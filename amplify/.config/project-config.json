@@ -1,0 +1,20 @@
+{
+    "projectName": "RightOn",
+    "projectPath": "/Users/andy/Desktop/RightOn",
+    "defaultEditor": "code",
+    "frontendHandler": {
+        "javascript": "/Users/andy/.nvm/versions/node/v8.11.4/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-javascript"
+    },
+    "javascript": {
+        "framework": "react-native",
+        "config": {
+            "SourceDir": "src",
+            "DistributionDir": "/",
+            "BuildCommand": "npm run build",
+            "StartCommand": "npm run start"
+        }
+    },
+    "providers": {
+        "awscloudformation": "/Users/andy/.nvm/versions/node/v8.11.4/lib/node_modules/@aws-amplify/cli/node_modules/amplify-provider-awscloudformation"
+    }
+}

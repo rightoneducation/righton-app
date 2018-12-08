@@ -1,0 +1,18 @@
+{
+	"ProjectName": "RightOn",
+	"ProjectPath": "/Users/andy/Desktop/RightOn",
+	"InitializationTime": "",
+	"LastConfigurationTime": "2018-12-08-01-33-40",
+	"LastNPMInstallTime": "",
+	"FrontendLastBuildTime": "",
+	"LastPublishTime": "",
+	"BackendLastSyncTime": "",
+	"BackendLastBuildTime": "",
+	"BackendLastPushTime": "",
+	"BackendProjectID": "e166c9b9-6873-4c86-9eea-dae956e7586b",
+	"BackendProjectName": "RightOn",
+	"BackendProjectConsoleUrl": "https://console.aws.amazon.com/mobilehub/home#/e166c9b9-6873-4c86-9eea-dae956e7586b/build",
+	"BackendProjectCreationTime": "2018-12-07T16:33:49.351Z",
+	"BackendProjectLastUpdatedTime": "2018-12-07T16:33:49.351Z",
+	"Framework": "react-native"
+}
