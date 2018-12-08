@@ -22,10 +22,3 @@
 #### 4) Start your app
 
 `npm start`
-  
-## Contributors
-
-
-### License
-
-- See [LICENSE](/LICENSE)
