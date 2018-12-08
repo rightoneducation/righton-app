@@ -7,7 +7,8 @@
 
 `git clone git:gitlab.com/friendly-robot/righton.git`
 
-
+<br>
+<br>
 
 #### 2) Install node modules
 
