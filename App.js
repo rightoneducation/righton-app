@@ -7,8 +7,8 @@ import { WithAuth } from './lib/Categories/Auth/Components';
 import Amplify from 'aws-amplify';
 import awsmobile from './src/aws-exports';
 import Home from './src/screens/Home';
-import OnboardLogin from './src/screens/Onboard/OnboardLogin';
-import OnboardIntro from './src/screens/Onboard/OnboardIntro';
+import Login from './src/screens/Login';
+import OnboardIntroSlides from './src/screens/OnboardIntroSlides';
 import Splash from './src/screens/Splash';
 
 Amplify.configure(awsmobile);
@@ -27,17 +27,17 @@ const App = DrawerNavigator({
       drawerLabel: ' ',
     },
   },
-  OnboardIntro: {
+  OnboardIntroSlides: {
     screen: (props) => {
-      return <OnboardIntro rootNavigator={props.navigation} {...props} />;
+      return <OnboardIntroSlides rootNavigator={props.navigation} {...props} />;
     }, 
     navigationOptions: { 
       drawerLabel: ' ',
     },
   },
-  OnboardLogin: {
+  Login: {
     screen: (props) => {
-      return <OnboardLogin rootNavigator={props.navigation} screenProps={{ ...props.screenProps }} />;
+      return <Login rootNavigator={props.navigation} screenProps={{ ...props.screenProps }} />;
     },
     navigationOptions: {
       drawerLabel: ' ',
