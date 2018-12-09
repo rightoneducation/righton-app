@@ -6,36 +6,39 @@ import { DrawerNavigator } from 'react-navigation';
 import { WithAuth } from './lib/Categories/Auth/Components';
 import Amplify from 'aws-amplify';
 import awsmobile from './src/aws-exports';
-import First from './src/Screens/First';
-import Splash from './src/Screens/Splash';
-import Home from './src/Screens/Home';
-import SignOut from './src/Components/SignOut';
-import ForgotPassword from './src/Components/ForgotPassword';
+import Home from './src/screens/Home';
+import OnboardLogin from './src/screens/Onboard/OnboardLogin';
+import OnboardIntro from './src/screens/Onboard/OnboardIntro';
+import Splash from './src/screens/Splash';
 
 Amplify.configure(awsmobile);
 
 const App = DrawerNavigator({
   Home: {
-    screen: props => <Home rootNavigator={props.navigation} {...props.screenProps } />,
-  },
-  ForgotPassword: {
     screen: (props) => {
-      return <ForgotPassword {...props.screenProps} onCancel={() => props.navigation.navigate('Home')} onSuccess={() => props.navigation.navigate('Home')} />
-    }, navigationOptions: { drawerLabel: 'Change password' }
-  },
-  SignOut: {
-    screen: (props) => {
-      return <SignOut rootNavigator={props.navigation} {...props} />
-    }, navigationOptions: { drawerLabel: 'Sign Out' }
+      return <Home rootNavigator={props.navigation} {...props.screenProps } />;
+    },
   },
   Splash: {
-    screen: props => <Splash navigation={props.navigation} { ...props.screenProps } />,
+    screen: (props) => {
+      return <Splash navigation={props.navigation} { ...props.screenProps } />;
+    },
     navigationOptions: {
       drawerLabel: ' ',
     },
   },
-  FirstScreen: {
-    screen: props => <First rootNavigator={props.navigation} screenProps={{ ...props.screenProps }} />,
+  OnboardIntro: {
+    screen: (props) => {
+      return <OnboardIntro rootNavigator={props.navigation} {...props} />;
+    }, 
+    navigationOptions: { 
+      drawerLabel: ' ',
+    },
+  },
+  OnboardLogin: {
+    screen: (props) => {
+      return <OnboardLogin rootNavigator={props.navigation} screenProps={{ ...props.screenProps }} />;
+    },
     navigationOptions: {
       drawerLabel: ' ',
     },
