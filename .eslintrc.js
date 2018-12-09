@@ -15,6 +15,7 @@ export default {
     "import/no-unresolved": 0,
     "import/extensions": 0,
     "skipBlankLines": true,
+    'comma-dangle': "off",
     "react/prop-types": [<enabled/>, { ignore: <ignore/>, customValidators: <customValidator/> }]
   }
 };
