@@ -139,12 +139,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   start: {
-    color: colors.dark,
+    color: colors.white,
     fontSize: fonts.medium,
   },
   startContainer: {
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.primary,
     borderColor: colors.grey,
     borderRadius: 100,
     borderWidth: 1,
