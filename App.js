@@ -7,7 +7,7 @@ import { WithAuth } from './lib/Categories/Auth/Components';
 import Amplify from 'aws-amplify';
 import awsmobile from './src/aws-exports';
 import Home from './src/screens/Home';
-import Login from './src/screens/Login';
+import First from './src/screens/First';
 import OnboardIntroSlides from './src/screens/OnboardIntroSlides';
 import Splash from './src/screens/Splash';
 
@@ -35,9 +35,9 @@ const App = DrawerNavigator({
       drawerLabel: ' ',
     },
   },
-  Login: {
+  First: {
     screen: (props) => {
-      return <Login rootNavigator={props.navigation} screenProps={{ ...props.screenProps }} />;
+      return <First rootNavigator={props.navigation} screenProps={{ ...props.screenProps }} />;
     },
     navigationOptions: {
       drawerLabel: ' ',
