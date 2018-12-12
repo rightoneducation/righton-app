@@ -59,8 +59,15 @@ export default class SelectionModal extends React.PureComponent {
 
 
   render() {
-    const { items, handleClose, onSelect, title, visible } = this.props;
-    const numberOfLabels = Object.keys(items[0]).length - 1;
+    const { 
+      items,
+      handleClose,
+      onSelect,
+      title,
+      visible
+    } = this.props;
+    
+    const numberOfLabels = items.length && Object.keys(items[0]).length - 1;
 
     return (
       <Modal
@@ -143,7 +150,8 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     flexGrow: 1,
-    paddingVertical: 15,
+    paddingBottom: 25,
+    paddingTop: 15,
   },
   title: {
     color: colors.white,
