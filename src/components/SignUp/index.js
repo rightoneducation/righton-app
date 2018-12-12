@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Keyboard,
   View,
   Text,
   TextInput,
@@ -11,8 +12,9 @@ import MFAPrompt from '../../../lib/Categories/Auth/Components/MFAPrompt';
 import { Auth } from 'aws-amplify';
 import Constants from '../../utils/constants';
 import { colors } from '../../utils/theme';
-import styles from '../LogIn/styles';
+import styles from '../SignIn/styles';
 import Birthdate from '../Birthdate';
+import ButtonRoundMain from '../ButtonRoundMain';
 
 class SignUp extends React.Component {
   static navigationOptions = {
@@ -34,13 +36,17 @@ class SignUp extends React.Component {
 
     this.baseState = this.state;
 
+    this.handleBirthdateNavigation = this.handleBirthdateNavigation.bind(this);
     this.handleCodeSelection = this.handleCodeSelection.bind(this);
     this.handleSelectionModal = this.handleSelectionModal.bind(this);
+    this.handleNumberBlur = this.handleNumberBlur.bind(this);
+    this.handleNumberInput = this.handleNumberInput.bind(this);
+    this.handleNumberRef = this.handleNumberRef.bind(this);
+    this.handleNumberSubmit = this.handleNumberSubmit.bind(this);
     this.handleSignUp = this.handleSignUp.bind(this);
     this.handleMFAValidate = this.handleMFAValidate.bind(this);
     this.handleMFASuccess = this.handleMFASuccess.bind(this);
     this.handleMFACancel = this.handleMFACancel.bind(this);
-    this.onPhoneSubmit = this.onPhoneSubmit.bind(this);
   }
 
 
@@ -103,16 +109,83 @@ class SignUp extends React.Component {
 
 
 
-  checkPhonePattern = (phone) => {
-    return /\+[1-9]\d{1,14}$/.test(phone);
+  checkPhonePattern = (number = '') => {
+    // Prevent including any non-numeric values except '-' and whitespace
+    return /^[0-9\-\s]*$/.test(number);
   }
 
 
 
-  onPhoneSubmit(event) {
-    const isValidPhone = this.checkPhonePattern(event.nativeEvent.text);
+  handleNumberBlur() {
+    this.numberRef.blur();
+    Keyboard.dismiss();
+  }
 
-    this.setState({ errorMessage: !isValidPhone && 'Please enter a phone number with the format +(countrycode)(number) such as +12223334444' });
+
+
+  handleNumberInput(number) {
+    if (number.length > 1 && number[0] === '+') {
+      // Number was selected from an auto-fill suggestion
+      const updatedNumber = number.substr(number.indexOf(1) + 1).trim();
+      this.setState({ phoneNumber: updatedNumber });
+      return;
+    }
+
+    const isValidPhone = this.checkPhonePattern(number);
+    if (!isValidPhone) {
+      // TODO Handle throwing message to human
+      return;
+    }
+
+    if (this.state.countryCode === '+1') { 
+      // Handle prettifying the phone number view for US numbers
+      const len = number.length;
+      if (number[len - 1] === '-' || (len === 4 && number[len - 1] !== ' ')) {
+        if (len === 4) {
+          if (number[len - 1] === '-') {
+            this.setState({ number: `${number.substr(0, 3)} ` });
+          } else {
+            const digit = number[len - 1];
+            this.setState({ phoneNumber: `${number.substr(0, 3)} ${digit}` });
+          }
+          return;
+        } else if (len === 8) {
+          // do nothing -- fall through
+        } else {
+          // Ignore if '-' or ' ' is entered anywhere else
+          return;
+        }
+      } else if (number[len - 1] === ' ' || (len === 8 && number[len - 1] !== '-')) {
+        if (len === 4) {
+          // do nothing -- fall through          
+        } else if (len === 8) {
+          if (number[len - 1] === ' ') {
+            this.setState({ number: `${number.substr(0, 7)}-` });
+          } else {
+            const digit = number[len - 1];
+            this.setState({ phoneNumber: `${number.substr(0, 7)}-${digit}` });
+          }
+          return;
+        } else {
+          // Ignore if '-' or ' ' is entered anywhere else
+          return;
+        }
+      }
+    }
+    this.setState({phoneNumber: number});
+  }
+
+
+
+  handleNumberRef(ref) {
+    this.numberRef = ref;
+  }
+
+
+
+  handleNumberSubmit() {
+    this.numberRef.blur();
+    Keyboard.dismiss();
   }
 
 
@@ -125,6 +198,18 @@ class SignUp extends React.Component {
 
   handleSelectionModal() {
     this.setState({ selectionModal: !this.state.selectionModal });
+  }
+
+
+
+  handleBirthdateNavigation() {
+    const { phoneNumber } = this.state;
+    const isValidPhone = this.checkPhonePattern(phoneNumber);
+    if (phoneNumber && isValidPhone) {
+      this.props.navigation.navigate('Birthdate', { phoneNumber });
+    } else {
+      // TODO Throw message to human
+    }
   }
   
 
@@ -168,16 +253,22 @@ class SignUp extends React.Component {
               returnKeyType='done'
               style={styles.numberInput}
               textAlign={'left'}
-              underlineColorAndroid={colors.black}
+              underlineColorAndroid={colors.dark}
               value={phoneNumber}
             />
           </View>
-          {this.state.showMFAPrompt &&
+          <ButtonRoundMain
+            icon={'arrow-right'}
+            onPress={this.handleBirthdateNavigation}
+          />
+          {
+            this.state.showMFAPrompt &&
             <MFAPrompt
               onValidate={this.handleMFAValidate}
               onCancel={this.handleMFACancel}
               onSuccess={this.handleMFASuccess}
-            />}
+            />
+          }
         </View>
       </View>
     );
