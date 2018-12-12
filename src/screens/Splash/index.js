@@ -34,7 +34,7 @@ class Splash extends React.Component {
         }
 
         resolve();
-      }, 3000));
+      }, __DEV__ ? 100 : 2000));
     } catch (exception) {
       debug.log('Rejected session from Splash:', exception);
     }
@@ -42,6 +42,11 @@ class Splash extends React.Component {
     const loggedIn = session && session.isValid();
 
     this.setState({ isLoading: false });
+
+    if (__DEV__) {
+      this._navigateTo('First');
+      return;
+    }
 
     this._navigateTo(loggedIn ? 'Home' : 'OnboardIntroSlides');
   }
