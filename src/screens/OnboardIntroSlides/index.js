@@ -8,7 +8,7 @@ import {
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import { GradCap } from '../../assets/images';
-import { colors, fonts } from '../../utils/common';
+import { colors, fonts } from '../../utils/theme';
 
 
 class OnboardIntroSlides extends PureComponent {
@@ -45,13 +45,13 @@ class OnboardIntroSlides extends PureComponent {
 
 
   handleStart() {
-    this._navigateTo('Login');
+    this._navigateTo('First');
   }
 
 
 
   _navigateTo(routeName) {
-    this.props.navigation.navigate(routeName);
+    this.props.rootNavigator.navigate(routeName);
   }
 
 
@@ -77,6 +77,15 @@ class OnboardIntroSlides extends PureComponent {
             <Text style={styles.subtitle}>Learn how to play to learn</Text>
           </View>
           <Image source={ {uri: GradCap} } style={styles.image}/>
+          <View style={styles.bottomContainer}>
+            <Text style={styles.accountCheck}>Have an account already?</Text>
+            <Touchable
+              onPress={this.handleStart}
+              activeOpacity={.8}
+            >
+              <Text style={styles.accountLogin}>Sign in and play!</Text>
+            </Touchable>
+          </View>
         </View>
 
 
@@ -106,6 +115,20 @@ class OnboardIntroSlides extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+  accountCheck: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  accountLogin: {
+    color: colors.primary,
+    fontSize: fonts.medium,
+    fontWeight: 'bold',
+  },
+  bottomContainer: {
+    alignItems: 'center',
+    bottom: 35,
+    position: 'absolute',
+  },
   container: {
     alignItems: 'center',
     backgroundColor: colors.dark,
