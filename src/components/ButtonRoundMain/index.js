@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Animated, Easing, StyleSheet } from 'react-native';
+import { ActivityIndicator, Animated, Easing, Keyboard, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
@@ -18,6 +18,7 @@ export default class ButtonRoundMain extends React.PureComponent {
 
 
   handleAnimatedPress() {
+    Keyboard.dismiss();
     Animated.timing(
       this.animatedRotation, {
       toValue: 1,
@@ -43,7 +44,7 @@ export default class ButtonRoundMain extends React.PureComponent {
 
     const spin = this.animatedRotation.interpolate({
       inputRange: [0, 1],
-      outputRange: ['0deg', '180deg']
+      outputRange: ['0deg', '420deg']
     });
 
     return (
