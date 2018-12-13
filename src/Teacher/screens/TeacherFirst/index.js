@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
 const FirstScreen = TabNavigator({
   LogIn: {
     screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
+      const { screenProps, ...otherProps } = props;
 
       return (
         <SignIn
           { ...screenProps }
           { ...otherProps }
-          onLogIn={() => screenProps.rootNavigator.navigate('Home')}
+          onLogIn={screenProps.onLogIn}
         />
       );
     },
@@ -43,7 +43,7 @@ const FirstScreen = TabNavigator({
         <SignUp
           { ...screenProps }
           { ...otherProps }
-          onSignUp={() => otherProps.navigation.navigate('LogIn')}
+          onSignUp={screenProps.onSignUp}
         />
       )
     },
