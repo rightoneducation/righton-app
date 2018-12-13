@@ -5,6 +5,7 @@ import {
   View,
 } from 'react-native';
 import styles from './styles';
+import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import { colors } from '../../../utils/theme';
 
@@ -43,8 +44,14 @@ export default class Age extends React.PureComponent {
       age,
     } = this.state;
 
+    const { rootNavigator } = this.props;
+
     return (
       <View style={styles.container}>
+        <ButtonBack
+          buttonStyles={{ top: 40 }}
+          navigator={rootNavigator}
+        />
         <Text style={styles.title}>How old are you?</Text>
         <TextInput
           keyboardType={'numeric'}
