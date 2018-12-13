@@ -28,7 +28,7 @@ const OnboardApp = StackNavigator({
 
   TeacherFirst: {
     screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
+      const { screenProps, ...otherProps } = props;
 
       return (
         <TeacherFirst
