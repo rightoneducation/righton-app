@@ -1,18 +1,19 @@
 {
 	"ProjectName": "RightOn",
-	"ProjectPath": "/Users/andy/Desktop/RightOn",
+	"ProjectPath": "/Users/andy/Desktop/Upwork/RightOn",
 	"InitializationTime": "",
 	"LastConfigurationTime": "2018-12-08-01-33-40",
 	"LastNPMInstallTime": "",
 	"FrontendLastBuildTime": "",
 	"LastPublishTime": "",
-	"BackendLastSyncTime": "",
+	"BackendLastSyncTime": "2018-12-13-23-17-10",
 	"BackendLastBuildTime": "",
 	"BackendLastPushTime": "",
 	"BackendProjectID": "e166c9b9-6873-4c86-9eea-dae956e7586b",
 	"BackendProjectName": "RightOn",
 	"BackendProjectConsoleUrl": "https://console.aws.amazon.com/mobilehub/home#/e166c9b9-6873-4c86-9eea-dae956e7586b/build",
 	"BackendProjectCreationTime": "2018-12-07T16:33:49.351Z",
-	"BackendProjectLastUpdatedTime": "2018-12-07T16:33:49.351Z",
-	"Framework": "react-native"
+	"BackendProjectLastUpdatedTime": "2018-12-13T14:16:40.696Z",
+	"Framework": "react-native",
+	"BackendLastSyncToDevTime": "2018-12-13-23-17-26"
 }

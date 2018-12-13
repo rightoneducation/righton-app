@@ -1,0 +1,21 @@
+--- !com.amazonaws.mobilehub.v0.Project 
+features:
+  sign-in: !com.amazonaws.mobilehub.v0.SignIn 
+    attributes:
+      enabled: true
+      optional-sign-in: true
+    components:
+      sign-in-user-pools: !com.amazonaws.mobilehub.v0.UserPoolsIdentityProvider 
+        attributes:
+          mfa-configuration: OFF
+          name: userpool
+          password-policy: !com.amazonaws.mobilehub.ConvertibleMap 
+            min-length: '8'
+            require-lower-case: false
+            require-numbers: true
+            require-symbols: false
+            require-upper-case: false
+          standard-attributes: '[]'
+          username-attributes: '["email"]'
+name: RightOn
+region: us-east-2
