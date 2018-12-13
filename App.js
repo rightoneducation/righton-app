@@ -1,7 +1,7 @@
 global.Buffer = global.Buffer || require('buffer').Buffer; // Required for aws sigv4 signing
 
 import React from 'react';
-import { DrawerNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 import { WithAuth } from './lib/Categories/Auth/Components';
 import Amplify from 'aws-amplify';
@@ -9,16 +9,17 @@ import awsmobile from './src/aws-exports';
 import OnboardApp from './src/screens/OnboardApp';
 import OnboardIntroSlides from './src/screens/OnboardIntroSlides';
 import Splash from './src/screens/Splash';
+import StudentApp from './src/Student';
 
 Amplify.configure(awsmobile);
 
-const App = DrawerNavigator({
+const App = StackNavigator({
   Splash: {
     screen: (props) => {
       return <Splash navigation={props.navigation} { ...props.screenProps } />;
     },
     navigationOptions: {
-      drawerLabel: ' ',
+      header: null,
     },
   },
   OnboardApp: {
@@ -26,7 +27,7 @@ const App = DrawerNavigator({
       return <OnboardApp rootNavigator={props.navigation} {...props} />;
     }, 
     navigationOptions: { 
-      drawerLabel: ' ',
+      header: null,
     },
   },
   OnboardIntroSlides: {
@@ -34,7 +35,15 @@ const App = DrawerNavigator({
       return <OnboardIntroSlides rootNavigator={props.navigation} {...props} />;
     }, 
     navigationOptions: { 
-      drawerLabel: ' ',
+      header: null,
+    },
+  },
+  StudentApp: {
+    screen: (props) => {
+      return <StudentApp rootNavigator={props.navigation} {...props} />;
+    }, 
+    navigationOptions: { 
+      header: null,
     },
   },
 }, { initialRouteName: 'Splash' });
