@@ -10,6 +10,8 @@ import OnboardApp from './src/screens/OnboardApp';
 import OnboardIntroSlides from './src/screens/OnboardIntroSlides';
 import Splash from './src/screens/Splash';
 import StudentApp from './src/Student';
+import TeacherApp from './src/Teacher';
+
 
 Amplify.configure(awsmobile);
 
@@ -41,6 +43,14 @@ const App = StackNavigator({
   StudentApp: {
     screen: (props) => {
       return <StudentApp rootNavigator={props.navigation} {...props} />;
+    }, 
+    navigationOptions: { 
+      header: null,
+    },
+  },
+  TeacherApp: {
+    screen: (props) => {
+      return <TeacherApp rootNavigator={props.navigation} {...props} />;
     }, 
     navigationOptions: { 
       header: null,
