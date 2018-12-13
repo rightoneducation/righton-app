@@ -1,10 +1,15 @@
 import React from 'react';
-import { Text, View, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 import { colors } from '../../../utils/theme';
+
+const styles = StyleSheet.create({
+  tabBarLabel: { marginLeft: 9 },
+  tabBarIconContainer: { flexDirection: 'row', alignItems: 'center', height: 30 },
+});
 
 
 const FirstScreen = TabNavigator({
