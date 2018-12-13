@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
   View,
   Text,
@@ -185,7 +187,10 @@ class SignUp extends React.Component {
               value={password}
             />
           </View>
-          <View style={styles.inputContainer}>
+          <KeyboardAvoidingView
+            behavior={'padding'}
+            style={styles.inputContainer}
+          >
             <Text style={styles.inputLabel}>Retype Password</Text>
             <TextInput
               keyboardType={'default'}
@@ -202,7 +207,7 @@ class SignUp extends React.Component {
               underlineColorAndroid={colors.dark}   
               value={retypePassword}
             />
-          </View>
+          </KeyboardAvoidingView>
           <ButtonRound
             icon={'arrow-right'}
             onPress={() => {}}
