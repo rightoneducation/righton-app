@@ -11,6 +11,7 @@ export default class ButtonRound extends React.PureComponent {
     this.state = {
       activity: false,
     };
+
     this.animatedRotation = new Animated.Value(0);
 
     this.handleAnimatedPress = this.handleAnimatedPress.bind(this);
@@ -34,13 +35,22 @@ export default class ButtonRound extends React.PureComponent {
   }
 
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.activity !== nextProps.activity && nextProps.activity === false) {
+      this.animatedRotation = new Animated.Value(0);
+      this.setState({ activity: false });
+    }
+  }
+
+
   render() {
+    const { activity } = this.state;
+
     const { 
+      // activity,
       icon, 
       // onPress,
     } = this.props;
-
-    const { activity } = this.state;
 
     const spin = this.animatedRotation.interpolate({
       inputRange: [0, 1],
@@ -73,11 +83,13 @@ export default class ButtonRound extends React.PureComponent {
 }
 
 ButtonRound.propTypes = {
+  activity: PropTypes.bool.isRequired,
   icon: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };
 
 ButtonRound.defaultProps = {
+  activity: false,
   icon: '',
   onPress: () => {},
 };
