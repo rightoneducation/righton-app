@@ -11,7 +11,7 @@ const HeaderSimple = ({ title }) => (
   <View style={styles.container}>
     <Text style={styles.title}>{ title }</Text>
     <View style={styles.logoContainer}>
-      <Text style={styles.logo} />
+      <Text style={styles.logo}>?</Text>
     </View>
   </View>
 );
@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    backgroundColor: colors.lightGrey,
+    borderColor: colors.white,
+    borderWidth: .5,
     borderRadius: 18,
     height: 35,
     justifyContent: 'center',
