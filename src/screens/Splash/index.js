@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import debug from '../../utils/debug';
+import { colors } from '../../utils/theme';
 
 class Splash extends React.Component {
 
@@ -44,11 +45,12 @@ class Splash extends React.Component {
     this.setState({ isLoading: false });
 
     if (__DEV__) {
-      this._navigateTo('First');
+      this._navigateTo('OnboardApp');
       return;
     }
 
-    this._navigateTo(loggedIn ? 'Home' : 'OnboardIntroSlides');
+    // TODO Check whether app is signed up for Teacher or Student and route accordingly
+    this._navigateTo(loggedIn ? 'OnboardApp' : 'OnboardApp');
   }
 
 
@@ -82,11 +84,12 @@ Splash.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    backgroundColor: colors.dark,
     flex: 1,
     justifyContent: 'center',
   },
   logo: {
-    color: '#000',    
+    color: colors.white,    
     fontSize: 35,
     fontStyle: 'italic',
   },
