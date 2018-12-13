@@ -17,8 +17,7 @@ const StudentFirst = StackNavigator({
         <Age 
           {...screenProps}
           {...otherProps}
-          onCancel={() => otherProps.navigation.goBack()}
-          onSuccess={() => otherProps.navigation.goBack()}
+          rootNavigator={screenProps.navigation}
           studentFirstNavigator={navigation}
         />
       );
