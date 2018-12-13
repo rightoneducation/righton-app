@@ -35,6 +35,7 @@ const OnboardApp = StackNavigator({
           { ...screenProps }
           { ...otherProps }
           onLogIn={() => screenProps.rootNavigator.navigate('TeacherApp')}
+          onSignUp={() => screenProps.rootNavigator.navigate('TeacherApp')}
         />
       );
     },
@@ -53,7 +54,6 @@ const OnboardApp = StackNavigator({
         <StudentFirst
           { ...screenProps }
           { ...otherProps }
-          onLogIn={() => screenProps.rootNavigator.navigate('StudentApp')}
         />
       )
     },
