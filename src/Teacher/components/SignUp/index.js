@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Auth } from 'aws-amplify';
+import MFAPrompt from '../../../../lib/Categories/Auth/Components/MFAPrompt';
 import Constants from '../../../utils/constants';
 import { colors } from '../../../utils/theme';
 import styles from '../SignIn/styles';
 import ButtonRound from '../../../components/ButtonRound';
+import debug from '../../../utils/debug';
 
 class SignUp extends React.Component {
   static navigationOptions = {
@@ -23,11 +25,14 @@ class SignUp extends React.Component {
     super(props);
 
     this.state = {
+      buttonActivity: false,
       email: '',
       errorMessage: '',
       password: '',
+      passwordPassed: null,
       retypePassword: '',
       showActivityIndicator: false,
+      showMFAPrompt: false,
     };
 
     this.baseState = this.state;
@@ -43,6 +48,10 @@ class SignUp extends React.Component {
     this.handleRetypePasswordRef = this.handleRetypePasswordRef.bind(this);
     this.handleRetypePasswordSubmit = this.handleRetypePasswordSubmit.bind(this);
 
+    this.handleMFAValidate = this.handleMFAValidate.bind(this);
+    this.handleMFASuccess = this.handleMFASuccess.bind(this);
+    this.handleMFACancel = this.handleMFACancel.bind(this);
+
     this.handleSignUp = this.handleSignUp.bind(this);
   }
 
@@ -52,21 +61,54 @@ class SignUp extends React.Component {
     const { password, email } = this.state;
     let userConfirmed = true;
 
-    this.setState({ showActivityIndicator: true });
+    this.setState({ buttonActivity: true, showActivityIndicator: true });
+
+    debug.log('Attempting sign up w/ email & password:', email, password);
 
     Auth.signUp(email, password, email, null)
       .then(data => {
         userConfirmed = data.userConfirmed;
+
+        debug.log('Sign up data received:', JSON.stringify(data));
+        this.setState({ showMFAPrompt: !userConfirmed });
 
         if (userConfirmed) {
           this.onSignUp();
         }
       })
       .catch(err => {
-        console.log(err);
-        this.setState({ errorMessage: err.message, showActivityIndicator: false });
+        debug.warn('Sign up error:', JSON.stringify(err));
+        this.setState({ errorMessage: err.message, showActivityIndicator: false, buttonActivity: false });
         return;
       });
+  }
+
+
+
+  async handleMFAValidate(code = '') {
+    try {
+      await Auth.confirmSignUp(this.state.email, code)
+        .then(data => debug.log('sign up successful ->', JSON.stringify(data)));
+    } catch (exception) {
+      this.setState({ buttonActivity: false });
+      return exception.message || exception;
+    }
+
+    return true;
+  }
+
+
+
+  handleMFACancel() {
+    this.setState({ buttonActivity: false, showMFAPrompt: false })
+  }
+
+
+
+  handleMFASuccess() {
+    this.setState({ showMFAPrompt: false });
+
+    this.onSignUp();
   }
 
 
@@ -123,6 +165,7 @@ class SignUp extends React.Component {
 
 
   handleRetypePasswordSubmit() {
+    // TODO Check that passwords match
     Keyboard.dismiss();
   }
 
@@ -134,6 +177,7 @@ class SignUp extends React.Component {
       password,
       retypePassword,
       showActivityIndicator,
+      showMFAPrompt,
     } = this.state;
 
     return (
@@ -210,9 +254,17 @@ class SignUp extends React.Component {
           </KeyboardAvoidingView>
           <ButtonRound
             icon={'arrow-right'}
-            onPress={() => {}}
+            onPress={this.handleSignUp}
           />
         </View>
+        {
+          showMFAPrompt &&
+          <MFAPrompt
+            onValidate={this.handleMFAValidate}
+            onCancel={this.handleMFACancel}
+            onSuccess={this.handleMFASuccess}
+          />
+        }
       </View>
     );
   }

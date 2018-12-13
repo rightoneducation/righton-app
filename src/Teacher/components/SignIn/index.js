@@ -11,6 +11,7 @@ import { StackNavigator } from 'react-navigation';
 import ButtonRound from '../../../components/ButtonRound';
 import { colors } from '../../../utils/theme';
 import styles from './styles';
+import debug from '../../../utils/debug';
 
 
 class SignIn extends React.Component {
@@ -18,6 +19,7 @@ class SignIn extends React.Component {
     super(props);
 
     this.state = {
+      buttonActivity: false,
       showActivityIndicator: false,
       email: '',
       password: '',
@@ -55,18 +57,22 @@ class SignIn extends React.Component {
     let errorMessage = '';
     let session = null;
 
+    this.setState({ buttonActivity: true });
+
     try {
       session = await auth.signIn(email, password)
         .then((data) => {
-          console.log('We get the Cognito User', data);
+          debug.log('We get the Cognito User', JSON.stringify(data));
           this.setState({ cognitoUser: data });
+          return true;
         });
     } catch (exception) {
-      console.log(exception);
+      debug.warn('Error caught in Teacher LogIn:', JSON.stringify(exception));
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
     }
 
     this.setState({
+      buttonActivity: false,
       errorMessage,
       session,
       showActivityIndicator: false,
@@ -120,6 +126,7 @@ class SignIn extends React.Component {
 
   render() {
     const {
+      buttonActivity,
       password,
       showActivityIndicator,
       email,
@@ -177,8 +184,9 @@ class SignIn extends React.Component {
             />
           </View>
           <ButtonRound
+            activity={buttonActivity}
             icon={'arrow-right'}
-            onPress={() => {}}
+            onPress={this.doLogin}
           />
         </View>
       </View>
