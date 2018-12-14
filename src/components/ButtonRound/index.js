@@ -5,7 +5,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors } from '../../utils/theme';
 
-export default class ButtonRound extends React.PureComponent {
+export default class ButtonRound extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
