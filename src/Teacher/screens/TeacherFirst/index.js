@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 
 
 const FirstScreen = TabNavigator({
-  LogIn: {
+  SignIn: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
