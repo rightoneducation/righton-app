@@ -18,18 +18,18 @@ export default OnboardAppRouter = ({ onboardNavigator }) => {
           activeOpacity={.8}
           background={Touchable.Ripple(colors.primary, false)}
           onPress={() => onboardNavigator.navigate('TeacherFirst')}
-          style={styles.iamaButton}
+          style={[styles.iamaButton, styles.whiteBackground]}
         >
           <View style={styles.iamaView}>
-            <Text style={styles.iama}>I am a</Text>
-            <Text style={styles.role}>Teacher</Text>
+            <Text style={[styles.iama, styles.primaryColor]}>I am a</Text>
+            <Text style={[styles.role, styles.primaryColor]}>Teacher</Text>
           </View>
         </Touchable>
         <Touchable
           activeOpacity={.8}
           background={Touchable.Ripple(colors.primary, false)}
           onPress={() => onboardNavigator.navigate('StudentFirst')}
-          style={styles.iamaButton}
+          style={[styles.iamaButton, styles.primaryBackground]}
         >
           <View style={styles.iamaView}>
             <Text style={styles.iama}>I am a</Text>
@@ -81,9 +81,18 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: fonts.large,
   },
+  primaryBackground: {
+    backgroundColor: colors.primary,
+  },
+  primaryColor: {
+    color: colors.primary,
+  },
   role: {
     color: colors.white,
     fontSize: fonts.large,
     fontWeight: 'bold',
+  },
+  whiteBackground: {
+    backgroundColor: colors.white,
   },
 });
