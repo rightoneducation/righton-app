@@ -1,7 +1,8 @@
 import React, {PureComponent} from 'react';
 import {Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Triangle from '../../components/Triangle';
+// import Triangle from '../../components/Triangle';
 import Circle from '../../components/Circle';
+import { colors, fonts } from '../../utils/theme';
 
 const { height, width } = Dimensions.get('screen');
 
@@ -228,6 +229,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#d3d3d3',
     flex: 1,
     justifyContent: 'center',
+  },
+  mainMessage: {
+    color: colors.white,
+    fontSize: fonts.medium,
+    fontStyle: 'italic',
   },
 });
 
