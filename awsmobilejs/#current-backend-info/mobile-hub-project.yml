@@ -1,5 +1,10 @@
 --- !com.amazonaws.mobilehub.v0.Project
+apps: 
+  react-native: !com.amazonaws.mobilehub.v0.AppDO {}
 features: 
+  mobile-analytics: !com.amazonaws.mobilehub.v0.Pinpoint
+    components: 
+      analytics: !com.amazonaws.mobilehub.v0.PinpointAnalytics {}
   sign-in: !com.amazonaws.mobilehub.v0.SignIn
     attributes: 
       enabled: true
@@ -7,6 +12,9 @@ features:
     components: 
       sign-in-user-pools: !com.amazonaws.mobilehub.v0.UserPoolsIdentityProvider
         attributes: 
+          alias-attributes: 
+            - preferred_username
+            - email
           mfa-configuration: OFF
           name: userpool
           password-policy: !com.amazonaws.mobilehub.ConvertibleMap
@@ -16,6 +24,5 @@ features:
             require-symbols: false
             require-upper-case: false
           standard-attributes: "[]"
-          username-attributes: "[\"email\"]"
 name: RightOn
-region: us-east-2
+region: us-east-1

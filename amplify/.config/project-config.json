@@ -1,20 +1,20 @@
 {
     "projectName": "RightOn",
-    "projectPath": "/Users/andy/Desktop/RightOn",
+    "projectPath": "/Users/andy/Desktop/Upwork/RightOn",
     "defaultEditor": "code",
     "frontendHandler": {
-        "javascript": "/Users/andy/.nvm/versions/node/v8.11.4/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-javascript"
+        "javascript": "/Users/andy/.nvm/versions/node/v10.9.0/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-javascript"
     },
     "javascript": {
         "framework": "react-native",
         "config": {
-            "SourceDir": "src",
+            "SourceDir": "/",
             "DistributionDir": "/",
-            "BuildCommand": "npm run build",
-            "StartCommand": "npm run start"
+            "BuildCommand": "npm run-script build",
+            "StartCommand": "npm run-script start"
         }
     },
     "providers": {
-        "awscloudformation": "/Users/andy/.nvm/versions/node/v8.11.4/lib/node_modules/@aws-amplify/cli/node_modules/amplify-provider-awscloudformation"
+        "awscloudformation": "/Users/andy/.nvm/versions/node/v10.9.0/lib/node_modules/@aws-amplify/cli/node_modules/amplify-provider-awscloudformation"
     }
 }

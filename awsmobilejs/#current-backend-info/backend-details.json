@@ -1,78 +1,109 @@
 {
 	"name": "RightOn",
-	"projectId": "e166c9b9-6873-4c86-9eea-dae956e7586b",
-	"region": "us-east-2",
+	"projectId": "d1a1ffa6-7c88-4f8e-b33c-e9565e74936a",
+	"region": "us-east-1",
 	"state": "NORMAL",
-	"createdDate": "2018-12-07T16:33:49.351Z",
-	"lastUpdatedDate": "2018-12-13T14:16:40.696Z",
-	"consoleUrl": "https://console.aws.amazon.com/mobilehub/home#/e166c9b9-6873-4c86-9eea-dae956e7586b/build",
+	"createdDate": "2018-12-14T07:20:42.292Z",
+	"lastUpdatedDate": "2018-12-14T09:23:59.196Z",
+	"consoleUrl": "https://console.aws.amazon.com/mobilehub/home#/d1a1ffa6-7c88-4f8e-b33c-e9565e74936a/build",
 	"resources": [
 		{
+			"type": "AWS::Pinpoint::AnalyticsApplication",
+			"name": "righton_MobileHub",
+			"arn": "9399cf227bf14b2090b307af258ab6b6",
+			"feature": "analytics",
+			"attributes": {
+				"lastUpdateRequestID": "f9db22d7-f2f2-46c6-8a0d-630bf3e242bc"
+			}
+		},
+		{
+			"type": "AWS::IAM::Policy",
+			"name": "righton_mobileanalytics_MOBILEHUB_679705973",
+			"arn": null,
+			"feature": "analytics",
+			"attributes": {
+				"authType": "authenticated",
+				"lastUpdateRequestID": "c1549760-dbdd-4fa4-b470-f60814a14345",
+				"role": "righton_auth_MOBILEHUB_679705973"
+			}
+		},
+		{
+			"type": "AWS::IAM::Policy",
+			"name": "righton_mobileanalytics_MOBILEHUB_679705973",
+			"arn": null,
+			"feature": "analytics",
+			"attributes": {
+				"authType": "unauthenticated",
+				"lastUpdateRequestID": "c1549760-dbdd-4fa4-b470-f60814a14345",
+				"role": "righton_unauth_MOBILEHUB_679705973"
+			}
+		},
+		{
 			"type": "AWS::Cognito::IdentityPool",
-			"name": "righton_MOBILEHUB_503791219",
-			"arn": "us-east-2:c187d84b-9641-4fd1-8f99-e9679f388122",
+			"name": "righton_MOBILEHUB_679705973",
+			"arn": "us-east-1:1413bcc3-873c-4df5-ab6e-92c02bc1256c",
 			"feature": "user-signin",
 			"attributes": {
-				"lastUpdateRequestID": "14b6eb56-31e2-47aa-ab13-901a5e2489ac",
-				"poolid": "us-east-2:c187d84b-9641-4fd1-8f99-e9679f388122",
-				"roleARNs": "arn:aws:iam::048737607653:role/righton_auth_MOBILEHUB_503791219,arn:aws:iam::048737607653:role/righton_unauth_MOBILEHUB_503791219"
+				"lastUpdateRequestID": "82594e8d-cd30-47f0-a08d-42e32847f44e",
+				"poolid": "us-east-1:1413bcc3-873c-4df5-ab6e-92c02bc1256c",
+				"roleARNs": "arn:aws:iam::484006752749:role/righton_auth_MOBILEHUB_679705973,arn:aws:iam::484006752749:role/righton_unauth_MOBILEHUB_679705973"
 			}
 		},
 		{
 			"type": "AWS::IAM::Role",
-			"name": "righton_smsverification_MOBILEHUB_503791219",
-			"arn": "arn:aws:iam::048737607653:role/service-role/righton_smsverification_MOBILEHUB_503791219",
+			"name": "righton_smsverification_MOBILEHUB_679705973",
+			"arn": "arn:aws:iam::484006752749:role/service-role/righton_smsverification_MOBILEHUB_679705973",
 			"feature": "user-signin",
 			"attributes": {
-				"lastUpdateRequestID": "14b6eb56-31e2-47aa-ab13-901a5e2489ac",
+				"lastUpdateRequestID": "82594e8d-cd30-47f0-a08d-42e32847f44e",
 				"user-pools-role-key": "user-pools-execution-role"
 			}
 		},
 		{
 			"type": "AWS::Cognito::UserPool",
-			"name": "righton_userpool_MOBILEHUB_503791219",
-			"arn": "us-east-2_qlqgzWiEP",
+			"name": "righton_userpool_MOBILEHUB_679705973",
+			"arn": "us-east-1_zakMlvkRJ",
 			"feature": "user-signin",
 			"attributes": {
-				"alias-attributes": "null",
-				"lastUpdateRequestID": "14b6eb56-31e2-47aa-ab13-901a5e2489ac",
+				"alias-attributes": "[\"preferred_username\",\"email\"]",
+				"lastUpdateRequestID": "82594e8d-cd30-47f0-a08d-42e32847f44e",
 				"mfa-configuration": "OFF",
 				"password-policy": "{\"minimumLength\":8,\"requireUppercase\":false,\"requireLowercase\":false,\"requireNumbers\":true,\"requireSymbols\":false}",
-				"region": "us-east-2",
-				"user-pools-client-id": "3tj2u49en26u0664uh9og9bu3g",
-				"user-pools-client-secret": "il8gohina8u67vnnk5p7u5tct0jhhs8otfavl9uilpdqcmi7bjc",
-				"user-pools-id": "us-east-2_qlqgzWiEP",
-				"user-pools-web-client-id": "5e3inlsnf407elne8ee01qcnri"
+				"region": "us-east-1",
+				"user-pools-client-id": "clfaogsmb6e9ieqh8657nuedg",
+				"user-pools-client-secret": "17d47v21rto81p3nhte0flmorkeh83i9fv4nhka51257nd5avon4",
+				"user-pools-id": "us-east-1_zakMlvkRJ",
+				"user-pools-web-client-id": "7dtavr9uqbsk1vadk0h81vt68j"
 			}
 		},
 		{
 			"type": "AWS::IAM::Role",
-			"name": "righton_auth_MOBILEHUB_503791219",
-			"arn": "arn:aws:iam::048737607653:role/righton_auth_MOBILEHUB_503791219",
+			"name": "righton_auth_MOBILEHUB_679705973",
+			"arn": "arn:aws:iam::484006752749:role/righton_auth_MOBILEHUB_679705973",
 			"feature": "user-signin",
 			"attributes": {
 				"authType": "authenticated",
-				"lastUpdateRequestID": "14b6eb56-31e2-47aa-ab13-901a5e2489ac"
+				"lastUpdateRequestID": "82594e8d-cd30-47f0-a08d-42e32847f44e"
 			}
 		},
 		{
 			"type": "AWS::IAM::Role",
-			"name": "righton_unauth_MOBILEHUB_503791219",
-			"arn": "arn:aws:iam::048737607653:role/righton_unauth_MOBILEHUB_503791219",
+			"name": "righton_unauth_MOBILEHUB_679705973",
+			"arn": "arn:aws:iam::484006752749:role/righton_unauth_MOBILEHUB_679705973",
 			"feature": "user-signin",
 			"attributes": {
 				"authType": "unauthenticated",
-				"lastUpdateRequestID": "28fc94cc-1046-4c00-87d6-3e7c95f05f64"
+				"lastUpdateRequestID": "f9db22d7-f2f2-46c6-8a0d-630bf3e242bc"
 			}
 		},
 		{
 			"type": "AWS::S3::Bucket",
-			"name": "righton-deployments-mobilehub-503791219",
+			"name": "righton-deployments-mobilehub-679705973",
 			"arn": null,
 			"feature": "common",
 			"attributes": {
-				"region": "us-east-2",
-				"s3-bucket-console-url": "https://s3.console.aws.amazon.com/s3/buckets/righton-deployments-mobilehub-503791219"
+				"region": "us-east-1",
+				"s3-bucket-console-url": "https://s3.console.aws.amazon.com/s3/buckets/righton-deployments-mobilehub-679705973"
 			}
 		},
 		{
@@ -82,7 +113,7 @@
 			"feature": "cloud-api",
 			"attributes": {
 				"primary": "true",
-				"region": "us-east-2",
+				"region": "us-east-1",
 				"stateSummary": "NOT_YET_DEPLOYED"
 			}
 		}

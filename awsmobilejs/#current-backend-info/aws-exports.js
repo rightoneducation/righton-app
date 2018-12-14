@@ -6,17 +6,20 @@
 
 // AWS Mobile Hub Project Constants
 const awsmobile = {
-    'aws_cognito_identity_pool_id': 'us-east-2:c187d84b-9641-4fd1-8f99-e9679f388122',
-    'aws_cognito_region': 'us-east-2',
-    'aws_project_id': 'e166c9b9-6873-4c86-9eea-dae956e7586b',
+    'aws_app_analytics': 'enable',
+    'aws_cognito_identity_pool_id': 'us-east-1:1413bcc3-873c-4df5-ab6e-92c02bc1256c',
+    'aws_cognito_region': 'us-east-1',
+    'aws_mobile_analytics_app_id': '9399cf227bf14b2090b307af258ab6b6',
+    'aws_mobile_analytics_app_region': 'us-east-1',
+    'aws_project_id': 'd1a1ffa6-7c88-4f8e-b33c-e9565e74936a',
     'aws_project_name': 'RightOn',
-    'aws_project_region': 'us-east-2',
-    'aws_resource_name_prefix': 'righton-mobilehub-503791219',
+    'aws_project_region': 'us-east-1',
+    'aws_resource_name_prefix': 'righton-mobilehub-679705973',
     'aws_sign_in_enabled': 'enable',
     'aws_user_pools': 'enable',
-    'aws_user_pools_id': 'us-east-2_qlqgzWiEP',
+    'aws_user_pools_id': 'us-east-1_zakMlvkRJ',
     'aws_user_pools_mfa_type': 'OFF',
-    'aws_user_pools_web_client_id': '5e3inlsnf407elne8ee01qcnri',
+    'aws_user_pools_web_client_id': '7dtavr9uqbsk1vadk0h81vt68j',
 }
 
 export default awsmobile;
