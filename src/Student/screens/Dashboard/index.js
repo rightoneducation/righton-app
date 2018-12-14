@@ -1,11 +1,17 @@
 import React from 'react';
 import {
+  Keyboard,
+  ScrollView,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Touchable from 'react-native-platform-touchable';
 import HeaderSimple from '../../../components/HeaderSimple';
+import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
+import { colors } from '../../../utils/theme';
 
 
 export default class Dashboard extends React.Component {
@@ -13,8 +19,137 @@ export default class Dashboard extends React.Component {
     super(props);
 
     this.state = {
-
+      name: '',
     };
+
+    this.handleNameInput = this.handleNameInput.bind(this);
+    this.handleNameSubmit = this.handleNameSubmit.bind(this);
+
+    this.handleRoomInput = this.handleRoomInput.bind(this);
+    this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+  }
+
+
+
+  handleNameInput(name) {
+    this.setState({ name });
+  }
+
+
+
+  handleNameSubmit() {
+    Keyboard.dismiss();
+  }
+
+
+
+  handleRoomInput(room) {
+    this.setState({ room });
+  }
+
+
+
+  handleRoomSubmit() {
+    Keyboard.dismiss();
+  }
+
+
+
+  renderProfileView() {
+    const { name } = this.state;
+
+    const { gamesPlayed, pointsEarned } = this.props.screenProps;
+    // Where are these values being hydrated from?
+
+    return (
+      <View style={styles.profileContainer}>
+        <TextInput
+          keyboardType={'default'}
+          maxLength={23}
+          multiline={false}
+          onChangeText={this.handleNameInput}
+          onSubmitEditing={this.handleNameSubmit}
+          placeholder={'Team Name'}
+          placeholderTextColor={colors.primary} 
+          returnKeyType='done'
+          style={styles.input} 
+          textAlign={'center'}
+          underlineColorAndroid={name ? colors.white : colors.dark}   
+          value={name}
+        />
+        <View style={styles.profileValuesContainer}>
+          <View style={styles.profileValueContainer}>
+            <Text style={styles.profileValueLabel}>{`Games: `}</Text>
+            <Text style={styles.profileValue}>{ gamesPlayed ? gamesPlayed : '--' }</Text>
+          </View>
+          <View style={styles.profileValueContainer}>
+            <Text style={styles.profileValueLabel}>{`Points: `}</Text>
+            <Text style={styles.profileValue}>{ pointsEarned ? pointsEarned : '--' }</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+
+
+  renderGameRoomState() {
+    return (
+      <View style={styles.roomContainer}>
+        {}
+      </View>
+    );
+  }
+
+
+
+  renderGameRoomEntry() {
+    const { room } = this.state;
+    return (
+      <View style={styles.roomContainer}>
+        <TextInput
+          keyboardType={'default'}
+          maxLength={23}
+          multiline={false}
+          onChangeText={this.handleRoomInput}
+          onSubmitEditing={this.handleRoomSubmit}
+          placeholder={'Game room'}
+          placeholderTextColor={colors.primary} 
+          returnKeyType='done'
+          style={styles.roomInput} 
+          textAlign={'center'}
+          underlineColorAndroid={colors.white}   
+          value={room}
+        />
+        <ButtonWide
+          label={'Enter game'}
+          onPress={() => {}}
+        />
+      </View>
+    );
+  }
+
+
+
+  renderButtons() {
+    return (
+      <View style={styles.buttonsContainer}>
+        <Touchable
+          activeOpacity={.8}
+          onPress={() => {}}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Top 10</Text>
+        </Touchable>
+        <Touchable
+          activeOpacity={.8}
+          onPress={() => {}}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Invite Friends</Text>
+        </Touchable>
+      </View>
+    );
   }
 
 
@@ -24,10 +159,26 @@ export default class Dashboard extends React.Component {
 
     } = this.state;
 
+    const { gameRoom } = this.props.screenProps;
+
     return (
-      <View style={styles.container}>
+      <ScrollView
+        keyboardShouldPersistTaps={'never'}
+        contentContainerStyle={styles.container}
+      >
         <HeaderSimple />
-      </View>
+        { this.renderProfileView() }
+        { gameRoom ? this.renderGameRoomState() : this.renderGameRoomEntry() }
+        { this.renderButtons() }
+      </ScrollView>
     );
   }
 }
+
+Dashboard.propTypes = {
+  screenProps: PropTypes.object.isRequired,
+};
+
+Dashboard.defaultProps = {
+  screenProps: {},
+};
