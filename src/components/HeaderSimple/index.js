@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: colors.dark,
+    backgroundColor: colors.black,
     flexDirection: 'row',
-    height: 50,
+    height: 45,
     justifyContent: 'center',
   },
   logo: {
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: colors.white,
     borderWidth: .5,
-    borderRadius: 18,
-    height: 35,
+    borderRadius: 13,
+    height: 25,
     justifyContent: 'center',
     position: 'absolute',
     right: 15,
-    width: 35,
+    width: 25,
   },
   title: {
     color: colors.white,
