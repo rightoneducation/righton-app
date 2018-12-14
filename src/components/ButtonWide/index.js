@@ -56,6 +56,7 @@ ButtonWide.defaultProps = {
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: colors.primary,
     borderRadius: 100,
     bottom: 15,
