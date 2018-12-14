@@ -4,9 +4,10 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
-  View,
+  ScrollView,
   Text,
   TextInput,
+  View,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Auth } from 'aws-amplify';
@@ -37,6 +38,8 @@ class SignUp extends React.Component {
 
     this.baseState = this.state;
 
+    this.closeActvitiyModal = this.closeActvitiyModal.bind(this);
+
     this.handleEmailInput = this.handleEmailInput.bind(this);
     this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
 
@@ -65,7 +68,11 @@ class SignUp extends React.Component {
 
     debug.log('Attempting sign up w/ email & password:', email, password);
 
-    Auth.signUp(email, password, email, null)
+
+    const lowercaseEmail = email.toLowerCase();
+    const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
+
+    Auth.signUp(username, password, lowercaseEmail, null)
       .then(data => {
         userConfirmed = data.userConfirmed;
 
@@ -78,6 +85,9 @@ class SignUp extends React.Component {
       })
       .catch(err => {
         debug.warn('Sign up error:', JSON.stringify(err));
+        if (err.code.includes('UsernameExists')) {
+          // TODO Message telling username already exists
+        }
         this.setState({ errorMessage: err.message, showActivityIndicator: false, buttonActivity: false });
         return;
       });
@@ -86,8 +96,11 @@ class SignUp extends React.Component {
 
 
   async handleMFAValidate(code = '') {
+    const { email } = this.state;
+    const lowercaseEmail = email.toLowerCase();
+    const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
     try {
-      await Auth.confirmSignUp(this.state.email, code)
+      await Auth.confirmSignUp(username, code)
         .then(data => debug.log('sign up successful ->', JSON.stringify(data)));
     } catch (exception) {
       this.setState({ buttonActivity: false });
@@ -100,7 +113,7 @@ class SignUp extends React.Component {
 
 
   handleMFACancel() {
-    this.setState({ buttonActivity: false, showMFAPrompt: false })
+    this.setState({ buttonActivity: false, showMFAPrompt: false, showActivityIndicator: false });
   }
 
 
@@ -171,6 +184,12 @@ class SignUp extends React.Component {
 
 
 
+  closeActvitiyModal() {
+    this.setState({ showActivityIndicator: false });
+  }
+
+
+
   render() {
     const { 
       email,
@@ -181,10 +200,13 @@ class SignUp extends React.Component {
     } = this.state;
 
     return (
-      <View style={styles.container}>
+      <ScrollView 
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps={'never'}
+      >
         <Modal
           visible={showActivityIndicator}
-          onRequestClose={() => null}
+          onRequestClose={this.closeActvitiyModal}
         >
           <ActivityIndicator
             style={styles.activityIndicator}
@@ -265,7 +287,7 @@ class SignUp extends React.Component {
             onSuccess={this.handleMFASuccess}
           />
         }
-      </View>
+      </ScrollView>
     );
   }
 }
