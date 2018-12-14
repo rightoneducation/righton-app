@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   Modal,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -59,8 +60,11 @@ class SignIn extends React.Component {
 
     this.setState({ buttonActivity: true });
 
+    const lowercaseEmail = email.toLowerCase();
+    const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
+
     try {
-      session = await auth.signIn(email, password)
+      session = await auth.signIn(username, password)
         .then((data) => {
           debug.log('We get the Cognito User', JSON.stringify(data));
           this.setState({ cognitoUser: data });
@@ -68,6 +72,13 @@ class SignIn extends React.Component {
         });
     } catch (exception) {
       debug.warn('Error caught in Teacher LogIn:', JSON.stringify(exception));
+      // TODO Message telling username already exists
+      if (exception.code = "UserNotConfirmedException") {
+
+      }
+      if (exception.code = "UserNotFoundException") {
+
+      }
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
     }
 
@@ -133,7 +144,10 @@ class SignIn extends React.Component {
     } = this.state;
 
     return (
-      <View style={styles.container}>
+      <ScrollView 
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps={'never'}
+      >
         <Modal
           visible={showActivityIndicator}
           onRequestClose={() => null}
@@ -189,11 +203,23 @@ class SignIn extends React.Component {
             onPress={this.doLogin}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 
 }
+
+SignIn.propTypes = {
+  screenProps: PropTypes.object.isRequired,
+  onLogIn: PropTypes.func.isRequired,
+  otherProps: PropTypes.object.isRequired,
+};
+
+SignIn.defaultProps = {
+  screenProps: {},
+  onLogIn: () => {},
+  otherProps: {},
+};
 
 const SignInStack = (StackNavigator({
   SignIn: {
