@@ -5,6 +5,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Portal from '../Portal';
 import debug from '../../utils/debug';
 import { colors } from '../../utils/theme';
 
@@ -40,17 +41,18 @@ class Splash extends React.Component {
       debug.log('Rejected session from Splash:', exception);
     }
 
-    const loggedIn = session && session.isValid();
+    // debug.log(JSON.stringify(session));
+    const loggedIn = Object.keys(session).length > 0 && session.isValid();
 
     this.setState({ isLoading: false });
 
-    if (__DEV__) {
-      this._navigateTo('OnboardApp');
-      return;
-    }
+    // if (__DEV__) {
+    //   this._navigateTo('OnboardApp');
+    //   return;
+    // }
 
     // TODO Check whether app is signed up for Teacher or Student and route accordingly
-    this._navigateTo(loggedIn ? 'OnboardApp' : 'OnboardApp');
+    this._navigateTo(loggedIn ? 'TeacherApp' : 'OnboardApp');
   }
 
 
@@ -64,9 +66,10 @@ class Splash extends React.Component {
   render() {
     return (
       this.state.isLoading &&
-      <View style={styles.container}>
-        <Text style={styles.logo}>Right On!</Text>
-      </View>
+      <Portal
+        messageType={'single'}
+        messageValues={{message: 'RightOn!'}}
+      />
     );
   }
 }
