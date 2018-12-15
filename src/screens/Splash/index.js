@@ -46,10 +46,10 @@ class Splash extends React.Component {
 
     this.setState({ isLoading: false });
 
-    // if (__DEV__) {
-    //   this._navigateTo('OnboardApp');
-    //   return;
-    // }
+    if (__DEV__) {
+      this._navigateTo('OnboardApp');
+      return;
+    }
 
     // TODO Check whether app is signed up for Teacher or Student and route accordingly
     this._navigateTo(loggedIn ? 'TeacherApp' : 'OnboardApp');
