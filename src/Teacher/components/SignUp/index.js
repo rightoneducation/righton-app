@@ -40,10 +40,13 @@ class SignUp extends React.Component {
     this.baseState = this.state;
 
     this.closeActvitiyModal = this.closeActvitiyModal.bind(this);
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
 
+    this.handleEmailBlur = this.handleEmailBlur.bind(this);
     this.handleEmailInput = this.handleEmailInput.bind(this);
     this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
 
+    this.handlePasswordBlur = this.handlePasswordBlur.bind(this);
     this.handlePasswordInput = this.handlePasswordInput.bind(this);
     this.handlePasswordRef = this.handlePasswordRef.bind(this);
     this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
@@ -62,6 +65,11 @@ class SignUp extends React.Component {
 
 
   async handleSignUp() {
+    const allReqsPass = this.checkRequirements();
+    if (!allReqsPass) return;
+
+    Keyboard.dismiss();
+
     const { password, email } = this.state;
     let userConfirmed = true;
 
@@ -91,7 +99,7 @@ class SignUp extends React.Component {
           buttonActivity: false,
           showActivityIndicator: false,
           messageProps: {
-            closeFunc: () => this.setState({ messageProps: {} }).bind(this),
+            closeFunc: this.handleCloseMessage,
             bodyStyle: null,
             textStyle: null,
             duration: null,
@@ -101,6 +109,26 @@ class SignUp extends React.Component {
         });
         return;
       });
+  }
+
+
+
+  checkRequirements() {
+    const { email, password, retypePassword } = this.state;
+    if (!email.includes('@') && !email.includes('.')) {
+      
+      return false;
+    }
+    if (password.length < 8 || !/[0-9]/.test(password)) {
+
+      return false;
+    }
+
+    if (password !== retypePassword) {
+
+      return false;
+    }
+    return true;
   }
 
 
@@ -118,7 +146,7 @@ class SignUp extends React.Component {
         buttonActivity: false,
         showActivityIndicator: false,
         messageProps: {
-          closeFunc: () => this.setState({ messageProps: {} }).bind(this),
+          closeFunc: this.handleCloseMessage,
           bodyStyle: null,
           textStyle: null,
           duration: null,
@@ -143,7 +171,7 @@ class SignUp extends React.Component {
     this.setState({
       showMFAPrompt: false,
       messageProps: {
-        closeFunc: () => this.setState({ messageProps: {} }).bind(this),
+        closeFunc: () => this.handleCloseMessage,
         bodyStyle: null,
         textStyle: null,
         duration: null,
@@ -169,9 +197,35 @@ class SignUp extends React.Component {
 
 
 
+  handleEmailBlur() {
+    this.handleEmailSubmit();
+  }
+
+
+
   handleEmailSubmit() {
+    const { email } = this.state;
+    if (!email.includes('@') && !email.includes('.')) {
+      this.setState({
+        messageProps: {
+          closeFunc: () => this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Enter valid email address',
+          timeout: null,
+        },
+      });
+      return;
+    }
+
     this.passwordRef.focus();
-    Keyboard.dismiss();
+  }
+
+
+
+  handlePasswordBlur() {
+    this.handlePasswordSubmit();
   }
 
 
@@ -189,6 +243,30 @@ class SignUp extends React.Component {
 
 
   handlePasswordSubmit() {
+    const { password } = this.state;
+    if (!/[0-9]/.test(password)) {
+      this.setState({
+        messageProps: {
+          closeFunc: () => this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Password must contain at least 1 number',
+          timeout: null,
+        },
+      });
+    } else if (password.length < 8) {
+      this.setState({
+        messageProps: {
+          closeFunc: () => this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Password must be 8 characters minimum',
+          timeout: null,
+        },
+      });
+    }
     this.retypePasswordRef.focus();
   }
 
@@ -207,14 +285,32 @@ class SignUp extends React.Component {
 
 
   handleRetypePasswordSubmit() {
-    // TODO Check that passwords match
-    Keyboard.dismiss();
+    const { password, retypePassword } = this.state;
+    if (password !== retypePassword) {
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Passwords do not match',
+          timeout: 4000,
+        },
+      });
+      return;
+    }
   }
 
 
 
   closeActvitiyModal() {
     this.setState({ showActivityIndicator: false });
+  }
+
+
+
+  handleCloseMessage() {
+    this.setState({ messageProps: null });
   }
 
 
@@ -254,6 +350,7 @@ class SignUp extends React.Component {
               keyboardType={'email-address'}
               maxLength={100}
               multiline={false}
+              onBlur={this.handleEmailBlur}
               onChangeText={this.handleEmailInput}
               onSubmitEditing={this.handleEmailSubmit}
               placeholder={'Email address'}
@@ -271,6 +368,7 @@ class SignUp extends React.Component {
               keyboardType={'default'}
               maxLength={100}
               multiline={false}
+              onBlur={this.handleEmailBlur}
               onChangeText={this.handlePasswordInput}
               onSubmitEditing={this.handlePasswordSubmit}
               placeholder={'Password'}
