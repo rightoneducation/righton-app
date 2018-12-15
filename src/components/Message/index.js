@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../config/styles';
 
@@ -29,7 +30,7 @@ export default class Message extends React.PureComponent {
       <Animated.View style={[{ opacity: this.opacity }, styles.container, bodyStyle]}>
         <Touchable
           activeOpacity={.8}
-          background={Touchable.Ripple(colors.black, false)}
+          background={Touchable.Ripple(colors.dark, false)}
           hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
           onPress={this.handleTouchClose}
         >
@@ -70,6 +71,24 @@ export default class Message extends React.PureComponent {
     });
   }
 }
+
+Message.propTypes = {
+  closeFunc: PropTypes.func.isRequired,
+  bodyStyle: PropTypes.object,
+  textStyle: PropTypes.object,
+  duration: PropTypes.number,
+  message: PropTypes.string.isRequired,
+  timeout: PropTypes.number,
+};
+
+Message.defaultProps = {
+  closeFunc: () => {},
+  bodyStyle: {},
+  textStyle: {},
+  duration: 0,
+  message: '',
+  timeout: 0,
+};
 
 const styles = StyleSheet.create({
   container: {
