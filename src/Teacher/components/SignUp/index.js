@@ -4,7 +4,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
-  ScrollView,
   Text,
   TextInput,
   View,
@@ -31,7 +30,7 @@ class SignUp extends React.Component {
       email: '',
       messageProps: null,
       password: '',
-      passwordPassed: null,
+      passwordFocused: false,
       retypePassword: '',
       showActivityIndicator: false,
       showMFAPrompt: false,
@@ -51,6 +50,8 @@ class SignUp extends React.Component {
     this.handlePasswordRef = this.handlePasswordRef.bind(this);
     this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
 
+    this.handleRetypePasswordBlur = this.handleRetypePasswordBlur.bind(this);
+    this.handleRetypePasswordFocus = this.handleRetypePasswordFocus.bind(this);
     this.handleRetypePasswordInput = this.handleRetypePasswordInput.bind(this);
     this.handleRetypePasswordRef = this.handleRetypePasswordRef.bind(this);
     this.handleRetypePasswordSubmit = this.handleRetypePasswordSubmit.bind(this);
@@ -116,16 +117,16 @@ class SignUp extends React.Component {
   checkRequirements() {
     const { email, password, retypePassword } = this.state;
     if (!email.includes('@') && !email.includes('.')) {
-      
+      this.handleEmailSubmit();
       return false;
     }
     if (password.length < 8 || !/[0-9]/.test(password)) {
-
+      this.handlePasswordSubmit();
       return false;
     }
 
     if (password !== retypePassword) {
-
+      this.handleRetypePasswordSubmit();
       return false;
     }
     return true;
@@ -171,11 +172,11 @@ class SignUp extends React.Component {
     this.setState({
       showMFAPrompt: false,
       messageProps: {
-        closeFunc: () => this.handleCloseMessage,
+        closeFunc: this.handleCloseMessage,
         bodyStyle: null,
         textStyle: null,
         duration: null,
-        message: 'Sign up successful',
+        message: 'Sign up successful!',
         timeout: null,
       },
     }, () => this.onSignUp());
@@ -208,7 +209,7 @@ class SignUp extends React.Component {
     if (!email.includes('@') && !email.includes('.')) {
       this.setState({
         messageProps: {
-          closeFunc: () => this.handleCloseMessage,
+          closeFunc: this.handleCloseMessage,
           bodyStyle: null,
           textStyle: null,
           duration: null,
@@ -225,7 +226,14 @@ class SignUp extends React.Component {
 
 
   handlePasswordBlur() {
+    this.setState({ passwordFocused: false });
     this.handlePasswordSubmit();
+  }
+
+
+
+  handlePasswordFocus() {
+    this.setState({ passwordFocused: true });
   }
 
 
@@ -247,7 +255,7 @@ class SignUp extends React.Component {
     if (!/[0-9]/.test(password)) {
       this.setState({
         messageProps: {
-          closeFunc: () => this.handleCloseMessage,
+          closeFunc: this.handleCloseMessage,
           bodyStyle: null,
           textStyle: null,
           duration: null,
@@ -258,7 +266,7 @@ class SignUp extends React.Component {
     } else if (password.length < 8) {
       this.setState({
         messageProps: {
-          closeFunc: () => this.handleCloseMessage,
+          closeFunc: this.handleCloseMessage,
           bodyStyle: null,
           textStyle: null,
           duration: null,
@@ -268,6 +276,12 @@ class SignUp extends React.Component {
       });
     }
     this.retypePasswordRef.focus();
+  }
+
+
+
+  handleRetypePasswFocus() {
+    this.handleRetypePasswordSubmit();
   }
 
 
@@ -320,16 +334,14 @@ class SignUp extends React.Component {
       email,
       messageProps,
       password,
+      passwordFocused,
       retypePassword,
       showActivityIndicator,
       showMFAPrompt,
     } = this.state;
 
     return (
-      <ScrollView 
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps={'never'}
-      >
+      <View style={styles.container}>
         <Modal
           visible={showActivityIndicator}
           onRequestClose={this.closeActvitiyModal}
@@ -380,6 +392,13 @@ class SignUp extends React.Component {
               underlineColorAndroid={colors.dark}   
               value={password}
             />
+            {
+              passwordFocused &&
+              <View>
+                <Text style={styles.req}>Must be 8 characters minimum</Text>
+                <Text style={styles.req}>Must contain 1 number</Text>
+              </View>
+            }
           </View>
           <KeyboardAvoidingView
             behavior={'padding'}
@@ -390,6 +409,7 @@ class SignUp extends React.Component {
               keyboardType={'default'}
               maxLength={100}
               multiline={false}
+              onBlur={this.handleRetypePasswordBlur}
               onChangeText={this.handleRetypePasswordInput}
               onSubmitEditing={this.handleRetypePasswordSubmit}
               placeholder={'Retype password'}
@@ -416,7 +436,7 @@ class SignUp extends React.Component {
           />
         }
         { messageProps && <Message { ...messageProps } /> }
-      </ScrollView>
+      </View>
     );
   }
 }
