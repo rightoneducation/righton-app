@@ -9,14 +9,15 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 import { Auth } from 'aws-amplify';
+import { StackNavigator } from 'react-navigation';
 import MFAPrompt from '../../../../lib/Categories/Auth/Components/MFAPrompt';
+import ButtonRound from '../../../components/ButtonRound';
+import Message from '../../../components/Message';
 import Constants from '../../../utils/constants';
+import debug from '../../../utils/debug';
 import { colors } from '../../../utils/theme';
 import styles from '../SignIn/styles';
-import ButtonRound from '../../../components/ButtonRound';
-import debug from '../../../utils/debug';
 
 class SignUp extends React.Component {
   static navigationOptions = {
@@ -28,7 +29,7 @@ class SignUp extends React.Component {
     this.state = {
       buttonActivity: false,
       email: '',
-      errorMessage: '',
+      messageProps: null,
       password: '',
       passwordPassed: null,
       retypePassword: '',
@@ -83,12 +84,21 @@ class SignUp extends React.Component {
           this.onSignUp();
         }
       })
-      .catch(err => {
-        debug.warn('Sign up error:', JSON.stringify(err));
-        if (err.code.includes('UsernameExists')) {
-          // TODO Message telling username already exists
-        }
-        this.setState({ errorMessage: err.message, showActivityIndicator: false, buttonActivity: false });
+      .catch(exception => {
+        const errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
+        debug.warn('Sign up exception:', JSON.stringify(exception));
+        this.setState({
+          buttonActivity: false,
+          showActivityIndicator: false,
+          messageProps: {
+            closeFunc: () => this.setState({ messageProps: {} }).bind(this),
+            bodyStyle: null,
+            textStyle: null,
+            duration: null,
+            message: errorMessage,
+            timeout: null,
+          },
+        });
         return;
       });
   }
@@ -103,10 +113,21 @@ class SignUp extends React.Component {
       await Auth.confirmSignUp(username, code)
         .then(data => debug.log('sign up successful ->', JSON.stringify(data)));
     } catch (exception) {
-      this.setState({ buttonActivity: false });
+      const errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
+      this.setState({
+        buttonActivity: false,
+        showActivityIndicator: false,
+        messageProps: {
+          closeFunc: () => this.setState({ messageProps: {} }).bind(this),
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: errorMessage,
+          timeout: 4000,
+        },
+      });
       return exception.message || exception;
     }
-
     return true;
   }
 
@@ -119,9 +140,17 @@ class SignUp extends React.Component {
 
 
   handleMFASuccess() {
-    this.setState({ showMFAPrompt: false });
-
-    this.onSignUp();
+    this.setState({
+      showMFAPrompt: false,
+      messageProps: {
+        closeFunc: () => this.setState({ messageProps: {} }).bind(this),
+        bodyStyle: null,
+        textStyle: null,
+        duration: null,
+        message: 'Sign up successful',
+        timeout: null,
+      },
+    }, () => this.onSignUp());
   }
 
 
@@ -193,6 +222,7 @@ class SignUp extends React.Component {
   render() {
     const { 
       email,
+      messageProps,
       password,
       retypePassword,
       showActivityIndicator,
@@ -287,6 +317,7 @@ class SignUp extends React.Component {
             onSuccess={this.handleMFASuccess}
           />
         }
+        { messageProps && <Message { ...messageProps } /> }
       </ScrollView>
     );
   }

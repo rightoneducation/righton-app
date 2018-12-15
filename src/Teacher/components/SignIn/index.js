@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { StackNavigator } from 'react-navigation';
+import Message from '../../../components/Message';
 import ButtonRound from '../../../components/ButtonRound';
 import { colors } from '../../../utils/theme';
 import styles from './styles';
@@ -21,11 +22,11 @@ class SignIn extends React.Component {
 
     this.state = {
       buttonActivity: false,
-      showActivityIndicator: false,
-      email: '',
-      password: '',
-      errorMessage: '',
       cognitoUser: '',
+      email: '',
+      messageProps: null,
+      password: '',
+      showActivityIndicator: false,
     };
 
     this.baseState = this.state;
@@ -81,12 +82,18 @@ class SignIn extends React.Component {
       }
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
     }
-
     this.setState({
       buttonActivity: false,
-      errorMessage,
       session,
       showActivityIndicator: false,
+      messageProps: {
+        closeFunc: () => this.setState({ messageProps: null }).bind(this),
+        bodyStyle: null,
+        textStyle: null,
+        duration: null,
+        message: errorMessage,
+        timeout: 4000,
+      },
     }, () => {
       if (session) {
         this.onLogIn();
@@ -138,9 +145,10 @@ class SignIn extends React.Component {
   render() {
     const {
       buttonActivity,
+      email,
+      messageProps,
       password,
       showActivityIndicator,
-      email,
     } = this.state;
 
     return (
@@ -203,6 +211,9 @@ class SignIn extends React.Component {
             onPress={this.doLogin}
           />
         </View>
+
+        { messageProps && <Message { ...messageProps } /> }
+
       </ScrollView>
     );
   }
