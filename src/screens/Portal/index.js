@@ -209,7 +209,7 @@ class Portal extends PureComponent {
         <Circle styles={{height: circleFour, width: circleFour, backgroundColor: circleFourBackground, borderWidth: 1, opacity: .5}}/>
         <Circle styles={{height: circleFive, width: circleFive}}/>
         <Circle styles={{height: circleSix, width: circleSix, borderWidth: 1}}/>
-        <Circle styles={{height: circleSeven, width: circleSeven}}/>
+        <Circle styles={{height: circleSeven, width: circleSeven, backgroundColor: colors.white}}/>
         <Circle styles={{height: circleEight, width: circleEight}}/>
         <Circle styles={{height: circleNine, width: circleNine}}/>
         <Circle styles={{height: circleTen, width: circleTen}}/>
@@ -226,14 +226,15 @@ class Portal extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#d3d3d3',
+    backgroundColor: colors.white,
     flex: 1,
     justifyContent: 'center',
   },
   mainMessage: {
-    color: colors.white,
+    color: colors.primary,
     fontSize: fonts.medium,
     fontStyle: 'italic',
+    zIndex: 10,
   },
 });
 
