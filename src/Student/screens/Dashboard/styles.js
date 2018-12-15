@@ -63,6 +63,11 @@ export default StyleSheet.create({
     marginBottom: 10,
     marginTop: 25,
   },
+  roomInput: {
+    color: colors.primary,
+    fontSize: fonts.medium,
+    fontWeight: 'bold',
+  },
   title: {
     color: colors.white,
     fontSize: fonts.large,

@@ -96,7 +96,7 @@ export default class Dashboard extends React.Component {
   renderGameRoomState() {
     return (
       <View style={styles.roomContainer}>
-        {}
+        { /* TODO */ }
       </View>
     );
   }
@@ -106,7 +106,7 @@ export default class Dashboard extends React.Component {
   renderGameRoomEntry() {
     const { room } = this.state;
     return (
-      <View style={styles.roomContainer}>
+      <View style={[styles.roomContainer, { justifyContent: 'center' }]}>
         <TextInput
           keyboardType={'default'}
           maxLength={23}
@@ -118,12 +118,12 @@ export default class Dashboard extends React.Component {
           returnKeyType='done'
           style={styles.roomInput} 
           textAlign={'center'}
-          underlineColorAndroid={colors.white}   
+          underlineColorAndroid={ room ? colors.white : colors.dark }   
           value={room}
         />
         <ButtonWide
           label={'Enter game'}
-          onPress={() => {}}
+          onPress={() => { /* TODO */ }}
         />
       </View>
     );
@@ -136,14 +136,14 @@ export default class Dashboard extends React.Component {
       <View style={styles.buttonsContainer}>
         <Touchable
           activeOpacity={.8}
-          onPress={() => {}}
+          onPress={() => { /* TODO */ }}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Top 10</Text>
         </Touchable>
         <Touchable
           activeOpacity={.8}
-          onPress={() => {}}
+          onPress={() => { /* TODO */ }}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Invite Friends</Text>
