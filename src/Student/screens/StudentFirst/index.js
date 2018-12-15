@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
 import Age from '../../components/Age';
-import GameRoom from '../StudentFirstGameRoom';
+import GameRoom from './StudentFirstGameRoom';
 
 
 const StudentFirst = StackNavigator({
