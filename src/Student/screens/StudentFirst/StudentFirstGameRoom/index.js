@@ -7,10 +7,10 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
-import ButtonBack from '../../../components/ButtonBack';
-import ButtonWide from '../../../components/ButtonWide';
-import { colors, fonts } from '../../../utils/theme';
-import styles from '../Age/styles';
+import ButtonBack from '../../../../components/ButtonBack';
+import ButtonWide from '../../../../components/ButtonWide';
+import { colors, fonts } from '../../../../utils/theme';
+import styles from '../../../components/Age/styles';
 
 
 class GameRoom extends React.Component {
