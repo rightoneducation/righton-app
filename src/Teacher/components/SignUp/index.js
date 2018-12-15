@@ -51,7 +51,6 @@ class SignUp extends React.Component {
     this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
 
     this.handleRetypePasswordBlur = this.handleRetypePasswordBlur.bind(this);
-    this.handleRetypePasswordFocus = this.handleRetypePasswordFocus.bind(this);
     this.handleRetypePasswordInput = this.handleRetypePasswordInput.bind(this);
     this.handleRetypePasswordRef = this.handleRetypePasswordRef.bind(this);
     this.handleRetypePasswordSubmit = this.handleRetypePasswordSubmit.bind(this);
@@ -66,8 +65,12 @@ class SignUp extends React.Component {
 
 
   async handleSignUp() {
+    this.setState({ buttonActivity: true });
     const allReqsPass = this.checkRequirements();
-    if (!allReqsPass) return;
+    if (!allReqsPass) {
+      this.setState({ buttonActivity: false });
+      return;
+    }
 
     Keyboard.dismiss();
 
@@ -213,7 +216,7 @@ class SignUp extends React.Component {
           bodyStyle: null,
           textStyle: null,
           duration: null,
-          message: 'Enter valid email address',
+          message: 'Enter valid email address.',
           timeout: null,
         },
       });
@@ -259,7 +262,7 @@ class SignUp extends React.Component {
           bodyStyle: null,
           textStyle: null,
           duration: null,
-          message: 'Password must contain at least 1 number',
+          message: 'Password must contain at least 1 number.',
           timeout: null,
         },
       });
@@ -270,7 +273,7 @@ class SignUp extends React.Component {
           bodyStyle: null,
           textStyle: null,
           duration: null,
-          message: 'Password must be 8 characters minimum',
+          message: 'Password must be 8 characters minimum.',
           timeout: null,
         },
       });
@@ -280,7 +283,7 @@ class SignUp extends React.Component {
 
 
 
-  handleRetypePasswFocus() {
+  handleRetypePasswordBlur() {
     this.handleRetypePasswordSubmit();
   }
 
@@ -307,7 +310,7 @@ class SignUp extends React.Component {
           bodyStyle: null,
           textStyle: null,
           duration: null,
-          message: 'Passwords do not match',
+          message: 'Passwords do not match.',
           timeout: 4000,
         },
       });
@@ -330,7 +333,8 @@ class SignUp extends React.Component {
 
 
   render() {
-    const { 
+    const {
+      buttonActivity,
       email,
       messageProps,
       password,
@@ -423,6 +427,7 @@ class SignUp extends React.Component {
             />
           </KeyboardAvoidingView>
           <ButtonRound
+            activity={buttonActivity}
             icon={'arrow-right'}
             onPress={this.handleSignUp}
           />
