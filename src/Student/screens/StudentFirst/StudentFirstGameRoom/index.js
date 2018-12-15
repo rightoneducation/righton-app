@@ -35,6 +35,7 @@ class GameRoom extends React.Component {
 
   handleRoomSubmit() {
     // TODO Handle entering game in DynamoDB
+    // Hydrate Dashboard w/ game details
     this.props.screenProps.rootNavigator.navigate('StudentApp');
   }
 
