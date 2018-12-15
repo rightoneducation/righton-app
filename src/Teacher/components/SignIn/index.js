@@ -56,12 +56,18 @@ class SignIn extends React.Component {
 
 
   async doLogin() {
+
+    this.setState({ buttonActivity: true });
+    const allReqsPass = this.checkRequirements();
+    if (!allReqsPass) {
+      this.setState({ buttonActivity: false });
+      return;
+    }
+
     const { auth } = this.props;
     const { email, password } = this.state;
     let errorMessage = '';
     let session = null;
-
-    this.setState({ buttonActivity: true });
 
     const lowercaseEmail = email.toLowerCase();
     const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
@@ -82,7 +88,12 @@ class SignIn extends React.Component {
       if (exception.code = "UserNotFoundException") {
 
       }
+
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
+
+      if (exception === 'Username cannot be empty') {
+        errorMessage = 'Email must be provided.';
+      }
     }
     this.setState({
       buttonActivity: false,
@@ -102,6 +113,42 @@ class SignIn extends React.Component {
       }
     });
   }
+
+
+
+  checkRequirements() {
+    const { email, password } = this.state;
+
+    if (!email.includes('@') && !email.includes('.')) {
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Enter valid email address.',
+          timeout: null,
+        },
+      });
+      return false;
+    }
+    if (password.length < 8 || !/[0-9]/.test(password)) {
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Password is incorrect. Please retype.',
+          timeout: null,
+        },
+      });
+      return false;
+    }
+
+    return true;
+  }
+
 
 
 
