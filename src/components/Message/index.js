@@ -6,9 +6,9 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
-import { colors, fonts } from '../../config/styles';
+import { colors, fonts } from '../../utils/theme';
 
-export default class Message extends React.PureComponent {
+export default class Message extends React.Component {
   constructor() { 
     super();
     this.opacity = new Animated.Value(0);
