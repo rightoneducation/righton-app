@@ -55,6 +55,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   roomContainer: {
+    alignItems: 'center',
     alignSelf: 'stretch',
     backgroundColor: colors.white,
     borderRadius: 10,

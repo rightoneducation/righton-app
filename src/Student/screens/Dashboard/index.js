@@ -70,11 +70,11 @@ export default class Dashboard extends React.Component {
           onChangeText={this.handleNameInput}
           onSubmitEditing={this.handleNameSubmit}
           placeholder={'Team Name'}
-          placeholderTextColor={colors.primary} 
+          placeholderTextColor={colors.primary}
           returnKeyType='done'
-          style={styles.input} 
+          style={styles.input}
           textAlign={'center'}
-          underlineColorAndroid={name ? colors.white : colors.dark}   
+          underlineColorAndroid={ name ? colors.white : colors.dark }
           value={name}
         />
         <View style={styles.profileValuesContainer}>
@@ -109,16 +109,16 @@ export default class Dashboard extends React.Component {
       <View style={[styles.roomContainer, { justifyContent: 'center' }]}>
         <TextInput
           keyboardType={'default'}
-          maxLength={23}
+          maxLength={89}
           multiline={false}
           onChangeText={this.handleRoomInput}
           onSubmitEditing={this.handleRoomSubmit}
           placeholder={'Game room'}
-          placeholderTextColor={colors.primary} 
+          placeholderTextColor={colors.primary}
           returnKeyType='done'
-          style={styles.roomInput} 
+          style={styles.roomInput}
           textAlign={'center'}
-          underlineColorAndroid={ room ? colors.white : colors.dark }   
+          underlineColorAndroid={ room ? colors.white : colors.dark }
           value={room}
         />
         <ButtonWide
