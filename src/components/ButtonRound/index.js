@@ -5,7 +5,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors } from '../../utils/theme';
 
-export default class ButtonRound extends React.Component {
+export default class ButtonRound extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ export default class ButtonRound extends React.Component {
     Animated.timing(
       this.animatedRotation, {
       toValue: 1,
-      duration: 250,
+      duration: 300,
       easing: Easing.linear
     }).start(() => {
       this.setState({ activity: true }, () => {
@@ -54,7 +54,7 @@ export default class ButtonRound extends React.Component {
 
     const spin = this.animatedRotation.interpolate({
       inputRange: [0, 1],
-      outputRange: ['0deg', '420deg']
+      outputRange: ['0deg', '360deg']
     });
 
     return (
@@ -101,10 +101,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 25,
     bottom: 15,
+    elevation: 2,
     height: 45,
     justifyContent: 'center',
     position: 'absolute',
     right: 15,
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    shadowColor: colors.dark,
+    shadowOffset: { height: 1, width: 0 },
     width: 45,
     zIndex: 10,
   },
