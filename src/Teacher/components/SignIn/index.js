@@ -31,6 +31,8 @@ class SignIn extends React.Component {
 
     this.baseState = this.state;
 
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
+
     this.handleEmailInput = this.handleEmailInput.bind(this);
     this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
 
@@ -87,7 +89,7 @@ class SignIn extends React.Component {
       session,
       showActivityIndicator: false,
       messageProps: {
-        closeFunc: () => this.setState({ messageProps: null }).bind(this),
+        closeFunc: this.handleCloseMessage,
         bodyStyle: null,
         textStyle: null,
         duration: null,
@@ -138,6 +140,12 @@ class SignIn extends React.Component {
 
   handlePasswordSubmit() {
     Keyboard.dismiss();
+  }
+
+
+
+  handleCloseMessage() {
+    this.setState({ messageProps: null });
   }
 
 
