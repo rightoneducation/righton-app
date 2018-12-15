@@ -42,6 +42,10 @@ export default StyleSheet.create({
   italic: {
     fontStyle: 'italic',
   },
+  req: {
+    color: colors.white,
+    fontSize: fonts.small,
+  },
   title: {
     color: colors.white,
     fontSize: fonts.large,
