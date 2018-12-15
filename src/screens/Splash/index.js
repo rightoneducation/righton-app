@@ -36,13 +36,13 @@ class Splash extends React.Component {
         }
 
         resolve();
-      }, __DEV__ ? 100 : 2000));
+      }, __DEV__ ? 1500 : 2000));
     } catch (exception) {
       debug.log('Rejected session from Splash:', exception);
     }
 
     // debug.log(JSON.stringify(session));
-    const loggedIn = Object.keys(session).length > 0 && session.isValid();
+    const loggedIn = session && session.isValid && session.isValid();
 
     this.setState({ isLoading: false });
 
