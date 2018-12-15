@@ -1,6 +1,7 @@
 global.Buffer = global.Buffer || require('buffer').Buffer; // Required for aws sigv4 signing
 
 import React from 'react';
+import { YellowBox } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 import { WithAuth } from './lib/Categories/Auth/Components';
@@ -13,7 +14,16 @@ import StudentApp from './src/Student';
 import TeacherApp from './src/Teacher';
 
 
+YellowBox.ignoreWarnings([]);
+YellowBox.ignoreWarnings(
+  [
+    "Module RNFetchBlob requires main queue setup", 
+  ]
+);
+
+
 Amplify.configure(awsmobile);
+
 
 const App = StackNavigator({
   Splash: {
