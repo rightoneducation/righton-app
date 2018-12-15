@@ -13,11 +13,14 @@ export default class Age extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.ageRef;
+
     this.state = {
       age: '',
     };
 
     this.handleAgeInput = this.handleAgeInput.bind(this);
+    this.handleAgeRef = this.handleAgeRef.bind(this);
     this.handleAgeSubmit = this.handleAgeSubmit.bind(this);
   }
 
@@ -30,11 +33,23 @@ export default class Age extends React.PureComponent {
 
 
 
+  handleAgeRef(ref) {
+    this.ageRef = ref;
+  }
+
+
+
   handleAgeSubmit() {
     if (parseInt(this.state.age) < 13) {
       // TODO Treat user specially
     } 
     this.props.studentFirstNavigator.navigate('GameRoom');
+  }
+
+
+
+  componentDidMount() {
+    setTimeout(() => this.ageRef.focus(), 0);
   }
 
 
@@ -60,7 +75,8 @@ export default class Age extends React.PureComponent {
           onChangeText={this.handleAgeInput}
           onSubmitEditing={this.handleAgeSubmit}
           placeholder={'##'}
-          placeholderTextColor={colors.primary} 
+          placeholderTextColor={colors.primary}
+          ref={this.handleAgeRef}
           returnKeyType='done'
           style={styles.input} 
           textAlign={'center'}
