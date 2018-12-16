@@ -30,6 +30,7 @@ export default StyleSheet.create({
     fontFamily: 'lato',
     fontSize: fonts.medium,
     paddingLeft: 10,
+    paddingVertical: 15,
     width: deviceWidth - 75,
   },
   inputLabel: {
