@@ -163,7 +163,7 @@ export default class Dashboard extends React.Component {
 }
 
 Dashboard.propTypes = {
-  screenProps: PropTypes.objectOf,
+  screenProps: PropTypes.shape({ type: PropTypes.any }),
 };
 
 Dashboard.defaultProps = {

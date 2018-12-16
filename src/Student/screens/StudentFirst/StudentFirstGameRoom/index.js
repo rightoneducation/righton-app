@@ -84,7 +84,7 @@ class GameRoom extends React.Component {
 }
 
 GameRoom.propTypes = {
-  screenProps: PropTypes.objectOf,
+  screenProps: PropTypes.shape({ type: PropTypes.any }),
 };
 
 GameRoom.defaultProps = {

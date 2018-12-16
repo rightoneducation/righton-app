@@ -12,8 +12,10 @@ import { colors } from '../../../utils/theme';
 
 export default class Age extends React.PureComponent {
   static propTypes = {
-    rootNavigator: PropTypes.objectOf.isRequired,
-    studentFirstNavigator: PropTypes.objectOf.isRequired,
+    rootNavigator: PropTypes.shape({ type: PropTypes.any }),
+    studentFirstNavigator: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
   }
 
   

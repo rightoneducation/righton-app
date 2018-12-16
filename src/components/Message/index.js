@@ -78,8 +78,8 @@ export default class Message extends React.Component {
 
 Message.propTypes = {
   closeFunc: PropTypes.func.isRequired,
-  bodyStyle: PropTypes.objectOf,
-  textStyle: PropTypes.objectOf,
+  bodyStyle: PropTypes.shape({ type: PropTypes.any }),
+  textStyle: PropTypes.shape({ type: PropTypes.any }),
   duration: PropTypes.number,
   message: PropTypes.string.isRequired,
   timeout: PropTypes.number,

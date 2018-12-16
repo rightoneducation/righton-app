@@ -9,6 +9,20 @@ import Touchable from 'react-native-platform-touchable';
 import { colors } from '../../utils/theme';
 
 export default class ButtonBack extends React.PureComponent {
+  static propTypes = {
+    buttonStyles: PropTypes.shape({ type: PropTypes.any }),
+    navigator: PropTypes.shape({
+      goBack: PropTypes.func,
+    }),
+    onPress: PropTypes.func,
+  }
+  
+  static defaultProps = {
+    buttonStyles: {},
+    navigator: {},
+    onPress: null,
+  }
+
   constructor(props) {
     super(props);
 
@@ -45,18 +59,6 @@ export default class ButtonBack extends React.PureComponent {
     );
   }
 }
-
-ButtonBack.propTypes = {
-  buttonStyles: PropTypes.objectOf,
-  navigator: PropTypes.objectOf,
-  onPress: PropTypes.func,
-};
-
-ButtonBack.defaultProps = {
-  buttonStyles: {},
-  navigator: {},
-  onPress: null,
-};
 
 
 const styles = StyleSheet.create({

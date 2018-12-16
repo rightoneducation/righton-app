@@ -14,7 +14,9 @@ import { colors, fonts } from '../../utils/theme';
 
 export default class OnboardIntroSlides extends React.PureComponent {
   static propTypes = {
-    rootNavigator: PropTypes.objectOf.isRequired,
+    rootNavigator: PropTypes.shape({
+      navigate: PropTypes.func
+    }),
   }
 
   static defaultProps = {
@@ -25,7 +27,7 @@ export default class OnboardIntroSlides extends React.PureComponent {
     super(props);
 
     this.swiper = undefined;
-
+    
     this.state = {
       startButton: true,
     };
