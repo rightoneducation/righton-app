@@ -64,7 +64,7 @@ const FirstScreen = TabNavigator({
 }, {
   tabBarPosition: 'bottom',
   tabBarOptions: {
-    tabStyle: { borderTopWidth: 0.5, borderTopColor: '#ededed' },
+    tabStyle: { backgroundColor: colors.primary, borderTopWidth: 0.5, borderTopColor: '#ededed' },
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
     activeTintColor: colors.white,
