@@ -16,6 +16,8 @@ module.exports = {
     "import/extensions": 0,
     "skipBlankLines": true,
     'comma-dangle': "off",
-    "react/prop-types": [<enabled/>, { ignore: <ignore/>, customValidators: <customValidator/> }]
+    "no-trailing-spaces": "off",
+    "react/prop-types": ["error", { "ignore": ["navigation", "screenProps"] }]
+    // "react/forbid-prop-types": [<disabled/>, { "forbid": [<string/>], checkContextTypes: <boolean/>, checkChildContextTypes: <boolean/> }]
   }
 };
