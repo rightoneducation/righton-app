@@ -13,14 +13,16 @@ const styles = StyleSheet.create({
 });
 
 
-const TabBarIcon = ({ tintColor }) => (
+const TabBarIcon = ({ label, tintColor }) => (
   <View style={styles.tabBarIconContainer}>
     <Aicon type={'font-awesome'} name="sign-in" style={styles.tabBarIcon} color={tintColor} />
-    {Platform.OS === 'ios' && <Text style={[styles.tabBarLabel, { color: tintColor }]}>SIGN IN</Text>}
+    {Platform.OS === 'ios' && <Text style={[styles.tabBarLabel, { color: tintColor }]}>{ label }</Text>}
   </View>
 );
 
 const FirstScreen = TabNavigator({
+
+
   SignIn: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
@@ -35,9 +37,11 @@ const FirstScreen = TabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign In',
-      tabBarIcon: <TabBarIcon tintColor={''} label={'SIGN IN'} />,
+      tabBarIcon: <TabBarIcon tintColor={colors.white} label={'SIGN IN'} />,
     },
   },
+
+
   SignUp: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
@@ -52,26 +56,32 @@ const FirstScreen = TabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign Up',
-      tabBarIcon: <TabBarIcon tintColor={''} label={'SIGN UP'} />
+      tabBarIcon: <TabBarIcon tintColor={colors.white} label={'SIGN UP'} />
     },
   },
+
+
 }, {
   tabBarPosition: 'bottom',
   tabBarOptions: {
     tabStyle: { borderTopWidth: 0.5, borderTopColor: '#ededed' },
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
-    activeTintColor: colors.primary,
+    activeTintColor: colors.white,
   },
 });
 
+
 TabBarIcon.propTypes = {
+  label: PropTypes.string,
   tintColor: PropTypes.string,
 };
 
 TabBarIcon.defaultProps = {
-  tintColor: '',
+  label: '',
+  tintColor: '#000',
 };
+
 
 export default (props) => {
   const { screenProps, ...otherProps } = props;
