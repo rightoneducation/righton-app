@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -9,7 +10,7 @@ import { colors, fonts } from '../../utils/theme';
 
 export default function HeaderSimple({ title }) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, Platform.OS === 'ios' ? styles.iosContainer : styles.androidContainer]}>
       <Text style={styles.title}>{ title }</Text>
       <View style={styles.logoContainer}>
         <Text style={styles.logo}>?</Text>
@@ -27,13 +28,19 @@ HeaderSimple.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  androidContainer: {
     alignItems: 'center',
+  },
+  container: {
     alignSelf: 'stretch',
     backgroundColor: colors.black,
     flexDirection: 'row',
-    height: 45,
     justifyContent: 'center',
+    height: 45,
+  },
+  iosContainer: {
+    alignItems: 'flex-end',
+    paddingBottom: 10,
   },
   logo: {
     color: colors.white,
