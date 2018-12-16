@@ -1,4 +1,6 @@
-global.Buffer = global.Buffer || require('buffer').Buffer; // Required for aws sigv4 signing
+import Buffer from 'buffer';
+
+global.Buffer = global.Buffer || Buffer.Buffer; // Required for aws sigv4 signing
 
 import React from 'react';
 import { YellowBox } from 'react-native';
@@ -17,7 +19,7 @@ import TeacherApp from './src/Teacher';
 YellowBox.ignoreWarnings([]);
 YellowBox.ignoreWarnings(
   [
-    "Module RNFetchBlob requires main queue setup", 
+    'Module RNFetchBlob requires main queue setup', 
   ]
 );
 
@@ -27,41 +29,41 @@ Amplify.configure(awsmobile);
 
 const App = StackNavigator({
   Splash: {
-    screen: (props) => {
-      return <Splash navigation={props.navigation} { ...props.screenProps } />;
-    },
+    screen: props => (
+      <Splash navigation={props.navigation} {...props.screenProps} />
+    ),
     navigationOptions: {
       header: null,
     },
   },
   OnboardApp: {
-    screen: (props) => {
-      return <OnboardApp rootNavigator={props.navigation} {...props} />;
-    }, 
+    screen: props => (
+      <OnboardApp rootNavigator={props.navigation} {...props} />
+    ), 
     navigationOptions: { 
       header: null,
     },
   },
   OnboardIntroSlides: {
-    screen: (props) => {
-      return <OnboardIntroSlides rootNavigator={props.navigation} {...props} />;
-    }, 
+    screen: props => (
+      <OnboardIntroSlides rootNavigator={props.navigation} {...props} />
+    ), 
     navigationOptions: { 
       header: null,
     },
   },
   StudentApp: {
-    screen: (props) => {
-      return <StudentApp rootNavigator={props.navigation} {...props} />;
-    }, 
+    screen: props => (
+      <StudentApp rootNavigator={props.navigation} {...props} />
+    ), 
     navigationOptions: { 
       header: null,
     },
   },
   TeacherApp: {
-    screen: (props) => {
-      return <TeacherApp rootNavigator={props.navigation} {...props} />;
-    }, 
+    screen: props => (
+      <TeacherApp rootNavigator={props.navigation} {...props} />
+    ), 
     navigationOptions: { 
       header: null,
     },

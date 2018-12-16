@@ -2,12 +2,11 @@ import React from 'react';
 import {
   Keyboard,
   StyleSheet,
-  Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-import { colors, deviceWidth, fonts } from '../../utils/theme';
+import { colors } from '../../utils/theme';
 
 export default class ButtonBack extends React.PureComponent {
   constructor(props) {
@@ -36,8 +35,8 @@ export default class ButtonBack extends React.PureComponent {
 
     return (
       <Touchable
-        activeOpacity={.8}
-        hitSlop={{top: 5, right: 5, bottom: 5, left: 5}}
+        activeOpacity={0.8}
+        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handlePress}
         style={[styles.button, { ...buttonStyles }]}
       >
@@ -48,8 +47,8 @@ export default class ButtonBack extends React.PureComponent {
 }
 
 ButtonBack.propTypes = {
-  buttonStyles: PropTypes.object,
-  navigator: PropTypes.object,
+  buttonStyles: PropTypes.objectOf,
+  navigator: PropTypes.objectOf,
   onPress: PropTypes.func,
 };
 

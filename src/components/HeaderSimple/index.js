@@ -7,14 +7,16 @@ import {
 import PropTypes from 'prop-types';
 import { colors, fonts } from '../../utils/theme';
 
-const HeaderSimple = ({ title }) => (
-  <View style={styles.container}>
-    <Text style={styles.title}>{ title }</Text>
-    <View style={styles.logoContainer}>
-      <Text style={styles.logo}>?</Text>
+export default function HeaderSimple({ title }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{ title }</Text>
+      <View style={styles.logoContainer}>
+        <Text style={styles.logo}>?</Text>
+      </View>
     </View>
-  </View>
-);
+  );
+}
 
 HeaderSimple.propTypes = {
   title: PropTypes.string,
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     borderColor: colors.white,
-    borderWidth: .5,
+    borderWidth: 0.5,
     borderRadius: 13,
     height: 25,
     justifyContent: 'center',
@@ -53,5 +55,3 @@ const styles = StyleSheet.create({
     fontSize: fonts.medium,
   },
 });
-
-export default HeaderSimple;

@@ -30,17 +30,14 @@ export default class Dashboard extends React.Component {
   }
 
 
-
   handleNameInput(name) {
     this.setState({ name });
   }
 
 
-
-  handleNameSubmit() {
-    Keyboard.dismiss();
-  }
-
+  handleNameSubmit = () => (
+    Keyboard.dismiss()
+  )
 
 
   handleRoomInput(room) {
@@ -48,11 +45,9 @@ export default class Dashboard extends React.Component {
   }
 
 
-
-  handleRoomSubmit() {
-    Keyboard.dismiss();
-  }
-
+  handleRoomSubmit = () => (
+    Keyboard.dismiss()
+  )
 
 
   renderProfileView() {
@@ -71,20 +66,20 @@ export default class Dashboard extends React.Component {
           onSubmitEditing={this.handleNameSubmit}
           placeholder={'Team Name'}
           placeholderTextColor={colors.primary}
-          returnKeyType='done'
+          returnKeyType={'done'}
           style={styles.input}
           textAlign={'center'}
-          underlineColorAndroid={ name ? colors.white : colors.dark }
+          underlineColorAndroid={name ? colors.white : colors.dark}
           value={name}
         />
         <View style={styles.profileValuesContainer}>
           <View style={styles.profileValueContainer}>
-            <Text style={styles.profileValueLabel}>{`Games: `}</Text>
-            <Text style={styles.profileValue}>{ gamesPlayed ? gamesPlayed : '--' }</Text>
+            <Text style={styles.profileValueLabel}>{'Games: '}</Text>
+            <Text style={styles.profileValue}>{ gamesPlayed || '--' }</Text>
           </View>
           <View style={styles.profileValueContainer}>
-            <Text style={styles.profileValueLabel}>{`Points: `}</Text>
-            <Text style={styles.profileValue}>{ pointsEarned ? pointsEarned : '--' }</Text>
+            <Text style={styles.profileValueLabel}>{'Points: '}</Text>
+            <Text style={styles.profileValue}>{ pointsEarned || '--' }</Text>
           </View>
         </View>
       </View>
@@ -92,15 +87,11 @@ export default class Dashboard extends React.Component {
   }
 
 
-
-  renderGameRoomState() {
-    return (
-      <View style={styles.roomContainer}>
-        { /* TODO */ }
-      </View>
-    );
-  }
-
+  renderGameRoomState = () => (
+    <View style={styles.roomContainer}>
+      { /* TODO */ }
+    </View>
+  );
 
 
   renderGameRoomEntry() {
@@ -115,10 +106,10 @@ export default class Dashboard extends React.Component {
           onSubmitEditing={this.handleRoomSubmit}
           placeholder={'Game room'}
           placeholderTextColor={colors.primary}
-          returnKeyType='done'
+          returnKeyType={'done'}
           style={styles.roomInput}
           textAlign={'center'}
-          underlineColorAndroid={ room ? colors.white : colors.dark }
+          underlineColorAndroid={room ? colors.white : colors.dark}
           value={room}
         />
         <ButtonWide
@@ -130,34 +121,30 @@ export default class Dashboard extends React.Component {
   }
 
 
-
-  renderButtons() {
-    return (
-      <View style={styles.buttonsContainer}>
-        <Touchable
-          activeOpacity={.8}
-          onPress={() => { /* TODO */ }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Top 10</Text>
-        </Touchable>
-        <Touchable
-          activeOpacity={.8}
-          onPress={() => { /* TODO */ }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Invite Friends</Text>
-        </Touchable>
-      </View>
-    );
-  }
-
+  renderButtons = () => (
+    <View style={styles.buttonsContainer}>
+      <Touchable
+        activeOpacity={0.8}
+        onPress={() => { /* TODO */ }}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Top 10</Text>
+      </Touchable>
+      <Touchable
+        activeOpacity={0.8}
+        onPress={() => { /* TODO */ }}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Invite Friends</Text>
+      </Touchable>
+    </View>
+  )
 
 
   render() {
-    const {
+    // const {
 
-    } = this.state;
+    // } = this.state;
 
     const { gameRoom } = this.props.screenProps;
 
@@ -176,7 +163,7 @@ export default class Dashboard extends React.Component {
 }
 
 Dashboard.propTypes = {
-  screenProps: PropTypes.object.isRequired,
+  screenProps: PropTypes.objectOf,
 };
 
 Dashboard.defaultProps = {

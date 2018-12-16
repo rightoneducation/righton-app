@@ -12,50 +12,43 @@ import { colors, fonts } from '../../utils/theme';
 
 
 export default class SelectionModal extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   renderOneTouchableItem = (item, onSelect) => (
     <Touchable
-      key={item['value']}
-      onPress={() => onSelect(item['value'])}
+      key={item.value}
+      onPress={() => onSelect(item.value)}
     >
       <View style={[styles.itemContainer, styles.center]}>
-        <Text style={styles.item}>{ item['label'] }</Text>
+        <Text style={styles.item}>{ item.label }</Text>
       </View>
     </Touchable>
   );
-  
 
 
   renderTwoTouchableItems = (item, onSelect) => (
     <Touchable
-      key={item['value']}
-      onPress={() => onSelect(item['value'])}
+      key={item.value}
+      onPress={() => onSelect(item.value)}
     >
       <View style={styles.itemContainer}>
-        <Text style={styles.item}>{ item['label'] }</Text>
-        <Text style={styles.item}>{ item['label_2'] }</Text>
+        <Text style={styles.item}>{ item.label }</Text>
+        <Text style={styles.item}>{ item.label_2 }</Text>
       </View>
     </Touchable>
   );
 
 
-  
-  renderThreeTouchableItems = (item, onSelect) => {
+  renderThreeTouchableItems = (item, onSelect) => (
     <Touchable
-      key={item['value']}
-      onPress={() => onSelect(item['value'])}
+      key={item.value}
+      onPress={() => onSelect(item.value)}
     >
       <View style={styles.itemContainer}>
-        <Text style={[styles.item, styles.flexOne]}>{ item['label'] }</Text>
-        <Text style={[styles.item, styles.flexTwo]}>{ item['label_2'] }</Text>
-        <Text style={[styles.item, styles.flexThree]}>{ item['label_3'] }</Text>
+        <Text style={[styles.item, styles.flexOne]}>{ item.label }</Text>
+        <Text style={[styles.item, styles.flexTwo]}>{ item.label_2 }</Text>
+        <Text style={[styles.item, styles.flexThree]}>{ item.label_3 }</Text>
       </View>
     </Touchable>
-  }
-
+  );
 
 
   render() {
@@ -73,7 +66,7 @@ export default class SelectionModal extends React.PureComponent {
       <Modal
         animationType={'slide'}
         onRequestClose={handleClose}
-        transparent={true}
+        transparent
         visible={visible}
         style={styles.modalContainer}
       >
@@ -81,16 +74,25 @@ export default class SelectionModal extends React.PureComponent {
           onPress={handleClose}
           style={styles.closeContainer}
         >
-          <View/>
+          <View />
         </Touchable>
         <View style={styles.selectionContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{ title }</Text>
           </View>
           <ScrollView style={styles.scrollview}>
-            { numberOfLabels === 1 && items.map(item => this.renderOneTouchableItem(item, onSelect)) }
-            { numberOfLabels === 2 && items.map(item => this.renderTwoTouchableItems(item, onSelect)) }
-            { numberOfLabels === 3 && items.map(item => this.renderThreeTouchableItems(item, onSelect)) }
+            {
+              numberOfLabels === 1 && 
+              items.map(item => this.renderOneTouchableItem(item, onSelect))
+            }
+            {
+              numberOfLabels === 2 && 
+              items.map(item => this.renderTwoTouchableItems(item, onSelect))
+            }
+            {
+              numberOfLabels === 3 && 
+              items.map(item => this.renderThreeTouchableItems(item, onSelect))
+            }
           </ScrollView>
         </View>
       </Modal>
@@ -100,7 +102,7 @@ export default class SelectionModal extends React.PureComponent {
 
 SelectionModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  items: PropTypes.array.isRequired,
+  items: PropTypes.arrayOf.isRequired,
   onSelect: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
@@ -119,17 +121,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   closeContainer: {
-    flex: .5,
+    flex: 0.5,
     height: 150,
   },
   flexOne: {
-    flex: .1,
+    flex: 0.1,
   },
   flexTwo: {
-    flex: .8,
+    flex: 0.8,
   },
   flexThree: {
-    flex: .1,
+    flex: 0.1,
   },
   item: {
     color: colors.dark,
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
   },
   selectionContainer: {
     backgroundColor: colors.white,
-    flex: .5,
+    flex: 0.5,
   },
   scrollview: {
     flexGrow: 1,
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: colors.primary,
     justifyContent: 'center',
-    borderBottomWidth: .5,
+    borderBottomWidth: 0.5,
     borderColor: colors.dark,
     paddingVertical: 10,
   },

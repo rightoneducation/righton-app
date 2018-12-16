@@ -26,11 +26,9 @@ class GameRoom extends React.Component {
   }
 
 
-
   handleRoomInput(room) {
     this.setState({ room });
   }
-
 
 
   handleRoomSubmit() {
@@ -38,7 +36,6 @@ class GameRoom extends React.Component {
     // Hydrate Dashboard w/ game details
     this.props.screenProps.rootNavigator.navigate('StudentApp');
   }
-
 
 
   render() {
@@ -63,15 +60,15 @@ class GameRoom extends React.Component {
           onSubmitEditing={this.handleRoomSubmit}
           placeholder={'Room Name'}
           placeholderTextColor={colors.primary} 
-          returnKeyType='done'
-          style={styles.input} 
+          returnKeyType={'done'}
+          style={styles.input}
           textAlign={'center'}
           underlineColorAndroid={colors.dark}   
           value={room}
         />
         <Touchable
-          activeOpacity={.8}
-          hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
+          activeOpacity={0.8}
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
           onPress={this.handleRoomSubmit}
           style={GameRoomStyles.skipButton}
         >
@@ -87,7 +84,7 @@ class GameRoom extends React.Component {
 }
 
 GameRoom.propTypes = {
-  screenProps: PropTypes.object,
+  screenProps: PropTypes.objectOf,
 };
 
 GameRoom.defaultProps = {

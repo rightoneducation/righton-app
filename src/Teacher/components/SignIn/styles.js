@@ -17,9 +17,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  input: {
-    fontFamily: 'lato',
-  },
   inputContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
@@ -30,6 +27,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     color: colors.white,
+    fontFamily: 'lato',
     fontSize: fonts.medium,
     paddingLeft: 10,
     width: deviceWidth - 75,

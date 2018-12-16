@@ -30,13 +30,13 @@ export default class ButtonWide extends React.PureComponent {
 
     return (
       <Touchable
-        activeOpacity={.8}
+        activeOpacity={0.8}
         background={Touchable.Ripple(colors.primary, false)}
-        hitSlop={{top: 5, right: 5, bottom: 5, left: 5}}
+        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handlePress}
         style={styles.button}
       >
-        <Text style={styles.label}>{ label ? label : 'Okay' }</Text>
+        <Text style={styles.label}>{ label || 'Okay' }</Text>
       </Touchable>
     );
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Keyboard,
   Modal,
   ScrollView,
   Text,
@@ -38,13 +39,11 @@ class SignIn extends React.Component {
 
     this.handlePasswordInput = this.handlePasswordInput.bind(this);
     this.handlePasswordRef = this.handlePasswordRef.bind(this);
-    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
 
     this.doLogin = this.doLogin.bind(this);
     this.onLogIn = this.onLogIn.bind(this);
     this.handleLogInClick = this.handleLogInClick.bind(this);
   }
-
 
 
   async onLogIn() {
@@ -54,9 +53,7 @@ class SignIn extends React.Component {
   }
 
 
-
   async doLogin() {
-
     this.setState({ buttonActivity: true });
     const allReqsPass = this.checkRequirements();
     if (!allReqsPass) {
@@ -82,12 +79,12 @@ class SignIn extends React.Component {
     } catch (exception) {
       debug.warn('Error caught in Teacher LogIn:', JSON.stringify(exception));
       // TODO Message telling username already exists
-      if (exception.code = "UserNotConfirmedException") {
+      // if (exception.code = "UserNotConfirmedException") {
 
-      }
-      if (exception.code = "UserNotFoundException") {
+      // }
+      // if (exception.code = "UserNotFoundException") {
 
-      }
+      // }
 
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
 
@@ -113,7 +110,6 @@ class SignIn extends React.Component {
       }
     });
   }
-
 
 
   checkRequirements() {
@@ -150,8 +146,6 @@ class SignIn extends React.Component {
   }
 
 
-
-
   handleLogInClick() {
     this.setState({ showActivityIndicator: true });
 
@@ -159,11 +153,9 @@ class SignIn extends React.Component {
   }
 
 
-
   handleEmailInput(email) {
     this.setState({ email });
   }
-
 
 
   handleEmailSubmit() {
@@ -172,11 +164,9 @@ class SignIn extends React.Component {
   }
 
 
-
   handlePasswordInput(password) {
     this.setState({ password });
   }
-
 
 
   handlePasswordRef(ref) {
@@ -184,17 +174,15 @@ class SignIn extends React.Component {
   }
 
 
-
   handlePasswordSubmit() {
     Keyboard.dismiss();
+    this.doLogin();
   }
-
 
 
   handleCloseMessage() {
     this.setState({ messageProps: null });
   }
-
 
 
   render() {
@@ -207,7 +195,7 @@ class SignIn extends React.Component {
     } = this.state;
 
     return (
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps={'never'}
       >
@@ -234,11 +222,11 @@ class SignIn extends React.Component {
               onChangeText={this.handleEmailInput}
               onSubmitEditing={this.handleEmailSubmit}
               placeholder={'Email address'}
-              placeholderTextColor={colors.primary} 
-              returnKeyType='done'
-              style={styles.input} 
+              placeholderTextColor={colors.primary}
+              returnKeyType={'done'}
+              style={styles.input}
               textAlign={'left'}
-              underlineColorAndroid={colors.dark}   
+              underlineColorAndroid={colors.dark}
               value={email}
             />
           </View>
@@ -251,12 +239,12 @@ class SignIn extends React.Component {
               onChangeText={this.handlePasswordInput}
               onSubmitEditing={this.handlePasswordSubmit}
               placeholder={'Password'}
-              placeholderTextColor={colors.primary} 
+              placeholderTextColor={colors.primary}
               ref={this.handlePasswordRef}
-              returnKeyType='done'
-              style={styles.input} 
+              returnKeyType={'done'}
+              style={styles.input}
               textAlign={'left'}
-              underlineColorAndroid={colors.dark}   
+              underlineColorAndroid={colors.dark}
               value={password}
             />
           </View>
@@ -267,24 +255,25 @@ class SignIn extends React.Component {
           />
         </View>
 
-        { messageProps && <Message { ...messageProps } /> }
+        { messageProps && <Message {...messageProps} /> }
 
       </ScrollView>
     );
   }
-
 }
 
 SignIn.propTypes = {
-  screenProps: PropTypes.object.isRequired,
+  // ESlint restricts object to be used as propType for specificity requirements.
+
+  // screenProps: PropTypes.object.isRequired,
   onLogIn: PropTypes.func.isRequired,
-  otherProps: PropTypes.object.isRequired,
+  // otherProps: PropTypes.object.isRequired,
 };
 
 SignIn.defaultProps = {
-  screenProps: {},
+  // screenProps: {},
   onLogIn: () => {},
-  otherProps: {},
+  // otherProps: {},
 };
 
 const SignInStack = (StackNavigator({

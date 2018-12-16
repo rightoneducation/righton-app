@@ -4,16 +4,29 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import styles from './styles';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import { colors } from '../../../utils/theme';
 
 export default class Age extends React.PureComponent {
+  static propTypes = {
+    rootNavigator: PropTypes.objectOf.isRequired,
+    studentFirstNavigator: PropTypes.objectOf.isRequired,
+  }
+
+  
+  static defaultProps = {
+    rootNavigator: {},
+    studentFirstNavigator: {},
+  }
+
+
   constructor(props) {
     super(props);
 
-    this.ageRef;
+    this.ageRef = undefined;
 
     this.state = {
       age: '',
@@ -25,12 +38,15 @@ export default class Age extends React.PureComponent {
   }
 
 
-
-  handleAgeInput(age) {
-    if (parseInt(age) === NaN) return;
-    this.setState({ age });
+  componentDidMount() {
+    setTimeout(() => this.ageRef.focus(), 0);
   }
 
+
+  handleAgeInput(age) {
+    if (isNaN(parseInt(age, 10))) return;
+    this.setState({ age });
+  }
 
 
   handleAgeRef(ref) {
@@ -38,20 +54,12 @@ export default class Age extends React.PureComponent {
   }
 
 
-
   handleAgeSubmit() {
-    if (parseInt(this.state.age) < 13) {
+    if (parseInt(this.state.age, 10) < 13) {
       // TODO Treat user specially
     } 
     this.props.studentFirstNavigator.navigate('GameRoom');
   }
-
-
-
-  componentDidMount() {
-    setTimeout(() => this.ageRef.focus(), 0);
-  }
-
 
 
   render() {
@@ -77,7 +85,7 @@ export default class Age extends React.PureComponent {
           placeholder={'##'}
           placeholderTextColor={colors.primary}
           ref={this.handleAgeRef}
-          returnKeyType='done'
+          returnKeyType={'done'}
           style={styles.input} 
           textAlign={'center'}
           underlineColorAndroid={colors.dark}   

@@ -24,4 +24,4 @@ export default StyleSheet.create({
     position: 'absolute',
     top: 35,
   },
-})
+});

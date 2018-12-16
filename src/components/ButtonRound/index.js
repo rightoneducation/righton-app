@@ -18,28 +18,29 @@ export default class ButtonRound extends React.PureComponent {
   }
 
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.activity !== nextProps.activity && nextProps.activity === false) {
+      this.animatedRotation = new Animated.Value(0);
+      this.setState({ activity: false });
+    }
+  }
+
+
   handleAnimatedPress() {
     Keyboard.dismiss();
     Animated.timing(
       this.animatedRotation, {
-      toValue: 1,
-      duration: 300,
-      easing: Easing.linear
-    }).start(() => {
+        toValue: 1,
+        duration: 300,
+        easing: Easing.linear
+      }
+    ).start(() => {
       this.setState({ activity: true }, () => {
         setTimeout(() => {
           this.props.onPress();
         }, 500);
       });
     });
-  }
-
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.activity !== nextProps.activity && nextProps.activity === false) {
-      this.animatedRotation = new Animated.Value(0);
-      this.setState({ activity: false });
-    }
   }
 
 
@@ -59,23 +60,23 @@ export default class ButtonRound extends React.PureComponent {
 
     return (
       <Touchable
-        activeOpacity={.8}
+        activeOpacity={0.8}
         background={Touchable.Ripple(colors.primary, false)}
-        hitSlop={{top: 5, right: 5, bottom: 5, left: 5}}
+        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handleAnimatedPress}
         style={styles.button}
       >
         {
           activity ?
-          <ActivityIndicator
-            animating={activity}
-            color={colors.white}
-            size={'small'}
-          />
-          :
-          <Animated.View style={{transform: [{rotate: spin}] }}>
-            <Aicon name={icon} style={styles.icon} />
-          </Animated.View>
+            <ActivityIndicator
+              animating={activity}
+              color={colors.white}
+              size={'small'}
+            />
+            :
+            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+              <Aicon name={icon} style={styles.icon} />
+            </Animated.View>
         }
       </Touchable>
     );

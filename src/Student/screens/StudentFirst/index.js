@@ -7,7 +7,6 @@ import GameRoom from './StudentFirstGameRoom';
 const StudentFirst = StackNavigator({
 
 
-
   Age: {
     screen: (props) => {
       const { screenProps, navigation, ...otherProps } = props;
@@ -27,15 +26,14 @@ const StudentFirst = StackNavigator({
   },
 
 
-
   GameRoom: {
     screen: (props) => {
       const { screenProps, navigation, ...otherProps } = props;
 
       return (
         <GameRoom
-          { ...screenProps }
-          { ...otherProps }
+          {...screenProps}
+          {...otherProps}
           studentFirstNavigator={navigation}
         />
       );
@@ -44,7 +42,6 @@ const StudentFirst = StackNavigator({
       header: null,
     },
   },
-
 
 
   // SignUp: {
@@ -66,10 +63,9 @@ const StudentFirst = StackNavigator({
   // },
 
 
-
 }, { header: null });
 
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <StudentFirst screenProps={{ ...screenProps, ...otherProps }} />
+  return <StudentFirst screenProps={{ ...screenProps, ...otherProps }} />;
 };

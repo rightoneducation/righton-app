@@ -9,13 +9,13 @@ import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
 
-export default OnboardAppRouter = ({ onboardNavigator }) => {
+export default function OnboardAppRouter({ onboardNavigator }) {
   return (
     <View style={styles.container}>
       <Text style={styles.placeholder}>RightOn!</Text>
       <View style={styles.iamaButtonsContainer}>
         <Touchable
-          activeOpacity={.8}
+          activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
           onPress={() => onboardNavigator.navigate('TeacherFirst')}
           style={[styles.iamaButton, styles.whiteBackground]}
@@ -26,7 +26,7 @@ export default OnboardAppRouter = ({ onboardNavigator }) => {
           </View>
         </Touchable>
         <Touchable
-          activeOpacity={.8}
+          activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
           onPress={() => onboardNavigator.navigate('StudentFirst')}
           style={[styles.iamaButton, styles.primaryBackground]}
@@ -38,11 +38,11 @@ export default OnboardAppRouter = ({ onboardNavigator }) => {
         </Touchable>
       </View>
     </View>
-  )
+  );
 }
 
 OnboardAppRouter.propTypes = {
-  onboardNavigator: PropTypes.object.isRequired,
+  onboardNavigator: PropTypes.shape({ type: PropTypes.func }),
 };
 
 OnboardAppRouter.defaultProps = {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   iamaButton: {
     backgroundColor: colors.lightGray,
     borderRadius: 10,
-    flex: .5,
+    flex: 0.5,
     marginHorizontal: 5,
     paddingVertical: 25,
   },

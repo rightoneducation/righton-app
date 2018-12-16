@@ -5,7 +5,7 @@ import { colors, fonts } from '../../../utils/theme';
 export default StyleSheet.create({
   button: {
     alignItems: 'center',
-    flex: .5,
+    flex: 0.5,
     justifyContent: 'center',
     paddingVertical: 25,
   },
@@ -74,4 +74,4 @@ export default StyleSheet.create({
     fontSize: fonts.large,
     fontWeight: 'bold',
   },
-})
+});

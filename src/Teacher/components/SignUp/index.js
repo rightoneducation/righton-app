@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { Auth } from 'aws-amplify';
 import { StackNavigator } from 'react-navigation';
 import MFAPrompt from '../../../../lib/Categories/Auth/Components/MFAPrompt';
@@ -22,6 +23,15 @@ class SignUp extends React.Component {
   static navigationOptions = {
     title: Constants.APP_NAME,
   }
+
+  static propTypes = {
+    onSignUp: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    onSignUp: () => {},
+  }
+
   constructor(props) {
     super(props);
 
@@ -63,6 +73,11 @@ class SignUp extends React.Component {
   }
 
 
+  onSignUp() {
+    this.setState(this.baseState);
+
+    this.props.onSignUp();
+  }
 
   async handleSignUp() {
     this.setState({ buttonActivity: true });
@@ -86,7 +101,7 @@ class SignUp extends React.Component {
     const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
 
     Auth.signUp(username, password, lowercaseEmail, null)
-      .then(data => {
+      .then((data) => {
         userConfirmed = data.userConfirmed;
 
         debug.log('Sign up data received:', JSON.stringify(data));
@@ -96,7 +111,7 @@ class SignUp extends React.Component {
           this.onSignUp();
         }
       })
-      .catch(exception => {
+      .catch((exception) => {
         const errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
         debug.warn('Sign up exception:', JSON.stringify(exception));
         this.setState({
@@ -111,10 +126,8 @@ class SignUp extends React.Component {
             timeout: null,
           },
         });
-        return;
       });
   }
-
 
 
   checkRequirements() {
@@ -134,7 +147,6 @@ class SignUp extends React.Component {
     }
     return true;
   }
-
 
 
   async handleMFAValidate(code = '') {
@@ -164,11 +176,9 @@ class SignUp extends React.Component {
   }
 
 
-
   handleMFACancel() {
     this.setState({ buttonActivity: false, showMFAPrompt: false, showActivityIndicator: false });
   }
-
 
 
   handleMFASuccess() {
@@ -186,25 +196,14 @@ class SignUp extends React.Component {
   }
 
 
-
-  onSignUp() {
-    this.setState(this.baseState);
-
-    this.props.onSignUp();
-  }
-
-
-
   handleEmailInput(email) {
     this.setState({ email });
   }
 
 
-
   handleEmailBlur() {
     this.handleEmailSubmit();
   }
-
 
 
   handleEmailSubmit() {
@@ -227,12 +226,10 @@ class SignUp extends React.Component {
   }
 
 
-
   handlePasswordBlur() {
     this.setState({ passwordFocused: false });
     this.handlePasswordSubmit();
   }
-
 
 
   handlePasswordFocus() {
@@ -240,17 +237,14 @@ class SignUp extends React.Component {
   }
 
 
-
   handlePasswordInput(password) {
     this.setState({ password });
   }
 
 
-
   handlePasswordRef(ref) {
     this.passwordRef = ref;
   }
-
 
 
   handlePasswordSubmit() {
@@ -282,11 +276,9 @@ class SignUp extends React.Component {
   }
 
 
-
   handleRetypePasswordBlur() {
     this.handleRetypePasswordSubmit();
   }
-
 
 
   handleRetypePasswordInput(retypePassword) {
@@ -294,11 +286,9 @@ class SignUp extends React.Component {
   }
 
 
-
   handleRetypePasswordRef(ref) {
     this.retypePasswordRef = ref;
   }
-
 
 
   handleRetypePasswordSubmit() {
@@ -314,10 +304,8 @@ class SignUp extends React.Component {
           timeout: 4000,
         },
       });
-      return;
     }
   }
-
 
 
   closeActvitiyModal() {
@@ -325,11 +313,9 @@ class SignUp extends React.Component {
   }
 
 
-
   handleCloseMessage() {
     this.setState({ messageProps: null });
   }
-
 
 
   render() {
@@ -371,7 +357,7 @@ class SignUp extends React.Component {
               onSubmitEditing={this.handleEmailSubmit}
               placeholder={'Email address'}
               placeholderTextColor={colors.primary}
-              returnKeyType='done'
+              returnKeyType={'done'}
               style={styles.input}
               textAlign={'left'}
               underlineColorAndroid={colors.dark}
@@ -390,7 +376,7 @@ class SignUp extends React.Component {
               placeholder={'Password'}
               placeholderTextColor={colors.primary} 
               ref={this.handlePasswordRef}
-              returnKeyType='done'
+              returnKeyType={'done'}
               style={styles.input} 
               textAlign={'left'}
               underlineColorAndroid={colors.dark}   
@@ -419,7 +405,7 @@ class SignUp extends React.Component {
               placeholder={'Retype password'}
               placeholderTextColor={colors.primary} 
               ref={this.handleRetypePasswordRef}
-              returnKeyType='done'
+              returnKeyType={'done'}
               style={styles.input} 
               textAlign={'left'}
               underlineColorAndroid={colors.dark}   
@@ -440,7 +426,7 @@ class SignUp extends React.Component {
             onSuccess={this.handleMFASuccess}
           />
         }
-        { messageProps && <Message { ...messageProps } /> }
+        { messageProps && <Message {...messageProps} /> }
       </View>
     );
   }
@@ -448,7 +434,6 @@ class SignUp extends React.Component {
 
 
 const SignUpStack = StackNavigator({
-
 
 
   SignUp: {
@@ -459,7 +444,7 @@ const SignUpStack = StackNavigator({
   },
 
 
-
 });
 
-export default props => <SignUpStack screenProps={{ onSignUp: props.onSignUp }} />;
+
+export default props => <SignUpStack screenProps={{ ...props }} />;

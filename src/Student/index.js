@@ -6,7 +6,6 @@ import Dashboard from './screens/Dashboard';
 const StudentApp = DrawerNavigator({
 
 
-
   Dashboard: {
     screen: (props) => {
       const { screenProps, navigation, ...otherProps } = props;
@@ -27,10 +26,9 @@ const StudentApp = DrawerNavigator({
   },
 
 
-
 }, { header: null });
 
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <StudentApp screenProps={{ ...screenProps, ...otherProps }} />
+  return <StudentApp screenProps={{ ...screenProps, ...otherProps }} />;
 };

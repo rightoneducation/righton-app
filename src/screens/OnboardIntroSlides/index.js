@@ -1,22 +1,30 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { 
   Image,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import { GradCap } from '../../assets/images';
 import { colors, fonts } from '../../utils/theme';
 
 
-class OnboardIntroSlides extends PureComponent {
+export default class OnboardIntroSlides extends React.PureComponent {
+  static propTypes = {
+    rootNavigator: PropTypes.objectOf.isRequired,
+  }
+
+  static defaultProps = {
+    rootNavigator: {},
+  }
 
   constructor(props) {
     super(props);
 
-    this.swiper;
+    this.swiper = undefined;
 
     this.state = {
       startButton: true,
@@ -27,33 +35,23 @@ class OnboardIntroSlides extends PureComponent {
   }
 
 
-
   onIndexChanged(index) {
     if (index !== 1) {
-
       this.setState({ startButton: false });
-
-    } else {
-
-      if (!this.state.startButton) {
-        this.setState({ startButton: true });
-      }
-
+    } else if (!this.state.startButton) {
+      this.setState({ startButton: true });
     }
   }
 
 
-
   handleStart() {
-    this._navigateTo('First');
+    this.navigateTo('First');
   }
 
 
-
-  _navigateTo(routeName) {
+  navigateTo(routeName) {
     this.props.rootNavigator.navigate(routeName);
   }
-
 
 
   render() {
@@ -62,12 +60,12 @@ class OnboardIntroSlides extends PureComponent {
     return (
       <Swiper
         activeDotColor={'#000'}
-        horizontal={true}
+        horizontal
         index={0}
         loadMinimal={false}
         loop={false}
         onIndexChanged={this.onIndexChanged}
-        ref={ref => this.swiper = ref}
+        ref={(ref) => { this.swiper = ref; }}
         showsPagination={!startButton}
       >
 
@@ -76,12 +74,12 @@ class OnboardIntroSlides extends PureComponent {
             <Text style={styles.title}>RightOn</Text>
             <Text style={styles.subtitle}>Learn how to play to learn</Text>
           </View>
-          <Image source={ {uri: GradCap} } style={styles.image}/>
+          <Image source={{ uri: GradCap }} style={styles.image} />
           <View style={styles.bottomContainer}>
             <Text style={styles.accountCheck}>Have an account already?</Text>
             <Touchable
               onPress={this.handleStart}
-              activeOpacity={.8}
+              activeOpacity={0.8}
             >
               <Text style={styles.accountLogin}>Sign in and play!</Text>
             </Touchable>
@@ -94,13 +92,13 @@ class OnboardIntroSlides extends PureComponent {
             <Text style={styles.title}>RightOn</Text>
             <Text style={styles.subtitle}>Learn how to play to learn</Text>
           </View>
-          <Image source={ {uri: GradCap} } style={styles.image}/>
+          <Image source={{ uri: GradCap }} style={styles.image} />
           {
             startButton &&
             <Touchable
-              activeOpacity={.8}
+              activeOpacity={0.8}
               background={Touchable.Ripple(colors.black, false)}
-              hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
+              hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
               onPress={this.handleStart}
               style={styles.startContainer}
             >
@@ -110,7 +108,7 @@ class OnboardIntroSlides extends PureComponent {
         </View>
 
       </Swiper>
-    )
+    );
   }
 }
 
@@ -171,5 +169,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default OnboardIntroSlides;

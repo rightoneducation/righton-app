@@ -8,7 +8,6 @@ import StudentFirst from '../../Student/screens/StudentFirst';
 const OnboardApp = StackNavigator({
 
 
-
   OnboardAppRouter: {
     screen: (props) => {
       const { navigation } = props;
@@ -25,15 +24,14 @@ const OnboardApp = StackNavigator({
   },
 
 
-
   TeacherFirst: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
         <TeacherFirst
-          { ...screenProps }
-          { ...otherProps }
+          {...screenProps}
+          {...otherProps}
           onLogIn={() => screenProps.rootNavigator.navigate('TeacherApp')}
           onSignUp={() => screenProps.rootNavigator.navigate('TeacherApp')}
         />
@@ -45,17 +43,16 @@ const OnboardApp = StackNavigator({
   },
 
 
-
   StudentFirst: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
         <StudentFirst
-          { ...screenProps }
-          { ...otherProps }
+          {...screenProps}
+          {...otherProps}
         />
-      )
+      );
     },
     navigationOptions: {
       header: null,
@@ -63,11 +60,10 @@ const OnboardApp = StackNavigator({
   },
 
 
-
 }, { header: null });
 
 
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <OnboardApp screenProps={{ ...screenProps, ...otherProps }} />
+  return <OnboardApp screenProps={{ ...screenProps, ...otherProps }} />;
 };

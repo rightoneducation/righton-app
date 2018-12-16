@@ -18,7 +18,7 @@ function warn() {
   console.warn(Array.prototype.join.call(arguments, ' '));
 }
 
-export default debug = {
+export default {
   error,
   log,
   table,

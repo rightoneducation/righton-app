@@ -12,9 +12,44 @@ export default class Message extends React.Component {
   constructor() { 
     super();
     this.opacity = new Animated.Value(0);
-    this.timeout;
+    this.timeout = undefined;
     this.handleTouchClose = this.handleTouchClose.bind(this);
   }
+
+
+  componentDidMount() {
+    const { duration, timeout } = this.props;
+    Animated.timing(
+      this.opacity, {
+        duration: duration || 1500,
+        toValue: 1,
+        useNativeDriver: true,
+      }
+    ).start();
+    this.timeout = setTimeout(() => {
+      this.handleTouchClose();
+    }, timeout || 5500);
+  }
+
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+
+  handleTouchClose() {
+    const { closeFunc } = this.props;
+    Animated.timing(
+      this.opacity, {
+        duration: 500,
+        toValue: 0,
+        useNativeDriver: true,
+      }
+    ).start(() => {
+      closeFunc();
+    });
+  }
+
 
   render() {
     const {
@@ -29,53 +64,22 @@ export default class Message extends React.Component {
     return (
       <Animated.View style={[{ opacity: this.opacity }, styles.container, bodyStyle]}>
         <Touchable
-          activeOpacity={.8}
+          activeOpacity={0.8}
           background={Touchable.Ripple(colors.dark, false)}
-          hitSlop={{top: 10, right: 10, bottom: 10, left: 10}}
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
           onPress={this.handleTouchClose}
         >
           <Text style={[styles.message, textStyle]}>{ message }</Text>
         </Touchable>
       </Animated.View>
-    )
-  }
-
-  componentDidMount() {
-    const { duration, timeout } = this.props;
-    Animated.timing(
-      this.opacity, {
-        duration: duration ? duration : 1500,
-        toValue: 1,
-        useNativeDriver: true,
-      }
-    ).start();
-    this.timeout = setTimeout(() => {
-      this.handleTouchClose();
-    }, timeout ? timeout : 5500);
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-
-  handleTouchClose() {
-    const { closeFunc } = this.props;
-    Animated.timing(
-      this.opacity, {
-        duration: 500,
-        toValue: 0,
-        useNativeDriver: true,
-      }
-    ).start(() => {
-      closeFunc();
-    });
+    );
   }
 }
 
 Message.propTypes = {
   closeFunc: PropTypes.func.isRequired,
-  bodyStyle: PropTypes.object,
-  textStyle: PropTypes.object,
+  bodyStyle: PropTypes.objectOf,
+  textStyle: PropTypes.objectOf,
   duration: PropTypes.number,
   message: PropTypes.string.isRequired,
   timeout: PropTypes.number,

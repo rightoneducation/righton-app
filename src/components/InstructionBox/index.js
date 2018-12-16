@@ -6,27 +6,29 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import { fonts } from '../../utils/theme';
+import { colors, fonts } from '../../utils/theme';
 
-const InstructionBox = ({ instruction, alignment }) => (
-  <View style={styles.container}>
-    {
-      alignment === 'left' &&
-      <View style={styles.teacherBubble}>
-        <Aicon name={'user'} style={styles.teacher} />
+export default function InstructionBox({ instruction, alignment }) {
+  return (
+    <View style={styles.container}>
+      {
+        alignment === 'left' &&
+        <View style={styles.teacherBubble}>
+          <Aicon name={'user'} style={styles.teacher} />
+        </View>
+      }
+      <View style={[styles.box, alignment === 'left' ? styles.alignLeft : styles.alignRight]}>
+        <Text style={styles.instruction}>{ instruction }</Text>
       </View>
-    }
-    <View style={[styles.box, alignment === 'left' ? styles.alignLeft : styles.alignRight]}>
-      <Text style={styles.instruction}>{ instruction }</Text>
+      {
+        alignment === 'right' &&
+        <View style={styles.teacherBubble}>
+          <Aicon name={'user'} style={styles.teacher} />
+        </View>
+      }
     </View>
-    {
-      alignment === 'right' &&
-      <View style={styles.teacherBubble}>
-        <Aicon name={'user'} style={styles.teacher} />
-      </View>
-    }
-  </View>
-);
+  );
+}
 
 InstructionBox.propTypes = {
   instruction: PropTypes.string.isRequired,
@@ -76,5 +78,3 @@ const styles = StyleSheet.create({
     width: 50,
   },
 });
-
-export default InstructionBox;

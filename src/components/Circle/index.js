@@ -1,9 +1,21 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import PropTypes from 'prop-types';
 
-const Circle = (props) => (
-  <View style={[styles.circle, props.styles]}/>
-);
+
+export default function Circle(props) {
+  return (
+    <View style={[styles.circle, props.styles]} />
+  );
+}
+
+Circle.propTypes = {
+  styles: PropTypes.shape({ type: PropTypes.string }),
+};
+
+Circle.defaultProps = {
+  styles: {},
+};
 
 const styles = StyleSheet.create({
   circle: {
@@ -17,5 +29,3 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 });
-
-export default Circle;

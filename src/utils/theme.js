@@ -2,6 +2,7 @@
  * @providesModule theme
  */
 import { Dimensions } from 'react-native';
+
 const { height, width } = Dimensions.get('screen');
 const deviceHeight = height;
 const deviceWidth = width;
