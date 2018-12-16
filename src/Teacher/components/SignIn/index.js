@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Keyboard,
   Modal,
-  ScrollView,
   Text,
   TextInput,
   View,
@@ -195,10 +194,7 @@ class SignIn extends React.Component {
     } = this.state;
 
     return (
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps={'never'}
-      >
+      <View style={styles.container}>
         <Modal
           visible={showActivityIndicator}
           onRequestClose={() => null}
@@ -257,7 +253,7 @@ class SignIn extends React.Component {
 
         { messageProps && <Message {...messageProps} /> }
 
-      </ScrollView>
+      </View>
     );
   }
 }
