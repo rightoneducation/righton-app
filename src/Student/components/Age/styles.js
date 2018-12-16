@@ -15,6 +15,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     color: colors.white,
     fontSize: fonts.medium,
+    paddingVertical: 15,
     width: deviceWidth - 75,
   },
   title: {
