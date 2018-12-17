@@ -133,6 +133,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-gesture-handler')
     compile project(':amazon-cognito-identity-js')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-vector-icons')
