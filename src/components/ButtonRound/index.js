@@ -32,7 +32,8 @@ export default class ButtonRound extends React.PureComponent {
       this.animatedRotation, {
         toValue: 1,
         duration: 300,
-        easing: Easing.linear
+        easing: Easing.linear,
+        useNativeDriver: true,
       }
     ).start(() => {
       this.setState({ activity: true }, () => {
