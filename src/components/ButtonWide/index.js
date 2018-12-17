@@ -9,6 +9,20 @@ import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, fonts } from '../../utils/theme';
 
 export default class ButtonWide extends React.PureComponent {
+  static propTypes = {
+    buttonStyles: PropTypes.shape({ type: PropTypes.any }),
+    label: PropTypes.string.isRequired,
+    onPress: PropTypes.func.isRequired,
+    textStyles: PropTypes.shape({ type: PropTypes.any }),
+  };
+  
+  static defaultProps = {
+    buttonStyles: {},
+    label: '',
+    onPress: () => {},
+    textStyles: {},
+  };
+  
   constructor(props) {
     super(props);
 
@@ -23,9 +37,11 @@ export default class ButtonWide extends React.PureComponent {
 
 
   render() {
-    const { 
+    const {
+      buttonStyles,
       // onPress,
       label,
+      textStyles,
     } = this.props;
 
     return (
@@ -34,23 +50,13 @@ export default class ButtonWide extends React.PureComponent {
         background={Touchable.Ripple(colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handlePress}
-        style={styles.button}
+        style={[styles.button, buttonStyles]}
       >
-        <Text style={styles.label}>{ label || 'Okay' }</Text>
+        <Text style={[styles.label, textStyles]}>{ label || 'Okay' }</Text>
       </Touchable>
     );
   }
 }
-
-ButtonWide.propTypes = {
-  label: PropTypes.string.isRequired,
-  onPress: PropTypes.func.isRequired,
-};
-
-ButtonWide.defaultProps = {
-  label: '',
-  onPress: () => {},
-};
 
 
 const styles = StyleSheet.create({
