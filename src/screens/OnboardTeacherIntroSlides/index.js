@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
-import Touchable from 'react-native-platform-touchable';
 import { GradCap } from '../../assets/images';
 import { colors, fonts } from '../../utils/theme';
 
@@ -28,74 +27,67 @@ export default class OnboardIntroSlides extends React.PureComponent {
 
     this.swiper = undefined;
     
-    this.state = {
-      startButton: true,
-    };
+    // this.state = {
+    //   startButton: true,
+    // };
 
-    this.onIndexChanged = this.onIndexChanged.bind(this);
-    this.handleStart = this.handleStart.bind(this);
+    // this.onIndexChanged = this.onIndexChanged.bind(this);
+    // this.handleStart = this.handleStart.bind(this);
   }
 
 
-  onIndexChanged(index) {
-    if (index !== 1) {
-      this.setState({ startButton: false });
-    } else if (!this.state.startButton) {
-      this.setState({ startButton: true });
-    }
-  }
+  // onIndexChanged(index) {
+  //   if (index !== 1) {
+  //     this.setState({ startButton: false });
+  //   } else if (!this.state.startButton) {
+  //     this.setState({ startButton: true });
+  //   }
+  // }
 
 
-  handleStart() {
-    this.navigateTo('First');
-  }
+  // handleStart() {
+  //   this.navigateTo('First');
+  // }
 
 
-  navigateTo(routeName) {
-    this.props.rootNavigator.navigate(routeName);
-  }
+  // navigateTo(routeName) {
+  //   this.props.rootNavigator.navigate(routeName);
+  // }
 
 
   render() {
-    const { startButton } = this.state;
+    // const { startButton } = this.state;
 
     return (
       <Swiper
-        activeDotColor={'#000'}
+        activeDotColor={colors.primary}
         horizontal
         index={0}
         loadMinimal={false}
         loop={false}
         onIndexChanged={this.onIndexChanged}
         ref={(ref) => { this.swiper = ref; }}
-        showsPagination={!startButton}
+        showsPagination
       >
 
         <View style={styles.container}>
           <View style={styles.textContainer}>
             <Text style={styles.title}>RightOn</Text>
-            <Text style={styles.subtitle}>Learn how to play to learn</Text>
+            <Text style={styles.subtitle}>Engage Students at all levels</Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
-          <View style={styles.bottomContainer}>
-            <Text style={styles.accountCheck}>Have an account already?</Text>
-            <Touchable
-              onPress={this.handleStart}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.accountLogin}>Sign in and play!</Text>
-            </Touchable>
-          </View>
         </View>
 
 
         <View style={styles.container}>
           <View style={styles.textContainer}>
             <Text style={styles.title}>RightOn</Text>
-            <Text style={styles.subtitle}>Learn how to play to learn</Text>
+            <Text style={styles.subtitle}>
+              Foster a culture of error where mistakes are expected, respected, and inspected
+            </Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
-          {
+          {/* {
             startButton &&
             <Touchable
               activeOpacity={0.8}
@@ -106,7 +98,18 @@ export default class OnboardIntroSlides extends React.PureComponent {
             >
               <Text style={styles.start}>GET STARTED</Text>
             </Touchable>
-          }
+          } */}
+        </View>
+
+        <View style={styles.container}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>RightOn</Text>
+            <Text style={styles.subtitle}>
+              Create quizzes not only faster, but also with better distractors -- 
+              ones that were generated and validated by your own students
+            </Text>
+          </View>
+          <Image source={{ uri: GradCap }} style={styles.image} />
         </View>
 
       </Swiper>
@@ -138,27 +141,28 @@ const styles = StyleSheet.create({
   image: {
     alignSelf: 'center',
   },
-  start: {
-    color: colors.white,
-    fontSize: fonts.medium,
-  },
-  startContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderColor: colors.grey,
-    borderRadius: 100,
-    borderWidth: 1,
-    bottom: 15,
-    justifyContent: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    position: 'absolute',
-    zIndex: 100,
-  },
+  // start: {
+  //   color: colors.white,
+  //   fontSize: fonts.medium,
+  // },
+  // startContainer: {
+  //   alignItems: 'center',
+  //   backgroundColor: colors.primary,
+  //   borderColor: colors.grey,
+  //   borderRadius: 100,
+  //   borderWidth: 1,
+  //   bottom: 15,
+  //   justifyContent: 'center',
+  //   paddingHorizontal: 15,
+  //   paddingVertical: 10,
+  //   position: 'absolute',
+  //   zIndex: 100,
+  // },
   subtitle: {
     color: colors.white,
     fontSize: fonts.medium,
     marginTop: 10,
+    textAlign: 'center',
   },
   textContainer: {
     alignItems: 'center',

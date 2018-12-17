@@ -10,7 +10,6 @@ import { WithAuth } from './lib/Categories/Auth/Components';
 import Amplify from 'aws-amplify';
 import awsmobile from './src/aws-exports';
 import OnboardApp from './src/screens/OnboardApp';
-import OnboardIntroSlides from './src/screens/OnboardIntroSlides';
 import Splash from './src/screens/Splash';
 import StudentApp from './src/Student';
 import TeacherApp from './src/Teacher';
@@ -39,14 +38,6 @@ const App = StackNavigator({
   OnboardApp: {
     screen: props => (
       <OnboardApp rootNavigator={props.navigation} {...props} />
-    ), 
-    navigationOptions: { 
-      header: null,
-    },
-  },
-  OnboardIntroSlides: {
-    screen: props => (
-      <OnboardIntroSlides rootNavigator={props.navigation} {...props} />
     ), 
     navigationOptions: { 
       header: null,

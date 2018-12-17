@@ -13,11 +13,12 @@ export default function OnboardAppRouter({ onboardNavigator }) {
   return (
     <View style={styles.container}>
       <Text style={styles.placeholder}>RightOn!</Text>
+      
       <View style={styles.iamaButtonsContainer}>
         <Touchable
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
-          onPress={() => onboardNavigator.navigate('TeacherFirst')}
+          onPress={() => onboardNavigator.navigate('OnboardTeacherRouter')}
           style={[styles.iamaButton, styles.whiteBackground]}
         >
           <View style={styles.iamaView}>

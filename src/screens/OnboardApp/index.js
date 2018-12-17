@@ -1,6 +1,7 @@
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
 import OnboardAppRouter from '../OnboardAppRouter';
+import OnboardTeacherRouter from '../OnboardTeacherRouter';
 import TeacherFirst from '../../Teacher/screens/TeacherFirst';
 import StudentFirst from '../../Student/screens/StudentFirst';
 
@@ -15,6 +16,23 @@ const OnboardApp = StackNavigator({
       return (
         <OnboardAppRouter
           onboardNavigator={navigation}
+        />
+      );
+    },
+    navigationOptions: {
+      header: null,
+    },
+  },
+
+
+  OnboardTeacherRouter: {
+    screen: (props) => {
+      const { navigation, screenProps } = props;
+
+      return (
+        <OnboardTeacherRouter
+          onboardNavigator={navigation}
+          rootNavigator={screenProps.rootNavigator}
         />
       );
     },
