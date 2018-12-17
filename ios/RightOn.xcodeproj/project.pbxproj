@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -75,6 +74,9 @@
 		E3D764273A604FF49A806D99 /* Montserrat-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D10E31BE54D42A0A28897F7 /* Montserrat-Italic.ttf */; };
 		EB263C175F024F68B8B9881E /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 58DC8864838B4D9CAEC73896 /* Ionicons.ttf */; };
 		F63C93E3B4B44F6FB0D6526A /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5BD3CF33D5149CCBC0D4C15 /* Zocial.ttf */; };
+		8BE472CA701349DEAC0650CB /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E71DC4DA2143C7B14BB765 /* libRNGestureHandler.a */; };
+		DAA7021ABE8744728B7F5C06 /* profileicon.png in Resources */ = {isa = PBXBuildFile; fileRef = F40C0A8D6242434CA2C9BC89 /* profileicon.png */; };
+		B3FBB01881C94559B298724B /* puppy.png in Resources */ = {isa = PBXBuildFile; fileRef = E4FD683A83E54606AC7772E2 /* puppy.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -433,6 +435,10 @@
 		E761104967E245D9B24ABB87 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = ../assets/fonts/EvilIcons.ttf; sourceTree = "<group>"; };
 		ED5469E16FE54E4FA5BC6138 /* Butler-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Butler-ExtraBold.ttf"; path = "../assets/fonts/Butler-ExtraBold.ttf"; sourceTree = "<group>"; };
 		F8BE33427F69444291DFE84D /* Lato-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Bold.ttf"; path = "../assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		D97080C9C18F43F891EB0846 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; name = "RNGestureHandler.xcodeproj"; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		A2E71DC4DA2143C7B14BB765 /* libRNGestureHandler.a */ = {isa = PBXFileReference; name = "libRNGestureHandler.a"; path = "libRNGestureHandler.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		F40C0A8D6242434CA2C9BC89 /* profileicon.png */ = {isa = PBXFileReference; name = "profileicon.png"; path = "../assets/images/profileicon.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E4FD683A83E54606AC7772E2 /* puppy.png */ = {isa = PBXFileReference; name = "puppy.png"; path = "../assets/images/puppy.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -463,6 +469,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				A6B36CFCFE1B45E890F3E066 /* libRNFetchBlob.a in Frameworks */,
 				5BE4ACBAA9A94B09BCE0F020 /* libRNAWSCognito.a in Frameworks */,
+				8BE472CA701349DEAC0650CB /* libRNGestureHandler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,6 +653,8 @@
 				31A6B6B9A6244FCB95E2DD13 /* Octicons.ttf */,
 				21229F3E7835427988C1E3B4 /* SimpleLineIcons.ttf */,
 				D5BD3CF33D5149CCBC0D4C15 /* Zocial.ttf */,
+				F40C0A8D6242434CA2C9BC89 /* profileicon.png */,
+				E4FD683A83E54606AC7772E2 /* puppy.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -709,6 +718,7 @@
 				CFC232AEFE084CC38063B361 /* RNVectorIcons.xcodeproj */,
 				1A02E9F618404F36A747E522 /* RNFetchBlob.xcodeproj */,
 				606D48E7EF684407A9F07765 /* RNAWSCognito.xcodeproj */,
+				D97080C9C18F43F891EB0846 /* RNGestureHandler.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1271,6 +1281,8 @@
 				1EDDD290009544B88EB87855 /* Octicons.ttf in Resources */,
 				B06FE09527EF4120BC153DC7 /* SimpleLineIcons.ttf in Resources */,
 				F63C93E3B4B44F6FB0D6526A /* Zocial.ttf in Resources */,
+				DAA7021ABE8744728B7F5C06 /* profileicon.png in Resources */,
+				B3FBB01881C94559B298724B /* puppy.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1398,6 +1410,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = rightonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1425,6 +1438,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = rightonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1453,6 +1467,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = righton/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1476,6 +1491,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = righton/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1506,6 +1522,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "righton-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1542,6 +1559,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "righton-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
