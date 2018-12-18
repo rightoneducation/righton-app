@@ -39,7 +39,7 @@ export default class Splash extends React.Component {
         }
 
         resolve();
-      }, __DEV__ ? 1500 : 2000));
+      }, __DEV__ ? 500 : 2000));
     } catch (exception) {
       debug.log('Rejected session from Splash:', exception);
     }
