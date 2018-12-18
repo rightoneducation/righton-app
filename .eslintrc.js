@@ -4,6 +4,9 @@ module.exports = {
   "settings": {
     "import/parser": "babel-eslint",
   },
+  "globals": {
+    "__DEV__": [true, true],
+  },
   "rules": {
     "strict": 0,
     "react/jsx-filename-extension": 0,
