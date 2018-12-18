@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import GamePreview from '../GamePreview';
 
 
@@ -15,7 +15,10 @@ const GameApp = createBottomTabNavigator(
 );
 
 
+const GameAppContainer = createAppContainer(GameApp);
+
+
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <GameApp screenProps={{ ...screenProps, ...otherProps }} />;
+  return <GameAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
 };
