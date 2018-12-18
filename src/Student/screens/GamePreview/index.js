@@ -14,7 +14,10 @@ import styles from './styles';
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
     gameState: PropTypes.shape({
-      type: PropTypes.any,
+      team0: PropTypes.shape({
+        question: PropTypes.string,
+        team: PropTypes.string,
+      }),
     }),
     group: PropTypes.number.isRequired,
     studentAppNavigator: PropTypes.shape({
@@ -23,7 +26,12 @@ export default class GamePreview extends React.PureComponent {
   }
   
   static defaultProps = {
-    gameState: {},
+    gameState: {
+      team0: {
+        question: 'What did you eat for breakfast?',
+        team: "The Catcher's Rye",
+      },
+    },
     group: 0,
     studentAppNavigator: {},
   }
@@ -42,31 +50,33 @@ export default class GamePreview extends React.PureComponent {
 
 
   componentDidMount() {
-    this.startArrowAnimation();
+    this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
+  }
+
+
+  componentWillUnmount() {
+    clearInterval(this.animationInterval);
   }
 
 
   startArrowAnimation() {
     Animated.parallel([
       Animated.timing(
-        this.animatedArrow1, {
+        this.animatedArrow3, {
           toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
+          duration: 750,
         }
       ),
       Animated.timing(
         this.animatedArrow2, {
           toValue: 1,
-          duration: 750,
-          useNativeDriver: true,
+          duration: 1500
         }
       ),
       Animated.timing(
-        this.animatedArrow3, {
+        this.animatedArrow1, {
           toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
+          duration: 2000
         }
       ),
     ]).start();
@@ -76,26 +86,23 @@ export default class GamePreview extends React.PureComponent {
         Animated.timing(
           this.animatedArrow1, {
             toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
+            duration: 2000,
           }
         ),
         Animated.timing(
           this.animatedArrow2, {
             toValue: 0,
-            duration: 750,
-            useNativeDriver: true,
+            duration: 1500,
           }
         ),
         Animated.timing(
           this.animatedArrow3, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
+            toValue: 0,
+            duration: 750,
           }
         ),
       ]).start();
-    }, 500);
+    }, 1250);
   }
 
 

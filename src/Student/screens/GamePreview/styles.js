@@ -9,7 +9,7 @@ export default StyleSheet.create({
     height: 50,
     position: 'absolute',
     transform: [
-      { rotate: '-90deg' },
+      { rotate: '-45deg' },
     ],
     width: 50,
   },
@@ -23,11 +23,15 @@ export default StyleSheet.create({
     bottom: 20,
   },
   arrowButton: {
-    bottom: 0,
+    alignItems: 'center',
+    bottom: -40,
+    left: 0,
     position: 'absolute',
+    right: 0,
   },
   container: {
     alignItems: 'center',
+    backgroundColor: colors.darkGray,
     flex: 1,
   },
   image: {
@@ -39,6 +43,6 @@ export default StyleSheet.create({
   },
   questionContainer: {
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 50,
   },
 });
