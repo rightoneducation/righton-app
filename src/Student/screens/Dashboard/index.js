@@ -27,6 +27,8 @@ export default class Dashboard extends React.Component {
 
     this.handleRoomInput = this.handleRoomInput.bind(this);
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+
+    this.handleGameEntry = this.handleGameEntry.bind(this);
   }
 
 
@@ -48,6 +50,11 @@ export default class Dashboard extends React.Component {
   handleRoomSubmit = () => (
     Keyboard.dismiss()
   )
+
+
+  handleGameEntry() {
+    this.props.studentAppNavigator.navigate('GameApp');
+  }
 
 
   renderProfileView() {
@@ -114,7 +121,7 @@ export default class Dashboard extends React.Component {
         />
         <ButtonWide
           label={'Enter game'}
-          onPress={() => { /* TODO */ }}
+          onPress={this.handleGameEntry}
         />
       </View>
     );
@@ -164,8 +171,10 @@ export default class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   screenProps: PropTypes.shape({ type: PropTypes.any }),
+  studentAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
 };
 
 Dashboard.defaultProps = {
   screenProps: {},
+  studentAppNavigator: {},
 };
