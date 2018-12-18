@@ -24,10 +24,11 @@ export default StyleSheet.create({
   },
   arrowButton: {
     alignItems: 'center',
+    alignSelf: 'center',
     bottom: -40,
-    left: 0,
+    height: 125,
     position: 'absolute',
-    right: 0,
+    width: 70,
   },
   container: {
     alignItems: 'center',

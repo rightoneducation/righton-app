@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import HeaderTeam from '../../components/HeaderTeam';
+import Instructions from '../../../components/Instructions';
 import styles from './styles';
 
 
@@ -15,6 +16,7 @@ export default class GamePreview extends React.PureComponent {
   static propTypes = {
     gameState: PropTypes.shape({
       team0: PropTypes.shape({
+        instructions: PropTypes.array,
         question: PropTypes.string,
         team: PropTypes.string,
       }),
@@ -28,8 +30,9 @@ export default class GamePreview extends React.PureComponent {
   static defaultProps = {
     gameState: {
       team0: {
-        question: 'What did you eat for breakfast?',
-        team: "The Catcher's Rye",
+        instructions: __DEV__ ? ['Look up and to the right', 'Touch your tongue', 'Smack your lips'] : [],
+        question: __DEV__ ? 'What did you eat for breakfast?' : '',
+        team: __DEV__ ? "The Catcher's Rye" : '',
       },
     },
     group: 0,
@@ -46,16 +49,36 @@ export default class GamePreview extends React.PureComponent {
     this.state = {
       showInstructions: false,
     };
+
+    this.toggleInstructions = this.toggleInstructions.bind(this);
   }
 
 
   componentDidMount() {
-    this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
+    this.startAnimation();
   }
 
 
   componentWillUnmount() {
     clearInterval(this.animationInterval);
+  }
+
+
+  startAnimation() {
+    this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
+  }
+
+
+  toggleInstructions() {
+    const { showInstructions } = this.state;
+    if (showInstructions) {
+      this.setState({ showInstructions: false }, () => {
+        this.startAnimation();
+      });
+    } else {
+      clearInterval(this.animationInterval);
+      this.setState({ showInstructions: true });
+    }
   }
 
 
@@ -109,7 +132,7 @@ export default class GamePreview extends React.PureComponent {
   renderArrowButton = () => (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => {}}
+      onPress={this.toggleInstructions}
       style={styles.arrowButton}
     >
       <Animated.View style={[styles.arrow, styles.arrow1, { opacity: this.animatedArrow1 }]} />
@@ -134,14 +157,22 @@ export default class GamePreview extends React.PureComponent {
 
 
   render() {
+    const { showInstructions } = this.state;
+
     const { gameState, group } = this.props;
     const team = `team${group}`;
 
     return (
       <View style={styles.container}>
         <HeaderTeam team={gameState[team].team} />
-        { this.renderQuestion() }
-        { this.renderArrowButton() }
+        {this.renderQuestion()}
+        {!showInstructions && this.renderArrowButton()}
+        {showInstructions &&
+          <Instructions
+            handleCloseModal={this.toggleInstructions}
+            data={gameState[team].instructions}
+            visible={showInstructions}
+          />}
       </View>
     );
   }
