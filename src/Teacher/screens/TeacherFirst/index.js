@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
-import { TabNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
@@ -20,7 +20,7 @@ const TabBarIcon = ({ label, tintColor }) => (
   </View>
 );
 
-const FirstScreen = TabNavigator({
+const TeacherFirst = createBottomTabNavigator({
 
 
   SignIn: {
@@ -83,7 +83,10 @@ TabBarIcon.defaultProps = {
 };
 
 
+const TeacherFirstContainer = createAppContainer(TeacherFirst);
+
+
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <FirstScreen screenProps={{ ...screenProps, ...otherProps }} />;
+  return <TeacherFirstContainer screenProps={{ ...screenProps, ...otherProps }} />;
 };

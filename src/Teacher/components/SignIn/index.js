@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Message from '../../../components/Message';
 import ButtonRound from '../../../components/ButtonRound';
 import { colors } from '../../../utils/theme';
@@ -272,7 +272,7 @@ SignIn.defaultProps = {
   // otherProps: {},
 };
 
-const SignInStack = (StackNavigator({
+const SignInStack = (createStackNavigator({
   SignIn: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
@@ -285,4 +285,8 @@ const SignInStack = (StackNavigator({
   },
 }, { mode: 'modal' }));
 
-export default props => <SignInStack screenProps={{ ...props }} />;
+
+const SignInStackContainer = createAppContainer(SignInStack);
+
+
+export default props => <SignInStackContainer screenProps={{ ...props }} />;

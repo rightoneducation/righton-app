@@ -1,12 +1,12 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import OnboardAppRouter from '../OnboardAppRouter';
 import OnboardTeacherRouter from '../OnboardTeacherRouter';
 import TeacherFirst from '../../Teacher/screens/TeacherFirst';
 import StudentFirst from '../../Student/screens/StudentFirst';
 
 
-const OnboardApp = StackNavigator({
+const OnboardApp = createStackNavigator({
 
 
   OnboardAppRouter: {
@@ -80,8 +80,9 @@ const OnboardApp = StackNavigator({
 
 }, { header: null });
 
+const OnboardAppContainer = createAppContainer(OnboardApp);
 
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <OnboardApp screenProps={{ ...screenProps, ...otherProps }} />;
+  return <OnboardAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
 };

@@ -1,10 +1,10 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import Age from '../../components/Age';
 import GameRoom from './StudentFirstGameRoom';
 
 
-const StudentFirst = StackNavigator({
+const StudentFirst = createStackNavigator({
 
 
   Age: {
@@ -65,7 +65,11 @@ const StudentFirst = StackNavigator({
 
 }, { header: null });
 
+
+const StudentFirstContainer = createAppContainer(StudentFirst);
+
+
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <StudentFirst screenProps={{ ...screenProps, ...otherProps }} />;
+  return <StudentFirstContainer screenProps={{ ...screenProps, ...otherProps }} />;
 };

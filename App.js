@@ -4,16 +4,13 @@ global.Buffer = global.Buffer || Buffer.Buffer; // Required for aws sigv4 signin
 
 import React from 'react';
 import { YellowBox } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 
-import { WithAuth } from './lib/Categories/Auth/Components';
-import Amplify from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 import awsmobile from './src/aws-exports';
-import OnboardApp from './src/screens/OnboardApp';
-import Splash from './src/screens/Splash';
-import StudentApp from './src/Student';
-import TeacherApp from './src/Teacher';
 
+import RootNavigator from './src/Navigator';
+
+import LocalStorage from './lib/Categories/LocalStorage';
 
 YellowBox.ignoreWarnings([]);
 YellowBox.ignoreWarnings(
@@ -26,41 +23,70 @@ YellowBox.ignoreWarnings(
 Amplify.configure(awsmobile);
 
 
-const App = StackNavigator({
-  Splash: {
-    screen: props => (
-      <Splash navigation={props.navigation} {...props.screenProps} />
-    ),
-    navigationOptions: {
-      header: null,
-    },
-  },
-  OnboardApp: {
-    screen: props => (
-      <OnboardApp rootNavigator={props.navigation} {...props} />
-    ), 
-    navigationOptions: { 
-      header: null,
-    },
-  },
-  StudentApp: {
-    screen: props => (
-      <StudentApp rootNavigator={props.navigation} {...props} />
-    ), 
-    navigationOptions: { 
-      header: null,
-    },
-  },
-  TeacherApp: {
-    screen: props => (
-      <TeacherApp rootNavigator={props.navigation} {...props} />
-    ), 
-    navigationOptions: { 
-      header: null,
-    },
-  },
-}, { initialRouteName: 'Splash' });
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-const AppContainer = props => <App screenProps={{ ...props }} />;
+    this.state = {
+      ready: false,
+      session: null,
+    };
 
-export default WithAuth(AppContainer);
+    this.handleOnSignIn = this.handleOnSignIn.bind(this);
+    this.handleOnSignUp = this.handleOnSignUp.bind(this);
+    this.handleOnSignOut = this.handleOnSignOut.bind(this);
+  }
+
+  async componentDidMount() {
+    await LocalStorage.init();
+    let session;
+    try {
+      session = await Auth.currentSession();
+    } catch (err) {
+      console.log(err);
+      session = null;
+    }
+    this.setState({
+      session,
+      ready: true,
+    });
+  }
+
+  handleOnSignIn(session) {
+    this.setState({ session });
+  }
+
+  handleOnSignUp() { }
+
+  handleOnSignOut() {
+    Auth.signOut();
+    this.setState({ session: null });
+  }
+
+  render() {
+    const { ready, session } = this.state;
+    const {
+      onSignIn,
+      onSignUp,
+      doSignOut,
+      // ...otherProps
+    } = this.props;
+    return (
+      <RootNavigator
+        ref={(nav) => {
+          this.navigator = nav;
+        }}
+        navigation={this.props.navigation}
+        screenProps={{
+          session,
+          onSignIn: onSignIn || this.handleOnSignIn,
+          onSignUp: onSignUp || this.handleOnSignUp,
+          doSignOut: doSignOut || this.handleOnSignOut,
+          auth: Auth,
+        }}
+      />
+    );
+  }
+}
+
+App.router = RootNavigator.router;

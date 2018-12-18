@@ -1,9 +1,9 @@
 import React from 'react';
-import { DrawerNavigator } from 'react-navigation';
+import { createDrawerNavigator, createAppContainer } from 'react-navigation';
 import Dashboard from './screens/Dashboard';
 
 
-const StudentApp = DrawerNavigator({
+const StudentApp = createDrawerNavigator({
 
 
   Dashboard: {
@@ -28,7 +28,11 @@ const StudentApp = DrawerNavigator({
 
 }, { header: null });
 
+
+const StudentAppContainer = createAppContainer(StudentApp);
+
+
 export default (props) => {
   const { screenProps, ...otherProps } = props;
-  return <StudentApp screenProps={{ ...screenProps, ...otherProps }} />;
+  return <StudentAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
 };
