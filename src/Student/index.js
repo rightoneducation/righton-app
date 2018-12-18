@@ -1,6 +1,7 @@
 import React from 'react';
 import { createDrawerNavigator, createAppContainer } from 'react-navigation';
 import Dashboard from './screens/Dashboard';
+import GameApp from './screens/GameApp';
 
 
 const StudentApp = createDrawerNavigator({
@@ -14,8 +15,24 @@ const StudentApp = createDrawerNavigator({
         <Dashboard 
           {...screenProps}
           {...otherProps}
-          onCancel={() => otherProps.navigation.goBack()}
-          onSuccess={() => otherProps.navigation.goBack()}
+          studentAppNavigator={navigation}
+        />
+      );
+    },
+    navigationOptions: {
+      drawerLabel: ' ',
+    },
+  },
+
+
+  GameApp: {
+    screen: (props) => {
+      const { screenProps, navigation, ...otherProps } = props;
+
+      return (
+        <GameApp 
+          {...screenProps}
+          {...otherProps}
           studentAppNavigator={navigation}
         />
       );
