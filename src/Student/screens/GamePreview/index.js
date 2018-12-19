@@ -9,11 +9,13 @@ import {
 import PropTypes from 'prop-types';
 import HeaderTeam from '../../components/HeaderTeam';
 import Instructions from '../../../components/Instructions';
+import ButtonRound from '../../../components/ButtonRound';
 import styles from './styles';
 
 
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
+    GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
     gameState: PropTypes.shape({
       team0: PropTypes.shape({
         instructions: PropTypes.array,
@@ -28,6 +30,7 @@ export default class GamePreview extends React.PureComponent {
   }
   
   static defaultProps = {
+    GameAppNavigator: {},
     gameState: {
       team0: {
         instructions: __DEV__ ? ['Look up and to the right', 'Touch your tongue', 'Smack your lips'] : [],
@@ -50,6 +53,7 @@ export default class GamePreview extends React.PureComponent {
       showInstructions: false,
     };
 
+    this.navigateToGameTricks = this.navigateToGameTricks.bind(this);
     this.toggleInstructions = this.toggleInstructions.bind(this);
   }
 
@@ -66,6 +70,11 @@ export default class GamePreview extends React.PureComponent {
 
   startAnimation() {
     this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
+  }
+
+
+  navigateToGameTricks() {
+    this.props.GameAppNavigator.navigate('GameTricks');
   }
 
 
@@ -173,6 +182,10 @@ export default class GamePreview extends React.PureComponent {
             data={gameState[team].instructions}
             visible={showInstructions}
           />}
+        <ButtonRound
+          icon={'pencil-square-o'}
+          onPress={this.navigateToGameTricks}
+        />
       </View>
     );
   }
