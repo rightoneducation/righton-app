@@ -1,16 +1,27 @@
 import React from 'react';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import GamePreview from '../GamePreview';
+import GameTricks from '../GameTricks';
 
 
 const GameApp = createBottomTabNavigator(
   {
     Default: { 
-      screen: GamePreview,
+      screen: props => (
+        <GamePreview screenProps={{ ...props.screenProps }} GameAppNavigator={props.navigation} />
+      ),
       navigationOptions: {
         tabBarVisible: false,
       },
-    }
+    },
+    GameTricks: { 
+      screen: props => (
+        <GameTricks screenProps={{ ...props.screenProps }} GameAppNavigator={props.navigation} />
+      ),
+      navigationOptions: {
+        tabBarVisible: false,
+      },
+    },
   }
 );
 
