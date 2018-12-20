@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import SignIn from '../../components/SignIn';
-import SignUp from '../../components/SignUp';
+import Class from '../Class';
+import Create from '../Create';
+import Quizzes from '../Quizzes';
+import Reports from '../Reports';
 import { colors } from '../../../utils/theme';
 
 const styles = StyleSheet.create({
@@ -13,9 +15,9 @@ const styles = StyleSheet.create({
 });
 
 
-const TabBarIcon = ({ label, tintColor }) => (
+const TabBarIcon = ({ icon, label, tintColor }) => (
   <View style={styles.tabBarIconContainer}>
-    <Aicon type={'font-awesome'} name={label === 'SIGN IN' ? 'sign-in' : 'sign-out'} style={styles.tabBarIcon} color={tintColor} />
+    <Aicon type={'font-awesome'} name={icon} style={styles.tabBarIcon} color={tintColor} />
     {Platform.OS === 'ios' && <Text style={[styles.tabBarLabel, { color: tintColor }]}>{ label }</Text>}
   </View>
 );
@@ -23,99 +25,100 @@ const TabBarIcon = ({ label, tintColor }) => (
 const Dashboard = createBottomTabNavigator({
 
 
-  SignIn: {
+  Class: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <SignIn
+        <Class
           {...screenProps}
           {...otherProps}
-          onLogIn={screenProps.onLogIn}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Sign In',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'Home'} />,
+      tabBarLabel: 'Class',
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'bell-o'} tintColor={tintColor} label={'Class'} />,
     },
   },
 
 
-  SignUp: {
+  Create: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <SignUp
+        <Create
           {...screenProps}
           {...otherProps}
-          onSignUp={screenProps.onSignUp}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Sign Up',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'Class'} />
+      tabBarLabel: 'Create',
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'tablet'} tintColor={tintColor} label={'Create'} />
     },
   },
 
 
-  SignOut: {
+  Quizzes: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <SignIn
+        <Quizzes
           {...screenProps}
           {...otherProps}
-          onLogIn={screenProps.onLogIn}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Sign In',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'Create'} />,
+      tabBarLabel: 'Quizzes',
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'database'} tintColor={tintColor} label={'Quizzes'} />,
     },
   },
 
 
-  SignHere: {
+  Reports: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <SignUp
+        <Reports
           {...screenProps}
           {...otherProps}
-          onSignUp={screenProps.onSignUp}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Sign Up',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'Preview'} />
+      tabBarLabel: 'Reports',
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'bar-chart'} tintColor={tintColor} label={'Reports'} />
     },
   },
 
 
 }, {
+  animationEnabled: true,
+  swipeEnabled: false,
   tabBarPosition: 'bottom',
   tabBarOptions: {
+    activeTintColor: colors.white,
+    inactiveTintColor: colors.dark,
     tabStyle: { backgroundColor: colors.primary, borderTopWidth: 0.5, borderTopColor: '#ededed' },
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
-    activeTintColor: colors.white,
   },
 });
 
 
 TabBarIcon.propTypes = {
+  icon: PropTypes.string,
   label: PropTypes.string,
   tintColor: PropTypes.string,
 };
 
 TabBarIcon.defaultProps = {
+  icon: '',
   label: '',
   tintColor: '#000',
 };
