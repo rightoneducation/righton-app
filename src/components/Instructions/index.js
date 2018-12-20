@@ -54,7 +54,7 @@ function Instructions({ data, handleCloseModal, visible }) {
     >
       <View style={styles.instructionsWrapper}>
         <TouchableHighlight
-          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+          hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
           onPress={handleCloseModal}
           style={styles.closeArrow}
         >
