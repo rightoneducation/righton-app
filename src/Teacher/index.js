@@ -1,6 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator, createAppContainer } from 'react-navigation';
-import Dashboard from '../Student/screens/Dashboard';
+import Dashboard from './screens/Dashboard';
 
 
 const TeacherApp = createDrawerNavigator({
@@ -14,8 +14,6 @@ const TeacherApp = createDrawerNavigator({
         <Dashboard 
           {...screenProps}
           {...otherProps}
-          onCancel={() => otherProps.navigation.goBack()}
-          onSuccess={() => otherProps.navigation.goBack()}
           TeacherAppNavigator={navigation}
         />
       );
