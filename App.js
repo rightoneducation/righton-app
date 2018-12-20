@@ -48,7 +48,7 @@ export default class App extends React.Component {
     };
 
     this.handleOnSignIn = this.handleOnSignIn.bind(this);
-    this.handleOnSignUp = this.handleOnSignUp.bind(this);
+    // this.handleOnSignUp = this.handleOnSignUp.bind(this);
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
   }
 
