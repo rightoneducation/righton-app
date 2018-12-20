@@ -64,10 +64,11 @@ const TeacherFirst = createBottomTabNavigator({
 }, {
   tabBarPosition: 'bottom',
   tabBarOptions: {
+    activeTintColor: colors.white,
+    inactiveTintColor: colors.dark,
     tabStyle: { backgroundColor: colors.primary, borderTopWidth: 0.5, borderTopColor: '#ededed' },
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
-    activeTintColor: colors.white,
   },
 });
 
