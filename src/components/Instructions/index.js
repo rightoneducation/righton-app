@@ -52,7 +52,7 @@ function Instructions({ data, handleCloseModal, visible }) {
       transparent
       visible={visible}
     >
-      <ScrollView contentContainerStyle={styles.instructionsContainer}>
+      <View style={styles.instructionsWrapper}>
         <TouchableHighlight
           hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
           onPress={handleCloseModal}
@@ -60,17 +60,19 @@ function Instructions({ data, handleCloseModal, visible }) {
         >
           <View />
         </TouchableHighlight>
-        {data.map((instruction, idx) => {
-          const alignment = idx % 2 === 0 ? 'left' : 'right';
-          return (
-            <InstructionBox
-              alignment={alignment}
-              key={instruction}
-              instruction={instruction}
-            />
-          );
-        })}
-      </ScrollView>
+        <ScrollView contentContainerStyle={styles.instructionsContainer}>
+          {data.map((instruction, idx) => {
+            const alignment = idx % 2 === 0 ? 'left' : 'right';
+            return (
+              <InstructionBox
+                alignment={alignment}
+                key={instruction}
+                instruction={instruction}
+              />
+            );
+          })}
+        </ScrollView>
+      </View>
     </Modal>
   );
 }
@@ -130,6 +132,9 @@ const styles = StyleSheet.create({
     fontSize: fonts.medium,
   },
   instructionsContainer: {
+    flexGrow: 1,
+  },
+  instructionsWrapper: {
     backgroundColor: colors.dark,
     bottom: 0,
     left: 0,
