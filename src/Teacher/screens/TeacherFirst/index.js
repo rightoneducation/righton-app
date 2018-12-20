@@ -9,13 +9,13 @@ import { colors } from '../../../utils/theme';
 
 const styles = StyleSheet.create({
   tabBarLabel: { marginLeft: 9 },
-  tabBarIconContainer: { flexDirection: 'row', alignItems: 'center', height: 30 },
+  tabBarIconContainer: { flexDirection: 'row', alignItems: 'center', height: 30, paddingVertical: 35, },
 });
 
 
 const TabBarIcon = ({ label, tintColor }) => (
   <View style={styles.tabBarIconContainer}>
-    <Aicon type={'font-awesome'} name="sign-in" style={styles.tabBarIcon} color={tintColor} />
+    <Aicon type={'font-awesome'} name={label === 'SIGN IN' ? 'sign-in' : 'sign-out'} style={styles.tabBarIcon} color={tintColor} />
     {Platform.OS === 'ios' && <Text style={[styles.tabBarLabel, { color: tintColor }]}>{ label }</Text>}
   </View>
 );
@@ -37,7 +37,7 @@ const TeacherFirst = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign In',
-      tabBarIcon: <TabBarIcon tintColor={colors.white} label={'SIGN IN'} />,
+      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'SIGN IN'} />,
     },
   },
 
@@ -56,7 +56,7 @@ const TeacherFirst = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign Up',
-      tabBarIcon: <TabBarIcon tintColor={colors.white} label={'SIGN UP'} />
+      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'SIGN UP'} />
     },
   },
 
