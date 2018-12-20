@@ -20,7 +20,7 @@ const StudentApp = createDrawerNavigator({
       );
     },
     navigationOptions: {
-      drawerLabel: ' ',
+      drawerLabel: 'Dashboard',
     },
   },
 
