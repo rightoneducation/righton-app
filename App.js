@@ -4,6 +4,7 @@ global.Buffer = global.Buffer || Buffer.Buffer; // Required for aws sigv4 signin
 
 import React from 'react';
 import { YellowBox } from 'react-native';
+import PropTypes from 'prop-types';
 
 import Amplify, { Auth } from 'aws-amplify';
 import awsmobile from './src/aws-exports';
@@ -11,11 +12,13 @@ import awsmobile from './src/aws-exports';
 import RootNavigator from './src/Navigator';
 
 import LocalStorage from './lib/Categories/LocalStorage';
+import debug from './src/utils/debug';
 
 YellowBox.ignoreWarnings([]);
 YellowBox.ignoreWarnings(
   [
-    'Module RNFetchBlob requires main queue setup', 
+    'Module RNFetchBlob requires main queue setup',
+    'You should only render one navigator explicitly in your app,',
   ]
 );
 
@@ -24,6 +27,18 @@ Amplify.configure(awsmobile);
 
 
 export default class App extends React.Component {
+  static propTypes = {
+    onSignIn: PropTypes.func,
+    onSignUp: PropTypes.func,
+    doSignOut: PropTypes.func,
+  }
+
+  static defaultProps = {
+    onSignIn: () => {},
+    onSignUp: () => {},
+    doSignOut: () => {},
+  }
+
   constructor(props) {
     super(props);
 
@@ -43,9 +58,13 @@ export default class App extends React.Component {
     try {
       session = await Auth.currentSession();
     } catch (err) {
-      console.log(err);
+      debug.log(err);
       session = null;
     }
+    this.setSession(session);
+  }
+
+  setSession(session) {
     this.setState({
       session,
       ready: true,
@@ -56,7 +75,7 @@ export default class App extends React.Component {
     this.setState({ session });
   }
 
-  handleOnSignUp() { }
+  // handleOnSignUp = () => { }
 
   handleOnSignOut() {
     Auth.signOut();
@@ -64,13 +83,18 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { ready, session } = this.state;
+    const { 
+      // ready,
+      session 
+    } = this.state;
+
     const {
       onSignIn,
       onSignUp,
       doSignOut,
       // ...otherProps
     } = this.props;
+
     return (
       <RootNavigator
         ref={(nav) => {
