@@ -40,7 +40,7 @@ export default StyleSheet.create({
   },
   question: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.large,
   },
   questionContainer: {
     alignItems: 'center',
