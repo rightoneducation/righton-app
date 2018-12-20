@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   iosContainer: {
     alignItems: 'flex-end',
-    paddingBottom: 10,
+    paddingTop: 15,
   },
   team: {
     color: colors.white,
