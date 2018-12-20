@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Animated, Easing, Keyboard, StyleSheet } from 'react-native';
+import { ActivityIndicator, Animated, Easing, Keyboard, StyleSheet, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
@@ -28,20 +28,24 @@ export default class ButtonRound extends React.PureComponent {
 
   handleAnimatedPress() {
     Keyboard.dismiss();
-    Animated.timing(
-      this.animatedRotation, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }
-    ).start(() => {
-      this.setState({ activity: true }, () => {
-        setTimeout(() => {
-          this.props.onPress();
-        }, 500);
+    if (this.props.animated) {
+      Animated.timing(
+        this.animatedRotation, {
+          toValue: 1,
+          duration: 300,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }
+      ).start(() => {
+        this.setState({ activity: true }, () => {
+          setTimeout(() => {
+            this.props.onPress();
+          }, 500);
+        });
       });
-    });
+    } else {
+      this.props.onPress();
+    }
   }
 
 
@@ -50,7 +54,10 @@ export default class ButtonRound extends React.PureComponent {
 
     const { 
       // activity,
-      icon, 
+      buttonStyles,
+      icon,
+      iconLabel,
+      iconStyles,
       // onPress,
     } = this.props;
 
@@ -65,7 +72,7 @@ export default class ButtonRound extends React.PureComponent {
         background={Touchable.Ripple(colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handleAnimatedPress}
-        style={styles.button}
+        style={[styles.button, buttonStyles]}
       >
         {
           activity ?
@@ -76,7 +83,12 @@ export default class ButtonRound extends React.PureComponent {
             />
             :
             <Animated.View style={{ transform: [{ rotate: spin }] }}>
-              <Aicon name={icon} style={styles.icon} />
+              {
+                iconLabel ?
+                  <Text style={[styles.icon, iconStyles]}>{iconLabel}</Text>
+                  :
+                  <Aicon name={icon} style={[styles.icon, iconStyles]} />
+              }
             </Animated.View>
         }
       </Touchable>
@@ -86,13 +98,21 @@ export default class ButtonRound extends React.PureComponent {
 
 ButtonRound.propTypes = {
   activity: PropTypes.bool.isRequired,
-  icon: PropTypes.string.isRequired,
+  animated: PropTypes.bool,
+  buttonStyles: PropTypes.shape({}),
+  icon: PropTypes.string,
+  iconLabel: PropTypes.string,
+  iconStyles: PropTypes.shape({}),
   onPress: PropTypes.func.isRequired,
 };
 
 ButtonRound.defaultProps = {
+  animated: false,
   activity: false,
+  buttonStyles: {},
   icon: '',
+  iconLabel: '',
+  iconStyles: {},
   onPress: () => {},
 };
 
