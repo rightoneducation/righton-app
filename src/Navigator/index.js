@@ -8,9 +8,9 @@ import TeacherApp from '../Teacher';
 
 const RootNavigator = createStackNavigator({
   Splash: {
-    screen: (props) => {
-      return <Splash navigation={props.navigation} {...props.screenProps} />;
-    },
+    screen: props => (
+      <Splash navigation={props.navigation} {...props.screenProps} />
+    ),
     navigationOptions: {
       header: null,
     },
