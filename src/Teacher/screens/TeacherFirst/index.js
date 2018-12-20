@@ -8,15 +8,15 @@ import SignUp from '../../components/SignUp';
 import { colors } from '../../../utils/theme';
 
 const styles = StyleSheet.create({
-  tabBarLabel: { marginLeft: 9 },
-  tabBarIconContainer: { flexDirection: 'row', alignItems: 'center', height: 30, paddingVertical: 35, },
+  tabBarIconContainer: { alignItems: 'center' },
+  tabBarIcon: { fontSize: 15 },
 });
 
 
-const TabBarIcon = ({ label, tintColor }) => (
+const TabBarIcon = ({ icon, label, tintColor }) => (
   <View style={styles.tabBarIconContainer}>
-    <Aicon type={'font-awesome'} name={label === 'SIGN IN' ? 'sign-in' : 'sign-out'} style={styles.tabBarIcon} color={tintColor} />
-    {Platform.OS === 'ios' && <Text style={[styles.tabBarLabel, { color: tintColor }]}>{ label }</Text>}
+    <Aicon type={'font-awesome'} name={icon} style={styles.tabBarIcon} color={tintColor} />
+    {Platform.OS === 'ios' && <Text style={{ color: tintColor }}>{ label }</Text>}
   </View>
 );
 
@@ -37,7 +37,7 @@ const TeacherFirst = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign In',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'SIGN IN'} />,
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'sign-in'} tintColor={tintColor} label={'SIGN IN'} />,
     },
   },
 
@@ -56,7 +56,7 @@ const TeacherFirst = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign Up',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon tintColor={tintColor} label={'SIGN UP'} />
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'sign-out'} tintColor={tintColor} label={'SIGN UP'} />
     },
   },
 
@@ -74,11 +74,13 @@ const TeacherFirst = createBottomTabNavigator({
 
 
 TabBarIcon.propTypes = {
+  icon: PropTypes.string,
   label: PropTypes.string,
   tintColor: PropTypes.string,
 };
 
 TabBarIcon.defaultProps = {
+  icon: '',
   label: '',
   tintColor: '#000',
 };

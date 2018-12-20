@@ -10,15 +10,15 @@ import Reports from '../Reports';
 import { colors } from '../../../utils/theme';
 
 const styles = StyleSheet.create({
-  tabBarLabel: { marginLeft: 9 },
-  tabBarIconContainer: { flexDirection: 'row', alignItems: 'center', height: 30, paddingVertical: 35, },
+  tabBarIconContainer: { alignItems: 'center' },
+  tabBarIcon: { fontSize: 15 },
 });
 
 
 const TabBarIcon = ({ icon, label, tintColor }) => (
   <View style={styles.tabBarIconContainer}>
     <Aicon type={'font-awesome'} name={icon} style={styles.tabBarIcon} color={tintColor} />
-    {Platform.OS === 'ios' && <Text style={[styles.tabBarLabel, { color: tintColor }]}>{ label }</Text>}
+    {Platform.OS === 'ios' && <Text style={{ color: tintColor }}>{ label }</Text>}
   </View>
 );
 
