@@ -370,7 +370,7 @@ class SignUp extends React.Component {
               keyboardType={'default'}
               maxLength={100}
               multiline={false}
-              onBlur={this.handleEmailBlur}
+              onBlur={this.handlePasswordBlur}
               onChangeText={this.handlePasswordInput}
               onSubmitEditing={this.handlePasswordSubmit}
               placeholder={'Password'}
