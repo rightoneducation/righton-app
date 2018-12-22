@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
+import Aicon from 'react-native-vector-icons/FontAwesome';
+import QuizBuilder from './QuizBuilder';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 
@@ -40,6 +42,9 @@ class Quizzes extends React.PureComponent {
     };
 
     this.quizzes = [];
+
+    this.handleCloseQuiz = this.handleCloseQuiz.bind(this);
+    this.handleOpenQuiz = this.handleOpenQuiz.bind(this);
   }
 
 
@@ -61,6 +66,7 @@ class Quizzes extends React.PureComponent {
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Quizzes, hydrateQuizzes():', exception);
     }
+  
     const quizRenderer = [];
     for (let i = 0; i < this.quizzes.length; i += 1) {
       quizRenderer.push(this.renderQuizBlock(this.quizzes[i]));
@@ -69,7 +75,7 @@ class Quizzes extends React.PureComponent {
   }
 
 
-  handleOpenQuiz(quiz) {
+  handleOpenQuiz(event, quiz = {}) {
     this.setState({ openQuiz: quiz });
   }
 
@@ -82,6 +88,14 @@ class Quizzes extends React.PureComponent {
   renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Quizzes</Text>
+      <Touchable
+        activeOpacity={0.8}
+        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+        onPress={this.handleOpenQuiz}
+        style={styles.plusButton}
+      >
+        <Aicon name={'plus'} style={styles.plusIcon} />
+      </Touchable>
     </View>
   );
 
@@ -93,7 +107,7 @@ class Quizzes extends React.PureComponent {
         background={Touchable.Ripple(colors.dark, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         key={quiz.title}
-        onPress={() => this.handleOpenQuiz(quiz)}
+        onPress={() => this.handleOpenQuiz(null, quiz)}
       >
         <View style={styles.quizButton}>
           <View style={styles.imageContainer}>
@@ -120,14 +134,17 @@ class Quizzes extends React.PureComponent {
 
 
   render() {
-    // const {
-
-    // } = this.state;
-
+    const { openQuiz } = this.state;
     // const { navigation } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
+        {openQuiz &&
+          <QuizBuilder
+            handleClose={this.handleCloseQuiz}
+            quiz={openQuiz}
+            visible
+          />}
         {this.renderHeader()}
         {this.renderQuizzes()}
       </View>
@@ -167,6 +184,15 @@ const styles = StyleSheet.create({
     color: colors.dark,
     fontSize: fonts.small,
     fontStyle: 'italic',
+  },
+  plusButton: {
+    bottom: 15,
+    position: 'absolute',
+    right: 15,
+  },
+  plusIcon: {
+    color: colors.white,
+    fontSize: 25,
   },
   quizButton: {
     backgroundColor: colors.white,
