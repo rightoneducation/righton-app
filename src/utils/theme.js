@@ -28,9 +28,18 @@ const colors = {
   red: '#c0001d',
 };
 
+const elevation = {
+  elevation: 2,
+  shadowOpacity: 0.5,
+  shadowRadius: 2,
+  shadowColor: colors.dark,
+  shadowOffset: { height: 1, width: 0 },
+};
+
 export {
   colors,
   deviceHeight,
   deviceWidth,
+  elevation,
   fonts,
 };
