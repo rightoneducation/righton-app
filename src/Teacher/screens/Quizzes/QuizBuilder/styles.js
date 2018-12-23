@@ -94,10 +94,11 @@ export default StyleSheet.create({
     color: colors.lightGray,
   },
   questionContainer: {
+    borderColor: colors.dark,
+    borderRadius: 1,
+    flexDirection: 'row',
     height: 100,
     marginTop: 15,
-    paddingHorizontal: 10,
-    paddingTop: 10,
     width: deviceWidth - 30,
   },
   questionAnswer: {
@@ -122,8 +123,11 @@ export default StyleSheet.create({
   },
   questionTextContainer: {
     backgroundColor: colors.white,
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   scrollview: {
     flexGrow: 1,

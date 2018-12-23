@@ -29,6 +29,7 @@ export default class QuizBuilder extends React.PureComponent {
         answer: PropTypes.string,
         image: PropTypes.string,
         question: PropTypes.string,
+        uid: PropTypes.number,
       })),
       title: PropTypes.string,
     }),
@@ -51,7 +52,12 @@ export default class QuizBuilder extends React.PureComponent {
 
     this.state = {
       addQuestion: {},
-      quiz: {},
+      quiz: {
+        avatar: '',
+        description: '',
+        questions: [],
+        title: '',
+      },
       showInput: false,
     };
 
@@ -67,8 +73,10 @@ export default class QuizBuilder extends React.PureComponent {
   }
 
 
-  componentDidMount() {
-    this.setQuizState();
+  componentWillReceiveProps(nextProps) {
+    if (this.props.quiz !== nextProps.quiz) {
+      this.hydrateState(nextProps.quiz);
+    }
   }
 
 
@@ -98,9 +106,8 @@ export default class QuizBuilder extends React.PureComponent {
   }
 
   
-  setQuizState() {
-    const { quiz } = this.props;
-    if (Object.keys(quiz).length) {
+  hydrateState(quiz) {
+    if (quiz && Object.keys(quiz).length) {
       this.setState({ quiz });
     } else {
       this.setState({ 
@@ -139,24 +146,31 @@ export default class QuizBuilder extends React.PureComponent {
   }
 
 
-  handleInputModal(inputLabel, placeholder) {
-    this.setState({
-      showInput: {
-        closeModal: this.closeInputModal,
-        keyboardType: 'default',
-        height: 45,
-        input: '',
-        inputLabel,
-        maxLength: 50,
-        multiline: false,
-        placeholder,
-        visible: true,
-        spellCheck: true,
-        width: deviceWidth - 30,
-        x: this[`${inputLabel}X`],
-        y: this[`${inputLabel}Y`],
-      }
-    });
+  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+    if (inputLabel === 'title') {
+      this.onTitleLayout();
+    } else if (inputLabel === 'description') {
+      this.onDescriptionLayout();
+    }
+    setTimeout(() => {
+      this.setState({
+        showInput: {
+          closeModal: this.closeInputModal,
+          keyboardType,
+          height: 45,
+          input,
+          inputLabel,
+          maxLength,
+          multiline: false,
+          placeholder,
+          visible: true,
+          spellCheck: true,
+          width: deviceWidth - 30,
+          x: this[`${inputLabel}X`],
+          y: this[`${inputLabel}Y`],
+        }
+      });
+    }, 100);
   }
 
 
@@ -298,6 +312,7 @@ export default class QuizBuilder extends React.PureComponent {
     return (
       <Touchable
         activeOpacity={0.8}
+        key={question.uid}
         onPress={() => this.openAddQuestion(null, question, idx)}
       >
         <View style={[styles.questionContainer, elevation]}>
@@ -324,7 +339,10 @@ export default class QuizBuilder extends React.PureComponent {
 
   renderQuestions() {
     const { questions } = this.state.quiz;
-    questions.map((question, idx) => this.renderQuestionBlock(question, idx));
+    if (Array.isArray(questions)) {
+      return questions.map((question, idx) => this.renderQuestionBlock(question, idx));
+    }
+    return null;
   }
 
 
@@ -398,7 +416,7 @@ export default class QuizBuilder extends React.PureComponent {
                     :
                     <View>
                       <Aicon name={'image'} style={styles.avatarIcon} />
-                      <Text style={styles.avatarLabel}>Upload splash</Text>
+                      <Text style={styles.avatarLabel}>Upload banner</Text>
                     </View>}
                 </View>
               </Touchable>
@@ -410,7 +428,7 @@ export default class QuizBuilder extends React.PureComponent {
               >
                 <Text style={styles.inputLabel}>Title</Text>
                 <Touchable
-                  onPress={() => this.handleInputModal('title', 'Enter title')}
+                  onPress={() => this.handleInputModal('title', 'Enter title', 75, title)}
                   style={[styles.inputButton, elevation]}
                 >
                   <Text style={[styles.inputButtonText, !title && styles.placeholder]}>{title || 'Enter title'}</Text>
@@ -424,7 +442,7 @@ export default class QuizBuilder extends React.PureComponent {
               >
                 <Text style={styles.inputLabel}>Description</Text>
                 <Touchable
-                  onPress={() => this.handleInputModal('description', 'Enter description')}
+                  onPress={() => this.handleInputModal('description', 'Enter description', 100, description)}
                   style={[styles.inputButton, elevation]}
                 >
                   <Text
@@ -452,7 +470,7 @@ export default class QuizBuilder extends React.PureComponent {
             closeModal={this.closeAddQuestion}
             question={addQuestion}
           />
-          
+
         </Swiper>
       </Modal>
     );
