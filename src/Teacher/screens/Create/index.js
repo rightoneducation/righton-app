@@ -61,7 +61,7 @@ class Create extends React.Component {
         <Text style={styles.title}>Game Room</Text>
         <TextInput
           keyboardType={'default'}
-          maxLength={100}
+          maxLength={30}
           multiline={false}
           onChangeText={this.handleRoomInput}
           onSubmitEditing={this.handleRoomSubmit}
