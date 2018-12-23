@@ -11,7 +11,6 @@ export default StyleSheet.create({
   },
   input: {
     borderColor: colors.white,
-    borderRadius: 10,
     borderWidth: 1,
     color: colors.white,
     fontSize: fonts.medium,
