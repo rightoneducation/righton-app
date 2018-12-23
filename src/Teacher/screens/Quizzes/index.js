@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Image,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -10,8 +9,9 @@ import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import QuizBuilder from './QuizBuilder';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
+import styles from './styles';
 
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
@@ -151,68 +151,6 @@ class Quizzes extends React.PureComponent {
     );
   }
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.dark,
-    flex: 1,
-  },
-  header: {
-    alignSelf: 'stretch',
-    backgroundColor: colors.primary,
-    height: 200,
-  },
-  headerTitle: {
-    color: colors.white,
-    fontSize: fonts.large,
-    marginTop: 50,
-    textAlign: 'center',
-  },
-  image: {
-    height: 150,
-    width: 150,
-  },
-  imageContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.lightGray,
-    height: 150,
-    justifyContent: 'center',
-    width: 150,
-  },
-  imageLabel: {
-    color: colors.dark,
-    fontSize: fonts.small,
-    fontStyle: 'italic',
-  },
-  plusButton: {
-    bottom: 15,
-    position: 'absolute',
-    right: 15,
-  },
-  plusIcon: {
-    color: colors.white,
-    fontSize: 25,
-  },
-  quizButton: {
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-    height: 150,
-    marginHorizontal: 15,
-    marginVertical: 10,
-    width: deviceWidth - 30,
-  },
-  quizTitle: {
-    color: colors.dark,
-    fontSize: fonts.medium,
-    padding: 10
-  },
-  scrollview: {
-    flexGrow: 1,
-    marginTop: 15,
-    paddingBottom: 25,
-  },
-});
 
 
 export default props => <Quizzes screenProps={{ ...props }} />;
