@@ -3,9 +3,10 @@ import { StyleSheet, Text, View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import Class from '../Class';
+import Explore from '../Explore';
 import Create from '../Create';
 import Quizzes from '../Quizzes';
+import Maker from '../Maker';
 import Reports from '../Reports';
 import { colors } from '../../../utils/theme';
 
@@ -25,20 +26,20 @@ const TabBarIcon = ({ icon, label, tintColor }) => (
 const Dashboard = createBottomTabNavigator({
 
 
-  Class: {
+  Explore: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <Class
+        <Explore
           {...screenProps}
           {...otherProps}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Class',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'bell-o'} tintColor={tintColor} label={'Class'} />,
+      tabBarLabel: 'Explore',
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'search'} tintColor={tintColor} label={'Explore'} />,
     },
   },
 
@@ -75,6 +76,24 @@ const Dashboard = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: 'Quizzes',
       tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'database'} tintColor={tintColor} label={'Quizzes'} />,
+    },
+  },
+
+
+  Maker: {
+    screen: (props) => {
+      const { screenProps, ...otherProps } = props;
+
+      return (
+        <Maker
+          {...screenProps}
+          {...otherProps}
+        />
+      );
+    },
+    navigationOptions: {
+      tabBarLabel: 'Maker',
+      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'puzzle-piece'} tintColor={tintColor} label={'Maker'} />,
     },
   },
 
