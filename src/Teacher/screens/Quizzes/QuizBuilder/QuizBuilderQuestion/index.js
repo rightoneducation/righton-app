@@ -116,36 +116,44 @@ export default class QuizBuilderQuestion extends React.PureComponent {
   }
 
 
-  handleInputModal(inputLabel, placeholder) {
-    this.setState({
-      showInput: {
-        closeModal: this.closeInputModal,
-        keyboardType: 'default',
-        height: 45,
-        input: '',
-        inputLabel,
-        maxLength: 50,
-        multiline: false,
-        placeholder,
-        visible: true,
-        spellCheck: true,
-        width: deviceWidth - 30,
-        x: this[`${inputLabel}X`],
-        y: this[`${inputLabel}Y`],
-      }
-    });
+  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+    if (inputLabel === 'question') {
+      this.onQuestionLayout();
+    } else if (inputLabel === 'answer') {
+      this.onAnswerLayout();
+    }
+    setTimeout(() => {
+      this.setState({
+        showInput: {
+          closeModal: this.closeInputModal,
+          keyboardType,
+          height: 45,
+          input,
+          inputLabel,
+          maxLength,
+          multiline: false,
+          placeholder,
+          visible: true,
+          spellCheck: true,
+          width: deviceWidth - 30,
+          x: this[`${inputLabel}X`],
+          y: this[`${inputLabel}Y`],
+        }
+      });
+    }, 100);
   }
 
 
   handleCloseModal() {
     const { question } = this.state;
     const { edit } = question;
+    const updatedQuestion = { ...question };
     if (typeof edit === 'number') {
-      const updatedQuestion = { ...question };
       delete updatedQuestion.edit;
       this.props.closeModal(null, updatedQuestion, edit);
     } else {
-      this.props.closeModal(null, question);
+      updatedQuestion.uid = `${Math.random()}`;
+      this.props.closeModal(null, updatedQuestion);
     }
   }
 
@@ -214,10 +222,15 @@ export default class QuizBuilderQuestion extends React.PureComponent {
           >
             <Text style={parentStyles.inputLabel}>Question</Text>
             <Touchable
-              onPress={() => this.handleInputModal('question', 'Enter question')}
+              onPress={() => this.handleInputModal('question', 'Enter question', 100, question)}
               style={[parentStyles.inputButton, elevation]}
             >
-              <Text style={[parentStyles.inputButtonText, !question && parentStyles.placeholder]}>
+              <Text
+                style={[
+                  parentStyles.inputButtonText,
+                  !question && parentStyles.placeholder
+                ]}
+              >
                 {question || 'Enter question'}
               </Text>
             </Touchable>
@@ -230,12 +243,12 @@ export default class QuizBuilderQuestion extends React.PureComponent {
           >
             <Text style={parentStyles.inputLabel}>Answer</Text>
             <Touchable
-              onPress={() => this.handleInputModal('answer', 'Enter answer')}
+              onPress={() => this.handleInputModal('answer', 'Enter answer', 100, answer, 'numeric')}
               style={[parentStyles.inputButton, elevation]}
             >
               <Text
                 style={[
-                  parentStyles.inputButtonText, 
+                  parentStyles.inputButtonText,
                   !answer && parentStyles.placeholder
                 ]}
               >
