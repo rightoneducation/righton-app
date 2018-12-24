@@ -73,9 +73,7 @@ const RootNavigator = createSwitchNavigator({
 
 
   StudentApp: {
-    screen: props => (
-      <StudentApp {...props} />
-    ), 
+    screen: StudentApp,
     navigationOptions: { 
       header: null,
     },
