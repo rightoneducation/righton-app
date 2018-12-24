@@ -2,16 +2,18 @@ import React from 'react';
 import {
   Keyboard,
   ScrollView,
+  StatusBar,
   Text,
   TextInput,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import HeaderSimple from '../../../components/HeaderSimple';
 import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
-import { colors } from '../../../utils/theme';
+import { colors, elevation } from '../../../utils/theme';
 
 
 export default class Dashboard extends React.Component {
@@ -55,6 +57,26 @@ export default class Dashboard extends React.Component {
   handleGameEntry() {
     this.props.studentAppNavigator.navigate('GameApp');
   }
+
+
+  renderHeader = () => (
+    <View style={[styles.headerContainer, elevation]}>
+      <Touchable
+        activeOpacity={0.8}
+        onPress={() => { /* TODO */ }}
+        style={styles.headerProfileContainer}
+      >
+        <Aicon name={'user'} style={styles.headerProfileIcon} />
+      </Touchable>
+      <Text style={styles.headerTitle}>RightOn!</Text>
+      <Touchable
+        activeOpacity={0.8}
+        onPress={() => { /* TODO */ }}
+      >
+        <Aicon name={'search'} style={styles.headerSearchIcon} />
+      </Touchable>
+    </View>
+  );
 
 
   renderProfileView() {
@@ -107,7 +129,7 @@ export default class Dashboard extends React.Component {
       <View style={[styles.roomContainer, { justifyContent: 'center' }]}>
         <TextInput
           keyboardType={'default'}
-          maxLength={89}
+          maxLength={30}
           multiline={false}
           onChangeText={this.handleRoomInput}
           onSubmitEditing={this.handleRoomSubmit}
@@ -156,15 +178,19 @@ export default class Dashboard extends React.Component {
     const { gameRoom } = this.props.screenProps;
 
     return (
-      <ScrollView
-        keyboardShouldPersistTaps={'never'}
-        contentContainerStyle={styles.container}
-      >
-        <HeaderSimple />
-        { this.renderProfileView() }
-        { gameRoom ? this.renderGameRoomState() : this.renderGameRoomEntry() }
-        { this.renderButtons() }
-      </ScrollView>
+      <View style={styles.container}>
+        <StatusBar backgroundColor={colors.primary} />     
+        {this.renderHeader()}   
+        <ScrollView
+          keyboardShouldPersistTaps={'never'}
+          contentContainerStyle={styles.scrollview}
+        >
+          {/* <HeaderSimple /> */}
+          { this.renderProfileView() }
+          { gameRoom ? this.renderGameRoomState() : this.renderGameRoomEntry() }
+          { this.renderButtons() }
+        </ScrollView>
+      </View>
     );
   }
 }
