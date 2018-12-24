@@ -12,12 +12,18 @@ import styles from '../styles';
 
 export default class AgeInput extends React.PureComponent {
   static propTypes = {
-    handleAgeSubmit: PropTypes.func.isRequired,
+    screenProps: PropTypes.shape({
+      handleAgeSubmit: PropTypes.func.isRequired,
+      handleBack: PropTypes.func.isRequired,
+    }),
   }
 
   
   static defaultProps = {
-    handleAgeSubmit: () => {},
+    screenProps: {
+      handleAgeSubmit: () => {},
+      handleBack: () => {},
+    },
   }
 
 
@@ -56,7 +62,7 @@ export default class AgeInput extends React.PureComponent {
     if (parseInt(this.state.age, 10) < 13) {
       // TODO Treat user specially
     } 
-    this.props.handleAgeSubmit();
+    this.props.screenProps.handleAgeSubmit();
   }
 
 
@@ -65,13 +71,13 @@ export default class AgeInput extends React.PureComponent {
       age,
     } = this.state;
 
-    const { navigation } = this.props;
+    const { handleBack } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
         <ButtonBack
           buttonStyles={{ top: 40 }}
-          navigator={navigation}
+          onPress={handleBack}
         />
         <Text style={styles.title}>How old are you?</Text>
         <TextInput

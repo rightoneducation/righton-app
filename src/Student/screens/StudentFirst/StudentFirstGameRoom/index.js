@@ -13,7 +13,22 @@ import { colors, fonts } from '../../../../utils/theme';
 import styles from '../styles';
 
 
-class GameRoom extends React.PureComponent {
+export default class GameRoom extends React.PureComponent {
+  static propTypes = {
+    screenProps: PropTypes.shape({
+      handleRoomSubmit: PropTypes.func,
+      handleBack: PropTypes.func.isRequired,
+    }),
+  }
+
+  
+  static defaultProps = {
+    screenProps: {
+      handleRoomSubmit: () => {},
+      handleBack: () => {},
+    },
+  }
+
   constructor(props) {
     super(props);
 
@@ -43,13 +58,13 @@ class GameRoom extends React.PureComponent {
       room,
     } = this.state;
 
-    const { navigation } = this.props;
+    const { handleBack } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
         <ButtonBack
           buttonStyles={{ top: 40 }}
-          navigator={navigation}
+          onPress={handleBack}
         />
         <Text style={styles.title}>Game Room</Text>
         <TextInput
@@ -83,13 +98,6 @@ class GameRoom extends React.PureComponent {
   }
 }
 
-GameRoom.propTypes = {
-  handleRoomSubmit: PropTypes.func,
-};
-
-GameRoom.defaultProps = {
-  handleRoomSubmit: () => {},
-};
 
 const GameRoomStyles = StyleSheet.create({
   skip: {
@@ -101,5 +109,3 @@ const GameRoomStyles = StyleSheet.create({
     position: 'absolute',
   },
 });
-
-export default props => <GameRoom screenProps={{ ...props }} />;
