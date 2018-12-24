@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Image,
   ScrollView,
+  StatusBar,
   Text,
   View,
 } from 'react-native';
@@ -139,6 +140,7 @@ class Quizzes extends React.PureComponent {
 
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor={colors.primary} />
         {openQuiz &&
           <QuizBuilder
             handleClose={this.handleCloseQuiz}
