@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Create from './screens/Create';
@@ -143,10 +143,4 @@ TabBarIcon.defaultProps = {
 };
 
 
-const TeacherAppContainer = createAppContainer(TeacherApp);
-
-
-export default (props) => {
-  const { screenProps, ...otherProps } = props;
-  return <TeacherAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
-};
+export default TeacherApp;
