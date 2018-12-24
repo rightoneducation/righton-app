@@ -35,7 +35,7 @@ export default class ButtonBack extends React.PureComponent {
     if (this.props.onPress) {
       this.props.onPress();
     } else {
-      this.props.navigator.goBack();
+      this.props.navigation.goBack();
     }
   }
 
