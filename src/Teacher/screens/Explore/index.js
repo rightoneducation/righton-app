@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Image,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -9,7 +10,7 @@ import {
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
 
 
 class Explore extends React.PureComponent {
@@ -66,6 +67,26 @@ class Explore extends React.PureComponent {
   }
 
 
+  renderHeader = () => (
+    <View style={[styles.headerContainer, elevation]}>
+      <Touchable
+        activeOpacity={0.8}
+        onPress={() => { /* TODO */ }}
+        style={styles.headerProfileContainer}
+      >
+        <Aicon name={'user'} style={styles.headerProfileIcon} />
+      </Touchable>
+      <Text style={styles.headerTitle}>RightOn!</Text>
+      <Touchable
+        activeOpacity={0.8}
+        onPress={() => { /* TODO */ }}
+      >
+        <Aicon name={'search'} style={styles.headerSearchIcon} />
+      </Touchable>
+    </View>
+  );
+
+
   renderDataBlock = data => (
     <Touchable
       activeOpacity={0.8}
@@ -80,8 +101,7 @@ class Explore extends React.PureComponent {
             {data.icon ?
               <Aicon name={data.icon} style={styles.icon} /> :
               <View style={styles.iconTextContainer}>
-                <Text style={[styles.iconText, styles.onStyle]}>Right</Text>
-                <Text style={styles.iconText}>On!</Text>
+                <Text style={styles.iconText}>RightOn!</Text>
               </View>}
           </View>
           <View style={styles.dataTextContainer}>
@@ -107,9 +127,13 @@ class Explore extends React.PureComponent {
     // const { navigation } = this.props.screenProps;
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        {this.renderData(data)}
-      </ScrollView>
+      <View style={styles.container}>
+        <StatusBar backgroundColor={colors.primary} />
+        {this.renderHeader()}
+        <ScrollView contentContainerStyle={styles.scrollview}>
+          {this.renderData(data)}
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -121,11 +145,7 @@ const styles = StyleSheet.create({
     width: deviceWidth - 30,
   },
   container: {
-    alignItems: 'center',
-    backgroundColor: colors.dark,
     flex: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 25,
   },
   dataBody: { 
     flex: 1,
@@ -151,6 +171,39 @@ const styles = StyleSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
   },
+  headerContainer: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: colors.primary,
+    borderColor: colors.dark,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    height: 65,
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+  },
+  headerProfileContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.lightGray,
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'flex-end',
+    width: 40,
+  },
+  headerProfileIcon: {
+    color: colors.dark,
+    fontSize: 30,
+    marginTop: 3,
+  },
+  headerSearchIcon: {
+    color: colors.white,
+    fontSize: 28,
+  },
+  headerTitle: {
+    color: colors.white,
+    fontSize: fonts.large,
+    fontStyle: 'italic',
+  },
   icon: {
     color: colors.white,
     fontSize: 35,
@@ -170,8 +223,12 @@ const styles = StyleSheet.create({
   iconTextContainer: {
     flexDirection: 'row',
   },
-  onStyle: {
-    marginTop: 4,
+  scrollview: {
+    alignItems: 'center',
+    backgroundColor: colors.dark,
+    flex: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 25,
   },
 });
 
