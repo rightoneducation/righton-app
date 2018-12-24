@@ -233,4 +233,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default props => <Explore screenProps={{ ...props }} />;
+export default Explore;
