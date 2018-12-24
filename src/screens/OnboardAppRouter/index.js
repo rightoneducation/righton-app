@@ -9,7 +9,7 @@ import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
 
-export default function OnboardAppRouter({ onboardNavigator }) {
+export default function OnboardAppRouter({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.placeholder}>RightOn!</Text>
@@ -18,7 +18,7 @@ export default function OnboardAppRouter({ onboardNavigator }) {
         <Touchable
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
-          onPress={() => onboardNavigator.navigate('OnboardTeacherRouter')}
+          onPress={() => navigation.navigate('OnboardTeacherRouter')}
           style={[styles.iamaButton, styles.whiteBackground]}
         >
           <View style={styles.iamaView}>
@@ -29,7 +29,7 @@ export default function OnboardAppRouter({ onboardNavigator }) {
         <Touchable
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
-          onPress={() => onboardNavigator.navigate('StudentFirst')}
+          onPress={() => navigation.navigate('StudentFirst')}
           style={[styles.iamaButton, styles.primaryBackground]}
         >
           <View style={styles.iamaView}>

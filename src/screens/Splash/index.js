@@ -50,7 +50,7 @@ export default class Splash extends React.Component {
     this.setLoading();
 
     if (__DEV__) {
-      this.navigateTo('OnboardApp');
+      this.navigateTo('OnboardAppRouter');
       return;
     }
 

@@ -17,7 +17,8 @@ import { colors } from '../../../utils/theme';
 
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
-    GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    // GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    navigator: PropTypes.shape({ navigate: PropTypes.func }),
     gameState: PropTypes.shape({
       team0: PropTypes.shape({
         question: PropTypes.string,
@@ -31,7 +32,8 @@ export default class GamePreview extends React.PureComponent {
   }
   
   static defaultProps = {
-    GameAppNavigator: {},
+    // GameAppNavigator: {},
+    navigator: {},
     gameState: {
       team0: {
         question: __DEV__ ? 'What did you eat for breakfast?' : '',

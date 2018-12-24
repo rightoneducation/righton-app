@@ -1,10 +1,11 @@
 import React from 'react';
-import { createDrawerNavigator, createAppContainer } from 'react-navigation';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import Dashboard from './screens/Dashboard';
-import GameApp from './screens/GameApp';
+// import GameApp from './screens/GameApp';
+import GamePreview from './screens/GamePreview';
+import GameTricks from './screens/GameTricks';
 
-
-const StudentApp = createDrawerNavigator({
+const StudentSwitchNavigator = createSwitchNavigator({
 
 
   Dashboard: {
@@ -15,30 +16,51 @@ const StudentApp = createDrawerNavigator({
         <Dashboard 
           {...screenProps}
           {...otherProps}
-          studentAppNavigator={navigation}
+          // studentAppNavigator={navigation}
+          navigation={navigation}
         />
       );
     },
     navigationOptions: {
-      drawerLabel: 'Dashboard',
+      // drawerLabel: 'Dashboard',
     },
   },
 
 
-  GameApp: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
+  // GameApp: {
+  //   screen: (props) => {
+  //     const { screenProps, navigation, ...otherProps } = props;
 
-      return (
-        <GameApp 
-          {...screenProps}
-          {...otherProps}
-          studentAppNavigator={navigation}
-        />
-      );
-    },
+  //     return (
+  //       <GameApp 
+  //         {...screenProps}
+  //         {...otherProps}
+  //         studentAppNavigator={navigation}
+  //       />
+  //     );
+  //   },
+  //   navigationOptions: {
+  //     drawerLabel: ' ',
+  //   },
+  // },
+
+
+  GamePreview: {
+    screen: props => (
+      <GamePreview screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+    ),
     navigationOptions: {
-      drawerLabel: ' ',
+      // tabBarVisible: false,
+    },
+  },
+
+
+  GameTricks: {
+    screen: props => (
+      <GameTricks screenProps={{ ...props.screenProps }} navigation={props.navigation} />
+    ),
+    navigationOptions: {
+      // tabBarVisible: false,
     },
   },
 
@@ -46,10 +68,32 @@ const StudentApp = createDrawerNavigator({
 }, { header: null });
 
 
-const StudentAppContainer = createAppContainer(StudentApp);
+const StudentAppContainer = createAppContainer(StudentSwitchNavigator);
 
 
-export default (props) => {
-  const { screenProps, ...otherProps } = props;
-  return <StudentAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
-};
+class StudentApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    };
+  }
+
+
+  render() {
+    const { screenProps, ...otherProps } = this.props;
+
+    return (
+      <StudentAppContainer screenProps={{ ...screenProps, ...otherProps }} />
+    );
+  }
+}
+
+
+export default StudentApp;
+
+
+// export default (props) => {
+//   const { screenProps, ...otherProps } = props;
+//   return <StudentAppContainer screenProps={{ ...screenProps, ...otherProps }} />;
+// };

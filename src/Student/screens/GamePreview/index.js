@@ -15,7 +15,8 @@ import styles from './styles';
 
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
-    GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    // GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+    navigator: PropTypes.shape({ navigate: PropTypes.func }),
     gameState: PropTypes.shape({
       team0: PropTypes.shape({
         instructions: PropTypes.array,
@@ -30,7 +31,8 @@ export default class GamePreview extends React.PureComponent {
   }
   
   static defaultProps = {
-    GameAppNavigator: {},
+    // GameAppNavigator: {},
+    navigator: {},
     gameState: {
       team0: {
         instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
@@ -74,7 +76,7 @@ export default class GamePreview extends React.PureComponent {
 
 
   navigateToGameTricks() {
-    this.props.GameAppNavigator.navigate('GameTricks');
+    this.props.navigation.navigate('GameTricks');
   }
 
 

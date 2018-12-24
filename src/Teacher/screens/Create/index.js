@@ -8,7 +8,7 @@ import {
 import PropTypes from 'prop-types';
 import ButtonWide from '../../../components/ButtonWide';
 import { colors } from '../../../utils/theme';
-import styles from '../../../Student/components/Age/styles';
+import styles from '../../../Student/screens/StudentFirst/styles';
 
 
 class Create extends React.Component {
@@ -48,7 +48,7 @@ class Create extends React.Component {
   handleRoomSubmit() {
     // TODO Handle entering game in DynamoDB
     // Hydrate Dashboard w/ game details
-    this.props.screenProps.navigation.navigate('Class');
+    this.props.navigation.navigate('Class');
   }
 
 

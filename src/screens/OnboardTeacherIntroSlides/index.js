@@ -51,7 +51,7 @@ export default class OnboardIntroSlides extends React.PureComponent {
 
 
   // navigateTo(routeName) {
-  //   this.props.rootNavigator.navigate(routeName);
+  //   this.props.navigation.navigate(routeName);
   // }
 
 

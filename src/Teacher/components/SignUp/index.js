@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { Auth } from 'aws-amplify';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
 import MFAPrompt from '../../../../lib/Categories/Auth/Components/MFAPrompt';
 import ButtonRound from '../../../components/ButtonRound';
 import Message from '../../../components/Message';
@@ -433,21 +432,4 @@ class SignUp extends React.Component {
 }
 
 
-const SignUpStack = createStackNavigator({
-
-
-  SignUp: {
-    screen: props => <SignUp {...props} onSignUp={props.screenProps.onSignUp} />,
-    navigationOptions: {
-      header: null,
-    }
-  },
-
-
-});
-
-
-const SignUpStackContainer = createAppContainer(SignUpStack);
-
-
-export default props => <SignUpStackContainer screenProps={{ ...props }} />;
+export default SignUp;

@@ -10,7 +10,7 @@ import {
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-import HeaderSimple from '../../../components/HeaderSimple';
+// import HeaderSimple from '../../../components/HeaderSimple';
 import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
 import { colors, elevation } from '../../../utils/theme';
@@ -55,7 +55,7 @@ export default class Dashboard extends React.Component {
 
 
   handleGameEntry() {
-    this.props.studentAppNavigator.navigate('GameApp');
+    this.props.navigation.navigate('GamePreview');
   }
 
 
@@ -197,10 +197,12 @@ export default class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   screenProps: PropTypes.shape({ type: PropTypes.any }),
-  studentAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+  // studentAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
+  navigator: PropTypes.shape({ navigate: PropTypes.func }),
 };
 
 Dashboard.defaultProps = {
   screenProps: {},
-  studentAppNavigator: {},
+  // studentAppNavigator: {},
+  navigator: {},
 };

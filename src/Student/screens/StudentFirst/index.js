@@ -1,75 +1,39 @@
 import React from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import Age from '../../components/Age';
+import Swiper from 'react-native-swiper';
+import AgeInput from './StudentFirstAgeInput';
 import GameRoom from './StudentFirstGameRoom';
 
 
-const StudentFirst = createStackNavigator({
+export default class StudentFirst extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.swiper = undefined;
+
+    this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+  }
 
 
-  Age: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
-
-      return (
-        <Age 
-          {...screenProps}
-          {...otherProps}
-          rootNavigator={screenProps.navigation}
-          studentFirstNavigator={navigation}
-        />
-      );
-    },
-    navigationOptions: {
-      header: null,
-    },
-  },
+  handleRoomSubmit() {
+    this.props.navigation.navigate('StudentApp');
+  }
 
 
-  GameRoom: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
-
-      return (
-        <GameRoom
-          {...screenProps}
-          {...otherProps}
-          studentFirstNavigator={navigation}
-        />
-      );
-    },
-    navigationOptions: {
-      header: null,
-    },
-  },
-
-
-  // SignUp: {
-  //   screen: (props) => {
-  //     const { screenProps, ...otherProps } = props;
-
-  //     return (
-  //       <SignUp
-  //         { ...screenProps }
-  //         { ...otherProps }
-  //         studentFirstNavigator={navigation}
-  //         onSignUp={() => otherProps.navigation.navigate('LogIn')}
-  //       />
-  //     )
-  //   },
-  //   navigationOptions: {
-  //     header: null,
-  //   },
-  // },
-
-
-}, { header: null });
-
-
-const StudentFirstContainer = createAppContainer(StudentFirst);
-
-
-export default (props) => {
-  const { screenProps, ...otherProps } = props;
-  return <StudentFirstContainer screenProps={{ ...screenProps, ...otherProps }} />;
-};
+  render() {
+    const { navigation } = this.props;
+    return (
+      <Swiper
+        horizontal
+        index={0}
+        loadMinimal={false}
+        loop={false}
+        ref={(ref) => { this.swiper = ref; }}
+        scrollEnabled={false}
+        showsPagination={false}
+      >
+        <AgeInput navigation={navigation} handleAgeSubmit={() => this.swiper.scrollBy(1, false)} />
+        <GameRoom navigation={navigation} handleRoomSubmit={this.handleRoomSubmit} />
+      </Swiper>
+    );
+  }
+}
