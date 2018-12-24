@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: 'center',
+    paddingHorizontal: 20,
     position: 'absolute',
     top: 65,
   },
