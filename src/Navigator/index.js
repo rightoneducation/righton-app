@@ -47,19 +47,7 @@ const RootNavigator = createSwitchNavigator({
 
 
   TeacherFirst: {
-    screen: (props) => {
-      const { navigation, screenProps, ...otherProps } = props;
-
-      return (
-        <TeacherFirst
-          navigation={navigation}
-          {...screenProps}
-          {...otherProps}
-          onLogIn={() => navigation.navigate('TeacherApp')}
-          onSignUp={() => navigation.navigate('TeacherApp')}
-        />
-      );
-    },
+    screen: TeacherFirst,
     navigationOptions: {
       header: null,
     },
@@ -95,9 +83,7 @@ const RootNavigator = createSwitchNavigator({
 
 
   TeacherApp: {
-    screen: props => (
-      <TeacherApp {...props} />
-    ), 
+    screen: TeacherApp,
     navigationOptions: { 
       header: null,
     },
