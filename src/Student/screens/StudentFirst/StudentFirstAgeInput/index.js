@@ -5,23 +5,19 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import styles from './styles';
-import ButtonBack from '../../../components/ButtonBack';
-import ButtonWide from '../../../components/ButtonWide';
-import { colors } from '../../../utils/theme';
+import ButtonBack from '../../../../components/ButtonBack';
+import ButtonWide from '../../../../components/ButtonWide';
+import { colors } from '../../../../utils/theme';
+import styles from '../styles';
 
-export default class Age extends React.PureComponent {
+export default class AgeInput extends React.PureComponent {
   static propTypes = {
-    rootNavigator: PropTypes.shape({ type: PropTypes.any }),
-    studentFirstNavigator: PropTypes.shape({
-      navigate: PropTypes.func,
-    }),
+    handleAgeSubmit: PropTypes.func.isRequired,
   }
 
   
   static defaultProps = {
-    rootNavigator: {},
-    studentFirstNavigator: {},
+    handleAgeSubmit: () => {},
   }
 
 
@@ -60,7 +56,7 @@ export default class Age extends React.PureComponent {
     if (parseInt(this.state.age, 10) < 13) {
       // TODO Treat user specially
     } 
-    this.props.studentFirstNavigator.navigate('GameRoom');
+    this.props.handleAgeSubmit();
   }
 
 
@@ -69,13 +65,13 @@ export default class Age extends React.PureComponent {
       age,
     } = this.state;
 
-    const { rootNavigator } = this.props;
+    const { navigation } = this.props;
 
     return (
       <View style={styles.container}>
         <ButtonBack
           buttonStyles={{ top: 40 }}
-          navigator={rootNavigator}
+          navigator={navigation}
         />
         <Text style={styles.title}>How old are you?</Text>
         <TextInput
