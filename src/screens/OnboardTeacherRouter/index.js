@@ -75,6 +75,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   maybeContainer: {
+    // Removing background color causes Swiper dot primary color to shine through
+    backgroundColor: colors.dark,
     bottom: 20,
     left: 0,
     position: 'absolute',
