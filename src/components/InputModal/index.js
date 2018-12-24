@@ -106,8 +106,11 @@ export default class InputModal extends React.PureComponent {
 
     let yAxis = deviceHeight / 2;
     let xAxis = 15;
+    let bottom;
     if (y < deviceHeight / 2) {
       yAxis = y;
+    } else {
+      bottom = true;
     }
 
     if (x < deviceWidth) {
@@ -119,7 +122,8 @@ export default class InputModal extends React.PureComponent {
         style={[
           styles.inputContainer,
           elevation,
-          { height, width, top: yAxis, left: xAxis }
+          { height, width, left: xAxis },
+          bottom ? { bottom: 15 } : { top: yAxis },
         ]}
       >
         <TextInput
