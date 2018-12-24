@@ -186,11 +186,13 @@ export default class QuizBuilder extends React.PureComponent {
       const updatedQuiz = { ...quiz };
       updatedQuiz.questions.splice(edit, 1, question);
       this.setState({ addQuestion: {}, quiz: updatedQuiz });
-    } else {
+    } else if (question) {
       this.setState({
         addQuestion: {},
         quiz: { ...quiz, questions: [...quiz.questions, question] },
       });
+    } else {
+      this.setState({ addQuestion: {} });
     }
     this.swiperRef.scrollBy(-1, false);
   }
@@ -340,7 +342,12 @@ export default class QuizBuilder extends React.PureComponent {
   renderQuestions() {
     const { questions } = this.state.quiz;
     if (Array.isArray(questions)) {
-      return questions.map((question, idx) => this.renderQuestionBlock(question, idx));
+      return (
+        <View style={styles.questionsContainer}>
+          {Boolean(questions.length) && <Text style={styles.inputLabel}>Questions</Text>}
+          {questions.map((question, idx) => this.renderQuestionBlock(question, idx))}
+        </View>
+      );
     }
     return null;
   }

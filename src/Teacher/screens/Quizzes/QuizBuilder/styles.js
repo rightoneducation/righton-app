@@ -93,17 +93,17 @@ export default StyleSheet.create({
   placeholder: {
     color: colors.lightGray,
   },
+  questionAnswer: {
+    color: colors.dark,
+    fontSize: fonts.small,
+  },
   questionContainer: {
     borderColor: colors.dark,
     borderRadius: 1,
     flexDirection: 'row',
     height: 100,
-    marginTop: 15,
+    marginBottom: 25,
     width: deviceWidth - 30,
-  },
-  questionAnswer: {
-    color: colors.dark,
-    fontSize: fonts.small,
   },
   questionImage: {
     alignItems: 'center',
@@ -128,6 +128,10 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     paddingTop: 10,
+  },
+  questionsContainer: {
+    alignSelf: 'stretch',
+    marginTop: 15,
   },
   scrollview: {
     flexGrow: 1,
