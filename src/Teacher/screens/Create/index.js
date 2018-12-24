@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  StatusBar,
   Text,
   TextInput,
   View,
@@ -58,6 +59,7 @@ class Create extends React.Component {
 
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor={colors.dark} />
         <Text style={styles.title}>Game Room</Text>
         <TextInput
           keyboardType={'default'}
@@ -74,7 +76,7 @@ class Create extends React.Component {
           value={room}
         />
         <ButtonWide
-          label={'Enter Game'}
+          label={'Launch Game'}
           onPress={this.handleRoomSubmit}
         />
       </View>

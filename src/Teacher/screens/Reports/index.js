@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Aicon from 'react-native-vector-icons';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 // import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../../utils/theme';
 
@@ -62,13 +63,13 @@ class Reports extends React.PureComponent {
 
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor={colors.primary} />
         {this.renderHeader()}
         <ScrollView
-          contentContainerStyle={styles.container}
+          contentContainerStyle={styles.scrollview}
         >
           {this.renderMessage()}
         </ScrollView>
-      
       </View>
     );
   }
@@ -92,7 +93,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   message: {
-
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 25,
   },
   messageDetail: {
     bottom: 100,
@@ -111,10 +115,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   scrollview: {
-    alignItems: 'center',
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 25,
   },
 });
 

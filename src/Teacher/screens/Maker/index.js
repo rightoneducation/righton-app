@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-// import Aicon from 'react-native-vector-icons';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 // import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../../utils/theme';
 
@@ -46,8 +47,9 @@ class Maker extends React.PureComponent {
 
   renderMessage = () => (
     <View style={styles.message}>
+      <Aicon name={'puzzle-piece'} style={styles.messageIcon} />
       <Text style={styles.messageTeaser}>
-        Access our repository of questions and student generated `${'&'} tested
+        Access our repository of questions and student generated {'&'} tested
         distractors to include in your homework and exams. 
       </Text>
       <Text style={styles.messageDetail}>Coming soon!</Text>
@@ -64,13 +66,13 @@ class Maker extends React.PureComponent {
 
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor={colors.primary} />
         {this.renderHeader()}
         <ScrollView
-          contentContainerStyle={styles.container}
+          contentContainerStyle={styles.scrollview}
         >
           {this.renderMessage()}
         </ScrollView>
-      
       </View>
     );
   }
@@ -94,7 +96,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   message: {
-
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 25,
   },
   messageDetail: {
     bottom: 100,
@@ -102,15 +107,18 @@ const styles = StyleSheet.create({
     fontSize: fonts.large,
     position: 'absolute',
   },
+  messageIcon: {
+    color: colors.white,
+    fontSize: 50,
+    marginBottom: 75,
+  },
   messageTeaser: {
     color: colors.white,
     fontSize: fonts.medium,
+    textAlign: 'center',
   },
   scrollview: {
-    alignItems: 'center',
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 25,
   },
 });
 
