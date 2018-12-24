@@ -15,7 +15,7 @@ import parentStyles from '../styles';
 import { deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 
 
-export default class QuizBuilderQuestion extends React.PureComponent {
+export default class QuizBuilderQuestion extends React.Component {
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
     question: PropTypes.shape({
@@ -45,6 +45,7 @@ export default class QuizBuilderQuestion extends React.PureComponent {
     };
 
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleExitModal = this.handleExitModal.bind(this);
 
     this.onQuestionLayout = this.onQuestionLayout.bind(this);
     this.handleQuestionRef = this.handleQuestionRef.bind(this);
@@ -56,7 +57,15 @@ export default class QuizBuilderQuestion extends React.PureComponent {
 
 
   componentDidMount() {
-    this.hydrateState();
+    this.hydrateState(this.props.question);
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.question.uid !== nextProps.question.uid || 
+      nextProps.question.uid === undefined) {
+      this.hydrateState(nextProps.question);
+    }
   }
 
 
@@ -86,8 +95,7 @@ export default class QuizBuilderQuestion extends React.PureComponent {
   }
 
 
-  hydrateState() {
-    const { question } = this.props;
+  hydrateState(question) {
     this.setState({ question });
   }
 
@@ -157,6 +165,11 @@ export default class QuizBuilderQuestion extends React.PureComponent {
     }
   }
 
+  
+  handleExitModal() {
+    this.props.closeModal();
+  }
+
 
   render() {
     // const {
@@ -181,7 +194,7 @@ export default class QuizBuilderQuestion extends React.PureComponent {
         <View style={[parentStyles.headerContainer, elevation]}>
           <Touchable
             hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-            onPress={this.handleCloseModal}
+            onPress={this.handleExitModal}
           >
             <View style={parentStyles.closeContainer}>
               <Aicon name={'close'} style={[parentStyles.closeIcon, parentStyles.closeIconShadow]} />
