@@ -24,11 +24,15 @@ class SignUp extends React.Component {
   }
 
   static propTypes = {
-    onSignUp: PropTypes.func.isRequired,
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
   };
 
   static defaultProps = {
-    onSignUp: () => {},
+    navigation: {
+      navigate: () => {},
+    },
   }
 
   constructor(props) {
@@ -75,7 +79,7 @@ class SignUp extends React.Component {
   onSignUp() {
     this.setState(this.baseState);
 
-    this.props.onSignUp();
+    this.props.navigation.navigate('TeacherApp');    
   }
 
   async handleSignUp() {

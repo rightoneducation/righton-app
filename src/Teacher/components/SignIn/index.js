@@ -16,6 +16,18 @@ import debug from '../../../utils/debug';
 
 
 class SignIn extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
+  };
+
+  static defaultProps = {
+    navigation: {
+      navigate: () => {},
+    },
+  }
+
   constructor(props) {
     super(props);
 
@@ -45,9 +57,9 @@ class SignIn extends React.Component {
 
 
   async onLogIn() {
-    this.setState(this.baseState);
-
-    this.props.onLogIn();
+    this.setState(this.baseState, () => {
+      this.props.navigation.navigate('TeacherApp');
+    });
   }
 
 
@@ -245,6 +257,7 @@ class SignIn extends React.Component {
           </View>
           <ButtonRound
             activity={buttonActivity}
+            animated
             icon={'arrow-right'}
             onPress={this.doLogin}
           />
@@ -256,20 +269,6 @@ class SignIn extends React.Component {
     );
   }
 }
-
-SignIn.propTypes = {
-  // ESlint restricts object to be used as propType for specificity requirements.
-
-  // screenProps: PropTypes.object.isRequired,
-  onLogIn: PropTypes.func.isRequired,
-  // otherProps: PropTypes.object.isRequired,
-};
-
-SignIn.defaultProps = {
-  // screenProps: {},
-  onLogIn: () => {},
-  // otherProps: {},
-};
 
 
 export default SignIn;
