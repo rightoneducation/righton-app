@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
@@ -31,7 +31,6 @@ const TeacherFirst = createBottomTabNavigator({
         <SignIn
           {...screenProps}
           {...otherProps}
-          onLogIn={screenProps.onLogIn}
         />
       );
     },
@@ -50,7 +49,6 @@ const TeacherFirst = createBottomTabNavigator({
         <SignUp
           {...screenProps}
           {...otherProps}
-          onSignUp={screenProps.onSignUp}
         />
       );
     },
@@ -62,6 +60,7 @@ const TeacherFirst = createBottomTabNavigator({
 
 
 }, {
+  initialRouteName: 'SignIn',
   tabBarPosition: 'bottom',
   tabBarOptions: {
     activeTintColor: colors.white,
@@ -86,10 +85,4 @@ TabBarIcon.defaultProps = {
 };
 
 
-const TeacherFirstContainer = createAppContainer(TeacherFirst);
-
-
-export default (props) => {
-  const { screenProps, ...otherProps } = props;
-  return <TeacherFirstContainer screenProps={{ ...screenProps, ...otherProps }} />;
-};
+export default TeacherFirst;
