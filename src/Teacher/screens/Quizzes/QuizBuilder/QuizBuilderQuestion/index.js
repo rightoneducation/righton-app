@@ -11,7 +11,7 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
-// import QuizBuilderSelectionModal from '../QuizBuilderSelectionModal';
+import ButtonWide from '../../../../../components/ButtonWide';
 import SelectionModal from '../../../../../components/SelectionModal';
 import parentStyles from '../styles';
 import { deviceWidth, elevation, fonts } from '../../../../../utils/theme';
@@ -23,6 +23,7 @@ export default class QuizBuilderQuestion extends React.Component {
     question: PropTypes.shape({
       answer: PropTypes.string,
       image: PropTypes.string,
+      instructions: PropTypes.arrayOf(PropTypes.string),
       quesiton: PropTypes.string,
       time: PropTypes.string,
     }),
@@ -34,6 +35,7 @@ export default class QuizBuilderQuestion extends React.Component {
     question: {
       answer: '',
       image: '',
+      instructions: [],
       question: '',
       time: '0:00',
       uid: '',
@@ -48,6 +50,7 @@ export default class QuizBuilderQuestion extends React.Component {
       question: {
         answer: '',
         image: '',
+        instructions: [],
         question: '',
         time: '0:00',
         uid: '',
@@ -62,6 +65,7 @@ export default class QuizBuilderQuestion extends React.Component {
     this.handleExitModal = this.handleExitModal.bind(this);
     this.handleTimeSelection = this.handleTimeSelection.bind(this);
     this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
+    this.handleAddInstruction = this.handleAddInstruction.bind(this);
 
     this.onQuestionLayout = this.onQuestionLayout.bind(this);
     this.handleQuestionRef = this.handleQuestionRef.bind(this);
@@ -135,9 +139,36 @@ export default class QuizBuilderQuestion extends React.Component {
       case 'answer':
         this.setState({ question: { ...this.state.question, answer: input }, showInput: false });
         break;
+      case 'instruction':
+        if (this.instructionIndex) {
+          const updatedInstructions = [...this.state.question.instructions];
+          updatedInstructions.splice(this.instructionIndex, 1, input);
+          this.setState({
+            question: { ...this.state.question, instructions: updatedInstructions },
+            showInput: false,
+          });
+          this.instructionIndex = null;
+        } else {
+          this.setState({
+            question: {
+              ...this.state.question,
+              instructions: [...this.state.question.instructions, input],
+            },
+            showInput: false,
+          });
+        }
+        break;
       default:
         break;
     }
+  }
+
+
+  handleAddInstruction(idx) {
+    if (typeof idx === 'number') {
+      this.instructionIndex = idx;
+    }
+    this.handleInputModal('instruction', 'Enter instruction', 100, '', 'default');
   }
 
 
@@ -203,14 +234,10 @@ export default class QuizBuilderQuestion extends React.Component {
 
 
   render() {
-    // const {
-    // closeModal,
-    // visible,
-    // } = this.props;
-
     const {
       answer,
       image,
+      instructions,
       question,
       time,
     } = this.state.question;
@@ -271,16 +298,8 @@ export default class QuizBuilderQuestion extends React.Component {
           </Touchable>
         </View>
 
-        <Touchable
-          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          onPress={this.handleOpenTimeSelection}
-          style={parentStyles.timeSelectionContainer}
-        >
-          <Text style={parentStyles.timeSelectionLabel}>{ time }</Text>
-        </Touchable>
-
         <ScrollView
-          contentContainerStyle={parentStyles.scrollview}
+          contentContainerStyle={[parentStyles.scrollview, { paddingBottom: 115 }]}
         >
           <Touchable
             onPress={() => {}}
@@ -293,6 +312,13 @@ export default class QuizBuilderQuestion extends React.Component {
                   <Aicon name={'image'} style={parentStyles.avatarIcon} />
                   <Text style={parentStyles.avatarLabel}>Tap to add an image</Text>
                 </View>}
+              <Touchable
+                hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                onPress={this.handleOpenTimeSelection}
+                style={parentStyles.timeSelectionContainer}
+              >
+                <Text style={parentStyles.timeSelectionLabel}>{ time }</Text>
+              </Touchable>
             </View>
           </Touchable>
 
@@ -337,6 +363,28 @@ export default class QuizBuilderQuestion extends React.Component {
               </Text>
             </Touchable>
           </View>
+
+          {Boolean(instructions) &&
+            <Text style={[parentStyles.inputLabel, parentStyles.marginTop]}>Instructions</Text>}
+
+          {Boolean(instructions) && instructions.map((instruction, idx) => (
+            <Touchable
+              activeOpacity={0.8}
+              key={instruction}
+              onPress={() => this.handleAddInstruction(idx)}
+            >
+              <View style={[parentStyles.inputContainer, parentStyles.row]}>
+                <Text style={parentStyles.avatarLabel}>{`${idx + 1}.  `}</Text>
+                <Text style={parentStyles.avatarLabel}>{ instruction }</Text>
+              </View>
+            </Touchable>
+          ))}
+
+          <ButtonWide
+            buttonStyles={{ position: 'absolute', bottom: 25 }}
+            label={'+ Instruction Step'}
+            onPress={this.handleAddInstruction}
+          />
         </ScrollView>
 
       </View>
