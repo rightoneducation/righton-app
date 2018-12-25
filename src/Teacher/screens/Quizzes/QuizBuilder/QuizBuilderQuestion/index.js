@@ -11,6 +11,8 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
+// import QuizBuilderSelectionModal from '../QuizBuilderSelectionModal';
+import SelectionModal from '../../../../../components/SelectionModal';
 import parentStyles from '../styles';
 import { deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 
@@ -22,6 +24,7 @@ export default class QuizBuilderQuestion extends React.Component {
       answer: PropTypes.string,
       image: PropTypes.string,
       quesiton: PropTypes.string,
+      time: PropTypes.string,
     }),
     visible: PropTypes.bool.isRequired,
   }
@@ -32,6 +35,8 @@ export default class QuizBuilderQuestion extends React.Component {
       answer: '',
       image: '',
       question: '',
+      time: '0:00',
+      uid: '',
     },
     visible: false,
   }
@@ -40,12 +45,23 @@ export default class QuizBuilderQuestion extends React.Component {
     super(props);
 
     this.state = {
-      question: {},
+      question: {
+        answer: '',
+        image: '',
+        question: '',
+        time: '0:00',
+        uid: '',
+      },
       showInput: false,
+      showSelection: false,
     };
+
+    this.blankQuestionState = this.state.question;
 
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleExitModal = this.handleExitModal.bind(this);
+    this.handleTimeSelection = this.handleTimeSelection.bind(this);
+    this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
 
     this.onQuestionLayout = this.onQuestionLayout.bind(this);
     this.handleQuestionRef = this.handleQuestionRef.bind(this);
@@ -62,9 +78,10 @@ export default class QuizBuilderQuestion extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.question.uid !== nextProps.question.uid || 
-      nextProps.question.uid === undefined) {
+    if (this.props.question.uid !== nextProps.question.uid) {
       this.hydrateState(nextProps.question);
+    } else if (nextProps.question.uid === undefined) {
+      this.hydrateState(this.blankQuestionState);
     }
   }
 
@@ -171,6 +188,20 @@ export default class QuizBuilderQuestion extends React.Component {
   }
 
 
+  handleTimeSelection(time) {
+    if (typeof time === 'object' || !time) {
+      this.setState({ showSelection: false });
+    } else {
+      this.setState({ question: { ...this.state.question, time }, showSelection: false });
+    }
+  }
+
+
+  handleOpenTimeSelection() {
+    this.setState({ showSelection: true });
+  }
+
+
   render() {
     // const {
     // closeModal,
@@ -181,15 +212,44 @@ export default class QuizBuilderQuestion extends React.Component {
       answer,
       image,
       question,
+      time,
     } = this.state.question;
 
-    const { showInput } = this.state;
+    const { showInput, showSelection } = this.state;
 
     return (
       <View style={parentStyles.container}>
 
         {showInput &&
           <InputModal {...showInput} />}
+
+        {showSelection &&
+          <SelectionModal
+            handleClose={this.handleTimeSelection}
+            items={[
+              { label: 'unlimited', value: '0:00' },
+              { label: '0:30', value: '0:30' },
+              { label: '1:00', value: '1:00' },
+              { label: '1:30', value: '1:30' },
+              { label: '2:00', value: '2:00' },
+              { label: '2:30', value: '2:30' },
+              { label: '3:00', value: '3:00' },
+              { label: '3:30', value: '3:30' },
+              { label: '4:00', value: '4:00' },
+              { label: '4:30', value: '4:30' },
+              { label: '5:00', value: '5:00' },
+              { label: '10:00', value: '10:00' },
+              { label: '15:00', value: '15:00' },
+              { label: '20:00', value: '20:00' },
+              { label: '25:00', value: '25:00' },
+              { label: '30:00', value: '30:00' },
+              { label: '45:00', value: '45:00' },
+              { label: '60:00', value: '60:00' },
+            ]}
+            onSelect={this.handleTimeSelection}
+            title={'Time remaining'}
+            visible={showSelection}
+          />}
 
         <View style={[parentStyles.headerContainer, elevation]}>
           <Touchable
@@ -210,6 +270,14 @@ export default class QuizBuilderQuestion extends React.Component {
             <Text style={parentStyles.createLabel}>Done</Text>
           </Touchable>
         </View>
+
+        <Touchable
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+          onPress={this.handleOpenTimeSelection}
+          style={parentStyles.selectionContainer}
+        >
+          <Text style={parentStyles.selectionLabel}>{ time }</Text>
+        </Touchable>
 
         <ScrollView
           contentContainerStyle={parentStyles.scrollview}
