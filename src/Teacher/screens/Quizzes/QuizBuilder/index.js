@@ -19,9 +19,10 @@ import { deviceWidth, elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
 
 
-export default class QuizBuilder extends React.PureComponent {
+export default class QuizBuilder extends React.Component {
   static propTypes = {
     handleClose: PropTypes.func.isRequired,
+    handleCreateQuiz: PropTypes.func.isRequired,
     quiz: PropTypes.shape({
       avatar: PropTypes.string,
       description: PropTypes.string,
@@ -30,7 +31,7 @@ export default class QuizBuilder extends React.PureComponent {
         image: PropTypes.string,
         instructions: PropTypes.arrayOf(PropTypes.string),
         question: PropTypes.string,
-        uid: PropTypes.number,
+        uid: PropTypes.string,
       })),
       title: PropTypes.string,
     }),
@@ -39,6 +40,7 @@ export default class QuizBuilder extends React.PureComponent {
   
   static defaultProps = {
     handleClose: () => {},
+    handleCreateQuiz: () => {},
     quiz: {
       avatar: '',
       description: '',
@@ -68,16 +70,15 @@ export default class QuizBuilder extends React.PureComponent {
     this.handleDescriptionRef = this.handleDescriptionRef.bind(this);
     this.handleInputModal = this.handleInputModal.bind(this);
     this.closeInputModal = this.closeInputModal.bind(this);
-
+    
+    this.createQuiz = this.createQuiz.bind(this);
     this.closeAddQuestion = this.closeAddQuestion.bind(this);
     this.openAddQuestion = this.openAddQuestion.bind(this);
   }
 
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.quiz !== nextProps.quiz) {
-      this.hydrateState(nextProps.quiz);
-    }
+  componentDidMount() {
+    this.hydrateState(this.props.quiz);
   }
 
 
@@ -119,6 +120,16 @@ export default class QuizBuilder extends React.PureComponent {
           title: '',
         }
       });
+    }
+  }
+
+  
+  createQuiz() {
+    const { quiz } = this.state;
+    if (this.props.currentQuiz !== null) {
+      this.props.handleCreateQuiz(quiz);
+    } else {
+      this.props.handleCreateQuiz({ ...quiz, uid: `${Math.random()}` });
     }
   }
 
@@ -375,7 +386,7 @@ export default class QuizBuilder extends React.PureComponent {
       <Modal
         animationType={'slide'}
         onRequestClose={handleClose}
-        transparent
+        transparent={false}
         visible={visible}
       >
         <Swiper
@@ -383,7 +394,6 @@ export default class QuizBuilder extends React.PureComponent {
           index={0}
           loadMinimal={false}
           loop={false}
-          // onIndexChanged={this.onIndexChanged}
           ref={(ref) => { this.swiperRef = ref; }}
           scrollEnabled={false}
           showsPagination={false}
@@ -406,7 +416,7 @@ export default class QuizBuilder extends React.PureComponent {
               <Text style={styles.title}>Quiz Builder</Text>
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-                onPress={() => { /* TODO! */ }}
+                onPress={this.createQuiz}
                 style={styles.createContainer}
               >
                 <Text style={styles.createLabel}>Create</Text>
