@@ -102,7 +102,7 @@ export default class SelectionModal extends React.PureComponent {
 
 SelectionModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  items: PropTypes.arrayOf.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({})),
   onSelect: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
@@ -164,9 +164,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     backgroundColor: colors.primary,
-    justifyContent: 'center',
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderColor: colors.dark,
+    justifyContent: 'center',
     paddingVertical: 10,
   },
 });
