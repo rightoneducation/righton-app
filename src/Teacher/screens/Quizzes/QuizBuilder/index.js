@@ -331,7 +331,7 @@ export default class QuizBuilder extends React.PureComponent {
             <Text style={styles.questionAnswer}>{question.answer}</Text>
 
             {(!question.question || !question.answer) &&
-              <Text style={styles.warning}>!</Text>}
+              <Aicon name={'exclamation-triangle'} style={styles.warning} />}
 
           </View>
         </View>
