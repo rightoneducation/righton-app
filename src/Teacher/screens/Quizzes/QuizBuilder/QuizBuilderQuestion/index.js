@@ -227,7 +227,7 @@ export default class QuizBuilderQuestion extends React.Component {
           <SelectionModal
             handleClose={this.handleTimeSelection}
             items={[
-              { label: 'unlimited', value: '0:00' },
+              { label: 'No time limit', value: '0:00' },
               { label: '0:30', value: '0:30' },
               { label: '1:00', value: '1:00' },
               { label: '1:30', value: '1:30' },
