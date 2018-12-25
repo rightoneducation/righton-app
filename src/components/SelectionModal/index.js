@@ -167,6 +167,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: colors.dark,
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
   },
 });
