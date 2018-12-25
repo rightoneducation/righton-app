@@ -10,10 +10,56 @@ import {
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import { colors, fonts } from '../../utils/theme';
+import ButtonWide from '../ButtonWide';
 
-function InstructionBox({ instruction, alignment }) {
-  return (
-    <View style={[styles.container, alignment === 'left' ? styles.justifyLeft : styles.justifyRight]}>
+
+export default class Instructions extends React.Component {
+  static propTypes = {
+    data: PropTypes.arrayOf(PropTypes.string),
+    handleCloseModal: PropTypes.func.isRequired,
+    visible: PropTypes.bool.isRequired,
+  };
+  
+  static defaultProps = {
+    data: [],
+    handleCloseModal: () => {},
+    visible: false,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      visibleItems: [],
+    };
+
+    this.handleReveal = this.handleReveal.bind(this);
+  }
+
+
+  componentDidMount() {
+    this.setVisibleItems();
+  }
+
+
+  setVisibleItems() {
+    const visibleItems = [true];
+    visibleItems[this.props.data.length - 1] = undefined;
+    this.setState({ visibleItems });
+  }
+
+
+  handleReveal() {
+    const { visibleItems } = this.state;
+    const updatedVisibleItems = [...visibleItems];
+    const index = updatedVisibleItems.indexOf(undefined);
+    updatedVisibleItems[index] = true;
+    this.setState({ visibleItems: updatedVisibleItems });
+  }
+
+
+  renderInstructionBox = (instruction, alignment) => (
+    <View key={instruction} style={[styles.container, alignment === 'left' ? styles.justifyLeft : styles.justifyRight]}>
       {
         alignment === 'left' &&
         <View style={styles.teacherBubble}>
@@ -31,64 +77,62 @@ function InstructionBox({ instruction, alignment }) {
       }
     </View>
   );
+
+
+  renderRevealButton() {
+    const { visibleItems } = this.state;
+    if (visibleItems[visibleItems.length - 1] === undefined) {
+      return (
+        <ButtonWide
+          buttonStyles={{
+            backgroundColor: colors.dark,
+            borderColor: colors.white,
+            borderWidth: 1,
+            marginTop: 25,
+            position: 'relative',
+          }}
+          label={'Reveal next hint'}
+          onPress={this.handleReveal}
+          ripple={colors.black}
+        />
+      );
+    }
+    return null;
+  }
+  
+  
+  render() {
+    const { data, handleCloseModal, visible } = this.props;
+    const { visibleItems } = this.state;
+    return (
+      <Modal
+        animationType={'slide'}
+        onRequestClose={handleCloseModal}
+        transparent
+        visible={visible}
+      >
+        <View style={styles.instructionsWrapper}>
+          <TouchableHighlight
+            hitSlop={{ top: 45, right: 45, bottom: 45, left: 45 }}
+            onPress={handleCloseModal}
+            style={styles.closeArrow}
+          >
+            <View />
+          </TouchableHighlight>
+          <ScrollView contentContainerStyle={styles.instructionsContainer}>
+            {data.map((instruction, idx) => {
+              if (!visibleItems[idx]) return null;
+              const alignment = idx % 2 === 0 ? 'left' : 'right';
+              return this.renderInstructionBox(instruction, alignment);
+            })}
+
+            {this.renderRevealButton()}
+          </ScrollView>
+        </View>
+      </Modal>
+    );
+  }
 }
-
-InstructionBox.propTypes = {
-  instruction: PropTypes.string.isRequired,
-  alignment: PropTypes.string.isRequired,
-};
-
-InstructionBox.defaultProps = {
-  instruction: '',
-  alignment: 'left',
-};
-
-
-function Instructions({ data, handleCloseModal, visible }) {
-  return (
-    <Modal
-      animationType={'slide'}
-      onRequestClose={handleCloseModal}
-      transparent
-      visible={visible}
-    >
-      <View style={styles.instructionsWrapper}>
-        <TouchableHighlight
-          hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
-          onPress={handleCloseModal}
-          style={styles.closeArrow}
-        >
-          <View />
-        </TouchableHighlight>
-        <ScrollView contentContainerStyle={styles.instructionsContainer}>
-          {data.map((instruction, idx) => {
-            const alignment = idx % 2 === 0 ? 'left' : 'right';
-            return (
-              <InstructionBox
-                alignment={alignment}
-                key={instruction}
-                instruction={instruction}
-              />
-            );
-          })}
-        </ScrollView>
-      </View>
-    </Modal>
-  );
-}
-
-
-Instructions.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.string),
-  handleCloseModal: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired,
-};
-
-Instructions.defaultProps = {
-  data: [],
-  handleCloseModal: () => {},
-  visible: false,
-};
 
 
 const styles = StyleSheet.create({
@@ -161,5 +205,3 @@ const styles = StyleSheet.create({
     width: 40,
   },
 });
-
-export default Instructions;
