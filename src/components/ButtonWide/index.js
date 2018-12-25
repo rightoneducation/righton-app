@@ -13,6 +13,7 @@ export default class ButtonWide extends React.PureComponent {
     buttonStyles: PropTypes.shape({ type: PropTypes.any }),
     label: PropTypes.string.isRequired,
     onPress: PropTypes.func.isRequired,
+    ripple: PropTypes.string,
     textStyles: PropTypes.shape({ type: PropTypes.any }),
   };
   
@@ -20,6 +21,7 @@ export default class ButtonWide extends React.PureComponent {
     buttonStyles: {},
     label: '',
     onPress: () => {},
+    ripple: '',
     textStyles: {},
   };
   
@@ -41,13 +43,14 @@ export default class ButtonWide extends React.PureComponent {
       buttonStyles,
       // onPress,
       label,
+      ripple,
       textStyles,
     } = this.props;
 
     return (
       <Touchable
         activeOpacity={0.8}
-        background={Touchable.Ripple(colors.primary, false)}
+        background={Touchable.Ripple(ripple || colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handlePress}
         style={[styles.button, buttonStyles]}
