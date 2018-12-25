@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  ScrollView,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -162,18 +162,23 @@ export default class InputModal extends React.PureComponent {
         transparent
         visible={visible}
       >
-        <ScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps={'always'}
-        >
+        <View style={styles.container}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={this.handleInputSubmit}
+            style={styles.closeContainer}
+          />
           {this.renderTextInput()}
-        </ScrollView>
+        </View>
       </Modal>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  closeContainer: {
+    flex: 1,
+  },
   container: {
     backgroundColor: colors.lightGray,
     flex: 1,
