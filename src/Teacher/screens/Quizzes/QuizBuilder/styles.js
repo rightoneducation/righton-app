@@ -139,6 +139,22 @@ export default StyleSheet.create({
     paddingTop: 25,
     paddingHorizontal: 15,
   },
+  timeSelectionContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 30,
+    height: 60,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 5,
+    top: 255,
+    width: 60,
+    zIndex: 2,
+  },
+  timeSelectionLabel: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
   title: {
     color: colors.dark,
     fontSize: fonts.large,

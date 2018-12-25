@@ -274,9 +274,9 @@ export default class QuizBuilderQuestion extends React.Component {
         <Touchable
           hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
           onPress={this.handleOpenTimeSelection}
-          style={parentStyles.selectionContainer}
+          style={parentStyles.timeSelectionContainer}
         >
-          <Text style={parentStyles.selectionLabel}>{ time }</Text>
+          <Text style={parentStyles.timeSelectionLabel}>{ time }</Text>
         </Touchable>
 
         <ScrollView
