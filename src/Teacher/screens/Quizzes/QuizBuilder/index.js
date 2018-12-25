@@ -28,6 +28,7 @@ export default class QuizBuilder extends React.PureComponent {
       questions: PropTypes.arrayOf(PropTypes.shape({
         answer: PropTypes.string,
         image: PropTypes.string,
+        instructions: PropTypes.arrayOf(PropTypes.string),
         question: PropTypes.string,
         uid: PropTypes.number,
       })),
