@@ -145,7 +145,9 @@ class Quizzes extends React.PureComponent {
               :
               <Text style={styles.imageLabel}>RightOn!</Text>}
           </View>
-          <Text style={styles.quizTitle}>{quiz.title}</Text>
+          <Text style={styles.quizTitle}>{ quiz.title }</Text>
+          <Text style={[styles.quizTitle, styles.quizDescription]}>{ quiz.description }</Text>
+          <Text style={styles.quizCount}>{ `${quiz.questions.length}Q` }</Text>
         </View>
       </Touchable>
     );

@@ -50,10 +50,22 @@ export default StyleSheet.create({
     marginVertical: 10,
     width: deviceWidth - 30,
   },
+  quizCount: {
+    bottom: 5,
+    color: colors.dark,
+    fontSize: fonts.large,
+    fontWeight: 'bold',
+    position: 'absolute',
+    right: 5,
+  },
+  quizDescription: {
+    fontWeight: 'normal',
+  },
   quizTitle: {
     color: colors.dark,
     fontSize: fonts.medium,
-    padding: 10
+    fontWeight: 'bold',
+    padding: 10,
   },
   scrollview: {
     flexGrow: 1,
