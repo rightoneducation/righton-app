@@ -126,7 +126,7 @@ export default class QuizBuilder extends React.Component {
   
   createQuiz() {
     const { quiz } = this.state;
-    if (this.props.currentQuiz !== null) {
+    if (this.props.currentQuiz !== null || quiz.uid) {
       this.props.handleCreateQuiz(quiz);
     } else {
       this.props.handleCreateQuiz({ ...quiz, uid: `${Math.random()}` });
