@@ -38,9 +38,8 @@
                     "WriteCapacityUnits": "5"
                 },
                 "TableName": {
-                   "Ref": "tableName"
-                },
-                
+                  "Ref": "tableName"
+                }
             }
         }
     },
