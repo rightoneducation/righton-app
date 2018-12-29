@@ -109,11 +109,26 @@ class Create extends React.Component {
   }
 
 
+  removeEmptyStringElements = (obj) => {
+    const refObj = obj;
+    const arr = Object.keys(refObj);
+    for (let i = 0; i < arr.length; i += 1) {
+      if (typeof refObj[arr[i]] === 'object') { // dive deeper in
+        this.removeEmptyStringElements(refObj[arr[i]]);
+      } else if (refObj[arr[i]] === '') { // delete elements that are empty strings
+        delete refObj[arr[i]];
+      }
+    }
+    return refObj;
+  }
+
+
   async handleGroupSelection(number) {
     const { activeQuiz, room } = this.state;
+    const parsedQuiz = this.removeEmptyStringElements(activeQuiz);
     const awsQuiz = {
-      ...activeQuiz,
-      GameRooms: room,
+      ...parsedQuiz,
+      GameRoomID: room,
       groups: number,
       answering: null,
     };
@@ -130,26 +145,26 @@ class Create extends React.Component {
     //     group: 'number',
     //     tricks: ['string'],
     //   }],
-    //   GameRoom: 'string',
+    //   GameRoomID: 'string',
     //   groups: 'number',
     //   answering: 'number', // index of quiz in questions array
     // };
 
     try {
-      const apiName = 'RightOnAPI'; // replace this with your api name.
-      const path = '/GameRooms'; // replace this with the path you have configured on your API
+      const apiName = 'TeacherGameAPI'; // replace this with your api name.
+      const path = '/GameRoomID'; // replace this with the path you have configured on your API
       const myInit = {
         body: awsQuiz, // replace this with attributes you need
         headers: {} // OPTIONAL
       };
-      
-      API.put(apiName, path, myInit).then((response) => {
-        debug.log('response from posting quiz: ', response);
+
+      API.post(apiName, path, myInit).then((response) => {
+        console.log('Response from posting quiz: ', response);
       }).catch((error) => {
-        debug.warn('Error from posting quiz:', error);
+        console.log('Error from posting quiz:', error);
       });
     } catch (exception) {
-      debug.log('Error putting awsQuiz into DynamoDB:', exception);
+      console.log('Error putting awsQuiz into DynamoDB:', exception);
     }
   }
 
