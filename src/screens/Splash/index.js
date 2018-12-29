@@ -55,7 +55,7 @@ export default class Splash extends React.Component {
     }
 
     // TODO Check whether app is signed up for Teacher or Student and route accordingly
-    this.navigateTo(loggedIn ? 'TeacherApp' : 'OnboardApp');
+    this.navigateTo(loggedIn ? 'TeacherApp' : 'OnboardAppRouter');
   }
 
 
