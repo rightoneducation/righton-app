@@ -7,7 +7,7 @@ import { YellowBox } from 'react-native';
 import PropTypes from 'prop-types';
 
 import Amplify, { Auth } from 'aws-amplify';
-import awsmobile from './src/aws-exports';
+import awsconfig from './src/aws-exports';
 
 import RootNavigator from './src/Navigator';
 
@@ -23,7 +23,7 @@ YellowBox.ignoreWarnings(
 );
 
 
-Amplify.configure(awsmobile);
+Amplify.configure(awsconfig);
 
 
 export default class App extends React.Component {
