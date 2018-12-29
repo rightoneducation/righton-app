@@ -1,95 +1,95 @@
 {
 	"providers": {
 		"awscloudformation": {
-			"AuthRoleName": "ightn-20181214164155-authRole",
-			"UnauthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181214164155-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181214164155-authRole",
-			"Region": "us-west-2",
-			"DeploymentBucketName": "ightn-20181214164155-deployment",
-			"UnauthRoleName": "ightn-20181214164155-unauthRole",
-			"StackName": "ightn-20181214164155",
-			"StackId": "arn:aws:cloudformation:us-west-2:484006752749:stack/ightn-20181214164155/bb351420-ff73-11e8-a488-0a1528792fce"
+			"AuthRoleName": "ightn-20181229134435-authRole",
+			"UnauthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181229134435-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181229134435-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "ightn-20181229134435-deployment",
+			"UnauthRoleName": "ightn-20181229134435-unauthRole",
+			"StackName": "ightn-20181229134435",
+			"StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/ightn-20181229134435/71e96480-0b24-11e9-b3fd-0a16600979f0"
+		}
+	},
+	"auth": {
+		"cognito9238527f": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
+				"logicalId": "authcognito9238527f"
+			},
+			"lastPushTimeStamp": "2018-12-29T06:20:30.342Z",
+			"output": {
+				"AppClientSecret": "fs7ul1g6lep607c0q4cfg15b7hhksi277achm9rck36m49aqm2u",
+				"UserPoolId": "us-east-1_oVDoZFvFM",
+				"AppClientIDWeb": "4uushlqpafqjl3t5cg5vjpkvtp",
+				"AppClientID": "3l4681vp0tidsuuhjfg4c02n9m",
+				"IdentityPoolId": "us-east-1:b4625dc0-227e-4872-a0f0-3095d4f1ef27",
+				"IdentityPoolName": "cognito9238527f_identitypool_9238527f",
+				"UserPoolName": "cognito9238527f_userpool_9238527f"
+			},
+			"lastPushDirHash": "XvUHUTbyefI89sMuo6USiVoLjdE="
 		}
 	},
 	"storage": {
-		"RightOnDynamoDB": {
+		"GameRooms": {
 			"service": "DynamoDB",
 			"providerPlugin": "awscloudformation",
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181214164155-deployment/amplify-cfn-templates/storage/RightOnDynamoDB-cloudformation-template.json",
-				"logicalId": "storageRightOnDynamoDB"
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/GameRooms-cloudformation-template.json",
+				"logicalId": "storageGameRooms"
 			},
-			"lastPushTimeStamp": "2018-12-14T07:52:51.364Z",
+			"lastPushTimeStamp": "2018-12-29T06:20:30.351Z",
 			"output": {
-				"PartitionKeyName": "GameRooms",
-				"Region": "us-west-2",
-				"Arn": "arn:aws:dynamodb:us-west-2:484006752749:table/RightOnDynamoDB",
+				"PartitionKeyName": "GameRoomID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/GameRooms",
 				"PartitionKeyType": "S",
-				"Name": "RightOnDynamoDB"
+				"Name": "GameRooms"
 			},
-			"lastPushDirHash": "S7Jy1w+l+wVORK73vUKAsqPBAIA="
+			"lastPushDirHash": "V8E5VVbdkTQ8SaKY3uUXMHC4GXk="
 		}
 	},
 	"function": {
-		"RightOnLambda1": {
+		"TeacherGameLambda": {
 			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
 			"build": true,
 			"dependsOn": [
 				{
 					"category": "storage",
-					"resourceName": "RightOnDynamoDB",
+					"resourceName": "GameRooms",
 					"attributes": [
 						"Name",
 						"Arn"
 					]
 				}
 			],
-			"lastBuildTimeStamp": "2018-12-14T07:49:51.945Z",
-			"lastPackageTimeStamp": "2018-12-14T07:49:58.012Z",
-			"distZipFilename": "RightOnLambda1-1544773791-latest-build.zip",
+			"lastBuildTimeStamp": "2018-12-29T05:06:38.124Z",
+			"lastPackageTimeStamp": "2018-12-29T06:19:06.745Z",
+			"distZipFilename": "TeacherGameLambda-1546064341-latest-build.zip",
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181214164155-deployment/amplify-cfn-templates/function/RightOnLambda1-cloudformation-template.json",
-				"logicalId": "functionRightOnLambda1"
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherGameLambda-cloudformation-template.json",
+				"logicalId": "functionTeacherGameLambda"
 			},
-			"lastPushTimeStamp": "2018-12-14T07:52:51.364Z",
+			"lastPushTimeStamp": "2018-12-29T06:20:30.358Z",
 			"output": {
-				"Region": "us-west-2",
-				"Arn": "arn:aws:lambda:us-west-2:484006752749:function:RightOnLambda1",
-				"Name": "RightOnLambda1"
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherGameLambda",
+				"Name": "TeacherGameLambda"
 			},
-			"lastPushDirHash": "l+qRQhIIG/W7QzGLw46UbpKoEV0="
-		}
-	},
-	"auth": {
-		"cognitof54b84ef": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181214164155-deployment/amplify-cfn-templates/auth/cognitof54b84ef-cloudformation-template.yml",
-				"logicalId": "authcognitof54b84ef"
-			},
-			"lastPushTimeStamp": "2018-12-14T07:52:51.364Z",
-			"output": {
-				"AppClientSecret": "u3liu047odopt8pr2620n6v3dtitju0ocg8bu1bl0p5riuu269b",
-				"UserPoolId": "us-west-2_2siWM5Ux6",
-				"AppClientIDWeb": "4pf5i15mpmc2jd3kl1nhta5ukq",
-				"AppClientID": "5c5gaiaql72pdmi8b0u3f7n3am",
-				"IdentityPoolId": "us-west-2:e8b63146-efb3-406c-878a-a09b03405828",
-				"IdentityPoolName": "righton_identitypool_51ae6dd2",
-				"UserPoolName": "righton_userpool_51ae6dd2"
-			},
-			"lastPushDirHash": "HB38Btefz41B4/XvrO0exqwlOPk="
+			"lastPushDirHash": "dITsvIk23t3Ljlgw1M5ODIrLigs="
 		}
 	},
 	"api": {
-		"RightOnBackend": {
+		"TeacherGameAPI": {
 			"service": "API Gateway",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [
 				{
 					"category": "function",
-					"resourceName": "RightOnLambda1",
+					"resourceName": "TeacherGameLambda",
 					"attributes": [
 						"Name",
 						"Arn"
@@ -97,15 +97,15 @@
 				}
 			],
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181214164155-deployment/amplify-cfn-templates/api/RightOnBackend-cloudformation-template.json",
-				"logicalId": "apiRightOnBackend"
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherGameAPI-cloudformation-template.json",
+				"logicalId": "apiTeacherGameAPI"
 			},
-			"lastPushTimeStamp": "2018-12-14T07:52:51.364Z",
+			"lastPushTimeStamp": "2018-12-29T06:20:30.356Z",
 			"output": {
-				"ApiName": "RightOnBackend",
-				"RootUrl": "https://doq0kkiwz9.execute-api.us-west-2.amazonaws.com/Prod"
+				"ApiName": "TeacherGameAPI",
+				"RootUrl": "https://hh6pg9sfh9.execute-api.us-east-1.amazonaws.com/Prod"
 			},
-			"lastPushDirHash": "SwARcBSbkoyb/eY5P/BCdficREQ="
+			"lastPushDirHash": "uBbz3BBDokVsJlQPrcCex3DTS7E="
 		}
 	}
 }

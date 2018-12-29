@@ -1,4 +1,4 @@
 {
-    "useProfile": false,
-    "awsConfigFilePath": "/Users/andy/.amplify/awscloudformation/L7Dr5x1rOx"
+    "useProfile": true,
+    "profileName": "RightOn-Amplify-Admin"
 }

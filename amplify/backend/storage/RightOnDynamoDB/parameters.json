@@ -1,5 +1,0 @@
-{
-    "tableName": "RightOnDynamoDB",
-    "partitionKeyName": "GameRooms",
-    "partitionKeyType": "S"
-}
