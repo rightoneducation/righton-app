@@ -9,6 +9,9 @@ import PropTypes from 'prop-types';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 
+import { attachIotPolicy } from './lib/Categories/IoT';
+
+
 import RootNavigator from './src/Navigator';
 
 import LocalStorage from './lib/Categories/LocalStorage';
@@ -61,7 +64,9 @@ export default class App extends React.Component {
       debug.log(err);
       session = null;
     }
-    this.setSession(session);
+    this.setSession(session, () => {
+      attachIotPolicy();
+    });
   }
 
   setSession(session) {
