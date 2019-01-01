@@ -49,6 +49,7 @@ class SignIn extends React.Component {
 
     this.handlePasswordInput = this.handlePasswordInput.bind(this);
     this.handlePasswordRef = this.handlePasswordRef.bind(this);
+    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
 
     this.doLogin = this.doLogin.bind(this);
     this.onLogIn = this.onLogIn.bind(this);
