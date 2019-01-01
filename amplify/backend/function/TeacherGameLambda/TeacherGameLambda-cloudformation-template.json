@@ -27,7 +27,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "ightn-20181229134435-deployment",
-					"S3Key": "amplify-builds/TeacherGameLambda-1546064341-latest-build.zip"
+					"S3Key": "amplify-builds/TeacherGameLambda-1546084042-latest-build.zip"
 				}
 			}
 		},
