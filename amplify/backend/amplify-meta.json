@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
 				"logicalId": "authcognito9238527f"
 			},
-			"lastPushTimeStamp": "2018-12-29T06:20:30.342Z",
+			"lastPushTimeStamp": "2018-12-29T11:57:48.919Z",
 			"output": {
 				"AppClientSecret": "fs7ul1g6lep607c0q4cfg15b7hhksi277achm9rck36m49aqm2u",
 				"UserPoolId": "us-east-1_oVDoZFvFM",
@@ -40,7 +40,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/GameRooms-cloudformation-template.json",
 				"logicalId": "storageGameRooms"
 			},
-			"lastPushTimeStamp": "2018-12-29T06:20:30.351Z",
+			"lastPushTimeStamp": "2018-12-29T11:57:48.928Z",
 			"output": {
 				"PartitionKeyName": "GameRoomID",
 				"Region": "us-east-1",
@@ -66,20 +66,20 @@
 					]
 				}
 			],
-			"lastBuildTimeStamp": "2018-12-29T05:06:38.124Z",
-			"lastPackageTimeStamp": "2018-12-29T06:19:06.745Z",
-			"distZipFilename": "TeacherGameLambda-1546064341-latest-build.zip",
+			"lastBuildTimeStamp": "2018-12-29T11:47:22.463Z",
+			"lastPackageTimeStamp": "2018-12-29T11:47:28.999Z",
+			"distZipFilename": "TeacherGameLambda-1546084042-latest-build.zip",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherGameLambda-cloudformation-template.json",
 				"logicalId": "functionTeacherGameLambda"
 			},
-			"lastPushTimeStamp": "2018-12-29T06:20:30.358Z",
+			"lastPushTimeStamp": "2018-12-29T11:57:48.933Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherGameLambda",
 				"Name": "TeacherGameLambda"
 			},
-			"lastPushDirHash": "dITsvIk23t3Ljlgw1M5ODIrLigs="
+			"lastPushDirHash": "7mWLAOvBDOgIQHzlLQ1qHO4lL2Q="
 		}
 	},
 	"api": {
@@ -100,7 +100,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherGameAPI-cloudformation-template.json",
 				"logicalId": "apiTeacherGameAPI"
 			},
-			"lastPushTimeStamp": "2018-12-29T06:20:30.356Z",
+			"lastPushTimeStamp": "2018-12-29T11:57:48.930Z",
 			"output": {
 				"ApiName": "TeacherGameAPI",
 				"RootUrl": "https://hh6pg9sfh9.execute-api.us-east-1.amazonaws.com/Prod"
