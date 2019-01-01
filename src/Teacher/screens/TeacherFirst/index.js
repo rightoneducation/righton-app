@@ -1,24 +1,12 @@
+/* eslint react/prop-types: 0 */
+
 import React from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import PropTypes from 'prop-types';
+import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
-import Aicon from 'react-native-vector-icons/FontAwesome';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
+import TabBarComponent from '../../../components/TabBarComponent';
 import { colors } from '../../../utils/theme';
-
-const styles = StyleSheet.create({
-  tabBarIconContainer: { alignItems: 'center' },
-  tabBarIcon: { fontSize: 15 },
-});
-
-
-const TabBarIcon = ({ icon, label, tintColor }) => (
-  <View style={styles.tabBarIconContainer}>
-    <Aicon type={'font-awesome'} name={icon} style={styles.tabBarIcon} color={tintColor} />
-    {Platform.OS === 'ios' && <Text style={{ color: tintColor }}>{ label }</Text>}
-  </View>
-);
 
 const TeacherFirst = createBottomTabNavigator({
 
@@ -36,7 +24,7 @@ const TeacherFirst = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign In',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'sign-in'} tintColor={tintColor} label={'SIGN IN'} />,
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'sign-in'} tintColor={tintColor} label={'Sign In'} />,
     },
   },
 
@@ -54,35 +42,36 @@ const TeacherFirst = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Sign Up',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'sign-out'} tintColor={tintColor} label={'SIGN UP'} />
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'sign-out'} tintColor={tintColor} label={'Sign Up'} />
     },
   },
 
 
 }, {
+  animationEnabled: true,
   initialRouteName: 'SignIn',
   tabBarPosition: 'bottom',
   tabBarOptions: {
     activeTintColor: colors.white,
     inactiveTintColor: colors.dark,
-    tabStyle: { backgroundColor: colors.primary, borderTopWidth: 0.5, borderTopColor: '#ededed' },
+    labelStyle: {
+      fontSize: 10,
+      margin: 0,
+      padding: 0,
+    },
+    tabStyle: {
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+      borderTopWidth: 0.5,
+      borderTopColor: '#ededed',
+      flex: 1,
+    },
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
+    style: {
+      justifyContent: 'center',
+    },
   },
 });
-
-
-TabBarIcon.propTypes = {
-  icon: PropTypes.string,
-  label: PropTypes.string,
-  tintColor: PropTypes.string,
-};
-
-TabBarIcon.defaultProps = {
-  icon: '',
-  label: '',
-  tintColor: '#000',
-};
-
 
 export default TeacherFirst;
