@@ -108,7 +108,7 @@ class SignUp extends React.Component {
         userConfirmed = data.userConfirmed;
 
         debug.log('Sign up data received:', JSON.stringify(data));
-        this.setState({ showMFAPrompt: !userConfirmed });
+        this.setState({ showMFAPrompt: !userConfirmed, showActivityIndicator: false });
 
         if (userConfirmed) {
           this.onSignUp();
