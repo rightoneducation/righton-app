@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { IOTSubscribeToMultipleTopics, unsubscribeFromTopics, publishMessage } from '../../../../lib/Categories/IoT';
 import { API } from 'aws-amplify';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
@@ -57,6 +58,14 @@ class Create extends React.Component {
 
     this.handleBackFromGroups = this.handleBackFromGroups.bind(this);
     this.handleBackFromHost = this.handleBackFromHost.bind(this);
+
+    this.handleReceivedMessage = this.handleReceivedMessage.bind(this);
+  }
+
+  
+  componentWillUnmount() {
+    const { room } = this.state;
+    unsubscribeFromTopics([room]);
   }
 
 
@@ -88,6 +97,8 @@ class Create extends React.Component {
   handleRoomSubmit() {
     // TODO Handle entering game in DynamoDB
     // Hydrate Dashboard w/ game details
+    const { room } = this.state;
+    this.setState({ room });
     this.hydrateQuizzes();
     this.swiperRef.scrollBy(1, false);
   }
@@ -109,40 +120,28 @@ class Create extends React.Component {
   }
 
 
-  removeEmptyStringElements = (obj) => {
-    const refObj = obj;
-    const arr = Object.keys(refObj);
-    for (let i = 0; i < arr.length; i += 1) {
-      if (typeof refObj[arr[i]] === 'object') { // dive deeper in
-        this.removeEmptyStringElements(refObj[arr[i]]);
-      } else if (refObj[arr[i]] === '') { // delete elements that are empty strings
-        delete refObj[arr[i]];
-      }
-    }
-    return refObj;
-  }
-
-
   async handleGroupSelection(number) {
     const { activeQuiz, room } = this.state;
-    const parsedQuiz = this.removeEmptyStringElements(activeQuiz);
     const awsQuiz = {
-      ...parsedQuiz,
-      GameRoomID: room,
+      ...activeQuiz,
       groups: number,
       answering: null,
+    };
+    const data = {
+      action: 'SET_QUIZ_STATE',
+      data: { ...awsQuiz },
     };
     // const schema = {
     //   avatar: 'string',
     //   title: 'string',
     //   description: 'string',
-    //   questions: [{
+    //   group#: [{ /* question schema */
     //     answer: 'string',
     //     image: 'string',
     //     instructions: ['string'],
     //     question: 'string',
     //     uid: 'string',
-    //     group: 'number',
+    //     group: 'number', ??
     //     tricks: ['string'],
     //   }],
     //   GameRoomID: 'string',
@@ -151,11 +150,15 @@ class Create extends React.Component {
     // };
 
     try {
-      const apiName = 'TeacherGameAPI'; // replace this with your api name.
-      const path = '/GameRoomID'; // replace this with the path you have configured on your API
+      const apiName = 'TeacherGameAPI';
+      const path = '/GameRoomID';
+      const date = Date.now();
       const myInit = {
-        body: awsQuiz, // replace this with attributes you need
-        headers: {} // OPTIONAL
+        body: {
+          GameRoomID: room,
+          date,
+        },
+        headers: {},
       };
 
       API.post(apiName, path, myInit).then((response) => {
@@ -166,6 +169,17 @@ class Create extends React.Component {
     } catch (exception) {
       console.log('Error putting awsQuiz into DynamoDB:', exception);
     }
+
+    IOTSubscribeToMultipleTopics([room], this.handleReceivedMessage);
+    setTimeout(() => {
+      const message = JSON.stringify(data);
+      publishMessage(room, message);
+    }, 5000);
+  }
+
+
+  handleReceivedMessage = (message) => {
+    console.log('Received Message', message);
   }
 
 
@@ -209,11 +223,18 @@ class Create extends React.Component {
   );
 
 
-  renderNumberBlocks = () => (
-    <View style={styles.blocksContainer}>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(number => this.renderNumberBlock(number))}
-    </View>
-  );
+  renderNumberBlocks = () => {
+    const { activeQuiz } = this.state;
+    if (!activeQuiz.questions) return null;
+    const len = activeQuiz.questions.length;
+    const arr = [];
+    arr[len] = undefined;
+    return (
+      <View style={styles.blocksContainer}>
+        {arr.map((n, idx) => len % idx === 0 && this.renderNumberBlock(idx))}
+      </View>
+    );
+  }
 
 
   render() {
