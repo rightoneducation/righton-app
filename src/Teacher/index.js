@@ -1,27 +1,16 @@
+/* eslint react/prop-types: 0 */
+
 import React from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import PropTypes from 'prop-types';
+import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
-import Aicon from 'react-native-vector-icons/FontAwesome';
 import Explore from './screens/Explore';
 import Create from './screens/Create';
 import Quizzes from './screens/Quizzes';
 import Maker from './screens/Maker';
 import Reports from './screens/Reports';
+import TabBarComponent from '../components/TabBarComponent';
 import { colors } from '../utils/theme';
 
-const styles = StyleSheet.create({
-  tabBarIconContainer: { alignItems: 'center' },
-  tabBarIcon: { fontSize: 15 },
-});
-
-
-const TabBarIcon = ({ icon, label, tintColor }) => (
-  <View style={styles.tabBarIconContainer}>
-    <Aicon type={'font-awesome'} name={icon} style={styles.tabBarIcon} color={tintColor} />
-    {Platform.OS === 'ios' && <Text style={{ color: tintColor }}>{ label }</Text>}
-  </View>
-);
 
 const TeacherApp = createBottomTabNavigator({
 
@@ -39,7 +28,7 @@ const TeacherApp = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Explore',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'search'} tintColor={tintColor} label={'Explore'} />,
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'search'} tintColor={tintColor} label={'Explore'} />,
     },
   },
 
@@ -57,7 +46,7 @@ const TeacherApp = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Create',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'tablet'} tintColor={tintColor} label={'Create'} />
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Create'} />
     },
   },
 
@@ -75,7 +64,7 @@ const TeacherApp = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Quizzes',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'database'} tintColor={tintColor} label={'Quizzes'} />,
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'database'} tintColor={tintColor} label={'Quizzes'} />,
     },
   },
 
@@ -93,7 +82,7 @@ const TeacherApp = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Maker',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'puzzle-piece'} tintColor={tintColor} label={'Maker'} />,
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'puzzle-piece'} tintColor={tintColor} label={'Maker'} />,
     },
   },
 
@@ -111,36 +100,37 @@ const TeacherApp = createBottomTabNavigator({
     },
     navigationOptions: {
       tabBarLabel: 'Reports',
-      tabBarIcon: ({ tintColor }) => <TabBarIcon icon={'bar-chart'} tintColor={tintColor} label={'Reports'} />
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'bar-chart'} tintColor={tintColor} label={'Reports'} />
     },
   },
 
 
 }, {
   animationEnabled: true,
-  swipeEnabled: false,
   tabBarPosition: 'bottom',
   tabBarOptions: {
     activeTintColor: colors.white,
     inactiveTintColor: colors.dark,
-    tabStyle: { backgroundColor: colors.primary, borderTopWidth: 0.5, borderTopColor: '#ededed' },
+    labelStyle: {
+      fontSize: 10,
+      margin: 0,
+      padding: 0,
+    },
+    tabStyle: {
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+      borderTopWidth: 0.5,
+      borderTopColor: '#ededed',
+      flex: 1,
+    },
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
+    style: {
+      justifyContent: 'center',
+    },
+    swipeEnabled: false,
   },
 });
-
-
-TabBarIcon.propTypes = {
-  icon: PropTypes.string,
-  label: PropTypes.string,
-  tintColor: PropTypes.string,
-};
-
-TabBarIcon.defaultProps = {
-  icon: '',
-  label: '',
-  tintColor: '#000',
-};
 
 
 export default TeacherApp;
