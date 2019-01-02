@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
 				"logicalId": "authcognito9238527f"
 			},
-			"lastPushTimeStamp": "2019-01-02T10:02:43.176Z",
+			"lastPushTimeStamp": "2019-01-02T15:19:20.032Z",
 			"output": {
 				"AppClientSecret": "fs7ul1g6lep607c0q4cfg15b7hhksi277achm9rck36m49aqm2u",
 				"UserPoolId": "us-east-1_oVDoZFvFM",
@@ -40,7 +40,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/GameRooms-cloudformation-template.json",
 				"logicalId": "storageGameRooms"
 			},
-			"lastPushTimeStamp": "2019-01-02T10:02:43.195Z",
+			"lastPushTimeStamp": "2019-01-02T15:19:20.034Z",
 			"output": {
 				"PartitionKeyName": "GameRoomID",
 				"Region": "us-east-1",
@@ -67,19 +67,19 @@
 				}
 			],
 			"lastBuildTimeStamp": "2018-12-29T11:47:22.463Z",
-			"lastPackageTimeStamp": "2019-01-02T09:48:25.835Z",
-			"distZipFilename": "TeacherGameLambda-1546422501-latest-build.zip",
+			"lastPackageTimeStamp": "2019-01-02T15:17:58.479Z",
+			"distZipFilename": "TeacherGameLambda-1546442273-latest-build.zip",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherGameLambda-cloudformation-template.json",
 				"logicalId": "functionTeacherGameLambda"
 			},
-			"lastPushTimeStamp": "2019-01-02T10:02:43.200Z",
+			"lastPushTimeStamp": "2019-01-02T15:19:20.039Z",
 			"output": {
 				"Region": "us-east-1",
 				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherGameLambda",
 				"Name": "TeacherGameLambda"
 			},
-			"lastPushDirHash": "YL8sWLgy5Uxhx7gR5hxKbdf7Lj8="
+			"lastPushDirHash": "88OwhJ4q1onZ4J9LvA+IOkCgCRY="
 		}
 	},
 	"api": {
@@ -100,7 +100,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherGameAPI-cloudformation-template.json",
 				"logicalId": "apiTeacherGameAPI"
 			},
-			"lastPushTimeStamp": "2019-01-02T10:02:43.198Z",
+			"lastPushTimeStamp": "2019-01-02T15:19:20.038Z",
 			"output": {
 				"ApiName": "TeacherGameAPI",
 				"RootUrl": "https://hh6pg9sfh9.execute-api.us-east-1.amazonaws.com/Prod"
