@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { IOTSubscribeToMultipleTopics, unsubscribeFromTopics, publishMessage } from '../../../../lib/Categories/IoT';
-import { API } from 'aws-amplify';
+import { IOTSubscribeToTopic, unsubscribeFromTopic, publishMessage } from '../../../../lib/Categories/IoT';
+// import { postGameToDynamoDB } from '../../../../lib/Categories/DynamoDB';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';
@@ -65,7 +65,7 @@ class Create extends React.Component {
   
   componentWillUnmount() {
     const { room } = this.state;
-    unsubscribeFromTopics([room]);
+    unsubscribeFromTopic(room);
   }
 
 
@@ -98,6 +98,8 @@ class Create extends React.Component {
     // TODO Handle entering game in DynamoDB
     // Hydrate Dashboard w/ game details
     const { room } = this.state;
+    // TODO Save teacher account name in table for conditional checking
+    // postGameToDynamoDB(room);
     this.setState({ room });
     this.hydrateQuizzes();
     this.swiperRef.scrollBy(1, false);
@@ -149,28 +151,7 @@ class Create extends React.Component {
     //   answering: 'number', // index of quiz in questions array
     // };
 
-    try {
-      const apiName = 'TeacherGameAPI';
-      const path = '/GameRoomID';
-      const date = Date.now();
-      const myInit = {
-        body: {
-          GameRoomID: room,
-          date,
-        },
-        headers: {},
-      };
-
-      API.post(apiName, path, myInit).then((response) => {
-        console.log('Response from posting quiz: ', response);
-      }).catch((error) => {
-        console.log('Error from posting quiz:', error);
-      });
-    } catch (exception) {
-      console.log('Error putting awsQuiz into DynamoDB:', exception);
-    }
-
-    IOTSubscribeToMultipleTopics([room], this.handleReceivedMessage);
+    IOTSubscribeToTopic(room, this.handleReceivedMessage);
     setTimeout(() => {
       const message = JSON.stringify(data);
       publishMessage(room, message);
