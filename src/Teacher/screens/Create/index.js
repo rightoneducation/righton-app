@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { IOTSubscribeToTopic, unsubscribeFromTopic, publishMessage } from '../../../../lib/Categories/IoT';
-// import { postGameToDynamoDB } from '../../../../lib/Categories/DynamoDB';
+import { deleteGameFromDynamoDB, getGameFromDynamoDB, putGameToDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';
@@ -46,6 +46,9 @@ class Create extends React.Component {
   constructor(props) {
     super(props);
 
+    this.hydratedQuizzes = false;
+    this.gamePutInDynamoDB = false;
+
     this.state = {
       activeQuiz: {},
       room: '',
@@ -61,10 +64,13 @@ class Create extends React.Component {
 
     this.handleReceivedMessage = this.handleReceivedMessage.bind(this);
   }
-
+  
   
   componentWillUnmount() {
     const { room } = this.state;
+    // TODO Handle this in top navigator state...
+    // Keep state of game and whether this needs to happen on app close or not.
+    if (this.gamePutInDynamoDB) deleteGameFromDynamoDB(room, r => debug.log('R', r), e => debug.log('E', e));
     unsubscribeFromTopic(room);
   }
 
@@ -75,6 +81,7 @@ class Create extends React.Component {
 
 
   async hydrateQuizzes() {
+    if (this.hydratedQuizzes) return;
     let quizzes;
     try {
       quizzes = await LocalStorage.getItem('@RightOn:Quizzes');
@@ -84,25 +91,55 @@ class Create extends React.Component {
         quizzes = [];
       } else {
         quizzes = JSON.parse(quizzes);
+        this.hydratedQuizzes = true;
       }
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Quizzes, hydrateQuizzes():', exception);
     }
-    this.setState({ quizzes }, () => {
-      setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
-    });
+    this.setState({ quizzes });
   }
 
 
-  handleRoomSubmit() {
-    // TODO Handle entering game in DynamoDB
+  async handleRoomSubmit() {
+    this.swiperRef.scrollBy(1, false);
+    if (!this.hydratedQuizzes) this.hydrateQuizzes();
     // Hydrate Dashboard w/ game details
     const { room } = this.state;
-    // TODO Save teacher account name in table for conditional checking
-    // postGameToDynamoDB(room);
-    this.setState({ room });
-    this.hydrateQuizzes();
-    this.swiperRef.scrollBy(1, false);
+    const { session } = this.props.screenProps;
+    let username = null;
+    if (session && session.idToken && session.idToken.payload) {
+      username = session.idToken.payload['cognito:username'];
+    }
+
+    getGameFromDynamoDB(room,
+      (res) => {
+        if (res && res.username && username !== res.username) {
+          // Invalid teacher account -- forbid access!
+          setTimeout(() => this.swiperRef.scrollBy(-1, false), 500);
+          // TODO Send message that account error / create room w/ different name
+        } else if (res && (username === res.username || res.username === null)) {
+          debug.log('Username matches and game room still exists: Enter');
+          setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
+          this.gamePutInDynamoDB = true;
+        } else if (!res || (res && !res.GameRoomId)) {
+          putGameToDynamoDB(room, username,
+            (putRes) => {
+              setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
+              debug.log('Put game in DynamoDB!', putRes);
+              this.gamePutInDynamoDB = true;
+            },
+            (exception) => {
+              setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
+              debug.log('Error putting game in DynamoDB', exception);
+            }
+          );
+        }
+      },
+      (exception) => {
+        // TODO Handle exception
+        setTimeout(() => this.swiperRef.scrollBy(-1, false), 500);
+        debug.log('Exception getting game from DynamoDB', exception);
+      });
   }
 
 
@@ -128,6 +165,7 @@ class Create extends React.Component {
       ...activeQuiz,
       groups: number,
       answering: null,
+      uid: `${Number.random()}`,
     };
     const data = {
       action: 'SET_QUIZ_STATE',
@@ -160,7 +198,7 @@ class Create extends React.Component {
 
 
   handleReceivedMessage = (message) => {
-    console.log('Received Message', message);
+    debug.log('Received Message', message);
   }
 
 
