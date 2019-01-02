@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/GameRoomID",
+            "lambdaFunction": "TeacherGameLambda",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "TeacherGameAPI",
+    "apiName": "righton8f971192",
+    "functionArns": [
+        {
+            "lambdaFunction": "TeacherGameLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ightn-20181229134435-authRole",
+        "unAuthRoleName": "ightn-20181229134435-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "TeacherGameLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
