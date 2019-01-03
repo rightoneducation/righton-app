@@ -17,6 +17,19 @@ import { colors, elevation } from '../../../utils/theme';
 
 
 export default class Dashboard extends React.Component {
+  static propTypes = {
+    screenProps: PropTypes.shape({ type: PropTypes.any }),
+  };
+  
+  static defaultProps = {
+    screenProps: {
+      handleSetRole: () => {},
+      navigation: {
+        navigate: () => {},
+      }
+    },
+  };
+  
   constructor(props) {
     super(props);
 
@@ -31,6 +44,11 @@ export default class Dashboard extends React.Component {
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
 
     this.handleGameEntry = this.handleGameEntry.bind(this);
+  }
+
+
+  componentDidMount() {
+    this.props.screenProps.handleSetRole('Student');
   }
 
 
@@ -55,7 +73,7 @@ export default class Dashboard extends React.Component {
 
 
   handleGameEntry() {
-    this.props.navigation.navigate('GamePreview');
+    this.props.screenProps.navigation.navigate('GamePreview');
   }
 
 
@@ -194,15 +212,3 @@ export default class Dashboard extends React.Component {
     );
   }
 }
-
-Dashboard.propTypes = {
-  screenProps: PropTypes.shape({ type: PropTypes.any }),
-  // studentAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
-  navigator: PropTypes.shape({ navigate: PropTypes.func }),
-};
-
-Dashboard.defaultProps = {
-  screenProps: {},
-  // studentAppNavigator: {},
-  navigator: {},
-};
