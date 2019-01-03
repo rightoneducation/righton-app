@@ -9,8 +9,9 @@ import PropTypes from 'prop-types';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 
-import { attachIotPolicy } from './lib/Categories/IoT';
-
+import { attachIotPolicy, IOTSubscribeToTopic, unsubscribeFromTopic, publishMessage } from './lib/Categories/IoT';
+import studentMessageHandler from './lib/Categories/IoT/studentMessageHandler';
+import teacherMessageHandler from './lib/Categories/IoT/teacherMessageHandler';
 
 import RootNavigator from './src/Navigator';
 
@@ -21,7 +22,7 @@ YellowBox.ignoreWarnings([]);
 YellowBox.ignoreWarnings(
   [
     'Module RNFetchBlob requires main queue setup',
-    'You should only render one navigator explicitly in your app,',
+    // 'You should only render one navigator explicitly in your app,',
   ]
 );
 
@@ -45,14 +46,24 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.messagesReceived = {};
+
     this.state = {
+      gameState: {},
       ready: false,
+      role: '', // 'Teacher' | 'Student'
       session: null,
     };
 
     this.handleOnSignIn = this.handleOnSignIn.bind(this);
     // this.handleOnSignUp = this.handleOnSignUp.bind(this);
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
+    this.handleSetGameState = this.handleSetGameState.bind(this);
+    this.handleSetRole = this.handleSetRole.bind(this);
+
+    this.IOTSubscribeToTopic = this.IOTSubscribeToTopic.bind(this);
+    // this.IOTUnsubscribeFromTopic = this.IOTUnsubscribeFromTopic.bind(this);
+    this.IOTPublishMessage = this.IOTPublishMessage.bind(this);
   }
 
   async componentDidMount() {
@@ -67,6 +78,11 @@ export default class App extends React.Component {
     this.setSession(session, () => {
       attachIotPolicy();
     });
+  }
+
+  componentWillUnmount() {
+    // TODO Unsubscribe from topic manually when game ends or user leaves game w/o exiting app.
+    this.IOTUnsubscribeFromTopic();
   }
 
   setSession(session) {
@@ -85,6 +101,31 @@ export default class App extends React.Component {
   handleOnSignOut() {
     Auth.signOut();
     this.setState({ session: null });
+  }
+
+  handleSetRole(role) {
+    this.setState({ role });
+  }
+
+  handleSetGameState(gameState) {
+    this.setState({ gameState });
+  }
+
+  IOTSubscribeToTopic(topic) {
+    const { role } = this.state;
+    IOTSubscribeToTopic(topic, role === 'Teacher' ? teacherMessageHandler : studentMessageHandler, this);
+  }
+
+  IOTUnsubscribeFromTopic() {
+    const { GameRoomID } = this.state.gameState;
+    unsubscribeFromTopic(GameRoomID);
+  }
+
+  IOTPublishMessage(message, uid) {
+    const { GameRoomID } = this.state.gameState;
+    // Prevent computing received messages sent by self.
+    this.messagesReceived[uid] = true;
+    publishMessage(GameRoomID, message);
   }
 
   render() {
@@ -111,7 +152,11 @@ export default class App extends React.Component {
           onSignIn: onSignIn || this.handleOnSignIn,
           onSignUp: onSignUp || this.handleOnSignUp,
           doSignOut: doSignOut || this.handleOnSignOut,
+          handleSetGameState: this.handleSetGameState,
+          handleSetRole: this.handleSetRole,
           auth: Auth,
+          IOTPublishMessage: this.IOTPublishMessage,
+          IOTSubscribeToTopic: this.IOTSubscribeToTopic,
         }}
       />
     );
