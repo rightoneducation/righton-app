@@ -97,7 +97,7 @@ class Explore extends React.PureComponent {
       onPress={() => {}}
     >
       <View style={[styles.dataContainer, data.banner && { flexDirection: 'column', height: 300 }]}>
-        {data.banner &&
+        {Boolean(data.banner) &&
           <Image source={{ uri: data.banner }} style={styles.banner} />}
         <View style={styles.dataBody}>
           <View style={styles.iconContainer}>
