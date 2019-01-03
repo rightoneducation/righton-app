@@ -143,6 +143,7 @@ export default class App extends React.Component {
 
   render() {
     const { 
+      gameState,
       // ready,
       session 
     } = this.state;
@@ -161,6 +162,7 @@ export default class App extends React.Component {
         }}
         navigation={this.props.navigation}
         screenProps={{
+          gameState,
           session,
           onSignIn: onSignIn || this.handleOnSignIn,
           onSignUp: onSignUp || this.handleOnSignUp,
