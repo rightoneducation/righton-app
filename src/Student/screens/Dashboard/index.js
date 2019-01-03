@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Keyboard,
+  NetInfo,
   ScrollView,
   StatusBar,
   Text,
@@ -8,12 +9,14 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-// import HeaderSimple from '../../../components/HeaderSimple';
 import ButtonWide from '../../../components/ButtonWide';
+import Message from '../../../components/Message';
 import styles from './styles';
 import { colors, elevation } from '../../../utils/theme';
+import debug from '../../../utils/debug';
 
 
 export default class Dashboard extends React.Component {
@@ -34,8 +37,11 @@ export default class Dashboard extends React.Component {
     super(props);
 
     this.state = {
+      messageProps: null,
       name: '',
     };
+
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
 
     this.handleNameInput = this.handleNameInput.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
@@ -73,7 +79,50 @@ export default class Dashboard extends React.Component {
 
 
   handleGameEntry() {
-    this.props.screenProps.navigation.navigate('GamePreview');
+    const { room } = this.state;
+    NetInfo.isConnected.fetch()
+      .then(async (isConnected) => {
+        if (isConnected) {
+          getGameFromDynamoDB(room, this.handleGameFound, this.handleGameError);
+        } else {
+          this.setState({
+            closeFunc: this.handleCloseMessage,
+            bodyStyle: null,
+            textStyle: null,
+            duration: null,
+            message: 'Network error.',
+            timeout: 4000,
+          });
+        }
+      });
+  }
+
+
+  handleGameFound(res) {
+    if (typeof res === 'object' && res.GameRoomID) {
+      this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
+      this.props.screenProps.navigation.navigate('GamePreview');
+    }
+  }
+
+
+  handleGameError = (exception) => {
+    this.setState({
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        bodyStyle: null,
+        textStyle: null,
+        duration: null,
+        message: 'Game room not found.',
+        timeout: 4000,
+      },
+    });
+    debug.log('Error getting game from DynamoDB:', exception);
+  }
+
+
+  handleCloseMessage() {
+    this.setState({ messageProps: null });
   }
 
 
@@ -100,7 +149,7 @@ export default class Dashboard extends React.Component {
   renderProfileView() {
     const { name } = this.state;
 
-    const { gamesPlayed, pointsEarned } = this.props.screenProps;
+    const { gamesPlayed, pointsEarned } = this.props.screenProps.profile;
     // Where are these values being hydrated from?
 
     return (
@@ -189,24 +238,29 @@ export default class Dashboard extends React.Component {
 
 
   render() {
-    // const {
+    const {
+      messageProps,
+    } = this.state;
 
-    // } = this.state;
-
-    const { gameRoom } = this.props.screenProps;
+    const { gameState } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={colors.primary} />     
+        <StatusBar backgroundColor={colors.primary} />   
+        { messageProps && <Message {...messageProps} /> }
+
         {this.renderHeader()}   
         <ScrollView
           keyboardShouldPersistTaps={'never'}
           contentContainerStyle={styles.scrollview}
         >
-          {/* <HeaderSimple /> */}
-          { this.renderProfileView() }
-          { gameRoom ? this.renderGameRoomState() : this.renderGameRoomEntry() }
-          { this.renderButtons() }
+          {this.renderProfileView()}
+
+          {Object.keys(gameState).length ?
+            this.renderGameRoomState() :
+            this.renderGameRoomEntry()}
+
+          {this.renderButtons()}
         </ScrollView>
       </View>
     );
