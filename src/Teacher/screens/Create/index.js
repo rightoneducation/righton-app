@@ -61,9 +61,9 @@ class Create extends React.Component {
 
     this.handleRoomInput = this.handleRoomInput.bind(this);
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
-    // this.handleGroupSelection = this.handleGroupSelection.bind(this);
+    // this.handleTeamSelection = this.handleTeamSelection.bind(this);
 
-    this.handleBackFromGroups = this.handleBackFromGroups.bind(this);
+    // this.handleBackFromTeams = this.handleBackFromTeams.bind(this);
     this.handleBackFromHost = this.handleBackFromHost.bind(this);
   }
 
@@ -141,17 +141,17 @@ class Create extends React.Component {
   }
 
 
-  handleBackFromGroups() {
-    this.swiperRef.scrollBy(-1, false);
-  }
+  // handleBackFromTeams() {
+  //   this.swiperRef.scrollBy(-1, false);
+  // }
 
 
   handleQuizSelection(e, quiz) {
     const { room } = this.state;
 
-    const groupQuestions = {};
+    const teamQuestions = {};
     quiz.questions.forEach((question, idx) => {
-      groupQuestions[`group${idx}`] = question;
+      teamQuestions[`team${idx}`] = question;
     });
 
     const gameState = {
@@ -159,8 +159,8 @@ class Create extends React.Component {
       avatar: quiz.avatar,
       title: quiz.description,
       description: quiz.description,
-      ...groupQuestions,
-      groups: quiz.questions.length,
+      ...teamQuestions,
+      teams: quiz.questions.length,
       answering: null,
     };
     
@@ -217,7 +217,7 @@ class Create extends React.Component {
   //     activeOpacity={0.8}
   //     background={Touchable.Ripple(colors.primary, false)}
   //     key={`${number}`}      
-  //     onPress={() => this.handleGroupSelection(number)}
+  //     onPress={() => this.handleTeamSelection(number)}
   //     style={styles.blockContainer}
   //   >
   //     <Text style={styles.blockNumber}>{ number }</Text>
@@ -295,13 +295,13 @@ class Create extends React.Component {
 
         {/* <ScrollView contentContainerStyle={[firstStyles.container, styles.scrollview]}>
           <ButtonBack
-            onPress={this.handleBackFromGroups}
+            onPress={this.handleBackFromTeams}
           />
-          <Text style={firstStyles.title}>Number of groups</Text>
+          <Text style={firstStyles.title}>Number of Teams</Text>
           {this.renderNumberBlocks()}
           <ButtonWide
             label={'Launch Game'}
-            onPress={this.handleGroupSelection}
+            onPress={this.handleTeamSelection}
           />
         </ScrollView> */}
 

@@ -25,7 +25,7 @@ export default class GamePreview extends React.PureComponent {
         team: PropTypes.string,
       }),
     }),
-    group: PropTypes.number.isRequired,
+    team: PropTypes.number.isRequired,
     studentAppNavigator: PropTypes.shape({
       navigate: PropTypes.func,
     }),
@@ -40,7 +40,7 @@ export default class GamePreview extends React.PureComponent {
         team: __DEV__ ? 'Scool' : '',
       },
     },
-    group: 0,
+    team: 0,
     studentAppNavigator: {},
   }
 
@@ -144,14 +144,14 @@ export default class GamePreview extends React.PureComponent {
 
 
   renderQuestion() {
-    const { gameState, group } = this.props;
-    const team = `team${group}`;
+    const { gameState, team } = this.props;
+    const teamRef = `team${team}`;
 
     return (
       <View style={styles.questionContainer}>
-        <Text style={styles.question}>{ gameState[team].question }</Text>
-        {gameState[team].image &&
-          <Image source={{ uri: gameState[team].image }} style={styles.image} />} 
+        <Text style={styles.question}>{ gameState[teamRef].question }</Text>
+        {gameState[teamRef].image &&
+          <Image source={{ uri: gameState[teamRef].image }} style={styles.image} />} 
       </View>
     );
   }
