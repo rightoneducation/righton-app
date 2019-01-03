@@ -12,7 +12,7 @@ import TabBarComponent from '../components/TabBarComponent';
 import { colors } from '../utils/theme';
 
 
-const TeacherApp = createBottomTabNavigator({
+const TeacherTabNavigator = createBottomTabNavigator({
 
 
   Explore: {
@@ -131,6 +131,30 @@ const TeacherApp = createBottomTabNavigator({
     swipeEnabled: false,
   },
 });
+
+
+class TeacherApp extends React.Component {
+  static router = TeacherTabNavigator.router;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    };
+  }
+
+
+  render() {
+    const { navigation, screenProps } = this.props;
+
+    return (
+      <TeacherTabNavigator
+        navigation={navigation}
+        screenProps={{ ...this.props, ...screenProps }}
+      />
+    );
+  }
+}
 
 
 export default TeacherApp;
