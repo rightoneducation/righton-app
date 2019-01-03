@@ -55,6 +55,7 @@ export default class App extends React.Component {
       ready: false,
       role: '', // 'Teacher' | 'Student'
       session: null,
+      team: null,
     };
 
     this.handleOnSignIn = this.handleOnSignIn.bind(this);
@@ -154,7 +155,8 @@ export default class App extends React.Component {
     const { 
       gameState,
       // ready,
-      session 
+      session,
+      team,
     } = this.state;
 
     const {
@@ -173,6 +175,7 @@ export default class App extends React.Component {
         screenProps={{
           gameState,
           session,
+          team,
           onSignIn: onSignIn || this.handleOnSignIn,
           onSignUp: onSignUp || this.handleOnSignUp,
           doSignOut: doSignOut || this.handleOnSignOut,
