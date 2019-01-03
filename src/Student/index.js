@@ -63,7 +63,10 @@ class StudentApp extends React.Component {
     const { navigation, screenProps } = this.props;
 
     return (
-      <StudentSwitchNavigator navigation={navigation} screenProps={{ ...screenProps }} />
+      <StudentSwitchNavigator
+        navigation={navigation}
+        screenProps={{ ...this.props, ...screenProps }}
+      />
     );
   }
 }
