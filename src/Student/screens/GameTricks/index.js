@@ -17,31 +17,23 @@ import { colors } from '../../../utils/theme';
 
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
-    // GameAppNavigator: PropTypes.shape({ navigate: PropTypes.func }),
-    navigator: PropTypes.shape({ navigate: PropTypes.func }),
-    gameState: PropTypes.shape({
-      team0: PropTypes.shape({
-        question: PropTypes.string,
-        team: PropTypes.string,
-      }),
-    }),
-    team: PropTypes.number.isRequired,
-    studentAppNavigator: PropTypes.shape({
-      navigate: PropTypes.func,
+    screenProps: PropTypes.shape({
+      gameState: PropTypes.shape({ type: PropTypes.any }),
+      team: PropTypes.number.isRequired,
     }),
   }
   
   static defaultProps = {
-    // GameAppNavigator: {},
-    navigator: {},
-    gameState: {
-      team0: {
-        question: __DEV__ ? 'What did you eat for breakfast?' : '',
-        team: __DEV__ ? 'Scool' : '',
+    screenProps: {
+      gameState: {
+        team0: {
+          instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
+          question: __DEV__ ? 'What did you eat for breakfast?' : '',
+          team: __DEV__ ? 'Scool' : '',
+        },
       },
+      team: 0,
     },
-    team: 0,
-    studentAppNavigator: {},
   }
 
   constructor(props) {
@@ -144,7 +136,7 @@ export default class GamePreview extends React.PureComponent {
 
 
   renderQuestion() {
-    const { gameState, team } = this.props;
+    const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
 
     return (
@@ -234,14 +226,14 @@ export default class GamePreview extends React.PureComponent {
       trick3,
     } = this.state;
 
-    const { gameState, group } = this.props;
-    const team = `team${group}`;
+    const { gameState, team } = this.props.screenProps;
+    const teamRef = `team${team}`;
 
     const showDoneButton = Boolean(trick1) && Boolean(trick2) && Boolean(trick3);
 
     return (
       <View style={styles.container}>
-        <HeaderTeam team={gameState[team].team} />
+        <HeaderTeam team={gameState[teamRef].team} />
         {this.renderQuestion()}
         <View>
           {/* {
