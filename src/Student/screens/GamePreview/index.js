@@ -149,9 +149,9 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.questionContainer}>
-        <Text style={styles.question}>{ gameState[team].question }</Text>
-        {gameState[team].image &&
-          <Image source={{ uri: gameState[team].image }} style={styles.image} />} 
+        <Text style={styles.question}>{ gameState[teamRef].question }</Text>
+        {gameState[teamRef].image &&
+          <Image source={{ uri: gameState[teamRef].image }} style={styles.image} />} 
       </View>
     );
   }
