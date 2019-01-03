@@ -13,6 +13,8 @@ import { attachIotPolicy, IOTSubscribeToTopic, unsubscribeFromTopic, publishMess
 import studentMessageHandler from './lib/Categories/IoT/studentMessageHandler';
 import teacherMessageHandler from './lib/Categories/IoT/teacherMessageHandler';
 
+import { deleteGameFromDynamoDB } from './lib/Categories/DynamoDB/TeacherAPI';
+
 import RootNavigator from './src/Navigator';
 
 import LocalStorage from './lib/Categories/LocalStorage';
@@ -83,6 +85,17 @@ export default class App extends React.Component {
   componentWillUnmount() {
     // TODO Unsubscribe from topic manually when game ends or user leaves game w/o exiting app.
     this.IOTUnsubscribeFromTopic();
+
+    const { role } = this.state;
+    if (role === 'Teacher') {
+      const { GameRoomID } = this.state.gameState;
+      if (GameRoomID) {
+        deleteGameFromDynamoDB(GameRoomID,
+          r => debug.log('Deleted GameRoom from DynamoDB', r),
+          e => debug.log('Error deleting GameRoom from DynamoDB', e)
+        );
+      }
+    }
   }
 
   setSession(session) {
