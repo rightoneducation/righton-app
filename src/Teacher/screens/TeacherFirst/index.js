@@ -49,7 +49,7 @@ const TeacherFirst = createBottomTabNavigator({
 
 }, {
   animationEnabled: true,
-  initialRouteName: 'SignIn',
+  initialRouteName: 'LogIn',
   tabBarPosition: 'bottom',
   tabBarOptions: {
     activeTintColor: colors.white,
