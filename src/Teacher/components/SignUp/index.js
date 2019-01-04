@@ -1,21 +1,20 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  Keyboard,
-  KeyboardAvoidingView,
-  Modal,
+  findNodeHandle,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import NativeMethodsMixin from 'NativeMethodsMixin';
+import Touchable from 'react-native-platform-touchable';
+import InputModal from '../../../components/InputModal';
 import { Auth } from 'aws-amplify';
 import MFAPrompt from '../../../../lib/Categories/Auth/Components/MFAPrompt';
 import ButtonRound from '../../../components/ButtonRound';
 import Message from '../../../components/Message';
 import Constants from '../../../utils/constants';
 import debug from '../../../utils/debug';
-import { colors } from '../../../utils/theme';
+import { deviceWidth, elevation, fonts } from '../../../utils/theme';
 import styles from '../LogIn/styles';
 
 class SignUp extends React.Component {
@@ -45,34 +44,71 @@ class SignUp extends React.Component {
       password: '',
       passwordFocused: false,
       retypePassword: '',
-      showActivityIndicator: false,
+      showInput: null,
       showMFAPrompt: false,
     };
 
     this.baseState = this.state;
 
-    this.closeActvitiyModal = this.closeActvitiyModal.bind(this);
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-
-    this.handleEmailBlur = this.handleEmailBlur.bind(this);
-    this.handleEmailInput = this.handleEmailInput.bind(this);
-    this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
-
-    this.handlePasswordBlur = this.handlePasswordBlur.bind(this);
-    this.handlePasswordInput = this.handlePasswordInput.bind(this);
+    this.emailRef = null;
+    this.passwordRef = null;
+    this.retypeRef = null;
+    this.handleEmailRef = this.handleEmailRef.bind(this);
     this.handlePasswordRef = this.handlePasswordRef.bind(this);
-    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
+    this.handleRetypeRef = this.handleRetypeRef.bind(this);
+    this.onEmailLayout = this.onEmailLayout.bind(this);
+    this.onPasswordLayout = this.onPasswordLayout.bind(this);
+    this.onRetypeLayout = this.onRetypeLayout.bind(this);
 
-    this.handleRetypePasswordBlur = this.handleRetypePasswordBlur.bind(this);
-    this.handleRetypePasswordInput = this.handleRetypePasswordInput.bind(this);
-    this.handleRetypePasswordRef = this.handleRetypePasswordRef.bind(this);
-    this.handleRetypePasswordSubmit = this.handleRetypePasswordSubmit.bind(this);
+    this.closeInputModal = this.closeInputModal.bind(this);
+    this.handleInputModal = this.handleInputModal.bind(this);
+    
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
 
     this.handleMFAValidate = this.handleMFAValidate.bind(this);
     this.handleMFASuccess = this.handleMFASuccess.bind(this);
     this.handleMFACancel = this.handleMFACancel.bind(this);
 
     this.handleSignUp = this.handleSignUp.bind(this);
+  }
+
+
+  onEmailLayout() {
+    if (this.emailRef) {
+      NativeMethodsMixin.measureInWindow.call(
+        findNodeHandle(this.emailRef),
+        (x, y) => {
+          this.emailX = x;
+          this.emailY = y + 9 + fonts.small;
+        }
+      );
+    }
+  }
+
+
+  onPasswordLayout() {
+    if (this.passwordRef) {
+      NativeMethodsMixin.measureInWindow.call(
+        findNodeHandle(this.passwordRef),
+        (x, y) => {
+          this.passwordX = x;
+          this.passwordY = y + 9 + fonts.small;
+        }
+      );
+    }
+  }
+
+
+  onRetypeLayout() {
+    if (this.retypeRef) {
+      NativeMethodsMixin.measureInWindow.call(
+        findNodeHandle(this.retypeRef),
+        (x, y) => {
+          this.retypeX = x;
+          this.retypeY = y + 9 + fonts.small;
+        }
+      );
+    }
   }
 
 
@@ -90,36 +126,50 @@ class SignUp extends React.Component {
       return;
     }
 
-    Keyboard.dismiss();
-
     const { password, email } = this.state;
     let userConfirmed = true;
-
-    this.setState({ buttonActivity: true, showActivityIndicator: true });
 
     debug.log('Attempting sign up w/ email & password:', email, password);
 
 
-    const lowercaseEmail = email.toLowerCase();
-    const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
+    const username = email.toLowerCase();
 
-    Auth.signUp(username, password, lowercaseEmail, null)
+    Auth.signUp(username, password, username, null)
       .then((data) => {
         userConfirmed = data.userConfirmed;
 
         debug.log('Sign up data received:', JSON.stringify(data));
-        this.setState({ showMFAPrompt: !userConfirmed, showActivityIndicator: false });
+        this.setState({ showMFAPrompt: !userConfirmed });
 
         if (userConfirmed) {
           this.onSignUp();
         }
       })
       .catch((exception) => {
+        if (exception.code === 'UsernameExistsException') {
+          Auth.resendSignUp(username);
+          this.setState({
+            buttonActivity: false,
+            messageProps: {
+              closeFunc: this.handleCloseMessage,
+              bodyStyle: null,
+              textStyle: null,
+              duration: null,
+              message: 'Please verify email account with verification code',
+              timeout: 4000,
+            },
+          }, () => {
+            setTimeout(() => {
+              this.setState({ showMFAPrompt: true });
+            }, 2000);
+          });
+          return;
+        }
+
         const errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
         debug.warn('Sign up exception:', JSON.stringify(exception));
         this.setState({
           buttonActivity: false,
-          showActivityIndicator: false,
           messageProps: {
             closeFunc: this.handleCloseMessage,
             bodyStyle: null,
@@ -133,29 +183,35 @@ class SignUp extends React.Component {
   }
 
 
-  checkRequirements() {
-    const { email, password, retypePassword } = this.state;
-    if (!email.includes('@') && !email.includes('.')) {
-      this.handleEmailSubmit();
-      return false;
-    }
-    if (password.length < 8 || !/[0-9]/.test(password)) {
-      this.handlePasswordSubmit();
-      return false;
-    }
+  handleEmailRef(ref) {
+    this.emailRef = ref;
+  }
 
-    if (password !== retypePassword) {
-      this.handleRetypePasswordSubmit();
-      return false;
-    }
+  
+  handlePasswordRef(ref) {
+    this.passwordRef = ref;
+  }
+
+
+  handleRetypeRef(ref) {
+    this.retypeRef = ref;
+  }
+
+
+  checkRequirements() {
+    const emailPassed = this.handleEmailSubmit();
+    if (!emailPassed) return false;
+    const passwordPassed = this.handlePasswordSubmit();
+    if (!passwordPassed) return false;
+    const retypePassed = this.handleRetypePasswordSubmit();
+    if (!retypePassed) return false;
     return true;
   }
 
 
   async handleMFAValidate(code = '') {
     const { email } = this.state;
-    const lowercaseEmail = email.toLowerCase();
-    const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
+    const username = email.toLowerCase();
     try {
       await Auth.confirmSignUp(username, code)
         .then(data => debug.log('sign up successful ->', JSON.stringify(data)));
@@ -163,7 +219,6 @@ class SignUp extends React.Component {
       const errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
       this.setState({
         buttonActivity: false,
-        showActivityIndicator: false,
         messageProps: {
           closeFunc: this.handleCloseMessage,
           bodyStyle: null,
@@ -180,7 +235,7 @@ class SignUp extends React.Component {
 
 
   handleMFACancel() {
-    this.setState({ buttonActivity: false, showMFAPrompt: false, showActivityIndicator: false });
+    this.setState({ buttonActivity: false, showMFAPrompt: false });
   }
 
 
@@ -199,6 +254,75 @@ class SignUp extends React.Component {
   }
 
 
+  closeInputModal(input, inputLabel) {
+    switch (inputLabel) {
+      case 'email': {
+        this.setState({ email: input, showInput: false }, () => {
+          const emailPassed = this.handleEmailSubmit();
+  
+          if (emailPassed && !this.state.password) {
+            this.handleInputModal('password', 'Password', 75, '');
+          }
+        });
+        break;
+      }
+      case 'password': {
+        this.setState({ password: input, showInput: false }, () => {
+          const passwordPassed = this.handlePasswordSubmit();
+  
+          if (passwordPassed && !this.state.retypePassword) {
+            this.handleInputModal('retype', 'Retype password', 75, '');
+          }
+        });
+        break;
+      }
+      case 'retype': {
+        this.setState({ retypePassword: input, showInput: false }, () => {
+          const emailPassed = this.handleEmailSubmit();
+          const retypePassed = this.handleRetypePasswordSubmit();
+          const passwordPassed = this.handlePasswordSubmit();
+  
+          if (emailPassed && retypePassed && passwordPassed) this.handleSignUp();
+        });
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+
+  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+    if (inputLabel === 'email') {
+      this.onEmailLayout();
+    } else if (inputLabel === 'password') {
+      this.onPasswordLayout();
+    } else if (inputLabel === 'retype') {
+      this.onRetypeLayout();
+    }
+
+    setTimeout(() => {
+      this.setState({
+        showInput: {
+          closeModal: this.closeInputModal,
+          keyboardType,
+          height: 45,
+          input,
+          inputLabel,
+          maxLength,
+          multiline: false,
+          placeholder,
+          visible: true,
+          spellCheck: true,
+          width: deviceWidth - 30,
+          x: this[`${inputLabel}X`],
+          y: this[`${inputLabel}Y`],
+        }
+      });
+    }, 100);
+  }
+
+
   handleEmailInput(email) {
     this.setState({ email });
   }
@@ -211,7 +335,7 @@ class SignUp extends React.Component {
 
   handleEmailSubmit() {
     const { email } = this.state;
-    if (!email.includes('@') && !email.includes('.')) {
+    if (!email.includes('@') || !email.includes('.')) {
       this.setState({
         messageProps: {
           closeFunc: this.handleCloseMessage,
@@ -222,48 +346,15 @@ class SignUp extends React.Component {
           timeout: null,
         },
       });
-      return;
+      return false;
     }
-
-    this.passwordRef.focus();
-  }
-
-
-  handlePasswordBlur() {
-    this.setState({ passwordFocused: false });
-    this.handlePasswordSubmit();
-  }
-
-
-  handlePasswordFocus() {
-    this.setState({ passwordFocused: true });
-  }
-
-
-  handlePasswordInput(password) {
-    this.setState({ password });
-  }
-
-
-  handlePasswordRef(ref) {
-    this.passwordRef = ref;
+    return true;
   }
 
 
   handlePasswordSubmit() {
     const { password } = this.state;
-    if (!/[0-9]/.test(password)) {
-      this.setState({
-        messageProps: {
-          closeFunc: this.handleCloseMessage,
-          bodyStyle: null,
-          textStyle: null,
-          duration: null,
-          message: 'Password must contain at least 1 number.',
-          timeout: null,
-        },
-      });
-    } else if (password.length < 8) {
+    if (password.length < 8) {
       this.setState({
         messageProps: {
           closeFunc: this.handleCloseMessage,
@@ -274,23 +365,9 @@ class SignUp extends React.Component {
           timeout: null,
         },
       });
+      return false;
     }
-    this.retypePasswordRef.focus();
-  }
-
-
-  handleRetypePasswordBlur() {
-    this.handleRetypePasswordSubmit();
-  }
-
-
-  handleRetypePasswordInput(retypePassword) {
-    this.setState({ retypePassword });
-  }
-
-
-  handleRetypePasswordRef(ref) {
-    this.retypePasswordRef = ref;
+    return true;
   }
 
 
@@ -307,12 +384,9 @@ class SignUp extends React.Component {
           timeout: 4000,
         },
       });
+      return false;
     }
-  }
-
-
-  closeActvitiyModal() {
-    this.setState({ showActivityIndicator: false });
+    return true;
   }
 
 
@@ -327,108 +401,73 @@ class SignUp extends React.Component {
       email,
       messageProps,
       password,
-      passwordFocused,
+      // passwordFocused,
       retypePassword,
-      showActivityIndicator,
+      showInput,
       showMFAPrompt,
     } = this.state;
 
     return (
       <View style={styles.container}>
-        <Modal
-          visible={showActivityIndicator}
-          onRequestClose={this.closeActvitiyModal}
-        >
-          <ActivityIndicator
-            style={styles.activityIndicator}
-            size="large"
-          />
-        </Modal>
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
             <Text style={styles.title}>Teacher Setup</Text>
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Your email address</Text>
-            <TextInput
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              keyboardType={'email-address'}
-              maxLength={100}
-              multiline={false}
-              onBlur={this.handleEmailBlur}
-              onChangeText={this.handleEmailInput}
-              onSubmitEditing={this.handleEmailSubmit}
-              placeholder={'Email address'}
-              placeholderTextColor={colors.primary}
-              returnKeyType={'done'}
-              spellCheck={false}
-              style={styles.input}
-              textAlign={'left'}
-              underlineColorAndroid={colors.dark}
-              value={email}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Password</Text>
-            <TextInput
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              keyboardType={'default'}
-              maxLength={100}
-              multiline={false}
-              onBlur={this.handlePasswordBlur}
-              onChangeText={this.handlePasswordInput}
-              onSubmitEditing={this.handlePasswordSubmit}
-              placeholder={'Password'}
-              placeholderTextColor={colors.primary} 
-              ref={this.handlePasswordRef}
-              returnKeyType={'done'}
-              spellCheck={false}
-              style={styles.input} 
-              textAlign={'left'}
-              underlineColorAndroid={colors.dark}   
-              value={password}
-            />
-            {
-              passwordFocused &&
-              <View>
-                <Text style={styles.req}>Must be 8 characters minimum</Text>
-                <Text style={styles.req}>Must contain 1 number</Text>
-              </View>
-            }
-          </View>
-          <KeyboardAvoidingView
-            behavior={'padding'}
+
+          {showInput &&
+          <InputModal {...showInput} />}
+
+          <View
+            onLayout={this.onEmailLayout}
+            ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>Retype Password</Text>
-            <TextInput
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              keyboardType={'default'}
-              maxLength={100}
-              multiline={false}
-              onBlur={this.handleRetypePasswordBlur}
-              onChangeText={this.handleRetypePasswordInput}
-              onSubmitEditing={this.handleRetypePasswordSubmit}
-              placeholder={'Retype password'}
-              placeholderTextColor={colors.primary} 
-              ref={this.handleRetypePasswordRef}
-              returnKeyType={'done'}
-              spellCheck={false}
-              style={styles.input} 
-              textAlign={'left'}
-              underlineColorAndroid={colors.dark}   
-              value={retypePassword}
-            />
-          </KeyboardAvoidingView>
-          <ButtonRound
-            activity={buttonActivity}
-            icon={'arrow-right'}
-            onPress={this.handleSignUp}
-          />
+            <Text style={styles.inputLabel}>Your email address</Text>
+            <Touchable
+              onPress={() => this.handleInputModal('email', 'Email address', 75, email)}
+              style={[styles.inputButton, elevation]}
+            >
+              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'email' ? '' : (email || 'Email address')}</Text>
+            </Touchable>
+          </View>
+          
+          <View
+            onLayout={this.onPasswordLayout}
+            ref={this.handlePasswordRef}
+            style={styles.inputContainer}
+          >
+            <Text style={styles.inputLabel}>Password</Text>
+            <Touchable
+              onPress={() => this.handleInputModal('password', 'Password', 75, password)}
+              style={[styles.inputButton, elevation]}
+            >
+              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'password' ? '' : (password || 'Password')}</Text>
+            </Touchable>
+          </View>
+
+          <View
+            onLayout={this.onRetypeLayout}
+            ref={this.handleRetypeRef}
+            style={styles.inputContainer}
+          >
+            <Text style={styles.inputLabel}>Retype password</Text>
+            <Touchable
+              onPress={() => this.handleInputModal('retype', 'Retype password', 75, retypePassword)}
+              style={[styles.inputButton, elevation]}
+            >
+              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'retype' ? '' : (retypePassword || 'Retype password')}</Text>
+            </Touchable>
+          </View>
+
+          {Boolean(email) && Boolean(password) && Boolean(retypePassword) &&
+            <ButtonRound
+              activity={buttonActivity}
+              animated
+              icon={'arrow-right'}
+              onPress={this.handleSignUp}
+            />}
+
         </View>
         {
           showMFAPrompt &&
