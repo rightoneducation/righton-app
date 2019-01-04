@@ -13,6 +13,8 @@ import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils
 
 export default class InputModal extends React.PureComponent {
   static propTypes = {
+    autoCapitalize: PropTypes.string,
+    autoCorrect: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,
     keyboardType: PropTypes.string,
     height: PropTypes.number,
@@ -29,6 +31,8 @@ export default class InputModal extends React.PureComponent {
   }
 
   static defaultProps = {
+    autoCapitalize: 'none',
+    autoCorrect: false,
     closeModal: () => {},
     keyboardType: 'default',
     height: 45,
@@ -93,6 +97,8 @@ export default class InputModal extends React.PureComponent {
   renderTextInput() {
     const { input } = this.state;
     const {
+      autoCapitalize,
+      autoCorrect,
       keyboardType,
       height,
       maxLength,
@@ -127,6 +133,8 @@ export default class InputModal extends React.PureComponent {
         ]}
       >
         <TextInput
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           keyboardType={keyboardType}
           maxLength={maxLength}
           multiline={multiline}
