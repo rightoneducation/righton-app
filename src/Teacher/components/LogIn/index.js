@@ -55,13 +55,6 @@ class LogIn extends React.Component {
     this.closeInputModal = this.closeInputModal.bind(this);
     this.handleInputModal = this.handleInputModal.bind(this);
 
-    // this.handleEmailInput = this.handleEmailInput.bind(this);
-    // this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
-
-    // this.handlePasswordInput = this.handlePasswordInput.bind(this);
-    // this.handlePasswordRef = this.handlePasswordRef.bind(this);
-    // this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
-
     this.doLogin = this.doLogin.bind(this);
     this.onLogIn = this.onLogIn.bind(this);
     this.handleLogInClick = this.handleLogInClick.bind(this);
@@ -120,11 +113,10 @@ class LogIn extends React.Component {
 
     const { auth } = this.props;
     const { email, password } = this.state;
-    let errorMessage = '';
+    let errorMessage = 'Successfully logged in.';
     let session = null;
 
-    const lowercaseEmail = email.toLowerCase();
-    const username = lowercaseEmail.substr(0, lowercaseEmail.indexOf('@'));
+    const username = email.toLowerCase();
 
     try {
       session = await auth.signIn(username, password)
@@ -135,18 +127,15 @@ class LogIn extends React.Component {
         });
     } catch (exception) {
       debug.warn('Error caught in Teacher LogIn:', JSON.stringify(exception));
-      // TODO Message telling username already exists
-      // if (exception.code = "UserNotConfirmedException") {
-
-      // }
-      // if (exception.code = "UserNotFoundException") {
-
-      // }
 
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
 
       if (exception === 'Username cannot be empty') {
         errorMessage = 'Email must be provided.';
+      } else if (exception.code === 'UserNotConfirmedException') {
+        errorMessage = 'Email unconfirmed. Please sign up again.';
+      } else if (exception.code === 'UserNotFoundException') {
+        errorMessage = 'Email not found. Please sign up again.';
       }
     }
     this.setState({
@@ -291,7 +280,7 @@ class LogIn extends React.Component {
               onPress={() => this.handleInputModal('email', 'Email address', 75, email)}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{email || 'Email address'}</Text>
+              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'email' ? '' : (email || 'Email address')}</Text>
             </Touchable>
           </View>
 
@@ -305,7 +294,7 @@ class LogIn extends React.Component {
               onPress={() => this.handleInputModal('password', 'Password', 75, password)}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{password || 'Password'}</Text>
+              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'password' ? '' : (password || 'Password')}</Text>
             </Touchable>
           </View>
 
