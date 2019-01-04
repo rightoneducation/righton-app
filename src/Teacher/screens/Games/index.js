@@ -17,7 +17,7 @@ import styles from './styles';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
-class Quizzes extends React.PureComponent {
+class Games extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       navigation: PropTypes.shape({
@@ -187,4 +187,4 @@ class Quizzes extends React.PureComponent {
 }
 
 
-export default props => <Quizzes screenProps={{ ...props }} />;
+export default props => <Games screenProps={{ ...props }} />;

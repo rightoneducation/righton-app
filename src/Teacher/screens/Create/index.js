@@ -18,7 +18,7 @@ import ButtonWide from '../../../components/ButtonWide';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 import firstStyles from '../../../Student/screens/StudentFirst/styles';
-import quizStyles from '../Quizzes/styles';
+import gamesStyles from '../Games/styles';
 import debug from '../../../utils/debug';
 
 
@@ -192,18 +192,18 @@ class Create extends React.Component {
         key={quiz.title}
         onPress={() => this.handleQuizSelection(null, quiz)}
       >
-        <View style={quizStyles.quizButton}>
-          <View style={quizStyles.imageContainer}>
+        <View style={gamesStyles.quizButton}>
+          <View style={gamesStyles.imageContainer}>
             {quiz.image ?
-              <Image source={{ uri: quiz.image }} style={quizStyles.image} />
+              <Image source={{ uri: quiz.image }} style={gamesStyles.image} />
               :
-              <Text style={quizStyles.imageLabel}>RightOn!</Text>}
+              <Text style={gamesStyles.imageLabel}>RightOn!</Text>}
           </View>
-          <Text style={quizStyles.quizTitle}>{ quiz.title }</Text>
-          <Text style={[quizStyles.quizTitle, quizStyles.quizDescription]}>
+          <Text style={gamesStyles.quizTitle}>{ quiz.title }</Text>
+          <Text style={[gamesStyles.quizTitle, gamesStyles.quizDescription]}>
             { quiz.description }
           </Text>
-          <Text style={quizStyles.quizCount}>{ `${quiz.questions.length}Q` }</Text>
+          <Text style={gamesStyles.quizCount}>{ `${quiz.questions.length}Q` }</Text>
         </View>
       </Touchable>
     );

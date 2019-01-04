@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import Explore from './screens/Explore';
 import Create from './screens/Create';
-import Quizzes from './screens/Quizzes';
+import Games from './screens/Games';
 import Maker from './screens/Maker';
 import Reports from './screens/Reports';
 import TabBarComponent from '../components/TabBarComponent';
@@ -51,20 +51,20 @@ const TeacherTabNavigator = createBottomTabNavigator({
   },
 
 
-  Quizzes: {
+  Games: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <Quizzes
+        <Games
           {...screenProps}
           {...otherProps}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Quizzes',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'database'} tintColor={tintColor} label={'Quizzes'} />,
+      tabBarLabel: 'My Games',
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'database'} tintColor={tintColor} label={'My Games'} />,
     },
   },
 
