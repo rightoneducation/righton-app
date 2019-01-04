@@ -129,14 +129,14 @@ export default class App extends React.Component {
     const { role } = this.state;
     IOTSubscribeToTopic(topic, role === 'Teacher' ? teacherMessageHandler : studentMessageHandler, this);
     if (role !== 'Teacher') {
-      const uid = `${Math.random()}`;
       const requestObj = {
         action: 'REQUEST_GAME_STATE',
-        uid,
+        uid: `${Math.random()}`,
       };
       const requestMessage = JSON.stringify(requestObj);
-      this.IOTPublishMessage(requestMessage, uid);
+      publishMessage(topic, requestMessage);
     }
+    debug.log('Subscribed to GameRoom:', topic);
   }
 
   IOTUnsubscribeFromTopic() {
