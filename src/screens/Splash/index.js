@@ -49,6 +49,8 @@ export default class Splash extends React.Component {
 
     this.setLoading();
 
+    debug.log('User has a valid session:', loggedIn);
+
     if (__DEV__) {
       this.navigateTo('OnboardAppRouter');
       return;
