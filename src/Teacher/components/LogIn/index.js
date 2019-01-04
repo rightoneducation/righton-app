@@ -224,7 +224,7 @@ class LogIn extends React.Component {
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Your email address</Text>
             <TextInput
-              autoCapitalize={false}
+              autoCapitalize={'none'}
               autoCorrect={false}
               keyboardType={'email-address'}
               maxLength={100}
@@ -244,7 +244,7 @@ class LogIn extends React.Component {
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Password</Text>
             <TextInput
-              autoCapitalize={false}
+              autoCapitalize={'none'}
               autoCorrect={false}
               keyboardType={'default'}
               maxLength={100}
