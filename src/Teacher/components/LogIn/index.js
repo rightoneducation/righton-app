@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  Keyboard,
-  Modal,
+  findNodeHandle,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import NativeMethodsMixin from 'NativeMethodsMixin';
+import Touchable from 'react-native-platform-touchable';
+import InputModal from '../../../components/InputModal';
 import Message from '../../../components/Message';
 import ButtonRound from '../../../components/ButtonRound';
-import { colors } from '../../../utils/theme';
+import { deviceWidth, elevation, fonts } from '../../../utils/theme';
 import styles from './styles';
 import debug from '../../../utils/debug';
 
@@ -37,19 +37,30 @@ class LogIn extends React.Component {
       email: '',
       messageProps: null,
       password: '',
-      showActivityIndicator: false,
+      showInput: false,
     };
 
     this.baseState = this.state;
 
+    
     this.handleCloseMessage = this.handleCloseMessage.bind(this);
-
-    this.handleEmailInput = this.handleEmailInput.bind(this);
-    this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
-
-    this.handlePasswordInput = this.handlePasswordInput.bind(this);
+    
+    this.emailRef = undefined;
+    this.passwordRef = undefined;
+    this.handleEmailRef = this.handleEmailRef.bind(this);
+    this.onEmailLayout = this.onEmailLayout.bind(this);
     this.handlePasswordRef = this.handlePasswordRef.bind(this);
-    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
+    this.onPasswordLayout = this.onPasswordLayout.bind(this);
+
+    this.closeInputModal = this.closeInputModal.bind(this);
+    this.handleInputModal = this.handleInputModal.bind(this);
+
+    // this.handleEmailInput = this.handleEmailInput.bind(this);
+    // this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
+
+    // this.handlePasswordInput = this.handlePasswordInput.bind(this);
+    // this.handlePasswordRef = this.handlePasswordRef.bind(this);
+    // this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
 
     this.doLogin = this.doLogin.bind(this);
     this.onLogIn = this.onLogIn.bind(this);
@@ -64,8 +75,43 @@ class LogIn extends React.Component {
   }
 
 
+  onEmailLayout() {
+    if (this.emailRef) {
+      NativeMethodsMixin.measureInWindow.call(
+        findNodeHandle(this.emailRef),
+        (x, y) => {
+          this.emailX = x;
+          this.emailY = y + 9 + fonts.small;
+        }
+      );
+    }
+  }
+
+
+  onPasswordLayout() {
+    if (this.passwordRef) {
+      NativeMethodsMixin.measureInWindow.call(
+        findNodeHandle(this.passwordRef),
+        (x, y) => {
+          this.passwordX = x;
+          this.passwordY = y + 9 + fonts.small;
+        }
+      );
+    }
+  }
+
+
+  handlePasswordRef(ref) {
+    this.passwordRef = ref;
+  }
+
+
+  handleEmailRef(ref) {
+    this.emailRef = ref;
+  }
+
+
   async doLogin() {
-    this.setState({ buttonActivity: true });
     const allReqsPass = this.checkRequirements();
     if (!allReqsPass) {
       this.setState({ buttonActivity: false });
@@ -106,7 +152,6 @@ class LogIn extends React.Component {
     this.setState({
       buttonActivity: false,
       session,
-      showActivityIndicator: false,
       messageProps: {
         closeFunc: this.handleCloseMessage,
         bodyStyle: null,
@@ -126,7 +171,7 @@ class LogIn extends React.Component {
   checkRequirements() {
     const { email, password } = this.state;
 
-    if (!email.includes('@') && !email.includes('.')) {
+    if (!email.includes('@') || !email.includes('.')) {
       this.setState({
         messageProps: {
           closeFunc: this.handleCloseMessage,
@@ -139,14 +184,14 @@ class LogIn extends React.Component {
       });
       return false;
     }
-    if (password.length < 8 || !/[0-9]/.test(password)) {
+    if (password.length < 8) {
       this.setState({
         messageProps: {
           closeFunc: this.handleCloseMessage,
           bodyStyle: null,
           textStyle: null,
           duration: null,
-          message: 'Password is incorrect. Please retype.',
+          message: 'Password must have a minimum of 8 characters.',
           timeout: null,
         },
       });
@@ -157,37 +202,56 @@ class LogIn extends React.Component {
   }
 
 
+  closeInputModal(input, inputLabel) {
+    switch (inputLabel) {
+      case 'email':
+        this.setState({ email: input, showInput: false });
+        if (!this.state.password) {
+          this.handleInputModal('password', 'Password', 75, '');
+        }
+        break;
+      case 'password':
+        this.setState({ password: input, showInput: false });
+        this.handleLogInClick();
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+    if (inputLabel === 'email') {
+      this.onEmailLayout();
+    } else if (inputLabel === 'password') {
+      this.onPasswordLayout();
+    }
+    setTimeout(() => {
+      this.setState({
+        showInput: {
+          closeModal: this.closeInputModal,
+          keyboardType,
+          height: 45,
+          input,
+          inputLabel,
+          maxLength,
+          multiline: false,
+          placeholder,
+          visible: true,
+          spellCheck: true,
+          width: deviceWidth - 30,
+          x: this[`${inputLabel}X`],
+          y: this[`${inputLabel}Y`],
+        }
+      });
+    }, 100);
+  }
+
+
   handleLogInClick() {
-    this.setState({ showActivityIndicator: true });
+    this.setState({ buttonActivity: true });
 
     setTimeout(this.doLogin, 0);
-  }
-
-
-  handleEmailInput(email) {
-    this.setState({ email });
-  }
-
-
-  handleEmailSubmit() {
-    this.passwordRef.focus();
-    Keyboard.dismiss();
-  }
-
-
-  handlePasswordInput(password) {
-    this.setState({ password });
-  }
-
-
-  handlePasswordRef(ref) {
-    this.passwordRef = ref;
-  }
-
-
-  handlePasswordSubmit() {
-    Keyboard.dismiss();
-    this.doLogin();
   }
 
 
@@ -202,72 +266,58 @@ class LogIn extends React.Component {
       email,
       messageProps,
       password,
-      showActivityIndicator,
+      showInput,
     } = this.state;
 
     return (
       <View style={styles.container}>
-        <Modal
-          visible={showActivityIndicator}
-          onRequestClose={() => null}
-        >
-          <ActivityIndicator
-            style={styles.activityIndicator}
-            size="large"
-          />
-        </Modal>
+
+        {showInput &&
+          <InputModal {...showInput} />}
+
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
             <Text style={styles.title}>Teacher Account</Text>
           </View>
-          <View style={styles.inputContainer}>
+
+          <View
+            onLayout={this.onEmailLayout}
+            ref={this.handleEmailRef}
+            style={styles.inputContainer}
+          >
             <Text style={styles.inputLabel}>Your email address</Text>
-            <TextInput
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              keyboardType={'email-address'}
-              maxLength={100}
-              multiline={false}
-              onChangeText={this.handleEmailInput}
-              onSubmitEditing={this.handleEmailSubmit}
-              placeholder={'Email address'}
-              placeholderTextColor={colors.primary}
-              returnKeyType={'done'}
-              spellCheck={false}
-              style={styles.input}
-              textAlign={'left'}
-              underlineColorAndroid={colors.dark}
-              value={email}
-            />
+            <Touchable
+              onPress={() => this.handleInputModal('email', 'Email address', 75, email)}
+              style={[styles.inputButton, elevation]}
+            >
+              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{email || 'Email address'}</Text>
+            </Touchable>
           </View>
-          <View style={styles.inputContainer}>
+
+          <View
+            onLayout={this.onPasswordLayout}
+            ref={this.handlePasswordRef}
+            style={styles.inputContainer}
+          >
             <Text style={styles.inputLabel}>Password</Text>
-            <TextInput
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              keyboardType={'default'}
-              maxLength={100}
-              multiline={false}
-              onChangeText={this.handlePasswordInput}
-              onSubmitEditing={this.handlePasswordSubmit}
-              placeholder={'Password'}
-              placeholderTextColor={colors.primary}
-              ref={this.handlePasswordRef}
-              returnKeyType={'done'}
-              spellCheck={false}
-              style={styles.input}
-              textAlign={'left'}
-              underlineColorAndroid={colors.dark}
-              value={password}
-            />
+            <Touchable
+              onPress={() => this.handleInputModal('password', 'Password', 75, password)}
+              style={[styles.inputButton, elevation]}
+            >
+              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{password || 'Password'}</Text>
+            </Touchable>
           </View>
-          <ButtonRound
-            activity={buttonActivity}
-            animated
-            icon={'arrow-right'}
-            onPress={this.doLogin}
-          />
+
+          {
+            Boolean(email) && Boolean(password) && !showInput &&
+            <ButtonRound
+              activity={buttonActivity}
+              animated
+              icon={'arrow-right'}
+              onPress={this.handleLogInClick}
+            />
+          }
         </View>
 
         { messageProps && <Message {...messageProps} /> }
