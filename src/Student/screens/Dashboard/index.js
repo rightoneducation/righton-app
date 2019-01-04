@@ -50,6 +50,8 @@ export default class Dashboard extends React.Component {
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
 
     this.handleGameEntry = this.handleGameEntry.bind(this);
+    this.handleGameError = this.handleGameError.bind(this);
+    this.handleGameFound = this.handleGameFound.bind(this);
   }
 
 
@@ -101,7 +103,21 @@ export default class Dashboard extends React.Component {
   handleGameFound(res) {
     if (typeof res === 'object' && res.GameRoomID) {
       this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
-      this.props.screenProps.navigation.navigate('GamePreview');
+      debug.log('JOIN GAME', res.GameRoomID);
+      // this.props.screenProps.navigation.navigate('GamePreview');
+    } else {
+      // res is most likely an empty object `{}` - either way notify user GameRoom cannot be joined.
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Game room not found.',
+          timeout: 4000,
+        },
+      });
+      debug.log('Bad response from getGameFromDynamoDB():', JSON.stringify(res), 'Game Room cannot be found.');
     }
   }
 
@@ -113,7 +129,7 @@ export default class Dashboard extends React.Component {
         bodyStyle: null,
         textStyle: null,
         duration: null,
-        message: 'Game room not found.',
+        message: 'Game room cannot be joined.',
         timeout: 4000,
       },
     });
@@ -149,7 +165,7 @@ export default class Dashboard extends React.Component {
   renderProfileView() {
     const { name } = this.state;
 
-    const { gamesPlayed, pointsEarned } = this.props.screenProps.profile;
+    const { gamesPlayed, pointsEarned } = this.props.screenProps;
     // Where are these values being hydrated from?
 
     return (
