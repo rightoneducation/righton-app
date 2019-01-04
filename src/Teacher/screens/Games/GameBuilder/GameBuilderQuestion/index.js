@@ -17,7 +17,7 @@ import parentStyles from '../styles';
 import { deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 
 
-export default class QuizBuilderQuestion extends React.Component {
+export default class GameBuilderQuestion extends React.Component {
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
     question: PropTypes.shape({
@@ -288,7 +288,7 @@ export default class QuizBuilderQuestion extends React.Component {
               <Aicon name={'close'} style={parentStyles.closeIcon} />
             </View>
           </Touchable>
-          {/* <Text style={parentStyles.title}>Quiz Builder</Text> */}
+          {/* <Text style={parentStyles.title}>Game Builder</Text> */}
           <Touchable
             hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
             onPress={this.handleCloseModal}

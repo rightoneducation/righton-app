@@ -42,7 +42,7 @@ export default StyleSheet.create({
     color: colors.white,
     fontSize: 25,
   },
-  quizButton: {
+  gameButton: {
     backgroundColor: colors.white,
     flexDirection: 'row',
     height: 150,
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     marginVertical: 10,
     width: deviceWidth - 30,
   },
-  quizCount: {
+  gameCount: {
     bottom: 5,
     color: colors.dark,
     fontSize: fonts.large,
@@ -58,10 +58,10 @@ export default StyleSheet.create({
     position: 'absolute',
     right: 5,
   },
-  quizDescription: {
+  gameDescription: {
     fontWeight: 'normal',
   },
-  quizTitle: {
+  gameTitle: {
     color: colors.dark,
     fontSize: fonts.medium,
     fontWeight: 'bold',

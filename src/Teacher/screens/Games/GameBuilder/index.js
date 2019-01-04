@@ -14,16 +14,16 @@ import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonWide from '../../../../components/ButtonWide';
 import InputModal from '../../../../components/InputModal';
-import QuizBuilderQuestion from './QuizBuilderQuestion';
+import GameBuilderQuestion from './GameBuilderQuestion';
 import { deviceWidth, elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
 
 
-export default class QuizBuilder extends React.Component {
+export default class GameBuilder extends React.Component {
   static propTypes = {
     handleClose: PropTypes.func.isRequired,
-    handleCreateQuiz: PropTypes.func.isRequired,
-    quiz: PropTypes.shape({
+    handleCreateGame: PropTypes.func.isRequired,
+    game: PropTypes.shape({
       avatar: PropTypes.string,
       description: PropTypes.string,
       questions: PropTypes.arrayOf(PropTypes.shape({
@@ -40,8 +40,8 @@ export default class QuizBuilder extends React.Component {
   
   static defaultProps = {
     handleClose: () => {},
-    handleCreateQuiz: () => {},
-    quiz: {
+    handleCreateGame: () => {},
+    game: {
       avatar: '',
       description: '',
       questions: [],
@@ -55,7 +55,7 @@ export default class QuizBuilder extends React.Component {
 
     this.state = {
       addQuestion: {},
-      quiz: {
+      game: {
         avatar: '',
         description: '',
         questions: [],
@@ -71,14 +71,14 @@ export default class QuizBuilder extends React.Component {
     this.handleInputModal = this.handleInputModal.bind(this);
     this.closeInputModal = this.closeInputModal.bind(this);
     
-    this.createQuiz = this.createQuiz.bind(this);
+    this.createGame = this.createGame.bind(this);
     this.closeAddQuestion = this.closeAddQuestion.bind(this);
     this.openAddQuestion = this.openAddQuestion.bind(this);
   }
 
 
   componentDidMount() {
-    this.hydrateState(this.props.quiz);
+    this.hydrateState(this.props.game);
   }
 
 
@@ -108,12 +108,12 @@ export default class QuizBuilder extends React.Component {
   }
 
   
-  hydrateState(quiz) {
-    if (quiz && Object.keys(quiz).length) {
-      this.setState({ quiz });
+  hydrateState(game) {
+    if (game && Object.keys(game).length) {
+      this.setState({ game });
     } else {
       this.setState({ 
-        quiz: {
+        game: {
           avatar: '',
           description: '',
           questions: [],
@@ -124,12 +124,12 @@ export default class QuizBuilder extends React.Component {
   }
 
   
-  createQuiz() {
-    const { quiz } = this.state;
-    if (this.props.currentQuiz !== null || quiz.uid) {
-      this.props.handleCreateQuiz(quiz);
+  createGame() {
+    const { game } = this.state;
+    if (this.props.currentgame !== null || game.uid) {
+      this.props.handleCreateGame(game);
     } else {
-      this.props.handleCreateQuiz({ ...quiz, uid: `${Math.random()}` });
+      this.props.handleCreateGame({ ...game, uid: `${Math.random()}` });
     }
   }
 
@@ -147,10 +147,10 @@ export default class QuizBuilder extends React.Component {
   closeInputModal(input, inputLabel) {
     switch (inputLabel) {
       case 'title':
-        this.setState({ quiz: { ...this.state.quiz, title: input }, showInput: false });
+        this.setState({ game: { ...this.state.game, title: input }, showInput: false });
         break;
       case 'description':
-        this.setState({ quiz: { ...this.state.quiz, description: input }, showInput: false });
+        this.setState({ game: { ...this.state.game, description: input }, showInput: false });
         break;
       default:
         break;
@@ -193,15 +193,15 @@ export default class QuizBuilder extends React.Component {
 
 
   closeAddQuestion(event, question, edit) {
-    const { quiz } = this.state;
+    const { game } = this.state;
     if (typeof edit === 'number') {
-      const updatedQuiz = { ...quiz };
-      updatedQuiz.questions.splice(edit, 1, question);
-      this.setState({ addQuestion: {}, quiz: updatedQuiz });
+      const updatedGame = { ...game };
+      updatedGame.questions.splice(edit, 1, question);
+      this.setState({ addQuestion: {}, game: updatedGame });
     } else if (question) {
       this.setState({
         addQuestion: {},
-        quiz: { ...quiz, questions: [...quiz.questions, question] },
+        game: { ...game, questions: [...game.questions, question] },
       });
     } else {
       this.setState({ addQuestion: {} });
@@ -223,7 +223,7 @@ export default class QuizBuilder extends React.Component {
   //           <Aicon name={'close'} style={styles.closeIcon} />
   //         </View>
   //       </Touchable>
-  //       <Text style={styles.title}>Quiz Builder</Text>
+  //       <Text style={styles.title}>Game Builder</Text>
   //       <Touchable
   //         hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
   //         onPress={handleClose}
@@ -352,7 +352,7 @@ export default class QuizBuilder extends React.Component {
 
 
   renderQuestions() {
-    const { questions } = this.state.quiz;
+    const { questions } = this.state.game;
     if (Array.isArray(questions)) {
       return (
         <View style={styles.questionsContainer}>
@@ -375,7 +375,7 @@ export default class QuizBuilder extends React.Component {
       avatar,
       description,
       title,
-    } = this.state.quiz;
+    } = this.state.game;
 
     const {
       addQuestion,
@@ -413,10 +413,10 @@ export default class QuizBuilder extends React.Component {
                   <Aicon name={'close'} style={styles.closeIcon} />
                 </View>
               </Touchable>
-              <Text style={styles.title}>Quiz Builder</Text>
+              <Text style={styles.title}>Game Builder</Text>
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-                onPress={this.createQuiz}
+                onPress={this.createGame}
                 style={styles.createContainer}
               >
                 <Text style={styles.createLabel}>Create</Text>
@@ -484,7 +484,7 @@ export default class QuizBuilder extends React.Component {
             </ScrollView>
           </View>
 
-          <QuizBuilderQuestion
+          <GameBuilderQuestion
             closeModal={this.closeAddQuestion}
             question={addQuestion}
           />
