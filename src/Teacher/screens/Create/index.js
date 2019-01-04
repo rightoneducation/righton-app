@@ -170,18 +170,16 @@ class Create extends React.Component {
 
     // TODO! Handle navigating to Teacher Game Room.
 
-    // if (__DEV__) {
-    //   setTimeout(() => {
-    //     const uid = `${Math.random()}`;
-    //     const data = {
-    //       action: 'REQUEST_GAME_STATE',
-    //       uid,
-    //       gameState,
-    //     };
-    //     const message = JSON.stringify(data);
-    //     this.props.screenProps.IOTPublishMessage(message, uid);
-    //   }, 5000);
-    // }
+    setTimeout(() => {
+      const uid = `${Math.random()}`;
+      const data = {
+        action: 'SET_GAME_STATE',
+        uid,
+        gameState,
+      };
+      const message = JSON.stringify(data);
+      this.props.screenProps.IOTPublishMessage(message, uid);
+    }, 5000);
   }
 
 
