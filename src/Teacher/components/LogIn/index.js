@@ -15,7 +15,7 @@ import styles from './styles';
 import debug from '../../../utils/debug';
 
 
-class SignIn extends React.Component {
+class LogIn extends React.Component {
   static propTypes = {
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
@@ -278,4 +278,4 @@ class SignIn extends React.Component {
 }
 
 
-export default SignIn;
+export default LogIn;

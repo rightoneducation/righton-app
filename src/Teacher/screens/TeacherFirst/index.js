@@ -3,7 +3,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
-import SignIn from '../../components/SignIn';
+import LogIn from '../../components/LogIn';
 import SignUp from '../../components/SignUp';
 import TabBarComponent from '../../../components/TabBarComponent';
 import { colors } from '../../../utils/theme';
@@ -11,20 +11,20 @@ import { colors } from '../../../utils/theme';
 const TeacherFirst = createBottomTabNavigator({
 
 
-  SignIn: {
+  LogIn: {
     screen: (props) => {
       const { screenProps, ...otherProps } = props;
 
       return (
-        <SignIn
+        <LogIn
           {...screenProps}
           {...otherProps}
         />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Sign In',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'sign-in'} tintColor={tintColor} label={'Sign In'} />,
+      tabBarLabel: 'Log In',
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'sign-in'} tintColor={tintColor} label={'Log In'} />,
     },
   },
 
