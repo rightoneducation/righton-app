@@ -352,6 +352,8 @@ class SignUp extends React.Component {
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Your email address</Text>
             <TextInput
+              autoCapitalize={false}
+              autoCorrect={false}
               keyboardType={'email-address'}
               maxLength={100}
               multiline={false}
@@ -361,6 +363,7 @@ class SignUp extends React.Component {
               placeholder={'Email address'}
               placeholderTextColor={colors.primary}
               returnKeyType={'done'}
+              spellCheck={false}
               style={styles.input}
               textAlign={'left'}
               underlineColorAndroid={colors.dark}
@@ -370,6 +373,8 @@ class SignUp extends React.Component {
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Password</Text>
             <TextInput
+              autoCapitalize={false}
+              autoCorrect={false}
               keyboardType={'default'}
               maxLength={100}
               multiline={false}
@@ -380,6 +385,7 @@ class SignUp extends React.Component {
               placeholderTextColor={colors.primary} 
               ref={this.handlePasswordRef}
               returnKeyType={'done'}
+              spellCheck={false}
               style={styles.input} 
               textAlign={'left'}
               underlineColorAndroid={colors.dark}   
@@ -399,6 +405,8 @@ class SignUp extends React.Component {
           >
             <Text style={styles.inputLabel}>Retype Password</Text>
             <TextInput
+              autoCapitalize={false}
+              autoCorrect={false}
               keyboardType={'default'}
               maxLength={100}
               multiline={false}
@@ -409,6 +417,7 @@ class SignUp extends React.Component {
               placeholderTextColor={colors.primary} 
               ref={this.handleRetypePasswordRef}
               returnKeyType={'done'}
+              spellCheck={false}
               style={styles.input} 
               textAlign={'left'}
               underlineColorAndroid={colors.dark}   
