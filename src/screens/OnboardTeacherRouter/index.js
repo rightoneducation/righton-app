@@ -45,7 +45,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
         
         <ButtonWide
           buttonStyles={{ bottom: 65 }}
-          label={'Sign Up / Sign In'}
+          label={'Log In / Sign Up'}
           onPress={this.handleTeacherOnboard}
         />
         <TouchableOpacity
