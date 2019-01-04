@@ -134,7 +134,8 @@ export default class App extends React.Component {
         uid: `${Math.random()}`,
       };
       const requestMessage = JSON.stringify(requestObj);
-      publishMessage(topic, requestMessage);
+      // Throttle the publishMessage() so PubSub is given time to connect to the GameRoom first.
+      setTimeout(() => publishMessage(topic, requestMessage), 1000);
     }
     debug.log('Subscribed to GameRoom:', topic);
   }
