@@ -44,12 +44,11 @@ export default class Splash extends React.Component {
       debug.log('Rejected session from Splash:', exception);
     }
 
-    // debug.log(JSON.stringify(session));
     const loggedIn = session && session.isValid && session.isValid();
 
     this.setLoading();
 
-    debug.log('User has a valid session:', loggedIn);
+    debug.log('User session:', JSON.stringify(session));
 
     if (__DEV__) {
       this.navigateTo('OnboardAppRouter');
