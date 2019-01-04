@@ -16,7 +16,7 @@ import Message from '../../../components/Message';
 import Constants from '../../../utils/constants';
 import debug from '../../../utils/debug';
 import { colors } from '../../../utils/theme';
-import styles from '../SignIn/styles';
+import styles from '../LogIn/styles';
 
 class SignUp extends React.Component {
   static navigationOptions = {
