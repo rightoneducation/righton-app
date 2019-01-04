@@ -8,17 +8,9 @@ const StudentSwitchNavigator = createSwitchNavigator({
 
 
   Dashboard: {
-    screen: (props) => {
-      const { screenProps, navigation, ...otherProps } = props;
-
-      return (
-        <Dashboard 
-          {...screenProps}
-          {...otherProps}
-          navigation={navigation}
-        />
-      );
-    },
+    screen: props => (
+      <Dashboard {...props} />
+    ),
     navigationOptions: {
 
     },
