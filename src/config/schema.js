@@ -10,7 +10,6 @@ const gameState = {
     instructions: ['string'],
     question: 'string',
     uid: 'string',
-    team: 'number', // ??
     tricks: ['string'],
   }],
   GameRoomID: 'string',
