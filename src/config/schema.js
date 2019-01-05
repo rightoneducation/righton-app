@@ -14,6 +14,7 @@ const gameState = {
     tricks: ['string'],
   }],
   GameRoomID: 'string',
+  start: 'bool',
   teams: 'number',
   answering: 'number', // index of quiz in questions array
 }
