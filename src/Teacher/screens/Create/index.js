@@ -156,7 +156,7 @@ class Create extends React.Component {
 
     const gameState = {
       GameRoomID: room,
-      avatar: quiz.avatar,
+      banner: quiz.banner,
       title: quiz.description,
       description: quiz.description,
       ...teamQuestions,

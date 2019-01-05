@@ -304,13 +304,13 @@ export default class GameBuilderQuestion extends React.Component {
           <Touchable
             onPress={() => {}}
           >
-            <View style={[parentStyles.avatarContainer, elevation]}>
+            <View style={[parentStyles.bannerContainer, elevation]}>
               {image ?
-                <Image source={{ uri: image }} style={parentStyles.avatarImage} />
+                <Image source={{ uri: image }} style={parentStyles.bannerImage} />
                 :
                 <View>
-                  <Aicon name={'image'} style={parentStyles.avatarIcon} />
-                  <Text style={parentStyles.avatarLabel}>Tap to add an image</Text>
+                  <Aicon name={'image'} style={parentStyles.bannerIcon} />
+                  <Text style={parentStyles.bannerLabel}>Tap to add an image</Text>
                 </View>}
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
@@ -374,8 +374,8 @@ export default class GameBuilderQuestion extends React.Component {
               onPress={() => this.handleAddInstruction(idx)}
             >
               <View style={[parentStyles.inputContainer, parentStyles.row]}>
-                <Text style={parentStyles.avatarLabel}>{`${idx + 1}.  `}</Text>
-                <Text style={parentStyles.avatarLabel}>{ instruction }</Text>
+                <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>
+                <Text style={parentStyles.bannerLabel}>{ instruction }</Text>
               </View>
             </Touchable>
           ))}

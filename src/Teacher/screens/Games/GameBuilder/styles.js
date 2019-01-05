@@ -3,7 +3,7 @@ import { colors, deviceWidth, fonts } from '../../../../utils/theme';
 
 
 export default StyleSheet.create({
-  avatarContainer: {
+  bannerContainer: {
     alignItems: 'center',
     backgroundColor: colors.white,
     borderColor: colors.dark,
@@ -12,17 +12,17 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: deviceWidth - 30,
   },
-  avatarIcon: {
+  bannerIcon: {
     alignSelf: 'center',
     color: colors.primary,
     fontSize: fonts.large,
     marginBottom: 10,
   },
-  avatarImage: {
+  bannerImage: {
     height: 200,
     width: deviceWidth - 30,
   },
-  avatarLabel: {
+  bannerLabel: {
     color: colors.dark,
     fontSize: fonts.medium,
   },

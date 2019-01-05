@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 const gameState = {
-  avatar: 'string',
+  banner: 'string',
   title: 'string',
   description: 'string',
   'team#': [{ /* question schema */

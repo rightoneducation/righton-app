@@ -24,7 +24,7 @@ export default class GameBuilder extends React.Component {
     handleClose: PropTypes.func.isRequired,
     handleCreateGame: PropTypes.func.isRequired,
     game: PropTypes.shape({
-      avatar: PropTypes.string,
+      banner: PropTypes.string,
       description: PropTypes.string,
       questions: PropTypes.arrayOf(PropTypes.shape({
         answer: PropTypes.string,
@@ -42,7 +42,7 @@ export default class GameBuilder extends React.Component {
     handleClose: () => {},
     handleCreateGame: () => {},
     game: {
-      avatar: '',
+      banner: '',
       description: '',
       questions: [],
       title: '',
@@ -56,7 +56,7 @@ export default class GameBuilder extends React.Component {
     this.state = {
       addQuestion: {},
       game: {
-        avatar: '',
+        banner: '',
         description: '',
         questions: [],
         title: '',
@@ -114,7 +114,7 @@ export default class GameBuilder extends React.Component {
     } else {
       this.setState({ 
         game: {
-          avatar: '',
+          banner: '',
           description: '',
           questions: [],
           title: '',
@@ -236,17 +236,17 @@ export default class GameBuilder extends React.Component {
   // }
 
 
-  // renderAvatarUploader = avatar => (
+  // renderBannerUploader = banner => (
   //   <Touchable
   //     onPress={() => {}}
   //   >
-  //     <View style={[styles.avatarContainer, elevation]}>
-  //       {avatar ?
-  //         <Image source={{ uri: avatar }} style={styles.avatarImage} />
+  //     <View style={[styles.bannerContainer, elevation]}>
+  //       {banner ?
+  //         <Image source={{ uri: banner }} style={styles.bannerImage} />
   //         :
   //         <View>
-  //           <Aicon name={'image'} style={styles.avatarIcon} />
-  //           <Text style={styles.avatarLabel}>Upload splash</Text>
+  //           <Aicon name={'image'} style={styles.bannerIcon} />
+  //           <Text style={styles.bannerLabel}>Upload splash</Text>
   //         </View>}
   //     </View>
   //   </Touchable>
@@ -372,7 +372,7 @@ export default class GameBuilder extends React.Component {
     } = this.props;
 
     const {
-      avatar,
+      banner,
       description,
       title,
     } = this.state.game;
@@ -428,13 +428,13 @@ export default class GameBuilder extends React.Component {
               <Touchable
                 onPress={() => {}}
               >
-                <View style={[styles.avatarContainer, elevation]}>
-                  {avatar ?
-                    <Image source={{ uri: avatar }} style={styles.avatarImage} />
+                <View style={[styles.bannerContainer, elevation]}>
+                  {banner ?
+                    <Image source={{ uri: banner }} style={styles.bannerImage} />
                     :
                     <View>
-                      <Aicon name={'image'} style={styles.avatarIcon} />
-                      <Text style={styles.avatarLabel}>Upload banner</Text>
+                      <Aicon name={'image'} style={styles.bannerIcon} />
+                      <Text style={styles.bannerLabel}>Upload banner</Text>
                     </View>}
                 </View>
               </Touchable>
