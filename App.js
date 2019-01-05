@@ -61,7 +61,7 @@ export default class App extends React.Component {
     this.handleOnSignIn = this.handleOnSignIn.bind(this);
     // this.handleOnSignUp = this.handleOnSignUp.bind(this);
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
-    this.handleSetGameState = this.handleSetGameState.bind(this);
+    this.handleSetAppState = this.handleSetAppState.bind(this);
     this.handleSetRole = this.handleSetRole.bind(this);
 
     this.IOTSubscribeToTopic = this.IOTSubscribeToTopic.bind(this);
@@ -121,7 +121,7 @@ export default class App extends React.Component {
     this.setState({ role });
   }
 
-  handleSetGameState(gameState) {
+  handleSetAppState(gameState) {
     this.setState({ gameState });
   }
 
@@ -180,7 +180,7 @@ export default class App extends React.Component {
           onSignIn: onSignIn || this.handleOnSignIn,
           onSignUp: onSignUp || this.handleOnSignUp,
           doSignOut: doSignOut || this.handleOnSignOut,
-          handleSetGameState: this.handleSetGameState,
+          handleSetAppState: this.handleSetAppState,
           handleSetRole: this.handleSetRole,
           auth: Auth,
           IOTPublishMessage: this.IOTPublishMessage,

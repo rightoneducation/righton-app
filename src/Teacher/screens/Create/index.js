@@ -28,7 +28,7 @@ const blockSize = deviceWidth / 4;
 class Create extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
-      handleSetGameState: PropTypes.func.isRequired,
+      handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
       IOTSubscribeToTopic: PropTypes.func.isRequired,
       navigation: PropTypes.shape({
@@ -39,7 +39,7 @@ class Create extends React.Component {
   
   static defaultProps = {
     screenProps: {
-      handleSetGameState: () => {},
+      handleSetAppState: () => {},
       IOTPublishMessage: () => {},
       IOTSubscribeToTopic: () => {},
       navigation: {
@@ -161,10 +161,11 @@ class Create extends React.Component {
       description: quiz.description,
       ...teamQuestions,
       teams: quiz.questions.length,
+      start: false,
       answering: null,
     };
     
-    this.props.screenProps.handleSetGameState(gameState);
+    this.props.screenProps.handleSetAppState(gameState);
     
     this.props.screenProps.IOTSubscribeToTopic(room);
 
