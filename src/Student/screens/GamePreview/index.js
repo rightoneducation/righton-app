@@ -37,6 +37,9 @@ export default class GamePreview extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.animationTimeout = null;
+    this.animationInterval = null;
+
     this.animatedArrow1 = new Animated.Value(0);
     this.animatedArrow2 = new Animated.Value(0);
     this.animatedArrow3 = new Animated.Value(0);
@@ -51,11 +54,12 @@ export default class GamePreview extends React.PureComponent {
 
 
   componentDidMount() {
-    this.startAnimation();
+    this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
   }
 
 
   componentWillUnmount() {
+    clearTimeout(this.animationTimeout);
     clearInterval(this.animationInterval);
   }
 
