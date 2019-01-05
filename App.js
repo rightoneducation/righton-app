@@ -121,8 +121,17 @@ export default class App extends React.Component {
     this.setState({ role });
   }
 
-  handleSetAppState(gameState) {
-    this.setState({ gameState });
+  handleSetAppState(property, value) {
+    switch (property) {
+      case 'gameState':
+        this.setState({ gameState: value });
+        break;
+      case 'team':
+        this.setState({ team: value });
+        break;   
+      default:
+        break;
+    }
   }
 
   IOTSubscribeToTopic(topic) {

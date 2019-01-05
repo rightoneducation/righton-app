@@ -165,7 +165,7 @@ class Create extends React.Component {
       answering: null,
     };
     
-    this.props.screenProps.handleSetAppState(gameState);
+    this.props.screenProps.handleSetAppState('gameState', gameState);
     
     this.props.screenProps.IOTSubscribeToTopic(room);
 
