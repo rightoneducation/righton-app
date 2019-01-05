@@ -25,9 +25,12 @@ export default class GamePreview extends React.PureComponent {
     screenProps: {
       gameState: {
         team0: {
+          answer: __DEV__ ? 'Bagel' : '',
+          image: '',
           instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
           question: __DEV__ ? 'What did you eat for breakfast?' : '',
-          team: __DEV__ ? 'Scool' : '',
+          tricks: [],
+          uid: '',
         },
       },
       team: 0,
@@ -169,7 +172,7 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <HeaderTeam team={gameState[teamRef].team} />
+        <HeaderTeam team={`Team ${team}`} />
         {this.renderQuestion()}
         {!showInstructions && this.renderArrowButton()}
         {showInstructions &&
