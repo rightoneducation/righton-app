@@ -39,7 +39,11 @@ export default class Dashboard extends React.Component {
     this.state = {
       messageProps: null,
       name: '',
+      room: '',
+      roomEntry: true,
     };
+
+    this.roomRef = null;
 
     this.handleCloseMessage = this.handleCloseMessage.bind(this);
 
@@ -48,15 +52,39 @@ export default class Dashboard extends React.Component {
 
     this.handleRoomInput = this.handleRoomInput.bind(this);
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+    this.handleRoomRef = this.handleRoomRef.bind(this);
 
     this.handleGameEntry = this.handleGameEntry.bind(this);
     this.handleGameError = this.handleGameError.bind(this);
     this.handleGameFound = this.handleGameFound.bind(this);
+
+    this.handleKeyboardHide = this.handleKeyboardHide.bind(this);
+    this.handleKeyboardShow = this.handleKeyboardShow.bind(this);
   }
 
 
   componentDidMount() {
     this.props.screenProps.handleSetRole('Student');
+    Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
+    Keyboard.addListener('keyboardDidShow', this.handleKeyboardShow);
+  }
+
+
+  componentWillUnmount() {
+    Keyboard.removeListener('keyboardDidHide');
+    Keyboard.removeListener('keyboardDidShow');
+  }
+
+
+  handleKeyboardHide() {
+    this.setState({ roomEntry: true }, () => {
+      if (this.roomRef) this.roomRef.blur();
+    });
+  }
+
+
+  handleKeyboardShow() {
+    this.setState({ roomEntry: false });
   }
 
 
@@ -78,6 +106,11 @@ export default class Dashboard extends React.Component {
   handleRoomSubmit = () => (
     Keyboard.dismiss()
   )
+
+
+  handleRoomRef(ref) {
+    this.roomRef = ref;
+  }
 
 
   handleGameEntry() {
@@ -206,7 +239,7 @@ export default class Dashboard extends React.Component {
   );
 
 
-  renderGameRoomEntry() {
+  renderGameRoomEntry(roomEntry) {
     const { room } = this.state;
     return (
       <View style={[styles.roomContainer, { justifyContent: 'center' }]}>
@@ -218,16 +251,18 @@ export default class Dashboard extends React.Component {
           onSubmitEditing={this.handleRoomSubmit}
           placeholder={'Game room'}
           placeholderTextColor={colors.primary}
+          ref={this.handleRoomRef}
           returnKeyType={'done'}
           style={styles.roomInput}
           textAlign={'center'}
           underlineColorAndroid={room ? colors.white : colors.dark}
           value={room}
         />
+        {roomEntry &&
         <ButtonWide
           label={'Enter game'}
           onPress={this.handleGameEntry}
-        />
+        />}
       </View>
     );
   }
@@ -256,6 +291,7 @@ export default class Dashboard extends React.Component {
   render() {
     const {
       messageProps,
+      roomEntry,
     } = this.state;
 
     const { gameState } = this.props.screenProps;
@@ -274,7 +310,7 @@ export default class Dashboard extends React.Component {
 
           {Object.keys(gameState).length ?
             this.renderGameRoomState() :
-            this.renderGameRoomEntry()}
+            this.renderGameRoomEntry(roomEntry)}
 
           {this.renderButtons()}
         </ScrollView>
