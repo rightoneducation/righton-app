@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
-import { colors, deviceWidth, fonts } from '../../utils/theme';
+import { colors, deviceWidth, elevation, fonts } from '../../utils/theme';
 
 export default class ButtonWide extends React.PureComponent {
   static propTypes = {
@@ -53,7 +53,7 @@ export default class ButtonWide extends React.PureComponent {
         background={Touchable.Ripple(ripple || colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handlePress}
-        style={[styles.button, buttonStyles]}
+        style={[styles.button, buttonStyles, elevation]}
       >
         <Text style={[styles.label, textStyles]}>{ label || 'Okay' }</Text>
       </Touchable>
@@ -68,14 +68,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: colors.primary,
     bottom: 15,
-    elevation: 2,
     height: 65,
     justifyContent: 'center',
     position: 'absolute',
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    shadowColor: colors.dark,
-    shadowOffset: { height: 1, width: 0 },
     width: deviceWidth - 75,
     zIndex: 10,
   },
