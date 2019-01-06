@@ -52,6 +52,7 @@ export default class App extends React.Component {
 
     this.state = {
       gameState: {},
+      players: {},
       ready: false,
       role: '', // 'Teacher' | 'Student'
       session: null,
@@ -153,10 +154,10 @@ export default class App extends React.Component {
     unsubscribeFromTopic(GameRoomID);
   }
 
-  IOTPublishMessage(message, uid) {
+  IOTPublishMessage(message) {
     const { GameRoomID } = this.state.gameState;
     // Prevent computing received messages sent by self.
-    this.messagesReceived[uid] = true;
+    this.messagesReceived[message.uid] = true;
     publishMessage(GameRoomID, message);
   }
 
@@ -164,6 +165,7 @@ export default class App extends React.Component {
   render() {
     const { 
       gameState,
+      players,
       // ready,
       session,
       team,
@@ -179,6 +181,7 @@ export default class App extends React.Component {
       <RootNavigator
         screenProps={{
           gameState,
+          players,
           session,
           team,
           onSignIn: onSignIn || this.handleOnSignIn,
