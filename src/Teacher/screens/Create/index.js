@@ -179,7 +179,7 @@ class Create extends React.Component {
       };
       this.props.screenProps.IOTPublishMessage(message, uid);
     }, 5000);
-    this.props.screenProps.navigation.navigate('TeacherGameRoom');
+    this.props.screenProps.navigation.navigate('TeacherGameRoom', { GameRoomID: room });
   }
 
 
