@@ -17,13 +17,10 @@ const TeacherTabNavigator = createBottomTabNavigator({
 
   Explore: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Explore
-          {...screenProps}
-          {...otherProps}
-        />
+        <Explore {...screenProps} />
       );
     },
     navigationOptions: {
@@ -35,13 +32,10 @@ const TeacherTabNavigator = createBottomTabNavigator({
 
   Create: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Create
-          {...screenProps}
-          {...otherProps}
-        />
+        <Create {...screenProps} />
       );
     },
     navigationOptions: {
@@ -53,13 +47,10 @@ const TeacherTabNavigator = createBottomTabNavigator({
 
   Games: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Games
-          {...screenProps}
-          {...otherProps}
-        />
+        <Games {...screenProps} />
       );
     },
     navigationOptions: {
@@ -71,13 +62,10 @@ const TeacherTabNavigator = createBottomTabNavigator({
 
   Maker: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Maker
-          {...screenProps}
-          {...otherProps}
-        />
+        <Maker {...screenProps} />
       );
     },
     navigationOptions: {
@@ -89,13 +77,10 @@ const TeacherTabNavigator = createBottomTabNavigator({
 
   Reports: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { screenProps } = props;
 
       return (
-        <Reports
-          {...screenProps}
-          {...otherProps}
-        />
+        <Reports {...screenProps} />
       );
     },
     navigationOptions: {
