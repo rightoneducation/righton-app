@@ -138,11 +138,10 @@ export default class App extends React.Component {
     const { role } = this.state;
     IOTSubscribeToTopic(topic, role === 'Teacher' ? teacherMessageHandler : studentMessageHandler, this);
     if (role !== 'Teacher') {
-      const requestObj = {
+      const requestMessage = {
         action: 'REQUEST_GAME_STATE',
         uid: `${Math.random()}`,
       };
-      const requestMessage = JSON.stringify(requestObj);
       // Throttle the publishMessage() so PubSub is given time to connect to the GameRoom first.
       setTimeout(() => publishMessage(topic, requestMessage), 1000);
     }
@@ -161,6 +160,7 @@ export default class App extends React.Component {
     publishMessage(GameRoomID, message);
   }
 
+
   render() {
     const { 
       gameState,
@@ -173,15 +173,10 @@ export default class App extends React.Component {
       onSignIn,
       onSignUp,
       doSignOut,
-      // ...otherProps
     } = this.props;
 
     return (
       <RootNavigator
-        ref={(nav) => {
-          this.navigator = nav;
-        }}
-        navigation={this.props.navigation}
         screenProps={{
           gameState,
           session,
