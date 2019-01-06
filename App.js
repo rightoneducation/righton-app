@@ -181,7 +181,7 @@ export default class App extends React.Component {
       <RootNavigator
         screenProps={{
           gameState,
-          players,
+          players: Object.keys(players).length,
           session,
           team,
           onSignIn: onSignIn || this.handleOnSignIn,
