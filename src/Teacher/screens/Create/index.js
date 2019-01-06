@@ -171,13 +171,12 @@ class Create extends React.Component {
     // TODO! Handle navigating to Teacher Game Room.
 
     setTimeout(() => {
-      const uid = `${Math.random()}`;
       const message = {
         action: 'SET_GAME_STATE',
-        uid,
+        uid: `${Math.random()}`,
         gameState,
       };
-      this.props.screenProps.IOTPublishMessage(message, uid);
+      this.props.screenProps.IOTPublishMessage(message);
     }, 5000);
     this.props.screenProps.navigation.navigate('TeacherGameRoom', { GameRoomID: room });
   }
