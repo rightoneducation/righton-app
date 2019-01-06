@@ -7,7 +7,7 @@ import StudentFirst from '../Student/screens/StudentFirst';
 import TeacherFirst from '../Teacher/screens/TeacherFirst';
 import StudentApp from '../Student';
 import TeacherApp from '../Teacher';
-
+import TeacherGameRoom from '../Teacher/screens/GameRoom';
 
 const RootNavigator = createSwitchNavigator({
 
@@ -86,6 +86,14 @@ const RootNavigator = createSwitchNavigator({
       header: null,
     },
   },
+
+
+  TeacherGameRoom: {
+    screen: TeacherGameRoom,
+    navigationOptions: {
+      header: null,
+    },
+  }
 
   
 }, { initialRouteName: 'Splash' });
