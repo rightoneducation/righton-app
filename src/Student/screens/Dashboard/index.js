@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
+import Portal from '../../../screens/Portal';
 import ButtonWide from '../../../components/ButtonWide';
 import Message from '../../../components/Message';
 import styles from './styles';
@@ -39,6 +40,7 @@ export default class Dashboard extends React.Component {
     this.state = {
       messageProps: null,
       name: '',
+      portal: '',
       room: '',
       roomEntry: true,
     };
@@ -67,6 +69,21 @@ export default class Dashboard extends React.Component {
     this.props.screenProps.handleSetRole('Student');
     Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
     Keyboard.addListener('keyboardDidShow', this.handleKeyboardShow);
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.screenProps.gameState.start !== nextProps.screenProps.gameState.start &&
+      nextProps.screenProps.gameState.start === true) {
+      this.setState({ portal: '5' });
+      setTimeout(() => this.setState({ portal: '4' }), 1000);
+      setTimeout(() => this.setState({ portal: '3' }), 2000);
+      setTimeout(() => this.setState({ portal: '2' }), 3000);
+      setTimeout(() => this.setState({ portal: '1' }), 4000);
+      setTimeout(() => this.setState({ portal: '1' }), 4000);
+      setTimeout(() => this.setState({ portal: 'RightOn!' }), 5000);
+      setTimeout(() => this.props.screenProps.navigation.navigate('GamePreview'), 6000);      
+    }
   }
 
 
@@ -135,9 +152,25 @@ export default class Dashboard extends React.Component {
 
   handleGameFound(res) {
     if (typeof res === 'object' && res.GameRoomID) {
+      this.setState({ portal: `Joining ${res.GameRoomID}` });
       this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
+      setTimeout(() => {
+        const { gameState } = this.props.screenProps;
+        if (Object.keys(gameState).length === 0) {
+          this.setState({
+            messageProps: {
+              closeFunc: this.handleCloseMessage,
+              bodyStyle: null,
+              textStyle: null,
+              duration: null,
+              message: 'Problem joining game. Please try again.',
+              timeout: 4000,
+            },
+            portal: '',
+          });
+        }
+      }, 3000);
       debug.log('JOIN GAME', res.GameRoomID);
-      // this.props.screenProps.navigation.navigate('GamePreview');
     } else {
       // res is most likely an empty object `{}` - either way notify user GameRoom cannot be joined.
       this.setState({
@@ -172,6 +205,13 @@ export default class Dashboard extends React.Component {
 
   handleCloseMessage() {
     this.setState({ messageProps: null });
+  }
+
+
+  handleTeamSelection(idx) {
+    const team = idx;
+    this.props.screenProps.handleSetAppState('team', team);
+    this.setState({ portal: 'Waiting for other players' });
   }
 
 
@@ -232,11 +272,27 @@ export default class Dashboard extends React.Component {
   }
 
 
-  renderGameRoomState = () => (
-    <View style={styles.roomContainer}>
-      { /* TODO */ }
-    </View>
-  );
+  renderGameRoomTeamSelection = (gameState) => {
+    const { teams } = gameState;
+    const teamsArr = [];
+    teamsArr[teams - 1] = true;
+    return (
+      <View style={styles.roomContainer}>
+        {teamsArr.map((n, idx) => (
+          <Touchable
+            activeOpacity={0.8}
+            background={Touchable.Ripple(colors.primary, false)}
+            hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+            onPress={() => this.handleTeamSelection(idx)}
+            key={`${Math.random()}`}
+            style={[styles.teamButton, elevation]}
+          >
+            <Text style={styles.buttonText}>{idx + 1}</Text>
+          </Touchable>
+        ))}
+      </View>
+    );
+  }
 
 
   renderGameRoomEntry(roomEntry) {
@@ -291,10 +347,22 @@ export default class Dashboard extends React.Component {
   render() {
     const {
       messageProps,
+      portal,
       roomEntry,
     } = this.state;
 
     const { gameState } = this.props.screenProps;
+
+    if (portal) {
+      return (
+        <Portal
+          messageType={'single'}
+          messageValues={{
+            message: portal,
+          }}
+        />
+      );
+    }
 
     return (
       <View style={styles.container}>
@@ -309,7 +377,7 @@ export default class Dashboard extends React.Component {
           {this.renderProfileView()}
 
           {Object.keys(gameState).length ?
-            this.renderGameRoomState() :
+            this.renderGameRoomTeamSelection(gameState) :
             this.renderGameRoomEntry(roomEntry)}
 
           {this.renderButtons()}

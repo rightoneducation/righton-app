@@ -112,6 +112,16 @@ export default StyleSheet.create({
     backgroundColor: colors.dark,
     flex: 1,
   },
+  teamButton: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: colors.primary,
+    borderRadius: 100,
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    marginVertical: 15,
+    paddingVertical: 25,
+  },
   title: {
     color: colors.white,
     fontSize: fonts.large,
