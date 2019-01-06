@@ -28,6 +28,8 @@ export default class Dashboard extends React.Component {
   static defaultProps = {
     screenProps: {
       handleSetRole: () => {},
+      IOTSubscribeToTopic: () => {},
+      IOTPublishMessage: () => {},
       navigation: {
         navigate: () => {},
       }
@@ -168,9 +170,16 @@ export default class Dashboard extends React.Component {
             },
             portal: '',
           });
+        } else {
+          const message = {
+            action: 'JOINED_GAME',
+            uid: `${Math.random()}`,
+            payload: { playerID: `${Math.random()}` }, // TODO! Make a device specific ID in local storage
+          };
+          this.props.screenProps.IOTPublishMessage(message);
+          debug.log('JOIN GAME', res.GameRoomID);
         }
       }, 3000);
-      debug.log('JOIN GAME', res.GameRoomID);
     } else {
       // res is most likely an empty object `{}` - either way notify user GameRoom cannot be joined.
       this.setState({
