@@ -21,7 +21,6 @@ import firstStyles from '../../../Student/screens/StudentFirst/styles';
 import gamesStyles from '../Games/styles';
 import debug from '../../../utils/debug';
 
-
 const blockSize = deviceWidth / 4;
 
 
@@ -173,14 +172,14 @@ class Create extends React.Component {
 
     setTimeout(() => {
       const uid = `${Math.random()}`;
-      const data = {
+      const message = {
         action: 'SET_GAME_STATE',
         uid,
         gameState,
       };
-      const message = JSON.stringify(data);
       this.props.screenProps.IOTPublishMessage(message, uid);
     }, 5000);
+    this.props.screenProps.navigation.navigate('TeacherGameRoom');
   }
 
 
