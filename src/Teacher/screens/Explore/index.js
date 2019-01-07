@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  dataBody: { 
+  dataBody: {
     flex: 1,
     flexDirection: 'row',
     height: 100,
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
   dataContainer: {
     flexDirection: 'row',
     height: 100,
+    width: deviceWidth - 30,
   },
   dataTextContainer: {
     backgroundColor: colors.white,
