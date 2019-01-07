@@ -14,7 +14,7 @@ import ButtonRound from '../../../components/ButtonRound';
 import Message from '../../../components/Message';
 import Constants from '../../../utils/constants';
 import debug from '../../../utils/debug';
-import { deviceWidth, elevation, fonts } from '../../../utils/theme';
+import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
 import styles from '../LogIn/styles';
 
 class SignUp extends React.Component {
@@ -304,6 +304,7 @@ class SignUp extends React.Component {
     setTimeout(() => {
       this.setState({
         showInput: {
+          backgroundColor: colors.dark,
           closeModal: this.closeInputModal,
           keyboardType,
           height: 45,

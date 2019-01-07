@@ -10,7 +10,7 @@ import Touchable from 'react-native-platform-touchable';
 import InputModal from '../../../components/InputModal';
 import Message from '../../../components/Message';
 import ButtonRound from '../../../components/ButtonRound';
-import { deviceWidth, elevation, fonts } from '../../../utils/theme';
+import { deviceWidth, elevation, fonts, colors } from '../../../utils/theme';
 import styles from './styles';
 import debug from '../../../utils/debug';
 
@@ -218,6 +218,7 @@ class LogIn extends React.Component {
     setTimeout(() => {
       this.setState({
         showInput: {
+          backgroundColor: colors.dark,
           closeModal: this.closeInputModal,
           keyboardType,
           height: 45,

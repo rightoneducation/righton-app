@@ -15,6 +15,7 @@ export default class InputModal extends React.PureComponent {
   static propTypes = {
     autoCapitalize: PropTypes.string,
     autoCorrect: PropTypes.bool,
+    backgroundColor: PropTypes.string,
     closeModal: PropTypes.func.isRequired,
     keyboardType: PropTypes.string,
     height: PropTypes.number,
@@ -33,6 +34,7 @@ export default class InputModal extends React.PureComponent {
   static defaultProps = {
     autoCapitalize: 'none',
     autoCorrect: false,
+    backgroundColor: colors.lightGray,
     closeModal: () => {},
     keyboardType: 'default',
     height: 45,
@@ -159,6 +161,7 @@ export default class InputModal extends React.PureComponent {
 
   render() {
     const {
+      backgroundColor,
       closeModal,
       visible,
     } = this.props;
@@ -170,7 +173,7 @@ export default class InputModal extends React.PureComponent {
         transparent
         visible={visible}
       >
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor }]}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={this.handleInputSubmit}
@@ -188,7 +191,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: colors.lightGray,
     flex: 1,
     opacity: 0.8,
   },
