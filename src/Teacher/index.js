@@ -4,7 +4,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import Explore from './screens/Explore';
-import Create from './screens/Create';
+import Launch from './screens/Launch';
 import Games from './screens/Games';
 import Maker from './screens/Maker';
 import Reports from './screens/Reports';
@@ -30,17 +30,17 @@ const TeacherTabNavigator = createBottomTabNavigator({
   },
 
 
-  Create: {
+  Launch: {
     screen: (props) => {
       const { screenProps } = props;
 
       return (
-        <Create {...screenProps} />
+        <Launch {...screenProps} />
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Create',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Create'} />
+      tabBarLabel: 'Launch',
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Launch'} />
     },
   },
 
@@ -69,8 +69,8 @@ const TeacherTabNavigator = createBottomTabNavigator({
       );
     },
     navigationOptions: {
-      tabBarLabel: 'Maker',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'puzzle-piece'} tintColor={tintColor} label={'Maker'} />,
+      tabBarLabel: 'Quiz Maker',
+      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'puzzle-piece'} tintColor={tintColor} label={'Quiz Maker'} />,
     },
   },
 

@@ -24,7 +24,7 @@ import debug from '../../../utils/debug';
 const blockSize = deviceWidth / 4;
 
 
-class Create extends React.Component {
+class Launch extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
       handleSetAppState: PropTypes.func.isRequired,
@@ -109,7 +109,7 @@ class Create extends React.Component {
           debug.log('Invalid access!', 'Required username:', res.username, 'Actual username:', username);
           // Invalid teacher account -- forbid access!
           setTimeout(() => this.swiperRef.scrollBy(-1, false), 500);
-          // TODO Send message that account error / create room w/ different name
+          // TODO Send message that account errLaunch room w/ different name
         } else if (res && (username === res.username || res.username === null)) {
           debug.log('Username matches and game room still exists: Enter');
           setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
@@ -338,4 +338,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default props => <Create screenProps={{ ...props }} />;
+export default props => <Launch screenProps={{ ...props }} />;
