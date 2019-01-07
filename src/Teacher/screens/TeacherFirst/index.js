@@ -31,10 +31,11 @@ const TeacherFirst = createBottomTabNavigator({
 
   SignUp: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { navigation, screenProps, ...otherProps } = props;
 
       return (
         <SignUp
+          navigation={navigation}
           {...screenProps}
           {...otherProps}
         />
