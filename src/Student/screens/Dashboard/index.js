@@ -170,15 +170,8 @@ export default class Dashboard extends React.Component {
             },
             portal: '',
           });
-        } else {
-          const message = {
-            action: 'JOINED_GAME',
-            uid: `${Math.random()}`,
-            payload: { playerID: `${Math.random()}` }, // TODO! Make a device specific ID in local storage
-          };
-          this.props.screenProps.IOTPublishMessage(message);
-          debug.log('JOIN GAME', res.GameRoomID);
         }
+        debug.log('JOIN GAME', res.GameRoomID);
       }, 3000);
     } else {
       // res is most likely an empty object `{}` - either way notify user GameRoom cannot be joined.
@@ -221,6 +214,15 @@ export default class Dashboard extends React.Component {
     const team = idx;
     this.props.screenProps.handleSetAppState('team', team);
     this.setState({ portal: 'Waiting for other players' });
+    const message = {
+      action: 'JOINED_GAME',
+      uid: `${Math.random()}`,
+      payload: {
+        playerID: `${Math.random()}`, // TODO! Make a device specific ID in local storage | Player name
+        team: idx,
+      },
+    };
+    this.props.screenProps.IOTPublishMessage(message);
   }
 
 
