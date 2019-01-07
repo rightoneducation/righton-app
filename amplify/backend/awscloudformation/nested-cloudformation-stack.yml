@@ -139,6 +139,17 @@
 				}
 			}
 		},
+		"storageGames": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Games-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "Games",
+					"partitionKeyName": "GameID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
 		"functionTeacherGameLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
