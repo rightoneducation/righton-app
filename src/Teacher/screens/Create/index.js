@@ -159,7 +159,6 @@ class Create extends React.Component {
       title: quiz.description,
       description: quiz.description,
       ...teamQuestions,
-      teams: quiz.questions.length,
       start: false,
       answering: null,
     };
