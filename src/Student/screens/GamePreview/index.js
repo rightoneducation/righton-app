@@ -172,7 +172,7 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <HeaderTeam team={`Team ${team}`} />
+        <HeaderTeam team={`Team ${team + 1}`} />
         {this.renderQuestion()}
         {!showInstructions && this.renderArrowButton()}
         {showInstructions &&
