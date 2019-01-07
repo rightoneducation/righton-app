@@ -27,6 +27,7 @@ export default class Dashboard extends React.Component {
   
   static defaultProps = {
     screenProps: {
+      gameState: {},
       handleSetRole: () => {},
       IOTSubscribeToTopic: () => {},
       IOTPublishMessage: () => {},
@@ -75,7 +76,8 @@ export default class Dashboard extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.screenProps.gameState.start !== nextProps.screenProps.gameState.start &&
+    if (nextProps.screenProps.gameState &&
+      this.props.screenProps.gameState.start !== nextProps.screenProps.gameState.start &&
       nextProps.screenProps.gameState.start === true) {
       this.setState({ portal: '5' });
       setTimeout(() => this.setState({ portal: '4' }), 1000);
@@ -157,24 +159,27 @@ export default class Dashboard extends React.Component {
       this.setState({ portal: `Joining ${res.GameRoomID}` });
       this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
       setTimeout(() => {
-        const { gameState } = this.props.screenProps;
-        if (Object.keys(gameState).length === 0) {
-          this.setState({
-            messageProps: {
-              closeFunc: this.handleCloseMessage,
-              bodyStyle: null,
-              textStyle: null,
-              duration: null,
-              message: 'Problem joining game. Please try again.',
-              timeout: 4000,
-            },
-            portal: '',
-          });
-        }
+        this.setState({ portal: '' });
+        setTimeout(() => {
+          const { gameState } = this.props.screenProps;
+          if (Object.keys(gameState).length === 0) {
+            this.setState({
+              messageProps: {
+                closeFunc: this.handleCloseMessage,
+                bodyStyle: null,
+                textStyle: null,
+                duration: null,
+                message: 'Problem joining game. Please try again.',
+                timeout: 4000,
+              },
+            });
+          }
+        }, 2000);
         debug.log('JOIN GAME', res.GameRoomID);
       }, 3000);
     } else {
-      // res is most likely an empty object `{}` - either way notify user GameRoom cannot be joined.
+      // res is most likely an empty object `{}`
+      // - either way notify user that GameRoom cannot be joined.
       this.setState({
         messageProps: {
           closeFunc: this.handleCloseMessage,
@@ -250,7 +255,7 @@ export default class Dashboard extends React.Component {
     const { name } = this.state;
 
     const { gamesPlayed, pointsEarned } = this.props.screenProps;
-    // Where are these values being hydrated from?
+    // TODO Where are these values being hydrated from?
 
     return (
       <View style={styles.profileContainer}>
@@ -284,9 +289,15 @@ export default class Dashboard extends React.Component {
 
 
   renderGameRoomTeamSelection = (gameState) => {
-    const { teams } = gameState;
+    const gameKeys = Object.keys(gameState);
     const teamsArr = [];
-    teamsArr[teams - 1] = true;
+    let teamSize = 0;
+    for (let i = 0; i < gameKeys.length; i += 1) {
+      if (gameKeys[i].includes('team')) {
+        teamSize += 1;
+      }
+    }
+    teamsArr[teamSize - 1] = true;
     return (
       <View style={styles.roomContainer}>
         {teamsArr.map((n, idx) => (
