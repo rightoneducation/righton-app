@@ -146,8 +146,7 @@ class SignUp extends React.Component {
         }
       })
       .catch((exception) => {
-        if (exception.code === 'UsernameExistsException') {
-          Auth.resendSignUp(username);
+        if (exception.message === 'User is already confirmed') {
           this.setState({
             buttonActivity: false,
             messageProps: {
@@ -155,13 +154,48 @@ class SignUp extends React.Component {
               bodyStyle: null,
               textStyle: null,
               duration: null,
-              message: 'Please verify email account with verification code',
+              message: 'This email already exists.',
+              timeout: 4000,
+            },
+            showMFAPrompt: false,
+          });
+          return;
+        }
+        if (exception.code === 'UsernameExistsException') {
+          Auth.resendSignUp(username)
+            .catch((err) => {
+              if (err.message === 'User is already confirmed.') {
+                this.setState({
+                  buttonActivity: false,
+                  messageProps: {
+                    closeFunc: this.handleCloseMessage,
+                    bodyStyle: null,
+                    textStyle: null,
+                    duration: null,
+                    message: 'Email address already exists.',
+                    timeout: 8000,
+                  },
+                });
+              }
+            });
+            
+          this.setState({
+            buttonActivity: false,
+            messageProps: {
+              closeFunc: this.handleCloseMessage,
+              bodyStyle: null,
+              textStyle: null,
+              duration: null,
+              message: 'Please verify email account with verification code.',
               timeout: 4000,
             },
           }, () => {
             setTimeout(() => {
-              this.setState({ showMFAPrompt: true });
-            }, 2000);
+              if (this.state.messageProps.message === 'Please verify email account with verification code.') {
+                // Only display prompt is the exception above was not caught
+                this.setState({ showMFAPrompt: true });
+              }
+            }, 3500);
           });
           return;
         }
@@ -277,8 +311,9 @@ class SignUp extends React.Component {
         break;
       }
       case 'retype': {
-        this.setState({ retypePassword: input, showInput: false });
-        this.checkRequirements();
+        this.setState({ retypePassword: input, showInput: false }, () => {
+          this.checkRequirements();
+        });
         break;
       }
       default:
@@ -421,7 +456,7 @@ class SignUp extends React.Component {
           >
             <Text style={styles.inputLabel}>Your email address</Text>
             <Touchable
-              onPress={() => this.handleInputModal('email', 'Email address', 75, email)}
+              onPress={() => this.handleInputModal('email', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
             >
               <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'email' ? '' : (email || 'Email address')}</Text>
