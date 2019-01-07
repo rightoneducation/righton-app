@@ -191,18 +191,18 @@ class Create extends React.Component {
         key={quiz.title}
         onPress={() => this.handleQuizSelection(null, quiz)}
       >
-        <View style={gamesStyles.quizButton}>
+        <View style={gamesStyles.gameButton}>
           <View style={gamesStyles.imageContainer}>
             {quiz.image ?
               <Image source={{ uri: quiz.image }} style={gamesStyles.image} />
               :
               <Text style={gamesStyles.imageLabel}>RightOn!</Text>}
           </View>
-          <Text style={gamesStyles.quizTitle}>{ quiz.title }</Text>
-          <Text style={[gamesStyles.quizTitle, gamesStyles.quizDescription]}>
+          <Text style={gamesStyles.gameTitle}>{ quiz.title }</Text>
+          <Text style={[gamesStyles.gameTitle, gamesStyles.gameDescription]}>
             { quiz.description }
           </Text>
-          <Text style={gamesStyles.quizCount}>{ `${quiz.questions.length}Q` }</Text>
+          <Text style={gamesStyles.gameCount}>{ `${quiz.questions.length}Q` }</Text>
         </View>
       </Touchable>
     );
