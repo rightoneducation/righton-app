@@ -69,6 +69,10 @@ export default class Dashboard extends React.Component {
 
 
   componentDidMount() {
+    if (this.props.screenProps.navigation.state && this.props.screenProps.navigation.state.params &&
+      this.props.screenProps.navigation.state.params.GameRoomID) {
+      this.handleParamRoomEntry();
+    }
     this.props.screenProps.handleSetRole('Student');
     Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
     Keyboard.addListener('keyboardDidShow', this.handleKeyboardShow);
@@ -77,7 +81,7 @@ export default class Dashboard extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState &&
-      this.props.screenProps.gameState.start !== nextProps.screenProps.gameState.start &&
+    this.props.screenProps.gameState.start !== nextProps.screenProps.gameState.start &&
       nextProps.screenProps.gameState.start === true) {
       this.setState({ portal: '5' });
       setTimeout(() => this.setState({ portal: '4' }), 1000);
@@ -94,6 +98,12 @@ export default class Dashboard extends React.Component {
   componentWillUnmount() {
     Keyboard.removeListener('keyboardDidHide');
     Keyboard.removeListener('keyboardDidShow');
+  }
+
+
+  handleParamRoomEntry() {
+    this.setState({ room: this.props.screenProps.navigation.state.params.GameRoomID },
+      () => this.handleGameEntry());
   }
 
 
@@ -163,6 +173,7 @@ export default class Dashboard extends React.Component {
         setTimeout(() => {
           const { gameState } = this.props.screenProps;
           if (Object.keys(gameState).length === 0) {
+            debug.log('Problem joining game room');
             this.setState({
               messageProps: {
                 closeFunc: this.handleCloseMessage,

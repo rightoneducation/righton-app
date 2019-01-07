@@ -47,9 +47,8 @@ export default class GameRoom extends React.PureComponent {
 
 
   onRoomSubmit() {
-    // TODO Handle entering game in DynamoDB
-    // Hydrate Dashboard w/ game details
-    this.props.screenProps.handleRoomSubmit();
+    const { room } = this.state;
+    this.props.screenProps.handleRoomSubmit(room);
   }
 
 
