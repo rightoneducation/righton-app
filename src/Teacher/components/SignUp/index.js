@@ -277,13 +277,8 @@ class SignUp extends React.Component {
         break;
       }
       case 'retype': {
-        this.setState({ retypePassword: input, showInput: false }, () => {
-          const emailPassed = this.handleEmailSubmit();
-          const retypePassed = this.handleRetypePasswordSubmit();
-          const passwordPassed = this.handlePasswordSubmit();
-  
-          if (emailPassed && retypePassed && passwordPassed) this.handleSignUp();
-        });
+        this.setState({ retypePassword: input, showInput: false });
+        this.checkRequirements();
         break;
       }
       default:

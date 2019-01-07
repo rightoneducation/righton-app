@@ -201,7 +201,7 @@ class LogIn extends React.Component {
         break;
       case 'password':
         this.setState({ password: input, showInput: false });
-        this.handleLogInClick();
+        this.checkRequirements();
         break;
       default:
         break;
