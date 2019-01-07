@@ -89,7 +89,19 @@ const RootNavigator = createSwitchNavigator({
 
 
   TeacherGameRoom: {
-    screen: TeacherGameRoom,
+    screen: (props) => {
+      const { navigation, screenProps } = props;
+      return (
+        <TeacherGameRoom
+          screenProps={{
+            gameState: screenProps.gameState,
+            IOTPublishMessage: screenProps.IOTPublishMessage,
+            navigation,
+            players: screenProps.players,
+          }}
+        />
+      );
+    },
     navigationOptions: {
       header: null,
     },
