@@ -129,6 +129,9 @@ export default class App extends React.Component {
         break;
       case 'team':
         this.setState({ team: value });
+        break;
+      case 'players':
+        this.setState({ players: value });
         break;   
       default:
         break;
