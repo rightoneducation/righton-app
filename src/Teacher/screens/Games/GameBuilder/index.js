@@ -167,6 +167,7 @@ export default class GameBuilder extends React.Component {
     setTimeout(() => {
       this.setState({
         showInput: {
+          autoCapitalize: 'sentences',
           closeModal: this.closeInputModal,
           keyboardType,
           height: 45,
