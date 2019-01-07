@@ -178,7 +178,7 @@ class SignUp extends React.Component {
                 });
               }
             });
-            
+
           this.setState({
             buttonActivity: false,
             messageProps: {
@@ -503,6 +503,7 @@ class SignUp extends React.Component {
         {
           showMFAPrompt &&
           <MFAPrompt
+            navigation={this.props.navigation}
             onValidate={this.handleMFAValidate}
             onCancel={this.handleMFACancel}
             onSuccess={this.handleMFASuccess}
