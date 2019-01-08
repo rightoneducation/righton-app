@@ -150,7 +150,20 @@ class Launch extends React.Component {
 
     const teamQuestions = {};
     quiz.questions.forEach((question, idx) => {
-      teamQuestions[`team${idx}`] = question;
+      teamQuestions[`team${idx}`] = {
+        ...question,
+        /*
+         * question's default props:
+        answer: PropTypes.string,
+        image: PropTypes.string,
+        instructions: PropTypes.arrayOf(PropTypes.string),
+        question: PropTypes.string,
+        uid: PropTypes.string,
+        */
+        tricks: [],
+        choices: [],
+        correctChoice: null,
+      };
     });
 
     const gameState = {
