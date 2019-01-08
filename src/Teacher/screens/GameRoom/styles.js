@@ -17,12 +17,9 @@ export default StyleSheet.create({
     flex: 0.5,
     marginVertical: 10,
   },
-  teamContainer: {
-    justifyContent: 'flex-start',
-    paddingVertical: 25,
-  },
   teamsContainer: {
     flexDirection: 'row',
+    justifyContent: 'flex-start',
     marginTop: 20,
   },
   textLabel: {
