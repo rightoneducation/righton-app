@@ -12,7 +12,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import { colors, fonts } from '../../../utils/theme';
 
 
-class Maker extends React.PureComponent {
+class QuizMaker extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       navigation: PropTypes.shape({
@@ -123,4 +123,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default props => <Maker screenProps={{ ...props }} />;
+export default props => <QuizMaker screenProps={{ ...props }} />;

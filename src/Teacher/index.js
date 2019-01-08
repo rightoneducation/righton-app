@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from 'react-navigation';
 import Explore from './screens/Explore';
 import Launch from './screens/Launch';
 import Games from './screens/Games';
-import Maker from './screens/Maker';
+import QuizMaker from './screens/QuizMaker';
 import Reports from './screens/Reports';
 import TabBarComponent from '../components/TabBarComponent';
 import { colors } from '../utils/theme';
@@ -60,12 +60,12 @@ const TeacherTabNavigator = createBottomTabNavigator({
   },
 
 
-  Maker: {
+  QuizMaker: {
     screen: (props) => {
       const { screenProps } = props;
 
       return (
-        <Maker {...screenProps} />
+        <QuizMaker {...screenProps} />
       );
     },
     navigationOptions: {
