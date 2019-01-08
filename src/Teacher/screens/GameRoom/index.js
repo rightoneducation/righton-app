@@ -163,7 +163,7 @@ export default class GameRoom extends React.Component {
             key.includes('team') &&
               <Touchable
                 activeOpacity={0.8}
-                key={`${Math.random()}`} // TODO Make sure uid exists in team object and use that instead.
+                key={gameState[key].uid}
                 onPress={() => {}}
               >
                 <View style={styles.gameContainer}>
