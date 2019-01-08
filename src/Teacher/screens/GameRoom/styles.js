@@ -10,7 +10,11 @@ export default StyleSheet.create({
   },
   gameContainer: {
     alignItems: 'flex-start',
-    marginVertical: 10,
+    borderColor: colors.white,
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    margin: 15,
   },
   playersContainer: {
     alignItems: 'center',
