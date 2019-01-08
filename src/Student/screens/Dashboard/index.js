@@ -96,8 +96,8 @@ export default class Dashboard extends React.Component {
 
 
   componentWillUnmount() {
-    Keyboard.removeListener('keyboardDidHide');
-    Keyboard.removeListener('keyboardDidShow');
+    Keyboard.removeListener('keyboardDidHide', this.handleKeyboardHide);
+    Keyboard.removeListener('keyboardDidShow', this.handleKeyboardShow);
   }
 
 
