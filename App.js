@@ -24,7 +24,7 @@ YellowBox.ignoreWarnings([]);
 YellowBox.ignoreWarnings(
   [
     'Module RNFetchBlob requires main queue setup',
-    // 'You should only render one navigator explicitly in your app,',
+    'Require cycle:',
   ]
 );
 
