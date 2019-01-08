@@ -157,6 +157,7 @@ export default class GameRoom extends React.Component {
         contentContainerStyle={styles.dashboardContainer}
       >
         {gameKeys.map((key) => {
+          if (!key.includes('team')) return null;
           const teamNumber = parseInt(key.substr(4), 10);
           return (
             key.includes('team') &&
@@ -170,6 +171,10 @@ export default class GameRoom extends React.Component {
                   <Text style={styles.textLabel}>{ `${teams[teamNumber]} players` }</Text>
                   <Text style={styles.textLabel}>Question:</Text>
                   <Text style={styles.textLabel}>{ gameState[key].question }</Text>
+                  <Text style={styles.textLabel}>Tricks:</Text>
+                  <Text style={styles.textLabel}>a. { gameState[key].tricks[0] }</Text>
+                  <Text style={styles.textLabel}>b. { gameState[key].tricks[1] }</Text>
+                  <Text style={styles.textLabel}>c. { gameState[key].tricks[2] }</Text>
                 </View>
               </Touchable>
           );
