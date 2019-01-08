@@ -168,13 +168,13 @@ class Launch extends React.Component {
     });
 
     const gameState = {
-      GameRoomID: room,
+      answering: null,
       banner: quiz.banner,
       title: quiz.description,
       description: quiz.description,
       ...teamQuestions,
-      start: false,
-      answering: null,
+      GameRoomID: room,
+      state: {},
     };
     
     this.props.screenProps.handleSetAppState('gameState', gameState);
