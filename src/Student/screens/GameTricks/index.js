@@ -19,6 +19,7 @@ export default class GamePreview extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({ type: PropTypes.any }),
+      IOTPublishMessage: PropTypes.func.isRequired,
       team: PropTypes.number.isRequired,
     }),
   }
@@ -32,6 +33,7 @@ export default class GamePreview extends React.PureComponent {
           team: __DEV__ ? 'Scool' : '',
         },
       },
+      IOTPublishMessage: () => {},
       team: 0,
     },
   }
@@ -42,21 +44,25 @@ export default class GamePreview extends React.PureComponent {
     this.webViewRef = undefined;
 
     this.state = {
-      currentTrick: 1,
+      currentTrick: 0,
       js: '',
+      trick0: '',
       trick1: '',
       trick2: '',
-      trick3: '',
     };
+
+    this.trick0Ref = '';
+    this.trick1Ref = '';
+    this.trick2Ref = '';
 
     this.handleRenderDemo = this.handleRenderDemo.bind(this);
 
     this.handleTrickInput = this.handleTrickInput.bind(this);
     this.handleTrickSubmit = this.handleTrickSubmit.bind(this);
 
+    this.handleTrick0 = this.handleTrick0.bind(this);
     this.handleTrick1 = this.handleTrick1.bind(this);
     this.handleTrick2 = this.handleTrick2.bind(this);
-    this.handleTrick3 = this.handleTrick3.bind(this);
   }
 
 
@@ -67,6 +73,49 @@ export default class GamePreview extends React.PureComponent {
     //   this.setState({ js: 'doDemo("f(x)")' });
     //   setTimeout(() => this.webViewRef.reload(), 1000);
     // }, 5000);
+    this.hydrateTricksState();
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    const { team } = this.props.screenProps;
+    const teamRef = `team${team}`;
+    if (this.props.screenProps.gameState[teamRef].tricks[0] !== 
+      nextProps.screenProps.gameState[teamRef].tricks[0]) {
+      this.setState({
+        trick0: nextProps.screenProps.gameState[teamRef].tricks[0]
+      });
+      this.trick0Ref = nextProps.screenProps.gameState[teamRef].tricks[0];
+    }
+    if (this.props.screenProps.gameState[teamRef].tricks[1] !== 
+      nextProps.screenProps.gameState[teamRef].tricks[1]) {
+      this.setState({
+        trick1: nextProps.screenProps.gameState[teamRef].tricks[1]
+      });
+      this.trick1Ref = nextProps.screenProps.gameState[teamRef].tricks[1];
+    }
+    if (this.props.screenProps.gameState[teamRef].tricks[2] !== 
+      nextProps.screenProps.gameState[teamRef].tricks[2]) {
+      this.setState({
+        trick2: nextProps.screenProps.gameState[teamRef].tricks[2]
+      });
+      this.trick2Ref = nextProps.screenProps.gameState[teamRef].tricks[2];
+    }
+  }
+
+
+  hydrateTricksState() {
+    const { gameState, team } = this.props.screenProps;
+    const teamRef = `team${team}`;
+    if (gameState[teamRef].tricks[0]) {
+      this.setState({ trick0: gameState[teamRef].tricks[0] });
+    }
+    if (gameState[teamRef].tricks[1]) {
+      this.setState({ trick1: gameState[teamRef].tricks[1] });
+    }
+    if (gameState[teamRef].tricks[2]) {
+      this.setState({ trick2: gameState[teamRef].tricks[2] });
+    }
   }
 
 
@@ -88,14 +137,14 @@ export default class GamePreview extends React.PureComponent {
   handleTrickInput(val) {
     const { currentTrick } = this.state;
     switch (currentTrick) {
+      case 0:
+        this.setState({ trick0: val });
+        break;
       case 1:
         this.setState({ trick1: val });
         break;
       case 2:
         this.setState({ trick2: val });
-        break;
-      case 3:
-        this.setState({ trick3: val });
         break;
       default:
     }
@@ -104,19 +153,46 @@ export default class GamePreview extends React.PureComponent {
 
   handleTrickSubmit() {
     const { currentTrick } = this.state;
+    const { IOTPublishMessage, team } = this.props.screenProps;
+    const message = {
+      action: 'UPDATE_TEAM_TRICK',
+      index: currentTrick,
+      team,
+      uid: `${Math.random()}`,
+    };
     switch (currentTrick) {
+      case 0:
+        this.setState({ currentTrick: 1 });
+        if (this.trick0Ref !== this.state.trick0) {
+          message.payload = this.state.trick0;
+          this.trick0Ref = this.state.trick0;
+        }
+        break;
       case 1:
         this.setState({ currentTrick: 2 });
+        if (this.trick1Ref !== this.state.trick1) {
+          message.payload = this.state.trick1;
+          this.trick1Ref = this.state.trick1;
+        }
         break;
       case 2:
-        this.setState({ currentTrick: 3 });
-        break;
-      case 3:
         Keyboard.dismiss();
+        if (this.trick2Ref !== this.state.trick2) {
+          message.payload = this.state.trick2;
+          this.trick2Ref = this.state.trick2;
+        }
         // TODO: Review and submit!
         break;
       default:
     }
+    if (message.payload) {
+      IOTPublishMessage(message);
+    }
+  }
+
+
+  handleTrick0() {
+    this.setState({ currentTrick: 0 });
   }
 
 
@@ -130,11 +206,6 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  handleTrick3() {
-    this.setState({ currentTrick: 3 });
-  }
-
-
   renderQuestion() {
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
@@ -142,7 +213,7 @@ export default class GamePreview extends React.PureComponent {
     return (
       <View style={styles.questionContainer}>
         <Text style={styles.question}>{ gameState[teamRef].question }</Text>
-        {gameState[teamRef].image &&
+        {Boolean(gameState[teamRef].image) &&
           <Image source={{ uri: gameState[teamRef].image }} style={styles.image} />} 
       </View>
     );
@@ -150,21 +221,21 @@ export default class GamePreview extends React.PureComponent {
 
 
   renderTricksButtons() {
-    const { currentTrick, trick1, trick2, trick3 } = this.state;
+    const { currentTrick, trick0, trick1, trick2 } = this.state;
     let icon1;
     let icon2;
     let icon3;
-    if (trick1 && currentTrick !== 1) {
+    if (trick0 && currentTrick !== 0) {
       icon1 = colors.primary;
     } else {
       icon1 = colors.white;
     }
-    if (trick2 && currentTrick !== 2) {
+    if (trick1 && currentTrick !== 1) {
       icon2 = colors.primary;
     } else {
       icon2 = colors.white;
     }
-    if (trick3 && currentTrick !== 3) {
+    if (trick2 && currentTrick !== 2) {
       icon3 = colors.primary;
     } else {
       icon3 = colors.white;
@@ -174,14 +245,28 @@ export default class GamePreview extends React.PureComponent {
         <ButtonRound
           animated={false}
           buttonStyles={{
+            backgroundColor: currentTrick !== 0 ? colors.white : colors.primary,
+            marginHorizontal: 10,
+            position: 'relative',
+          }}
+          icon={trick0 && 'check'}
+          iconLabel={!trick0 ? 'A' : ''}
+          iconStyles={{
+            color: icon1,
+          }}
+          onPress={this.handleTrick0}
+        />
+        <ButtonRound
+          animated={false}
+          buttonStyles={{
             backgroundColor: currentTrick !== 1 ? colors.white : colors.primary,
             marginHorizontal: 10,
             position: 'relative',
           }}
           icon={trick1 && 'check'}
-          iconLabel={!trick1 ? 'A' : ''}
+          iconLabel={!trick1 ? 'B' : ''}
           iconStyles={{
-            color: icon1,
+            color: icon2,
           }}
           onPress={this.handleTrick1}
         />
@@ -193,25 +278,11 @@ export default class GamePreview extends React.PureComponent {
             position: 'relative',
           }}
           icon={trick2 && 'check'}
-          iconLabel={!trick2 ? 'B' : ''}
-          iconStyles={{
-            color: icon2,
-          }}
-          onPress={this.handleTrick2}
-        />
-        <ButtonRound
-          animated={false}
-          buttonStyles={{
-            backgroundColor: currentTrick !== 3 ? colors.white : colors.primary,
-            marginHorizontal: 10,
-            position: 'relative',
-          }}
-          icon={trick3 && 'check'}
-          iconLabel={!trick3 ? 'C' : ''}
+          iconLabel={!trick2 ? 'C' : ''}
           iconStyles={{
             color: icon3,
           }}
-          onPress={this.handleTrick3}
+          onPress={this.handleTrick2}
         />
       </View>
     );
@@ -221,15 +292,15 @@ export default class GamePreview extends React.PureComponent {
   render() {
     const { 
       currentTrick,
+      trick0,
       trick1,
       trick2,
-      trick3,
     } = this.state;
 
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
 
-    const showDoneButton = Boolean(trick1) && Boolean(trick2) && Boolean(trick3);
+    const showDoneButton = Boolean(trick0) && Boolean(trick1) && Boolean(trick2);
 
     return (
       <View style={styles.container}>
