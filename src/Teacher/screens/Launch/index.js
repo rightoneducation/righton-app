@@ -160,6 +160,7 @@ class Launch extends React.Component {
         question: PropTypes.string,
         uid: PropTypes.string,
         */
+        uid: `${Math.random()}`,
         tricks: [],
         choices: [],
         correctChoice: null,
