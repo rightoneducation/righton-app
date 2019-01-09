@@ -164,7 +164,6 @@ class Launch extends React.Component {
         uid: `${Math.random()}`,
         tricks: [],
         choices: [],
-        correctChoice: null,
       };
     });
 
