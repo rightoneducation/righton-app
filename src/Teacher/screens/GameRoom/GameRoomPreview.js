@@ -32,24 +32,26 @@ export default function GameRoomPreview({
         {Boolean(gameState[teamRef].image) &&
           <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
       </View>
-      <View style={gamePreviewStyles.choicesContainer}>
-        {gameState[teamRef].choices.map(choice => (
-          <Touchable
-            activeOpacity={0.8}
-            key={choice.value}
-            onPress={() => {}}
-          >
-            <View style={gamePreviewStyles.choiceContainer}>
-              <View style={gamePreviewStyles.choiceDot} />
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choice.value }</Text>
-            </View>
-          </Touchable>
-        ))}
+      <View style={gamePreviewStyles.choiceContainerWrapper}>
+        <View style={gamePreviewStyles.choicesContainer}>
+          {gameState[teamRef].choices.map(choice => (
+            <Touchable
+              activeOpacity={0.8}
+              key={choice.value}
+              onPress={() => {}}
+            >
+              <View style={gamePreviewStyles.choiceContainer}>
+                <View style={gamePreviewStyles.choiceDot} />
+                <Text style={gamePreviewStyles.choiceAnswer}>{ choice.value }</Text>
+              </View>
+            </Touchable>
+          ))}
+        </View>
       </View>
       {startedQuiz ?
         <ButtonWide
           label={'View results'}
-          onPress={() => handleViewResults()}
+          onPress={() => handleViewResults(teamRef)}
         />
         :
         <ButtonWide
