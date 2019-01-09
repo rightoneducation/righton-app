@@ -9,7 +9,7 @@ import Touchable from 'react-native-platform-touchable';
 import styles from './styles';
 
 export default function GameRoomOverview({ gameState, handleGamePreview, teams }) {
-  const gameKeys = Object.keys(gameState);
+  const gameKeys = typeof gameState === 'object' ? Object.keys(gameState) : [];
   return (
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
@@ -19,17 +19,17 @@ export default function GameRoomOverview({ gameState, handleGamePreview, teams }
       </Text>
       {gameKeys.map((key) => {
         if (!key.includes('team')) return null;
-        const teamRef = parseInt(key.substr(4), 10);
+        const teamIdx = parseInt(key.substr(4), 10);
         return (
           key.includes('team') &&
             <Touchable
               activeOpacity={0.8}
               key={gameState[key].uid}
-              onPress={() => handleGamePreview(`team${teamRef}`)}
+              onPress={() => handleGamePreview(`team${teamIdx}`)}
             >
               <View style={styles.gameContainer}>
-                <Text style={styles.textLabel}>{ `Team ${teamRef + 1}` }</Text>
-                <Text style={styles.textLabel}>{ `${teams[teamRef]} players` }</Text>
+                <Text style={styles.textLabel}>{ `Team ${teamIdx + 1}` }</Text>
+                <Text style={styles.textLabel}>{ `${teams[teamIdx]} players` }</Text>
                 <Text style={styles.textLabel}>Question:</Text>
                 <Text style={styles.textLabel}>{ gameState[key].question }</Text>
                 <Text style={styles.textLabel}>Tricks:</Text>
