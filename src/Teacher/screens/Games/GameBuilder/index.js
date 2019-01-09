@@ -31,6 +31,7 @@ export default class GameBuilder extends React.Component {
         image: PropTypes.string,
         instructions: PropTypes.arrayOf(PropTypes.string),
         question: PropTypes.string,
+        time: PropTypes.string,
         uid: PropTypes.string,
       })),
       title: PropTypes.string,
