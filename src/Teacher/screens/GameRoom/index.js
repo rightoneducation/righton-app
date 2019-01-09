@@ -120,22 +120,24 @@ export default class GameRoom extends React.Component {
       // Map the correct answer to the index in the random ordered array.
       const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
       const updatedGameState = { ...gameState };
-      const choices = [];
       const choicesLimit = gameState[teamRef].tricks.length + 1;
+      const choices = [];
+      choices[choicesLimit - 1] = null;
+      choices.fill(null, 0, choicesLimit - 1);
       const correctIndex = Math.floor(Math.random() * choicesLimit);
       choices[correctIndex] = { correct: true, value: gameState[teamRef].answer, votes: 0 };
 
       let trickAnswerIndex = 0;
-      while (choices.length < choicesLimit && trickAnswerIndex < choicesLimit - 1) {
+      while (choices.indexOf(null) > -1 && trickAnswerIndex < choicesLimit - 1) {
         const randomIndex = Math.floor(Math.random() * choicesLimit);
         if (!choices[randomIndex]) {
           choices[randomIndex] = { value: gameState[teamRef].tricks[trickAnswerIndex], votes: 0 };
           trickAnswerIndex += 1;
         }
-        if (choices.length === choicesLimit - 1) {
+        if (choices.indexOf(null) === choices.lastIndexOf(null)) {
           // Last spot left - plug in the remaining trick value.
           for (let i = 0; i < choicesLimit; i += 1) {
-            if (choices[i] === undefined) {
+            if (choices[i] === null) {
               choices[i] = { value: gameState[teamRef].tricks[trickAnswerIndex], votes: 0 };
               trickAnswerIndex += 1;
             }
