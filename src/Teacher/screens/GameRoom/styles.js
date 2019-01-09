@@ -32,7 +32,10 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
   },
-  textNumber: {
+  textCenter: {
+    textAlign: 'center',
+  },
+  textLarge: {
     fontSize: fonts.large,
   },
 });

@@ -1,28 +1,29 @@
 import React from 'react';
-import {
-  // Image,
-  ScrollView,
-  // StatusBar,
-  Text,
-  View,
-} from 'react-native';
+// import {
+//   // Image,
+//   ScrollView,
+//   // StatusBar,
+//   Text,
+//   View,
+// } from 'react-native';
 import PropTypes from 'prop-types';
 // import Swiper from 'react-native-swiper';
-import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';
 // import ButtonBack from '../../../components/ButtonBack';
-import ButtonWide from '../../../components/ButtonWide';
+import GameRoomStart from './GameRoomStart';
+import GameRoomOverview from './GameRoomOverview';
+import GameRoomPreview from './GameRoomPreview';
 // import LocalStorage from '../../../../lib/Categories/LocalStorage';
 // import { colors, deviceWidth, fonts } from '../../../utils/theme';
-import styles from './styles';
-// import debug from '../../../utils/debug';
+// import styles from './styles';
+import debug from '../../../utils/debug';
 
 
 export default class GameRoom extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({}),
-      // handleSetAppState: PropTypes.func.isRequired,
+      handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
       navigation: PropTypes.shape({
         navigate: PropTypes.func.isRequired,
@@ -37,7 +38,7 @@ export default class GameRoom extends React.Component {
   static defaultProps = {
     screenProps: {
       gameState: {},
-      // handleSetAppState: () => {},
+      handleSetAppState: () => {},
       IOTPublishMessage: () => {},
       navigation: {
         navigate: () => {},
@@ -53,13 +54,17 @@ export default class GameRoom extends React.Component {
     super(props);
     this.state = {
       portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
+      preview: null,
       renderType: 'portal',
       teams: [],
     };
 
     this.mounted = true;
 
+    this.handleBackFromPreview = this.handleBackFromPreview.bind(this);
+    this.handleGamePreview = this.handleGamePreview.bind(this);
     this.handleStartGame = this.handleStartGame.bind(this);
+    this.handleStartQuiz = this.handleStartQuiz.bind(this);    
   }
 
 
@@ -101,101 +106,126 @@ export default class GameRoom extends React.Component {
     setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
     setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
     setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
-    setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'game' }), 5500);
+    setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'overview' }), 5500);
   }
 
 
-  renderPortal() {
-    const { portal } = this.state;
-    return (
-      <Portal
-        messageType={'single'}
-        messageValues={{
-          message: portal,
-        }}
-      />
-    );
-  }
-
-
-  renderStartScreen() {
-    const { gameState, players } = this.props.screenProps;
-    const { teams } = this.state;
-
-    return (
-      <ScrollView
-        contentContainerStyle={styles.dashboardContainer}
-      >
-        <View style={styles.playersContainer}>
-          <Text style={[styles.textLabel, styles.textNumber]}>{ Object.keys(players).length }</Text>
-          <Text style={styles.textLabel}>Players</Text>
-        </View>
-        <View style={styles.teamsContainer}>
-          {teams.map((val, idx) => (
-            <View key={`${Math.random()}`} style={styles.playersContainer}>
-              <Text style={[styles.textLabel, styles.textNumber]}>{ val }</Text>
-              <Text style={styles.textLabel}>{ `Team ${idx + 1}` }</Text>
-            </View>
-          ))}
-        </View>
-        {!gameState.start &&
-          <ButtonWide
-            label={'Start Game'}
-            onPress={this.handleStartGame}
-          />}
-      </ScrollView>
-    );
-  }
-
-
-  renderGameScreen() {
+  // Update all gameStates with a randomized order of choices for quizzing.
+  handleGamePreview(teamRef) {
     const { gameState } = this.props.screenProps;
-    const { teams } = this.state;
-    const gameKeys = Object.keys(gameState);
-    return (
-      <ScrollView
-        contentContainerStyle={styles.dashboardContainer}
-      >
-        {gameKeys.map((key) => {
-          if (!key.includes('team')) return null;
-          const teamNumber = parseInt(key.substr(4), 10);
-          return (
-            key.includes('team') &&
-              <Touchable
-                activeOpacity={0.8}
-                key={gameState[key].uid}
-                onPress={() => {}}
-              >
-                <View style={styles.gameContainer}>
-                  <Text style={styles.textLabel}>{ `Team ${teamNumber + 1}` }</Text>
-                  <Text style={styles.textLabel}>{ `${teams[teamNumber]} players` }</Text>
-                  <Text style={styles.textLabel}>Question:</Text>
-                  <Text style={styles.textLabel}>{ gameState[key].question }</Text>
-                  <Text style={styles.textLabel}>Tricks:</Text>
-                  <Text style={styles.textLabel}>a. { gameState[key].tricks[0] }</Text>
-                  <Text style={styles.textLabel}>b. { gameState[key].tricks[1] }</Text>
-                  <Text style={styles.textLabel}>c. { gameState[key].tricks[2] }</Text>
-                </View>
-              </Touchable>
-          );
-        })}
-      </ScrollView>
-    );
+    if (gameState[teamRef].choices.length === 0) {
+      // Create a random order of choices mixed with the correct answer.
+      // Map the correct answer to the index in the random ordered array.
+      const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
+      const updatedGameState = { ...gameState };
+      const choices = [];
+      const choicesLimit = gameState[teamRef].tricks.length + 1;
+      const correctIndex = Math.floor(Math.random() * choicesLimit);
+      choices[correctIndex] = { correct: true, value: gameState[teamRef].answer, votes: 0 };
+
+      let trickAnswerIndex = 0;
+      while (choices.length < choicesLimit && trickAnswerIndex < choicesLimit - 1) {
+        const randomIndex = Math.floor(Math.random() * choicesLimit);
+        if (!choices[randomIndex]) {
+          choices[randomIndex] = { value: gameState[teamRef].tricks[trickAnswerIndex], votes: 0 };
+          trickAnswerIndex += 1;
+        }
+        if (choices.length === choicesLimit - 1) {
+          // Last spot left - plug in the remaining trick value.
+          for (let i = 0; i < choicesLimit; i += 1) {
+            if (choices[i] === undefined) {
+              choices[i] = { value: gameState[teamRef].tricks[trickAnswerIndex], votes: 0 };
+              trickAnswerIndex += 1;
+            }
+          }
+        }
+      }
+
+      debug.log(`Choices for ${teamRef}:`, choices);
+
+      updatedGameState[teamRef].choices = choices;
+      handleSetAppState('gameState', updatedGameState);
+      
+      const message = {
+        action: 'UPDATE_TEAM_CHOICES',
+        teamRef,
+        uid: `${Math.random()}`,
+        payload: choices,
+      };
+      IOTPublishMessage(message);
+    }
+    this.setState({ renderType: 'preview', preview: teamRef });
+  }
+
+
+  handleBackFromPreview() {
+    this.setState({ renderType: 'overview', preview: null });
+  }
+
+
+  handleStartQuiz(teamRef) {
+    const { IOTPublishMessage } = this.props.screenProps;
+    const message = {
+      action: 'START_QUIZ',
+      uid: `${Math.random()}`,
+      payload: {
+        startQuiz: true,
+        teamRef,
+      },
+    };
+    IOTPublishMessage(message);
+
+    const { gameState, handleSetAppState } = this.props.screenProps;
+    const updatedGameState = { ...gameState, state: { startQuiz: teamRef } };
+    handleSetAppState('gameState', updatedGameState);
   }
 
 
   render() {
+    const { gameState, players } = this.props.screenProps;
     const {
       renderType,
+      portal,
+      preview,
+      teams,
     } = this.state;
 
     switch (renderType) {
       case 'portal':
-        return this.renderPortal();
+        return (
+          <Portal
+            messageType={'single'}
+            messageValues={{
+              message: portal,
+            }}
+          />
+        );
       case 'start':
-        return this.renderStartScreen();
-      case 'game':
-        return this.renderGameScreen();
+        return (
+          <GameRoomStart
+            gameState={gameState}
+            handleStartGame={this.handleStartGame}
+            players={players}
+            teams={teams}
+          />
+        );
+      case 'overview':
+        return (
+          <GameRoomOverview
+            gameState={gameState}
+            handleGamePreview={this.handleGamePreview}
+            teams={teams}
+          />
+        );
+      case 'preview':
+        return (
+          <GameRoomPreview
+            gameState={gameState}
+            handleBackFromPreview={this.handleBackFromPreview}
+            handleStartQuiz={this.handleStartQuiz}
+            teamRef={preview}
+          />
+        );
       default:
         return null;
     }
