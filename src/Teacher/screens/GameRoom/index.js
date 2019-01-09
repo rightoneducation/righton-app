@@ -197,7 +197,7 @@ export default class GameRoom extends React.Component {
     };
     IOTPublishMessage(message);
 
-    this.setState({ renderType: 'results' });
+    this.setState({ renderType: 'results', preview: teamRef });
   }
 
 
@@ -254,6 +254,7 @@ export default class GameRoom extends React.Component {
             handleBackFromChild={this.handleBackFromChild}
             handleViewResults={this.handleViewResults}
             handleStartQuiz={this.handleStartQuiz}
+            numberOfPlayers={Object.keys(players).length}
             teamRef={preview}
           />
         );
