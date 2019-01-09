@@ -80,9 +80,8 @@ export default class Dashboard extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screenProps.gameState &&
-    this.props.screenProps.gameState.state.start !== nextProps.screenProps.gameState.state.start &&
-      nextProps.screenProps.gameState.state.start === true) {
+    if (nextProps.screenProps.gameState && nextProps.screenProps.gameState.state &&
+      nextProps.screenProps.gameState.state.start === true && typeof nextProps.screenProps.team === 'number') {
       this.setState({ portal: '5' });
       setTimeout(() => this.setState({ portal: '4' }), 1000);
       setTimeout(() => this.setState({ portal: '3' }), 2000);
@@ -409,7 +408,7 @@ export default class Dashboard extends React.Component {
         >
           {this.renderProfileView()}
 
-          {Object.keys(gameState).length ?
+          {typeof gameState === 'object' && Object.keys(gameState).length ?
             this.renderGameRoomTeamSelection(gameState) :
             this.renderGameRoomEntry(roomEntry)}
 
