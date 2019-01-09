@@ -101,6 +101,11 @@ export default class GamePreview extends React.PureComponent {
       });
       this.trick2Ref = nextProps.screenProps.gameState[teamRef].tricks[2];
     }
+
+    if (this.props.screenProps.gameState.state.startQuiz !==
+      nextProps.screenProps.gameState.state.startQuiz) {
+      this.props.navigation.navigate('GameQuiz');
+    }
   }
 
 
@@ -157,7 +162,7 @@ export default class GamePreview extends React.PureComponent {
     const message = {
       action: 'UPDATE_TEAM_TRICK',
       index: currentTrick,
-      team,
+      teamRef: `team${team}`,
       uid: `${Math.random()}`,
     };
     switch (currentTrick) {
