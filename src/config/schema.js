@@ -11,6 +11,7 @@ const gameState = {
     image: 'string',
     instructions: ['string'],
     question: 'string',
+    time: 'string',
     uid: 'string',
     tricks: ['string'],
   }],
