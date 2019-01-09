@@ -95,6 +95,7 @@ const RootNavigator = createSwitchNavigator({
         <TeacherGameRoom
           screenProps={{
             gameState: screenProps.gameState,
+            handleSetAppState: screenProps.handleSetAppState,
             IOTPublishMessage: screenProps.IOTPublishMessage,
             navigation,
             players: screenProps.players,
