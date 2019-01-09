@@ -171,7 +171,7 @@ export default class Dashboard extends React.Component {
         this.setState({ portal: '' });
         setTimeout(() => {
           const { gameState } = this.props.screenProps;
-          if (Object.keys(gameState).length === 0) {
+          if (typeof gameState === 'object' && Object.keys(gameState).length === 0) {
             debug.log('Problem joining game room');
             this.setState({
               messageProps: {
@@ -299,7 +299,7 @@ export default class Dashboard extends React.Component {
 
 
   renderGameRoomTeamSelection = (gameState) => {
-    const gameKeys = Object.keys(gameState);
+    const gameKeys = typeof gameState === 'object' ? Object.keys(gameState) : [];
     const teamsArr = [];
     let teamSize = 0;
     for (let i = 0; i < gameKeys.length; i += 1) {
