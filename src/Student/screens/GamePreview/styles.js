@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, fonts } from '../../../utils/theme';
+import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
 export default StyleSheet.create({
   arrow: {
@@ -35,12 +35,19 @@ export default StyleSheet.create({
     fontSize: fonts.medium,
   },
   choiceContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     borderColor: colors.darkGray,
+    borderRadius: 5,
     borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     marginVertical: 10,
+    width: deviceWidth - 30,
+  },
+  choiceContainerWrapper: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   choiceDot: {
     borderColor: colors.white,
