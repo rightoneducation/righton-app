@@ -30,6 +30,30 @@ export default StyleSheet.create({
     position: 'absolute',
     width: 70,
   },
+  choiceAnswer: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  choiceContainer: {
+    alignItems: 'flex-start',
+    borderColor: colors.darkGray,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginVertical: 10,
+  },
+  choiceDot: {
+    borderColor: colors.white,
+    borderWidth: 1,
+    height: 10,
+    width: 10,
+    marginHorizontal: 15,
+  },
+  choicesContainer: {
+    alignItems: 'center',
+    flex: 1,
+    marginVertical: 25,
+  },
   container: {
     alignItems: 'center',
     backgroundColor: colors.darkGray,
