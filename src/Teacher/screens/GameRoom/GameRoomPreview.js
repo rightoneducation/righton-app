@@ -13,16 +13,19 @@ import gamePreviewStyles from '../../../Student/screens/GamePreview/styles';
 
 export default function GameRoomPreview({
   gameState,
-  handleBackFromPreview,
+  handleBackFromChild,
   handleStartQuiz,
+  handleViewResults,
   teamRef,
 }) {
+  const startedQuiz = gameState.state.startQuiz;
+
   return (
     <ScrollView
       contentContainerStyle={gamePreviewStyles.container}
     >
       <ButtonBack
-        onPress={handleBackFromPreview}
+        onPress={handleBackFromChild}
       />
       <View style={gamePreviewStyles.questionContainer}>
         <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
@@ -33,7 +36,7 @@ export default function GameRoomPreview({
         {gameState[teamRef].choices.map(choice => (
           <Touchable
             activeOpacity={0.8}
-            key={choice.value} // TODO Replace w/ uid
+            key={choice.value}
             onPress={() => {}}
           >
             <View style={gamePreviewStyles.choiceContainer}>
@@ -43,24 +46,32 @@ export default function GameRoomPreview({
           </Touchable>
         ))}
       </View>
-      <ButtonWide
-        label={'Start quiz'}
-        onPress={() => handleStartQuiz(teamRef)}
-      />
+      {startedQuiz ?
+        <ButtonWide
+          label={'View results'}
+          onPress={() => handleViewResults()}
+        />
+        :
+        <ButtonWide
+          label={'Start quiz'}
+          onPress={() => handleStartQuiz(teamRef)}
+        />}
     </ScrollView>
   );
 }
 
 GameRoomPreview.propTypes = {
   gameState: PropTypes.shape({}),
-  handleBackFromPreview: PropTypes.func.isRequired,
+  handleBackFromChild: PropTypes.func.isRequired,
+  handleViewResults: PropTypes.func.isRequired,
   handleStartQuiz: PropTypes.func.isRequired,
   teamRef: PropTypes.string.isRequired,
 };
 
 GameRoomPreview.defaultProps = {
   gameState: {},
-  handleBackFromPreview: () => {},  
+  handleBackFromChild: () => {},  
+  handleViewResults: () => {},
   handleStartQuiz: () => {},
   teamRef: 'team0',
 };
