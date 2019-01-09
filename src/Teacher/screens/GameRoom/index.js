@@ -13,6 +13,7 @@ import Portal from '../../../screens/Portal';
 import GameRoomStart from './GameRoomStart';
 import GameRoomOverview from './GameRoomOverview';
 import GameRoomPreview from './GameRoomPreview';
+import GameRoomResults from './GameRoomResults';
 // import LocalStorage from '../../../../lib/Categories/LocalStorage';
 // import { colors, deviceWidth, fonts } from '../../../utils/theme';
 // import styles from './styles';
@@ -61,8 +62,9 @@ export default class GameRoom extends React.Component {
 
     this.mounted = true;
 
-    this.handleBackFromPreview = this.handleBackFromPreview.bind(this);
+    this.handleBackFromChild = this.handleBackFromChild.bind(this);
     this.handleGamePreview = this.handleGamePreview.bind(this);
+    this.handleViewResults = this.handleViewResults.bind(this);
     this.handleStartGame = this.handleStartGame.bind(this);
     this.handleStartQuiz = this.handleStartQuiz.bind(this);    
   }
@@ -158,7 +160,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleBackFromPreview() {
+  handleBackFromChild() {
     this.setState({ renderType: 'overview', preview: null });
   }
 
@@ -178,6 +180,22 @@ export default class GameRoom extends React.Component {
     const { gameState, handleSetAppState } = this.props.screenProps;
     const updatedGameState = { ...gameState, state: { startQuiz: teamRef } };
     handleSetAppState('gameState', updatedGameState);
+  }
+
+
+  handleViewResults(teamRef) {
+    const { IOTPublishMessage } = this.props.screenProps;
+    const message = {
+      action: 'END_QUIZ',
+      uid: `${Math.random()}`,
+      payload: {
+        endQuiz: true,
+        teamRef,
+      },
+    };
+    IOTPublishMessage(message);
+
+    this.setState({ renderType: 'results' });
   }
 
 
@@ -221,7 +239,18 @@ export default class GameRoom extends React.Component {
         return (
           <GameRoomPreview
             gameState={gameState}
-            handleBackFromPreview={this.handleBackFromPreview}
+            handleBackFromChild={this.handleBackFromChild}
+            handleViewResults={this.handleViewResults}
+            handleStartQuiz={this.handleStartQuiz}
+            teamRef={preview}
+          />
+        );
+      case 'results':
+        return (
+          <GameRoomResults
+            gameState={gameState}
+            handleBackFromChild={this.handleBackFromChild}
+            handleViewResults={this.handleViewResults}
             handleStartQuiz={this.handleStartQuiz}
             teamRef={preview}
           />
