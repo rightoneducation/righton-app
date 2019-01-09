@@ -117,13 +117,15 @@ export default class GameQuiz extends React.Component {
     const { teamRef } = gameState.state;
 
     const { selectedChoice, timeLeft } = this.state;
-
+    
     return (
       <ScrollView
         contentContainerStyle={gamePreviewStyles.container}
       >
         {Boolean(timeLeft) &&
-          <View><Text>{ timeLeft }</Text></View>}
+          <View style={gamePreviewStyles.timeContainer}>
+            <Text style={gamePreviewStyles.time}>{ timeLeft }</Text>
+          </View>}
         <View style={gamePreviewStyles.questionContainer}>
           <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
           {Boolean(gameState[teamRef].image) &&
