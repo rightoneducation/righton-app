@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { colors, fonts } from '../../../utils/theme';
 
 export default StyleSheet.create({
   arrow: {
@@ -36,13 +36,9 @@ export default StyleSheet.create({
   },
   choiceContainer: {
     alignItems: 'center',
-    borderColor: colors.darkGray,
-    borderRadius: 5,
-    borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     marginVertical: 10,
-    width: deviceWidth - 30,
   },
   choiceContainerWrapper: {
     alignItems: 'center',
@@ -57,7 +53,7 @@ export default StyleSheet.create({
     marginHorizontal: 15,
   },
   choicesContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flex: 1,
     marginVertical: 25,
   },
@@ -76,5 +72,14 @@ export default StyleSheet.create({
   questionContainer: {
     alignItems: 'center',
     marginTop: 50,
+  },
+  time: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  timeContainer: {
+    position: 'absolute',
+    right: 5,
+    top: 25,
   },
 });
