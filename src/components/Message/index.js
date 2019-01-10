@@ -18,7 +18,25 @@ export default class Message extends React.Component {
 
 
   componentDidMount() {
-    const { duration, timeout } = this.props;
+    if (this.props.message) {
+      this.handleAnimation(this.props.duration, this.props.timeout);
+    }
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.message !== nextProps.message) {
+      this.handleAnimation(nextProps.duration, nextProps.timeout);
+    }
+  }
+
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+
+  handleAnimation(duration, timeout) {
     Animated.timing(
       this.opacity, {
         duration: duration || 1500,
@@ -29,11 +47,6 @@ export default class Message extends React.Component {
     this.timeout = setTimeout(() => {
       this.handleTouchClose();
     }, timeout || 5500);
-  }
-
-
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
   }
 
 
