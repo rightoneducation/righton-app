@@ -3,7 +3,7 @@ import Buffer from 'buffer';
 global.Buffer = global.Buffer || Buffer.Buffer; // Required for aws sigv4 signing
 
 import React from 'react';
-import { YellowBox } from 'react-native';
+import { AppState, YellowBox } from 'react-native';
 import PropTypes from 'prop-types';
 
 import Amplify, { Auth } from 'aws-amplify';
@@ -51,6 +51,7 @@ export default class App extends React.Component {
     this.messagesReceived = {};
 
     this.state = {
+      appState: AppState.currentState,
       gameState: {},
       players: {},
       ready: false,
@@ -64,11 +65,13 @@ export default class App extends React.Component {
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
     this.handleSetAppState = this.handleSetAppState.bind(this);
     this.handleSetRole = this.handleSetRole.bind(this);
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
 
     this.IOTSubscribeToTopic = this.IOTSubscribeToTopic.bind(this);
     // this.IOTUnsubscribeFromTopic = this.IOTUnsubscribeFromTopic.bind(this);
     this.IOTPublishMessage = this.IOTPublishMessage.bind(this);
   }
+
 
   async componentDidMount() {
     await LocalStorage.init();
@@ -82,7 +85,16 @@ export default class App extends React.Component {
     this.setSession(session, () => {
       attachIotPolicy();
     });
+
+    AppState.addEventListener('change', this.handleAppStateChange);
   }
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.appState !== nextState.appState) return false;
+    return true;
+  }
+
 
   componentWillUnmount() {
     // TODO Unsubscribe from topic manually when game ends or user leaves game w/o exiting app.
@@ -98,7 +110,10 @@ export default class App extends React.Component {
         );
       }
     }
+
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
+
 
   setSession(session) {
     this.setState({
@@ -107,20 +122,37 @@ export default class App extends React.Component {
     });
   }
 
+
+  handleAppStateChange(nextAppState) {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      debug.log('App has come to the foreground!');
+      const { gameState } = this.state;
+      if (typeof gameState === 'object' && gameState.GameRoomID) {
+        debug.log('Resubscribing to GameRoom:', gameState.GameRoomID);
+        this.IOTSubscribeToTopic(gameState.GameRoomID);
+      }
+    }
+    this.setState({ appState: nextAppState });
+  }
+
+
   handleOnSignIn(session) {
     this.setState({ session });
   }
 
   // handleOnSignUp = () => { }
 
+
   handleOnSignOut() {
     Auth.signOut();
     this.setState({ session: null });
   }
 
+
   handleSetRole(role) {
     this.setState({ role });
   }
+
 
   handleSetAppState(property, value) {
     switch (property) {
@@ -138,6 +170,7 @@ export default class App extends React.Component {
     }
   }
 
+
   IOTSubscribeToTopic(topic) {
     const { role } = this.state;
     IOTSubscribeToTopic(topic, role === 'Teacher' ? teacherMessageHandler : studentMessageHandler, this);
@@ -152,10 +185,12 @@ export default class App extends React.Component {
     debug.log('Subscribed to GameRoom:', topic);
   }
 
+
   IOTUnsubscribeFromTopic() {
     const { GameRoomID } = this.state.gameState;
     unsubscribeFromTopic(GameRoomID);
   }
+
 
   IOTPublishMessage(message) {
     const { GameRoomID } = this.state.gameState;
