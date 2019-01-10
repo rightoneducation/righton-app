@@ -20,6 +20,7 @@ export default class GameTricks extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({ type: PropTypes.any }),
+      handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
       team: PropTypes.number.isRequired,
     }),
@@ -34,6 +35,7 @@ export default class GameTricks extends React.PureComponent {
           team: __DEV__ ? 'Scool' : '',
         },
       },
+      handleSetAppState: () => {},
       IOTPublishMessage: () => {},
       team: 0,
     },
@@ -107,8 +109,12 @@ export default class GameTricks extends React.PureComponent {
     }
 
     if (this.props.screenProps.gameState.state.startQuiz !==
-      nextProps.screenProps.gameState.state.startQuiz) {
-      this.props.navigation.navigate('GameQuiz');
+    nextProps.screenProps.gameState.state.startQuiz) {
+      if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
+        this.props.navigation.navigate('GameReasons');
+      } else {
+        this.props.navigation.navigate('GameQuiz');
+      }
     }
   }
 
@@ -162,11 +168,12 @@ export default class GameTricks extends React.PureComponent {
 
   handleTrickSubmit() {
     const { currentTrick } = this.state;
-    const { IOTPublishMessage, team } = this.props.screenProps;
+    const { handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
+    const teamRef = `team${team}`;
     const message = {
       action: 'UPDATE_TEAM_TRICK',
       index: currentTrick,
-      teamRef: `team${team}`,
+      teamRef,
       uid: `${Math.random()}`,
     };
     switch (currentTrick) {
@@ -248,6 +255,10 @@ export default class GameTricks extends React.PureComponent {
     }
     if (message.payload) {
       IOTPublishMessage(message);
+      const { gameState } = this.props.screenProps;
+      const updatedGameState = { ...gameState };
+      updatedGameState[teamRef].tricks[currentTrick] = this.state[`trick${currentTrick}`];
+      handleSetAppState('gameState', updatedGameState);
     }
   }
 
