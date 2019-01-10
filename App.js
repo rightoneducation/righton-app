@@ -49,6 +49,7 @@ export default class App extends React.Component {
     super(props);
 
     this.messagesReceived = {};
+    this.requestAttempts = 0;
 
     this.state = {
       appState: AppState.currentState,
@@ -68,7 +69,7 @@ export default class App extends React.Component {
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
 
     this.IOTSubscribeToTopic = this.IOTSubscribeToTopic.bind(this);
-    // this.IOTUnsubscribeFromTopic = this.IOTUnsubscribeFromTopic.bind(this);
+    this.IOTUnsubscribeFromTopic = this.IOTUnsubscribeFromTopic.bind(this);
     this.IOTPublishMessage = this.IOTPublishMessage.bind(this);
   }
 
@@ -186,9 +187,13 @@ export default class App extends React.Component {
   }
 
 
-  IOTUnsubscribeFromTopic() {
-    const { GameRoomID } = this.state.gameState;
-    unsubscribeFromTopic(GameRoomID);
+  IOTUnsubscribeFromTopic(gameroom) {
+    if (gameroom) {
+      unsubscribeFromTopic(gameroom);
+    } else {
+      const { GameRoomID } = this.state.gameState;
+      unsubscribeFromTopic(GameRoomID);
+    }
   }
 
 
@@ -230,6 +235,7 @@ export default class App extends React.Component {
           auth: Auth,
           IOTPublishMessage: this.IOTPublishMessage,
           IOTSubscribeToTopic: this.IOTSubscribeToTopic,
+          IOTUnsubscribeFromTopic: this.IOTUnsubscribeFromTopic,
         }}
       />
     );
