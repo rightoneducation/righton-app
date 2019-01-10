@@ -63,7 +63,8 @@ export default class GameReasons extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.screenProps.gameState.state.startQuiz !==
-      nextProps.screenProps.gameState.state.startQuiz) {
+      nextProps.screenProps.gameState.state.startQuiz &&
+      this.props.screenProps.gameState.state.endQuiz !== true) {
       this.props.navigation.navigate('GameQuiz');
     }
   }
@@ -212,7 +213,9 @@ export default class GameReasons extends React.PureComponent {
     const teamRef = `team${team}`;
 
     return (
-      <ScrollView style={[gamePreviewStyles.container, styles.container]}>
+      <ScrollView 
+        contentContainerStyle={[gamePreviewStyles.container, styles.container]}
+      >
         {showInput &&
           <InputModal {...showInput} />}
         <HeaderTeam team={gameState[teamRef].team} />
