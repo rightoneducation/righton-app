@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from 'react-navigation';
 import LogIn from '../../components/LogIn';
 import SignUp from '../../components/SignUp';
 import TabBarComponent from '../../../components/TabBarComponent';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { colors } from '../../../utils/theme';
 
 const TeacherFirst = createBottomTabNavigator({
@@ -56,7 +57,7 @@ const TeacherFirst = createBottomTabNavigator({
     activeTintColor: colors.white,
     inactiveTintColor: colors.dark,
     labelStyle: {
-      fontSize: 10,
+      fontSize: moderateScale(10, 0.2),
       margin: 0,
       padding: 0,
     },
@@ -70,6 +71,7 @@ const TeacherFirst = createBottomTabNavigator({
     showIcon: true,
     showLabel: Platform.OS !== 'ios',
     style: {
+      height: verticalScale(55),
       justifyContent: 'center',
     },
   },

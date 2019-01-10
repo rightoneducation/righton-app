@@ -10,6 +10,7 @@ import QuizMaker from './screens/QuizMaker';
 import Reports from './screens/Reports';
 import TabBarComponent from '../components/TabBarComponent';
 import { colors } from '../utils/theme';
+import { verticalScale } from 'react-native-size-matters';
 
 
 const TeacherTabNavigator = createBottomTabNavigator({
@@ -112,6 +113,7 @@ const TeacherTabNavigator = createBottomTabNavigator({
     showLabel: Platform.OS !== 'ios',
     style: {
       justifyContent: 'center',
+      height: verticalScale(55),
     },
     swipeEnabled: false,
   },
