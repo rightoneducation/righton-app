@@ -182,14 +182,16 @@ export default class GamePreview extends React.PureComponent {
           this.setState({
             messageProps: {
               message: 'Trick answer cannot be actual answer.',
-            }
+            },
+            trick0: '',
           });
         } else if (this.state.trick0 === this.state.trick1 ||
         this.state.trick0 === this.state.trick2) {
           this.setState({
             messageProps: {
               message: 'Trick answers should be unique from each other.',
-            }
+            },
+            trick0: '',
           });
         }
         break;
@@ -205,14 +207,16 @@ export default class GamePreview extends React.PureComponent {
           this.setState({
             messageProps: {
               message: 'Trick answer cannot be actual answer.',
-            }
+            },
+            trick1: '',
           });
         } else if (this.state.trick1 === this.state.trick0 ||
         this.state.trick1 === this.state.trick2) {
           this.setState({
             messageProps: {
               message: 'Trick answers should be unique from each other.',
-            }
+            },
+            trick1: '',
           });
         }
         break;
@@ -227,14 +231,16 @@ export default class GamePreview extends React.PureComponent {
           this.setState({
             messageProps: {
               message: 'Trick answer cannot be actual answer.',
-            }
+            },
+            trick2: '',
           });
         } else if (this.state.trick2 === this.state.trick0 ||
         this.state.trick2 === this.state.trick1) {
           this.setState({
             messageProps: {
               message: 'Trick answers should be unique from each other.',
-            }
+            },
+            trick2: '',
           });
         }
         break;
