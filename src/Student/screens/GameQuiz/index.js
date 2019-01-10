@@ -63,7 +63,11 @@ export default class GameQuiz extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state.endQuiz === true) {
-      this.publishChoice();
+      if (this.state.timeLeft !== 'Time is up!') {
+        this.publishChoice();
+        clearInterval(this.timerInterval);
+        this.setState({ timeLeft: 'Time is up!' });
+      }
     } 
   }
 
@@ -85,9 +89,9 @@ export default class GameQuiz extends React.Component {
     } else if (seconds === 0 && minutes > 0) {
       newTimeLeft = `${minutes - 1}:59`;
     } else if (seconds === 0 && minutes === 0) {
+      this.publishChoice();
       clearInterval(this.timerInterval);
       newTimeLeft = 'Time is up!';
-      this.publishChoice();
     }
     this.setState({ timeLeft: newTimeLeft });
   }
@@ -108,7 +112,10 @@ export default class GameQuiz extends React.Component {
 
 
   handleChoiceSelection(value) {
-    this.setState({ selectedChoice: value });
+    const { timeLeft } = this.state;
+    if (timeLeft !== 'Time is up!') {
+      this.setState({ selectedChoice: value });
+    }
   }
 
 
