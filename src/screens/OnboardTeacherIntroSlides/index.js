@@ -1,11 +1,11 @@
 import React from 'react';
 import { 
   Image,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Swiper from 'react-native-swiper';
 import { GradCap } from '../../assets/images';
 import { colors, fonts } from '../../utils/theme';
@@ -117,7 +117,7 @@ export default class OnboardIntroSlides extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   accountCheck: {
     color: colors.white,
     fontSize: fonts.medium,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     alignItems: 'center',
-    bottom: 35,
+    bottom: '35@vs',
     position: 'absolute',
   },
   container: {
@@ -161,14 +161,14 @@ const styles = StyleSheet.create({
   subtitle: {
     color: colors.white,
     fontSize: fonts.medium,
-    marginTop: 10,
+    marginTop: '10@vs',
     textAlign: 'center',
   },
   textContainer: {
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: '20@s',
     position: 'absolute',
-    top: 65,
+    top: '65@vs',
   },
   title: {
     color: colors.white,

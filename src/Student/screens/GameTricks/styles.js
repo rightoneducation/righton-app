@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
-export default StyleSheet.create({
+export default ScaledSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.darkGray,
@@ -13,10 +13,10 @@ export default StyleSheet.create({
   input: {
     backgroundColor: colors.white,
     borderRadius: 5,
-    marginTop: 50,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    width: deviceWidth - 150,
+    marginTop: '50@vs',
+    paddingHorizontal: '15@s',
+    paddingVertical: '10@vs',
+    width: deviceWidth - scale(150),
   },
   question: {
     color: colors.white,
@@ -24,12 +24,12 @@ export default StyleSheet.create({
   },
   questionContainer: {
     alignItems: 'center',
-    marginTop: 75,
+    marginTop: '75@vs',
   },
   tricksContainer: {
     bottom: 0,
     flexDirection: 'row',
-    left: 15,
+    left: '15@s',
     position: 'absolute',
   },
 });

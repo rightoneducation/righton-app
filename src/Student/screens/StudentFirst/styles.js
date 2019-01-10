@@ -1,8 +1,7 @@
-
-import { StyleSheet } from 'react-native';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
-export default StyleSheet.create({
+export default ScaledSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.dark,
@@ -14,14 +13,14 @@ export default StyleSheet.create({
     borderWidth: 1,
     color: colors.white,
     fontSize: fonts.medium,
-    paddingVertical: 15,
-    width: deviceWidth - 75,
+    paddingVertical: '15@vs',
+    width: deviceWidth - scale(75),
   },
   title: {
     color: colors.white,
     fontSize: fonts.large,
     fontWeight: 'bold',
     position: 'absolute',
-    top: 35,
+    top: '35@vs',
   },
 });

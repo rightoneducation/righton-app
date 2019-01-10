@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   Platform,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import { colors, fonts } from '../../utils/theme';
 
 export default function HeaderSimple({ title }) {
@@ -27,7 +27,7 @@ HeaderSimple.defaultProps = {
   title: 'RIGHT ON!',
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   androidContainer: {
     alignItems: 'center',
   },
@@ -36,11 +36,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
     flexDirection: 'row',
     justifyContent: 'center',
-    height: 45,
+    height: '45@vs',
   },
   iosContainer: {
     alignItems: 'flex-end',
-    paddingTop: 10,
+    paddingTop: '10@vs',
   },
   logo: {
     color: colors.white,
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: colors.white,
     borderWidth: 0.5,
-    borderRadius: 13,
-    height: 25,
+    borderRadius: 100,
+    height: '25@s',
     justifyContent: 'center',
     position: 'absolute',
-    right: 15,
-    width: 25,
+    right: '15@s',
+    width: '25@s',
   },
   title: {
     color: colors.white,

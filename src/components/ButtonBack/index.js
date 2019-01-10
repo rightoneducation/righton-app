@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   Keyboard,
-  StyleSheet,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors } from '../../utils/theme';
@@ -64,15 +64,15 @@ export default class ButtonBack extends React.PureComponent {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   button: {
     position: 'absolute',
-    left: 15,
-    top: 25,
+    left: '15@s',
+    top: '25@vs',
     zIndex: 10,
   },
   icon: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: '20@ms0.2',
   },
 });

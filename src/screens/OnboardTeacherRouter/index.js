@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Text,
   TouchableOpacity,
-  StyleSheet,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet, verticalScale } from 'react-native-size-matters';
 import ButtonWide from '../../components/ButtonWide';
 import { colors, fonts } from '../../utils/theme';
 import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
@@ -44,7 +44,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
         <OnboardTeacherIntroSlides />
         
         <ButtonWide
-          buttonStyles={{ bottom: 65 }}
+          buttonStyles={{ bottom: verticalScale(65) }}
           label={'Log In / Sign Up'}
           onPress={this.handleTeacherOnboard}
         />
@@ -60,7 +60,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   mainContainer: {
     backgroundColor: colors.dark,
     flex: 1,
@@ -75,7 +75,9 @@ const styles = StyleSheet.create({
   maybeContainer: {
     // Removing background color causes Swiper dot primary color to shine through
     backgroundColor: colors.dark,
-    bottom: 20,
+    bottom: 0,
+    height: '65@vs',
+    justifyContent: 'center',
     left: 0,
     position: 'absolute',
     right: 0,

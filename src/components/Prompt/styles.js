@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { ScaledSheet } from 'react-native-size-matters';
 
-export default StyleSheet.create({
+export default ScaledSheet.create({
   dialog: {
     flex: 1,
     alignItems: 'center'
@@ -15,8 +15,8 @@ export default StyleSheet.create({
   },
   dialogContent: {
     elevation: 5,
-    marginTop: 150,
-    width: 300,
+    marginTop: '150@vs',
+    width: '300@s',
     backgroundColor: 'white',
     borderRadius: 5,
     borderWidth: 1,
@@ -24,19 +24,19 @@ export default StyleSheet.create({
   },
   dialogTitle: {
     borderBottomWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingVertical: '10@vs',
+    paddingHorizontal: '15@s'
   },
   dialogTitleText: {
-    fontSize: 18,
+    fontSize: '18@ms0.2',
     fontWeight: '600'
   },
   dialogBody: {
-    paddingHorizontal: 10
+    paddingHorizontal: '10@s'
   },
   dialogInput: {
-    height: 50,
-    fontSize: 18
+    height: '50@vs',
+    fontSize: '18@ms0.2'
   },
   dialogFooter: {
     borderTopWidth: 1,
@@ -44,10 +44,10 @@ export default StyleSheet.create({
   },
   dialogAction: {
     flex: 1,
-    padding: 15
+    padding: '15@s'
   },
   dialogActionText: {
-    fontSize: 18,
+    fontSize: '18@ms0.2',
     textAlign: 'center',
     color: '#006dbf'
   }

@@ -2,11 +2,11 @@ import React from 'react';
 import {
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 // import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../../utils/theme';
@@ -79,7 +79,7 @@ class QuizMaker extends React.PureComponent {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     backgroundColor: colors.dark,
     flex: 1,
@@ -87,30 +87,30 @@ const styles = StyleSheet.create({
   header: {
     alignSelf: 'stretch',
     backgroundColor: colors.primary,
-    height: 200,
+    height: '200@vs',
   },
   headerTitle: {
     color: colors.white,
     fontSize: fonts.large,
-    marginTop: 50,
+    marginTop: '50@vs',
     textAlign: 'center',
   },
   message: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 25,
+    paddingHorizontal: '25@s',
   },
   messageDetail: {
-    bottom: 100,
+    bottom: '100@vs',
     color: colors.white,
     fontSize: fonts.large,
     position: 'absolute',
   },
   messageIcon: {
     color: colors.white,
-    fontSize: 50,
-    marginBottom: 75,
+    fontSize: '50@ms0.2',
+    marginBottom: '75@vs',
   },
   messageTeaser: {
     color: colors.white,

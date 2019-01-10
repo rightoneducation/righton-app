@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   Platform,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import { colors, fonts } from '../../../utils/theme';
 
 export default function HeaderSimple({ team }) {
@@ -25,7 +25,7 @@ HeaderSimple.defaultProps = {
   team: '',
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   androidContainer: {
     alignItems: 'center',
   },
@@ -33,12 +33,12 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    height: 45,
+    paddingHorizontal: '15@s',
+    height: '45@vs',
   },
   iosContainer: {
     alignItems: 'flex-end',
-    paddingTop: 15,
+    paddingTop: '15@vs',
   },
   team: {
     color: colors.white,

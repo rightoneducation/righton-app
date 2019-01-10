@@ -2,12 +2,12 @@ import React from 'react';
 import {
   Modal,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import { colors, fonts } from '../../utils/theme';
 import ButtonWide from '../ButtonWide';
@@ -135,41 +135,41 @@ export default class Instructions extends React.Component {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   alignLeft: {
     borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 10,
-    marginLeft: 5,
+    borderBottomRightRadius: '10@s',
+    marginLeft: '5@s',
   },
   alignRight: {
-    borderBottomLeftRadius: 10,
+    borderBottomLeftRadius: '10@s',
     borderBottomRightRadius: 0,
-    marginRight: 5,
+    marginRight: '5@s',
   },
   box: {
     backgroundColor: colors.darkGray,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    padding: 10,
+    borderTopLeftRadius: '10@s',
+    borderTopRightRadius: '10@s',
+    padding: '10@s',
   },
   closeArrow: {
     alignSelf: 'center',
     borderColor: colors.white,
     borderTopWidth: 1,
     borderRightWidth: 1,
-    height: 15,
-    marginBottom: 25,
-    marginTop: 10,
+    height: '15@s',
+    marginBottom: '25@vs',
+    marginTop: '10@vs',
     transform: [
       { rotate: '135deg' },
     ],
-    width: 15,
+    width: '15@s',
   },
   container: {
     alignItems: 'flex-end',
     alignSelf: 'stretch',
     flexDirection: 'row',
-    margin: 10,
+    margin: '10@s',
   },
   instruction: {
     color: colors.white,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
     right: 0,
-    top: 250,
+    top: '250@vs',
   },
   justifyLeft: {
     justifyContent: 'flex-start',
@@ -194,14 +194,14 @@ const styles = StyleSheet.create({
   },
   teacher: {
     color: colors.dark,
-    fontSize: 20,
+    fontSize: '20@ms0.2',
   },
   teacherBubble: {
     alignItems: 'center',
     backgroundColor: colors.white,
-    borderRadius: 20,
-    height: 40,
+    borderRadius: 100,
+    height: '40@s',
     justifyContent: 'center',
-    width: 40,
+    width: '40@s',
   },
 });

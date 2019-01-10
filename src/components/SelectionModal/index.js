@@ -2,11 +2,11 @@ import React from 'react';
 import {
   Modal,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
@@ -116,13 +116,13 @@ SelectionModal.defaultProps = {
   visible: false,
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   center: {
     justifyContent: 'center',
   },
   closeContainer: {
     flex: 0.5,
-    height: 150,
+    height: '150@vs',
   },
   flexOne: {
     flex: 0.1,
@@ -140,8 +140,8 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 15,
-    paddingVertical: 15,
+    marginHorizontal: '15@s',
+    paddingVertical: '15@vs',
   },
   modalContainer: {
     flex: 1,
@@ -152,8 +152,8 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     flexGrow: 1,
-    paddingBottom: 25,
-    paddingTop: 15,
+    paddingBottom: '25@vs',
+    paddingTop: '15@vs',
   },
   title: {
     color: colors.white,
@@ -167,6 +167,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: colors.dark,
     justifyContent: 'center',
-    paddingVertical: 15,
+    paddingVertical: '15@vs',
   },
 });

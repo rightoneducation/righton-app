@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   Text,
-  StyleSheet,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
@@ -50,7 +50,7 @@ OnboardAppRouter.defaultProps = {
   onboardNavigator: {},
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.dark,
@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGray,
     borderRadius: 10,
     flex: 0.5,
-    marginHorizontal: 5,
-    paddingVertical: 25,
+    marginHorizontal: '5@s',
+    paddingVertical: '25@vs',
   },
   iamaButtonsContainer: {
-    bottom: 15,
+    bottom: '15@vs',
     flex: 1,
     flexDirection: 'row',
     position: 'absolute',

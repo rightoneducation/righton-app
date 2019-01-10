@@ -3,11 +3,11 @@ import {
   Image,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
@@ -142,10 +142,10 @@ class Explore extends React.PureComponent {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   banner: {
-    height: 200,
-    width: deviceWidth - 30,
+    height: '200@vs',
+    width: deviceWidth - scale(30),
   },
   container: {
     flex: 1,
@@ -153,18 +153,18 @@ const styles = StyleSheet.create({
   dataBody: {
     flex: 1,
     flexDirection: 'row',
-    height: 100,
+    height: '100@vs',
   },
   dataContainer: {
     flexDirection: 'row',
-    height: 100,
-    width: deviceWidth - 30,
+    height: '100@vs',
+    width: deviceWidth - scale(30),
   },
   dataTextContainer: {
     backgroundColor: colors.white,
     flex: 1,
     justifyContent: 'space-around',
-    padding: 10,
+    padding: '10@s',
   },
   dataTextDescription: {
     color: colors.dark,
@@ -182,26 +182,26 @@ const styles = StyleSheet.create({
     borderColor: colors.dark,
     borderBottomWidth: 1,
     flexDirection: 'row',
-    height: 65,
+    height: '65@vs',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
+    paddingHorizontal: '15@s',
   },
   headerProfileContainer: {
     alignItems: 'center',
     backgroundColor: colors.lightGray,
-    borderRadius: 20,
-    height: 40,
+    borderRadius: 100,
+    height: '40@ms',
     justifyContent: 'flex-end',
-    width: 40,
+    width: '40@ms',
   },
   headerProfileIcon: {
     color: colors.dark,
-    fontSize: 30,
-    marginTop: 3,
+    fontSize: '30@ms0.2',
+    marginTop: '3@vs',
   },
   headerSearchIcon: {
     color: colors.white,
-    fontSize: 28,
+    fontSize: '28@ms0.2',
   },
   headerTitle: {
     color: colors.white,
@@ -210,14 +210,14 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: colors.white,
-    fontSize: 35,
+    fontSize: '35@ms0.2',
   },
   iconContainer: {
     alignItems: 'center',
     backgroundColor: colors.lightGray,
-    height: 100,
+    height: '100@vs',
     justifyContent: 'center',
-    width: 100,
+    width: '100@vs',
   },
   iconText: {
     color: colors.white,
@@ -231,8 +231,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.dark,
     flex: 1,
-    paddingHorizontal: 15,
-    paddingVertical: 25,
+    paddingHorizontal: '15@s',
+    paddingVertical: '25@vs',
   },
 });
 

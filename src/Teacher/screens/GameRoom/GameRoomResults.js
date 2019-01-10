@@ -3,11 +3,11 @@ import {
   Animated,
   Image,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
@@ -158,20 +158,20 @@ export default class GameRoomResults extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   bar: {
     backgroundColor: colors.primary,
-    height: 30,
+    height: '30@vs',
   },
   hiddenDot: {
-    height: 25,
-    marginHorizontal: 15,
-    width: 25,
+    height: '25@s',
+    marginHorizontal: '15@s',
+    width: '25@s',
   },
   checkmark: {
     color: colors.primary,
-    fontSize: 25,
-    marginBottom: 10,
-    marginHorizontal: 15,
+    fontSize: '25@ms0.2',
+    marginBottom: '10@vs',
+    marginHorizontal: '15@s',
   },
 });

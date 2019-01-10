@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
-export default StyleSheet.create({
+export default ScaledSheet.create({
   activityIndicator: {
     backgroundColor: colors.mask,
     justifyContent: 'center',
@@ -22,10 +22,10 @@ export default StyleSheet.create({
     backgroundColor: colors.white,
     borderColor: colors.dark,
     borderWidth: 1,
-    height: 45,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    width: deviceWidth - 30,
+    height: '45@vs',
+    justifyContent: 'center',
+    paddingHorizontal: '15@s',
+    width: deviceWidth - scale(30),
   },
   inputButtonText: {
     color: colors.dark,
@@ -36,13 +36,13 @@ export default StyleSheet.create({
     alignItems: 'flex-start',
     alignSelf: 'stretch',
     flexDirection: 'column',
-    marginTop: 15,
+    marginTop: '15@vs',
   },
   inputLabel: {
     color: colors.primary,
     fontSize: fonts.small,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: '5@vs',
   },
   inputPlaceholder: {
     color: colors.lightGray,
@@ -61,7 +61,7 @@ export default StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',  
-    marginBottom: 55,
-    marginTop: 35,
+    marginBottom: '55@vs',
+    marginTop: '35@vs',
   },
 });

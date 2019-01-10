@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   Keyboard,
-  StyleSheet,
   Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, elevation, fonts } from '../../utils/theme';
 
@@ -62,16 +62,16 @@ export default class ButtonWide extends React.PureComponent {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   button: {
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: colors.primary,
-    bottom: 15,
-    height: 65,
+    bottom: '15@vs',
+    height: '65@vs',
     justifyContent: 'center',
     position: 'absolute',
-    width: deviceWidth - 75,
+    width: deviceWidth - scale(75),
     zIndex: 10,
   },
   label: {

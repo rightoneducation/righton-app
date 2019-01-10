@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   Platform,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import { deviceWidth } from '../../utils/theme';
 
@@ -30,13 +30,13 @@ TabBarComponent.defaultProps = {
   tintColor: '#000',
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   tabBarIconContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     width: deviceWidth / 5,
   },
-  tabBarIcon: { fontSize: 15 },
-  tabBarLabel: { fontSize: 16 },
+  tabBarIcon: { fontSize: moderateScale(15, 0.2) },
+  tabBarLabel: { fontSize: moderateScale(16, 0.2) },
 });

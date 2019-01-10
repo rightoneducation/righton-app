@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { verticalScale } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import ButtonBack from '../../../../components/ButtonBack';
 import ButtonWide from '../../../../components/ButtonWide';
@@ -104,7 +105,7 @@ const GameRoomStyles = StyleSheet.create({
     fontSize: fonts.medium,
   },
   skipButton: {
-    bottom: 100,
+    bottom: verticalScale(100),
     position: 'absolute',
   },
 });

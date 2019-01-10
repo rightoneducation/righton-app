@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   Animated,
-  StyleSheet,
   Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
@@ -94,17 +94,17 @@ Message.defaultProps = {
   timeout: 0,
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: colors.darkGray,
     borderRadius: 100,
-    bottom: 40,
+    bottom: '40@vs',
     justifyContent: 'center',
-    marginHorizontal: 15,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    marginHorizontal: '15@s',
+    paddingHorizontal: '15@s',
+    paddingVertical: '10@vs',
     position: 'absolute',
     zIndex: 10,
   },

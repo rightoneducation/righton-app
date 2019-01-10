@@ -3,12 +3,12 @@ import {
   Image,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import { getGameFromDynamoDB, putGameToDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
@@ -291,7 +291,7 @@ class Launch extends React.Component {
         </View>
 
 
-        <Portal messageType={'single'} messageValues={{ message: `Launching ${room}` }} />
+        {/* <Portal messageType={'single'} messageValues={{ message: `Launching ${room}` }} /> */}
 
 
         <ScrollView contentContainerStyle={[firstStyles.container, styles.scrollview]}>
@@ -322,13 +322,13 @@ class Launch extends React.Component {
 }
 
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   blockContainer: {
     alignItems: 'center',
     backgroundColor: colors.lightGray,
     height: blockSize,
     justifyContent: 'center',
-    marginBottom: 15,
+    marginBottom: '15@vs',
     width: blockSize,
   },
   blocksContainer: {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    paddingHorizontal: 15,
+    paddingHorizontal: '15@s',
   },
   blockNumber: {
     color: colors.white,
@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
   },
   scrollview: {
     justifyContent: 'flex-start',
-    paddingBottom: 50,
-    paddingTop: 90,
+    paddingBottom: '50@vs',
+    paddingTop: '90@vs',
   },
 });
 

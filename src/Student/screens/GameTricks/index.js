@@ -10,6 +10,7 @@ import {
 import PropTypes from 'prop-types';
 import HeaderTeam from '../../components/HeaderTeam';
 import ButtonRound from '../../../components/ButtonRound';
+import Message from '../../../components/Message';
 import styles from './styles';
 import { colors } from '../../../utils/theme';
 // import { deviceHeight, deviceWidth } from '../../../utils/theme';
@@ -46,6 +47,7 @@ export default class GamePreview extends React.PureComponent {
     this.state = {
       currentTrick: 0,
       js: '',
+      messageProps: {},
       trick0: '',
       trick1: '',
       trick2: '',
@@ -55,7 +57,7 @@ export default class GamePreview extends React.PureComponent {
     this.trick1Ref = '';
     this.trick2Ref = '';
 
-    this.handleRenderDemo = this.handleRenderDemo.bind(this);
+    // this.handleRenderDemo = this.handleRenderDemo.bind(this);
 
     this.handleTrickInput = this.handleTrickInput.bind(this);
     this.handleTrickSubmit = this.handleTrickSubmit.bind(this);
@@ -80,6 +82,8 @@ export default class GamePreview extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     const { team } = this.props.screenProps;
     const teamRef = `team${team}`;
+
+    // Handle updating the tricks in state when teammates enter values. 
     if (this.props.screenProps.gameState[teamRef].tricks[0] !== 
       nextProps.screenProps.gameState[teamRef].tricks[0]) {
       this.setState({
@@ -124,19 +128,19 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  handleDoDemo() {
-    const func = this.state.js;
-    // const runThisFunc = `${func}`;
-    // console.log(func, runThisFunc);
-    setTimeout(() => this.handleDoDemo(), 1000);
-    return func;
-  }
+  // handleDoDemo() {
+  //   const func = this.state.js;
+  //   // const runThisFunc = `${func}`;
+  //   // console.log(func, runThisFunc);
+  //   setTimeout(() => this.handleDoDemo(), 1000);
+  //   return func;
+  // }
 
 
-  handleRenderDemo() {
-    const func = this.state.js;
-    return func;
-  }
+  // handleRenderDemo() {
+  //   const func = this.state.js;
+  //   return func;
+  // }
 
 
   handleTrickInput(val) {
@@ -167,26 +171,72 @@ export default class GamePreview extends React.PureComponent {
     };
     switch (currentTrick) {
       case 0:
-        this.setState({ currentTrick: 1 });
-        if (this.trick0Ref !== this.state.trick0) {
+        // this.setState({ currentTrick: 1 });
+        Keyboard.dismiss();
+        if (this.trick0Ref !== this.state.trick0 &&
+        this.props.screenProps.gameState[`team${team}`].answer !== this.state.trick0 &&
+        this.state.trick0 !== this.state.trick1 && this.state.trick0 !== this.state.trick2) {
           message.payload = this.state.trick0;
           this.trick0Ref = this.state.trick0;
+        } else if (this.state.trick0 === this.props.screenProps.gameState[`team${team}`].answer) {
+          this.setState({
+            messageProps: {
+              message: 'Trick answer cannot be actual answer.',
+            }
+          });
+        } else if (this.state.trick0 === this.state.trick1 ||
+        this.state.trick0 === this.state.trick2) {
+          this.setState({
+            messageProps: {
+              message: 'Trick answers should be unique from each other.',
+            }
+          });
         }
         break;
       case 1:
-        this.setState({ currentTrick: 2 });
-        if (this.trick1Ref !== this.state.trick1) {
+        // this.setState({ currentTrick: 2 });
+        Keyboard.dismiss();
+        if (this.trick1Ref !== this.state.trick1 &&
+        this.props.screenProps.gameState[`team${team}`].answer !== this.state.trick1 &&
+        this.state.trick1 !== this.state.trick0 && this.state.trick1 !== this.state.trick2) {
           message.payload = this.state.trick1;
           this.trick1Ref = this.state.trick1;
+        } else if (this.state.trick1 === this.props.screenProps.gameState[`team${team}`].answer) {
+          this.setState({
+            messageProps: {
+              message: 'Trick answer cannot be actual answer.',
+            }
+          });
+        } else if (this.state.trick1 === this.state.trick0 ||
+        this.state.trick1 === this.state.trick2) {
+          this.setState({
+            messageProps: {
+              message: 'Trick answers should be unique from each other.',
+            }
+          });
         }
         break;
       case 2:
         Keyboard.dismiss();
-        if (this.trick2Ref !== this.state.trick2) {
+        if (this.trick2Ref !== this.state.trick2 &&
+        this.props.screenProps.gameState[`team${team}`].answer !== this.state.trick2 &&
+        this.state.trick2 !== this.state.trick0 && this.state.trick2 !== this.state.trick1) {
           message.payload = this.state.trick2;
           this.trick2Ref = this.state.trick2;
+        } else if (this.state.trick2 === this.props.screenProps.gameState[`team${team}`].answer) {
+          this.setState({
+            messageProps: {
+              message: 'Trick answer cannot be actual answer.',
+            }
+          });
+        } else if (this.state.trick2 === this.state.trick0 ||
+        this.state.trick2 === this.state.trick1) {
+          this.setState({
+            messageProps: {
+              message: 'Trick answers should be unique from each other.',
+            }
+          });
         }
-        // TODO: Review and submit!
         break;
       default:
     }
@@ -297,6 +347,7 @@ export default class GamePreview extends React.PureComponent {
   render() {
     const { 
       currentTrick,
+      messageProps,
       trick0,
       trick1,
       trick2,
@@ -309,6 +360,7 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.container}>
+        <Message {...messageProps} />
         <HeaderTeam team={gameState[teamRef].team} />
         {this.renderQuestion()}
         <View>

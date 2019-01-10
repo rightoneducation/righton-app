@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   Modal,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet, verticalScale } from 'react-native-size-matters';
 import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme';
 
 
@@ -130,7 +130,7 @@ export default class InputModal extends React.PureComponent {
         style={[
           styles.inputContainer,
           elevation,
-          { height, width, left: xAxis },
+          { height: verticalScale(height), width, left: xAxis },
           bottom ? { bottom: 15 } : { top: yAxis },
         ]}
       >
@@ -186,7 +186,7 @@ export default class InputModal extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   closeContainer: {
     flex: 1,
   },
@@ -198,8 +198,8 @@ const styles = StyleSheet.create({
     color: colors.dark,
     fontSize: fonts.medium,
     fontWeight: 'bold',
-    paddingLeft: 10,
-    paddingRight: 25,
+    paddingLeft: '10@s',
+    paddingRight: '25@s',
   },
   inputContainer: {
     backgroundColor: colors.white,
@@ -212,6 +212,6 @@ const styles = StyleSheet.create({
     color: colors.lightGray,
     fontSize: fonts.small,
     position: 'absolute',
-    right: 5,
+    right: '5@s',
   },
 });

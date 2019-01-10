@@ -1,34 +1,34 @@
-import { StyleSheet } from 'react-native';
+import { ScaledSheet, verticalScale } from 'react-native-size-matters';
 import { colors, fonts } from '../../../utils/theme';
 
-export default StyleSheet.create({
+export default ScaledSheet.create({
   arrow: {
     borderColor: colors.primary,
     borderTopWidth: 1,
     borderRightWidth: 1,
-    height: 50,
+    height: '50@s',
     position: 'absolute',
     transform: [
       { rotate: '-45deg' },
     ],
-    width: 50,
+    width: '50@s',
   },
   arrow1: {
-    bottom: 50,
+    bottom: '50@vs',
   },
   arrow2: {
-    bottom: 35,
+    bottom: '35@vs',
   },
   arrow3: {
-    bottom: 20,
+    bottom: '20@vs',
   },
   arrowButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    bottom: -40,
-    height: 125,
+    bottom: verticalScale(-40),
+    height: '125@vs',
     position: 'absolute',
-    width: 70,
+    width: '70@s',
   },
   choiceAnswer: {
     color: colors.white,
@@ -38,7 +38,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginVertical: 10,
+    marginVertical: '10@vs',
   },
   choiceContainerWrapper: {
     alignItems: 'center',
@@ -48,14 +48,14 @@ export default StyleSheet.create({
   choiceDot: {
     borderColor: colors.white,
     borderWidth: 1,
-    height: 10,
-    width: 10,
-    marginHorizontal: 15,
+    height: '10@s',
+    width: '10@s',
+    marginHorizontal: '15@s',
   },
   choicesContainer: {
     alignItems: 'flex-start',
     flex: 1,
-    marginVertical: 25,
+    marginVertical: '25@vs',
   },
   container: {
     alignItems: 'center',
@@ -71,7 +71,7 @@ export default StyleSheet.create({
   },
   questionContainer: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: '50@vs',
   },
   time: {
     color: colors.white,
@@ -79,7 +79,7 @@ export default StyleSheet.create({
   },
   timeContainer: {
     position: 'absolute',
-    right: 5,
-    top: 25,
+    right: '5@s',
+    top: '25@vs',
   },
 });
