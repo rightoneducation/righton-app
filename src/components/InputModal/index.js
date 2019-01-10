@@ -2,11 +2,11 @@ import React from 'react';
 import {
   Modal,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import { ScaledSheet, verticalScale } from 'react-native-size-matters';
 import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme';
 
@@ -134,7 +134,7 @@ export default class InputModal extends React.PureComponent {
           bottom ? { bottom: 15 } : { top: yAxis },
         ]}
       >
-        <TextInput
+        <AutoGrowingTextInput
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}
           keyboardType={keyboardType}
