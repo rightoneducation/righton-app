@@ -1,13 +1,15 @@
 import React from 'react';
 import {
   Animated,
+  findNodeHandle,
   Image,
   ScrollView,
   Text,
   View,
 } from 'react-native';
+import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
+import { scale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
@@ -38,6 +40,12 @@ export default class GameRoomResults extends React.Component {
     this.secondChoice = new Animated.Value(0);
     this.thirdChoice = new Animated.Value(0);
     this.fourthChoice = new Animated.Value(0);
+
+    this.choicesRef = undefined;
+    this.choicesWidth = deviceWidth;
+
+    this.handleChoicesRef = this.handleChoicesRef.bind(this);
+    this.onChoicesLayout = this.onChoicesLayout.bind(this);
   }
   
 
@@ -46,48 +54,68 @@ export default class GameRoomResults extends React.Component {
   }
 
 
-  startWidthAnimation() {
-    const { gameState, numberOfPlayers, teamRef } = this.props;
-    const firstWidth = gameState[teamRef].choices[0] ?
-      (gameState[teamRef].choices[0].votes / numberOfPlayers) *
-      (deviceWidth - 30) : 0;
-    const secondWidth = gameState[teamRef].choices[1] ?
-      (gameState[teamRef].choices[1].votes / numberOfPlayers) *
-      (deviceWidth - 30) : 0;
-    const thirdWidth = gameState[teamRef].choices[2] ?
-      (gameState[teamRef].choices[2].votes / numberOfPlayers) *
-      (deviceWidth - 30) : 0;
-    const fourthWidth = gameState[teamRef].choices[3] ?
-      (gameState[teamRef].choices[3].votes / numberOfPlayers) *
-      (deviceWidth - 30) : 0;
+  onChoicesLayout() {
+    if (this.choicesRef) {
+      NativeMethodsMixin.measureInWindow.call(
+        findNodeHandle(this.choicesRef),
+        (x) => {
+          this.choicesWidth = deviceWidth - x - scale(55);
+        }
+      );
+    }
+  }
 
-    Animated.parallel([
-      Animated.timing(
-        this.firstChoice, {
-          toValue: firstWidth,
-          duration: 2000,
-        }
-      ),
-      Animated.timing(
-        this.secondChoice, {
-          toValue: secondWidth,
-          duration: 2000,
-        }
-      ),
-      Animated.timing(
-        this.thirdChoice, {
-          toValue: thirdWidth,
-          duration: 2000,
-        }
-      ),
-      Animated.timing(
-        this.fourthChoice, {
-          toValue: fourthWidth,
-          duration: 2000,
-        }
-      ),
-    ],
-    { useNativeDriver: true }).start();
+
+  handleChoicesRef(ref) {
+    this.choicesRef = ref;
+  }
+
+
+  startWidthAnimation() {
+    this.onChoicesLayout();
+    setTimeout(() => {
+      const { gameState, numberOfPlayers, teamRef } = this.props;
+      const firstWidth = gameState[teamRef].choices[0] ?
+        (gameState[teamRef].choices[0].votes / numberOfPlayers) *
+        this.choicesWidth : 0;
+      const secondWidth = gameState[teamRef].choices[1] ?
+        (gameState[teamRef].choices[1].votes / numberOfPlayers) *
+        this.choicesWidth : 0;
+      const thirdWidth = gameState[teamRef].choices[2] ?
+        (gameState[teamRef].choices[2].votes / numberOfPlayers) *
+        this.choicesWidth : 0;
+      const fourthWidth = gameState[teamRef].choices[3] ?
+        (gameState[teamRef].choices[3].votes / numberOfPlayers) *
+        this.choicesWidth : 0;
+  
+      Animated.parallel([
+        Animated.timing(
+          this.firstChoice, {
+            toValue: firstWidth,
+            duration: 2000,
+          }
+        ),
+        Animated.timing(
+          this.secondChoice, {
+            toValue: secondWidth,
+            duration: 2000,
+          }
+        ),
+        Animated.timing(
+          this.thirdChoice, {
+            toValue: thirdWidth,
+            duration: 2000,
+          }
+        ),
+        Animated.timing(
+          this.fourthChoice, {
+            toValue: fourthWidth,
+            duration: 2000,
+          }
+        ),
+      ],
+      { useNativeDriver: true }).start();
+    }, 100);
   }
 
   
@@ -113,7 +141,11 @@ export default class GameRoomResults extends React.Component {
           {Boolean(gameState[teamRef].image) &&
             <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
         </View>
-        <View style={gamePreviewStyles.choiceContainerWrapper}>
+        <View
+          onLayout={this.onChoicesLayout}
+          ref={this.handleChoicesRef}
+          style={gamePreviewStyles.choiceContainerWrapper}
+        >
           <View style={gamePreviewStyles.choicesContainer}>
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[0].correct ?
@@ -162,6 +194,7 @@ const styles = ScaledSheet.create({
   bar: {
     backgroundColor: colors.primary,
     height: '30@vs',
+    marginLeft: '55@s',
   },
   hiddenDot: {
     height: '25@s',
