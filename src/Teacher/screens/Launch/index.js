@@ -93,7 +93,7 @@ class Launch extends React.Component {
 
 
   async handleRoomSubmit() {
-    this.swiperRef.scrollBy(1, false);
+    this.swiperRef.scrollBy(2, false);
     if (!this.hydratedQuizzes) this.hydrateQuizzes();
     // Hydrate Dashboard w/ game details
     const { room } = this.state;
@@ -108,20 +108,20 @@ class Launch extends React.Component {
         if (res && (res.username && username !== res.username)) {
           debug.log('Invalid access!', 'Required username:', res.username, 'Actual username:', username);
           // Invalid teacher account -- forbid access!
-          setTimeout(() => this.swiperRef.scrollBy(-1, false), 500);
+          setTimeout(() => this.swiperRef.scrollBy(-2, false), 500);
           // TODO Send message that account errLaunch room w/ different name
         } else if (res && (username === res.username || res.username === null)) {
           debug.log('Username matches and game room still exists: Enter');
-          setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
+          setTimeout(() => this.swiperRef.scrollBy(2, false), 500);
         } else if (!res || (res && !res.GameRoomId)) {
           debug.log('GameRoom w/ ID does not exist: Create & Enter');
           putGameToDynamoDB(room, username,
             (putRes) => {
-              setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
+              setTimeout(() => this.swiperRef.scrollBy(2, false), 500);
               debug.log('Put game in DynamoDB!', putRes);
             },
             (exception) => {
-              setTimeout(() => this.swiperRef.scrollBy(1, false), 500);
+              setTimeout(() => this.swiperRef.scrollBy(2, false), 500);
               debug.log('Error putting game in DynamoDB', exception);
             }
           );
@@ -129,14 +129,14 @@ class Launch extends React.Component {
       },
       (exception) => {
         // TODO Handle exception
-        setTimeout(() => this.swiperRef.scrollBy(-1, false), 500);
+        setTimeout(() => this.swiperRef.scrollBy(-2, false), 500);
         debug.log('Exception getting game from DynamoDB', exception);
       });
   }
 
 
   handleBackFromHost() {
-    this.swiperRef.scrollBy(-2, false);
+    this.swiperRef.scrollBy(-3, false);
   }
 
 
@@ -257,9 +257,9 @@ class Launch extends React.Component {
 
     return (
       <Swiper
-        horizontal={false}
+        horizontal
         index={0}
-        loadMinimal={false}
+        loadMinimal
         loop={false}
         ref={(ref) => { this.swiperRef = ref; }}
         scrollEnabled={false}
@@ -290,9 +290,13 @@ class Launch extends React.Component {
           />
         </View>
 
-
-        {/* <Portal messageType={'single'} messageValues={{ message: `Launching ${room}` }} /> */}
-
+        {/* 
+          * These Views act as padding between the screens because of the
+          * extended circular region overlapping the nearby screens.
+          */}
+        <View />
+        <Portal messageType={'single'} messageValues={{ message: `Launching ${room}` }} />
+        <View />
 
         <ScrollView contentContainerStyle={[firstStyles.container, styles.scrollview]}>
           <ButtonBack
