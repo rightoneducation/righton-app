@@ -68,7 +68,10 @@ export default class GameQuiz extends React.Component {
         clearInterval(this.timerInterval);
         this.setState({ timeLeft: 'Time is up!' });
       }
-    } 
+    } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
+    nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
+      this.props.navigation.navigate('GameReasons');
+    }
   }
 
 
