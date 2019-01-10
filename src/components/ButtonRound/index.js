@@ -124,11 +124,11 @@ const styles = ScaledSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 100,
     bottom: '15@vs',
-    height: '45@s',
+    height: '45@ms',
     justifyContent: 'center',
     position: 'absolute',
     right: '15@s',
-    width: '45@s',
+    width: '45@ms',
     zIndex: 10,
   },
   icon: {
