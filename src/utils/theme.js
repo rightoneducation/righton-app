@@ -1,6 +1,9 @@
 /**
  * @providesModule theme
  */
+
+import { moderateScale } from 'react-native-size-matters';
+
 import { Dimensions } from 'react-native';
 
 const { height, width } = Dimensions.get('screen');
@@ -8,9 +11,9 @@ const deviceHeight = height;
 const deviceWidth = width;
 
 const fonts = {
-  small: 14,
-  medium: 18,
-  large: 24,
+  small: moderateScale(14, 0.2),
+  medium: moderateScale(18, 0.2),
+  large: moderateScale(24, 0.2),
 };
 
 const colors = {
