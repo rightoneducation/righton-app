@@ -56,8 +56,11 @@ const TeacherFirst = createBottomTabNavigator({
   tabBarOptions: {
     activeTintColor: colors.white,
     inactiveTintColor: colors.dark,
+    iconStyle: {
+      padding: 0,
+    },
     labelStyle: {
-      fontSize: moderateScale(10, 0.2),
+      fontSize: moderateScale(12, 0.2),
       margin: 0,
       padding: 0,
     },

@@ -10,7 +10,7 @@ import QuizMaker from './screens/QuizMaker';
 import Reports from './screens/Reports';
 import TabBarComponent from '../components/TabBarComponent';
 import { colors } from '../utils/theme';
-import { verticalScale } from 'react-native-size-matters';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 
 
 const TeacherTabNavigator = createBottomTabNavigator({
@@ -97,8 +97,11 @@ const TeacherTabNavigator = createBottomTabNavigator({
   tabBarOptions: {
     activeTintColor: colors.white,
     inactiveTintColor: colors.dark,
+    iconStyle: {
+      padding: 0,
+    },
     labelStyle: {
-      fontSize: 10,
+      fontSize: moderateScale(12, 0.2),
       margin: 0,
       padding: 0,
     },
