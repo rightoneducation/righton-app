@@ -16,7 +16,7 @@ import { colors } from '../../../utils/theme';
 // import { deviceHeight, deviceWidth } from '../../../utils/theme';
 
 
-export default class GamePreview extends React.PureComponent {
+export default class GameTricks extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({ type: PropTypes.any }),
