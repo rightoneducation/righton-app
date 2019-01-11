@@ -11,6 +11,9 @@ export default ScaledSheet.create({
     paddingHorizontal: '15@s',
     paddingVertical: '15@vs',
   },
+  extraMarginBottom: {
+    marginBottom: '25@vs',
+  },
   gameContainer: {
     alignItems: 'flex-start',
     borderColor: colors.white,
@@ -47,6 +50,9 @@ export default ScaledSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
     marginTop: '10@vs',
+  },
+  textNormal: {
+    fontWeight: 'normal',
   },
   textCenter: {
     textAlign: 'center',
