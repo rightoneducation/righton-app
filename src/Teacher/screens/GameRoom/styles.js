@@ -16,6 +16,9 @@ export default ScaledSheet.create({
     paddingVertical: '10@vs',
     margin: '15@s',
   },
+  marginBottom: {
+    marginBottom: '5@vs'
+  },
   playersContainer: {
     alignItems: 'center',
     flex: 0.5,
@@ -37,5 +40,25 @@ export default ScaledSheet.create({
   },
   textLarge: {
     fontSize: fonts.large,
+  },
+  trickButton: {
+    borderColor: colors.white,
+    borderRadius: 100,
+    borderWidth: 1,
+    height: '15@ms',
+    marginHorizontal: '15@s',
+    width: '15@ms',
+  },
+  trickButtonSelected: {
+    backgroundColor: colors.primary,
+  },
+  trickItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: '5@vs',
+  },
+  trickValue: {
+    color: colors.white,
+    fontSize: fonts.medium,
   },
 });
