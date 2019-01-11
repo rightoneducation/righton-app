@@ -210,7 +210,7 @@ export default class GamePreview extends React.PureComponent {
         selectedTricks += 1;
       }
     }
-    if (trick.selected && selectedTricks === 3) {
+    if (trick.selected === false && selectedTricks === 3) {
       this.setState({
         messageProps: {
           closeFunc: this.handleCloseMessage,
