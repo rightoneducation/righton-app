@@ -37,7 +37,7 @@ export default class Prompt extends Component {
     visible: false,
     defaultValue: '',
     cancelText: 'Cancel',
-    submitText: 'OK',
+    submitText: 'Verify',
     borderColor: '#ccc',
     placeholder: '',
     promptStyle: {},
@@ -94,7 +94,7 @@ export default class Prompt extends Component {
       title,
       placeholder,
       defaultValue,
-      cancelText,
+      // cancelText,
       submitText,
       borderColor,
       promptStyle,
@@ -103,8 +103,8 @@ export default class Prompt extends Component {
       buttonTextStyle,
       submitButtonStyle,
       submitButtonTextStyle,
-      cancelButtonStyle,
-      cancelButtonTextStyle,
+      // cancelButtonStyle,
+      // cancelButtonTextStyle,
       inputStyle
     } = this.props;
     return (
@@ -128,13 +128,13 @@ export default class Prompt extends Component {
             />
           </View>
           <View style={[styles.dialogFooter, { borderColor }]}>
-            <TouchableWithoutFeedback onPress={this.onCancelPress}>
+            {/* <TouchableWithoutFeedback onPress={this.onCancelPress}>
               <View style={[styles.dialogAction, buttonStyle, cancelButtonStyle]}>
                 <Text style={[styles.dialogActionText, buttonTextStyle, cancelButtonTextStyle]}>
                   {cancelText}
                 </Text>
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback> */}
             <TouchableWithoutFeedback onPress={this.onSubmitPress}>
               <View style={[styles.dialogAction, buttonStyle, submitButtonStyle]}>
                 <Text style={[styles.dialogActionText, buttonTextStyle, submitButtonTextStyle]}>
