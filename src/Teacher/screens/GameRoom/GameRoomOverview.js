@@ -32,10 +32,21 @@ export default function GameRoomOverview({ gameState, handleGamePreview, teams }
                 <Text style={styles.textLabel}>{ `${teams[teamIdx]} players` }</Text>
                 <Text style={styles.textLabel}>Question:</Text>
                 <Text style={styles.textLabel}>{ gameState[key].question }</Text>
-                <Text style={styles.textLabel}>Tricks:</Text>
-                <Text style={styles.textLabel}>a. { gameState[key].tricks[0] }</Text>
-                <Text style={styles.textLabel}>b. { gameState[key].tricks[1] }</Text>
-                <Text style={styles.textLabel}>c. { gameState[key].tricks[2] }</Text>
+                <Text style={[styles.textLabel, styles.marginBottom]}>Tricks:</Text>
+                {gameState[key].tricks.map(trick => (
+                  <View
+                    key={trick.uid}
+                    style={styles.trickItem}
+                  >
+                    <View
+                      style={[
+                        styles.trickButton,
+                        trick.selected && styles.trickButtonSelected
+                      ]}
+                    />
+                    <Text style={styles.trickValue}>{ trick.value }</Text>
+                  </View>
+                ))}
               </View>
             </Touchable>
         );
