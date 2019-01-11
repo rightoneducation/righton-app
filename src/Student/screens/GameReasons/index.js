@@ -219,14 +219,14 @@ export default class GameReasons extends React.PureComponent {
           <InputModal {...showInput} />}
         <HeaderTeam team={gameState[teamRef].team} />
         {this.renderQuestion()}
-        <View>
+        <View style={styles.extraMarginBottom}>
           <View>
             <View
               onLayout={this.onTrick0Layout}
               ref={this.handleTrick0Ref}
-              style={styles.inputContainer}
+              style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
             >
-              <Text style={gamePreviewStyles.choiceAnswer}>
+              <Text style={[gamePreviewStyles.choiceAnswer, gamePreviewStyles.marginBottom]}>
                 { gameState[teamRef].tricks[0].value }
               </Text>
               <Touchable
@@ -240,9 +240,9 @@ export default class GameReasons extends React.PureComponent {
             <View
               onLayout={this.onTrick1Layout}
               ref={this.handleTrick1Ref}
-              style={styles.inputContainer}
+              style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
             >
-              <Text style={gamePreviewStyles.choiceAnswer}>
+              <Text style={[gamePreviewStyles.choiceAnswer, gamePreviewStyles.marginBottom]}>
                 { gameState[teamRef].tricks[1].value }
               </Text>
               <Touchable
@@ -256,9 +256,9 @@ export default class GameReasons extends React.PureComponent {
             <View
               onLayout={this.onTrick2Layout}
               ref={this.handleTrick2Ref}
-              style={styles.inputContainer}
+              style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
             >
-              <Text style={gamePreviewStyles.choiceAnswer}>
+              <Text style={[gamePreviewStyles.choiceAnswer, gamePreviewStyles.marginBottom]}>
                 { gameState[teamRef].tricks[2].value }
               </Text>
               <Touchable
@@ -278,6 +278,9 @@ export default class GameReasons extends React.PureComponent {
 const styles = ScaledSheet.create({
   container: {
     flexGrow: 1,
+  },
+  extraMarginBottom: {
+    marginBottom: '35@vs',
   },
   inputButton: {
     backgroundColor: colors.white,
