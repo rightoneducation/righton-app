@@ -75,6 +75,18 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.screenProps.gameState.state.startQuiz !==
+      nextProps.screenProps.gameState.state.startQuiz) {
+      if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
+        this.props.navigation.navigate('GameReasons');
+      } else {
+        this.props.navigation.navigate('GameQuiz');
+      }
+    }
+  }
+
+
   componentWillUnmount() {
     clearTimeout(this.animationTimeout);
     clearInterval(this.animationInterval);
