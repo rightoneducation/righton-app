@@ -19,6 +19,11 @@ export default ScaledSheet.create({
     paddingVertical: '10@vs',
     margin: '15@s',
   },
+  gameRow: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   marginBottom: {
     marginBottom: '5@vs'
   },

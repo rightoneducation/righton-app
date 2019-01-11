@@ -28,10 +28,14 @@ export default function GameRoomOverview({ gameState, handleGamePreview, teams }
               onPress={() => handleGamePreview(`team${teamIdx}`)}
             >
               <View style={styles.gameContainer}>
-                <Text style={styles.textLabel}>{ `Team ${teamIdx + 1}` }</Text>
-                <Text style={styles.textLabel}>{ `${teams[teamIdx]} players` }</Text>
+                <View style={[styles.gameRow, styles.marginBottom]}>
+                  <Text style={styles.textLabel}>{ `Team ${teamIdx + 1}` }</Text>
+                  <Text style={styles.textLabel}>{ teams[teamIdx] === 1 ? '1 player' : `${teams[teamIdx]} players` }</Text>
+                </View>
                 <Text style={styles.textLabel}>Question:</Text>
-                <Text style={styles.textLabel}>{ gameState[key].question }</Text>
+                <Text style={[styles.textLabel, styles.marginBottom]}>
+                  { gameState[key].question }
+                </Text>
                 <Text style={[styles.textLabel, styles.marginBottom]}>Tricks:</Text>
                 {gameState[key].tricks.map(trick => (
                   <View
