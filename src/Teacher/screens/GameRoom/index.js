@@ -248,6 +248,7 @@ export default class GameRoom extends React.Component {
           <GameRoomOverview
             gameState={gameState}
             handleGamePreview={this.handleGamePreview}
+            players={players}
             teams={teams}
           />
         );
