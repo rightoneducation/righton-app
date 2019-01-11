@@ -37,7 +37,7 @@ export default function GameRoomPreview({
           {gameState[teamRef].choices.map(choice => (
             <Touchable
               activeOpacity={0.8}
-              key={choice.value}
+              key={choice.uid}
               onPress={() => {}}
             >
               <View style={gamePreviewStyles.choiceContainer}>
