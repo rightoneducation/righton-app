@@ -2,11 +2,14 @@ import { ScaledSheet } from 'react-native-size-matters';
 import { colors, fonts } from '../../../utils/theme';
 
 export default ScaledSheet.create({
+  alignRight: {
+    textAlign: 'right',
+  },
   dashboardContainer: {
     backgroundColor: colors.dark,
     flexGrow: 1,
     paddingHorizontal: '15@s',
-    paddingVertical: '25@vs',
+    paddingVertical: '15@vs',
   },
   gameContainer: {
     alignItems: 'flex-start',
@@ -21,13 +24,18 @@ export default ScaledSheet.create({
   },
   playersContainer: {
     alignItems: 'center',
-    flex: 0.5,
-    marginVertical: '10@vs',
   },
   teamsContainer: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'flex-start',
-    marginTop: '20@vs',
+    marginTop: '35@vs',
+  },
+  teamContainer: {
+    flex: 0.5,
+    height: '100@ms',
+    marginBottom: '10@vs',
   },
   textLabel: {
     color: colors.white,

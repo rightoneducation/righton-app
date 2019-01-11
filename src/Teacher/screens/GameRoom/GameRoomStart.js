@@ -13,15 +13,18 @@ export default function GameRoomStart({ gameState, handleStartGame, players, tea
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
     >
+      <Text style={[styles.textLabel, styles.textLarge, styles.alignRight]}>
+        { gameState.GameRoomID }
+      </Text>
       <View style={styles.playersContainer}>
         <Text style={[styles.textLabel, styles.textLarge]}>{ Object.keys(players).length }</Text>
-        <Text style={styles.textLabel}>Players</Text>
+        <Text style={styles.textLabel}>Players in game room</Text>
       </View>
       <View style={styles.teamsContainer}>
         {teams.map((val, idx) => (
-          <View key={`${Math.random()}`} style={styles.playersContainer}>
-            <Text style={[styles.textLabel, styles.textLarge]}>{ val }</Text>
+          <View key={`${Math.random()}`} style={styles.teamContainer}>
             <Text style={styles.textLabel}>{ `Team ${idx + 1}` }</Text>
+            <Text style={[styles.textLabel, styles.textLarge]}>{ val === 1 ? '1 player' : `${val} players` }</Text>
           </View>
         ))}
       </View>
