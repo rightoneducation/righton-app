@@ -153,12 +153,15 @@ export default class Dashboard extends React.Component {
           getGameFromDynamoDB(room, this.handleGameFound, this.handleGameError);
         } else {
           this.setState({
-            closeFunc: this.handleCloseMessage,
-            bodyStyle: null,
-            textStyle: null,
-            duration: null,
-            message: 'Network error.',
-            timeout: 4000,
+            portal: '',
+            messageProps: {
+              closeFunc: this.handleCloseMessage,
+              bodyStyle: null,
+              textStyle: null,
+              duration: null,
+              message: 'Network connection error.',
+              timeout: 4000,
+            },
           });
         }
       });
