@@ -47,6 +47,7 @@ export default ScaledSheet.create({
   },
   choiceDot: {
     borderColor: colors.white,
+    borderRadius: 100,
     borderWidth: 1,
     height: '10@s',
     width: '10@s',
