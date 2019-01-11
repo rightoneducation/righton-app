@@ -65,6 +65,9 @@ export default ScaledSheet.create({
   image: {
 
   },
+  marginBottom: {
+    marginBottom: '15@vs',
+  },
   question: {
     color: colors.white,
     fontSize: fonts.large,
@@ -96,7 +99,7 @@ export default ScaledSheet.create({
   trickItem: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: '5@vs',
+    marginBottom: '15@vs',
   },
   tricksContainer: {
     alignItems: 'flex-start',
@@ -112,8 +115,10 @@ export default ScaledSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     justifyContent: 'flex-start',
-    margin: '15@ms',
+    marginHorizontal: '15@ms',
+    marginVertical: '35@vs',
     paddingHorizontal: '15@s',
-    paddingVertical: '20@vs',
+    paddingBottom: '5@vs',
+    paddingTop: '20@vs',
   },
 });

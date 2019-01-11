@@ -284,6 +284,9 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.tricksWrapper}>
+        <Text style={[styles.choiceAnswer, styles.marginBottom]}>
+          Select at least three trick answers
+        </Text>
         <View style={styles.tricksContainer}>
           {tricks.map((trick, idx) => (
             <View
