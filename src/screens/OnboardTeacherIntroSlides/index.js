@@ -83,7 +83,7 @@ export default class OnboardIntroSlides extends React.PureComponent {
           <View style={styles.textContainer}>
             <Text style={styles.title}>RightOn</Text>
             <Text style={styles.subtitle}>
-              Foster a culture of error where mistakes are expected, respected, and inspected
+              Foster a culture of error where mistakes are both expected and respected
             </Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
@@ -105,8 +105,17 @@ export default class OnboardIntroSlides extends React.PureComponent {
           <View style={styles.textContainer}>
             <Text style={styles.title}>RightOn</Text>
             <Text style={styles.subtitle}>
-              Create quizzes not only faster, but also with better distractors -- 
-              ones that were generated and validated by your own students
+              Create better quizzes faster
+            </Text>
+          </View>
+          <Image source={{ uri: GradCap }} style={styles.image} />
+        </View>
+
+        <View style={styles.container}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>RightOn</Text>
+            <Text style={styles.subtitle}>
+              Reduce time grading, increase time engaging!
             </Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
