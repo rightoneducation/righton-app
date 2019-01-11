@@ -2,14 +2,20 @@ import React from 'react';
 import {
   Animated,
   Image,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Touchable from 'react-native-platform-touchable';
+import { scale } from 'react-native-size-matters';
+import Message from '../../../components/Message';
+import InputModal from '../../../components/InputModal';
 import HeaderTeam from '../../components/HeaderTeam';
 import Instructions from '../../../components/Instructions';
 import ButtonRound from '../../../components/ButtonRound';
+import { deviceWidth } from '../../../utils/theme';
 import styles from './styles';
 
 
@@ -17,6 +23,8 @@ export default class GamePreview extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({ type: PropTypes.any }),
+      handleSetAppState: PropTypes.func.isRequired,
+      IOTPublishMessage: PropTypes.func.isRequired,
       team: PropTypes.number.isRequired,
     }),
   }
@@ -33,6 +41,8 @@ export default class GamePreview extends React.PureComponent {
           uid: '',
         },
       },
+      handleSetAppState: () => {},
+      IOTPublishMessage: () => {},
       team: 0,
     },
   }
@@ -48,10 +58,14 @@ export default class GamePreview extends React.PureComponent {
     this.animatedArrow3 = new Animated.Value(0);
 
     this.state = {
+      messageProps: {},
+      showInput: false,
       showInstructions: false,
     };
 
-    this.navigateToGameTricks = this.navigateToGameTricks.bind(this);
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
+    this.closeInputModal = this.closeInputModal.bind(this);
+    this.handleInputModal = this.handleInputModal.bind(this);
     this.toggleInstructions = this.toggleInstructions.bind(this);
   }
 
@@ -69,11 +83,6 @@ export default class GamePreview extends React.PureComponent {
 
   startAnimation() {
     this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
-  }
-
-
-  navigateToGameTricks() {
-    this.props.navigation.navigate('GameTricks');
   }
 
 
@@ -137,6 +146,99 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
+  handleInputModal() {
+    this.setState({
+      showInput: {
+        autoCapitalize: 'sentences',
+        closeModal: this.closeInputModal,
+        keyboardType: 'default',
+        height: 45,
+        input: '',
+        inputLabel: '',
+        maxLength: 125,
+        multiline: true,
+        placeholder: 'Enter a trick answer',
+        visible: true,
+        spellCheck: true,
+        width: deviceWidth - scale(30),
+      }
+    });
+  }
+
+
+  closeInputModal(input) {
+    this.setState({ showInput: false });
+    if (input) {
+      const { handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
+      const teamRef = `team${team}`;
+      const uid = `${Math.random()}`;
+      const message = {
+        action: 'PUSH_TEAM_TRICK',
+        payload: { selected: false, uid, value: input, },
+        teamRef,
+        uid,
+      };
+      IOTPublishMessage(message);
+      const { gameState } = this.props.screenProps;
+      const updatedGameState = { ...gameState };
+      updatedGameState[teamRef].tricks.push(message.payload);
+      handleSetAppState('gameState', updatedGameState);
+    }
+  }
+
+
+  /**
+   * Updates `choicesList` for all players including teacher.
+   *
+   * @param {object} choice
+   * ex: {
+   *  value: `string`,
+   *  selected: `boolean`,
+   * }
+   */
+  handleTrickSelection(trick, index, gameState, teamRef) {
+    const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
+    const message = {
+      action: 'UPDATE_TEAM_TRICK',
+      index,
+      teamRef,
+      uid: `${Math.random()}`,
+    };
+    let selectedTricks = 0;
+    for (let i = 0; i < gameState[teamRef].tricks.length; i += 1) {
+      if (gameState[teamRef].tricks[i].selected) {
+        selectedTricks += 1;
+      }
+    }
+    if (trick.selected && selectedTricks === 3) {
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Maximum of three tricks selected.',
+          timeout: 4000,
+        },
+      });
+      return;
+    } else if (trick.selected) {
+      message.payload = false;
+    } else {
+      message.payload = true;
+    }
+    IOTPublishMessage(message);
+    const updatedGameState = { ...gameState };
+    updatedGameState[teamRef].tricks[index].selected = message.payload;
+    handleSetAppState('gameState', updatedGameState);
+  }
+
+
+  handleCloseMessage() {
+    this.setState({ messageProps: {} });
+  }
+
+
   renderArrowButton = () => (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -164,16 +266,51 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
+  renderTricks(gameState, teamRef) {
+    const { tricks } = gameState[teamRef];
+    if (!tricks.length) return null;
+
+    return (
+      <View style={styles.tricksWrapper}>
+        <View style={styles.tricksContainer}>
+          {tricks.map((trick, idx) => (
+            <View
+              key={trick.uid}
+              style={styles.trickItem}
+            >
+              <Touchable
+                activeOpacity={0.8}
+                hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                onPress={() => this.handleTrickSelection(trick, idx, gameState, teamRef)}
+              >
+                <View style={[styles.trickButton, trick.selected && styles.trickButtonSelected]} />
+              </Touchable>
+              <Text style={styles.trickValue}>{ trick.value }</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  }
+
+
   render() {
-    const { showInstructions } = this.state;
+    const {
+      messageProps,
+      showInput,
+      showInstructions
+    } = this.state;
 
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
 
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Message {...messageProps} />
+        {showInput && <InputModal {...showInput} />}
         <HeaderTeam team={`Team ${team + 1}`} />
         {this.renderQuestion()}
+        {this.renderTricks(gameState, teamRef)}
         {!showInstructions && this.renderArrowButton()}
         {showInstructions &&
           <Instructions
@@ -181,11 +318,12 @@ export default class GamePreview extends React.PureComponent {
             data={gameState[teamRef].instructions}
             visible={showInstructions}
           />}
-        <ButtonRound
-          icon={'pencil-square-o'}
-          onPress={this.navigateToGameTricks}
-        />
-      </View>
+        {!showInstructions && !showInput &&
+          <ButtonRound
+            icon={'pencil-square-o'}
+            onPress={this.handleInputModal}
+          />}
+      </ScrollView>
     );
   }
 }

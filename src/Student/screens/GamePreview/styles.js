@@ -82,4 +82,38 @@ export default ScaledSheet.create({
     right: '5@s',
     top: '25@vs',
   },
+  trickButton: {
+    borderColor: colors.white,
+    borderRadius: 100,
+    borderWidth: 1,
+    height: '15@ms',
+    marginHorizontal: '15@s',
+    width: '15@ms',
+  },
+  trickButtonSelected: {
+    backgroundColor: colors.primary,
+  },
+  trickItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: '5@vs',
+  },
+  tricksContainer: {
+    alignItems: 'flex-start',
+  },
+  trickValue: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  tricksWrapper: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    borderColor: colors.grey,
+    borderRadius: 5,
+    borderWidth: 1,
+    justifyContent: 'flex-start',
+    margin: '15@ms',
+    paddingHorizontal: '15@s',
+    paddingVertical: '20@vs',
+  },
 });
