@@ -62,9 +62,8 @@ export default class GameReasons extends React.PureComponent {
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.screenProps.gameState.state.startQuiz !==
-      nextProps.screenProps.gameState.state.startQuiz &&
-      this.props.screenProps.gameState.state.endQuiz !== true) {
+    if (nextProps.screenProps.gameState.state.startQuiz &&
+      nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
       this.props.navigation.navigate('GameQuiz');
     }
   }
@@ -227,7 +226,9 @@ export default class GameReasons extends React.PureComponent {
               ref={this.handleTrick0Ref}
               style={styles.inputContainer}
             >
-              <Text style={gamePreviewStyles.choiceAnswer}>{ gameState[teamRef].tricks[0] }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>
+                { gameState[teamRef].tricks[0].value }
+              </Text>
               <Touchable
                 onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
                 style={[styles.inputButton, elevation]}
@@ -241,7 +242,9 @@ export default class GameReasons extends React.PureComponent {
               ref={this.handleTrick1Ref}
               style={styles.inputContainer}
             >
-              <Text style={gamePreviewStyles.choiceAnswer}>{ gameState[teamRef].tricks[1] }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>
+                { gameState[teamRef].tricks[1].value }
+              </Text>
               <Touchable
                 onPress={() => this.handleInputModal('trick1', 'Enter your reason', 500, trick1Reason)}
                 style={[styles.inputButton, elevation]}
@@ -255,7 +258,9 @@ export default class GameReasons extends React.PureComponent {
               ref={this.handleTrick2Ref}
               style={styles.inputContainer}
             >
-              <Text style={gamePreviewStyles.choiceAnswer}>{ gameState[teamRef].tricks[2] }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>
+                { gameState[teamRef].tricks[2].value }
+              </Text>
               <Touchable
                 onPress={() => this.handleInputModal('trick2', 'Enter your reason', 500, trick2Reason)}
                 style={[styles.inputButton, elevation]}
