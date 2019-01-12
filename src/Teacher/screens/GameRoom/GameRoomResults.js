@@ -151,35 +151,35 @@ export default class GameRoomResults extends React.Component {
         >
           <View style={gamePreviewStyles.choicesContainer}>
             <View style={gamePreviewStyles.choiceContainer}>
-              {choices[0].correct ?
+              {choices[0] && choices[0].correct ?
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[0].value }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[0] && choices[0].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.firstChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
-              {choices[1].correct ?
+              {choices[1] && choices[1].correct ?
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[1].value }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[1] && choices[1].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.secondChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
-              {choices[2].correct ?
+              {choices[2] && choices[2].correct ?
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[2].value }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[2] && choices[2].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.thirdChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
-              {choices[3].correct ?
+              {choices[3] && choices[3].correct ?
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[3].value }</Text>
+              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[3] && choices[3].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.fourthChoice }]} />
           </View>
