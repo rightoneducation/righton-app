@@ -16,6 +16,7 @@ export default class GameRoom extends React.Component {
       gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
+      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
       navigation: PropTypes.shape({
         navigate: PropTypes.func.isRequired,
         state: PropTypes.shape({
@@ -31,6 +32,7 @@ export default class GameRoom extends React.Component {
       gameState: {},
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
+      IOTUnsubscribeFromTopic: () => {},
       navigation: {
         navigate: () => {},
         state: {
@@ -54,6 +56,7 @@ export default class GameRoom extends React.Component {
     this.mounted = true;
 
     this.handleBackFromChild = this.handleBackFromChild.bind(this);
+    this.handleEndGame = this.handleEndGame.bind(this);
     this.handleGamePreview = this.handleGamePreview.bind(this);
     this.handleNextTeam = this.handleNextTeam.bind(this);  
     this.handleViewResults = this.handleViewResults.bind(this);
@@ -241,6 +244,27 @@ export default class GameRoom extends React.Component {
   }
 
 
+  handleEndGame() {
+    const {
+      handleSetAppState,
+      IOTPublishMessage,
+      IOTUnsubscribeFromTopic,
+    } = this.props.screenProps;
+    const message = {
+      action: 'END_GAME',
+      uid: `${Math.random()}`,
+    };
+    IOTPublishMessage(message);
+    setTimeout(() => {
+      // TODO! Save game details to teacher account & QuizMaker database
+      IOTUnsubscribeFromTopic();
+      handleSetAppState('gameState', {});
+      handleSetAppState('players', {});
+      this.props.screenProps.navigation.navigate('TeacherApp');
+    }, 0);
+  }
+
+
   render() {
     const { gameState, players } = this.props.screenProps;
     const {
@@ -307,6 +331,7 @@ export default class GameRoom extends React.Component {
           <GameRoomFinal
             gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
+            handleEndGame={this.handleEndGame}
             numberOfPlayers={Object.keys(players).length}
           />
         );
