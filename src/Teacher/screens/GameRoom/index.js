@@ -1,22 +1,12 @@
 import React from 'react';
-// import {
-//   // Image,
-//   ScrollView,
-//   // StatusBar,
-//   Text,
-//   View,
-// } from 'react-native';
 import PropTypes from 'prop-types';
-// import Swiper from 'react-native-swiper';
 import Portal from '../../../screens/Portal';
-// import ButtonBack from '../../../components/ButtonBack';
 import GameRoomStart from './GameRoomStart';
 import GameRoomOverview from './GameRoomOverview';
 import GameRoomPreview from './GameRoomPreview';
 import GameRoomResults from './GameRoomResults';
+import GameRoomFinal from './GameRoomFinal';
 // import LocalStorage from '../../../../lib/Categories/LocalStorage';
-// import { colors, deviceWidth, fonts } from '../../../utils/theme';
-// import styles from './styles';
 import debug from '../../../utils/debug';
 
 
@@ -103,7 +93,7 @@ export default class GameRoom extends React.Component {
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
       if (gameStateKeys[i].includes('team')) {
-        if (Object.keys(gameStateKeys[i].choices).length === 0) {
+        if (gameState[gameStateKeys[i]].choices.length === 0) {
           nextTeamRef = `team${i}`;
           break;
         }
@@ -246,8 +236,7 @@ export default class GameRoom extends React.Component {
     if (nextTeam.length) {
       this.handleGamePreview(nextTeam);
     } else {
-      debug.log('Game has ended!');
-      // Game ends. Show a final results screen. TODO!
+      this.setState({ renderType: 'final', preview: '' });
     }
   }
 
@@ -311,6 +300,14 @@ export default class GameRoom extends React.Component {
             nextTeam={nextTeam}
             numberOfPlayers={Object.keys(players).length}
             teamRef={preview}
+          />
+        );
+      case 'final':
+        return (
+          <GameRoomFinal
+            gameState={gameState}
+            handleBackFromChild={this.handleBackFromChild}
+            numberOfPlayers={Object.keys(players).length}
           />
         );
       default:
