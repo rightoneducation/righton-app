@@ -50,11 +50,11 @@ export default class InputModal extends React.PureComponent {
     y: Number.POSITIVE_INFINITY,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      input: '',
+      input: props.input || '',
     };
     this.handleInput = this.handleInput.bind(this);
     this.handleInputBlur = this.handleInputBlur.bind(this);
@@ -64,15 +64,7 @@ export default class InputModal extends React.PureComponent {
 
 
   componentDidMount() {
-    this.setInputState();
     setTimeout(() => this.inputRef.focus(), 100);
-  }
-
-
-  setInputState() {
-    if (this.props.input) {
-      this.setState({ input: this.props.input });
-    }
   }
 
 
