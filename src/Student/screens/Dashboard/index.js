@@ -83,6 +83,10 @@ export default class Dashboard extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState && nextProps.screenProps.gameState.state &&
       nextProps.screenProps.gameState.state.start === true && typeof nextProps.screenProps.team === 'number') {
+      if (__DEV__) {
+        this.props.screenProps.navigation.navigate('GamePreview');
+        return;
+      }
       this.setState({ portal: '5' });
       setTimeout(() => this.setState({ portal: '4' }), 1000);
       setTimeout(() => this.setState({ portal: '3' }), 2000);
