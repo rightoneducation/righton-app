@@ -97,6 +97,7 @@ const RootNavigator = createSwitchNavigator({
             gameState: screenProps.gameState,
             handleSetAppState: screenProps.handleSetAppState,
             IOTPublishMessage: screenProps.IOTPublishMessage,
+            IOTUnsubscribeFromTopic: screenProps.IOTUnsubscribeFromTopic,
             navigation,
             players: screenProps.players,
           }}
