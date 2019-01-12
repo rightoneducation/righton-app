@@ -54,6 +54,7 @@ export default class GameRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      nextTeam: '',
       portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
       preview: null,
       renderType: 'portal',
@@ -64,9 +65,10 @@ export default class GameRoom extends React.Component {
 
     this.handleBackFromChild = this.handleBackFromChild.bind(this);
     this.handleGamePreview = this.handleGamePreview.bind(this);
+    this.handleNextTeam = this.handleNextTeam.bind(this);  
     this.handleViewResults = this.handleViewResults.bind(this);
     this.handleStartGame = this.handleStartGame.bind(this);
-    this.handleStartQuiz = this.handleStartQuiz.bind(this);    
+    this.handleStartQuiz = this.handleStartQuiz.bind(this);
   }
 
 
@@ -95,20 +97,23 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleStartGame() {
-    const message = {
-      action: 'START_GAME',
-      uid: `${Math.random()}`,
-      payload: { start: true },
-    };
-    this.props.screenProps.IOTPublishMessage(message);
-    setTimeout(() => this.mounted && this.setState({ portal: '5', renderType: 'portal' }), 256);
-    setTimeout(() => this.mounted && this.setState({ portal: '4' }), 1000);
-    setTimeout(() => this.mounted && this.setState({ portal: '3' }), 2000);
-    setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
-    setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
-    setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
-    setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'overview' }), 5500);
+  setNextTeam() {
+    const { gameState } = this.props.screenProps;
+    let nextTeamRef;
+    const gameStateKeys = Object.keys(gameState);
+    for (let i = 0; i < gameStateKeys.length; i += 1) {
+      if (gameStateKeys[i].includes('team')) {
+        if (Object.keys(gameStateKeys[i].choices).length === 0) {
+          nextTeamRef = `team${i}`;
+          break;
+        }
+      }
+    }
+    if (typeof nextTeamRef === 'number') {
+      this.setState({ nextTeam: nextTeamRef });
+    } else {
+      this.setState({ nextTeam: '' });
+    }
   }
 
 
@@ -172,7 +177,28 @@ export default class GameRoom extends React.Component {
       };
       IOTPublishMessage(message);
     }
-    this.setState({ renderType: 'preview', preview: teamRef });
+    this.setState({ renderType: 'preview', preview: teamRef }, () => this.setNextTeam());
+  }
+
+
+  handleStartGame() {
+    const message = {
+      action: 'START_GAME',
+      uid: `${Math.random()}`,
+      payload: { start: true },
+    };
+    this.props.screenProps.IOTPublishMessage(message);
+    if (__DEV__) {
+      this.setState({ portal: false, renderType: 'overview' });
+      return;
+    }
+    setTimeout(() => this.mounted && this.setState({ portal: '5', renderType: 'portal' }), 256);
+    setTimeout(() => this.mounted && this.setState({ portal: '4' }), 1000);
+    setTimeout(() => this.mounted && this.setState({ portal: '3' }), 2000);
+    setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
+    setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
+    setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
+    setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'overview' }), 5500);
   }
 
 
@@ -215,9 +241,21 @@ export default class GameRoom extends React.Component {
   }
 
 
+  handleNextTeam() {
+    const { nextTeam } = this.state;
+    if (nextTeam.length) {
+      this.handleGamePreview(nextTeam);
+    } else {
+      debug.log('Game has ended!');
+      // Game ends. Show a final results screen. TODO!
+    }
+  }
+
+
   render() {
     const { gameState, players } = this.props.screenProps;
     const {
+      nextTeam,
       renderType,
       portal,
       preview,
@@ -267,8 +305,10 @@ export default class GameRoom extends React.Component {
           <GameRoomResults
             gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
+            handleNextTeam={this.handleNextTeam}
             handleViewResults={this.handleViewResults}
             handleStartQuiz={this.handleStartQuiz}
+            nextTeam={nextTeam}
             numberOfPlayers={Object.keys(players).length}
             teamRef={preview}
           />

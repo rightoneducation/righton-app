@@ -20,7 +20,8 @@ export default class GameRoomResults extends React.Component {
   static propTypes = {
     gameState: PropTypes.shape({}),
     handleBackFromChild: PropTypes.func.isRequired,
-    handleNextQuiz: PropTypes.func.isRequired,
+    handleNextTeam: PropTypes.func.isRequired,
+    nextTeam: PropTypes.string.isRequired,
     numberOfPlayers: PropTypes.number.isRequired,
     teamRef: PropTypes.string.isRequired,
   };
@@ -28,7 +29,8 @@ export default class GameRoomResults extends React.Component {
   static defaultProps = {
     gameState: {},
     handleBackFromChild: () => {},
-    handleNextQuiz: () => {},
+    handleNextTeam: () => {},
+    nextTeam: '',
     numberOfPlayers: 0,
     teamRef: 'team0',
   };
@@ -123,7 +125,8 @@ export default class GameRoomResults extends React.Component {
     const {
       gameState,
       handleBackFromChild,
-      handleNextQuiz,
+      handleNextTeam,
+      nextTeam,
       teamRef,
     } = this.props;
 
@@ -182,8 +185,8 @@ export default class GameRoomResults extends React.Component {
           </View>
         </View>
         <ButtonWide
-          label={'Next quiz'}
-          onPress={() => handleNextQuiz()}
+          label={nextTeam ? 'Next team' : 'End game'}
+          onPress={() => handleNextTeam()}
         />
       </ScrollView>
     );
