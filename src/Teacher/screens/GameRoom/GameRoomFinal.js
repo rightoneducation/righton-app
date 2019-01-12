@@ -17,12 +17,14 @@ export default class GameRoomFinal extends React.Component {
   static propTypes = {
     gameState: PropTypes.shape({}),
     handleBackFromChild: PropTypes.func.isRequired,
+    handleEndGame: PropTypes.func.isRequired,
     numberOfPlayers: PropTypes.number.isRequired,
   };
   
   static defaultProps = {
     gameState: {},
     handleBackFromChild: () => {},
+    handleEndGame: () => {},
     numberOfPlayers: 0,
   };
 
@@ -118,6 +120,7 @@ export default class GameRoomFinal extends React.Component {
     const {
       gameState,
       handleBackFromChild,
+      handleEndGame,
       numberOfPlayers,
     } = this.props;
 
@@ -150,7 +153,7 @@ export default class GameRoomFinal extends React.Component {
 
         <ButtonWide
           label={'End game'}
-          onPress={() => {}}
+          onPress={handleEndGame}
         />
       </ScrollView>
     );
