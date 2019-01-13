@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     // width: 100, // Passed in via props
     // height: 100,
     backgroundColor: 'transparent',
-    borderColor: '#000',
+    borderColor: '#fff',
     borderRadius: 10000, // Defaults to half of width & height
     borderWidth: 1,
     position: 'absolute',
