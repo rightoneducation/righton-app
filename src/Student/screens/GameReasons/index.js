@@ -223,7 +223,7 @@ export default class GameReasons extends React.PureComponent {
       >
         {showInput &&
           <InputModal {...showInput} />}
-        <HeaderTeam team={gameState[teamRef].team} />
+        <HeaderTeam team={`Team ${team + 1}`} />
         {this.renderQuestion()}
         <View style={styles.extraMarginBottom}>
           <View>
