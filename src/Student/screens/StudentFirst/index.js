@@ -18,7 +18,11 @@ export default class StudentFirst extends React.Component {
 
 
   handleRoomSubmit(room) {
-    this.props.navigation.navigate('StudentApp', { GameRoomID: room });
+    if (room) {
+      this.props.navigation.navigate('StudentApp', { GameRoomID: room });
+    } else {
+      this.props.navigation.navigate('StudentApp');
+    }
   }
 
 
