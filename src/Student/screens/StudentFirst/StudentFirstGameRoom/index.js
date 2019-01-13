@@ -39,6 +39,7 @@ export default class GameRoom extends React.PureComponent {
 
     this.onRoomInput = this.onRoomInput.bind(this);
     this.onRoomSubmit = this.onRoomSubmit.bind(this);
+    this.onJoinLater = this.onJoinLater.bind(this);
   }
 
 
@@ -50,6 +51,11 @@ export default class GameRoom extends React.PureComponent {
   onRoomSubmit() {
     const { room } = this.state;
     this.props.screenProps.handleRoomSubmit(room);
+  }
+
+
+  onJoinLater() {
+    this.props.screenProps.handleRoomSubmit();
   }
 
 
@@ -84,7 +90,7 @@ export default class GameRoom extends React.PureComponent {
         <Touchable
           activeOpacity={0.8}
           hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          onPress={this.onRoomSubmit}
+          onPress={this.onJoinLater}
           style={GameRoomStyles.skipButton}
         >
           <Text style={GameRoomStyles.skip}>Join later</Text>
