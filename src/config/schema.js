@@ -14,6 +14,7 @@ const gameState = {
     time: 'string',
     uid: 'string',
     tricks: ['string'],
+    points: 'number',
   }],
   GameRoomID: 'string',
   state: 'object',
