@@ -55,6 +55,7 @@ export default class App extends React.Component {
       appState: AppState.currentState,
       gameState: {},
       players: {},
+      points: 0,
       ready: false,
       role: '', // 'Teacher' | 'Student'
       session: null,
@@ -125,12 +126,14 @@ export default class App extends React.Component {
 
 
   handleAppStateChange(nextAppState) {
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      debug.log('App has come to the foreground!');
-      const { gameState } = this.state;
-      if (typeof gameState === 'object' && gameState.GameRoomID) {
-        debug.log('Resubscribing to GameRoom:', gameState.GameRoomID);
+    const { appState, gameState } = this.state;
+    if (typeof gameState === 'object' && gameState.GameRoomID) {
+      if (appState.match(/inactive|background/) && nextAppState === 'active') {
+        debug.log('App has come to the foreground - resubscribing to GameRoom:', gameState.GameRoomID);
         this.IOTSubscribeToTopic(gameState.GameRoomID);
+      } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+        debug.log('App going into background - unsubscribing from GameRoom:', gameState.GameRoomID);
+        this.IOTUnsubscribeFromTopic(gameState.GameRoomID);
       }
     }
     this.setState({ appState: nextAppState });
@@ -165,6 +168,9 @@ export default class App extends React.Component {
         break;
       case 'players':
         this.setState({ players: value });
+        break;
+      case 'points':
+        this.setState({ points: this.state.points + value });
         break;   
       default:
         break;
@@ -209,6 +215,7 @@ export default class App extends React.Component {
     const { 
       gameState,
       players,
+      points,
       // ready,
       session,
       team,
@@ -225,6 +232,7 @@ export default class App extends React.Component {
         screenProps={{
           gameState,
           players,
+          points,
           session,
           team,
           onSignIn: onSignIn || this.handleOnSignIn,
