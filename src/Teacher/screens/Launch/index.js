@@ -182,8 +182,6 @@ class Launch extends React.Component {
     
     this.props.screenProps.IOTSubscribeToTopic(room);
 
-    // TODO! Handle navigating to Teacher Game Room.
-
     setTimeout(() => {
       const message = {
         action: 'SET_GAME_STATE',
