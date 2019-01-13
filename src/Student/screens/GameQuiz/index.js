@@ -69,7 +69,7 @@ export default class GameQuiz extends React.Component {
         this.setState({ timeLeft: 'Time is up!' });
       }
     } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
-    nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
+      nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
       this.props.navigation.navigate('GameReasons');
     }
   }
@@ -80,6 +80,18 @@ export default class GameQuiz extends React.Component {
   }
 
 
+  handleCheckAndPoints() {
+    const { selectedChoice } = this.state;
+    const { gameState, handleSetAppState } = this.props.screenProps;
+    const { teamRef } = gameState.state;
+    if (gameState[teamRef].choices[selectedChoice].correct) {
+      handleSetAppState('points', 50);
+      return 50;
+    }
+    return 0;
+  }
+
+  
   countdownTime() {
     const { timeLeft } = this.state;
     const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
@@ -102,13 +114,18 @@ export default class GameQuiz extends React.Component {
 
   publishChoice() {
     const { selectedChoice } = this.state;
-    if (!selectedChoice) return;
+    if (typeof selectedChoice !== 'number') return;
+    const { team } = this.props.screenProps;
     const { teamRef } = this.props.screenProps.gameState.state;
     const message = {
-      action: 'UPDATE_PLAYER_CHOICE',
+      action: 'UPDATE_PLAYER_CHOICE_AND_TEAM_POINTS',
       uid: `${Math.random()}`,
       teamRef,
       index: selectedChoice,
+      points: {
+        teamRef: `team${team}`,
+        value: this.handleCheckAndPoints(),
+      }
     };
     this.props.screenProps.IOTPublishMessage(message);
   }
