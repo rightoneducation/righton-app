@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 // import Triangle from '../../components/Triangle';
 import Circle from '../../components/Circle';
@@ -95,8 +95,6 @@ export default class Portal extends React.PureComponent {
 
   renderMessageType(type) {
     switch (type) {
-      case 'righton':
-        return this.renderRightOnMessage();
       case 'single':
         return this.renderSingleMessage();
       case 'doubleSub':
@@ -110,47 +108,6 @@ export default class Portal extends React.PureComponent {
       default:
         return null;
     }
-  }
-
-  renderRightOnMessage() {
-    // *TODO: Where do we check whether players share the same wrong answers?
-    // - This must happen prior to rendering this screen as the `messageValues` prop must be set.
-    // TODO: Replace TouchableOpacity w/ react-native-touchable
-    const { players } = this.props.messageValues; 
-    // @prop players: [{image: base64, name: playerName}, ...]
-    let others = '';
-    for (let i = 1; i < players.length; i += 1) {
-      others += ` and ${players[i].name}`;
-    }
-    return (
-      <View style={styles.rightOnContainer}>
-        <Text style={styles.mainMessage}>RIGHT ON!</Text>
-        <Text style={styles.subMessage}>{`You${others} came up with the same wrong answer!`}</Text>
-        <View style={styles.rightOnPlayersContainer}>
-          { 
-            players.map(player => (
-              <View style={styles.rightOnPlayerContainer}>
-                {
-                  player.image ? 
-                    <Image source={{ uri: player.image }} style={styles.rightOnPlayerImage} />
-                    : 
-                    <View style={styles.rightOnPlayerImage} />
-                }
-                <Text style={styles.rightOnPlayerName}>{ player.name }</Text>
-              </View>
-            )) 
-          }
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.rightOnWaveContainer}
-          onPress={() => {}}
-        >
-          { /* Wave icon */ }
-          <Text style={styles.subMessage}>Wave</Text>
-        </TouchableOpacity>
-      </View>
-    );
   }
 
   renderSingleMessage() {
