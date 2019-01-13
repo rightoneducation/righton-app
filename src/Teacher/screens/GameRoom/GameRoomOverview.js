@@ -7,8 +7,17 @@ import {
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import styles from './styles';
+import ButtonWide from '../../../components/ButtonWide';
 
-export default function GameRoomOverview({ gameState, handleGamePreview, players, teams }) {
+export default function GameRoomOverview({
+  gameState,
+  handleEndGame,
+  handleGamePreview,
+  handleStartRandomGame,
+  nextTeam,
+  players,
+  teams,
+}) {
   const gameKeys = typeof gameState === 'object' ? Object.keys(gameState) : [];
   return (
     <ScrollView
@@ -35,6 +44,16 @@ export default function GameRoomOverview({ gameState, handleGamePreview, players
       >
         Total number of players: { Object.keys(players).length }
       </Text>
+
+      <ButtonWide
+        buttonStyles={{
+          position: 'relative',
+          marginVertical: 15,
+        }}
+        label={nextTeam ? 'Begin Quizzing' : 'Close Gameroom'}
+        onPress={nextTeam ? handleStartRandomGame : handleEndGame}
+      />
+
       {gameKeys.map((key) => {
         if (!key.includes('team')) return null;
         const teamIdx = parseInt(key.substr(4), 10);
@@ -79,14 +98,20 @@ export default function GameRoomOverview({ gameState, handleGamePreview, players
 
 GameRoomOverview.propTypes = {
   gameState: PropTypes.shape({}),
+  handleEndGame: PropTypes.func.isRequired,
   handleGamePreview: PropTypes.func.isRequired,
+  handleStartRandomGame: PropTypes.func.isRequired,
+  nextTeam: PropTypes.string,
   players: PropTypes.shape({}),
   teams: PropTypes.arrayOf(PropTypes.number),
 };
 
 GameRoomOverview.defaultProps = {
   gameState: {},
+  handleEndGame: () => {},
   handleGamePreview: () => {},
+  handleStartRandomGame: () => {},
+  nextTeam: '',
   players: {},
   teams: [],
 };
