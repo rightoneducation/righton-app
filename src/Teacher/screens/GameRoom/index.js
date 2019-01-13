@@ -114,62 +114,61 @@ export default class GameRoom extends React.Component {
   handleGamePreview(teamRef) {
     const { gameState } = this.props.screenProps;
     // Create a random order of choices mixed with the correct answer.
-    if (gameState[teamRef].choices.length === 0) {
-      const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
-      const updatedGameState = { ...gameState };
-      
-      const selectedTricks = gameState[teamRef].tricks.filter(trick => trick.selected);
-      debug.log('selectedTricks:', selectedTricks);
-      
-      if (!selectedTricks.length && gameState[teamRef].tricks.length) {
-        for (let i = 0;
-          i < gameState[teamRef].tricks.length || selectedTricks.length !== 3;
-          i += 1) {
-          selectedTricks.push(gameState[teamRef].tricks[i]);
-        }
+    const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
+    const updatedGameState = { ...gameState };
+    
+    const selectedTricks = gameState[teamRef].tricks.filter(trick => trick.selected);
+    debug.log('selectedTricks:', selectedTricks);
+    
+    if (!selectedTricks.length && gameState[teamRef].tricks.length) {
+      for (let i = 0;
+        i < gameState[teamRef].tricks.length || selectedTricks.length !== 3;
+        i += 1) {
+        selectedTricks.push(gameState[teamRef].tricks[i]);
       }
+    }
 
-      const dualUid = `${Math.random()}`;
-      const choicesLimit = selectedTricks.length + 1;
-      const choices = [];
-      choices[choicesLimit - 1] = null;
-      choices.fill(null, 0, choicesLimit - 1);
-      // Map the correct answer to the index in the random ordered array.
-      const correctIndex = Math.floor(Math.random() * choicesLimit);
-      choices[correctIndex] =
-        { correct: true, uid: dualUid, value: gameState[teamRef].answer, votes: 0 };
+    const dualUid = `${Math.random()}`;
+    const choicesLimit = selectedTricks.length + 1;
+    const choices = [];
+    choices[choicesLimit - 1] = null;
+    choices.fill(null, 0, choicesLimit - 1);
+    // Map the correct answer to the index in the random ordered array.
+    const correctIndex = Math.floor(Math.random() * choicesLimit);
+    choices[correctIndex] =
+      { correct: true, uid: dualUid, value: gameState[teamRef].answer, votes: 0 };
 
-      let trickAnswerIndex = 0;
-      while (choices.indexOf(null) > -1 && trickAnswerIndex < choicesLimit - 1) {
-        const randomIndex = Math.floor(Math.random() * choicesLimit);
-        if (!choices[randomIndex]) {
-          choices[randomIndex] = { uid: `${Math.random()}`, value: selectedTricks[trickAnswerIndex].value, votes: 0 };
-          trickAnswerIndex += 1;
-        }
-        if (choices.indexOf(null) === choices.lastIndexOf(null)) {
-          // Last spot left - plug in the remaining trick value.
-          for (let i = 0; i < choicesLimit; i += 1) {
-            if (choices[i] === null) {
-              choices[i] = { uid: `${Math.random()}`, value: selectedTricks[trickAnswerIndex].value, votes: 0 };
-              trickAnswerIndex += 1;
-            }
+    let trickAnswerIndex = 0;
+    while (choices.indexOf(null) > -1 && trickAnswerIndex < choicesLimit - 1) {
+      const randomIndex = Math.floor(Math.random() * choicesLimit);
+      if (!choices[randomIndex]) {
+        choices[randomIndex] = { uid: `${Math.random()}`, value: selectedTricks[trickAnswerIndex].value, votes: 0 };
+        trickAnswerIndex += 1;
+      }
+      if (choices.indexOf(null) === choices.lastIndexOf(null)) {
+        // Last spot left - plug in the remaining trick value.
+        for (let i = 0; i < choicesLimit; i += 1) {
+          if (choices[i] === null) {
+            choices[i] = { uid: `${Math.random()}`, value: selectedTricks[trickAnswerIndex].value, votes: 0 };
+            trickAnswerIndex += 1;
           }
         }
       }
-
-      debug.log(`Choices for ${teamRef}:`, JSON.stringify(choices));
-
-      updatedGameState[teamRef].choices = choices;
-      handleSetAppState('gameState', updatedGameState);
-      
-      const message = {
-        action: 'SET_TEAM_CHOICES',
-        teamRef,
-        uid: dualUid,
-        payload: choices,
-      };
-      IOTPublishMessage(message);
     }
+
+    debug.log(`Choices for ${teamRef}:`, JSON.stringify(choices));
+
+    updatedGameState[teamRef].choices = choices;
+    handleSetAppState('gameState', updatedGameState);
+    
+    const message = {
+      action: 'SET_TEAM_CHOICES',
+      teamRef,
+      uid: dualUid,
+      payload: choices,
+    };
+    IOTPublishMessage(message);
+    
     this.setState({ renderType: 'preview', preview: teamRef }, () => this.setNextTeam());
   }
 
