@@ -77,6 +77,10 @@ export default ScaledSheet.create({
     alignItems: 'center',
     marginTop: '50@vs',
   },
+  questionContainerTeacher: {
+    // Account for back button
+    marginTop: '65@vs',
+  },
   time: {
     color: colors.white,
     fontSize: fonts.medium,

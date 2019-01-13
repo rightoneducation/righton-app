@@ -139,7 +139,9 @@ export default class GameRoomResults extends React.Component {
         <ButtonBack
           onPress={handleBackFromChild}
         />
-        <View style={gamePreviewStyles.questionContainer}>
+        <View 
+          style={[gamePreviewStyles.questionContainer, gamePreviewStyles.questionContainerTeacher]}
+        >
           <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
           {Boolean(gameState[teamRef].image) &&
             <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
