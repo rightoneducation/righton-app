@@ -109,7 +109,7 @@ export default class GameTricks extends React.PureComponent {
     }
 
     if (this.props.screenProps.gameState.state.startQuiz !==
-    nextProps.screenProps.gameState.state.startQuiz) {
+      nextProps.screenProps.gameState.state.startQuiz) {
       if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
         this.props.navigation.navigate('GameReasons');
       } else {
