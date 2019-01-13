@@ -46,7 +46,7 @@ export default class GameRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nextTeam: '',
+      nextTeam: 'team0',
       portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
       preview: null,
       renderType: 'portal',
@@ -62,6 +62,7 @@ export default class GameRoom extends React.Component {
     this.handleViewResults = this.handleViewResults.bind(this);
     this.handleStartGame = this.handleStartGame.bind(this);
     this.handleStartQuiz = this.handleStartQuiz.bind(this);
+    this.handleStartRandomGame = this.handleStartRandomGame.bind(this);
   }
 
 
@@ -92,17 +93,31 @@ export default class GameRoom extends React.Component {
 
   setNextTeam() {
     const { gameState } = this.props.screenProps;
+    const { preview } = this.state;
     let nextTeamRef;
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
-      if (gameStateKeys[i].includes('team')) {
-        if (gameState[gameStateKeys[i]].choices.length === 0) {
-          nextTeamRef = `team${i}`;
+      if (gameStateKeys[i].includes('team') && gameStateKeys[i] !== preview) {
+        const teamRef = gameStateKeys[i];
+        if (gameState[teamRef].choices.length === 0) {
+          nextTeamRef = teamRef;
+          break;
+        }
+        // Do a deeper check in case `handleGamePreview()` was operated on team
+        let completed = false;
+        for (let j = 0; j < gameState[teamRef].choices.length; j += 1) {
+          if (gameState[teamRef].choices[j].votes) {
+            completed = true;
+            break;
+          }
+        }
+        if (!completed) {
+          nextTeamRef = teamRef;
           break;
         }
       }
     }
-    if (typeof nextTeamRef === 'number') {
+    if (nextTeamRef) {
       this.setState({ nextTeam: nextTeamRef });
     } else {
       this.setState({ nextTeam: '' });
@@ -217,6 +232,34 @@ export default class GameRoom extends React.Component {
   }
 
 
+  handleStartRandomGame() {
+    const { gameState } = this.props.screenProps;
+    const gameStateKeys = Object.keys(gameState);
+    for (let i = 0; i < gameStateKeys.length; i += 1) {
+      if (gameStateKeys[i].includes('team')) {
+        const teamRef = gameStateKeys[i];
+        if (gameState[teamRef].choices.length === 0) {
+          this.handleGamePreview(teamRef);
+          return;
+        }
+        // Do a deeper check in case `handleGamePreview()` was operated on team
+        let completed = false;
+        for (let j = 0; j < gameState[teamRef].choices.length; j += 1) {
+          if (gameState[teamRef].choices[j].votes) {
+            completed = true;
+            break;
+          }
+        }
+        if (!completed) {
+          this.handleGamePreview(teamRef);
+          return;
+        }
+      }
+    }
+    // TODO Notify teacher that all quizzes have been completed.
+  }
+
+
   handleViewResults(teamRef) {
     const { IOTPublishMessage } = this.props.screenProps;
     const message = {
@@ -235,7 +278,7 @@ export default class GameRoom extends React.Component {
 
   handleNextTeam() {
     const { nextTeam } = this.state;
-    if (nextTeam.length) {
+    if (nextTeam) {
       this.handleGamePreview(nextTeam);
     } else {
       this.setState({ renderType: 'final', preview: '' });
@@ -297,7 +340,10 @@ export default class GameRoom extends React.Component {
         return (
           <GameRoomOverview
             gameState={gameState}
+            handleEndGame={this.handleEndGame}
             handleGamePreview={this.handleGamePreview}
+            handleStartRandomGame={this.handleStartRandomGame}
+            nextTeam={nextTeam}
             players={players}
             teams={teams}
           />
