@@ -82,38 +82,45 @@ export default class GameTricks extends React.PureComponent {
 
 
   componentWillReceiveProps(nextProps) {
-    const { team } = this.props.screenProps;
-    const teamRef = `team${team}`;
+    if (nextProps.screenProps.gameState.state) {
+      if (nextProps.screenProps.gameState.state.endGame === true) {
+        this.props.navigation.navigate('Dashboard');
+        return;
+      }
 
-    // Handle updating the tricks in state when teammates enter values. 
-    if (this.props.screenProps.gameState[teamRef].tricks[0] !== 
-      nextProps.screenProps.gameState[teamRef].tricks[0]) {
-      this.setState({
-        trick0: nextProps.screenProps.gameState[teamRef].tricks[0]
-      });
-      this.trick0Ref = nextProps.screenProps.gameState[teamRef].tricks[0];
-    }
-    if (this.props.screenProps.gameState[teamRef].tricks[1] !== 
-      nextProps.screenProps.gameState[teamRef].tricks[1]) {
-      this.setState({
-        trick1: nextProps.screenProps.gameState[teamRef].tricks[1]
-      });
-      this.trick1Ref = nextProps.screenProps.gameState[teamRef].tricks[1];
-    }
-    if (this.props.screenProps.gameState[teamRef].tricks[2] !== 
-      nextProps.screenProps.gameState[teamRef].tricks[2]) {
-      this.setState({
-        trick2: nextProps.screenProps.gameState[teamRef].tricks[2]
-      });
-      this.trick2Ref = nextProps.screenProps.gameState[teamRef].tricks[2];
-    }
+      const { team } = this.props.screenProps;
+      const teamRef = `team${team}`;
 
-    if (this.props.screenProps.gameState.state.startQuiz !==
-      nextProps.screenProps.gameState.state.startQuiz) {
-      if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
-        this.props.navigation.navigate('GameReasons');
-      } else {
-        this.props.navigation.navigate('GameQuiz');
+      // Handle updating the tricks in state when teammates enter values. 
+      if (this.props.screenProps.gameState[teamRef].tricks[0] !== 
+        nextProps.screenProps.gameState[teamRef].tricks[0]) {
+        this.setState({
+          trick0: nextProps.screenProps.gameState[teamRef].tricks[0]
+        });
+        this.trick0Ref = nextProps.screenProps.gameState[teamRef].tricks[0];
+      }
+      if (this.props.screenProps.gameState[teamRef].tricks[1] !== 
+        nextProps.screenProps.gameState[teamRef].tricks[1]) {
+        this.setState({
+          trick1: nextProps.screenProps.gameState[teamRef].tricks[1]
+        });
+        this.trick1Ref = nextProps.screenProps.gameState[teamRef].tricks[1];
+      }
+      if (this.props.screenProps.gameState[teamRef].tricks[2] !== 
+        nextProps.screenProps.gameState[teamRef].tricks[2]) {
+        this.setState({
+          trick2: nextProps.screenProps.gameState[teamRef].tricks[2]
+        });
+        this.trick2Ref = nextProps.screenProps.gameState[teamRef].tricks[2];
+      }
+
+      if (this.props.screenProps.gameState.state.startQuiz !==
+        nextProps.screenProps.gameState.state.startQuiz) {
+        if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
+          this.props.navigation.navigate('GameReasons');
+        } else {
+          this.props.navigation.navigate('GameQuiz');
+        }
       }
     }
   }

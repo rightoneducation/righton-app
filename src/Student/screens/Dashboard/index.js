@@ -73,6 +73,7 @@ export default class Dashboard extends React.Component {
     if (this.props.screenProps.navigation.state && this.props.screenProps.navigation.state.params &&
       this.props.screenProps.navigation.state.params.GameRoomID) {
       this.handleParamRoomEntry();
+      this.props.screenProps.navigation.state.params = {};
     }
     this.props.screenProps.handleSetRole('Student');
     Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
@@ -81,12 +82,18 @@ export default class Dashboard extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screenProps.gameState && nextProps.screenProps.gameState.state &&
-      nextProps.screenProps.gameState.state.start === true && typeof nextProps.screenProps.team === 'number') {
-      if (__DEV__) {
-        this.props.screenProps.navigation.navigate('GamePreview');
-        return;
-      }
+    if (nextProps.screenProps.gameState.state &&
+      nextProps.screenProps.gameState.state.endGame === true) {
+      this.setState({ portal: '' });
+      return;
+    }
+    if (nextProps.screenProps.gameState.state &&
+      nextProps.screenProps.gameState.state.start === true &&
+      typeof nextProps.screenProps.team === 'number') {
+      // if (__DEV__) {
+      //   this.props.screenProps.navigation.navigate('GamePreview');
+      //   return;
+      // }
       this.setState({ portal: '5' });
       setTimeout(() => this.setState({ portal: '4' }), 1000);
       setTimeout(() => this.setState({ portal: '3' }), 2000);
@@ -435,7 +442,7 @@ export default class Dashboard extends React.Component {
         >
           {this.renderProfileView()}
 
-          {typeof gameState === 'object' && Object.keys(gameState).length ?
+          {gameState.state && !gameState.state.endGame ?
             this.renderGameRoomTeamSelection(gameState) :
             this.renderGameRoomEntry(roomEntry)}
 

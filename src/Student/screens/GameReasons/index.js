@@ -62,9 +62,15 @@ export default class GameReasons extends React.PureComponent {
 
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screenProps.gameState.state.startQuiz &&
-      nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
-      this.props.navigation.navigate('GameQuiz');
+    if (nextProps.screenProps.gameState.state) {
+      if (nextProps.screenProps.gameState.state.endGame === true) {
+        this.props.navigation.navigate('Dashboard');
+        return;
+      }
+      if (nextProps.screenProps.gameState.state.startQuiz &&
+        nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
+        this.props.navigation.navigate('GameQuiz');
+      }
     }
   }
 
