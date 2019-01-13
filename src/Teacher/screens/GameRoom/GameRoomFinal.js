@@ -48,8 +48,9 @@ export default class GameRoomFinal extends React.Component {
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
       if (gameStateKeys[i].includes('team')) {
-        if (gameState[gameStateKeys[i]].choices.length) {
-          const choices = gameState[gameStateKeys[i]].choices;
+        const teamRef = gameStateKeys[i];
+        if (gameState[teamRef].choices.length) {
+          const choices = gameState[teamRef].choices;
           const teamRank = {};
           let bestTrickValue = '';
           let bestTrickCount = 0;
@@ -63,11 +64,13 @@ export default class GameRoomFinal extends React.Component {
               }
             }
           }
-          teamRank.team = `Team ${i + 1}`;
+          const teamNumber = parseInt(teamRef.substr(teamRef.indexOf('m') + 1), 10) + 1;
+          const teamPoints = gameState[teamRef].points;
+          teamRank.team = `Team ${teamNumber}`;
           teamRank.bestTrickValue = bestTrickValue;
           teamRank.bestTrickCount = bestTrickCount;
           teamRank.totalTricks = totalTricks;
-          teamRank.totalPoints = totalTricks * 100;
+          teamRank.totalPoints = (totalTricks * 100) + teamPoints;
           teamRank.uid = `${Math.random()}`;
           // Include a `correctPoints` count in `team#` for additional adjustment TODO
           rankedTeamsAux.push(teamRank);
@@ -109,7 +112,7 @@ export default class GameRoomFinal extends React.Component {
       <Text style={parentStyles.textLabel}>Number of players tricked:</Text>
       <View style={styles.teamItemRow}>
         <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickCount }</Text>
-        <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.bestTrickCount * players) / 100)}%` }</Text>
+        <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.bestTrickCount * players) * 100)}%` }</Text>
       </View>
       <View style={styles.divider} />
     </View>
