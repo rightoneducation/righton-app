@@ -216,9 +216,9 @@ export default class Portal extends React.PureComponent {
       // userImage,
     } = this.props;
 
-    const { countdown } = this.state;
+    // const { countdown } = this.state;
 
-    const circleFourBackground = countdown === null || messageType !== 'rightOn' ? '#000' : null;
+    // const circleFourBackground = countdown === null || messageType !== 'rightOn' ? '#000' : null;
 
     return (
       <View style={styles.container}>
@@ -232,7 +232,6 @@ export default class Portal extends React.PureComponent {
           styles={{
             height: circleFour,
             width: circleFour,
-            backgroundColor: circleFourBackground,
             borderWidth: 1,
             opacity: 0.5,
           }} 
@@ -243,7 +242,7 @@ export default class Portal extends React.PureComponent {
           styles={{
             height: circleSeven,
             width: circleSeven,
-            backgroundColor: colors.white
+            backgroundColor: colors.primary
           }}
         />
         <Circle styles={{ height: circleEight, width: circleEight }} />
@@ -262,12 +261,12 @@ export default class Portal extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.dark,
     flex: 1,
     justifyContent: 'center',
   },
   mainMessage: {
-    color: colors.primary,
+    color: colors.white,
     fontSize: fonts.medium,
     fontStyle: 'italic',
     zIndex: 10,
