@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import styles from './styles';
+import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 
 export default function GameRoomOverview({
@@ -23,6 +24,10 @@ export default function GameRoomOverview({
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
     >
+      <ButtonBack
+        iconName={'close'}
+        onPress={handleEndGame}
+      />
       <Text 
         style={[
           styles.textLabel, styles.textLarge, styles.textCenter, styles.extraMarginBottom

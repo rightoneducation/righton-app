@@ -5,14 +5,25 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
 
-export default function GameRoomStart({ gameState, handleStartGame, players, teams }) {
+export default function GameRoomStart({
+  gameState,
+  handleEndGame,
+  handleStartGame,
+  players,
+  teams
+}) {
   return (
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
     >
+      <ButtonBack
+        iconName={'close'}
+        onPress={handleEndGame}
+      />
       <Text style={[styles.textLabel, styles.textLarge, styles.alignRight]}>
         { gameState.GameRoomID }
       </Text>
@@ -39,6 +50,7 @@ export default function GameRoomStart({ gameState, handleStartGame, players, tea
 
 GameRoomStart.propTypes = {
   gameState: PropTypes.shape({}),
+  handleEndGame: PropTypes.func.isRequired,
   handleStartGame: PropTypes.func.isRequired,
   players: PropTypes.shape({}),
   teams: PropTypes.arrayOf(PropTypes.number),
@@ -46,6 +58,7 @@ GameRoomStart.propTypes = {
 
 GameRoomStart.defaultProps = {
   gameState: {},
+  handleEndGame: () => {},
   handleStartGame: () => {},
   players: {},
   teams: [],

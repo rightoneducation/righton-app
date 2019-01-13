@@ -331,6 +331,7 @@ export default class GameRoom extends React.Component {
         return (
           <GameRoomStart
             gameState={gameState}
+            handleEndGame={this.handleEndGame}
             handleStartGame={this.handleStartGame}
             players={players}
             teams={teams}
