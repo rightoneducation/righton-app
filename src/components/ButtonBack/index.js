@@ -11,6 +11,7 @@ import { colors } from '../../utils/theme';
 export default class ButtonBack extends React.PureComponent {
   static propTypes = {
     buttonStyles: PropTypes.shape({ type: PropTypes.any }),
+    iconName: PropTypes.string,
     iconStyles: PropTypes.shape({ type: PropTypes.any }),
     navigator: PropTypes.shape({
       goBack: PropTypes.func,
@@ -20,6 +21,7 @@ export default class ButtonBack extends React.PureComponent {
   
   static defaultProps = {
     buttonStyles: {},
+    iconName: 'arrow-left',
     iconStyles: {},
     navigator: {},
     onPress: null,
@@ -45,6 +47,7 @@ export default class ButtonBack extends React.PureComponent {
   render() {
     const {
       buttonStyles,
+      iconName,
       iconStyles,
       // navigator,
       // onPress,
@@ -57,7 +60,7 @@ export default class ButtonBack extends React.PureComponent {
         onPress={this.handlePress}
         style={[styles.button, { ...buttonStyles }]}
       >
-        <Aicon name={'arrow-left'} style={[styles.icon, { ...iconStyles }]} />
+        <Aicon name={iconName} style={[styles.icon, { ...iconStyles }]} />
       </Touchable>
     );
   }
