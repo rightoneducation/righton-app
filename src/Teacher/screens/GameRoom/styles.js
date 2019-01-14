@@ -14,6 +14,9 @@ export default ScaledSheet.create({
   extraMarginBottom: {
     marginBottom: '25@vs',
   },
+  extraPaddingBottom: {
+    paddingBottom: '95@vs',
+  },
   gameContainer: {
     alignItems: 'flex-start',
     borderColor: colors.white,

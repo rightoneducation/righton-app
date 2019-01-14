@@ -9,11 +9,13 @@ import Touchable from 'react-native-platform-touchable';
 import styles from './styles';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
+import { colors } from '../../../utils/theme';
 
 export default function GameRoomOverview({
   gameState,
   handleEndGame,
   handleGamePreview,
+  handleRenderNewGame,
   handleStartRandomGame,
   nextTeam,
   players,
@@ -22,7 +24,7 @@ export default function GameRoomOverview({
   const gameKeys = typeof gameState === 'object' ? Object.keys(gameState) : [];
   return (
     <ScrollView
-      contentContainerStyle={styles.dashboardContainer}
+      contentContainerStyle={[styles.dashboardContainer, styles.extraPaddingBottom]}
     >
       <ButtonBack
         iconName={'close'}
@@ -97,6 +99,15 @@ export default function GameRoomOverview({
             </Touchable>
         );
       })}
+      <ButtonWide
+        buttonStyles={{
+          backgroundColor: colors.dark,
+          borderColor: colors.primary,
+          borderWidth: 1,
+        }}
+        label={'New game'}
+        onPress={handleRenderNewGame}
+      />
     </ScrollView>
   );
 }
@@ -105,6 +116,7 @@ GameRoomOverview.propTypes = {
   gameState: PropTypes.shape({}),
   handleEndGame: PropTypes.func.isRequired,
   handleGamePreview: PropTypes.func.isRequired,
+  handleRenderNewGame: PropTypes.func.isRequired,
   handleStartRandomGame: PropTypes.func.isRequired,
   nextTeam: PropTypes.string,
   players: PropTypes.shape({}),
@@ -115,6 +127,7 @@ GameRoomOverview.defaultProps = {
   gameState: {},
   handleEndGame: () => {},
   handleGamePreview: () => {},
+  handleRenderNewGame: () => {},
   handleStartRandomGame: () => {},
   nextTeam: '',
   players: {},

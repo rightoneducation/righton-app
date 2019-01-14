@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { scale, ScaledSheet } from 'react-native-size-matters';
+import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
@@ -18,6 +18,7 @@ export default class GameRoomFinal extends React.Component {
     gameState: PropTypes.shape({}),
     handleBackFromChild: PropTypes.func.isRequired,
     handleEndGame: PropTypes.func.isRequired,
+    handleRenderNewGame: PropTypes.func.isRequired,
     numberOfPlayers: PropTypes.number.isRequired,
   };
   
@@ -25,6 +26,7 @@ export default class GameRoomFinal extends React.Component {
     gameState: {},
     handleBackFromChild: () => {},
     handleEndGame: () => {},
+    handleRenderNewGame: () => {},
     numberOfPlayers: 0,
   };
 
@@ -124,6 +126,7 @@ export default class GameRoomFinal extends React.Component {
       gameState,
       handleBackFromChild,
       handleEndGame,
+      handleRenderNewGame,
       numberOfPlayers,
     } = this.props;
 
@@ -131,7 +134,11 @@ export default class GameRoomFinal extends React.Component {
 
     return (
       <ScrollView
-        contentContainerStyle={[parentStyles.dashboardContainer, styles.alignCenter]}
+        contentContainerStyle={[
+          parentStyles.dashboardContainer,
+          styles.alignCenter,
+          styles.extraPaddingBottom,
+        ]}
       >
         <ButtonBack
           onPress={handleBackFromChild}
@@ -155,6 +162,17 @@ export default class GameRoomFinal extends React.Component {
         {rankedTeams.map(team => this.renderTeam(team, numberOfPlayers))}
 
         <ButtonWide
+          buttonStyles={{
+            backgroundColor: colors.dark,
+            borderColor: colors.primary,
+            borderWidth: 1,
+            bottom: verticalScale(95),
+          }}
+          label={'New game'}
+          onPress={handleRenderNewGame}
+        />
+
+        <ButtonWide
           label={'End game'}
           onPress={handleEndGame}
         />
@@ -174,6 +192,9 @@ const styles = ScaledSheet.create({
     marginBottom: '25@vs',
     opacity: 0.5,
     width: deviceWidth - scale(100),
+  },
+  extraPaddingBottom: {
+    paddingBottom: '175@vs',
   },
   primary: {
     color: colors.primary,
