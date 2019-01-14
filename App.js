@@ -54,6 +54,7 @@ export default class App extends React.Component {
     this.state = {
       appState: AppState.currentState,
       gameState: {},
+      gameroom: '',
       players: {},
       points: 0,
       ready: false,
@@ -160,6 +161,9 @@ export default class App extends React.Component {
 
   handleSetAppState(property, value) {
     switch (property) {
+      case 'gameroom':
+        this.setState({ gameroom: value });
+        break;
       case 'gameState':
         this.setState({ gameState: value });
         break;
@@ -213,6 +217,7 @@ export default class App extends React.Component {
 
   render() {
     const { 
+      gameroom,
       gameState,
       players,
       points,
@@ -230,6 +235,7 @@ export default class App extends React.Component {
     return (
       <RootNavigator
         screenProps={{
+          gameroom,
           gameState,
           players,
           points,
