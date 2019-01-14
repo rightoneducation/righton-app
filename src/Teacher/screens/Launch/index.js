@@ -159,7 +159,6 @@ class Launch extends React.Component {
         image: PropTypes.string,
         instructions: PropTypes.arrayOf(PropTypes.string),
         question: PropTypes.string,
-        time: PropTypes.string,
         uid: PropTypes.string,
         */
         uid: `${Math.random()}`,
@@ -174,6 +173,8 @@ class Launch extends React.Component {
       banner: quiz.banner,
       title: quiz.description,
       description: quiz.description,
+      quizTime: '1:00',
+      trickTime: '3:00',
       ...teamQuestions,
       GameRoomID: room,
       state: {},

@@ -25,8 +25,6 @@ export default class GameBuilderQuestion extends React.Component {
       image: PropTypes.string,
       instructions: PropTypes.arrayOf(PropTypes.string),
       quesiton: PropTypes.string,
-      quizTime: PropTypes.string,
-      trickTime: PropTypes.string,
     }),
     visible: PropTypes.bool.isRequired,
   }
@@ -38,8 +36,6 @@ export default class GameBuilderQuestion extends React.Component {
       image: '',
       instructions: [],
       question: '',
-      quizTime: '1:00',
-      trickTime: '3:00',
       uid: '',
     },
     visible: false,

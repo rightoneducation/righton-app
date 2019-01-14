@@ -31,11 +31,11 @@ export default class GameBuilder extends React.Component {
         image: PropTypes.string,
         instructions: PropTypes.arrayOf(PropTypes.string),
         question: PropTypes.string,
-        quizTime: PropTypes.string,
-        trickTime: PropTypes.string,
         uid: PropTypes.string,
       })),
+      quizTime: PropTypes.string,
       title: PropTypes.string,
+      trickTime: PropTypes.string,
     }),
     visible: PropTypes.bool.isRequired,
   };

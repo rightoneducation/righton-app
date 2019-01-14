@@ -64,8 +64,8 @@ export default class GamePreview extends React.PureComponent {
       messageProps: {},
       showInput: false,
       showInstructions: false,
-      timeLeft: props.screenProps.gameState[props.screenProps.gameState.state.teamRef].trickTime ?
-        props.screenProps.gameState[props.screenProps.gameState.state.teamRef].trickTime : '',
+      timeLeft: props.screenProps.gameState.trickTime ?
+        props.screenProps.gameState.trickTime : '',
     };
 
     this.timerInterval = undefined;
@@ -80,9 +80,8 @@ export default class GamePreview extends React.PureComponent {
 
   componentDidMount() {
     this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
-    
-    if (this.props.screenProps
-      .gameState[this.props.screenProps.gameState.state.teamRef].trickTime) {
+
+    if (this.props.screenProps.gameState.trickTime) {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     }
   }
