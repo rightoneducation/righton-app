@@ -40,14 +40,14 @@ export default function GameRoomOverview({
           styles.textLabel, styles.textNormal, styles.textCenter, styles.marginBottom
         ]}
       >
-        Total number of teams: { teams.length }
+        Number of teams: { Object.keys(teams).length }
       </Text>
       <Text
         style={[
           styles.textLabel, styles.textNormal, styles.textCenter, styles.extraMarginBottom
         ]}
       >
-        Total number of players: { Object.keys(players).length }
+        Number of players: { Object.keys(players).length }
       </Text>
 
       <ButtonWide
