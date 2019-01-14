@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import Touchable from 'react-native-platform-touchable';
@@ -43,8 +44,11 @@ export default function GameRoomPreview({
               onPress={() => {}}
             >
               <View style={gamePreviewStyles.choiceContainer}>
-                <View style={gamePreviewStyles.choiceDot} />
-                <Text style={gamePreviewStyles.choiceAnswer}>{ choice.value }</Text>
+                <View style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSquare]}>
+                  {choice.selected &&
+                    <Aicon name={'check'} style={gamePreviewStyles.choiceCheck} />}
+                </View>
+                <Text style={gamePreviewStyles.choiceValue}>{ choice.value }</Text>
               </View>
             </Touchable>
           ))}

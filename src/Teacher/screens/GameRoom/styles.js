@@ -5,6 +5,32 @@ export default ScaledSheet.create({
   alignRight: {
     textAlign: 'right',
   },
+  choiceButton: {
+    alignItems: 'center',
+    borderColor: colors.white,
+    borderRadius: 100,
+    borderWidth: 1,
+    height: '15@ms',
+    justifyContent: 'center',
+    marginHorizontal: '15@s',
+    width: '15@ms',
+  },
+  choiceCheck: {
+    color: colors.primary,
+    fontSize: '12@ms0.2',
+  },
+  choiceItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: '5@vs',
+  },
+  choiceValue: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  choiceSquare: {
+    borderRadius: 0,
+  },
   dashboardContainer: {
     backgroundColor: colors.dark,
     flexGrow: 1,
@@ -62,25 +88,5 @@ export default ScaledSheet.create({
   },
   textLarge: {
     fontSize: fonts.large,
-  },
-  trickButton: {
-    borderColor: colors.white,
-    borderRadius: 100,
-    borderWidth: 1,
-    height: '15@ms',
-    marginHorizontal: '15@s',
-    width: '15@ms',
-  },
-  trickButtonSelected: {
-    backgroundColor: colors.primary,
-  },
-  trickItem: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: '5@vs',
-  },
-  trickValue: {
-    color: colors.white,
-    fontSize: fonts.medium,
   },
 });

@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { scale } from 'react-native-size-matters';
 import Message from '../../../components/Message';
@@ -297,16 +298,19 @@ export default class GamePreview extends React.PureComponent {
           {tricks.map((trick, idx) => (
             <View
               key={trick.uid}
-              style={styles.trickItem}
+              style={styles.choiceItem}
             >
               <Touchable
                 activeOpacity={0.8}
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 onPress={() => this.handleTrickSelection(trick, idx, gameState, teamRef)}
               >
-                <View style={[styles.trickButton, trick.selected && styles.trickButtonSelected]} />
+                <View style={[styles.choiceButton, styles.choiceSquare]}>
+                  {trick.selected &&
+                    <Aicon name={'check'} style={styles.choiceCheck} />}
+                </View>
               </Touchable>
-              <Text style={styles.trickValue}>{ trick.value }</Text>
+              <Text style={styles.choiceValue}>{ trick.value }</Text>
             </View>
           ))}
         </View>

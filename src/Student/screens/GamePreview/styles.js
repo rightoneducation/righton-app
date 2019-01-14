@@ -30,10 +30,6 @@ export default ScaledSheet.create({
     position: 'absolute',
     width: '70@s',
   },
-  choiceAnswer: {
-    color: colors.white,
-    fontSize: fonts.medium,
-  },
   choiceContainer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -45,13 +41,34 @@ export default ScaledSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  choiceDot: {
+  choiceButton: {
+    alignItems: 'center',
     borderColor: colors.white,
     borderRadius: 100,
     borderWidth: 1,
-    height: '10@s',
-    width: '10@s',
+    height: '15@ms',
+    justifyContent: 'center',
     marginHorizontal: '15@s',
+    width: '15@ms',
+  },
+  choiceCheck: {
+    color: colors.primary,
+    fontSize: '12@ms0.2',
+  },
+  choiceItem: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: '5@vs',
+  },
+  choiceValue: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  choiceSelected: {
+    backgroundColor: colors.primary,
+  },
+  choiceSquare: {
+    borderRadius: 0,
   },
   choicesContainer: {
     alignItems: 'flex-start',
@@ -90,28 +107,8 @@ export default ScaledSheet.create({
     right: '5@s',
     top: '25@vs',
   },
-  trickButton: {
-    borderColor: colors.white,
-    borderRadius: 100,
-    borderWidth: 1,
-    height: '15@ms',
-    marginHorizontal: '15@s',
-    width: '15@ms',
-  },
-  trickButtonSelected: {
-    backgroundColor: colors.primary,
-  },
-  trickItem: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: '15@vs',
-  },
   tricksContainer: {
     alignItems: 'flex-start',
-  },
-  trickValue: {
-    color: colors.white,
-    fontSize: fonts.medium,
   },
   tricksWrapper: {
     alignItems: 'center',

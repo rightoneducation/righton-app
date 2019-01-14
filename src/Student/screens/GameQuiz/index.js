@@ -8,7 +8,7 @@ import {
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import gamePreviewStyles from '../GamePreview/styles';
-import { colors } from '../../../utils/theme';
+
 
 export default class GameQuiz extends React.Component {
   static propTypes = {
@@ -177,10 +177,10 @@ export default class GameQuiz extends React.Component {
                   <View 
                     style={[
                       gamePreviewStyles.choiceDot,
-                      selectedChoice === idx && { backgroundColor: colors.primary },
+                      selectedChoice === idx && gamePreviewStyles.choiceSelected,
                     ]}
                   />
-                  <Text style={gamePreviewStyles.choiceAnswer}>{ choice.value }</Text>
+                  <Text style={gamePreviewStyles.choiceValue}>{ choice.value }</Text>
                 </View>
               </Touchable>
             ))}

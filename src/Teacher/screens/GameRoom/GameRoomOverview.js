@@ -5,6 +5,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import styles from './styles';
 import ButtonBack from '../../../components/ButtonBack';
@@ -84,15 +85,13 @@ export default function GameRoomOverview({
                 {gameState[key].tricks.map(trick => (
                   <View
                     key={trick.uid}
-                    style={styles.trickItem}
+                    style={styles.choiceItem}
                   >
-                    <View
-                      style={[
-                        styles.trickButton,
-                        trick.selected && styles.trickButtonSelected
-                      ]}
-                    />
-                    <Text style={styles.trickValue}>{ trick.value }</Text>
+                    <View style={[styles.choiceButton, styles.choiceSquare]}>
+                      {trick.selected &&
+                        <Aicon name={'check'} style={styles.choiceCheck} />}
+                    </View>
+                    <Text style={styles.choiceValue}>{ trick.value }</Text>
                   </View>
                 ))}
               </View>
