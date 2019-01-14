@@ -281,29 +281,33 @@ export default class GameRoom extends React.Component {
     if (nextTeam) {
       this.handleGamePreview(nextTeam);
     } else {
-      this.setState({ renderType: 'final', preview: '' });
+      this.setState({ renderType: 'final', preview: '' }, () => this.handleFinalMessage());
     }
   }
 
 
-  handleEndGame() {
+  handleFinalMessage() {
     const {
-      handleSetAppState,
       IOTPublishMessage,
-      IOTUnsubscribeFromTopic,
     } = this.props.screenProps;
     const message = {
       action: 'END_GAME',
       uid: `${Math.random()}`,
     };
     IOTPublishMessage(message);
-    setTimeout(() => {
+  }
+  
+  
+  handleEndGame() {
+    this.props.screenProps.navigation.navigate('TeacherApp');
+    const {
+      handleSetAppState,
+      IOTUnsubscribeFromTopic,
+    } = this.props.screenProps;
       // TODO! Save game details to teacher account & QuizMaker database
-      IOTUnsubscribeFromTopic();
-      handleSetAppState('gameState', {});
-      handleSetAppState('players', {});
-      this.props.screenProps.navigation.navigate('TeacherApp');
-    }, 0);
+    IOTUnsubscribeFromTopic();
+    handleSetAppState('gameState', {});
+    handleSetAppState('players', {});
   }
 
 
