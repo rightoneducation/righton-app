@@ -4,10 +4,11 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Portal from '../../../screens/Portal';
 import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
-// import { colors } from '../../../utils/theme';
+
 
 export default class GameFinal extends React.Component {
   static propTypes = {
@@ -37,8 +38,12 @@ export default class GameFinal extends React.Component {
 
     this.state = {
       playerScore: props.screenProps.points,
+      portal: '',
       teamScore: 0,
     };
+
+    this.mounted = false;
+    this.startingGame = false;
 
     this.handleExitGame = this.handleExitGame.bind(this);
   }
@@ -46,15 +51,34 @@ export default class GameFinal extends React.Component {
 
   componentDidMount() {
     this.calculateTeamScore();
+    this.mounted = true;
   }
 
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
       if (nextProps.screenProps.gameState.state.newGame) {
-        this.props.navigation.navigate('GamePreview');
+        this.setState({ portal: 'Game is preparing...' });
+      } else if (nextProps.screenProps.gameState.state.start) {
+        this.startingGame = true;
+        this.setState({ portal: '5' });
+        setTimeout(() => this.mounted && this.setState({ portal: '4' }), 1000);
+        setTimeout(() => this.mounted && this.setState({ portal: '3' }), 2000);
+        setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
+        setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
+        setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
+        setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
+        setTimeout(() => {
+          this.startingGame = false;
+          if (this.mounted) this.props.screenProps.navigation.navigate('GamePreview');
+        }, 6000);
       }
     }
+  }
+
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
 
@@ -84,7 +108,16 @@ export default class GameFinal extends React.Component {
 
   render() {
     const { team } = this.props.screenProps;
-    const { playerScore, teamScore } = this.state;
+    const { playerScore, portal, teamScore } = this.state;
+
+    if (portal) {
+      return (
+        <Portal
+          messageType={'single'}
+          messageValues={{ message: portal }} 
+        />
+      );
+    }
 
     return (
       <View style={gamePreviewStyles.container}>
