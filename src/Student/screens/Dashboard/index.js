@@ -143,11 +143,18 @@ export default class Dashboard extends React.Component {
 
   handleGameEntry() {
     const { room } = this.state;
-    this.setState({ portal: `Joining ${room}` });
+    let GameRoomID = '';
+    if (room) {
+      GameRoomID = room;
+    } else if (this.props.screenProps.gameroom) {
+      GameRoomID = this.props.screenProps.gameroom;
+      this.setState({ room: GameRoomID });
+    }
+    this.setState({ portal: `Joining ${GameRoomID}` });
     NetInfo.isConnected.fetch()
       .then(async (isConnected) => {
         if (isConnected) {
-          getGameFromDynamoDB(room, this.handleGameFound, this.handleGameError);
+          getGameFromDynamoDB(GameRoomID, this.handleGameFound, this.handleGameError);
         } else {
           this.setState({
             portal: '',
