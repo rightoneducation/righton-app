@@ -47,6 +47,7 @@ export default class Dashboard extends React.Component {
       roomEntry: true,
     };
 
+    this.startingGame = false;
     this.roomRef = null;
     this.attemptedEntries = 0;
 
@@ -74,6 +75,7 @@ export default class Dashboard extends React.Component {
     this.props.screenProps.handleSetRole('Student');
     Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
     Keyboard.addListener('keyboardDidShow', this.handleKeyboardShow);
+    this.mounted = true;
   }
 
 
@@ -84,25 +86,31 @@ export default class Dashboard extends React.Component {
         return;
       }
       if (nextProps.screenProps.gameState.state.newGame) {
-        this.props.navigation.navigate('GamePreview');
+        this.setState({ portal: 'Game is preparing...' });
         return;
       }
       if (nextProps.screenProps.gameState.state.start === true &&
-        typeof nextProps.screenProps.team === 'number') {
+        typeof nextProps.screenProps.team === 'number' &&
+        !this.startingGame) {
+        this.startingGame = true;
         this.setState({ portal: '5' });
-        setTimeout(() => this.setState({ portal: '4' }), 1000);
-        setTimeout(() => this.setState({ portal: '3' }), 2000);
-        setTimeout(() => this.setState({ portal: '2' }), 3000);
-        setTimeout(() => this.setState({ portal: '1' }), 4000);
-        setTimeout(() => this.setState({ portal: '1' }), 4000);
-        setTimeout(() => this.setState({ portal: 'RightOn!' }), 5000);
-        setTimeout(() => this.props.screenProps.navigation.navigate('GamePreview'), 6000);      
+        setTimeout(() => this.mounted && this.setState({ portal: '4' }), 1000);
+        setTimeout(() => this.mounted && this.setState({ portal: '3' }), 2000);
+        setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
+        setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
+        setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
+        setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
+        setTimeout(() => {
+          this.startingGame = false;
+          if (this.mounted) this.props.screenProps.navigation.navigate('GamePreview');
+        }, 6000);      
       }
     }
   }
 
 
   componentWillUnmount() {
+    this.mounted = false;
     Keyboard.removeListener('keyboardDidHide', this.handleKeyboardHide);
     Keyboard.removeListener('keyboardDidShow', this.handleKeyboardShow);
   }
