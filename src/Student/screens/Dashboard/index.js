@@ -42,7 +42,6 @@ export default class Dashboard extends React.Component {
 
     this.state = {
       messageProps: null,
-      name: '',
       portal: '',
       room: '',
       roomEntry: true,
@@ -52,9 +51,6 @@ export default class Dashboard extends React.Component {
     this.attemptedEntries = 0;
 
     this.handleCloseMessage = this.handleCloseMessage.bind(this);
-
-    this.handleNameInput = this.handleNameInput.bind(this);
-    this.handleNameSubmit = this.handleNameSubmit.bind(this);
 
     this.handleRoomInput = this.handleRoomInput.bind(this);
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
@@ -128,16 +124,6 @@ export default class Dashboard extends React.Component {
   handleKeyboardShow() {
     this.setState({ roomEntry: false });
   }
-
-
-  handleNameInput(name) {
-    this.setState({ name });
-  }
-
-
-  handleNameSubmit = () => (
-    Keyboard.dismiss()
-  )
 
 
   handleRoomInput(room) {
@@ -216,6 +202,7 @@ export default class Dashboard extends React.Component {
               timeout: 4000,
             },
           });
+          this.props.screenProps.handleSetAppState('gameroom', res.GameRoomID);
         }
         debug.log('JOIN GAME', res.GameRoomID);
       }, 3000);
@@ -296,27 +283,14 @@ export default class Dashboard extends React.Component {
 
 
   renderProfileView() {
-    const { name } = this.state;
+    const { gameroom } = this.props.screenProps;
 
     const { gamesPlayed, pointsEarned } = this.props.screenProps;
     // TODO Where are these values being hydrated from?
 
     return (
       <View style={styles.profileContainer}>
-        <TextInput
-          keyboardType={'default'}
-          maxLength={23}
-          multiline={false}
-          onChangeText={this.handleNameInput}
-          onSubmitEditing={this.handleNameSubmit}
-          placeholder={'Team Name'}
-          placeholderTextColor={colors.primary}
-          returnKeyType={'done'}
-          style={styles.input}
-          textAlign={'center'}
-          underlineColorAndroid={name ? colors.white : colors.dark}
-          value={name}
-        />
+        <Text style={styles.input}>{ gameroom }</Text>
         <View style={styles.profileValuesContainer}>
           <View style={styles.profileValueContainer}>
             <Text style={styles.profileValueLabel}>{'Games: '}</Text>
