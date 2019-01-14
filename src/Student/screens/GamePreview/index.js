@@ -38,6 +38,8 @@ export default class GamePreview extends React.PureComponent {
           image: '',
           instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
           question: __DEV__ ? 'What did you eat for breakfast?' : '',
+          quizTime: '3:00',
+          trickTime: '1:00',
           tricks: [],
           uid: '',
         },
@@ -62,7 +64,12 @@ export default class GamePreview extends React.PureComponent {
       messageProps: {},
       showInput: false,
       showInstructions: false,
+      timeLeft: props.screenProps.gameState[props.screenProps.gameState.state.teamRef].trickTime ?
+        props.screenProps.gameState[props.screenProps.gameState.state.teamRef].trickTime : '',
     };
+
+    this.timerInterval = undefined;
+    this.countdownTime = this.countdownTime.bind(this);
 
     this.handleCloseMessage = this.handleCloseMessage.bind(this);
     this.closeInputModal = this.closeInputModal.bind(this);
@@ -73,6 +80,11 @@ export default class GamePreview extends React.PureComponent {
 
   componentDidMount() {
     this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
+    
+    if (this.props.screenProps
+      .gameState[this.props.screenProps.gameState.state.teamRef].trickTime) {
+      this.timerInterval = setInterval(this.countdownTime, 1000);
+    }
   }
 
 
@@ -84,6 +96,8 @@ export default class GamePreview extends React.PureComponent {
       }
       if (this.props.screenProps.gameState.state.startQuiz !==
         nextProps.screenProps.gameState.state.startQuiz) {
+        this.setState({ timeLeft: 'Time is up!' });
+        clearTimeout(this.timerInterval);
         if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
           this.props.navigation.navigate('GameReasons');
         } else {
@@ -97,11 +111,32 @@ export default class GamePreview extends React.PureComponent {
   componentWillUnmount() {
     clearTimeout(this.animationTimeout);
     clearInterval(this.animationInterval);
+    clearInterval(this.timerInterval);
   }
 
 
   startAnimation() {
     this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
+  }
+  
+
+  countdownTime() {
+    const { timeLeft } = this.state;
+    const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
+    const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
+    let newTimeLeft = '';
+    if (seconds > 10) {
+      newTimeLeft = `${minutes}:${seconds - 1}`;
+    } else if (seconds > 0) {
+      newTimeLeft = `${minutes}:0${seconds - 1}`;
+    } else if (seconds === 0 && minutes > 0) {
+      newTimeLeft = `${minutes - 1}:59`;
+    } else if (seconds === 0 && minutes === 0) {
+      this.publishChoice();
+      clearInterval(this.timerInterval);
+      newTimeLeft = 'Time is up!';
+    }
+    this.setState({ timeLeft: newTimeLeft });
   }
 
 
@@ -323,7 +358,8 @@ export default class GamePreview extends React.PureComponent {
     const {
       messageProps,
       showInput,
-      showInstructions
+      showInstructions,
+      timeLeft,
     } = this.state;
 
     const { gameState, team } = this.props.screenProps;
@@ -333,6 +369,10 @@ export default class GamePreview extends React.PureComponent {
       <ScrollView contentContainerStyle={styles.container}>
         <Message {...messageProps} />
         {showInput && <InputModal {...showInput} />}
+        {Boolean(timeLeft) &&
+          <View style={styles.timeContainer}>
+            <Text style={styles.time}>{ timeLeft }</Text>
+          </View>}
         <HeaderTeam team={`Team ${team + 1}`} />
         {this.renderQuestion()}
         {this.renderTricks(gameState, teamRef)}

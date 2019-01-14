@@ -44,18 +44,17 @@ export default class GameQuiz extends React.Component {
 
     this.state = {
       selectedChoice: null,
-      timeLeft: props.screenProps.gameState[props.screenProps.gameState.state.teamRef].time ?
-        props.screenProps.gameState[props.screenProps.gameState.state.teamRef].time : '',
+      timeLeft: props.screenProps.gameState[props.screenProps.gameState.state.teamRef].quizTime ?
+        props.screenProps.gameState[props.screenProps.gameState.state.teamRef].quizTime : '',
     };
 
     this.timerInterval = undefined;
-
     this.countdownTime = this.countdownTime.bind(this);
   }
 
 
   componentDidMount() {
-    if (this.props.screenProps.gameState[this.props.screenProps.gameState.state.teamRef].time) {
+    if (this.props.screenProps.gameState[this.props.screenProps.gameState.state.teamRef].quizTime) {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     }
   }
