@@ -64,7 +64,7 @@ export default class GameQuiz extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
       if (nextProps.screenProps.gameState.state.endGame === true) {
-        this.props.navigation.navigate('Dashboard');
+        this.props.navigation.navigate('GameFinal');
         return;
       }
       if (nextProps.screenProps.gameState.state.endQuiz === true) {

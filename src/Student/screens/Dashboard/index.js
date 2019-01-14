@@ -78,26 +78,26 @@ export default class Dashboard extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screenProps.gameState.state &&
-      nextProps.screenProps.gameState.state.endGame === true) {
-      this.setState({ portal: '' });
-      return;
-    }
-    if (nextProps.screenProps.gameState.state &&
-      nextProps.screenProps.gameState.state.start === true &&
-      typeof nextProps.screenProps.team === 'number') {
-      // if (__DEV__) {
-      //   this.props.screenProps.navigation.navigate('GamePreview');
-      //   return;
-      // }
-      this.setState({ portal: '5' });
-      setTimeout(() => this.setState({ portal: '4' }), 1000);
-      setTimeout(() => this.setState({ portal: '3' }), 2000);
-      setTimeout(() => this.setState({ portal: '2' }), 3000);
-      setTimeout(() => this.setState({ portal: '1' }), 4000);
-      setTimeout(() => this.setState({ portal: '1' }), 4000);
-      setTimeout(() => this.setState({ portal: 'RightOn!' }), 5000);
-      setTimeout(() => this.props.screenProps.navigation.navigate('GamePreview'), 6000);      
+    if (nextProps.screenProps.gameState.state) {
+      if (nextProps.screenProps.gameState.state.endGame === true) {
+        this.setState({ portal: '' });
+        return;
+      }
+      if (nextProps.screenProps.gameState.state.newGame) {
+        this.props.navigation.navigate('GamePreview');
+        return;
+      }
+      if (nextProps.screenProps.gameState.state.start === true &&
+        typeof nextProps.screenProps.team === 'number') {
+        this.setState({ portal: '5' });
+        setTimeout(() => this.setState({ portal: '4' }), 1000);
+        setTimeout(() => this.setState({ portal: '3' }), 2000);
+        setTimeout(() => this.setState({ portal: '2' }), 3000);
+        setTimeout(() => this.setState({ portal: '1' }), 4000);
+        setTimeout(() => this.setState({ portal: '1' }), 4000);
+        setTimeout(() => this.setState({ portal: 'RightOn!' }), 5000);
+        setTimeout(() => this.props.screenProps.navigation.navigate('GamePreview'), 6000);      
+      }
     }
   }
 
