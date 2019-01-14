@@ -12,7 +12,6 @@ export default function HeaderSimple({ team }) {
   return (
     <View style={[styles.container, Platform.OS === 'ios' ? styles.iosContainer : styles.androidContainer]}>
       <Text style={styles.team}>{ team }</Text>
-      <Text style={styles.team}>RIGHT ON!</Text>
     </View>
   );
 }
@@ -32,7 +31,7 @@ const styles = ScaledSheet.create({
   container: {
     alignSelf: 'stretch',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     paddingHorizontal: '15@s',
     height: '45@vs',
   },
