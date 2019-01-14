@@ -102,6 +102,7 @@ class Launch extends React.Component {
     if (session && session.idToken && session.idToken.payload) {
       username = session.idToken.payload['cognito:username'];
     }
+    this.props.screenProps.handleSetAppState('gameroom', room);
 
     getGameFromDynamoDB(room,
       (res) => {
@@ -118,7 +119,6 @@ class Launch extends React.Component {
           putGameToDynamoDB(room, username,
             (putRes) => {
               setTimeout(() => this.swiperRef.scrollBy(2, false), 500);
-              this.props.screenProps.handleSetAppState('gameroom', this.state.room);
               debug.log('Put game in DynamoDB!', putRes);
             },
             (exception) => {
