@@ -54,7 +54,7 @@ class Launch extends React.Component {
 
     this.state = {
       activeQuiz: {},
-      room: '',
+      room: props.screenProps.gameroom,
       quizzes: [],
     };
 
@@ -76,9 +76,9 @@ class Launch extends React.Component {
     if (this.hydratedQuizzes) return;
     let quizzes;
     try {
-      quizzes = await LocalStorage.getItem('@RightOn:Quizzes');
+      quizzes = await LocalStorage.getItem('@RightOn:Games');
       if (quizzes === undefined) {
-        LocalStorage.setItem('@RightOn:Quizzes', JSON.stringify([]));
+        LocalStorage.setItem('@RightOn:Games', JSON.stringify([]));
         // TODO! Handle when user is logged in with different account??
         quizzes = [];
       } else {
@@ -118,6 +118,7 @@ class Launch extends React.Component {
           putGameToDynamoDB(room, username,
             (putRes) => {
               setTimeout(() => this.swiperRef.scrollBy(2, false), 500);
+              this.props.screenProps.handleSetAppState('gameroom', this.state.room);
               debug.log('Put game in DynamoDB!', putRes);
             },
             (exception) => {
