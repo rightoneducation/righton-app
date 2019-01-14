@@ -12,7 +12,7 @@ import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
-import SelectionModal from '../../../../../components/SelectionModal';
+// import SelectionModal from '../../../../../components/SelectionModal';
 import parentStyles from '../styles';
 import { deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 
@@ -25,7 +25,8 @@ export default class GameBuilderQuestion extends React.Component {
       image: PropTypes.string,
       instructions: PropTypes.arrayOf(PropTypes.string),
       quesiton: PropTypes.string,
-      time: PropTypes.string,
+      quizTime: PropTypes.string,
+      trickTime: PropTypes.string,
     }),
     visible: PropTypes.bool.isRequired,
   }
@@ -37,7 +38,8 @@ export default class GameBuilderQuestion extends React.Component {
       image: '',
       instructions: [],
       question: '',
-      time: '2:00',
+      quizTime: '1:00',
+      trickTime: '3:00',
       uid: '',
     },
     visible: false,
@@ -52,7 +54,8 @@ export default class GameBuilderQuestion extends React.Component {
         image: '',
         instructions: [],
         question: '',
-        time: '2:00',
+        quizTime: '1:00',
+        trickTime: '3:00',
         uid: '',
       },
       showInput: false,
@@ -63,8 +66,8 @@ export default class GameBuilderQuestion extends React.Component {
 
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleExitModal = this.handleExitModal.bind(this);
-    this.handleTimeSelection = this.handleTimeSelection.bind(this);
-    this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
+    // this.handleTimeSelection = this.handleTimeSelection.bind(this);
+    // this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
     this.handleAddInstruction = this.handleAddInstruction.bind(this);
 
     this.onQuestionLayout = this.onQuestionLayout.bind(this);
@@ -219,18 +222,18 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  handleTimeSelection(time) {
-    if (typeof time === 'object' || !time) {
-      this.setState({ showSelection: false });
-    } else {
-      this.setState({ question: { ...this.state.question, time }, showSelection: false });
-    }
-  }
+  // handleTimeSelection(time) {
+  //   if (typeof time === 'object' || !time) {
+  //     this.setState({ showSelection: false });
+  //   } else {
+  //     this.setState({ question: { ...this.state.question, time }, showSelection: false });
+  //   }
+  // }
 
 
-  handleOpenTimeSelection() {
-    this.setState({ showSelection: true });
-  }
+  // handleOpenTimeSelection() {
+  //   this.setState({ showSelection: true });
+  // }
 
 
   render() {
@@ -239,10 +242,11 @@ export default class GameBuilderQuestion extends React.Component {
       image,
       instructions,
       question,
-      time,
+      // quizTime,
+      // trickTime,
     } = this.state.question;
 
-    const { showInput, showSelection } = this.state;
+    const { showInput } = this.state;
 
     return (
       <View style={parentStyles.container}>
@@ -250,7 +254,7 @@ export default class GameBuilderQuestion extends React.Component {
         {showInput &&
           <InputModal {...showInput} />}
 
-        {showSelection &&
+        {/* {showSelection &&
           <SelectionModal
             handleClose={this.handleTimeSelection}
             items={[
@@ -276,7 +280,7 @@ export default class GameBuilderQuestion extends React.Component {
             onSelect={this.handleTimeSelection}
             title={'Time remaining'}
             visible={showSelection}
-          />}
+          />} */}
 
         <View style={[parentStyles.headerContainer, elevation]}>
           <Touchable
@@ -312,13 +316,13 @@ export default class GameBuilderQuestion extends React.Component {
                   <Aicon name={'image'} style={parentStyles.bannerIcon} />
                   <Text style={parentStyles.bannerLabel}>Tap to add an image</Text>
                 </View>}
-              <Touchable
+              {/* <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 onPress={this.handleOpenTimeSelection}
                 style={parentStyles.timeSelectionContainer}
               >
                 <Text style={parentStyles.timeSelectionLabel}>{ time }</Text>
-              </Touchable>
+              </Touchable> */}
             </View>
           </Touchable>
 
