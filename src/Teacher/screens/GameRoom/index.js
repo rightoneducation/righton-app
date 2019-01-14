@@ -62,6 +62,7 @@ export default class GameRoom extends React.Component {
     this.handleEndGame = this.handleEndGame.bind(this);
     this.handleGamePreview = this.handleGamePreview.bind(this);
     this.handleNextTeam = this.handleNextTeam.bind(this);  
+    this.handleRenderNewGame = this.handleRenderNewGame.bind(this);  
     this.handleViewResults = this.handleViewResults.bind(this);
     this.handleStartGame = this.handleStartGame.bind(this);
     this.handleStartQuiz = this.handleStartQuiz.bind(this);
@@ -135,16 +136,17 @@ export default class GameRoom extends React.Component {
     const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
     const updatedGameState = { ...gameState };
     
-    const selectedTricks = gameState[teamRef].tricks.filter(trick => trick.selected);
+    const selectedTricks = gameState[teamRef].tricks.filter(trick => trick.selected) || [];
     debug.log('selectedTricks:', selectedTricks);
     
-    if (!selectedTricks.length && gameState[teamRef].tricks.length) {
-      for (let i = 0;
-        i < gameState[teamRef].tricks.length || selectedTricks.length !== 3;
-        i += 1) {
-        selectedTricks.push(gameState[teamRef].tricks[i]);
-      }
-    }
+    // Automatically picks out the first tricks if none were selected
+    // if (!selectedTricks.length && gameState[teamRef].tricks.length) {
+    //   for (let i = 0;
+    //     i < gameState[teamRef].tricks.length || selectedTricks.length !== 3;
+    //     i += 1) {
+    //     selectedTricks.push(gameState[teamRef].tricks[i]);
+    //   }
+    // }
 
     const dualUid = `${Math.random()}`;
     const choicesLimit = selectedTricks.length + 1;
@@ -157,7 +159,9 @@ export default class GameRoom extends React.Component {
       { correct: true, uid: dualUid, value: gameState[teamRef].answer, votes: 0 };
 
     let trickAnswerIndex = 0;
-    while (choices.indexOf(null) > -1 && trickAnswerIndex < choicesLimit - 1) {
+    while (choices.indexOf(null) > -1 &&
+      trickAnswerIndex < choicesLimit - 1 &&
+      selectedTricks[trickAnswerIndex]) {
       const randomIndex = Math.floor(Math.random() * choicesLimit);
       if (!choices[randomIndex]) {
         choices[randomIndex] = { uid: `${Math.random()}`, value: selectedTricks[trickAnswerIndex].value, votes: 0 };
@@ -260,6 +264,11 @@ export default class GameRoom extends React.Component {
     const { gameState, handleSetAppState } = this.props.screenProps;
     const updatedGameState = { ...gameState, state: { startQuiz: teamRef } };
     handleSetAppState('gameState', updatedGameState);
+  }
+
+  
+  handleRenderNewGame() {
+    this.setState({ renderType: 'newGame', preview: null });
   }
 
 
@@ -384,6 +393,7 @@ export default class GameRoom extends React.Component {
             gameState={gameState}
             handleEndGame={this.handleEndGame}
             handleGamePreview={this.handleGamePreview}
+            handleRenderNewGame={this.handleRenderNewGame}          
             handleStartRandomGame={this.handleStartRandomGame}
             nextTeam={nextTeam}
             players={players}
@@ -419,6 +429,7 @@ export default class GameRoom extends React.Component {
             gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
+            handleRenderNewGame={this.handleRenderNewGame}
             numberOfPlayers={Object.keys(players).length}
           />
         );
@@ -426,7 +437,7 @@ export default class GameRoom extends React.Component {
         return (
           <GameRoomNewGame
             gameroom={gameroom}
-            handleBackToOverview={this.handleBackToOverview}
+            handleBackFromChild={this.handleBackFromChild}
             handleSetAppState={handleSetAppState}
             IOTPublishMessage={IOTPublishMessage}
           />
