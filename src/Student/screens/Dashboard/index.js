@@ -341,9 +341,11 @@ export default class Dashboard extends React.Component {
         teamSize += 1;
       }
     }
-    teamsArr[teamSize - 1] = true;
+    teamsArr[teamSize - 1] = null;
+    teamsArr.fill(null, 0, teamSize - 1);
     return (
       <View style={styles.roomContainer}>
+        <Text style={styles.input}>Select your team</Text>
         {teamsArr.map((n, idx) => (
           <Touchable
             activeOpacity={0.8}
@@ -353,7 +355,7 @@ export default class Dashboard extends React.Component {
             key={`${Math.random()}`}
             style={[styles.teamButton, elevation]}
           >
-            <Text style={styles.buttonText}>{idx + 1}</Text>
+            <Text style={styles.buttonText}>{`Team ${idx + 1}`}</Text>
           </Touchable>
         ))}
       </View>

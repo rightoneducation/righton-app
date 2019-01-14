@@ -101,6 +101,7 @@ export default ScaledSheet.create({
     marginHorizontal: '15@s',
     marginBottom: '10@vs',
     marginTop: '25@vs',
+    paddingTop: '15@vs',
   },
   roomInput: {
     color: colors.primary,
