@@ -6,6 +6,7 @@ import GameRoomOverview from './GameRoomOverview';
 import GameRoomPreview from './GameRoomPreview';
 import GameRoomResults from './GameRoomResults';
 import GameRoomFinal from './GameRoomFinal';
+import GameRoomNewGame from './GameRoomNewGame';
 // import LocalStorage from '../../../../lib/Categories/LocalStorage';
 import debug from '../../../utils/debug';
 
@@ -13,6 +14,7 @@ import debug from '../../../utils/debug';
 export default class GameRoom extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
+      gameroom: PropTypes.string,
       gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
@@ -29,6 +31,7 @@ export default class GameRoom extends React.Component {
   
   static defaultProps = {
     screenProps: {
+      gameroom: '',
       gameState: {},
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
@@ -195,21 +198,49 @@ export default class GameRoom extends React.Component {
       payload: { start: true },
     };
     this.props.screenProps.IOTPublishMessage(message);
-    if (__DEV__) {
-      this.setState({ portal: false, renderType: 'overview' });
-      return;
-    }
-    setTimeout(() => this.mounted && this.setState({ portal: '5', renderType: 'portal' }), 256);
-    setTimeout(() => this.mounted && this.setState({ portal: '4' }), 1000);
-    setTimeout(() => this.mounted && this.setState({ portal: '3' }), 2000);
-    setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
-    setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
-    setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
-    setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'overview' }), 5500);
+    // if (__DEV__) {
+    this.setState({ portal: 'RightOn!', renderType: 'portal' });
+    setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'overview' }), 1500);
+    //   return;
+    // }
+    // setTimeout(() => this.mounted && this.setState({ portal: '5', renderType: 'portal' }), 256);
+    // setTimeout(() => this.mounted && this.setState({ portal: '4' }), 1000);
+    // setTimeout(() => this.mounted && this.setState({ portal: '3' }), 2000);
+    // setTimeout(() => this.mounted && this.setState({ portal: '2' }), 3000);
+    // setTimeout(() => this.mounted && this.setState({ portal: '1' }), 4000);
+    // setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
+    // setTimeout(() => this.mounted && 
+    //   this.setState({ portal: false, renderType: 'overview' }), 5500);
+    this.removeQuestionsWithMissingPlayers();
   }
 
 
-  handleBackFromChild() {
+  removeQuestionsWithMissingPlayers() {
+    const { teams } = this.state;
+    const { gameState, handleSetAppState } = this.props.screenProps;
+    const updatedGameState = { ...gameState };
+    const gameStateKeys = Object.keys(updatedGameState);
+    let deleted;
+    for (let i = 0; i < gameStateKeys.length; i += 1) {
+      if (gameStateKeys[i].includes('team')) {
+        const index = gameStateKeys[i].substr(gameStateKeys[i].indexOf('m') + 1);
+        if (!teams[index]) {
+          deleted = true;
+          delete updatedGameState[`team${index}`];
+        }
+      }
+    }
+    if (deleted) {
+      handleSetAppState('gameState', updatedGameState);
+    }
+  }
+
+
+  handleBackFromChild(screen) {
+    if (screen) {
+      this.setState({ renderType: screen, preview: null });
+      return;
+    }
     this.setState({ renderType: 'overview', preview: null });
   }
 
@@ -312,7 +343,13 @@ export default class GameRoom extends React.Component {
 
 
   render() {
-    const { gameState, players } = this.props.screenProps;
+    const {
+      gameroom,
+      gameState,
+      handleSetAppState,
+      IOTPublishMessage,
+      players,
+    } = this.props.screenProps;
     const {
       nextTeam,
       renderType,
@@ -383,6 +420,15 @@ export default class GameRoom extends React.Component {
             handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
             numberOfPlayers={Object.keys(players).length}
+          />
+        );
+      case 'newGame':
+        return (
+          <GameRoomNewGame
+            gameroom={gameroom}
+            handleBackToOverview={this.handleBackToOverview}
+            handleSetAppState={handleSetAppState}
+            IOTPublishMessage={IOTPublishMessage}
           />
         );
       default:
