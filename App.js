@@ -127,14 +127,14 @@ export default class App extends React.Component {
 
 
   handleAppStateChange(nextAppState) {
-    const { appState, gameState } = this.state;
-    if (typeof gameState === 'object' && gameState.GameRoomID) {
+    const { appState, gameroom } = this.state;
+    if (gameroom) {
       if (appState.match(/inactive|background/) && nextAppState === 'active') {
-        debug.log('App has come to the foreground - resubscribing to GameRoom:', gameState.GameRoomID);
-        this.IOTSubscribeToTopic(gameState.GameRoomID);
+        debug.log('App has come to the foreground - resubscribing to GameRoom:', gameroom);
+        this.IOTSubscribeToTopic(gameroom);
       } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
-        debug.log('App going into background - unsubscribing from GameRoom:', gameState.GameRoomID);
-        this.IOTUnsubscribeFromTopic(gameState.GameRoomID);
+        debug.log('App going into background - unsubscribing from GameRoom:', gameroom);
+        this.IOTUnsubscribeFromTopic(gameroom);
       }
     }
     this.setState({ appState: nextAppState });
@@ -197,18 +197,23 @@ export default class App extends React.Component {
   }
 
 
-  IOTUnsubscribeFromTopic(gameroom) {
-    if (gameroom) {
-      unsubscribeFromTopic(gameroom);
+  IOTUnsubscribeFromTopic(specifiedGameroom) {
+    if (specifiedGameroom) {
+      unsubscribeFromTopic(specifiedGameroom);
     } else {
-      const { GameRoomID } = this.state.gameState;
-      unsubscribeFromTopic(GameRoomID);
+      const { gameroom } = this.state;
+      unsubscribeFromTopic(gameroom);
     }
   }
 
 
   IOTPublishMessage(message) {
-    const { GameRoomID } = this.state.gameState;
+    const { gameroom, gameState } = this.state;
+    const GameRoomID = gameState.GameRoomID || gameroom || '';
+    if (!GameRoomID) {
+      debug.warn('Attempted to publish message w/o a GameRoomID set. Message:', JSON.stringify(message));
+      return;
+    }
     // Prevent computing received messages sent by self.
     this.messagesReceived[message.uid] = true;
     publishMessage(GameRoomID, message);
