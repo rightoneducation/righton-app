@@ -172,7 +172,7 @@ class SignUp extends React.Component {
                     bodyStyle: null,
                     textStyle: null,
                     duration: null,
-                    message: 'Email address already exists.',
+                    message: 'An account with that email already exists.',
                     timeout: 8000,
                   },
                 });
