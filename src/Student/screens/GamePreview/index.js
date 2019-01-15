@@ -64,8 +64,8 @@ export default class GamePreview extends React.PureComponent {
       messageProps: {},
       showInput: false,
       showInstructions: false,
-      timeLeft: props.screenProps.gameState.trickTime ?
-        props.screenProps.gameState.trickTime : '',
+      timeLeft: props.screenProps.gameState.trickTime && props.screenProps.gameState.trickTime !== '0:00' ?
+        props.screenProps.gameState.trickTime : 'No time limit',
     };
 
     this.timerInterval = undefined;
@@ -81,7 +81,7 @@ export default class GamePreview extends React.PureComponent {
   componentDidMount() {
     this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
 
-    if (this.props.screenProps.gameState.trickTime) {
+    if (this.props.screenProps.gameState.trickTime && this.props.screenProps.gameState.trickTime !== '0:00') {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     }
   }
@@ -131,7 +131,6 @@ export default class GamePreview extends React.PureComponent {
     } else if (seconds === 0 && minutes > 0) {
       newTimeLeft = `${minutes - 1}:59`;
     } else if (seconds === 0 && minutes === 0) {
-      this.publishChoice();
       clearInterval(this.timerInterval);
       newTimeLeft = 'Time is up!';
     }

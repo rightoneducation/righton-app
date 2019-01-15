@@ -44,10 +44,15 @@ export default class GameReasons extends React.PureComponent {
 
     this.state = {
       showInput: false,
+      timeLeft: props.screenProps.gameState.quizTime && props.screenProps.gameState.quizTime !== '0:00' ?
+        props.screenProps.gameState.quizTime : 'No time limit',
       trick0Reason: '',
       trick1Reason: '',
       trick2Reason: '',
     };
+
+    this.timerInterval = undefined;
+    this.countdownTime = this.countdownTime.bind(this);
 
     this.onTrick0Layout = this.onTrick0Layout.bind(this);
     this.handleTrick0Ref = this.handleTrick0Ref.bind(this);
@@ -58,6 +63,13 @@ export default class GameReasons extends React.PureComponent {
 
     this.handleInputModal = this.handleInputModal.bind(this);
     this.closeInputModal = this.closeInputModal.bind(this);
+  }
+
+
+  componentDidMount() {
+    if (this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00') {
+      this.timerInterval = setInterval(this.countdownTime, 1000);
+    }
   }
 
 
@@ -72,6 +84,11 @@ export default class GameReasons extends React.PureComponent {
         this.props.navigation.navigate('GameQuiz');
       }
     }
+  }
+
+
+  componentWillUnmount() {
+    clearInterval(this.timerInterval);
   }
 
 
@@ -126,6 +143,25 @@ export default class GameReasons extends React.PureComponent {
 
   handleTrick2Ref(ref) {
     this.trick2Ref = ref;
+  }
+
+
+  countdownTime() {
+    const { timeLeft } = this.state;
+    const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
+    const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
+    let newTimeLeft = '';
+    if (seconds > 10) {
+      newTimeLeft = `${minutes}:${seconds - 1}`;
+    } else if (seconds > 0) {
+      newTimeLeft = `${minutes}:0${seconds - 1}`;
+    } else if (seconds === 0 && minutes > 0) {
+      newTimeLeft = `${minutes - 1}:59`;
+    } else if (seconds === 0 && minutes === 0) {
+      clearInterval(this.timerInterval);
+      newTimeLeft = 'Time is up!';
+    }
+    this.setState({ timeLeft: newTimeLeft });
   }
 
 
@@ -209,6 +245,7 @@ export default class GameReasons extends React.PureComponent {
   render() {
     const {
       showInput,
+      timeLeft,
       trick0Reason,
       trick1Reason,
       trick2Reason,
@@ -224,6 +261,10 @@ export default class GameReasons extends React.PureComponent {
         {showInput &&
           <InputModal {...showInput} />}
         <HeaderTeam team={`Team ${team + 1}`} />
+        {Boolean(timeLeft) &&
+          <View style={gamePreviewStyles.timeContainer}>
+            <Text style={gamePreviewStyles.time}>{ timeLeft }</Text>
+          </View>}
         {this.renderQuestion()}
         <View style={styles.extraMarginBottom}>
           <View>
