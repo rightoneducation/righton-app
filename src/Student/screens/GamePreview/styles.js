@@ -6,12 +6,12 @@ export default ScaledSheet.create({
     borderColor: colors.primary,
     borderTopWidth: 1,
     borderRightWidth: 1,
-    height: '50@s',
+    height: '50@ms0.2',
     position: 'absolute',
     transform: [
       { rotate: '-45deg' },
     ],
-    width: '50@s',
+    width: '50@ms0.2',
   },
   arrow1: {
     bottom: '50@vs',

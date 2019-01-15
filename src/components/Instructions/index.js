@@ -30,7 +30,7 @@ export default class Instructions extends React.Component {
     super();
 
     this.state = {
-      visibleItems: [],
+      visibleItems: [true],
     };
 
     this.handleReveal = this.handleReveal.bind(this);
@@ -44,7 +44,9 @@ export default class Instructions extends React.Component {
 
   setVisibleItems() {
     const visibleItems = [true];
-    visibleItems[this.props.data.length - 1] = undefined;
+    if (this.props.data.length > 1) {
+      visibleItems[this.props.data.length - 1] = undefined;
+    }
     this.setState({ visibleItems });
   }
 
@@ -150,7 +152,7 @@ const styles = ScaledSheet.create({
     backgroundColor: colors.darkGray,
     borderTopLeftRadius: '10@s',
     borderTopRightRadius: '10@s',
-    padding: '10@s',
+    padding: '10@ms',
   },
   closeArrow: {
     alignSelf: 'center',
@@ -194,14 +196,14 @@ const styles = ScaledSheet.create({
   },
   teacher: {
     color: colors.dark,
-    fontSize: '20@ms0.2',
+    fontSize: '28@ms0.2',
   },
   teacherBubble: {
     alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: 100,
-    height: '40@s',
+    height: '40@ms',
     justifyContent: 'center',
-    width: '40@s',
+    width: '40@ms',
   },
 });
