@@ -37,7 +37,7 @@ export default class Prompt extends Component {
     visible: false,
     defaultValue: '',
     cancelText: 'Cancel',
-    submitText: 'Verify',
+    submitText: 'OK',
     borderColor: '#ccc',
     placeholder: '',
     promptStyle: {},
