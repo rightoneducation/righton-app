@@ -100,7 +100,7 @@ export default class GameFinal extends React.Component {
     const { handleSetAppState } = this.props.screenProps;
     this.props.navigation.navigate('Dashboard');
     setTimeout(() => {
-      // Refrain from cleanup up `team` in state & unsubscribing from gameroom
+      // Refrain from cleanup up `team` in state & unsubscribing from GameRoomID
       handleSetAppState('gameState', {});
     }, 500);
   }

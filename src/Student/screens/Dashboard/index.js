@@ -154,8 +154,8 @@ export default class Dashboard extends React.Component {
     let GameRoomID = '';
     if (room) {
       GameRoomID = room;
-    } else if (this.props.screenProps.gameroom) {
-      GameRoomID = this.props.screenProps.gameroom;
+    } else if (this.props.screenProps.GameRoomID) {
+      GameRoomID = this.props.screenProps.GameRoomID;
       this.setState({ room: GameRoomID });
     }
     this.setState({ portal: `Joining ${GameRoomID}` });
@@ -217,7 +217,7 @@ export default class Dashboard extends React.Component {
               timeout: 4000,
             },
           });
-          this.props.screenProps.handleSetAppState('gameroom', res.GameRoomID);
+          this.props.screenProps.handleSetAppState('GameRoomID', res.GameRoomID);
         }
         debug.log('JOIN GAME', res.GameRoomID);
       }, 3000);
@@ -298,14 +298,14 @@ export default class Dashboard extends React.Component {
 
 
   renderProfileView() {
-    const { gameroom } = this.props.screenProps;
+    const { gameState, GameRoomID } = this.props.screenProps;
 
     const { gamesPlayed, pointsEarned } = this.props.screenProps;
     // TODO Where are these values being hydrated from?
 
     return (
       <View style={styles.profileContainer}>
-        <Text style={styles.input}>{ gameroom }</Text>
+        <Text style={styles.input}>{ gameState.room ? gameState.room : GameRoomID }</Text>
         <View style={styles.profileValuesContainer}>
           <View style={styles.profileValueContainer}>
             <Text style={styles.profileValueLabel}>{'Games: '}</Text>

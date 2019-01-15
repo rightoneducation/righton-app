@@ -9,13 +9,14 @@ import GameRoomResults from './GameRoomResults';
 import GameRoomFinal from './GameRoomFinal';
 import GameRoomNewGame from './GameRoomNewGame';
 // import LocalStorage from '../../../../lib/Categories/LocalStorage';
+import { deleteGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
 import debug from '../../../utils/debug';
 
 
 export default class GameRoom extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
-      gameroom: PropTypes.string,
+      GameRoomID: PropTypes.string,
       gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
@@ -32,7 +33,7 @@ export default class GameRoom extends React.Component {
   
   static defaultProps = {
     screenProps: {
-      gameroom: '',
+      GameRoomID: '',
       gameState: {},
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
@@ -51,7 +52,8 @@ export default class GameRoom extends React.Component {
     super(props);
     this.state = {
       nextTeam: 'team0',
-      portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
+      // portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
+      portal: 'Joining Game',      
       preview: null,
       renderType: 'portal',
       teams: [],
@@ -322,12 +324,12 @@ export default class GameRoom extends React.Component {
     if (nextTeam) {
       this.handleGamePreview(nextTeam);
     } else {
-      this.setState({ renderType: 'final', preview: '' }, () => this.handleFinalMessage());
+      this.setState({ renderType: 'final', preview: '' }, () => this.handleEndMessage());
     }
   }
 
 
-  handleFinalMessage() {
+  handleEndMessage() {
     const {
       IOTPublishMessage,
     } = this.props.screenProps;
@@ -341,20 +343,27 @@ export default class GameRoom extends React.Component {
   
   handleEndGame() {
     this.props.screenProps.navigation.navigate('TeacherApp');
+    // this.handleExitMessage(); TODO - message action 'EXIT_GAME' if game has not finished
     const {
       handleSetAppState,
       IOTUnsubscribeFromTopic,
     } = this.props.screenProps;
-      // TODO! Save game details to teacher account & QuizMaker database
+    const { GameRoomID } = this.props.screenProps;
+    // TODO! Save game details to teacher account & QuizMaker database
     IOTUnsubscribeFromTopic();
     handleSetAppState('gameState', {});
+    handleSetAppState('GameRoomID', '');
     handleSetAppState('players', {});
+    deleteGameFromDynamoDB(GameRoomID,
+      () => debug.log('Deleted GameRoomID from DynamoDB'),
+      e => debug.warn('Error deleting GameRoomID from DynamoDB', JSON.stringify(e))
+    );
   }
 
 
   render() {
     const {
-      gameroom,
+      GameRoomID,
       gameState,
       handleSetAppState,
       IOTPublishMessage,
@@ -390,6 +399,7 @@ export default class GameRoom extends React.Component {
       case 'start':
         return (
           <GameRoomStart
+            GameRoomID={GameRoomID}
             gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
@@ -448,7 +458,7 @@ export default class GameRoom extends React.Component {
       case 'newGame':
         return (
           <GameRoomNewGame
-            gameroom={gameroom}
+            GameRoomID={GameRoomID}
             gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
             handleSetAppState={handleSetAppState}

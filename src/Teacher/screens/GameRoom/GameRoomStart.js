@@ -9,8 +9,10 @@ import { scale } from 'react-native-size-matters';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
+import { colors } from '../../../utils/theme';
 
 export default function GameRoomStart({
+  GameRoomID,
   gameState,
   handleBackFromChild,
   handleEndGame,
@@ -39,6 +41,18 @@ export default function GameRoomStart({
         onPress={() => handleBackFromChild('settings')}
       />
 
+      <ButtonWide
+        buttonStyles={{
+          position: 'relative',
+          backgroundColor: colors.dark,
+          borderColor: colors.primary,
+          borderWidth: 1,
+          marginTop: 25,
+        }}
+        label={GameRoomID ? `Enter game with: ${GameRoomID}` : 'Generating game room...'}
+        onPress={() => {}}
+      />
+
       <View style={styles.playersContainer}>
         <Text style={[styles.textLabel, styles.textLarge]}>{ Object.keys(players).length }</Text>
         <Text style={styles.textLabel}>Players in game room</Text>
@@ -61,6 +75,7 @@ export default function GameRoomStart({
 }
 
 GameRoomStart.propTypes = {
+  GameRoomID: PropTypes.string,
   gameState: PropTypes.shape({}),
   handleBackFromChild: PropTypes.func.isRequired,
   handleEndGame: PropTypes.func.isRequired,
@@ -70,6 +85,7 @@ GameRoomStart.propTypes = {
 };
 
 GameRoomStart.defaultProps = {
+  GameRoomID: '',
   gameState: {},
   handleBackFromChild: () => {},
   handleEndGame: () => {},

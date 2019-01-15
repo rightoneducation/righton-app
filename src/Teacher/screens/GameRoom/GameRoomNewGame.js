@@ -21,7 +21,7 @@ const blockSize = deviceWidth / 4;
 
 export default class GameRoomNewGame extends React.Component {
   static propTypes = {
-    gameroom: PropTypes.string,
+    GameRoomID: PropTypes.string,
     gameState: PropTypes.shape({
       quizTime: PropTypes.string,
       trickTime: PropTypes.string,
@@ -32,7 +32,7 @@ export default class GameRoomNewGame extends React.Component {
   };
   
   static defaultProps = {
-    gameroom: '',
+    GameRoomID: '',
     gameState: {
       quizTime: '1:00',
       trickTime: '3:00',
@@ -107,7 +107,8 @@ export default class GameRoomNewGame extends React.Component {
       trickTime: gameState.trickTime,
       description: game.description,
       ...teamQuestions,
-      GameRoomID: this.props.gameroom,
+      GameRoomID: this.props.GameRoomID,
+      room: gameState.room,
       state: {
         newGame: true,
       },
