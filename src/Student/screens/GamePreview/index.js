@@ -378,7 +378,9 @@ export default class GamePreview extends React.PureComponent {
         {showInstructions &&
           <Instructions
             handleCloseModal={this.toggleInstructions}
-            data={gameState[teamRef].instructions}
+            data={gameState[teamRef].instructions.length ?
+              gameState[teamRef].instructions :
+              [gameState[teamRef].answer]}
             visible={showInstructions}
           />}
         {!showInstructions && !showInput &&
