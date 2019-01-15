@@ -388,14 +388,14 @@ export default class Dashboard extends React.Component {
         onPress={() => { /* TODO */ }}
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Top 10</Text>
+        <Text style={styles.buttonText}>Stats</Text>
       </Touchable>
       <Touchable
         activeOpacity={0.8}
         onPress={() => { /* TODO */ }}
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Invite Friends</Text>
+        <Text style={styles.buttonText}>Games</Text>
       </Touchable>
     </View>
   )
