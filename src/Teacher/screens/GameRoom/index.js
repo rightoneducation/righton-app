@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Portal from '../../../screens/Portal';
+import GameRoomSettings from './GameRoomSettings';
 import GameRoomStart from './GameRoomStart';
 import GameRoomOverview from './GameRoomOverview';
 import GameRoomPreview from './GameRoomPreview';
@@ -377,10 +378,20 @@ export default class GameRoom extends React.Component {
             }}
           />
         );
+      case 'settings':
+        return (
+          <GameRoomSettings
+            gameState={gameState}
+            handleBackFromChild={this.handleBackFromChild}
+            handleSetAppState={handleSetAppState}
+            IOTPublishMessage={IOTPublishMessage}
+          />
+        );
       case 'start':
         return (
           <GameRoomStart
             gameState={gameState}
+            handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
             handleStartGame={this.handleStartGame}
             players={players}
@@ -391,6 +402,7 @@ export default class GameRoom extends React.Component {
         return (
           <GameRoomOverview
             gameState={gameState}
+            handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
             handleGamePreview={this.handleGamePreview}
             handleRenderNewGame={this.handleRenderNewGame}          
