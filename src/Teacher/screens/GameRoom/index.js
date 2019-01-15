@@ -449,6 +449,7 @@ export default class GameRoom extends React.Component {
         return (
           <GameRoomNewGame
             gameroom={gameroom}
+            gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
             handleSetAppState={handleSetAppState}
             IOTPublishMessage={IOTPublishMessage}
