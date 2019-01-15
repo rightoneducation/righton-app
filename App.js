@@ -54,7 +54,7 @@ export default class App extends React.Component {
     this.state = {
       appState: AppState.currentState,
       gameState: {},
-      gameroom: '',
+      GameRoomID: '',
       players: {},
       points: 0,
       ready: false,
@@ -105,7 +105,7 @@ export default class App extends React.Component {
 
     const { role } = this.state;
     if (role === 'Teacher') {
-      const { GameRoomID } = this.state.gameState;
+      const { GameRoomID } = this.state;
       if (GameRoomID) {
         deleteGameFromDynamoDB(GameRoomID,
           r => debug.log('Deleted GameRoom from DynamoDB', r),
@@ -127,14 +127,14 @@ export default class App extends React.Component {
 
 
   handleAppStateChange(nextAppState) {
-    const { appState, gameroom } = this.state;
-    if (gameroom) {
+    const { appState, GameRoomID } = this.state;
+    if (GameRoomID) {
       if (appState.match(/inactive|background/) && nextAppState === 'active') {
-        debug.log('App has come to the foreground - resubscribing to GameRoom:', gameroom);
-        this.IOTSubscribeToTopic(gameroom);
+        debug.log('App has come to the foreground - resubscribing to GameRoom:', GameRoomID);
+        this.IOTSubscribeToTopic(GameRoomID);
       } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
-        debug.log('App going into background - unsubscribing from GameRoom:', gameroom);
-        this.IOTUnsubscribeFromTopic(gameroom);
+        debug.log('App going into background - unsubscribing from GameRoom:', GameRoomID);
+        this.IOTUnsubscribeFromTopic(GameRoomID);
       }
     }
     this.setState({ appState: nextAppState });
@@ -161,8 +161,8 @@ export default class App extends React.Component {
 
   handleSetAppState(property, value) {
     switch (property) {
-      case 'gameroom':
-        this.setState({ gameroom: value });
+      case 'GameRoomID':
+        this.setState({ GameRoomID: value });
         break;
       case 'gameState':
         this.setState({ gameState: value });
@@ -197,32 +197,28 @@ export default class App extends React.Component {
   }
 
 
-  IOTUnsubscribeFromTopic(specifiedGameroom) {
-    if (specifiedGameroom) {
-      unsubscribeFromTopic(specifiedGameroom);
-    } else {
-      const { gameroom } = this.state;
-      unsubscribeFromTopic(gameroom);
-    }
+  IOTUnsubscribeFromTopic() {
+    const { GameRoomID } = this.state;
+    unsubscribeFromTopic(GameRoomID);
   }
 
 
   IOTPublishMessage(message) {
-    const { gameroom, gameState } = this.state;
-    const GameRoomID = gameState.GameRoomID || gameroom || '';
-    if (!GameRoomID) {
+    const { GameRoomID, gameState } = this.state;
+    const topic = GameRoomID || gameState.GameRoomID || '';
+    if (!topic) {
       debug.warn('Attempted to publish message w/o a GameRoomID set. Message:', JSON.stringify(message));
       return;
     }
     // Prevent computing received messages sent by self.
     this.messagesReceived[message.uid] = true;
-    publishMessage(GameRoomID, message);
+    publishMessage(topic, message);
   }
 
 
   render() {
     const { 
-      gameroom,
+      GameRoomID,
       gameState,
       players,
       points,
@@ -240,7 +236,7 @@ export default class App extends React.Component {
     return (
       <RootNavigator
         screenProps={{
-          gameroom,
+          GameRoomID,
           gameState,
           players,
           points,
