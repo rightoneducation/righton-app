@@ -55,7 +55,7 @@ export default class GameBuilderQuestion extends React.Component {
         uid: '',
       },
       showInput: false,
-      showSelection: false,
+      // showSelection: false,
     };
 
     this.blankQuestionState = this.state.question;
