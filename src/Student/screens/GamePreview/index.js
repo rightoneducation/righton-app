@@ -79,9 +79,15 @@ export default class GamePreview extends React.PureComponent {
 
 
   componentDidMount() {
-    this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
+    const { trickTime } = this.props.screenProps.gameState;
+    const minute = parseInt(trickTime.substr(0, 1), 10);
+    if (minute <= 1) {
+      this.startAnimation();
+    } else {
+      this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
+    }
 
-    if (this.props.screenProps.gameState.trickTime && this.props.screenProps.gameState.trickTime !== '0:00') {
+    if (trickTime && trickTime !== '0:00') {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     }
   }
