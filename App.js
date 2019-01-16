@@ -52,6 +52,7 @@ export default class App extends React.Component {
     this.requestAttempts = 0;
 
     this.state = {
+      account: {},
       appState: AppState.currentState,
       gameState: {},
       GameRoomID: '',
@@ -60,6 +61,7 @@ export default class App extends React.Component {
       ready: false,
       role: '', // 'Teacher' | 'Student'
       session: null,
+      settings: {},
       team: null,
     };
 
@@ -67,7 +69,6 @@ export default class App extends React.Component {
     // this.handleOnSignUp = this.handleOnSignUp.bind(this);
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
     this.handleSetAppState = this.handleSetAppState.bind(this);
-    this.handleSetRole = this.handleSetRole.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
 
     this.IOTSubscribeToTopic = this.IOTSubscribeToTopic.bind(this);
@@ -154,13 +155,11 @@ export default class App extends React.Component {
   }
 
 
-  handleSetRole(role) {
-    this.setState({ role });
-  }
-
-
   handleSetAppState(property, value) {
     switch (property) {
+      case 'role':
+        this.setState({ role: value });
+        break;
       case 'GameRoomID':
         this.setState({ GameRoomID: value });
         break;
@@ -246,7 +245,6 @@ export default class App extends React.Component {
           onSignUp: onSignUp || this.handleOnSignUp,
           doSignOut: doSignOut || this.handleOnSignOut,
           handleSetAppState: this.handleSetAppState,
-          handleSetRole: this.handleSetRole,
           auth: Auth,
           IOTPublishMessage: this.IOTPublishMessage,
           IOTSubscribeToTopic: this.IOTSubscribeToTopic,

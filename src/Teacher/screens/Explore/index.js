@@ -16,7 +16,7 @@ import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
 class Explore extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
-      handleSetRole: PropTypes.func.isRequired,
+      handleSetAppState: PropTypes.func.isRequired,
       navigation: PropTypes.shape({
         navigate: PropTypes.func,
       }),
@@ -25,7 +25,7 @@ class Explore extends React.PureComponent {
   
   static defaultProps = {
     screenProps: {
-      handleSetRole: () => {},
+      handleSetAppState: () => {},
       navigation: {
         navigate: () => {},
       },
@@ -43,7 +43,7 @@ class Explore extends React.PureComponent {
 
   componentDidMount() {
     if (__DEV__) this.hydrateDummyData();
-    this.props.screenProps.handleSetRole('Teacher');
+    this.props.screenProps.handleSetAppState('role', 'Teacher');
   }
 
 
