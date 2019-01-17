@@ -17,16 +17,18 @@ import styles from '../styles';
 export default class GameRoom extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
-      handleRoomSubmit: PropTypes.func,
       handleBack: PropTypes.func.isRequired,
+      handleSetAppState: PropTypes.func.isRequired,
+      handleRoomSubmit: PropTypes.func.isRequired,
     }),
   }
 
   
   static defaultProps = {
     screenProps: {
-      handleRoomSubmit: () => {},
       handleBack: () => {},
+      handleSetAppState: () => {},
+      handleRoomSubmit: () => {},
     },
   }
 
@@ -51,11 +53,13 @@ export default class GameRoom extends React.PureComponent {
   onRoomSubmit() {
     const { room } = this.state;
     this.props.screenProps.handleRoomSubmit(room);
+    this.props.screenProps.handleSetAppState('deviceSettings', { role: 'student' });
   }
 
 
   onJoinLater() {
     this.props.screenProps.handleRoomSubmit();
+    this.props.screenProps.handleSetAppState('deviceSettings', { role: 'student' });
   }
 
 
