@@ -99,7 +99,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: '25@s',
   },
   messageDetail: {
-    bottom: '100@vs',
+    bottom: '50@vs',
     color: colors.white,
     fontSize: fonts.large,
     position: 'absolute',
