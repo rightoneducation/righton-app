@@ -14,12 +14,11 @@ const TeacherFirst = createBottomTabNavigator({
 
   LogIn: {
     screen: (props) => {
-      const { screenProps, ...otherProps } = props;
+      const { navigation } = props;
 
       return (
         <LogIn
-          {...screenProps}
-          {...otherProps}
+          navigation={navigation}
         />
       );
     },
@@ -32,13 +31,14 @@ const TeacherFirst = createBottomTabNavigator({
 
   SignUp: {
     screen: (props) => {
-      const { navigation, screenProps, ...otherProps } = props;
+      const { navigation, screenProps } = props;
 
       return (
         <SignUp
           navigation={navigation}
-          {...screenProps}
-          {...otherProps}
+          screenProps={{
+            onSignUp: screenProps.onSignUp,
+          }}
         />
       );
     },
