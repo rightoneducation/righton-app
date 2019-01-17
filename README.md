@@ -42,6 +42,8 @@ If you receive a `hasteImpl returning the same name for different files` error i
 
 We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
 
+Please refer to our [Contribution Guide](https://gitlab.com/friendly-robot/righton/CONTRIBUTING.md)
+
 ### Communication channels
 
 Please join us on Slack at #RightOnEducation. We want to hear from you about your experience!
