@@ -21,7 +21,11 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
+<<<<<<< Updated upstream
 	<string>14</string>
+=======
+	<string>12</string>
+>>>>>>> Stashed changes
 	<key>ITSEncryptionExportComplianceCode</key>
 	<string>NO</string>
 	<key>LSRequiresIPhoneOS</key>
