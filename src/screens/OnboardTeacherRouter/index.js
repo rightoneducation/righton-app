@@ -13,10 +13,16 @@ import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
 export default class OnboardTeacherRouter extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.shape({ navigate: PropTypes.func }),
+    screenProps: PropTypes.shape({
+      handleSetAppState: PropTypes.func.isRequired,
+    }),    
   }
   
   static defaultProps = {
     navigation: {},
+    screenProps: {
+      handleSetAppState: () => {},
+    },
   }
   
   constructor(props) {
@@ -34,6 +40,11 @@ export default class OnboardTeacherRouter extends React.PureComponent {
 
   handleTeacherApp() {
     this.props.navigation.navigate('TeacherApp');
+    this.props.screenProps.handleSetAppState('deviceSettings', {
+      role: 'teacher',
+      quizTime: '1:00',
+      trickTime: '3:00',
+    });
   }
 
 
