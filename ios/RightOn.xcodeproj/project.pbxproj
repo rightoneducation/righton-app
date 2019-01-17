@@ -1501,7 +1501,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 				CURRENT_PROJECT_VERSION = 14;
+=======
+				CURRENT_PROJECT_VERSION = 12;
+>>>>>>> Stashed changes
 =======
 				CURRENT_PROJECT_VERSION = 12;
 >>>>>>> Stashed changes
