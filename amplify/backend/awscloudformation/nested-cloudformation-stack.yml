@@ -150,6 +150,28 @@
 				}
 			}
 		},
+		"storageStudents": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Students-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "Students",
+					"partitionKeyName": "StudentID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageTeachers": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Teachers-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "Teachers",
+					"partitionKeyName": "TeacherID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
 		"functionTeacherGameLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -170,6 +192,20 @@
 				}
 			}
 		},
+		"functionStudentAccountLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/StudentAccountLambda-cloudformation-template.json",
+				"Parameters": {}
+			}
+		},
+		"functionTeacherAccountLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherAccountLambda-cloudformation-template.json",
+				"Parameters": {}
+			}
+		},
 		"apiTeacherGameAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -188,6 +224,20 @@
 						]
 					}
 				}
+			}
+		},
+		"apiStudentAccountAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/StudentAccountAPI-cloudformation-template.json",
+				"Parameters": {}
+			}
+		},
+		"apiTeacherAccountAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherAccountAPI-cloudformation-template.json",
+				"Parameters": {}
 			}
 		}
 	},
