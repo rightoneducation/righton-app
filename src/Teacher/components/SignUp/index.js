@@ -26,11 +26,17 @@ class SignUp extends React.Component {
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
     }),
+    screenProps: PropTypes.shape({
+      onSignUp: PropTypes.func,
+    }),
   };
 
   static defaultProps = {
     navigation: {
       navigate: () => {},
+    },
+    screenProps: {
+      onSignUp: () => {},
     },
   }
 
@@ -113,7 +119,7 @@ class SignUp extends React.Component {
 
 
   onSignUp() {
-    this.setState(this.baseState);
+    // this.setState(this.baseState);
 
     this.props.navigation.navigate('TeacherApp');    
   }
@@ -143,6 +149,7 @@ class SignUp extends React.Component {
 
         if (userConfirmed) {
           this.onSignUp();
+          this.props.screenProps.onSignUp('teacher', username);
         }
       })
       .catch((exception) => {
