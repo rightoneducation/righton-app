@@ -33,7 +33,7 @@ The Xcode editor if testing on iOS.
 #### Note:
 Some NPM packages may be outdated and need to be altered for the Android build.
 <br>
-If you receive a `compileOnly` error, it is due to the `build.gradle` file of the affected library. To fix this issue, locate the line in the mention file and change `compile` to `implementation`.
+If you receive a `compileOnly` error, it is due to the `build.gradle` file of the affected library. To fix this issue, locate the line in the mentioned file and change `compileOnly` to `implementation`.
 <br>
 <br>
 If you receive a `hasteImpl returning the same name for different files` error in your packager. This is due to identical path names created by AWS Amplify. To fix this issue, simply drag the `#current-cloud-backend` folder from `${root}/amplify` out, restart the packager and run again.
