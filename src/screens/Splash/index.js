@@ -6,11 +6,17 @@ import debug from '../../utils/debug';
 
 export default class Splash extends React.Component {
   static propTypes = {
+    deviceSettings: PropTypes.shape({
+      role: PropTypes.string,
+    }),
     navigation: PropTypes.shape({ type: PropTypes.func }),
     session: PropTypes.shape({ type: PropTypes.string }),
   }
   
   static defaultProps = {
+    deviceSettings: {
+      role: '',
+    },
     navigation: {},
     session: {},
   }
@@ -55,8 +61,19 @@ export default class Splash extends React.Component {
       return;
     }
 
-    // TODO Check whether app is signed up for Teacher or Student and route accordingly
-    this.navigateTo(loggedIn ? 'TeacherApp' : 'OnboardAppRouter');
+    if (loggedIn) {
+      if (this.props.deviceSettings.role === 'teacher') {
+        this.navigateTo('TeacherApp');
+      } else {
+        this.navigateTo('StudentApp');
+      }
+    } else if (this.props.deviceSettings.role === 'teacher') {
+      this.navigateTo('TeacherFirst');
+    } else if (this.props.deviceSettings.role === 'student') {
+      this.navigateTo('StudentApp');
+    } else {
+      this.navigateTo('OnboardAppRouter');
+    }
   }
 
 
