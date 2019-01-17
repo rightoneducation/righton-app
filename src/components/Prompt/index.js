@@ -11,7 +11,7 @@ import styles from './styles';
 
 export default class Prompt extends Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     visible: PropTypes.bool,
     defaultValue: PropTypes.string,
     placeholder: PropTypes.string,
@@ -41,6 +41,7 @@ export default class Prompt extends Component {
     borderColor: '#ccc',
     placeholder: '',
     promptStyle: {},
+    title: '',
     titleStyle: {},
     buttonStyle: {},
     buttonTextStyle: {},
