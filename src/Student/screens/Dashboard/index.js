@@ -72,7 +72,6 @@ export default class Dashboard extends React.Component {
       this.handleParamRoomEntry();
       this.props.screenProps.navigation.state.params = {};
     }
-    this.props.screenProps.handleSetAppState('role', 'Student');
     Keyboard.addListener('keyboardDidHide', this.handleKeyboardHide);
     Keyboard.addListener('keyboardDidShow', this.handleKeyboardShow);
     this.mounted = true;
