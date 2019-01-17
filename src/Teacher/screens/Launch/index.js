@@ -30,6 +30,13 @@ const blockSize = deviceWidth / 4;
 class Launch extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
+      account: PropTypes.shape({
+        username: PropTypes.string,
+      }),
+      deviceSettings: PropTypes.shape({
+        quizTime: PropTypes.string,
+        trickTime: PropTypes.string,
+      }),
       gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
@@ -42,6 +49,13 @@ class Launch extends React.Component {
   
   static defaultProps = {
     screenProps: {
+      account: {
+        username: '',
+      },
+      deviceSettings: {
+        quizTime: '',
+        trickTime: '',
+      },
       gameState: {},
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
@@ -55,12 +69,11 @@ class Launch extends React.Component {
   constructor(props) {
     super(props);
 
-    this.hydratedQuizzes = false;
+    this.hydratedGames = false;
 
     this.state = {
-      activeQuiz: {},
       room: props.screenProps.GameRoomID,
-      quizzes: [],
+      games: [],
       // GameRoomID: '',
     };
 
@@ -81,23 +94,27 @@ class Launch extends React.Component {
   }
 
 
-  async hydrateQuizzes() {
-    if (this.hydratedQuizzes) return;
-    let quizzes;
+  async hydrateGames() {
+    if (this.hydratedGames) return;
     try {
-      quizzes = await LocalStorage.getItem('@RightOn:Games');
-      if (quizzes === undefined) {
-        LocalStorage.setItem('@RightOn:Games', JSON.stringify([]));
-        // TODO! Handle when user is logged in with different account??
-        quizzes = [];
-      } else {
-        quizzes = JSON.parse(quizzes);
-        this.hydratedQuizzes = true;
+      const { username } = this.props.screenProps.account;
+      if (!username) {
+        // TODO! Notify user that they must create an account to create a game
+        return;
       }
+      let games;
+      games = await LocalStorage.getItem(`@RightOn:${username}/Games`);
+      if (games === undefined || (typeof games === 'string' && games.length === 0)) {
+        LocalStorage.setItem(`@RightOn:${username}/Games`, JSON.stringify([]));
+        games = [];
+      } else {
+        games = JSON.parse(games);
+        this.hydratedGames = true;
+      }
+      this.setState({ games });
     } catch (exception) {
-      debug.log('Caught exception getting item from LocalStorage @Quizzes, hydrateQuizzes():', exception);
+      debug.log('Caught exception getting item from LocalStorage @Games, hydrateGames():', exception);
     }
-    this.setState({ quizzes });
   }
 
 
@@ -108,7 +125,7 @@ class Launch extends React.Component {
     }, 1500);
 
     // Hydrate Dashboard w/ game details
-    if (!this.hydratedQuizzes) this.hydrateQuizzes();
+    if (!this.hydratedGames) this.hydrateGames();
     
 
     /* Previous code before generating unique GameRoomID */
@@ -157,11 +174,12 @@ class Launch extends React.Component {
   }
 
 
-  handleQuizSelection(e, quiz) {
+  handleGameSelection(e, game) {
     const { room } = this.state;
+    const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
 
     const teamQuestions = {};
-    quiz.questions.forEach((question, idx) => {
+    game.questions.forEach((question, idx) => {
       teamQuestions[`team${idx}`] = {
         ...question,
         /*
@@ -181,13 +199,13 @@ class Launch extends React.Component {
 
     const gameState = {
       answering: null,
-      banner: quiz.banner,
-      title: quiz.description,
-      description: quiz.description,
-      quizTime: '1:00',
-      trickTime: '3:00',
+      banner: game.banner,
+      title: game.description,
+      description: game.description,
+      quizTime,
+      trickTime,
       ...teamQuestions,
-      // GameRoomID: room,
+      // GameRoomID: '######',
       room,
       state: {},
     };
@@ -222,27 +240,27 @@ class Launch extends React.Component {
   }
 
 
-  renderQuizBlock(quiz) {
+  renderGameBlock(game) {
     return (
       <Touchable
         activeOpacity={0.8}
         background={Touchable.Ripple(colors.dark, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-        key={quiz.title}
-        onPress={() => this.handleQuizSelection(null, quiz)}
+        key={game.title}
+        onPress={() => this.handleGameSelection(null, game)}
       >
         <View style={gamesStyles.gameButton}>
           <View style={gamesStyles.imageContainer}>
-            {quiz.image ?
-              <Image source={{ uri: quiz.image }} style={gamesStyles.image} />
+            {game.image ?
+              <Image source={{ uri: game.image }} style={gamesStyles.image} />
               :
               <Text style={gamesStyles.imageLabel}>RightOn!</Text>}
           </View>
-          <Text style={gamesStyles.gameTitle}>{ quiz.title }</Text>
+          <Text style={gamesStyles.gameTitle}>{ game.title }</Text>
           <Text style={[gamesStyles.gameTitle, gamesStyles.gameDescription]}>
-            { quiz.description }
+            { game.description }
           </Text>
-          <Text style={gamesStyles.gameCount}>{ `${quiz.questions.length}Q` }</Text>
+          <Text style={gamesStyles.gameCount}>{ `${game.questions.length}Q` }</Text>
         </View>
       </Touchable>
     );
@@ -251,7 +269,7 @@ class Launch extends React.Component {
 
   render() {
     const {
-      quizzes,
+      games,
       room,
     } = this.state;
 
@@ -303,8 +321,8 @@ class Launch extends React.Component {
           <ButtonBack
             onPress={this.handleBackFromHost}
           />
-          <Text style={firstStyles.title}>Host a quiz</Text>
-          {quizzes.map(quiz => this.renderQuizBlock(quiz))}
+          <Text style={firstStyles.title}>Host a game</Text>
+          {games.map(game => this.renderGameBlock(game))}
         </ScrollView>
       </Swiper>
     );

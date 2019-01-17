@@ -29,6 +29,7 @@ export default class GameRoomNewGame extends React.Component {
     handleBackFromChild: PropTypes.func.isRequired,
     handleSetAppState: PropTypes.func.isRequired,
     IOTPublishMessage: PropTypes.func.isRequired,
+    username: PropTypes.string,
   };
   
   static defaultProps = {
@@ -40,6 +41,7 @@ export default class GameRoomNewGame extends React.Component {
     handleBackFromChild: () => {},
     handleSetAppState: () => {},
     IOTPublishMessage: () => {},
+    username: '',
   };
   
   constructor(props) {
@@ -61,21 +63,26 @@ export default class GameRoomNewGame extends React.Component {
 
   async hydrateGames() {
     if (this.hydratedGames) return;
-    let games;
     try {
-      games = await LocalStorage.getItem('@RightOn:Games');
-      if (games === undefined) {
-        LocalStorage.setItem('@RightOn:Games', JSON.stringify([]));
-        // TODO! Handle when user is logged in with different account??
+      const { username } = this.props;
+      if (!username) {
+        // TODO! Notify user that they must create an account to create a game
+        return;
+      }
+      let games;
+      games = await LocalStorage.getItem(`@RightOn:${username}/Games`);
+      if (games === undefined || (typeof games === 'string' && games.length === 0)) {
+        LocalStorage.setItem(`@RightOn:${username}/Games`, JSON.stringify([]));
         games = [];
       } else {
         games = JSON.parse(games);
         this.hydratedGames = true;
       }
+
+      this.setState({ games });
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Games, hydrateGames():', exception);
     }
-    this.setState({ games });
   }
 
 

@@ -20,6 +20,9 @@ import LocalStorage from '../../../../lib/Categories/LocalStorage';
 class Games extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
+      account: PropTypes.shape({
+        username: PropTypes.string,
+      }),
       navigation: PropTypes.shape({
         navigate: PropTypes.func,
       }),
@@ -28,6 +31,9 @@ class Games extends React.PureComponent {
   
   static defaultProps = {
     screenProps: {
+      account: {
+        username: '',
+      },
       navigation: {
         navigate: () => {},
       },
@@ -56,12 +62,16 @@ class Games extends React.PureComponent {
   
   
   async hydrateGames() {
-    let games;
     try {
-      games = await LocalStorage.getItem('@RightOn:Games');
-      if (games === undefined) {
-        LocalStorage.setItem('@RightOn:Games', JSON.stringify([]));
-        // TODO! Handle when user is logged in with different account??
+      let games;
+      const { username } = this.props.screenProps.account;
+      if (!username) {
+        // TODO! Notify user that they must create an account to create a game
+        return;
+      }
+      games = await LocalStorage.getItem(`@RightOn:${username}/Games`);
+      if (games === undefined || (typeof games === 'string' && games.length === 0)) {
+        LocalStorage.setItem(`@RightOn:${username}/Games`, JSON.stringify([]));
         games = [];
       } else {
         games = JSON.parse(games);
@@ -74,10 +84,11 @@ class Games extends React.PureComponent {
       //     { image: '', title: 'Like all of future past.' }
       //   ];
       // }
+
+      this.setState({ games });
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Games, hydrateGames():', exception);
     }
-    this.setState({ games });
   }
 
 
@@ -109,8 +120,12 @@ class Games extends React.PureComponent {
 
 
   saveGamesToDatabase = (updatedGames) => {
-    const stringifyGames = JSON.stringify(updatedGames);
-    LocalStorage.setItem('@RightOn:Games', stringifyGames);
+    const { username } = this.props.screenProps.account;
+    if (username) {
+      const stringifyGames = JSON.stringify(updatedGames);
+      LocalStorage.setItem(`@RightOn:${username}/Games`, stringifyGames);
+      // TODO! Update user's DynamoDB here
+    }
   }
 
 
