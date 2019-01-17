@@ -45,18 +45,20 @@ Coming soon!
 ### Acknowledgments
 
 #### Meet our team
-<strong>Sinclair</strong> - Product Lead
-<strong>Edward Tan</strong> - Tech Lead
-<strong>Kai King</strong> - Math Educator
-<strong>Daz C Yang</strong> - Full-Stack Web Developer
+<strong>Sinclair</strong> - Product Lead<br>
+<strong>Edward Tan</strong> - Tech Lead<br>
+<strong>Kai King</strong> - Math Educator<br>
+<strong>Daz C Yang</strong> - Full-Stack Web Developer<br>
 <strong>Andy Li</strong> - Mobile Developer
-
+<br>
+<br>
 #### Advisors
-<strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher
-<strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education
-<strong>Eric Boucher</strong> - Cofounder & CEO of Ovio [technology non-profit]
+<strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
+<strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
+<strong>Eric Boucher</strong> - Cofounder & CEO of Ovio [technology non-profit]<br>
 <strong>Payton Richardson</strong> - Mixed-methods research analyst at the Center for Research on Education Outcomes (CREDO) at Stanford University
-
+<br>
+<br>
 <em>Learn more about our RightOn & our team @https://rightoneducation.com</em>
 
 
