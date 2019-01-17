@@ -54,19 +54,18 @@ export default class App extends React.Component {
     this.state = {
       account: {},
       appState: AppState.currentState,
+      deviceSettings: {},
       gameState: {},
       GameRoomID: '',
       players: {},
       points: 0,
       ready: false,
-      role: '', // 'Teacher' | 'Student'
       session: null,
-      settings: {},
       team: null,
     };
 
     this.handleOnSignIn = this.handleOnSignIn.bind(this);
-    // this.handleOnSignUp = this.handleOnSignUp.bind(this);
+    this.handleOnSignUp = this.handleOnSignUp.bind(this);
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
     this.handleSetAppState = this.handleSetAppState.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
@@ -87,6 +86,13 @@ export default class App extends React.Component {
       session = null;
     }
     this.setSession(session, () => {
+      this.loadDeviceSettingsFromLocalStorage();
+      if (session && session.idToken && session.idToken.payload) {
+        const username = session.idToken.payload['cognito:username'];
+        if (username) {
+          this.loadAccountSettingsFromLocalStorage(username);
+        }
+      }
       attachIotPolicy();
     });
 
@@ -104,8 +110,8 @@ export default class App extends React.Component {
     // TODO Unsubscribe from topic manually when game ends or user leaves game w/o exiting app.
     this.IOTUnsubscribeFromTopic();
 
-    const { role } = this.state;
-    if (role === 'Teacher') {
+    const { role } = this.state.deviceSettings;
+    if (role === 'teacher') {
       const { GameRoomID } = this.state;
       if (GameRoomID) {
         deleteGameFromDynamoDB(GameRoomID,
@@ -146,7 +152,47 @@ export default class App extends React.Component {
     this.setState({ session });
   }
 
-  // handleOnSignUp = () => { }
+  handleOnSignUp(accountType, username) {
+    const account = {};
+    const deviceSettings = {};
+    const date = Date.now();
+    account.signUpDate = date;
+
+    if (accountType === 'teacher') {
+      account.username = username;
+      account.gamesPlayed = 0;
+
+      account.games = [];
+      account.favorites = [];
+      account.history = [];
+
+      deviceSettings.quizTime = '1:00';
+      deviceSettings.trickTime = '3:00';
+      deviceSettings.role = 'teacher';
+
+      LocalStorage.setItem(`RightOn:${username}/Games`, '[]');
+      LocalStorage.setItem(`RightOn:${username}/Recent`, '[]');
+    } else if (accountType === 'student') {
+      account.username = username;
+      account.gamesPlayed = 0;
+      account.playersTricked = 0;
+      account.tricksSuggested = 0;
+      account.points = 0;
+
+      deviceSettings.role = 'student';
+    }
+
+    this.setState({
+      account,
+      deviceSettings,
+    });
+    
+    const stringifiedAccount = JSON.stringify(account);
+    LocalStorage.setItem(`RightOn:${username}`, stringifiedAccount);
+
+    const stringifiedDeviceSettings = JSON.stringify(deviceSettings);
+    LocalStorage.setItem('RightOn:DeviceSettings', stringifiedDeviceSettings);
+  }
 
 
   handleOnSignOut() {
@@ -157,9 +203,6 @@ export default class App extends React.Component {
 
   handleSetAppState(property, value) {
     switch (property) {
-      case 'role':
-        this.setState({ role: value });
-        break;
       case 'GameRoomID':
         this.setState({ GameRoomID: value });
         break;
@@ -174,7 +217,13 @@ export default class App extends React.Component {
         break;
       case 'points':
         this.setState({ points: this.state.points + value });
-        break;   
+        break;
+      case 'deviceSettings':
+        this.setState({ deviceSettings: { ...this.state.deviceSettings, ...value } }, () => {
+          const stringifiedDeviceSettings = JSON.stringify(this.state.deviceSettings);
+          LocalStorage.setItem('RightOn:DeviceSettings', stringifiedDeviceSettings);
+        });
+        break;
       default:
         break;
     }
@@ -182,9 +231,9 @@ export default class App extends React.Component {
 
 
   IOTSubscribeToTopic(topic) {
-    const { role } = this.state;
-    IOTSubscribeToTopic(topic, role === 'Teacher' ? teacherMessageHandler : studentMessageHandler, this);
-    if (role !== 'Teacher') {
+    const { role } = this.state.deviceSettings;
+    IOTSubscribeToTopic(topic, role === 'teacher' ? teacherMessageHandler : studentMessageHandler, this);
+    if (role !== 'teacher') {
       const requestMessage = {
         action: 'REQUEST_GAME_STATE',
         uid: `${Math.random()}`,
@@ -215,8 +264,36 @@ export default class App extends React.Component {
   }
 
 
+  async loadAccountSettingsFromLocalStorage(username) {
+    try { 
+      const accountString = await LocalStorage.getItem(`RightOn:${username}`);
+      if (typeof accountString === 'string') {
+        const account = JSON.parse(accountString);
+        this.setState({ account });
+      }
+    } catch (exception) {
+      debug.log('Error loading account settings from LocalStorage:', exception);
+    }
+  }
+
+
+  async loadDeviceSettingsFromLocalStorage() {
+    try { 
+      const deviceSettingsString = await LocalStorage.getItem('RightOn:DeviceSettings');
+      if (typeof deviceSettingsString === 'string') {
+        const deviceSettings = JSON.parse(deviceSettingsString);
+        this.setState({ deviceSettings });
+      }
+    } catch (exception) {
+      debug.log('Error loading device settings from LocalStorage:', exception);
+    }
+  }
+
+
   render() {
-    const { 
+    const {
+      account,
+      deviceSettings,
       GameRoomID,
       gameState,
       players,
@@ -235,6 +312,8 @@ export default class App extends React.Component {
     return (
       <RootNavigator
         screenProps={{
+          account,
+          deviceSettings,
           GameRoomID,
           gameState,
           players,
