@@ -42,6 +42,7 @@ const TeacherAccount = {
 
 
 const StudentAccount = {
+  age: 'number',
   email: 'string',
   gamesPlayed: 'number',
   playersTricked: 'number',
