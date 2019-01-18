@@ -1,10 +1,30 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
 import AgeInput from './StudentFirstAgeInput';
 import GameRoom from './StudentFirstGameRoom';
 
 
 export default class StudentFirst extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired,
+    }),
+    screenProps: PropTypes.shape({
+      handleSetAppState: PropTypes.func.isRequired,
+    }),
+  }
+
+  
+  static defaultProps = {
+    navigation: {
+      navigate: () => {},
+    },
+    screenProps: {
+      handleSetAppState: () => {},
+    },
+  }
+
   constructor(props) {
     super(props);
 
@@ -31,7 +51,8 @@ export default class StudentFirst extends React.Component {
   }
 
 
-  handleSwipeToRoom() {
+  handleSwipeToRoom(age) {
+    this.props.screenProps.handleSetAppState('deviceSettings', { age });
     this.swiper.scrollBy(1, false);
   }
 

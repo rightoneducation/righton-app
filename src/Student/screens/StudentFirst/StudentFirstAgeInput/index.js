@@ -15,6 +15,7 @@ export default class AgeInput extends React.PureComponent {
     screenProps: PropTypes.shape({
       handleAgeSubmit: PropTypes.func.isRequired,
       handleBack: PropTypes.func.isRequired,
+      handleSetAppState: PropTypes.func.isRequired,
     }),
   }
 
@@ -23,6 +24,7 @@ export default class AgeInput extends React.PureComponent {
     screenProps: {
       handleAgeSubmit: () => {},
       handleBack: () => {},
+      handleSetAppState: () => {},
     },
   }
 
@@ -59,10 +61,11 @@ export default class AgeInput extends React.PureComponent {
 
 
   handleAgeSubmit() {
-    if (parseInt(this.state.age, 10) < 13) {
+    const age = parseInt(this.state.age, 10);
+    if (age < 13) {
       // TODO Treat user specially
-    } 
-    this.props.screenProps.handleAgeSubmit();
+    }
+    this.props.screenProps.handleAgeSubmit(age);
   }
 
 
