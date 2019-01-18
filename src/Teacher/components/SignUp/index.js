@@ -149,7 +149,6 @@ class SignUp extends React.Component {
 
         if (userConfirmed) {
           this.onSignUp();
-          this.props.screenProps.onSignUp('teacher', username);
         }
       })
       .catch((exception) => {
@@ -255,7 +254,10 @@ class SignUp extends React.Component {
     const username = email.toLowerCase();
     try {
       await Auth.confirmSignUp(username, code)
-        .then(data => debug.log('sign up successful ->', JSON.stringify(data)));
+        .then((data) => {
+          this.props.screenProps.onSignUp('teacher', username);
+          debug.log('sign up successful ->', JSON.stringify(data));
+        });
     } catch (exception) {
       const errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
       this.setState({
