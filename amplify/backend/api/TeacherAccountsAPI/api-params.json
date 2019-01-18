@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/TeacherID",
+            "lambdaFunction": "TeacherAccountsLambda",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "TeacherAccountsAPI",
+    "apiName": "righton9272359f",
+    "functionArns": [
+        {
+            "lambdaFunction": "TeacherAccountsLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ightn-20181229134435-authRole",
+        "unAuthRoleName": "ightn-20181229134435-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "TeacherAccountsLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

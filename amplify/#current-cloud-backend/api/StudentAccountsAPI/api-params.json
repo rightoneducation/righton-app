@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/StudentID",
+            "lambdaFunction": "StudentAccountsLambda",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "StudentAccountsAPI",
+    "apiName": "rightonc90c884c",
+    "functionArns": [
+        {
+            "lambdaFunction": "StudentAccountsLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ightn-20181229134435-authRole",
+        "unAuthRoleName": "ightn-20181229134435-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "StudentAccountsLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

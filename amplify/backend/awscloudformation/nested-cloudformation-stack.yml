@@ -150,23 +150,23 @@
 				}
 			}
 		},
-		"storageStudents": {
+		"storageStudentAccounts": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Students-cloudformation-template.json",
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/StudentAccounts-cloudformation-template.json",
 				"Parameters": {
-					"tableName": "Students",
+					"tableName": "StudentAccounts",
 					"partitionKeyName": "StudentID",
 					"partitionKeyType": "S"
 				}
 			}
 		},
-		"storageTeachers": {
+		"storageTeacherAccounts": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Teachers-cloudformation-template.json",
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherAccounts-cloudformation-template.json",
 				"Parameters": {
-					"tableName": "Teachers",
+					"tableName": "TeacherAccounts",
 					"partitionKeyName": "TeacherID",
 					"partitionKeyType": "S"
 				}
@@ -192,18 +192,44 @@
 				}
 			}
 		},
-		"functionStudentAccountLambda": {
+		"functionTeacherAccountsLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/StudentAccountLambda-cloudformation-template.json",
-				"Parameters": {}
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherAccountsLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageTeacherAccountsName": {
+						"Fn::GetAtt": [
+							"storageTeacherAccounts",
+							"Outputs.Name"
+						]
+					},
+					"storageTeacherAccountsArn": {
+						"Fn::GetAtt": [
+							"storageTeacherAccounts",
+							"Outputs.Arn"
+						]
+					}
+				}
 			}
 		},
-		"functionTeacherAccountLambda": {
+		"functionStudentAccountsLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherAccountLambda-cloudformation-template.json",
-				"Parameters": {}
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/StudentAccountsLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageStudentAccountsName": {
+						"Fn::GetAtt": [
+							"storageStudentAccounts",
+							"Outputs.Name"
+						]
+					},
+					"storageStudentAccountsArn": {
+						"Fn::GetAtt": [
+							"storageStudentAccounts",
+							"Outputs.Arn"
+						]
+					}
+				}
 			}
 		},
 		"apiTeacherGameAPI": {
@@ -226,18 +252,44 @@
 				}
 			}
 		},
-		"apiStudentAccountAPI": {
+		"apiTeacherAccountsAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/StudentAccountAPI-cloudformation-template.json",
-				"Parameters": {}
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherAccountsAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionTeacherAccountsLambdaName": {
+						"Fn::GetAtt": [
+							"functionTeacherAccountsLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionTeacherAccountsLambdaArn": {
+						"Fn::GetAtt": [
+							"functionTeacherAccountsLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
 			}
 		},
-		"apiTeacherAccountAPI": {
+		"apiStudentAccountsAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherAccountAPI-cloudformation-template.json",
-				"Parameters": {}
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/StudentAccountsAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionStudentAccountsLambdaName": {
+						"Fn::GetAtt": [
+							"functionStudentAccountsLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionStudentAccountsLambdaArn": {
+						"Fn::GetAtt": [
+							"functionStudentAccountsLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
 			}
 		}
 	},
