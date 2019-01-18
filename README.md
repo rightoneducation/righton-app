@@ -18,6 +18,7 @@ Our mission is to make math more fun for middle and high school students, increa
 #### 3) Install on device
 
 `npm run ios`
+<br>
 `npm run android`
   
 #### 4) Start your app
@@ -26,9 +27,12 @@ Our mission is to make math more fun for middle and high school students, increa
 
 ### Files needed / Additional notes
 
-The `react-native` npm package.<br>
-A `local.properties` file if testing on Android.<br>
-The Xcode editor if testing on iOS.<br>
+The `react-native` npm package.
+<br>
+A `local.properties` file if testing on Android.
+<br>
+The Xcode editor if testing on iOS.
+<br>
 
 #### Note:
 Some NPM packages may be outdated and need to be altered for the Android build.
