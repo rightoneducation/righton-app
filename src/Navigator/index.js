@@ -56,13 +56,14 @@ const RootNavigator = createSwitchNavigator({
 
   StudentFirst: {
     screen: (props) => {
-      const { navigation, screenProps, ...otherProps } = props;
+      const { navigation, screenProps } = props;
 
       return (
         <StudentFirst
           navigation={navigation}
-          {...screenProps}
-          {...otherProps}
+          screenProps={{
+            handleSetAppState: screenProps.handleSetAppState,
+          }}
         />
       );
     },
