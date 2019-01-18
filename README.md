@@ -26,9 +26,9 @@ Our mission is to make math more fun for middle and high school students, increa
 
 ### Files needed / Additional notes
 
-The `react-native` npm package.
-A `local.properties` file if testing on Android.
-The Xcode editor if testing on iOS.
+The `react-native` npm package.<br>
+A `local.properties` file if testing on Android.<br>
+The Xcode editor if testing on iOS.<br>
 
 #### Note:
 Some NPM packages may be outdated and need to be altered for the Android build.
@@ -42,7 +42,7 @@ If you receive a `hasteImpl returning the same name for different files` error i
 
 We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
 
-Please refer to our [Contribution Guide](https://gitlab.com/friendly-robot/righton/CONTRIBUTING.md)
+Please refer to our [Contribution Guide](https://gitlab.com/friendly-robot/righton/blob/master/CONTRIBUTING.md).
 
 ### Communication channels
 
@@ -73,6 +73,6 @@ Coming soon!
 <strong>Payton Richardson</strong> - Mixed-methods research analyst at the Center for Research on Education Outcomes (CREDO) at Stanford University
 <br>
 <br>
-<em>Learn more about our RightOn & our team @https://rightoneducation.com</em>
+<em>Learn more about RightOn & our team @https://rightoneducation.com</em>
 
 
