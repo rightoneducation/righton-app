@@ -15,12 +15,30 @@ const awsmobile =  {
         {
             "tableName": "Games",
             "region": "us-east-1"
+        },
+        {
+            "tableName": "StudentAccounts",
+            "region": "us-east-1"
+        },
+        {
+            "tableName": "TeacherAccounts",
+            "region": "us-east-1"
         }
     ],
     "aws_cloud_logic_custom": [
         {
             "name": "TeacherGameAPI",
             "endpoint": "https://hh6pg9sfh9.execute-api.us-east-1.amazonaws.com/Prod",
+            "region": "us-east-1"
+        },
+        {
+            "name": "TeacherAccountsAPI",
+            "endpoint": "https://ja1qpt35r2.execute-api.us-east-1.amazonaws.com/Prod",
+            "region": "us-east-1"
+        },
+        {
+            "name": "StudentAccountsAPI",
+            "endpoint": "https://kjotcfrpvj.execute-api.us-east-1.amazonaws.com/Prod",
             "region": "us-east-1"
         }
     ]
