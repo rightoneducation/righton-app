@@ -46,13 +46,13 @@ export default class GameBuilderQuestion extends React.Component {
 
     this.state = {
       question: {
-        answer: '',
-        image: '',
+        answer: null,
+        image: null,
         instructions: [],
-        question: '',
+        question: null,
         quizTime: '1:00',
         trickTime: '3:00',
-        uid: '',
+        uid: null,
       },
       showInput: false,
       // showSelection: false,

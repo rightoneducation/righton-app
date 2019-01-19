@@ -116,10 +116,10 @@ export default class GameBuilder extends React.Component {
     } else {
       this.setState({ 
         game: {
-          banner: '',
-          description: '',
+          banner: null,
+          description: null,
           questions: [],
-          title: '',
+          title: null,
         }
       });
     }
