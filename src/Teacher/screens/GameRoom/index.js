@@ -9,7 +9,7 @@ import GameRoomResults from './GameRoomResults';
 import GameRoomFinal from './GameRoomFinal';
 import GameRoomNewGame from './GameRoomNewGame';
 // import LocalStorage from '../../../../lib/Categories/LocalStorage';
-import { deleteGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
+import { deleteGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import debug from '../../../utils/debug';
 
 

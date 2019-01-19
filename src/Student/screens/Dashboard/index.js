@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAPI';
+import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';

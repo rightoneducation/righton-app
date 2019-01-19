@@ -12,7 +12,7 @@ import { ScaledSheet } from 'react-native-size-matters';
 import {
   generateUniqueGameRoomIDInDynamoDB,
   putGameToDynamoDB,
-} from '../../../../lib/Categories/DynamoDB/TeacherAPI';
+} from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';

@@ -14,6 +14,7 @@ import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import styles from './styles';
 
+import { putTeacherAccountToDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
@@ -21,7 +22,7 @@ class Games extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       account: PropTypes.shape({
-        username: PropTypes.string,
+        TeacherID: PropTypes.string,
       }),
       navigation: PropTypes.shape({
         navigate: PropTypes.func,
@@ -32,7 +33,7 @@ class Games extends React.PureComponent {
   static defaultProps = {
     screenProps: {
       account: {
-        username: '',
+        TeacherID: '',
       },
       navigation: {
         navigate: () => {},
@@ -63,29 +64,17 @@ class Games extends React.PureComponent {
   
   async hydrateGames() {
     try {
-      let games;
-      const { username } = this.props.screenProps.account;
-      if (!username) {
+      const { TeacherID } = this.props.screenProps.account;
+      if (!TeacherID) {
         // TODO! Notify user that they must create an account to create a game
         return;
       }
-      games = await LocalStorage.getItem(`@RightOn:${username}/Games`);
-      if (games === undefined || (typeof games === 'string' && games.length === 0)) {
-        LocalStorage.setItem(`@RightOn:${username}/Games`, JSON.stringify([]));
-        games = [];
-      } else {
+      let games = [];
+      games = await LocalStorage.getItem(`@RightOn:${TeacherID}/Games`);
+      if (typeof games === 'string') {
         games = JSON.parse(games);
+        this.setState({ games });
       }
-      // if (__DEV__) {
-      //   games = [{ image: '', title: 'Hello world' },
-      //     { image: '', title: 'How are you?' },
-      //     { image: '', title: 'Take a walk with me!' },
-      //     { image: '', title: 'How nice it is today..' },
-      //     { image: '', title: 'Like all of future past.' }
-      //   ];
-      // }
-
-      this.setState({ games });
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Games, hydrateGames():', exception);
     }
@@ -119,12 +108,24 @@ class Games extends React.PureComponent {
   }
 
 
-  saveGamesToDatabase = (updatedGames) => {
-    const { username } = this.props.screenProps.account;
-    if (username) {
+  saveGamesToDatabase = async (updatedGames) => {
+    const { TeacherID } = this.props.screenProps.account;
+    if (TeacherID) {
       const stringifyGames = JSON.stringify(updatedGames);
-      LocalStorage.setItem(`@RightOn:${username}/Games`, stringifyGames);
-      // TODO! Update user's DynamoDB here
+      LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, stringifyGames);
+
+      // const favoritesJSON = await LocalStorage.getItem(`@RightOn:${TeacherID}/Favorites`);
+      // const historyJSON = await LocalStorage.getItem(`@RightOn:${TeacherID}/History`);
+      // const favorites = JSON.parse(favoritesJSON);
+      // const history = JSON.parse(historyJSON);
+      putTeacherAccountToDynamoDB(
+        {
+          TeacherID,
+          games: updatedGames,
+        },
+        res => debug.log('Successfully PUT new teacher account into DynamoDB', JSON.stringify(res)),
+        exception => debug.warn('Error PUTTING new teacher account into DynamoDB', JSON.stringify(exception)),
+      );
     }
   }
 
