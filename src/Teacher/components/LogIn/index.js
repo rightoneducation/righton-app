@@ -17,15 +17,23 @@ import debug from '../../../utils/debug';
 
 class LogIn extends React.Component {
   static propTypes = {
+    auth: PropTypes.shape({
+      signIn: PropTypes.func,
+    }),
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
     }),
+    onSignIn: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
+    auth: {
+      signIn: () => {},
+    },
     navigation: {
       navigate: () => {},
     },
+    onSignIn: () => {},
   }
 
   constructor(props) {
@@ -123,6 +131,7 @@ class LogIn extends React.Component {
         .then((data) => {
           debug.log('We get the Cognito User', JSON.stringify(data));
           this.setState({ cognitoUser: data });
+          this.props.onSignIn(data, 'teacher');
           return true;
         });
     } catch (exception) {
@@ -200,8 +209,9 @@ class LogIn extends React.Component {
         }
         break;
       case 'password':
-        this.setState({ password: input, showInput: false });
-        this.checkRequirements();
+        this.setState({ password: input, showInput: false }, () => {
+          this.checkRequirements();
+        });
         break;
       default:
         break;
