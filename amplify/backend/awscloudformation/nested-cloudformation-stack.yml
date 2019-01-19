@@ -172,6 +172,39 @@
 				}
 			}
 		},
+		"storageTeacherHistory": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherHistory-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "TeacherHistory",
+					"partitionKeyName": "TeacherID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageTeacherGames": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherGames-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "TeacherGames",
+					"partitionKeyName": "TeacherID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageTeacherFavorites": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherFavorites-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "TeacherFavorites",
+					"partitionKeyName": "TeacherID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
 		"functionTeacherGameLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -232,6 +265,66 @@
 				}
 			}
 		},
+		"functionTeacherGamesLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherGamesLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageTeacherGamesName": {
+						"Fn::GetAtt": [
+							"storageTeacherGames",
+							"Outputs.Name"
+						]
+					},
+					"storageTeacherGamesArn": {
+						"Fn::GetAtt": [
+							"storageTeacherGames",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"functionTeacherFavoritesLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherFavoritesLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageTeacherFavoritesName": {
+						"Fn::GetAtt": [
+							"storageTeacherFavorites",
+							"Outputs.Name"
+						]
+					},
+					"storageTeacherFavoritesArn": {
+						"Fn::GetAtt": [
+							"storageTeacherFavorites",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"functionTeacherHistoryLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherHistoryLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageTeacherHistoryName": {
+						"Fn::GetAtt": [
+							"storageTeacherHistory",
+							"Outputs.Name"
+						]
+					},
+					"storageTeacherHistoryArn": {
+						"Fn::GetAtt": [
+							"storageTeacherHistory",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
 		"apiTeacherGameAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -286,6 +379,66 @@
 					"functionStudentAccountsLambdaArn": {
 						"Fn::GetAtt": [
 							"functionStudentAccountsLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiTeacherGamesAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherGamesAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionTeacherGamesLambdaName": {
+						"Fn::GetAtt": [
+							"functionTeacherGamesLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionTeacherGamesLambdaArn": {
+						"Fn::GetAtt": [
+							"functionTeacherGamesLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiTeacherFavoritesAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherFavoritesAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionTeacherFavoritesLambdaName": {
+						"Fn::GetAtt": [
+							"functionTeacherFavoritesLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionTeacherFavoritesLambdaArn": {
+						"Fn::GetAtt": [
+							"functionTeacherFavoritesLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiTeacherHistoryAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherHistoryAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionTeacherHistoryLambdaName": {
+						"Fn::GetAtt": [
+							"functionTeacherHistoryLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionTeacherHistoryLambdaArn": {
+						"Fn::GetAtt": [
+							"functionTeacherHistoryLambda",
 							"Outputs.Arn"
 						]
 					}

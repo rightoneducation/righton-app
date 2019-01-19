@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/TeacherID",
+            "lambdaFunction": "TeacherFavoritesLambda",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "TeacherFavoritesAPI",
+    "apiName": "rightonb0551e68",
+    "functionArns": [
+        {
+            "lambdaFunction": "TeacherFavoritesLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ightn-20181229134435-authRole",
+        "unAuthRoleName": "ightn-20181229134435-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "TeacherFavoritesLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

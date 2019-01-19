@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/TeacherID",
+            "lambdaFunction": "TeacherHistoryLambda",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "TeacherHistoryAPI",
+    "apiName": "righton530d9e71",
+    "functionArns": [
+        {
+            "lambdaFunction": "TeacherHistoryLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ightn-20181229134435-authRole",
+        "unAuthRoleName": "ightn-20181229134435-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "TeacherHistoryLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

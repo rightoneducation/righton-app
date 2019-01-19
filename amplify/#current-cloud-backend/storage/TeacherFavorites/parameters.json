@@ -1,0 +1,5 @@
+{
+    "tableName": "TeacherFavorites",
+    "partitionKeyName": "TeacherID",
+    "partitionKeyType": "S"
+}
