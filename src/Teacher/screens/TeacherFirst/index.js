@@ -18,7 +18,9 @@ const TeacherFirst = createBottomTabNavigator({
 
       return (
         <LogIn
+          auth={props.screenProps.auth}
           navigation={navigation}
+          onSignIn={props.screenProps.onSignIn}
         />
       );
     },
@@ -31,14 +33,12 @@ const TeacherFirst = createBottomTabNavigator({
 
   SignUp: {
     screen: (props) => {
-      const { navigation, screenProps } = props;
+      const { navigation } = props;
 
       return (
         <SignUp
           navigation={navigation}
-          screenProps={{
-            onSignUp: screenProps.onSignUp,
-          }}
+          onSignUp={props.screenProps.onSignUp}
         />
       );
     },
