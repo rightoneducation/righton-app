@@ -26,18 +26,14 @@ class SignUp extends React.Component {
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
     }),
-    screenProps: PropTypes.shape({
-      onSignUp: PropTypes.func,
-    }),
+    onSignUp: PropTypes.func,
   };
 
   static defaultProps = {
     navigation: {
       navigate: () => {},
     },
-    screenProps: {
-      onSignUp: () => {},
-    },
+    onSignUp: () => {},
   }
 
   constructor(props) {
@@ -255,7 +251,7 @@ class SignUp extends React.Component {
     try {
       await Auth.confirmSignUp(username, code)
         .then((data) => {
-          this.props.screenProps.onSignUp('teacher', username);
+          this.props.onSignUp('teacher', username);
           debug.log('sign up successful ->', JSON.stringify(data));
         });
     } catch (exception) {
