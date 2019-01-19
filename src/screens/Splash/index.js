@@ -35,17 +35,17 @@ export default class Splash extends React.Component {
 
 
   async componentDidMount() {
-    const { session } = this.props;
-
+    let session;
     try {
       await new Promise(async (resolve, reject) => setTimeout(() => {
+        session = this.props.session;
         if (!session) {
           reject('No current session');
           return;
         }
 
         resolve();
-      }, __DEV__ ? 500 : 2000));
+      }, 2000));
     } catch (exception) {
       debug.log('Rejected session from Splash:', exception);
     }
@@ -56,10 +56,10 @@ export default class Splash extends React.Component {
 
     debug.log('User session:', JSON.stringify(session));
 
-    if (__DEV__) {
-      this.navigateTo('OnboardAppRouter');
-      return;
-    }
+    // if (__DEV__) {
+    //   this.navigateTo('OnboardAppRouter');
+    //   return;
+    // }
 
     if (loggedIn) {
       if (this.props.deviceSettings.role === 'teacher') {
