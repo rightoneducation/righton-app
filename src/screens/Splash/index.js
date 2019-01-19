@@ -35,7 +35,7 @@ export default class Splash extends React.Component {
 
 
   async componentDidMount() {
-    let session;
+    let session = {};
     try {
       await new Promise(async (resolve, reject) => setTimeout(() => {
         session = this.props.session;
