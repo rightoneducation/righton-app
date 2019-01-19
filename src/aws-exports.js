@@ -23,6 +23,18 @@ const awsmobile =  {
         {
             "tableName": "TeacherAccounts",
             "region": "us-east-1"
+        },
+        {
+            "tableName": "TeacherHistory",
+            "region": "us-east-1"
+        },
+        {
+            "tableName": "TeacherGames",
+            "region": "us-east-1"
+        },
+        {
+            "tableName": "TeacherFavorites",
+            "region": "us-east-1"
         }
     ],
     "aws_cloud_logic_custom": [
@@ -39,6 +51,21 @@ const awsmobile =  {
         {
             "name": "StudentAccountsAPI",
             "endpoint": "https://kjotcfrpvj.execute-api.us-east-1.amazonaws.com/Prod",
+            "region": "us-east-1"
+        },
+        {
+            "name": "TeacherGamesAPI",
+            "endpoint": "https://7wquqgimh0.execute-api.us-east-1.amazonaws.com/Prod",
+            "region": "us-east-1"
+        },
+        {
+            "name": "TeacherFavoritesAPI",
+            "endpoint": "https://c9t4yvkfih.execute-api.us-east-1.amazonaws.com/Prod",
+            "region": "us-east-1"
+        },
+        {
+            "name": "TeacherHistoryAPI",
+            "endpoint": "https://1xwlucckuj.execute-api.us-east-1.amazonaws.com/Prod",
             "region": "us-east-1"
         }
     ]
