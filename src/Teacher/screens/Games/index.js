@@ -14,7 +14,7 @@ import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import styles from './styles';
 
-import { putTeacherAccountToDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
+import { putTeacherItemInDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
@@ -22,22 +22,32 @@ class Games extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       account: PropTypes.shape({
+        games: PropTypes.shape({
+          local: PropTypes.number,
+          db: PropTypes.number,
+        }),
         TeacherID: PropTypes.string,
       }),
       navigation: PropTypes.shape({
         navigate: PropTypes.func,
       }),
+      updateAccountInStateAndDynamoDB: PropTypes.func.isRequired,
     }),
   };
   
   static defaultProps = {
     screenProps: {
       account: {
+        games: PropTypes.shape({
+          local: 0,
+          db: 0,
+        }),
         TeacherID: '',
       },
       navigation: {
         navigate: () => {},
       },
+      updateAccountInStateAndDynamoDB: () => {},
     },
   };
   
@@ -73,7 +83,13 @@ class Games extends React.PureComponent {
       games = await LocalStorage.getItem(`@RightOn:${TeacherID}/Games`);
       if (typeof games === 'string') {
         games = JSON.parse(games);
-        this.setState({ games });
+        this.setState({ games }, () => {
+          const { account } = this.props.screenProps;
+          if (account.games.local !== account.games.db) {
+            // Previous attempt to save games to DynamoDB failed so we try again.
+            this.saveGamesToDatabase(games);
+          }
+        });
       }
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Games, hydrateGames():', exception);
@@ -114,17 +130,29 @@ class Games extends React.PureComponent {
       const stringifyGames = JSON.stringify(updatedGames);
       LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, stringifyGames);
 
-      // const favoritesJSON = await LocalStorage.getItem(`@RightOn:${TeacherID}/Favorites`);
-      // const historyJSON = await LocalStorage.getItem(`@RightOn:${TeacherID}/History`);
-      // const favorites = JSON.parse(favoritesJSON);
-      // const history = JSON.parse(historyJSON);
-      putTeacherAccountToDynamoDB(
-        {
-          TeacherID,
-          games: updatedGames,
+      const { account, updateAccountInStateAndDynamoDB } = this.props.screenProps;
+      const updatedAccount = {
+        ...account,
+        games: {
+          local: account.games.local + 1,
+          db: account.games.db,
         },
-        res => debug.log('Successfully PUT new teacher account into DynamoDB', JSON.stringify(res)),
-        exception => debug.warn('Error PUTTING new teacher account into DynamoDB', JSON.stringify(exception)),
+      };
+      updateAccountInStateAndDynamoDB('teacher', updatedAccount);
+
+      putTeacherItemInDynamoDB(
+        'TeacherGamesAPI',
+        TeacherID,
+        { games: updatedGames },
+        (res) => {
+          updatedAccount.games = {
+            local: updatedAccount.games.local,
+            db: updatedAccount.games.db + 1,
+          };
+          updateAccountInStateAndDynamoDB('teacher', updatedAccount);
+          debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
+        },
+        exception => debug.warn('Error PUTTING new teacher item into DynamoDB', JSON.stringify(exception)),
       );
     }
   }
