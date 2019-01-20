@@ -301,7 +301,7 @@ class Launch extends React.Component {
           />
           {/* <Text style={styles.optional}>Optional</Text> */}
           <ButtonWide
-            label={'Enter Game'}
+            label={'Launch'}
             onPress={this.handleRoomSubmit}
           />
         </View>
