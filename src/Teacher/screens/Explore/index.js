@@ -10,7 +10,8 @@ import PropTypes from 'prop-types';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
+import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import MainHeader from '../../components/MainHeader';
 
 
 class Explore extends React.PureComponent {
@@ -67,26 +68,6 @@ class Explore extends React.PureComponent {
   }
 
 
-  renderHeader = () => (
-    <View style={[styles.headerContainer, elevation]}>
-      <Touchable
-        activeOpacity={0.8}
-        onPress={() => { /* TODO */ }}
-        style={styles.headerProfileContainer}
-      >
-        <Aicon name={'user'} style={styles.headerProfileIcon} />
-      </Touchable>
-      <Text style={styles.headerTitle}>RightOn!</Text>
-      <Touchable
-        activeOpacity={0.8}
-        onPress={() => { /* TODO */ }}
-      >
-        <Aicon name={'search'} style={styles.headerSearchIcon} />
-      </Touchable>
-    </View>
-  );
-
-
   renderDataBlock = data => (
     <Touchable
       activeOpacity={0.8}
@@ -124,12 +105,15 @@ class Explore extends React.PureComponent {
       data
     } = this.state;
 
-    // const { navigation } = this.props.screenProps;
+    const { navigation } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={colors.primary} />
-        {this.renderHeader()}
+        <MainHeader
+          navigation={navigation}
+          parent={'Explore'}
+        />
         <ScrollView contentContainerStyle={styles.scrollview}>
           {this.renderData(data)}
         </ScrollView>
@@ -171,39 +155,6 @@ const styles = ScaledSheet.create({
     color: colors.dark,
     fontSize: fonts.medium,
     fontWeight: 'bold',
-  },
-  headerContainer: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    backgroundColor: colors.primary,
-    borderColor: colors.dark,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    height: '65@vs',
-    justifyContent: 'space-between',
-    paddingHorizontal: '15@s',
-  },
-  headerProfileContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.lightGray,
-    borderRadius: 100,
-    height: '40@ms',
-    justifyContent: 'flex-end',
-    width: '40@ms',
-  },
-  headerProfileIcon: {
-    color: colors.dark,
-    fontSize: '30@ms0.2',
-    marginTop: '3@vs',
-  },
-  headerSearchIcon: {
-    color: colors.white,
-    fontSize: '28@ms0.2',
-  },
-  headerTitle: {
-    color: colors.white,
-    fontSize: fonts.large,
-    fontStyle: 'italic',
   },
   icon: {
     color: colors.white,
