@@ -30,14 +30,28 @@ const gameState = {
 
 
 const TeacherAccount = {
-  email: '',
-  games: ['object'],
-  favorites: ['object'],
-  history: ['object'],  // Depending on data stored we can generate reports of students engagement over time
-                        // - number of correct answers per game (as bars)
-                        // - number of trick answers per game (as bars)
-                        // - tricked to correct ratio performance per game
-  // settings: {}
+  TeacherID: 'string',
+  gamesCreated: 'number',
+  gamesPlayed: 'number',
+  schoolID: 'string',
+  // Depending on data stored we can generate reports of students engagement over time
+  // - number of correct answers per game (as bars)
+  // - number of trick answers per game (as bars)
+  // - tricked to correct ratio performance per game
+  games: { local: 0, db: 0 },
+  favorites: { local: 0, db: 0 },
+  history: { local: 0, db: 0 },
+  // Notes: `db` is designed to almost always be less than local by a factor of 1.
+  // - This is due to not updating the teacher account in DynamoDB once the
+  //   write transaction has completed for updating games, favorites, or history.
+}
+
+
+const deviceSettings = {
+  username: 'string',
+  quizTime: 'string', // Teacher only
+  trickTime: 'string', // Teacher only
+  signUpDate: 'number',
 }
 
 
