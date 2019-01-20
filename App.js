@@ -258,6 +258,12 @@ export default class App extends React.Component {
 
   handleSetAppState(property, value) {
     switch (property) {
+      case 'account':
+        this.setState({ account: { ...this.state.account, ...value } }, () => {
+          const stringifiedAccount = JSON.stringify(this.state.account);
+          LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
+        });
+        break;
       case 'GameRoomID':
         this.setState({ GameRoomID: value });
         break;
