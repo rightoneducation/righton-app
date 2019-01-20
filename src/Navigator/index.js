@@ -8,6 +8,7 @@ import TeacherFirst from '../Teacher/screens/TeacherFirst';
 import StudentApp from '../Student';
 import TeacherApp from '../Teacher';
 import TeacherGameRoom from '../Teacher/screens/GameRoom';
+import TeacherProfile from '../Teacher/screens/TeacherProfile';
 
 const RootNavigator = createSwitchNavigator({
 
@@ -110,7 +111,25 @@ const RootNavigator = createSwitchNavigator({
     navigationOptions: {
       header: null,
     },
-  }
+  },
+
+
+  TeacherProfile: {
+    screen: (props) => {
+      const { navigation, screenProps } = props;
+      return (
+        <TeacherProfile
+          navigation={navigation}
+          screenProps={{
+            doSignOut: screenProps.doSignOut,
+          }}
+        />
+      );
+    },
+    navigationOptions: { 
+      header: null,
+    },
+  },
 
   
 }, { initialRouteName: 'Splash' });
