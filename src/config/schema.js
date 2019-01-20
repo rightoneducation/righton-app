@@ -63,3 +63,16 @@ const QuizMaker = {
     }
   ],
 }
+
+
+const history = [
+  {
+    GameID: 'string',
+    date: 'number',
+    correct: 'number',
+    incorrect: 'number',
+    favorite: 'boolean',
+    players: 'number',
+    tricks: 'number',
+  }
+]
