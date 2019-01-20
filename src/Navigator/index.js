@@ -103,6 +103,7 @@ const RootNavigator = createSwitchNavigator({
             IOTUnsubscribeFromTopic: screenProps.IOTUnsubscribeFromTopic,
             navigation,
             players: screenProps.players,
+            updateAccountInStateAndDynamoDB: screenProps.updateAccountInStateAndDynamoDB,
           }}
         />
       );
