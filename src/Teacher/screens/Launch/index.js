@@ -291,7 +291,7 @@ class Launch extends React.Component {
             multiline={false}
             onChangeText={this.handleRoomInput}
             onSubmitEditing={this.handleRoomSubmit}
-            placeholder={'Game Name'}
+            placeholder={'Enter Game Code'}
             placeholderTextColor={colors.primary} 
             returnKeyType={'done'}
             style={firstStyles.input}
