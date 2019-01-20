@@ -24,6 +24,7 @@ export default class GameBuilder extends React.Component {
     handleClose: PropTypes.func.isRequired,
     handleCreateGame: PropTypes.func.isRequired,
     game: PropTypes.shape({
+      GameID: PropTypes.string,
       banner: PropTypes.string,
       description: PropTypes.string,
       questions: PropTypes.arrayOf(PropTypes.shape({
@@ -128,10 +129,10 @@ export default class GameBuilder extends React.Component {
   
   createGame() {
     const { game } = this.state;
-    if (this.props.currentgame !== null || game.uid) {
+    if (this.props.currentgame !== null || game.GameID) {
       this.props.handleCreateGame(game);
     } else {
-      this.props.handleCreateGame({ ...game, uid: `${Math.random()}` });
+      this.props.handleCreateGame({ ...game, GameID: `${Math.random()}` });
     }
   }
 
