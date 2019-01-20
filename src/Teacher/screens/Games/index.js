@@ -111,6 +111,10 @@ class Games extends React.PureComponent {
       } else if (games === undefined || games === null) {
         // User signed in on a different device so let's get their games from the cloud
         // and hydrate state as well as store them in LocalStorage.
+
+        // Note: technically we handle this is App.js when user signs in with a username
+        // that is different from that of the one saved on device, but we'll leave this
+        // here just in case as a fallback.
         this.getGamesFromDynamoDB(TeacherID);
       }
     } catch (exception) {
