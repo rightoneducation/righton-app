@@ -122,6 +122,7 @@ const RootNavigator = createSwitchNavigator({
           navigation={navigation}
           screenProps={{
             doSignOut: screenProps.doSignOut,
+            handleSetAppState: screenProps.handleSetAppState,
           }}
         />
       );
