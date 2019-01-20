@@ -4,10 +4,12 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { ScaledSheet } from 'react-native-size-matters';
 import Portal from '../../../screens/Portal';
 import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
+import { colors, fonts } from '../../utils/theme';
 
 
 export default class GameFinal extends React.Component {
@@ -122,10 +124,30 @@ export default class GameFinal extends React.Component {
     return (
       <View style={gamePreviewStyles.container}>
         <HeaderTeam team={`Team ${team + 1}`} />
-        <View>
-          <Text>{ teamScore }</Text>
-          <Text>{ playerScore }</Text>
+        <View style={styles.container}>
+          <View style={styles.row}>
+            <View style={styles.centerAlign}>
+              <Text style={styles.label}>Team Score</Text>            
+              <Text style={styles.value}>{ teamScore }</Text>
+            </View>
+            <View style={styles.centerAlign}>
+              <Text style={styles.label}>Your score</Text>            
+              <Text style={styles.value}>{ playerScore }</Text>
+            </View>
+          </View>
+
+          <View style={styles.centerAlign}>
+            <Text style={styles.label}>Number of answers</Text>            
+            <Text style={[styles.label, styles.italic]}>correct</Text>            
+            <Text style={styles.value}>{ playerScore / 50 }</Text>
+          </View>
+          <View style={[styles.centerAlign, styles.marginTop]}>
+            <Text style={styles.label}>Number of players</Text>
+            <Text style={[styles.label, styles.italic]}>tricked</Text>            
+            <Text style={styles.value}>{ (teamScore - playerScore) / 100 }</Text>
+          </View>
         </View>
+
         <ButtonWide
           label={'Exit game'}
           onPress={this.handleExitGame}
@@ -134,3 +156,34 @@ export default class GameFinal extends React.Component {
     );
   }
 }
+
+const styles = ScaledSheet.create({
+  centerAlign: {
+    alignItems: 'center',
+  },
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  italic: {
+    fontStyle: 'italic',
+  },
+  label: {
+    color: colors.white,
+    fontSize: fonts.medium,
+  },
+  marginTop: {
+    marginTop: '15@vs',
+  },
+  value: {
+    color: colors.primary,
+    fontSize: fonts.large,
+    marginTop: '5@vs',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: '25@vs',
+  },
+});
