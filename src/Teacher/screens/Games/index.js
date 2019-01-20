@@ -14,7 +14,10 @@ import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import styles from './styles';
 
-import { putTeacherItemInDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
+import {
+  getTeacherItemFromDynamoDB,
+  putTeacherItemInDynamoDB,
+} from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
@@ -71,6 +74,21 @@ class Games extends React.PureComponent {
     this.hydrateGames();
   }
   
+
+  getGamesFromDynamoDB(TeacherID) {
+    getTeacherItemFromDynamoDB(
+      'TeacherGamesAPI',
+      TeacherID,
+      (res) => {
+        this.setState({ games: res });
+        const gamesJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, gamesJSON);
+        debug.log('Successful GETTING teacher games from DynamoDB to hydrate local state in games:', JSON.stringify(res));
+      },
+      exception => debug.warn('Error GETTING teacher games from DynamoDB to hydrate local state in games:', JSON.stringify(exception))
+    );
+  }
+
   
   async hydrateGames() {
     try {
@@ -90,6 +108,10 @@ class Games extends React.PureComponent {
             this.saveGamesToDatabase(games);
           }
         });
+      } else if (games === undefined || games === null) {
+        // User signed in on a different device so let's get their games from the cloud
+        // and hydrate state as well as store them in LocalStorage.
+        this.getGamesFromDynamoDB(TeacherID);
       }
     } catch (exception) {
       debug.log('Caught exception getting item from LocalStorage @Games, hydrateGames():', exception);
