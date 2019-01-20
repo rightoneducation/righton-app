@@ -289,8 +289,10 @@ export default class App extends React.Component {
     getTeacherAccountFromDynamoDB(
       TeacherID,
       (res) => {
-        debug.log('Result from GETTING teacher account from DynamoDB:', JSON.stringify(res));
         this.setState({ account: res });
+        const accountJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${TeacherID}`, accountJSON);
+        debug.log('Result from GETTING teacher account from DynamoDB:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher account from DynamoDB:', JSON.stringify(exception)),
     );
@@ -299,6 +301,8 @@ export default class App extends React.Component {
       'TeacherGamesAPI',
       TeacherID,
       (res) => {
+        const gamesJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, gamesJSON);
         debug.log('Result from GETTING teacher games from DynamoDB:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher games from DynamoDB:', JSON.stringify(exception)),
@@ -308,6 +312,8 @@ export default class App extends React.Component {
       'TeacherFavoritesAPI',
       TeacherID,
       (res) => {
+        const favoritesJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${TeacherID}/Favorites`, favoritesJSON);
         debug.log('Result from GETTING teacher favorites from DynamoDB:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher favorites from DynamoDB:', JSON.stringify(exception)),
@@ -317,6 +323,8 @@ export default class App extends React.Component {
       'TeacherHistoryAPI',
       TeacherID,
       (res) => {
+        const historyJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${TeacherID}/History`, historyJSON);
         debug.log('Result from GETTING teacher history from DynamoDB:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher history from DynamoDB:', JSON.stringify(exception)),
