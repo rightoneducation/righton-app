@@ -31,10 +31,10 @@ class Games extends React.PureComponent {
         }),
         TeacherID: PropTypes.string,
       }),
+      handleSetAppState: PropTypes.func.isRequired,
       navigation: PropTypes.shape({
         navigate: PropTypes.func,
       }),
-      updateAccountInStateAndDynamoDB: PropTypes.func.isRequired,
     }),
   };
   
@@ -47,10 +47,10 @@ class Games extends React.PureComponent {
         }),
         TeacherID: '',
       },
+      handleSetAppState: () => {},
       navigation: {
         navigate: () => {},
       },
-      updateAccountInStateAndDynamoDB: () => {},
     },
   };
   
@@ -156,26 +156,22 @@ class Games extends React.PureComponent {
       const stringifyGames = JSON.stringify(updatedGames);
       LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, stringifyGames);
 
-      const { account, updateAccountInStateAndDynamoDB } = this.props.screenProps;
-      const updatedAccount = {
-        ...account,
+      const { account, handleSetAppState } = this.props.screenProps;
+      const update = {
         games: {
           local: account.games.local + 1,
           db: account.games.db,
         },
       };
-      updateAccountInStateAndDynamoDB('teacher', updatedAccount);
+      handleSetAppState('account', update);
 
       putTeacherItemInDynamoDB(
         'TeacherGamesAPI',
         TeacherID,
         { games: updatedGames },
         (res) => {
-          updatedAccount.games = {
-            local: updatedAccount.games.local,
-            db: updatedAccount.games.db + 1,
-          };
-          updateAccountInStateAndDynamoDB('teacher', updatedAccount);
+          update.games.db = account.games.db + 1;
+          handleSetAppState('account', update);
           debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
         },
         exception => debug.warn('Error PUTTING new teacher item into DynamoDB', JSON.stringify(exception)),
