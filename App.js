@@ -42,6 +42,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.accountUpdated = false;
     this.messagesReceived = {};
     this.requestAttempts = 0;
 
@@ -63,7 +64,6 @@ export default class App extends React.Component {
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
 
     this.handleSetAppState = this.handleSetAppState.bind(this);
-    this.updateAccountInStateAndDynamoDB = this.updateAccountInStateAndDynamoDB.bind(this);
 
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
 
@@ -107,6 +107,9 @@ export default class App extends React.Component {
     }
 
     AppState.removeEventListener('change', this.handleAppStateChange);
+    if (this.accountUpdated) {
+      this.updateAccountInDynamoDB(role);
+    }
   }
 
 
@@ -262,6 +265,7 @@ export default class App extends React.Component {
         this.setState({ account: { ...this.state.account, ...value } }, () => {
           const stringifiedAccount = JSON.stringify(this.state.account);
           LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
+          this.accountUpdated = true;
         });
         break;
       case 'GameRoomID':
@@ -417,14 +421,11 @@ export default class App extends React.Component {
   }
 
 
-  updateAccountInStateAndDynamoDB(accountType, updatedAccount) {
-    this.setState({ account: updatedAccount });
-    if (accountType === 'teacher') {
-      const { TeacherID } = this.state.account;
-      const updatedAccountJSON = JSON.stringify(updatedAccount);
-      LocalStorage.setItem(`@RightOn:${TeacherID}`, updatedAccountJSON);
+  updateAccountInDynamoDB(role) {
+    const { account } = this.state;
+    if (role === 'teacher') {
       putTeacherAccountToDynamoDB(
-        updatedAccount,
+        account,
         res => debug.log('Successfully PUT updated teacher account into DynamoDB', res),
         exception => debug.warn('Error PUTTING updated teacher account into DynamoDB', exception),
       );
@@ -457,7 +458,6 @@ export default class App extends React.Component {
           team,
           
           handleSetAppState: this.handleSetAppState,
-          updateAccountInStateAndDynamoDB: this.updateAccountInStateAndDynamoDB,
           
           auth: Auth,
           onSignIn: this.handleOnSignIn,
