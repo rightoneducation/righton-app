@@ -8,6 +8,8 @@ const GameRoom = {
 
 
 const gameState = {
+  GameID: 'string',
+  GameRoomID: 'string',
   answering: 'number', // index of quiz in questions array
   banner: 'string',
   title: 'string',
@@ -24,7 +26,6 @@ const gameState = {
     tricks: ['string'],
     points: 'number',
   }],
-  GameRoomID: 'string',
   state: 'object',
 };
 
