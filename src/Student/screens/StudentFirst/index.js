@@ -77,12 +77,14 @@ export default class StudentFirst extends React.Component {
           screenProps={{
             handleAgeSubmit: this.handleSwipeToRoom,
             handleBack: this.handleNavigateToOnboardApp,
+            handleSetAppState: this.props.screenProps.handleSetAppState,
           }}
         />
         <GameRoom
           screenProps={{
             handleRoomSubmit: this.handleRoomSubmit,
             handleBack: this.handleSwipeToAge,
+            handleSetAppState: this.props.screenProps.handleSetAppState,
           }}
         />
       </Swiper>
