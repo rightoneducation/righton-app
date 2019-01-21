@@ -105,7 +105,7 @@ class Explore extends React.PureComponent {
       data
     } = this.state;
 
-    const { navigation } = this.props.screenProps;
+    const { navigation } = this.props;
 
     return (
       <View style={styles.container}>
