@@ -49,19 +49,25 @@ export default class MainHeader extends React.Component {
     };
 
     this.handleNavigateBack = this.handleNavigateBack.bind(this);
+    this.handleOnboardNavigation = this.handleOnboardNavigation.bind(this);
+    this.handleSchoolInput = this.handleSchoolInput.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);
+  }
+
+
+  componentWillUnmount() {
+    this.props.navigation.state.params = {};
   }
 
 
   handleNavigateBack() {
     const { parent } = this.props.navigation.state.params;
-    this.props.navigation.navigate(parent);
-    this.props.navigation.state.params = {};
-    if (this.updatedAccount) {
+    if (this.updatedAccount && this.state.account.TeacherID) {
       const { account } = this.state;
       const { handleSetAppState } = this.props.screenProps;
       handleSetAppState('account', account);
     }
+    this.props.navigation.navigate(parent);
   }
 
 
@@ -77,6 +83,12 @@ export default class MainHeader extends React.Component {
   handleSchoolInput(input) {
     this.setState({ account: { ...this.state.account, schoolID: input } });
     this.updatedAccount = true;
+  }
+
+
+  handleOnboardNavigation() {
+    const { navigation } = this.props;
+    navigation.navigate('OnboardTeacherRouter');
   }
 
 
@@ -135,7 +147,7 @@ export default class MainHeader extends React.Component {
     } = this.state;
 
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
 
         {/* {showInput &&
           <InputModal {...showInput} />} */}
@@ -158,9 +170,9 @@ export default class MainHeader extends React.Component {
         />
         <Text style={styles.headerTitle}>Profile</Text>
 
-        <View style={styles.itemContainer}>
+        <View style={[styles.itemContainer, styles.divider]}>
           <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{ account.TeacherID }</Text>
+          <Text style={styles.value}>{ account.TeacherID || 'Not logged in' }</Text>
         </View>
 
         <View style={styles.itemContainer}>
@@ -171,7 +183,7 @@ export default class MainHeader extends React.Component {
             multiline={false}
             onChangeText={this.handleSchoolInput}
             placeholder={'123456'}
-            placeholderTextColor={colors.primary}
+            placeholderTextColor={colors.lightGray}
             returnKeyType={'done'}
             style={styles.value}
             textAlign={'left'}
@@ -181,8 +193,8 @@ export default class MainHeader extends React.Component {
         </View>
 
         <ButtonWide
-          label={'Log out'}
-          onPress={this.handleSignOut}
+          label={account.TeacherID ? 'Log out' : 'Log In / Sign Up'}
+          onPress={account.TeacherID ? this.handleSignOut : this.handleOnboardNavigation}
         />
       </ScrollView>
     );
@@ -195,7 +207,11 @@ const styles = ScaledSheet.create({
     backgroundColor: colors.dark,
     flex: 1,
     paddingBottom: '90@vs',
-    paddingTop: '75@vs',
+    paddingTop: '100@vs',
+  },
+  divider: {
+    borderColor: colors.lightGray,
+    borderBottomWidth: 0.5,
   },
   headerTitle: {
     color: colors.white,
@@ -206,14 +222,16 @@ const styles = ScaledSheet.create({
   },
   itemContainer: {
     alignItems: 'flex-start',
+    alignSelf: 'stretch',
     flexDirection: 'column',
-    marginBottom: '10@vs',
     paddingHorizontal: '15@s',
+    paddingVertical: '20@vs',
   },
   label: {
-    color: colors.white,
+    color: colors.lightGray,
     fontSize: fonts.small,
-    marginBottom: '5@vs',
+    fontWeight: 'bold',
+    marginBottom: '2@vs',
   },
   value: {
     color: colors.white,
