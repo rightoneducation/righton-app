@@ -9,7 +9,7 @@ Our mission is to make math more fun for middle and high school students, increa
 
 #### 1) Clone project
 
-`git clone git:gitlab.com/friendly-robot/righton.git`
+`git clone https://gitlab.com/friendly-robot/righton.git`
 
 #### 2) Install node modules
 
@@ -37,7 +37,12 @@ The Xcode editor if testing on iOS.
 #### Note:
 Some NPM packages may be outdated and need to be altered for the Android build.
 <br>
-If you receive a `compileOnly` error, it is due to the `build.gradle` file of the affected library. To fix this issue, locate the line in the mentioned file and change `compileOnly` to `implementation`.
+If you encounter the following error:
+<br>
+> A problem occurred evaluating project ':amazon-cognito-identity-js'.
+> Could not find method implementation() for arguments [com.facebook.react:react-native:+]
+<br>
+Locate the `build.gradle` file in `node_modules/amazon-cognito-identity.js/android`, find the line mentioned in the `dependencies` object, and change `implementation` to `compile`.
 <br>
 <br>
 If you receive a `hasteImpl returning the same name for different files` error in your packager. This is due to identical path names created by AWS Amplify. To fix this issue, simply drag the `#current-cloud-backend` folder from `${root}/amplify` out, restart the packager and run again.
