@@ -38,7 +38,12 @@ const RootNavigator = createSwitchNavigator({
       const { navigation, screenProps } = props;
 
       return (
-        <OnboardTeacherRouter navigation={navigation} {...screenProps} />
+        <OnboardTeacherRouter
+          navigation={navigation}
+          screenProps={{
+            handleSetAppState: screenProps.handleSetAppState,
+          }}
+        />
       );
     },
     navigationOptions: {
@@ -121,6 +126,7 @@ const RootNavigator = createSwitchNavigator({
         <TeacherProfile
           navigation={navigation}
           screenProps={{
+            account: screenProps.account,
             doSignOut: screenProps.doSignOut,
             handleSetAppState: screenProps.handleSetAppState,
           }}
