@@ -86,7 +86,7 @@ export default class GameFinal extends React.Component {
 
   calculateTeamScore() {
     const { gameState, team } = this.props.screenProps;
-    const choices = gameState[`team${team}`].choices;
+    const choices = gameState[`team${team}`].choices || [];
     let trickCount = 0;
     for (let i = 0; i < choices.length; i += 1) {
       if (!choices[i].correct) {
