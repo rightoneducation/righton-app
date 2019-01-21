@@ -39,12 +39,12 @@ export default class OnboardTeacherRouter extends React.PureComponent {
 
 
   handleTeacherApp() {
-    this.props.navigation.navigate('TeacherApp');
     this.props.screenProps.handleSetAppState('deviceSettings', {
       role: 'teacher',
       quizTime: '1:00',
       trickTime: '3:00',
     });
+    this.props.navigation.navigate('TeacherApp');
   }
 
 
