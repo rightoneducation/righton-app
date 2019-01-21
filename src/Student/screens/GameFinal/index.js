@@ -9,7 +9,7 @@ import Portal from '../../../screens/Portal';
 import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
-import { colors, fonts } from '../../utils/theme';
+import { colors, fonts } from '../../../utils/theme';
 
 
 export default class GameFinal extends React.Component {
@@ -182,6 +182,7 @@ const styles = ScaledSheet.create({
     marginTop: '5@vs',
   },
   row: {
+    alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: '25@vs',
