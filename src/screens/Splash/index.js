@@ -56,10 +56,10 @@ export default class Splash extends React.Component {
 
     debug.log('User session:', JSON.stringify(session));
 
-    // if (__DEV__) {
-    //   this.navigateTo('OnboardAppRouter');
-    //   return;
-    // }
+    if (__DEV__) {
+      this.navigateTo('OnboardAppRouter');
+      return;
+    }
 
     if (loggedIn) {
       if (this.props.deviceSettings.role === 'teacher') {
