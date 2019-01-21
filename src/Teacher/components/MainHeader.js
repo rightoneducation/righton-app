@@ -34,7 +34,7 @@ export default class MainHeader extends React.Component {
 
   handleNavigateToTeacherProfile() {
     const { navigation, parent } = this.props;
-    navigation.navigate('TeacherProfile', parent);
+    navigation.navigate('TeacherProfile', { parent });
   }
 
   
