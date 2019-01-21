@@ -344,6 +344,7 @@ export default class App extends React.Component {
 
   IOTSubscribeToTopic(topic) {
     const { role } = this.state.deviceSettings;
+    debug.log('Subscribing to topic:', topic, 'as', role);
     IOTSubscribeToTopic(topic, role === 'teacher' ? teacherMessageHandler : studentMessageHandler, this);
     if (role !== 'teacher') {
       const requestMessage = {
