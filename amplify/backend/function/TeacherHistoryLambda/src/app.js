@@ -18,7 +18,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 let tableName = "TeacherHistory";
 
-const userIdPresent = false; // TODO: update in case is required to use that definition
+const userIdPresent = false;
 const partitionKeyName = "TeacherID";
 const partitionKeyType = "S";
 const sortKeyName = "";

@@ -19,7 +19,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 let tableName = "GameRooms";
 
-const userIdPresent = false; // TODO: update in case is required to use that definition
+const userIdPresent = false;
 const partitionKeyName = "GameRoomID";
 const partitionKeyType = "S";
 const sortKeyName = "";
