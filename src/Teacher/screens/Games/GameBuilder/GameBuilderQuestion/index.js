@@ -141,13 +141,17 @@ export default class GameBuilderQuestion extends React.Component {
       case 'instruction':
         if (typeof this.instructionIndex === 'number') {
           const updatedInstructions = [...this.state.question.instructions];
-          updatedInstructions.splice(this.instructionIndex, 1, input);
+          if (input) {
+            updatedInstructions.splice(this.instructionIndex, 1, input);
+          } else {
+            updatedInstructions.splice(this.instructionIndex, 1);
+          }
           this.setState({
             question: { ...this.state.question, instructions: updatedInstructions },
             showInput: false,
           });
           this.instructionIndex = null;
-        } else {
+        } else if (input) {
           this.setState({
             question: {
               ...this.state.question,
@@ -182,6 +186,7 @@ export default class GameBuilderQuestion extends React.Component {
     setTimeout(() => {
       this.setState({
         showInput: {
+          autoCapitalize: 'sentences',
           closeModal: this.closeInputModal,
           keyboardType,
           height: 45,
