@@ -5,8 +5,10 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { verticalScale } from 'react-native-size-matters';
 import ButtonBack from '../../../../components/ButtonBack';
 import ButtonWide from '../../../../components/ButtonWide';
+import Message from '../../../../components/Message';
 import { colors } from '../../../../utils/theme';
 import styles from '../styles';
 
@@ -36,11 +38,13 @@ export default class AgeInput extends React.PureComponent {
 
     this.state = {
       age: '',
+      messageProps: null,
     };
 
     this.handleAgeInput = this.handleAgeInput.bind(this);
     this.handleAgeRef = this.handleAgeRef.bind(this);
     this.handleAgeSubmit = this.handleAgeSubmit.bind(this);
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
   }
 
 
@@ -50,7 +54,7 @@ export default class AgeInput extends React.PureComponent {
 
 
   handleAgeInput(age) {
-    if (isNaN(parseInt(age, 10))) return;
+    if (age !== '' && isNaN(parseInt(age, 10))) return;
     this.setState({ age });
   }
 
@@ -62,22 +66,42 @@ export default class AgeInput extends React.PureComponent {
 
   handleAgeSubmit() {
     const age = parseInt(this.state.age, 10);
-    if (age < 13) {
-      // TODO Treat user specially
+    if (isNaN(age)) {
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: { backgroundColor: colors.white, bottom: verticalScale(100) },
+          textStyle: { color: colors.dark },
+          duration: null,
+          message: 'Enter valid age as number.',
+          timeout: 4000,
+        },
+      });
+      return;
     }
-    this.props.screenProps.handleAgeSubmit(age);
+    const { handleAgeSubmit } = this.props.screenProps;
+    handleAgeSubmit(age);
+  }
+
+
+  handleCloseMessage() {
+    this.setState({ messageProps: null });
   }
 
 
   render() {
     const {
       age,
+      messageProps,
     } = this.state;
 
     const { handleBack } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
+
+        <Message {...messageProps} />
+
         <ButtonBack
           buttonStyles={{ top: 40 }}
           onPress={handleBack}
