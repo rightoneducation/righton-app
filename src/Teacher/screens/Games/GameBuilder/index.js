@@ -452,7 +452,7 @@ export default class GameBuilder extends React.Component {
                 ref={this.handleTitleRef}
                 style={styles.inputContainer}
               >
-                <Text style={styles.inputLabel}>Title</Text>
+                <Text style={styles.inputLabel}>Game Title</Text>
                 <Touchable
                   onPress={() => this.handleInputModal('title', 'Enter title', 75, title)}
                   style={[styles.inputButton, elevation]}
