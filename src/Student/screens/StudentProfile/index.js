@@ -82,7 +82,6 @@ export default class StudentProfile extends React.Component {
 
   handleOnboardNavigation() {
     const { navigation } = this.props;
-    // TODO Navigate to a Student log in / sign up screen
     navigation.navigate('OnboardAccount');
   }
 
