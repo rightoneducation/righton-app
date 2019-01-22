@@ -25,7 +25,7 @@ export default class Message extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.message !== nextProps.message) {
+    if (this.props.message !== nextProps.message && nextProps.message) {
       this.handleAnimation(nextProps.duration, nextProps.timeout);
     }
   }
@@ -119,7 +119,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: '15@s',
     paddingVertical: '10@vs',
     position: 'absolute',
-    zIndex: 10,
+    zIndex: 100,
   },
   message: {
     color: colors.white,
