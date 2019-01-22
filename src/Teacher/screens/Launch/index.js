@@ -167,7 +167,7 @@ class Launch extends React.Component {
 
 
   handleBackFromHost() {
-    this.swiperRef.scrollBy(-3, false);
+    this.swiperRef.scrollBy(-4, false);
   }
 
 
