@@ -159,6 +159,8 @@ export default class GameBuilderQuestion extends React.Component {
             },
             showInput: false,
           });
+        } else {
+          this.setState({ showInput: false });
         }
         break;
       default:
@@ -173,7 +175,8 @@ export default class GameBuilderQuestion extends React.Component {
       this.instructionIndex = idx;
       input = this.state.question.instructions[idx];
     }
-    this.handleInputModal('instruction', 'Enter instruction', 100, input, 'default');
+    const index = typeof idx === 'number' ? index + 1 : this.state.question.instructions.length + 1;
+    this.handleInputModal('instruction', `${index}. Instruction Step`, 100, input, 'default');
   }
 
 
