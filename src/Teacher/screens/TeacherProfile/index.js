@@ -15,7 +15,7 @@ import ButtonWide from '../../../components/ButtonWide';
 import ButtonBack from '../../../components/ButtonBack';
 
 
-export default class MainHeader extends React.Component {
+export default class TeacherProfile extends React.Component {
   static propTypes = {
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
