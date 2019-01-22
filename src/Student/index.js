@@ -5,6 +5,7 @@ import GamePreview from './screens/GamePreview';
 import GameQuiz from './screens/GameQuiz';
 import GameReasons from './screens/GameReasons';
 import GameFinal from './screens/GameFinal';
+import StudentProfile from './screens/StudentProfile';
 
 
 const StudentSwitchNavigator = createSwitchNavigator({
@@ -13,6 +14,16 @@ const StudentSwitchNavigator = createSwitchNavigator({
   Dashboard: {
     screen: props => (
       <Dashboard {...props} />
+    ),
+    navigationOptions: {
+
+    },
+  },
+
+
+  StudentProfile: {
+    screen: props => (
+      <StudentProfile {...props} />
     ),
     navigationOptions: {
 
