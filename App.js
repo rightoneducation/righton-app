@@ -224,6 +224,7 @@ export default class App extends React.Component {
       account.points = 0;
 
       deviceSettings.role = 'student';
+      deviceSettings.ID = `${Math.random()}`;
 
       putStudentAccountToDynamoDB(
         account,
@@ -256,8 +257,10 @@ export default class App extends React.Component {
       case 'account':
         this.setState({ account: { ...this.state.account, ...value } }, () => {
           const stringifiedAccount = JSON.stringify(this.state.account);
-          LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
-          this.accountUpdated = true;
+          if (this.state.deviceSettings.username) {
+            LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
+            this.accountUpdated = true;
+          }
         });
         break;
       case 'GameRoomID':
@@ -451,6 +454,12 @@ export default class App extends React.Component {
         account,
         res => debug.log('Successfully PUT updated teacher account into DynamoDB', res),
         exception => debug.warn('Error PUTTING updated teacher account into DynamoDB', exception),
+      );
+    } else {
+      putStudentAccountToDynamoDB(
+        account,
+        res => debug.log('Successfully PUT updated student account into DynamoDB', res),
+        exception => debug.warn('Error PUTTING updated student account into DynamoDB', exception),
       );
     }
   }
