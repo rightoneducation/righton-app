@@ -67,8 +67,7 @@ export default class GameRoom extends React.Component {
     super(props);
     this.state = {
       nextTeam: 'team0',
-      // portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
-      portal: 'Creating Game',      
+      portal: 'Creating Game..',      
       preview: null,
       renderType: 'portal',
       teams: [],
@@ -381,7 +380,6 @@ export default class GameRoom extends React.Component {
       IOTUnsubscribeFromTopic,
     } = this.props.screenProps;
     const { GameRoomID } = this.props.screenProps;
-    // TODO! Save game details QuizMaker database
     IOTUnsubscribeFromTopic();
     handleSetAppState('gameState', {});
     handleSetAppState('GameRoomID', '');
@@ -412,17 +410,14 @@ export default class GameRoom extends React.Component {
     const teacherHistoryJSON = await LocalStorage.getItem(`@RightOn:${account.TeacherID}/History`);
     const teacherHistory = JSON.parse(teacherHistoryJSON);
     const report = this.generateHistoryReport(gameState, numberOfPlayers);
-    teacherHistory.unshift(report);
+    teacherHistory.history.unshift(report);
     const updatedTeacherHistoryJSON = JSON.stringify(teacherHistory);
     LocalStorage.setItem(`@RightOn:${account.TeacherID}/History`, updatedTeacherHistoryJSON);
     
 
     putTeacherItemInDynamoDB(
       'TeacherHistoryAPI',
-      {
-        TeacherID: account.TeacherID,
-        history: teacherHistory,
-      },
+      teacherHistory,
       (res) => {
         handleSetAppState('account', {
           history: {
