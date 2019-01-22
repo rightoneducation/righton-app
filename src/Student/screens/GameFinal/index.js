@@ -177,6 +177,7 @@ const styles = ScaledSheet.create({
   },
   container: {
     alignItems: 'center',
+    alignSelf: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
@@ -199,6 +200,6 @@ const styles = ScaledSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: '25@vs',
+    marginBottom: '35@vs',
   },
 });
