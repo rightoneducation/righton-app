@@ -45,7 +45,7 @@ export default class InputModal extends React.PureComponent {
     placeholder: '',
     visible: false,
     spellCheck: false,
-    width: deviceWidth - 30,
+    width: deviceWidth - scale(30),
     x: Number.POSITIVE_INFINITY,
     y: Number.POSITIVE_INFINITY,
   }
