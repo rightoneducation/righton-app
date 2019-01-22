@@ -256,8 +256,8 @@ export default class App extends React.Component {
     switch (property) {
       case 'account':
         this.setState({ account: { ...this.state.account, ...value } }, () => {
-          const stringifiedAccount = JSON.stringify(this.state.account);
           if (this.state.deviceSettings.username) {
+            const stringifiedAccount = JSON.stringify(this.state.account);
             LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
             this.accountUpdated = true;
           }
