@@ -157,7 +157,7 @@ export default class GameRoomResults extends React.Component {
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[0] && choices[0].value }</Text>
+              <Text style={gamePreviewStyles.choiceValue}>{ choices[0] && choices[0].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.firstChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
@@ -165,7 +165,7 @@ export default class GameRoomResults extends React.Component {
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[1] && choices[1].value }</Text>
+              <Text style={gamePreviewStyles.choiceValue}>{ choices[1] && choices[1].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.secondChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
@@ -173,7 +173,7 @@ export default class GameRoomResults extends React.Component {
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[2] && choices[2].value }</Text>
+              <Text style={gamePreviewStyles.choiceValue}>{ choices[2] && choices[2].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.thirdChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
@@ -181,7 +181,7 @@ export default class GameRoomResults extends React.Component {
                 <Aicon name={'check'} style={styles.checkmark} /> :
                 <View style={styles.hiddenDot} />
               }
-              <Text style={gamePreviewStyles.choiceAnswer}>{ choices[3] && choices[3].value }</Text>
+              <Text style={gamePreviewStyles.choiceValue}>{ choices[3] && choices[3].value }</Text>
             </View>
             <Animated.View style={[styles.bar, { width: this.fourthChoice }]} />
           </View>

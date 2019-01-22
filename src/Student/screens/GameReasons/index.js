@@ -274,7 +274,7 @@ export default class GameReasons extends React.PureComponent {
                 ref={this.handleTrick0Ref}
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
-                <Text style={[gamePreviewStyles.choiceAnswer, gamePreviewStyles.marginBottom]}>
+                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
                   { gameState[teamRef].tricks[0].value }
                 </Text>
                 <Touchable
@@ -292,7 +292,7 @@ export default class GameReasons extends React.PureComponent {
                 ref={this.handleTrick1Ref}
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
-                <Text style={[gamePreviewStyles.choiceAnswer, gamePreviewStyles.marginBottom]}>
+                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
                   { gameState[teamRef].tricks[1].value }
                 </Text>
                 <Touchable
@@ -310,7 +310,7 @@ export default class GameReasons extends React.PureComponent {
                 ref={this.handleTrick2Ref}
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
-                <Text style={[gamePreviewStyles.choiceAnswer, gamePreviewStyles.marginBottom]}>
+                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
                   { gameState[teamRef].tricks[2].value }
                 </Text>
                 <Touchable
