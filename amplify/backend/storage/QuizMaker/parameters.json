@@ -1,0 +1,5 @@
+{
+    "tableName": "QuizMaker",
+    "partitionKeyName": "GameID",
+    "partitionKeyType": "S"
+}

@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/GameID",
+            "lambdaFunction": "QuizMakerLambda",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "QuizMakerAPI",
+    "apiName": "rightonda81d864",
+    "functionArns": [
+        {
+            "lambdaFunction": "QuizMakerLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "ightn-20181229134435-authRole",
+        "unAuthRoleName": "ightn-20181229134435-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "QuizMakerLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

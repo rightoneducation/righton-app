@@ -205,6 +205,17 @@
 				}
 			}
 		},
+		"storageQuizMaker": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/QuizMaker-cloudformation-template.json",
+				"Parameters": {
+					"tableName": "QuizMaker",
+					"partitionKeyName": "GameID",
+					"partitionKeyType": "S"
+				}
+			}
+		},
 		"functionTeacherGameLambda": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -325,6 +336,26 @@
 				}
 			}
 		},
+		"functionQuizMakerLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/QuizMakerLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageQuizMakerName": {
+						"Fn::GetAtt": [
+							"storageQuizMaker",
+							"Outputs.Name"
+						]
+					},
+					"storageQuizMakerArn": {
+						"Fn::GetAtt": [
+							"storageQuizMaker",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
 		"apiTeacherGameAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -439,6 +470,26 @@
 					"functionTeacherHistoryLambdaArn": {
 						"Fn::GetAtt": [
 							"functionTeacherHistoryLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiQuizMakerAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/QuizMakerAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionQuizMakerLambdaName": {
+						"Fn::GetAtt": [
+							"functionQuizMakerLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionQuizMakerLambdaArn": {
+						"Fn::GetAtt": [
+							"functionQuizMakerLambda",
 							"Outputs.Arn"
 						]
 					}
