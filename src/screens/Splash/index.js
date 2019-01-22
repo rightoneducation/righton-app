@@ -70,7 +70,7 @@ export default class Splash extends React.Component {
     } else if (this.props.deviceSettings.role === 'teacher') {
       this.navigateTo('OnboardAccount');
     } else if (this.props.deviceSettings.role === 'student') {
-      this.navigateTo('StudentApp');
+      this.navigateTo('StudentFirst');
     } else {
       this.navigateTo('OnboardAppRouter');
     }
