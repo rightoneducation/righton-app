@@ -286,7 +286,7 @@ export default class Dashboard extends React.Component {
     <View style={[styles.headerContainer, elevation]}>
       <Touchable
         activeOpacity={0.8}
-        onPress={() => { /* TODO */ }}
+        onPress={() => this.props.navigation.navigate('StudentProfile')}
         style={styles.headerProfileContainer}
       >
         <Aicon name={'user'} style={styles.headerProfileIcon} />
