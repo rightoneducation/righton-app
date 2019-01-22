@@ -133,7 +133,7 @@ class LogIn extends React.Component {
       return;
     }
 
-    const { auth } = this.props;
+    const { auth, deviceSettings, onSignIn } = this.props.screenProps;
     const { email, password } = this.state;
     let errorMessage = 'Successfully logged in.';
     let session = null;
@@ -145,10 +145,10 @@ class LogIn extends React.Component {
         .then((data) => {
           debug.log('We get the Cognito User', JSON.stringify(data));
           this.setState({ cognitoUser: data });
-          if (this.props.screenProps.deviceSettings.role === 'student') {
-            this.props.onSignIn(data, 'student');     
+          if (deviceSettings.role === 'student') {
+            onSignIn(data, 'student');     
           } else {
-            this.props.onSignIn(data, 'teacher');
+            onSignIn(data, 'teacher');
           }
           return true;
         });

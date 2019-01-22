@@ -85,17 +85,6 @@ class SignUp extends React.Component {
   }
 
 
-  componentDidMount() {
-    debug.log('Mounts', JSON.stringify(this.props.navigation.state));
-  }
-
-
-  componentWillUnmount() {
-    debug.log('unmounts', JSON.stringify(this.props.navigation.state));
-    this.props.navigation.state.params = {};
-  }
-
-
   onEmailLayout() {
     if (this.emailRef) {
       NativeMethodsMixin.measureInWindow.call(
@@ -277,9 +266,9 @@ class SignUp extends React.Component {
       await Auth.confirmSignUp(username, code)
         .then((data) => {
           if (this.props.screenProps.deviceSettings.role === 'student') {
-            this.props.onSignUp('student', username);     
+            this.props.screenProps.onSignUp('student', username);     
           } else {
-            this.props.onSignUp('teacher', username);
+            this.props.screenProps.onSignUp('teacher', username);
           }
           debug.log('sign up successful ->', JSON.stringify(data));
         });
