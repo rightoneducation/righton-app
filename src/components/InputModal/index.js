@@ -142,7 +142,7 @@ export default class InputModal extends React.PureComponent {
           spellCheck={spellCheck}
           style={[styles.input, { height, width }]}
           textAlign={'left'}
-          underlineColorAndroid={colors.lightGray}
+          underlineColorAndroid={colors.white}
           value={input}
         />
         <Text style={styles.length}>{ maxLength - input.length }</Text>
