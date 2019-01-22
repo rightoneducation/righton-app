@@ -171,7 +171,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+  handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
     if (inputLabel === 'question') {
       this.onQuestionLayout();
     } else if (inputLabel === 'answer') {
@@ -329,7 +329,7 @@ export default class GameBuilderQuestion extends React.Component {
           >
             <Text style={parentStyles.inputLabel}>Question</Text>
             <Touchable
-              onPress={() => this.handleInputModal('question', 'Enter question', 100, question)}
+              onPress={() => this.handleInputModal('question', 'Enter question', 100, question, 'default')}
               style={[parentStyles.inputButton, elevation]}
             >
               <Text

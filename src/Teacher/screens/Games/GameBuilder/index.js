@@ -161,7 +161,7 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+  handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
     if (inputLabel === 'title') {
       this.onTitleLayout();
     } else if (inputLabel === 'description') {
