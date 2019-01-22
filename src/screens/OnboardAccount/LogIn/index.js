@@ -17,23 +17,33 @@ import debug from '../../../utils/debug';
 
 class LogIn extends React.Component {
   static propTypes = {
-    auth: PropTypes.shape({
-      signIn: PropTypes.func,
-    }),
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
     }),
-    onSignIn: PropTypes.func.isRequired,
+    screenProps: PropTypes.shape({
+      auth: PropTypes.shape({
+        signIn: PropTypes.func,
+      }),
+      deviceSettings: PropTypes.shape({
+        role: PropTypes.string,
+      }),
+      onSignIn: PropTypes.func.isRequired,
+    }),
   };
 
   static defaultProps = {
-    auth: {
-      signIn: () => {},
-    },
     navigation: {
       navigate: () => {},
     },
-    onSignIn: () => {},
+    screenProps: {      
+      auth: {
+        signIn: () => {},
+      },
+      deviceSettings: {
+        role: '',
+      },
+      onSignIn: () => {},
+    },
   }
 
   constructor(props) {
@@ -71,7 +81,11 @@ class LogIn extends React.Component {
 
   async onLogIn() {
     this.setState(this.baseState, () => {
-      this.props.navigation.navigate('TeacherApp');
+      if (this.props.screenProps.deviceSettings.role === 'student') {
+        this.props.navigation.navigate('StudentApp');        
+      } else {
+        this.props.navigation.navigate('TeacherApp');
+      }
     });
   }
 
@@ -131,11 +145,15 @@ class LogIn extends React.Component {
         .then((data) => {
           debug.log('We get the Cognito User', JSON.stringify(data));
           this.setState({ cognitoUser: data });
-          this.props.onSignIn(data, 'teacher');
+          if (this.props.screenProps.deviceSettings.role === 'student') {
+            this.props.onSignIn(data, 'student');     
+          } else {
+            this.props.onSignIn(data, 'teacher');
+          }
           return true;
         });
     } catch (exception) {
-      debug.warn('Error caught in Teacher LogIn:', JSON.stringify(exception));
+      debug.warn('Error caught in Account LogIn:', JSON.stringify(exception));
 
       errorMessage = exception.invalidCredentialsMessage || exception.message || exception;
 
@@ -269,6 +287,8 @@ class LogIn extends React.Component {
       showInput,
     } = this.state;
 
+    const { deviceSettings } = this.props.screenProps;
+
     return (
       <View style={styles.container}>
 
@@ -278,7 +298,11 @@ class LogIn extends React.Component {
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
-            <Text style={styles.title}>Teacher Account</Text>
+            <Text style={styles.title}>
+              {deviceSettings.role === 'student' ?
+                'Student Account' :
+                'Teacher Account'}
+            </Text>
           </View>
 
           <View

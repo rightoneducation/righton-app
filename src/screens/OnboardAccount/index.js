@@ -3,24 +3,27 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
-import LogIn from '../../components/LogIn';
-import SignUp from '../../components/SignUp';
-import TabBarComponent from '../../../components/TabBarComponent';
+import LogIn from './LogIn';
+import SignUp from './SignUp';
+import TabBarComponent from '../../components/TabBarComponent';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { colors } from '../../../utils/theme';
+import { colors } from '../../utils/theme';
 
-const TeacherFirst = createBottomTabNavigator({
+const OnboardAccount = createBottomTabNavigator({
 
 
   LogIn: {
     screen: (props) => {
-      const { navigation } = props;
+      const { navigation, screenProps } = props;
 
       return (
         <LogIn
-          auth={props.screenProps.auth}
           navigation={navigation}
-          onSignIn={props.screenProps.onSignIn}
+          screenProps={{
+            deviceSettings: screenProps.deviceSettings,
+            auth: screenProps.auth,
+            onSignIn: screenProps.onSignIn,
+          }}
         />
       );
     },
@@ -33,12 +36,15 @@ const TeacherFirst = createBottomTabNavigator({
 
   SignUp: {
     screen: (props) => {
-      const { navigation } = props;
+      const { navigation, screenProps } = props;
 
       return (
         <SignUp
           navigation={navigation}
-          onSignUp={props.screenProps.onSignUp}
+          screenProps={{
+            deviceSettings: screenProps.deviceSettings,
+            onSignUp: screenProps.onSignUp,
+          }}
         />
       );
     },
@@ -80,4 +86,4 @@ const TeacherFirst = createBottomTabNavigator({
   },
 });
 
-export default TeacherFirst;
+export default OnboardAccount;

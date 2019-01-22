@@ -34,7 +34,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
 
 
   handleTeacherOnboard() { 
-    this.props.navigation.navigate('TeacherFirst');
+    this.props.navigation.navigate('OnboardAccount');
   }
 
 

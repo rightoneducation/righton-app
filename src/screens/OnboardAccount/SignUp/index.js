@@ -26,14 +26,24 @@ class SignUp extends React.Component {
     navigation: PropTypes.shape({
       navigate: PropTypes.func,
     }),
-    onSignUp: PropTypes.func,
+    screenProps: PropTypes.shape({
+      deviceSettings: PropTypes.shape({
+        role: PropTypes.string,
+      }),
+      onSignUp: PropTypes.func.isRequired,
+    }),
   };
 
   static defaultProps = {
     navigation: {
       navigate: () => {},
     },
-    onSignUp: () => {},
+    screenProps: {      
+      deviceSettings: {
+        role: '',
+      },
+      onSignUp: () => {},
+    },
   }
 
   constructor(props) {
@@ -72,6 +82,17 @@ class SignUp extends React.Component {
     this.handleMFACancel = this.handleMFACancel.bind(this);
 
     this.handleSignUp = this.handleSignUp.bind(this);
+  }
+
+
+  componentDidMount() {
+    debug.log('Mounts', JSON.stringify(this.props.navigation.state));
+  }
+
+
+  componentWillUnmount() {
+    debug.log('unmounts', JSON.stringify(this.props.navigation.state));
+    this.props.navigation.state.params = {};
   }
 
 
@@ -117,7 +138,11 @@ class SignUp extends React.Component {
   onSignUp() {
     // this.setState(this.baseState);
 
-    this.props.navigation.navigate('TeacherApp');    
+    if (this.props.screenProps.deviceSettings.role === 'student') {
+      this.props.navigation.navigate('StudentApp');        
+    } else {
+      this.props.navigation.navigate('TeacherApp');
+    }
   }
 
   async handleSignUp() {
@@ -251,7 +276,11 @@ class SignUp extends React.Component {
     try {
       await Auth.confirmSignUp(username, code)
         .then((data) => {
-          this.props.onSignUp('teacher', username);
+          if (this.props.screenProps.deviceSettings.role === 'student') {
+            this.props.onSignUp('student', username);     
+          } else {
+            this.props.onSignUp('teacher', username);
+          }
           debug.log('sign up successful ->', JSON.stringify(data));
         });
     } catch (exception) {
@@ -443,12 +472,18 @@ class SignUp extends React.Component {
       showMFAPrompt,
     } = this.state;
 
+    const { deviceSettings } = this.props.screenProps;
+
     return (
       <View style={styles.container}>
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
-            <Text style={styles.title}>Teacher Setup</Text>
+            <Text style={styles.title}>
+              {deviceSettings.role === 'student' ?
+                'Student Setup' :
+                'Teacher Setup'}
+            </Text>
           </View>
 
           {showInput &&

@@ -9,7 +9,17 @@ import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
 
 
-export default function OnboardAppRouter({ navigation }) {
+export default function OnboardAppRouter({ navigation, screenProps }) {
+  function handleTeacher() {
+    screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
+    setTimeout(() => navigation.navigate('OnboardTeacherRouter'), 250);
+  }
+
+  function handleStudent() {
+    screenProps.handleSetAppState('deviceSettings', { role: 'student' });
+    setTimeout(() => navigation.navigate('StudentFirst'), 250);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.placeholder}>RightOn!</Text>
@@ -18,7 +28,7 @@ export default function OnboardAppRouter({ navigation }) {
         <Touchable
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
-          onPress={() => navigation.navigate('OnboardTeacherRouter')}
+          onPress={handleTeacher}
           style={[styles.iamaButton, styles.whiteBackground]}
         >
           <View style={styles.iamaView}>
@@ -29,7 +39,7 @@ export default function OnboardAppRouter({ navigation }) {
         <Touchable
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
-          onPress={() => navigation.navigate('StudentFirst')}
+          onPress={handleStudent}
           style={[styles.iamaButton, styles.primaryBackground]}
         >
           <View style={styles.iamaView}>
@@ -44,10 +54,16 @@ export default function OnboardAppRouter({ navigation }) {
 
 OnboardAppRouter.propTypes = {
   onboardNavigator: PropTypes.shape({ type: PropTypes.func }),
+  screenProps: PropTypes.shape({
+    handleSetAppState: PropTypes.func,
+  }),
 };
 
 OnboardAppRouter.defaultProps = {
   onboardNavigator: {},
+  screenProps: {
+    handleSetAppState: () => {},
+  },
 };
 
 const styles = ScaledSheet.create({

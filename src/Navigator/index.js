@@ -4,7 +4,7 @@ import Splash from '../screens/Splash';
 import OnboardAppRouter from '../screens/OnboardAppRouter';
 import OnboardTeacherRouter from '../screens/OnboardTeacherRouter';
 import StudentFirst from '../Student/screens/StudentFirst';
-import TeacherFirst from '../Teacher/screens/TeacherFirst';
+import OnboardAccount from '../screens/OnboardAccount';
 import StudentApp from '../Student';
 import TeacherApp from '../Teacher';
 import TeacherGameRoom from '../Teacher/screens/GameRoom';
@@ -25,7 +25,12 @@ const RootNavigator = createSwitchNavigator({
 
   OnboardAppRouter: {
     screen: props => (
-      <OnboardAppRouter navigation={props.navigation} />
+      <OnboardAppRouter
+        navigation={props.navigation}
+        screenProps={{
+          handleSetAppState: props.screenProps.handleSetAppState,
+        }}
+      />
     ),
     navigationOptions: {
       header: null,
@@ -52,8 +57,8 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
-  TeacherFirst: {
-    screen: TeacherFirst,
+  OnboardAccount: {
+    screen: OnboardAccount,
     navigationOptions: {
       header: null,
     },
