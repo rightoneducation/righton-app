@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 // import Triangle from '../../components/Triangle';
 import Circle from '../../components/Circle';
-import { colors, deviceHeight, deviceWidth, fonts } from '../../utils/theme';
+import { colors, deviceHeight, deviceWidth } from '../../utils/theme';
 
 const circleOne = deviceHeight;
 const circleTwo = deviceHeight - 150;
@@ -169,7 +169,8 @@ export default class Portal extends React.PureComponent {
       //   players: [{image, name}, {image, name}, ...],
       //   rewardImageUri: '../../assets/rewards/icon.png',
       // }
-      messageType, // "rightOn", "single", "doubleSub", "doubleSuper", "reward", "countdown"
+      // messageType, // "rightOn", "single", "doubleSub", "doubleSuper", "reward", "countdown"
+      messageValues,
       // userImage,
     } = this.props;
 
@@ -180,7 +181,7 @@ export default class Portal extends React.PureComponent {
     return (
       <View style={styles.container}>
 
-        { this.renderMessageType(messageType) }
+        {/* { this.renderMessageType(messageType) } */}
 
         <Circle styles={{ height: circleOne, width: circleOne }} />
         <Circle styles={{ height: circleTwo, width: circleTwo }} />
@@ -196,6 +197,7 @@ export default class Portal extends React.PureComponent {
         <Circle styles={{ height: circleFive, width: circleFive }} />
         <Circle styles={{ height: circleSix, width: circleSix, borderWidth: 1 }} />
         <Circle 
+          message={messageValues.message}
           styles={{
             height: circleSeven,
             width: circleSeven,
@@ -221,11 +223,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark,
     flex: 1,
     justifyContent: 'center',
-  },
-  mainMessage: {
-    color: colors.white,
-    fontSize: fonts.medium,
-    fontStyle: 'italic',
-    zIndex: 10,
   },
 });
