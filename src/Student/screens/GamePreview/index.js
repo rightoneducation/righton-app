@@ -214,7 +214,7 @@ export default class GamePreview extends React.PureComponent {
         input: '',
         inputLabel: '',
         maxLength: 125,
-        multiline: true,
+        multiline: false,
         placeholder: 'Enter a trick answer',
         visible: true,
         spellCheck: true,
