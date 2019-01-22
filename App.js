@@ -157,15 +157,7 @@ export default class App extends React.Component {
         // Hydrate LocalStorage w/ new user's DynamoDB
         this.hydrateNewTeacherData(username);
       } else if (role === 'student' && username !== this.state.account.StudentID) {
-        getStudentAccountFromDynamoDB(
-          username,
-          (res) => {
-            // TODO! Set account to state
-            // TODO Needs a sign out/in option for Student
-            debug.log('Result from GETTING student account from DynamoDB:', JSON.stringify(res));
-          },
-          exception => debug.warn('Error GETTING student account from DynamoDB:', JSON.stringify(exception)),
-        );
+        this.hydrateNewStudentData(username);
       }
     }
   }
@@ -295,6 +287,21 @@ export default class App extends React.Component {
   }
 
 
+  hydrateNewStudentData(StudentID) {
+    getStudentAccountFromDynamoDB(
+      StudentID,
+      (res) => {
+        this.setState({ account: res });
+        const accountJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${StudentID}`, accountJSON);
+        this.resetDeviceSettings('student', StudentID);
+        debug.log('Result from GETTING student account from DynamoDB:', JSON.stringify(res));
+      },
+      exception => debug.warn('Error GETTING student account from DynamoDB:', JSON.stringify(exception)),
+    );
+  }
+
+
   hydrateNewTeacherData(TeacherID) {
     getTeacherAccountFromDynamoDB(
       TeacherID,
@@ -302,6 +309,7 @@ export default class App extends React.Component {
         this.setState({ account: res });
         const accountJSON = JSON.stringify(res);
         LocalStorage.setItem(`@RightOn:${TeacherID}`, accountJSON);
+        this.resetDeviceSettings('teacher', TeacherID);
         debug.log('Result from GETTING teacher account from DynamoDB:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher account from DynamoDB:', JSON.stringify(exception)),
@@ -339,6 +347,20 @@ export default class App extends React.Component {
       },
       exception => debug.warn('Error GETTING teacher history from DynamoDB:', JSON.stringify(exception)),
     );
+  }
+
+
+  resetDeviceSettings(accountType, username) {
+    const deviceSettings = {};
+    deviceSettings.username = username;
+    deviceSettings.role = accountType;
+    if (accountType === 'teacher') {
+      deviceSettings.quizTime = this.state.deviceSettings.quizTime || '1:00';
+      deviceSettings.trickTime = this.state.deviceSettings.trickTime || '3:00';
+    }
+    this.setState({ deviceSettings });
+    const deviceSettingsJSON = JSON.stringify(deviceSettings);
+    LocalStorage.setItem('@RightOn:DeviceSettings', deviceSettingsJSON);
   }
 
 
