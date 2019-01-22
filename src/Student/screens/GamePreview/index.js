@@ -349,6 +349,7 @@ export default class GamePreview extends React.PureComponent {
                     <Aicon name={'check'} style={styles.choiceCheck} />}
                 </View>
               </Touchable>
+              <Text style={styles.choiceValue}>{ `${idx + 1}. ` }</Text>                
               <Text style={styles.choiceValue}>{ trick.value }</Text>
             </View>
           ))}
