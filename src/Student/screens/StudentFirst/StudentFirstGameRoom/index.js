@@ -78,7 +78,7 @@ export default class GameRoom extends React.PureComponent {
         />
         <Text style={styles.title}>Game Code</Text>
         <TextInput
-          keyboardType={'default'}
+          keyboardType={'numeric'}
           maxLength={100}
           multiline={false}
           onChangeText={this.onRoomInput}
