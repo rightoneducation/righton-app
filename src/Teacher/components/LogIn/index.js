@@ -204,7 +204,7 @@ class LogIn extends React.Component {
     switch (inputLabel) {
       case 'email':
         this.setState({ email: input, showInput: false });
-        if (!this.state.password) {
+        if (!this.state.password && input) {
           this.handleInputModal('password', 'Password', 75, '');
         }
         break;

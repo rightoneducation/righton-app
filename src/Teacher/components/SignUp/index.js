@@ -299,7 +299,7 @@ class SignUp extends React.Component {
         this.setState({ email: input, showInput: false }, () => {
           const emailPassed = this.handleEmailSubmit();
   
-          if (emailPassed && !this.state.password) {
+          if (input && emailPassed && !this.state.password) {
             this.handleInputModal('password', 'Password', 75, '');
           }
         });
@@ -309,7 +309,7 @@ class SignUp extends React.Component {
         this.setState({ password: input, showInput: false }, () => {
           const passwordPassed = this.handlePasswordSubmit();
   
-          if (passwordPassed && !this.state.retypePassword) {
+          if (input && passwordPassed && !this.state.retypePassword) {
             this.handleInputModal('retype', 'Retype password', 75, '');
           }
         });
