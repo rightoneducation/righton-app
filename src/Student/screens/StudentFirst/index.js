@@ -1,17 +1,33 @@
 import React from 'react';
+import {
+  NetInfo,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import PropTypes from 'prop-types';
-// import Swiper from 'react-native-swiper';
-// import AgeInput from './StudentFirstAgeInput';
-import GameRoom from './StudentFirstGameRoom';
+import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
+import { verticalScale } from 'react-native-size-matters';
+import Touchable from 'react-native-platform-touchable';
+import Portal from '../../../screens/Portal';
+import Message from '../../../components/Message';
+import ButtonBack from '../../../components/ButtonBack';
+import ButtonWide from '../../../components/ButtonWide';
+import { colors, fonts } from '../../../utils/theme';
+import styles from './styles';
+import debug from '../../../utils/debug';
 
 
-export default class StudentFirst extends React.Component {
+export default class StudentFirst extends React.PureComponent {
   static propTypes = {
     navigation: PropTypes.shape({
       navigate: PropTypes.func.isRequired,
     }),
     screenProps: PropTypes.shape({
       handleSetAppState: PropTypes.func.isRequired,
+      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
+      IOTSubscribeToTopic: PropTypes.func.isRequired,
     }),
   }
 
@@ -22,40 +38,157 @@ export default class StudentFirst extends React.Component {
     },
     screenProps: {
       handleSetAppState: () => {},
+      IOTUnsubscribeFromTopic: () => {},
+      IOTSubscribeToTopic: () => {},
     },
   }
 
   constructor(props) {
     super(props);
 
-    // this.swiper = undefined;
+    this.state = {
+      messageProps: null,
+      portal: null,
+      room: '',
+    };
 
-    this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
     this.handleNavigateToOnboardApp = this.handleNavigateToOnboardApp.bind(this);
-    // this.handleSwipeToAge = this.handleSwipeToAge.bind(this);
-    // this.handleAgeSubmit = this.handleAgeSubmit.bind(this);
+
+    this.onRoomInput = this.onRoomInput.bind(this);
+    this.onRoomSubmit = this.onRoomSubmit.bind(this);
+    this.onJoinLater = this.onJoinLater.bind(this);
+
+    this.handleGameError = this.handleGameError.bind(this);
+    this.handleGameFound = this.handleGameFound.bind(this);
   }
 
 
-  handleRoomSubmit(room) {
-    if (room) {
-      this.props.navigation.navigate('StudentApp', { GameRoomID: room });
+  componentWillUnmount() {
+    this.props.screenProps.handleSetAppState('deviceSettings', { role: 'student' });
+  }
+
+
+  onRoomInput(room) {
+    this.setState({ room });
+  }
+
+
+  onRoomSubmit() {
+    this.handleGameEntry();
+  }
+
+
+  onJoinLater() {
+    this.props.navigation.navigate('StudentApp');
+  }
+
+
+  handleGameEntry() {
+    const { room } = this.state;
+    const GameRoomID = room;
+    this.setState({ portal: `Joining ${GameRoomID}` });
+    NetInfo.isConnected.fetch()
+      .then(async (isConnected) => {
+        if (isConnected) {
+          getGameFromDynamoDB(GameRoomID, this.handleGameFound, this.handleGameError);
+        } else {
+          this.setState({
+            portal: '',
+            messageProps: {
+              closeFunc: this.handleCloseMessage,
+              bodyStyle: null,
+              textStyle: null,
+              duration: null,
+              message: 'Network connection error.',
+              timeout: 4000,
+            },
+          });
+        }
+      });
+  }
+
+
+  handleGameFound(res) {
+    if (typeof res === 'object' && res.GameRoomID) {
+      this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
+      setTimeout(() => {
+        const { gameState } = this.props.screenProps;
+        if (typeof gameState === 'object' && Object.keys(gameState).length === 0) {
+          debug.log('Problem joining game room');
+          if (this.attemptedEntries < 2) {
+            this.props.screenProps.IOTUnsubscribeFromTopic(res.GameRoomID);
+            setTimeout(() => this.handleGameEntry(), 500);
+            this.attemptedEntries += 1;
+          } else {
+            this.attemptedEntries = 0;
+            this.setState({
+              portal: '',
+              messageProps: {
+                closeFunc: this.handleCloseMessage,
+                bodyStyle: null,
+                textStyle: null,
+                duration: null,
+                message: 'Problem joining game. Please try again.',
+                timeout: 4000,
+              },
+            });
+          }
+        } else {
+          this.setState({
+            portal: '',
+            messageProps: {
+              closeFunc: this.handleCloseMessage,
+              bodyStyle: null,
+              textStyle: null,
+              duration: null,
+              message: 'Entered game room. Select your team.',
+              timeout: 4000,
+            },
+          });
+          this.props.screenProps.handleSetAppState('GameRoomID', res.GameRoomID);
+          setTimeout(() => this.props.navigation.navigate('StudentApp'), 0);
+        }
+        debug.log('JOIN GAME', res.GameRoomID);
+      }, 3000);
     } else {
-      this.props.navigation.navigate('StudentApp');
+      // res is most likely an empty object `{}`
+      // - either way notify user that GameRoom cannot be joined.
+      this.setState({
+        portal: '',
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          bodyStyle: null,
+          textStyle: null,
+          duration: null,
+          message: 'Game room not found.',
+          timeout: 4000,
+        },
+      });
+      debug.log('Bad response from getGameFromDynamoDB():', JSON.stringify(res), 'Game Room cannot be found.');
     }
   }
 
 
-  // handleSwipeToAge() {
-  //   this.swiper.scrollBy(-1, false);
-  // }
+  handleGameError = (exception) => {
+    this.setState({
+      portal: '',
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        bodyStyle: null,
+        textStyle: null,
+        duration: null,
+        message: 'Game room cannot be joined.',
+        timeout: 4000,
+      },
+    });
+    debug.log('Error getting game from DynamoDB:', exception);
+  }
 
 
-  // handleAgeSubmit(age) {
-  //   const { handleSetAppState } = this.props.screenProps;
-  //   handleSetAppState('deviceSettings', { age });
-  //   this.swiper.scrollBy(1, false);
-  // }
+  handleCloseMessage() {
+    this.setState({ messageProps: null });
+  }
 
 
   handleNavigateToOnboardApp() {
@@ -64,38 +197,72 @@ export default class StudentFirst extends React.Component {
 
 
   render() {
+    const {
+      messageProps,
+      portal,
+      room,
+    } = this.state;
+    
+    if (portal) {
+      return (
+        <Portal
+          messageType={'single'}
+          messageValues={{
+            message: portal,
+          }}
+        />
+      );
+    }
+
     return (
-      <GameRoom
-        screenProps={{
-          handleRoomSubmit: this.handleRoomSubmit,
-          handleBack: this.handleNavigateToOnboardApp,
-          handleSetAppState: this.props.screenProps.handleSetAppState,
-        }}
-      />
-      // <Swiper
-      //   horizontal
-      //   index={0}
-      //   loadMinimal={false}
-      //   loop={false}
-      //   ref={(ref) => { this.swiper = ref; }}
-      //   scrollEnabled={false}
-      //   showsPagination={false}
-      // >
-      //   <AgeInput
-      //     screenProps={{
-      //       handleAgeSubmit: this.handleAgeSubmit,
-      //       handleBack: this.handleNavigateToOnboardApp,
-      //       handleSetAppState: this.props.screenProps.handleSetAppState,
-      //     }}
-      //   />
-      //   <GameRoom
-      //     screenProps={{
-      //       handleRoomSubmit: this.handleRoomSubmit,
-      //       handleBack: this.handleSwipeToAge,
-      //       handleSetAppState: this.props.screenProps.handleSetAppState,
-      //     }}
-      //   />
-      // </Swiper>
+      <View style={styles.container}>
+
+        {messageProps && <Message {...messageProps} />}
+
+        <ButtonBack
+          buttonStyles={{ top: 40 }}
+          onPress={this.handleNavigateToOnboardApp}
+        />
+        <Text style={styles.title}>Game Code</Text>
+        <TextInput
+          keyboardType={'numeric'}
+          maxLength={6}
+          multiline={false}
+          onChangeText={this.onRoomInput}
+          onSubmitEditing={this.onRoomSubmit}
+          placeholder={'######'}
+          placeholderTextColor={colors.primary} 
+          returnKeyType={'done'}
+          style={styles.input}
+          textAlign={'center'}
+          underlineColorAndroid={colors.dark}   
+          value={room}
+        />
+        <Touchable
+          activeOpacity={0.8}
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+          onPress={this.onJoinLater}
+          style={GameRoomStyles.skipButton}
+        >
+          <Text style={GameRoomStyles.skip}>Join later</Text>
+        </Touchable>
+        <ButtonWide
+          label={'Enter Game'}
+          onPress={this.onRoomSubmit}
+        />
+      </View>
     );
   }
 }
+
+
+const GameRoomStyles = StyleSheet.create({
+  skip: {
+    color: colors.primary,
+    fontSize: fonts.medium,
+  },
+  skipButton: {
+    bottom: verticalScale(100),
+    position: 'absolute',
+  },
+});
