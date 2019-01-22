@@ -164,8 +164,8 @@ export default class App extends React.Component {
 
 
   handleOnSignUp(accountType, username) {
+    const deviceSettings = { ...this.state.deviceSettings };
     const account = {};
-    const deviceSettings = {};
     deviceSettings.username = username;
     const date = Date.now();
     account.signUpDate = date;
@@ -218,6 +218,7 @@ export default class App extends React.Component {
       );
     } else if (accountType === 'student') {
       account.StudentID = username;
+      account.age = deviceSettings.age;
       account.gamesPlayed = 0;
       account.playersTricked = 0;
       account.tricksSuggested = 0;

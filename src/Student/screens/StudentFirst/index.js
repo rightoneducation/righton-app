@@ -33,7 +33,7 @@ export default class StudentFirst extends React.Component {
     this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
     this.handleNavigateToOnboardApp = this.handleNavigateToOnboardApp.bind(this);
     this.handleSwipeToAge = this.handleSwipeToAge.bind(this);
-    this.handleSwipeToRoom = this.handleSwipeToRoom.bind(this);
+    this.handleAgeSubmit = this.handleAgeSubmit.bind(this);
   }
 
 
@@ -51,8 +51,9 @@ export default class StudentFirst extends React.Component {
   }
 
 
-  handleSwipeToRoom(age) {
-    this.props.screenProps.handleSetAppState('deviceSettings', { age });
+  handleAgeSubmit(age) {
+    const { handleSetAppState } = this.props.screenProps;
+    handleSetAppState('deviceSettings', { age });
     this.swiper.scrollBy(1, false);
   }
 
@@ -75,7 +76,7 @@ export default class StudentFirst extends React.Component {
       >
         <AgeInput
           screenProps={{
-            handleAgeSubmit: this.handleSwipeToRoom,
+            handleAgeSubmit: this.handleAgeSubmit,
             handleBack: this.handleNavigateToOnboardApp,
             handleSetAppState: this.props.screenProps.handleSetAppState,
           }}
