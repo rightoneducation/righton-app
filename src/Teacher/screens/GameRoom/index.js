@@ -410,14 +410,17 @@ export default class GameRoom extends React.Component {
     const teacherHistoryJSON = await LocalStorage.getItem(`@RightOn:${account.TeacherID}/History`);
     const teacherHistory = JSON.parse(teacherHistoryJSON);
     const report = this.generateHistoryReport(gameState, numberOfPlayers);
-    teacherHistory.history.unshift(report);
+    teacherHistory.unshift(report);
     const updatedTeacherHistoryJSON = JSON.stringify(teacherHistory);
     LocalStorage.setItem(`@RightOn:${account.TeacherID}/History`, updatedTeacherHistoryJSON);
     
 
     putTeacherItemInDynamoDB(
       'TeacherHistoryAPI',
-      teacherHistory,
+      {
+        TeacherID: account.TeacherID,
+        history: teacherHistory,
+      },
       (res) => {
         handleSetAppState('account', {
           history: {
