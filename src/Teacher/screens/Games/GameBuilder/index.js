@@ -15,7 +15,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonWide from '../../../../components/ButtonWide';
 import InputModal from '../../../../components/InputModal';
 import GameBuilderQuestion from './GameBuilderQuestion';
-import { deviceWidth, elevation, fonts } from '../../../../utils/theme';
+import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
 
 
@@ -25,7 +25,9 @@ export default class GameBuilder extends React.Component {
     handleCreateGame: PropTypes.func.isRequired,
     game: PropTypes.shape({
       GameID: PropTypes.string,
-      banner: PropTypes.string,
+      // banner: PropTypes.string,
+      category: PropTypes.string,
+      CCS: PropTypes.string,
       description: PropTypes.string,
       questions: PropTypes.arrayOf(PropTypes.shape({
         answer: PropTypes.string,
@@ -45,7 +47,10 @@ export default class GameBuilder extends React.Component {
     handleClose: () => {},
     handleCreateGame: () => {},
     game: {
-      banner: '',
+      GameID: '',
+      // banner: '',
+      category: '',
+      CCS: '',
       description: '',
       questions: [],
       title: '',
@@ -59,7 +64,7 @@ export default class GameBuilder extends React.Component {
     this.state = {
       addQuestion: {},
       game: {
-        banner: '',
+        // banner: '',
         description: '',
         questions: [],
         title: '',
@@ -181,7 +186,6 @@ export default class GameBuilder extends React.Component {
           placeholder,
           visible: true,
           spellCheck: true,
-          width: deviceWidth - 30,
           x: this[`${inputLabel}X`],
           y: this[`${inputLabel}Y`],
         }
@@ -376,7 +380,7 @@ export default class GameBuilder extends React.Component {
     } = this.props;
 
     const {
-      banner,
+      // banner,
       description,
       title,
     } = this.state.game;
@@ -429,7 +433,7 @@ export default class GameBuilder extends React.Component {
 
             <ScrollView contentContainerStyle={styles.scrollview}>
 
-              <Touchable
+              {/* <Touchable
                 onPress={() => {}}
               >
                 <View style={[styles.bannerContainer, elevation]}>
@@ -441,7 +445,7 @@ export default class GameBuilder extends React.Component {
                       <Text style={styles.bannerLabel}>Upload banner</Text>
                     </View>}
                 </View>
-              </Touchable>
+              </Touchable> */}
 
               <View
                 onLayout={this.onTitleLayout}
