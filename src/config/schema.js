@@ -50,6 +50,7 @@ const TeacherAccount = {
 
 const deviceSettings = {
   username: 'string',
+  ID: 'string', // Student only
   quizTime: 'string', // Teacher only
   trickTime: 'string', // Teacher only
   signUpDate: 'number',
