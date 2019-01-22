@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: fonts.medium,
     fontStyle: 'italic',
+    textAlign: 'center',
     zIndex: 10,
   },
 });
