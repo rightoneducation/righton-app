@@ -68,7 +68,7 @@ export default class GameRoom extends React.Component {
     this.state = {
       nextTeam: 'team0',
       // portal: `Joining ${props.screenProps.navigation.state.params.GameRoomID}`,
-      portal: 'Joining Game',      
+      portal: 'Creating Game',      
       preview: null,
       renderType: 'portal',
       teams: [],
