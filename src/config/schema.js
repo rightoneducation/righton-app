@@ -68,16 +68,20 @@ const StudentAccount = {
 
 
 const QuizMaker = {
-  answer: 'string',
-  category: 'string',
-  question: 'string',
+  GameID: 'string', // Same as GameID of Game in DynamoDB/Games
   played: 'number', // To calculate popularity rating
-  tricks: [
-    {
-      votes: 'number',
-      value: 'string',
-    }
-  ],
+  q1: {
+    answer: 'string',
+    category: 'string',
+    question: 'string',
+    tricks: [
+      {
+        votes: 'number',
+        value: 'string',
+      }
+    ],
+  }
+  // q2, q3, q4, q5...
 }
 
 
