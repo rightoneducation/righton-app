@@ -301,7 +301,6 @@ export default class Dashboard extends React.Component {
     const { gameState, GameRoomID } = this.props.screenProps;
 
     const { gamesPlayed, points } = this.props.screenProps.account;
-    // TODO Where are these values being hydrated from?
 
     return (
       <View style={styles.profileContainer}>
