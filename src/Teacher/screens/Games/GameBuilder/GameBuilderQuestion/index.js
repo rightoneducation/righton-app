@@ -374,7 +374,13 @@ export default class GameBuilderQuestion extends React.Component {
               key={instruction}
               onPress={() => this.handleAddInstruction(idx)}
             >
-              <View style={[parentStyles.inputContainer, parentStyles.row]}>
+              <View
+                style={[
+                  parentStyles.inputContainer,
+                  parentStyles.row,
+                  parentStyles.inputPadding,
+                ]}
+              >
                 <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>
                 <Text style={parentStyles.bannerLabel}>{ instruction }</Text>
               </View>

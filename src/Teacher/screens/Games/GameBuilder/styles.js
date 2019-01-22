@@ -92,6 +92,9 @@ export default ScaledSheet.create({
     fontWeight: 'bold',
     marginBottom: '5@vs',
   },
+  inputPadding: {
+    paddingHorizontal: '15@s',
+  },
   marginTop: {
     marginTop: '15@vs',
   },
