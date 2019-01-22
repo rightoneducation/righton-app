@@ -453,7 +453,9 @@ export default class GameBuilder extends React.Component {
                   onPress={() => this.handleInputModal('title', 'Enter title', 75, title)}
                   style={[styles.inputButton, elevation]}
                 >
-                  <Text style={[styles.inputButtonText, !title && styles.placeholder]}>{title || 'Enter title'}</Text>
+                  <Text style={[styles.inputButtonText, !title && styles.placeholder]}>
+                    {showInput ? null : title || 'Enter title'}
+                  </Text>
                 </Touchable>
               </View>
 
@@ -473,7 +475,7 @@ export default class GameBuilder extends React.Component {
                       !description && styles.placeholder
                     ]}
                   >
-                    {description || 'Enter description'}
+                    {showInput ? null : description || 'Enter description'}
                   </Text>
                 </Touchable>
               </View>

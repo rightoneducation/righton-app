@@ -338,7 +338,7 @@ export default class GameBuilderQuestion extends React.Component {
                   !question && parentStyles.placeholder
                 ]}
               >
-                {question || 'Enter question'}
+                {showInput ? null : question || 'Enter question'}
               </Text>
             </Touchable>
           </View>
@@ -359,7 +359,7 @@ export default class GameBuilderQuestion extends React.Component {
                   !answer && parentStyles.placeholder
                 ]}
               >
-                {answer || 'Enter answer'}
+                {showInput ? null : answer || 'Enter answer'}
               </Text>
             </Touchable>
           </View>
