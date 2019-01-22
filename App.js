@@ -324,7 +324,7 @@ export default class App extends React.Component {
       'TeacherGamesAPI',
       TeacherID,
       (res) => {
-        const gamesJSON = JSON.stringify(res);
+        const gamesJSON = JSON.stringify(res.games);
         LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, gamesJSON);
         debug.log('Result from GETTING teacher games from DynamoDB:', JSON.stringify(res));
       },
@@ -335,7 +335,7 @@ export default class App extends React.Component {
       'TeacherFavoritesAPI',
       TeacherID,
       (res) => {
-        const favoritesJSON = JSON.stringify(res);
+        const favoritesJSON = JSON.stringify(res.favorites);
         LocalStorage.setItem(`@RightOn:${TeacherID}/Favorites`, favoritesJSON);
         debug.log('Result from GETTING teacher favorites from DynamoDB:', JSON.stringify(res));
       },
@@ -346,7 +346,7 @@ export default class App extends React.Component {
       'TeacherHistoryAPI',
       TeacherID,
       (res) => {
-        const historyJSON = JSON.stringify(res);
+        const historyJSON = JSON.stringify(res.history);
         LocalStorage.setItem(`@RightOn:${TeacherID}/History`, historyJSON);
         debug.log('Result from GETTING teacher history from DynamoDB:', JSON.stringify(res));
       },
