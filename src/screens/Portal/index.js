@@ -83,7 +83,7 @@ export default class Portal extends React.PureComponent {
   igniteCountdown(count) {
     if (count === 1) {
       setTimeout(() => {
-        // TODO: Render next event
+        // Render next event
       }, 1000);
     } else {
       this.setState({ countdown: count });
