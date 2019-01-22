@@ -262,18 +262,23 @@ export default class Dashboard extends React.Component {
 
 
   handleTeamSelection(idx) {
+    const {
+      deviceSettings,
+      handleSetAppState,
+      IOTPublishMessage,
+    } = this.props.screenProps;
     const team = idx;
-    this.props.screenProps.handleSetAppState('team', team);
+    handleSetAppState('team', team);
     this.setState({ portal: 'Waiting for other players' });
     const message = {
       action: 'JOINED_GAME',
       uid: `${Math.random()}`,
       payload: {
-        playerID: `${Math.random()}`, // TODO! Make a device specific ID in local storage | Player name
+        playerID: deviceSettings.username || deviceSettings.ID || `${Math.random()}`,
         team: idx,
       },
     };
-    this.props.screenProps.IOTPublishMessage(message);
+    IOTPublishMessage(message);
   }
 
 
