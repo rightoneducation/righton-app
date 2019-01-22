@@ -82,7 +82,6 @@ export default class GameFinal extends React.Component {
 
   componentWillUnmount() {
     this.mounted = false;
-    this.updateAccountScores();
   }
 
 
@@ -107,7 +106,9 @@ export default class GameFinal extends React.Component {
       }
     }
     const teamScore = trickCount * 100;
-    this.setState({ teamScore });
+    this.setState({ teamScore }, () => {
+      this.updateAccountScores();
+    });
   }
 
 
