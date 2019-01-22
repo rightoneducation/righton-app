@@ -10,6 +10,7 @@ import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
 import { colors, fonts } from '../../../utils/theme';
+// import debug from '../../../utils/debug';
 
 
 export default class GameFinal extends React.Component {
@@ -81,6 +82,18 @@ export default class GameFinal extends React.Component {
 
   componentWillUnmount() {
     this.mounted = false;
+    this.updateAccountScores();
+  }
+
+
+  updateAccountScores() {
+    const { account, handleSetAppState } = this.props.screenProps;
+    const { playerScore, teamScore } = this.state;
+    const total = playerScore + teamScore;
+    const updatedAccount = { ...account };
+    updatedAccount.points = account.points + total;
+    updatedAccount.gamesPlayed = account.gamesPlayed + 1;
+    handleSetAppState('account', updatedAccount);
   }
 
 
