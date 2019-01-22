@@ -69,6 +69,7 @@ export default ScaledSheet.create({
     borderColor: colors.dark,
     borderWidth: 1,
     height: '45@vs',
+    justifyContent: 'center',
     paddingHorizontal: '15@s',
     paddingVertical: '10@vs',
     width: deviceWidth - scale(30),
@@ -82,6 +83,7 @@ export default ScaledSheet.create({
     alignItems: 'flex-start',
     alignSelf: 'stretch',
     flexDirection: 'column',
+    justifyContent: 'center',
     marginTop: '15@vs',
   },
   inputLabel: {
