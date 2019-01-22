@@ -14,7 +14,7 @@ import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
 // import SelectionModal from '../../../../../components/SelectionModal';
 import parentStyles from '../styles';
-import { deviceWidth, elevation, fonts } from '../../../../../utils/theme';
+import { elevation, fonts } from '../../../../../utils/theme';
 
 
 export default class GameBuilderQuestion extends React.Component {
@@ -139,7 +139,7 @@ export default class GameBuilderQuestion extends React.Component {
         this.setState({ question: { ...this.state.question, answer: input }, showInput: false });
         break;
       case 'instruction':
-        if (this.instructionIndex) {
+        if (typeof this.instructionIndex === 'number') {
           const updatedInstructions = [...this.state.question.instructions];
           updatedInstructions.splice(this.instructionIndex, 1, input);
           this.setState({
@@ -164,10 +164,12 @@ export default class GameBuilderQuestion extends React.Component {
 
 
   handleAddInstruction(idx) {
+    let input = '';
     if (typeof idx === 'number') {
       this.instructionIndex = idx;
+      input = this.state.question.instructions[idx];
     }
-    this.handleInputModal('instruction', 'Enter instruction', 100, '', 'default');
+    this.handleInputModal('instruction', 'Enter instruction', 100, input, 'default');
   }
 
 
@@ -190,7 +192,6 @@ export default class GameBuilderQuestion extends React.Component {
           placeholder,
           visible: true,
           spellCheck: true,
-          width: deviceWidth - 30,
           x: this[`${inputLabel}X`],
           y: this[`${inputLabel}Y`],
         }
