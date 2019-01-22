@@ -27,6 +27,7 @@ export default class Dashboard extends React.Component {
   
   static defaultProps = {
     screenProps: {
+      account: {},
       gameState: {},
       handleSetAppState: () => {},
       IOTSubscribeToTopic: () => {},
@@ -299,7 +300,7 @@ export default class Dashboard extends React.Component {
   renderProfileView() {
     const { gameState, GameRoomID } = this.props.screenProps;
 
-    const { gamesPlayed, pointsEarned } = this.props.screenProps;
+    const { gamesPlayed, points } = this.props.screenProps.account;
     // TODO Where are these values being hydrated from?
 
     return (
@@ -312,7 +313,7 @@ export default class Dashboard extends React.Component {
           </View>
           <View style={styles.profileValueContainer}>
             <Text style={styles.profileValueLabel}>{'Points: '}</Text>
-            <Text style={styles.profileValue}>{ pointsEarned || '--' }</Text>
+            <Text style={styles.profileValue}>{ points || '--' }</Text>
           </View>
         </View>
       </View>
