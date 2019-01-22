@@ -8,14 +8,22 @@ import GameRoomPreview from './GameRoomPreview';
 import GameRoomResults from './GameRoomResults';
 import GameRoomFinal from './GameRoomFinal';
 import GameRoomNewGame from './GameRoomNewGame';
-// import LocalStorage from '../../../../lib/Categories/LocalStorage';
+import LocalStorage from '../../../../lib/Categories/LocalStorage';
 import { deleteGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
+import { putTeacherItemInDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import debug from '../../../utils/debug';
 
 
 export default class GameRoom extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
+      account: PropTypes.shape({
+        TeacherID: PropTypes.string,
+        history: PropTypes.shape({
+          local: PropTypes.number,
+          db: PropTypes.number,
+        }),
+      }),
       GameRoomID: PropTypes.string,
       gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
@@ -33,6 +41,13 @@ export default class GameRoom extends React.Component {
   
   static defaultProps = {
     screenProps: {
+      account: {
+        TeacherID: '',
+        history: {
+          local: 0,
+          db: 0,
+        },
+      },
       GameRoomID: '',
       gameState: {},
       handleSetAppState: () => {},
@@ -324,7 +339,17 @@ export default class GameRoom extends React.Component {
     if (nextTeam) {
       this.handleGamePreview(nextTeam);
     } else {
-      this.setState({ renderType: 'final', preview: '' }, () => this.handleEndMessage());
+      this.setState({ renderType: 'final', preview: '' }, () => {
+        this.handleEndMessage();
+        debug.log('End of game! Updating teacher account and history!');
+        setTimeout(() =>
+          this.updateTeacherAccountAndHistory(
+            this.props.screenProps.account,
+            this.props.screenProps.handleSetAppState,
+            this.props.screenProps.gameState,
+            Object.keys(this.props.screenProps.players).length,
+          ), 1500);
+      });
     }
   }
 
@@ -349,7 +374,7 @@ export default class GameRoom extends React.Component {
       IOTUnsubscribeFromTopic,
     } = this.props.screenProps;
     const { GameRoomID } = this.props.screenProps;
-    // TODO! Save game details to teacher account & QuizMaker database
+    // TODO! Save game details QuizMaker database
     IOTUnsubscribeFromTopic();
     handleSetAppState('gameState', {});
     handleSetAppState('GameRoomID', '');
@@ -358,6 +383,84 @@ export default class GameRoom extends React.Component {
       () => debug.log('Deleted GameRoomID from DynamoDB'),
       e => debug.warn('Error deleting GameRoomID from DynamoDB', JSON.stringify(e))
     );
+  }
+
+
+  updateTeacherAccountAndHistory = async (
+    account,
+    handleSetAppState,
+    gameState,
+    numberOfPlayers,
+  ) => {
+    const update = {
+      history: {
+        local: account.history.local + 1,
+        db: account.history.db,
+      },
+      gamesPlayed: account.gamesPlayed + 1,
+    };
+    handleSetAppState('account', update);
+
+
+    const teacherHistoryJSON = await LocalStorage.getItem(`@RightOn:${account.TeacherID}/History`);
+    const teacherHistory = JSON.parse(teacherHistoryJSON);
+    const report = this.generateHistoryReport(gameState, numberOfPlayers);
+    teacherHistory.unshift(report);
+    const updatedTeacherHistoryJSON = JSON.stringify(teacherHistory);
+    LocalStorage.setItem(`@RightOn:${account.TeacherID}/History`, updatedTeacherHistoryJSON);
+    
+
+    putTeacherItemInDynamoDB(
+      'TeacherHistoryAPI',
+      {
+        TeacherID: account.TeacherID,
+        history: teacherHistory,
+      },
+      (res) => {
+        handleSetAppState('account', {
+          history: {
+            local: update.history.local,
+            db: update.history.db + 1,
+          }
+        });
+        debug.log('Successfully UPDATED teacher history in DynamoDB:', JSON.stringify(res));
+      },
+      exception => debug.warn('Error UPDATING teacher history in DynamoDB in updateTeacherAccountAndHistory():', JSON.stringify(exception)),
+    );
+  }
+
+
+  generateHistoryReport = (gameState, players) => {
+    const date = Date.now();
+    const GameID = gameState.GameID;
+    const favorite = gameState.favorite;
+    let correct = 0;
+    let incorrect = 0;
+    let tricks = 0;
+
+    const gameStateKeys = Object.keys(gameState);
+    for (let i = 0; i < gameStateKeys.length; i += 1) {
+      if (gameStateKeys[i].includes('team')) {
+        const choices = gameState[gameStateKeys[i]].choices || [];
+        for (let j = 0; j < choices.length; j += 1) {
+          if (choices[j].correct) {
+            correct += choices[j].votes;
+          } else {
+            incorrect += choices[j].votes;
+          }
+        }
+        tricks += gameStateKeys[i].tricks.length;
+      }
+    }
+    return {
+      date,
+      GameID,
+      favorite,
+      correct,
+      incorrect,
+      players,
+      tricks,
+    };
   }
 
 
