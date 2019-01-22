@@ -361,7 +361,7 @@ export default class Dashboard extends React.Component {
           multiline={false}
           onChangeText={this.handleRoomInput}
           onSubmitEditing={this.handleRoomSubmit}
-          placeholder={'Game room'}
+          placeholder={'Game code'}
           placeholderTextColor={colors.primary}
           ref={this.handleRoomRef}
           returnKeyType={'done'}

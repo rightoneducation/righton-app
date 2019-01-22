@@ -76,14 +76,14 @@ export default class GameRoom extends React.PureComponent {
           buttonStyles={{ top: 40 }}
           onPress={handleBack}
         />
-        <Text style={styles.title}>Game Room</Text>
+        <Text style={styles.title}>Game Code</Text>
         <TextInput
           keyboardType={'default'}
           maxLength={100}
           multiline={false}
           onChangeText={this.onRoomInput}
           onSubmitEditing={this.onRoomSubmit}
-          placeholder={'Room Name'}
+          placeholder={'######'}
           placeholderTextColor={colors.primary} 
           returnKeyType={'done'}
           style={styles.input}
