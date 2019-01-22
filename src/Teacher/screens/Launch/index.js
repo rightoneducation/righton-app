@@ -140,7 +140,6 @@ class Launch extends React.Component {
     //     if (res && (res.username && username !== res.username)) {
     //       // Invalid teacher account -- forbid access!
     //       setTimeout(() => this.swiperRef.scrollBy(-2, false), 500);
-    //       // TODO Send message that account errLaunch room w/ different name
     //     } else if (res && (username === res.username || res.username === null)) {
     //       debug.log('Username matches and game room still exists: Enter');
     //       setTimeout(() => this.swiperRef.scrollBy(2, false), 500);
@@ -159,7 +158,6 @@ class Launch extends React.Component {
     //     }
     //   },
     //   (exception) => {
-    //     // TODO Handle exception
     //     setTimeout(() => this.swiperRef.scrollBy(-2, false), 500);
     //     debug.log('Exception getting game from DynamoDB', exception);
     //   });
