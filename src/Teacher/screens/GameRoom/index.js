@@ -456,7 +456,7 @@ export default class GameRoom extends React.Component {
             incorrect += choices[j].votes;
           }
         }
-        tricks += gameStateKeys[i].tricks.length;
+        tricks += gameState[gameStateKeys[i]].tricks.length;
       }
     }
     return {
