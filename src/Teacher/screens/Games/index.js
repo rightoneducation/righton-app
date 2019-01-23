@@ -303,7 +303,7 @@ class Games extends React.PureComponent {
           <Text style={styles.gameCount}>{ `${game.questions.length} Team${game.questions.length === 1 ? '' : 's'}` }</Text>
         </View>
         <View style={styles.gameColumn}>
-          <Text numberOfLines={2} style={styles.gameTitle}>{ game.title }</Text>
+          <Text numberOfLines={1} style={styles.gameTitle}>{ game.title }</Text>
           <Text
             numberOfLines={2}
             style={[styles.gameTitle, styles.gameDescription]}
