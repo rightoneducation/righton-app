@@ -7,11 +7,14 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
+import { getQuizFromDynamoDB, putQuizInDynamoDB } from '../../../../lib/Categories/DynamoDB/QuizMakerAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import parentStyles from './styles';
 import { colors, deviceWidth } from '../../../utils/theme';
+import debug from '../../../utils/debug';
+
 
 export default class GameRoomFinal extends React.Component {
   static propTypes = {
@@ -20,6 +23,7 @@ export default class GameRoomFinal extends React.Component {
     handleEndGame: PropTypes.func.isRequired,
     handleRenderNewGame: PropTypes.func.isRequired,
     numberOfPlayers: PropTypes.number.isRequired,
+    players: PropTypes.shape({}),
   };
   
   static defaultProps = {
@@ -28,6 +32,7 @@ export default class GameRoomFinal extends React.Component {
     handleEndGame: () => {},
     handleRenderNewGame: () => {},
     numberOfPlayers: 0,
+    players: {},
   };
 
   constructor(props) {
@@ -55,22 +60,24 @@ export default class GameRoomFinal extends React.Component {
           const choices = gameState[teamRef].choices;
           const teamRank = {};
           let bestTrickValue = '';
-          let bestTrickCount = 0;
+          let bestTrickVotes = 0;
           let totalTricks = 0;
           for (let j = 0; j < choices.length; j += 1) {
             if (choices[j].correct === undefined) {
               totalTricks += choices[j].votes;
-              if (choices[j].votes > bestTrickCount) {
+              if (choices[j].votes > bestTrickVotes) {
                 bestTrickValue = choices[j].value;
-                bestTrickCount = choices[j].votes;
+                bestTrickVotes = choices[j].votes;
               }
             }
           }
-          const teamNumber = parseInt(teamRef.substr(teamRef.indexOf('m') + 1), 10) + 1;
+          const teamNumber = teamRef.substr(teamRef.indexOf('m') + 1);
           const teamPoints = gameState[teamRef].points;
+          teamRank.answer = gameState[teamRef].answer;
           teamRank.team = `Team ${teamNumber}`;
+          teamRank.teamNumber = teamNumber;
           teamRank.bestTrickValue = bestTrickValue;
-          teamRank.bestTrickCount = bestTrickCount;
+          teamRank.bestTrickVotes = bestTrickVotes;
           teamRank.totalTricks = totalTricks;
           teamRank.totalPoints = (totalTricks * 100) + teamPoints;
           teamRank.uid = `${Math.random()}`;
@@ -80,7 +87,64 @@ export default class GameRoomFinal extends React.Component {
       }
     }
     const rankedTeams = this.sortRankedTeams(rankedTeamsAux);
-    this.setState({ rankedTeams });
+    this.setState({ rankedTeams },
+      () => this.updateGameInQuizMaker()
+    );
+  }
+
+
+  calculatePlayersInTeam(teamNumber) {
+    const { numberOfPlayers, players } = this.props;
+    let numberOfTeammates = 0;
+    const playerKeys = Object.keys(players);
+    for (let i = 0; i < numberOfPlayers; i += 1) {
+      if (players[playerKeys[i]] === teamNumber) {
+        numberOfTeammates += 1;
+      }
+    }
+    return numberOfTeammates;
+  }
+
+
+  updateGameInQuizMaker() {
+    const { gameState } = this.props;
+    if (gameState.quizmaker) {
+      const { rankedTeams } = this.state;
+      getQuizFromDynamoDB(
+        gameState.GameID,
+        (res) => {
+          if (typeof res === 'object' && res.GameID === gameState.GameID) {
+            // Update the Quiz w/ the details of this game.
+            const updatedQuiz = { ...res };
+            const keys = Object.keys(updatedQuiz);
+            updatedQuiz.played += 1;
+
+
+            for (let i = 0; i < rankedTeams.length; i += 1) {
+              const answer = rankedTeams[i].answer;
+              for (let j = 0; j < keys.length; j += 1) {
+                if (typeof updatedQuiz[j] === 'object' && updatedQuiz[j].answer === answer) {
+                  // TODO Check whether we want to refrain from pushing it votes
+                  // is less than a specified amount.
+                  updatedQuiz[j].tricks.push({
+                    votes: rankedTeams[i].bestTrickVotes,
+                    value: rankedTeams[i].bestTrickValue,
+                  });
+                  break;
+                }
+              }
+            }
+
+            putQuizInDynamoDB(
+              updatedQuiz,
+              response => debug.log('Successfully PUT quiz in QuizMaker', response),
+              exception => debug.warn('Error PUTTING quiz in QuizMaker', exception),
+            );
+          } 
+        },
+        exception => debug.log('Error GETTING quiz from QuizMaker in DynamoDB', JSON.stringify(exception))
+      );
+    }
   }
 
 
@@ -102,23 +166,26 @@ export default class GameRoomFinal extends React.Component {
   }
 
 
-  renderTeam = (team, players) => (
-    <View key={team.uid} style={styles.teamContainer}>
-      <Text style={[parentStyles.textLabel, parentStyles.textLarge, styles.primary]}>
-        { team.team }
-      </Text>
-      <Text style={parentStyles.textLabel}>Total points:</Text>
-      <Text style={[parentStyles.textLabel, styles.primary]}>{ team.totalPoints }</Text>
-      <Text style={parentStyles.textLabel}>Best trick:</Text>
-      <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickValue }</Text>
-      <Text style={parentStyles.textLabel}>Number of players tricked:</Text>
-      <View style={styles.teamItemRow}>
-        <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickCount }</Text>
-        <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.bestTrickCount * players) * 100)}%` }</Text>
+  renderTeam = (team, players) => {
+    const numberOfTeammates = this.calculatePlayersInTeam(team.teamNumber);
+    return (
+      <View key={team.uid} style={styles.teamContainer}>
+        <Text style={[parentStyles.textLabel, parentStyles.textLarge, styles.primary]}>
+          { team.team }
+        </Text>
+        <Text style={parentStyles.textLabel}>Total points:</Text>
+        <Text style={[parentStyles.textLabel, styles.primary]}>{ team.totalPoints }</Text>
+        <Text style={parentStyles.textLabel}>Best trick:</Text>
+        <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickValue }</Text>
+        <Text style={parentStyles.textLabel}>Number of players tricked:</Text>
+        <View style={styles.teamItemRow}>
+          <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickVotes }</Text>
+          <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.bestTrickVotes * (players - numberOfTeammates)) * 100)}%` }</Text>
+        </View>
+        <View style={styles.divider} />
       </View>
-      <View style={styles.divider} />
-    </View>
-  );
+    );
+  };
 
   
   render() {
@@ -130,7 +197,9 @@ export default class GameRoomFinal extends React.Component {
       numberOfPlayers,
     } = this.props;
 
-    const { rankedTeams } = this.state;
+    const {
+      rankedTeams,
+    } = this.state;
 
     return (
       <ScrollView
