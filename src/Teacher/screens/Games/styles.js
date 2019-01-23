@@ -65,6 +65,7 @@ export default ScaledSheet.create({
   gameDescription: {
     fontWeight: 'normal',
     fontSize: fonts.small,
+    paddingTop: 0,
   },
   gameOpenButton: {
     bottom: '8@vs',
