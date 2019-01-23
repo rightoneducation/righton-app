@@ -13,7 +13,11 @@ import gamePreviewStyles from '../GamePreview/styles';
 export default class GameQuiz extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
-      gameState: PropTypes.shape({}),
+      gameState: PropTypes.shape({
+        state: PropTypes.shape({
+          teamRef: PropTypes.string,
+        }),
+      }),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
     }),
@@ -27,7 +31,11 @@ export default class GameQuiz extends React.Component {
 
   static defaultProps = {
     screenProps: {
-      gameState: {},
+      gameState: {
+        state: {
+          teamRef: 'team0',
+        },
+      },
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
     },
@@ -46,6 +54,7 @@ export default class GameQuiz extends React.Component {
       selectedChoice: null,
       timeLeft: props.screenProps.gameState.quizTime && props.screenProps.gameState.quizTime !== '0:00' ?
         props.screenProps.gameState.quizTime : 'No time limit',
+      teamRef: (props.screenProps.gameState.state && props.screenProps.gameState.state.teamRef) || 'team0',
     };
 
     this.timerInterval = undefined;
@@ -63,6 +72,10 @@ export default class GameQuiz extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
       if (nextProps.screenProps.gameState.state.endGame === true) {
+        if (this.state.timeLeft !== 'Time is up!') {
+          this.publishChoice();
+          clearInterval(this.timerInterval);
+        }
         this.props.navigation.navigate('GameFinal');
         return;
       }
@@ -148,6 +161,8 @@ export default class GameQuiz extends React.Component {
     const { gameState } = this.props.screenProps;
     const { teamRef } = gameState.state;
 
+    if (!teamRef) return null;
+
     const { selectedChoice, timeLeft } = this.state;
     
     return (
@@ -175,7 +190,7 @@ export default class GameQuiz extends React.Component {
                 <View style={gamePreviewStyles.choiceContainer}>
                   <View 
                     style={[
-                      gamePreviewStyles.choiceDot,
+                      gamePreviewStyles.choiceButton,
                       selectedChoice === idx && gamePreviewStyles.choiceSelected,
                     ]}
                   />
