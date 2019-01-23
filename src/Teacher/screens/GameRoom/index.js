@@ -120,7 +120,15 @@ export default class GameRoom extends React.Component {
     for (let i = 0; i < gameStateKeys.length; i += 1) {
       if (gameStateKeys[i].includes('team') && gameStateKeys[i] !== preview) {
         const teamRef = gameStateKeys[i];
-        if (gameState[teamRef].choices.length === 0) {
+        if (
+          gameState[teamRef].tricks.length &&
+          (gameState[teamRef].choices.length === 0 ||
+            (gameState[teamRef].choices[0] && !gameState[teamRef].choices[0].votes &&
+            gameState[teamRef].choices[1] && !gameState[teamRef].choices[1].votes &&
+            gameState[teamRef].choices[2] && !gameState[teamRef].choices[2].votes &&
+            gameState[teamRef].choices[3] && !gameState[teamRef].choices[3].votes)
+          )
+        ) {
           nextTeamRef = teamRef;
           break;
         }
@@ -205,6 +213,7 @@ export default class GameRoom extends React.Component {
       teamRef,
       uid: dualUid,
       payload: choices,
+      state: typeof teamRef === 'string' ? { startQuiz: true, teamRef } : null, 
     };
     IOTPublishMessage(message);
     
@@ -414,13 +423,11 @@ export default class GameRoom extends React.Component {
     const updatedTeacherHistoryJSON = JSON.stringify(teacherHistory);
     LocalStorage.setItem(`@RightOn:${account.TeacherID}/History`, updatedTeacherHistoryJSON);
     
-
+    const TeacherID = account.TeacherID;
     putTeacherItemInDynamoDB(
       'TeacherHistoryAPI',
-      {
-        TeacherID: account.TeacherID,
-        history: teacherHistory,
-      },
+      TeacherID,
+      { history: teacherHistory },
       (res) => {
         handleSetAppState('account', {
           history: {
@@ -549,6 +556,7 @@ export default class GameRoom extends React.Component {
             handleViewResults={this.handleViewResults}
             handleStartQuiz={this.handleStartQuiz}
             nextTeam={nextTeam}
+            players={players}
             numberOfPlayers={Object.keys(players).length}
             teamRef={preview}
           />
@@ -561,6 +569,7 @@ export default class GameRoom extends React.Component {
             handleEndGame={this.handleEndGame}
             handleRenderNewGame={this.handleRenderNewGame}
             numberOfPlayers={Object.keys(players).length}
+            players={players}
           />
         );
       case 'newGame':
