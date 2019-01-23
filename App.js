@@ -196,7 +196,7 @@ export default class App extends React.Component {
       putTeacherItemInDynamoDB(
         'TeacherGamesAPI',
         account.TeacherID,
-        { games: '[]' },
+        { games: [] },
         res => debug.log('Successfully PUT teacher games into DynamoDB', res),
         exception => debug.warn('Error PUTTING teacher games into DynamoDB', exception),
       );
@@ -204,7 +204,7 @@ export default class App extends React.Component {
       putTeacherItemInDynamoDB(
         'TeacherFavoritesAPI',
         account.TeacherID,
-        { favorites: '[]' },
+        { favorites: [] },
         res => debug.log('Successfully PUT teacher favorites into DynamoDB', res),
         exception => debug.warn('Error PUTTING teacher favorites into DynamoDB', exception),
       );
@@ -212,7 +212,7 @@ export default class App extends React.Component {
       putTeacherItemInDynamoDB(
         'TeacherHistoryAPI',
         account.TeacherID,
-        { history: '[]' },
+        { history: [] },
         res => debug.log('Successfully PUT teacher history into DynamoDB', res),
         exception => debug.warn('Error PUTTING teacher history into DynamoDB', exception),
       );
