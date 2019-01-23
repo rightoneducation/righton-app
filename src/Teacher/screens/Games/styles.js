@@ -48,7 +48,12 @@ export default ScaledSheet.create({
     height: '150@vs',
     marginHorizontal: '15@s',
     marginVertical: '10@vs',
+    paddingRight: '5@ms',
     width: deviceWidth - scale(30),
+  },
+  gameColumn: {
+    flexDirection: 'column',
+    flex: 1,
   },
   gameCount: {
     bottom: '5@vs',
@@ -60,12 +65,14 @@ export default ScaledSheet.create({
   },
   gameDescription: {
     fontWeight: 'normal',
+    fontSize: fonts.small,
   },
   gameTitle: {
     color: colors.dark,
+    flexWrap: 'wrap',
     fontSize: fonts.medium,
     fontWeight: 'bold',
-    padding: '10@s',
+    padding: '10@ms',
   },
   scrollview: {
     flexGrow: 1,
