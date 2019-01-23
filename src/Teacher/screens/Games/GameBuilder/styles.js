@@ -26,6 +26,9 @@ export default ScaledSheet.create({
     color: colors.dark,
     fontSize: fonts.medium,
   },
+  caret: {
+    fontSize: '18@ms0.2',
+  },
   closeContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -38,6 +41,9 @@ export default ScaledSheet.create({
   closeIconShadow: {
     color: colors.primary,
     fontSize: '33@ms0.2',
+  },
+  colorPrimary: {
+    color: colors.primary,
   },
   container: {
     backgroundColor: colors.lightGray,
@@ -102,8 +108,8 @@ export default ScaledSheet.create({
     color: colors.lightGray,
   },
   questionAnswer: {
-    color: colors.dark,
-    fontSize: fonts.small,
+    flexWrap: 'wrap',
+    fontSize: fonts.medium,
   },
   questionContainer: {
     borderColor: colors.dark,
@@ -125,17 +131,23 @@ export default ScaledSheet.create({
     fontSize: fonts.small,
     fontStyle: 'italic',
   },
+  questionInstructions: {
+    bottom: '10@ms',
+    fontSize: fonts.small,
+    left: '10@ms',
+    position: 'absolute',
+  },
   questionQuestion: {
     color: colors.dark,
+    flexWrap: 'wrap',
     fontSize: fonts.medium,
   },
   questionTextContainer: {
     backgroundColor: colors.white,
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    paddingHorizontal: '10@s',
-    paddingTop: '10@vs',
+    justifyContent: 'flex-start',
+    padding: '10@ms',
   },
   questionsContainer: {
     alignSelf: 'stretch',
@@ -149,6 +161,9 @@ export default ScaledSheet.create({
     paddingBottom: '95@vs',
     paddingTop: '25@vs',
     paddingHorizontal: '15@s',
+  },
+  spaceBetween: {
+    justifyContent: 'space-between',
   },
   timeSelectionContainer: {
     alignItems: 'center',
