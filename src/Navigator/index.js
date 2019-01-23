@@ -74,6 +74,8 @@ const RootNavigator = createSwitchNavigator({
           navigation={navigation}
           screenProps={{
             handleSetAppState: screenProps.handleSetAppState,
+            IOTUnsubscribeFromTopic: screenProps.IOTUnsubscribeFromTopic,
+            IOTSubscribeToTopic: screenProps.IOTSubscribeToTopic,
           }}
         />
       );
