@@ -158,7 +158,7 @@ export default class GameFinal extends React.Component {
           <View style={[styles.centerAlign, styles.marginTop]}>
             <Text style={styles.label}>Number of players</Text>
             <Text style={[styles.label, styles.italic]}>tricked</Text>            
-            <Text style={styles.value}>{ (teamScore - playerScore) / 100 }</Text>
+            <Text style={styles.value}>{ teamScore / 100 }</Text>
           </View>
         </View>
 
