@@ -147,7 +147,7 @@ export default class GameRoomStart extends React.Component {
             />}
           <ButtonBack
             iconName={'close'}
-            onPress={handleBackFromChild}
+            onPress={() => handleBackFromChild('start')}
           />
           <Text style={[parentStyles.textLabel, parentStyles.textLarge, parentStyles.textCenter]}>
             Settings
