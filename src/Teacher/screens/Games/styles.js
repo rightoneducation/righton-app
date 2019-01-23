@@ -2,6 +2,12 @@ import { scale, ScaledSheet } from 'react-native-size-matters';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
 export default ScaledSheet.create({
+  alignCenter: {
+    alignItems: 'center',
+  },
+  colorGrey: {
+    color: colors.grey,
+  },
   container: {
     backgroundColor: colors.dark,
     flex: 1,
@@ -9,12 +15,29 @@ export default ScaledSheet.create({
   header: {
     alignSelf: 'stretch',
     backgroundColor: colors.primary,
-    height: '200@vs',
+    height: '150@vs',
+  },
+  headerButton: {
+    bottom: '15@s',
+    position: 'absolute',
+  },
+  headerGames: {
+    left: '15@s',
+  },
+  headerFavorites: {
+    left: '95@s',
+  },
+  headerPlus: {
+    right: '15@s',
+  },
+  headerIcon: {
+    color: colors.white,
+    fontSize: '25@ms0.2',
   },
   headerTitle: {
     color: colors.white,
     fontSize: fonts.large,
-    marginTop: '50@vs',
+    marginTop: '30@vs',
     textAlign: 'center',
   },
   image: {
@@ -32,15 +55,6 @@ export default ScaledSheet.create({
     color: colors.white,
     fontSize: fonts.large,
     fontStyle: 'italic',
-  },
-  plusButton: {
-    bottom: '15@vs',
-    position: 'absolute',
-    right: '15@s',
-  },
-  plusIcon: {
-    color: colors.white,
-    fontSize: '25@ms0.2',
   },
   gameButton: {
     backgroundColor: colors.white,
