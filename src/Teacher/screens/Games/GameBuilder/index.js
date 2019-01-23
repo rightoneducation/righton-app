@@ -13,16 +13,19 @@ import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonWide from '../../../../components/ButtonWide';
+import ButtonPlay from '../../../../components/ButtonPlay';
 import InputModal from '../../../../components/InputModal';
 import GameBuilderQuestion from './GameBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
+// import debug from '../../../../utils/debug';
 
 
 export default class GameBuilder extends React.Component {
   static propTypes = {
     handleClose: PropTypes.func.isRequired,
     handleCreateGame: PropTypes.func.isRequired,
+    handlePlayGame: PropTypes.func.isRequired,
     game: PropTypes.shape({
       GameID: PropTypes.string,
       // banner: PropTypes.string,
@@ -46,6 +49,7 @@ export default class GameBuilder extends React.Component {
   static defaultProps = {
     handleClose: () => {},
     handleCreateGame: () => {},
+    handlePlayGame: () => {},
     game: {
       GameID: '',
       // banner: '',
@@ -65,9 +69,9 @@ export default class GameBuilder extends React.Component {
       addQuestion: {},
       game: {
         // banner: '',
-        description: '',
+        description: null,
         questions: [],
-        title: '',
+        title: null,
       },
       showInput: false,
     };
@@ -122,7 +126,7 @@ export default class GameBuilder extends React.Component {
     } else {
       this.setState({ 
         game: {
-          banner: null,
+          // banner: null,
           description: null,
           questions: [],
           title: null,
@@ -134,7 +138,8 @@ export default class GameBuilder extends React.Component {
   
   createGame() {
     const { game } = this.state;
-    if (this.props.currentgame !== null || game.GameID) {
+    if (this.props.currentGame !== null || game.GameID) {
+      // TODO! Handle if editting a "quizmaker" game
       this.props.handleCreateGame(game);
     } else {
       this.props.handleCreateGame({ ...game, GameID: `${Math.random()}` });
@@ -218,32 +223,6 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  // renderHeader() {
-  //   const { handleClose } = this.props;
-  //   return (
-  //     <View style={[styles.headerContainer, elevation]}>
-  //       <Touchable
-  //         hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-  //         onPress={handleClose}
-  //       >
-  //         <View style={styles.closeContainer}>
-  //           <Aicon name={'close'} style={[styles.closeIcon, styles.closeIconShadow]} />
-  //           <Aicon name={'close'} style={styles.closeIcon} />
-  //         </View>
-  //       </Touchable>
-  //       <Text style={styles.title}>Game Builder</Text>
-  //       <Touchable
-  //         hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-  //         onPress={handleClose}
-  //         style={styles.createContainer}
-  //       >
-  //         <Text style={styles.createLabel}>Create</Text>
-  //       </Touchable>
-  //     </View>
-  //   );
-  // }
-
-
   // renderBannerUploader = banner => (
   //   <Touchable
   //     onPress={() => {}}
@@ -258,75 +237,6 @@ export default class GameBuilder extends React.Component {
   //         </View>}
   //     </View>
   //   </Touchable>
-  // );
-
-
-  // renderTitleInput = (title, showInput) => (
-  //   <View
-  //     onLayout={this.onTitleLayout}
-  //     style={styles.inputContainer}
-  //   >
-  //     <Text style={styles.inputLabel}>Title</Text>
-  //     {showInput ?
-  //       <TextInput
-  //         keyboardType={'default'}
-  //         maxLength={40}
-  //         multiline={false}
-  //         onBlur={this.handleTitleBlur}
-  //         onChangeText={this.handleTitleInput}
-  //         onSubmitEditing={this.handleTitleSubmit}
-  //         placeholder={'Enter title'}
-  //         placeholderTextColor={colors.dark}
-  //         returnKeyType={'done'}
-  //         spellCheck
-  //         style={[styles.inputButton, styles.inputButtonText, elevation]}
-  //         textAlign={'left'}
-  //         underlineColorAndroid={colors.lightGray}
-  //         value={title}
-  //       />
-  //       :
-  //       <Touchable
-  //         onPress={() => this.handleInputModal('title')}
-  //         style={[styles.inputButton, elevation]}
-  //       >
-  //         <Text style={[styles.inputButtonText, !title && styles.placeholder]}>
-  //           {title || 'Enter title'}
-  //         </Text>
-  //       </Touchable>}
-  //   </View>
-  // );
-
-
-  // renderDescriptionInput = (description, showInput) => (
-  //   <View style={styles.inputContainer}>
-  //     <Text style={styles.inputLabel}>Description</Text>
-  //     {showInput ?
-  //       <TextInput
-  //         keyboardType={'default'}
-  //         maxLength={40}
-  //         multiline={false}
-  //         onBlur={this.handleDescriptionBlur}
-  //         onChangeText={this.handleDescriptionInput}
-  //         onSubmitEditing={this.handleDescriptionSubmit}
-  //         placeholder={'Enter description'}
-  //         placeholderTextColor={colors.lightGray}
-  //         returnKeyType={'done'}
-  //         spellCheck
-  //         style={[styles.inputButton, styles.inputButtonText, elevation]}
-  //         textAlign={'left'}
-  //         underlineColorAndroid={colors.lightGray}
-  //         value={description}
-  //       />
-  //       :
-  //       <Touchable
-  //         onPress={() => {}}
-  //         style={[styles.inputButton, elevation]}
-  //       >
-  //         <Text style={[styles.inputButtonText, !description && styles.placeholder]}>
-  //           {description || 'Enter description'}
-  //         </Text>
-  //       </Touchable>}
-  //   </View>
   // );
 
 
@@ -376,10 +286,12 @@ export default class GameBuilder extends React.Component {
   render() {
     const {
       handleClose,
+      handlePlayGame,
       visible,
     } = this.props;
 
     const {
+      GameID,
       // banner,
       description,
       title,
@@ -427,7 +339,7 @@ export default class GameBuilder extends React.Component {
                 onPress={this.createGame}
                 style={styles.createContainer}
               >
-                <Text style={styles.createLabel}>Create</Text>
+                <Text style={styles.createLabel}>{ GameID ? 'Save' : 'Create' }</Text>
               </Touchable>
             </View>
 
@@ -458,7 +370,7 @@ export default class GameBuilder extends React.Component {
                   style={[styles.inputButton, elevation]}
                 >
                   <Text style={[styles.inputButtonText, !title && styles.placeholder]}>
-                    {showInput ? null : title || 'Enter title'}
+                    {showInput && showInput.inputLabel === 'title' ? null : title || 'Enter title'}
                   </Text>
                 </Touchable>
               </View>
@@ -479,7 +391,7 @@ export default class GameBuilder extends React.Component {
                       !description && styles.placeholder
                     ]}
                   >
-                    {showInput ? null : description || 'Enter description'}
+                    {showInput && showInput.inputLabel === 'description' ? null : description || 'Enter description'}
                   </Text>
                 </Touchable>
               </View>
@@ -492,6 +404,10 @@ export default class GameBuilder extends React.Component {
               />
 
             </ScrollView>
+            
+            {Boolean(GameID) && 
+              <ButtonPlay onPress={() => handlePlayGame(null, this.state.game)} />}
+
           </View>
 
           <GameBuilderQuestion
