@@ -8,6 +8,10 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
+import {
+  generateUniqueGameRoomIDInDynamoDB,
+  putGameToDynamoDB,
+} from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import GameBuilder from './GameBuilder';
 import { colors } from '../../../utils/theme';
@@ -31,9 +35,17 @@ class Games extends React.PureComponent {
         }),
         TeacherID: PropTypes.string,
       }),
+      deviceSettings: PropTypes.shape({
+        quizTime: PropTypes.string,
+        trickTime: PropTypes.string,
+      }),
+      gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
+      IOTPublishMessage: PropTypes.func.isRequired,
+      IOTSubscribeToTopic: PropTypes.func.isRequired,
+      // Root navigation (Switch Navigator)
       navigation: PropTypes.shape({
-        navigate: PropTypes.func,
+        navigate: PropTypes.func.isRequired,
       }),
     }),
   };
@@ -47,7 +59,14 @@ class Games extends React.PureComponent {
         }),
         TeacherID: '',
       },
+      deviceSettings: {
+        quizTime: '',
+        trickTime: '',
+      },
+      gameState: {},
       handleSetAppState: () => {},
+      IOTPublishMessage: () => {},
+      IOTSubscribeToTopic: () => {},
       navigation: {
         navigate: () => {},
       },
@@ -67,6 +86,10 @@ class Games extends React.PureComponent {
     this.handleCloseGame = this.handleCloseGame.bind(this);
     this.handleCreateGame = this.handleCreateGame.bind(this);
     this.handleOpenGame = this.handleOpenGame.bind(this);
+
+    this.handlePlayGame = this.handlePlayGame.bind(this);
+    this.handleGameRoomID = this.handleGameRoomID.bind(this);
+    this.handleGameRoomError = this.handleGameRoomError.bind(this);
   }
 
 
@@ -123,7 +146,7 @@ class Games extends React.PureComponent {
   }
 
 
-  handleOpenGame(event, game = {}, idx) {
+  handleOpenGame(event, game = {}, idx = null) {
     this.currentGame = idx;
     this.setState({ openGame: game });
   }
@@ -138,7 +161,7 @@ class Games extends React.PureComponent {
   handleCreateGame(game) {
     const { games } = this.state;
     if (this.currentGame === null) {
-      const updatedGames = [...games, game];
+      const updatedGames = [game, ...games];
       this.setState({ games: updatedGames, openGame: null });
       this.saveGamesToDatabase(updatedGames);
     } else {
@@ -146,6 +169,7 @@ class Games extends React.PureComponent {
       updatedGames.splice(this.currentGame, 1, game);
       this.setState({ games: updatedGames, openGame: null });
       this.saveGamesToDatabase(updatedGames);
+      this.currentGame = null;
     }
   }
 
@@ -180,6 +204,76 @@ class Games extends React.PureComponent {
   }
 
 
+  handlePlayGame(e, game) {
+    const { room } = this.state;
+    const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
+
+    const teamQuestions = {};
+    game.questions.forEach((question, idx) => {
+      teamQuestions[`team${idx}`] = {
+        ...question,
+        /*
+         * question's default props:
+        answer: PropTypes.string,
+        image: PropTypes.string,
+        instructions: PropTypes.arrayOf(PropTypes.string),
+        question: PropTypes.string,
+        uid: PropTypes.string,
+        */
+        uid: `${Math.random()}`,
+        tricks: [],
+        choices: [],
+        points: 0,
+      };
+    });
+
+    const gameState = {
+      GameID: game.GameID,
+      answering: null,
+      banner: game.banner,
+      title: game.description,
+      description: game.description,
+      quizTime,
+      trickTime,
+      ...teamQuestions,
+      // GameRoomID: '######',
+      room,
+      state: {},
+    };
+    
+    this.props.screenProps.handleSetAppState('gameState', gameState);
+
+    generateUniqueGameRoomIDInDynamoDB(this.handleGameRoomID, this.handleGameRoomError);
+
+    this.handleCloseGame();
+    setTimeout(() => {
+      this.props.screenProps.navigation.navigate('TeacherGameRoom');
+    }, 0);
+  }
+
+
+  handleGameRoomID(GameRoomID) {
+    this.props.screenProps.handleSetAppState('GameRoomID', GameRoomID);
+    debug.log('Received GameRoomID:', GameRoomID);
+    this.props.screenProps.IOTSubscribeToTopic(GameRoomID);
+
+    putGameToDynamoDB(GameRoomID, null,
+      (putRes) => {
+        debug.log('Put game in DynamoDB!', putRes);
+      },
+      (exception) => {
+        // setTimeout(() => this.swiperRef.scrollBy(-4, false), 500);
+        debug.log('Error putting game in DynamoDB', exception);
+      }
+    );
+  }
+
+
+  handleGameRoomError = (exception) => {
+    debug.log('Error generating a random GameRoomID!', JSON.stringify(exception));
+  }
+
+
   renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Games</Text>
@@ -211,8 +305,15 @@ class Games extends React.PureComponent {
               :
               <Text style={styles.imageLabel}>RightOn!</Text>}
           </View>
-          <Text style={styles.gameTitle}>{ game.title }</Text>
-          <Text style={[styles.gameTitle, styles.gameDescription]}>{ game.description }</Text>
+          <View style={styles.gameColumn}>
+            <Text numberOfLines={2} style={styles.gameTitle}>{ game.title }</Text>
+            <Text
+              numberOfLines={3}
+              style={[styles.gameTitle, styles.gameDescription]}
+            >
+              { game.description }
+            </Text>
+          </View>
           <Text style={styles.gameCount}>{ `${game.questions.length}Q` }</Text>
         </View>
       </Touchable>
@@ -222,6 +323,8 @@ class Games extends React.PureComponent {
 
   renderGames() {
     const { games } = this.state;
+    if (!Array.isArray(games)) return null;
+
     return (
       <ScrollView contentContainerStyle={styles.scrollview}>
         {games.map((game, idx) => this.renderGameBlock(game, idx))}
@@ -232,7 +335,6 @@ class Games extends React.PureComponent {
 
   render() {
     const { openGame } = this.state;
-    // const { navigation } = this.props.screenProps;
 
     return (
       <View style={styles.container}>
@@ -242,6 +344,7 @@ class Games extends React.PureComponent {
             currentGame={this.currentGame}
             handleClose={this.handleCloseGame}
             handleCreateGame={this.handleCreateGame}
+            handlePlayGame={this.handlePlayGame}
             game={openGame}
             visible
           />}
