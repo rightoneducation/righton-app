@@ -4,7 +4,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import Explore from './screens/Explore';
-import Launch from './screens/Launch';
+// import Launch from './screens/Launch';
 import Games from './screens/Games';
 import QuizMaker from './screens/QuizMaker';
 import Reports from './screens/Reports';
@@ -31,27 +31,29 @@ const TeacherTabNavigator = createBottomTabNavigator({
   },
 
 
-  Launch: {
-    screen: (props) => {
-      const { screenProps } = props;
+  // Launch: {
+  //   screen: (props) => {
+  //     const { screenProps } = props;
 
-      return (
-        <Launch {...screenProps} />
-      );
-    },
-    navigationOptions: {
-      tabBarLabel: 'Launch',
-      tabBarIcon: ({ tintColor }) => <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Launch'} />
-    },
-  },
+  //     return (
+  //       <Launch {...screenProps} />
+  //     );
+  //   },
+  //   navigationOptions: {
+  //     tabBarLabel: 'Launch',
+  //     tabBarIcon: ({ tintColor }) => (
+  //       <TabBarComponent icon={'tablet'} tintColor={tintColor} label={'Launch'} />
+  //     ),
+  //   },
+  // },
 
 
   Games: {
     screen: (props) => {
-      const { screenProps } = props;
+      const { navigation, screenProps } = props;
 
       return (
-        <Games {...screenProps} />
+        <Games navigation={navigation} {...screenProps} />
       );
     },
     navigationOptions: {
