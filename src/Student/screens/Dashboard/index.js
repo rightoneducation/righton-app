@@ -275,7 +275,7 @@ export default class Dashboard extends React.Component {
       uid: `${Math.random()}`,
       payload: {
         playerID: deviceSettings.username || deviceSettings.ID || `${Math.random()}`,
-        team: idx,
+        team: `${idx}`,
       },
     };
     IOTPublishMessage(message);
