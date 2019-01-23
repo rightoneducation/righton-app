@@ -205,8 +205,6 @@ export default class GameRoom extends React.Component {
 
     debug.log(`Choices for ${teamRef}:`, JSON.stringify(choices));
 
-    updatedGameState[teamRef].choices = choices;
-    handleSetAppState('gameState', updatedGameState);
     
     const message = {
       action: 'SET_TEAM_CHOICES',
@@ -217,6 +215,15 @@ export default class GameRoom extends React.Component {
     };
     IOTPublishMessage(message);
     
+    updatedGameState[teamRef].choices = choices;
+    if (teamRef) {
+      // This is a specific handler for handleStartRandomGame() due to it not 
+      // setting state of gameState by default when calling handleGamePreview()
+      // causing the "Start quiz" label to show in GameRoomPreview.
+      updatedGameState.state = { startQuiz: true, teamRef };
+    }
+    handleSetAppState('gameState', updatedGameState);
+
     this.setState({ renderType: 'preview', preview: teamRef }, () => this.setNextTeam());
   }
 
@@ -288,7 +295,7 @@ export default class GameRoom extends React.Component {
     IOTPublishMessage(message);
 
     const { gameState, handleSetAppState } = this.props.screenProps;
-    const updatedGameState = { ...gameState, state: { startQuiz: teamRef } };
+    const updatedGameState = { ...gameState, state: { startQuiz: true, teamRef } };
     handleSetAppState('gameState', updatedGameState);
   }
 
