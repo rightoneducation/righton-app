@@ -205,7 +205,6 @@ class Games extends React.PureComponent {
 
 
   handlePlayGame(e, game) {
-    const { room } = this.state;
     const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
 
     const teamQuestions = {};
@@ -231,13 +230,14 @@ class Games extends React.PureComponent {
       GameID: game.GameID,
       answering: null,
       banner: game.banner,
+      category: game.category,
+      CCS: game.CCS,
       title: game.description,
       description: game.description,
       quizTime,
       trickTime,
       ...teamQuestions,
       // GameRoomID: '######',
-      room,
       state: {},
     };
     
