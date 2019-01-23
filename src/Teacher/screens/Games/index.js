@@ -291,32 +291,45 @@ class Games extends React.PureComponent {
 
   renderGameBlock(game, idx) {
     return (
-      <Touchable
-        activeOpacity={0.8}
-        background={Touchable.Ripple(colors.dark, false)}
-        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+      <View
         key={game.title}
-        onPress={() => this.handleOpenGame(null, game, idx)}
+        style={styles.gameButton}
       >
-        <View style={styles.gameButton}>
-          <View style={styles.imageContainer}>
-            {game.image ?
-              <Image source={{ uri: game.image }} style={styles.image} />
-              :
-              <Text style={styles.imageLabel}>RightOn!</Text>}
-          </View>
-          <View style={styles.gameColumn}>
-            <Text numberOfLines={2} style={styles.gameTitle}>{ game.title }</Text>
-            <Text
-              numberOfLines={3}
-              style={[styles.gameTitle, styles.gameDescription]}
-            >
-              { game.description }
-            </Text>
-          </View>
-          <Text style={styles.gameCount}>{ `${game.questions.length}Q` }</Text>
+        <View style={styles.imageContainer}>
+          {game.image ?
+            <Image source={{ uri: game.image }} style={styles.image} />
+            :
+            <Text style={styles.imageLabel}>RightOn!</Text>}
+            <Text style={styles.gameCount}>{ `${game.questions.length} Team${game.questions.length === 1 ? '' : 's'}` }</Text>
         </View>
-      </Touchable>
+        <View style={styles.gameColumn}>
+          <Text numberOfLines={2} style={styles.gameTitle}>{ game.title }</Text>
+          <Text
+            numberOfLines={3}
+            style={[styles.gameTitle, styles.gameDescription]}
+          >
+            { game.description }
+          </Text>
+        </View>
+        <Touchable
+          activeOpacity={0.8}
+          background={Touchable.Ripple(colors.primary, false)}
+          hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+          onPress={() => this.handleOpenGame(null, game, idx)}
+          style={styles.gameOpenButton}
+        >
+          <Text style={styles.gameOpenText}>Open game</Text>
+        </Touchable>
+        <Touchable
+          activeOpacity={0.8}
+          background={Touchable.Ripple(colors.primary, false)}
+          hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+          onPress={() => this.handlePlayGame(null, game)}
+          style={[styles.gameOpenButton, styles.gamePlayButton]}
+        >
+          <Aicon name={'play'} style={styles.gamePlayIcon} />
+        </Touchable>
+      </View>
     );
   }
 
