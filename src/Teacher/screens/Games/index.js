@@ -300,12 +300,12 @@ class Games extends React.PureComponent {
             <Image source={{ uri: game.image }} style={styles.image} />
             :
             <Text style={styles.imageLabel}>RightOn!</Text>}
-            <Text style={styles.gameCount}>{ `${game.questions.length} Team${game.questions.length === 1 ? '' : 's'}` }</Text>
+          <Text style={styles.gameCount}>{ `${game.questions.length} Team${game.questions.length === 1 ? '' : 's'}` }</Text>
         </View>
         <View style={styles.gameColumn}>
           <Text numberOfLines={2} style={styles.gameTitle}>{ game.title }</Text>
           <Text
-            numberOfLines={3}
+            numberOfLines={2}
             style={[styles.gameTitle, styles.gameDescription]}
           >
             { game.description }
