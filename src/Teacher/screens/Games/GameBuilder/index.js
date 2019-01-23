@@ -15,6 +15,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonWide from '../../../../components/ButtonWide';
 import ButtonPlay from '../../../../components/ButtonPlay';
 import InputModal from '../../../../components/InputModal';
+import SelectionModal from '../../../../components/SelectionModal';
 import GameBuilderQuestion from './GameBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
@@ -69,11 +70,14 @@ export default class GameBuilder extends React.Component {
       addQuestion: {},
       game: {
         // banner: '',
+        category: null,
+        CCS: null,
         description: null,
         questions: [],
         title: null,
       },
       showInput: false,
+      showSelection: false,
     };
 
     this.onTitleLayout = this.onTitleLayout.bind(this);
@@ -82,6 +86,12 @@ export default class GameBuilder extends React.Component {
     this.handleDescriptionRef = this.handleDescriptionRef.bind(this);
     this.handleInputModal = this.handleInputModal.bind(this);
     this.closeInputModal = this.closeInputModal.bind(this);
+
+    this.showCategorySelection = this.showCategorySelection.bind(this);
+    this.hideCategorySelection = this.hideCategorySelection.bind(this);
+    this.showCCSSelection = this.showCCSSelection.bind(this);
+    this.hideCCSSelection = this.hideCCSSelection.bind(this);
+  
     
     this.createGame = this.createGame.bind(this);
     this.closeAddQuestion = this.closeAddQuestion.bind(this);
@@ -240,6 +250,32 @@ export default class GameBuilder extends React.Component {
   // );
 
 
+  showCategorySelection() {
+    this.setState({ showSelection: 'Subject Category' });
+  }
+
+
+  hideCategorySelection(selection = null) {
+    this.setState({
+      game: { ...this.state.game, category: selection },
+      showSelection: false,
+    });
+  }
+
+
+  showCCSSelection() {
+    this.setState({ showSelection: 'Common Core Standard' });
+  }
+
+
+  hideCCSSelection(selection = null) {
+    this.setState({
+      game: { ...this.state.game, CCS: selection },
+      showSelection: false,
+    });
+  }
+
+
   renderQuestionBlock(question, idx) {
     return (
       <Touchable
@@ -256,8 +292,11 @@ export default class GameBuilder extends React.Component {
             </View>}
           
           <View style={styles.questionTextContainer}>
-            <Text style={styles.questionQuestion}>{question.question}</Text>
-            <Text style={styles.questionAnswer}>{question.answer}</Text>
+            <Text numberOfLines={1} style={styles.questionQuestion}>{`Q: ${question.question}`}</Text>
+            <Text numberOfLines={2} style={[styles.questionAnswer, styles.colorPrimary]}>{`A: ${question.answer}`}</Text>
+            <Text style={[styles.questionQuestion, styles.questionInstructions]}>
+              { `${question.instructions.length} ${question.instructions.length === 1 ? 'Instruction' : 'Instructions'}` }
+            </Text>
 
             {(!question.question || !question.answer) &&
               <Aicon name={'exclamation-triangle'} style={styles.warning} />}
@@ -293,6 +332,8 @@ export default class GameBuilder extends React.Component {
     const {
       GameID,
       // banner,
+      category,
+      CCS,
       description,
       title,
     } = this.state.game;
@@ -300,6 +341,7 @@ export default class GameBuilder extends React.Component {
     const {
       addQuestion,
       showInput,
+      showSelection,
     } = this.state;
 
     return (
@@ -322,6 +364,50 @@ export default class GameBuilder extends React.Component {
 
             {showInput &&
               <InputModal {...showInput} />}
+
+            {Boolean(showSelection) &&
+              <SelectionModal
+                handleClose={showSelection === 'Subject Category' ? this.hideCategorySelection : this.hideCCSSelection}
+                items={showSelection === 'Subject Category' ?
+                  [
+                    { label: 'Math', value: 'Math' },
+                    { label: 'Algebra', value: 'Algebra' },
+                    { label: 'Geometry', value: 'Geometry' },
+                    { label: 'Calculus', value: 'Calculus' },
+                    { label: 'Statistics', value: 'Statistics' },
+                    { label: 'Computer Science', value: 'Computer Science' },
+                    { label: 'Art', value: 'Art' },
+                    { label: 'Design', value: 'Design' },
+                    { label: 'Speech', value: 'Speech' },
+                    { label: 'Biology', value: 'Biology' },
+                    { label: 'Chemistry', value: 'Chemistry' },
+                    { label: 'Physics', value: 'Physics' },
+                    { label: 'Geography', value: 'Geography' },
+                    { label: 'Psychology', value: 'Psychology' },
+                    { label: 'History', value: 'History' },
+                    { label: 'Government', value: 'Government' },
+                    { label: 'Economics', value: 'Economics' },
+                    { label: 'English', value: 'English' },
+                    { label: 'Spanish', value: 'Spanish' },
+                    { label: 'French', value: 'French' },
+                    { label: 'German', value: 'German' },
+                    { label: 'Physical Education', value: 'Physical Education' },
+                  ] :
+                  [
+                    { label: 'Level 1', value: '1' },
+                    { label: 'Level 2', value: '2' },
+                    { label: 'Level 3', value: '3' },
+                    { label: 'Level 4', value: '4' },
+                    { label: 'Level 5', value: '5' },
+                    { label: 'Level 6', value: '6' },
+                    { label: 'Level 7', value: '7' },
+                    { label: 'Level 8', value: '8' },
+                  ]
+                }
+                onSelect={showSelection === 'Subject Category' ? this.hideCategorySelection : this.hideCCSSelection}
+                title={showSelection}
+                visible={Boolean(showSelection)}
+              />}
 
             <View style={[styles.headerContainer, elevation]}>
               <Touchable
@@ -393,6 +479,34 @@ export default class GameBuilder extends React.Component {
                   >
                     {showInput && showInput.inputLabel === 'description' ? null : description || 'Enter description'}
                   </Text>
+                </Touchable>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Subject</Text>
+                <Touchable
+                  onPress={this.showCategorySelection}
+                >
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                    <Text style={[styles.inputButtonText, !category && styles.colorPrimary]}>
+                      { category || 'Subject Category' }
+                    </Text>
+                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                  </View>
+                </Touchable>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Common Core Standard</Text>
+                <Touchable
+                  onPress={this.showCCSSelection}  
+                >
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                    <Text style={[styles.inputButtonText, !CCS && styles.colorPrimary]}>
+                      { CCS || 'Level' }
+                    </Text>
+                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                  </View>
                 </Touchable>
               </View>
               
