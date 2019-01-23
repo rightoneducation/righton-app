@@ -10,7 +10,7 @@ import {
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet } from 'react-native-size-matters';
-import Aicon from 'react-native-vector-icons/FontAwesome';
+// import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../../../Student/screens/GamePreview/styles';
@@ -23,6 +23,7 @@ export default class GameRoomResults extends React.Component {
     handleNextTeam: PropTypes.func.isRequired,
     nextTeam: PropTypes.string.isRequired,
     numberOfPlayers: PropTypes.number.isRequired,
+    players: PropTypes.shape({}),
     teamRef: PropTypes.string.isRequired,
   };
   
@@ -32,6 +33,7 @@ export default class GameRoomResults extends React.Component {
     handleNextTeam: () => {},
     nextTeam: '',
     numberOfPlayers: 0,
+    players: {},
     teamRef: 'team0',
   };
 
@@ -76,18 +78,26 @@ export default class GameRoomResults extends React.Component {
   startWidthAnimation() {
     this.onChoicesLayout();
     setTimeout(() => {
-      const { gameState, numberOfPlayers, teamRef } = this.props;
+      const { gameState, numberOfPlayers, players, teamRef } = this.props;
+      const teamIdx = teamRef.substr(teamRef.indexOf('m') + 1);
+      let playersInTeamRef = 0;
+      const playerKeys = Object.keys(players);
+      for (let i = 0; i < numberOfPlayers; i += 1) {
+        if (players[playerKeys[i]] === `${teamIdx}`) {
+          playersInTeamRef += 1;
+        }
+      }
       const firstWidth = gameState[teamRef].choices[0] ?
-        (gameState[teamRef].choices[0].votes / numberOfPlayers) *
+        (gameState[teamRef].choices[0].votes / (numberOfPlayers - playersInTeamRef)) *
         this.choicesWidth : 0;
       const secondWidth = gameState[teamRef].choices[1] ?
-        (gameState[teamRef].choices[1].votes / numberOfPlayers) *
+        (gameState[teamRef].choices[1].votes / (numberOfPlayers - playersInTeamRef)) *
         this.choicesWidth : 0;
       const thirdWidth = gameState[teamRef].choices[2] ?
-        (gameState[teamRef].choices[2].votes / numberOfPlayers) *
+        (gameState[teamRef].choices[2].votes / (numberOfPlayers - playersInTeamRef)) *
         this.choicesWidth : 0;
       const fourthWidth = gameState[teamRef].choices[3] ?
-        (gameState[teamRef].choices[3].votes / numberOfPlayers) *
+        (gameState[teamRef].choices[3].votes / (numberOfPlayers - playersInTeamRef)) *
         this.choicesWidth : 0;
   
       Animated.parallel([
@@ -154,7 +164,9 @@ export default class GameRoomResults extends React.Component {
           <View style={gamePreviewStyles.choicesContainer}>
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[0] && choices[0].correct ?
-                <Aicon name={'check'} style={styles.checkmark} /> :
+                <View
+                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
+                /> :
                 <View style={styles.hiddenDot} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[0] && choices[0].value }</Text>
@@ -162,7 +174,9 @@ export default class GameRoomResults extends React.Component {
             <Animated.View style={[styles.bar, { width: this.firstChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[1] && choices[1].correct ?
-                <Aicon name={'check'} style={styles.checkmark} /> :
+                <View
+                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
+                /> :
                 <View style={styles.hiddenDot} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[1] && choices[1].value }</Text>
@@ -170,7 +184,9 @@ export default class GameRoomResults extends React.Component {
             <Animated.View style={[styles.bar, { width: this.secondChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[2] && choices[2].correct ?
-                <Aicon name={'check'} style={styles.checkmark} /> :
+                <View
+                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
+                /> :
                 <View style={styles.hiddenDot} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[2] && choices[2].value }</Text>
@@ -178,7 +194,9 @@ export default class GameRoomResults extends React.Component {
             <Animated.View style={[styles.bar, { width: this.thirdChoice }]} />
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[3] && choices[3].correct ?
-                <Aicon name={'check'} style={styles.checkmark} /> :
+                <View
+                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
+                /> :
                 <View style={styles.hiddenDot} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[3] && choices[3].value }</Text>
