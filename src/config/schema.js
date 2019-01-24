@@ -40,11 +40,10 @@ const TeacherAccount = {
   // - number of trick answers per game (as bars)
   // - tricked to correct ratio performance per game
   games: { local: 0, db: 0 },
-  favorites: { local: 0, db: 0 },
   history: { local: 0, db: 0 },
   // Notes: `db` is designed to almost always be less than local by a factor of 1.
   // - This is due to not updating the teacher account in DynamoDB once the
-  //   write transaction has completed for updating games, favorites, or history.
+  //   write transaction has completed for updating games or history.
 }
 
 
