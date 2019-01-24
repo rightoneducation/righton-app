@@ -79,10 +79,9 @@ class Games extends React.PureComponent {
     this.state = {
       openGame: null,
       games: [],
-      showing: 'My Games',
+      filter: '',
     };
 
-    this.gamesAux = null;
     this.currentGame = null;
 
     this.handleRenderFavorites = this.handleRenderFavorites.bind(this);
@@ -99,12 +98,7 @@ class Games extends React.PureComponent {
 
 
   componentDidMount() {
-    this.hydrateGamesWithMyGames();
-  }
-
-
-  componentWillUnmount() {
-    this.gamesAux = null;
+    this.hydrateGames();
   }
   
 
@@ -123,22 +117,7 @@ class Games extends React.PureComponent {
   }
 
 
-  getFavoritesFromDynamoDB(TeacherID) {
-    getTeacherItemFromDynamoDB(
-      'TeacherFavoritesAPI',
-      TeacherID,
-      (res) => {
-        this.setState({ games: res });
-        const gamesJSON = JSON.stringify(res);
-        LocalStorage.setItem(`@RightOn:${TeacherID}/Favorites`, gamesJSON);
-        debug.log('Successful GETTING teacher favorites from DynamoDB to hydrate local state in favorites:', JSON.stringify(res));
-      },
-      exception => debug.warn('Error GETTING teacher favorites from DynamoDB to hydrate local state in favorites:', JSON.stringify(exception))
-    );
-  }
-
-  
-  async hydrateGamesWithMyGames() {
+  async hydrateGames() {
     try {
       const { TeacherID } = this.props.screenProps.account;
       if (!TeacherID) {
@@ -163,7 +142,7 @@ class Games extends React.PureComponent {
         // Note: technically we handle this is App.js when user signs in with a username
         // that is different from that of the one saved on device, but we'll leave this
         // here just in case as a fallback.
-        this.getFavoritesFromDynamoDB(TeacherID);
+        this.getGamesFromDynamoDB(TeacherID);
       }
     } catch (exception) {
       debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);
@@ -171,58 +150,13 @@ class Games extends React.PureComponent {
   }
 
 
-  async hydrateGamesWithFavorites() {
-    try {
-      const { TeacherID } = this.props.screenProps.account;
-      if (!TeacherID) {
-        // TODO! Notify user that they must create an account to create a game
-        return;
-      }
-      let games = [];
-      games = await LocalStorage.getItem(`@RightOn:${TeacherID}/Favorites`);
-      if (typeof games === 'string') {
-        games = JSON.parse(games);
-        this.setState({ games, showing: 'Favorites' }, () => {
-          const { account } = this.props.screenProps;
-          if (account.favorites.local !== account.favorites.db) {
-            // Previous attempt to save games to DynamoDB failed so we try again.
-            this.saveFavoritesToDatabase(games);
-          }
-        });
-      } else if (games === undefined || games === null) {
-        // User signed in on a different device so let's get their games from the cloud
-        // and hydrate state as well as store them in LocalStorage.
-
-        // Note: technically we handle this is App.js when user signs in with a username
-        // that is different from that of the one saved on device, but we'll leave this
-        // here just in case as a fallback.
-        this.getFavoritesFromDynamoDB(TeacherID);
-      }
-    } catch (exception) {
-      debug.log('Caught exception getting Favorites from LocalStorage @Games, hydrateGames():', exception);
-    }
-  }
-
-
   handleRenderFavorites() {
-    const { games } = this.state;
-    if (this.gamesAux) {
-      this.setState({ games: this.gamesAux, showing: 'Favorites' });
-    } else {
-      this.hydrateGamesWithFavorites();
-    }
-    this.gamesAux = games;
+    this.setState({ filter: 'Favorites' });
   }
 
 
   handleRenderMyGames() {
-    const { games } = this.state;
-    if (this.gamesAux) {
-      this.setState({ games: this.gamesAux, showing: 'My Games' });
-    } else {
-      this.hydrateGamesWithMyGames();
-    }
-    this.gamesAux = games;
+    this.setState({ filter: '' });
   }
 
 
@@ -275,36 +209,6 @@ class Games extends React.PureComponent {
         { games: updatedGames },
         (res) => {
           update.games.db = account.games.db + 1;
-          handleSetAppState('account', update);
-          debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
-        },
-        exception => debug.warn('Error PUTTING new teacher item into DynamoDB', JSON.stringify(exception)),
-      );
-    }
-  }
-
-
-  saveFavoritesToDatabase = async (updatedFavorites) => {
-    const { TeacherID } = this.props.screenProps.account;
-    if (TeacherID) {
-      const stringifyFavorites = JSON.stringify(updatedFavorites);
-      LocalStorage.setItem(`@RightOn:${TeacherID}/Favorites`, stringifyFavorites);
-
-      const { account, handleSetAppState } = this.props.screenProps;
-      const update = {
-        games: {
-          local: account.favorites.local + 1,
-          db: account.favorites.db,
-        },
-      };
-      handleSetAppState('account', update);
-
-      putTeacherItemInDynamoDB(
-        'TeacherFavoritesAPI',
-        TeacherID,
-        { favorites: updatedFavorites },
-        (res) => {
-          update.favorites.db = account.favorites.db + 1;
           handleSetAppState('account', update);
           debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
         },
@@ -384,7 +288,7 @@ class Games extends React.PureComponent {
   }
 
 
-  renderHeader = showing => (
+  renderHeader = filter => (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Games</Text>
 
@@ -395,8 +299,8 @@ class Games extends React.PureComponent {
         style={[styles.headerButton, styles.headerGames]}
       >
         <View style={styles.alignCenter}>
-          <Aicon name={'gamepad'} style={[styles.headerIcon, showing === 'Favorites' && styles.colorGrey]} />
-          <Text style={[styles.gamePlayIcon, showing === 'Favorites' && styles.colorGrey]}>My Games</Text>
+          <Aicon name={'gamepad'} style={[styles.headerIcon, filter === 'Favorites' && styles.colorGrey]} />
+          <Text style={[styles.gamePlayIcon, filter === 'Favorites' && styles.colorGrey]}>My Games</Text>
         </View>
       </Touchable>
 
@@ -407,25 +311,25 @@ class Games extends React.PureComponent {
         style={[styles.headerButton, styles.headerFavorites]}
       >
         <View style={styles.alignCenter}>
-          <Aicon name={'heart'} style={[styles.headerIcon, showing === 'My Games' && styles.colorGrey]} />
-          <Text style={[styles.gamePlayIcon, showing === 'My Games' && styles.colorGrey]}>Favorites</Text>
+          <Aicon name={'heart'} style={[styles.headerIcon, filter === '' && styles.colorGrey]} />
+          <Text style={[styles.gamePlayIcon, filter === '' && styles.colorGrey]}>Favorites</Text>
         </View>
       </Touchable>
 
-      {showing === 'My Games' &&
-        <Touchable
-          activeOpacity={0.8}
-          hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-          onPress={this.handleOpenGame}
-          style={[styles.headerButton, styles.headerPlus]}
-        >
-          <Aicon name={'plus'} style={styles.headerIcon} />
-        </Touchable>}
+      <Touchable
+        activeOpacity={0.8}
+        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+        onPress={this.handleOpenGame}
+        style={[styles.headerButton, styles.headerPlus]}
+      >
+        <Aicon name={'plus'} style={styles.headerIcon} />
+      </Touchable>
     </View>
   );
 
 
-  renderGameBlock(game, idx) {
+  renderGameBlock(game, idx, filter) {
+    if (filter === 'Favorites' && !game.favorite) return null;
     return (
       <View
         key={game.title}
@@ -470,20 +374,20 @@ class Games extends React.PureComponent {
   }
 
 
-  renderGames() {
+  renderGames(filter) {
     const { games } = this.state;
     if (!Array.isArray(games)) return null;
 
     return (
       <ScrollView contentContainerStyle={styles.scrollview}>
-        {games.map((game, idx) => this.renderGameBlock(game, idx))}
+        {games.map((game, idx) => this.renderGameBlock(game, idx, filter))}
       </ScrollView>
     );
   }
 
 
   render() {
-    const { openGame, showing } = this.state;
+    const { openGame, filter } = this.state;
 
     return (
       <View style={styles.container}>
@@ -497,8 +401,8 @@ class Games extends React.PureComponent {
             game={openGame}
             visible
           />}
-        {this.renderHeader(showing)}
-        {this.renderGames()}
+        {this.renderHeader(filter)}
+        {this.renderGames(filter)}
       </View>
     );
   }
