@@ -70,6 +70,23 @@ export default ScaledSheet.create({
     borderColor: colors.dark,
     paddingLeft: '20@s',
   },
+  heartContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heartIcon: {
+    color: colors.white,
+    fontSize: fonts.medium,
+    position: 'absolute',
+  },
+  heartIconBig: {
+    color: colors.primary,
+    fontSize: fonts.large,
+  },
+  heartWrapper: {
+    position: 'absolute',
+    right: '95@ms',
+  },
   inputButton: {
     backgroundColor: colors.white,
     borderColor: colors.dark,

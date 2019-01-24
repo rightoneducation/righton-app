@@ -33,6 +33,7 @@ export default class GameBuilder extends React.Component {
       category: PropTypes.string,
       CCS: PropTypes.string,
       description: PropTypes.string,
+      favorite: PropTypes.boolean,
       questions: PropTypes.arrayOf(PropTypes.shape({
         answer: PropTypes.string,
         image: PropTypes.string,
@@ -57,6 +58,7 @@ export default class GameBuilder extends React.Component {
       category: '',
       CCS: '',
       description: '',
+      favorite: false,
       questions: [],
       title: '',
     },
@@ -73,6 +75,7 @@ export default class GameBuilder extends React.Component {
         category: null,
         CCS: null,
         description: null,
+        favorite: false,
         questions: [],
         title: null,
       },
@@ -92,7 +95,7 @@ export default class GameBuilder extends React.Component {
     this.showCCSSelection = this.showCCSSelection.bind(this);
     this.hideCCSSelection = this.hideCCSSelection.bind(this);
   
-    
+    this.toggleFavorite = this.toggleFavorite.bind(this);
     this.createGame = this.createGame.bind(this);
     this.closeAddQuestion = this.closeAddQuestion.bind(this);
     this.openAddQuestion = this.openAddQuestion.bind(this);
@@ -143,6 +146,12 @@ export default class GameBuilder extends React.Component {
         }
       });
     }
+  }
+
+
+  toggleFavorite() {
+    const { game } = this.state;
+    this.setState({ game: { ...game, favorite: !game.favorite } });
   }
 
   
@@ -335,6 +344,7 @@ export default class GameBuilder extends React.Component {
       category,
       CCS,
       description,
+      favorite,
       title,
     } = this.state.game;
 
@@ -420,6 +430,16 @@ export default class GameBuilder extends React.Component {
                 </View>
               </Touchable>
               <Text style={styles.title}>Game Builder</Text>
+              <Touchable
+                hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+                onPress={this.toggleFavorite}
+                style={styles.heartWrapper}
+              >
+                <View style={styles.heartContainer}>
+                  <Aicon name={'heart'} style={[styles.heartIcon, styles.heartIconBig]} />
+                  <Aicon name={'heart'} style={[styles.heartIcon, favorite && styles.colorPrimary]} />
+                </View>
+              </Touchable>
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 onPress={this.createGame}
