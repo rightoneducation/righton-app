@@ -246,6 +246,7 @@ class Games extends React.PureComponent {
       banner: game.banner,
       category: game.category,
       CCS: game.CCS,
+      favorite: game.favorite,
       title: game.description,
       description: game.description,
       quizTime,
