@@ -66,3 +66,11 @@ buck-out/
 # Lock files
 yarn.lock
 package-lock.json
+
+# AWS Amplify
+amplify/\#current-cloud-backend
+aws-info.json
+project-config.json
+aws-exports.*
+amplify/backend/function/*/src/node_modules/
+amplify/backend/function/*/dist/
