@@ -20,7 +20,7 @@ import styles from './styles';
 
 import {
   getItemFromTeacherAccountFromDynamoDB,
-  putTeacherItemInDynamoDB,
+  updateTeacherGamesInTeacherAccountInDynamoDB,
 } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
@@ -204,10 +204,9 @@ class Games extends React.PureComponent {
       };
       handleSetAppState('account', update);
 
-      putTeacherItemInDynamoDB(
-        'TeacherGamesAPI',
+      updateTeacherGamesInTeacherAccountInDynamoDB(
         TeacherID,
-        { games: updatedGames },
+        updatedGames,
         (res) => {
           update.games.db = account.games.db + 1;
           handleSetAppState('account', update);

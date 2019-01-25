@@ -10,7 +10,7 @@ import GameRoomFinal from './GameRoomFinal';
 import GameRoomNewGame from './GameRoomNewGame';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 import { deleteGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
-import { putTeacherItemInDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
+import { updateTeacherHistoryInTeacherAccountInDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import debug from '../../../utils/debug';
 
 
@@ -431,10 +431,9 @@ export default class GameRoom extends React.Component {
     LocalStorage.setItem(`@RightOn:${account.TeacherID}/History`, updatedTeacherHistoryJSON);
     
     const TeacherID = account.TeacherID;
-    putTeacherItemInDynamoDB(
-      'TeacherHistoryAPI',
+    updateTeacherHistoryInTeacherAccountInDynamoDB(
       TeacherID,
-      { history: teacherHistory },
+      teacherHistory,
       (res) => {
         handleSetAppState('account', {
           history: {
