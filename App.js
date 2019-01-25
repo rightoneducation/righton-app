@@ -184,7 +184,6 @@ export default class App extends React.Component {
       deviceSettings.role = 'teacher';
 
       LocalStorage.setItem(`@RightOn:${username}/Games`, '[]');
-      LocalStorage.setItem(`@RightOn:${username}/Favorites`, '[]');
       LocalStorage.setItem(`@RightOn:${username}/History`, '[]');
 
       putTeacherAccountToDynamoDB(
@@ -199,14 +198,6 @@ export default class App extends React.Component {
         { games: [] },
         res => debug.log('Successfully PUT teacher games into DynamoDB', res),
         exception => debug.warn('Error PUTTING teacher games into DynamoDB', exception),
-      );
-
-      putTeacherItemInDynamoDB(
-        'TeacherFavoritesAPI',
-        account.TeacherID,
-        { favorites: [] },
-        res => debug.log('Successfully PUT teacher favorites into DynamoDB', res),
-        exception => debug.warn('Error PUTTING teacher favorites into DynamoDB', exception),
       );
 
       putTeacherItemInDynamoDB(

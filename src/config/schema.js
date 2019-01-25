@@ -11,7 +11,6 @@ const gameState = {
   GameID: 'string',
   GameRoomID: 'string',
   answering: 'number', // index of quiz in questions array
-  banner: 'string',
   title: 'string',
   description: 'string',
   quizTime: 'string',
@@ -39,8 +38,11 @@ const TeacherAccount = {
   // - number of correct answers per game (as bars)
   // - number of trick answers per game (as bars)
   // - tricked to correct ratio performance per game
-  games: { local: 0, db: 0 },
-  history: { local: 0, db: 0 },
+
+  games: [],
+  history: [],
+  gamesRef: { local: 0, db: 0 },
+  historyRef: { local: 0, db: 0 },
   // Notes: `db` is designed to almost always be less than local by a factor of 1.
   // - This is due to not updating the teacher account in DynamoDB once the
   //   write transaction has completed for updating games or history.
