@@ -33,7 +33,7 @@ const awsmobile =  {
             "region": "us-east-1"
         },
         {
-            "tableName": "TeacherFavorites",
+            "tableName": "QuizMaker",
             "region": "us-east-1"
         }
     ],
@@ -59,13 +59,13 @@ const awsmobile =  {
             "region": "us-east-1"
         },
         {
-            "name": "TeacherFavoritesAPI",
-            "endpoint": "https://c9t4yvkfih.execute-api.us-east-1.amazonaws.com/Prod",
+            "name": "TeacherHistoryAPI",
+            "endpoint": "https://1xwlucckuj.execute-api.us-east-1.amazonaws.com/Prod",
             "region": "us-east-1"
         },
         {
-            "name": "TeacherHistoryAPI",
-            "endpoint": "https://1xwlucckuj.execute-api.us-east-1.amazonaws.com/Prod",
+            "name": "QuizMakerAPI",
+            "endpoint": "https://fe9bm3iami.execute-api.us-east-1.amazonaws.com/Prod",
             "region": "us-east-1"
         }
     ]
