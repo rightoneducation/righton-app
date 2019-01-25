@@ -374,6 +374,9 @@ export default class GameBuilder extends React.Component {
 
             {showInput &&
               <InputModal {...showInput} />}
+            
+            {Boolean(GameID) && 
+              <ButtonPlay onPress={() => handlePlayGame(null, this.state.game)} />}
 
             {Boolean(showSelection) &&
               <SelectionModal
@@ -538,9 +541,6 @@ export default class GameBuilder extends React.Component {
               />
 
             </ScrollView>
-            
-            {Boolean(GameID) && 
-              <ButtonPlay onPress={() => handlePlayGame(null, this.state.game)} />}
 
           </View>
 
