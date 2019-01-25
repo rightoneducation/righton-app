@@ -107,7 +107,6 @@ export default class GameRoomNewGame extends React.Component {
     });
 
     const gameState = {
-      answering: null,
       banner: game.banner,
       quizTime: gameState.quizTime,
       title: game.description,

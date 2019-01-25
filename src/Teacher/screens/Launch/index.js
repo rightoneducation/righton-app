@@ -193,7 +193,6 @@ class Launch extends React.Component {
     });
 
     const gameState = {
-      answering: null,
       banner: game.banner,
       title: game.description,
       description: game.description,

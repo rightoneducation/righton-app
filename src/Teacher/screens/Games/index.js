@@ -242,7 +242,6 @@ class Games extends React.PureComponent {
 
     const gameState = {
       GameID: game.GameID,
-      answering: null,
       banner: game.banner,
       category: game.category,
       CCS: game.CCS,

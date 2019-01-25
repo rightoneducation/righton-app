@@ -10,7 +10,6 @@ const GameRoom = {
 const gameState = {
   GameID: 'string',
   GameRoomID: 'string',
-  answering: 'number', // index of quiz in questions array
   title: 'string',
   description: 'string',
   quizTime: 'string',
