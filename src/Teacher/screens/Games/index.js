@@ -19,7 +19,7 @@ import debug from '../../../utils/debug';
 import styles from './styles';
 
 import {
-  getTeacherItemFromDynamoDB,
+  getItemFromTeacherAccountFromDynamoDB,
   putTeacherItemInDynamoDB,
 } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
@@ -29,7 +29,7 @@ class Games extends React.PureComponent {
   static propTypes = {
     screenProps: PropTypes.shape({
       account: PropTypes.shape({
-        games: PropTypes.shape({
+        gamesRef: PropTypes.shape({
           local: PropTypes.number,
           db: PropTypes.number,
         }),
@@ -53,7 +53,7 @@ class Games extends React.PureComponent {
   static defaultProps = {
     screenProps: {
       account: {
-        games: PropTypes.shape({
+        gamesRef: PropTypes.shape({
           local: 0,
           db: 0,
         }),
@@ -103,8 +103,9 @@ class Games extends React.PureComponent {
   
 
   getGamesFromDynamoDB(TeacherID) {
-    getTeacherItemFromDynamoDB(
+    getItemFromTeacherAccountFromDynamoDB(
       'TeacherGamesAPI',
+      'games',
       TeacherID,
       (res) => {
         this.setState({ games: res });
@@ -252,7 +253,6 @@ class Games extends React.PureComponent {
       quizTime,
       trickTime,
       ...teamQuestions,
-      // GameRoomID: '######',
       state: {},
     };
     
