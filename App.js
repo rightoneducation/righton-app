@@ -15,9 +15,7 @@ import teacherMessageHandler from './lib/Categories/IoT/teacherMessageHandler';
 import { deleteGameFromDynamoDB } from './lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import {
   putTeacherAccountToDynamoDB,
-  getTeacherAccountFromDynamoDB,
-  putTeacherItemInDynamoDB,
-  getTeacherItemFromDynamoDB,
+  getItemFromTeacherAccountFromDynamoDB,
 } from './lib/Categories/DynamoDB/TeacherAccountsAPI';
 import { putStudentAccountToDynamoDB, getStudentAccountFromDynamoDB } from './lib/Categories/DynamoDB/StudentAccountsAPI';
 
@@ -175,9 +173,10 @@ export default class App extends React.Component {
       account.gamesCreated = 0;
       account.gamesPlayed = 0;
       account.schoolID = null;
-      account.games = { local: 0, db: 0 };
-      account.favorites = { local: 0, db: 0 };
-      account.history = { local: 0, db: 0 };
+      account.games = [];
+      account.history = [];
+      account.gamesRef = { local: 0, db: 0 };
+      account.historyRef = { local: 0, db: 0 };
 
       deviceSettings.quizTime = '1:00';
       deviceSettings.trickTime = '3:00';
@@ -190,22 +189,6 @@ export default class App extends React.Component {
         account,
         res => debug.log('Successfully PUT new teacher account into DynamoDB', res),
         exception => debug.warn('Error PUTTING new teacher account into DynamoDB', exception),
-      );
-
-      putTeacherItemInDynamoDB(
-        'TeacherGamesAPI',
-        account.TeacherID,
-        { games: [] },
-        res => debug.log('Successfully PUT teacher games into DynamoDB', res),
-        exception => debug.warn('Error PUTTING teacher games into DynamoDB', exception),
-      );
-
-      putTeacherItemInDynamoDB(
-        'TeacherHistoryAPI',
-        account.TeacherID,
-        { history: [] },
-        res => debug.log('Successfully PUT teacher history into DynamoDB', res),
-        exception => debug.warn('Error PUTTING teacher history into DynamoDB', exception),
       );
     } else if (accountType === 'student') {
       account.StudentID = username;
@@ -299,49 +282,17 @@ export default class App extends React.Component {
 
 
   hydrateNewTeacherData(TeacherID) {
-    getTeacherAccountFromDynamoDB(
+    getItemFromTeacherAccountFromDynamoDB(
       TeacherID,
+      '',
       (res) => {
-        this.setState({ account: res });
+        this.setState({ account: { games: [], history: [], ...res } });
         const accountJSON = JSON.stringify(res);
         LocalStorage.setItem(`@RightOn:${TeacherID}`, accountJSON);
         this.resetDeviceSettings('teacher', TeacherID);
         debug.log('Result from GETTING teacher account from DynamoDB:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher account from DynamoDB:', JSON.stringify(exception)),
-    );
-
-    getTeacherItemFromDynamoDB(
-      'TeacherGamesAPI',
-      TeacherID,
-      (res) => {
-        const gamesJSON = JSON.stringify(res.games);
-        LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, gamesJSON);
-        debug.log('Result from GETTING teacher games from DynamoDB:', JSON.stringify(res));
-      },
-      exception => debug.warn('Error GETTING teacher games from DynamoDB:', JSON.stringify(exception)),
-    );
-
-    getTeacherItemFromDynamoDB(
-      'TeacherFavoritesAPI',
-      TeacherID,
-      (res) => {
-        const favoritesJSON = JSON.stringify(res.favorites);
-        LocalStorage.setItem(`@RightOn:${TeacherID}/Favorites`, favoritesJSON);
-        debug.log('Result from GETTING teacher favorites from DynamoDB:', JSON.stringify(res));
-      },
-      exception => debug.warn('Error GETTING teacher favorites from DynamoDB:', JSON.stringify(exception)),
-    );
-
-    getTeacherItemFromDynamoDB(
-      'TeacherHistoryAPI',
-      TeacherID,
-      (res) => {
-        const historyJSON = JSON.stringify(res.history);
-        LocalStorage.setItem(`@RightOn:${TeacherID}/History`, historyJSON);
-        debug.log('Result from GETTING teacher history from DynamoDB:', JSON.stringify(res));
-      },
-      exception => debug.warn('Error GETTING teacher history from DynamoDB:', JSON.stringify(exception)),
     );
   }
 
