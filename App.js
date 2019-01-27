@@ -13,11 +13,8 @@ import studentMessageHandler from './lib/Categories/IoT/studentMessageHandler';
 import teacherMessageHandler from './lib/Categories/IoT/teacherMessageHandler';
 
 import { deleteGameFromDynamoDB } from './lib/Categories/DynamoDB/TeacherGameRoomAPI';
-import {
-  putTeacherAccountToDynamoDB,
-  getItemFromTeacherAccountFromDynamoDB,
-} from './lib/Categories/DynamoDB/TeacherAccountsAPI';
-import { putStudentAccountToDynamoDB, getStudentAccountFromDynamoDB } from './lib/Categories/DynamoDB/StudentAccountsAPI';
+import { putTeacherAccountToDynamoDB } from './lib/Categories/DynamoDB/TeacherAccountsAPI';
+import { putStudentAccountToDynamoDB } from './lib/Categories/DynamoDB/StudentAccountsAPI';
 
 import RootNavigator from './src/Navigator';
 
@@ -57,8 +54,6 @@ export default class App extends React.Component {
       team: null,
     };
 
-    this.handleOnSignIn = this.handleOnSignIn.bind(this);
-    this.handleOnSignUp = this.handleOnSignUp.bind(this);
     this.handleOnSignOut = this.handleOnSignOut.bind(this);
 
     this.handleSetAppState = this.handleSetAppState.bind(this);
@@ -132,220 +127,6 @@ export default class App extends React.Component {
   }
 
 
-  handleAppStateChange(nextAppState) {
-    const { appState, GameRoomID } = this.state;
-    if (GameRoomID) {
-      if (appState.match(/inactive|background/) && nextAppState === 'active') {
-        debug.log('App has come to the foreground - resubscribing to GameRoom:', GameRoomID);
-        this.IOTSubscribeToTopic(GameRoomID);
-      } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
-        debug.log('App going into background - unsubscribing from GameRoom:', GameRoomID);
-        this.IOTUnsubscribeFromTopic(GameRoomID);
-      }
-    }
-    this.setState({ appState: nextAppState });
-  }
-
-
-  handleOnSignIn(session, role) {
-    this.setSession(session);
-    if (session && (session.username || (session.idToken && session.idToken.payload))) {
-      const username = session.username || session.idToken.payload['cognito:username'];
-      if (role === 'teacher' && username !== this.state.account.TeacherID) {
-        // Hydrate LocalStorage w/ new user's DynamoDB
-        this.hydrateNewTeacherData(username);
-      } else if (role === 'student' && username !== this.state.account.StudentID) {
-        this.hydrateNewStudentData(username);
-      }
-    }
-  }
-
-
-  handleOnSignUp(accountType, username) {
-    const deviceSettings = {};
-    const account = {};
-    deviceSettings.username = username;
-    const date = Date.now();
-    account.signUpDate = date;
-
-    if (accountType === 'teacher') {
-      account.TeacherID = username;
-      account.gamesCreated = 0;
-      account.gamesPlayed = 0;
-      account.schoolID = null;
-      account.games = [];
-      account.history = [];
-      account.gamesRef = { local: 0, db: 0 };
-      account.historyRef = { local: 0, db: 0 };
-
-      deviceSettings.quizTime = '1:00';
-      deviceSettings.trickTime = '3:00';
-      deviceSettings.role = 'teacher';
-
-      LocalStorage.setItem(`@RightOn:${username}/Games`, '[]');
-      LocalStorage.setItem(`@RightOn:${username}/History`, '[]');
-
-      putTeacherAccountToDynamoDB(
-        account,
-        res => debug.log('Successfully PUT new teacher account into DynamoDB', res),
-        exception => debug.warn('Error PUTTING new teacher account into DynamoDB', exception),
-      );
-    } else if (accountType === 'student') {
-      account.StudentID = username;
-      account.age = this.state.deviceSettings.age || null;
-      account.gamesPlayed = 0;
-      account.playersTricked = 0;
-      account.tricksSuggested = 0;
-      account.points = 0;
-
-      deviceSettings.age = this.state.deviceSettings.age || null;
-      deviceSettings.role = 'student';
-      deviceSettings.ID = `${Math.random()}`;
-
-      putStudentAccountToDynamoDB(
-        account,
-        res => debug.log('Successfully PUT new student account into DynamoDB', res),
-        exception => debug.warn('Error PUTTING new student account into DynamoDB', exception),
-      );
-    }
-
-    this.setState({
-      account,
-      deviceSettings,
-    });
-    
-    const stringifiedAccount = JSON.stringify(account);
-    LocalStorage.setItem(`@RightOn:${username}`, stringifiedAccount);
-
-    const stringifiedDeviceSettings = JSON.stringify(deviceSettings);
-    LocalStorage.setItem('@RightOn:DeviceSettings', stringifiedDeviceSettings);
-  }
-
-
-  handleOnSignOut() {
-    Auth.signOut();
-    this.setState({ session: null });
-  }
-
-
-  handleSetAppState(property, value) {
-    switch (property) {
-      case 'account':
-        this.setState({ account: { ...this.state.account, ...value } }, () => {
-          if (this.state.deviceSettings.username) {
-            const stringifiedAccount = JSON.stringify(this.state.account);
-            LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
-            this.accountUpdated = true;
-          }
-        });
-        break;
-      case 'GameRoomID':
-        this.setState({ GameRoomID: value });
-        break;
-      case 'gameState':
-        this.setState({ gameState: value });
-        break;
-      case 'team':
-        this.setState({ team: value });
-        break;
-      case 'players':
-        this.setState({ players: value });
-        break;
-      case 'points':
-        this.setState({ points: this.state.points + value });
-        break;
-      case 'deviceSettings':
-        this.setState({ deviceSettings: { ...this.state.deviceSettings, ...value } }, () => {
-          const stringifiedDeviceSettings = JSON.stringify(this.state.deviceSettings);
-          LocalStorage.setItem('@RightOn:DeviceSettings', stringifiedDeviceSettings);
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
-
-  hydrateNewStudentData(StudentID) {
-    getStudentAccountFromDynamoDB(
-      StudentID,
-      (res) => {
-        this.setState({ account: res });
-        const accountJSON = JSON.stringify(res);
-        LocalStorage.setItem(`@RightOn:${StudentID}`, accountJSON);
-        this.resetDeviceSettings('student', StudentID);
-        debug.log('Result from GETTING student account from DynamoDB:', JSON.stringify(res));
-      },
-      exception => debug.warn('Error GETTING student account from DynamoDB:', JSON.stringify(exception)),
-    );
-  }
-
-
-  hydrateNewTeacherData(TeacherID) {
-    getItemFromTeacherAccountFromDynamoDB(
-      TeacherID,
-      '',
-      (res) => {
-        this.setState({ account: { games: [], history: [], ...res } });
-        const accountJSON = JSON.stringify(res);
-        LocalStorage.setItem(`@RightOn:${TeacherID}`, accountJSON);
-        this.resetDeviceSettings('teacher', TeacherID);
-        debug.log('Result from GETTING teacher account from DynamoDB:', JSON.stringify(res));
-      },
-      exception => debug.warn('Error GETTING teacher account from DynamoDB:', JSON.stringify(exception)),
-    );
-  }
-
-
-  resetDeviceSettings(accountType, username) {
-    const deviceSettings = {};
-    deviceSettings.username = username;
-    deviceSettings.role = accountType;
-    if (accountType === 'teacher') {
-      deviceSettings.quizTime = this.state.deviceSettings.quizTime || '1:00';
-      deviceSettings.trickTime = this.state.deviceSettings.trickTime || '3:00';
-    }
-    this.setState({ deviceSettings });
-    const deviceSettingsJSON = JSON.stringify(deviceSettings);
-    LocalStorage.setItem('@RightOn:DeviceSettings', deviceSettingsJSON);
-  }
-
-
-  IOTSubscribeToTopic(topic) {
-    const { role } = this.state.deviceSettings;
-    debug.log('Subscribing to topic:', topic, 'as', role);
-    IOTSubscribeToTopic(topic, role === 'teacher' ? teacherMessageHandler : studentMessageHandler, this);
-    if (role !== 'teacher') {
-      const requestMessage = {
-        action: 'REQUEST_GAME_STATE',
-        uid: `${Math.random()}`,
-      };
-      // Throttle the publishMessage() so PubSub is given time to connect to the GameRoom first.
-      setTimeout(() => publishMessage(topic, requestMessage), 1000);
-    }
-    debug.log('Subscribed to GameRoom:', topic);
-  }
-
-
-  IOTUnsubscribeFromTopic() {
-    const { GameRoomID } = this.state;
-    unsubscribeFromTopic(GameRoomID);
-  }
-
-
-  IOTPublishMessage(message) {
-    const { GameRoomID, gameState } = this.state;
-    const topic = GameRoomID || gameState.GameRoomID || '';
-    if (!topic) {
-      debug.warn('Attempted to publish message w/o a GameRoomID set. Message:', JSON.stringify(message));
-      return;
-    }
-    // Prevent computing received messages sent by self.
-    this.messagesReceived[message.uid] = true;
-    publishMessage(topic, message);
-  }
-
-
   async loadAccountSettingsFromLocalStorage(username) {
     try { 
       const accountString = await LocalStorage.getItem(`@RightOn:${username}`);
@@ -388,6 +169,103 @@ export default class App extends React.Component {
     } catch (exception) {
       debug.log('Error loading device settings from LocalStorage:', exception);
     }
+  }
+
+
+  handleAppStateChange(nextAppState) {
+    const { appState, GameRoomID } = this.state;
+    if (GameRoomID) {
+      if (appState.match(/inactive|background/) && nextAppState === 'active') {
+        debug.log('App has come to the foreground - resubscribing to GameRoom:', GameRoomID);
+        this.IOTSubscribeToTopic(GameRoomID);
+      } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+        debug.log('App going into background - unsubscribing from GameRoom:', GameRoomID);
+        this.IOTUnsubscribeFromTopic(GameRoomID);
+      }
+    }
+    this.setState({ appState: nextAppState });
+  }
+
+
+  handleOnSignOut() {
+    Auth.signOut();
+    this.setState({ session: null });
+  }
+
+
+  handleSetAppState(property, value) {
+    switch (property) {
+      case 'session': 
+        this.setSession(value);
+        break;
+      case 'account':
+        this.setState({ account: { ...this.state.account, ...value } }, () => {
+          if (this.state.deviceSettings.username) {
+            const stringifiedAccount = JSON.stringify(this.state.account);
+            LocalStorage.setItem(`@RightOn:${this.state.deviceSettings.username}`, stringifiedAccount);
+            this.accountUpdated = true;
+          }
+        });
+        break;
+      case 'GameRoomID':
+        this.setState({ GameRoomID: value });
+        break;
+      case 'gameState':
+        this.setState({ gameState: value });
+        break;
+      case 'team':
+        this.setState({ team: value });
+        break;
+      case 'players':
+        this.setState({ players: value });
+        break;
+      case 'points':
+        this.setState({ points: this.state.points + value });
+        break;
+      case 'deviceSettings':
+        this.setState({ deviceSettings: { ...this.state.deviceSettings, ...value } }, () => {
+          const stringifiedDeviceSettings = JSON.stringify(this.state.deviceSettings);
+          LocalStorage.setItem('@RightOn:DeviceSettings', stringifiedDeviceSettings);
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  IOTSubscribeToTopic(topic) {
+    const { role } = this.state.deviceSettings;
+    debug.log('Subscribing to topic:', topic, 'as', role);
+    IOTSubscribeToTopic(topic, role === 'teacher' ? teacherMessageHandler : studentMessageHandler, this);
+    if (role !== 'teacher') {
+      const requestMessage = {
+        action: 'REQUEST_GAME_STATE',
+        uid: `${Math.random()}`,
+      };
+      // Throttle the publishMessage() so PubSub is given time to connect to the GameRoom first.
+      setTimeout(() => publishMessage(topic, requestMessage), 1000);
+    }
+    debug.log('Subscribed to GameRoom:', topic);
+  }
+
+
+  IOTUnsubscribeFromTopic() {
+    const { GameRoomID } = this.state;
+    unsubscribeFromTopic(GameRoomID);
+  }
+
+
+  IOTPublishMessage(message) {
+    const { GameRoomID, gameState } = this.state;
+    const topic = GameRoomID || gameState.GameRoomID || '';
+    if (!topic) {
+      debug.warn('Attempted to publish message w/o a GameRoomID set. Message:', JSON.stringify(message));
+      return;
+    }
+    // Prevent computing received messages sent by self.
+    this.messagesReceived[message.uid] = true;
+    publishMessage(topic, message);
   }
 
 
@@ -436,8 +314,6 @@ export default class App extends React.Component {
           handleSetAppState: this.handleSetAppState,
           
           auth: Auth,
-          onSignIn: this.handleOnSignIn,
-          onSignUp: this.handleOnSignUp,
           doSignOut: this.handleOnSignOut,
 
           IOTPublishMessage: this.IOTPublishMessage,

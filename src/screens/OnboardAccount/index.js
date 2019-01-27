@@ -20,9 +20,9 @@ const OnboardAccount = createBottomTabNavigator({
         <LogIn
           navigation={navigation}
           screenProps={{
-            deviceSettings: screenProps.deviceSettings,
             auth: screenProps.auth,
-            onSignIn: screenProps.onSignIn,
+            deviceSettings: screenProps.deviceSettings,
+            handleSetAppState: screenProps.handleSetAppState,
           }}
         />
       );
@@ -43,7 +43,7 @@ const OnboardAccount = createBottomTabNavigator({
           navigation={navigation}
           screenProps={{
             deviceSettings: screenProps.deviceSettings,
-            onSignUp: screenProps.onSignUp,
+            handleSetAppState: screenProps.handleSetAppState,
           }}
         />
       );

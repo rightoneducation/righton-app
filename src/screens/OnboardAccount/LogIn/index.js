@@ -13,6 +13,9 @@ import ButtonRound from '../../../components/ButtonRound';
 import { deviceWidth, elevation, fonts, colors } from '../../../utils/theme';
 import styles from './styles';
 import debug from '../../../utils/debug';
+import { getItemFromTeacherAccountFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
+import { getStudentAccountFromDynamoDB } from '../../../../lib/Categories/DynamoDB/StudentAccountsAPI';
+import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
 class LogIn extends React.Component {
@@ -27,7 +30,6 @@ class LogIn extends React.Component {
       deviceSettings: PropTypes.shape({
         role: PropTypes.string,
       }),
-      onSignIn: PropTypes.func.isRequired,
     }),
   };
 
@@ -42,7 +44,6 @@ class LogIn extends React.Component {
       deviceSettings: {
         role: '',
       },
-      onSignIn: () => {},
     },
   }
 
@@ -133,7 +134,7 @@ class LogIn extends React.Component {
       return;
     }
 
-    const { auth, deviceSettings, onSignIn } = this.props.screenProps;
+    const { auth, deviceSettings } = this.props.screenProps;
     const { email, password } = this.state;
     let errorMessage = 'Successfully logged in.';
     let session = null;
@@ -146,9 +147,9 @@ class LogIn extends React.Component {
           debug.log('We get the Cognito User', JSON.stringify(data));
           this.setState({ cognitoUser: data });
           if (deviceSettings.role === 'student') {
-            onSignIn(data, 'student');     
+            this.handleSignIn(data, 'student');     
           } else {
-            onSignIn(data, 'teacher');
+            this.handleSignIn(data, 'teacher');
           }
           return true;
         });
@@ -181,6 +182,67 @@ class LogIn extends React.Component {
         this.onLogIn();
       }
     });
+  }
+
+
+  handleSignIn(session, role) {
+    const { deviceSettings, handleSetAppState } = this.props.screenProps;
+    handleSetAppState('session', session);
+    if (session && (session.username || (session.idToken && session.idToken.payload))) {
+      const username = session.username || session.idToken.payload['cognito:username'];
+      if (role === 'teacher' && username !== deviceSettings.username) {
+        // Hydrate LocalStorage w/ new user's DynamoDB
+        this.hydrateNewTeacherData(username);
+      } else if (role === 'student' && username !== deviceSettings.username) {
+        this.hydrateNewStudentData(username);
+      }
+    }
+  }
+
+
+  hydrateNewStudentData(StudentID) {
+    const { handleSetAppState } = this.props.screenProps;
+    getStudentAccountFromDynamoDB(
+      StudentID,
+      (res) => {
+        handleSetAppState('account', res);
+        const accountJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${StudentID}`, accountJSON);
+        this.resetDeviceSettings('student', StudentID);
+        debug.log('Result from GETTING student account from DynamoDB:', JSON.stringify(res));
+      },
+      exception => debug.warn('Error GETTING student account from DynamoDB:', JSON.stringify(exception)),
+    );
+  }
+
+
+  hydrateNewTeacherData(TeacherID) {
+    const { handleSetAppState } = this.props.screenProps;
+    getItemFromTeacherAccountFromDynamoDB(
+      TeacherID,
+      '',
+      (res) => {
+        handleSetAppState('account', { games: [], history: [], ...res });
+        const accountJSON = JSON.stringify(res);
+        LocalStorage.setItem(`@RightOn:${TeacherID}`, accountJSON);
+        this.resetDeviceSettings('teacher', TeacherID);
+        debug.log('Result from GETTING teacher account from DynamoDB:', JSON.stringify(res));
+      },
+      exception => debug.warn('Error GETTING teacher account from DynamoDB:', JSON.stringify(exception)),
+    );
+  }
+
+
+  resetDeviceSettings(accountType, username) {
+    const { deviceSettings, handleSetAppState } = this.props.screenProps;
+    const updatedDeviceSettings = {};
+    updatedDeviceSettings.username = username;
+    updatedDeviceSettings.role = accountType;
+    if (accountType === 'teacher') {
+      updatedDeviceSettings.quizTime = deviceSettings.quizTime || '1:00';
+      updatedDeviceSettings.trickTime = deviceSettings.trickTime || '3:00';
+    }
+    handleSetAppState('deviceSettings', updatedDeviceSettings);
   }
 
 

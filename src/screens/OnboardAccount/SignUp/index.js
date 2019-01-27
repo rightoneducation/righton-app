@@ -16,6 +16,10 @@ import Constants from '../../../utils/constants';
 import debug from '../../../utils/debug';
 import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
 import styles from '../LogIn/styles';
+import { putStudentAccountToDynamoDB } from '../../../../lib/Categories/DynamoDB/StudentAccountsAPI';
+import { putTeacherAccountToDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
+import LocalStorage from '../../../../lib/Categories/LocalStorage';
+
 
 class SignUp extends React.Component {
   static navigationOptions = {
@@ -30,7 +34,7 @@ class SignUp extends React.Component {
       deviceSettings: PropTypes.shape({
         role: PropTypes.string,
       }),
-      onSignUp: PropTypes.func.isRequired,
+      handleSetAppState: PropTypes.func.isRequired,
     }),
   };
 
@@ -42,7 +46,7 @@ class SignUp extends React.Component {
       deviceSettings: {
         role: '',
       },
-      onSignUp: () => {},
+      handleSetAppState: () => {},
     },
   }
 
@@ -233,6 +237,64 @@ class SignUp extends React.Component {
   }
 
 
+  handleConfirmedSignUp(accountType, username) {
+    const deviceSettings = {};
+    const account = {};
+    deviceSettings.username = username;
+    const date = Date.now();
+    account.signUpDate = date;
+
+    if (accountType === 'teacher') {
+      account.TeacherID = username;
+      account.gamesCreated = 0;
+      account.gamesPlayed = 0;
+      account.schoolID = null;
+      account.games = [];
+      account.history = [];
+      account.gamesRef = { local: 0, db: 0 };
+      account.historyRef = { local: 0, db: 0 };
+
+      deviceSettings.quizTime = '1:00';
+      deviceSettings.trickTime = '3:00';
+      deviceSettings.role = 'teacher';
+
+      LocalStorage.setItem(`@RightOn:${username}/Games`, '[]');
+      LocalStorage.setItem(`@RightOn:${username}/History`, '[]');
+
+      putTeacherAccountToDynamoDB(
+        account,
+        res => debug.log('Successfully PUT new teacher account into DynamoDB', res),
+        exception => debug.warn('Error PUTTING new teacher account into DynamoDB', exception),
+      );
+    } else if (accountType === 'student') {
+      account.StudentID = username;
+      account.gamesPlayed = 0;
+      account.playersTricked = 0;
+      account.tricksSuggested = 0;
+      account.points = 0;
+
+      deviceSettings.role = 'student';
+      deviceSettings.ID = `${Math.random()}`;
+
+      putStudentAccountToDynamoDB(
+        account,
+        res => debug.log('Successfully PUT new student account into DynamoDB', res),
+        exception => debug.warn('Error PUTTING new student account into DynamoDB', exception),
+      );
+    }
+
+    const { handleSetAppState } = this.props.screenProps;
+    handleSetAppState('account', account);
+    handleSetAppState('deviceSettings', deviceSettings);
+    
+    const stringifiedAccount = JSON.stringify(account);
+    LocalStorage.setItem(`@RightOn:${username}`, stringifiedAccount);
+
+    const stringifiedDeviceSettings = JSON.stringify(deviceSettings);
+    LocalStorage.setItem('@RightOn:DeviceSettings', stringifiedDeviceSettings);
+  }
+
+
   handleEmailRef(ref) {
     this.emailRef = ref;
   }
@@ -266,9 +328,9 @@ class SignUp extends React.Component {
       await Auth.confirmSignUp(username, code)
         .then((data) => {
           if (this.props.screenProps.deviceSettings.role === 'student') {
-            this.props.screenProps.onSignUp('student', username);     
+            this.handleConfirmedSignUp('student', username);     
           } else {
-            this.props.screenProps.onSignUp('teacher', username);
+            this.handleConfirmedSignUp('teacher', username);
           }
           debug.log('sign up successful ->', JSON.stringify(data));
         });
