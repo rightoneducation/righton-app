@@ -58,7 +58,7 @@ const deviceSettings = {
 
 
 const StudentAccount = {
-  age: 'number',
+  // age: 'number',
   email: 'string',
   gamesPlayed: 'number',
   playersTricked: 'number',
