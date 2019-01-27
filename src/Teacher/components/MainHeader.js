@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -40,7 +41,7 @@ export default class MainHeader extends React.Component {
   
   render() {
     return (
-      <View style={[styles.headerContainer, elevation]}>
+      <View style={[styles.headerContainer, elevation, Platform.OS === 'ios' && styles.iosContainer]}>
         <Touchable
           activeOpacity={0.8}
           onPress={this.handleNavigateToTeacherProfile}
@@ -76,22 +77,25 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     backgroundColor: colors.lightGray,
     borderRadius: 100,
-    height: '40@ms',
+    height: '35@ms',
     justifyContent: 'flex-end',
-    width: '40@ms',
+    width: '35@ms',
   },
   headerProfileIcon: {
     color: colors.dark,
-    fontSize: '30@ms0.2',
+    fontSize: '25@ms0.2',
     marginTop: '3@vs',
   },
   headerSearchIcon: {
     color: colors.white,
-    fontSize: '28@ms0.2',
+    fontSize: '25@ms0.2',
   },
   headerTitle: {
     color: colors.white,
     fontSize: fonts.large,
     fontStyle: 'italic',
+  },
+  iosContainer: {
+    paddingTop: '15@vs',
   },
 });
