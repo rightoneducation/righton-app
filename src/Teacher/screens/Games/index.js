@@ -131,7 +131,7 @@ class Games extends React.PureComponent {
         games = JSON.parse(games);
         this.setState({ games }, () => {
           const { account } = this.props.screenProps;
-          if (account.games.local !== account.games.db) {
+          if (account.gamesRef.local !== account.gamesRef.db) {
             // Previous attempt to save games to DynamoDB failed so we try again.
             this.saveGamesToDatabase(games);
           }
@@ -198,8 +198,8 @@ class Games extends React.PureComponent {
       const { account, handleSetAppState } = this.props.screenProps;
       const update = {
         games: {
-          local: account.games.local + 1,
-          db: account.games.db,
+          local: account.gamesRef.local + 1,
+          db: account.gamesRef.db,
         },
       };
       handleSetAppState('account', update);
@@ -208,7 +208,7 @@ class Games extends React.PureComponent {
         TeacherID,
         updatedGames,
         (res) => {
-          update.games.db = account.games.db + 1;
+          update.games.db = account.gamesRef.db + 1;
           handleSetAppState('account', update);
           debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
         },

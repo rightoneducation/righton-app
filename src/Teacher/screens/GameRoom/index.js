@@ -19,7 +19,7 @@ export default class GameRoom extends React.Component {
     screenProps: PropTypes.shape({
       account: PropTypes.shape({
         TeacherID: PropTypes.string,
-        history: PropTypes.shape({
+        historyRef: PropTypes.shape({
           local: PropTypes.number,
           db: PropTypes.number,
         }),
@@ -43,7 +43,7 @@ export default class GameRoom extends React.Component {
     screenProps: {
       account: {
         TeacherID: '',
-        history: {
+        historyRef: {
           local: 0,
           db: 0,
         },
@@ -429,8 +429,8 @@ export default class GameRoom extends React.Component {
   ) => {
     const update = {
       history: {
-        local: account.history.local + 1,
-        db: account.history.db,
+        local: account.historyRef.local + 1,
+        db: account.historyRef.db,
       },
       gamesPlayed: account.gamesPlayed + 1,
     };
