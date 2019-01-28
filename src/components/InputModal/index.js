@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
-import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
+import { scale, ScaledSheet, verticalScale, moderateScale } from 'react-native-size-matters';
 import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme';
 
 
@@ -21,6 +21,7 @@ export default class InputModal extends React.PureComponent {
     height: PropTypes.number,
     input: PropTypes.string,
     inputLabel: PropTypes.string,
+    labelStyles: PropTypes.shape({}),
     maxLength: PropTypes.number,
     multiline: PropTypes.bool,
     placeholder: PropTypes.string,
@@ -40,6 +41,7 @@ export default class InputModal extends React.PureComponent {
     height: 45,
     input: '',
     inputLabel: '',
+    labelStyles: {},
     maxLength: 50,
     multiline: false,
     placeholder: '',
@@ -88,41 +90,25 @@ export default class InputModal extends React.PureComponent {
   }
 
 
-  renderTextInput() {
+  renderTextInput(xAxis, yAxis, bottom, height) {
     const { input } = this.state;
     const {
       autoCapitalize,
       autoCorrect,
       keyboardType,
-      height,
       maxLength,
       multiline,
       placeholder,
       spellCheck,
       width,
-      x,
-      y,
     } = this.props;
-
-    let yAxis = deviceHeight / 2;
-    let xAxis = scale(15);
-    let bottom;
-    if (y < deviceHeight / 2) {
-      yAxis = y;
-    } else {
-      bottom = true;
-    }
-
-    if (x < deviceWidth) {
-      xAxis = x;
-    }
 
     return (
       <View 
         style={[
           styles.inputContainer,
           elevation,
-          { height: verticalScale(height), width, left: xAxis },
+          { height, width, left: xAxis },
           bottom ? { bottom: 15 } : { top: yAxis },
         ]}
       >
@@ -155,8 +141,29 @@ export default class InputModal extends React.PureComponent {
     const {
       backgroundColor,
       closeModal,
+      height,
+      inputLabel,
+      labelStyles,
       visible,
+      x,
+      y,
     } = this.props;
+
+    let yAxis = deviceHeight / 2;
+    let xAxis = scale(15);
+    let bottom;
+    const scaledHeight = verticalScale(height);
+    if (y < deviceHeight / 2) {
+      yAxis = y;
+    } else {
+      bottom = true;
+    }
+
+    if (x < deviceWidth) {
+      xAxis = x;
+    }
+
+    const ms5 = moderateScale(5);
 
     return (
       <Modal
@@ -171,7 +178,16 @@ export default class InputModal extends React.PureComponent {
             onPress={this.handleInputSubmit}
             style={styles.closeContainer}
           />
-          {this.renderTextInput()}
+          <Text
+            style={[
+              styles.inputLabel,
+              { left: xAxis },
+              bottom ? { bottom: 15 + ms5 + scaledHeight } : { top: yAxis - ms5 },
+              labelStyles,
+            ]}
+          >{ inputLabel }</Text>
+
+          {this.renderTextInput(xAxis, yAxis, bottom, scaledHeight)}
         </View>
       </Modal>
     );
@@ -199,6 +215,11 @@ const styles = ScaledSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     position: 'absolute',
+  },
+  inputLabel: {
+    color: colors.primary,
+    fontSize: fonts.medium,
+    marginBottom: '5@ms',
   },
   length: {
     color: colors.lightGray,
