@@ -389,7 +389,7 @@ export default class GameRoom extends React.Component {
   
   
   handleEndGame() {
-    this.props.screenProps.navigation.navigate('TeacherApp');
+    this.props.screenProps.navigation.navigate('Games');
     // this.handleExitMessage(); TODO - message action 'EXIT_GAME' if game has not finished
     const {
       handleSetAppState,
