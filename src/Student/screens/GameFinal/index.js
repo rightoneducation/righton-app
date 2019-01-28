@@ -18,6 +18,7 @@ export default class GameFinal extends React.Component {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({}),
       handleSetAppState: PropTypes.func.isRequired,
+      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
       team: PropTypes.number,
     }),
     navigation: PropTypes.shape({
@@ -29,6 +30,7 @@ export default class GameFinal extends React.Component {
     screenProps: {
       gameState: {},
       handleSetAppState: () => {},
+      IOTUnsubscribeFromTopic: () => {},
       team: 0,
     },
     navigation: {
@@ -40,6 +42,7 @@ export default class GameFinal extends React.Component {
     super(props);
 
     this.state = {
+      exit: false,
       playerScore: props.screenProps.points,
       portal: '',
       teamScore: 0,
@@ -75,6 +78,8 @@ export default class GameFinal extends React.Component {
           this.startingGame = false;
           if (this.mounted) this.props.screenProps.navigation.navigate('GamePreview');
         }, 6000);
+      } else if (nextProps.screenProps.gameState.state.exitGame) {
+        this.setState({ exit: true });
       }
     }
   }
@@ -113,19 +118,20 @@ export default class GameFinal extends React.Component {
 
 
   handleExitGame() {
-    const { handleSetAppState } = this.props.screenProps;
-    this.props.navigation.navigate('Dashboard');
+    const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
+    handleSetAppState('gameState', {});
+    IOTUnsubscribeFromTopic();
     setTimeout(() => {
-      // Refrain from cleanup up `team` in state & unsubscribing from GameRoomID
-      handleSetAppState('gameState', {});
-    }, 500);
+      this.props.navigation.navigate('Dashboard');
+      handleSetAppState('GameRoomID', '');
+      handleSetAppState('team', '');
+    }, 250);
   }
 
 
   render() {
     const { team } = this.props.screenProps;
-    const { state } = this.props.screenProps.gameState;
-    const { playerScore, portal, teamScore } = this.state;
+    const { exit, playerScore, portal, teamScore } = this.state;
 
     if (portal) {
       return (
@@ -163,7 +169,7 @@ export default class GameFinal extends React.Component {
           </View>
         </View>
 
-        {state.EXIT_GAME &&
+        {exit &&
           <ButtonWide
             label={'Exit game'}
             onPress={this.handleExitGame}
