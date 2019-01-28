@@ -357,7 +357,7 @@ class Games extends React.PureComponent {
           onPress={() => this.handleOpenGame(null, game, idx)}
           style={styles.gameOpenButton}
         >
-          <Text style={styles.gameOpenText}>Open game</Text>
+          <Text style={styles.gameOpenText}>View game</Text>
         </Touchable>
         <Touchable
           activeOpacity={0.8}
