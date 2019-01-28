@@ -390,20 +390,34 @@ export default class GameRoom extends React.Component {
   
   handleEndGame() {
     this.props.screenProps.navigation.navigate('Games');
-    // this.handleExitMessage(); TODO - message action 'EXIT_GAME' if game has not finished
-    const {
-      handleSetAppState,
-      IOTUnsubscribeFromTopic,
-    } = this.props.screenProps;
-    const { GameRoomID } = this.props.screenProps;
-    IOTUnsubscribeFromTopic();
-    handleSetAppState('gameState', {});
-    handleSetAppState('GameRoomID', '');
-    handleSetAppState('players', {});
-    deleteGameFromDynamoDB(GameRoomID,
-      () => debug.log('Deleted GameRoomID from DynamoDB'),
-      e => debug.warn('Error deleting GameRoomID from DynamoDB', JSON.stringify(e))
-    );
+    this.handleExitMessage();
+    setTimeout(() => {
+      const {
+        handleSetAppState,
+        IOTUnsubscribeFromTopic,
+      } = this.props.screenProps;
+      const { GameRoomID } = this.props.screenProps;
+      IOTUnsubscribeFromTopic();
+      handleSetAppState('gameState', {});
+      handleSetAppState('GameRoomID', '');
+      handleSetAppState('players', {});
+      deleteGameFromDynamoDB(GameRoomID,
+        () => debug.log('Deleted GameRoomID from DynamoDB'),
+        e => debug.warn('Error deleting GameRoomID from DynamoDB', JSON.stringify(e))
+      );
+    }, 0);
+  }
+
+
+  handleExitMessage() {
+    const { IOTPublishMessage } = this.props.screenProps;
+    const message = {
+      uid: `${Math.random()}`,
+      payload: {
+        EXIT_GAME: true,
+      },
+    };
+    IOTPublishMessage(message);
   }
 
 

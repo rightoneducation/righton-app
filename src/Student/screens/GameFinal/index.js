@@ -124,6 +124,7 @@ export default class GameFinal extends React.Component {
 
   render() {
     const { team } = this.props.screenProps;
+    const { state } = this.props.screenProps.gameState;
     const { playerScore, portal, teamScore } = this.state;
 
     if (portal) {
@@ -162,10 +163,11 @@ export default class GameFinal extends React.Component {
           </View>
         </View>
 
-        <ButtonWide
-          label={'Exit game'}
-          onPress={this.handleExitGame}
-        />
+        {state.EXIT_GAME &&
+          <ButtonWide
+            label={'Exit game'}
+            onPress={this.handleExitGame}
+          />}
       </View>
     );
   }
