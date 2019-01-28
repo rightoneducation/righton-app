@@ -6,7 +6,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors, elevation } from '../../utils/theme';
 
-export default function ButtonPlay({
+export default function ButtonStart({
   buttonStyles = {},
   iconStyles = {},
   iconLabel = 'Play',
@@ -30,7 +30,7 @@ export default function ButtonPlay({
 }
 
 
-ButtonPlay.propTypes = {
+ButtonStart.propTypes = {
   buttonStyles: PropTypes.shape({}),
   icon: PropTypes.string,
   iconLabel: PropTypes.string,
@@ -38,7 +38,7 @@ ButtonPlay.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-ButtonPlay.defaultProps = {
+ButtonStart.defaultProps = {
   buttonStyles: {},
   icon: 'play',
   iconLabel: 'Start',

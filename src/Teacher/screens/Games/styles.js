@@ -91,7 +91,7 @@ export default ScaledSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
   },
-  gamePlayButton: {
+  gameStartButton: {
     alignItems: 'center',
     bottom: '5@vs',
     backgroundColor: colors.primary,
@@ -101,7 +101,7 @@ export default ScaledSheet.create({
     right: '5@s',
     width: '25@ms',
   },
-  gamePlayIcon: {
+  gameStartIcon: {
     color: colors.white,
     fontSize: fonts.small,
   },

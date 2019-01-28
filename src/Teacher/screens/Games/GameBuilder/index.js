@@ -13,7 +13,7 @@ import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonWide from '../../../../components/ButtonWide';
-import ButtonPlay from '../../../../components/ButtonPlay';
+import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
 import SelectionModal from '../../../../components/SelectionModal';
 import { categorySelection, levelSelection } from '../../../../config/selections';
@@ -377,7 +377,7 @@ export default class GameBuilder extends React.Component {
               <InputModal {...showInput} />}
             
             {Boolean(GameID) && 
-              <ButtonPlay onPress={() => handlePlayGame(null, this.state.game)} />}
+              <ButtonStart onPress={() => handlePlayGame(null, this.state.game)} />}
 
             {Boolean(showSelection) &&
               <SelectionModal

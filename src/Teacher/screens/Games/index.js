@@ -299,7 +299,7 @@ class Games extends React.PureComponent {
       >
         <View style={styles.alignCenter}>
           <Aicon name={'gamepad'} style={[styles.headerIcon, filter === 'Favorites' && styles.colorGrey]} />
-          <Text style={[styles.gamePlayIcon, filter === 'Favorites' && styles.colorGrey]}>My Games</Text>
+          <Text style={[styles.gameStartIcon, filter === 'Favorites' && styles.colorGrey]}>My Games</Text>
         </View>
       </Touchable>
 
@@ -311,7 +311,7 @@ class Games extends React.PureComponent {
       >
         <View style={styles.alignCenter}>
           <Aicon name={'heart'} style={[styles.headerIcon, filter === '' && styles.colorGrey]} />
-          <Text style={[styles.gamePlayIcon, filter === '' && styles.colorGrey]}>Favorites</Text>
+          <Text style={[styles.gameStartIcon, filter === '' && styles.colorGrey]}>Favorites</Text>
         </View>
       </Touchable>
 
@@ -364,9 +364,9 @@ class Games extends React.PureComponent {
           background={Touchable.Ripple(colors.primary, false)}
           hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
           onPress={() => this.handlePlayGame(null, game)}
-          style={[styles.gameOpenButton, styles.gamePlayButton]}
+          style={[styles.gameOpenButton, styles.gameStartButton]}
         >
-          <Aicon name={'play'} style={styles.gamePlayIcon} />
+          <Aicon name={'play'} style={styles.gameStartIcon} />
         </Touchable>
       </View>
     );
