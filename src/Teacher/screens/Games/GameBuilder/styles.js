@@ -171,6 +171,7 @@ export default ScaledSheet.create({
     marginTop: '15@vs',
   },
   row: {
+    alignItems: 'center',
     flexDirection: 'row',
   },
   scrollview: {
