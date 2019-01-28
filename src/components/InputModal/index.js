@@ -19,6 +19,7 @@ export default class InputModal extends React.PureComponent {
     closeModal: PropTypes.func.isRequired,
     keyboardType: PropTypes.string,
     height: PropTypes.number,
+    hiddenLabel: PropTypes.bool,
     input: PropTypes.string,
     inputLabel: PropTypes.string,
     labelStyles: PropTypes.shape({}),
@@ -39,6 +40,7 @@ export default class InputModal extends React.PureComponent {
     closeModal: () => {},
     keyboardType: 'default',
     height: 45,
+    hiddenLabel: true,
     input: '',
     inputLabel: '',
     labelStyles: {},
@@ -142,6 +144,7 @@ export default class InputModal extends React.PureComponent {
       backgroundColor,
       closeModal,
       height,
+      hiddenLabel,
       inputLabel,
       labelStyles,
       visible,
@@ -178,14 +181,15 @@ export default class InputModal extends React.PureComponent {
             onPress={this.handleInputSubmit}
             style={styles.closeContainer}
           />
-          <Text
-            style={[
-              styles.inputLabel,
-              { left: xAxis },
-              bottom ? { bottom: 15 + ms5 + scaledHeight } : { top: yAxis - ms5 },
-              labelStyles,
-            ]}
-          >{ inputLabel }</Text>
+          {!hiddenLabel &&
+            <Text
+              style={[
+                styles.inputLabel,
+                { left: xAxis },
+                bottom ? { bottom: 15 + ms5 + scaledHeight } : { top: yAxis - ms5 },
+                labelStyles,
+              ]}
+            >{ inputLabel }</Text>}
 
           {this.renderTextInput(xAxis, yAxis, bottom, scaledHeight)}
         </View>
