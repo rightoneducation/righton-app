@@ -48,7 +48,7 @@ export default ScaledSheet.create({
     borderWidth: 1,
     height: '15@ms',
     justifyContent: 'center',
-    marginHorizontal: '15@s',
+    marginHorizontal: '15@ms',
     width: '15@ms',
   },
   choiceCheck: {

@@ -10,7 +10,7 @@ import {
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet } from 'react-native-size-matters';
-// import Aicon from 'react-native-vector-icons/FontAwesome';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../../../Student/screens/GamePreview/styles';
@@ -167,7 +167,7 @@ export default class GameRoomResults extends React.Component {
                 <View
                   style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
                 /> :
-                <View style={styles.hiddenDot} />
+                <Aicon name={'checkmark'} style={styles.checkmark} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[0] && choices[0].value }</Text>
             </View>
@@ -177,7 +177,7 @@ export default class GameRoomResults extends React.Component {
                 <View
                   style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
                 /> :
-                <View style={styles.hiddenDot} />
+                <Aicon name={'checkmark'} style={styles.checkmark} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[1] && choices[1].value }</Text>
             </View>
@@ -187,7 +187,7 @@ export default class GameRoomResults extends React.Component {
                 <View
                   style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
                 /> :
-                <View style={styles.hiddenDot} />
+                <Aicon name={'checkmark'} style={styles.checkmark} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[2] && choices[2].value }</Text>
             </View>
@@ -197,7 +197,7 @@ export default class GameRoomResults extends React.Component {
                 <View
                   style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
                 /> :
-                <View style={styles.hiddenDot} />
+                <Aicon name={'checkmark'} style={styles.checkmark} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[3] && choices[3].value }</Text>
             </View>
@@ -219,15 +219,9 @@ const styles = ScaledSheet.create({
     height: '30@vs',
     marginLeft: '55@s',
   },
-  hiddenDot: {
-    height: '25@s',
-    marginHorizontal: '15@s',
-    width: '25@s',
-  },
   checkmark: {
     color: colors.primary,
-    fontSize: '25@ms0.2',
-    marginBottom: '10@vs',
-    marginHorizontal: '15@s',
+    fontSize: '15@ms',
+    marginHorizontal: '15@ms',
   },
 });
