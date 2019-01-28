@@ -175,9 +175,9 @@ export default class GameRoomFinal extends React.Component {
         </Text>
         <Text style={parentStyles.textLabel}>Total points:</Text>
         <Text style={[parentStyles.textLabel, styles.primary]}>{ team.totalPoints }</Text>
-        <Text style={parentStyles.textLabel}>Best trick:</Text>
+        <Text style={parentStyles.textLabel}>Best trick answer:</Text>
         <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickValue }</Text>
-        <Text style={parentStyles.textLabel}>Number of players tricked:</Text>
+        <Text style={parentStyles.textLabel}>Players tricked:</Text>
         <View style={styles.teamItemRow}>
           <Text style={[parentStyles.textLabel, styles.primary]}>{ team.bestTrickVotes }</Text>
           <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.bestTrickVotes * (players - numberOfTeammates)) * 100)}%` }</Text>
