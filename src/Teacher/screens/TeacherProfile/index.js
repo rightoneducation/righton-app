@@ -72,8 +72,10 @@ export default class TeacherProfile extends React.Component {
 
 
   handleSignOut() {
-    const { doSignOut } = this.props.screenProps;
+    const { doSignOut, handleSetAppState } = this.props.screenProps;
     const { navigation } = this.props;
+
+    handleSetAppState('reset');
 
     doSignOut();
     navigation.navigate('OnboardAppRouter');
@@ -88,7 +90,7 @@ export default class TeacherProfile extends React.Component {
 
   handleOnboardNavigation() {
     const { navigation } = this.props;
-    navigation.navigate('OnboardTeacherRouter');
+    navigation.navigate('OnboardAppRouter');
   }
 
 
