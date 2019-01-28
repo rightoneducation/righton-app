@@ -41,7 +41,7 @@ ButtonPlay.propTypes = {
 ButtonPlay.defaultProps = {
   buttonStyles: {},
   icon: 'play',
-  iconLabel: 'Play',
+  iconLabel: 'Start',
   iconStyles: {},
   onPress: () => {},
 };
