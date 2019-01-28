@@ -228,6 +228,18 @@ export default class App extends React.Component {
           LocalStorage.setItem('@RightOn:DeviceSettings', stringifiedDeviceSettings);
         });
         break;
+      case 'reset':
+        this.setState({
+          account: {},
+          deviceSettings: {},
+          gameState: {},
+          GameRoomID: '',
+          players: {},
+          points: 0,
+          session: null,
+          team: null,
+        });
+        break;
       default:
         break;
     }
