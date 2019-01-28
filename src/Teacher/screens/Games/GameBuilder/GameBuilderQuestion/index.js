@@ -319,7 +319,7 @@ export default class GameBuilderQuestion extends React.Component {
                 :
                 <View>
                   <Aicon name={'image'} style={parentStyles.bannerIcon} />
-                  <Text style={parentStyles.bannerLabel}>Tap to add an image</Text>
+                  <Text style={parentStyles.bannerLabel}>Tap to add an image or diagram</Text>
                 </View>}
               {/* <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
