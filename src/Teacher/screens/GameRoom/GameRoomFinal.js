@@ -74,7 +74,7 @@ export default class GameRoomFinal extends React.Component {
           const teamNumber = teamRef.substr(teamRef.indexOf('m') + 1);
           const teamPoints = gameState[teamRef].points;
           teamRank.answer = gameState[teamRef].answer;
-          teamRank.team = `Team ${teamNumber}`;
+          teamRank.team = `Team ${teamNumber + 1}`;
           teamRank.teamNumber = teamNumber;
           teamRank.bestTrickValue = bestTrickValue;
           teamRank.bestTrickVotes = bestTrickVotes;
