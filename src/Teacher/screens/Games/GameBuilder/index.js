@@ -16,6 +16,7 @@ import ButtonWide from '../../../../components/ButtonWide';
 import ButtonPlay from '../../../../components/ButtonPlay';
 import InputModal from '../../../../components/InputModal';
 import SelectionModal from '../../../../components/SelectionModal';
+import { categorySelection, levelSelection } from '../../../../config/selections';
 import GameBuilderQuestion from './GameBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
@@ -382,40 +383,8 @@ export default class GameBuilder extends React.Component {
               <SelectionModal
                 handleClose={showSelection === 'Subject Category' ? this.hideCategorySelection : this.hideCCSSelection}
                 items={showSelection === 'Subject Category' ?
-                  [
-                    { label: 'Math', value: 'Math' },
-                    { label: 'Algebra', value: 'Algebra' },
-                    { label: 'Geometry', value: 'Geometry' },
-                    { label: 'Calculus', value: 'Calculus' },
-                    { label: 'Statistics', value: 'Statistics' },
-                    { label: 'Computer Science', value: 'Computer Science' },
-                    { label: 'Art', value: 'Art' },
-                    { label: 'Design', value: 'Design' },
-                    { label: 'Speech', value: 'Speech' },
-                    { label: 'Biology', value: 'Biology' },
-                    { label: 'Chemistry', value: 'Chemistry' },
-                    { label: 'Physics', value: 'Physics' },
-                    { label: 'Geography', value: 'Geography' },
-                    { label: 'Psychology', value: 'Psychology' },
-                    { label: 'History', value: 'History' },
-                    { label: 'Government', value: 'Government' },
-                    { label: 'Economics', value: 'Economics' },
-                    { label: 'English', value: 'English' },
-                    { label: 'Spanish', value: 'Spanish' },
-                    { label: 'French', value: 'French' },
-                    { label: 'German', value: 'German' },
-                    { label: 'Physical Education', value: 'Physical Education' },
-                  ] :
-                  [
-                    { label: 'Level 1', value: '1' },
-                    { label: 'Level 2', value: '2' },
-                    { label: 'Level 3', value: '3' },
-                    { label: 'Level 4', value: '4' },
-                    { label: 'Level 5', value: '5' },
-                    { label: 'Level 6', value: '6' },
-                    { label: 'Level 7', value: '7' },
-                    { label: 'Level 8', value: '8' },
-                  ]
+                  categorySelection :
+                  levelSelection
                 }
                 onSelect={showSelection === 'Subject Category' ? this.hideCategorySelection : this.hideCCSSelection}
                 title={showSelection}

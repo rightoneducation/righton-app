@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import SelectionModal from '../../../components/SelectionModal';
+import { timeSelection } from '../../../config/selections';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import parentStyles from './styles';
@@ -121,26 +122,7 @@ export default class GameRoomStart extends React.Component {
           {showSelection &&
             <SelectionModal
               handleClose={this.handleTimeSelection}
-              items={[
-                { label: 'No time limit', value: '0:00' },
-                { label: '0:30', value: '0:30' },
-                { label: '1:00', value: '1:00' },
-                { label: '1:30', value: '1:30' },
-                { label: '2:00', value: '2:00' },
-                { label: '2:30', value: '2:30' },
-                { label: '3:00', value: '3:00' },
-                { label: '3:30', value: '3:30' },
-                { label: '4:00', value: '4:00' },
-                { label: '4:30', value: '4:30' },
-                { label: '5:00', value: '5:00' },
-                { label: '10:00', value: '10:00' },
-                { label: '15:00', value: '15:00' },
-                { label: '20:00', value: '20:00' },
-                { label: '25:00', value: '25:00' },
-                { label: '30:00', value: '30:00' },
-                { label: '45:00', value: '45:00' },
-                { label: '60:00', value: '60:00' },
-              ]}
+              items={timeSelection}
               onSelect={this.handleTimeSelection}
               title={'Time remaining'}
               visible={showSelection}
