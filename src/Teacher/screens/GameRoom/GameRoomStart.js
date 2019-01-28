@@ -9,7 +9,7 @@ import { scale } from 'react-native-size-matters';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
-import { colors } from '../../../utils/theme';
+import { colors, fonts } from '../../../utils/theme';
 
 export default function GameRoomStart({
   GameRoomID,
@@ -48,6 +48,10 @@ export default function GameRoomStart({
           borderColor: colors.primary,
           borderWidth: 1,
           marginTop: 25,
+        }}
+        textStyles={{
+          fontWeight: 'bold',
+          fontSize: fonts.large,
         }}
         label={GameRoomID ? `Enter game with: ${GameRoomID}` : 'Generating game room...'}
         onPress={() => {}}
