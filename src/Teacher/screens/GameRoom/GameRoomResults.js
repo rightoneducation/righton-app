@@ -205,7 +205,7 @@ export default class GameRoomResults extends React.Component {
           </View>
         </View>
         <ButtonWide
-          label={nextTeam ? 'Next team' : 'Final results'}
+          label={nextTeam ? `Next: Team ${nextTeam.substr(4)}'s Question` : 'Final results'}
           onPress={() => handleNextTeam()}
         />
       </ScrollView>
