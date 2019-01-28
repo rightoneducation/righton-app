@@ -10,7 +10,7 @@ import Touchable from 'react-native-platform-touchable';
 import InputModal from '../../../components/InputModal';
 import Message from '../../../components/Message';
 import ButtonRound from '../../../components/ButtonRound';
-import { deviceWidth, elevation, fonts, colors } from '../../../utils/theme';
+import { elevation, fonts, colors } from '../../../utils/theme';
 import styles from './styles';
 import debug from '../../../utils/debug';
 import { getItemFromTeacherAccountFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
@@ -282,13 +282,13 @@ class LogIn extends React.Component {
 
   closeInputModal(input, inputLabel) {
     switch (inputLabel) {
-      case 'email':
+      case 'Your email address':
         this.setState({ email: input, showInput: false });
         if (!this.state.password && input) {
-          this.handleInputModal('password', 'Password', 75, '');
+          this.handleInputModal('Password', 'Password', 75, '');
         }
         break;
-      case 'password':
+      case 'Password':
         this.setState({ password: input, showInput: false }, () => {
           this.checkRequirements();
         });
@@ -300,9 +300,9 @@ class LogIn extends React.Component {
 
 
   handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
-    if (inputLabel === 'email') {
+    if (inputLabel === 'Your email address') {
       this.onEmailLayout();
-    } else if (inputLabel === 'password') {
+    } else if (inputLabel === 'Password') {
       this.onPasswordLayout();
     }
     setTimeout(() => {
@@ -312,6 +312,7 @@ class LogIn extends React.Component {
           closeModal: this.closeInputModal,
           keyboardType,
           height: 45,
+          hiddenLabel: false,
           input,
           inputLabel,
           maxLength,
@@ -319,7 +320,6 @@ class LogIn extends React.Component {
           placeholder,
           visible: true,
           spellCheck: true,
-          width: deviceWidth - 30,
           x: this[`${inputLabel}X`],
           y: this[`${inputLabel}Y`],
         }
@@ -374,10 +374,10 @@ class LogIn extends React.Component {
           >
             <Text style={styles.inputLabel}>Your email address</Text>
             <Touchable
-              onPress={() => this.handleInputModal('email', 'Email address', 75, email, 'email-address')}
+              onPress={() => this.handleInputModal('Your email address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'email' ? '' : (email || 'Email address')}</Text>
+              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your email address' ? '' : (email || 'Email address')}</Text>
             </Touchable>
           </View>
 
@@ -388,10 +388,10 @@ class LogIn extends React.Component {
           >
             <Text style={styles.inputLabel}>Password</Text>
             <Touchable
-              onPress={() => this.handleInputModal('password', 'Password', 75, password)}
+              onPress={() => this.handleInputModal('Password', 'Password', 75, password)}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'password' ? '' : (password || 'Password')}</Text>
+              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Password' ? '' : (password || 'Password')}</Text>
             </Touchable>
           </View>
 
