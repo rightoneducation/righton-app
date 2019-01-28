@@ -70,8 +70,10 @@ export default ScaledSheet.create({
     marginTop: '35@vs',
   },
   teamContainer: {
+    alignItems: 'center',
     flex: 0.5,
     height: '100@ms',
+    justifyContent: 'center',
     marginBottom: '10@vs',
   },
   textLabel: {
