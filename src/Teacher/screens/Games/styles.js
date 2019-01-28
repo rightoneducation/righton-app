@@ -25,7 +25,7 @@ export default ScaledSheet.create({
     left: '15@s',
   },
   headerFavorites: {
-    left: '95@s',
+    left: '65@s',
   },
   headerPlus: {
     right: '15@s',
