@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
-import { scale, ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../../../Student/screens/GamePreview/styles';
-import { colors, deviceWidth } from '../../../utils/theme';
+import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
 export default class GameRoomResults extends React.Component {
   static propTypes = {
@@ -40,10 +40,19 @@ export default class GameRoomResults extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      firstPercent: 0,
+      secondPercent: 0,
+      thirdPercent: 0,
+      fourthPercent: 0,
+    };
+
     this.firstChoice = new Animated.Value(0);
     this.secondChoice = new Animated.Value(0);
     this.thirdChoice = new Animated.Value(0);
     this.fourthChoice = new Animated.Value(0);
+
+    this.percentOpacity = new Animated.Value(0);
 
     this.choicesRef = undefined;
     this.choicesWidth = deviceWidth;
@@ -63,7 +72,7 @@ export default class GameRoomResults extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.choicesRef),
         (x) => {
-          this.choicesWidth = deviceWidth - x - scale(55);
+          this.choicesWidth = deviceWidth - x - moderateScale(45);
         }
       );
     }
@@ -87,18 +96,44 @@ export default class GameRoomResults extends React.Component {
           playersInTeamRef += 1;
         }
       }
-      const firstWidth = gameState[teamRef].choices[0] ?
-        (gameState[teamRef].choices[0].votes / (numberOfPlayers - playersInTeamRef)) *
-        this.choicesWidth : 0;
-      const secondWidth = gameState[teamRef].choices[1] ?
-        (gameState[teamRef].choices[1].votes / (numberOfPlayers - playersInTeamRef)) *
-        this.choicesWidth : 0;
-      const thirdWidth = gameState[teamRef].choices[2] ?
-        (gameState[teamRef].choices[2].votes / (numberOfPlayers - playersInTeamRef)) *
-        this.choicesWidth : 0;
-      const fourthWidth = gameState[teamRef].choices[3] ?
-        (gameState[teamRef].choices[3].votes / (numberOfPlayers - playersInTeamRef)) *
-        this.choicesWidth : 0;
+      let firstWidth = 0;
+      let secondWidth = 0;
+      let thirdWidth = 0;
+      let fourthWidth = 0;
+
+      let firstPercent = 0;
+      let secondPercent = 0;
+      let thirdPercent = 0;
+      let fourthPercent = 0;
+
+      if (gameState[teamRef].choices[0]) {
+        firstWidth = (gameState[teamRef].choices[0].votes / (numberOfPlayers - playersInTeamRef)) *
+          this.choicesWidth;
+        firstPercent = Math.round(
+          (gameState[teamRef].choices[0].votes / (numberOfPlayers - playersInTeamRef)) * 100
+        );
+      }
+      if (gameState[teamRef].choices[1]) {
+        secondWidth = (gameState[teamRef].choices[1].votes / (numberOfPlayers - playersInTeamRef)) *
+          this.choicesWidth;
+        secondPercent = Math.round(
+          (gameState[teamRef].choices[1].votes / (numberOfPlayers - playersInTeamRef)) * 100
+        );
+      }
+      if (gameState[teamRef].choices[2]) {
+        thirdWidth = (gameState[teamRef].choices[2].votes / (numberOfPlayers - playersInTeamRef)) *
+          this.choicesWidth;
+        thirdPercent = Math.round(
+          (gameState[teamRef].choices[2].votes / (numberOfPlayers - playersInTeamRef)) * 100
+        );
+      }
+      if (gameState[teamRef].choices[3]) {
+        fourthWidth = (gameState[teamRef].choices[3].votes / (numberOfPlayers - playersInTeamRef)) *
+          this.choicesWidth;
+        fourthPercent = Math.round(
+          (gameState[teamRef].choices[3].votes / (numberOfPlayers - playersInTeamRef)) * 100
+        );
+      }
   
       Animated.parallel([
         Animated.timing(
@@ -125,8 +160,21 @@ export default class GameRoomResults extends React.Component {
             duration: 2000,
           }
         ),
+        Animated.timing(
+          this.percentOpacity, {
+            toValue: 1,
+            duration: 2000,
+          }
+        ),
       ],
-      { useNativeDriver: true }).start();
+      { useNativeDriver: true }).start(() => {
+        this.setState({
+          firstPercent,
+          secondPercent,
+          thirdPercent,
+          fourthPercent,
+        });
+      });
     }, 100);
   }
 
@@ -141,6 +189,13 @@ export default class GameRoomResults extends React.Component {
     } = this.props;
 
     const { choices } = gameState[teamRef]; 
+
+    const {
+      firstPercent,
+      secondPercent,
+      thirdPercent,
+      fourthPercent,
+    } = this.state;
 
     return (
       <ScrollView
@@ -162,46 +217,71 @@ export default class GameRoomResults extends React.Component {
           style={gamePreviewStyles.choiceContainerWrapper}
         >
           <View style={gamePreviewStyles.choicesContainer}>
+
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[0] && choices[0].correct ?
-                <View
-                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
-                /> :
-                <Aicon name={'checkmark'} style={styles.checkmark} />
+                <Aicon name={'check'} style={styles.check} /> :
+                <View style={[gamePreviewStyles.choiceButton, styles.hiddenDot]} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[0] && choices[0].value }</Text>
             </View>
-            <Animated.View style={[styles.bar, { width: this.firstChoice }]} />
+            <View style={styles.barContainer}>
+              <Animated.View style={[styles.bar, 
+                { width: this.firstChoice, opacity: this.percentOpacity }]}
+              />
+              <Text style={[styles.percent, firstPercent && styles.visible]}>
+                { firstPercent ? `${firstPercent}%` : '100%' }
+              </Text>
+            </View>
+
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[1] && choices[1].correct ?
-                <View
-                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
-                /> :
-                <Aicon name={'checkmark'} style={styles.checkmark} />
+                <Aicon name={'check'} style={styles.check} /> :
+                <View style={[gamePreviewStyles.choiceButton, styles.hiddenDot]} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[1] && choices[1].value }</Text>
             </View>
-            <Animated.View style={[styles.bar, { width: this.secondChoice }]} />
+            <View style={styles.barContainer}>
+              <Animated.View style={[styles.bar, 
+                { width: this.secondChoice, opacity: this.percentOpacity }]}
+              />
+              <Text style={[styles.percent, secondPercent && styles.visible]}>
+                { secondPercent ? `${secondPercent}%` : '100%' }
+              </Text>
+            </View>
+
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[2] && choices[2].correct ?
-                <View
-                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
-                /> :
-                <Aicon name={'checkmark'} style={styles.checkmark} />
+                <Aicon name={'check'} style={styles.check} /> :
+                <View style={[gamePreviewStyles.choiceButton, styles.hiddenDot]} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[2] && choices[2].value }</Text>
             </View>
-            <Animated.View style={[styles.bar, { width: this.thirdChoice }]} />
+            <View style={styles.barContainer}>
+              <Animated.View style={[styles.bar, 
+                { width: this.thirdChoice, opacity: this.percentOpacity }]}
+              />
+              <Text style={[styles.percent, thirdPercent && styles.visible]}>
+                { thirdPercent ? `${thirdPercent}%` : '100%' }
+              </Text>
+            </View>
+
             <View style={gamePreviewStyles.choiceContainer}>
               {choices[3] && choices[3].correct ?
-                <View
-                  style={[gamePreviewStyles.choiceButton, gamePreviewStyles.choiceSelected]}
-                /> :
-                <Aicon name={'checkmark'} style={styles.checkmark} />
+                <Aicon name={'check'} style={styles.check} /> :
+                <View style={[gamePreviewStyles.choiceButton, styles.hiddenDot]} />
               }
               <Text style={gamePreviewStyles.choiceValue}>{ choices[3] && choices[3].value }</Text>
             </View>
-            <Animated.View style={[styles.bar, { width: this.fourthChoice }]} />
+            <View style={styles.barContainer}>
+              <Animated.View style={[styles.bar, 
+                { width: this.fourthChoice, opacity: this.percentOpacity }]}
+              />
+              <Text style={[styles.percent, fourthPercent && styles.visible]}>
+                { fourthPercent ? `${fourthPercent}%` : '100%' }
+              </Text>
+            </View>
+
           </View>
         </View>
         <ButtonWide
@@ -217,11 +297,27 @@ const styles = ScaledSheet.create({
   bar: {
     backgroundColor: colors.primary,
     height: '30@vs',
-    marginLeft: '55@s',
   },
-  checkmark: {
+  barContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginLeft: '45@ms',
+  },
+  check: {
     color: colors.primary,
     fontSize: '15@ms',
     marginHorizontal: '15@ms',
+  },
+  hiddenDot: {
+    borderColor: colors.darkGray,
+  },
+  percent: {
+    color: colors.darkGray,
+    fontSize: fonts.medium,
+    fontWeight: 'bold',
+    marginLeft: '5@ms',
+  },
+  visible: {
+    color: colors.white,
   },
 });
