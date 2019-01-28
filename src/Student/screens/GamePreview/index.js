@@ -228,6 +228,20 @@ export default class GamePreview extends React.PureComponent {
     this.setState({ showInput: false });
     if (input) {
       const { handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
+      const { answer } = this.props.screenProps.gameState[`team${team}`];
+      if (input === answer) {
+        this.setState({
+          messageProps: {
+            closeFunc: this.handleCloseMessage,
+            bodyStyle: null,
+            textStyle: null,
+            duration: null,
+            message: 'Trick answer cannot be actual answer.',
+            timeout: 4000,
+          },
+        });
+        return;
+      }
       const teamRef = `team${team}`;
       const uid = `${Math.random()}`;
       const message = {
