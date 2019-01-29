@@ -24,7 +24,7 @@ export default class GameBuilderQuestion extends React.Component {
       answer: PropTypes.string,
       image: PropTypes.string,
       instructions: PropTypes.arrayOf(PropTypes.string),
-      quesiton: PropTypes.string,
+      question: PropTypes.string,
     }),
     visible: PropTypes.bool.isRequired,
   }
