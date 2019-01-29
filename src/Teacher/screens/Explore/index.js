@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Image,
+  // Image,
   ScrollView,
   StatusBar,
   Text,
@@ -8,10 +8,13 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet } from 'react-native-size-matters';
-import Aicon from 'react-native-vector-icons/FontAwesome';
+import { getGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
+// import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import debug from '../../../utils/debug';
 import MainHeader from '../../components/MainHeader';
+import GameBuilder from '../Games/GameBuilder';
 
 
 class Explore extends React.PureComponent {
@@ -36,12 +39,14 @@ class Explore extends React.PureComponent {
 
     this.state = {
       data: [],
+      viewGame: null,
     };
   }
 
 
   componentDidMount() {
     if (__DEV__) this.hydrateDummyData();
+    this.hydrateGamesFromDynamoDB();
   }
 
 
@@ -49,13 +54,22 @@ class Explore extends React.PureComponent {
     this.setState({
       data: [
         {
-          icon: '',
-          banner: '',
           title: 'Triangles or try angles',
           description: 'A guide up the pyramids',
         },
       ],
     });
+  }
+
+
+  hydrateGamesFromDynamoDB() {
+    getGamesFromDynamoDB(
+      (res) => {
+        debug.log('Result from GETTING games from DynamoDB for Explore:', JSON.stringify(res));
+        this.hydrateState(res.data);
+      },
+      exception => debug.warn('Error GETTING games from DynamoDB for Explore:', JSON.stringify(exception))
+    );
   }
 
 
@@ -68,22 +82,35 @@ class Explore extends React.PureComponent {
   }
 
 
+  handleViewGame(data) {
+    const parsedGame = {};
+    parsedGame.title = data.title;
+    parsedGame.description = data.description;
+    parsedGame.category = data.category;
+    parsedGame.CCS = data.CCS;
+    parsedGame.questions = [];
+    let questionIndex = 1;
+    while (data[`q${questionIndex}`]) {
+      parsedGame.questions.push(data[`q${questionIndex}`]);
+      parsedGame.questions[questionIndex - 1].uid = `${Math.random()}`;
+      questionIndex += 1;
+    }
+    this.setState({ viewGame: parsedGame });
+  }
+
+
   renderDataBlock = data => (
     <Touchable
       activeOpacity={0.8}
       key={data.title || data.description}
-      onPress={() => {}}
+      onPress={() => this.handleViewGame(data)}
     >
       <View style={[styles.dataContainer, data.banner && { flexDirection: 'column', height: 300 }]}>
-        {Boolean(data.banner) &&
-          <Image source={{ uri: data.banner }} style={styles.banner} />}
         <View style={styles.dataBody}>
           <View style={styles.iconContainer}>
-            {data.icon ?
-              <Aicon name={data.icon} style={styles.icon} /> :
-              <View style={styles.iconTextContainer}>
-                <Text style={styles.iconText}>RightOn!</Text>
-              </View>}
+            <View style={styles.iconTextContainer}>
+              <Text style={styles.iconText}>RightOn!</Text>
+            </View>
           </View>
           <View style={styles.dataTextContainer}>
             <Text style={styles.dataTextTitle}>{data.title}</Text>
@@ -102,10 +129,20 @@ class Explore extends React.PureComponent {
 
   render() {
     const {
-      data
+      data,
+      viewGame,
     } = this.state;
 
     const { navigation } = this.props;
+
+    if (viewGame) {
+      return (
+        <GameBuilder
+          game={viewGame}
+          visible
+        />
+      );
+    }
 
     return (
       <View style={styles.container}>
