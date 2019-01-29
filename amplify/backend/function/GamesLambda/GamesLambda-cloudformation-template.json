@@ -2,13 +2,13 @@
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "Lambda resource stack creation using Amplify CLI",
 	"Parameters": {
-		"storageTeacherHistoryName": {
+		"storageGamesName": {
 			"Type": "String",
-			"Default": "storageTeacherHistoryName"
+			"Default": "storageGamesName"
 		},
-		"storageTeacherHistoryArn": {
+		"storageGamesArn": {
 			"Type": "String",
-			"Default": "storageTeacherHistoryArn"
+			"Default": "storageGamesArn"
 		}
 	},
 	"Resources": {
@@ -16,7 +16,7 @@
 			"Type": "AWS::Lambda::Function",
 			"Properties": {
 				"Handler": "index.handler",
-				"FunctionName": "TeacherHistoryLambda",
+				"FunctionName": "GamesLambda",
 				"Role": {
 					"Fn::GetAtt": [
 						"LambdaExecutionRole",
@@ -27,14 +27,14 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "ightn-20181229134435-deployment",
-					"S3Key": "amplify-builds/TeacherHistoryLambda-1548307723-latest-build.zip"
+					"S3Key": "amplify-builds/GamesLambda-1548750037-latest-build.zip"
 				}
 			}
 		},
 		"LambdaExecutionRole": {
 			"Type": "AWS::IAM::Role",
 			"Properties": {
-				"RoleName": "rightonLambdaRolefb5ba475",
+				"RoleName": "rightonLambdaRole49a2eac4",
 				"AssumeRolePolicyDocument": {
 					"Version": "2012-10-17",
 					"Statement": [
@@ -104,7 +104,7 @@
 							],
 							"Resource": [
 								{
-									"Ref": "storageTeacherHistoryArn"
+									"Ref": "storageGamesArn"
 								}
 							]
 						}

@@ -263,6 +263,26 @@
 				}
 			}
 		},
+		"functionGamesLambda": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/GamesLambda-cloudformation-template.json",
+				"Parameters": {
+					"storageGamesName": {
+						"Fn::GetAtt": [
+							"storageGames",
+							"Outputs.Name"
+						]
+					},
+					"storageGamesArn": {
+						"Fn::GetAtt": [
+							"storageGames",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
 		"apiTeacherGameAPI": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -337,6 +357,26 @@
 					"functionQuizMakerLambdaArn": {
 						"Fn::GetAtt": [
 							"functionQuizMakerLambda",
+							"Outputs.Arn"
+						]
+					}
+				}
+			}
+		},
+		"apiGamesAPI": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/GamesAPI-cloudformation-template.json",
+				"Parameters": {
+					"functionGamesLambdaName": {
+						"Fn::GetAtt": [
+							"functionGamesLambda",
+							"Outputs.Name"
+						]
+					},
+					"functionGamesLambdaArn": {
+						"Fn::GetAtt": [
+							"functionGamesLambda",
 							"Outputs.Arn"
 						]
 					}

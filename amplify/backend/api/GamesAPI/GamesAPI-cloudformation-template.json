@@ -7,15 +7,15 @@
         
     
     
-          "functionTeacherHistoryLambdaName": {
+          "functionGamesLambdaName": {
             "Type": "String",
-            "Default": "functionTeacherHistoryLambdaName"
+            "Default": "functionGamesLambdaName"
           },
         
           
-          "functionTeacherHistoryLambdaArn": {
+          "functionGamesLambdaArn": {
             "Type": "String",
-            "Default": "functionTeacherHistoryLambdaArn"
+            "Default": "functionGamesLambdaArn"
           }
         
           
@@ -25,16 +25,16 @@
     "Resources": {
         
         
-      "righton530d9e71": {
+      "righton1498e448": {
         "Type": "AWS::ApiGateway::RestApi",
         "Properties": {
           "Description": "",
-          "Name": "righton530d9e71",
+          "Name": "righton1498e448",
           "Body": {
             "swagger": "2.0",
             "info": {
               "version": "2018-05-24T17:52:00Z",
-              "title": "righton530d9e71"
+              "title": "righton1498e448"
             },
             "host": {
                 "Fn::Join": [
@@ -54,7 +54,7 @@
             ],
             "paths": {
               
-              "/TeacherID": {
+              "/items": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -140,7 +140,7 @@
                             
                             {
                                 
-                                "Ref": "functionTeacherHistoryLambdaArn"
+                                "Ref": "functionGamesLambdaArn"
                             },
                             
                             "/invocations"
@@ -153,7 +153,7 @@
                   }
                 }
               },
-              "/TeacherID/{proxy+}": {
+              "/items/{proxy+}": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -239,7 +239,7 @@
                           
                           {
                             
-                            "Ref": "functionTeacherHistoryLambdaArn"
+                            "Ref": "functionGamesLambdaArn"
                           },
                           
                           "/invocations"
@@ -296,12 +296,12 @@
                   
         
         
-        "functionTeacherHistoryLambdaPermissionrighton530d9e71": {
+        "functionGamesLambdaPermissionrighton1498e448": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "FunctionName": 
                     {
-                        "Ref":  "functionTeacherHistoryLambdaName"
+                        "Ref":  "functionGamesLambdaName"
                     },
                     
                     "Action": "lambda:InvokeFunction",
@@ -320,7 +320,7 @@
                             },
                             ":",
                             {
-                                "Ref": "righton530d9e71"
+                                "Ref": "righton1498e448"
                             },
                             "/*/*/*"
                         ]
@@ -333,13 +333,13 @@
         
         
         
-      "DeploymentAPIGWrighton530d9e71": {
+      "DeploymentAPIGWrighton1498e448": {
         "Type": "AWS::ApiGateway::Deployment",
         "Properties": {
           "Description": "The Development stage deployment of your API.",
           "StageName": "Prod",
           "RestApiId": {
-            "Ref": "righton530d9e71"
+            "Ref": "righton1498e448"
           }
         }
       }
@@ -347,11 +347,11 @@
     "Outputs": {
         "RootUrl": {
             "Description": "Root URL of the API gateway",
-            "Value": {"Fn::Join": ["", ["https://", {"Ref": "righton530d9e71"}, ".execute-api.", {"Ref": "AWS::Region"}, ".amazonaws.com/Prod"]]}
+            "Value": {"Fn::Join": ["", ["https://", {"Ref": "righton1498e448"}, ".execute-api.", {"Ref": "AWS::Region"}, ".amazonaws.com/Prod"]]}
         },
         "ApiName": {
           "Description": "API Friendly name",
-          "Value": "TeacherHistoryAPI"
+          "Value": "GamesAPI"
         }
     }
   }

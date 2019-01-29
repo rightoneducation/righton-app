@@ -1,18 +1,18 @@
 {
     "paths": [
         {
-            "name": "/TeacherID",
-            "lambdaFunction": "TeacherGamesLambda",
+            "name": "/items",
+            "lambdaFunction": "GamesLambda",
             "privacy": {
                 "open": true
             }
         }
     ],
-    "resourceName": "TeacherGamesAPI",
-    "apiName": "righton8a0a505f",
+    "resourceName": "GamesAPI",
+    "apiName": "righton1498e448",
     "functionArns": [
         {
-            "lambdaFunction": "TeacherGamesLambda"
+            "lambdaFunction": "GamesLambda"
         }
     ],
     "privacy": {
@@ -24,7 +24,7 @@
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "TeacherGamesLambda",
+            "resourceName": "GamesLambda",
             "attributes": [
                 "Name",
                 "Arn"
