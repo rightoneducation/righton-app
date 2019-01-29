@@ -9,12 +9,14 @@ import {
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import { getGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
+import { playGame, saveGamesToDatabase } from '../../../utils/gameBuilder';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import MainHeader from '../../components/MainHeader';
 import GameBuilder from '../Games/GameBuilder';
+import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
 class Explore extends React.PureComponent {
@@ -41,25 +43,29 @@ class Explore extends React.PureComponent {
       data: [],
       viewGame: null,
     };
+
+    this.handleCloseGame = this.handleCloseGame.bind(this);
+    this.handleCreateGame = this.handleCreateGame.bind(this);
+    this.handlePlayGame = this.handlePlayGame.bind(this);
   }
 
 
   componentDidMount() {
-    if (__DEV__) this.hydrateDummyData();
+    // if (__DEV__) this.hydrateDummyData();
     this.hydrateGamesFromDynamoDB();
   }
 
 
-  hydrateDummyData() {
-    this.setState({
-      data: [
-        {
-          title: 'Triangles or try angles',
-          description: 'A guide up the pyramids',
-        },
-      ],
-    });
-  }
+  // hydrateDummyData() {
+  //   this.setState({
+  //     data: [
+  //       {
+  //         title: 'Triangles or try angles',
+  //         description: 'A guide up the pyramids',
+  //       },
+  //     ],
+  //   });
+  // }
 
 
   hydrateGamesFromDynamoDB() {
@@ -82,8 +88,55 @@ class Explore extends React.PureComponent {
   }
 
 
+  handleCloseGame = () => this.setState({ viewGame: null });
+
+
+  handleCreateGame = async (game) => {
+    try {
+      const { TeacherID } = this.props.screenProps.account;
+      if (!TeacherID) {
+        // TODO! Notify user that they must create an account to create a game
+        return;
+      }
+      let games = [];
+      games = await LocalStorage.getItem(`@RightOn:${TeacherID}/Games`);
+      if (typeof games === 'string') {
+        games = JSON.parse(games);
+
+        games.unshift(game);
+
+        const { account, handleSetAppState } = this.props.screenProps;
+        if (account.gamesRef.local !== account.gamesRef.db) {
+          // Previous attempt to save games to DynamoDB failed so we try again.
+          saveGamesToDatabase(games, account, handleSetAppState);
+        }
+      }
+    } catch (exception) {
+      debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);
+    }
+  }
+
+
+  handlePlayGame = (e, game) => {
+    const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
+    const { handleSetAppState, IOTSubscribeToTopic } = this.props.screenProps;
+    const { navigation } = this.props;
+
+    playGame(
+      game,
+      quizTime,
+      trickTime,
+      handleSetAppState,
+      this.handleCloseGame,
+      navigation,
+      IOTSubscribeToTopic,
+    );
+  }
+
+
   handleViewGame(data) {
     const parsedGame = {};
+    parsedGame.GameID = data.GameID;
     parsedGame.title = data.title;
     parsedGame.description = data.description;
     parsedGame.category = data.category;
@@ -138,6 +191,9 @@ class Explore extends React.PureComponent {
     if (viewGame) {
       return (
         <GameBuilder
+          handleCloseGame={this.handleCloseGame}
+          handleCreateGame={this.handleCreateGame}
+          handlePlayGame={this.handlePlayGame}
           game={viewGame}
           visible
         />

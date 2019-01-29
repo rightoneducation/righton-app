@@ -8,19 +8,16 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
-import {
-  generateUniqueGameRoomIDInDynamoDB,
-  putGameToDynamoDB,
-} from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import GameBuilder from './GameBuilder';
 import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import styles from './styles';
 
+import { playGame, saveGamesToDatabase } from '../../../utils/gameBuilder';
+
 import {
   getItemFromTeacherAccountFromDynamoDB,
-  updateTeacherGamesInTeacherAccountInDynamoDB,
 } from '../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
@@ -77,7 +74,7 @@ class Games extends React.PureComponent {
     super(props);
 
     this.state = {
-      openGame: null,
+      viewGame: null,
       games: [],
       filter: '',
     };
@@ -89,11 +86,9 @@ class Games extends React.PureComponent {
 
     this.handleCloseGame = this.handleCloseGame.bind(this);
     this.handleCreateGame = this.handleCreateGame.bind(this);
-    this.handleOpenGame = this.handleOpenGame.bind(this);
+    this.handleViewGame = this.handleViewGame.bind(this);
 
     this.handlePlayGame = this.handlePlayGame.bind(this);
-    this.handleGameRoomID = this.handleGameRoomID.bind(this);
-    this.handleGameRoomError = this.handleGameRoomError.bind(this);
   }
 
 
@@ -161,14 +156,14 @@ class Games extends React.PureComponent {
   }
 
 
-  handleOpenGame(event, game = {}, idx = null) {
+  handleViewGame(event, game = {}, idx = null) {
     this.currentGame = idx;
-    this.setState({ openGame: game });
+    this.setState({ viewGame: game });
   }
 
 
   handleCloseGame() {
-    this.setState({ openGame: null });
+    this.setState({ viewGame: null });
     this.currentGame = null;
   }
 
@@ -177,12 +172,12 @@ class Games extends React.PureComponent {
     const { games } = this.state;
     if (this.currentGame === null) {
       const updatedGames = [game, ...games];
-      this.setState({ games: updatedGames, openGame: null });
+      this.setState({ games: updatedGames, viewGame: null });
       this.saveGamesToDatabase(updatedGames);
     } else {
       const updatedGames = [...games];
       updatedGames.splice(this.currentGame, 1, game);
-      this.setState({ games: updatedGames, openGame: null });
+      this.setState({ games: updatedGames, viewGame: null });
       this.saveGamesToDatabase(updatedGames);
       this.currentGame = null;
     }
@@ -190,100 +185,25 @@ class Games extends React.PureComponent {
 
 
   saveGamesToDatabase = async (updatedGames) => {
-    const { TeacherID } = this.props.screenProps.account;
-    if (TeacherID) {
-      const stringifyGames = JSON.stringify(updatedGames);
-      LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, stringifyGames);
+    const { account, handleSetAppState, } = this.props.screenProps;
 
-      const { account, handleSetAppState } = this.props.screenProps;
-      const update = {
-        games: {
-          local: account.gamesRef.local + 1,
-          db: account.gamesRef.db,
-        },
-      };
-      handleSetAppState('account', update);
-
-      updateTeacherGamesInTeacherAccountInDynamoDB(
-        TeacherID,
-        updatedGames,
-        (res) => {
-          update.games.db = account.gamesRef.db + 1;
-          handleSetAppState('account', update);
-          debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
-        },
-        exception => debug.warn('Error PUTTING new teacher item into DynamoDB', JSON.stringify(exception)),
-      );
-    }
+    saveGamesToDatabase(updatedGames, account, handleSetAppState);
   }
 
 
   handlePlayGame(e, game) {
     const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
+    const { handleSetAppState, IOTSubscribeToTopic, navigation } = this.props.screenProps;
 
-    const teamQuestions = {};
-    game.questions.forEach((question, idx) => {
-      teamQuestions[`team${idx}`] = {
-        ...question,
-        /*
-         * question's default props:
-        answer: PropTypes.string,
-        image: PropTypes.string,
-        instructions: PropTypes.arrayOf(PropTypes.string),
-        question: PropTypes.string,
-        uid: PropTypes.string,
-        */
-        uid: `${Math.random()}`,
-        tricks: [],
-        choices: [],
-        points: 0,
-      };
-    });
-
-    const gameState = {
-      GameID: game.GameID,
-      banner: game.banner,
-      category: game.category,
-      CCS: game.CCS,
-      favorite: game.favorite,
-      title: game.description,
-      description: game.description,
+    playGame(
+      game,
       quizTime,
       trickTime,
-      ...teamQuestions,
-      state: {},
-    };
-    
-    this.props.screenProps.handleSetAppState('gameState', gameState);
-
-    generateUniqueGameRoomIDInDynamoDB(this.handleGameRoomID, this.handleGameRoomError);
-
-    this.handleCloseGame();
-    setTimeout(() => {
-      this.props.screenProps.navigation.navigate('TeacherGameRoom');
-    }, 0);
-  }
-
-
-  handleGameRoomID(GameRoomID) {
-    this.props.screenProps.handleSetAppState('GameRoomID', GameRoomID);
-    debug.log('Received GameRoomID:', GameRoomID);
-    this.props.screenProps.IOTSubscribeToTopic(GameRoomID);
-
-    putGameToDynamoDB(GameRoomID, null,
-      (putRes) => {
-        debug.log('Put game in DynamoDB!', putRes);
-      },
-      (exception) => {
-        // setTimeout(() => this.swiperRef.scrollBy(-4, false), 500);
-        debug.log('Error putting game in DynamoDB', exception);
-      }
+      handleSetAppState,
+      this.handleCloseGame,
+      navigation,
+      IOTSubscribeToTopic,
     );
-  }
-
-
-  handleGameRoomError = (exception) => {
-    debug.log('Error generating a random GameRoomID!', JSON.stringify(exception));
   }
 
 
@@ -318,7 +238,7 @@ class Games extends React.PureComponent {
       <Touchable
         activeOpacity={0.8}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-        onPress={this.handleOpenGame}
+        onPress={this.handleViewGame}
         style={[styles.headerButton, styles.headerPlus]}
       >
         <Aicon name={'plus'} style={styles.headerIcon} />
@@ -354,7 +274,7 @@ class Games extends React.PureComponent {
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
           hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-          onPress={() => this.handleOpenGame(null, game, idx)}
+          onPress={() => this.handleViewGame(null, game, idx)}
           style={styles.gameOpenButton}
         >
           <Text style={styles.gameOpenText}>View game</Text>
@@ -386,18 +306,18 @@ class Games extends React.PureComponent {
 
 
   render() {
-    const { openGame, filter } = this.state;
+    const { viewGame, filter } = this.state;
 
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={colors.primary} />
-        {openGame &&
+        {viewGame &&
           <GameBuilder
             currentGame={this.currentGame}
             handleClose={this.handleCloseGame}
             handleCreateGame={this.handleCreateGame}
             handlePlayGame={this.handlePlayGame}
-            game={openGame}
+            game={viewGame}
             visible
           />}
         {this.renderHeader(filter)}
