@@ -77,7 +77,10 @@ export function playGame(
   
   handleSetAppState('gameState', gameState);
 
-  generateUniqueGameRoomIDInDynamoDB(id => handleGameRoomID(id, handleSetAppState, IOTSubscribeToTopic), handleGameRoomError);
+  generateUniqueGameRoomIDInDynamoDB(
+    id => handleGameRoomID(id, handleSetAppState, IOTSubscribeToTopic),
+    handleGameRoomError,
+  );
 
   handleCloseGame();
   setTimeout(() => {
