@@ -25,14 +25,6 @@ const awsmobile =  {
             "region": "us-east-1"
         },
         {
-            "tableName": "TeacherHistory",
-            "region": "us-east-1"
-        },
-        {
-            "tableName": "TeacherGames",
-            "region": "us-east-1"
-        },
-        {
             "tableName": "QuizMaker",
             "region": "us-east-1"
         }
@@ -54,18 +46,13 @@ const awsmobile =  {
             "region": "us-east-1"
         },
         {
-            "name": "TeacherGamesAPI",
-            "endpoint": "https://7wquqgimh0.execute-api.us-east-1.amazonaws.com/Prod",
-            "region": "us-east-1"
-        },
-        {
-            "name": "TeacherHistoryAPI",
-            "endpoint": "https://1xwlucckuj.execute-api.us-east-1.amazonaws.com/Prod",
-            "region": "us-east-1"
-        },
-        {
             "name": "QuizMakerAPI",
             "endpoint": "https://fe9bm3iami.execute-api.us-east-1.amazonaws.com/Prod",
+            "region": "us-east-1"
+        },
+        {
+            "name": "GamesAPI",
+            "endpoint": "https://b1mxea7gza.execute-api.us-east-1.amazonaws.com/Prod",
             "region": "us-east-1"
         }
     ]
