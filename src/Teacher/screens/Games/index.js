@@ -128,7 +128,7 @@ class Games extends React.PureComponent {
           const { account } = this.props.screenProps;
           if (account.gamesRef.local !== account.gamesRef.db) {
             // Previous attempt to save games to DynamoDB failed so we try again.
-            this.saveGamesToDatabase(games);
+            this.handleSaveGamesToDatabase(games);
           }
         });
       } else if (games === undefined || games === null) {
@@ -173,19 +173,19 @@ class Games extends React.PureComponent {
     if (this.currentGame === null) {
       const updatedGames = [game, ...games];
       this.setState({ games: updatedGames, viewGame: null });
-      this.saveGamesToDatabase(updatedGames);
+      this.handleSaveGamesToDatabase(updatedGames);
     } else {
       const updatedGames = [...games];
       updatedGames.splice(this.currentGame, 1, game);
       this.setState({ games: updatedGames, viewGame: null });
-      this.saveGamesToDatabase(updatedGames);
+      this.handleSaveGamesToDatabase(updatedGames);
       this.currentGame = null;
     }
   }
 
 
-  saveGamesToDatabase = async (updatedGames) => {
-    const { account, handleSetAppState, } = this.props.screenProps;
+  handleSaveGamesToDatabase = async (updatedGames) => {
+    const { account, handleSetAppState } = this.props.screenProps;
 
     saveGamesToDatabase(updatedGames, account, handleSetAppState);
   }
