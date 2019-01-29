@@ -95,6 +95,7 @@ class Explore extends React.PureComponent {
     try {
       const { TeacherID } = this.props.screenProps.account;
       if (!TeacherID) {
+        this.handleCloseGame();
         // TODO! Notify user that they must create an account to create a game
         return;
       }
@@ -106,14 +107,12 @@ class Explore extends React.PureComponent {
         games.unshift(game);
 
         const { account, handleSetAppState } = this.props.screenProps;
-        if (account.gamesRef.local !== account.gamesRef.db) {
-          // Previous attempt to save games to DynamoDB failed so we try again.
-          saveGamesToDatabase(games, account, handleSetAppState);
-        }
+        saveGamesToDatabase(games, account, handleSetAppState);
       }
     } catch (exception) {
       debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);
     }
+    this.handleCloseGame();
   }
 
 
@@ -142,6 +141,7 @@ class Explore extends React.PureComponent {
     parsedGame.category = data.category;
     parsedGame.CCS = data.CCS;
     parsedGame.questions = [];
+    parsedGame.quizmaker = true;
     let questionIndex = 1;
     while (data[`q${questionIndex}`]) {
       parsedGame.questions.push(data[`q${questionIndex}`]);
@@ -152,27 +152,31 @@ class Explore extends React.PureComponent {
   }
 
 
-  renderDataBlock = data => (
-    <Touchable
-      activeOpacity={0.8}
-      key={data.title || data.description}
-      onPress={() => this.handleViewGame(data)}
-    >
-      <View style={[styles.dataContainer, data.banner && { flexDirection: 'column', height: 300 }]}>
-        <View style={styles.dataBody}>
-          <View style={styles.iconContainer}>
-            <View style={styles.iconTextContainer}>
-              <Text style={styles.iconText}>RightOn!</Text>
+  renderDataBlock = (data) => {
+    if (data.GameID === 'A123456789') return null;
+    return (
+      <Touchable
+        activeOpacity={0.8}
+        key={data.title || data.description}
+        onPress={() => this.handleViewGame(data)}
+      >
+        <View style={[styles.dataContainer, data.banner && { flexDirection: 'column', height: 300 }]}>
+          <View style={styles.dataBody}>
+            <View style={styles.iconContainer}>
+              <View style={styles.iconTextContainer}>
+                <Text style={styles.iconText}>RightOn!</Text>
+              </View>
+            </View>
+            <View style={styles.dataTextContainer}>
+              <Text style={styles.dataTextTitle}>{data.title}</Text>
+              <Text style={styles.dataTextDescription}>{data.description}</Text>
+              <Text style={styles.dataTextDescription}>{`${data.category} ${data.CCS}`}</Text>
             </View>
           </View>
-          <View style={styles.dataTextContainer}>
-            <Text style={styles.dataTextTitle}>{data.title}</Text>
-            <Text style={styles.dataTextDescription}>{data.description}</Text>
-          </View>
         </View>
-      </View>
-    </Touchable>
-  );
+      </Touchable>
+    );
+  }
 
 
   renderData = data => (
