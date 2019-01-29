@@ -93,19 +93,21 @@ class Games extends React.PureComponent {
 
 
   componentDidMount() {
-    this.hydrateGames();
+    // this.hydrateGames();
+    this.getGamesFromDynamoDB(this.props.screenProps.account.TeacherID);
   }
   
 
   getGamesFromDynamoDB(TeacherID) {
     getItemFromTeacherAccountFromDynamoDB(
-      'TeacherGamesAPI',
-      'games',
       TeacherID,
+      'games',
       (res) => {
-        this.setState({ games: res });
-        const gamesJSON = JSON.stringify(res);
-        LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, gamesJSON);
+        if (typeof res === 'object' && res.games) {
+          this.setState({ games: res.games });
+          const gamesJSON = JSON.stringify(res.games);
+          LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, gamesJSON);
+        }
         debug.log('Successful GETTING teacher games from DynamoDB to hydrate local state in games:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher games from DynamoDB to hydrate local state in games:', JSON.stringify(exception))
