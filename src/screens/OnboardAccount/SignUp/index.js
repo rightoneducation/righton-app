@@ -395,7 +395,7 @@ class SignUp extends React.Component {
         });
         break;
       }
-      case 'Retype': {
+      case 'Retype password': {
         this.setState({ retypePassword: input, showInput: false }, () => {
           this.checkRequirements();
         });
