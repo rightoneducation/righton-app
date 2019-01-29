@@ -45,12 +45,14 @@ export default class GameRoomResults extends React.Component {
       secondPercent: 0,
       thirdPercent: 0,
       fourthPercent: 0,
+      noAnswerPercent: 0,
     };
 
     this.firstChoice = new Animated.Value(0);
     this.secondChoice = new Animated.Value(0);
     this.thirdChoice = new Animated.Value(0);
     this.fourthChoice = new Animated.Value(0);
+    this.noAnswer = new Animated.Value(0);
 
     this.percentOpacity = new Animated.Value(0);
 
@@ -96,43 +98,53 @@ export default class GameRoomResults extends React.Component {
           playersInTeamRef += 1;
         }
       }
+      const playersWhoVoted = numberOfPlayers - playersInTeamRef;
+      let noAnswerCount = playersWhoVoted;
+
       let firstWidth = 0;
       let secondWidth = 0;
       let thirdWidth = 0;
       let fourthWidth = 0;
+      let noAnswerWidth = 0;
 
       let firstPercent = 0;
       let secondPercent = 0;
       let thirdPercent = 0;
       let fourthPercent = 0;
+      let noAnswerPercent = 0;
+
 
       if (gameState[teamRef].choices[0]) {
-        firstWidth = (gameState[teamRef].choices[0].votes / (numberOfPlayers - playersInTeamRef)) *
-          this.choicesWidth;
-        firstPercent = Math.round(
-          (gameState[teamRef].choices[0].votes / (numberOfPlayers - playersInTeamRef)) * 100
-        );
+        const votes = gameState[teamRef].choices[0].votes;
+        const fraction = votes / playersWhoVoted;
+        firstWidth = fraction * this.choicesWidth;
+        firstPercent = Math.round(fraction * 100);
+        noAnswerCount -= votes;
       }
       if (gameState[teamRef].choices[1]) {
-        secondWidth = (gameState[teamRef].choices[1].votes / (numberOfPlayers - playersInTeamRef)) *
-          this.choicesWidth;
-        secondPercent = Math.round(
-          (gameState[teamRef].choices[1].votes / (numberOfPlayers - playersInTeamRef)) * 100
-        );
+        const votes = gameState[teamRef].choices[1].votes;
+        const fraction = votes / playersWhoVoted;
+        secondWidth = fraction * this.choicesWidth;
+        secondPercent = Math.round(fraction * 100);
+        noAnswerCount -= votes;
       }
       if (gameState[teamRef].choices[2]) {
-        thirdWidth = (gameState[teamRef].choices[2].votes / (numberOfPlayers - playersInTeamRef)) *
-          this.choicesWidth;
-        thirdPercent = Math.round(
-          (gameState[teamRef].choices[2].votes / (numberOfPlayers - playersInTeamRef)) * 100
-        );
+        const votes = gameState[teamRef].choices[2].votes;
+        const fraction = votes / playersWhoVoted;
+        thirdWidth = fraction * this.choicesWidth;
+        thirdPercent = Math.round(fraction * 100);
+        noAnswerCount -= votes;
       }
       if (gameState[teamRef].choices[3]) {
-        fourthWidth = (gameState[teamRef].choices[3].votes / (numberOfPlayers - playersInTeamRef)) *
-          this.choicesWidth;
-        fourthPercent = Math.round(
-          (gameState[teamRef].choices[3].votes / (numberOfPlayers - playersInTeamRef)) * 100
-        );
+        const votes = gameState[teamRef].choices[3].votes;
+        const fraction = votes / playersWhoVoted;
+        fourthWidth = fraction * this.choicesWidth;
+        fourthPercent = Math.round(fraction * 100);
+        noAnswerCount -= votes;
+      }
+      if (noAnswerCount) {
+        noAnswerWidth = (noAnswerCount / playersWhoVoted) * this.choicesWidth;
+        noAnswerPercent = (noAnswerCount / playersWhoVoted) * 100;
       }
   
       Animated.parallel([
@@ -161,6 +173,12 @@ export default class GameRoomResults extends React.Component {
           }
         ),
         Animated.timing(
+          this.noAnswer, {
+            toValue: noAnswerWidth,
+            duration: 2000,
+          }
+        ),
+        Animated.timing(
           this.percentOpacity, {
             toValue: 1,
             duration: 2000,
@@ -173,6 +191,7 @@ export default class GameRoomResults extends React.Component {
           secondPercent,
           thirdPercent,
           fourthPercent,
+          noAnswerPercent,
         });
       });
     }, 100);
@@ -195,6 +214,7 @@ export default class GameRoomResults extends React.Component {
       secondPercent,
       thirdPercent,
       fourthPercent,
+      noAnswerPercent,
     } = this.state;
 
     return (
@@ -281,6 +301,21 @@ export default class GameRoomResults extends React.Component {
                 { fourthPercent ? `${fourthPercent}%` : '100%' }
               </Text>
             </View>
+
+            {noAnswerPercent &&
+              <View style={gamePreviewStyles.choiceContainer}>
+                <View style={[gamePreviewStyles.choiceButton, styles.hiddenDot]} />
+                <Text style={gamePreviewStyles.choiceValue}>No answer</Text>
+              </View>}
+            {noAnswerPercent &&
+              <View style={styles.barContainer}>
+                <Animated.View style={[styles.bar, 
+                  { width: this.noAnswer, opacity: this.percentOpacity }]}
+                />
+                <Text style={[styles.percent, noAnswerPercent && styles.visible]}>
+                  { noAnswerPercent ? `${noAnswerPercent}%` : '100%' }
+                </Text>
+              </View>}
 
           </View>
         </View>
