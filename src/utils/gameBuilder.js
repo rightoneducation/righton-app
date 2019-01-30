@@ -106,7 +106,7 @@ export async function saveGamesToDatabase(updatedGames, account, handleSetAppSta
       TeacherID,
       updatedGames,
       (res) => {
-        update.games.db = account.gamesRef.db + 1;
+        update.gamesRef.db = account.gamesRef.db + 1;
         handleSetAppState('account', update);
         debug.log('Successfully PUT new teacher item into DynamoDB', JSON.stringify(res));
       },
