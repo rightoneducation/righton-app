@@ -302,12 +302,12 @@ export default class GameRoomResults extends React.Component {
               </Text>
             </View>
 
-            {noAnswerPercent &&
+            {Boolean(noAnswerPercent) &&
               <View style={gamePreviewStyles.choiceContainer}>
                 <View style={[gamePreviewStyles.choiceButton, styles.hiddenDot]} />
                 <Text style={gamePreviewStyles.choiceValue}>No answer</Text>
               </View>}
-            {noAnswerPercent &&
+            {Boolean(noAnswerPercent) &&
               <View style={styles.barContainer}>
                 <Animated.View style={[styles.bar, 
                   { width: this.noAnswer, opacity: this.percentOpacity }]}
@@ -320,7 +320,7 @@ export default class GameRoomResults extends React.Component {
           </View>
         </View>
         <ButtonWide
-          label={nextTeam ? `Next: Team ${nextTeam.substr(4)}'s Question` : 'Final results'}
+          label={nextTeam ? `Next: Team ${parseInt(nextTeam.substr(4), 10) + 1}'s Question` : 'Final results'}
           onPress={() => handleNextTeam()}
         />
       </ScrollView>
