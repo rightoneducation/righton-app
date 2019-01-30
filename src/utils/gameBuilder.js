@@ -95,7 +95,7 @@ export async function saveGamesToDatabase(updatedGames, account, handleSetAppSta
     LocalStorage.setItem(`@RightOn:${TeacherID}/Games`, stringifyGames);
 
     const update = {
-      games: {
+      gamesRef: {
         local: account.gamesRef.local + 1,
         db: account.gamesRef.db,
       },
