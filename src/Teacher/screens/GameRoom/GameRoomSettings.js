@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import SelectionModal from '../../../components/SelectionModal';
-import { timeSelection } from '../../../config/selections';
+import { trickTimeSelection, quizTimeSelection } from '../../../config/selections';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import parentStyles from './styles';
@@ -122,7 +122,7 @@ export default class GameRoomStart extends React.Component {
           {showSelection &&
             <SelectionModal
               handleClose={this.handleTimeSelection}
-              items={timeSelection}
+              items={this.setTimer === 'quizTime' ? quizTimeSelection : trickTimeSelection}
               onSelect={this.handleTimeSelection}
               title={'Time remaining'}
               visible={showSelection}
@@ -138,26 +138,26 @@ export default class GameRoomStart extends React.Component {
           <View style={[parentStyles.playersContainer, styles.verticalSpacing]}>
             <Touchable
               activeOpacity={0.8}
-              onPress={() => this.handleOpenTimeSelection('quizTime')}
-              style={styles.settingWrapper}
-            >
-              <View style={styles.settingContainer}>
-                <Text style={[styles.settingText, styles.settingLabel]}>
-                  Configure quizzing timer
-                </Text>
-                <Text style={styles.settingText}>{ quizTime }</Text>
-              </View>
-            </Touchable>
-            <Touchable
-              activeOpacity={0.8}
               onPress={() => this.handleOpenTimeSelection('trickTime')}
               style={styles.settingWrapper}
             >
               <View style={styles.settingContainer}>
                 <Text style={[styles.settingText, styles.settingLabel]}>
-                  Configure tricking timer
+                  Distractor Creation Time
                 </Text>
                 <Text style={styles.settingText}>{ trickTime }</Text>
+              </View>
+            </Touchable>
+            <Touchable
+              activeOpacity={0.8}
+              onPress={() => this.handleOpenTimeSelection('quizTime')}
+              style={styles.settingWrapper}
+            >
+              <View style={styles.settingContainer}>
+                <Text style={[styles.settingText, styles.settingLabel]}>
+                  Quiz Response Time
+                </Text>
+                <Text style={styles.settingText}>{ quizTime }</Text>
               </View>
             </Touchable>
           </View>
