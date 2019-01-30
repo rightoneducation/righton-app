@@ -1,8 +1,19 @@
-export const timeSelection = [
+export const quizTimeSelection = [
   { label: 'No time limit', value: '0:00' },
   { label: '0:30', value: '0:30' },
   { label: '1:00', value: '1:00' },
   { label: '1:30', value: '1:30' },
+  { label: '2:00', value: '2:00' },
+  { label: '2:30', value: '2:30' },
+  { label: '3:00', value: '3:00' },
+  { label: '3:30', value: '3:30' },
+  { label: '4:00', value: '4:00' },
+  { label: '4:30', value: '4:30' },
+  { label: '5:00', value: '5:00' },
+];
+
+export const trickTimeSelection = [
+  { label: 'No time limit', value: '0:00' },
   { label: '2:00', value: '2:00' },
   { label: '2:30', value: '2:30' },
   { label: '3:00', value: '3:00' },
