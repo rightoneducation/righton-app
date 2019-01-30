@@ -195,7 +195,7 @@ class Explore extends React.PureComponent {
     if (viewGame) {
       return (
         <GameBuilder
-          handleCloseGame={this.handleCloseGame}
+          handleClose={this.handleCloseGame}
           handleCreateGame={this.handleCreateGame}
           handlePlayGame={this.handlePlayGame}
           game={viewGame}
