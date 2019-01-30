@@ -109,6 +109,9 @@ export default class GamePreview extends React.PureComponent {
           this.props.navigation.navigate('GameQuiz');
         }
       }
+      if (nextProps.screenProps.gameState.state.exitGame === true) {
+        this.props.navigation.navigate('Dashboard');
+      }
     }
   }
 

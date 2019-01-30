@@ -89,6 +89,9 @@ export default class GameQuiz extends React.Component {
         nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
         this.props.navigation.navigate('GameReasons');
       }
+      if (nextProps.screenProps.gameState.state.exitGame === true) {
+        this.props.navigation.navigate('Dashboard');
+      }
     }
   }
 
