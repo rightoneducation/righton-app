@@ -104,6 +104,14 @@ class Explore extends React.PureComponent {
       if (typeof games === 'string') {
         games = JSON.parse(games);
 
+        for (let i = 0; i < games.length; i += 1) {
+          if (games[i].GameID === game.GameID) {
+            // Prevent adding a game twice
+            this.handleCloseGame();
+            return;
+          }
+        }
+
         games.unshift(game);
 
         const { account, handleSetAppState } = this.props.screenProps;
