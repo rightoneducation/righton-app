@@ -21,18 +21,21 @@ export default ScaledSheet.create({
     bottom: '15@s',
     position: 'absolute',
   },
-  headerGames: {
-    left: '15@s',
-  },
   headerFavorites: {
-    left: '65@s',
+    left: '80@ms',
   },
-  headerPlus: {
-    right: '15@s',
+  headerGames: {
+    left: '15@ms',
   },
   headerIcon: {
     color: colors.white,
     fontSize: '25@ms0.2',
+  },
+  headerPlus: {
+    right: '15@s',
+  },
+  headerShared: {
+    left: '140@ms',
   },
   headerTitle: {
     color: colors.white,

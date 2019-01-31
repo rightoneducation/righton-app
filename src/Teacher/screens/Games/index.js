@@ -76,13 +76,15 @@ class Games extends React.PureComponent {
     this.state = {
       viewGame: null,
       games: [],
-      filter: '',
+      filter: 'MyGames',
+      shared: [],
     };
 
     this.currentGame = null;
 
     this.handleRenderFavorites = this.handleRenderFavorites.bind(this);
     this.handleRenderMyGames = this.handleRenderMyGames.bind(this);
+    this.handleRenderShared = this.handleRenderShared.bind(this);
 
     this.handleCloseGame = this.handleCloseGame.bind(this);
     this.handleCreateGame = this.handleCreateGame.bind(this);
@@ -111,6 +113,21 @@ class Games extends React.PureComponent {
         debug.log('Successful GETTING teacher games from DynamoDB to hydrate local state in games:', JSON.stringify(res));
       },
       exception => debug.warn('Error GETTING teacher games from DynamoDB to hydrate local state in games:', JSON.stringify(exception))
+    );
+  }
+
+
+  getSharedGamesFromDynamoDB(TeacherID) {
+    getItemFromTeacherAccountFromDynamoDB(
+      TeacherID,
+      'shared',
+      (res) => {
+        if (typeof res === 'object' && res.shared) {
+          this.setState({ shared: res.shared });
+        }
+        debug.log('Successful GETTING teacher shared games from DynamoDB to hydrate local state in games:', JSON.stringify(res));
+      },
+      exception => debug.warn('Error GETTING teacher shared games from DynamoDB to hydrate local state in games:', JSON.stringify(exception))
     );
   }
 
@@ -154,7 +171,14 @@ class Games extends React.PureComponent {
 
 
   handleRenderMyGames() {
-    this.setState({ filter: '' });
+    this.setState({ filter: 'MyGames' });
+  }
+
+
+  handleRenderShared() {
+    this.setState({ filter: 'Shared' });
+    const { TeacherID } = this.props.screenProps.account;
+    this.getSharedGamesFromDynamoDB(TeacherID);
   }
 
 
@@ -220,8 +244,8 @@ class Games extends React.PureComponent {
         style={[styles.headerButton, styles.headerGames]}
       >
         <View style={styles.alignCenter}>
-          <Aicon name={'gamepad'} style={[styles.headerIcon, filter === 'Favorites' && styles.colorGrey]} />
-          <Text style={[styles.gameStartIcon, filter === 'Favorites' && styles.colorGrey]}>My Games</Text>
+          <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'MyGames' && styles.colorGrey]} />
+          <Text style={[styles.gameStartIcon, filter !== 'MyGames' && styles.colorGrey]}>My Games</Text>
         </View>
       </Touchable>
 
@@ -232,8 +256,20 @@ class Games extends React.PureComponent {
         style={[styles.headerButton, styles.headerFavorites]}
       >
         <View style={styles.alignCenter}>
-          <Aicon name={'heart'} style={[styles.headerIcon, filter === '' && styles.colorGrey]} />
-          <Text style={[styles.gameStartIcon, filter === '' && styles.colorGrey]}>Favorites</Text>
+          <Aicon name={'heart'} style={[styles.headerIcon, filter !== 'Favorites' && styles.colorGrey]} />
+          <Text style={[styles.gameStartIcon, filter !== 'Favorites' && styles.colorGrey]}>Favorites</Text>
+        </View>
+      </Touchable>
+
+      <Touchable
+        activeOpacity={0.8}
+        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+        onPress={this.handleRenderShared}
+        style={[styles.headerButton, styles.headerShared]}
+      >
+        <View style={styles.alignCenter}>
+          <Aicon name={'share'} style={[styles.headerIcon, filter !== 'Shared' && styles.colorGrey]} />
+          <Text style={[styles.gameStartIcon, filter !== 'Shared' && styles.colorGrey]}>Shared</Text>
         </View>
       </Touchable>
 
@@ -298,6 +334,15 @@ class Games extends React.PureComponent {
   renderGames(filter) {
     const { games } = this.state;
     if (!Array.isArray(games)) return null;
+
+    if (filter === 'Shared') {
+      const { shared } = this.state;
+      return (
+        <ScrollView contentContainerStyle={styles.scrollview}>
+          {shared.map((game, idx) => this.renderGameBlock(game, idx, filter))}
+        </ScrollView>
+      );
+    }
 
     return (
       <ScrollView contentContainerStyle={styles.scrollview}>
