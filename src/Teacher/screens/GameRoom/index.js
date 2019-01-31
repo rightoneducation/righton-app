@@ -426,7 +426,7 @@ export default class GameRoom extends React.Component {
     numberOfPlayers,
   ) => {
     const update = {
-      history: {
+      historyRef: {
         local: account.historyRef.local + 1,
         db: account.historyRef.db,
       },
@@ -464,13 +464,20 @@ export default class GameRoom extends React.Component {
     const date = Date.now();
     const GameID = gameState.GameID;
     const favorite = gameState.favorite;
-    let correct = 0;
-    let incorrect = 0;
-    let tricks = 0;
-
+    const report = {
+      date,
+      GameID,
+      favorite,
+      players,
+    };
+    
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
       if (gameStateKeys[i].includes('team')) {
+        let correct = 0;
+        let incorrect = 0;
+        let tricks = 0;
+
         const choices = gameState[gameStateKeys[i]].choices || [];
         for (let j = 0; j < choices.length; j += 1) {
           if (choices[j].correct) {
@@ -480,17 +487,18 @@ export default class GameRoom extends React.Component {
           }
         }
         tricks += gameState[gameStateKeys[i]].tricks.length;
+        report[gameStateKeys[i]] = {
+          correct,
+          incorrect,
+          tricks,
+          question: gameState[gameStateKeys[i]].question,
+          image: gameState[gameStateKeys[i]].image,
+          choices: gameState[gameStateKeys[i]].choices,
+          uid: gameState[gameStateKeys[i]].uid,
+        };
       }
     }
-    return {
-      date,
-      GameID,
-      favorite,
-      correct,
-      incorrect,
-      players,
-      tricks,
-    };
+    return report;
   }
 
 
@@ -527,6 +535,7 @@ export default class GameRoom extends React.Component {
             handleBackFromChild={this.handleBackFromChild}
             handleSetAppState={handleSetAppState}
             IOTPublishMessage={IOTPublishMessage}
+            numberOfPlayers={Object.keys(players).length}
           />
         );
       case 'start':
