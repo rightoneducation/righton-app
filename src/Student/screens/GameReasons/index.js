@@ -275,6 +275,10 @@ export default class GameReasons extends React.PureComponent {
           </View>}
         {this.renderQuestion()}
         <View style={styles.extraMarginBottom}>
+          <Text style={[styles.question, gamePreviewStyles.marginBottom]}>
+            Jot down a few notes for why your team chose each trick answer:
+          </Text>
+
           <View>
             {gameState[teamRef].tricks[0] &&
               <View
@@ -283,7 +287,7 @@ export default class GameReasons extends React.PureComponent {
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
                 <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `1. ${gameState[teamRef].tricks[0].value}` }
+                  { `Trick Answer #1. ${gameState[teamRef].tricks[0].value}` }
                 </Text>
                 <Touchable
                   onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
@@ -301,7 +305,7 @@ export default class GameReasons extends React.PureComponent {
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
                 <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `2. ${gameState[teamRef].tricks[1].value}` }
+                  { `Trick Answer #2. ${gameState[teamRef].tricks[1].value}` }
                 </Text>
                 <Touchable
                   onPress={() => this.handleInputModal('trick1', 'Enter your reason', 500, trick1Reason)}
@@ -319,7 +323,7 @@ export default class GameReasons extends React.PureComponent {
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
                 <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `3. ${gameState[teamRef].tricks[2].value}` }
+                  { `Trick Answer #3. ${gameState[teamRef].tricks[2].value}` }
                 </Text>
                 <Touchable
                   onPress={() => this.handleInputModal('trick2', 'Enter your reason', 500, trick2Reason)}
