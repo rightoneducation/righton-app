@@ -11,6 +11,7 @@ import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
 import { colors, fonts } from '../../../utils/theme';
 // import debug from '../../../utils/debug';
+import { handleExitGame } from '../../../utils/studentGameUtils';
 
 
 export default class GameFinal extends React.Component {
@@ -90,6 +91,13 @@ export default class GameFinal extends React.Component {
   }
 
 
+  handleExitGame() {
+    const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
+    const { navigation } = this.props;
+    handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);
+  }
+
+
   updateAccountScores() {
     const { account, handleSetAppState } = this.props.screenProps;
     const { playerScore, teamScore } = this.state;
@@ -114,18 +122,6 @@ export default class GameFinal extends React.Component {
     this.setState({ teamScore }, () => {
       this.updateAccountScores();
     });
-  }
-
-
-  handleExitGame() {
-    const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
-    handleSetAppState('gameState', {});
-    IOTUnsubscribeFromTopic();
-    setTimeout(() => {
-      this.props.navigation.navigate('Dashboard');
-      handleSetAppState('GameRoomID', '');
-      handleSetAppState('team', '');
-    }, 250);
   }
 
 

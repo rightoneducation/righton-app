@@ -8,6 +8,7 @@ import {
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import gamePreviewStyles from '../GamePreview/styles';
+import { handleExitGame } from '../../../utils/studentGameUtils';
 
 
 export default class GameQuiz extends React.Component {
@@ -20,6 +21,7 @@ export default class GameQuiz extends React.Component {
       }),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
+      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
     }),
     navigation: PropTypes.shape({
       navigate: PropTypes.func.isRequired,
@@ -38,6 +40,7 @@ export default class GameQuiz extends React.Component {
       },
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
+      IOTUnsubscribeFromTopic: () => {},
     },
     navigation: {
       navigate: () => {},
@@ -71,12 +74,13 @@ export default class GameQuiz extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
+      const { navigation } = this.props;
       if (nextProps.screenProps.gameState.state.endGame === true) {
         if (this.state.timeLeft !== 'Time is up!') {
           this.publishChoice();
           clearInterval(this.timerInterval);
         }
-        this.props.navigation.navigate('GameFinal');
+        navigation.navigate('GameFinal');
         return;
       }
       if (nextProps.screenProps.gameState.state.endQuiz === true) {
@@ -87,10 +91,11 @@ export default class GameQuiz extends React.Component {
         }
       } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
         nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
-        this.props.navigation.navigate('GameReasons');
+        navigation.navigate('GameReasons');
       }
       if (nextProps.screenProps.gameState.state.exitGame === true) {
-        this.props.navigation.navigate('Dashboard');
+        const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
+        handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);
       }
     }
   }

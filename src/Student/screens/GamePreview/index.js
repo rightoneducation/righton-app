@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Animated,
   Image,
+  InteractionManager,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -16,6 +17,7 @@ import InputModal from '../../../components/InputModal';
 import HeaderTeam from '../../components/HeaderTeam';
 import Instructions from '../../../components/Instructions';
 import ButtonRound from '../../../components/ButtonRound';
+import { handleExitGame } from '../../../utils/studentGameUtils';
 import { deviceWidth } from '../../../utils/theme';
 import styles from './styles';
 
@@ -26,6 +28,7 @@ export default class GamePreview extends React.PureComponent {
       gameState: PropTypes.shape({ type: PropTypes.any }),
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
+      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
       team: PropTypes.number.isRequired,
     }),
   }
@@ -46,6 +49,7 @@ export default class GamePreview extends React.PureComponent {
       },
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
+      IOTUnsubscribeFromTopic: () => {},
       team: 0,
     },
   }
@@ -61,6 +65,7 @@ export default class GamePreview extends React.PureComponent {
     this.animatedArrow3 = new Animated.Value(0);
 
     this.state = {
+      instructions: [],
       messageProps: {},
       showInput: false,
       showInstructions: false,
@@ -90,13 +95,17 @@ export default class GamePreview extends React.PureComponent {
     if (trickTime && trickTime !== '0:00') {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     }
+    
+    InteractionManager.runAfterInteractions(this.setupInstructions());
   }
 
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
+      const { navigation } = this.props;
+
       if (nextProps.screenProps.gameState.state.endGame === true) {
-        this.props.navigation.navigate('GameFinal');
+        navigation.navigate('GameFinal');
         return;
       }
       if (this.props.screenProps.gameState.state.startQuiz !==
@@ -104,13 +113,14 @@ export default class GamePreview extends React.PureComponent {
         this.setState({ timeLeft: 'Time is up!' });
         clearTimeout(this.timerInterval);
         if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
-          this.props.navigation.navigate('GameReasons');
+          navigation.navigate('GameReasons');
         } else {
-          this.props.navigation.navigate('GameQuiz');
+          navigation.navigate('GameQuiz');
         }
       }
       if (nextProps.screenProps.gameState.state.exitGame === true) {
-        this.props.navigation.navigate('Dashboard');
+        const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
+        handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);
       }
     }
   }
@@ -120,6 +130,20 @@ export default class GamePreview extends React.PureComponent {
     clearTimeout(this.animationTimeout);
     clearInterval(this.animationInterval);
     clearInterval(this.timerInterval);
+  }
+
+
+  setupInstructions() {
+    const { gameState, team } = this.props.screenProps;
+    const teamRef = `team${team}`;
+    const { answer, instructions } = gameState[teamRef];
+    if (!instructions) {
+      this.setState({ instructions: [answer] });
+    } else if (instructions[instructions.length - 1] !== answer) {
+      this.setState({ instructions: [...instructions, answer] });
+    } else {
+      this.setState({ instructions });
+    }
   }
 
 
@@ -378,6 +402,7 @@ export default class GamePreview extends React.PureComponent {
 
   render() {
     const {
+      instructions,
       messageProps,
       showInput,
       showInstructions,
@@ -402,9 +427,7 @@ export default class GamePreview extends React.PureComponent {
         {showInstructions &&
           <Instructions
             handleCloseModal={this.toggleInstructions}
-            data={gameState[teamRef].instructions.length ?
-              gameState[teamRef].instructions :
-              [gameState[teamRef].answer]}
+            data={instructions}
             visible={showInstructions}
           />}
         {!showInstructions && !showInput &&

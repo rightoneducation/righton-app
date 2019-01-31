@@ -14,6 +14,7 @@ import HeaderTeam from '../../components/HeaderTeam';
 import InputModal from '../../../components/InputModal';
 import gamePreviewStyles from '../GamePreview/styles';
 import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
+import { handleExitGame } from '../../../utils/studentGameUtils';
 
 
 export default class GameReasons extends React.PureComponent {
@@ -21,6 +22,7 @@ export default class GameReasons extends React.PureComponent {
     screenProps: PropTypes.shape({
       gameState: PropTypes.shape({ type: PropTypes.any }),
       IOTPublishMessage: PropTypes.func.isRequired,
+      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
       team: PropTypes.number.isRequired,
     }),
   }
@@ -35,6 +37,7 @@ export default class GameReasons extends React.PureComponent {
         },
       },
       IOTPublishMessage: () => {},
+      IOTUnsubscribeFromTopic: () => {},
       team: 0,
     },
   }
@@ -75,16 +78,18 @@ export default class GameReasons extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
+      const { navigation } = this.props;
       if (nextProps.screenProps.gameState.state.endGame === true) {
-        this.props.navigation.navigate('GameFinal');
+        navigation.navigate('GameFinal');
         return;
       }
       if (nextProps.screenProps.gameState.state.startQuiz &&
         nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
-        this.props.navigation.navigate('GameQuiz');
+        navigation.navigate('GameQuiz');
       }
       if (nextProps.screenProps.gameState.state.exitGame === true) {
-        this.props.navigation.navigate('Dashboard');
+        const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
+        handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);
       }
     }
   }
