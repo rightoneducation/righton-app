@@ -337,7 +337,7 @@ export default class Dashboard extends React.Component {
     teamsArr[teamSize - 1] = null;
     teamsArr.fill(null, 0, teamSize - 1);
     return (
-      <View style={styles.roomContainer}>
+      <ScrollView contentContainerStyle={[styles.roomContainer, styles.roomScrollView]}>
         <Text style={styles.input}>Select your team</Text>
         {teamsArr.map((n, idx) => (
           <Touchable
@@ -351,7 +351,7 @@ export default class Dashboard extends React.Component {
             <Text style={styles.buttonText}>{`Team ${idx + 1}`}</Text>
           </Touchable>
         ))}
-      </View>
+      </ScrollView>
     );
   }
 
@@ -431,10 +431,7 @@ export default class Dashboard extends React.Component {
         { messageProps && <Message {...messageProps} /> }
 
         {this.renderHeader()}   
-        <ScrollView
-          keyboardShouldPersistTaps={'never'}
-          contentContainerStyle={styles.scrollview}
-        >
+        <View style={styles.dashContainer}>
           {this.renderProfileView()}
 
           {gameState.state && !gameState.state.endGame ?
@@ -442,7 +439,7 @@ export default class Dashboard extends React.Component {
             this.renderGameRoomEntry(roomEntry)}
 
           {this.renderButtons()}
-        </ScrollView>
+        </View>
       </View>
     );
   }

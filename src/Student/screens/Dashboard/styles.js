@@ -1,6 +1,6 @@
 
-import { ScaledSheet } from 'react-native-size-matters';
-import { colors, fonts } from '../../../utils/theme';
+import { scale, ScaledSheet } from 'react-native-size-matters';
+import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
 export default ScaledSheet.create({
   button: {
@@ -17,6 +17,11 @@ export default ScaledSheet.create({
     fontSize: fonts.medium,
   },
   container: {
+    flex: 1,
+  },
+  dashContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.dark,
     flex: 1,
   },
   headerContainer: {
@@ -108,10 +113,10 @@ export default ScaledSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
   },
-  scrollview: {
-    alignItems: 'center',
-    backgroundColor: colors.dark,
-    flex: 1,
+  roomScrollView: {
+    flexGrow: 1,
+    // Size of ButtonWide + `15@s` from marginHorizontal of styles.roomContainer
+    width: deviceWidth - scale(50),
   },
   teamButton: {
     alignItems: 'center',
