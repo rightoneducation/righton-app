@@ -16,6 +16,8 @@ import Eicon from 'react-native-vector-icons/Entypo';
 import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
+import Menu from '../../../../components/Menu';
+import GameShare from './GameShare';
 import SelectionModal from '../../../../components/SelectionModal';
 import { categorySelection, levelSelection } from '../../../../config/selections';
 import GameBuilderQuestion from './GameBuilderQuestion';
@@ -82,7 +84,9 @@ export default class GameBuilder extends React.Component {
         title: null,
       },
       showInput: false,
+      showMenu: false,
       showSelection: false,
+      showShare: false,
     };
 
     this.onTitleLayout = this.onTitleLayout.bind(this);
@@ -101,6 +105,9 @@ export default class GameBuilder extends React.Component {
     this.createGame = this.createGame.bind(this);
     this.closeAddQuestion = this.closeAddQuestion.bind(this);
     this.openAddQuestion = this.openAddQuestion.bind(this);
+
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.toggleShare = this.toggleShare.bind(this);
   }
 
 
@@ -287,6 +294,16 @@ export default class GameBuilder extends React.Component {
   }
 
 
+  toggleMenu() {
+    this.setState({ showMenu: !this.state.showMenu });
+  }
+
+
+  toggleShare() {
+    this.setState({ showMenu: false, showShare: !this.state.showShare });
+  }
+
+
   renderQuestionBlock(question, idx) {
     return (
       <Touchable
@@ -353,7 +370,9 @@ export default class GameBuilder extends React.Component {
     const {
       addQuestion,
       showInput,
+      showMenu,
       showSelection,
+      showShare,
     } = this.state;
 
     return (
@@ -376,6 +395,17 @@ export default class GameBuilder extends React.Component {
 
             {showInput &&
               <InputModal {...showInput} />}
+
+            {showMenu && 
+              <Menu
+                handleClose={this.toggleMenu}
+                items={[
+                  { onPress: this.toggleShare, label: 'Share' },
+                ]}
+              />}
+
+            {showShare && 
+              <GameShare handleClose={this.toggleShare} />}
             
             {Boolean(GameID) && 
               <ButtonStart onPress={() => handlePlayGame(null, this.state.game)} />}
