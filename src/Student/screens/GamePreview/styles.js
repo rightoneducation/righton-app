@@ -89,10 +89,12 @@ export default ScaledSheet.create({
   question: {
     color: colors.white,
     fontSize: fonts.large,
+    textAlign: 'center',
   },
   questionContainer: {
     alignItems: 'center',
     marginTop: '50@vs',
+    paddingHorizontal: '15@ms',
   },
   questionContainerTeacher: {
     // Account for back button
