@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
 import SelectionModal from '../../../components/SelectionModal';
+import Message from '../../../components/Message';
 import { trickTimeSelection, quizTimeSelection } from '../../../config/selections';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
@@ -24,6 +25,7 @@ export default class GameRoomStart extends React.Component {
     handleBackFromChild: PropTypes.func.isRequired,
     handleSetAppState: PropTypes.func.isRequired,
     IOTPublishMessage: PropTypes.func.isRequired,
+    numberOfPlayers: PropTypes.number,
   };
   
   static defaultProps = {
@@ -34,19 +36,22 @@ export default class GameRoomStart extends React.Component {
     handleBackFromChild: () => {},
     handleSetAppState: () => {},
     IOTPublishMessage: () => {},
+    numberOfPlayers: 0,
   };
 
   constructor(props) {
     super(props);
     
     this.state = {
+      messageProps: {},
       quizTime: props.gameState.quizTime || '1:00',
       showSelection: false,
       trickTime: props.gameState.trickTime || '3:00',
     };
 
     this.setTimer = null;
-
+    
+    this.handleCloseMessage = this.handleCloseMessage.bind(this);
     this.handleTimeSelection = this.handleTimeSelection.bind(this);
     this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
     this.handleSaveSettings = this.handleSaveSettings.bind(this);
@@ -73,25 +78,43 @@ export default class GameRoomStart extends React.Component {
 
   handleSaveSettings() {
     const { quizTime, trickTime } = this.state;
-    const { gameState, handleBackFromChild } = this.props;
+    const { gameState, handleBackFromChild, numberOfPlayers } = this.props;
     if (quizTime !== gameState.quizTime ||
       trickTime !== gameState.trickTime) {
-      const { handleSetAppState, IOTPublishMessage } = this.props;
-      const message = {
-        action: 'UPDATE_GAME_SETTINGS',
-        payload: {
-          quizTime,
-          trickTime,
-        },
-        uid: `${Math.random()}`,
-      };
-      IOTPublishMessage(message);
-      const updatedGameState = { ...gameState };
-      updatedGameState.quizTime = quizTime;
-      updatedGameState.trickTime = trickTime;
-      handleSetAppState('gameState', updatedGameState);
+      const { handleSetAppState } = this.props;
+      // const message = {
+      //   action: 'UPDATE_GAME_SETTINGS',
+      //   payload: {
+      //     quizTime,
+      //     trickTime,
+      //   },
+      //   uid: `${Math.random()}`,
+      // };
+      // IOTPublishMessage(message);
+      if (numberOfPlayers === 0) {
+        const updatedGameState = { ...gameState };
+        updatedGameState.quizTime = quizTime;
+        updatedGameState.trickTime = trickTime;
+        handleSetAppState('gameState', updatedGameState);
+        handleBackFromChild('start');
+      } else {
+        this.setState({
+          messageProps: {
+            closeFunc: this.handleCloseMessage,
+            bodyStyle: null,
+            textStyle: null,
+            duration: null,
+            message: 'Settings can only be updated before players join game.',
+            timeout: null,
+          },
+        });
+      }
     }
-    handleBackFromChild('start');
+  }
+
+
+  handleCloseMessage() {
+    this.setState({ messageProps: {} });
   }
 
   
@@ -101,6 +124,7 @@ export default class GameRoomStart extends React.Component {
     } = this.props;
 
     const {
+      messageProps,
       quizTime,
       showSelection,
       trickTime,
@@ -112,6 +136,7 @@ export default class GameRoomStart extends React.Component {
         onRequestClose={() => handleBackFromChild('start')}
         visible
       >
+        <Message {...messageProps} />
         <ScrollView
           contentContainerStyle={[
             parentStyles.dashboardContainer,
