@@ -239,7 +239,7 @@ export default class GamePreview extends React.PureComponent {
             bodyStyle: null,
             textStyle: null,
             duration: null,
-            message: 'Trick answer cannot be actual answer.',
+            message: 'That\'s the right answer! \nEnter a trickier answer.',
             timeout: 4000,
           },
         });
