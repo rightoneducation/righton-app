@@ -54,7 +54,6 @@ export function playGame(
       question: PropTypes.string,
       uid: PropTypes.string,
       */
-      uid: `${Math.random()}`,
       tricks: [],
       choices: [],
       points: 0,
