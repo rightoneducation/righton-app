@@ -26,11 +26,11 @@ export default class Instructions extends React.Component {
     visible: false,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      visibleItems: [true],
+      visibleItems: [],
     };
 
     this.handleReveal = this.handleReveal.bind(this);
@@ -43,7 +43,8 @@ export default class Instructions extends React.Component {
 
 
   setVisibleItems() {
-    const visibleItems = [true];
+    const { data } = this.props;
+    const visibleItems = data.length === 1 ? [undefined] : [true];
     if (this.props.data.length > 1) {
       visibleItems[this.props.data.length - 1] = undefined;
     }
@@ -81,9 +82,12 @@ export default class Instructions extends React.Component {
   );
 
 
-  renderRevealButton() {
-    const { visibleItems } = this.state;
+  renderRevealButton(visibleItems, data) {
     if (visibleItems[visibleItems.length - 1] === undefined) {
+      let label = 'Reveal next hint';
+      if (visibleItems.indexOf(undefined) === data.length - 1) {
+        label = 'Reveal answer';
+      }
       return (
         <ButtonWide
           buttonStyles={{
@@ -93,7 +97,7 @@ export default class Instructions extends React.Component {
             marginTop: 25,
             position: 'relative',
           }}
-          label={'Reveal next hint'}
+          label={label}
           onPress={this.handleReveal}
           ripple={colors.black}
         />
@@ -128,7 +132,7 @@ export default class Instructions extends React.Component {
               return this.renderInstructionBox(instruction, alignment);
             })}
 
-            {this.renderRevealButton()}
+            {this.renderRevealButton(visibleItems, data)}
           </ScrollView>
         </View>
       </Modal>
