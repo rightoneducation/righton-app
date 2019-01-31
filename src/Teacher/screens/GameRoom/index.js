@@ -469,6 +469,7 @@ export default class GameRoom extends React.Component {
       GameID,
       favorite,
       players,
+      uid: `${Math.random()}`,
     };
     
     const gameStateKeys = Object.keys(gameState);
