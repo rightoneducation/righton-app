@@ -51,7 +51,7 @@ export default ScaledSheet.create({
   },
   createContainer: {
     position: 'absolute',
-    right: '15@s',
+    right: '50@ms',
   },
   createLabel: {
     color: colors.primary,
@@ -85,7 +85,7 @@ export default ScaledSheet.create({
   },
   heartWrapper: {
     position: 'absolute',
-    right: '95@ms',
+    right: '115@ms',
   },
   inputButton: {
     backgroundColor: colors.white,
@@ -120,6 +120,10 @@ export default ScaledSheet.create({
   },
   marginTop: {
     marginTop: '15@vs',
+  },
+  menuWrapper: {
+    position: 'absolute',
+    right: '10@ms',
   },
   placeholder: {
     color: colors.lightGray,

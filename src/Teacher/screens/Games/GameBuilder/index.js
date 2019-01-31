@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
+import Eicon from 'react-native-vector-icons/Entypo';
 import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
@@ -418,6 +419,13 @@ export default class GameBuilder extends React.Component {
                 style={styles.createContainer}
               >
                 <Text style={styles.createLabel}>{ GameID ? 'Save' : 'Create' }</Text>
+              </Touchable>
+              <Touchable
+                hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+                onPress={this.toggleMenu}
+                style={styles.menuWrapper}
+              >
+                <Eicon name={'dots-three-vertical'} style={styles.heartIconBig} />
               </Touchable>
             </View>
 
