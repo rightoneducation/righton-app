@@ -223,11 +223,11 @@ export default class StudentFirst extends React.PureComponent {
         <Text style={styles.title}>Game Code</Text>
         <TextInput
           keyboardType={'numeric'}
-          maxLength={6}
+          maxLength={4}
           multiline={false}
           onChangeText={this.onRoomInput}
           onSubmitEditing={this.onRoomSubmit}
-          placeholder={'######'}
+          placeholder={'####'}
           placeholderTextColor={colors.primary} 
           returnKeyType={'done'}
           style={styles.input}
