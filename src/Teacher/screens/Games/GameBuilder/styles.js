@@ -91,11 +91,11 @@ export default ScaledSheet.create({
     backgroundColor: colors.white,
     borderColor: colors.dark,
     borderWidth: 1,
-    height: '45@vs',
+    minHeight: '45@vs',
     justifyContent: 'center',
     paddingHorizontal: '15@s',
     paddingVertical: '10@vs',
-    width: deviceWidth - scale(30),
+    minWidth: deviceWidth - scale(30),
   },
   inputButtonText: {
     color: colors.dark,
