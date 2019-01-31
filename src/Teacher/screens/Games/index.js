@@ -93,8 +93,8 @@ class Games extends React.PureComponent {
 
 
   componentDidMount() {
-    // this.hydrateGames();
-    this.getGamesFromDynamoDB(this.props.screenProps.account.TeacherID);
+    this.hydrateGames();
+    // this.getGamesFromDynamoDB(this.props.screenProps.account.TeacherID);
   }
   
 
