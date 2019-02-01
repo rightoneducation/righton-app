@@ -16,7 +16,7 @@ export default function OnboardAppRouter({ navigation, screenProps }) {
   }
 
   function handleStudent() {
-    screenProps.handleSetAppState('deviceSettings', { role: 'student' });
+    screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
     setTimeout(() => navigation.navigate('StudentFirst'), 250);
   }
 
