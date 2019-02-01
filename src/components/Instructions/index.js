@@ -47,6 +47,7 @@ export default class Instructions extends React.Component {
     const visibleItems = data.length === 1 ? [undefined] : [true];
     if (this.props.data.length > 1) {
       visibleItems[this.props.data.length - 1] = undefined;
+      visibleItems.fill(undefined, 1);
     }
     this.setState({ visibleItems });
   }
@@ -84,7 +85,7 @@ export default class Instructions extends React.Component {
 
   renderRevealButton(visibleItems, data) {
     if (visibleItems[visibleItems.length - 1] === undefined) {
-      let label = 'Reveal next hint';
+      let label = 'Reveal next step';
       if (visibleItems.indexOf(undefined) === data.length - 1) {
         label = 'Reveal answer';
       }
