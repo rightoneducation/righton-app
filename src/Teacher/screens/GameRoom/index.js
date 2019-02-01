@@ -205,13 +205,14 @@ export default class GameRoom extends React.Component {
 
     debug.log(`Choices for ${teamRef}:`, JSON.stringify(choices));
 
+    const time = Date.now();
     
     const message = {
       action: 'SET_TEAM_CHOICES',
       teamRef,
       uid: dualUid,
       payload: choices,
-      state: typeof teamRef === 'string' ? { startQuiz: true, teamRef } : null, 
+      state: typeof teamRef === 'string' ? { startQuiz: true, teamRef, time } : null, 
     };
     IOTPublishMessage(message);
     
