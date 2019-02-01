@@ -289,7 +289,7 @@ export default class GameBuilderQuestion extends React.Component {
 
         <View style={[parentStyles.headerContainer, elevation]}>
           <Touchable
-            hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+            hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
             onPress={this.handleExitModal}
           >
             <View style={parentStyles.closeContainer}>
@@ -359,7 +359,7 @@ export default class GameBuilderQuestion extends React.Component {
           >
             <Text style={parentStyles.inputLabel}>Answer</Text>
             <Touchable
-              onPress={() => this.handleInputModal('answer', 'Enter answer', 100, answer, 'numeric')}
+              onPress={() => this.handleInputModal('answer', 'Enter answer', 100, answer, 'default')}
               style={[parentStyles.inputButton, elevation]}
             >
               <Text
@@ -374,7 +374,7 @@ export default class GameBuilderQuestion extends React.Component {
           </View>
 
           {Boolean(instructions) &&
-            <Text style={[parentStyles.inputLabel, parentStyles.marginTop]}>Instructions</Text>}
+            <Text style={[parentStyles.inputLabel, parentStyles.marginTop]}>Solution Steps</Text>}
 
           {Boolean(instructions) && instructions.map((instruction, idx) => (
             <Touchable
@@ -397,7 +397,7 @@ export default class GameBuilderQuestion extends React.Component {
 
           <ButtonWide
             buttonStyles={{ position: 'absolute', bottom: 25 }}
-            label={'+ Instruction Step'}
+            label={'+ Solution Step'}
             onPress={this.handleAddInstruction}
           />
         </ScrollView>
