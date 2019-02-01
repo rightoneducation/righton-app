@@ -424,7 +424,7 @@ export default class GameBuilder extends React.Component {
 
             <View style={[styles.headerContainer, elevation]}>
               <Touchable
-                hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+                hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
                 onPress={handleClose}
               >
                 <View style={styles.closeContainer}>
