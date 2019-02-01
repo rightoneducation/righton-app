@@ -241,7 +241,7 @@ export default class GameReasons extends React.PureComponent {
     const teamRef = `team${team}`;
 
     return (
-      <View style={gamePreviewStyles.questionContainer}>
+      <View style={[gamePreviewStyles.questionContainer, styles.extraMarginBottom]}>
         <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
         {Boolean(gameState[teamRef].image) &&
           <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
@@ -275,7 +275,12 @@ export default class GameReasons extends React.PureComponent {
           </View>}
         {this.renderQuestion()}
         <View style={styles.extraMarginBottom}>
-          <Text style={[styles.question, gamePreviewStyles.marginBottom]}>
+          <Text style={[
+            gamePreviewStyles.question,
+            gamePreviewStyles.time,
+            gamePreviewStyles.marginBottom
+          ]}
+          >
             Jot down a few notes for why your team chose each trick answer:
           </Text>
 
