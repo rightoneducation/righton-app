@@ -145,6 +145,7 @@ export default class GameRoomResults extends React.Component {
       if (noAnswerCount) {
         noAnswerWidth = (noAnswerCount / playersWhoVoted) * this.choicesWidth;
         noAnswerPercent = (noAnswerCount / playersWhoVoted) * 100;
+        this.setState({ noAnswerPercent });
       }
   
       Animated.parallel([
@@ -191,7 +192,6 @@ export default class GameRoomResults extends React.Component {
           secondPercent,
           thirdPercent,
           fourthPercent,
-          noAnswerPercent,
         });
       });
     }, 100);
