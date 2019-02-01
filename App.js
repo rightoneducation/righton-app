@@ -146,7 +146,9 @@ export default class App extends React.Component {
       if (typeof deviceSettingsString === 'string') {
         const deviceSettings = JSON.parse(deviceSettingsString);
         debug.log('DeviceSettings:', deviceSettingsString);
-        if (signInWithoutPassword && deviceSettings.role && deviceSettings.username) {
+        if (signInWithoutPassword &&
+          deviceSettings.role &&
+          (deviceSettings.username && isNaN(parseInt(deviceSettings.username, 10)))) {
           debug.log('Attempting to sign in without password with username:', deviceSettings.username);
           Auth.signIn(deviceSettings.username)
             .then((session) => {
@@ -177,7 +179,19 @@ export default class App extends React.Component {
     if (GameRoomID) {
       if (appState.match(/inactive|background/) && nextAppState === 'active') {
         debug.log('App has come to the foreground - resubscribing to GameRoom:', GameRoomID);
-        this.IOTSubscribeToTopic(GameRoomID);
+        this.IOTSubscribeToTopic(GameRoomID, 'dropped');
+
+        const { role, username } = this.state.deviceSettings;
+        if (role === 'student') {
+          setTimeout(() => {
+            const message = {
+              action: 'REQUEST_DROPPED_GAME_STATE',
+              uid: `${Math.random()}`,
+              username,
+            };
+            this.IOTPublishMessage(message);
+          }, 1000);
+        }
       } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
         debug.log('App going into background - unsubscribing from GameRoom:', GameRoomID);
         this.IOTUnsubscribeFromTopic(GameRoomID);
@@ -246,11 +260,11 @@ export default class App extends React.Component {
   }
 
 
-  IOTSubscribeToTopic(topic) {
+  IOTSubscribeToTopic(topic, dropped) {
     const { role } = this.state.deviceSettings;
     debug.log('Subscribing to topic:', topic, 'as', role);
     IOTSubscribeToTopic(topic, role === 'teacher' ? teacherMessageHandler : studentMessageHandler, this);
-    if (role !== 'teacher') {
+    if (role !== 'teacher' && !dropped) {
       const requestMessage = {
         action: 'REQUEST_GAME_STATE',
         uid: `${Math.random()}`,
