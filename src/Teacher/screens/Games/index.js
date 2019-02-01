@@ -145,7 +145,7 @@ class Games extends React.PureComponent {
         games = JSON.parse(games);
         this.setState({ games }, () => {
           const { account } = this.props.screenProps;
-          if (account.gamesRef.local !== account.gamesRef.db) {
+          if (account.gamesRef && (account.gamesRef.local !== account.gamesRef.db)) {
             // Previous attempt to save games to DynamoDB failed so we try again.
             this.handleSaveGamesToDatabase(games);
           }
