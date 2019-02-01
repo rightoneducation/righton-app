@@ -92,7 +92,11 @@ export default class GameQuiz extends React.Component {
       } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
         nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
         navigation.navigate('GameReasons');
+      } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
+        nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
+        this.resetState(nextProps.screenProps.gameState.state.teamRef);
       }
+
       if (nextProps.screenProps.gameState.state.exitGame === true) {
         const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
         handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);
@@ -103,6 +107,18 @@ export default class GameQuiz extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.timerInterval);
+  }
+
+
+  resetState(teamRef) {
+    this.setState({
+      selectedChoice: null,
+      timeLeft: this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00' ?
+        this.props.screenProps.gameState.quizTime : 'No time limit',
+      teamRef,
+    }, () => {
+      this.timerInterval = setInterval(this.countdownTime, 1000);
+    });
   }
 
 
