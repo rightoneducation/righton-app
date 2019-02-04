@@ -94,7 +94,10 @@ export default class GameQuiz extends React.Component {
         navigation.navigate('GameReasons');
       } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
         nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
-        this.resetState(nextProps.screenProps.gameState.state.teamRef);
+        this.resetState(
+          nextProps.screenProps.gameState.state.teamRef,
+          // nextProps.screenProps.gameState.state.time,
+        );
       }
 
       if (nextProps.screenProps.gameState.state.exitGame === true) {
@@ -111,6 +114,9 @@ export default class GameQuiz extends React.Component {
 
 
   resetState(teamRef) {
+    // const now = Date.now();
+    // const quizTime = this.props.screenProps.gameState.quizTime;
+    // const timeLeft = time - now
     this.setState({
       selectedChoice: null,
       timeLeft: this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00' ?
