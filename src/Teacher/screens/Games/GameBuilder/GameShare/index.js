@@ -41,40 +41,42 @@ export default class GameShare extends React.PureComponent {
       <Modal
         animationType={'slide'}
         onRequestClose={handleClose}
-        transparent
         visible
-        style={styles.container}
       >
-        <Touchable
-          activeOpacity={0.8}
-          style={styles.closeButton}
-        >
-          <View>
-            <Aicon name={'close'} style={styles.closeIcon} />
+        <View style={styles.container}>
+
+          <Touchable
+            activeOpacity={0.8}
+            style={styles.closeButton}
+          >
+            <View>
+              <Aicon name={'close'} style={styles.closeIcon} />
+            </View>
+          </Touchable>
+
+          <View style={styles.itemContainer}>
+            <Text style={styles.label}>Share game with teacher</Text>
+            <TextInput
+              keyboardType={'default'}
+              maxLength={65}
+              multiline={false}
+              // onChangeText={this.handleSchoolInput}
+              placeholder={'teacher@email.edu'}
+              placeholderTextColor={colors.lightGray}
+              returnKeyType={'done'}
+              style={[styles.textinput, elevation]}
+              textAlign={'center'}
+              underlineColorAndroid={colors.dark}
+              value={email}
+            />
           </View>
-        </Touchable>
 
-        <View style={styles.itemContainer}>
-          <Text style={styles.label}>Share game with teacher</Text>
-          <TextInput
-            keyboardType={'default'}
-            maxLength={65}
-            multiline={false}
-            // onChangeText={this.handleSchoolInput}
-            placeholder={'teacher@email.edu'}
-            placeholderTextColor={colors.lightGray}
-            returnKeyType={'done'}
-            style={[styles.textinput, elevation]}
-            textAlign={'center'}
-            underlineColorAndroid={colors.dark}
-            value={email}
+          <ButtonWide
+            label={'Share game'}
+            onPress={() => {}}
           />
-        </View>
 
-        <ButtonWide
-          label={'Share game'}
-          onPress={() => {}}
-        />
+        </View>
       </Modal>
     );
   }
