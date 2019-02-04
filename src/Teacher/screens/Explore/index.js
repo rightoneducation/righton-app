@@ -150,6 +150,7 @@ class Explore extends React.PureComponent {
     parsedGame.CCS = data.CCS;
     parsedGame.questions = [];
     parsedGame.quizmaker = true;
+    parsedGame.explore = true; // This let's us know that the game is viewed from Explore tab.
     let questionIndex = 1;
     while (data[`q${questionIndex}`]) {
       parsedGame.questions.push(data[`q${questionIndex}`]);

@@ -141,6 +141,18 @@ export default class GameBuilder extends React.Component {
     }
   }
 
+
+  handleCloseGame = () => {
+    const { handleClose, game } = this.props;
+    if (game.explore) {
+      if (this.state.game.favorite) {
+        this.createGame();
+        return;
+      }
+    }
+    handleClose();
+  }
+
   
   hydrateState(game) {
     if (game && Object.keys(game).length) {
@@ -352,7 +364,7 @@ export default class GameBuilder extends React.Component {
 
   render() {
     const {
-      handleClose,
+      // handleClose,
       handlePlayGame,
       visible,
     } = this.props;
@@ -378,7 +390,7 @@ export default class GameBuilder extends React.Component {
     return (
       <Modal
         animationType={'slide'}
-        onRequestClose={handleClose}
+        onRequestClose={this.handleCloseGame}
         transparent={false}
         visible={visible}
       >
@@ -425,7 +437,7 @@ export default class GameBuilder extends React.Component {
             <View style={[styles.headerContainer, elevation]}>
               <Touchable
                 hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
-                onPress={handleClose}
+                onPress={this.handleCloseGame}
               >
                 <View style={styles.closeContainer}>
                   <Aicon name={'close'} style={[styles.closeIcon, styles.closeIconShadow]} />
