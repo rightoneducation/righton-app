@@ -362,7 +362,7 @@ export default class Dashboard extends React.Component {
       <View style={[styles.roomContainer, { justifyContent: 'center' }]}>
         <TextInput
           keyboardType={'numeric'}
-          maxLength={30}
+          maxLength={4}
           multiline={false}
           onChangeText={this.handleRoomInput}
           onSubmitEditing={this.handleRoomSubmit}
