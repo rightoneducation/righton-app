@@ -11,6 +11,7 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
+import KeepAwake from 'react-native-keep-awake';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../../../Student/screens/GamePreview/styles';
@@ -221,6 +222,8 @@ export default class GameRoomResults extends React.Component {
       <ScrollView
         contentContainerStyle={gamePreviewStyles.container}
       >
+        <KeepAwake />
+
         <ButtonBack
           onPress={handleBackFromChild}
         />

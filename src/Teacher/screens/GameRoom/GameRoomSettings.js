@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import Touchable from 'react-native-platform-touchable';
 import SelectionModal from '../../../components/SelectionModal';
 import Message from '../../../components/Message';
@@ -136,6 +137,8 @@ export default class GameRoomStart extends React.Component {
         onRequestClose={() => handleBackFromChild('start')}
         visible
       >
+        <KeepAwake />
+
         <Message {...messageProps} />
         <ScrollView
           contentContainerStyle={[

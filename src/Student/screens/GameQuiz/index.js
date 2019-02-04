@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
+import KeepAwake from 'react-native-keep-awake';
 import gamePreviewStyles from '../GamePreview/styles';
 import { handleExitGame } from '../../../utils/studentGameUtils';
 
@@ -199,6 +200,8 @@ export default class GameQuiz extends React.Component {
       <ScrollView
         contentContainerStyle={gamePreviewStyles.container}
       >
+        <KeepAwake />
+
         {Boolean(timeLeft) &&
           <View style={gamePreviewStyles.timeContainer}>
             <Text style={gamePreviewStyles.time}>{ timeLeft }</Text>

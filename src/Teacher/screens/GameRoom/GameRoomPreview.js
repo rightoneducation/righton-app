@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
+import KeepAwake from 'react-native-keep-awake';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import Touchable from 'react-native-platform-touchable';
@@ -25,6 +26,8 @@ export default function GameRoomPreview({
     <ScrollView
       contentContainerStyle={gamePreviewStyles.container}
     >
+      <KeepAwake />
+
       <ButtonBack
         onPress={handleBackFromChild}
       />

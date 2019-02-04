@@ -9,6 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import Touchable from 'react-native-platform-touchable';
 import HeaderTeam from '../../components/HeaderTeam';
 import InputModal from '../../../components/InputModal';
@@ -266,6 +267,8 @@ export default class GameReasons extends React.PureComponent {
       <ScrollView 
         contentContainerStyle={[gamePreviewStyles.container, styles.container]}
       >
+        <KeepAwake />
+
         {showInput &&
           <InputModal {...showInput} />}
         <HeaderTeam team={`Team ${team + 1}`} />

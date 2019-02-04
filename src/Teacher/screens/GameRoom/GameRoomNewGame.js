@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';
 import ButtonBack from '../../../components/ButtonBack';
@@ -169,6 +170,8 @@ export default class GameRoomNewGame extends React.Component {
 
     return (
       <ScrollView contentContainerStyle={[firstStyles.container, styles.scrollview]}>
+        <KeepAwake />
+
         {Boolean(portal) &&
           <Portal messageProps={{ message: 'Launching new game' }} />}
         <ButtonBack

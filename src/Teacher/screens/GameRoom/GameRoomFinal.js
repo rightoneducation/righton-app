@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import { getQuizFromDynamoDB, putQuizInDynamoDB } from '../../../../lib/Categories/DynamoDB/QuizMakerAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import ButtonBack from '../../../components/ButtonBack';
@@ -209,6 +210,8 @@ export default class GameRoomFinal extends React.Component {
           styles.extraPaddingBottom,
         ]}
       >
+        <KeepAwake />
+
         <ButtonBack
           onPress={handleBackFromChild}
         />

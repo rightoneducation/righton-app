@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { scale } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
 import styles from './styles';
@@ -24,6 +25,8 @@ export default function GameRoomStart({
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
     >
+      <KeepAwake />
+
       <ButtonBack
         iconName={'close'}
         onPress={handleEndGame}

@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
+import KeepAwake from 'react-native-keep-awake';
 import styles from './styles';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
@@ -27,6 +28,8 @@ export default function GameRoomOverview({
     <ScrollView
       contentContainerStyle={[styles.dashboardContainer, styles.extraPaddingBottom]}
     >
+      <KeepAwake />
+
       <ButtonBack
         iconName={'close'}
         onPress={handleEndGame}

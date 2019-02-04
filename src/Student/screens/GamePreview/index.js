@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { scale } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import Message from '../../../components/Message';
 import InputModal from '../../../components/InputModal';
 import HeaderTeam from '../../components/HeaderTeam';
@@ -414,6 +415,8 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <ScrollView contentContainerStyle={styles.container}>
+        <KeepAwake />
+
         <Message {...messageProps} />
         {showInput && <InputModal {...showInput} />}
         {Boolean(timeLeft) &&

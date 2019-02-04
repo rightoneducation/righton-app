@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
+import KeepAwake from 'react-native-keep-awake';
 import Portal from '../../../screens/Portal';
 import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
@@ -140,6 +141,8 @@ export default class GameFinal extends React.Component {
 
     return (
       <View style={gamePreviewStyles.container}>
+        <KeepAwake />
+
         <HeaderTeam team={`Team ${team + 1}`} />
         <View style={styles.container}>
           <View style={styles.row}>
