@@ -1,0 +1,9 @@
+{
+    "bucketName": "rightons3",
+    "authPolicyName": "s3_amplify_9a6fafd9",
+    "unauthPolicyName": "s3_amplify_9a6fafd9",
+    "authRoleName": "ightn-20181229134435-authRole",
+    "unauthRoleName": "ightn-20181229134435-unauthRole",
+    "authPermissions": "rw",
+    "unauthPermissions": "r"
+}

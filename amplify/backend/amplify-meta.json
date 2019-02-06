@@ -1,391 +1,405 @@
 {
-    "providers": {
-        "awscloudformation": {
-            "AuthRoleName": "ightn-20181229134435-authRole",
-            "UnauthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181229134435-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181229134435-authRole",
-            "Region": "us-east-1",
-            "DeploymentBucketName": "ightn-20181229134435-deployment",
-            "UnauthRoleName": "ightn-20181229134435-unauthRole",
-            "StackName": "ightn-20181229134435",
-            "StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/ightn-20181229134435/71e96480-0b24-11e9-b3fd-0a16600979f0"
-        }
-    },
-    "auth": {
-        "cognito9238527f": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
-                "logicalId": "authcognito9238527f"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.303Z",
-            "output": {
-                "AppClientSecret": "fs7ul1g6lep607c0q4cfg15b7hhksi277achm9rck36m49aqm2u",
-                "UserPoolId": "us-east-1_oVDoZFvFM",
-                "AppClientIDWeb": "4uushlqpafqjl3t5cg5vjpkvtp",
-                "AppClientID": "3l4681vp0tidsuuhjfg4c02n9m",
-                "IdentityPoolId": "us-east-1:b4625dc0-227e-4872-a0f0-3095d4f1ef27",
-                "IdentityPoolName": "cognito9238527f_identitypool_9238527f",
-                "UserPoolName": "cognito9238527f_userpool_9238527f"
-            },
-            "lastPushDirHash": "XvUHUTbyefI89sMuo6USiVoLjdE="
-        }
-    },
-    "storage": {
-        "GameRooms": {
-            "service": "DynamoDB",
-            "providerPlugin": "awscloudformation",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/GameRooms-cloudformation-template.json",
-                "logicalId": "storageGameRooms"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.305Z",
-            "output": {
-                "PartitionKeyName": "GameRoomID",
-                "Region": "us-east-1",
-                "Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/GameRooms",
-                "PartitionKeyType": "S",
-                "Name": "GameRooms"
-            },
-            "lastPushDirHash": "V8E5VVbdkTQ8SaKY3uUXMHC4GXk="
-        },
-        "Games": {
-            "service": "DynamoDB",
-            "providerPlugin": "awscloudformation",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Games-cloudformation-template.json",
-                "logicalId": "storageGames"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.306Z",
-            "output": {
-                "PartitionKeyName": "GameID",
-                "Region": "us-east-1",
-                "Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/Games",
-                "PartitionKeyType": "S",
-                "Name": "Games"
-            },
-            "lastPushDirHash": "L4eOW000UJRY35hhSXRRdW50E4g="
-        },
-        "StudentAccounts": {
-            "service": "DynamoDB",
-            "providerPlugin": "awscloudformation",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/StudentAccounts-cloudformation-template.json",
-                "logicalId": "storageStudentAccounts"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.307Z",
-            "output": {
-                "PartitionKeyName": "StudentID",
-                "Region": "us-east-1",
-                "Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/StudentAccounts",
-                "PartitionKeyType": "S",
-                "Name": "StudentAccounts"
-            },
-            "lastPushDirHash": "WFVsijO/7f0NVP0hCSRtgbczlfo="
-        },
-        "TeacherAccounts": {
-            "service": "DynamoDB",
-            "providerPlugin": "awscloudformation",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherAccounts-cloudformation-template.json",
-                "logicalId": "storageTeacherAccounts"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.308Z",
-            "output": {
-                "PartitionKeyName": "TeacherID",
-                "Region": "us-east-1",
-                "Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/TeacherAccounts",
-                "PartitionKeyType": "S",
-                "Name": "TeacherAccounts"
-            },
-            "lastPushDirHash": "+RZQxtIKwOLzhkrimJW622dtE/Y="
-        },
-        "QuizMaker": {
-            "service": "DynamoDB",
-            "providerPlugin": "awscloudformation",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/QuizMaker-cloudformation-template.json",
-                "logicalId": "storageQuizMaker"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.309Z",
-            "output": {
-                "PartitionKeyName": "GameID",
-                "Region": "us-east-1",
-                "Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/QuizMaker",
-                "PartitionKeyType": "S",
-                "Name": "QuizMaker"
-            },
-            "lastPushDirHash": "i5NuUBa9cg++u1ywb/ums8Gv8Dk="
-        }
-    },
-    "function": {
-        "TeacherGameLambda": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "storage",
-                    "resourceName": "GameRooms",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "lastBuildTimeStamp": "2018-12-29T11:47:22.463Z",
-            "lastPackageTimeStamp": "2019-01-24T05:29:02.475Z",
-            "distZipFilename": "TeacherGameLambda-1548307723-latest-build.zip",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherGameLambda-cloudformation-template.json",
-                "logicalId": "functionTeacherGameLambda"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.310Z",
-            "output": {
-                "Region": "us-east-1",
-                "Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherGameLambda",
-                "Name": "TeacherGameLambda"
-            },
-            "lastPushDirHash": "HWzadlJrWiwj0c7brMQZP3uM7uA="
-        },
-        "TeacherAccountsLambda": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "storage",
-                    "resourceName": "TeacherAccounts",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "lastBuildTimeStamp": "2019-01-22T09:14:02.459Z",
-            "lastPackageTimeStamp": "2019-02-06T07:47:20.790Z",
-            "distZipFilename": "TeacherAccountsLambda-1549439228-latest-build.zip",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherAccountsLambda-cloudformation-template.json",
-                "logicalId": "functionTeacherAccountsLambda"
-            },
-            "lastPushTimeStamp": "2019-02-06T07:52:49.010Z",
-            "output": {
-                "Region": "us-east-1",
-                "Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherAccountsLambda",
-                "Name": "TeacherAccountsLambda"
-            },
-            "lastPushDirHash": "fB9HRF8YBiGbDowyGj/xc3thxbw="
-        },
-        "StudentAccountsLambda": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "storage",
-                    "resourceName": "StudentAccounts",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "lastBuildTimeStamp": "2019-01-22T09:14:05.328Z",
-            "lastPackageTimeStamp": "2019-01-24T05:29:03.748Z",
-            "distZipFilename": "StudentAccountsLambda-1548307723-latest-build.zip",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/StudentAccountsLambda-cloudformation-template.json",
-                "logicalId": "functionStudentAccountsLambda"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.313Z",
-            "output": {
-                "Region": "us-east-1",
-                "Arn": "arn:aws:lambda:us-east-1:484006752749:function:StudentAccountsLambda",
-                "Name": "StudentAccountsLambda"
-            },
-            "lastPushDirHash": "do8GMqVQYBsk457TSSUnVoCkDHQ="
-        },
-        "QuizMakerLambda": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "storage",
-                    "resourceName": "QuizMaker",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "lastBuildTimeStamp": "2019-01-24T05:28:43.221Z",
-            "lastPackageTimeStamp": "2019-01-29T08:20:50.299Z",
-            "distZipFilename": "QuizMakerLambda-1548750037-latest-build.zip",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/QuizMakerLambda-cloudformation-template.json",
-                "logicalId": "functionQuizMakerLambda"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.322Z",
-            "output": {
-                "Region": "us-east-1",
-                "Arn": "arn:aws:lambda:us-east-1:484006752749:function:QuizMakerLambda",
-                "Name": "QuizMakerLambda"
-            },
-            "lastPushDirHash": "t4GbS2fBaRHlG3TFoJbwaYO0OkY="
-        },
-        "GamesLambda": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "storage",
-                    "resourceName": "Games",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "lastBuildTimeStamp": "2019-01-29T08:03:15.393Z",
-            "lastPackageTimeStamp": "2019-01-29T08:20:50.835Z",
-            "distZipFilename": "GamesLambda-1548750037-latest-build.zip",
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/GamesLambda-cloudformation-template.json",
-                "logicalId": "functionGamesLambda"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.322Z",
-            "output": {
-                "Region": "us-east-1",
-                "Arn": "arn:aws:lambda:us-east-1:484006752749:function:GamesLambda",
-                "Name": "GamesLambda"
-            },
-            "lastPushDirHash": "KSgeuUUzshZoNTYKMaFyYs1hYRE="
-        }
-    },
-    "api": {
-        "TeacherGameAPI": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "TeacherGameLambda",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherGameAPI-cloudformation-template.json",
-                "logicalId": "apiTeacherGameAPI"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.317Z",
-            "output": {
-                "ApiName": "TeacherGameAPI",
-                "RootUrl": "https://hh6pg9sfh9.execute-api.us-east-1.amazonaws.com/Prod"
-            },
-            "lastPushDirHash": "uBbz3BBDokVsJlQPrcCex3DTS7E="
-        },
-        "TeacherAccountsAPI": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "TeacherAccountsLambda",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherAccountsAPI-cloudformation-template.json",
-                "logicalId": "apiTeacherAccountsAPI"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.317Z",
-            "output": {
-                "ApiName": "TeacherAccountsAPI",
-                "RootUrl": "https://ja1qpt35r2.execute-api.us-east-1.amazonaws.com/Prod"
-            },
-            "lastPushDirHash": "up6qpxRJSBbnMQjraaBQJQ7UHNM="
-        },
-        "StudentAccountsAPI": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "StudentAccountsLambda",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/StudentAccountsAPI-cloudformation-template.json",
-                "logicalId": "apiStudentAccountsAPI"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.318Z",
-            "output": {
-                "ApiName": "StudentAccountsAPI",
-                "RootUrl": "https://kjotcfrpvj.execute-api.us-east-1.amazonaws.com/Prod"
-            },
-            "lastPushDirHash": "Fg81kJZxcd1S4cFJd89n2H18BSg="
-        },
-        "QuizMakerAPI": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "QuizMakerLambda",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/QuizMakerAPI-cloudformation-template.json",
-                "logicalId": "apiQuizMakerAPI"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.319Z",
-            "output": {
-                "ApiName": "QuizMakerAPI",
-                "RootUrl": "https://fe9bm3iami.execute-api.us-east-1.amazonaws.com/Prod"
-            },
-            "lastPushDirHash": "KFw+83lZkNBKKUcDGfrZSZJ7z50="
-        },
-        "GamesAPI": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "GamesLambda",
-                    "attributes": [
-                        "Name",
-                        "Arn"
-                    ]
-                }
-            ],
-            "providerMetadata": {
-                "s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/GamesAPI-cloudformation-template.json",
-                "logicalId": "apiGamesAPI"
-            },
-            "lastPushTimeStamp": "2019-01-29T08:22:39.320Z",
-            "output": {
-                "ApiName": "GamesAPI",
-                "RootUrl": "https://b1mxea7gza.execute-api.us-east-1.amazonaws.com/Prod"
-            },
-            "lastPushDirHash": "koUykFFLE280H75lOEXkwm5ZHBk="
-        }
-    }
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "ightn-20181229134435-authRole",
+			"UnauthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181229134435-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::484006752749:role/ightn-20181229134435-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "ightn-20181229134435-deployment",
+			"UnauthRoleName": "ightn-20181229134435-unauthRole",
+			"StackName": "ightn-20181229134435",
+			"StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/ightn-20181229134435/71e96480-0b24-11e9-b3fd-0a16600979f0"
+		}
+	},
+	"auth": {
+		"cognito9238527f": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
+				"logicalId": "authcognito9238527f"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.965Z",
+			"output": {
+				"AppClientSecret": "fs7ul1g6lep607c0q4cfg15b7hhksi277achm9rck36m49aqm2u",
+				"UserPoolId": "us-east-1_oVDoZFvFM",
+				"AppClientIDWeb": "4uushlqpafqjl3t5cg5vjpkvtp",
+				"AppClientID": "3l4681vp0tidsuuhjfg4c02n9m",
+				"IdentityPoolId": "us-east-1:b4625dc0-227e-4872-a0f0-3095d4f1ef27",
+				"IdentityPoolName": "cognito9238527f_identitypool_9238527f",
+				"UserPoolName": "cognito9238527f_userpool_9238527f"
+			},
+			"lastPushDirHash": "7WndeFJ6NfDC5+pRPYDAR4b+vXE="
+		}
+	},
+	"storage": {
+		"GameRooms": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/GameRooms-cloudformation-template.json",
+				"logicalId": "storageGameRooms"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.949Z",
+			"output": {
+				"PartitionKeyName": "GameRoomID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/GameRooms",
+				"PartitionKeyType": "S",
+				"Name": "GameRooms"
+			},
+			"lastPushDirHash": "V8E5VVbdkTQ8SaKY3uUXMHC4GXk="
+		},
+		"Games": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/Games-cloudformation-template.json",
+				"logicalId": "storageGames"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.950Z",
+			"output": {
+				"PartitionKeyName": "GameID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/Games",
+				"PartitionKeyType": "S",
+				"Name": "Games"
+			},
+			"lastPushDirHash": "L4eOW000UJRY35hhSXRRdW50E4g="
+		},
+		"StudentAccounts": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/StudentAccounts-cloudformation-template.json",
+				"logicalId": "storageStudentAccounts"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.951Z",
+			"output": {
+				"PartitionKeyName": "StudentID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/StudentAccounts",
+				"PartitionKeyType": "S",
+				"Name": "StudentAccounts"
+			},
+			"lastPushDirHash": "WFVsijO/7f0NVP0hCSRtgbczlfo="
+		},
+		"TeacherAccounts": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/TeacherAccounts-cloudformation-template.json",
+				"logicalId": "storageTeacherAccounts"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.952Z",
+			"output": {
+				"PartitionKeyName": "TeacherID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/TeacherAccounts",
+				"PartitionKeyType": "S",
+				"Name": "TeacherAccounts"
+			},
+			"lastPushDirHash": "+RZQxtIKwOLzhkrimJW622dtE/Y="
+		},
+		"QuizMaker": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/QuizMaker-cloudformation-template.json",
+				"logicalId": "storageQuizMaker"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.953Z",
+			"output": {
+				"PartitionKeyName": "GameID",
+				"Region": "us-east-1",
+				"Arn": "arn:aws:dynamodb:us-east-1:484006752749:table/QuizMaker",
+				"PartitionKeyType": "S",
+				"Name": "QuizMaker"
+			},
+			"lastPushDirHash": "i5NuUBa9cg++u1ywb/ums8Gv8Dk="
+		},
+		"RightOnS3": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storageRightOnS3"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.965Z",
+			"output": {
+				"BucketName": "rightons3",
+				"Region": "us-east-1"
+			},
+			"lastPushDirHash": "db69TJ3DUH1TY3EIGJBzd73g1+Y="
+		}
+	},
+	"function": {
+		"TeacherGameLambda": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "GameRooms",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2018-12-29T11:47:22.463Z",
+			"lastPackageTimeStamp": "2019-01-24T05:29:02.475Z",
+			"distZipFilename": "TeacherGameLambda-1548307723-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherGameLambda-cloudformation-template.json",
+				"logicalId": "functionTeacherGameLambda"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.954Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherGameLambda",
+				"Name": "TeacherGameLambda"
+			},
+			"lastPushDirHash": "HWzadlJrWiwj0c7brMQZP3uM7uA="
+		},
+		"TeacherAccountsLambda": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "TeacherAccounts",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2019-01-22T09:14:02.459Z",
+			"lastPackageTimeStamp": "2019-02-06T07:47:20.790Z",
+			"distZipFilename": "TeacherAccountsLambda-1549439228-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/TeacherAccountsLambda-cloudformation-template.json",
+				"logicalId": "functionTeacherAccountsLambda"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.965Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:TeacherAccountsLambda",
+				"Name": "TeacherAccountsLambda"
+			},
+			"lastPushDirHash": "dUT5d3I9a6ipKGWm7lLZZmG9x/A="
+		},
+		"StudentAccountsLambda": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "StudentAccounts",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2019-01-22T09:14:05.328Z",
+			"lastPackageTimeStamp": "2019-01-24T05:29:03.748Z",
+			"distZipFilename": "StudentAccountsLambda-1548307723-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/StudentAccountsLambda-cloudformation-template.json",
+				"logicalId": "functionStudentAccountsLambda"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.956Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:StudentAccountsLambda",
+				"Name": "StudentAccountsLambda"
+			},
+			"lastPushDirHash": "do8GMqVQYBsk457TSSUnVoCkDHQ="
+		},
+		"QuizMakerLambda": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "QuizMaker",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2019-01-24T05:28:43.221Z",
+			"lastPackageTimeStamp": "2019-01-29T08:20:50.299Z",
+			"distZipFilename": "QuizMakerLambda-1548750037-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/QuizMakerLambda-cloudformation-template.json",
+				"logicalId": "functionQuizMakerLambda"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.957Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:QuizMakerLambda",
+				"Name": "QuizMakerLambda"
+			},
+			"lastPushDirHash": "t4GbS2fBaRHlG3TFoJbwaYO0OkY="
+		},
+		"GamesLambda": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "storage",
+					"resourceName": "Games",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"lastBuildTimeStamp": "2019-01-29T08:03:15.393Z",
+			"lastPackageTimeStamp": "2019-01-29T08:20:50.835Z",
+			"distZipFilename": "GamesLambda-1548750037-latest-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/function/GamesLambda-cloudformation-template.json",
+				"logicalId": "functionGamesLambda"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.959Z",
+			"output": {
+				"Region": "us-east-1",
+				"Arn": "arn:aws:lambda:us-east-1:484006752749:function:GamesLambda",
+				"Name": "GamesLambda"
+			},
+			"lastPushDirHash": "KSgeuUUzshZoNTYKMaFyYs1hYRE="
+		}
+	},
+	"api": {
+		"TeacherGameAPI": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "TeacherGameLambda",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherGameAPI-cloudformation-template.json",
+				"logicalId": "apiTeacherGameAPI"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.960Z",
+			"output": {
+				"ApiName": "TeacherGameAPI",
+				"RootUrl": "https://hh6pg9sfh9.execute-api.us-east-1.amazonaws.com/Prod"
+			},
+			"lastPushDirHash": "uBbz3BBDokVsJlQPrcCex3DTS7E="
+		},
+		"TeacherAccountsAPI": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "TeacherAccountsLambda",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/TeacherAccountsAPI-cloudformation-template.json",
+				"logicalId": "apiTeacherAccountsAPI"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.961Z",
+			"output": {
+				"ApiName": "TeacherAccountsAPI",
+				"RootUrl": "https://ja1qpt35r2.execute-api.us-east-1.amazonaws.com/Prod"
+			},
+			"lastPushDirHash": "up6qpxRJSBbnMQjraaBQJQ7UHNM="
+		},
+		"StudentAccountsAPI": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "StudentAccountsLambda",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/StudentAccountsAPI-cloudformation-template.json",
+				"logicalId": "apiStudentAccountsAPI"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.962Z",
+			"output": {
+				"ApiName": "StudentAccountsAPI",
+				"RootUrl": "https://kjotcfrpvj.execute-api.us-east-1.amazonaws.com/Prod"
+			},
+			"lastPushDirHash": "Fg81kJZxcd1S4cFJd89n2H18BSg="
+		},
+		"QuizMakerAPI": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "QuizMakerLambda",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/QuizMakerAPI-cloudformation-template.json",
+				"logicalId": "apiQuizMakerAPI"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.963Z",
+			"output": {
+				"ApiName": "QuizMakerAPI",
+				"RootUrl": "https://fe9bm3iami.execute-api.us-east-1.amazonaws.com/Prod"
+			},
+			"lastPushDirHash": "KFw+83lZkNBKKUcDGfrZSZJ7z50="
+		},
+		"GamesAPI": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "GamesLambda",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/api/GamesAPI-cloudformation-template.json",
+				"logicalId": "apiGamesAPI"
+			},
+			"lastPushTimeStamp": "2019-02-06T08:44:54.964Z",
+			"output": {
+				"ApiName": "GamesAPI",
+				"RootUrl": "https://b1mxea7gza.execute-api.us-east-1.amazonaws.com/Prod"
+			},
+			"lastPushDirHash": "koUykFFLE280H75lOEXkwm5ZHBk="
+		}
+	}
 }

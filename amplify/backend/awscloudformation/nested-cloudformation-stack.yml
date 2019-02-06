@@ -84,7 +84,7 @@
 				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/auth/cognito9238527f-cloudformation-template.yml",
 				"Parameters": {
 					"identityPoolName": "cognito9238527f_identitypool_9238527f",
-					"allowUnauthenticatedIdentities": false,
+					"allowUnauthenticatedIdentities": true,
 					"thirdPartyAuth": false,
 					"lambdaLogPolicy": "cognito9238527f_lambda_log_policy",
 					"openIdLambdaRoleName": "cognito9238527f_openid_lambda_role",
@@ -180,6 +180,21 @@
 					"tableName": "QuizMaker",
 					"partitionKeyName": "GameID",
 					"partitionKeyType": "S"
+				}
+			}
+		},
+		"storageRightOnS3": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/ightn-20181229134435-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"Parameters": {
+					"bucketName": "rightons3",
+					"authPolicyName": "s3_amplify_9a6fafd9",
+					"unauthPolicyName": "s3_amplify_9a6fafd9",
+					"authRoleName": "ightn-20181229134435-authRole",
+					"unauthRoleName": "ightn-20181229134435-unauthRole",
+					"authPermissions": "rw",
+					"unauthPermissions": "r"
 				}
 			}
 		},
