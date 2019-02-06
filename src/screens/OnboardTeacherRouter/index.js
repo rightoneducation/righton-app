@@ -60,7 +60,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
           onPress={this.handleTeacherOnboard}
         />
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={1}
           onPress={this.handleTeacherApp}
           style={styles.maybeContainer}
         >
