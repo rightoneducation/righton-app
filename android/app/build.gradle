@@ -144,10 +144,11 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-picker')
+    compile project(':rn-fetch-blob')
     compile project(':react-native-keep-awake')
     compile project(':react-native-gesture-handler')
     compile project(':amazon-cognito-identity-js')
-    compile project(':react-native-fetch-blob')
     compile project(':react-native-vector-icons')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
