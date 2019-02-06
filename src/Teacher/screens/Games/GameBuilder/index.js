@@ -74,6 +74,7 @@ export default class GameBuilder extends React.Component {
 
     this.state = {
       addQuestion: {},
+      edited: false,
       game: {
         // banner: '',
         category: null,
@@ -142,15 +143,11 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  handleCloseGame = () => {
-    const { handleClose, game } = this.props;
-    if (game.explore) {
-      if (this.state.game.favorite) {
-        this.createGame();
-        return;
-      }
+  setEdited = () => {
+    const { edited } = this.state;
+    if (!edited) {
+      this.setState({ edited: true });
     }
-    handleClose();
   }
 
   
@@ -170,17 +167,33 @@ export default class GameBuilder extends React.Component {
   }
 
 
+  handleCloseGame = () => {
+    const { handleClose, game } = this.props;
+    if (game.explore) {
+      if (this.state.game.favorite) {
+        this.createGame();
+        return;
+      }
+    }
+    handleClose();
+  }
+
+
   toggleFavorite() {
     const { game } = this.state;
     this.setState({ game: { ...game, favorite: !game.favorite } });
+    this.setEdited();
   }
 
   
   createGame() {
     const { game } = this.state;
     if (this.props.currentGame !== null || game.GameID) {
-      // TODO! Handle if editting a "quizmaker" game
-      this.props.handleCreateGame(game);
+      if (this.props.game.quizmaker && this.state.edited) {
+        this.props.handleCreateGame({ ...game, GameID: `${Math.random()}`, quizmaker: null });
+      } else {
+        this.props.handleCreateGame(game);
+      }
     } else {
       this.props.handleCreateGame({ ...game, GameID: `${Math.random()}` });
     }
@@ -208,6 +221,7 @@ export default class GameBuilder extends React.Component {
       default:
         break;
     }
+    this.setEdited();    
   }
 
 
@@ -260,6 +274,7 @@ export default class GameBuilder extends React.Component {
       this.setState({ addQuestion: {} });
     }
     this.swiperRef.scrollBy(-1, false);
+    this.setEdited();
   }
 
 
@@ -285,11 +300,16 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  hideCategorySelection(selection = null) {
+  hideCategorySelection(selection) {
+    if (typeof selection === 'object') { // Dismiss the event object
+      this.setState({ showSelection: false });
+      return;
+    }
     this.setState({
-      game: { ...this.state.game, category: selection },
+      game: { ...this.state.game, category: selection || this.props.game.category },
       showSelection: false,
     });
+    this.setEdited();
   }
 
 
@@ -298,11 +318,16 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  hideCCSSelection(selection = null) {
+  hideCCSSelection(selection) {
+    if (typeof selection === 'object') { // Dismiss the event object
+      this.setState({ showSelection: false });
+      return;
+    }
     this.setState({
-      game: { ...this.state.game, CCS: selection },
+      game: { ...this.state.game, CCS: selection || this.props.game.CCS },
       showSelection: false,
     });
+    this.setEdited();
   }
 
 
@@ -325,7 +350,7 @@ export default class GameBuilder extends React.Component {
       >
         <View style={[styles.questionContainer, elevation]}>
 
-          {question.image ?
+          {question.image && question.image !== 'null' ?
             <Image source={{ uri: question.image }} style={styles.questionImage} /> :
             <View style={styles.questionImage}>
               <Text style={styles.questionImageText}>RightOn!</Text>
@@ -381,11 +406,19 @@ export default class GameBuilder extends React.Component {
 
     const {
       addQuestion,
+      edited,
       showInput,
       showMenu,
       showSelection,
       showShare,
     } = this.state;
+
+    let action = '';
+    if (GameID && edited) {
+      action = 'save';
+    } else if (!GameID) {
+      action = 'create';
+    }
 
     return (
       <Modal
@@ -446,6 +479,13 @@ export default class GameBuilder extends React.Component {
               </Touchable>
               <Text style={styles.title}>Game Builder</Text>
               <Touchable
+                hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                onPress={this.createGame}
+                style={styles.createContainer}
+              >
+                <Text style={styles.createLabel}>{ action }</Text>
+              </Touchable>
+              <Touchable
                 hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
                 onPress={this.toggleFavorite}
                 style={styles.heartWrapper}
@@ -454,13 +494,6 @@ export default class GameBuilder extends React.Component {
                   <Aicon name={'heart'} style={[styles.heartIcon, styles.heartIconBig]} />
                   <Aicon name={'heart'} style={[styles.heartIcon, favorite && styles.colorPrimary]} />
                 </View>
-              </Touchable>
-              <Touchable
-                hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-                onPress={this.createGame}
-                style={styles.createContainer}
-              >
-                <Text style={styles.createLabel}>{ GameID ? 'Save' : 'Create' }</Text>
               </Touchable>
               <Touchable
                 hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
