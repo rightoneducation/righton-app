@@ -301,7 +301,7 @@ export default class GameBuilderQuestion extends React.Component {
           <Touchable
             hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
             onPress={this.handleCloseModal}
-            style={parentStyles.createContainer}
+            style={parentStyles.menuWrapper}
           >
             <Text style={parentStyles.createLabel}>Done</Text>
           </Touchable>
@@ -310,27 +310,6 @@ export default class GameBuilderQuestion extends React.Component {
         <ScrollView
           contentContainerStyle={[parentStyles.scrollview, { paddingBottom: 115 }]}
         >
-          <Touchable
-            onPress={() => {}}
-          >
-            <View style={[parentStyles.bannerContainer, elevation]}>
-              {image ?
-                <Image source={{ uri: image }} style={parentStyles.bannerImage} />
-                :
-                <View>
-                  <Aicon name={'image'} style={parentStyles.bannerIcon} />
-                  <Text style={parentStyles.bannerLabel}>Tap to add an image or diagram</Text>
-                </View>}
-              {/* <Touchable
-                hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-                onPress={this.handleOpenTimeSelection}
-                style={parentStyles.timeSelectionContainer}
-              >
-                <Text style={parentStyles.timeSelectionLabel}>{ time }</Text>
-              </Touchable> */}
-            </View>
-          </Touchable>
-
           <View
             onLayout={this.onQuestionLayout}
             ref={this.handleQuestionRef}
@@ -349,6 +328,23 @@ export default class GameBuilderQuestion extends React.Component {
               >
                 {showInput && showInput.inputLabel === 'question' ? null : question || 'Enter question'}
               </Text>
+            </Touchable>
+          </View>
+
+          <View style={parentStyles.inputContainer}>
+            <Text style={parentStyles.inputLabel}>Image</Text>
+            <Touchable
+              onPress={() => {}}
+            >
+              <View style={[image && image !== 'null' ? parentStyles.bannerImageContainer : parentStyles.bannerAddContainer, elevation]}>
+                {image && image !== 'null' ?
+                  <Image source={{ uri: image }} style={parentStyles.bannerImage} />
+                  :
+                  <View style={parentStyles.row}>
+                    <Aicon name={'image'} style={parentStyles.bannerIcon} />
+                    <Text style={parentStyles.bannerLabel}>Add an image or diagram</Text>
+                  </View>}
+              </View>
             </Touchable>
           </View>
 
@@ -387,6 +383,7 @@ export default class GameBuilderQuestion extends React.Component {
                   parentStyles.inputContainer,
                   parentStyles.row,
                   parentStyles.inputPadding,
+                  parentStyles.justifyStart,
                 ]}
               >
                 <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>

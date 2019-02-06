@@ -3,24 +3,27 @@ import { colors, deviceWidth, fonts } from '../../../../utils/theme';
 
 
 export default ScaledSheet.create({
-  bannerContainer: {
-    alignItems: 'center',
+  bannerAddContainer: {
+    alignItems: 'flex-start',
     backgroundColor: colors.white,
     borderColor: colors.dark,
     borderWidth: 1,
-    height: '200@vs',
+    height: '45@vs',
     justifyContent: 'center',
+    paddingHorizontal: '15@ms',
     width: deviceWidth - scale(30),
   },
   bannerIcon: {
-    alignSelf: 'center',
     color: colors.primary,
     fontSize: fonts.large,
-    marginBottom: '10@vs',
+    marginRight: '15@ms',
   },
   bannerImage: {
     height: '200@vs',
     width: deviceWidth - scale(30),
+  },
+  bannerImageContainer: {
+
   },
   bannerLabel: {
     color: colors.dark,
@@ -93,7 +96,7 @@ export default ScaledSheet.create({
     borderWidth: 1,
     minHeight: '45@vs',
     justifyContent: 'center',
-    paddingHorizontal: '15@s',
+    paddingHorizontal: '15@ms',
     paddingVertical: '10@vs',
     width: deviceWidth - scale(30),
   },
@@ -116,7 +119,10 @@ export default ScaledSheet.create({
     marginBottom: '5@vs',
   },
   inputPadding: {
-    paddingHorizontal: '15@s',
+    paddingHorizontal: '15@ms',
+  },
+  justifyStart: {
+    justifyContent: 'flex-start',
   },
   marginTop: {
     marginTop: '15@vs',
@@ -183,7 +189,7 @@ export default ScaledSheet.create({
     flexGrow: 1,
     paddingBottom: '95@vs',
     paddingTop: '25@vs',
-    paddingHorizontal: '15@s',
+    paddingHorizontal: '15@ms',
   },
   spaceBetween: {
     justifyContent: 'space-between',
