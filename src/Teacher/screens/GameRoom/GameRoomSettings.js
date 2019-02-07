@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Modal,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -137,7 +138,7 @@ export default class GameRoomStart extends React.Component {
         onRequestClose={() => handleBackFromChild('start')}
         visible
       >
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         <Message {...messageProps} />
         <ScrollView

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import KeepAwake from 'react-native-keep-awake';
 // import Triangle from '../../components/Triangle';
@@ -181,7 +181,7 @@ export default class Portal extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         {/* { this.renderMessageType(messageType) } */}
 

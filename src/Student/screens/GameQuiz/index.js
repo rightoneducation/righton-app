@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Image,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -200,7 +201,7 @@ export default class GameQuiz extends React.Component {
       <ScrollView
         contentContainerStyle={gamePreviewStyles.container}
       >
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         {Boolean(timeLeft) &&
           <View style={gamePreviewStyles.timeContainer}>

@@ -3,6 +3,7 @@ import {
   Animated,
   findNodeHandle,
   Image,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -222,7 +223,7 @@ export default class GameRoomResults extends React.Component {
       <ScrollView
         contentContainerStyle={gamePreviewStyles.container}
       >
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         <ButtonBack
           onPress={handleBackFromChild}

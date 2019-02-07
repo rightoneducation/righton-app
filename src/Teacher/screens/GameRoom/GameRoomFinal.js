@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   // Animated,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -210,7 +211,7 @@ export default class GameRoomFinal extends React.Component {
           styles.extraPaddingBottom,
         ]}
       >
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         <ButtonBack
           onPress={handleBackFromChild}

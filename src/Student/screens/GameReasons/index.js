@@ -2,6 +2,7 @@ import React from 'react';
 import {
   findNodeHandle,
   Image,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -267,7 +268,7 @@ export default class GameReasons extends React.PureComponent {
       <ScrollView 
         contentContainerStyle={[gamePreviewStyles.container, styles.container]}
       >
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         {showInput &&
           <InputModal {...showInput} />}

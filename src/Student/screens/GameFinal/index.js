@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -141,7 +142,7 @@ export default class GameFinal extends React.Component {
 
     return (
       <View style={gamePreviewStyles.container}>
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         <HeaderTeam team={`Team ${team + 1}`} />
         <View style={styles.container}>

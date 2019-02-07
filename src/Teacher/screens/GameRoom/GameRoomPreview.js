@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Image,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -26,7 +27,7 @@ export default function GameRoomPreview({
     <ScrollView
       contentContainerStyle={gamePreviewStyles.container}
     >
-      <KeepAwake />
+      { Platform.OS === 'ios' && <KeepAwake /> }
 
       <ButtonBack
         onPress={handleBackFromChild}

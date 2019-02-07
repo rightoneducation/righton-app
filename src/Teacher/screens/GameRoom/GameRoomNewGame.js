@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Image,
+  Platform,
   ScrollView,
   Text,
   View,
@@ -170,7 +171,7 @@ export default class GameRoomNewGame extends React.Component {
 
     return (
       <ScrollView contentContainerStyle={[firstStyles.container, styles.scrollview]}>
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         {Boolean(portal) &&
           <Portal messageProps={{ message: 'Launching new game' }} />}

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   ScrollView,
   Text,
   View,
@@ -25,7 +26,7 @@ export default function GameRoomStart({
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
     >
-      <KeepAwake />
+      { Platform.OS === 'ios' && <KeepAwake /> }
 
       <ButtonBack
         iconName={'close'}

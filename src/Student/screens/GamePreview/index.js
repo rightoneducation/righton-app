@@ -3,6 +3,7 @@ import {
   Animated,
   Image,
   InteractionManager,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -415,7 +416,7 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <KeepAwake />
+        { Platform.OS === 'ios' && <KeepAwake /> }
 
         <Message {...messageProps} />
         {showInput && <InputModal {...showInput} />}
