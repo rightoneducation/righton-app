@@ -3,9 +3,8 @@ package com.righton;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.imagepicker.ImagePickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.corbt.keepawake.KCKeepAwakePackage;
+import com.imagepicker.ImagePickerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.amazonaws.RNAWSCognitoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -29,9 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ImagePickerPackage(),
             new RNFetchBlobPackage(),
-            new KCKeepAwakePackage(),
+            new ImagePickerPackage(),
             new RNGestureHandlerPackage(),
             new RNAWSCognitoPackage(),
             new VectorIconsPackage()
