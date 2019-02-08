@@ -16,7 +16,6 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
-// import SelectionModal from '../../../../../components/SelectionModal';
 import parentStyles from '../styles';
 import { elevation, fonts } from '../../../../../utils/theme';
 import debug from '../../../../../utils/debug';
@@ -60,15 +59,12 @@ export default class GameBuilderQuestion extends React.Component {
         uid: null,
       },
       showInput: false,
-      // showSelection: false,
     };
 
     this.blankQuestionState = this.state.question;
 
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleExitModal = this.handleExitModal.bind(this);
-    // this.handleTimeSelection = this.handleTimeSelection.bind(this);
-    // this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
     this.handleAddInstruction = this.handleAddInstruction.bind(this);
 
     this.onQuestionLayout = this.onQuestionLayout.bind(this);
@@ -285,20 +281,6 @@ export default class GameBuilderQuestion extends React.Component {
   readFile = filePath => RNFetchBlob.fs.readFile(filePath, 'base64').then(data => new Buffer(data, 'base64'));
 
 
-  // handleTimeSelection(time) {
-  //   if (typeof time === 'object' || !time) {
-  //     this.setState({ showSelection: false });
-  //   } else {
-  //     this.setState({ question: { ...this.state.question, time }, showSelection: false });
-  //   }
-  // }
-
-
-  // handleOpenTimeSelection() {
-  //   this.setState({ showSelection: true });
-  // }
-
-
   render() {
     const {
       answer,
@@ -316,34 +298,6 @@ export default class GameBuilderQuestion extends React.Component {
 
         {showInput &&
           <InputModal {...showInput} />}
-
-        {/* {showSelection &&
-          <SelectionModal
-            handleClose={this.handleTimeSelection}
-            items={[
-              { label: 'No time limit', value: '0:00' },
-              { label: '0:30', value: '0:30' },
-              { label: '1:00', value: '1:00' },
-              { label: '1:30', value: '1:30' },
-              { label: '2:00', value: '2:00' },
-              { label: '2:30', value: '2:30' },
-              { label: '3:00', value: '3:00' },
-              { label: '3:30', value: '3:30' },
-              { label: '4:00', value: '4:00' },
-              { label: '4:30', value: '4:30' },
-              { label: '5:00', value: '5:00' },
-              { label: '10:00', value: '10:00' },
-              { label: '15:00', value: '15:00' },
-              { label: '20:00', value: '20:00' },
-              { label: '25:00', value: '25:00' },
-              { label: '30:00', value: '30:00' },
-              { label: '45:00', value: '45:00' },
-              { label: '60:00', value: '60:00' },
-            ]}
-            onSelect={this.handleTimeSelection}
-            title={'Time remaining'}
-            visible={showSelection}
-          />} */}
 
         <View style={[parentStyles.headerContainer, elevation]}>
           <Touchable
