@@ -76,7 +76,7 @@ class Games extends React.PureComponent {
     this.state = {
       viewGame: null,
       games: [],
-      filter: 'MyGames',
+      filter: 'My Games',
       shared: [],
     };
 
@@ -97,6 +97,15 @@ class Games extends React.PureComponent {
   componentDidMount() {
     this.hydrateGames();
     // this.getGamesFromDynamoDB(this.props.screenProps.account.TeacherID);
+    this.tabDidFocusListener = this.props.screenProps.navigation.addListener(
+      'didFocus',
+      this.hydrateGames
+    );
+  }
+
+
+  componentWillUnmount() {
+    this.tabDidFocusListener.remove();
   }
   
 
@@ -132,7 +141,21 @@ class Games extends React.PureComponent {
   }
 
 
+  getIndexOfGame(game) {
+    const { games } = this.state;
+    for (let i = 0; i < games.length; i += 1) {
+      if (games[i].GameID === game.GameID) {
+        return i;
+      }
+    }
+    debug.warn('Warning: Game with GameID ', game.GameID,
+      'did not return an index in `Games`, this will cause a malfunction when game is updated.');
+    return null;
+  }
+
+
   async hydrateGames() {
+    debug.log('hydrating games');
     try {
       const { TeacherID } = this.props.screenProps.account;
       if (!TeacherID) {
@@ -143,6 +166,7 @@ class Games extends React.PureComponent {
       games = await LocalStorage.getItem(`@RightOn:${TeacherID}/Games`);
       if (typeof games === 'string') {
         games = JSON.parse(games);
+        if (this.state.games.length === games.length) return;
         this.setState({ games }, () => {
           const { account } = this.props.screenProps;
           if (account.gamesRef && (account.gamesRef.local !== account.gamesRef.db)) {
@@ -171,7 +195,7 @@ class Games extends React.PureComponent {
 
 
   handleRenderMyGames() {
-    this.setState({ filter: 'MyGames' });
+    this.setState({ filter: 'My Games' });
   }
 
 
@@ -183,7 +207,14 @@ class Games extends React.PureComponent {
 
 
   handleViewGame(event, game = {}, idx = null) {
-    this.currentGame = idx;
+    if (idx === null && game.GameID && this.state.filter !== 'Shared') {
+      // `game` is opened from "Favorites" filter and so we will
+      // require the index of the game from `games` in state.
+      // Otherwise, for "Shared" games we will handle it by creating a new game.
+      this.currentGame = this.getIndexOfGame(game);
+    } else {
+      this.currentGame = idx;
+    }
     this.setState({ viewGame: game });
   }
 
@@ -245,8 +276,8 @@ class Games extends React.PureComponent {
           style={styles.navButton}
         >
           <View style={styles.alignCenter}>
-            <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'MyGames' && styles.colorGrey]} />
-            <Text style={[styles.gameStartIcon, filter !== 'MyGames' && styles.colorGrey]}>My Games</Text>
+            <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'My Games' && styles.colorGrey]} />
+            <Text style={[styles.gameStartIcon, filter !== 'My Games' && styles.colorGrey]}>My Games</Text>
           </View>
         </Touchable>
 
@@ -314,7 +345,7 @@ class Games extends React.PureComponent {
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
           hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-          onPress={() => this.handleViewGame(null, game, idx)}
+          onPress={() => this.handleViewGame(null, game, filter === 'My Games' ? idx : null)}
           style={styles.gameOpenButton}
         >
           <Text style={styles.gameOpenText}>View game</Text>
