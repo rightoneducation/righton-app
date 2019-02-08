@@ -237,47 +237,49 @@ class Games extends React.PureComponent {
     <View style={styles.header}>
       <Text style={styles.headerTitle}>Games</Text>
 
-      <Touchable
-        activeOpacity={0.8}
-        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-        onPress={this.handleRenderMyGames}
-        style={[styles.headerButton, styles.headerGames]}
-      >
-        <View style={styles.alignCenter}>
-          <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'MyGames' && styles.colorGrey]} />
-          <Text style={[styles.gameStartIcon, filter !== 'MyGames' && styles.colorGrey]}>My Games</Text>
-        </View>
-      </Touchable>
+      <View style={styles.navRow}>
+        <Touchable
+          activeOpacity={0.8}
+          hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+          onPress={this.handleRenderMyGames}
+          style={styles.navButton}
+        >
+          <View style={styles.alignCenter}>
+            <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'MyGames' && styles.colorGrey]} />
+            <Text style={[styles.gameStartIcon, filter !== 'MyGames' && styles.colorGrey]}>My Games</Text>
+          </View>
+        </Touchable>
 
-      <Touchable
-        activeOpacity={0.8}
-        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-        onPress={this.handleRenderFavorites}
-        style={[styles.headerButton, styles.headerFavorites]}
-      >
-        <View style={styles.alignCenter}>
-          <Aicon name={'heart'} style={[styles.headerIcon, filter !== 'Favorites' && styles.colorGrey]} />
-          <Text style={[styles.gameStartIcon, filter !== 'Favorites' && styles.colorGrey]}>Favorites</Text>
-        </View>
-      </Touchable>
+        <Touchable
+          activeOpacity={0.8}
+          hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+          onPress={this.handleRenderFavorites}
+          style={styles.navButton}
+        >
+          <View style={styles.alignCenter}>
+            <Aicon name={'heart'} style={[styles.headerIcon, filter !== 'Favorites' && styles.colorGrey]} />
+            <Text style={[styles.gameStartIcon, filter !== 'Favorites' && styles.colorGrey]}>Favorites</Text>
+          </View>
+        </Touchable>
 
-      <Touchable
-        activeOpacity={0.8}
-        hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-        onPress={this.handleRenderShared}
-        style={[styles.headerButton, styles.headerShared]}
-      >
-        <View style={styles.alignCenter}>
-          <Aicon name={'share'} style={[styles.headerIcon, filter !== 'Shared' && styles.colorGrey]} />
-          <Text style={[styles.gameStartIcon, filter !== 'Shared' && styles.colorGrey]}>Shared</Text>
-        </View>
-      </Touchable>
+        <Touchable
+          activeOpacity={0.8}
+          hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+          onPress={this.handleRenderShared}
+          style={styles.navButton}
+        >
+          <View style={styles.alignCenter}>
+            <Aicon name={'share'} style={[styles.headerIcon, filter !== 'Shared' && styles.colorGrey]} />
+            <Text style={[styles.gameStartIcon, filter !== 'Shared' && styles.colorGrey]}>Shared</Text>
+          </View>
+        </Touchable>
+      </View>
 
       <Touchable
         activeOpacity={0.8}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
         onPress={this.handleViewGame}
-        style={[styles.headerButton, styles.headerPlus]}
+        style={styles.headerPlus}
       >
         <Aicon name={'plus'} style={styles.headerIcon} />
       </Touchable>

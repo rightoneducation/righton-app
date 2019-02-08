@@ -17,25 +17,14 @@ export default ScaledSheet.create({
     backgroundColor: colors.primary,
     height: '150@vs',
   },
-  headerButton: {
-    bottom: '15@s',
-    position: 'absolute',
-  },
-  headerFavorites: {
-    left: '80@ms',
-  },
-  headerGames: {
-    left: '15@ms',
-  },
   headerIcon: {
     color: colors.white,
     fontSize: '25@ms0.2',
   },
   headerPlus: {
-    right: '15@s',
-  },
-  headerShared: {
-    left: '140@ms',
+    bottom: '15@ms',
+    position: 'absolute',
+    right: '15@ms',
   },
   headerTitle: {
     color: colors.white,
@@ -114,6 +103,16 @@ export default ScaledSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
     padding: '10@ms',
+  },
+  navButton: {
+    marginLeft: '20@ms',
+  },
+  navRow: {
+    bottom: '15@ms',
+    flexDirection: 'row',
+    left: 0,
+    position: 'absolute',
+    right: 0,
   },
   scrollview: {
     flexGrow: 1,
