@@ -352,17 +352,26 @@ export default class GameBuilderQuestion extends React.Component {
           </View>
 
           <View style={parentStyles.inputContainer}>
-            <Text style={parentStyles.inputLabel}>Image</Text>
+            <Text style={parentStyles.inputLabel}>Optional Image/Diagram</Text>
             <Touchable
               onPress={this.handleImagePicker}
             >
-              <View style={[image && image !== 'null' ? parentStyles.bannerImageContainer : parentStyles.bannerAddContainer, elevation]}>
+              <View
+                style={[
+                  image && image !== 'null' ?
+                    { ...parentStyles.bannerImageContainer, ...parentStyles.bannerImage } :
+                    parentStyles.bannerAddContainer,
+                  elevation,
+                ]}
+              >
                 {image && image !== 'null' ?
                   <Image source={{ uri: image }} style={parentStyles.bannerImage} />
                   :
                   <View style={parentStyles.row}>
                     <Aicon name={'image'} style={parentStyles.bannerIcon} />
-                    <Text style={parentStyles.bannerLabel}>Add an image or diagram</Text>
+                    <Text style={parentStyles.bannerLabel}>
+                      None (tap to upload an image or diagram)
+                    </Text>
                   </View>}
                 {image === 'loading' &&
                 <ActivityIndicator
