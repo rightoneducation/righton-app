@@ -9,12 +9,17 @@ import {
 import PropTypes from 'prop-types';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
+import { verticalScale } from 'react-native-size-matters';
+import { Storage } from 'aws-amplify';
+import RNImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
 // import SelectionModal from '../../../../../components/SelectionModal';
 import parentStyles from '../styles';
 import { elevation, fonts } from '../../../../../utils/theme';
+import debug from '../../../../../utils/debug';
 
 
 export default class GameBuilderQuestion extends React.Component {
@@ -83,6 +88,7 @@ export default class GameBuilderQuestion extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.question.uid !== nextProps.question.uid) {
       this.hydrateState(nextProps.question);
+      debug.log('Question:', JSON.stringify(nextProps.question));
     } else if (nextProps.question.uid === undefined) {
       this.hydrateState(this.blankQuestionState);
     }
@@ -227,6 +233,58 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
+  handleImagePicker = () => {
+    const options = {
+      // title: 'Select Avatar',
+      // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    RNImagePicker.showImagePicker(options, (response) => {
+      debug.log('Response = ', JSON.stringify(response));
+    
+      if (response.didCancel) {
+        debug.log('User cancelled image picker');
+      } else if (response.error) {
+        debug.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        debug.log('User tapped custom button: ', response.customButton);
+      } else {
+        if (this.state.question.image && this.state.question.image !== 'null') {
+          Storage.remove(this.state.question.image, { level: 'public' });
+        }
+
+        const imagePath = response.uri;
+        const imageType = 'image/png';
+
+        this.readFile(imagePath).then((buffer) => {
+          Storage.put(imagePath, buffer, {
+            contentType: imageType,
+            level: 'public',
+          })
+            .then(() => {
+              Storage.get(imagePath)
+                .then((res) => {
+                  debug.log('RESPONSE FROM GETTING IMAGE:', res);
+                  this.setState({
+                    question: { ...this.state.question, image: res },
+                  });
+                });
+            });
+        }).catch(e => (
+          debug.warn('Error putting image into Storage:', JSON.stringify(e))
+        ));
+      }
+    });
+  }
+
+
+  readFile = filePath => RNFetchBlob.fs.readFile(filePath, 'base64').then(data => new Buffer(data, 'base64'));
+
+
   // handleTimeSelection(time) {
   //   if (typeof time === 'object' || !time) {
   //     this.setState({ showSelection: false });
@@ -307,9 +365,7 @@ export default class GameBuilderQuestion extends React.Component {
           </Touchable>
         </View>
 
-        <ScrollView
-          contentContainerStyle={[parentStyles.scrollview, { paddingBottom: 115 }]}
-        >
+        <ScrollView contentContainerStyle={parentStyles.scrollview}>
           <View
             onLayout={this.onQuestionLayout}
             ref={this.handleQuestionRef}
@@ -334,7 +390,7 @@ export default class GameBuilderQuestion extends React.Component {
           <View style={parentStyles.inputContainer}>
             <Text style={parentStyles.inputLabel}>Image</Text>
             <Touchable
-              onPress={() => {}}
+              onPress={this.handleImagePicker}
             >
               <View style={[image && image !== 'null' ? parentStyles.bannerImageContainer : parentStyles.bannerAddContainer, elevation]}>
                 {image && image !== 'null' ?
@@ -393,7 +449,7 @@ export default class GameBuilderQuestion extends React.Component {
           ))}
 
           <ButtonWide
-            buttonStyles={{ position: 'absolute', bottom: 25 }}
+            buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
             label={'+ Solution Step'}
             onPress={this.handleAddInstruction}
           />
