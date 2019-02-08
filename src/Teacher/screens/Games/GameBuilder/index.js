@@ -13,6 +13,7 @@ import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Eicon from 'react-native-vector-icons/Entypo';
+import { verticalScale } from 'react-native-size-matters';
 import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
@@ -588,6 +589,7 @@ export default class GameBuilder extends React.Component {
               {this.renderQuestions()}
 
               <ButtonWide
+                buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
                 onPress={this.openAddQuestion}
                 label={'Add question'}
               />
