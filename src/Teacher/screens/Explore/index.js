@@ -245,6 +245,7 @@ const styles = ScaledSheet.create({
   dataContainer: {
     flexDirection: 'row',
     height: '100@vs',
+    marginBottom: '15@vs',
     width: deviceWidth - scale(30),
   },
   dataTextContainer: {
