@@ -187,7 +187,6 @@ export default ScaledSheet.create({
   },
   scrollview: {
     flexGrow: 1,
-    paddingBottom: '95@vs',
     paddingTop: '25@vs',
     paddingHorizontal: '15@ms',
   },
