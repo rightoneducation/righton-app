@@ -47,6 +47,7 @@ export default class GameShare extends React.PureComponent {
 
           <Touchable
             activeOpacity={0.8}
+            hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
             style={styles.closeButton}
             onPress={handleClose}
           >
