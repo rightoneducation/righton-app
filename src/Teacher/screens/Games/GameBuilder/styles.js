@@ -144,8 +144,7 @@ export default ScaledSheet.create({
     backgroundColor: colors.white,
     borderColor: colors.dark,
     borderRadius: 1,
-    flexDirection: 'row',
-    height: '100@ms',
+    flexDirection: 'column',
     marginBottom: '25@vs',
     width: deviceWidth - scale(30),
   },
@@ -154,7 +153,7 @@ export default ScaledSheet.create({
     backgroundColor: colors.lightGray,
     height: '100@ms',
     justifyContent: 'center',
-    width: '100@ms',
+    width: deviceWidth - scale(30),   
   },
   questionImageText: {
     color: colors.white,
@@ -162,10 +161,8 @@ export default ScaledSheet.create({
     fontStyle: 'italic',
   },
   questionInstructions: {
-    bottom: '10@ms',
     fontSize: fonts.small,
-    left: '10@ms',
-    position: 'absolute',
+    marginTop: '15@ms',
   },
   questionQuestion: {
     color: colors.dark,
@@ -177,7 +174,8 @@ export default ScaledSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    padding: '10@ms',
+    paddingHorizontal: '10@ms',
+    paddingVertical: '15@ms',
   },
   questionsContainer: {
     alignSelf: 'stretch',

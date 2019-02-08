@@ -358,8 +358,8 @@ export default class GameBuilder extends React.Component {
             </View>}
           
           <View style={styles.questionTextContainer}>
-            <Text numberOfLines={1} style={styles.questionQuestion}>{`Q: ${question.question}`}</Text>
-            <Text numberOfLines={2} style={[styles.questionAnswer, styles.colorPrimary]}>{`A: ${question.answer}`}</Text>
+            <Text style={styles.questionQuestion}>{`Q: ${question.question}`}</Text>
+            <Text style={[styles.questionAnswer, styles.colorPrimary]}>{`A: ${question.answer}`}</Text>
             <Text style={[styles.questionQuestion, styles.questionInstructions]}>
               { `${question.instructions.length} ${question.instructions.length === 1 ? 'Solution step' : 'Solution steps'}` }
             </Text>
