@@ -85,9 +85,9 @@ export default class Instructions extends React.Component {
 
   renderRevealButton(visibleItems, data) {
     if (visibleItems[visibleItems.length - 1] === undefined) {
-      let label = 'Reveal next step';
+      let label = 'Show next step';
       if (visibleItems.indexOf(undefined) === data.length - 1) {
-        label = 'Reveal answer';
+        label = 'Show answer';
       }
       return (
         <ButtonWide
