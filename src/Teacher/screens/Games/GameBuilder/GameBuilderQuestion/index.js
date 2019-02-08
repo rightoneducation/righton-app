@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   findNodeHandle,
   Image,
   ScrollView,
@@ -17,7 +18,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
 import parentStyles from '../styles';
-import { elevation, fonts } from '../../../../../utils/theme';
+import { colors, elevation, fonts } from '../../../../../utils/theme';
 import debug from '../../../../../utils/debug';
 
 
@@ -253,9 +254,12 @@ export default class GameBuilderQuestion extends React.Component {
           Storage.remove(this.state.question.image, { level: 'public' });
         }
 
+        this.setState({ question: { ...this.state.question, image: 'loading' } });
+
         const imagePath = response.uri;
         const imageType = 'image/png';
 
+        // TODO! Resize image to make read access more efficient.
         this.readFile(imagePath).then((buffer) => {
           Storage.put(imagePath, buffer, {
             contentType: imageType,
@@ -268,13 +272,19 @@ export default class GameBuilderQuestion extends React.Component {
                   this.setState({
                     question: { ...this.state.question, image: res },
                   });
-                });
-            });
-        }).catch(e => (
-          debug.warn('Error putting image into Storage:', JSON.stringify(e))
-        ));
+                })
+                .catch(e => this.catchImageError(e));
+            })
+            .catch(e => this.catchImageError(e));
+        }).catch(e => this.catchImageError(e));
       }
     });
+  }
+
+
+  catchImageError = (exception) => {
+    this.setState({ question: { ...this.state.question, image: 'null' } });
+    debug.warn('Error PUTTING/GETTING image @S3 Storage:', JSON.stringify(exception));
   }
 
 
@@ -354,6 +364,12 @@ export default class GameBuilderQuestion extends React.Component {
                     <Aicon name={'image'} style={parentStyles.bannerIcon} />
                     <Text style={parentStyles.bannerLabel}>Add an image or diagram</Text>
                   </View>}
+                {image === 'loading' &&
+                <ActivityIndicator
+                  animating
+                  color={colors.primary}
+                  size={'large'}
+                />}
               </View>
             </Touchable>
           </View>
