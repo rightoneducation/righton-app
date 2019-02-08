@@ -6,11 +6,11 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
-import Aicon from 'react-native-vector-icons';
+import { scale, ScaledSheet } from 'react-native-size-matters';
+import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import ButtonWide from '../../../../../components/ButtonWide';
-import { colors, elevation, fonts } from '../../../../../utils/theme';
+import { colors, deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 
 export default class GameShare extends React.PureComponent {
   static propTypes = {
@@ -48,14 +48,14 @@ export default class GameShare extends React.PureComponent {
           <Touchable
             activeOpacity={0.8}
             style={styles.closeButton}
+            onPress={handleClose}
           >
-            <View>
-              <Aicon name={'close'} style={styles.closeIcon} />
-            </View>
+            <Aicon name={'close'} style={styles.closeIcon} />
           </Touchable>
 
+          <Text style={styles.label}>Share game with a teacher</Text>
+
           <View style={styles.itemContainer}>
-            <Text style={styles.label}>Share game with teacher</Text>
             <TextInput
               keyboardType={'default'}
               maxLength={65}
@@ -66,7 +66,7 @@ export default class GameShare extends React.PureComponent {
               returnKeyType={'done'}
               style={[styles.textinput, elevation]}
               textAlign={'center'}
-              underlineColorAndroid={colors.dark}
+              underlineColorAndroid={colors.white}
               value={email}
             />
           </View>
@@ -94,11 +94,13 @@ const styles = ScaledSheet.create({
     fontSize: fonts.large,
   },
   container: {
+    alignItems: 'center',
     backgroundColor: colors.dark,
     flex: 1,
+    justifyContent: 'center',
   },
   itemContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     alignSelf: 'stretch',
     flexDirection: 'column',
     paddingHorizontal: '15@s',
@@ -108,7 +110,8 @@ const styles = ScaledSheet.create({
     color: colors.white,
     fontSize: fonts.large,
     fontWeight: 'bold',
-    marginBottom: '2@vs',
+    position: 'absolute',
+    top: '90@vs',
   },
   textinput: {
     backgroundColor: colors.white,
@@ -116,5 +119,6 @@ const styles = ScaledSheet.create({
     fontSize: fonts.medium,
     paddingVertical: '15@ms',
     paddingHorizontal: '20@ms',
+    width: deviceWidth - scale(30),
   },
 });
