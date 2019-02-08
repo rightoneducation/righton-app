@@ -23,7 +23,9 @@ export default ScaledSheet.create({
     width: deviceWidth - scale(30),
   },
   bannerImageContainer: {
-
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    justifyContent: 'center',
   },
   bannerLabel: {
     color: colors.dark,
