@@ -258,7 +258,7 @@ export default class GamePreview extends React.PureComponent {
     if (input) {
       const { handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
       const { answer } = this.props.screenProps.gameState[`team${team}`];
-      if (input === answer) {
+      if (input.toLowerCase() === answer.toLowerCase()) {
         this.setState({
           messageProps: {
             closeFunc: this.handleCloseMessage,
