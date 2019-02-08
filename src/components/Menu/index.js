@@ -51,14 +51,17 @@ export default class Menu extends React.PureComponent {
         transparent
         visible
       >
-        <Touchable
-          activeOpacity={0.8}
-          onPress={handleClose}
-        >
-          <View style={styles.closeContainer} />
-        </Touchable>
-        <View style={[styles.menuContainer, elevation, menuStyles]}>
-          {items.map(item => this.renderMenuItem(item, textStyles))}
+        <View style={styles.container}>
+          <Touchable
+            activeOpacity={0.8}
+            onPress={handleClose}
+            style={styles.container}
+          >
+            <View />
+          </Touchable>
+          <View style={[styles.menuContainer, elevation, menuStyles]}>
+            {items.map(item => this.renderMenuItem(item, textStyles))}
+          </View>
         </View>
       </Modal>
     );
@@ -67,7 +70,7 @@ export default class Menu extends React.PureComponent {
 
 
 const styles = ScaledSheet.create({
-  closeContainer: {
+  container: {
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -76,6 +79,7 @@ const styles = ScaledSheet.create({
   },
   button: {
     alignItems: 'flex-start',
+    backgroundColor: colors.white,
     borderBottomWidth: 0.5,
     borderColor: colors.darkGray,
     paddingVertical: '10@ms',
