@@ -118,6 +118,14 @@ export default class GameBuilder extends React.Component {
   }
 
 
+  componentWillUnmount() {
+    const { edited, game } = this.state;
+    if (game.explore && game.favorite && !edited) {
+      this.createGame();
+    }
+  }
+
+
   onTitleLayout() {
     if (this.titleRef) {
       NativeMethodsMixin.measureInWindow.call(
@@ -183,17 +191,20 @@ export default class GameBuilder extends React.Component {
   toggleFavorite() {
     const { game } = this.state;
     this.setState({ game: { ...game, favorite: !game.favorite } });
-    this.setEdited();
   }
 
   
   createGame() {
     const { game } = this.state;
     if (this.props.currentGame !== null || game.GameID) {
+      const saveGame = { ...game };
+      if (saveGame.explore) {
+        delete saveGame.explore;
+      }
       if (this.props.game.quizmaker && this.state.edited) {
-        this.props.handleCreateGame({ ...game, GameID: `${Math.random()}`, quizmaker: null });
+        this.props.handleCreateGame({ ...saveGame, GameID: `${Math.random()}`, quizmaker: null });
       } else {
-        this.props.handleCreateGame(game);
+        this.props.handleCreateGame(saveGame);
       }
     } else {
       this.props.handleCreateGame({ ...game, GameID: `${Math.random()}` });
