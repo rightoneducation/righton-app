@@ -76,7 +76,7 @@ class Games extends React.PureComponent {
     this.state = {
       viewGame: null,
       games: [],
-      filter: 'MyGames',
+      filter: 'My Games',
       shared: [],
     };
 
@@ -132,6 +132,17 @@ class Games extends React.PureComponent {
   }
 
 
+  getIndexOfGame(game) {
+    const { games } = this.state;
+    for (let i = 0; i < games.length; i += 1) {
+      if (games[i].GameID === game.GameID) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+
   async hydrateGames() {
     try {
       const { TeacherID } = this.props.screenProps.account;
@@ -150,7 +161,7 @@ class Games extends React.PureComponent {
             this.handleSaveGamesToDatabase(games);
           }
         });
-      } else if (games === undefined || games === null) {
+      } else if (games === undefined || games === null || (Array.isArray(games) && !games)) {
         // User signed in on a different device so let's get their games from the cloud
         // and hydrate state as well as store them in LocalStorage.
 
@@ -171,19 +182,25 @@ class Games extends React.PureComponent {
 
 
   handleRenderMyGames() {
-    this.setState({ filter: 'MyGames' });
+    this.setState({ filter: 'My Games' });
   }
 
 
   handleRenderShared() {
     this.setState({ filter: 'Shared' });
     const { TeacherID } = this.props.screenProps.account;
-    this.getSharedGamesFromDynamoDB(TeacherID);
+    if (TeacherID) {
+      this.getSharedGamesFromDynamoDB(TeacherID);
+    }
   }
 
 
   handleViewGame(event, game = {}, idx = null) {
-    this.currentGame = idx;
+    if (idx === null || game.GameID) {
+      this.currentGame = this.getIndexOfGame(game);
+    } else {
+      this.currentGame = idx;
+    }
     this.setState({ viewGame: game });
   }
 
@@ -205,8 +222,8 @@ class Games extends React.PureComponent {
       updatedGames.splice(this.currentGame, 1, game);
       this.setState({ games: updatedGames, viewGame: null });
       this.handleSaveGamesToDatabase(updatedGames);
-      this.currentGame = null;
     }
+    this.handleCloseGame();
   }
 
 
@@ -245,8 +262,8 @@ class Games extends React.PureComponent {
           style={styles.navButton}
         >
           <View style={styles.alignCenter}>
-            <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'MyGames' && styles.colorGrey]} />
-            <Text style={[styles.gameStartIcon, filter !== 'MyGames' && styles.colorGrey]}>My Games</Text>
+            <Aicon name={'gamepad'} style={[styles.headerIcon, filter !== 'My Games' && styles.colorGrey]} />
+            <Text style={[styles.gameStartIcon, filter !== 'My Games' && styles.colorGrey]}>My Games</Text>
           </View>
         </Touchable>
 
@@ -314,7 +331,7 @@ class Games extends React.PureComponent {
           activeOpacity={0.8}
           background={Touchable.Ripple(colors.primary, false)}
           hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-          onPress={() => this.handleViewGame(null, game, idx)}
+          onPress={() => this.handleViewGame(null, game, filter === 'My Games' ? idx : null)}
           style={styles.gameOpenButton}
         >
           <Text style={styles.gameOpenText}>View game</Text>
