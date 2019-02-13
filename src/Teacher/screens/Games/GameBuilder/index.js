@@ -20,7 +20,7 @@ import InputModal from '../../../../components/InputModal';
 import Menu from '../../../../components/Menu';
 import GameShare from './GameShare';
 import SelectionModal from '../../../../components/SelectionModal';
-import { categorySelection, levelSelection } from '../../../../config/selections';
+import { categorySelection, categorySelectionHS, difficultySelection, gradeSelection, levelSelection } from '../../../../config/selections';
 import GameBuilderQuestion from './GameBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
@@ -35,8 +35,10 @@ export default class GameBuilder extends React.Component {
     game: PropTypes.shape({
       GameID: PropTypes.string,
       // banner: PropTypes.string,
+      grade: PropTypes.string,
       category: PropTypes.string,
-      CCS: PropTypes.string,
+      level: PropTypes.string,
+      difficulty: PropTypes.string,
       description: PropTypes.string,
       favorite: PropTypes.boolean,
       questions: PropTypes.arrayOf(PropTypes.shape({
@@ -60,8 +62,10 @@ export default class GameBuilder extends React.Component {
     game: {
       GameID: '',
       // banner: '',
+      grade: '',
       category: '',
-      CCS: '',
+      level: '',
+      difficulty: '',
       description: '',
       favorite: false,
       questions: [],
@@ -78,8 +82,10 @@ export default class GameBuilder extends React.Component {
       edited: false,
       game: {
         // banner: '',
+        grade: null,
         category: null,
-        CCS: null,
+        level: null,
+        difficulty: null,
         description: null,
         favorite: false,
         questions: [],
@@ -98,10 +104,11 @@ export default class GameBuilder extends React.Component {
     this.handleInputModal = this.handleInputModal.bind(this);
     this.closeInputModal = this.closeInputModal.bind(this);
 
+    this.showGradeSelection = this.showGradeSelection.bind(this);
     this.showCategorySelection = this.showCategorySelection.bind(this);
-    this.hideCategorySelection = this.hideCategorySelection.bind(this);
-    this.showCCSSelection = this.showCCSSelection.bind(this);
-    this.hideCCSSelection = this.hideCCSSelection.bind(this);
+    this.showLevelSelection = this.showLevelSelection.bind(this);
+    this.showDifficultySelection = this.showDifficultySelection.bind(this);  
+    this.hideSelection = this.hideSelection.bind(this);
   
     this.toggleFavorite = this.toggleFavorite.bind(this);
     this.createGame = this.createGame.bind(this);
@@ -300,38 +307,61 @@ export default class GameBuilder extends React.Component {
   // );
 
 
+  showGradeSelection() {
+    this.setState({ showSelection: 'Grade' });
+  }
+
+
   showCategorySelection() {
-    this.setState({ showSelection: 'Subject Category' });
+    this.setState({ showSelection: 'Category' });
   }
 
 
-  hideCategorySelection(selection) {
+  showLevelSelection() {
+    this.setState({ showSelection: 'Level' });
+  }
+
+
+  showDifficultySelection() {
+    this.setState({ showSelection: 'Difficulty' });
+  }
+
+
+  hideSelection(selection) {
     if (typeof selection === 'object') { // Dismiss the event object
       this.setState({ showSelection: false });
       return;
     }
-    this.setState({
-      game: { ...this.state.game, category: selection || this.props.game.category },
-      showSelection: false,
-    });
-    this.setEdited();
-  }
-
-
-  showCCSSelection() {
-    this.setState({ showSelection: 'Common Core Standard' });
-  }
-
-
-  hideCCSSelection(selection) {
-    if (typeof selection === 'object') { // Dismiss the event object
-      this.setState({ showSelection: false });
-      return;
+    const { showSelection } = this.state;
+    switch (showSelection) {
+      case 'Grade': 
+        this.setState({
+          game: { ...this.state.game, grade: selection || this.props.game.grade },
+          showSelection: false,
+        });
+        break;
+      case 'Category': 
+        this.setState({
+          game: { ...this.state.game, category: selection || this.props.game.category },
+          showSelection: false,
+        });
+        break;
+      case 'Level': 
+        this.setState({
+          game: { ...this.state.game, level: selection || this.props.game.level },
+          showSelection: false,
+        });
+        break;
+      case 'Difficulty': 
+        this.setState({
+          game: { ...this.state.game, difficulty: selection || this.props.game.difficulty },
+          showSelection: false,
+        });
+        break;
+      default:
+        this.setState({ showSelection: false });
+        break;
     }
-    this.setState({
-      game: { ...this.state.game, CCS: selection || this.props.game.CCS },
-      showSelection: false,
-    });
     this.setEdited();
   }
 
@@ -402,8 +432,10 @@ export default class GameBuilder extends React.Component {
     const {
       GameID,
       // banner,
+      grade,
       category,
-      CCS,
+      level,
+      difficulty,
       description,
       favorite,
       title,
@@ -423,6 +455,32 @@ export default class GameBuilder extends React.Component {
       action = 'save';
     } else if (!GameID) {
       action = 'create';
+    }
+
+    let selectionItems = [];
+    if (showSelection) {
+      switch (showSelection) {
+        case 'Grade':
+          selectionItems = gradeSelection;
+          break;
+        case 'Category':
+          if (!grade) {
+            break;
+          } else if (grade === 'HS') {
+            selectionItems = categorySelectionHS;
+          } else {
+            selectionItems = categorySelection;
+          }
+          break;
+        case 'Level':
+          selectionItems = levelSelection;
+          break;
+        case 'Difficulty':
+          selectionItems = difficultySelection;
+          break;
+        default:
+          break;
+      }
     }
 
     return (
@@ -462,12 +520,9 @@ export default class GameBuilder extends React.Component {
 
             {Boolean(showSelection) &&
               <SelectionModal
-                handleClose={showSelection === 'Subject Category' ? this.hideCategorySelection : this.hideCCSSelection}
-                items={showSelection === 'Subject Category' ?
-                  categorySelection :
-                  levelSelection
-                }
-                onSelect={showSelection === 'Subject Category' ? this.hideCategorySelection : this.hideCCSSelection}
+                handleClose={this.hideSelection}
+                items={selectionItems}
+                onSelect={this.hideSelection}
                 title={showSelection}
                 visible={Boolean(showSelection)}
               />}
@@ -563,27 +618,48 @@ export default class GameBuilder extends React.Component {
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Subject</Text>
+                <Text style={styles.inputLabel}>Common Core Standard</Text>
+                { grade && category && level && difficulty &&
+                  <Text style={styles.inputLabel}>{ `${grade === 'HS' ? '' : `${grade}.`}${category}.${level}.${difficulty}` }</Text>}
+                <Touchable
+                  onPress={this.showGradeSelection}
+                >
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                    <Text style={[styles.inputButtonText, !grade && styles.colorPrimary]}>
+                      { grade || 'Grade' }
+                    </Text>
+                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                  </View>
+                </Touchable>
+
                 <Touchable
                   onPress={this.showCategorySelection}
                 >
                   <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
                     <Text style={[styles.inputButtonText, !category && styles.colorPrimary]}>
-                      { category || 'Subject Category' }
+                      { category || 'Category' }
                     </Text>
                     <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
                   </View>
                 </Touchable>
-              </View>
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Common Core Standard</Text>
                 <Touchable
-                  onPress={this.showCCSSelection}  
+                  onPress={this.showLevelSelection}
                 >
                   <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
-                    <Text style={[styles.inputButtonText, !CCS && styles.colorPrimary]}>
-                      { CCS || 'Level' }
+                    <Text style={[styles.inputButtonText, !level && styles.colorPrimary]}>
+                      { level || 'Level' }
+                    </Text>
+                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                  </View>
+                </Touchable>
+
+                <Touchable
+                  onPress={this.showDifficultySelection}
+                >
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                    <Text style={[styles.inputButtonText, !difficulty && styles.colorPrimary]}>
+                      { difficulty || 'Difficulty' }
                     </Text>
                     <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
                   </View>
