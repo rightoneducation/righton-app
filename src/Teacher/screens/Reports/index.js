@@ -113,6 +113,7 @@ const styles = ScaledSheet.create({
     color: colors.white,
     fontSize: fonts.medium,
     marginBottom: '25@vs',
+    textAlign: 'center',
   },
   scrollview: {
     flexGrow: 1,
