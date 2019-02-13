@@ -12,16 +12,25 @@ import { colors, fonts } from '../../utils/theme';
 
 
 export default class SelectionModal extends React.PureComponent {
-  renderOneTouchableItem = (item, onSelect) => (
-    <Touchable
-      key={item.value}
-      onPress={() => onSelect(item.value)}
-    >
-      <View style={[styles.itemContainer, styles.center]}>
-        <Text style={styles.item}>{ item.label }</Text>
-      </View>
-    </Touchable>
-  );
+  renderOneTouchableItem = (item, onSelect) => {
+    if (item.value === 'section') {
+      return (
+        <View key={item.label} style={[styles.itemContainer, styles.center]}>
+          <Text style={styles.section}>{ item.label }</Text>
+        </View>
+      );
+    }
+    return (
+      <Touchable
+        key={item.value}
+        onPress={() => onSelect(item.value)}
+      >
+        <View style={[styles.itemContainer, styles.center]}>
+          <Text style={styles.item}>{ item.label }</Text>
+        </View>
+      </Touchable>
+    );
+  }
 
 
   renderTwoTouchableItems = (item, onSelect) => (
@@ -136,6 +145,7 @@ const styles = ScaledSheet.create({
   item: {
     color: colors.dark,
     fontSize: fonts.medium,
+    textAlign: 'center',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -145,6 +155,10 @@ const styles = ScaledSheet.create({
   },
   modalContainer: {
     flex: 1,
+  },
+  section: {
+    fontSize: fonts.medium,
+    fontWeight: 'bold',
   },
   selectionContainer: {
     backgroundColor: colors.white,
