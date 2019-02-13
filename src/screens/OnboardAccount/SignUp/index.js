@@ -94,8 +94,8 @@ class SignUp extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.emailRef),
         (x, y) => {
-          this.emailX = x;
-          this.emailY = y + 9 + fonts.small;
+          this['Your email addressX'] = x;
+          this['Your email addressY'] = y + 9 + fonts.small;
         }
       );
     }
@@ -107,8 +107,8 @@ class SignUp extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.passwordRef),
         (x, y) => {
-          this.passwordX = x;
-          this.passwordY = y + 9 + fonts.small;
+          this.PasswordX = x;
+          this.PasswordY = y + 9 + fonts.small;
         }
       );
     }
@@ -120,8 +120,8 @@ class SignUp extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.retypeRef),
         (x, y) => {
-          this.retypeX = x;
-          this.retypeY = y + 9 + fonts.small;
+          this['Retype passwordX'] = x;
+          this['Retype passwordY'] = y + 9 + fonts.small;
         }
       );
     }
