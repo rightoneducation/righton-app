@@ -118,14 +118,6 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  componentWillUnmount() {
-    const { edited, game } = this.state;
-    if (game.explore && game.favorite && !edited) {
-      this.createGame();
-    }
-  }
-
-
   onTitleLayout() {
     if (this.titleRef) {
       NativeMethodsMixin.measureInWindow.call(
@@ -177,12 +169,13 @@ export default class GameBuilder extends React.Component {
 
 
   handleCloseGame = () => {
-    const { handleClose, game } = this.props;
-    if (game.explore) {
-      if (this.state.game.favorite) {
-        this.createGame();
-        return;
-      }
+    const { handleClose } = this.props;
+    const { edited, game } = this.state;
+    if (game.explore && game.favorite && !edited) {
+      this.createGame();
+    } else if (this.props.game.favorite !== game.favorite && !edited) {
+      // Automatically update game is `favorite` was update but fields were not.
+      this.createGame();
     }
     handleClose();
   }
