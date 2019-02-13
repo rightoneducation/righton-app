@@ -146,8 +146,10 @@ class Explore extends React.PureComponent {
     parsedGame.GameID = data.GameID;
     parsedGame.title = data.title;
     parsedGame.description = data.description;
+    parsedGame.grade = data.grade;
     parsedGame.category = data.category;
-    parsedGame.CCS = data.CCS;
+    parsedGame.level = data.level;
+    parsedGame.difficulty = data.difficulty;
     parsedGame.questions = [];
     parsedGame.quizmaker = true;
     parsedGame.explore = true; // This let's us know that the game is viewed from Explore tab.
@@ -179,7 +181,7 @@ class Explore extends React.PureComponent {
             <View style={styles.dataTextContainer}>
               <Text style={styles.dataTextTitle}>{data.title}</Text>
               <Text style={styles.dataTextDescription}>{data.description}</Text>
-              <Text style={styles.dataTextDescription}>{`${data.category} ${data.CCS}`}</Text>
+              <Text style={styles.dataTextDescription}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.category}.${data.level}.${data.difficulty}`}</Text>
             </View>
           </View>
         </View>
