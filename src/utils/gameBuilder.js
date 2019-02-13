@@ -63,8 +63,10 @@ export function playGame(
   const gameState = {
     GameID: game.GameID,
     banner: game.banner,
+    grade: game.grade,
     category: game.category,
-    CCS: game.CCS,
+    level: game.level,
+    difficulty: game.difficulty,
     favorite: game.favorite,
     title: game.description,
     description: game.description,
