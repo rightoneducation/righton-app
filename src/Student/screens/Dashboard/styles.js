@@ -24,6 +24,9 @@ export default ScaledSheet.create({
     backgroundColor: colors.dark,
     flex: 1,
   },
+  flex: {
+    flex: 1,
+  },
   headerContainer: {
     alignItems: 'center',
     alignSelf: 'stretch',
@@ -114,9 +117,10 @@ export default ScaledSheet.create({
     fontWeight: 'bold',
   },
   roomScrollView: {
+    alignItems: 'center',
     flexGrow: 1,
     // Size of ButtonWide + `15@s` from marginHorizontal of styles.roomContainer
-    width: deviceWidth - scale(50),
+    width: deviceWidth - scale(30),
   },
   teamButton: {
     alignItems: 'center',

@@ -337,21 +337,24 @@ export default class Dashboard extends React.Component {
     teamsArr[teamSize - 1] = null;
     teamsArr.fill(null, 0, teamSize - 1);
     return (
-      <ScrollView contentContainerStyle={[styles.roomContainer, styles.roomScrollView]}>
-        <Text style={styles.input}>Select your team</Text>
-        {teamsArr.map((n, idx) => (
-          <Touchable
-            activeOpacity={0.8}
-            background={Touchable.Ripple(colors.primary, false)}
-            hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
-            onPress={() => this.handleTeamSelection(idx)}
-            key={`${Math.random()}`}
-            style={[styles.teamButton, elevation]}
-          >
-            <Text style={styles.buttonText}>{`Team ${idx + 1}`}</Text>
-          </Touchable>
-        ))}
-      </ScrollView>
+      <View style={styles.roomContainer}>
+        <ScrollView contentContainerStyle={styles.roomScrollView}>
+          <Text style={styles.input}>Select your team</Text>
+          {teamsArr.map((n, idx) => (
+            <Touchable
+              activeOpacity={0.8}
+              background={Touchable.Ripple(colors.primary, false)}
+              hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+              onPress={() => this.handleTeamSelection(idx)}
+              key={`${Math.random()}`}
+              style={[styles.teamButton, elevation]}
+            >
+              <Text style={styles.buttonText}>{`Team ${idx + 1}`}</Text>
+            </Touchable>
+          ))}
+        </ScrollView>
+      </View>
+
     );
   }
 
