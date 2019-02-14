@@ -206,7 +206,6 @@ export default class GameReasons extends React.PureComponent {
           autoCapitalize: 'sentences',
           closeModal: this.closeInputModal,
           keyboardType,
-          height: 45,
           input,
           inputLabel,
           maxLength,

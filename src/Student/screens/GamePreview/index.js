@@ -239,7 +239,6 @@ export default class GamePreview extends React.PureComponent {
         autoCapitalize: 'sentences',
         closeModal: this.closeInputModal,
         keyboardType: 'default',
-        height: 45,
         input: '',
         inputLabel: '',
         maxLength: 125,
