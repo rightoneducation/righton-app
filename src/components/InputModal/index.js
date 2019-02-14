@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Keyboard,
   Modal,
   Text,
   TouchableOpacity,
@@ -58,8 +59,10 @@ export default class InputModal extends React.PureComponent {
     super(props);
 
     this.state = {
+      minY: deviceHeight / 2,
       input: props.input || '',
     };
+
     this.handleInput = this.handleInput.bind(this);
     this.handleInputBlur = this.handleInputBlur.bind(this);
     this.handleInputRef = this.handleInputRef.bind(this);
@@ -68,7 +71,21 @@ export default class InputModal extends React.PureComponent {
 
 
   componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.keyboardDidShow(e));
     setTimeout(() => this.inputRef.focus(), 100);
+  }
+
+
+  componentWillUnmount() {
+    Keyboard.removeListener('keyboardDidShow', this.keyboardDidShow);
+  }
+
+
+  keyboardDidShow = (e) => {
+    const minY = deviceHeight - e.endCoordinates.height;
+    if (this.state.minY !== minY) {
+      this.setState({ minY });
+    }
   }
 
 
@@ -152,11 +169,13 @@ export default class InputModal extends React.PureComponent {
       y,
     } = this.props;
 
-    let yAxis = deviceHeight / 2;
+    const { minY } = this.state;
+
+    let yAxis = minY;
     let xAxis = scale(15);
     let bottom;
     const scaledHeight = verticalScale(height);
-    if (y < deviceHeight / 2) {
+    if (y < minY) {
       yAxis = y;
     } else {
       bottom = true;
@@ -166,7 +185,7 @@ export default class InputModal extends React.PureComponent {
       xAxis = x;
     }
 
-    const ms5 = moderateScale(5);
+    const ms25 = moderateScale(25);
 
     return (
       <Modal
@@ -186,7 +205,7 @@ export default class InputModal extends React.PureComponent {
               style={[
                 styles.inputLabel,
                 { left: xAxis },
-                bottom ? { bottom: 15 + ms5 + scaledHeight } : { top: yAxis - ms5 },
+                bottom ? { bottom: 15 + ms25 + scaledHeight } : { top: yAxis - ms25 },
                 labelStyles,
               ]}
             >{ inputLabel }</Text>}
@@ -222,8 +241,8 @@ const styles = ScaledSheet.create({
   },
   inputLabel: {
     color: colors.primary,
-    fontSize: fonts.medium,
-    marginBottom: '5@ms',
+    fontSize: fonts.small,
+    position: 'absolute',
   },
   length: {
     color: colors.lightGray,
