@@ -97,7 +97,7 @@ class LogIn extends React.Component {
         findNodeHandle(this.emailRef),
         (x, y) => {
           this['Your email addressX'] = x;
-          this['Your email addressY'] = y + 9 + fonts.small;
+          this['Your email addressY'] = y + 12 + fonts.small;
         }
       );
     }
@@ -110,7 +110,7 @@ class LogIn extends React.Component {
         findNodeHandle(this.passwordRef),
         (x, y) => {
           this.PasswordX = x;
-          this.PasswordY = y + 9 + fonts.small;
+          this.PasswordY = y + 12 + fonts.small;
         }
       );
     }
@@ -311,7 +311,6 @@ class LogIn extends React.Component {
           backgroundColor: colors.dark,
           closeModal: this.closeInputModal,
           keyboardType,
-          height: 45,
           hiddenLabel: false,
           input,
           inputLabel,
@@ -372,7 +371,7 @@ class LogIn extends React.Component {
             ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>Your email address</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email address'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Your email address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
@@ -386,7 +385,7 @@ class LogIn extends React.Component {
             ref={this.handlePasswordRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>Password</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Password' ? '' : 'Password'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Password', 'Password', 75, password)}
               style={[styles.inputButton, elevation]}

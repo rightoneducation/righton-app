@@ -423,7 +423,6 @@ class SignUp extends React.Component {
           backgroundColor: colors.dark,
           closeModal: this.closeInputModal,
           keyboardType,
-          height: 45,
           hiddenLabel: false,
           input,
           inputLabel,
@@ -546,7 +545,7 @@ class SignUp extends React.Component {
             ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>Your email address</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email address'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Your email address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
@@ -560,7 +559,7 @@ class SignUp extends React.Component {
             ref={this.handlePasswordRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>Password</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Password' ? '' : 'Password'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Password', 'Password', 75, password)}
               style={[styles.inputButton, elevation]}
@@ -574,7 +573,7 @@ class SignUp extends React.Component {
             ref={this.handleRetypeRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>Retype password</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Password' ? '' : 'Retype Password'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Retype password', 'Retype password', 75, retypePassword)}
               style={[styles.inputButton, elevation]}
