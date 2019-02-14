@@ -99,7 +99,7 @@ export default ScaledSheet.create({
     minHeight: '45@vs',
     justifyContent: 'center',
     paddingHorizontal: '15@ms',
-    paddingVertical: '10@vs',
+    paddingVertical: '10@ms',
     width: deviceWidth - scale(30),
   },
   inputButtonText: {

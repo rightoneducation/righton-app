@@ -98,7 +98,7 @@ export default class GameBuilderQuestion extends React.Component {
         findNodeHandle(this.questionRef),
         (x, y) => {
           this.questionX = x;
-          this.questionY = y + 9 + fonts.small;
+          this.questionY = y + 12 + fonts.small;
         }
       );
     }
@@ -111,7 +111,7 @@ export default class GameBuilderQuestion extends React.Component {
         findNodeHandle(this.answerRef),
         (x, y) => {
           this.answerX = x;
-          this.answerY = y + 9 + fonts.small;
+          this.answerY = y + 12 + fonts.small;
         }
       );
     }
@@ -195,7 +195,6 @@ export default class GameBuilderQuestion extends React.Component {
           autoCapitalize: 'sentences',
           closeModal: this.closeInputModal,
           keyboardType,
-          height: 45,
           input,
           inputLabel,
           maxLength,

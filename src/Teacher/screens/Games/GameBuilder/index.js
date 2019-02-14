@@ -131,7 +131,7 @@ export default class GameBuilder extends React.Component {
         findNodeHandle(this.titleRef),
         (x, y) => {
           this.titleX = x;
-          this.titleY = y + 9 + fonts.small;
+          this.titleY = y + 12 + fonts.small;
         }
       );
     }
@@ -144,7 +144,7 @@ export default class GameBuilder extends React.Component {
         findNodeHandle(this.descriptionRef),
         (x, y) => {
           this.descriptionX = x;
-          this.descriptionY = y + 9 + fonts.small;
+          this.descriptionY = y + 12 + fonts.small;
         }
       );
     }
@@ -249,7 +249,6 @@ export default class GameBuilder extends React.Component {
           autoCapitalize: 'sentences',
           closeModal: this.closeInputModal,
           keyboardType,
-          height: 45,
           input,
           inputLabel,
           maxLength,
