@@ -369,7 +369,7 @@ export default class GameBuilderQuestion extends React.Component {
                   <View style={parentStyles.row}>
                     <Aicon name={'image'} style={parentStyles.bannerIcon} />
                     <Text style={parentStyles.bannerLabel}>
-                      None (tap to upload an image or diagram)
+                      Tap to upload an image or diagram
                     </Text>
                   </View>}
                 {image === 'loading' &&
