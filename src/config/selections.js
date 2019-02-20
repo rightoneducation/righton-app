@@ -31,12 +31,12 @@ export const trickTimeSelection = [
 ];
 
 export const domainSelection = [
-  { label: 'Ratios & Proportional Relationships', value: 'RP' },
-  { label: 'The Number System', value: 'NS' },
-  { label: 'Expressions & Equations', value: 'EE' },
-  { label: 'Geometry', value: 'G' },
-  { label: 'Statistics & Probability', value: 'SP' },
-  { label: 'Functions', value: 'F' },
+  { label: '[RP] - Ratios & Proportional Relationships', value: 'RP' },
+  { label: '[NS] - The Number System', value: 'NS' },
+  { label: '[EE] - Expressions & Equations', value: 'EE' },
+  { label: '[G] - Geometry', value: 'G' },
+  { label: '[SP] - Statistics & Probability', value: 'SP' },
+  { label: '[F] - Functions', value: 'F' },
 ];
 
 export const domainSelectionHS = [
