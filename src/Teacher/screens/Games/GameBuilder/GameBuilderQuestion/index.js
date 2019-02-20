@@ -55,8 +55,6 @@ export default class GameBuilderQuestion extends React.Component {
         image: null,
         instructions: [],
         question: null,
-        quizTime: '1:00',
-        trickTime: '3:00',
         uid: null,
       },
       showInput: false,
@@ -294,8 +292,6 @@ export default class GameBuilderQuestion extends React.Component {
       image,
       instructions,
       question,
-      // quizTime,
-      // trickTime,
     } = this.state.question;
 
     const { showInput } = this.state;
