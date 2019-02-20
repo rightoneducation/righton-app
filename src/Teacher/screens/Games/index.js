@@ -211,9 +211,9 @@ class Games extends React.PureComponent {
   }
 
 
-  handleCreateGame(game) {
+  handleCreateGame(game, newGame) {
     const { games } = this.state;
-    if (this.currentGame === null) {
+    if (this.currentGame === null || newGame) {
       const updatedGames = [game, ...games];
       this.setState({ games: updatedGames, viewGame: null });
       this.handleSaveGamesToDatabase(updatedGames);
