@@ -4,6 +4,9 @@ module.exports = {
   "settings": {
     "import/parser": "babel-eslint",
   },
+  "env": {
+    "jest": true
+  },
   "globals": {
     "__DEV__": [true, true],
   },
