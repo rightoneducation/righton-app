@@ -371,6 +371,7 @@ export default class GameBuilderQuestion extends React.Component {
                   animating
                   color={colors.primary}
                   size={'large'}
+                  style={{ position: 'absolute' }}
                 />}
               </View>
             </Touchable>
