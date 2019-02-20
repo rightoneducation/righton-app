@@ -231,7 +231,7 @@ export default class GameBuilderQuestion extends React.Component {
 
   handleImagePicker = () => {
     const options = {
-      // title: 'Select Avatar',
+      title: 'Choose an image/diagram',
       // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
       storageOptions: {
         skipBackup: true,
@@ -271,10 +271,8 @@ export default class GameBuilderQuestion extends React.Component {
                   this.setState({
                     question: { ...this.state.question, image: res },
                   });
-                })
-                .catch(e => this.catchImageError(e));
-            })
-            .catch(e => this.catchImageError(e));
+                }).catch(e => this.catchImageError(e));
+            }).catch(e => this.catchImageError(e));
         }).catch(e => this.catchImageError(e));
       }
     });
@@ -351,7 +349,7 @@ export default class GameBuilderQuestion extends React.Component {
           </View>
 
           <View style={parentStyles.inputContainer}>
-            <Text style={parentStyles.inputLabel}>Optional Image/Diagram</Text>
+            <Text style={parentStyles.inputLabel}>Image/Diagram (Optional)</Text>
             <Touchable
               onPress={this.handleImagePicker}
             >
@@ -369,7 +367,7 @@ export default class GameBuilderQuestion extends React.Component {
                   <View style={parentStyles.row}>
                     <Aicon name={'image'} style={parentStyles.bannerIcon} />
                     <Text style={parentStyles.bannerLabel}>
-                      Tap to upload an image or diagram
+                      Add an image or diagram
                     </Text>
                   </View>}
                 {image === 'loading' &&
