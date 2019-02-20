@@ -205,7 +205,7 @@ export default class GameBuilder extends React.Component {
         delete saveGame.quizmaker;
         saveGame.GameID = `${Math.random()}`;
         if (this.state.game.title === this.props.game.title) {
-          saveGame.title = `Copy of ${this.state.game.title}`;
+          saveGame.title = `Duplicate of ${this.state.game.title}`;
           this.props.handleCreateGame(saveGame, true);
         } else {
           this.props.handleCreateGame(saveGame, true);
