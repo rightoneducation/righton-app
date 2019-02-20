@@ -202,7 +202,14 @@ export default class GameBuilder extends React.Component {
         delete saveGame.explore;
       }
       if (this.props.game.quizmaker && this.state.edited) {
-        this.props.handleCreateGame({ ...saveGame, GameID: `${Math.random()}`, quizmaker: null });
+        delete saveGame.quizmaker;
+        saveGame.GameID = `${Math.random()}`;
+        if (this.state.game.title === this.props.game.title) {
+          saveGame.title = `Copy of ${this.state.game.title}`;
+          this.props.handleCreateGame(saveGame, true);
+        } else {
+          this.props.handleCreateGame(saveGame, true);
+        }
       } else {
         this.props.handleCreateGame(saveGame);
       }
@@ -438,6 +445,7 @@ export default class GameBuilder extends React.Component {
       description,
       favorite,
       title,
+      quizmaker,
     } = this.state.game;
 
     const {
@@ -450,10 +458,12 @@ export default class GameBuilder extends React.Component {
     } = this.state;
 
     let action = '';
-    if (GameID && edited) {
-      action = 'save';
-    } else if (!GameID) {
-      action = 'create';
+    if (edited) {
+      if (quizmaker && title === this.props.game.title) {
+        action = 'Duplicate';
+      } else {
+        action = 'Save';
+      }
     }
 
     let selectionItems = [];
