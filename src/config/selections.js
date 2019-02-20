@@ -30,7 +30,7 @@ export const trickTimeSelection = [
   { label: '60:00', value: '60:00' },
 ];
 
-export const categorySelection = [
+export const domainSelection = [
   { label: 'Ratios & Proportional Relationships', value: 'RP' },
   { label: 'The Number System', value: 'NS' },
   { label: 'Expressions & Equations', value: 'EE' },
@@ -39,7 +39,7 @@ export const categorySelection = [
   { label: 'Functions', value: 'F' },
 ];
 
-export const categorySelectionHS = [
+export const domainSelectionHS = [
   { label: 'Algebra I', value: 'section' },
   { label: '[HSN-Q] - Quantities', value: 'HSN-Q' },
   { label: '[HSA-CED] - Creating Equations', value: 'HSA-CED' },

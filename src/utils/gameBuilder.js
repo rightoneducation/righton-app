@@ -64,7 +64,7 @@ export function playGame(
     GameID: game.GameID,
     banner: game.banner,
     grade: game.grade,
-    category: game.category,
+    domain: game.domain,
     level: game.level,
     difficulty: game.difficulty,
     favorite: game.favorite,

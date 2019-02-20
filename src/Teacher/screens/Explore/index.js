@@ -147,7 +147,7 @@ class Explore extends React.PureComponent {
     parsedGame.title = data.title;
     parsedGame.description = data.description;
     parsedGame.grade = data.grade;
-    parsedGame.category = data.category;
+    parsedGame.domain = data.domain;
     parsedGame.level = data.level;
     parsedGame.difficulty = data.difficulty;
     parsedGame.questions = [];
@@ -181,7 +181,7 @@ class Explore extends React.PureComponent {
             <View style={styles.dataTextContainer}>
               <Text style={styles.dataTextTitle}>{data.title}</Text>
               <Text style={styles.dataTextDescription}>{data.description}</Text>
-              <Text style={[styles.dataTextDescription, styles.italic]}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.category}.${data.level}.${data.difficulty}`}</Text>
+              <Text style={[styles.dataTextDescription, styles.italic]}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.domain}.${data.level}.${data.difficulty}`}</Text>
             </View>
           </View>
         </View>

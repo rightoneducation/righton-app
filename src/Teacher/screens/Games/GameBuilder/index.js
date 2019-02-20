@@ -20,7 +20,7 @@ import InputModal from '../../../../components/InputModal';
 import Menu from '../../../../components/Menu';
 import GameShare from './GameShare';
 import SelectionModal from '../../../../components/SelectionModal';
-import { categorySelection, categorySelectionHS, difficultySelection, gradeSelection, levelSelection } from '../../../../config/selections';
+import { domainSelection, domainSelectionHS, difficultySelection, gradeSelection, levelSelection } from '../../../../config/selections';
 import GameBuilderQuestion from './GameBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
@@ -36,7 +36,7 @@ export default class GameBuilder extends React.Component {
       GameID: PropTypes.string,
       // banner: PropTypes.string,
       grade: PropTypes.string,
-      category: PropTypes.string,
+      domain: PropTypes.string,
       level: PropTypes.string,
       difficulty: PropTypes.string,
       description: PropTypes.string,
@@ -63,7 +63,7 @@ export default class GameBuilder extends React.Component {
       GameID: '',
       // banner: '',
       grade: '',
-      category: '',
+      domain: '',
       level: '',
       difficulty: '',
       description: '',
@@ -83,7 +83,7 @@ export default class GameBuilder extends React.Component {
       game: {
         // banner: '',
         grade: null,
-        category: null,
+        domain: null,
         level: null,
         difficulty: null,
         description: null,
@@ -105,7 +105,7 @@ export default class GameBuilder extends React.Component {
     this.closeInputModal = this.closeInputModal.bind(this);
 
     this.showGradeSelection = this.showGradeSelection.bind(this);
-    this.showCategorySelection = this.showCategorySelection.bind(this);
+    this.showDomainSelection = this.showDomainSelection.bind(this);
     this.showLevelSelection = this.showLevelSelection.bind(this);
     this.showDifficultySelection = this.showDifficultySelection.bind(this);  
     this.hideSelection = this.hideSelection.bind(this);
@@ -311,8 +311,8 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  showCategorySelection() {
-    this.setState({ showSelection: 'Category' });
+  showDomainSelection() {
+    this.setState({ showSelection: 'Domain' });
   }
 
 
@@ -339,9 +339,9 @@ export default class GameBuilder extends React.Component {
           showSelection: false,
         });
         break;
-      case 'Category': 
+      case 'Domain': 
         this.setState({
-          game: { ...this.state.game, category: selection || this.props.game.category },
+          game: { ...this.state.game, domain: selection || this.props.game.domain },
           showSelection: false,
         });
         break;
@@ -432,7 +432,7 @@ export default class GameBuilder extends React.Component {
       GameID,
       // banner,
       grade,
-      category,
+      domain,
       level,
       difficulty,
       description,
@@ -462,13 +462,13 @@ export default class GameBuilder extends React.Component {
         case 'Grade':
           selectionItems = gradeSelection;
           break;
-        case 'Category':
+        case 'Domain':
           if (!grade) {
             break;
           } else if (grade === 'HS') {
-            selectionItems = categorySelectionHS;
+            selectionItems = domainSelectionHS;
           } else {
-            selectionItems = categorySelection;
+            selectionItems = domainSelection;
           }
           break;
         case 'Level':
@@ -618,8 +618,8 @@ export default class GameBuilder extends React.Component {
 
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Common Core Standard</Text>
-                { grade && category && level && difficulty &&
-                  <Text style={styles.inputLabel}>{ `${grade === 'HS' ? '' : `${grade}.`}${category}.${level}.${difficulty}` }</Text>}
+                { grade && domain && level && difficulty &&
+                  <Text style={styles.inputLabel}>{ `${grade === 'HS' ? '' : `${grade}.`}${domain}.${level}.${difficulty}` }</Text>}
                 <Touchable
                   onPress={this.showGradeSelection}
                 >
@@ -632,11 +632,11 @@ export default class GameBuilder extends React.Component {
                 </Touchable>
 
                 <Touchable
-                  onPress={this.showCategorySelection}
+                  onPress={this.showDomainSelection}
                 >
                   <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
-                    <Text style={[styles.inputButtonText, !category && styles.colorPrimary]}>
-                      { category || 'Category' }
+                    <Text style={[styles.inputButtonText, !domain && styles.colorPrimary]}>
+                      { domain || 'Domain' }
                     </Text>
                     <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
                   </View>

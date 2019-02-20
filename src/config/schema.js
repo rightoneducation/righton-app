@@ -12,6 +12,10 @@ const gameState = {
   GameRoomID: 'string',
   title: 'string',
   description: 'string',
+  grade: 'string',
+  domain: 'string',
+  level: 'string',
+  difficulty: 'string',
   quizTime: 'string',
   trickTime: 'string',
   'team#': [{ /* question schema */
@@ -70,9 +74,12 @@ const StudentAccount = {
 const QuizMaker = {
   GameID: 'string', // Same as GameID of Game in DynamoDB/Games
   played: 'number', // To calculate popularity rating
+  grade: 'string',
+  domain: 'string',
+  level: 'string',
+  difficulty: 'string',
   q1: {
     answer: 'string',
-    category: 'string',
     question: 'string',
     tricks: [
       {
