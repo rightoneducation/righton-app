@@ -51,21 +51,8 @@ class Explore extends React.PureComponent {
 
 
   componentDidMount() {
-    // if (__DEV__) this.hydrateDummyData();
     this.hydrateGamesFromDynamoDB();
   }
-
-
-  // hydrateDummyData() {
-  //   this.setState({
-  //     data: [
-  //       {
-  //         title: 'Triangles or try angles',
-  //         description: 'A guide up the pyramids',
-  //       },
-  //     ],
-  //   });
-  // }
 
 
   hydrateGamesFromDynamoDB() {
