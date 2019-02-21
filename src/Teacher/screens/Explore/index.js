@@ -116,6 +116,7 @@ class Explore extends React.PureComponent {
 
         const { account, handleSetAppState } = this.props.screenProps;
         saveGamesToDatabase(games, account, handleSetAppState);
+        this.props.navigation.state.params = { reloadGames: true };
       }
     } catch (exception) {
       debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);

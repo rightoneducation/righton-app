@@ -9,6 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
+import { NavigationEvents } from 'react-navigation';
 import GameBuilder from './GameBuilder';
 import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
@@ -100,6 +101,14 @@ class Games extends React.PureComponent {
   }
   
 
+  onGamesTabFocused = () => {
+    if (this.props.navigation.state.params && this.props.navigation.state.params.reloadGames) {
+      this.hydrateGames();
+      delete this.props.navigation.state.params.reloadGames;
+    }
+  }
+  
+
   getGamesFromDynamoDB(TeacherID) {
     getItemFromTeacherAccountFromDynamoDB(
       TeacherID,
@@ -154,6 +163,8 @@ class Games extends React.PureComponent {
       games = await LocalStorage.getItem(`@RightOn:${TeacherID}/Games`);
       if (typeof games === 'string') {
         games = JSON.parse(games);
+        // games.shift();
+        // this.handleSaveGamesToDatabase(games);
         this.setState({ games }, () => {
           const { account } = this.props.screenProps;
           if (account.gamesRef && (account.gamesRef.local !== account.gamesRef.db)) {
@@ -377,6 +388,9 @@ class Games extends React.PureComponent {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={colors.primary} />
+        <NavigationEvents
+          onWillFocus={this.onGamesTabFocused}
+        />
         {viewGame &&
           <GameBuilder
             currentGame={this.currentGame}
@@ -394,4 +408,4 @@ class Games extends React.PureComponent {
 }
 
 
-export default props => <Games screenProps={{ ...props }} />;
+export default Games;
