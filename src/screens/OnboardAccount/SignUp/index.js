@@ -251,7 +251,7 @@ class SignUp extends React.Component {
       account.schoolID = null;
       account.games = [];
       account.history = [];
-      account.shared = [];
+      account.sharedGames = [];
       account.gamesRef = { local: 0, db: 0 };
       account.historyRef = { local: 0, db: 0 };
 

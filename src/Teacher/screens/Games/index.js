@@ -23,7 +23,7 @@ import {
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
-class Games extends React.PureComponent {
+class Games extends React.Component {
   static propTypes = {
     screenProps: PropTypes.shape({
       account: PropTypes.shape({
@@ -41,10 +41,9 @@ class Games extends React.PureComponent {
       handleSetAppState: PropTypes.func.isRequired,
       IOTPublishMessage: PropTypes.func.isRequired,
       IOTSubscribeToTopic: PropTypes.func.isRequired,
-      // Root navigation (Switch Navigator)
-      navigation: PropTypes.shape({
-        navigate: PropTypes.func.isRequired,
-      }),
+    }),
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func.isRequired,
     }),
   };
   
@@ -65,9 +64,9 @@ class Games extends React.PureComponent {
       handleSetAppState: () => {},
       IOTPublishMessage: () => {},
       IOTSubscribeToTopic: () => {},
-      navigation: {
-        navigate: () => {},
-      },
+    },
+    navigation: {
+      navigate: () => {},
     },
   };
   
@@ -78,7 +77,7 @@ class Games extends React.PureComponent {
       viewGame: null,
       games: [],
       filter: 'My Games',
-      shared: [],
+      sharedGames: [],
     };
 
     this.currentGame = null;
@@ -98,6 +97,14 @@ class Games extends React.PureComponent {
   componentDidMount() {
     this.hydrateGames();
     // this.getGamesFromDynamoDB(this.props.screenProps.account.TeacherID);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.filter !== nextState.filter) return true;
+    if (this.state.viewGame !== nextState.viewGame) return true;
+    if (this.state.games.length !== nextState.games.length) return true;
+    if (this.state.sharedGames.length !== nextState.sharedGames.length) return true;
+    return false;
   }
   
 
@@ -129,10 +136,10 @@ class Games extends React.PureComponent {
   getSharedGamesFromDynamoDB(TeacherID) {
     getItemFromTeacherAccountFromDynamoDB(
       TeacherID,
-      'shared',
+      'sharedGames',
       (res) => {
-        if (typeof res === 'object' && res.shared) {
-          this.setState({ shared: res.shared });
+        if (typeof res === 'object' && res.sharedGames) {
+          this.setState({ sharedGames: res.sharedGames });
         }
         debug.log('Successful GETTING teacher shared games from DynamoDB to hydrate local state in games:', JSON.stringify(res));
       },
@@ -366,10 +373,10 @@ class Games extends React.PureComponent {
     if (!Array.isArray(games)) return null;
 
     if (filter === 'Shared') {
-      const { shared } = this.state;
+      const { sharedGames } = this.state;
       return (
         <ScrollView contentContainerStyle={styles.scrollview}>
-          {shared.map((game, idx) => this.renderGameBlock(game, idx, filter))}
+          {sharedGames.map((game, idx) => this.renderGameBlock(game, idx, filter))}
         </ScrollView>
       );
     }
@@ -384,6 +391,7 @@ class Games extends React.PureComponent {
 
   render() {
     const { viewGame, filter } = this.state;
+    const { TeacherID } = this.props.screenProps.account;
 
     return (
       <View style={styles.container}>
@@ -398,6 +406,7 @@ class Games extends React.PureComponent {
             handleCreateGame={this.handleCreateGame}
             handlePlayGame={this.handlePlayGame}
             game={viewGame}
+            TeacherID={TeacherID}
             visible
           />}
         {this.renderHeader(filter)}
