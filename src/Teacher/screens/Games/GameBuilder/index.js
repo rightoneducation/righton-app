@@ -520,7 +520,10 @@ export default class GameBuilder extends React.Component {
               />}
 
             {showShare && 
-              <GameShare handleClose={this.toggleShare} />}
+              <GameShare
+                handleClose={this.toggleShare}
+                game={{ ...this.state.game, shared: this.props.TeacherID }}
+              />}
             
             {Boolean(GameID) && 
               <ButtonStart onPress={() => handlePlayGame(null, this.state.game)} />}
