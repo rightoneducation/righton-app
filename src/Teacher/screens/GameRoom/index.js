@@ -609,6 +609,7 @@ export default class GameRoom extends React.Component {
             handleBackFromChild={this.handleBackFromChild}
             handleSetAppState={handleSetAppState}
             IOTPublishMessage={IOTPublishMessage}
+            TeacherID={this.props.screenProps.account.TeacherID}
           />
         );
       default:
