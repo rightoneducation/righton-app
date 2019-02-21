@@ -188,6 +188,27 @@ app.put(path + '/history', function(req, res) {
   });
 });
 
+
+app.put(path + '/sharedGames', function(req, res) {
+  
+  if (userIdPresent) {
+    req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  }
+
+  let putItemParams = {
+    TableName: tableName,
+    ...req.body,
+  }
+  dynamodb.update(putItemParams, (err, data) => {
+    if(err) {
+      res.json({error: err, url: req.url, body: req.body});
+    } else{
+      res.json({success: 'post call succeed!', url: req.url, data: data})
+    }
+  });
+});
+
+
 /**************************************
 * HTTP remove method to delete object *
 ***************************************/

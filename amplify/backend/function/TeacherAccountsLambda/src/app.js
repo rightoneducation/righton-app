@@ -189,7 +189,7 @@ app.put(path + '/history', function(req, res) {
 });
 
 
-app.put(path + '/shared', function(req, res) {
+app.put(path + '/sharedGames', function(req, res) {
   
   if (userIdPresent) {
     req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
