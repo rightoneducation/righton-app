@@ -35,7 +35,9 @@ export default class GameShare extends React.PureComponent {
 
 
   onSuccess = () => {
+    // TODO Tell teacher
     debug.log('Successfully shared game with teacher');
+    this.props.handleClose();
   }
 
 
