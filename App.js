@@ -65,7 +65,12 @@ export default class App extends React.Component {
     this.IOTPublishMessage = this.IOTPublishMessage.bind(this);
   }
 
-
+  /**
+   * Main application upon mount lifecycle event.
+   * Initiates LocalStorage and gets session from Auth to set in core state.
+   * 
+   * Sets up background listener to handle Websocket connectivity.
+   */
   async componentDidMount() {
     await LocalStorage.init();
     let session;
