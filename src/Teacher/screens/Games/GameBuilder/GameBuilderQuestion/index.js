@@ -25,6 +25,7 @@ import debug from '../../../../../utils/debug';
 export default class GameBuilderQuestion extends React.Component {
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
+    explore: PropTypes.bool,
     question: PropTypes.shape({
       answer: PropTypes.string,
       image: PropTypes.string,
@@ -37,6 +38,7 @@ export default class GameBuilderQuestion extends React.Component {
 
   static defaultProps = {
     closeModal: () => {},
+    explore: false,
     question: {
       answer: '',
       image: '',
@@ -183,6 +185,7 @@ export default class GameBuilderQuestion extends React.Component {
 
 
   handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
+    if (this.props.explore) return;
     if (inputLabel === 'question') {
       this.onQuestionLayout();
     } else if (inputLabel === 'answer') {
@@ -229,6 +232,7 @@ export default class GameBuilderQuestion extends React.Component {
 
 
   handleImagePicker = () => {
+    if (this.props.explore) return;
     const options = {
       title: 'Choose an image/diagram',
       // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -297,6 +301,8 @@ export default class GameBuilderQuestion extends React.Component {
 
     const { showInput } = this.state;
 
+    const { explore } = this.props;
+
     return (
       <View style={parentStyles.container}>
 
@@ -323,7 +329,7 @@ export default class GameBuilderQuestion extends React.Component {
           </Touchable>
         </View>
 
-        <ScrollView contentContainerStyle={parentStyles.scrollview}>
+        <ScrollView contentContainerStyle={[parentStyles.scrollview, { paddingBottom: 50 }]}>
           <View
             onLayout={this.onQuestionLayout}
             ref={this.handleQuestionRef}
@@ -422,11 +428,12 @@ export default class GameBuilderQuestion extends React.Component {
             </Touchable>
           ))}
 
-          <ButtonWide
-            buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
-            label={'+ Solution Step'}
-            onPress={this.handleAddInstruction}
-          />
+          {!explore &&
+            <ButtonWide
+              buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
+              label={'+ Solution Step'}
+              onPress={this.handleAddInstruction}
+            />}
         </ScrollView>
 
       </View>

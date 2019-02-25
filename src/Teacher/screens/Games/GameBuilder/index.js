@@ -51,6 +51,7 @@ export default class GameBuilder extends React.Component {
       })),
       quizmaker: PropTypes.bool,
       title: PropTypes.string,
+      explore: PropTypes.bool,
     }),
     TeacherID: PropTypes.string,
     visible: PropTypes.bool.isRequired,
@@ -73,6 +74,7 @@ export default class GameBuilder extends React.Component {
       questions: [],
       quizmaker: false,
       title: '',
+      explore: false,
     },
     TeacherID: '',
     visible: false,
@@ -169,7 +171,6 @@ export default class GameBuilder extends React.Component {
     } else {
       this.setState({ 
         game: {
-          // banner: null,
           description: null,
           questions: [],
           title: null,
@@ -209,7 +210,7 @@ export default class GameBuilder extends React.Component {
         delete saveGame.quizmaker;
         saveGame.GameID = `${Math.random()}`;
         if (this.state.game.title === this.props.game.title) {
-          saveGame.title = `Duplicate of ${this.state.game.title}`;
+          saveGame.title = `Clone of ${this.state.game.title}`;
           this.props.handleCreateGame(saveGame, true);
         } else {
           this.props.handleCreateGame(saveGame, true);
@@ -249,6 +250,7 @@ export default class GameBuilder extends React.Component {
 
 
   handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
+    if (this.state.game.explore) return;
     if (inputLabel === 'title') {
       this.onTitleLayout();
     } else if (inputLabel === 'description') {
@@ -318,21 +320,25 @@ export default class GameBuilder extends React.Component {
 
 
   showGradeSelection() {
+    if (this.state.game.explore) return;
     this.setState({ showSelection: 'Grade' });
   }
 
 
   showDomainSelection() {
+    if (this.state.game.explore) return;
     this.setState({ showSelection: 'Domain' });
   }
 
 
   showClusterSelection() {
+    if (this.state.game.explore) return;
     this.setState({ showSelection: 'Cluster' });
   }
 
 
   showStandardSelection() {
+    if (this.state.game.explore) return;
     this.setState({ showSelection: 'Standard' });
   }
 
@@ -447,6 +453,7 @@ export default class GameBuilder extends React.Component {
       favorite,
       title,
       quizmaker,
+      explore,
     } = this.state.game;
 
     const {
@@ -461,7 +468,7 @@ export default class GameBuilder extends React.Component {
     let action = '';
     if (edited) {
       if (quizmaker && title === this.props.game.title) {
-        action = 'Duplicate';
+        action = 'Clone';
       } else {
         action = 'Save';
       }
@@ -558,16 +565,17 @@ export default class GameBuilder extends React.Component {
               >
                 <Text style={styles.createLabel}>{ action }</Text>
               </Touchable>
-              <Touchable
-                hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-                onPress={this.toggleFavorite}
-                style={styles.heartWrapper}
-              >
-                <View style={styles.heartContainer}>
-                  <Aicon name={'heart'} style={[styles.heartIcon, styles.heartIconBig]} />
-                  <Aicon name={'heart'} style={[styles.heartIcon, favorite && styles.colorPrimary]} />
-                </View>
-              </Touchable>
+              {!explore &&
+                <Touchable
+                  hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+                  onPress={this.toggleFavorite}
+                  style={styles.heartWrapper}
+                >
+                  <View style={styles.heartContainer}>
+                    <Aicon name={'heart'} style={[styles.heartIcon, styles.heartIconBig]} />
+                    <Aicon name={'heart'} style={[styles.heartIcon, favorite && styles.colorPrimary]} />
+                  </View>
+                </Touchable>}
               <Touchable
                 hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
                 onPress={this.toggleMenu}
@@ -681,11 +689,12 @@ export default class GameBuilder extends React.Component {
               
               {this.renderQuestions()}
 
-              <ButtonWide
-                buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
-                onPress={this.openAddQuestion}
-                label={'Add question'}
-              />
+              {!explore && 
+                <ButtonWide
+                  buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
+                  onPress={this.openAddQuestion}
+                  label={'Add question'}
+                />}
 
             </ScrollView>
 
@@ -694,6 +703,7 @@ export default class GameBuilder extends React.Component {
           <GameBuilderQuestion
             closeModal={this.closeAddQuestion}
             question={addQuestion}
+            explore={explore}
           />
 
         </Swiper>
