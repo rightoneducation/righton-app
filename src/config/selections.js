@@ -92,13 +92,13 @@ export const gradeSelection = [
   { label: 'High School', value: 'HS' },
 ];
 
-export const levelSelection = [
+export const clusterSelection = [
   { label: 'A', value: 'A' },
   { label: 'B', value: 'B' },
   { label: 'C', value: 'C' },
 ];
 
-export const difficultySelection = [
+export const standardSelection = [
   { label: '1', value: '1' },
   { label: '2', value: '2' },
   { label: '3', value: '3' },

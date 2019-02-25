@@ -14,8 +14,8 @@ const gameState = {
   description: 'string',
   grade: 'string',
   domain: 'string',
-  level: 'string',
-  difficulty: 'string',
+  cluster: 'string',
+  standard: 'string',
   quizTime: 'string',
   trickTime: 'string',
   'team#': [{ /* question schema */
@@ -76,8 +76,8 @@ const QuizMaker = {
   played: 'number', // To calculate popularity rating
   grade: 'string',
   domain: 'string',
-  level: 'string',
-  difficulty: 'string',
+  cluster: 'string',
+  standard: 'string',
   q1: {
     answer: 'string',
     question: 'string',

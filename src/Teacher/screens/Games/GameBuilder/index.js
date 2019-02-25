@@ -20,7 +20,7 @@ import InputModal from '../../../../components/InputModal';
 import Menu from '../../../../components/Menu';
 import GameShare from './GameShare';
 import SelectionModal from '../../../../components/SelectionModal';
-import { domainSelection, domainSelectionHS, difficultySelection, gradeSelection, levelSelection } from '../../../../config/selections';
+import { domainSelection, domainSelectionHS, standardSelection, gradeSelection, clusterSelection } from '../../../../config/selections';
 import GameBuilderQuestion from './GameBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
@@ -29,6 +29,7 @@ import styles from './styles';
 
 export default class GameBuilder extends React.Component {
   static propTypes = {
+    currentGame: PropTypes.number,
     handleClose: PropTypes.func.isRequired,
     handleCreateGame: PropTypes.func.isRequired,
     handlePlayGame: PropTypes.func.isRequired,
@@ -37,8 +38,8 @@ export default class GameBuilder extends React.Component {
       // banner: PropTypes.string,
       grade: PropTypes.string,
       domain: PropTypes.string,
-      level: PropTypes.string,
-      difficulty: PropTypes.string,
+      cluster: PropTypes.string,
+      standard: PropTypes.string,
       description: PropTypes.string,
       favorite: PropTypes.boolean,
       questions: PropTypes.arrayOf(PropTypes.shape({
@@ -48,12 +49,15 @@ export default class GameBuilder extends React.Component {
         question: PropTypes.string,
         uid: PropTypes.string,
       })),
+      quizmaker: PropTypes.bool,
       title: PropTypes.string,
     }),
+    TeacherID: PropTypes.string,
     visible: PropTypes.bool.isRequired,
   };
   
   static defaultProps = {
+    currentGame: null,
     handleClose: () => {},
     handleCreateGame: () => {},
     handlePlayGame: () => {},
@@ -62,13 +66,15 @@ export default class GameBuilder extends React.Component {
       // banner: '',
       grade: '',
       domain: '',
-      level: '',
-      difficulty: '',
+      cluster: '',
+      standard: '',
       description: '',
       favorite: false,
       questions: [],
+      quizmaker: false,
       title: '',
     },
+    TeacherID: '',
     visible: false,
   };
 
@@ -82,8 +88,8 @@ export default class GameBuilder extends React.Component {
         // banner: '',
         grade: null,
         domain: null,
-        level: null,
-        difficulty: null,
+        cluster: null,
+        standard: null,
         description: null,
         favorite: false,
         questions: [],
@@ -104,8 +110,8 @@ export default class GameBuilder extends React.Component {
 
     this.showGradeSelection = this.showGradeSelection.bind(this);
     this.showDomainSelection = this.showDomainSelection.bind(this);
-    this.showLevelSelection = this.showLevelSelection.bind(this);
-    this.showDifficultySelection = this.showDifficultySelection.bind(this);  
+    this.showClusterSelection = this.showClusterSelection.bind(this);
+    this.showStandardSelection = this.showStandardSelection.bind(this);  
     this.hideSelection = this.hideSelection.bind(this);
   
     this.toggleFavorite = this.toggleFavorite.bind(this);
@@ -321,13 +327,13 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  showLevelSelection() {
-    this.setState({ showSelection: 'Level' });
+  showClusterSelection() {
+    this.setState({ showSelection: 'Cluster' });
   }
 
 
-  showDifficultySelection() {
-    this.setState({ showSelection: 'Difficulty' });
+  showStandardSelection() {
+    this.setState({ showSelection: 'Standard' });
   }
 
 
@@ -350,15 +356,15 @@ export default class GameBuilder extends React.Component {
           showSelection: false,
         });
         break;
-      case 'Level': 
+      case 'Cluster': 
         this.setState({
-          game: { ...this.state.game, level: selection || this.props.game.level },
+          game: { ...this.state.game, cluster: selection || this.props.game.cluster },
           showSelection: false,
         });
         break;
-      case 'Difficulty': 
+      case 'Standard': 
         this.setState({
-          game: { ...this.state.game, difficulty: selection || this.props.game.difficulty },
+          game: { ...this.state.game, standard: selection || this.props.game.standard },
           showSelection: false,
         });
         break;
@@ -438,8 +444,8 @@ export default class GameBuilder extends React.Component {
       // banner,
       grade,
       domain,
-      level,
-      difficulty,
+      cluster,
+      standard,
       description,
       favorite,
       title,
@@ -479,11 +485,11 @@ export default class GameBuilder extends React.Component {
             selectionItems = domainSelection;
           }
           break;
-        case 'Level':
-          selectionItems = levelSelection;
+        case 'Cluster':
+          selectionItems = clusterSelection;
           break;
-        case 'Difficulty':
-          selectionItems = difficultySelection;
+        case 'Standard':
+          selectionItems = standardSelection;
           break;
         default:
           break;
@@ -629,8 +635,8 @@ export default class GameBuilder extends React.Component {
 
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Common Core Standard</Text>
-                { grade && domain && level && difficulty &&
-                  <Text style={styles.inputLabel}>{ `${grade === 'HS' ? '' : `${grade}.`}${domain}.${level}.${difficulty}` }</Text>}
+                { grade && domain && cluster && standard &&
+                  <Text style={styles.inputLabel}>{ `${grade === 'HS' ? '' : `${grade}.`}${domain}.${cluster}.${standard}` }</Text>}
                 <Touchable
                   onPress={this.showGradeSelection}
                 >
@@ -654,22 +660,22 @@ export default class GameBuilder extends React.Component {
                 </Touchable>
 
                 <Touchable
-                  onPress={this.showLevelSelection}
+                  onPress={this.showClusterSelection}
                 >
                   <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
-                    <Text style={[styles.inputButtonText, !level && styles.colorPrimary]}>
-                      { level || 'Level' }
+                    <Text style={[styles.inputButtonText, !cluster && styles.colorPrimary]}>
+                      { cluster || 'Cluster' }
                     </Text>
                     <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
                   </View>
                 </Touchable>
 
                 <Touchable
-                  onPress={this.showDifficultySelection}
+                  onPress={this.showStandardSelection}
                 >
                   <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
-                    <Text style={[styles.inputButtonText, !difficulty && styles.colorPrimary]}>
-                      { difficulty || 'Difficulty' }
+                    <Text style={[styles.inputButtonText, !standard && styles.colorPrimary]}>
+                      { standard || 'Standard' }
                     </Text>
                     <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
                   </View>
