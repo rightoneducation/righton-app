@@ -395,12 +395,9 @@ export default class GameBuilder extends React.Component {
       >
         <View style={[styles.questionContainer, elevation]}>
 
-          {question.image && question.image !== 'null' ?
-            <Image source={{ uri: question.image }} style={styles.questionImage} /> :
-            <View style={styles.questionImage}>
-              <Text style={styles.questionImageText}>RightOn!</Text>
-            </View>}
-          
+          {question.image && question.image !== 'null' &&
+            <Image source={{ uri: question.image }} style={styles.questionImage} />}
+            
           <View style={styles.questionTextContainer}>
             <Text style={styles.questionQuestion}>{`Q: ${question.question}`}</Text>
             <Text style={[styles.questionAnswer, styles.colorPrimary]}>{`A: ${question.answer}`}</Text>
