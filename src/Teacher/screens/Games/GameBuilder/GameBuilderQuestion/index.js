@@ -30,6 +30,7 @@ export default class GameBuilderQuestion extends React.Component {
       image: PropTypes.string,
       instructions: PropTypes.arrayOf(PropTypes.string),
       question: PropTypes.string,
+      uid: PropTypes.string,
     }),
     visible: PropTypes.bool.isRequired,
   }
@@ -41,7 +42,7 @@ export default class GameBuilderQuestion extends React.Component {
       image: '',
       instructions: [],
       question: '',
-      uid: '',
+      uid: undefined,
     },
     visible: false,
   }
