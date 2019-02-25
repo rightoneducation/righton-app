@@ -7,9 +7,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { scale, ScaledSheet } from 'react-native-size-matters';
-import Aicon from 'react-native-vector-icons/FontAwesome';
 import { shareGameWithTeacher } from '../../../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
-import Touchable from 'react-native-platform-touchable';
+import ButtonBack from '../../../../../components/ButtonBack';
 import ButtonWide from '../../../../../components/ButtonWide';
 import { colors, deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 import debug from '../../../../../utils/debug';
@@ -72,14 +71,10 @@ export default class GameShare extends React.PureComponent {
       >
         <View style={styles.container}>
 
-          <Touchable
-            activeOpacity={0.8}
-            hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
-            style={styles.closeButton}
+          <ButtonBack
+            iconName={'close'}
             onPress={handleClose}
-          >
-            <Aicon name={'close'} style={styles.closeIcon} />
-          </Touchable>
+          />
 
           <Text style={styles.label}>Share game with teacher</Text>
 
