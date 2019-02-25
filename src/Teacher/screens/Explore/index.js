@@ -167,8 +167,8 @@ class Explore extends React.PureComponent {
               </View>
             </View>
             <View style={styles.dataTextContainer}>
-              <Text style={styles.dataTextTitle}>{data.title}</Text>
-              <Text style={styles.dataTextDescription}>{data.description}</Text>
+              <Text numberOfLines={1} style={styles.dataTextTitle}>{data.title}</Text>
+              <Text numberOfLines={2} style={styles.dataTextDescription}>{data.description}</Text>
               <Text style={[styles.dataTextDescription, styles.italic]}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.domain}.${data.cluster}.${data.standard}`}</Text>
             </View>
           </View>
