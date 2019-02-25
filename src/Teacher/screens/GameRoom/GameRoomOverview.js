@@ -62,7 +62,7 @@ export default function GameRoomOverview({
           position: 'relative',
           marginVertical: 15,
         }}
-        label={nextTeam ? 'Begin Quizzing' : 'Close Gameroom'}
+        label={nextTeam ? 'Start Game' : 'Close Gameroom'}
         onPress={nextTeam ? handleStartRandomGame : handleEndGame}
       />
 
