@@ -210,7 +210,11 @@ class Explore extends React.PureComponent {
           navigation={navigation}
           parent={'Explore'}
         />
-        <ScrollView contentContainerStyle={styles.scrollview}>
+        <ScrollView
+          contentContainerStyle={styles.scrollview}
+          indicatorStyle={'white'}
+          showsVerticalScrollIndicator
+        >
           {this.renderData(data)}
         </ScrollView>
       </View>
@@ -278,7 +282,7 @@ const styles = ScaledSheet.create({
   scrollview: {
     alignItems: 'center',
     backgroundColor: colors.dark,
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: '15@s',
     paddingVertical: '25@vs',
   },
