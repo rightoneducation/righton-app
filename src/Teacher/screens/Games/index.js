@@ -254,7 +254,8 @@ class Games extends React.Component {
 
   handlePlayGame(e, game) {
     const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
-    const { handleSetAppState, IOTSubscribeToTopic, navigation } = this.props.screenProps;
+    const { handleSetAppState, IOTSubscribeToTopic } = this.props.screenProps;
+    const { navigation } = this.props;
 
     playGame(
       game,
