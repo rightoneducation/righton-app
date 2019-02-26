@@ -159,19 +159,19 @@ class Explore extends React.PureComponent {
         key={data.title || data.description}
         onPress={() => this.handleViewGame(data)}
       >
-        <View style={[styles.dataContainer, data.banner && { flexDirection: 'column', height: 300 }]}>
-          <View style={styles.dataBody}>
+        <View style={[styles.dataContainer, { flexDirection: 'column', height: 150 }]}>
+          {/* <View style={styles.dataBody}>
             <View style={styles.iconContainer}>
               <View style={styles.iconTextContainer}>
                 <Text style={styles.iconText}>RightOn!</Text>
               </View>
-            </View>
-            <View style={styles.dataTextContainer}>
-              <Text numberOfLines={1} style={styles.dataTextTitle}>{data.title}</Text>
-              <Text numberOfLines={2} style={styles.dataTextDescription}>{data.description}</Text>
-              <Text style={[styles.dataTextDescription, styles.italic]}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.domain}.${data.cluster}.${data.standard}`}</Text>
-            </View>
+            </View> */}
+          <View style={styles.dataTextContainer}>
+            <Text numberOfLines={2} style={styles.dataTextTitle}>{data.title}</Text>
+            <Text numberOfLines={2} style={styles.dataTextDescription}>{data.description}</Text>
+            <Text style={[styles.dataTextDescription, styles.ccs, styles.italic]}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.domain}.${data.cluster}.${data.standard}`}</Text>
           </View>
+          {/* </View> */}
         </View>
       </Touchable>
     );
@@ -228,14 +228,19 @@ const styles = ScaledSheet.create({
     height: '200@vs',
     width: deviceWidth - scale(30),
   },
+  ccs: {
+    bottom: 15,
+    position: 'absolute',
+    right: 15,
+  },
   container: {
     flex: 1,
   },
-  dataBody: {
-    flex: 1,
-    flexDirection: 'row',
-    height: '100@vs',
-  },
+  // dataBody: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+  //   height: '100@vs',
+  // },
   dataContainer: {
     flexDirection: 'row',
     height: '100@vs',
@@ -245,7 +250,7 @@ const styles = ScaledSheet.create({
   dataTextContainer: {
     backgroundColor: colors.white,
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     padding: '10@s',
   },
   dataTextDescription: {
@@ -257,25 +262,25 @@ const styles = ScaledSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
   },
-  icon: {
-    color: colors.white,
-    fontSize: '35@ms0.2',
-  },
-  iconContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.lightGray,
-    height: '100@vs',
-    justifyContent: 'center',
-    width: '100@vs',
-  },
-  iconText: {
-    color: colors.white,
-    fontSize: fonts.small,
-    fontStyle: 'italic',
-  },
-  iconTextContainer: {
-    flexDirection: 'row',
-  },
+  // icon: {
+  //   color: colors.white,
+  //   fontSize: '35@ms0.2',
+  // },
+  // iconContainer: {
+  //   alignItems: 'center',
+  //   backgroundColor: colors.lightGray,
+  //   height: '100@vs',
+  //   justifyContent: 'center',
+  //   width: '100@vs',
+  // },
+  // iconText: {
+  //   color: colors.white,
+  //   fontSize: fonts.small,
+  //   fontStyle: 'italic',
+  // },
+  // iconTextContainer: {
+  //   flexDirection: 'row',
+  // },
   italic: {
     fontStyle: 'italic',
   },
