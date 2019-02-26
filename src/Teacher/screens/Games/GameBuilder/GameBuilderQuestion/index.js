@@ -420,6 +420,7 @@ export default class GameBuilderQuestion extends React.Component {
                   parentStyles.row,
                   parentStyles.inputPadding,
                   parentStyles.justifyStart,
+                  parentStyles.alignStart
                 ]}
               >
                 <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>

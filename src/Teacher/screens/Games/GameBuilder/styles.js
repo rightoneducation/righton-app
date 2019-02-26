@@ -3,6 +3,9 @@ import { colors, deviceWidth, fonts } from '../../../../utils/theme';
 
 
 export default ScaledSheet.create({
+  alignStart: {
+    alignItems: 'flex-start',
+  },
   bannerAddContainer: {
     alignItems: 'flex-start',
     backgroundColor: colors.white,
