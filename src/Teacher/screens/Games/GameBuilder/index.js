@@ -201,6 +201,7 @@ export default class GameBuilder extends React.Component {
   
   createGame() {
     const { game } = this.state;
+    const { handleCreateGame } = this.props;
     if (this.props.currentGame !== null || game.GameID) {
       const saveGame = { ...game };
       if (saveGame.explore) {
@@ -209,17 +210,16 @@ export default class GameBuilder extends React.Component {
       if (this.props.game.quizmaker && this.state.edited) {
         delete saveGame.quizmaker;
         saveGame.GameID = `${Math.random()}`;
-        if (this.state.game.title === this.props.game.title) {
-          saveGame.title = `Clone of ${this.state.game.title}`;
-          this.props.handleCreateGame(saveGame, true);
-        } else {
-          this.props.handleCreateGame(saveGame, true);
-        }
+        handleCreateGame(saveGame);
+      } else if (this.props.game.explore) {
+        // Clone game from Explore
+        saveGame.title = `Clone of ${saveGame.title}`;
+        handleCreateGame(saveGame);
       } else {
-        this.props.handleCreateGame(saveGame);
+        handleCreateGame(saveGame);
       }
     } else {
-      this.props.handleCreateGame({ ...game, GameID: `${Math.random()}` });
+      handleCreateGame({ ...game, GameID: `${Math.random()}` });
     }
   }
 
@@ -452,7 +452,6 @@ export default class GameBuilder extends React.Component {
       description,
       favorite,
       title,
-      quizmaker,
       explore,
     } = this.state.game;
 
@@ -466,12 +465,10 @@ export default class GameBuilder extends React.Component {
     } = this.state;
 
     let action = '';
-    if (edited) {
-      if (quizmaker && title === this.props.game.title) {
-        action = 'Clone';
-      } else {
-        action = 'Save';
-      }
+    if (explore) {
+      action = 'Clone';
+    } else if (edited) {
+      action = 'Save';
     }
 
     let selectionItems = [];
@@ -561,7 +558,7 @@ export default class GameBuilder extends React.Component {
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 onPress={this.createGame}
-                style={styles.createContainer}
+                style={[styles.createContainer, action === 'Clone' && styles.heartWrapper]}
               >
                 <Text style={styles.createLabel}>{ action }</Text>
               </Touchable>
