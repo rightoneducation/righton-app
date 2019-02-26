@@ -95,6 +95,9 @@ export default ScaledSheet.create({
     position: 'absolute',
     right: '60@ms',
   },
+  inactive: {
+    backgroundColor: colors.lightGray,
+  },
   inputButton: {
     backgroundColor: colors.white,
     borderColor: colors.dark,
