@@ -54,7 +54,7 @@ export default class MainHeader extends React.Component {
           activeOpacity={0.8}
           onPress={() => { /* TODO */ }}
         >
-          <Aicon name={'search'} style={styles.headerSearchIcon} />
+          <Aicon name={'sort'} style={styles.headerSearchIcon} />
         </Touchable>
       </View>
     );
