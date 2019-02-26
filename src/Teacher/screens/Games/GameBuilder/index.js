@@ -568,7 +568,7 @@ export default class GameBuilder extends React.Component {
                   <Aicon name={'close'} style={styles.closeIcon} />
                 </View>
               </Touchable>
-              <Text style={styles.title}>Game Builder</Text>
+              {!explore && <Text style={styles.title}>Game Builder</Text>}
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 onPress={this.createGame}
