@@ -326,19 +326,19 @@ export default class GameBuilder extends React.Component {
 
 
   showDomainSelection() {
-    if (this.state.game.explore) return;
+    if (this.state.game.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Domain' });
   }
 
 
   showClusterSelection() {
-    if (this.state.game.explore) return;
+    if (this.state.game.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Cluster' });
   }
 
 
   showStandardSelection() {
-    if (this.state.game.explore) return;
+    if (this.state.game.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Standard' });
   }
 
@@ -351,10 +351,17 @@ export default class GameBuilder extends React.Component {
     const { showSelection } = this.state;
     switch (showSelection) {
       case 'Grade': 
-        this.setState({
-          game: { ...this.state.game, grade: selection || this.props.game.grade },
-          showSelection: false,
-        });
+        if (selection === 'General') {
+          this.setState({
+            game: { ...this.state.game, grade: 'General', domain: null, cluster: null, standard: null },
+            showSelection: false,
+          });
+        } else {
+          this.setState({
+            game: { ...this.state.game, grade: selection || this.props.game.grade },
+            showSelection: false,
+          });
+        }
         break;
       case 'Domain': 
         this.setState({
@@ -497,6 +504,13 @@ export default class GameBuilder extends React.Component {
       }
     }
 
+    let ccs = '';
+    if (grade === 'General') {
+      ccs = 'General';
+    } else if (grade && domain && cluster && standard) {
+      ccs = `${grade === 'HS' ? '' : `${grade}.`}${domain}.${cluster}.${standard}`;
+    }
+
     return (
       <Modal
         animationType={'slide'}
@@ -637,8 +651,7 @@ export default class GameBuilder extends React.Component {
 
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Common Core Standard</Text>
-                { grade && domain && cluster && standard &&
-                  <Text style={styles.inputLabel}>{ `${grade === 'HS' ? '' : `${grade}.`}${domain}.${cluster}.${standard}` }</Text>}
+                <Text style={styles.inputLabel}>{ ccs }</Text>
                 <Touchable
                   onPress={this.showGradeSelection}
                 >
@@ -646,40 +659,40 @@ export default class GameBuilder extends React.Component {
                     <Text style={[styles.inputButtonText, !grade && styles.colorPrimary]}>
                       { grade || 'Grade' }
                     </Text>
-                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                    {!explore && <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />}
                   </View>
                 </Touchable>
 
                 <Touchable
                   onPress={this.showDomainSelection}
                 >
-                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween, grade === 'General' && styles.inactive]}>
                     <Text style={[styles.inputButtonText, !domain && styles.colorPrimary]}>
                       { domain || 'Domain' }
                     </Text>
-                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                    {!explore && <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />}
                   </View>
                 </Touchable>
 
                 <Touchable
                   onPress={this.showClusterSelection}
                 >
-                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween, grade === 'General' && styles.inactive]}>
                     <Text style={[styles.inputButtonText, !cluster && styles.colorPrimary]}>
                       { cluster || 'Cluster' }
                     </Text>
-                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                    {!explore && <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />}
                   </View>
                 </Touchable>
 
                 <Touchable
                   onPress={this.showStandardSelection}
                 >
-                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween]}>
+                  <View style={[styles.inputButton, elevation, styles.row, styles.spaceBetween, grade === 'General' && styles.inactive]}>
                     <Text style={[styles.inputButtonText, !standard && styles.colorPrimary]}>
                       { standard || 'Standard' }
                     </Text>
-                    <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />
+                    {!explore && <Aicon name={'caret-down'} style={[styles.caret, styles.colorPrimary]} />}
                   </View>
                 </Touchable>
               </View>
