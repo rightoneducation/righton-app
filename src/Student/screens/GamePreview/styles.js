@@ -1,5 +1,5 @@
-import { ScaledSheet, verticalScale } from 'react-native-size-matters';
-import { colors, fonts } from '../../../utils/theme';
+import { ScaledSheet, moderateScale, verticalScale } from 'react-native-size-matters';
+import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
 export default ScaledSheet.create({
   arrow: {
@@ -78,10 +78,12 @@ export default ScaledSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.darkGray,
-    flex: 1,
+    flexGrow: 1,
   },
   image: {
-
+    height: '250@ms',
+    marginVertical: '15@ms',
+    width: deviceWidth - moderateScale(50),
   },
   marginBottom: {
     marginBottom: '15@vs',
