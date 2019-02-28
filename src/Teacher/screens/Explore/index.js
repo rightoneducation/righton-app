@@ -132,7 +132,6 @@ class Explore extends React.PureComponent {
     parsedGame.standard = data.standard;
     parsedGame.questions = [];
     parsedGame.quizmaker = true;
-    parsedGame.explore = true; // This let's us know that the game is viewed from Explore tab.
     let questionIndex = 1;
     while (data[`q${questionIndex}`]) {
       parsedGame.questions.push(data[`q${questionIndex}`]);
@@ -186,6 +185,7 @@ class Explore extends React.PureComponent {
     if (viewGame) {
       return (
         <GameBuilder
+          explore // This let's us know that the game is viewed from Explore tab.
           handleClose={this.handleCloseGame}
           handleCreateGame={this.handleCreateGame}
           handlePlayGame={this.handlePlayGame}
