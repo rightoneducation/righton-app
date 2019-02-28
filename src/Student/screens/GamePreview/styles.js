@@ -81,6 +81,9 @@ export default ScaledSheet.create({
     backgroundColor: colors.darkGray,
     flexGrow: 1,
   },
+  extraPaddingBottom: {
+    paddingBottom: '140@vs',
+  },
   image: {
     height: '250@ms',
     marginVertical: '15@ms',
