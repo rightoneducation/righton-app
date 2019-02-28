@@ -60,6 +60,7 @@ export default class GameQuiz extends React.Component {
       timeLeft: props.screenProps.gameState.quizTime && props.screenProps.gameState.quizTime !== '0:00' ?
         props.screenProps.gameState.quizTime : 'No time limit',
       teamRef: (props.screenProps.gameState.state && props.screenProps.gameState.state.teamRef) || 'team0',
+      published: false,
     };
 
     this.timerInterval = undefined;
@@ -95,7 +96,7 @@ export default class GameQuiz extends React.Component {
         nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
         navigation.navigate('GameReasons');
       } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
-        nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
+        nextProps.screenProps.gameState.state.teamRef !== this.state.teamRef) {
         this.resetState(
           nextProps.screenProps.gameState.state.teamRef,
           // nextProps.screenProps.gameState.state.time,
@@ -124,6 +125,7 @@ export default class GameQuiz extends React.Component {
       timeLeft: this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00' ?
         this.props.screenProps.gameState.quizTime : 'No time limit',
       teamRef,
+      published: false,
     }, () => {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     });
@@ -134,7 +136,7 @@ export default class GameQuiz extends React.Component {
     const { selectedChoice } = this.state;
     const { gameState, handleSetAppState } = this.props.screenProps;
     const { teamRef } = gameState.state;
-    if (gameState[teamRef].choices[selectedChoice].correct) {
+    if (selectedChoice !== null && gameState[teamRef].choices[selectedChoice].correct) {
       handleSetAppState('points', 50);
       return 50;
     }
@@ -163,8 +165,10 @@ export default class GameQuiz extends React.Component {
 
 
   publishChoice() {
-    const { selectedChoice } = this.state;
-    if (typeof selectedChoice !== 'number') return;
+    const { published, selectedChoice } = this.state;
+    if (published) return;
+    this.setState({ published: true });
+    if (selectedChoice === null) return;
     const { team } = this.props.screenProps;
     const { teamRef } = this.props.screenProps.gameState.state;
     const message = {
