@@ -44,17 +44,6 @@ export default class GameReasons extends React.PureComponent {
     };
 
     this.timerInterval = undefined;
-    this.countdownTime = this.countdownTime.bind(this);
-
-    this.onTrick0Layout = this.onTrick0Layout.bind(this);
-    this.handleTrick0Ref = this.handleTrick0Ref.bind(this);
-    this.onTrick1Layout = this.onTrick1Layout.bind(this);
-    this.handleTrick1Ref = this.handleTrick1Ref.bind(this);
-    this.onTrick2Layout = this.onTrick2Layout.bind(this);
-    this.handleTrick2Ref = this.handleTrick2Ref.bind(this);
-
-    this.handleInputModal = this.handleInputModal.bind(this);
-    this.closeInputModal = this.closeInputModal.bind(this);
   }
 
 
@@ -142,22 +131,22 @@ export default class GameReasons extends React.PureComponent {
   }
 
 
-  handleTrick0Ref(ref) {
+  handleTrick0Ref = (ref) => {
     this.trick0Ref = ref;
   }
 
 
-  handleTrick1Ref(ref) {
+  handleTrick1Ref = (ref) => {
     this.trick1Ref = ref;
   }
 
 
-  handleTrick2Ref(ref) {
+  handleTrick2Ref = (ref) => {
     this.trick2Ref = ref;
   }
 
 
-  countdownTime() {
+  countdownTime = () => {
     const { timeLeft } = this.state;
     const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
     const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
@@ -176,7 +165,7 @@ export default class GameReasons extends React.PureComponent {
   }
 
 
-  closeInputModal(input, inputLabel) {
+  closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
       case 'trick0':
         this.setState({ trick0Reason: input, showInput: false });
@@ -193,7 +182,7 @@ export default class GameReasons extends React.PureComponent {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+  handleInputModal = (inputLabel, placeholder, maxLength, input, keyboardType = 'default') => {
     if (inputLabel === 'trick0') {
       this.onTrick0Layout();
     } else if (inputLabel === 'trick1') {
@@ -223,19 +212,13 @@ export default class GameReasons extends React.PureComponent {
   }
 
 
-  handleTrick0() {
-    this.setState({ currentTrick: 0 });
-  }
+  handleTrick0 = () => this.setState({ currentTrick: 0 });
 
 
-  handleTrick1() {
-    this.setState({ currentTrick: 1 });
-  }
+  handleTrick1 = () => this.setState({ currentTrick: 1 });
 
 
-  handleTrick2() {
-    this.setState({ currentTrick: 2 });
-  }
+  handleTrick2 = () => this.setState({ currentTrick: 2 });
 
 
   renderQuestion() {

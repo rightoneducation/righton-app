@@ -65,31 +65,13 @@ class SignUp extends React.Component {
     };
 
     this.baseState = this.state;
-
     this.emailRef = null;
     this.passwordRef = null;
     this.retypeRef = null;
-    this.handleEmailRef = this.handleEmailRef.bind(this);
-    this.handlePasswordRef = this.handlePasswordRef.bind(this);
-    this.handleRetypeRef = this.handleRetypeRef.bind(this);
-    this.onEmailLayout = this.onEmailLayout.bind(this);
-    this.onPasswordLayout = this.onPasswordLayout.bind(this);
-    this.onRetypeLayout = this.onRetypeLayout.bind(this);
-
-    this.closeInputModal = this.closeInputModal.bind(this);
-    this.handleInputModal = this.handleInputModal.bind(this);
-    
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-
-    this.handleMFAValidate = this.handleMFAValidate.bind(this);
-    this.handleMFASuccess = this.handleMFASuccess.bind(this);
-    this.handleMFACancel = this.handleMFACancel.bind(this);
-
-    this.handleSignUp = this.handleSignUp.bind(this);
   }
 
 
-  onEmailLayout() {
+  onEmailLayout = () => {
     if (this.emailRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.emailRef),
@@ -102,7 +84,7 @@ class SignUp extends React.Component {
   }
 
 
-  onPasswordLayout() {
+  onPasswordLayout = () => {
     if (this.passwordRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.passwordRef),
@@ -115,7 +97,7 @@ class SignUp extends React.Component {
   }
 
 
-  onRetypeLayout() {
+  onRetypeLayout = () => {
     if (this.retypeRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.retypeRef),
@@ -128,7 +110,7 @@ class SignUp extends React.Component {
   }
 
 
-  onSignUp() {
+  onSignUp = () => {
     // this.setState(this.baseState);
 
     if (this.props.screenProps.deviceSettings.role === 'student') {
@@ -138,7 +120,7 @@ class SignUp extends React.Component {
     }
   }
 
-  async handleSignUp() {
+  handleSignUp = () => {
     this.setState({ buttonActivity: true });
     const allReqsPass = this.checkRequirements();
     if (!allReqsPass) {
@@ -237,7 +219,7 @@ class SignUp extends React.Component {
   }
 
 
-  handleConfirmedSignUp(accountType, username) {
+  handleConfirmedSignUp = (accountType, username) => {
     const deviceSettings = {};
     const account = {};
     deviceSettings.username = username;
@@ -296,22 +278,22 @@ class SignUp extends React.Component {
   }
 
 
-  handleEmailRef(ref) {
+  handleEmailRef = (ref) => {
     this.emailRef = ref;
   }
 
   
-  handlePasswordRef(ref) {
+  handlePasswordRef = (ref) => {
     this.passwordRef = ref;
   }
 
 
-  handleRetypeRef(ref) {
+  handleRetypeRef = (ref) => {
     this.retypeRef = ref;
   }
 
 
-  checkRequirements() {
+  checkRequirements = () => {
     const emailPassed = this.handleEmailSubmit();
     if (!emailPassed) return false;
     const passwordPassed = this.handlePasswordSubmit();
@@ -322,7 +304,7 @@ class SignUp extends React.Component {
   }
 
 
-  async handleMFAValidate(code = '') {
+  handleMFAValidate = async (code = '') => {
     const { email } = this.state;
     const username = email.toLowerCase();
     try {
@@ -354,12 +336,12 @@ class SignUp extends React.Component {
   }
 
 
-  handleMFACancel() {
+  handleMFACancel = () => {
     this.setState({ buttonActivity: false, showMFAPrompt: false });
   }
 
 
-  handleMFASuccess() {
+  handleMFASuccess = () => {
     this.setState({
       showMFAPrompt: false,
       messageProps: {
@@ -374,7 +356,7 @@ class SignUp extends React.Component {
   }
 
 
-  closeInputModal(input, inputLabel) {
+  closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
       case 'Your email address': {
         this.setState({ email: input, showInput: false }, () => {
@@ -408,7 +390,7 @@ class SignUp extends React.Component {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+  handleInputModal = (inputLabel, placeholder, maxLength, input, keyboardType = 'default') => {
     if (inputLabel === 'Your email address') {
       this.onEmailLayout();
     } else if (inputLabel === 'Password') {
@@ -439,17 +421,17 @@ class SignUp extends React.Component {
   }
 
 
-  handleEmailInput(email) {
+  handleEmailInput = (email) => {
     this.setState({ email });
   }
 
 
-  handleEmailBlur() {
+  handleEmailBlur = () => {
     this.handleEmailSubmit();
   }
 
 
-  handleEmailSubmit() {
+  handleEmailSubmit = () => {
     const { email } = this.state;
     if (!email.includes('@') || !email.includes('.')) {
       this.setState({
@@ -468,7 +450,7 @@ class SignUp extends React.Component {
   }
 
 
-  handlePasswordSubmit() {
+  handlePasswordSubmit = () => {
     const { password } = this.state;
     if (password.length < 8) {
       this.setState({
@@ -487,7 +469,7 @@ class SignUp extends React.Component {
   }
 
 
-  handleRetypePasswordSubmit() {
+  handleRetypePasswordSubmit = () => {
     const { password, retypePassword } = this.state;
     if (password !== retypePassword) {
       this.setState({
@@ -506,9 +488,7 @@ class SignUp extends React.Component {
   }
 
 
-  handleCloseMessage() {
-    this.setState({ messageProps: null });
-  }
+  handleCloseMessage = () => this.setState({ messageProps: null });
 
 
   render() {

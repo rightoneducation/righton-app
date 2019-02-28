@@ -27,14 +27,8 @@ export default class ButtonBack extends React.PureComponent {
     onPress: null,
   }
 
-  constructor(props) {
-    super(props);
 
-    this.handlePress = this.handlePress.bind(this);
-  }
-
-
-  handlePress() {
+  handlePress = () => {
     Keyboard.dismiss();
     if (this.props.onPress) {
       this.props.onPress();

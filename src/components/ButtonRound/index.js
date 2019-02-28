@@ -14,8 +14,6 @@ export default class ButtonRound extends React.PureComponent {
     };
 
     this.animatedRotation = new Animated.Value(0);
-
-    this.handleAnimatedPress = this.handleAnimatedPress.bind(this);
   }
 
 
@@ -27,7 +25,7 @@ export default class ButtonRound extends React.PureComponent {
   }
 
 
-  handleAnimatedPress() {
+  handleAnimatedPress = () => {
     Keyboard.dismiss();
     if (this.props.animated) {
       Animated.timing(

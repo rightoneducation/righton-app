@@ -25,20 +25,13 @@ export default class OnboardTeacherRouter extends React.PureComponent {
     },
   }
   
-  constructor(props) {
-    super(props);
-    
-    this.handleTeacherApp = this.handleTeacherApp.bind(this);
-    this.handleTeacherOnboard = this.handleTeacherOnboard.bind(this);
-  }
 
-
-  handleTeacherOnboard() { 
+  handleTeacherOnboard = () => { 
     this.props.navigation.navigate('OnboardAccount');
   }
 
 
-  handleTeacherApp() {
+  handleTeacherApp = () => {
     this.props.screenProps.handleSetAppState('deviceSettings', {
       role: 'teacher',
       quizTime: '1:00',

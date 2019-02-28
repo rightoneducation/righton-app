@@ -36,7 +36,6 @@ export default class GameQuiz extends React.Component {
     };
 
     this.timerInterval = undefined;
-    this.countdownTime = this.countdownTime.bind(this);
   }
 
 
@@ -116,7 +115,7 @@ export default class GameQuiz extends React.Component {
   }
 
   
-  countdownTime() {
+  countdownTime = () => {
     const { timeLeft } = this.state;
     const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
     const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);

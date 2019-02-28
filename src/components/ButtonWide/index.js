@@ -24,15 +24,9 @@ export default class ButtonWide extends React.PureComponent {
     ripple: '',
     textStyles: {},
   };
-  
-  constructor(props) {
-    super(props);
-
-    this.handlePress = this.handlePress.bind(this);
-  }
 
 
-  handlePress() {
+  handlePress = () => {
     Keyboard.dismiss();
     this.props.onPress();
   }

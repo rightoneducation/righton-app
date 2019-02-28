@@ -35,10 +35,6 @@ class Explore extends React.PureComponent {
       data: [],
       viewGame: null,
     };
-
-    this.handleCloseGame = this.handleCloseGame.bind(this);
-    this.handleCreateGame = this.handleCreateGame.bind(this);
-    this.handlePlayGame = this.handlePlayGame.bind(this);
   }
 
 

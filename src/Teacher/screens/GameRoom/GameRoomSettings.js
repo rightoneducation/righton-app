@@ -47,15 +47,10 @@ export default class GameRoomStart extends React.Component {
     };
 
     this.setTimer = null;
-    
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    this.handleTimeSelection = this.handleTimeSelection.bind(this);
-    this.handleOpenTimeSelection = this.handleOpenTimeSelection.bind(this);
-    this.handleSaveSettings = this.handleSaveSettings.bind(this);
   }
 
 
-  handleTimeSelection(time) {
+  handleTimeSelection = (time) => {
     if (typeof time === 'object' || !time) {
       this.setState({ showSelection: false });
     } else if (this.setTimer === 'quizTime') {
@@ -67,13 +62,13 @@ export default class GameRoomStart extends React.Component {
   }
 
 
-  handleOpenTimeSelection(timer) {
+  handleOpenTimeSelection = (timer) => {
     this.setTimer = timer;
     this.setState({ showSelection: true });
   }
 
 
-  handleSaveSettings() {
+  handleSaveSettings = () => {
     const { quizTime, trickTime } = this.state;
     const { gameState, handleBackFromChild, numberOfPlayers } = this.props;
     if (quizTime !== gameState.quizTime ||
@@ -110,9 +105,7 @@ export default class GameRoomStart extends React.Component {
   }
 
 
-  handleCloseMessage() {
-    this.setState({ messageProps: {} });
-  }
+  handleCloseMessage = () => this.setState({ messageProps: {} });
 
   
   render() {

@@ -56,14 +56,10 @@ export default class GameRoomResults extends React.Component {
     this.thirdChoice = new Animated.Value(0);
     this.fourthChoice = new Animated.Value(0);
     this.noAnswer = new Animated.Value(0);
-
     this.percentOpacity = new Animated.Value(0);
 
     this.choicesRef = undefined;
     this.choicesWidth = deviceWidth;
-
-    this.handleChoicesRef = this.handleChoicesRef.bind(this);
-    this.onChoicesLayout = this.onChoicesLayout.bind(this);
   }
   
 
@@ -72,7 +68,7 @@ export default class GameRoomResults extends React.Component {
   }
 
 
-  onChoicesLayout() {
+  onChoicesLayout = () => {
     if (this.choicesRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.choicesRef),
@@ -84,7 +80,7 @@ export default class GameRoomResults extends React.Component {
   }
 
 
-  handleChoicesRef(ref) {
+  handleChoicesRef = (ref) => {
     this.choicesRef = ref;
   }
 
@@ -148,7 +144,8 @@ export default class GameRoomResults extends React.Component {
       if (noAnswerCount) {
         noAnswerWidth = (noAnswerCount / playersWhoVoted) * this.choicesWidth;
         noAnswerPercent = (noAnswerCount / playersWhoVoted) * 100;
-        this.setState({ noAnswerPercent });
+        this.setState({ noAnswerPercent }); 
+        // TODO Delay rendering the actual percentage with the rest
       }
   
       Animated.parallel([

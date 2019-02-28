@@ -58,29 +58,12 @@ class LogIn extends React.Component {
       password: '',
       showInput: false,
     };
-
+    
     this.baseState = this.state;
-
-    
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    
-    this.emailRef = undefined;
-    this.passwordRef = undefined;
-    this.handleEmailRef = this.handleEmailRef.bind(this);
-    this.onEmailLayout = this.onEmailLayout.bind(this);
-    this.handlePasswordRef = this.handlePasswordRef.bind(this);
-    this.onPasswordLayout = this.onPasswordLayout.bind(this);
-
-    this.closeInputModal = this.closeInputModal.bind(this);
-    this.handleInputModal = this.handleInputModal.bind(this);
-
-    this.doLogin = this.doLogin.bind(this);
-    this.onLogIn = this.onLogIn.bind(this);
-    this.handleLogInClick = this.handleLogInClick.bind(this);
   }
 
 
-  async onLogIn() {
+  onLogIn = async () => {
     this.setState(this.baseState, () => {
       if (this.props.screenProps.deviceSettings.role === 'student') {
         this.props.navigation.navigate('StudentApp');        
@@ -91,7 +74,7 @@ class LogIn extends React.Component {
   }
 
 
-  onEmailLayout() {
+  onEmailLayout = () => {
     if (this.emailRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.emailRef),
@@ -104,7 +87,7 @@ class LogIn extends React.Component {
   }
 
 
-  onPasswordLayout() {
+  onPasswordLayout = () => {
     if (this.passwordRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.passwordRef),
@@ -117,17 +100,17 @@ class LogIn extends React.Component {
   }
 
 
-  handlePasswordRef(ref) {
+  handlePasswordRef = (ref) => {
     this.passwordRef = ref;
   }
 
 
-  handleEmailRef(ref) {
+  handleEmailRef = (ref) => {
     this.emailRef = ref;
   }
 
 
-  async doLogin() {
+  doLogin = async () => {
     const allReqsPass = this.checkRequirements();
     if (!allReqsPass) {
       this.setState({ buttonActivity: false });
@@ -185,7 +168,7 @@ class LogIn extends React.Component {
   }
 
 
-  handleSignIn(session, role) {
+  handleSignIn = (session, role) => {
     const { deviceSettings, handleSetAppState } = this.props.screenProps;
     handleSetAppState('session', session);
     if (session && (session.username || (session.idToken && session.idToken.payload))) {
@@ -200,7 +183,7 @@ class LogIn extends React.Component {
   }
 
 
-  hydrateNewStudentData(StudentID) {
+  hydrateNewStudentData = (StudentID) => {
     const { handleSetAppState } = this.props.screenProps;
     getStudentAccountFromDynamoDB(
       StudentID,
@@ -216,7 +199,7 @@ class LogIn extends React.Component {
   }
 
 
-  hydrateNewTeacherData(TeacherID) {
+  hydrateNewTeacherData = (TeacherID) => {
     const { handleSetAppState } = this.props.screenProps;
     getItemFromTeacherAccountFromDynamoDB(
       TeacherID,
@@ -233,7 +216,7 @@ class LogIn extends React.Component {
   }
 
 
-  resetDeviceSettings(accountType, username) {
+  resetDeviceSettings = (accountType, username) => {
     const { deviceSettings, handleSetAppState } = this.props.screenProps;
     const updatedDeviceSettings = {};
     updatedDeviceSettings.username = username;
@@ -246,7 +229,7 @@ class LogIn extends React.Component {
   }
 
 
-  checkRequirements() {
+  checkRequirements = () => {
     const { email, password } = this.state;
 
     if (!email.includes('@') || !email.includes('.')) {
@@ -280,7 +263,7 @@ class LogIn extends React.Component {
   }
 
 
-  closeInputModal(input, inputLabel) {
+  closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
       case 'Your email address':
         this.setState({ email: input, showInput: false });
@@ -299,7 +282,7 @@ class LogIn extends React.Component {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
+  handleInputModal = (inputLabel, placeholder, maxLength, input, keyboardType = 'default') => {
     if (inputLabel === 'Your email address') {
       this.onEmailLayout();
     } else if (inputLabel === 'Password') {
@@ -327,14 +310,14 @@ class LogIn extends React.Component {
   }
 
 
-  handleLogInClick() {
+  handleLogInClick = () => {
     this.setState({ buttonActivity: true });
 
     setTimeout(this.doLogin, 0);
   }
 
 
-  handleCloseMessage() {
+  handleCloseMessage = () => {
     this.setState({ messageProps: null });
   }
 

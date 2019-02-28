@@ -55,12 +55,6 @@ export default class GamePreview extends React.PureComponent {
     };
 
     this.timerInterval = undefined;
-    this.countdownTime = this.countdownTime.bind(this);
-
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    this.closeInputModal = this.closeInputModal.bind(this);
-    this.handleInputModal = this.handleInputModal.bind(this);
-    this.toggleInstructions = this.toggleInstructions.bind(this);
   }
 
 
@@ -114,7 +108,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  setupInstructions() {
+  setupInstructions = () => {
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
     const { answer, instructions } = gameState[teamRef];
@@ -128,12 +122,12 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  startAnimation() {
+  startAnimation = () => {
     this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
   }
   
 
-  countdownTime() {
+  countdownTime = () => {
     const { timeLeft } = this.state;
     const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
     const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
@@ -152,7 +146,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  toggleInstructions() {
+  toggleInstructions = () => {
     const { showInstructions } = this.state;
     if (showInstructions) {
       this.setState({ showInstructions: false }, () => {
@@ -165,7 +159,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  startArrowAnimation() {
+  startArrowAnimation = () => {
     Animated.parallel([
       Animated.timing(
         this.animatedArrow3, {
@@ -212,7 +206,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  handleInputModal() {
+  handleInputModal = () => {
     this.setState({
       showInput: {
         autoCapitalize: 'sentences',
@@ -231,7 +225,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  closeInputModal(input) {
+  closeInputModal = (input) => {
     this.setState({ showInput: false });
     if (input) {
       const { handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
@@ -275,7 +269,7 @@ export default class GamePreview extends React.PureComponent {
    *  selected: `boolean`,
    * }
    */
-  handleTrickSelection(trick, index, gameState, teamRef) {
+  handleTrickSelection = (trick, index, gameState, teamRef) => {
     const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
     const message = {
       action: 'UPDATE_TEAM_TRICK',
@@ -313,9 +307,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  handleCloseMessage() {
-    this.setState({ messageProps: {} });
-  }
+  handleCloseMessage = () => this.setState({ messageProps: {} });
 
 
   renderArrowButton = () => (
@@ -331,7 +323,7 @@ export default class GamePreview extends React.PureComponent {
   )
 
 
-  renderQuestion() {
+  renderQuestion = () => {
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
 
@@ -345,7 +337,7 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
-  renderTricks(gameState, teamRef) {
+  renderTricks = (gameState, teamRef) => {
     const { tricks } = gameState[teamRef];
     if (!tricks.length) return null;
 

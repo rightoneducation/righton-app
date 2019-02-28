@@ -42,19 +42,6 @@ export default class Dashboard extends React.Component {
     this.startingGame = false;
     this.roomRef = null;
     this.attemptedEntries = 0;
-
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-
-    this.handleRoomInput = this.handleRoomInput.bind(this);
-    this.handleRoomSubmit = this.handleRoomSubmit.bind(this);
-    this.handleRoomRef = this.handleRoomRef.bind(this);
-
-    this.handleGameEntry = this.handleGameEntry.bind(this);
-    this.handleGameError = this.handleGameError.bind(this);
-    this.handleGameFound = this.handleGameFound.bind(this);
-
-    this.handleKeyboardHide = this.handleKeyboardHide.bind(this);
-    this.handleKeyboardShow = this.handleKeyboardShow.bind(this);
   }
 
 
@@ -107,27 +94,25 @@ export default class Dashboard extends React.Component {
   }
 
 
-  handleParamRoomEntry() {
+  handleParamRoomEntry = () => {
     this.setState({ room: this.props.screenProps.navigation.state.params.GameRoomID },
       () => this.handleGameEntry());
   }
 
 
-  handleKeyboardHide() {
+  handleKeyboardHide = () => {
     this.setState({ roomEntry: true }, () => {
       if (this.roomRef) this.roomRef.blur();
     });
   }
 
 
-  handleKeyboardShow() {
+  handleKeyboardShow = () => {
     this.setState({ roomEntry: false });
   }
 
 
-  handleRoomInput(room) {
-    this.setState({ room });
-  }
+  handleRoomInput = room => this.setState({ room });
 
 
   handleRoomSubmit = () => (
@@ -135,12 +120,12 @@ export default class Dashboard extends React.Component {
   )
 
 
-  handleRoomRef(ref) {
+  handleRoomRef = (ref) => {
     this.roomRef = ref;
   }
 
 
-  handleGameEntry() {
+  handleGameEntry = () => {
     const { room } = this.state;
     let GameRoomID = '';
     if (room) {
@@ -171,7 +156,7 @@ export default class Dashboard extends React.Component {
   }
 
 
-  handleGameFound(res) {
+  handleGameFound = (res) => {
     if (typeof res === 'object' && res.GameRoomID) {
       this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
       setTimeout(() => {
@@ -247,12 +232,12 @@ export default class Dashboard extends React.Component {
   }
 
 
-  handleCloseMessage() {
+  handleCloseMessage = () => {
     this.setState({ messageProps: null });
   }
 
 
-  handleTeamSelection(idx) {
+  handleTeamSelection = (idx) => {
     const {
       deviceSettings,
       handleSetAppState,
@@ -293,7 +278,7 @@ export default class Dashboard extends React.Component {
   );
 
 
-  renderProfileView() {
+  renderProfileView = () => {
     const { gameState, GameRoomID } = this.props.screenProps;
 
     const { gamesPlayed, points } = this.props.screenProps.account;
@@ -350,7 +335,7 @@ export default class Dashboard extends React.Component {
   }
 
 
-  renderGameRoomEntry(roomEntry) {
+  renderGameRoomEntry = (roomEntry) => {
     const { room } = this.state;
     return (
       <View style={[styles.roomContainer, { justifyContent: 'center' }]}>

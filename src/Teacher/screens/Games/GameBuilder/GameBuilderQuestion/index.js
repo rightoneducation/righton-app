@@ -64,17 +64,6 @@ export default class GameBuilderQuestion extends React.Component {
     };
 
     this.blankQuestionState = this.state.question;
-
-    this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.handleExitModal = this.handleExitModal.bind(this);
-    this.handleAddInstruction = this.handleAddInstruction.bind(this);
-
-    this.onQuestionLayout = this.onQuestionLayout.bind(this);
-    this.handleQuestionRef = this.handleQuestionRef.bind(this);
-    this.onAnswerLayout = this.onAnswerLayout.bind(this);
-    this.handleAnswerRef = this.handleAnswerRef.bind(this);
-    this.handleInputModal = this.handleInputModal.bind(this);
-    this.closeInputModal = this.closeInputModal.bind(this);
   }
 
 
@@ -93,7 +82,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  onQuestionLayout() {
+  onQuestionLayout = () => {
     if (this.questionRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.questionRef),
@@ -106,7 +95,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  onAnswerLayout() {
+  onAnswerLayout = () => {
     if (this.answerRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.answerRef),
@@ -119,22 +108,16 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  hydrateState(question) {
-    this.setState({ question });
-  }
+  hydrateState = question => this.setState({ question });
 
   
-  handleQuestionRef(ref) {
-    this.questionRef = ref;
-  }
+  handleQuestionRef = (ref) => { this.questionRef = ref; }
 
 
-  handleAnswerRef(ref) {
-    this.answerRef = ref;
-  }
+  handleAnswerRef = (ref) => { this.answerRef = ref; }
 
 
-  closeInputModal(input, inputLabel) {
+  closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
       case 'question':
         this.setState({ question: { ...this.state.question, question: input }, showInput: false });
@@ -173,7 +156,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  handleAddInstruction(idx) {
+  handleAddInstruction = (idx) => {
     let input = '';
     if (typeof idx === 'number') {
       this.instructionIndex = idx;
@@ -184,7 +167,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
+  handleInputModal = (inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') => {
     if (this.props.explore) return;
     if (inputLabel === 'question') {
       this.onQuestionLayout();
@@ -212,7 +195,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
 
-  handleCloseModal() {
+  handleCloseModal = () => {
     const { question } = this.state;
     const { edit } = question;
     const updatedQuestion = { ...question };
@@ -226,7 +209,7 @@ export default class GameBuilderQuestion extends React.Component {
   }
 
   
-  handleExitModal() {
+  handleExitModal = () => {
     this.props.closeModal();
   }
 

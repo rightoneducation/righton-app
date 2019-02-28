@@ -13,7 +13,6 @@ export default class Message extends React.Component {
     super();
     this.opacity = new Animated.Value(0);
     this.timeout = undefined;
-    this.handleTouchClose = this.handleTouchClose.bind(this);
   }
 
 
@@ -50,7 +49,7 @@ export default class Message extends React.Component {
   }
 
 
-  handleTouchClose() {
+  handleTouchClose = () => {
     const { closeFunc } = this.props;
     Animated.timing(
       this.opacity, {

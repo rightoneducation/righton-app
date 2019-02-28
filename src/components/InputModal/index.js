@@ -62,11 +62,6 @@ export default class InputModal extends React.PureComponent {
       minY: deviceHeight / 2,
       input: props.input || '',
     };
-
-    this.handleInput = this.handleInput.bind(this);
-    this.handleInputBlur = this.handleInputBlur.bind(this);
-    this.handleInputRef = this.handleInputRef.bind(this);
-    this.handleInputSubmit = this.handleInputSubmit.bind(this);
   }
 
 
@@ -89,27 +84,23 @@ export default class InputModal extends React.PureComponent {
   }
 
 
-  handleInputBlur() {
+  handleInputBlur = () => {
     this.props.closeModal(this.state.input, this.props.inputLabel);
   }
 
 
-  handleInput(val) {
-    this.setState({ input: val });
-  }
+  handleInput = val => this.setState({ input: val });
 
 
-  handleInputRef(ref) {
-    this.inputRef = ref;
-  }
+  handleInputRef = (ref) => { this.inputRef = ref; }
 
 
-  handleInputSubmit() {
+  handleInputSubmit = () => {
     this.props.closeModal(this.state.input, this.props.inputLabel);
   }
 
 
-  renderTextInput(xAxis, yAxis, bottom, height) {
+  renderTextInput = (xAxis, yAxis, bottom, height) => {
     const { input } = this.state;
     const {
       autoCapitalize,

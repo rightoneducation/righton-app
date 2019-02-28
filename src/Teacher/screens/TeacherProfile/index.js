@@ -35,11 +35,6 @@ export default class TeacherProfile extends React.Component {
       account: props.screenProps.account,
       // showInput: null,
     };
-
-    this.handleNavigateBack = this.handleNavigateBack.bind(this);
-    this.handleOnboardNavigation = this.handleOnboardNavigation.bind(this);
-    this.handleSchoolInput = this.handleSchoolInput.bind(this);
-    this.handleSignOut = this.handleSignOut.bind(this);
   }
 
 
@@ -48,7 +43,7 @@ export default class TeacherProfile extends React.Component {
   }
 
 
-  handleNavigateBack() {
+  handleNavigateBack = () => {
     const { parent } = this.props.navigation.state.params;
     if (this.updatedAccount && this.state.account.TeacherID) {
       const { account } = this.state;
@@ -59,7 +54,7 @@ export default class TeacherProfile extends React.Component {
   }
 
 
-  handleSignOut() {
+  handleSignOut = () => {
     const { doSignOut, handleSetAppState } = this.props.screenProps;
     const { navigation } = this.props;
 
@@ -70,13 +65,13 @@ export default class TeacherProfile extends React.Component {
   }
 
 
-  handleSchoolInput(input) {
+  handleSchoolInput = (input) => {
     this.setState({ account: { ...this.state.account, schoolID: input } });
     this.updatedAccount = true;
   }
 
 
-  handleOnboardNavigation() {
+  handleOnboardNavigation = () => {
     const { navigation } = this.props;
     navigation.navigate('OnboardAppRouter');
   }

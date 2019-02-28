@@ -73,27 +73,6 @@ export default class GameBuilder extends React.Component {
       showSelection: false,
       showShare: false,
     };
-
-    this.onTitleLayout = this.onTitleLayout.bind(this);
-    this.handleTitleRef = this.handleTitleRef.bind(this);
-    this.onDescriptionLayout = this.onDescriptionLayout.bind(this);
-    this.handleDescriptionRef = this.handleDescriptionRef.bind(this);
-    this.handleInputModal = this.handleInputModal.bind(this);
-    this.closeInputModal = this.closeInputModal.bind(this);
-
-    this.showGradeSelection = this.showGradeSelection.bind(this);
-    this.showDomainSelection = this.showDomainSelection.bind(this);
-    this.showClusterSelection = this.showClusterSelection.bind(this);
-    this.showStandardSelection = this.showStandardSelection.bind(this);  
-    this.hideSelection = this.hideSelection.bind(this);
-  
-    this.toggleFavorite = this.toggleFavorite.bind(this);
-    this.createGame = this.createGame.bind(this);
-    this.closeAddQuestion = this.closeAddQuestion.bind(this);
-    this.openAddQuestion = this.openAddQuestion.bind(this);
-
-    this.toggleMenu = this.toggleMenu.bind(this);
-    this.toggleShare = this.toggleShare.bind(this);
   }
 
 
@@ -102,7 +81,7 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  onTitleLayout() {
+  onTitleLayout = () => {
     if (this.titleRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.titleRef),
@@ -115,7 +94,7 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  onDescriptionLayout() {
+  onDescriptionLayout = () => {
     if (this.descriptionRef) {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.descriptionRef),
@@ -136,7 +115,7 @@ export default class GameBuilder extends React.Component {
   }
 
   
-  hydrateState(game) {
+  hydrateState = (game) => {
     if (game && Object.keys(game).length) {
       this.setState({ game });
     } else {
@@ -164,13 +143,13 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  toggleFavorite() {
+  toggleFavorite = () => {
     const { game } = this.state;
     this.setState({ game: { ...game, favorite: !game.favorite } });
   }
 
   
-  createGame() {
+  createGame = () => {
     const { game } = this.state;
     const { handleCreateGame } = this.props;
     if (this.props.currentGame !== null || game.GameID) {
@@ -195,17 +174,13 @@ export default class GameBuilder extends React.Component {
   }
 
   
-  handleTitleRef(ref) {
-    this.titleRef = ref;
-  }
+  handleTitleRef = (ref) => { this.titleRef = ref; }
 
 
-  handleDescriptionRef(ref) {
-    this.descriptionRef = ref;
-  }
+  handleDescriptionRef = (ref) => { this.descriptionRef = ref; }
 
 
-  closeInputModal(input, inputLabel) {
+  closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
       case 'title':
         this.setState({ game: { ...this.state.game, title: input }, showInput: false });
@@ -220,7 +195,7 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
+  handleInputModal = (inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') => {
     if (this.props.explore) return;
     if (inputLabel === 'title') {
       this.onTitleLayout();
@@ -248,13 +223,13 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  openAddQuestion(event, question = {}, edit) {
+  openAddQuestion = (event, question = {}, edit) => {
     this.setState({ addQuestion: { ...question, edit } });
     this.swiperRef.scrollBy(1, false);
   }
 
 
-  closeAddQuestion(event, question, edit) {
+  closeAddQuestion = (event, question, edit) => {
     const { game } = this.state;
     if (typeof edit === 'number') {
       const updatedGame = { ...game };
@@ -290,31 +265,31 @@ export default class GameBuilder extends React.Component {
   // );
 
 
-  showGradeSelection() {
+  showGradeSelection = () => {
     if (this.props.explore) return;
     this.setState({ showSelection: 'Grade' });
   }
 
 
-  showDomainSelection() {
+  showDomainSelection = () => {
     if (this.props.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Domain' });
   }
 
 
-  showClusterSelection() {
+  showClusterSelection = () => {
     if (this.props.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Cluster' });
   }
 
 
-  showStandardSelection() {
+  showStandardSelection = () => {
     if (this.props.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Standard' });
   }
 
 
-  hideSelection(selection) {
+  hideSelection = (selection) => {
     if (typeof selection === 'object') { // Dismiss the event object
       this.setState({ showSelection: false });
       return;
@@ -360,46 +335,40 @@ export default class GameBuilder extends React.Component {
   }
 
 
-  toggleMenu() {
-    this.setState({ showMenu: !this.state.showMenu });
-  }
+  toggleMenu = () => this.setState({ showMenu: !this.state.showMenu });
 
 
-  toggleShare() {
-    this.setState({ showMenu: false, showShare: !this.state.showShare });
-  }
+  toggleShare = () => this.setState({ showMenu: false, showShare: !this.state.showShare });
 
 
-  renderQuestionBlock(question, idx) {
-    return (
-      <Touchable
-        activeOpacity={0.8}
-        key={question.uid}
-        onPress={() => this.openAddQuestion(null, question, idx)}
-      >
-        <View style={[styles.questionContainer, elevation]}>
+  renderQuestionBlock = (question, idx) => (
+    <Touchable
+      activeOpacity={0.8}
+      key={question.uid}
+      onPress={() => this.openAddQuestion(null, question, idx)}
+    >
+      <View style={[styles.questionContainer, elevation]}>
 
-          {question.image && question.image !== 'null' &&
-            <Image source={{ uri: question.image }} style={styles.questionImage} />}
-            
-          <View style={styles.questionTextContainer}>
-            <Text style={styles.questionQuestion}>{`Q: ${question.question}`}</Text>
-            <Text style={[styles.questionAnswer, styles.colorPrimary]}>{`A: ${question.answer}`}</Text>
-            <Text style={[styles.questionQuestion, styles.questionInstructions]}>
-              { `${question.instructions.length} ${question.instructions.length === 1 ? 'Solution step' : 'Solution steps'}` }
-            </Text>
+        {question.image && question.image !== 'null' &&
+          <Image source={{ uri: question.image }} style={styles.questionImage} />}
+          
+        <View style={styles.questionTextContainer}>
+          <Text style={styles.questionQuestion}>{`Q: ${question.question}`}</Text>
+          <Text style={[styles.questionAnswer, styles.colorPrimary]}>{`A: ${question.answer}`}</Text>
+          <Text style={[styles.questionQuestion, styles.questionInstructions]}>
+            { `${question.instructions.length} ${question.instructions.length === 1 ? 'Solution step' : 'Solution steps'}` }
+          </Text>
 
-            {(!question.question || !question.answer) &&
-              <Aicon name={'exclamation-triangle'} style={styles.warning} />}
+          {(!question.question || !question.answer) &&
+            <Aicon name={'exclamation-triangle'} style={styles.warning} />}
 
-          </View>
         </View>
-      </Touchable>
-    );
-  }
+      </View>
+    </Touchable>
+  );
 
 
-  renderQuestions() {
+  renderQuestions = () => {
     const { questions } = this.state.game;
     if (Array.isArray(questions)) {
       return (

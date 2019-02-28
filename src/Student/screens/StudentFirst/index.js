@@ -38,16 +38,6 @@ export default class StudentFirst extends React.PureComponent {
       portal: null,
       room: '',
     };
-
-    this.handleCloseMessage = this.handleCloseMessage.bind(this);
-    this.handleNavigateToOnboardApp = this.handleNavigateToOnboardApp.bind(this);
-
-    this.onRoomInput = this.onRoomInput.bind(this);
-    this.onRoomSubmit = this.onRoomSubmit.bind(this);
-    this.onJoinLater = this.onJoinLater.bind(this);
-
-    this.handleGameError = this.handleGameError.bind(this);
-    this.handleGameFound = this.handleGameFound.bind(this);
   }
 
 
@@ -56,22 +46,20 @@ export default class StudentFirst extends React.PureComponent {
   }
 
 
-  onRoomInput(room) {
-    this.setState({ room });
-  }
+  onRoomInput = room => this.setState({ room });
 
 
-  onRoomSubmit() {
+  onRoomSubmit = () => {
     this.handleGameEntry();
   }
 
 
-  onJoinLater() {
+  onJoinLater = () => {
     this.props.navigation.navigate('StudentApp');
   }
 
 
-  handleGameEntry() {
+  handleGameEntry = () => {
     const { room } = this.state;
     const GameRoomID = room;
     this.setState({ portal: `Joining ${GameRoomID}` });
@@ -96,7 +84,7 @@ export default class StudentFirst extends React.PureComponent {
   }
 
 
-  handleGameFound(res) {
+  handleGameFound = (res) => {
     if (typeof res === 'object' && res.GameRoomID) {
       this.props.screenProps.IOTSubscribeToTopic(res.GameRoomID);
       setTimeout(() => {
@@ -173,12 +161,12 @@ export default class StudentFirst extends React.PureComponent {
   }
 
 
-  handleCloseMessage() {
+  handleCloseMessage = () => {
     this.setState({ messageProps: null });
   }
 
 
-  handleNavigateToOnboardApp() {
+  handleNavigateToOnboardApp = () => {
     this.props.navigation.navigate('OnboardAppRouter');
   }
 

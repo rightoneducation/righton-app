@@ -34,16 +34,6 @@ export default class GameRoom extends React.Component {
     };
 
     this.mounted = true;
-
-    this.handleBackFromChild = this.handleBackFromChild.bind(this);
-    this.handleEndGame = this.handleEndGame.bind(this);
-    this.handleGamePreview = this.handleGamePreview.bind(this);
-    this.handleNextTeam = this.handleNextTeam.bind(this);  
-    this.handleRenderNewGame = this.handleRenderNewGame.bind(this);  
-    this.handleViewResults = this.handleViewResults.bind(this);
-    this.handleStartGame = this.handleStartGame.bind(this);
-    this.handleStartQuiz = this.handleStartQuiz.bind(this);
-    this.handleStartRandomGame = this.handleStartRandomGame.bind(this);
   }
 
 
@@ -72,7 +62,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  setNextTeam() {
+  setNextTeam = () => {
     const { gameState } = this.props.screenProps;
     const { preview } = this.state;
     let nextTeamRef;
@@ -115,7 +105,7 @@ export default class GameRoom extends React.Component {
 
 
   // Update all gameStates with a randomized order of choices for quizzing.
-  handleGamePreview(teamRef) {
+  handleGamePreview = (teamRef) => {
     const { gameState } = this.props.screenProps;
     // Create a random order of choices mixed with the correct answer.
     const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
@@ -189,7 +179,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleStartGame() {
+  handleStartGame = () => {
     const message = {
       action: 'START_GAME',
       uid: `${Math.random()}`,
@@ -213,7 +203,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  removeQuestionsWithMissingPlayers() {
+  removeQuestionsWithMissingPlayers = () => {
     const { teams } = this.state;
     const { gameState, handleSetAppState } = this.props.screenProps;
     const updatedGameState = { ...gameState };
@@ -234,7 +224,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleBackFromChild(screen) {
+  handleBackFromChild = (screen) => {
     if (screen) {
       this.setState({ renderType: screen, preview: null });
       return;
@@ -243,7 +233,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleStartQuiz(teamRef) {
+  handleStartQuiz = (teamRef) => {
     const { IOTPublishMessage } = this.props.screenProps;
     const message = {
       action: 'START_QUIZ',
@@ -261,12 +251,12 @@ export default class GameRoom extends React.Component {
   }
 
   
-  handleRenderNewGame() {
+  handleRenderNewGame = () => {
     this.setState({ renderType: 'newGame', preview: null });
   }
 
 
-  handleStartRandomGame() {
+  handleStartRandomGame = () => {
     const { gameState } = this.props.screenProps;
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
@@ -294,7 +284,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleViewResults(teamRef) {
+  handleViewResults = (teamRef) => {
     const { IOTPublishMessage } = this.props.screenProps;
     const message = {
       action: 'END_QUIZ',
@@ -310,7 +300,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleNextTeam() {
+  handleNextTeam = () => {
     const { nextTeam } = this.state;
     if (nextTeam) {
       this.handleGamePreview(nextTeam);
@@ -337,7 +327,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleEndMessage() {
+  handleEndMessage = () => {
     const {
       IOTPublishMessage,
     } = this.props.screenProps;
@@ -349,7 +339,7 @@ export default class GameRoom extends React.Component {
   }
   
   
-  handleEndGame() {
+  handleEndGame = () => {
     this.props.screenProps.navigation.navigate('Games');
     this.handleExitMessage();
     setTimeout(() => {
@@ -370,7 +360,7 @@ export default class GameRoom extends React.Component {
   }
 
 
-  handleExitMessage() {
+  handleExitMessage = () => {
     const { IOTPublishMessage } = this.props.screenProps;
     const message = {
       action: 'EXIT_GAME',

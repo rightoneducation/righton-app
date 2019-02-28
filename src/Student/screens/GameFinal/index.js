@@ -39,8 +39,6 @@ export default class GameFinal extends React.Component {
 
     this.mounted = false;
     this.startingGame = false;
-
-    this.handleExitGame = this.handleExitGame.bind(this);
   }
 
 
@@ -79,7 +77,7 @@ export default class GameFinal extends React.Component {
   }
 
 
-  handleExitGame() {
+  handleExitGame = () => {
     const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
     const { navigation } = this.props;
     handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);

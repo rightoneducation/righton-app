@@ -22,42 +22,8 @@ export default class OnboardIntroSlides extends React.PureComponent {
     rootNavigator: {},
   }
 
-  constructor(props) {
-    super(props);
-
-    this.swiper = undefined;
-    
-    // this.state = {
-    //   startButton: true,
-    // };
-
-    // this.onIndexChanged = this.onIndexChanged.bind(this);
-    // this.handleStart = this.handleStart.bind(this);
-  }
-
-
-  // onIndexChanged(index) {
-  //   if (index !== 1) {
-  //     this.setState({ startButton: false });
-  //   } else if (!this.state.startButton) {
-  //     this.setState({ startButton: true });
-  //   }
-  // }
-
-
-  // handleStart() {
-  //   this.navigateTo('First');
-  // }
-
-
-  // navigateTo(routeName) {
-  //   this.props.navigation.navigate(routeName);
-  // }
-
 
   render() {
-    // const { startButton } = this.state;
-
     return (
       <Swiper
         activeDotColor={colors.primary}
@@ -66,7 +32,6 @@ export default class OnboardIntroSlides extends React.PureComponent {
         loadMinimal={false}
         loop={false}
         onIndexChanged={this.onIndexChanged}
-        ref={(ref) => { this.swiper = ref; }}
         showsPagination
       >
 
@@ -87,18 +52,6 @@ export default class OnboardIntroSlides extends React.PureComponent {
             </Text>
           </View>
           <Image source={{ uri: GradCap }} style={styles.image} />
-          {/* {
-            startButton &&
-            <Touchable
-              activeOpacity={0.8}
-              background={Touchable.Ripple(colors.black, false)}
-              hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-              onPress={this.handleStart}
-              style={styles.startContainer}
-            >
-              <Text style={styles.start}>GET STARTED</Text>
-            </Touchable>
-          } */}
         </View>
 
         <View style={styles.container}>

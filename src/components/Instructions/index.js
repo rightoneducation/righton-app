@@ -32,8 +32,6 @@ export default class Instructions extends React.Component {
     this.state = {
       visibleItems: [],
     };
-
-    this.handleReveal = this.handleReveal.bind(this);
   }
 
 
@@ -53,7 +51,7 @@ export default class Instructions extends React.Component {
   }
 
 
-  handleReveal() {
+  handleReveal = () => {
     const { visibleItems } = this.state;
     const updatedVisibleItems = [...visibleItems];
     const index = updatedVisibleItems.indexOf(undefined);

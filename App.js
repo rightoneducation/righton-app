@@ -54,16 +54,6 @@ export default class App extends React.Component {
       session: null,
       team: null,
     };
-
-    this.handleOnSignOut = this.handleOnSignOut.bind(this);
-
-    this.handleSetAppState = this.handleSetAppState.bind(this);
-
-    this.handleAppStateChange = this.handleAppStateChange.bind(this);
-
-    this.IOTSubscribeToTopic = this.IOTSubscribeToTopic.bind(this);
-    this.IOTUnsubscribeFromTopic = this.IOTUnsubscribeFromTopic.bind(this);
-    this.IOTPublishMessage = this.IOTPublishMessage.bind(this);
   }
 
   /**
@@ -112,7 +102,7 @@ export default class App extends React.Component {
   }
 
 
-  setSession(session) {
+  setSession = (session) => {
     this.setState({
       session,
       ready: true,
@@ -136,7 +126,7 @@ export default class App extends React.Component {
    * Local storage access of specific user's account settings.
    * @param username Email of user
    */
-  async loadAccountSettingsFromLocalStorage(username) {
+  loadAccountSettingsFromLocalStorage = async (username) => {
     try { 
       const accountString = await LocalStorage.getItem(`@RightOn:${username}`);
       if (typeof accountString === 'string') {
@@ -154,7 +144,7 @@ export default class App extends React.Component {
    * @param signInWithoutPassword Action conditional for automatically signing
    * in user if username is provided from a previous session.
    */
-  async loadDeviceSettingsFromLocalStorage(signInWithoutPassword) {
+  loadDeviceSettingsFromLocalStorage = async (signInWithoutPassword) => {
     try { 
       const deviceSettingsString = await LocalStorage.getItem('@RightOn:DeviceSettings');
       if (typeof deviceSettingsString === 'string') {
@@ -191,7 +181,7 @@ export default class App extends React.Component {
    * Background listener for subscribing/unsubscribing from GameRoom topic.
    * @param nextAppState Returned event argument from the listener function.
    */
-  handleAppStateChange(nextAppState) {
+  handleAppStateChange = (nextAppState) => {
     const { appState, GameRoomID } = this.state;
     if (GameRoomID) {
       if (appState.match(/inactive|background/) && nextAppState === 'active') {
@@ -218,7 +208,7 @@ export default class App extends React.Component {
   }
 
 
-  handleOnSignOut() {
+  handleOnSignOut = () => {
     Auth.signOut();
     this.setState({ session: null });
   }
@@ -228,7 +218,7 @@ export default class App extends React.Component {
    * @param property Property key to update.
    * @param value Value of property to update with.
    */
-  handleSetAppState(property, value) {
+  handleSetAppState = (property, value) => {
     switch (property) {
       case 'session': 
         this.setSession(value);
@@ -281,7 +271,7 @@ export default class App extends React.Component {
   }
 
 
-  IOTSubscribeToTopic(topic, dropped) {
+  IOTSubscribeToTopic = (topic, dropped) => {
     const { role } = this.state.deviceSettings;
     debug.log('Subscribing to topic:', topic, 'as', role);
     IOTSubscribeToTopic(topic, role === 'teacher' ? teacherMessageHandler : studentMessageHandler, this);
@@ -297,13 +287,13 @@ export default class App extends React.Component {
   }
 
 
-  IOTUnsubscribeFromTopic() {
+  IOTUnsubscribeFromTopic = () => {
     const { GameRoomID } = this.state;
     unsubscribeFromTopic(GameRoomID);
   }
 
 
-  IOTPublishMessage(message) {
+  IOTPublishMessage = (message) => {
     const { GameRoomID, gameState } = this.state;
     const topic = GameRoomID || gameState.GameRoomID || '';
     if (!topic) {
@@ -320,7 +310,7 @@ export default class App extends React.Component {
    * Duo account type function for writing directly to an account's DynamoDB table.
    * @param role Type of user: teacher || student.
    */
-  updateAccountInDynamoDB(role) {
+  updateAccountInDynamoDB = (role) => {
     const { account } = this.state;
     if (role === 'teacher') {
       putTeacherAccountToDynamoDB(

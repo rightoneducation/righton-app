@@ -45,16 +45,6 @@ class Games extends React.Component {
     };
 
     this.currentGame = null;
-
-    this.handleRenderFavorites = this.handleRenderFavorites.bind(this);
-    this.handleRenderMyGames = this.handleRenderMyGames.bind(this);
-    this.handleRenderShared = this.handleRenderShared.bind(this);
-
-    this.handleCloseGame = this.handleCloseGame.bind(this);
-    this.handleCreateGame = this.handleCreateGame.bind(this);
-    this.handleViewGame = this.handleViewGame.bind(this);
-
-    this.handlePlayGame = this.handlePlayGame.bind(this);
   }
 
 
@@ -80,7 +70,7 @@ class Games extends React.Component {
   }
   
 
-  getGamesFromDynamoDB(TeacherID) {
+  getGamesFromDynamoDB = (TeacherID) => {
     getItemFromTeacherAccountFromDynamoDB(
       TeacherID,
       'games',
@@ -97,7 +87,7 @@ class Games extends React.Component {
   }
 
 
-  getSharedGamesFromDynamoDB(TeacherID) {
+  getSharedGamesFromDynamoDB = (TeacherID) => {
     getItemFromTeacherAccountFromDynamoDB(
       TeacherID,
       'sharedGames',
@@ -112,7 +102,7 @@ class Games extends React.Component {
   }
 
 
-  getIndexOfGame(game) {
+  getIndexOfGame = (game) => {
     const { games } = this.state;
     for (let i = 0; i < games.length; i += 1) {
       if (games[i].GameID === game.GameID) {
@@ -123,7 +113,7 @@ class Games extends React.Component {
   }
 
 
-  async hydrateGames() {
+  hydrateGames = async () => {
     try {
       const { TeacherID } = this.props.screenProps.account;
       if (!TeacherID) {
@@ -158,17 +148,17 @@ class Games extends React.Component {
   }
 
 
-  handleRenderFavorites() {
+  handleRenderFavorites = () => {
     this.setState({ filter: 'Favorites' });
   }
 
 
-  handleRenderMyGames() {
+  handleRenderMyGames = () => {
     this.setState({ filter: 'My Games' });
   }
 
 
-  handleRenderShared() {
+  handleRenderShared = () => {
     this.setState({ filter: 'Shared' });
     const { TeacherID } = this.props.screenProps.account;
     if (TeacherID) {
@@ -177,7 +167,7 @@ class Games extends React.Component {
   }
 
 
-  handleViewGame(event, game = {}, idx = null) {
+  handleViewGame = (event, game = {}, idx = null) => {
     if (idx === null || game.GameID) {
       this.currentGame = this.getIndexOfGame(game);
     } else {
@@ -187,13 +177,13 @@ class Games extends React.Component {
   }
 
 
-  handleCloseGame() {
+  handleCloseGame = () => {
     this.setState({ viewGame: null });
     this.currentGame = null;
   }
 
 
-  handleCreateGame(game, newGame) {
+  handleCreateGame = (game, newGame) => {
     const { games } = this.state;
     if (this.currentGame === null || newGame) {
       const updatedGames = [game, ...games];
@@ -216,7 +206,7 @@ class Games extends React.Component {
   }
 
 
-  handlePlayGame(e, game) {
+  handlePlayGame = (e, game) => {
     const { quizTime, trickTime } = this.props.screenProps.deviceSettings;
     const { handleSetAppState, IOTSubscribeToTopic } = this.props.screenProps;
     const { navigation } = this.props;
@@ -287,7 +277,7 @@ class Games extends React.Component {
   );
 
 
-  renderGameBlock(game, idx, filter) {
+  renderGameBlock = (game, idx, filter) => {
     if (filter === 'Favorites' && !game.favorite) return null;
     return (
       <View
@@ -333,7 +323,7 @@ class Games extends React.Component {
   }
 
 
-  renderGames(filter) {
+  renderGames = (filter) => {
     const { games } = this.state;
     if (!Array.isArray(games)) return null;
 
