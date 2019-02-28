@@ -131,9 +131,9 @@ export default class GamesBuilder extends React.Component {
 
 
   handleCloseGame = () => {
-    const { handleClose } = this.props;
+    const { explore, handleClose } = this.props;
     const { edited, game } = this.state;
-    if (game.explore && game.favorite && !edited) {
+    if (explore && game.favorite && !edited) {
       this.createGame();
     } else if (this.props.game.favorite !== game.favorite && !edited) {
       // Automatically update game is `favorite` was update but fields were not.
@@ -154,9 +154,6 @@ export default class GamesBuilder extends React.Component {
     const { handleCreateGame } = this.props;
     if (this.props.currentGame !== null || game.GameID) {
       const saveGame = { ...game };
-      if (saveGame.explore) {
-        delete saveGame.explore;
-      }
       if (this.props.game.quizmaker && this.state.edited) {
         delete saveGame.quizmaker;
         saveGame.GameID = `${Math.random()}`;
@@ -300,6 +297,18 @@ export default class GamesBuilder extends React.Component {
         if (selection === 'General') {
           this.setState({
             game: { ...this.state.game, grade: 'General', domain: null, cluster: null, standard: null },
+            showSelection: false,
+          });
+        } else if ((selection === 'HS' && this.state.game.grade !== 'HS') ||
+          (selection !== 'HS' && this.state.game.grade === 'HS')) {
+          this.setState({
+            game: {
+              ...this.state.game,
+              grade: selection || this.props.game.grade,
+              domain: null,
+              cluster: null,
+              standard: null,
+            },
             showSelection: false,
           });
         } else {
