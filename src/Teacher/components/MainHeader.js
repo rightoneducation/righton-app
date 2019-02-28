@@ -5,6 +5,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps } from '../../config/propTypes';
 import { ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
@@ -13,16 +14,12 @@ import { colors, elevation, fonts } from '../../utils/theme';
 
 export default class MainHeader extends React.Component {
   static propTypes = {
-    navigation: PropTypes.shape({
-      navigate: PropTypes.func,
-    }),
+    navigation: navigationPropTypes,
     parent: PropTypes.string,
   };
   
   static defaultProps = {
-    navigation: {
-      navigate: () => {},
-    },
+    navigation: navigationDefaultProps,
     parent: '',
   };
 

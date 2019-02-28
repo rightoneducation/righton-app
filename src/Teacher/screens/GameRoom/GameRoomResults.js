@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import KeepAwake from 'react-native-keep-awake';
@@ -20,7 +21,7 @@ import { colors, deviceWidth, fonts } from '../../../utils/theme';
 
 export default class GameRoomResults extends React.Component {
   static propTypes = {
-    gameState: PropTypes.shape({}),
+    gameState: gameStatePropTypes,
     handleBackFromChild: PropTypes.func.isRequired,
     handleNextTeam: PropTypes.func.isRequired,
     nextTeam: PropTypes.string.isRequired,
@@ -30,7 +31,7 @@ export default class GameRoomResults extends React.Component {
   };
   
   static defaultProps = {
-    gameState: {},
+    gameState: gameStateDefaultProps,
     handleBackFromChild: () => {},
     handleNextTeam: () => {},
     nextTeam: '',

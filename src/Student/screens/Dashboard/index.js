@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
@@ -22,20 +22,11 @@ import debug from '../../../utils/debug';
 
 export default class Dashboard extends React.Component {
   static propTypes = {
-    screenProps: PropTypes.shape({ type: PropTypes.any }),
+    screenProps: screenPropsPropTypes,
   };
   
   static defaultProps = {
-    screenProps: {
-      account: {},
-      gameState: {},
-      handleSetAppState: () => {},
-      IOTSubscribeToTopic: () => {},
-      IOTPublishMessage: () => {},
-      navigation: {
-        navigate: () => {},
-      }
-    },
+    screenProps: screenPropsDefaultProps,
   };
   
   constructor(props) {

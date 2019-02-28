@@ -24,10 +24,6 @@ const blockSize = deviceWidth / 4;
 export default class GameRoomNewGame extends React.Component {
   static propTypes = {
     GameRoomID: PropTypes.string,
-    gameState: PropTypes.shape({
-      quizTime: PropTypes.string,
-      trickTime: PropTypes.string,
-    }),
     handleBackFromChild: PropTypes.func.isRequired,
     handleSetAppState: PropTypes.func.isRequired,
     IOTPublishMessage: PropTypes.func.isRequired,
@@ -36,10 +32,6 @@ export default class GameRoomNewGame extends React.Component {
   
   static defaultProps = {
     GameRoomID: '',
-    gameState: {
-      quizTime: '1:00',
-      trickTime: '3:00',
-    },
     handleBackFromChild: () => {},
     handleSetAppState: () => {},
     IOTPublishMessage: () => {},

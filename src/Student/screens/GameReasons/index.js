@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
@@ -21,28 +21,13 @@ import { handleExitGame } from '../../../utils/studentGameUtils';
 
 export default class GameReasons extends React.PureComponent {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      gameState: PropTypes.shape({ type: PropTypes.any }),
-      IOTPublishMessage: PropTypes.func.isRequired,
-      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
-      team: PropTypes.number.isRequired,
-    }),
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
   }
-  
+
   static defaultProps = {
-    screenProps: {
-      gameState: {
-        team0: {
-          instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
-          question: __DEV__ ? 'What did you eat for breakfast?' : '',
-          team: __DEV__ ? 'Scool' : '',
-          tricks: [],
-        },
-      },
-      IOTPublishMessage: () => {},
-      IOTUnsubscribeFromTopic: () => {},
-      team: 0,
-    },
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
   }
 
   constructor(props) {

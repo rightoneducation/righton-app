@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 import { ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
 import Touchable from 'react-native-platform-touchable';
@@ -20,10 +21,7 @@ import { colors, fonts } from '../../../utils/theme';
 
 export default class GameRoomStart extends React.Component {
   static propTypes = {
-    gameState: PropTypes.shape({
-      quizTime: PropTypes.string,
-      trickTime: PropTypes.string,
-    }),
+    gameState: gameStatePropTypes,
     handleBackFromChild: PropTypes.func.isRequired,
     handleSetAppState: PropTypes.func.isRequired,
     IOTPublishMessage: PropTypes.func.isRequired,
@@ -31,10 +29,7 @@ export default class GameRoomStart extends React.Component {
   };
   
   static defaultProps = {
-    gameState: {
-      quizTime: '1:00',
-      trickTime: '3:00',
-    },
+    gameState: gameStateDefaultProps,
     handleBackFromChild: () => {},
     handleSetAppState: () => {},
     IOTPublishMessage: () => {},

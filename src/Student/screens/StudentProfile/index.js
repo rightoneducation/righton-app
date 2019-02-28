@@ -5,7 +5,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 // import Touchable from 'react-native-platform-touchable';
@@ -17,26 +17,14 @@ import ButtonBack from '../../../components/ButtonBack';
 
 export default class StudentProfile extends React.Component {
   static propTypes = {
-    navigation: PropTypes.shape({
-      navigate: PropTypes.func,
-    }),
-    screenProps: PropTypes.shape({
-      account: PropTypes.shape({}),
-      doSignOut: PropTypes.func,
-      handleSetAppState: PropTypes.func,
-    }),
-  };
-  
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
+  }
+
   static defaultProps = {
-    navigation: {
-      navigate: () => {},
-    },
-    screenProps: {
-      account: {},
-      doSignOut: () => {},
-      handleSetAppState: () => {},
-    },
-  };
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
+  }
 
   constructor(props) {
     super(props);

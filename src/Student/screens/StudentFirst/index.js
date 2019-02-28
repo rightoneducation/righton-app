@@ -6,7 +6,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import { verticalScale } from 'react-native-size-matters';
 import Touchable from 'react-native-platform-touchable';
@@ -21,26 +21,13 @@ import debug from '../../../utils/debug';
 
 export default class StudentFirst extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.shape({
-      navigate: PropTypes.func.isRequired,
-    }),
-    screenProps: PropTypes.shape({
-      handleSetAppState: PropTypes.func.isRequired,
-      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
-      IOTSubscribeToTopic: PropTypes.func.isRequired,
-    }),
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
   }
 
-  
   static defaultProps = {
-    navigation: {
-      navigate: () => {},
-    },
-    screenProps: {
-      handleSetAppState: () => {},
-      IOTUnsubscribeFromTopic: () => {},
-      IOTSubscribeToTopic: () => {},
-    },
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
   }
 
   constructor(props) {

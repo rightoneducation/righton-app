@@ -4,7 +4,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
 import Portal from '../../../screens/Portal';
@@ -18,27 +18,13 @@ import { handleExitGame } from '../../../utils/studentGameUtils';
 
 export default class GameFinal extends React.Component {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      gameState: PropTypes.shape({}),
-      handleSetAppState: PropTypes.func.isRequired,
-      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
-      team: PropTypes.number,
-    }),
-    navigation: PropTypes.shape({
-      navigate: PropTypes.func.isRequired,
-    }),
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
   }
 
   static defaultProps = {
-    screenProps: {
-      gameState: {},
-      handleSetAppState: () => {},
-      IOTUnsubscribeFromTopic: () => {},
-      team: 0,
-    },
-    navigation: {
-      navigate: () => {},
-    },
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
   }
 
   constructor(props) {

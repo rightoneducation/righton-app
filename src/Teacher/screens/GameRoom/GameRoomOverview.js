@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import KeepAwake from 'react-native-keep-awake';
@@ -116,7 +117,7 @@ export default function GameRoomOverview({
 }
 
 GameRoomOverview.propTypes = {
-  gameState: PropTypes.shape({}),
+  gameState: gameStatePropTypes,
   handleEndGame: PropTypes.func.isRequired,
   handleGamePreview: PropTypes.func.isRequired,
   handleRenderNewGame: PropTypes.func.isRequired,
@@ -127,7 +128,7 @@ GameRoomOverview.propTypes = {
 };
 
 GameRoomOverview.defaultProps = {
-  gameState: {},
+  gameState: gameStateDefaultProps,
   handleEndGame: () => {},
   handleGamePreview: () => {},
   handleRenderNewGame: () => {},

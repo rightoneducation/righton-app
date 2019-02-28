@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { scale } from 'react-native-size-matters';
@@ -26,34 +26,13 @@ import styles from './styles';
 
 export default class GamePreview extends React.PureComponent {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      gameState: PropTypes.shape({ type: PropTypes.any }),
-      handleSetAppState: PropTypes.func.isRequired,
-      IOTPublishMessage: PropTypes.func.isRequired,
-      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
-      team: PropTypes.number.isRequired,
-    }),
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
   }
-  
+
   static defaultProps = {
-    screenProps: {
-      gameState: {
-        team0: {
-          answer: __DEV__ ? 'Bagel' : '',
-          image: '',
-          instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
-          question: __DEV__ ? 'What did you eat for breakfast?' : '',
-          quizTime: '3:00',
-          trickTime: '1:00',
-          tricks: [],
-          uid: '',
-        },
-      },
-      handleSetAppState: () => {},
-      IOTPublishMessage: () => {},
-      IOTUnsubscribeFromTopic: () => {},
-      team: 0,
-    },
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
   }
 
   constructor(props) {

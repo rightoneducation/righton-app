@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
 import { getQuizFromDynamoDB, putQuizInDynamoDB } from '../../../../lib/Categories/DynamoDB/QuizMakerAPI';
@@ -20,7 +21,7 @@ import debug from '../../../utils/debug';
 
 export default class GameRoomFinal extends React.Component {
   static propTypes = {
-    gameState: PropTypes.shape({}),
+    gameState: gameStatePropTypes,
     handleBackFromChild: PropTypes.func.isRequired,
     handleEndGame: PropTypes.func.isRequired,
     handleRenderNewGame: PropTypes.func.isRequired,
@@ -29,7 +30,7 @@ export default class GameRoomFinal extends React.Component {
   };
   
   static defaultProps = {
-    gameState: {},
+    gameState: gameStateDefaultProps,
     handleBackFromChild: () => {},
     handleEndGame: () => {},
     handleRenderNewGame: () => {},

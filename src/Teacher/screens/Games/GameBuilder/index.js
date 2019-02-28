@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
+import { gamePropTypes, gameDefaultProps } from '../../../../config/propTypes';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
@@ -33,25 +34,7 @@ export default class GameBuilder extends React.Component {
     handleClose: PropTypes.func.isRequired,
     handleCreateGame: PropTypes.func.isRequired,
     handlePlayGame: PropTypes.func.isRequired,
-    game: PropTypes.shape({
-      GameID: PropTypes.string,
-      // banner: PropTypes.string,
-      grade: PropTypes.string,
-      domain: PropTypes.string,
-      cluster: PropTypes.string,
-      standard: PropTypes.string,
-      description: PropTypes.string,
-      favorite: PropTypes.boolean,
-      questions: PropTypes.arrayOf(PropTypes.shape({
-        answer: PropTypes.string,
-        image: PropTypes.string,
-        instructions: PropTypes.arrayOf(PropTypes.string),
-        question: PropTypes.string,
-        uid: PropTypes.string,
-      })),
-      quizmaker: PropTypes.bool,
-      title: PropTypes.string,
-    }),
+    game: gamePropTypes,
     explore: PropTypes.bool,
     TeacherID: PropTypes.string,
     visible: PropTypes.bool.isRequired,
@@ -62,19 +45,7 @@ export default class GameBuilder extends React.Component {
     handleClose: () => {},
     handleCreateGame: () => {},
     handlePlayGame: () => {},
-    game: {
-      GameID: '',
-      // banner: '',
-      grade: '',
-      domain: '',
-      cluster: '',
-      standard: '',
-      description: '',
-      favorite: false,
-      questions: [],
-      quizmaker: false,
-      title: '',
-    },
+    game: gameDefaultProps,
     explore: false,
     TeacherID: '',
     visible: false,

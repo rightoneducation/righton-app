@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 import KeepAwake from 'react-native-keep-awake';
 import ButtonBack from '../../../components/ButtonBack';
@@ -73,7 +74,7 @@ export default function GameRoomPreview({
 }
 
 GameRoomPreview.propTypes = {
-  gameState: PropTypes.shape({}),
+  gameState: gameStatePropTypes,
   handleBackFromChild: PropTypes.func.isRequired,
   handleViewResults: PropTypes.func.isRequired,
   handleStartQuiz: PropTypes.func.isRequired,
@@ -81,7 +82,7 @@ GameRoomPreview.propTypes = {
 };
 
 GameRoomPreview.defaultProps = {
-  gameState: {},
+  gameState: gameStateDefaultProps,
   handleBackFromChild: () => {},  
   handleViewResults: () => {},
   handleStartQuiz: () => {},

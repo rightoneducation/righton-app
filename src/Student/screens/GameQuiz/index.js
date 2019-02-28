@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import Touchable from 'react-native-platform-touchable';
 import KeepAwake from 'react-native-keep-awake';
 import gamePreviewStyles from '../GamePreview/styles';
@@ -15,41 +15,13 @@ import { handleExitGame } from '../../../utils/studentGameUtils';
 
 export default class GameQuiz extends React.Component {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      gameState: PropTypes.shape({
-        state: PropTypes.shape({
-          teamRef: PropTypes.string,
-        }),
-      }),
-      handleSetAppState: PropTypes.func.isRequired,
-      IOTPublishMessage: PropTypes.func.isRequired,
-      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
-    }),
-    navigation: PropTypes.shape({
-      navigate: PropTypes.func.isRequired,
-      state: PropTypes.shape({
-        params: PropTypes.shape({}),
-      }),
-    }),
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
   }
 
   static defaultProps = {
-    screenProps: {
-      gameState: {
-        state: {
-          teamRef: 'team0',
-        },
-      },
-      handleSetAppState: () => {},
-      IOTPublishMessage: () => {},
-      IOTUnsubscribeFromTopic: () => {},
-    },
-    navigation: {
-      navigate: () => {},
-      state: {
-        params: {},
-      },
-    },
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
   }
 
   constructor(props) {

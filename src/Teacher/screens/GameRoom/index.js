@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import Portal from '../../../screens/Portal';
 import GameRoomSettings from './GameRoomSettings';
 import GameRoomStart from './GameRoomStart';
@@ -16,51 +16,11 @@ import debug from '../../../utils/debug';
 
 export default class GameRoom extends React.Component {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      account: PropTypes.shape({
-        TeacherID: PropTypes.string,
-        historyRef: PropTypes.shape({
-          local: PropTypes.number,
-          db: PropTypes.number,
-        }),
-      }),
-      GameRoomID: PropTypes.string,
-      gameState: PropTypes.shape({}),
-      handleSetAppState: PropTypes.func.isRequired,
-      IOTPublishMessage: PropTypes.func.isRequired,
-      IOTUnsubscribeFromTopic: PropTypes.func.isRequired,
-      navigation: PropTypes.shape({
-        navigate: PropTypes.func.isRequired,
-        state: PropTypes.shape({
-          params: PropTypes.shape({}),
-        }),
-      }),
-      players: PropTypes.shape({}),
-    }),
+    screenProps: screenPropsPropTypes,
   }
   
   static defaultProps = {
-    screenProps: {
-      account: {
-        TeacherID: '',
-        historyRef: {
-          local: 0,
-          db: 0,
-        },
-      },
-      GameRoomID: '',
-      gameState: {},
-      handleSetAppState: () => {},
-      IOTPublishMessage: () => {},
-      IOTUnsubscribeFromTopic: () => {},
-      navigation: {
-        navigate: () => {},
-        state: {
-          params: {},
-        },
-      },
-      players: {},
-    },
+    screenProps: screenPropsDefaultProps,
   }
 
   constructor(props) {

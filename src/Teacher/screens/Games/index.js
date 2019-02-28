@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import { NavigationEvents } from 'react-navigation';
@@ -25,50 +25,14 @@ import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 class Games extends React.Component {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      account: PropTypes.shape({
-        gamesRef: PropTypes.shape({
-          local: PropTypes.number,
-          db: PropTypes.number,
-        }),
-        TeacherID: PropTypes.string,
-      }),
-      deviceSettings: PropTypes.shape({
-        quizTime: PropTypes.string,
-        trickTime: PropTypes.string,
-      }),
-      gameState: PropTypes.shape({}),
-      handleSetAppState: PropTypes.func.isRequired,
-      IOTPublishMessage: PropTypes.func.isRequired,
-      IOTSubscribeToTopic: PropTypes.func.isRequired,
-    }),
-    navigation: PropTypes.shape({
-      navigate: PropTypes.func.isRequired,
-    }),
-  };
-  
+    screenProps: screenPropsPropTypes,
+    navigation: navigationPropTypes,
+  }
+
   static defaultProps = {
-    screenProps: {
-      account: {
-        gamesRef: PropTypes.shape({
-          local: 0,
-          db: 0,
-        }),
-        TeacherID: '',
-      },
-      deviceSettings: {
-        quizTime: '',
-        trickTime: '',
-      },
-      gameState: {},
-      handleSetAppState: () => {},
-      IOTPublishMessage: () => {},
-      IOTSubscribeToTopic: () => {},
-    },
-    navigation: {
-      navigate: () => {},
-    },
-  };
+    screenProps: screenPropsDefaultProps,
+    navigation: navigationDefaultProps,
+  }
   
   constructor(props) {
     super(props);

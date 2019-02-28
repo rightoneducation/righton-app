@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 import { scale } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
 import ButtonBack from '../../../components/ButtonBack';
@@ -84,7 +85,7 @@ export default function GameRoomStart({
 
 GameRoomStart.propTypes = {
   GameRoomID: PropTypes.string,
-  gameState: PropTypes.shape({}),
+  gameState: gameStatePropTypes,
   handleBackFromChild: PropTypes.func.isRequired,
   handleEndGame: PropTypes.func.isRequired,
   handleStartGame: PropTypes.func.isRequired,
@@ -94,7 +95,7 @@ GameRoomStart.propTypes = {
 
 GameRoomStart.defaultProps = {
   GameRoomID: '',
-  gameState: {},
+  gameState: gameStateDefaultProps,
   handleBackFromChild: () => {},
   handleEndGame: () => {},
   handleStartGame: () => {},
