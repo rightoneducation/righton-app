@@ -19,7 +19,7 @@ import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
 import Menu from '../../../../components/Menu';
-import GamesShare from './GamesShare';
+import GamesShare from '../components/GamesShare';
 import SelectionModal from '../../../../components/SelectionModal';
 import { domainSelection, domainSelectionHS, standardSelection, gradeSelection, clusterSelection } from '../../../../config/selections';
 import GamesBuilderQuestion from './GamesBuilderQuestion';
