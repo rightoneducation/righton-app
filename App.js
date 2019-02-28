@@ -41,6 +41,7 @@ export default class App extends React.Component {
     this.messagesReceived = {};
     this.requestAttempts = 0;
 
+    // The application core state that gets passed down the Navigator's screenProps.
     this.state = {
       account: {},
       appState: AppState.currentState,
@@ -131,7 +132,10 @@ export default class App extends React.Component {
     });
   }
 
-
+  /**
+   * Local storage access of specific user's account settings.
+   * @param username Email of user
+   */
   async loadAccountSettingsFromLocalStorage(username) {
     try { 
       const accountString = await LocalStorage.getItem(`@RightOn:${username}`);
@@ -145,6 +149,11 @@ export default class App extends React.Component {
   }
 
 
+  /**
+   * Local storage access of specific user's device settings.
+   * @param signInWithoutPassword Action conditional for automatically signing
+   * in user if username is provided from a previous session.
+   */
   async loadDeviceSettingsFromLocalStorage(signInWithoutPassword) {
     try { 
       const deviceSettingsString = await LocalStorage.getItem('@RightOn:DeviceSettings');
@@ -178,7 +187,10 @@ export default class App extends React.Component {
     }
   }
 
-
+  /**
+   * Background listener for subscribing/unsubscribing from GameRoom topic.
+   * @param nextAppState Returned event argument from the listener function.
+   */
   handleAppStateChange(nextAppState) {
     const { appState, GameRoomID } = this.state;
     if (GameRoomID) {
@@ -211,7 +223,11 @@ export default class App extends React.Component {
     this.setState({ session: null });
   }
 
-
+  /**
+   * Main application core state update function.
+   * @param property Property key to update.
+   * @param value Value of property to update with.
+   */
   handleSetAppState(property, value) {
     switch (property) {
       case 'session': 
@@ -300,6 +316,10 @@ export default class App extends React.Component {
   }
 
 
+  /**
+   * Duo account type function for writing directly to an account's DynamoDB table.
+   * @param role Type of user: teacher || student.
+   */
   updateAccountInDynamoDB(role) {
     const { account } = this.state;
     if (role === 'teacher') {
@@ -356,4 +376,5 @@ export default class App extends React.Component {
   }
 }
 
+// Pass router to RootNavigator for hooking it into the navigation paradigm.
 App.router = RootNavigator.router;
