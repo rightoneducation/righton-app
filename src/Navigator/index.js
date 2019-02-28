@@ -23,6 +23,13 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * A duo account type front facing screen directly after the Splash screen
+   * that displays if the user has not accessed the application before.
+   * 
+   * Helps navigate teacher/student into their respective application interfaces
+   * and sets the deviceSettings for future streamlined access.
+   */
   OnboardAppRouter: {
     screen: props => (
       <OnboardAppRouter
@@ -38,6 +45,10 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * A screen for specifically onboarding teachers with slides to educate
+   * them about RightOn and also to provide options for login/signup/maybe later.
+   */
   OnboardTeacherRouter: {
     screen: (props) => {
       const { navigation, screenProps } = props;
@@ -57,6 +68,10 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * A duo account type onboarding TabNavigator for login/signup.
+   * Serves creating both teacher and student accounts.
+   */
   OnboardAccount: {
     screen: OnboardAccount,
     navigationOptions: {
@@ -65,6 +80,10 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * A fast-tracked student game joining shell to immediately route
+   * students into a game if one is being hosted by the teacher.
+   */
   StudentFirst: {
     screen: (props) => {
       const { navigation, screenProps } = props;
@@ -85,7 +104,10 @@ const RootNavigator = createSwitchNavigator({
     },
   },
 
-
+  /**
+   * The main student application screen which encapsulates the GameRoom screens
+   * for the student RightOn experience. 
+   */
   StudentApp: {
     screen: StudentApp,
     navigationOptions: { 
@@ -94,6 +116,10 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * The TabNavigation experience of the Teacher for view/creating/launching games
+   * and access to QuizMaker and Reports.
+   */
   TeacherApp: {
     screen: TeacherApp,
     navigationOptions: { 
@@ -102,6 +128,10 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * Separate GameRoom screen which switches between rendering the various game
+   * screens for the teacher RightOn experience.
+   */
   TeacherGameRoom: {
     screen: (props) => {
       const { navigation, screenProps } = props;
@@ -126,6 +156,9 @@ const RootNavigator = createSwitchNavigator({
   },
 
 
+  /**
+   * A separated screen for accessing teacher profile/account settings.
+   */
   TeacherProfile: {
     screen: (props) => {
       const { navigation, screenProps } = props;
