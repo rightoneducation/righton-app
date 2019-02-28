@@ -51,8 +51,8 @@ export default class GameBuilder extends React.Component {
       })),
       quizmaker: PropTypes.bool,
       title: PropTypes.string,
-      explore: PropTypes.bool,
     }),
+    explore: PropTypes.bool,
     TeacherID: PropTypes.string,
     visible: PropTypes.bool.isRequired,
   };
@@ -74,8 +74,8 @@ export default class GameBuilder extends React.Component {
       questions: [],
       quizmaker: false,
       title: '',
-      explore: false,
     },
+    explore: false,
     TeacherID: '',
     visible: false,
   };
@@ -211,7 +211,7 @@ export default class GameBuilder extends React.Component {
         delete saveGame.quizmaker;
         saveGame.GameID = `${Math.random()}`;
         handleCreateGame(saveGame);
-      } else if (this.props.game.explore) {
+      } else if (this.props.explore) {
         // Clone game from Explore
         saveGame.title = `Clone of ${saveGame.title}`;
         handleCreateGame(saveGame);
@@ -250,7 +250,7 @@ export default class GameBuilder extends React.Component {
 
 
   handleInputModal(inputLabel, placeholder, maxLength, input = '', keyboardType = 'default') {
-    if (this.state.game.explore) return;
+    if (this.props.explore) return;
     if (inputLabel === 'title') {
       this.onTitleLayout();
     } else if (inputLabel === 'description') {
@@ -320,25 +320,25 @@ export default class GameBuilder extends React.Component {
 
 
   showGradeSelection() {
-    if (this.state.game.explore) return;
+    if (this.props.explore) return;
     this.setState({ showSelection: 'Grade' });
   }
 
 
   showDomainSelection() {
-    if (this.state.game.explore || this.state.game.grade === 'General') return;
+    if (this.props.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Domain' });
   }
 
 
   showClusterSelection() {
-    if (this.state.game.explore || this.state.game.grade === 'General') return;
+    if (this.props.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Cluster' });
   }
 
 
   showStandardSelection() {
-    if (this.state.game.explore || this.state.game.grade === 'General') return;
+    if (this.props.explore || this.state.game.grade === 'General') return;
     this.setState({ showSelection: 'Standard' });
   }
 
@@ -444,6 +444,7 @@ export default class GameBuilder extends React.Component {
 
   render() {
     const {
+      explore,
       // handleClose,
       handlePlayGame,
       visible,
@@ -459,7 +460,6 @@ export default class GameBuilder extends React.Component {
       description,
       favorite,
       title,
-      explore,
     } = this.state.game;
 
     const {
