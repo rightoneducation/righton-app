@@ -40,6 +40,7 @@ export default ScaledSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'flex-end',
+    paddingBottom: '90@vs',
   },
   choiceButton: {
     alignItems: 'center',
@@ -90,7 +91,7 @@ export default ScaledSheet.create({
   },
   question: {
     color: colors.white,
-    fontSize: fonts.large,
+    fontSize: fonts.medium,
     textAlign: 'center',
   },
   questionContainer: {
