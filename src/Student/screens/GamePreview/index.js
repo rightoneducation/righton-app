@@ -414,7 +414,7 @@ export default class GamePreview extends React.PureComponent {
     const teamRef = `team${team}`;
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
         { Platform.OS === 'ios' && <KeepAwake /> }
 
         <Message {...messageProps} />
