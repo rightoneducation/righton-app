@@ -13,8 +13,8 @@ import { gamePropTypes, gameDefaultProps } from '../../../../config/propTypes';
 import Swiper from 'react-native-swiper';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import Eicon from 'react-native-vector-icons/Entypo';
 import { verticalScale } from 'react-native-size-matters';
+import ButtonMenu from '../../../../components/ButtonMenu';
 import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
@@ -58,7 +58,6 @@ export default class GamesBuilder extends React.Component {
       addQuestion: {},
       edited: false,
       game: {
-        // banner: '',
         grade: null,
         domain: null,
         cluster: null,
@@ -245,23 +244,6 @@ export default class GamesBuilder extends React.Component {
   }
 
 
-  // renderBannerUploader = banner => (
-  //   <Touchable
-  //     onPress={() => {}}
-  //   >
-  //     <View style={[styles.bannerContainer, elevation]}>
-  //       {banner ?
-  //         <Image source={{ uri: banner }} style={styles.bannerImage} />
-  //         :
-  //         <View>
-  //           <Aicon name={'image'} style={styles.bannerIcon} />
-  //           <Text style={styles.bannerLabel}>Upload splash</Text>
-  //         </View>}
-  //     </View>
-  //   </Touchable>
-  // );
-
-
   showGradeSelection = () => {
     if (this.props.explore) return;
     this.setState({ showSelection: 'Grade' });
@@ -401,7 +383,6 @@ export default class GamesBuilder extends React.Component {
 
     const {
       GameID,
-      // banner,
       grade,
       domain,
       cluster,
@@ -508,6 +489,7 @@ export default class GamesBuilder extends React.Component {
               />}
 
             <View style={[styles.headerContainer, elevation]}>
+            
               <Touchable
                 hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
                 onPress={this.handleCloseGame}
@@ -517,6 +499,7 @@ export default class GamesBuilder extends React.Component {
                   <Aicon name={'close'} style={styles.closeIcon} />
                 </View>
               </Touchable>
+
               {!explore && <Text style={styles.title}>Game Builder</Text>}
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
@@ -525,6 +508,7 @@ export default class GamesBuilder extends React.Component {
               >
                 <Text style={styles.createLabel}>{ action }</Text>
               </Touchable>
+
               {!explore &&
                 <Touchable
                   hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
@@ -536,30 +520,11 @@ export default class GamesBuilder extends React.Component {
                     <Aicon name={'heart'} style={[styles.heartIcon, favorite && styles.colorPrimary]} />
                   </View>
                 </Touchable>}
-              <Touchable
-                hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
-                onPress={this.toggleMenu}
-                style={styles.menuWrapper}
-              >
-                <Eicon name={'dots-three-vertical'} style={styles.heartIconBig} />
-              </Touchable>
+
+              <ButtonMenu onPress={this.toggleMenu} />
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollview}>
-
-              {/* <Touchable
-                onPress={() => {}}
-              >
-                <View style={[styles.bannerContainer, elevation]}>
-                  {banner ?
-                    <Image source={{ uri: banner }} style={styles.bannerImage} />
-                    :
-                    <View>
-                      <Aicon name={'image'} style={styles.bannerIcon} />
-                      <Text style={styles.bannerLabel}>Upload banner</Text>
-                    </View>}
-                </View>
-              </Touchable> */}
 
               <View
                 onLayout={this.onTitleLayout}

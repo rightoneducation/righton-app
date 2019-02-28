@@ -135,10 +135,6 @@ export default ScaledSheet.create({
   marginTop: {
     marginTop: '15@vs',
   },
-  menuWrapper: {
-    position: 'absolute',
-    right: '10@ms',
-  },
   placeholder: {
     color: colors.lightGray,
   },
