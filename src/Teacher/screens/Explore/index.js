@@ -139,7 +139,12 @@ class Explore extends React.PureComponent {
 
 
   renderDataBlock = (data) => {
-    if (data.GameID === 'A123456789') return null;
+    let ccs = '';
+    if (data.grade === 'General') {
+      ccs = 'General';
+    } else if (data.grade && data.domain && data.cluster && data.standard) {
+      ccs = `${data.grade === 'HS' ? '' : `${data.grade}.`}${data.domain}.${data.cluster}.${data.standard}`;
+    }
     return (
       <Touchable
         activeOpacity={0.8}
@@ -156,7 +161,7 @@ class Explore extends React.PureComponent {
           <View style={styles.dataTextContainer}>
             <Text numberOfLines={2} style={styles.dataTextTitle}>{data.title}</Text>
             <Text numberOfLines={2} style={styles.dataTextDescription}>{data.description}</Text>
-            <Text style={[styles.dataTextDescription, styles.ccs, styles.italic]}>{`${data.grade === 'HS' ? '' : `${data.grade}.`}${data.domain}.${data.cluster}.${data.standard}`}</Text>
+            <Text style={[styles.dataTextDescription, styles.ccs, styles.italic]}>{ ccs }</Text>
           </View>
           {/* </View> */}
         </View>
