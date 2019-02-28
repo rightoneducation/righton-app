@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import PropTypes from 'prop-types';
+import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import { getGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
 import { playGame, saveGamesToDatabase } from '../../../utils/gameBuilder';
@@ -21,19 +21,11 @@ import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 class Explore extends React.PureComponent {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      navigation: PropTypes.shape({
-        navigate: PropTypes.func,
-      }),
-    }),
+    screenProps: screenPropsPropTypes,
   };
   
   static defaultProps = {
-    screenProps: {
-      navigation: {
-        navigate: () => {},
-      },
-    },
+    screenProps: screenPropsDefaultProps,
   };
   
   constructor(props) {
