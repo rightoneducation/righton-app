@@ -86,11 +86,11 @@ export const domainSelectionHS = [
 ];
 
 export const gradeSelection = [
-  { label: 'General', value: 'General' },
   { label: 'Grade 6', value: '6' },
   { label: 'Grade 7', value: '7' },
   { label: 'Grade 8', value: '8' },
   { label: 'High School', value: 'HS' },
+  { label: 'General', value: 'General' },
 ];
 
 export const clusterSelection = [
