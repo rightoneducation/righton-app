@@ -36,6 +36,7 @@ export default class GameReasons extends React.PureComponent {
           instructions: __DEV__ ? ['Look up and to the left', 'Think back to earlier this morning', 'What was the texture of your food?', 'What did it smell like?', 'How was it cooked or prepared?', 'Who made breakfast this morning?', 'Do you want to eat it again right now?', 'What was it?!'] : [],
           question: __DEV__ ? 'What did you eat for breakfast?' : '',
           team: __DEV__ ? 'Scool' : '',
+          tricks: [],
         },
       },
       IOTPublishMessage: () => {},
@@ -54,6 +55,7 @@ export default class GameReasons extends React.PureComponent {
       trick0Reason: '',
       trick1Reason: '',
       trick2Reason: '',
+      tricks: [],
     };
 
     this.timerInterval = undefined;
@@ -75,6 +77,7 @@ export default class GameReasons extends React.PureComponent {
     if (this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00') {
       this.timerInterval = setInterval(this.countdownTime, 1000);
     }
+    this.parseTricks();
   }
 
 
@@ -138,6 +141,19 @@ export default class GameReasons extends React.PureComponent {
         }
       );
     }
+  }
+
+  
+  parseTricks() {
+    const { gameState, team } = this.props.screenProps;
+    const teamRef = `team${team}`;
+    const tricks = [];
+    for (let i = 0; i < gameState[teamRef].tricks.length; i += 1) {
+      if (gameState[teamRef].tricks[i].selected) {
+        tricks.push(gameState[teamRef].tricks[i].value);
+      }
+    }
+    this.setState({ tricks });
   }
 
 
@@ -258,10 +274,10 @@ export default class GameReasons extends React.PureComponent {
       trick0Reason,
       trick1Reason,
       trick2Reason,
+      tricks,
     } = this.state;
 
-    const { gameState, team } = this.props.screenProps;
-    const teamRef = `team${team}`;
+    const { team } = this.props.screenProps;
 
     return (
       <ScrollView 
@@ -288,14 +304,14 @@ export default class GameReasons extends React.PureComponent {
           </Text>
 
           <View>
-            {gameState[teamRef].tricks[0] &&
+            {tricks[0] &&
               <View
                 onLayout={this.onTrick0Layout}
                 ref={this.handleTrick0Ref}
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
                 <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `Trick Answer #1. ${gameState[teamRef].tricks[0].value}` }
+                  { `Trick Answer #1. ${tricks[0]}` }
                 </Text>
                 <Touchable
                   onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
@@ -306,14 +322,14 @@ export default class GameReasons extends React.PureComponent {
               </View>
             }
 
-            {gameState[teamRef].tricks[1] &&
+            {tricks[1] &&
               <View
                 onLayout={this.onTrick1Layout}
                 ref={this.handleTrick1Ref}
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
                 <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `Trick Answer #2. ${gameState[teamRef].tricks[1].value}` }
+                  { `Trick Answer #2. ${tricks[1]}` }
                 </Text>
                 <Touchable
                   onPress={() => this.handleInputModal('trick1', 'Enter your reason', 500, trick1Reason)}
@@ -324,14 +340,14 @@ export default class GameReasons extends React.PureComponent {
               </View>
             }
 
-            {gameState[teamRef].tricks[2] &&
+            {tricks[2] &&
               <View
                 onLayout={this.onTrick2Layout}
                 ref={this.handleTrick2Ref}
                 style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
               >
                 <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `Trick Answer #3. ${gameState[teamRef].tricks[2].value}` }
+                  { `Trick Answer #3. ${tricks[2]}` }
                 </Text>
                 <Touchable
                   onPress={() => this.handleInputModal('trick2', 'Enter your reason', 500, trick2Reason)}
