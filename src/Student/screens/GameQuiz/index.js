@@ -137,8 +137,8 @@ export default class GameQuiz extends React.Component {
     const { gameState, handleSetAppState } = this.props.screenProps;
     const { teamRef } = gameState.state;
     if (selectedChoice !== null && gameState[teamRef].choices[selectedChoice].correct) {
-      handleSetAppState('points', 50);
-      return 50;
+      handleSetAppState('points', 25);
+      return 25;
     }
     return 0;
   }
