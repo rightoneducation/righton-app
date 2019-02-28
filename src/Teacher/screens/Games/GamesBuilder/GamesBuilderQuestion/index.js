@@ -22,7 +22,7 @@ import { colors, elevation, fonts } from '../../../../../utils/theme';
 import debug from '../../../../../utils/debug';
 
 
-export default class GameBuilderQuestion extends React.Component {
+export default class GamesBuilderQuestion extends React.Component {
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
     explore: PropTypes.bool,

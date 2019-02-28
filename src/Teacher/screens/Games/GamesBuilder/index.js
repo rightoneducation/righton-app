@@ -19,16 +19,16 @@ import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
 import Menu from '../../../../components/Menu';
-import GameShare from './GameShare';
+import GamesShare from './GamesShare';
 import SelectionModal from '../../../../components/SelectionModal';
 import { domainSelection, domainSelectionHS, standardSelection, gradeSelection, clusterSelection } from '../../../../config/selections';
-import GameBuilderQuestion from './GameBuilderQuestion';
+import GamesBuilderQuestion from './GamesBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
 // import debug from '../../../../utils/debug';
 
 
-export default class GameBuilder extends React.Component {
+export default class GamesBuilder extends React.Component {
   static propTypes = {
     currentGame: PropTypes.number,
     handleClose: PropTypes.func.isRequired,
@@ -481,7 +481,7 @@ export default class GameBuilder extends React.Component {
               />}
 
             {showShare && 
-              <GameShare
+              <GamesShare
                 handleClose={this.toggleShare}
                 game={{ ...this.state.game, shared: this.props.TeacherID }}
               />}
@@ -650,7 +650,7 @@ export default class GameBuilder extends React.Component {
 
           </View>
 
-          <GameBuilderQuestion
+          <GamesBuilderQuestion
             closeModal={this.closeAddQuestion}
             question={addQuestion}
             explore={explore}

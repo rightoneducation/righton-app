@@ -13,7 +13,7 @@ import ButtonWide from '../../../../../components/ButtonWide';
 import { colors, deviceWidth, elevation, fonts } from '../../../../../utils/theme';
 import debug from '../../../../../utils/debug';
 
-export default class GameShare extends React.PureComponent {
+export default class GamesShare extends React.PureComponent {
   static propTypes = {
     handleClose: PropTypes.func,
     game: PropTypes.shape({}),

@@ -10,12 +10,12 @@ import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, scre
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import { NavigationEvents } from 'react-navigation';
-import GameBuilder from './GameBuilder';
+import GamesBuilder from './GamesBuilder';
 import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import styles from './styles';
 
-import { playGame, saveGamesToDatabase } from '../../../utils/gameBuilder';
+import { playGame, saveGamesToDatabase } from '../../../utils/gamesBuilder';
 
 import {
   getItemFromTeacherAccountFromDynamoDB,
@@ -355,7 +355,7 @@ class Games extends React.Component {
           onWillFocus={this.onGamesTabFocused}
         />
         {viewGame &&
-          <GameBuilder
+          <GamesBuilder
             currentGame={this.currentGame}
             handleClose={this.handleCloseGame}
             handleCreateGame={this.handleCreateGame}

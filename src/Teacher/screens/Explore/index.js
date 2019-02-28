@@ -9,13 +9,13 @@ import {
 import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import { getGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
-import { playGame, saveGamesToDatabase } from '../../../utils/gameBuilder';
+import { playGame, saveGamesToDatabase } from '../../../utils/gamesBuilder';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
 import debug from '../../../utils/debug';
 import MainHeader from '../../components/MainHeader';
-import GameBuilder from '../Games/GameBuilder';
+import GamesBuilder from '../Games/GamesBuilder';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 
 
@@ -180,7 +180,7 @@ class Explore extends React.PureComponent {
 
     if (viewGame) {
       return (
-        <GameBuilder
+        <GamesBuilder
           explore // This let's us know that the game is viewed from Explore tab.
           handleClose={this.handleCloseGame}
           handleCreateGame={this.handleCreateGame}
