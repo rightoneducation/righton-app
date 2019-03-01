@@ -33,7 +33,7 @@ export const gameStatePropTypes = PropTypes.shape({
       })
     ),
     image: PropTypes.string,
-    instructions: PropTypes.string,
+    instructions: PropTypes.arrayOf(PropTypes.string),
     question: PropTypes.string,
     uid: PropTypes.string,
     tricks: PropTypes.arrayOf(
@@ -70,7 +70,7 @@ export const gameStateDefaultProps = {
       }
     ],
     image: '',
-    instructions: '',
+    instructions: [],
     question: '',
     uid: '',
     tricks: [{
