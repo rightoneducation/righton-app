@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import { colors, fonts } from '../../utils/theme';
+import { colors, deviceWidth, fonts } from '../../utils/theme';
 import ButtonWide from '../ButtonWide';
 
 
@@ -17,12 +17,16 @@ export default class Instructions extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.string),
     handleCloseModal: PropTypes.func.isRequired,
+    instructionIndex: PropTypes.number.isRequired,
+    incrementInstruction: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
   };
   
   static defaultProps = {
     data: [],
     handleCloseModal: () => {},
+    instructionIndex: 0,
+    incrementInstruction: () => {},
     visible: false,
   };
 
@@ -41,11 +45,20 @@ export default class Instructions extends React.Component {
 
 
   setVisibleItems() {
-    const { data } = this.props;
-    const visibleItems = data.length === 1 ? [undefined] : [true];
-    if (this.props.data.length > 1) {
-      visibleItems[this.props.data.length - 1] = undefined;
-      visibleItems.fill(undefined, 1);
+    const { data, instructionIndex } = this.props;
+    let visibleItems = [];
+    if (instructionIndex) {
+      visibleItems = this.props.data.slice(0, instructionIndex + 1);
+      if (this.props.data.length - 1 !== instructionIndex) {
+        visibleItems[this.props.data.length - 1] = undefined;
+        visibleItems.fill(undefined, instructionIndex + 1);
+      }
+    } else {
+      visibleItems = data.length === 1 ? [undefined] : [true];
+      if (this.props.data.length > 1) {
+        visibleItems[this.props.data.length - 1] = undefined;
+        visibleItems.fill(undefined, 1);
+      }
     }
     this.setState({ visibleItems });
   }
@@ -53,14 +66,15 @@ export default class Instructions extends React.Component {
 
   handleReveal = () => {
     const { visibleItems } = this.state;
+    const { incrementInstruction } = this.props;
     const updatedVisibleItems = [...visibleItems];
     const index = updatedVisibleItems.indexOf(undefined);
     updatedVisibleItems[index] = true;
-    this.setState({ visibleItems: updatedVisibleItems });
+    this.setState({ visibleItems: updatedVisibleItems }, incrementInstruction);
   }
 
 
-  renderInstructionBox = (instruction, alignment) => (
+  renderInstructionBox = (instruction, alignment, lastElement) => (
     <View key={instruction} style={[styles.container, alignment === 'left' ? styles.justifyLeft : styles.justifyRight]}>
       {
         alignment === 'left' &&
@@ -69,6 +83,7 @@ export default class Instructions extends React.Component {
         </View>
       }
       <View style={[styles.box, alignment === 'left' ? styles.alignLeft : styles.alignRight]}>
+        {lastElement && <Text style={[styles.instruction, styles.bold]}>{'A: '}</Text>}
         <Text style={styles.instruction}>{ instruction }</Text>
       </View>
       {
@@ -128,7 +143,7 @@ export default class Instructions extends React.Component {
             {data.map((instruction, idx) => {
               if (!visibleItems[idx]) return null;
               const alignment = idx % 2 === 0 ? 'left' : 'right';
-              return this.renderInstructionBox(instruction, alignment);
+              return this.renderInstructionBox(instruction, alignment, idx === data.length - 1);
             })}
 
             {this.renderRevealButton(visibleItems, data)}
@@ -145,17 +160,26 @@ const styles = ScaledSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: '10@s',
     marginLeft: '5@s',
+    paddingLeft: '5@ms',
+    paddingRight: '10@ms',
   },
   alignRight: {
     borderBottomLeftRadius: '10@s',
     borderBottomRightRadius: 0,
     marginRight: '5@s',
+    paddingLeft: '10@ms',
+    paddingRight: '5@ms',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
   box: {
     backgroundColor: colors.darkGray,
     borderTopLeftRadius: '10@s',
     borderTopRightRadius: '10@s',
-    padding: '10@ms',
+    flexDirection: 'row',
+    paddingVertical: '10@ms',
+    width: deviceWidth - moderateScale(70),
   },
   closeArrow: {
     alignSelf: 'center',
