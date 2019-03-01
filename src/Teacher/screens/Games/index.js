@@ -199,6 +199,17 @@ class Games extends React.Component {
   }
 
 
+  handleDeleteGame = () => {
+    if (this.currentGame !== null) {
+      const { games } = this.state;
+      const updatedGames = [...games];
+      updatedGames.splice(this.currentGame, 1);
+      this.setState({ games: updatedGames, viewGame: null });
+      this.handleSaveGamesToDatabase(updatedGames);
+    }
+  }
+
+
   handleSaveGamesToDatabase = async (updatedGames) => {
     const { account, handleSetAppState } = this.props.screenProps;
 
@@ -360,6 +371,7 @@ class Games extends React.Component {
             handleClose={this.handleCloseGame}
             handleCreateGame={this.handleCreateGame}
             handlePlayGame={this.handlePlayGame}
+            handleDeleteGame={this.handleDeleteGame}
             game={viewGame}
             TeacherID={TeacherID}
             visible

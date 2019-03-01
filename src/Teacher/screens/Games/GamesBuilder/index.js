@@ -33,6 +33,7 @@ export default class GamesBuilder extends React.Component {
     currentGame: PropTypes.number,
     handleClose: PropTypes.func.isRequired,
     handleCreateGame: PropTypes.func.isRequired,
+    handleDeleteGame: PropTypes.func.isRequired,
     handlePlayGame: PropTypes.func.isRequired,
     game: gamePropTypes,
     explore: PropTypes.bool,
@@ -44,6 +45,7 @@ export default class GamesBuilder extends React.Component {
     currentGame: null,
     handleClose: () => {},
     handleCreateGame: () => {},
+    handleDeleteGame: () => {},
     handlePlayGame: () => {},
     game: gameDefaultProps,
     explore: false,
@@ -332,6 +334,9 @@ export default class GamesBuilder extends React.Component {
   toggleShare = () => this.setState({ showMenu: false, showShare: !this.state.showShare });
 
 
+  handleDeleteConfirmation = () => this.props.handleDeleteGame();
+
+
   renderQuestionBlock = (question, idx) => (
     <Touchable
       activeOpacity={0.8}
@@ -467,6 +472,7 @@ export default class GamesBuilder extends React.Component {
                 handleClose={this.toggleMenu}
                 items={[
                   { onPress: this.toggleShare, label: 'Share' },
+                  !explore && { onPress: this.handleDeleteConfirmation, label: 'Delete' },
                 ]}
               />}
 
