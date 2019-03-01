@@ -47,6 +47,7 @@ export default class GamePreview extends React.PureComponent {
 
     this.state = {
       instructions: [],
+      instructionIndex: 0,
       messageProps: {},
       showInput: false,
       showInstructions: false,
@@ -157,6 +158,9 @@ export default class GamePreview extends React.PureComponent {
       this.setState({ showInstructions: true });
     }
   }
+
+
+  incrementInstruction = () => this.setState({ instructionIndex: this.state.instructionIndex + 1 });
 
 
   startArrowAnimation = () => {
@@ -375,6 +379,7 @@ export default class GamePreview extends React.PureComponent {
   render() {
     const {
       instructions,
+      instructionIndex,
       messageProps,
       showInput,
       showInstructions,
@@ -401,6 +406,8 @@ export default class GamePreview extends React.PureComponent {
         {showInstructions &&
           <Instructions
             handleCloseModal={this.toggleInstructions}
+            incrementInstruction={this.incrementInstruction}
+            instructionIndex={instructionIndex}
             data={instructions}
             visible={showInstructions}
           />}
