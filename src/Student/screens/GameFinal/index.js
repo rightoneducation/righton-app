@@ -35,6 +35,7 @@ export default class GameFinal extends React.Component {
       playerScore: props.screenProps.points,
       portal: '',
       teamScore: 0,
+      totalTricks: 0,
     };
 
     this.mounted = false;
@@ -97,15 +98,23 @@ export default class GameFinal extends React.Component {
 
   calculateTeamScore() {
     const { gameState, team } = this.props.screenProps;
-    const choices = gameState[`team${team}`].choices || [];
+    const teamRef = `team${team}`;
+    const choices = gameState[teamRef].choices || [];
+    const players = gameState.state || {};
+    const numberOfPlayers = Object.keys(players).length;
+    let numberOfTeammates = 0;
+    for (let i = 0; i < numberOfPlayers.length; i += 1) {
+      if (players[numberOfPlayers[i]] === teamRef) numberOfTeammates += 1;
+    }
     let trickCount = 0;
     for (let i = 0; i < choices.length; i += 1) {
       if (!choices[i].correct) {
         trickCount += choices[i].votes;
       }
     }
-    const teamScore = trickCount * 100;
-    this.setState({ teamScore }, () => {
+    trickCount += numberOfPlayers - numberOfTeammates - trickCount;
+    const teamScore = Math.round((trickCount / (numberOfPlayers - numberOfTeammates)) * 100);
+    this.setState({ teamScore, totalTricks: trickCount }, () => {
       this.updateAccountScores();
     });
   }
@@ -113,7 +122,7 @@ export default class GameFinal extends React.Component {
 
   render() {
     const { team } = this.props.screenProps;
-    const { exit, playerScore, portal, teamScore } = this.state;
+    const { exit, playerScore, portal, teamScore, totalTricks } = this.state;
 
     if (portal) {
       return (
@@ -144,12 +153,12 @@ export default class GameFinal extends React.Component {
           <View style={styles.centerAlign}>
             <Text style={styles.label}>Number of answers</Text>            
             <Text style={[styles.label, styles.italic]}>correct</Text>            
-            <Text style={styles.value}>{ playerScore / 50 }</Text>
+            <Text style={styles.value}>{ playerScore / 25 }</Text>
           </View>
           <View style={[styles.centerAlign, styles.marginTop]}>
             <Text style={styles.label}>Number of players</Text>
             <Text style={[styles.label, styles.italic]}>tricked</Text>            
-            <Text style={styles.value}>{ teamScore / 100 }</Text>
+            <Text style={styles.value}>{ totalTricks }</Text>
           </View>
         </View>
 

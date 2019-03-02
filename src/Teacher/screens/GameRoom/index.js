@@ -330,10 +330,12 @@ export default class GameRoom extends React.Component {
   handleEndMessage = () => {
     const {
       IOTPublishMessage,
+      players,
     } = this.props.screenProps;
     const message = {
       action: 'END_GAME',
       uid: `${Math.random()}`,
+      players,
     };
     IOTPublishMessage(message);
   }
