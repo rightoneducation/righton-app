@@ -243,7 +243,7 @@ export default class Dashboard extends React.Component {
       handleSetAppState,
       IOTPublishMessage,
     } = this.props.screenProps;
-    const team = idx;
+    const team = `${idx}`;
     handleSetAppState('team', team);
     this.setState({ portal: 'Waiting for other players' });
     const message = {
