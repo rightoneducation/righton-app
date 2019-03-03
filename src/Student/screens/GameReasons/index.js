@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
+import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
@@ -33,10 +34,10 @@ export default class GameReasons extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    const { quizTime } = props.screenProps.gameState;
     this.state = {
       showInput: false,
-      timeLeft: props.screenProps.gameState.quizTime && props.screenProps.gameState.quizTime !== '0:00' ?
-        props.screenProps.gameState.quizTime : 'No time limit',
+      timeLeft: quizTime && quizTime !== '0:00' ? quizTime : 'No time limit',
       trick0Reason: '',
       trick1Reason: '',
       trick2Reason: '',
@@ -48,8 +49,9 @@ export default class GameReasons extends React.PureComponent {
 
 
   componentDidMount() {
-    if (this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00') {
-      this.timerInterval = setInterval(this.countdownTime, 1000);
+    const { quizTime } = this.props.screenProps.gameState;
+    if (quizTime && quizTime !== '0:00') {
+      requestCountdownTimer(quizTime, this.setTime);
     }
     this.parseTricks();
   }
@@ -75,7 +77,7 @@ export default class GameReasons extends React.PureComponent {
 
 
   componentWillUnmount() {
-    clearInterval(this.timerInterval);
+    cancelCountdownTimer();
   }
 
 
@@ -117,6 +119,9 @@ export default class GameReasons extends React.PureComponent {
     }
   }
 
+
+  setTime = timeLeft => this.setState({ timeLeft });
+
   
   parseTricks() {
     const { gameState, team } = this.props.screenProps;
@@ -143,25 +148,6 @@ export default class GameReasons extends React.PureComponent {
 
   handleTrick2Ref = (ref) => {
     this.trick2Ref = ref;
-  }
-
-
-  countdownTime = () => {
-    const { timeLeft } = this.state;
-    const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
-    const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
-    let newTimeLeft = '';
-    if (seconds > 10) {
-      newTimeLeft = `${minutes}:${seconds - 1}`;
-    } else if (seconds > 0) {
-      newTimeLeft = `${minutes}:0${seconds - 1}`;
-    } else if (seconds === 0 && minutes > 0) {
-      newTimeLeft = `${minutes - 1}:59`;
-    } else if (seconds === 0 && minutes === 0) {
-      clearInterval(this.timerInterval);
-      newTimeLeft = 'Time is up!';
-    }
-    this.setState({ timeLeft: newTimeLeft });
   }
 
 

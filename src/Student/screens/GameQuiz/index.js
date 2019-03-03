@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
+import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
 import Touchable from 'react-native-platform-touchable';
 import KeepAwake from 'react-native-keep-awake';
 import gamePreviewStyles from '../GamePreview/styles';
@@ -27,21 +28,20 @@ export default class GameQuiz extends React.Component {
   constructor(props) {
     super(props);
 
+    const { quizTime, state } = props.screenProps.gameState;
     this.state = {
       selectedChoice: null,
-      timeLeft: props.screenProps.gameState.quizTime && props.screenProps.gameState.quizTime !== '0:00' ?
-        props.screenProps.gameState.quizTime : 'No time limit',
-      teamRef: (props.screenProps.gameState.state && props.screenProps.gameState.state.teamRef) || 'team0',
+      timeLeft: quizTime && quizTime !== '0:00' ? quizTime : 'No time limit',
+      teamRef: (state && state.teamRef) || 'team0', // What does 'team0' do that's wrong in this case?
       published: false,
     };
-
-    this.timerInterval = undefined;
   }
 
 
   componentDidMount() {
-    if (this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00') {
-      this.timerInterval = setInterval(this.countdownTime, 1000);
+    const { quizTime } = this.props.screenProps.gameState;
+    if (quizTime && quizTime !== '0:00') {
+      requestCountdownTimer(quizTime, this.setTime);
     }
   }
 
@@ -52,7 +52,7 @@ export default class GameQuiz extends React.Component {
       if (nextProps.screenProps.gameState.state.endGame === true) {
         if (this.state.timeLeft !== 'Time is up!') {
           this.publishChoice();
-          clearInterval(this.timerInterval);
+          cancelCountdownTimer();
         }
         navigation.navigate('GameFinal');
         return;
@@ -60,7 +60,7 @@ export default class GameQuiz extends React.Component {
       if (nextProps.screenProps.gameState.state.endQuiz === true) {
         if (this.state.timeLeft !== 'Time is up!') {
           this.publishChoice();
-          clearInterval(this.timerInterval);
+          cancelCountdownTimer();
           this.setState({ timeLeft: 'Time is up!' });
         }
       } else if (nextProps.screenProps.gameState.state.startQuiz === true &&
@@ -83,22 +83,27 @@ export default class GameQuiz extends React.Component {
 
 
   componentWillUnmount() {
-    clearInterval(this.timerInterval);
+    cancelCountdownTimer();
   }
+
+
+  setTime = timeLeft => this.setState({ timeLeft });
 
 
   resetState(teamRef) {
     // const now = Date.now();
     // const quizTime = this.props.screenProps.gameState.quizTime;
     // const timeLeft = time - now
+    const { quizTime } = this.props.screenProps.gameState;
     this.setState({
       selectedChoice: null,
-      timeLeft: this.props.screenProps.gameState.quizTime && this.props.screenProps.gameState.quizTime !== '0:00' ?
-        this.props.screenProps.gameState.quizTime : 'No time limit',
+      timeLeft: quizTime && quizTime !== '0:00' ? quizTime : 'No time limit',
       teamRef,
       published: false,
     }, () => {
-      this.timerInterval = setInterval(this.countdownTime, 1000);
+      if (quizTime && quizTime !== '0:00') {
+        requestCountdownTimer(quizTime, this.setTime);
+      }
     });
   }
 
@@ -112,26 +117,6 @@ export default class GameQuiz extends React.Component {
       return 25;
     }
     return 0;
-  }
-
-  
-  countdownTime = () => {
-    const { timeLeft } = this.state;
-    const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
-    const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
-    let newTimeLeft = '';
-    if (seconds > 10) {
-      newTimeLeft = `${minutes}:${seconds - 1}`;
-    } else if (seconds > 0) {
-      newTimeLeft = `${minutes}:0${seconds - 1}`;
-    } else if (seconds === 0 && minutes > 0) {
-      newTimeLeft = `${minutes - 1}:59`;
-    } else if (seconds === 0 && minutes === 0) {
-      this.publishChoice();
-      clearInterval(this.timerInterval);
-      newTimeLeft = 'Time is up!';
-    }
-    this.setState({ timeLeft: newTimeLeft });
   }
 
 

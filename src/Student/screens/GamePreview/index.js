@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
+import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { scale } from 'react-native-size-matters';
@@ -54,8 +55,6 @@ export default class GamePreview extends React.PureComponent {
       timeLeft: props.screenProps.gameState.trickTime && props.screenProps.gameState.trickTime !== '0:00' ?
         props.screenProps.gameState.trickTime : 'No time limit',
     };
-
-    this.timerInterval = undefined;
   }
 
 
@@ -69,7 +68,7 @@ export default class GamePreview extends React.PureComponent {
     }
 
     if (trickTime && trickTime !== '0:00') {
-      this.timerInterval = setInterval(this.countdownTime, 1000);
+      requestCountdownTimer(trickTime, this.setTime);
     }
     
     InteractionManager.runAfterInteractions(this.setupInstructions());
@@ -86,8 +85,8 @@ export default class GamePreview extends React.PureComponent {
       }
       if (this.props.screenProps.gameState.state.startQuiz !==
         nextProps.screenProps.gameState.state.startQuiz) {
+        cancelCountdownTimer();
         this.setState({ timeLeft: 'Time is up!' });
-        clearTimeout(this.timerInterval);
         if (nextProps.screenProps.gameState.state.teamRef === `team${this.props.screenProps.team}`) {
           navigation.navigate('GameReasons');
         } else {
@@ -105,7 +104,7 @@ export default class GamePreview extends React.PureComponent {
   componentWillUnmount() {
     clearTimeout(this.animationTimeout);
     clearInterval(this.animationInterval);
-    clearInterval(this.timerInterval);
+    cancelCountdownTimer();
   }
 
 
@@ -123,29 +122,13 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
+  setTime = timeLeft => this.setState({ timeLeft });
+
+
   startAnimation = () => {
     this.animationInterval = setInterval(() => this.startArrowAnimation(), 3500);
   }
   
-
-  countdownTime = () => {
-    const { timeLeft } = this.state;
-    const seconds = parseInt(timeLeft.substr(timeLeft.indexOf(':') + 1), 10);
-    const minutes = parseInt(timeLeft.substr(0, timeLeft.indexOf(':')), 10);
-    let newTimeLeft = '';
-    if (seconds > 10) {
-      newTimeLeft = `${minutes}:${seconds - 1}`;
-    } else if (seconds > 0) {
-      newTimeLeft = `${minutes}:0${seconds - 1}`;
-    } else if (seconds === 0 && minutes > 0) {
-      newTimeLeft = `${minutes - 1}:59`;
-    } else if (seconds === 0 && minutes === 0) {
-      clearInterval(this.timerInterval);
-      newTimeLeft = 'Time is up!';
-    }
-    this.setState({ timeLeft: newTimeLeft });
-  }
-
 
   toggleInstructions = () => {
     const { showInstructions } = this.state;
@@ -317,6 +300,7 @@ export default class GamePreview extends React.PureComponent {
   renderArrowButton = () => (
     <TouchableOpacity
       activeOpacity={0.8}
+      hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
       onPress={this.toggleInstructions}
       style={styles.arrowButton}
     >
@@ -335,7 +319,7 @@ export default class GamePreview extends React.PureComponent {
       <View style={styles.questionContainer}>
         <Text style={styles.question}>{ gameState[teamRef].question }</Text>
         {Boolean(gameState[teamRef].image) &&
-          <Image source={{ uri: gameState[teamRef].image }} style={styles.image} resizeMethod={'resize'} />} 
+          <Image source={{ uri: gameState[teamRef].image }} style={styles.image} resizeMethod={'scale'} />} 
       </View>
     );
   }
