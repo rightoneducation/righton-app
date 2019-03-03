@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Modal,
+  RefreshControl,
   ScrollView,
   Text,
   TouchableHighlight,
@@ -139,7 +140,15 @@ export default class Instructions extends React.Component {
           >
             <View />
           </TouchableHighlight>
-          <ScrollView contentContainerStyle={styles.instructionsContainer}>
+          <ScrollView
+            contentContainerStyle={styles.instructionsContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={false}
+                onRefresh={handleCloseModal}
+              />
+            }
+          >
             {data.map((instruction, idx) => {
               if (!visibleItems[idx]) return null;
               const alignment = idx % 2 === 0 ? 'left' : 'right';
