@@ -46,7 +46,7 @@ class Explore extends React.PureComponent {
   hydrateGamesFromDynamoDB() {
     getGamesFromDynamoDB(
       (res) => {
-        debug.log('Result from GETTING games from DynamoDB for Explore:', JSON.stringify(res));
+        debug.log('Successfully got result from GETTING games from DynamoDB for Explore:');
         this.hydrateState(res.data);
       },
       exception => debug.warn('Error GETTING games from DynamoDB for Explore:', JSON.stringify(exception))
