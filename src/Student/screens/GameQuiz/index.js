@@ -170,7 +170,7 @@ export default class GameQuiz extends React.Component {
         <View style={gamePreviewStyles.questionContainer}>
           <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
           {Boolean(gameState[teamRef].image) &&
-            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
+            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
         </View>
         <View style={gamePreviewStyles.choiceContainerWrapper}>
           <View style={gamePreviewStyles.choicesContainer}>

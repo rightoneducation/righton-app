@@ -215,7 +215,7 @@ export default class GameReasons extends React.PureComponent {
       <View style={[gamePreviewStyles.questionContainer, styles.extraMarginBottom]}>
         <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
         {Boolean(gameState[teamRef].image) &&
-          <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
+          <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
       </View>
     );
   }

@@ -231,7 +231,7 @@ export default class GameRoomResults extends React.Component {
         >
           <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
           {Boolean(gameState[teamRef].image) &&
-            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} />} 
+            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
         </View>
         <View
           onLayout={this.onChoicesLayout}
