@@ -78,15 +78,15 @@ export default class GameRoomFinal extends React.Component {
           // TODO Remove teamPoints - or include it into `totalPoints`?? 
           const teamNumber = teamRef.substr(teamRef.indexOf('m') + 1);
           const playersInTeam = this.calculatePlayersInTeam(teamNumber);
-          const totalTricks = numberOfPlayers - playersInTeam - correctVotes;
+          const totalTricks = (numberOfPlayers - playersInTeam - correctVotes) || 0;
           teamRank.playersInTeam = playersInTeam;
           teamRank.answer = gameState[teamRef].answer;
           teamRank.team = `Team ${parseInt(teamNumber, 10) + 1}`;
-          teamRank.bestTrickValue = bestTrickValue;
-          teamRank.bestTrickVotes = bestTrickVotes;
-          teamRank.totalTricks = totalTricks;
+          teamRank.bestTrickValue = bestTrickValue || '';
+          teamRank.bestTrickVotes = bestTrickVotes || 0;
+          teamRank.totalTricks = totalTricks || 0;
           teamRank.totalPoints = 
-            Math.round((totalTricks / (numberOfPlayers - playersInTeam)) * 100);
+            Math.round((totalTricks / (numberOfPlayers - playersInTeam)) * 100) || 0;
           teamRank.uid = `${Math.random()}`;
           rankedTeamsAux.push(teamRank);
         }
@@ -189,7 +189,7 @@ export default class GameRoomFinal extends React.Component {
       <Text style={parentStyles.textLabel}>Players tricked:</Text>
       <View style={styles.teamItemRow}>
         <Text style={[parentStyles.textLabel, styles.primary]}>{ team.totalTricks }</Text>
-        <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.totalTricks / (numberOfPlayers - team.playersInTeam)) * 100)}%` }</Text>
+        <Text style={[parentStyles.textLabel, styles.primary]}>{ `${Math.round((team.totalTricks / (numberOfPlayers - team.playersInTeam)) * 100) || 0}%` }</Text>
       </View>
       <View style={styles.divider} />
     </View>
