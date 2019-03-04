@@ -100,11 +100,12 @@ export default class GameFinal extends React.Component {
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
     const choices = gameState[teamRef].choices || [];
-    const players = gameState.state || {};
-    const numberOfPlayers = Object.keys(players).length;
+    const { players } = gameState.state;
+    const playerKeys = Object.keys(players);
+    const numberOfPlayers = playerKeys.length;
     let numberOfTeammates = 0;
-    for (let i = 0; i < numberOfPlayers.length; i += 1) {
-      if (players[numberOfPlayers[i]] === teamRef) numberOfTeammates += 1;
+    for (let i = 0; i < numberOfPlayers; i += 1) {
+      if (players[playerKeys[i]] === team) numberOfTeammates += 1;
     }
     let trickCount = 0;
     for (let i = 0; i < choices.length; i += 1) {
@@ -113,7 +114,7 @@ export default class GameFinal extends React.Component {
       }
     }
     trickCount += numberOfPlayers - numberOfTeammates - trickCount;
-    const teamScore = Math.round((trickCount / (numberOfPlayers - numberOfTeammates)) * 100);
+    const teamScore = Math.round((trickCount / (numberOfPlayers - numberOfTeammates)) * 100) || 0;
     this.setState({ teamScore, totalTricks: trickCount }, () => {
       this.updateAccountScores();
     });
