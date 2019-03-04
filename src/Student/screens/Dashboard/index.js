@@ -68,7 +68,7 @@ export default class Dashboard extends React.Component {
         return;
       }
       if (nextProps.screenProps.gameState.state.start === true &&
-        typeof nextProps.screenProps.team === 'number' &&
+        nextProps.screenProps.team !== null &&
         !this.startingGame) {
         this.startingGame = true;
         this.setState({ portal: '5' });
