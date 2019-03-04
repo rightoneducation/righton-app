@@ -60,11 +60,18 @@ export default class GameRoomResults extends React.Component {
 
     this.choicesRef = undefined;
     this.choicesWidth = deviceWidth;
+    this.mounted = undefined;
   }
   
 
   componentDidMount() {
     setTimeout(() => this.startWidthAnimation(), 3500);
+    this.mounted = true;
+  }
+
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
 
@@ -86,6 +93,7 @@ export default class GameRoomResults extends React.Component {
 
 
   startWidthAnimation() {
+    if (!this.mounted) return;
     this.onChoicesLayout();
     setTimeout(() => {
       const { gameState, numberOfPlayers, players, teamRef } = this.props;
@@ -144,7 +152,7 @@ export default class GameRoomResults extends React.Component {
       if (noAnswerCount) {
         noAnswerWidth = (noAnswerCount / playersWhoVoted) * this.choicesWidth;
         noAnswerPercent = (noAnswerCount / playersWhoVoted) * 100;
-        this.setState({ noAnswerPercent }); 
+        if (this.mounted) this.setState({ noAnswerPercent }); 
         // TODO Delay rendering the actual percentage with the rest
       }
   
@@ -187,12 +195,14 @@ export default class GameRoomResults extends React.Component {
         ),
       ],
       { useNativeDriver: true }).start(() => {
-        this.setState({
-          firstPercent,
-          secondPercent,
-          thirdPercent,
-          fourthPercent,
-        });
+        if (this.mounted) {
+          this.setState({
+            firstPercent,
+            secondPercent,
+            thirdPercent,
+            fourthPercent,
+          });
+        }
       });
     }, 100);
   }
