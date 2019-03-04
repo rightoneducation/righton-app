@@ -248,17 +248,26 @@ export default class GameReasons extends React.PureComponent {
           </View>}
         {this.renderQuestion()}
         <View style={styles.extraMarginBottom}>
-          <Text style={[
-            gamePreviewStyles.question,
-            gamePreviewStyles.time,
-            gamePreviewStyles.marginBottom
-          ]}
-          >
-            Jot down a few notes for why your team chose each trick answer:
-          </Text>
+          {tricks[0] ?
+            <Text style={[
+              gamePreviewStyles.question,
+              gamePreviewStyles.time,
+              gamePreviewStyles.marginBottom
+            ]}
+            >
+              Jot down a few notes for why your team chose each trick answer:
+            </Text> :
+            <Text style={[
+              gamePreviewStyles.question,
+              gamePreviewStyles.time,
+              gamePreviewStyles.marginBottom
+            ]}
+            >
+              Explain why your team did not come up with trick answers:
+            </Text>}
 
           <View>
-            {tricks[0] &&
+            {tricks[0] ?
               <View
                 onLayout={this.onTrick0Layout}
                 ref={this.handleTrick0Ref}
@@ -273,8 +282,22 @@ export default class GameReasons extends React.PureComponent {
                 >
                   <Text style={[styles.inputButtonText, !trick0Reason && styles.placeholder]}>{trick0Reason || 'Enter your reason'}</Text>
                 </Touchable>
-              </View>
-            }
+              </View> :
+              <View
+                onLayout={this.onTrick0Layout}
+                ref={this.handleTrick0Ref}
+                style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
+              >
+                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
+                  Our reason is because...
+                </Text>
+                <Touchable
+                  onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
+                  style={[styles.inputButton, elevation]}
+                >
+                  <Text style={[styles.inputButtonText, !trick0Reason && styles.placeholder]}>{trick0Reason || 'Enter your reason'}</Text>
+                </Touchable>
+              </View>}
 
             {tricks[1] &&
               <View
@@ -291,8 +314,7 @@ export default class GameReasons extends React.PureComponent {
                 >
                   <Text style={[styles.inputButtonText, !trick1Reason && styles.placeholder]}>{trick1Reason || 'Enter your reason'}</Text>
                 </Touchable>
-              </View>
-            }
+              </View>}
 
             {tricks[2] &&
               <View
@@ -309,8 +331,7 @@ export default class GameReasons extends React.PureComponent {
                 >
                   <Text style={[styles.inputButtonText, !trick2Reason && styles.placeholder]}>{trick2Reason || 'Enter your reason'}</Text>
                 </Touchable>
-              </View>
-            }
+              </View>}
           </View>
         </View>
       </ScrollView>

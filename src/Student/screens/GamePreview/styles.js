@@ -95,6 +95,7 @@ export default ScaledSheet.create({
   question: {
     color: colors.white,
     fontSize: fonts.medium,
+    marginHorizontal: '15@ms',
     textAlign: 'center',
   },
   questionContainer: {
