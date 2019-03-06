@@ -82,6 +82,10 @@ export default class GamesBuilder extends React.Component {
   }
 
 
+  /*
+   * Measure the layout of the view for pinpointing where
+   * on the x, y axis the InputModal should display the input.
+   */
   onTitleLayout = () => {
     if (this.titleRef) {
       NativeMethodsMixin.measureInWindow.call(
@@ -108,6 +112,10 @@ export default class GamesBuilder extends React.Component {
   }
 
 
+  /*
+   * Keep track of when properties are edited to conditionally
+   * display the "Save" button.
+   */
   setEdited = () => {
     const { edited } = this.state;
     if (!edited) {
@@ -116,13 +124,22 @@ export default class GamesBuilder extends React.Component {
   }
 
   
+  /*
+   * Hydrate the state with provided `game` properties or
+   * set it to the initial state if it's viewing an empty, default game.
+   */
   hydrateState = (game) => {
     if (game && Object.keys(game).length) {
       this.setState({ game });
     } else {
       this.setState({ 
         game: {
+          grade: null,
+          domain: null,
+          cluster: null,
+          standard: null,
           description: null,
+          favorite: false,
           questions: [],
           title: null,
         }
@@ -131,10 +148,16 @@ export default class GamesBuilder extends React.Component {
   }
 
 
+  /*
+   * Exits out of the modal screen that this component renders in.
+   * Upon exiting, it checks whether the game was 'favorited,'
+   * if it was and there weren't other edits, we will update its favorite property.
+   */
   handleCloseGame = () => {
     const { explore, handleClose } = this.props;
     const { edited, game } = this.state;
     if (explore && game.favorite && !edited) {
+      // TODO! REMOVE THIS CONDITION BECAUSE PRESSING CLONE ACTION AUTOMATICALLY SAVES
       this.createGame();
     } else if (this.props.game.favorite !== game.favorite && !edited) {
       // Automatically update game is `favorite` was update but fields were not.
@@ -149,29 +172,34 @@ export default class GamesBuilder extends React.Component {
     this.setState({ game: { ...game, favorite: !game.favorite } });
   }
 
-  
+
   createGame = () => {
     const { game } = this.state;
     const { handleCreateGame } = this.props;
     if (this.props.currentGame !== null || game.GameID) {
+      // If the game already exists...
       const saveGame = { ...game };
       if (this.props.game.quizmaker && this.state.edited) {
+        // This game was cloned from the Explore tab and it has just been edited
+        // so now we will remove its `quizmaker` property and assign it a new `GameID`.
         delete saveGame.quizmaker;
         saveGame.GameID = `${Math.random()}`;
         handleCreateGame(saveGame);
       } else if (this.props.explore) {
-        // Clone game from Explore
+        // Clone game from Explore - prepend "Clone of" to its `title`.
         saveGame.title = `Clone of ${saveGame.title}`;
         handleCreateGame(saveGame);
       } else {
+        // It's a custom game so we'll just overwrite its existing properties.
         handleCreateGame(saveGame);
       }
     } else {
+      // If the game doesn't exist, create a new one with a brand spankin' new `GameID`.
       handleCreateGame({ ...game, GameID: `${Math.random()}` });
     }
   }
 
-  
+
   handleTitleRef = (ref) => { this.titleRef = ref; }
 
 
