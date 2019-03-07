@@ -383,7 +383,7 @@ export default class GamePreview extends React.PureComponent {
           <View style={styles.timeContainer}>
             <Text style={styles.time}>{ timeLeft }</Text>
           </View>}
-        <HeaderTeam team={`Team ${team + 1}`} />
+        <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
         {this.renderQuestion()}
         {this.renderTricks(gameState, teamRef)}
         {!showInstructions && this.renderArrowButton()}

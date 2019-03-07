@@ -241,7 +241,7 @@ export default class GameReasons extends React.PureComponent {
 
         {showInput &&
           <InputModal {...showInput} />}
-        <HeaderTeam team={`Team ${team + 1}`} />
+        <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
         {Boolean(timeLeft) &&
           <View style={gamePreviewStyles.timeContainer}>
             <Text style={gamePreviewStyles.time}>{ timeLeft }</Text>
