@@ -215,8 +215,8 @@ export default class GamePreview extends React.PureComponent {
   closeInputModal = (input) => {
     this.setState({ showInput: false });
     if (input) {
-      const { handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
-      const { answer } = this.props.screenProps.gameState[`team${team}`];
+      const { gameState, handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
+      const { answer } = gameState[`team${team}`];
       if (input.toLowerCase() === answer.toLowerCase()) {
         this.setState({
           messageProps: {
@@ -238,8 +238,11 @@ export default class GamePreview extends React.PureComponent {
         teamRef,
         uid,
       };
+      if (gameState[`team${team}`].tricks.length < 3) {
+        // Automatically select the first three tricks.
+        message.payload.selected = true;
+      }
       IOTPublishMessage(message);
-      const { gameState } = this.props.screenProps;
       const updatedGameState = { ...gameState };
       updatedGameState[teamRef].tricks.push(message.payload);
       handleSetAppState('gameState', updatedGameState);
