@@ -280,7 +280,7 @@ export default class GamePreview extends React.PureComponent {
           bodyStyle: null,
           textStyle: null,
           duration: null,
-          message: 'Maximum of three tricks selected.',
+          message: 'Maximum of three trick answers selected.',
           timeout: 4000,
         },
       });
