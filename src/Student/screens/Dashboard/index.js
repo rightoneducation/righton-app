@@ -68,7 +68,7 @@ export default class Dashboard extends React.Component {
         return;
       }
       if (nextProps.screenProps.gameState.state.start === true &&
-        nextProps.screenProps.team !== null &&
+        !!nextProps.screenProps.team &&
         !this.startingGame) {
         this.startingGame = true;
         this.setState({ portal: '5' });
@@ -82,6 +82,21 @@ export default class Dashboard extends React.Component {
           this.startingGame = false;
           if (this.mounted) this.props.screenProps.navigation.navigate('GamePreview');
         }, 6000);      
+      } else if (nextProps.screenProps.gameState.state.start === true &&
+        !nextProps.screenProps.team &&
+        !this.startingGame) {
+        this.setState({
+          portal: '',
+          messageProps: {
+            closeFunc: this.handleCloseMessage,
+            bodyStyle: null,
+            textStyle: null,
+            duration: null,
+            message: 'The game started without you because you didn\'t join a team!',
+            timeout: 4000,
+          },
+        });
+        this.props.screenProps.handleSetAppState('gameState', {});
       }
     }
   }
