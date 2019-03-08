@@ -10,6 +10,7 @@ import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/p
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import { getGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
 import { playGame, saveGamesToDatabase } from '../../../utils/gamesBuilder';
+import Message from '../../../components/Message';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
@@ -33,6 +34,7 @@ class Explore extends React.PureComponent {
 
     this.state = {
       data: [],
+      messageProps: null,
       viewGame: null,
     };
   }
@@ -71,7 +73,8 @@ class Explore extends React.PureComponent {
       const { TeacherID } = this.props.screenProps.account;
       if (!TeacherID) {
         this.handleCloseGame();
-        // TODO! Notify user that they must create an account to create a game
+        // TODO Display an option for the teacher to login/signup.
+        this.handleShowMessage('Create an account to clone and create games.');
         return;
       }
       let games = [];
@@ -83,6 +86,7 @@ class Explore extends React.PureComponent {
           if (games[i].GameID === game.GameID) {
             // Prevent adding a game twice
             this.handleCloseGame();
+            this.handleShowMessage('This game already exists in your My Games.');
             return;
           }
         }
@@ -92,6 +96,7 @@ class Explore extends React.PureComponent {
         const { account, handleSetAppState } = this.props.screenProps;
         saveGamesToDatabase(games, account, handleSetAppState);
         this.props.navigation.state.params = { reloadGames: true };
+        this.handleShowMessage('Game has been cloned to your My Games.');
       }
     } catch (exception) {
       debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);
@@ -138,6 +143,21 @@ class Explore extends React.PureComponent {
   }
 
 
+  handleCloseMessage = () => {
+    this.setState({ messageProps: null });
+  }
+
+
+  handleShowMessage = (message) => {
+    this.setState({
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        message,
+      },
+    });
+  }
+
+
   renderDataBlock = (data) => {
     let ccs = '';
     if (data.grade === 'General') {
@@ -178,6 +198,7 @@ class Explore extends React.PureComponent {
   render() {
     const {
       data,
+      messageProps,
       viewGame,
     } = this.state;
 
@@ -210,6 +231,7 @@ class Explore extends React.PureComponent {
         >
           {this.renderData(data)}
         </ScrollView>
+        { messageProps && <Message {...messageProps} /> }
       </View>
     );
   }
