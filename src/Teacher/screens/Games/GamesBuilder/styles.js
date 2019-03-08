@@ -66,6 +66,9 @@ export default ScaledSheet.create({
     fontSize: fonts.medium,
     fontWeight: 'bold',
   },
+  donePosition: {
+    right: '15@ms',
+  },
   headerContainer: {
     alignItems: 'center',
     alignSelf: 'stretch',

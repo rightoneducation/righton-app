@@ -306,7 +306,7 @@ export default class GamesBuilderQuestion extends React.Component {
           <Touchable
             hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
             onPress={this.handleCloseModal}
-            style={parentStyles.menuWrapper}
+            style={[parentStyles.heartWrapper, parentStyles.donePosition]}
           >
             <Text style={parentStyles.createLabel}>Done</Text>
           </Touchable>
