@@ -12,12 +12,14 @@ import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import { colors, deviceWidth, fonts } from '../../utils/theme';
 import ButtonWide from '../ButtonWide';
+import renderHyperlinkedText from '../../utils/renderHyperlinkedText';
 
 
 export default class Instructions extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.string),
     handleCloseModal: PropTypes.func.isRequired,
+    handleOpenLink: PropTypes.func.isRequired,
     instructionIndex: PropTypes.number.isRequired,
     incrementInstruction: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
@@ -26,6 +28,7 @@ export default class Instructions extends React.Component {
   static defaultProps = {
     data: [],
     handleCloseModal: () => {},
+    handleOpenLink: () => {},
     instructionIndex: 0,
     incrementInstruction: () => {},
     visible: false,
@@ -35,6 +38,7 @@ export default class Instructions extends React.Component {
     super(props);
 
     this.state = {
+      hyperlink: '',
       visibleItems: [],
     };
   }
@@ -85,7 +89,12 @@ export default class Instructions extends React.Component {
       }
       <View style={[styles.box, alignment === 'left' ? styles.alignLeft : styles.alignRight]}>
         {lastElement && <Text style={[styles.instruction, styles.bold]}>{'A: '}</Text>}
-        <Text style={styles.instruction}>{ instruction }</Text>
+        {renderHyperlinkedText(
+          instruction,
+          styles.instruction,
+          { fontWeight: 'bold' },
+          this.props.handleOpenLink
+        )}
       </View>
       {
         alignment === 'right' &&
@@ -187,6 +196,7 @@ const styles = ScaledSheet.create({
     borderTopLeftRadius: '10@s',
     borderTopRightRadius: '10@s',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     paddingVertical: '10@ms',
     width: deviceWidth - moderateScale(70),
   },
