@@ -19,6 +19,7 @@ import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
 import parentStyles from '../styles';
 import { colors, elevation, fonts } from '../../../../../utils/theme';
+import renderHyperlinkedText from '../../../../../utils/renderHyperlinkedText';
 import debug from '../../../../../utils/debug';
 
 
@@ -407,7 +408,12 @@ export default class GamesBuilderQuestion extends React.Component {
                 ]}
               >
                 <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>
-                <Text style={parentStyles.bannerLabel}>{ instruction }</Text>
+                {renderHyperlinkedText(
+                  instruction,
+                  parentStyles.bannerLabel,
+                  { color: colors.primary },
+                  null
+                )}
               </View>
             </Touchable>
           ))}

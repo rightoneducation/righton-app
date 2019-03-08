@@ -120,6 +120,7 @@ export default ScaledSheet.create({
     alignItems: 'flex-start',
     alignSelf: 'stretch',
     flexDirection: 'column',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     marginTop: '15@vs',
   },
