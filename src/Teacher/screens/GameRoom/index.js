@@ -69,14 +69,22 @@ export default class GameRoom extends React.Component {
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
       if (gameStateKeys[i].includes('team') && gameStateKeys[i] !== preview) {
+        // Pretty much the only reason we prepend "team" to the number is because of this
+        // where we need to differentiate a "team" property from others.
+        // - One solution is just to check whether `typeof gameStateKeys[i] === 'number'` or 
+        // `isNaN` conditional equivalent.
         const teamRef = gameStateKeys[i];
         if (
           gameState[teamRef].tricks.length &&
-          (gameState[teamRef].choices.length === 0 ||
-            (gameState[teamRef].choices[0] && !gameState[teamRef].choices[0].votes &&
-            gameState[teamRef].choices[1] && !gameState[teamRef].choices[1].votes &&
-            gameState[teamRef].choices[2] && !gameState[teamRef].choices[2].votes &&
-            gameState[teamRef].choices[3] && !gameState[teamRef].choices[3].votes)
+          (gameState[teamRef].choices.length === 0 // ||
+          // Remove these conditions due to game replaying unnecessarily
+          // if no choices were selected the first time around.
+          // Commented out 3/7/2019 - Remove if necessary.
+          
+          // (gameState[teamRef].choices[0] && !gameState[teamRef].choices[0].votes &&
+          // gameState[teamRef].choices[1] && !gameState[teamRef].choices[1].votes &&
+          // gameState[teamRef].choices[2] && !gameState[teamRef].choices[2].votes &&
+          // gameState[teamRef].choices[3] && !gameState[teamRef].choices[3].votes)
           )
         ) {
           nextTeamRef = teamRef;
