@@ -154,9 +154,6 @@ class LogIn extends React.Component {
       session,
       messageProps: {
         closeFunc: this.handleCloseMessage,
-        bodyStyle: null,
-        textStyle: null,
-        duration: null,
         message: errorMessage,
         timeout: 4000,
       },
@@ -233,29 +230,11 @@ class LogIn extends React.Component {
     const { email, password } = this.state;
 
     if (!email.includes('@') || !email.includes('.')) {
-      this.setState({
-        messageProps: {
-          closeFunc: this.handleCloseMessage,
-          bodyStyle: null,
-          textStyle: null,
-          duration: null,
-          message: 'Enter valid email address.',
-          timeout: null,
-        },
-      });
+      this.handleShowMessage('Enter valid email address.');
       return false;
     }
     if (password.length < 8) {
-      this.setState({
-        messageProps: {
-          closeFunc: this.handleCloseMessage,
-          bodyStyle: null,
-          textStyle: null,
-          duration: null,
-          message: 'Password must have a minimum of 8 characters.',
-          timeout: null,
-        },
-      });
+      this.handleShowMessage('Password must have a minimum of 8 characters.');
       return false;
     }
 
@@ -317,6 +296,16 @@ class LogIn extends React.Component {
   }
 
 
+  handleShowMessage = (message) => {
+    this.setState({
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        message,
+      },
+    });
+  }
+
+
   handleCloseMessage = () => {
     this.setState({ messageProps: null });
   }
@@ -335,6 +324,7 @@ class LogIn extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Message {...messageProps} />
 
         {showInput &&
           <InputModal {...showInput} />}
@@ -387,8 +377,6 @@ class LogIn extends React.Component {
             />
           }
         </View>
-
-        { messageProps && <Message {...messageProps} /> }
 
       </View>
     );

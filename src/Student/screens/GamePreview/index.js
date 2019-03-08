@@ -218,16 +218,7 @@ export default class GamePreview extends React.PureComponent {
       const { gameState, handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
       const { answer } = gameState[`team${team}`];
       if (input.toLowerCase() === answer.toLowerCase()) {
-        this.setState({
-          messageProps: {
-            closeFunc: this.handleCloseMessage,
-            bodyStyle: null,
-            textStyle: null,
-            duration: null,
-            message: 'That\'s the right answer! \nEnter a trickier answer.',
-            timeout: 4000,
-          },
-        });
+        this.handleShowMessage('That\'s the right answer! \nEnter a trickier answer.');
         return;
       }
       const teamRef = `team${team}`;
@@ -274,16 +265,7 @@ export default class GamePreview extends React.PureComponent {
       }
     }
     if (trick.selected === false && selectedTricks === 3) {
-      this.setState({
-        messageProps: {
-          closeFunc: this.handleCloseMessage,
-          bodyStyle: null,
-          textStyle: null,
-          duration: null,
-          message: 'Maximum of three trick answers selected.',
-          timeout: 4000,
-        },
-      });
+      this.handleShowMessage('Maximum of three trick answers selected.');
       return;
     } else if (trick.selected) {
       message.payload = false;
@@ -294,6 +276,16 @@ export default class GamePreview extends React.PureComponent {
     const updatedGameState = { ...gameState };
     updatedGameState[teamRef].tricks[index].selected = message.payload;
     handleSetAppState('gameState', updatedGameState);
+  }
+
+
+  handleShowMessage = (message) => {
+    this.setState({
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        message,
+      },
+    });
   }
 
 

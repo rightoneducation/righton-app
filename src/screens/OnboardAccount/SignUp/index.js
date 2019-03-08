@@ -507,6 +507,8 @@ class SignUp extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Message {...messageProps} />
+
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
@@ -580,7 +582,6 @@ class SignUp extends React.Component {
             onSuccess={this.handleMFASuccess}
           />
         }
-        { messageProps && <Message {...messageProps} /> }
       </View>
     );
   }

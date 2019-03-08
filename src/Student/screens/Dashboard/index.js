@@ -89,9 +89,6 @@ export default class Dashboard extends React.Component {
           portal: '',
           messageProps: {
             closeFunc: this.handleCloseMessage,
-            bodyStyle: null,
-            textStyle: null,
-            duration: null,
             message: 'The game started without you because you didn\'t join a team!',
             timeout: 4000,
           },
@@ -159,9 +156,6 @@ export default class Dashboard extends React.Component {
             portal: '',
             messageProps: {
               closeFunc: this.handleCloseMessage,
-              bodyStyle: null,
-              textStyle: null,
-              duration: null,
               message: 'Network connection error.',
               timeout: 4000,
             },
@@ -188,9 +182,6 @@ export default class Dashboard extends React.Component {
               portal: '',
               messageProps: {
                 closeFunc: this.handleCloseMessage,
-                bodyStyle: null,
-                textStyle: null,
-                duration: null,
                 message: 'Problem joining game. Please try again.',
                 timeout: 4000,
               },
@@ -201,9 +192,6 @@ export default class Dashboard extends React.Component {
             portal: '',
             messageProps: {
               closeFunc: this.handleCloseMessage,
-              bodyStyle: null,
-              textStyle: null,
-              duration: null,
               message: 'Entered game room. Select your team.',
               timeout: 4000,
             },
@@ -219,9 +207,6 @@ export default class Dashboard extends React.Component {
         portal: '',
         messageProps: {
           closeFunc: this.handleCloseMessage,
-          bodyStyle: null,
-          textStyle: null,
-          duration: null,
           message: 'Game room not found.',
           timeout: 4000,
         },
@@ -236,9 +221,6 @@ export default class Dashboard extends React.Component {
       portal: '',
       messageProps: {
         closeFunc: this.handleCloseMessage,
-        bodyStyle: null,
-        textStyle: null,
-        duration: null,
         message: 'Game room cannot be joined.',
         timeout: 4000,
       },
@@ -422,7 +404,7 @@ export default class Dashboard extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={colors.primary} />   
-        { messageProps && <Message {...messageProps} /> }
+        <Message {...messageProps} />
 
         {this.renderHeader()}   
         <View style={styles.dashContainer}>

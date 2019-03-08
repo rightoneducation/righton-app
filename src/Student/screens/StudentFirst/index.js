@@ -73,8 +73,6 @@ export default class StudentFirst extends React.PureComponent {
             messageProps: {
               closeFunc: this.handleCloseMessage,
               bodyStyle: { bottom: verticalScale(140) },
-              textStyle: null,
-              duration: null,
               message: 'Network connection error.',
               timeout: 4000,
             },
@@ -102,8 +100,6 @@ export default class StudentFirst extends React.PureComponent {
               messageProps: {
                 closeFunc: this.handleCloseMessage,
                 bodyStyle: { bottom: verticalScale(140) },
-                textStyle: null,
-                duration: null,
                 message: 'Problem joining game. Please try again.',
                 timeout: 4000,
               },
@@ -115,8 +111,6 @@ export default class StudentFirst extends React.PureComponent {
             messageProps: {
               closeFunc: this.handleCloseMessage,
               bodyStyle: { bottom: verticalScale(140) },
-              textStyle: null,
-              duration: null,
               message: 'Entered game room. Select your team.',
               timeout: 4000,
             },
@@ -134,8 +128,6 @@ export default class StudentFirst extends React.PureComponent {
         messageProps: {
           closeFunc: this.handleCloseMessage,
           bodyStyle: { bottom: verticalScale(140) },
-          textStyle: null,
-          duration: null,
           message: 'Game room not found.',
           timeout: 4000,
         },
@@ -151,8 +143,6 @@ export default class StudentFirst extends React.PureComponent {
       messageProps: {
         closeFunc: this.handleCloseMessage,
         bodyStyle: { bottom: verticalScale(140) },
-        textStyle: null,
-        duration: null,
         message: 'Game room cannot be joined.',
         timeout: 4000,
       },
@@ -191,6 +181,8 @@ export default class StudentFirst extends React.PureComponent {
 
     return (
       <View style={styles.container}>
+        <Message {...messageProps} />
+
         <ButtonBack
           buttonStyles={{ top: 40 }}
           onPress={this.handleNavigateToOnboardApp}
@@ -222,9 +214,6 @@ export default class StudentFirst extends React.PureComponent {
           label={'Enter Game'}
           onPress={this.onRoomSubmit}
         />
-
-        {messageProps && <Message {...messageProps} />}
-
       </View>
     );
   }

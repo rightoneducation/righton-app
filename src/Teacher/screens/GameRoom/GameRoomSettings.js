@@ -90,18 +90,19 @@ export default class GameRoomStart extends React.Component {
         handleSetAppState('gameState', updatedGameState);
         handleBackFromChild('start');
       } else {
-        this.setState({
-          messageProps: {
-            closeFunc: this.handleCloseMessage,
-            bodyStyle: null,
-            textStyle: null,
-            duration: null,
-            message: 'Settings can only be updated before players join game.',
-            timeout: null,
-          },
-        });
+        this.handleShowMessage('Settings can only be updated before players join game.');
       }
     }
+  }
+
+
+  handleShowMessage = (message) => {
+    this.setState({
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        message,
+      },
+    });
   }
 
 
