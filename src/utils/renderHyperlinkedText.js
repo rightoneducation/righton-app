@@ -9,12 +9,13 @@ export default function renderHyperlinkedText(string, baseStyles = {}, linkStyle
   const httpType = httpRegex.test(string);
   const wwwType = wwwRegex.test(string);
   const comIndices = getMatchedIndices(comRegex, string);
-  if ((httpType || wwwType) && comIndices.length) {
+  if ((httpType || wwwType) && comIndices) {
     // Reset these regex indices because `comRegex` throws it off at its completion. 
     httpRegex.lastIndex = 0;
     wwwRegex.lastIndex = 0;
     const httpIndices = httpType ? 
-      getMatchedIndices(httpRegex, string) : getMatchedIndices(wwwRegex, string);
+      getMatchedIndices(httpRegex, string) :
+      getMatchedIndices(wwwRegex, string);
     if (httpIndices.length === comIndices.length) {
       const result = [];
       let noLinkString = string.substring(0, httpIndices[0] || string.length);
