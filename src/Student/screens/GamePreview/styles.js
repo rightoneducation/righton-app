@@ -115,6 +115,7 @@ export default ScaledSheet.create({
     position: 'absolute',
     right: '5@s',
     top: '25@vs',
+    zIndex: 100,
   },
   tricksContainer: {
     alignItems: 'flex-start',

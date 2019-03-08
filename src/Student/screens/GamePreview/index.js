@@ -20,6 +20,7 @@ import InputModal from '../../../components/InputModal';
 import HeaderTeam from '../../components/HeaderTeam';
 import Instructions from '../../../components/Instructions';
 import ButtonRound from '../../../components/ButtonRound';
+import WebView from '../../../components/WebView';
 import { handleExitGame } from '../../../utils/studentGameUtils';
 import { deviceWidth } from '../../../utils/theme';
 import styles from './styles';
@@ -47,6 +48,7 @@ export default class GamePreview extends React.PureComponent {
     this.animatedArrow3 = new Animated.Value(0);
 
     this.state = {
+      hyperlink: '',
       instructions: [],
       instructionIndex: 0,
       messageProps: {},
@@ -279,6 +281,12 @@ export default class GamePreview extends React.PureComponent {
   }
 
 
+  handleOpenLink = hyperlink => this.setState({ hyperlink, showInstructions: false });
+
+
+  handleCloseLink = () => this.setState({ hyperlink: '' });
+
+
   handleShowMessage = (message) => {
     this.setState({
       messageProps: {
@@ -357,6 +365,7 @@ export default class GamePreview extends React.PureComponent {
 
   render() {
     const {
+      hyperlink,
       instructions,
       instructionIndex,
       messageProps,
@@ -367,6 +376,22 @@ export default class GamePreview extends React.PureComponent {
 
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
+
+    if (hyperlink) {
+      return (
+        <View style={styles.container}>
+          { Platform.OS === 'ios' && <KeepAwake /> }
+          {Boolean(timeLeft) &&
+            <View style={styles.timeContainer}>
+              <Text style={styles.time}>{ timeLeft }</Text>
+            </View>}
+          <WebView
+            handleClose={this.handleCloseLink}
+            hyperlink={hyperlink}
+          />
+        </View>
+      );
+    }
 
     return (
       <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
@@ -385,6 +410,7 @@ export default class GamePreview extends React.PureComponent {
         {showInstructions &&
           <Instructions
             handleCloseModal={this.toggleInstructions}
+            handleOpenLink={this.handleOpenLink}
             incrementInstruction={this.incrementInstruction}
             instructionIndex={instructionIndex}
             data={instructions}
