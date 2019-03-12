@@ -5,23 +5,22 @@ export default function renderHyperlinkedText(string, baseStyles = {}, linkStyle
   if (typeof string !== 'string') return null;
   const httpRegex = /http/g;
   const wwwRegex = /www/g;
-  const comRegex = /.com/g;
   const httpType = httpRegex.test(string);
   const wwwType = wwwRegex.test(string);
-  const comIndices = getMatchedIndices(comRegex, string);
-  if ((httpType || wwwType) && comIndices) {
-    // Reset these regex indices because `comRegex` throws it off at its completion. 
+  if (httpType || wwwType) {
+    // Reset these regex indices because sometimes it starts off at a weird sequence.. 
     httpRegex.lastIndex = 0;
     wwwRegex.lastIndex = 0;
     const httpIndices = httpType ? 
       getMatchedIndices(httpRegex, string) :
       getMatchedIndices(wwwRegex, string);
+    const comIndices = getComIndices(string, httpIndices);
     if (httpIndices.length === comIndices.length) {
       const result = [];
       let noLinkString = string.substring(0, httpIndices[0] || string.length);
       result.push(<Text key={noLinkString} style={baseStyles}>{ noLinkString }</Text>);
       for (let i = 0; i < httpIndices.length; i += 1) {
-        const linkString = string.substring(httpIndices[i], comIndices[i] + 4);
+        const linkString = string.substring(httpIndices[i], comIndices[i]);
         result.push(
           <Text
             key={linkString}
@@ -31,7 +30,7 @@ export default function renderHyperlinkedText(string, baseStyles = {}, linkStyle
             { linkString }
           </Text>
         );
-        noLinkString = string.substring(comIndices[i] + 4, httpIndices[i + 1] || string.length);
+        noLinkString = string.substring(comIndices[i], httpIndices[i + 1] || string.length);
         if (noLinkString) {
           result.push(
             <Text key={noLinkString} style={baseStyles}>
@@ -55,4 +54,16 @@ function getMatchedIndices(regex, text) {
     if (match) result.push(match.index);
   } while (match);
   return result;
+}
+
+function getComIndices(text, httpIndices) {
+  const comIndices = [];
+  for (let i = 0; i < httpIndices.length; i += 1) {
+    let j = httpIndices[i];
+    while (text[j] !== ' ' && text[j] !== undefined) {
+      j += 1;
+    }
+    comIndices.push(j);
+  }
+  return comIndices;
 }
