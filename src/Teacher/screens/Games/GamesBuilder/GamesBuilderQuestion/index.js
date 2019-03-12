@@ -275,6 +275,170 @@ export default class GamesBuilderQuestion extends React.Component {
   readFile = filePath => RNFetchBlob.fs.readFile(filePath, 'base64').then(data => new Buffer(data, 'base64'));
 
 
+  renderHead = () => (
+    <View style={[parentStyles.headerContainer, elevation]}>
+      <Touchable
+        hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
+        onPress={this.handleExitModal}
+      >
+        <View style={parentStyles.closeContainer}>
+          <Aicon name={'close'} style={[parentStyles.closeIcon, parentStyles.closeIconShadow]} />
+          <Aicon name={'close'} style={parentStyles.closeIcon} />
+        </View>
+      </Touchable>
+
+      <Touchable
+        hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+        onPress={this.handleCloseModal}
+        style={[parentStyles.heartWrapper, parentStyles.donePosition]}
+      >
+        <Text style={parentStyles.createLabel}>Done</Text>
+      </Touchable>
+    </View>
+  );
+
+
+  renderQuestionInput = (question, showInput) => (
+    <View
+      onLayout={this.onQuestionLayout}
+      ref={this.handleQuestionRef}
+      style={parentStyles.inputContainer}
+    >
+      <Text style={parentStyles.inputLabel}>Question</Text>
+      <Touchable
+        onPress={() => this.handleInputModal('question', 'Enter question', 100, question, 'default')}
+        style={[parentStyles.inputButton, elevation]}
+      >
+        <Text
+          style={[
+            parentStyles.inputButtonText,
+            !question && parentStyles.placeholder
+          ]}
+        >
+          {showInput && showInput.inputLabel === 'question' ?
+            null :
+            renderHyperlinkedText(question, {}, { color: colors.primary }) || 'Enter question'}
+        </Text>
+      </Touchable>
+    </View>
+  );
+
+
+  renderImageSelection = image => (
+    <View style={parentStyles.inputContainer}>
+      <Text style={parentStyles.inputLabel}>Image/Diagram (Optional)</Text>
+      <Touchable
+        onPress={this.handleImagePicker}
+      >
+        <View
+          style={[
+            image && image !== 'null' ?
+              { ...parentStyles.bannerImageContainer, ...parentStyles.bannerImage } :
+              parentStyles.bannerAddContainer,
+            elevation,
+          ]}
+        >
+          {image && image !== 'null' ?
+            <Image source={{ uri: image }} style={parentStyles.bannerImage} />
+            :
+            <View style={parentStyles.row}>
+              <Aicon name={'image'} style={parentStyles.bannerIcon} />
+              <Text style={parentStyles.bannerLabel}>
+                Add an image or diagram
+              </Text>
+            </View>}
+          {image === 'loading' &&
+            <ActivityIndicator
+              animating
+              color={colors.primary}
+              size={'large'}
+              style={{ position: 'absolute' }}
+            />}
+        </View>
+      </Touchable>
+    </View>
+  );
+
+
+  renderAnswerInput = (answer, showInput) => (
+    <View
+      onLayout={this.onAnswerLayout}
+      ref={this.handleAnswerRef}
+      style={parentStyles.inputContainer}
+    >
+      <Text style={parentStyles.inputLabel}>Answer</Text>
+      <Touchable
+        onPress={() => this.handleInputModal('answer', 'Enter answer', 100, answer, 'default')}
+        style={[parentStyles.inputButton, elevation]}
+      >
+        <Text
+          style={[
+            parentStyles.inputButtonText,
+            !answer && parentStyles.placeholder
+          ]}
+        >
+          {showInput && showInput.inputLabel === 'answer' ? null : answer || 'Enter answer'}
+        </Text>
+      </Touchable>
+    </View>
+  );
+
+
+  renderInstructionTitle = (instructions) => {
+    if (instructions) {
+      return <Text style={[parentStyles.inputLabel, parentStyles.marginTop]}>Solution Steps</Text>;
+    }
+    return null;
+  }
+
+
+  renderInstructions = (instructions) => {
+    if (instructions) {
+      const comps = instructions.map((instruction, idx) => (
+        <Touchable
+          activeOpacity={0.8}
+          key={instruction}
+          onPress={() => this.handleAddInstruction(idx)}
+        >
+          <View
+            style={[
+              parentStyles.inputContainer,
+              parentStyles.row,
+              parentStyles.inputPadding,
+              parentStyles.justifyStart,
+              parentStyles.alignStart
+            ]}
+          >
+            <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>
+            {renderHyperlinkedText(
+              instruction,
+              parentStyles.bannerLabel,
+              { color: colors.primary },
+              null
+            )}
+          </View>
+        </Touchable>
+      ));
+      return comps;
+    }
+    return null;
+  }
+
+
+  renderInstructionButton = (explore) => {
+    if (!explore) {
+      return (
+        <ButtonWide
+          buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
+          label={'+ Solution Step'}
+          onPress={this.handleAddInstruction}
+        />
+      );
+    }
+    return null;
+  }
+
+
   render() {
     const {
       answer,
@@ -293,137 +457,18 @@ export default class GamesBuilderQuestion extends React.Component {
         {showInput &&
           <InputModal {...showInput} />}
 
-        <View style={[parentStyles.headerContainer, elevation]}>
-          <Touchable
-            hitSlop={{ top: 25, right: 25, bottom: 25, left: 25 }}
-            onPress={this.handleExitModal}
-          >
-            <View style={parentStyles.closeContainer}>
-              <Aicon name={'close'} style={[parentStyles.closeIcon, parentStyles.closeIconShadow]} />
-              <Aicon name={'close'} style={parentStyles.closeIcon} />
-            </View>
-          </Touchable>
-          {/* <Text style={parentStyles.title}>Game Builder</Text> */}
-          <Touchable
-            hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-            onPress={this.handleCloseModal}
-            style={[parentStyles.heartWrapper, parentStyles.donePosition]}
-          >
-            <Text style={parentStyles.createLabel}>Done</Text>
-          </Touchable>
-        </View>
+        { this.renderHead() }
 
         <ScrollView contentContainerStyle={[parentStyles.scrollview, { paddingBottom: 50 }]}>
-          <View
-            onLayout={this.onQuestionLayout}
-            ref={this.handleQuestionRef}
-            style={parentStyles.inputContainer}
-          >
-            <Text style={parentStyles.inputLabel}>Question</Text>
-            <Touchable
-              onPress={() => this.handleInputModal('question', 'Enter question', 100, question, 'default')}
-              style={[parentStyles.inputButton, elevation]}
-            >
-              <Text
-                style={[
-                  parentStyles.inputButtonText,
-                  !question && parentStyles.placeholder
-                ]}
-              >
-                {showInput && showInput.inputLabel === 'question' ? null : question || 'Enter question'}
-              </Text>
-            </Touchable>
-          </View>
+          { this.renderQuestionInput(question, showInput) }
 
-          <View style={parentStyles.inputContainer}>
-            <Text style={parentStyles.inputLabel}>Image/Diagram (Optional)</Text>
-            <Touchable
-              onPress={this.handleImagePicker}
-            >
-              <View
-                style={[
-                  image && image !== 'null' ?
-                    { ...parentStyles.bannerImageContainer, ...parentStyles.bannerImage } :
-                    parentStyles.bannerAddContainer,
-                  elevation,
-                ]}
-              >
-                {image && image !== 'null' ?
-                  <Image source={{ uri: image }} style={parentStyles.bannerImage} />
-                  :
-                  <View style={parentStyles.row}>
-                    <Aicon name={'image'} style={parentStyles.bannerIcon} />
-                    <Text style={parentStyles.bannerLabel}>
-                      Add an image or diagram
-                    </Text>
-                  </View>}
-                {image === 'loading' &&
-                <ActivityIndicator
-                  animating
-                  color={colors.primary}
-                  size={'large'}
-                  style={{ position: 'absolute' }}
-                />}
-              </View>
-            </Touchable>
-          </View>
+          { this.renderImageSelection(image) }
 
-          <View
-            onLayout={this.onAnswerLayout}
-            ref={this.handleAnswerRef}
-            style={parentStyles.inputContainer}
-          >
-            <Text style={parentStyles.inputLabel}>Answer</Text>
-            <Touchable
-              onPress={() => this.handleInputModal('answer', 'Enter answer', 100, answer, 'default')}
-              style={[parentStyles.inputButton, elevation]}
-            >
-              <Text
-                style={[
-                  parentStyles.inputButtonText,
-                  !answer && parentStyles.placeholder
-                ]}
-              >
-                {showInput && showInput.inputLabel === 'answer' ? null : answer || 'Enter answer'}
-              </Text>
-            </Touchable>
-          </View>
+          { this.renderAnswerInput(answer, showInput)}
 
-          {Boolean(instructions) &&
-            <Text style={[parentStyles.inputLabel, parentStyles.marginTop]}>Solution Steps</Text>}
-
-          {Boolean(instructions) && instructions.map((instruction, idx) => (
-            <Touchable
-              activeOpacity={0.8}
-              key={instruction}
-              onPress={() => this.handleAddInstruction(idx)}
-            >
-              <View
-                style={[
-                  parentStyles.inputContainer,
-                  parentStyles.row,
-                  parentStyles.inputPadding,
-                  parentStyles.justifyStart,
-                  parentStyles.alignStart
-                ]}
-              >
-                <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>
-                {renderHyperlinkedText(
-                  instruction,
-                  parentStyles.bannerLabel,
-                  { color: colors.primary },
-                  null
-                )}
-              </View>
-            </Touchable>
-          ))}
-
-          {!explore &&
-            <ButtonWide
-              buttonStyles={{ position: 'relative', marginVertical: verticalScale(25) }}
-              label={'+ Solution Step'}
-              onPress={this.handleAddInstruction}
-            />}
+          { this.renderInstructionTitle(instructions) }
+          { this.renderInstructions(instructions) }
+          { this.renderInstructionButton(explore) }
         </ScrollView>
 
       </View>
