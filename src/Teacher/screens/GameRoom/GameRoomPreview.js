@@ -33,6 +33,9 @@ export default function GameRoomPreview({
       <ButtonBack
         onPress={handleBackFromChild}
       />
+
+      <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${teamRef + 1}` }</Text>
+      
       <View 
         style={[gamePreviewStyles.questionContainer, gamePreviewStyles.questionContainerTeacher]}
       >
