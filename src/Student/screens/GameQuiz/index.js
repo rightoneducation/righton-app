@@ -87,7 +87,12 @@ export default class GameQuiz extends React.Component {
   }
 
 
-  setTime = timeLeft => this.setState({ timeLeft });
+  setTime = (timeLeft) => {
+    this.setState({ timeLeft });
+    if (timeLeft === 'Time is up!' && !this.state.published) {
+      this.publishChoice();
+    }
+  }
 
 
   resetState(teamRef) {
@@ -163,10 +168,9 @@ export default class GameQuiz extends React.Component {
       >
         { Platform.OS === 'ios' && <KeepAwake /> }
 
-        {Boolean(timeLeft) &&
-          <View style={gamePreviewStyles.timeContainer}>
-            <Text style={gamePreviewStyles.time}>{ timeLeft }</Text>
-          </View>}
+        <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${parseInt(teamRef[4], 10) + 1}` }</Text>
+
+        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
         <View style={gamePreviewStyles.questionContainer}>
           <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
           {Boolean(gameState[teamRef].image) &&
