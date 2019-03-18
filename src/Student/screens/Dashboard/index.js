@@ -39,6 +39,7 @@ export default class Dashboard extends React.Component {
       roomEntry: true,
     };
 
+    this.gameInput = null;
     this.startingGame = false;
     this.roomRef = null;
     this.attemptedEntries = 0;
@@ -127,18 +128,26 @@ export default class Dashboard extends React.Component {
   handleRoomInput = room => this.setState({ room });
 
 
-  handleRoomSubmit = () => (
-    Keyboard.dismiss()
-  )
+  handleRoomSubmit = () => {
+    Keyboard.dismiss();
+    const { room } = this.state;
+    if (room) {
+      this.handleGameEntry();
+    }
+  }
 
 
   handleRoomRef = (ref) => {
-    this.roomRef = ref;
+    this.gameInput = ref;
   }
 
 
   handleGameEntry = () => {
     const { room } = this.state;
+    if (!room && this.gameInput) {
+      this.gameInput.focus();
+      return;
+    }
     let GameRoomID = '';
     if (room) {
       GameRoomID = room;
