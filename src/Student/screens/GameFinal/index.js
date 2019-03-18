@@ -12,6 +12,7 @@ import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
 import { colors, fonts } from '../../../utils/theme';
+import debug from '../../../utils/debug';
 // import debug from '../../../utils/debug';
 import { handleExitGame } from '../../../utils/studentGameUtils';
 
@@ -104,6 +105,7 @@ export default class GameFinal extends React.Component {
     const playerKeys = Object.keys(players);
     const numberOfPlayers = playerKeys.length;
     let numberOfTeammates = 0;
+    let correctCount = 0;
     for (let i = 0; i < numberOfPlayers; i += 1) {
       if (players[playerKeys[i]] === team) numberOfTeammates += 1;
     }
@@ -111,9 +113,13 @@ export default class GameFinal extends React.Component {
     for (let i = 0; i < choices.length; i += 1) {
       if (!choices[i].correct) {
         trickCount += choices[i].votes;
+      } else {
+        correctCount = choices[i].votes;
       }
     }
-    trickCount += numberOfPlayers - numberOfTeammates - trickCount;
+    trickCount += numberOfPlayers - numberOfTeammates - trickCount - correctCount;
+    debug.log(JSON.stringify(choices));
+    debug.log('trickCount:', trickCount, 'numberOfPlayers', numberOfPlayers, 'numberOfTeammates', numberOfTeammates);
     const teamScore = Math.round((trickCount / (numberOfPlayers - numberOfTeammates)) * 100) || 0;
     this.setState({ teamScore, totalTricks: trickCount }, () => {
       this.updateAccountScores();
