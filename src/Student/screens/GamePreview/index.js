@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import { scale } from 'react-native-size-matters';
@@ -20,9 +21,10 @@ import InputModal from '../../../components/InputModal';
 import HeaderTeam from '../../components/HeaderTeam';
 import Instructions from '../../../components/Instructions';
 import ButtonRound from '../../../components/ButtonRound';
+import ButtonAnimated from '../../../components/ButtonAnimated';
 import WebView from '../../../components/WebView';
 import { handleExitGame } from '../../../utils/studentGameUtils';
-import { deviceWidth } from '../../../utils/theme';
+import { colors, deviceWidth } from '../../../utils/theme';
 import styles from './styles';
 
 
@@ -320,7 +322,13 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.questionContainer}>
-        <Text style={styles.question}>{ gameState[teamRef].question }</Text>
+        <Text style={styles.question}>
+          { renderHyperlinkedText(
+            gameState[teamRef].question,
+            {},
+            { color: colors.primary },
+            this.handleOpenLink)}
+        </Text>
         {Boolean(gameState[teamRef].image) &&
           <Image source={{ uri: gameState[teamRef].image }} style={styles.image} resizeMode={'contain'} />} 
       </View>
@@ -377,14 +385,18 @@ export default class GamePreview extends React.PureComponent {
     const { gameState, team } = this.props.screenProps;
     const teamRef = `team${team}`;
 
+    let showInputButton = true;
+    const renderAnimatedButton = !gameState[teamRef].tricks.length;
+    if (showInstructions && showInput) {
+      showInputButton = false;
+    }
+
     if (hyperlink) {
       return (
         <View style={styles.container}>
           { Platform.OS === 'ios' && <KeepAwake /> }
           {Boolean(timeLeft) &&
-            <View style={styles.timeContainer}>
-              <Text style={styles.time}>{ timeLeft }</Text>
-            </View>}
+            <Text style={styles.timeContainer}>{ timeLeft }</Text>}
           <WebView
             handleClose={this.handleCloseLink}
             hyperlink={hyperlink}
@@ -394,34 +406,40 @@ export default class GamePreview extends React.PureComponent {
     }
 
     return (
-      <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
-        { Platform.OS === 'ios' && <KeepAwake /> }
-
-        <Message {...messageProps} />
-        {showInput && <InputModal {...showInput} />}
+      <View style={styles.flex}>
         {Boolean(timeLeft) &&
-          <View style={styles.timeContainer}>
-            <Text style={styles.time}>{ timeLeft }</Text>
-          </View>}
-        <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
-        {this.renderQuestion()}
-        {this.renderTricks(gameState, teamRef)}
-        {!showInstructions && this.renderArrowButton()}
-        {showInstructions &&
-          <Instructions
-            handleCloseModal={this.toggleInstructions}
-            handleOpenLink={this.handleOpenLink}
-            incrementInstruction={this.incrementInstruction}
-            instructionIndex={instructionIndex}
-            data={instructions}
-            visible={showInstructions}
-          />}
-        {!showInstructions && !showInput &&
+          <Text style={styles.timeContainer}>{ timeLeft }</Text>}
+        <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
+          { Platform.OS === 'ios' && <KeepAwake /> }
+
+          <Message {...messageProps} />
+          {showInput && <InputModal {...showInput} />}
+
+          <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
+          {this.renderQuestion()}
+          {this.renderTricks(gameState, teamRef)}
+          {!showInstructions && this.renderArrowButton()}
+          {showInstructions &&
+            <Instructions
+              handleCloseModal={this.toggleInstructions}
+              handleOpenLink={this.handleOpenLink}
+              incrementInstruction={this.incrementInstruction}
+              instructionIndex={instructionIndex}
+              data={instructions}
+              visible={showInstructions}
+            />}
+        </ScrollView>
+        {showInputButton && !renderAnimatedButtont &&
           <ButtonRound
             icon={'pencil-square-o'}
             onPress={this.handleInputModal}
           />}
-      </ScrollView>
+        {showInputButton && renderAnimatedButton &&
+          <ButtonAnimated
+            icon={'pencil-square-o'}
+            onPress={this.handleInputModal}
+          />}
+      </View>
     );
   }
 }
