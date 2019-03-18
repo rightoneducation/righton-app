@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
@@ -213,7 +214,13 @@ export default class GameReasons extends React.PureComponent {
 
     return (
       <View style={[gamePreviewStyles.questionContainer, styles.extraMarginBottom]}>
-        <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
+        <Text style={gamePreviewStyles.question}>
+          { renderHyperlinkedText(
+            gameState[teamRef].question,
+            {},
+            { color: colors.primary },
+            this.handleOpenLink)}
+        </Text>
         {Boolean(gameState[teamRef].image) &&
           <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
       </View>
@@ -242,16 +249,13 @@ export default class GameReasons extends React.PureComponent {
         {showInput &&
           <InputModal {...showInput} />}
         <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
-        {Boolean(timeLeft) &&
-          <View style={gamePreviewStyles.timeContainer}>
-            <Text style={gamePreviewStyles.time}>{ timeLeft }</Text>
-          </View>}
+        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
         {this.renderQuestion()}
         <View style={styles.extraMarginBottom}>
           {tricks[0] ?
             <Text style={[
               gamePreviewStyles.question,
-              gamePreviewStyles.time,
+              gamePreviewStyles.choiceValue,
               gamePreviewStyles.marginBottom
             ]}
             >
@@ -259,7 +263,7 @@ export default class GameReasons extends React.PureComponent {
             </Text> :
             <Text style={[
               gamePreviewStyles.question,
-              gamePreviewStyles.time,
+              gamePreviewStyles.choiceValue,
               gamePreviewStyles.marginBottom
             ]}
             >
