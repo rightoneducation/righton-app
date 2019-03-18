@@ -82,7 +82,7 @@ export default ScaledSheet.create({
     flexGrow: 1,
   },
   extraPaddingBottom: {
-    paddingBottom: '140@vs',
+    paddingBottom: '125@vs',
   },
   flex: {
     flex: 1,
@@ -132,7 +132,7 @@ export default ScaledSheet.create({
     borderWidth: 1,
     justifyContent: 'flex-start',
     marginHorizontal: '15@ms',
-    marginVertical: '35@vs',
+    marginTop: '35@vs',
     paddingHorizontal: '15@s',
     paddingBottom: '5@vs',
     paddingTop: '20@vs',
