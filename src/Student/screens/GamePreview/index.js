@@ -429,7 +429,7 @@ export default class GamePreview extends React.PureComponent {
               visible={showInstructions}
             />}
         </ScrollView>
-        {showInputButton && !renderAnimatedButtont &&
+        {showInputButton && !renderAnimatedButton &&
           <ButtonRound
             icon={'pencil-square-o'}
             onPress={this.handleInputModal}
