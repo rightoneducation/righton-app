@@ -236,6 +236,9 @@ export default class GameRoomResults extends React.Component {
         <ButtonBack
           onPress={handleBackFromChild}
         />
+
+        <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${teamRef + 1}` }</Text>
+  
         <View 
           style={[gamePreviewStyles.questionContainer, gamePreviewStyles.questionContainerTeacher]}
         >
