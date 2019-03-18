@@ -84,6 +84,9 @@ export default ScaledSheet.create({
   extraPaddingBottom: {
     paddingBottom: '140@vs',
   },
+  flex: {
+    flex: 1,
+  },
   image: {
     height: '250@ms',
     marginVertical: '15@ms',
@@ -107,11 +110,12 @@ export default ScaledSheet.create({
     // Account for back button
     marginTop: '65@vs',
   },
-  time: {
-    color: colors.white,
-    fontSize: fonts.medium,
+  teamContainer: {
+    left: '5@s',
   },
   timeContainer: {
+    color: colors.white,
+    fontSize: fonts.medium,
     position: 'absolute',
     right: '5@s',
     top: '25@vs',
