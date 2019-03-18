@@ -38,6 +38,8 @@ export default class StudentFirst extends React.PureComponent {
       portal: null,
       room: '',
     };
+
+    this.gameInput = null;
   }
 
 
@@ -61,6 +63,10 @@ export default class StudentFirst extends React.PureComponent {
 
   handleGameEntry = () => {
     const { room } = this.state;
+    if (!room && this.gameInput) {
+      this.gameInput.focus();
+      return;
+    }
     const GameRoomID = room;
     this.setState({ portal: `Joining ${GameRoomID}` });
     NetInfo.isConnected.fetch()
@@ -196,6 +202,7 @@ export default class StudentFirst extends React.PureComponent {
           onSubmitEditing={this.onRoomSubmit}
           placeholder={'####'}
           placeholderTextColor={colors.primary} 
+          ref={(ref) => { this.gameInput = ref; }}
           returnKeyType={'done'}
           style={styles.input}
           textAlign={'center'}
