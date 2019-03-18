@@ -34,6 +34,7 @@ export default class GameRoom extends React.Component {
     };
 
     this.mounted = true;
+    this.completedQuestions = {};
   }
 
 
@@ -76,32 +77,25 @@ export default class GameRoom extends React.Component {
         const teamRef = gameStateKeys[i];
         if (
           gameState[teamRef].tricks.length &&
-          (gameState[teamRef].choices.length === 0 // ||
-          // Remove these conditions due to game replaying unnecessarily
-          // if no choices were selected the first time around.
-          // Commented out 3/7/2019 - Remove if necessary.
-          
-          // (gameState[teamRef].choices[0] && !gameState[teamRef].choices[0].votes &&
-          // gameState[teamRef].choices[1] && !gameState[teamRef].choices[1].votes &&
-          // gameState[teamRef].choices[2] && !gameState[teamRef].choices[2].votes &&
-          // gameState[teamRef].choices[3] && !gameState[teamRef].choices[3].votes)
+          (gameState[teamRef].choices.length === 0 &&
+          !this.completedQuestions[teamRef]
           )
         ) {
           nextTeamRef = teamRef;
           break;
         }
         // Do a deeper check in case `handleGamePreview()` was operated on team
-        let completed = false;
-        for (let j = 0; j < gameState[teamRef].choices.length; j += 1) {
-          if (gameState[teamRef].choices[j].votes) {
-            completed = true;
-            break;
-          }
-        }
-        if (!completed) {
-          nextTeamRef = teamRef;
-          break;
-        }
+        // let completed = false;
+        // for (let j = 0; j < gameState[teamRef].choices.length; j += 1) {
+        //   if (gameState[teamRef].choices[j].votes) {
+        //     completed = true;
+        //     break;
+        //   }
+        // }
+        // if (!completed) {
+        //   nextTeamRef = teamRef;
+        //   break;
+        // }
       }
     }
     if (nextTeamRef) {
@@ -121,15 +115,6 @@ export default class GameRoom extends React.Component {
     
     const selectedTricks = gameState[teamRef].tricks.filter(trick => trick.selected) || [];
     debug.log('selectedTricks:', selectedTricks);
-    
-    // Automatically picks out the first tricks if none were selected
-    // if (!selectedTricks.length && gameState[teamRef].tricks.length) {
-    //   for (let i = 0;
-    //     i < gameState[teamRef].tricks.length || selectedTricks.length !== 3;
-    //     i += 1) {
-    //     selectedTricks.push(gameState[teamRef].tricks[i]);
-    //   }
-    // }
 
     const dualUid = `${Math.random()}`;
     const choicesLimit = selectedTricks.length + 1;
@@ -160,9 +145,9 @@ export default class GameRoom extends React.Component {
         }
       }
     }
+    this.completedQuestions[teamRef] = true;
 
     debug.log(`Choices for ${teamRef}:`, JSON.stringify(choices));
-
     const time = Date.now();
     
     const message = {
