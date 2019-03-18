@@ -237,7 +237,9 @@ export default class GameRoomResults extends React.Component {
           onPress={handleBackFromChild}
         />
 
-        <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${teamRef + 1}` }</Text>
+        <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>
+          { `Team ${parseInt(teamRef.substring(4), 10) + 1}` }
+        </Text>
   
         <View 
           style={[gamePreviewStyles.questionContainer, gamePreviewStyles.questionContainerTeacher]}
