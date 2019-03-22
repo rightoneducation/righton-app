@@ -14,6 +14,7 @@ import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import Portal from '../../../screens/Portal';
 import ButtonWide from '../../../components/ButtonWide';
+import ButtonBack from '../../../components/ButtonBack';
 import Message from '../../../components/Message';
 import styles from './styles';
 import { colors, elevation } from '../../../utils/theme';
@@ -61,6 +62,8 @@ export default class Dashboard extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
       if (nextProps.screenProps.gameState.state.endGame === true) {
+        const { handleSetAppState } = this.props.screenProps;
+        handleSetAppState('gameState', {});
         this.setState({ portal: '' });
         return;
       }
@@ -264,6 +267,23 @@ export default class Dashboard extends React.Component {
   }
 
 
+  handleBackFromPortal = () => {
+    const {
+      deviceSettings,
+      IOTPublishMessage,
+    } = this.props.screenProps;
+    this.setState({ portal: '' });
+    const message = {
+      action: 'LEAVE_TEAM',
+      uid: `${Math.random()}`,
+      payload: {
+        playerID: deviceSettings.username || deviceSettings.ID || `${Math.random()}`,
+      },
+    };
+    IOTPublishMessage(message);
+  }
+
+
   renderHeader = () => (
     <View style={[styles.headerContainer, elevation]}>
       <Touchable
@@ -401,12 +421,20 @@ export default class Dashboard extends React.Component {
 
     if (portal) {
       return (
-        <Portal
-          messageType={'single'}
-          messageValues={{
-            message: portal,
-          }}
-        />
+        <View style={styles.container}>
+          <ButtonBack
+            // buttonStyles={buttonStyles}
+            iconName={'close'}
+            // iconStyles={iconStyles}
+            onPress={this.handleBackFromPortal}
+          />
+          <Portal
+            messageType={'single'}
+            messageValues={{
+              message: portal,
+            }}
+          />
+        </View>
       );
     }
 
