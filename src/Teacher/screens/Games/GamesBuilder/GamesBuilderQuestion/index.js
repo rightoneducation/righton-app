@@ -22,6 +22,8 @@ import { colors, elevation, fonts } from '../../../../../utils/theme';
 import renderHyperlinkedText from '../../../../../utils/renderHyperlinkedText';
 import debug from '../../../../../utils/debug';
 
+import HyperlinkText from 'react-native-hyperlink-text';
+
 
 export default class GamesBuilderQuestion extends React.Component {
   static propTypes = {
@@ -409,13 +411,13 @@ export default class GamesBuilderQuestion extends React.Component {
               parentStyles.alignStart
             ]}
           >
-            <Text style={parentStyles.bannerLabel}>{`${idx + 1}.  `}</Text>
-            {renderHyperlinkedText(
-              instruction,
-              parentStyles.bannerLabel,
-              { color: colors.primary },
-              null
-            )}
+            <Text style={parentStyles.bannerLabel}>
+              <Text>{`${idx + 1}.  `}</Text>
+              <HyperlinkText
+                value={instruction}
+                linkStyle={{ color: colors.primary }}
+              />
+            </Text>
           </View>
         </Touchable>
       ));
