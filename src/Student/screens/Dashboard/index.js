@@ -61,7 +61,7 @@ export default class Dashboard extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
-      if (nextProps.screenProps.gameState.state.endGame === true) {
+      if (nextProps.screenProps.gameState.state.exitGame === true) {
         const { handleSetAppState } = this.props.screenProps;
         handleSetAppState('gameState', {});
         this.setState({ portal: '' });
