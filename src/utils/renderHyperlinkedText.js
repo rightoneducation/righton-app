@@ -3,17 +3,12 @@ import { Linking, Text } from 'react-native';
 
 export default function renderHyperlinkedText(string, baseStyles = {}, linkStyles = {}, openLink) {
   if (typeof string !== 'string') return null;
-  const httpRegex = /http/g;
-  const wwwRegex = /www/g;
+  const httpRegex = /(((https?:\/\/)|(www\.))(\S+))/gi;
   const httpType = httpRegex.test(string);
-  const wwwType = wwwRegex.test(string);
-  if (httpType || wwwType) {
+  if (httpType) {
     // Reset these regex indices because sometimes it starts off at a weird sequence.. 
     httpRegex.lastIndex = 0;
-    wwwRegex.lastIndex = 0;
-    const httpIndices = httpType ? 
-      getMatchedIndices(httpRegex, string) :
-      getMatchedIndices(wwwRegex, string);
+    const httpIndices = getMatchedIndices(httpRegex, string);
     const comIndices = getComIndices(string, httpIndices);
     if (httpIndices.length === comIndices.length) {
       const result = [];
