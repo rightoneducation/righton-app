@@ -423,9 +423,7 @@ export default class Dashboard extends React.Component {
       return (
         <View style={styles.container}>
           <ButtonBack
-            // buttonStyles={buttonStyles}
             iconName={'close'}
-            // iconStyles={iconStyles}
             onPress={this.handleBackFromPortal}
           />
           <Portal
