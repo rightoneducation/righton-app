@@ -43,6 +43,9 @@ export default ScaledSheet.create({
   extraPaddingBottom: {
     paddingBottom: '95@vs',
   },
+  flex: {
+    flex: 1,
+  },
   gameContainer: {
     alignItems: 'flex-start',
     borderColor: colors.white,
@@ -90,5 +93,13 @@ export default ScaledSheet.create({
   },
   textLarge: {
     fontSize: fonts.large,
+  },
+  timeContainer: {
+    color: colors.white,
+    fontSize: fonts.medium,
+    position: 'absolute',
+    right: '5@s',
+    top: '25@vs',
+    zIndex: 100,
   },
 });
