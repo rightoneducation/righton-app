@@ -24,7 +24,7 @@ export default class Message extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.message !== nextProps.message && nextProps.message) {
+    if (nextProps.message) {
       this.handleAnimation(nextProps.duration, nextProps.timeout);
     }
   }
