@@ -96,7 +96,7 @@ class Explore extends React.PureComponent {
         const { account, handleSetAppState } = this.props.screenProps;
         saveGamesToDatabase(games, account, handleSetAppState);
         this.props.navigation.state.params = { reloadGames: true };
-        this.handleShowMessage('Game has been cloned to your My Games.');
+        this.handleShowMessage('Game has been cloned to your Games.');
       }
     } catch (exception) {
       debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);
