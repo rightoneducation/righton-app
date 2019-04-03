@@ -86,7 +86,7 @@ class Explore extends React.PureComponent {
           if (games[i].GameID === game.GameID) {
             // Prevent adding a game twice
             this.handleCloseGame();
-            this.handleShowMessage('This game already exists in My Games.');
+            this.handleShowMessage('This game already exists in *My Games*.');
             return;
           }
         }
@@ -96,7 +96,7 @@ class Explore extends React.PureComponent {
         const { account, handleSetAppState } = this.props.screenProps;
         saveGamesToDatabase(games, account, handleSetAppState);
         this.props.navigation.state.params = { reloadGames: true };
-        this.handleShowMessage('Game has been cloned to your Games.');
+        this.handleShowMessage('Game has been cloned to *My Games*.');
       }
     } catch (exception) {
       debug.log('Caught exception getting Games from LocalStorage @Games, hydrateGames():', exception);
