@@ -34,6 +34,26 @@ export default class Message extends React.Component {
     clearTimeout(this.timeout);
   }
 
+  
+  processMessage(message) {
+    const { textStyle } = this.props;
+    if (message.includes('*')) {
+      const firstIndex = message.indexOf('*');
+      const lastIndex = message.lastIndexOf('*');
+      if (firstIndex === lastIndex) {
+        return <Text style={[styles.message, textStyle]}>{ message }</Text>;
+      }
+      return (
+        <Text style={[styles.message, textStyle]}>
+          { message.substring(0, firstIndex) }
+          <Text style={styles.bold}>{ message.substring(firstIndex + 1, lastIndex) }</Text>
+          { message.substring(lastIndex + 1) }
+        </Text>
+      );
+    }
+    return <Text style={[styles.message, textStyle]}>{ message }</Text>;
+  }
+
 
   handleAnimation(duration, timeout) {
     Animated.timing(
@@ -67,7 +87,7 @@ export default class Message extends React.Component {
     const {
       // closeFunc,
       bodyStyle,
-      textStyle,
+      // textStyle,
       // duration,
       message,
       // timeout,
@@ -81,7 +101,7 @@ export default class Message extends React.Component {
           hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
           onPress={this.handleTouchClose}
         >
-          <Text style={[styles.message, textStyle]}>{ message }</Text>
+          { this.processMessage(message) }
         </Touchable>
       </Animated.View>
     );
@@ -107,6 +127,9 @@ Message.defaultProps = {
 };
 
 const styles = ScaledSheet.create({
+  bold: {
+    fontWeight: '500',
+  },
   container: {
     alignItems: 'center',
     alignSelf: 'center',
