@@ -21,6 +21,9 @@ import RootNavigator from './src/Navigator';
 import LocalStorage from './lib/Categories/LocalStorage';
 import debug from './src/utils/debug';
 
+// Import after Amplify to provide polyfill and avoid clashing with React.
+import 'babel-polyfill';
+
 YellowBox.ignoreWarnings([]);
 YellowBox.ignoreWarnings(
   [
