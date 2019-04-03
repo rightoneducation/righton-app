@@ -19,6 +19,7 @@ import ButtonWide from '../../../../components/ButtonWide';
 import ButtonStart from '../../../../components/ButtonStart';
 import InputModal from '../../../../components/InputModal';
 import Menu from '../../../../components/Menu';
+import Message from '../../../../components/Message';
 import GamesShare from '../components/GamesShare';
 import SelectionModal from '../../../../components/SelectionModal';
 import { domainSelection, domainSelectionHS, standardSelection, gradeSelection, clusterSelection } from '../../../../config/selections';
@@ -69,6 +70,7 @@ export default class GamesBuilder extends React.Component {
         questions: [],
         title: null,
       },
+      messageProps: null,
       showInput: false,
       showMenu: false,
       showSelection: false,
@@ -170,6 +172,11 @@ export default class GamesBuilder extends React.Component {
   toggleFavorite = () => {
     const { game } = this.state;
     this.setState({ game: { ...game, favorite: !game.favorite } });
+    if (game.favorite) {
+      this.handleShowMessage('Removed from Favorites');
+    } else {
+      this.handleShowMessage('Saved to Favorites');
+    }
   }
 
 
@@ -365,6 +372,21 @@ export default class GamesBuilder extends React.Component {
   handleDeleteConfirmation = () => this.props.handleDeleteGame();
 
 
+  handleShowMessage = (message) => {
+    this.setState({
+      messageProps: {
+        closeFunc: this.handleCloseMessage,
+        message,
+      },
+    });
+  }
+
+
+  handleCloseMessage = () => {
+    this.setState({ messageProps: null });
+  }
+
+
   renderQuestionBlock = (question, idx) => (
     <Touchable
       activeOpacity={0.8}
@@ -428,6 +450,7 @@ export default class GamesBuilder extends React.Component {
     const {
       addQuestion,
       edited,
+      messageProps,
       showInput,
       showMenu,
       showSelection,
@@ -494,6 +517,9 @@ export default class GamesBuilder extends React.Component {
 
             {showInput &&
               <InputModal {...showInput} />}
+
+            {messageProps &&
+              <Message {...messageProps} />}
 
             {showMenu && 
               <Menu
