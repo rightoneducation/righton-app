@@ -76,7 +76,7 @@ export default function GameRoomStart({
       </View>
       {!gameState.start &&
         <ButtonWide
-          label={'Start Game'}
+          label={teams.length < 2 ? 'Waiting for students...' : 'Ready to Begin'}
           onPress={handleStartGame}
         />}
     </ScrollView>
