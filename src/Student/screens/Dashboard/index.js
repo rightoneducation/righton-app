@@ -422,15 +422,15 @@ export default class Dashboard extends React.Component {
     if (portal) {
       return (
         <View style={styles.container}>
-          <ButtonBack
-            iconName={'close'}
-            onPress={this.handleBackFromPortal}
-          />
           <Portal
             messageType={'single'}
             messageValues={{
               message: portal,
             }}
+          />
+          <ButtonBack
+            iconName={'close'}
+            onPress={this.handleBackFromPortal}
           />
         </View>
       );
