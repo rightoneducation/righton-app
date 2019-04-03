@@ -86,7 +86,7 @@ class Explore extends React.PureComponent {
           if (games[i].GameID === game.GameID) {
             // Prevent adding a game twice
             this.handleCloseGame();
-            this.handleShowMessage('This game already exists in your My Games.');
+            this.handleShowMessage('This game already exists in My Games.');
             return;
           }
         }
