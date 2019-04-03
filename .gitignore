@@ -74,3 +74,7 @@ project-config.json
 */aws-exports.js
 amplify/backend/function/*/src/node_modules/
 amplify/backend/function/*/dist/
+
+# Tests
+coverage/
+cache/
