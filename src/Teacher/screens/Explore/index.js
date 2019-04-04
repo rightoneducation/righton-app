@@ -74,7 +74,7 @@ class Explore extends React.PureComponent {
       if (!TeacherID) {
         this.handleCloseGame();
         // TODO Display an option for the teacher to login/signup.
-        this.handleShowMessage('Create an account to clone and create games.');
+        this.handleShowMessage('Log in to clone and create games.');
         return;
       }
       let games = [];
