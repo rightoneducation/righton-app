@@ -173,12 +173,14 @@ export default class GameRoom extends React.Component {
 
 
   handleStartGame = () => {
+    const { IOTPublishMessage } = this.props.screenProps;
+    const payload = { start: true };
     const message = {
       action: 'START_GAME',
       uid: `${Math.random()}`,
-      payload: { start: true },
+      payload,
     };
-    this.props.screenProps.IOTPublishMessage(message);
+    IOTPublishMessage(message);
     // if (__DEV__) {
     this.setState({ portal: 'RightOn!', renderType: 'portal' });
     setTimeout(() => this.mounted && this.setState({ portal: false, renderType: 'overview' }), 1500);
@@ -192,14 +194,14 @@ export default class GameRoom extends React.Component {
     // setTimeout(() => this.mounted && this.setState({ portal: 'RightOn!' }), 5000);
     // setTimeout(() => this.mounted && 
     //   this.setState({ portal: false, renderType: 'overview' }), 5500);
-    this.removeQuestionsWithMissingPlayers();
+    this.removeQuestionsWithMissingPlayers(payload);
   }
 
 
-  removeQuestionsWithMissingPlayers = () => {
+  removeQuestionsWithMissingPlayers = (state) => {
     const { teams } = this.state;
     const { gameState, handleSetAppState } = this.props.screenProps;
-    const updatedGameState = { ...gameState };
+    const updatedGameState = { ...gameState, state };
     const gameStateKeys = Object.keys(updatedGameState);
     let deleted;
     for (let i = 0; i < gameStateKeys.length; i += 1) {
@@ -288,8 +290,12 @@ export default class GameRoom extends React.Component {
       },
     };
     IOTPublishMessage(message);
-
-    this.setState({ renderType: 'results', preview: teamRef });
+    
+    this.setState({ renderType: 'results', preview: teamRef }, () => {
+      const { gameState, handleSetAppState } = this.props.screenProps;
+      const updatedGameState = { ...gameState, state: { startQuiz: true, teamRef } };
+      handleSetAppState('gameState', updatedGameState);
+    });
   }
 
 
@@ -331,6 +337,10 @@ export default class GameRoom extends React.Component {
       players,
     };
     IOTPublishMessage(message);
+
+    const { gameState, handleSetAppState } = this.props.screenProps;
+    const updatedGameState = { ...gameState, state: { endGame: true } };
+    handleSetAppState('gameState', updatedGameState);
   }
   
   
