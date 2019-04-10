@@ -87,6 +87,7 @@ export default class Dashboard extends React.Component {
           if (this.mounted) this.props.screenProps.navigation.navigate('GamePreview');
         }, 6000);      
       } else if (nextProps.screenProps.gameState.state.start === true &&
+        !nextProps.screenProps.gameState.state.reenter &&
         !nextProps.screenProps.team &&
         !this.startingGame) {
         this.setState({
@@ -250,10 +251,15 @@ export default class Dashboard extends React.Component {
     const {
       deviceSettings,
       handleSetAppState,
+      gameState,
       IOTPublishMessage,
     } = this.props.screenProps;
     const team = `${idx}`;
     handleSetAppState('team', team);
+    if (gameState.state.reenter) {
+      this.handleReenter(team);
+      return;
+    }
     this.setState({ portal: 'Waiting for other players' });
     const message = {
       action: 'JOINED_GAME',
@@ -264,6 +270,32 @@ export default class Dashboard extends React.Component {
       },
     };
     IOTPublishMessage(message);
+  }
+
+
+  handleReenter = (team) => {
+    const { gameState } = this.props.screenProps;
+    const { navigation } = this.props;
+    if (gameState.state.start) {
+      navigation.navigate('GamePreview');
+    } else if (gameState.state.startQuiz || gameState.state.endQuiz) {
+      if (gameState.state.teamRef === `team${team}`) {
+        navigation.navigate('GameReasons');
+      } else {
+        navigation.navigate('GameQuiz');
+      }
+    } else if (gameState.state.endGame === true) {
+      navigation.navigate('GameFinal');
+    } else {
+      this.props.screenProps.handleSetAppState('gameState', {});
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          message: 'Problem re-joining game...',
+          timeout: 4000,
+        },
+      });
+    }
   }
 
 
@@ -330,19 +362,21 @@ export default class Dashboard extends React.Component {
   renderGameRoomTeamSelection = (gameState) => {
     const gameKeys = typeof gameState === 'object' ? Object.keys(gameState) : [];
     const teamsArr = [];
-    let teamSize = 0;
+    // let teamSize = 0;
     for (let i = 0; i < gameKeys.length; i += 1) {
       if (gameKeys[i].includes('team')) {
-        teamSize += 1;
+        // teamSize += 1;
+        teamsArr.push(parseInt(gameKeys[i].substring(4), 10));
       }
     }
-    teamsArr[teamSize - 1] = null;
-    teamsArr.fill(null, 0, teamSize - 1);
+    teamsArr.sort((a, b) => a - b);
+    // teamsArr[teamSize - 1] = null;
+    // teamsArr.fill(null, 0, teamSize - 1);
     return (
       <View style={styles.roomContainer}>
         <ScrollView contentContainerStyle={styles.roomScrollView}>
           <Text style={styles.input}>Select your team</Text>
-          {teamsArr.map((n, idx) => (
+          {teamsArr.map((idx) => (
             <Touchable
               activeOpacity={0.8}
               background={Touchable.Ripple(colors.primary, false)}
