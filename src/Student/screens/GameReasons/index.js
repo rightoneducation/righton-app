@@ -51,8 +51,12 @@ export default class GameReasons extends React.PureComponent {
 
   componentDidMount() {
     const { quizTime } = this.props.screenProps.gameState;
-    if (quizTime && quizTime !== '0:00') {
-      requestCountdownTimer(quizTime, this.setTime);
+    const { params } = this.props.navigation.state;
+    const time = params && params.time ? params.time : trickTime;
+    if (time && time !== '0:00') {
+      requestCountdownTimer(time, this.setTime);
+    } else {
+      this.setState({ timeLeft: trickTime === '0:00' ? 'No time limit' : 'Time is up!' });          
     }
     this.parseTricks();
   }

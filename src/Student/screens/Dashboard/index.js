@@ -277,12 +277,12 @@ export default class Dashboard extends React.Component {
     const { gameState } = this.props.screenProps;
     const { navigation } = this.props;
     if (gameState.state.start) {
-      navigation.navigate('GamePreview');
+      navigation.navigate('GamePreview', { time: '0:00' });
     } else if (gameState.state.startQuiz || gameState.state.endQuiz) {
       if (gameState.state.teamRef === `team${team}`) {
-        navigation.navigate('GameReasons');
+        navigation.navigate('GameReasons', { time: '0:00' });
       } else {
-        navigation.navigate('GameQuiz');
+        navigation.navigate('GameQuiz', { time: '0:00' });
       }
     } else if (gameState.state.endGame === true) {
       navigation.navigate('GameFinal');

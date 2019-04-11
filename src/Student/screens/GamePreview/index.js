@@ -64,15 +64,21 @@ export default class GamePreview extends React.PureComponent {
 
   componentDidMount() {
     const { trickTime } = this.props.screenProps.gameState;
-    const minute = parseInt(trickTime.substr(0, 1), 10);
+    const { params } = this.props.navigation.state;
+    const time = params && params.time ? params.time : trickTime;
+
+    const minute = parseInt(time.substr(0, 1), 10);
+    
     if (minute <= 1) {
       this.startAnimation();
     } else {
       this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
     }
 
-    if (trickTime && trickTime !== '0:00') {
-      requestCountdownTimer(trickTime, this.setTime);
+    if (time && time !== '0:00') {
+      requestCountdownTimer(time, this.setTime);
+    } else {
+      this.setState({ timeLeft: trickTime === '0:00' ? 'No time limit' : 'Time is up!' });
     }
     
     InteractionManager.runAfterInteractions(this.setupInstructions());
@@ -407,8 +413,6 @@ export default class GamePreview extends React.PureComponent {
 
     return (
       <View style={styles.flex}>
-        {Boolean(timeLeft) &&
-          <Text style={styles.timeContainer}>{ timeLeft }</Text>}
         <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
           { Platform.OS === 'ios' && <KeepAwake /> }
 
@@ -429,6 +433,8 @@ export default class GamePreview extends React.PureComponent {
               visible={showInstructions}
             />}
         </ScrollView>
+        {Boolean(timeLeft) &&
+          <Text style={styles.timeContainer}>{ timeLeft }</Text>}
         {showInputButton && !renderAnimatedButton &&
           <ButtonRound
             icon={'pencil-square-o'}
