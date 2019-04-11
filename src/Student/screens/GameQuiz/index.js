@@ -7,7 +7,8 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import { cancelCountdownTimer } from '../../../utils/countdownTimer';
+import startCountdownTimer from '../../utils/startCountdownTimer';
 import Touchable from 'react-native-platform-touchable';
 import KeepAwake from 'react-native-keep-awake';
 import gamePreviewStyles from '../GamePreview/styles';
@@ -29,9 +30,17 @@ export default class GameQuiz extends React.Component {
     super(props);
 
     const { quizTime, state } = props.screenProps.gameState;
+    const { params } = props.navigation.state;
+    let timeLeft;
+    if (params && params.time) {
+      timeLeft = quizTime === '0:00' ? 'No time limit' : params.time;
+    } else {
+      timeLeft = quizTime === '0:00' ? 'No time limit' : quizTime;
+    }
+
     this.state = {
       selectedChoice: null,
-      timeLeft: quizTime && quizTime !== '0:00' ? quizTime : 'No time limit',
+      timeLeft,
       teamRef: (state && state.teamRef) || 'team0', // What does 'team0' do that's wrong in this case?
       published: false,
     };
@@ -41,12 +50,7 @@ export default class GameQuiz extends React.Component {
   componentDidMount() {
     const { quizTime } = this.props.screenProps.gameState;
     const { params } = this.props.navigation.state;
-    const time = params && params.time ? params.time : trickTime;
-    if (time && time !== '0:00') {
-      requestCountdownTimer(time, this.setTime);
-    } else {
-      this.setState({ timeLeft: trickTime === '0:00' ? 'No time limit' : 'Time is up!' });
-    }
+    startCountdownTimer(params, quizTime, this.setTime);
   }
 
 
@@ -100,9 +104,6 @@ export default class GameQuiz extends React.Component {
 
 
   resetState(teamRef) {
-    // const now = Date.now();
-    // const quizTime = this.props.screenProps.gameState.quizTime;
-    // const timeLeft = time - now
     const { quizTime } = this.props.screenProps.gameState;
     this.setState({
       selectedChoice: null,
@@ -110,9 +111,7 @@ export default class GameQuiz extends React.Component {
       teamRef,
       published: false,
     }, () => {
-      if (quizTime && quizTime !== '0:00') {
-        requestCountdownTimer(quizTime, this.setTime);
-      }
+      startCountdownTimer(null, quizTime, this.setTime);
     });
   }
 

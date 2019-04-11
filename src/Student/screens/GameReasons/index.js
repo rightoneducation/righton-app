@@ -8,7 +8,8 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import { cancelCountdownTimer } from '../../../utils/countdownTimer';
+import startCountdownTimer from '../../utils/startCountdownTimer';
 import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';
@@ -36,9 +37,17 @@ export default class GameReasons extends React.PureComponent {
     super(props);
 
     const { quizTime } = props.screenProps.gameState;
+    const { params } = props.navigation.state;
+    let timeLeft;
+    if (params && params.time) {
+      timeLeft = quizTime === '0:00' ? 'No time limit' : params.time;
+    } else {
+      timeLeft = quizTime === '0:00' ? 'No time limit' : quizTime;
+    }
+
     this.state = {
       showInput: false,
-      timeLeft: quizTime && quizTime !== '0:00' ? quizTime : 'No time limit',
+      timeLeft,
       trick0Reason: '',
       trick1Reason: '',
       trick2Reason: '',
@@ -50,15 +59,10 @@ export default class GameReasons extends React.PureComponent {
 
 
   componentDidMount() {
+    this.parseTricks();
     const { quizTime } = this.props.screenProps.gameState;
     const { params } = this.props.navigation.state;
-    const time = params && params.time ? params.time : quizTime;
-    if (time && time !== '0:00') {
-      requestCountdownTimer(time, this.setTime);
-    } else {
-      this.setState({ timeLeft: quizTime === '0:00' ? 'No time limit' : 'Time is up!' });          
-    }
-    this.parseTricks();
+    startCountdownTimer(params, quizTime, this.setTime);
   }
 
 

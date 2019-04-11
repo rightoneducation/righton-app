@@ -10,7 +10,8 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import { cancelCountdownTimer } from '../../../utils/countdownTimer';
+import startCountdownTimer from '../../utils/startCountdownTimer';
 import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
@@ -49,6 +50,15 @@ export default class GamePreview extends React.PureComponent {
     this.animatedArrow2 = new Animated.Value(0);
     this.animatedArrow3 = new Animated.Value(0);
 
+    const { trickTime } = props.screenProps.gameState;
+    const { params } = props.navigation.state;
+    let timeLeft;
+    if (params && params.time) {
+      timeLeft = trickTime === '0:00' ? 'No time limit' : params.time;
+    } else {
+      timeLeft = trickTime === '0:00' ? 'No time limit' : trickTime;
+    }
+
     this.state = {
       hyperlink: '',
       instructions: [],
@@ -56,8 +66,7 @@ export default class GamePreview extends React.PureComponent {
       messageProps: {},
       showInput: false,
       showInstructions: false,
-      timeLeft: props.screenProps.gameState.trickTime && props.screenProps.gameState.trickTime !== '0:00' ?
-        props.screenProps.gameState.trickTime : 'No time limit',
+      timeLeft,
     };
   }
 
@@ -74,12 +83,7 @@ export default class GamePreview extends React.PureComponent {
     } else {
       this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
     }
-
-    if (time && time !== '0:00') {
-      requestCountdownTimer(time, this.setTime);
-    } else {
-      this.setState({ timeLeft: trickTime === '0:00' ? 'No time limit' : 'Time is up!' });
-    }
+    startCountdownTimer(params, trickTime, this.setTime);
     
     InteractionManager.runAfterInteractions(this.setupInstructions());
   }
