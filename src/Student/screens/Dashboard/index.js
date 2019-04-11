@@ -376,7 +376,7 @@ export default class Dashboard extends React.Component {
       <View style={styles.roomContainer}>
         <ScrollView contentContainerStyle={styles.roomScrollView}>
           <Text style={styles.input}>Select your team</Text>
-          {teamsArr.map((idx) => (
+          {teamsArr.map(idx => (
             <Touchable
               activeOpacity={0.8}
               background={Touchable.Ripple(colors.primary, false)}
