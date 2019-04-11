@@ -103,7 +103,7 @@ export default class GameRoomOverview extends React.Component {
           <Touchable
             activeOpacity={0.8}
             key={gameState[key].uid}
-            onPress={() => handleGamePreview(`team${teamIdx}`)}
+            onPress={() => handleGamePreview(`team${teamIdx}`, 'preview')}
           >
             <View style={styles.gameContainer}>
               <View style={[styles.gameRow, styles.marginBottom]}>
@@ -144,8 +144,6 @@ export default class GameRoomOverview extends React.Component {
   
     return (
       <View style={styles.flex}>
-        {Boolean(timeLeft) &&
-          <Text style={styles.timeContainer}>{ timeLeft }</Text>}
         <ScrollView
           contentContainerStyle={[styles.dashboardContainer, styles.extraPaddingBottom]}
         >
@@ -183,6 +181,8 @@ export default class GameRoomOverview extends React.Component {
             onPress={handleRenderNewGame}
           />
         </ScrollView>
+        {Boolean(timeLeft) &&
+          <Text style={styles.timeContainer}>{ timeLeft }</Text>}
       </View>
     );
   }

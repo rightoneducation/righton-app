@@ -107,7 +107,7 @@ export default class GameRoom extends React.Component {
 
 
   // Update all gameStates with a randomized order of choices for quizzing.
-  handleGamePreview = (teamRef) => {
+  handleGamePreview = (teamRef, preview = false) => {
     const { gameState } = this.props.screenProps;
     // Create a random order of choices mixed with the correct answer.
     const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
@@ -155,12 +155,12 @@ export default class GameRoom extends React.Component {
       teamRef,
       uid: dualUid,
       payload: choices,
-      state: typeof teamRef === 'string' ? { startQuiz: true, teamRef, time } : null, 
+      state: preview === false ? { startQuiz: true, teamRef, time } : {}, 
     };
     IOTPublishMessage(message);
     
     updatedGameState[teamRef].choices = choices;
-    if (teamRef) {
+    if (teamRef && !preview) {
       // This is a specific handler for handleStartRandomGame() due to it not 
       // setting state of gameState by default when calling handleGamePreview()
       // causing the "Start quiz" label to show in GameRoomPreview.
@@ -168,8 +168,10 @@ export default class GameRoom extends React.Component {
     }
     handleSetAppState('gameState', updatedGameState);
 
-    this.setState({ renderType: 'preview', preview: teamRef }, () => this.setNextTeam());
-  }
+    this.setState({ renderType: 'preview', preview: teamRef }, () => {
+      if (!preview) this.setNextTeam();
+    });
+  } 
 
 
   handleStartGame = () => {
