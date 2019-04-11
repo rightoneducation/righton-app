@@ -52,11 +52,11 @@ export default class GameReasons extends React.PureComponent {
   componentDidMount() {
     const { quizTime } = this.props.screenProps.gameState;
     const { params } = this.props.navigation.state;
-    const time = params && params.time ? params.time : trickTime;
+    const time = params && params.time ? params.time : quizTime;
     if (time && time !== '0:00') {
       requestCountdownTimer(time, this.setTime);
     } else {
-      this.setState({ timeLeft: trickTime === '0:00' ? 'No time limit' : 'Time is up!' });          
+      this.setState({ timeLeft: quizTime === '0:00' ? 'No time limit' : 'Time is up!' });          
     }
     this.parseTricks();
   }
