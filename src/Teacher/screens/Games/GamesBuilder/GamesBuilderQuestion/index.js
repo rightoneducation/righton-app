@@ -412,7 +412,7 @@ export default class GamesBuilderQuestion extends React.Component {
             ]}
           >
             <Text style={parentStyles.bannerLabel}>
-              <Text>{`${idx + 1}.  `}</Text>
+              <Text>{`${idx + 1}. `}</Text>
               <HyperlinkText
                 value={instruction}
                 linkStyle={{ color: colors.primary }}
