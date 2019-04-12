@@ -260,7 +260,7 @@ export default class Dashboard extends React.Component {
       this.handleReenter(team);
       return;
     }
-    this.setState({ portal: `Team ${idx + 1}\nWaiting for other players..`});
+    this.setState({ portal: `Team ${idx + 1}\nWaiting for other players..` });
     const message = {
       action: 'JOINED_GAME',
       uid: `${Math.random()}`,
