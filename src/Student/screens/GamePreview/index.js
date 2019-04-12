@@ -10,8 +10,7 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer } from '../../../utils/countdownTimer';
-import startCountdownTimer from '../../utils/startCountdownTimer';
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
 import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';

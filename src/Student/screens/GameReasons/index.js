@@ -8,8 +8,7 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer } from '../../../utils/countdownTimer';
-import startCountdownTimer from '../../utils/startCountdownTimer';
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
 import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
 import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';

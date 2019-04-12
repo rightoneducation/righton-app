@@ -7,8 +7,7 @@ import {
   View,
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer } from '../../../utils/countdownTimer';
-import startCountdownTimer from '../../utils/startCountdownTimer';
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
 import Touchable from 'react-native-platform-touchable';
 import KeepAwake from 'react-native-keep-awake';
 import gamePreviewStyles from '../GamePreview/styles';
