@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 import KeepAwake from 'react-native-keep-awake';
 import ButtonBack from '../../../components/ButtonBack';
@@ -45,7 +45,7 @@ export default class GameRoomPreview extends React.Component {
     const { gameState } = this.props;
     if (gameState.state.startQuiz) {
       if (gameState.quizTime && gameState.quizTime !== '0:00') {
-        requestCountdownTimer(gameState.quizTime, this.setTime);
+        startCountdownTimer(null, gameState.quizTime, this.setTime);
       }
     }
   }
@@ -53,7 +53,7 @@ export default class GameRoomPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.gameState.state.startQuiz !== nextProps.gameState.state.startQuiz) {
       if (nextProps.gameState.state.startQuiz) {
-        requestCountdownTimer(nextProps.gameState.quizTime, this.setTime);
+        startCountdownTimer(null, nextProps.gameState.quizTime, this.setTime);
       } else {
         cancelCountdownTimer();
         this.setTime('Time is up!');

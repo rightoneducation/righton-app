@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, requestCountdownTimer } from '../../../utils/countdownTimer';
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
 import KeepAwake from 'react-native-keep-awake';
@@ -34,7 +34,7 @@ export default class GameRoomOverview extends React.Component {
   startTrickTimer = () => {
     const { timeLeft } = this.state;
     if (timeLeft !== '0:00' && timeLeft !== 'No time limit') {
-      setTimeout(() => requestCountdownTimer(timeLeft, this.setTime), 5000);
+      setTimeout(() => startCountdownTimer(null, timeLeft, this.setTime), 5000);
     }
   }
 
