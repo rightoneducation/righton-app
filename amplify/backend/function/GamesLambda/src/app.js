@@ -51,22 +51,37 @@ const convertUrlType = (param, type) => {
 
 
 app.get(path, function(req, res) {
-  const payload = {
+  const params = {
     TableName: tableName,
-    Limit: 50, // optional (limit the number of items to evaluate)
+    Limit: 5,
     Select: 'ALL_ATTRIBUTES',
   };
 
-  dynamodb.scan(payload, (err, data) => {
+  dynamodb.scan(params, (err, data) => {
     if (err) {
       res.json({error: 'Could not load items: ' + err.message});
     }
 
-    res.json({
-        data: data.Items.map(item => {
-          return item;
-        })
-    });
+    res.json({ data });
+  });
+});
+
+
+app.get(path + '/:LastEvaluatedKey', function(req, res) {
+  const LastEvaluatedKey = JSON.parse(req.params.LastEvaluatedKey);
+  const params = {
+    TableName: tableName,
+    ExclusiveStartKey: LastEvaluatedKey,    
+    Limit: 10,
+    Select: 'ALL_ATTRIBUTES',
+  };
+
+  dynamodb.scan(params, (err, data) => {
+    if (err) {
+      res.json({error: 'Could not load items: ' + err.message});
+    }
+
+    res.json({ data });
   });
 });
 

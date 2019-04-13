@@ -104,11 +104,11 @@ app.put(path, function(req, res) {
     req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
-  let putItemParams = {
+  let params = {
     TableName: tableName,
     Item: req.body
   }
-  dynamodb.put(putItemParams, (err, data) => {
+  dynamodb.put(params, (err, data) => {
     if(err) {
       res.json({error: err, url: req.url, body: req.body});
     } else{
@@ -127,11 +127,11 @@ app.post(path, function(req, res) {
     req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
-  let putItemParams = {
+  let params = {
     TableName: tableName,
     Item: req.body
   }
-  dynamodb.put(putItemParams, (err, data) => {
+  dynamodb.put(params, (err, data) => {
     if(err) {
       res.json({error: err, url: req.url, body: req.body});
     } else{

@@ -1,6 +1,6 @@
 {
-    "projectName": "RightOn",
-    "projectPath": "/Users/andy/Desktop/Upwork/RightOn",
+    "projectName": "righton",
+    "projectPath": "/Users/andy/Desktop/righton",
     "defaultEditor": "code",
     "frontendHandler": {
         "javascript": "/Users/andy/.nvm/versions/node/v10.9.0/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-javascript"
@@ -8,7 +8,7 @@
     "javascript": {
         "framework": "react-native",
         "config": {
-            "SourceDir": "/src",
+            "SourceDir": "/src/",
             "DistributionDir": "/",
             "BuildCommand": "npm run-script build",
             "StartCommand": "npm run-script start"
