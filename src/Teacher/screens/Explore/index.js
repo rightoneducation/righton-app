@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   // Image,
   ScrollView,
   StatusBar,
@@ -8,7 +9,7 @@ import {
 } from 'react-native';
 import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { scale, ScaledSheet } from 'react-native-size-matters';
-import { getGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
+import { getAdditionalGamesFromDynamoDB, getInitialGamesFromDynamoDB } from '../../../../lib/Categories/DynamoDB/ExploreGamesAPI';
 import { playGame, saveGamesToDatabase } from '../../../utils/gamesBuilder';
 import Message from '../../../components/Message';
 // import Aicon from 'react-native-vector-icons/FontAwesome';
@@ -34,34 +35,60 @@ class Explore extends React.PureComponent {
 
     this.state = {
       data: [],
+      loadingGames: true,
       messageProps: null,
       viewGame: null,
     };
+
+    this.lastEvaluatedKey = null;
   }
 
 
   componentDidMount() {
-    this.hydrateGamesFromDynamoDB();
+    this.initializeGamesFromDynamoDB();
   }
 
 
-  hydrateGamesFromDynamoDB() {
-    getGamesFromDynamoDB(
+  initializeGamesFromDynamoDB() {
+    getInitialGamesFromDynamoDB(
       (res) => {
         debug.log('Successfully got result from GETTING games from DynamoDB for Explore:');
-        this.hydrateState(res.data);
+        this.hydrateState(res.data.Items);
+        this.lastEvaluatedKey = res.data.LastEvaluatedKey;
       },
       exception => debug.warn('Error GETTING games from DynamoDB for Explore:', JSON.stringify(exception))
     );
   }
 
 
+  hydrateGamesFromDynamoDB() {
+    if (this.state.loadingGames || !this.lastEvaluatedKey) return;
+    this.setState({ loadingGames: true });
+    getAdditionalGamesFromDynamoDB(
+      (res) => {
+        debug.log('Successfully got result from GETTING games from DynamoDB for Explore:');
+        this.hydrateState(res.data.Items, true);
+        this.lastEvaluatedKey = res.data.LastEvaluatedKey;
+      },
+      exception => debug.warn('Error GETTING games from DynamoDB for Explore:', JSON.stringify(exception)),
+      this.lastEvaluatedKey,
+    );
+  }
+
+
   hydrateState(data, extraData) {
     if (extraData) {
-      this.setState({ data: [...data, ...extraData] });
+      this.setState({ data: [...this.state.data, ...data], loadingGames: false });
     } else {
-      this.setState({ data });
+      this.setState({ data, loadingGames: false });
     }
+  }
+
+
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 20;
+    return (layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom);
   }
 
 
@@ -198,6 +225,7 @@ class Explore extends React.PureComponent {
   render() {
     const {
       data,
+      loadingGames,
       messageProps,
       viewGame,
     } = this.state;
@@ -228,8 +256,20 @@ class Explore extends React.PureComponent {
           contentContainerStyle={styles.scrollview}
           indicatorStyle={'white'}
           showsVerticalScrollIndicator
+          onScroll={({ nativeEvent }) => {
+            if (this.isCloseToBottom(nativeEvent)) {
+              this.hydrateGamesFromDynamoDB();
+            }
+          }}
+          scrollEventThrottle={400}
         >
           {this.renderData(data)}
+          {loadingGames &&
+            <ActivityIndicator
+              animating
+              color={colors.white}
+              size={'large'}
+            />}
         </ScrollView>
         { messageProps && <Message {...messageProps} /> }
       </View>
