@@ -308,21 +308,21 @@ export default class GameRoom extends React.Component {
     } else {
       this.setState({ renderType: 'final', preview: '' }, () => {
         this.handleEndMessage();
-        debug.log('End of game! Updating teacher account and history!');
-        setTimeout(() => {
-          const {
-            account,
-            handleSetAppState,
-            gameState,
-            players,
-          } = this.props.screenProps;
-          this.updateTeacherAccountAndHistory(
-            account,
-            handleSetAppState,
-            gameState,
-            Object.keys(players).length,
-          );
-        }, 1500);
+      //   debug.log('End of game! Updating teacher account and history!');
+      //   setTimeout(() => {
+      //     const {
+      //       account,
+      //       handleSetAppState,
+      //       gameState,
+      //       players,
+      //     } = this.props.screenProps;
+      //     this.updateTeacherAccountAndHistory(
+      //       account,
+      //       handleSetAppState,
+      //       gameState,
+      //       Object.keys(players).length,
+      //     );
+      //   }, 1500);
       });
     }
   }

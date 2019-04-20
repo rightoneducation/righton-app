@@ -118,44 +118,44 @@ export default class GameRoomFinal extends React.Component {
 
 
   updateGameInQuizMaker() {
-    const { gameState } = this.props;
-    if (gameState.quizmaker) {
-      const { rankedTeams } = this.state;
-      getQuizFromDynamoDB(
-        gameState.GameID,
-        (res) => {
-          if (typeof res === 'object' && res.GameID === gameState.GameID) {
-            // Update the Quiz w/ the details of this game.
-            const updatedQuiz = { ...res };
-            const keys = Object.keys(updatedQuiz);
-            updatedQuiz.played += 1;
+    // const { gameState } = this.props;
+    // if (gameState.quizmaker) {
+    //   const { rankedTeams } = this.state;
+    //   getQuizFromDynamoDB(
+    //     gameState.GameID,
+    //     (res) => {
+    //       if (typeof res === 'object' && res.GameID === gameState.GameID) {
+    //         // Update the Quiz w/ the details of this game.
+    //         const updatedQuiz = { ...res };
+    //         const keys = Object.keys(updatedQuiz);
+    //         updatedQuiz.played += 1;
 
 
-            for (let i = 0; i < rankedTeams.length; i += 1) {
-              const answer = rankedTeams[i].answer;
-              for (let j = 0; j < keys.length; j += 1) {
-                if (typeof updatedQuiz[j] === 'object' && updatedQuiz[j].answer === answer) {
-                  // TODO Check whether we want to refrain from pushing it votes
-                  // is less than a specified amount.
-                  updatedQuiz[j].tricks.push({
-                    votes: rankedTeams[i].bestTrickVotes,
-                    value: rankedTeams[i].bestTrickValue,
-                  });
-                  break;
-                }
-              }
-            }
+    //         for (let i = 0; i < rankedTeams.length; i += 1) {
+    //           const answer = rankedTeams[i].answer;
+    //           for (let j = 0; j < keys.length; j += 1) {
+    //             if (typeof updatedQuiz[j] === 'object' && updatedQuiz[j].answer === answer) {
+    //               // TODO Check whether we want to refrain from pushing it votes
+    //               // is less than a specified amount.
+    //               updatedQuiz[j].tricks.push({
+    //                 votes: rankedTeams[i].bestTrickVotes,
+    //                 value: rankedTeams[i].bestTrickValue,
+    //               });
+    //               break;
+    //             }
+    //           }
+    //         }
 
-            putQuizInDynamoDB(
-              updatedQuiz,
-              response => debug.log('Successfully PUT quiz in QuizMaker', response),
-              exception => debug.warn('Error PUTTING quiz in QuizMaker', exception),
-            );
-          } 
-        },
-        exception => debug.log('Error GETTING quiz from QuizMaker in DynamoDB', JSON.stringify(exception))
-      );
-    }
+    //         putQuizInDynamoDB(
+    //           updatedQuiz,
+    //           response => debug.log('Successfully PUT quiz in QuizMaker', response),
+    //           exception => debug.warn('Error PUTTING quiz in QuizMaker', exception),
+    //         );
+    //       } 
+    //     },
+    //     exception => debug.log('Error GETTING quiz from QuizMaker in DynamoDB', JSON.stringify(exception))
+    //   );
+    // }
   }
 
 
