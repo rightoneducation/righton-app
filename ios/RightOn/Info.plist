@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>27</string>
+	<string>29</string>
 	<key>ITSEncryptionExportComplianceCode</key>
 	<string>NO</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -69,6 +69,7 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>fontawesome-webfont.ttf</string>
+		<string>Feather.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -87,5 +88,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CodePushDeploymentKey</key>
+	<string>wYic_DXp9qUCEO8zgpmQ_yQF7bE3688ca8ed-6b04-4e89-961f-94741a45a40e</string>
 </dict>
 </plist>
