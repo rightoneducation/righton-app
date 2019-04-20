@@ -5,6 +5,8 @@ global.Buffer = global.Buffer || Buffer.Buffer; // Required for aws sigv4 signin
 import React from 'react';
 import { AppState, YellowBox } from 'react-native';
 
+import codePush from 'react-native-code-push';
+
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 
@@ -36,7 +38,7 @@ YellowBox.ignoreWarnings(
 Amplify.configure(awsconfig);
 
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
 
@@ -77,6 +79,7 @@ export default class App extends React.Component {
     this.setSession(session);
 
     AppState.addEventListener('change', this.handleAppStateChange);
+    codePush.notifyAppReady();
   }
 
 
@@ -369,5 +372,15 @@ export default class App extends React.Component {
   }
 }
 
+const codePushOptions = { 
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, 
+  installMode: codePush.InstallMode.ON_NEXT_RESUME 
+};
+
 // Pass router to RootNavigator for hooking it into the navigation paradigm.
 App.router = RootNavigator.router;
+
+/* eslint no-class-assign: 0 */
+App = codePush(codePushOptions)(App);
+
+export default App;
