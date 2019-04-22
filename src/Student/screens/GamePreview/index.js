@@ -3,6 +3,7 @@ import {
   Animated,
   Image,
   InteractionManager,
+  Modal,
   Platform,
   ScrollView,
   Text,
@@ -400,20 +401,6 @@ export default class GamePreview extends React.PureComponent {
       showInputButton = false;
     }
 
-    if (hyperlink) {
-      return (
-        <View style={styles.container}>
-          { Platform.OS === 'ios' && <KeepAwake /> }
-          {Boolean(timeLeft) &&
-            <Text style={styles.timeContainer}>{ timeLeft }</Text>}
-          <WebView
-            handleClose={this.handleCloseLink}
-            hyperlink={hyperlink}
-          />
-        </View>
-      );
-    }
-
     return (
       <View style={styles.flex}>
         <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
@@ -448,6 +435,22 @@ export default class GamePreview extends React.PureComponent {
             icon={'pencil-square-o'}
             onPress={this.handleInputModal}
           />}
+        {Boolean(hyperlink) &&
+          <Modal
+            animationType={'fade'}
+            onRequestClose={this.handleCloseLink}
+            transparent={false}
+          >
+            <View style={styles.container}>
+              { Platform.OS === 'ios' && <KeepAwake /> }
+              {Boolean(timeLeft) &&
+                <Text style={styles.timeContainer}>{ timeLeft }</Text>}
+              <WebView
+                handleClose={this.handleCloseLink}
+                hyperlink={hyperlink}
+              />
+            </View>
+          </Modal>}
       </View>
     );
   }
