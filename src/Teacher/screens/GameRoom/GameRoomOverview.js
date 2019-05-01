@@ -14,12 +14,15 @@ import KeepAwake from 'react-native-keep-awake';
 import styles from './styles';
 import ButtonBack from '../../../components/ButtonBack';
 import ButtonWide from '../../../components/ButtonWide';
+import Message from '../../../components/Message';
 import { colors } from '../../../utils/theme';
 
 export default class GameRoomOverview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      buttonEnabled: false,
+      messageProps: {},
       timeLeft: props.gameState.trickTime && props.gameState.trickTime !== '0:00' ?
         props.gameState.trickTime : 'No time limit',
     };
@@ -28,17 +31,25 @@ export default class GameRoomOverview extends React.Component {
   componentDidMount() {
     this.startTrickTimer();
   }
+
+  componentWillUnmount() {
+    cancelCountdownTimer();
+  }
   
   setTime = timeLeft => this.setState({ timeLeft });
 
   startTrickTimer = () => {
     const { timeLeft } = this.state;
     if (timeLeft !== '0:00' && timeLeft !== 'No time limit') {
-      setTimeout(() => startCountdownTimer(null, timeLeft, this.setTime), 5000);
+      setTimeout(() => 
+        startCountdownTimer(null, timeLeft, this.setTime, this.enableButtonStyle),
+      5000);
     }
   }
 
-  handleGameButton = () => {
+  enableButtonStyle = () => this.setState({ buttonEnabled: true });
+
+  handleOverrideGameButton = () => {
     const {
       handleEndGame,
       handleStartRandomGame,
@@ -51,6 +62,32 @@ export default class GameRoomOverview extends React.Component {
       handleEndGame();
     }
   }
+
+  handleGameButton = () => {
+    if (!this.state.buttonEnabled) {
+      this.setState({
+        messageProps: {
+          closeFunc: this.handleCloseMessage,
+          message: 'Tricks answers are still in session\nLong-press to override',
+          timeout: 4000,
+        },
+      });
+      return;
+    }
+    const {
+      handleEndGame,
+      handleStartRandomGame,
+      nextTeam, 
+    } = this.props;
+    cancelCountdownTimer();
+    if (nextTeam) {
+      handleStartRandomGame();
+    } else {
+      handleEndGame();
+    }
+  }
+
+  handleCloseMessage = () => this.setState({ messageProps: {} });
 
   renderGameRoomID = () => {
     const { gameState } = this.props; 
@@ -140,7 +177,11 @@ export default class GameRoomOverview extends React.Component {
       nextTeam,
     } = this.props;
 
-    const { timeLeft } = this.state;
+    const {
+      buttonEnabled,
+      messageProps,
+      timeLeft
+    } = this.state;
   
     return (
       <View style={styles.flex}>
@@ -164,8 +205,10 @@ export default class GameRoomOverview extends React.Component {
             buttonStyles={{
               position: 'relative',
               marginVertical: 15,
+              backgroundColor: buttonEnabled ? colors.primary : colors.lightGray,
             }}
             label={nextTeam ? 'Start Voting Round' : 'Close Gameroom'}
+            onLongPress={this.handleOverrideGameButton}
             onPress={this.handleGameButton}
           />
 
@@ -183,6 +226,7 @@ export default class GameRoomOverview extends React.Component {
         </ScrollView>
         {Boolean(timeLeft) &&
           <Text style={styles.timeContainer}>{ timeLeft }</Text>}
+        <Message {...messageProps} />
       </View>
     );
   }
