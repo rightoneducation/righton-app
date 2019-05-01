@@ -3,7 +3,7 @@
 let REQUEST = null;
 let CURRENT_END_TIME = 0;
 
-export function requestCountdownTimer(endTime, callback) {
+export function requestCountdownTimer(endTime, callback, final = () => {}) {
   // set our end time
   if (typeof endTime === 'string') {
     CURRENT_END_TIME = transformStringToTime(endTime);
@@ -24,6 +24,7 @@ export function requestCountdownTimer(endTime, callback) {
 
     if (newTime === '00:00') {
       callback('Time is up!');
+      final();
       CURRENT_END_TIME = 0;
       return;
     }
@@ -60,10 +61,10 @@ function pad(value) {
 }
 
 
-export function startCountdownTimer(params, defaultTime, setTime) {
+export function startCountdownTimer(params, defaultTime, setTime, final) {
   const timeLeft = (params && params.time) ? params.time : defaultTime;
   if (timeLeft && (timeLeft !== '0:00' && timeLeft !== 'No time limit')) {
-    requestCountdownTimer(timeLeft, setTime);
+    requestCountdownTimer(timeLeft, setTime, final);
   }
 }
 
