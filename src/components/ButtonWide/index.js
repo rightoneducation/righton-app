@@ -12,6 +12,7 @@ export default class ButtonWide extends React.PureComponent {
   static propTypes = {
     buttonStyles: PropTypes.shape({ type: PropTypes.any }),
     label: PropTypes.string.isRequired,
+    onLongPress: PropTypes.func,
     onPress: PropTypes.func.isRequired,
     ripple: PropTypes.string,
     textStyles: PropTypes.shape({ type: PropTypes.any }),
@@ -20,6 +21,7 @@ export default class ButtonWide extends React.PureComponent {
   static defaultProps = {
     buttonStyles: {},
     label: '',
+    onLongPress: () => {},
     onPress: () => {},
     ripple: '',
     textStyles: {},
@@ -35,6 +37,7 @@ export default class ButtonWide extends React.PureComponent {
   render() {
     const {
       buttonStyles,
+      onLongPress,
       // onPress,
       label,
       ripple,
@@ -46,6 +49,7 @@ export default class ButtonWide extends React.PureComponent {
         activeOpacity={0.8}
         background={Touchable.Ripple(ripple || colors.primary, false)}
         hitSlop={{ top: 5, right: 5, bottom: 5, left: 5 }}
+        onLongPress={onLongPress}
         onPress={this.handlePress}
         style={[styles.button, buttonStyles, elevation]}
       >
