@@ -165,42 +165,45 @@ export default class GameQuiz extends React.Component {
     const { selectedChoice, timeLeft } = this.state;
     
     return (
-      <ScrollView
-        contentContainerStyle={gamePreviewStyles.container}
-      >
-        { Platform.OS === 'ios' && <KeepAwake /> }
+      <View style={gamePreviewStyles.flex}>
+        <ScrollView
+          contentContainerStyle={gamePreviewStyles.container}
+        >
+          { Platform.OS === 'ios' && <KeepAwake /> }
 
-        <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${parseInt(teamRef[4], 10) + 1}` }</Text>
+          <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${parseInt(teamRef[4], 10) + 1}` }</Text>
+
+          <View style={gamePreviewStyles.questionContainer}>
+            <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
+            {Boolean(gameState[teamRef].image) &&
+              <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
+          </View>
+          <View style={gamePreviewStyles.choiceContainerWrapper}>
+            <View style={gamePreviewStyles.choicesContainer}>
+              {gameState[teamRef].choices.map((choice, idx) => (
+                Object.keys(choice).length &&
+                <Touchable
+                  activeOpacity={0.8}
+                  key={choice.value}
+                  onPress={() => this.handleChoiceSelection(idx)}
+                >
+                  <View style={gamePreviewStyles.choiceContainer}>
+                    <View 
+                      style={[
+                        gamePreviewStyles.choiceButton,
+                        selectedChoice === idx && gamePreviewStyles.choiceSelected,
+                      ]}
+                    />
+                    <Text style={gamePreviewStyles.choiceValue}>{ choice.value }</Text>
+                  </View>
+                </Touchable>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
 
         {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
-        <View style={gamePreviewStyles.questionContainer}>
-          <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
-          {Boolean(gameState[teamRef].image) &&
-            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
-        </View>
-        <View style={gamePreviewStyles.choiceContainerWrapper}>
-          <View style={gamePreviewStyles.choicesContainer}>
-            {gameState[teamRef].choices.map((choice, idx) => (
-              Object.keys(choice).length &&
-              <Touchable
-                activeOpacity={0.8}
-                key={choice.value}
-                onPress={() => this.handleChoiceSelection(idx)}
-              >
-                <View style={gamePreviewStyles.choiceContainer}>
-                  <View 
-                    style={[
-                      gamePreviewStyles.choiceButton,
-                      selectedChoice === idx && gamePreviewStyles.choiceSelected,
-                    ]}
-                  />
-                  <Text style={gamePreviewStyles.choiceValue}>{ choice.value }</Text>
-                </View>
-              </Touchable>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+      </View>
     );
   }
 }
