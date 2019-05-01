@@ -9,6 +9,7 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
 import InputModal from '../../../components/InputModal';
 import Message from '../../../components/Message';
+import ButtonBack from '../../../components/ButtonBack';
 import ButtonRound from '../../../components/ButtonRound';
 import { elevation, fonts, colors } from '../../../utils/theme';
 import styles from './styles';
@@ -310,6 +311,7 @@ class LogIn extends React.Component {
     this.setState({ messageProps: null });
   }
 
+  handleBack = () => this.props.navigation.navigate('OnboardAppRouter');
 
   render() {
     const {
@@ -328,6 +330,8 @@ class LogIn extends React.Component {
 
         {showInput &&
           <InputModal {...showInput} />}
+
+        <ButtonBack onPress={this.handleBack} />        
 
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>

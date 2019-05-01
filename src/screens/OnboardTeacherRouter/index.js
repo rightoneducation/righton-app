@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { ScaledSheet, verticalScale } from 'react-native-size-matters';
+import ButtonBack from '../../components/ButtonBack';
 import ButtonWide from '../../components/ButtonWide';
 import { colors, fonts } from '../../utils/theme';
 import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
@@ -40,12 +41,17 @@ export default class OnboardTeacherRouter extends React.PureComponent {
     this.props.navigation.navigate('TeacherApp');
   }
 
+  
+  handleBack = () => this.props.navigation.navigate('OnboardAppRouter');
+
 
   render() {
     return (
       <View style={styles.mainContainer}>
 
         <OnboardTeacherIntroSlides />
+
+        <ButtonBack onPress={this.handleBack} />
         
         <ButtonWide
           buttonStyles={{ bottom: verticalScale(65) }}
