@@ -81,7 +81,10 @@ export default class GamePreview extends React.PureComponent {
     if (minute <= 1) {
       this.startAnimation();
     } else {
-      this.animationTimeout = setTimeout(() => this.startAnimation(), 59250);
+      this.animationTimeout = setTimeout(() => {
+        this.startAnimation();
+        this.handleShowMessage('Tap the arrow\nto view answer');
+      }, 59250);
     }
     startCountdownTimer(params, trickTime, this.setTime);
     
