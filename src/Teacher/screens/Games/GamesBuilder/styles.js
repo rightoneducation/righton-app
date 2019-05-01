@@ -187,6 +187,9 @@ export default ScaledSheet.create({
     alignSelf: 'stretch',
     marginTop: '15@vs',
   },
+  right: {
+    right: '15@ms'
+  },
   row: {
     alignItems: 'center',
     flexDirection: 'row',

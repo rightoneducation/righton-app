@@ -564,7 +564,7 @@ export default class GamesBuilder extends React.Component {
               <Touchable
                 hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
                 onPress={this.createGame}
-                style={[styles.createContainer, action === 'Clone' && styles.heartWrapper]}
+                style={[styles.createContainer, action === 'Clone' && styles.right]}
               >
                 <Text style={styles.createLabel}>{ action }</Text>
               </Touchable>
@@ -581,7 +581,7 @@ export default class GamesBuilder extends React.Component {
                   </View>
                 </Touchable>}
 
-              <ButtonMenu onPress={this.toggleMenu} />
+              {!explore && <ButtonMenu onPress={this.toggleMenu} />}
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollview}>
