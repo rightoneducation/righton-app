@@ -90,14 +90,10 @@ export default class GameRoomOverview extends React.Component {
   handleCloseMessage = () => this.setState({ messageProps: {} });
 
   renderGameRoomID = () => {
-    const { gameState } = this.props; 
+    const { gameRoom } = this.props; 
     return (
-      <Text 
-        style={[
-          styles.textLabel, styles.textLarge, styles.textCenter, styles.extraMarginBottom
-        ]}
-      >
-        { gameState.GameRoomID }
+      <Text style={[styles.textLabel, styles.textCenter]}>
+        { gameRoom }
       </Text>
     );
   }
@@ -233,6 +229,7 @@ export default class GameRoomOverview extends React.Component {
 }
 
 GameRoomOverview.propTypes = {
+  gameRoom: PropTypes.string.isRequired,
   gameState: gameStatePropTypes,
   handleEndGame: PropTypes.func.isRequired,
   handleGamePreview: PropTypes.func.isRequired,
@@ -244,6 +241,7 @@ GameRoomOverview.propTypes = {
 };
 
 GameRoomOverview.defaultProps = {
+  gameRoom: '',
   gameState: gameStateDefaultProps,
   handleEndGame: () => {},
   handleGamePreview: () => {},

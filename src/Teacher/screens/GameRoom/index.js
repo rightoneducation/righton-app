@@ -512,6 +512,7 @@ export default class GameRoom extends React.Component {
       case 'overview':
         return (
           <GameRoomOverview
+            gameRoom={GameRoomID}
             gameState={gameState}
             handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
