@@ -167,7 +167,7 @@ export default class InputModal extends React.PureComponent {
     let xAxis = scale(15);
     let bottom;
     const scaledHeight = verticalScale(height);
-    if (y < minY) {
+    if (y + height < minY) {
       yAxis = y;
     } else {
       bottom = true;
