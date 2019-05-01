@@ -248,104 +248,105 @@ export default class GameReasons extends React.PureComponent {
     const { team } = this.props.screenProps;
 
     return (
-      <ScrollView 
-        contentContainerStyle={[gamePreviewStyles.container, styles.container]}
-      >
-        { Platform.OS === 'ios' && <KeepAwake /> }
+      <View style={gamePreviewStyles.flex}>
+        <ScrollView contentContainerStyle={[gamePreviewStyles.container, styles.container]}>
+          { Platform.OS === 'ios' && <KeepAwake /> }
 
-        {showInput &&
-          <InputModal {...showInput} />}
-        <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
-        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
-        {this.renderQuestion()}
-        <View style={styles.extraMarginBottom}>
-          {tricks[0] ?
-            <Text style={[
-              gamePreviewStyles.question,
-              gamePreviewStyles.choiceValue,
-              gamePreviewStyles.marginBottom
-            ]}
-            >
-              Jot down a few notes for why your team chose each trick answer:
-            </Text> :
-            <Text style={[
-              gamePreviewStyles.question,
-              gamePreviewStyles.choiceValue,
-              gamePreviewStyles.marginBottom
-            ]}
-            >
-              Explain why your team did not come up with trick answers:
-            </Text>}
-
-          <View>
+          {showInput &&
+            <InputModal {...showInput} />}
+          <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
+          {this.renderQuestion()}
+          <View style={styles.extraMarginBottom}>
             {tricks[0] ?
-              <View
-                onLayout={this.onTrick0Layout}
-                ref={this.handleTrick0Ref}
-                style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
+              <Text style={[
+                gamePreviewStyles.question,
+                gamePreviewStyles.choiceValue,
+                gamePreviewStyles.marginBottom
+              ]}
               >
-                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `Trick Answer #1. ${tricks[0]}` }
-                </Text>
-                <Touchable
-                  onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
-                  style={[styles.inputButton, elevation]}
-                >
-                  <Text style={[styles.inputButtonText, !trick0Reason && styles.placeholder]}>{trick0Reason || 'Enter your reason'}</Text>
-                </Touchable>
-              </View> :
-              <View
-                onLayout={this.onTrick0Layout}
-                ref={this.handleTrick0Ref}
-                style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
+                Jot down a few notes for why your team chose each trick answer:
+              </Text> :
+              <Text style={[
+                gamePreviewStyles.question,
+                gamePreviewStyles.choiceValue,
+                gamePreviewStyles.marginBottom
+              ]}
               >
-                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  Our reason is because...
-                </Text>
-                <Touchable
-                  onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
-                  style={[styles.inputButton, elevation]}
-                >
-                  <Text style={[styles.inputButtonText, !trick0Reason && styles.placeholder]}>{trick0Reason || 'Enter your reason'}</Text>
-                </Touchable>
-              </View>}
+                Explain why your team did not come up with trick answers:
+              </Text>}
 
-            {tricks[1] &&
-              <View
-                onLayout={this.onTrick1Layout}
-                ref={this.handleTrick1Ref}
-                style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
-              >
-                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `Trick Answer #2. ${tricks[1]}` }
-                </Text>
-                <Touchable
-                  onPress={() => this.handleInputModal('trick1', 'Enter your reason', 500, trick1Reason)}
-                  style={[styles.inputButton, elevation]}
+            <View>
+              {tricks[0] ?
+                <View
+                  onLayout={this.onTrick0Layout}
+                  ref={this.handleTrick0Ref}
+                  style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
                 >
-                  <Text style={[styles.inputButtonText, !trick1Reason && styles.placeholder]}>{trick1Reason || 'Enter your reason'}</Text>
-                </Touchable>
-              </View>}
+                  <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
+                    { `Trick Answer #1. ${tricks[0]}` }
+                  </Text>
+                  <Touchable
+                    onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
+                    style={[styles.inputButton, elevation]}
+                  >
+                    <Text style={[styles.inputButtonText, !trick0Reason && styles.placeholder]}>{trick0Reason || 'Enter your reason'}</Text>
+                  </Touchable>
+                </View> :
+                <View
+                  onLayout={this.onTrick0Layout}
+                  ref={this.handleTrick0Ref}
+                  style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
+                >
+                  <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
+                    Our reason is because...
+                  </Text>
+                  <Touchable
+                    onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
+                    style={[styles.inputButton, elevation]}
+                  >
+                    <Text style={[styles.inputButtonText, !trick0Reason && styles.placeholder]}>{trick0Reason || 'Enter your reason'}</Text>
+                  </Touchable>
+                </View>}
 
-            {tricks[2] &&
-              <View
-                onLayout={this.onTrick2Layout}
-                ref={this.handleTrick2Ref}
-                style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
-              >
-                <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                  { `Trick Answer #3. ${tricks[2]}` }
-                </Text>
-                <Touchable
-                  onPress={() => this.handleInputModal('trick2', 'Enter your reason', 500, trick2Reason)}
-                  style={[styles.inputButton, elevation]}
+              {tricks[1] &&
+                <View
+                  onLayout={this.onTrick1Layout}
+                  ref={this.handleTrick1Ref}
+                  style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
                 >
-                  <Text style={[styles.inputButtonText, !trick2Reason && styles.placeholder]}>{trick2Reason || 'Enter your reason'}</Text>
-                </Touchable>
-              </View>}
+                  <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
+                    { `Trick Answer #2. ${tricks[1]}` }
+                  </Text>
+                  <Touchable
+                    onPress={() => this.handleInputModal('trick1', 'Enter your reason', 500, trick1Reason)}
+                    style={[styles.inputButton, elevation]}
+                  >
+                    <Text style={[styles.inputButtonText, !trick1Reason && styles.placeholder]}>{trick1Reason || 'Enter your reason'}</Text>
+                  </Touchable>
+                </View>}
+
+              {tricks[2] &&
+                <View
+                  onLayout={this.onTrick2Layout}
+                  ref={this.handleTrick2Ref}
+                  style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
+                >
+                  <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
+                    { `Trick Answer #3. ${tricks[2]}` }
+                  </Text>
+                  <Touchable
+                    onPress={() => this.handleInputModal('trick2', 'Enter your reason', 500, trick2Reason)}
+                    style={[styles.inputButton, elevation]}
+                  >
+                    <Text style={[styles.inputButtonText, !trick2Reason && styles.placeholder]}>{trick2Reason || 'Enter your reason'}</Text>
+                  </Touchable>
+                </View>}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+
+        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
+      </View>
     );
   }
 }
