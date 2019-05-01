@@ -165,7 +165,7 @@ export default class GameRoomOverview extends React.Component {
               position: 'relative',
               marginVertical: 15,
             }}
-            label={nextTeam ? 'Start Game' : 'Close Gameroom'}
+            label={nextTeam ? 'Start Voting Round' : 'Close Gameroom'}
             onPress={this.handleGameButton}
           />
 
