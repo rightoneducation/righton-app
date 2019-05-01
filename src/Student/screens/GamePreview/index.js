@@ -54,7 +54,8 @@ export default class GamePreview extends React.PureComponent {
     const { params } = props.navigation.state;
     let timeLeft;
     if (params && params.time) {
-      timeLeft = trickTime === '0:00' ? 'No time limit' : params.time;
+      // timeLeft = trickTime === '0:00' ? 'No time limit' : params.time;
+      timeLeft = 'Time is up!';
     } else {
       timeLeft = trickTime === '0:00' ? 'No time limit' : trickTime;
     }
@@ -231,7 +232,7 @@ export default class GamePreview extends React.PureComponent {
 
   closeInputModal = (input) => {
     this.setState({ showInput: false });
-    if (input) {
+    if (input && this.state.timeLeft !== 'Time is up!') {
       const { gameState, handleSetAppState, IOTPublishMessage, team } = this.props.screenProps;
       const { answer } = gameState[`team${team}`];
       if (input.toLowerCase() === answer.toLowerCase()) {
