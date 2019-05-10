@@ -3,8 +3,19 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "devtools": "react-devtools",
+    "flow": "flow",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "apk": "cd android && ./gradlew assembleRelease",
+    "fastlane": "cd ios && fastlane ios beta",
+    "reload": "adb shell input keyevent 82 && adb shell input keyevent 66 && adb shell input keyevent 66",
+    "devmenu": "adb shell input keyevent 82",
+    "debug": "adb shell input keyevent 82 && adb shell input keyevent 61 && adb shell input keyevent 66 && adb shell input keyevent 66",
+    "push_android": "code-push release-react righton-android android",
+    "push_ios": "code-push release-react righton-ios ios",
+    "start": "react-native start",
+    "test": "node node_modules/jest/bin/jest.js --watchAll --verbose --coverage"
   },
   "dependencies": {
     "aws-amplify": "^1.1.26",
