@@ -51,11 +51,11 @@ If you receive a `hasteImpl returning the same name for different files` error i
 
 We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
 
-Please refer to our [Contribution Guide](https://gitlab.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md).
+Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md).
 
 ### Additional Documentation
 
-Please refer to our [docs](https://gitlab.com/righton-dev/righton-app/tree/master/docs)
+Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/master/docs)
 
 ### Communication channels
 
