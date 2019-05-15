@@ -184,7 +184,7 @@ export default class GameRoomOverview extends React.Component {
         <ScrollView
           contentContainerStyle={[styles.dashboardContainer, styles.extraPaddingBottom]}
         >
-          { Platform.OS === 'ios' && <KeepAwake /> }
+          <KeepAwake />
 
           <ButtonBack
             iconName={'close'}

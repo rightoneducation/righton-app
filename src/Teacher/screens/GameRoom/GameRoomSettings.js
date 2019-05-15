@@ -127,7 +127,7 @@ export default class GameRoomStart extends React.Component {
         onRequestClose={() => handleBackFromChild('start')}
         visible
       >
-        { Platform.OS === 'ios' && <KeepAwake /> }
+        <KeepAwake />
 
         <Message {...messageProps} />
         <ScrollView

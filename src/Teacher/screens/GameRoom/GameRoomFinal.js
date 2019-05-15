@@ -217,7 +217,7 @@ export default class GameRoomFinal extends React.Component {
           styles.extraPaddingBottom,
         ]}
       >
-        { Platform.OS === 'ios' && <KeepAwake /> }
+        <KeepAwake />
 
         <ButtonBack
           onPress={handleBackFromChild}

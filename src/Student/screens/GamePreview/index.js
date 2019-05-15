@@ -408,7 +408,7 @@ export default class GamePreview extends React.PureComponent {
     return (
       <View style={styles.flex}>
         <ScrollView contentContainerStyle={[styles.container, styles.extraPaddingBottom]}>
-          { Platform.OS === 'ios' && <KeepAwake /> }
+          <KeepAwake />
 
           <Message {...messageProps} />
           {showInput && <InputModal {...showInput} />}
@@ -446,7 +446,7 @@ export default class GamePreview extends React.PureComponent {
             transparent={false}
           >
             <View style={styles.container}>
-              { Platform.OS === 'ios' && <KeepAwake /> }
+              <KeepAwake />
               {Boolean(timeLeft) &&
                 <Text style={styles.timeContainer}>{ timeLeft }</Text>}
               <WebView

@@ -181,7 +181,7 @@ export default class Portal extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        { Platform.OS === 'ios' && <KeepAwake /> }
+        <KeepAwake />
 
         {/* { this.renderMessageType(messageType) } */}
 

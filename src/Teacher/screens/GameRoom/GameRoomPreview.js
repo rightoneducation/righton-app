@@ -83,7 +83,7 @@ export default class GameRoomPreview extends React.Component {
         <ScrollView
           contentContainerStyle={gamePreviewStyles.container}
         >
-          { Platform.OS === 'ios' && <KeepAwake /> }
+          <KeepAwake />
 
           <ButtonBack
             onPress={handleBackFromChild}

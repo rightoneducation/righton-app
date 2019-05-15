@@ -250,7 +250,7 @@ export default class GameReasons extends React.PureComponent {
     return (
       <View style={gamePreviewStyles.flex}>
         <ScrollView contentContainerStyle={[gamePreviewStyles.container, styles.container]}>
-          { Platform.OS === 'ios' && <KeepAwake /> }
+          <KeepAwake />
 
           {showInput &&
             <InputModal {...showInput} />}

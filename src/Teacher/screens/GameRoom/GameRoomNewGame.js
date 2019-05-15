@@ -159,7 +159,7 @@ export default class GameRoomNewGame extends React.Component {
 
     return (
       <ScrollView contentContainerStyle={[firstStyles.container, styles.scrollview]}>
-        { Platform.OS === 'ios' && <KeepAwake /> }
+        <KeepAwake />
 
         {Boolean(portal) &&
           <Portal messageProps={{ message: 'Launching new game' }} />}

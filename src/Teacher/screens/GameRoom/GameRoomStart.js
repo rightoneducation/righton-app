@@ -27,7 +27,7 @@ export default function GameRoomStart({
     <ScrollView
       contentContainerStyle={styles.dashboardContainer}
     >
-      { Platform.OS === 'ios' && <KeepAwake /> }
+      <KeepAwake />
 
       <ButtonBack
         iconName={'close'}

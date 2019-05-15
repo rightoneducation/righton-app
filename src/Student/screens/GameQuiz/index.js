@@ -169,7 +169,7 @@ export default class GameQuiz extends React.Component {
         <ScrollView
           contentContainerStyle={gamePreviewStyles.container}
         >
-          { Platform.OS === 'ios' && <KeepAwake /> }
+          <KeepAwake />
 
           <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>{ `Team ${parseInt(teamRef[4], 10) + 1}` }</Text>
 

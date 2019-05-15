@@ -142,7 +142,7 @@ export default class GameFinal extends React.Component {
 
     return (
       <View style={gamePreviewStyles.container}>
-        { Platform.OS === 'ios' && <KeepAwake /> }
+        <KeepAwake />
 
         <HeaderTeam team={`Team ${parseInt(team, 10) + 1}`} />
         <View style={styles.container}>
