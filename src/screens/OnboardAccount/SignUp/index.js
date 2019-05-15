@@ -76,8 +76,8 @@ class SignUp extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.emailRef),
         (x, y) => {
-          this['Your email addressX'] = x;
-          this['Your email addressY'] = y + 9 + fonts.small;
+          this['Your Email AddressX'] = x;
+          this['Your Email AddressY'] = y + 9 + fonts.small;
         }
       );
     }
@@ -102,8 +102,8 @@ class SignUp extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.retypeRef),
         (x, y) => {
-          this['Retype passwordX'] = x;
-          this['Retype passwordY'] = y + 9 + fonts.small;
+          this['Retype PasswordX'] = x;
+          this['Retype PasswordY'] = y + 9 + fonts.small;
         }
       );
     }
@@ -358,7 +358,7 @@ class SignUp extends React.Component {
 
   closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
-      case 'Your email address': {
+      case 'Your Email Address': {
         this.setState({ email: input, showInput: false }, () => {
           const emailPassed = this.handleEmailSubmit();
   
@@ -373,12 +373,12 @@ class SignUp extends React.Component {
           const passwordPassed = this.handlePasswordSubmit();
   
           if (input && passwordPassed && !this.state.retypePassword) {
-            this.handleInputModal('Retype password', 'Retype password', 75, '');
+            this.handleInputModal('Retype Password', 'Retype Password', 75, '');
           }
         });
         break;
       }
-      case 'Retype password': {
+      case 'Retype Password': {
         this.setState({ retypePassword: input, showInput: false }, () => {
           this.checkRequirements();
         });
@@ -391,11 +391,11 @@ class SignUp extends React.Component {
 
 
   handleInputModal = (inputLabel, placeholder, maxLength, input, keyboardType = 'default') => {
-    if (inputLabel === 'Your email address') {
+    if (inputLabel === 'Your Email Address') {
       this.onEmailLayout();
     } else if (inputLabel === 'Password') {
       this.onPasswordLayout();
-    } else if (inputLabel === 'Retype password') {
+    } else if (inputLabel === 'Retype Password') {
       this.onRetypeLayout();
     }
 
@@ -527,12 +527,12 @@ class SignUp extends React.Component {
             ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email Address'}</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your Email Address' ? '' : 'Your Email Address'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Your Email Address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your email address' ? '' : (email || 'Email address')}</Text>
+              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your Email Address' ? '' : (email || 'Email address')}</Text>
             </Touchable>
           </View>
           
@@ -557,10 +557,10 @@ class SignUp extends React.Component {
           >
             <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Password' ? '' : 'Retype Password'}</Text>
             <Touchable
-              onPress={() => this.handleInputModal('Retype Password', 'Retype password', 75, retypePassword)}
+              onPress={() => this.handleInputModal('Retype Password', 'Password', 75, retypePassword)}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Retype password' ? '' : (retypePassword || 'Retype password')}</Text>
+              <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Retype Password' ? '' : (retypePassword || 'Retype Password')}</Text>
             </Touchable>
           </View>
 

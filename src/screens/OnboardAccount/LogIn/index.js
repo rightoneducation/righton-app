@@ -80,8 +80,8 @@ class LogIn extends React.Component {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.emailRef),
         (x, y) => {
-          this['Your email addressX'] = x;
-          this['Your email addressY'] = y + 12 + fonts.small;
+          this['Your Email AddressX'] = x;
+          this['Your Email AddressY'] = y + 12 + fonts.small;
         }
       );
     }
@@ -245,7 +245,7 @@ class LogIn extends React.Component {
 
   closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
-      case 'Your email address':
+      case 'Your Email Address':
         this.setState({ email: input, showInput: false });
         if (!this.state.password && input) {
           this.handleInputModal('Password', 'Password', 75, '');
@@ -263,7 +263,7 @@ class LogIn extends React.Component {
 
 
   handleInputModal = (inputLabel, placeholder, maxLength, input, keyboardType = 'default') => {
-    if (inputLabel === 'Your email address') {
+    if (inputLabel === 'Your Email Address') {
       this.onEmailLayout();
     } else if (inputLabel === 'Password') {
       this.onPasswordLayout();
@@ -348,12 +348,12 @@ class LogIn extends React.Component {
             ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email Address'}</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your Email Address' ? '' : 'Your Email Address'}</Text>
             <Touchable
               onPress={() => this.handleInputModal('Your Email Address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
             >
-              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your email address' ? '' : (email || 'Email address')}</Text>
+              <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your Email Address' ? '' : (email || 'Email address')}</Text>
             </Touchable>
           </View>
 
