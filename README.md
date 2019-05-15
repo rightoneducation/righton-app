@@ -55,7 +55,7 @@ Please refer to our [Contribution Guide](https://gitlab.com/friendly-robot/right
 
 ### Additional Documentation
 
-Please refer to our [docs](docs)
+Please refer to our [docs](https://gitlab.com/friendly-robot/righton/blob/master/docs)
 
 ### Communication channels
 
