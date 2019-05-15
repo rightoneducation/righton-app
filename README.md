@@ -9,7 +9,7 @@ Our mission is to make math more fun for middle and high school students, increa
 
 #### 1) Clone project
 
-`git clone https://gitlab.com/friendly-robot/righton.git`
+`git clone https://gitlab.com/righton-dev/righton-app.git`
 
 #### 2) Install node modules
 
@@ -51,11 +51,11 @@ If you receive a `hasteImpl returning the same name for different files` error i
 
 We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
 
-Please refer to our [Contribution Guide](https://gitlab.com/friendly-robot/righton/blob/master/CONTRIBUTING.md).
+Please refer to our [Contribution Guide](https://gitlab.com/righton-dev/righton-app/blob/master/CONTRIBUTING.md).
 
 ### Additional Documentation
 
-Please refer to our [docs](https://gitlab.com/friendly-robot/righton/blob/master/docs)
+Please refer to our [docs](https://gitlab.com/righton-dev/righton-app/blob/master/docs)
 
 ### Communication channels
 
