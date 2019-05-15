@@ -348,9 +348,9 @@ class LogIn extends React.Component {
             ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email address'}</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email Address'}</Text>
             <Touchable
-              onPress={() => this.handleInputModal('Your email address', 'Email address', 75, email, 'email-address')}
+              onPress={() => this.handleInputModal('Your Email Address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
             >
               <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your email address' ? '' : (email || 'Email address')}</Text>

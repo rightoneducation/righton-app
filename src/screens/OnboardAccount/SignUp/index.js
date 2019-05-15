@@ -527,9 +527,9 @@ class SignUp extends React.Component {
             ref={this.handleEmailRef}
             style={styles.inputContainer}
           >
-            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email address'}</Text>
+            <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Your email address' ? '' : 'Your Email Address'}</Text>
             <Touchable
-              onPress={() => this.handleInputModal('Your email address', 'Email address', 75, email, 'email-address')}
+              onPress={() => this.handleInputModal('Your Email Address', 'Email address', 75, email, 'email-address')}
               style={[styles.inputButton, elevation]}
             >
               <Text style={[styles.inputButtonText, !email && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Your email address' ? '' : (email || 'Email address')}</Text>
@@ -557,7 +557,7 @@ class SignUp extends React.Component {
           >
             <Text style={styles.inputLabel}>{showInput && showInput.inputLabel === 'Password' ? '' : 'Retype Password'}</Text>
             <Touchable
-              onPress={() => this.handleInputModal('Retype password', 'Retype password', 75, retypePassword)}
+              onPress={() => this.handleInputModal('Retype Password', 'Retype password', 75, retypePassword)}
               style={[styles.inputButton, elevation]}
             >
               <Text style={[styles.inputButtonText, !password && styles.inputPlaceholder]}>{showInput && showInput.inputLabel === 'Retype password' ? '' : (retypePassword || 'Retype password')}</Text>
