@@ -53,6 +53,10 @@ We welcome contributions from everyone. Please report issues directly to us or m
 
 Please refer to our [Contribution Guide](https://gitlab.com/friendly-robot/righton/blob/master/CONTRIBUTING.md).
 
+### Additional Documentation
+
+Please refer to our [docs](docs)
+
 ### Communication channels
 
 Please join us on Slack at #RightOnEducation. We want to hear from you about your experience!
