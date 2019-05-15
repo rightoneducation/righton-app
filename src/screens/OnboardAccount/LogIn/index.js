@@ -338,8 +338,8 @@ class LogIn extends React.Component {
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
             <Text style={styles.title}>
               {deviceSettings.role === 'student' ?
-                'Student Account' :
-                'Teacher Account'}
+                'Student Log In' :
+                'Teacher Log In'}
             </Text>
           </View>
 

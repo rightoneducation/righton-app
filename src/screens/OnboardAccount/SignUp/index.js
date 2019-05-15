@@ -514,8 +514,8 @@ class SignUp extends React.Component {
             <Text style={[styles.title, styles.italic]}>RightOn!</Text>
             <Text style={styles.title}>
               {deviceSettings.role === 'student' ?
-                'Student Setup' :
-                'Teacher Setup'}
+                'Student Sign Up' :
+                'Teacher Sign Up'}
             </Text>
           </View>
 
