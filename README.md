@@ -1,7 +1,7 @@
 # RightOn Education
 
 ### Project Description
-Fun and motivation first – RightOn! is a math game show app for students to learn from and even win with wrong answers!
+Fun and motivation first – RightOn! is a math game show app for students to learn from and have fun with wrong answers.
 
 Our mission is to make math more fun for middle and high school students, increasing both motivation and self-confidence. Not a big fan of math? Great, RightOn! is the game for you. Already like math? That’s cool too, you’ll like it even more!
 
@@ -82,7 +82,7 @@ Coming soon!
 #### Advisors
 <strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
 <strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
-<strong>Eric Boucher</strong> - Cofounder & CEO of Ovio [technology non-profit]<br>
+<strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
 <strong>Payton Richardson</strong> - Mixed-methods research analyst at the Center for Research on Education Outcomes (CREDO) at Stanford University
 <br>
 <br>
