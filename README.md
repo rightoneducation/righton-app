@@ -72,10 +72,10 @@ Coming soon!
 ### Acknowledgments
 
 #### Meet our team
-<strong>Sinclair</strong> - Product Lead<br>
+<strong>Sinclair Wu</strong> - Product Lead<br>
 <strong>Edward Tan</strong> - Tech Lead<br>
 <strong>Kai King</strong> - Math Educator<br>
-<strong>Daz C Yang</strong> - Full-Stack Web Developer<br>
+<strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Andy Li</strong> - Mobile Developer
 <br>
 <br>
