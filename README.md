@@ -72,7 +72,7 @@ Coming soon!
 ### Acknowledgments
 
 #### Meet our team
-<strong>Andy Li</strong> - Mobile Developer
+<strong>Andy Li</strong> - Mobile Developer<br>
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Edward Tan</strong> - Tech Lead<br>
 <strong>Kai King</strong> - Math Educator<br>
