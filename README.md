@@ -1,7 +1,7 @@
 # RightOn Education
 
 ### Project Description
-Fun and motivation first – RightOn! is a math game show app for students to learn from and have fun with wrong answers.
+Fun and motivation first – RightOn! is an app-based classroom activity for students to learn from and have fun with wrong answers.
 
 Our mission is to make math more fun for middle and high school students, increasing both motivation and self-confidence. Not a big fan of math? Great, RightOn! is the game for you. Already like math? That’s cool too, you’ll like it even more!
 
@@ -49,7 +49,7 @@ If you receive a `hasteImpl returning the same name for different files` error i
 
 ### Contributing
 
-We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
+We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes in the RightOn! game, we'd like to fix as many of them as possible too. Your contribution counts!
 
 Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md).
 
@@ -59,11 +59,11 @@ Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/maste
 
 ### Communication channels
 
-Please join us on Slack at #RightOnEducation. We want to hear from you about your experience!
+We are always to hear from people who are also interested in making math more fun, engaging, and accessible to more people. Please let us know about your experience -- we're trying to build this plane as we fly it, and suggestions are always welcome and appreciated. You can reach us anytime at info@rightoneducation.com. 
 
-### Tests
+### Testing
 
-You are welcome to download our latest beta version to test and give feedback. Please use Test Flight to install our app from this link: https://testflight.apple.com/join/2l8414MU
+You are welcome to download the latest iOS beta version to test and give feedback. Please use TestFlight to install our app from this link: https://testflight.apple.com/join/2l8414MU
 
 ### Deployment
 
@@ -76,13 +76,16 @@ Coming soon!
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Edward Tan</strong> - Tech Lead<br>
 <strong>Kai King</strong> - Math Educator<br>
+<strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
 <strong>Sinclair Wu</strong> - Product Lead<br>
 <br>
 <br>
 #### Advisors
 <strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
 <strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
+<strong>Esmeralda Ortiz</strong> - Senior Director, Boys & Girls Clubs of the Peninsula<br>
 <strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
+<strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
 <strong>Payton Richardson</strong> - Mixed-methods research analyst at the Center for Research on Education Outcomes (CREDO) at Stanford University
 <br>
 <br>
