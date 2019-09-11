@@ -1,6 +1,6 @@
 # AWS Amplify
 
-Amplify is what we're using to build and deploy our AWS stack (we were previously useing AWS-Mobile, but are no longer). Due to Amplify's infancy but preferred aspects over the deprecating, AWS-Mobile, it's not possible to make changes on the AWS console and `pull` those changes. This is why we're relying on creating and making changes to Lambda functions, etc. from within the `amplify` directory.
+Amplify is what we're using to build and deploy our AWS stack. Due to its infancy but preferred aspects over the deprecating, AWS-Mobile, it's not possible to make changes on the AWS console and `pull` those changes. This is why we're relying on creating and making changes to Lambda functions, etc from within the `amplify` directory.
 
 ## Getting Started
 
