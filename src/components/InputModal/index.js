@@ -63,6 +63,7 @@ export default class InputModal extends React.PureComponent {
       minY: deviceHeight / 2,
       input: props.input || '',
     };
+    console.log('-----deviceHeight=' + deviceHeight);
   }
 
 
@@ -79,6 +80,7 @@ export default class InputModal extends React.PureComponent {
 
   keyboardDidShow = (e) => {
     const minY = deviceHeight - e.endCoordinates.height;
+    console.log('deviceHeight='+deviceHeight + ' endCoord=' + e.endCoordinates.height + ' minY='+ minY);
     if (this.state.minY !== minY) {
       this.setState({ minY });
     }
@@ -113,14 +115,15 @@ export default class InputModal extends React.PureComponent {
       spellCheck,
       width,
     } = this.props;
+    console.log('---yAxis='+yAxis + ' bottom=' + bottom );
 
     return (
-      <View 
+      <View
         style={[
           styles.inputContainer,
           elevation,
           { height, width, left: xAxis },
-          bottom ? { bottom: 15 } : { top: yAxis },
+          bottom ? { bottom: 15 } : { top: yAxis - 70 },
         ]}
       >
         <TextInput
@@ -167,17 +170,26 @@ export default class InputModal extends React.PureComponent {
     let xAxis = scale(15);
     let bottom;
     const scaledHeight = verticalScale(height);
+    console.log(':::scaledHeight='+scaledHeight + ' height=' + height + ' x='+x +' y='+y);
+
     if (y + height < minY) {
       yAxis = y;
     } else {
       bottom = true;
     }
+    console.log(':::yAxis='+yAxis + ' bottom=' + bottom );
 
     if (x < deviceWidth) {
       xAxis = x;
     }
+    bottom = false;
 
     const ms25 = moderateScale(25);
+
+    let newY = 15 + ms25 + scaledHeight;
+    let newTop = yAxis - ms25;
+
+    console.log(':::newY='+newY + ' newTop=' + newTop );
 
     return (
       <Modal
@@ -187,21 +199,6 @@ export default class InputModal extends React.PureComponent {
         visible={visible}
       >
         <View style={[styles.container, { backgroundColor }]}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={this.handleInputSubmit}
-            style={styles.closeContainer}
-          />
-          {!hiddenLabel &&
-            <Text
-              style={[
-                styles.inputLabel,
-                { left: xAxis },
-                bottom ? { bottom: 15 + ms25 + scaledHeight } : { top: yAxis - ms25 },
-                labelStyles,
-              ]}
-            >{ inputLabel }</Text>}
-
           {this.renderTextInput(xAxis, yAxis, bottom, scaledHeight)}
         </View>
       </Modal>
