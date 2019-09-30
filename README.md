@@ -57,7 +57,7 @@ Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/maste
 
 ### Communication channels
 
-We are always to hear from people who are also interested in making math more fun, engaging, and accessible to more people. Please let us know about your experience -- we're trying to build this plane as we fly it, and suggestions are always welcome and appreciated. You can reach us anytime at info@rightoneducation.com. 
+We are always happy to hear from people who are also interested in building learning apps and making math more fun for more people. We're trying to build this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com. 
 
 ### Testing
 
