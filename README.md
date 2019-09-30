@@ -77,7 +77,6 @@ Coming soon!
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
 <strong>Sinclair Wu</strong> - Product Lead<br>
 <br>
-<br>
 #### Advisors
 <strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
 <strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
@@ -87,6 +86,4 @@ Coming soon!
 <strong>Payton Richardson</strong> - Data Officer, Eastside Pathways
 <br>
 <br>
-<em>Learn more about RightOn & our team @https://rightoneducation.com</em>
-
-
+<em>Learn more about RightOn! & our team at https://rightoneducation.com</em>
