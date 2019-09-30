@@ -1,9 +1,8 @@
 # RightOn Education
 
 ### Project Description
-Fun and motivation first – RightOn! is an app-based classroom activity for students to learn from and have fun with wrong answers.
-
-Our mission is to make math more fun for middle and high school students, increasing both motivation and self-confidence. Not a big fan of math? Great, RightOn! is the game for you. Already like math? That’s cool too, you’ll like it even more!
+<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is an app-based classroom activity that increases engagement and helps more students feel better about math: think Kahoot/Fibbage + math + learning from and having fun with wrong answers. Rather than focusing on just increasing math proficiency -- which can leave behind many disengaged and underserved youth -- RightOn! is also working to increase self-confidence and self-efficacy through an engaging activity that applies research into learning from mistakes and common misconceptions.
+Fun and motivation first – RightOn! is an app-based classroom activity for students to learn from and have fun with wrong answers. Our mission is to make math more fun for middle and high school students, increasing both motivation and self-confidence.
 
 ### Getting Started
 
