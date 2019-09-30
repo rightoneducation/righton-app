@@ -86,4 +86,4 @@ Coming soon!
 <strong>Payton Richardson</strong> - Data Officer, Eastside Pathways
 <br>
 <br>
-<em>Learn more about RightOn! & our team at https://rightoneducation.com</em>
+<em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>
