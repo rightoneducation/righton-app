@@ -1,8 +1,7 @@
 # RightOn Education
 
 ### Project Description
-<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is an app-based classroom activity that increases engagement and helps more students feel better about math: think Kahoot/Fibbage + math + learning from and having fun with wrong answers. Rather than focusing on just increasing math proficiency -- which can leave behind many disengaged and underserved youth -- RightOn! is also working to increase self-confidence and self-efficacy through an engaging activity that applies research into learning from mistakes and common misconceptions.
-Fun and motivation first – RightOn! is an app-based classroom activity for students to learn from and have fun with wrong answers. Our mission is to make math more fun for middle and high school students, increasing both motivation and self-confidence.
+<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is an app-based classroom activity that increases engagement and helps more students feel better about math: think Kahoot/Fibbage + math + learning from and having fun with wrong answers. Rather than focusing on just increasing math proficiency -- which can leave behind many disengaged and underserved youth -- <strong><i>RightOn!</i></strong> is also working to increase self-confidence and self-efficacy through an engaging activity that applies research into learning from mistakes and common misconceptions.
 
 ### Getting Started
 
@@ -34,7 +33,7 @@ The Xcode editor if testing on iOS.
 <br>
 
 #### Note:
-Some NPM packages may be outdated and need to be altered for the Android build.
+Some NPM packages may be out of date and need to be updated for the Android build.
 <br>
 If you encounter the following error:
 <br>
@@ -73,7 +72,7 @@ Coming soon!
 #### Meet our team
 <strong>Andy Li</strong> - Mobile Developer<br>
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
-<strong>Edward Tan</strong> - Tech Lead<br>
+<strong>Edward Tan</strong> - Architect Lead<br>
 <strong>Kai King</strong> - Math Educator<br>
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
 <strong>Sinclair Wu</strong> - Product Lead<br>
@@ -85,7 +84,7 @@ Coming soon!
 <strong>Esmeralda Ortiz</strong> - Senior Director, Boys & Girls Clubs of the Peninsula<br>
 <strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
 <strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
-<strong>Payton Richardson</strong> - Mixed-methods research analyst at the Center for Research on Education Outcomes (CREDO) at Stanford University
+<strong>Payton Richardson</strong> - Data Officer, Eastside Pathways
 <br>
 <br>
 <em>Learn more about RightOn & our team @https://rightoneducation.com</em>
