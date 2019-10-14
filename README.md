@@ -18,7 +18,7 @@
 `npm run ios`
 <br>
 `npm run android`
-  
+
 #### 4) Start your app
 
 `npm start`
@@ -47,7 +47,7 @@ If you receive a `hasteImpl returning the same name for different files` error i
 
 ### Contributing
 
-We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes in the RightOn! game, we'd like to fix as many of them as possible too. Your contribution counts!
+We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
 
 Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md).
 
@@ -57,11 +57,11 @@ Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/maste
 
 ### Communication channels
 
-We are always happy to hear from people who are also interested in building learning apps and making math more fun for more people. We're trying to build this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com. 
+We are always happy to hear from people who are also interested in building learning apps and making math more fun for more people. We're trying to build this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com.
 
-### Testing
+### Tests
 
-You are welcome to download the latest iOS beta version to test and give feedback. Please use TestFlight to install our app from this link: https://testflight.apple.com/join/2l8414MU
+You are welcome to download our latest beta version to test and give feedback. Please use Test Flight to install our app from this link: https://testflight.apple.com/join/2l8414MU
 
 ### Deployment
 
@@ -75,8 +75,7 @@ Coming soon!
 <strong>Edward Tan</strong> - Architect Lead<br>
 <strong>Kai King</strong> - Math Educator<br>
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
-<strong>Sinclair Wu</strong> - Product Lead<br>
-<br>
+<strong>Sinclair Wu </strong> - Product Lead<br>
 #### Advisors
 <strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
 <strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
@@ -84,6 +83,7 @@ Coming soon!
 <strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
 <strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
 <strong>Payton Richardson</strong> - Data Officer, Eastside Pathways
+
 <br>
 <br>
 <em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>

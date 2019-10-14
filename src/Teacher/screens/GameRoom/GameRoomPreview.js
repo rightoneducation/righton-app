@@ -24,10 +24,10 @@ export default class GameRoomPreview extends React.Component {
     handleStartQuiz: PropTypes.func.isRequired,
     teamRef: PropTypes.string.isRequired,
   }
-  
+
   static defaultProps = {
     gameState: gameStateDefaultProps,
-    handleBackFromChild: () => {},  
+    handleBackFromChild: () => {},
     handleViewResults: () => {},
     handleStartQuiz: () => {},
     teamRef: 'team0',
@@ -64,7 +64,7 @@ export default class GameRoomPreview extends React.Component {
   setTime = timeLeft => this.setState({ timeLeft });
 
   render() {
-    const { 
+    const {
       gameState,
       handleBackFromChild,
       handleStartQuiz,
@@ -75,11 +75,10 @@ export default class GameRoomPreview extends React.Component {
     const { timeLeft } = this.state;
 
     const startedQuiz = gameState.state.startQuiz;
+    // console.log('[GameRoomPreview] Enter: ' + timeLeft);
 
     return (
       <View style={gamePreviewStyles.flex}>
-        {Boolean(timeLeft) &&
-          <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
         <ScrollView
           contentContainerStyle={gamePreviewStyles.container}
         >
@@ -92,8 +91,8 @@ export default class GameRoomPreview extends React.Component {
           <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>
             { `Team ${parseInt(teamRef.substring(4), 10) + 1}` }
           </Text>
-          
-          <View 
+
+          <View
             style={[
               gamePreviewStyles.questionContainer,
               gamePreviewStyles.questionContainerTeacher,
@@ -101,7 +100,7 @@ export default class GameRoomPreview extends React.Component {
           >
             <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
             {Boolean(gameState[teamRef].image) &&
-              <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
+              <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />}
           </View>
           <View style={gamePreviewStyles.choiceContainerWrapper}>
             <View style={gamePreviewStyles.choicesContainer}>
@@ -133,6 +132,8 @@ export default class GameRoomPreview extends React.Component {
               onPress={() => handleStartQuiz(teamRef)}
             />}
         </ScrollView>
+
+        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
       </View>
     );
   }

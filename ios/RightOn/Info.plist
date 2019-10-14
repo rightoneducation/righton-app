@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>30</string>
+	<string>46</string>
 	<key>CodePushDeploymentKey</key>
 	<string>wYic_DXp9qUCEO8zgpmQ_yQF7bE3688ca8ed-6b04-4e89-961f-94741a45a40e</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -39,8 +39,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>RightOn does not require location access or use it in any form.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>RightOn does not require location access or use it in any form.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>RightOn does not require lo access to photo library or use it in any form.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

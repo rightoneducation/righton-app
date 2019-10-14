@@ -35,13 +35,13 @@ export default class GameRoomOverview extends React.Component {
   componentWillUnmount() {
     cancelCountdownTimer();
   }
-  
+
   setTime = timeLeft => this.setState({ timeLeft });
 
   startTrickTimer = () => {
     const { timeLeft } = this.state;
     if (timeLeft !== '0:00' && timeLeft !== 'No time limit') {
-      setTimeout(() => 
+      setTimeout(() =>
         startCountdownTimer(null, timeLeft, this.setTime, this.enableButtonStyle),
       5000);
     }
@@ -53,7 +53,7 @@ export default class GameRoomOverview extends React.Component {
     const {
       handleEndGame,
       handleStartRandomGame,
-      nextTeam, 
+      nextTeam,
     } = this.props;
     cancelCountdownTimer();
     if (nextTeam) {
@@ -77,7 +77,7 @@ export default class GameRoomOverview extends React.Component {
     const {
       handleEndGame,
       handleStartRandomGame,
-      nextTeam, 
+      nextTeam,
     } = this.props;
     cancelCountdownTimer();
     if (nextTeam) {
@@ -90,7 +90,7 @@ export default class GameRoomOverview extends React.Component {
   handleCloseMessage = () => this.setState({ messageProps: {} });
 
   renderGameRoomID = () => {
-    const { gameRoom } = this.props; 
+    const { gameRoom } = this.props;
     return (
       <Text style={[styles.textLabel, styles.textCenter]}>
         { gameRoom }
@@ -99,9 +99,9 @@ export default class GameRoomOverview extends React.Component {
   }
 
   renderTeamsCount = () => {
-    const { teams } = this.props; 
+    const { teams } = this.props;
     return (
-      <Text 
+      <Text
         style={[
           styles.textLabel, styles.textNormal, styles.textCenter, styles.marginBottom
         ]}
@@ -112,7 +112,7 @@ export default class GameRoomOverview extends React.Component {
   }
 
   renderPlayersCount = () => {
-    const { players } = this.props; 
+    const { players } = this.props;
     return (
       <Text
         style={[
@@ -178,7 +178,7 @@ export default class GameRoomOverview extends React.Component {
       messageProps,
       timeLeft
     } = this.state;
-  
+
     return (
       <View style={styles.flex}>
         <ScrollView
@@ -192,9 +192,9 @@ export default class GameRoomOverview extends React.Component {
           />
 
           { this.renderGameRoomID() }
-          
+
           { this.renderTeamsCount() }
-          
+
           { this.renderPlayersCount() }
 
           <ButtonWide
@@ -210,15 +210,6 @@ export default class GameRoomOverview extends React.Component {
 
           { this.renderGameRoomDetails() }
 
-          <ButtonWide
-            buttonStyles={{
-              backgroundColor: colors.dark,
-              borderColor: colors.primary,
-              borderWidth: 1,
-            }}
-            label={'New game'}
-            onPress={handleRenderNewGame}
-          />
         </ScrollView>
         {Boolean(timeLeft) &&
           <Text style={styles.timeContainer}>{ timeLeft }</Text>}
