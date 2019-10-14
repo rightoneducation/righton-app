@@ -800,7 +800,7 @@
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = FH9WVF26MX;
+						DevelopmentTeam = 6EM34J2VW2;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1307,9 +1307,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 46;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = FH9WVF26MX;
+				DEVELOPMENT_TEAM = 6EM34J2VW2;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
@@ -1334,7 +1334,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.righton.edu.beta;
 				PRODUCT_NAME = righton;
-				PROVISIONING_PROFILE_SPECIFIER = "Friendly-Robot";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1344,11 +1344,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Andy Li (FH9WVF26MX)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Andy Li (FH9WVF26MX)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
-				DEVELOPMENT_TEAM = FH9WVF26MX;
+				CURRENT_PROJECT_VERSION = 46;
+				DEVELOPMENT_TEAM = 6EM34J2VW2;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
@@ -1373,7 +1373,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.righton.edu.beta;
 				PRODUCT_NAME = righton;
-				PROVISIONING_PROFILE_SPECIFIER = "com.righton.edu.beta AppStore 1565849555";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

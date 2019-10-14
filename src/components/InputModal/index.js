@@ -170,7 +170,7 @@ export default class InputModal extends React.PureComponent {
     let xAxis = scale(15);
     let bottom;
     const scaledHeight = verticalScale(height);
-    console.log(':::scaledHeight='+scaledHeight + ' height=' + height + ' x='+x +' y='+y);
+    // console.log(':::scaledHeight='+scaledHeight + ' height=' + height + ' x='+x +' y='+y);
 
     if (y + height < minY) {
       yAxis = y;
@@ -182,6 +182,7 @@ export default class InputModal extends React.PureComponent {
     if (x < deviceWidth) {
       xAxis = x;
     }
+    // TODO: Temporary hack since the calculated heights are not working on iOS
     bottom = false;
 
     const ms25 = moderateScale(25);
@@ -189,7 +190,7 @@ export default class InputModal extends React.PureComponent {
     let newY = 15 + ms25 + scaledHeight;
     let newTop = yAxis - ms25;
 
-    console.log(':::newY='+newY + ' newTop=' + newTop );
+    // console.log(':::newY='+newY + ' newTop=' + newTop );
 
     return (
       <Modal
