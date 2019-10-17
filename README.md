@@ -79,22 +79,33 @@ Coming soon!
 
 ## Acknowledgments
 
+
 ### Meet our team
 
 __Andy Li__ - Mobile Developer
+
 __Daz Yang__ - Full-Stack Web Developer
+
 __Edward Tan__ - Architect Lead
+
 __Kai King__ - Math Educator
+
 __Katerina Schenke__ - Research & Learning Scientist
+
 __Sinclair Wu__ - Product Lead
 
 ### Advisors
 
 __Ay-Nur Najm__ - Independent math consultant and computer science teacher
+
 __Ben Woodford__ - Doctoral scholar at Stanford specializing in math education
+
 __Esmeralda Ortiz__ - Senior Director, Boys & Girls Clubs of the Peninsula
+
 __Eric Boucher__ - Cofounder & CEO of Ovio
+
 __Paul Chin__ - Assistant Professor of Practice, Relay Graduate School of Education
+
 __Payton Richardson__ - Data Officer, Eastside Pathways
 
 *Learn more about RightOn! & our team at [https://rightoneducation.com](https://rightoneducation.com)*
