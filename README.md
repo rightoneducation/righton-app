@@ -1,6 +1,6 @@
-[![](/assets/images/right_on_banner.png)](https://www.rightoneducation.com/)
-
 # RightOn Education
+
+[![](/assets/images/right_on_banner.png)](https://www.rightoneducation.com/)
 
 ## Project Description
 
@@ -37,6 +37,10 @@ The Xcode editor if testing on iOS.
 ### AWS
 
 There has to be a file `aws-exports.js` file placed under `src/` directory. This file is not checked into the Github. It must be obtained separately from the admin of this project so that the project can properly communicate with the AWS cloud services during runtime.
+
+### Branching
+
+The default development branch is `dev`. All changes should be committed here first. Any changes to `master` branch will require a pull-request first and be code reviewed.
 
 ### Note
 
