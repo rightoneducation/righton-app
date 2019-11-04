@@ -40,7 +40,10 @@ There has to be a file `aws-exports.js` file placed under `src/` directory. This
 
 ### Branching
 
-The default development branch is `dev`. All changes should be committed here first. Any changes to `master` branch will require a pull-request first and be code reviewed.
+- The default development branch is `dev`. All changes should be committed here, and then pull-request'ed into 'staging'
+- No changes should be committed or merged into the 'master' branch.
+- We will do our main builds using the 'staging' branch.
+- Any merges into `staging` branch will require a pull-request first and be code reviewed.
 
 ### Note
 
