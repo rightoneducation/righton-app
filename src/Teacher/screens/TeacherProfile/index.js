@@ -37,7 +37,6 @@ export default class TeacherProfile extends React.Component {
     };
   }
 
-
   componentWillUnmount() {
     this.props.navigation.state.params = {};
   }
@@ -101,7 +100,7 @@ export default class TeacherProfile extends React.Component {
   //     this.onTrick1Layout();
   //   } else if (inputLabel === 'trick2') {
   //     this.onTrick2Layout();
-  //   } 
+  //   }
   //   setTimeout(() => {
   //     this.setState({
   //       showInput: {
@@ -124,7 +123,7 @@ export default class TeacherProfile extends React.Component {
   //   }, 100);
   // }
 
-  
+
   render() {
     const {
       account,

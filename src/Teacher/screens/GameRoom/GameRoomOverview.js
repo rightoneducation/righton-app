@@ -211,6 +211,7 @@ export default class GameRoomOverview extends React.Component {
           { this.renderGameRoomDetails() }
 
         </ScrollView>
+
         {Boolean(timeLeft) &&
           <Text style={styles.timeContainer}>{ timeLeft }</Text>}
         <Message {...messageProps} />
