@@ -1,6 +1,6 @@
 {
   "name": "righton",
-  "version": "0.0.1",
+  "version": "1.0.48",
   "private": true,
   "scripts": {
     "devtools": "react-devtools",
