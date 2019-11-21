@@ -23,7 +23,7 @@ export default function OnboardAppRouter({ navigation, screenProps }) {
   return (
     <View style={styles.container}>
       <Text style={styles.placeholder}>RightOn!</Text>
-      <Text style={styles.version}>v1.0.48</Text>
+      <Text style={styles.version}>v1.1.50</Text>
 
       <View style={styles.iamaButtonsContainer}>
         <Touchable
@@ -100,7 +100,7 @@ const styles = ScaledSheet.create({
     fontSize: fonts.large,
   },
   version: {
-    color: colors.darkgray,
+    color: colors.white,
     fontSize: fonts.tiny,
   },
   primaryBackground: {
