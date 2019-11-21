@@ -147,7 +147,7 @@ export default class GameRoomOverview extends React.Component {
               <Text style={[styles.textLabel, styles.marginBottom]}>
                 { gameState[key].question }
               </Text>
-              <Text style={[styles.textLabel, styles.marginBottom]}>Tricks:</Text>
+              <Text style={[styles.textLabel, styles.marginBottom]}>Trick Answers:</Text>
               {gameState[key].tricks.map(trick => (
                 <View
                   key={trick.uid}
