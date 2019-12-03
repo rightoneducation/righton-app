@@ -249,6 +249,8 @@ export default class GameRoom extends React.Component {
 
   
   handleRenderNewGame = () => {
+    this.props.screenProps.navigation.navigate('Explore');
+    this.handleExitMessage();
     this.setState({ renderType: 'newGame', preview: null });
   }
 
@@ -347,7 +349,7 @@ export default class GameRoom extends React.Component {
   
   
   handleEndGame = () => {
-    this.props.screenProps.navigation.navigate('Games');
+    this.props.screenProps.navigation.navigate('Explore');
     this.handleExitMessage();
     setTimeout(() => {
       const {
