@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 // import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import { scale, ScaledSheet, verticalScale, moderateScale } from 'react-native-size-matters';
 import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme';
-
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default class InputModal extends React.PureComponent {
   static propTypes = {
@@ -121,9 +121,8 @@ export default class InputModal extends React.PureComponent {
       <View
         style={[
           styles.inputContainer,
-          elevation,
-          { height, width, left: xAxis },
-          bottom ? { bottom: 15 } : { top: yAxis - 70 },
+          
+         {top: 250, left: 16}
         ]}
       >
         <TextInput
@@ -140,12 +139,15 @@ export default class InputModal extends React.PureComponent {
           ref={this.handleInputRef}
           returnKeyType={'done'}
           spellCheck={spellCheck}
-          style={[styles.input, { height, width }]}
+          style={[styles.input, { height, width, backgroundColor: colors.white,
+            borderColor: colors.dark,
+            borderWidth: 1, }]}
           textAlign={'left'}
           underlineColorAndroid={colors.white}
           value={input}
         />
         <Text style={styles.length}>{ maxLength - input.length }</Text>
+        <KeyboardSpacer/>
       </View>
     );
   }
@@ -223,9 +225,9 @@ const styles = ScaledSheet.create({
     paddingRight: '25@s',
   },
   inputContainer: {
-    backgroundColor: colors.white,
-    borderColor: colors.dark,
-    borderWidth: 1,
+    // backgroundColor: colors.white,
+    // borderColor: colors.dark,
+    // borderWidth: 1,
     justifyContent: 'center',
     position: 'absolute',
   },
