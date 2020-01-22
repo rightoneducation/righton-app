@@ -16,18 +16,18 @@ export default class OnboardTeacherRouter extends React.PureComponent {
     navigation: PropTypes.shape({ navigate: PropTypes.func }),
     screenProps: PropTypes.shape({
       handleSetAppState: PropTypes.func.isRequired,
-    }),    
+    }),
   }
-  
+
   static defaultProps = {
     navigation: {},
     screenProps: {
       handleSetAppState: () => {},
     },
   }
-  
 
-  handleTeacherOnboard = () => { 
+
+  handleTeacherOnboard = () => {
     this.props.navigation.navigate('OnboardAccount');
   }
 
@@ -41,7 +41,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
     this.props.navigation.navigate('TeacherApp');
   }
 
-  
+
   handleBack = () => this.props.navigation.navigate('OnboardAppRouter');
 
 
@@ -51,8 +51,10 @@ export default class OnboardTeacherRouter extends React.PureComponent {
 
         <OnboardTeacherIntroSlides />
 
-        <ButtonBack onPress={this.handleBack} />
-        
+        <ButtonBack
+          buttonStyles={{ top: 40 }}
+          onPress={this.handleBack} />
+
         <ButtonWide
           buttonStyles={{ bottom: verticalScale(65) }}
           label={'Log In / Sign Up'}

@@ -11,6 +11,7 @@ const deviceHeight = height;
 const deviceWidth = width;
 
 const fonts = {
+  tiny: moderateScale(10, 0.2),
   small: moderateScale(14, 0.2),
   medium: moderateScale(18, 0.2),
   large: moderateScale(24, 0.2),

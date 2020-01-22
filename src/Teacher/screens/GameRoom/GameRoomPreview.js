@@ -133,7 +133,8 @@ export default class GameRoomPreview extends React.Component {
             />}
         </ScrollView>
 
-        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
+        {Boolean(timeLeft) &&
+          <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
       </View>
     );
   }

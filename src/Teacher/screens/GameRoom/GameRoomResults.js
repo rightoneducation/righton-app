@@ -29,7 +29,7 @@ export default class GameRoomResults extends React.Component {
     players: PropTypes.shape({}),
     teamRef: PropTypes.string.isRequired,
   };
-  
+
   static defaultProps = {
     gameState: gameStateDefaultProps,
     handleBackFromChild: () => {},
@@ -62,7 +62,7 @@ export default class GameRoomResults extends React.Component {
     this.choicesWidth = deviceWidth;
     this.mounted = undefined;
   }
-  
+
 
   componentDidMount() {
     setTimeout(() => this.startWidthAnimation(), 3500);
@@ -152,10 +152,10 @@ export default class GameRoomResults extends React.Component {
       if (noAnswerCount) {
         noAnswerWidth = (noAnswerCount / playersWhoVoted) * this.choicesWidth;
         noAnswerPercent = (noAnswerCount / playersWhoVoted) * 100;
-        if (this.mounted) this.setState({ noAnswerPercent }); 
+        if (this.mounted) this.setState({ noAnswerPercent });
         // TODO Delay rendering the actual percentage with the rest
       }
-  
+
       Animated.parallel([
         Animated.timing(
           this.firstChoice, {
@@ -207,7 +207,7 @@ export default class GameRoomResults extends React.Component {
     }, 100);
   }
 
-  
+
   render() {
     const {
       gameState,
@@ -217,7 +217,7 @@ export default class GameRoomResults extends React.Component {
       teamRef,
     } = this.props;
 
-    const { choices } = gameState[teamRef]; 
+    const { choices } = gameState[teamRef];
 
     const {
       firstPercent,
@@ -240,13 +240,13 @@ export default class GameRoomResults extends React.Component {
         <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>
           { `Team ${parseInt(teamRef.substring(4), 10) + 1}` }
         </Text>
-  
-        <View 
+
+        <View
           style={[gamePreviewStyles.questionContainer, gamePreviewStyles.questionContainerTeacher]}
         >
           <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
           {Boolean(gameState[teamRef].image) &&
-            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
+            <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />}
         </View>
         <View
           onLayout={this.onChoicesLayout}
@@ -263,7 +263,7 @@ export default class GameRoomResults extends React.Component {
               <Text style={gamePreviewStyles.choiceValue}>{ choices[0] && choices[0].value }</Text>
             </View>
             <View style={styles.barContainer}>
-              <Animated.View style={[styles.bar, 
+              <Animated.View style={[styles.bar,
                 { width: this.firstChoice, opacity: this.percentOpacity }]}
               />
               <Text style={[styles.percent, firstPercent && styles.visible]}>
@@ -279,7 +279,7 @@ export default class GameRoomResults extends React.Component {
               <Text style={gamePreviewStyles.choiceValue}>{ choices[1] && choices[1].value }</Text>
             </View>
             <View style={styles.barContainer}>
-              <Animated.View style={[styles.bar, 
+              <Animated.View style={[styles.bar,
                 { width: this.secondChoice, opacity: this.percentOpacity }]}
               />
               <Text style={[styles.percent, secondPercent && styles.visible]}>
@@ -295,7 +295,7 @@ export default class GameRoomResults extends React.Component {
               <Text style={gamePreviewStyles.choiceValue}>{ choices[2] && choices[2].value }</Text>
             </View>
             <View style={styles.barContainer}>
-              <Animated.View style={[styles.bar, 
+              <Animated.View style={[styles.bar,
                 { width: this.thirdChoice, opacity: this.percentOpacity }]}
               />
               <Text style={[styles.percent, thirdPercent && styles.visible]}>
@@ -311,7 +311,7 @@ export default class GameRoomResults extends React.Component {
               <Text style={gamePreviewStyles.choiceValue}>{ choices[3] && choices[3].value }</Text>
             </View>
             <View style={styles.barContainer}>
-              <Animated.View style={[styles.bar, 
+              <Animated.View style={[styles.bar,
                 { width: this.fourthChoice, opacity: this.percentOpacity }]}
               />
               <Text style={[styles.percent, fourthPercent && styles.visible]}>
@@ -326,7 +326,7 @@ export default class GameRoomResults extends React.Component {
               </View>}
             {Boolean(noAnswerPercent) &&
               <View style={styles.barContainer}>
-                <Animated.View style={[styles.bar, 
+                <Animated.View style={[styles.bar,
                   { width: this.noAnswer, opacity: this.percentOpacity }]}
                 />
                 <Text style={[styles.percent, noAnswerPercent && styles.visible]}>
@@ -337,7 +337,7 @@ export default class GameRoomResults extends React.Component {
           </View>
         </View>
         <ButtonWide
-          label={nextTeam ? `Next: Team ${parseInt(nextTeam.substr(4), 10) + 1}'s Question` : 'Final results'}
+          label={nextTeam ? `Next: Team ${parseInt(nextTeam.substr(4), 10) + 1}'s Question` : 'Final Results'}
           onPress={() => handleNextTeam()}
         />
       </ScrollView>
