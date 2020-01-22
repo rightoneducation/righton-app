@@ -19,6 +19,8 @@ import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';
 import parentStyles from '../styles';
 import { colors, elevation, fonts } from '../../../../../utils/theme';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../../../../utils/Backer';
+
 import renderHyperlinkedText from '../../../../../utils/renderHyperlinkedText';
 import debug from '../../../../../utils/debug';
 
@@ -70,9 +72,16 @@ export default class GamesBuilderQuestion extends React.Component {
   }
 
 
-  componentDidMount() {
+ componentDidMount() {
     this.hydrateState(this.props.question);
+
+        handleAndroidBackButton(()=>alert("hiii"))
   }
+
+
+   componentWillUnmount() {
+        removeAndroidBackButtonHandler();
+      }
 
 
   componentWillReceiveProps(nextProps) {

@@ -249,6 +249,23 @@ export default class GameRoom extends React.Component {
 
   
   handleRenderNewGame = () => {
+    this.props.screenProps.navigation.navigate('Explore');
+    this.handleExitMessage();
+    setTimeout(() => {
+      const {
+        handleSetAppState,
+        IOTUnsubscribeFromTopic,
+      } = this.props.screenProps;
+      const { GameRoomID } = this.props.screenProps;
+      IOTUnsubscribeFromTopic();
+      handleSetAppState('gameState', {});
+      handleSetAppState('GameRoomID', '');
+      handleSetAppState('players', {});
+      deleteGameFromDynamoDB(GameRoomID,
+        () => debug.log('Deleted GameRoomID from DynamoDB'),
+        e => debug.warn('Error deleting GameRoomID from DynamoDB', JSON.stringify(e))
+      );
+    }, 0);
     this.setState({ renderType: 'newGame', preview: null });
   }
 
@@ -347,7 +364,7 @@ export default class GameRoom extends React.Component {
   
   
   handleEndGame = () => {
-    this.props.screenProps.navigation.navigate('Games');
+    this.props.screenProps.navigation.navigate('Explore');
     this.handleExitMessage();
     setTimeout(() => {
       const {
