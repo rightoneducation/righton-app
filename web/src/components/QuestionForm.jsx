@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
@@ -45,8 +44,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function QuestionForm() {
-  const [question, setQuestion] = useState({
+function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
+  useEffect(() => {
+    document.title = 'RightOn! | New question';
+    return () => { document.title = 'RightOn! | Game management'; }
+  }, []);
+  const [question, setQuestion] = useState(originalQuestion || {
     text: '',
     image: '',
     answer: '',
@@ -66,7 +69,7 @@ function QuestionForm() {
       <TextField className={classes.input} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" multiline rows={4} required />
       <TextField className={classnames(classes.input, classes.half)} id="image-url" value={question.image} onChange={onChangeMaker('image')} label="URL for Photo" variant="outlined" />
       <div className={classnames(classes.half, classes.imagePreview)}>
-        {question.image && <img className={classes.image} src={question.image} />}
+        {question.image && <img className={classes.image} src={question.image} alt="Preview" />}
       </div>
       <Divider className={classes.divider} />
       <TextField className={classes.input} id="answer" value={question.answer} onChange={onChangeMaker('answer')} label="Answer" variant="outlined" required />
@@ -83,6 +86,7 @@ function QuestionForm() {
           </Button>
         </ListItem>
       </List>
+      {/* TODO: hook up submit question callback */}
     </form>
   );
 }
