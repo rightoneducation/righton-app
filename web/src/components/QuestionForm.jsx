@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
@@ -47,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 
 function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
   useEffect(() => {
-    document.title = 'RightOn! | New question';
+    document.title = 'RightOn! | Edit question';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
   const [question, setQuestion] = useState(originalQuestion || {
@@ -72,6 +73,10 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
+      <Typography gutterBottom variant="h4" component="h1">
+        {originalQuestion ? 'Edit' : 'New'} question
+      </Typography>
+
       <TextField className={classes.input} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" multiline rows={4} required />
       <TextField className={classnames(classes.input, classes.half)} id="image-url" value={question.image} onChange={onChangeMaker('image')} label="URL for Photo" variant="outlined" />
       <div className={classnames(classes.half, classes.imagePreview)}>

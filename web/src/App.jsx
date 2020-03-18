@@ -58,7 +58,6 @@ function App() {
     const newGames = [...games];
     newGames[Number(gameIndex)] = game;
     setGames(newGames);
-    console.log('updated games', game, newGames);
   }, [games, setGames]);
 
   const saveQuestion = useCallback((question, gameIndex, questionIndex) => {
@@ -67,7 +66,6 @@ function App() {
     game[`q${Number(questionIndex)}`] = question;
     newGames[Number(gameIndex)] = game;
     setGames(newGames);
-    console.log('updated questions', question, games, newGames);
   }, [games, setGames]);
 
   return (

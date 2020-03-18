@@ -19,7 +19,7 @@ export default function Games({ games, saveGame }) {
     <Grid container className={classes.root} spacing={4}>
       <Grid item xs={3} className={classes.sidebar}>
         <Box className={classes.actions}>
-          <Button variant="contained" color="primary" onClick={() => history.push(`/games/${games.length}`)} disabled={!!match}>
+          <Button variant="contained" color="primary" onClick={() => history.push(`/games/${games.length + 1}`)} disabled={!!match}>
             Add game
           </Button>
         </Box>
