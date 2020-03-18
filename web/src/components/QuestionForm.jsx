@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -56,13 +57,18 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
     instructions: [],
   });
   const classes = useStyles();
-  const onChangeMaker = (field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); };
-  const onStepChangeMaker = (index) => ({ currentTarget }) => {
+  const history = useHistory();
+  const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); }, [question, setQuestion]);
+  const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
     const newInstructions = [...question.instructions];
     newInstructions[index] = currentTarget.value;
     setQuestion({ ...question, instructions: newInstructions });
-  };
-  const addInstruction = () => { setQuestion({ ...question, instructions: [...question.instructions, ''] }); };
+  }, [question, setQuestion]);
+  const addInstruction = useCallback(() => { setQuestion({ ...question, instructions: [...question.instructions, ''] }); }, [question, setQuestion]);
+  const handleSaveQuestion = useCallback(() => {
+    saveQuestion(question, Number(gameIndex) - 1, questionIndex);
+    history.push(`/games/${gameIndex}`);
+  }, [question])
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -71,7 +77,9 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
       <div className={classnames(classes.half, classes.imagePreview)}>
         {question.image && <img className={classes.image} src={question.image} alt="Preview" />}
       </div>
+
       <Divider className={classes.divider} />
+
       <TextField className={classes.input} id="answer" value={question.answer} onChange={onChangeMaker('answer')} label="Answer" variant="outlined" required />
       <h3>Solution Steps</h3>
       <List>
@@ -81,12 +89,17 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
           </ListItem>
         ))}
         <ListItem>
-          <Button variant="contained" color="primary" onClick={addInstruction}>
+          <Button variant="contained" onClick={addInstruction}>
             Add step
           </Button>
         </ListItem>
       </List>
-      {/* TODO: hook up submit question callback */}
+
+      <Divider className={classes.divider} />
+
+      <Button variant="contained" color="primary" onClick={handleSaveQuestion}>
+        Save
+      </Button>
     </form>
   );
 }

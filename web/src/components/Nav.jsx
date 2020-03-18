@@ -12,7 +12,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar className={classes.bar} position="static">
         <Toolbar>
           <Link className={classes.link} to={'/'}>
             <Typography className={classes.title} variant="h6" noWrap>
@@ -28,6 +28,7 @@ export default function PrimarySearchAppBar() {
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
+    marginBottom: '24px',
   },
   title: {
     display: 'none',
