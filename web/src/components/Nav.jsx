@@ -4,13 +4,29 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+
+export default function PrimarySearchAppBar() {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.grow}>
+      <AppBar className={classes.bar} position="static">
+        <Toolbar>
+          <Link className={classes.link} to={'/'}>
+            <Typography className={classes.title} variant="h6" noWrap>
+              Games
+            </Typography>
+          </Link>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+}
 
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
+    marginBottom: '24px',
   },
   menuButton: {
     marginRight: theme.spacing(2),
