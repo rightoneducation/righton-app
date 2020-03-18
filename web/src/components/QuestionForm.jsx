@@ -68,7 +68,7 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
   const handleSaveQuestion = useCallback(() => {
     saveQuestion(question, Number(gameIndex) - 1, questionIndex);
     history.push(`/games/${gameIndex}`);
-  }, [question])
+  }, [question, saveQuestion, gameIndex, questionIndex, history])
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
