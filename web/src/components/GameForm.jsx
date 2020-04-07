@@ -56,7 +56,7 @@ function GameForm({ saveGame, game: originalGame, gameIndex }) {
         {originalGame ? 'Edit' : 'New'} game
       </Typography>
       <TextField className={classes.input} id="game-title" value={game.title} onChange={onChangeMaker('title')} label="Title" variant="outlined" required />
-      <TextField className={classes.input} id="game-description" value={game.description} onChange={onChangeMaker('description')} label="Description" variant="outlined" required multiline rows={3} />
+      <TextField className={classes.input} id="game-description" value={game.description} onChange={onChangeMaker('description')} label="Description" variant="outlined" multiline rows={3} />
 
       {questions.map(index => {
         const { text, answer } = game[`q${index}`];

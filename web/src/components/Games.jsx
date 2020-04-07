@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -10,19 +10,26 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
+import NewGameDialogue from './NewGameDialogue';
 
 export default function Games({ games, saveGame, saveQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
+  const [newGameOpen, setNewGameOpen] = useState(false);
+  const handleNewGame = (game) => {
+    setNewGameOpen(false);
+    saveGame(game, games.length);
+  };
 
   return (
     <Grid container className={classes.root} spacing={4}>
       <Grid item xs={3} className={classes.sidebar}>
         <Box className={classes.actions}>
-          <Button variant="contained" color="primary" onClick={() => history.push(`/games/${games.length + 1}`)} disabled={!!match}>
+          <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)} disabled={!!match}>
             Add game
           </Button>
+          <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         {games.map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
           const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;

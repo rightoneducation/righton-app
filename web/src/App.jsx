@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 // import Amplify, { Auth } from 'aws-amplify';
 import {
   BrowserRouter as Router,
@@ -71,9 +71,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Box>
           <Nav />
-            <Route path="/">
-              <Games games={games} saveGame={saveGame} saveQuestion={saveQuestion} />
-            </Route>
+          <Route path="/">
+            <Games games={games} saveGame={saveGame} saveQuestion={saveQuestion} />
+          </Route>
         </Box>
       </ThemeProvider>
     </Router>
