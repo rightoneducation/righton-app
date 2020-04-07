@@ -12,8 +12,6 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: '0 auto',
-    paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     maxWidth: '75%',
   },
@@ -71,9 +69,15 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
     saveQuestion(question, Number(gameIndex) - 1, questionIndex);
     history.push(`/games/${gameIndex}`);
   }, [question, saveQuestion, gameIndex, questionIndex, history])
+  const handleBack = useCallback(() => {
+    history.push(`/games/${gameIndex}`);
+  }, [gameIndex, history])
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
+      <Button onClick={handleBack}>
+        Back
+      </Button>
       <Typography gutterBottom variant="h4" component="h1">
         {originalQuestion ? 'Edit' : 'New'} question
       </Typography>

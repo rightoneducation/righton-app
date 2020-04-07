@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -7,9 +7,10 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 
-export default function Games({ games, saveGame }) {
+export default function Games({ games, saveGame, saveQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -42,12 +43,20 @@ export default function Games({ games, saveGame }) {
         })}
       </Grid>
       <Grid item xs={9} className={classes.content}>
-        <Route path="/games/:gameIndex" render={
-          ({ match }) => {
-            const { gameIndex } = match.params;
-            return <GameForm saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
-          }
-        } />
+        <Switch>
+          <Route path="/games/:gameIndex/questions/:questionIndex" render={
+            ({ match }) => {
+              const { questionIndex, gameIndex } = match.params;
+              return <QuestionForm saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
+            }
+          } />
+          <Route path="/games/:gameIndex" render={
+            ({ match }) => {
+              const { gameIndex } = match.params;
+              return <GameForm saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+            }
+          } />
+        </Switch>
       </Grid>
     </Grid>
   );
