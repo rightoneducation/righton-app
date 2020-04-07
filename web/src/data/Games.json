@@ -1,10 +1,15 @@
 [
   {
     "GameID": "A12345682",
-    "description": "Apply and extend understandings of multiplication and division to divide fractions by fractions.",
     "grade": 6,
+    "domain": "",
+    "cluster": "",
     "standard": 1,
     "title": "Fun with Fractions",
+    "description": "Apply and extend understandings of multiplication and division to divide fractions by fractions.",
+    "question": {
+      "S": "After Joaquin’s party, there’s 3/4 of a chocolate cake left. If you’d like to divide the remaining cake equally among 4 friends, how much cake does each friend get?"
+    },
     "q1": {
       "answer": {
         "S": "3/16"
@@ -33,9 +38,6 @@
             "S": "In the numerator: 3 x 1 = 3. In the denominator: 4 x 4 = 16. So your answer is..."
           }
         ]
-      },
-      "question": {
-        "S": "After Joaquin’s party, there’s 3/4 of a chocolate cake left. If you’d like to divide the remaining cake equally among 4 friends, how much cake does each friend get?"
       }
     }
   }

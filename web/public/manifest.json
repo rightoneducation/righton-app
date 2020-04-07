@@ -1,6 +1,6 @@
 {
   "short_name": "Right On",
-  "name": "Create React App Sample",
+  "name": "Right On Game Management App",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#ffffff",
+  "background_color": "#30285b"
 }
