@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 // import Amplify, { Auth } from 'aws-amplify';
 import {
   BrowserRouter as Router,
-  Route,
-  Switch
+  Route
 } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import {
@@ -12,7 +11,6 @@ import {
 } from '@material-ui/core/styles';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import QuestionForm from './components/QuestionForm';
 // use local storage instead of mock
 import gamesMock from './data/Games.json';
 // import awsconfig from './aws-exports';
@@ -73,17 +71,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <Box>
           <Nav />
-          <Switch>
-            <Route path="/games/:gameIndex/questions/:questionIndex" render={
-              ({ match }) => {
-                const { questionIndex, gameIndex } = match.params;
-                return <QuestionForm saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
-              }
-            } />
             <Route path="/">
-              <Games games={games} saveGame={saveGame} />
+              <Games games={games} saveGame={saveGame} saveQuestion={saveQuestion} />
             </Route>
-          </Switch>
         </Box>
       </ThemeProvider>
     </Router>
