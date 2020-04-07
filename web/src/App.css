@@ -1,0 +1,27 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.Sidebar {
+  width: 300px;
+  position: absolute;
+  left: 0;
+  top: 64px;
+  bottom: 0;
+  border-right: 1px black solid;
+  padding: 16px 8px;
+}
+
+.Game-actions {
+  margin-bottom: 16px;
+}
