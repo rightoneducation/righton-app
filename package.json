@@ -20,6 +20,7 @@
   "dependencies": {
     "aws-amplify": "^1.1.26",
     "buffer": "^5.0.7",
+    "classnames": "^2.2.6",
     "mime-type": "^3.0.5",
     "path": "^0.12.7",
     "react": "16.8.3",
