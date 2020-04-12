@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 const INITIAL_STATE = {
   title: '',
+  description: '',
 };
 
 export default function FormDialog({ open, onClose, submit }) {
@@ -31,6 +32,17 @@ export default function FormDialog({ open, onClose, submit }) {
             value={game.title}
             onChange={({ currentTarget }) => { setGame({ title: currentTarget.value }); }}
             fullWidth
+            required
+          />
+          <TextField
+            margin="dense"
+            id="tite"
+            label="Description"
+            value={game.description}
+            onChange={({ currentTarget }) => { setGame({ description: currentTarget.value }); }}
+            fullWidth
+            multiline
+            rows={2}
           />
         </DialogContent>
         <DialogActions>
@@ -38,7 +50,7 @@ export default function FormDialog({ open, onClose, submit }) {
             Cancel
           </Button>
           <Button color="primary" type="submit">
-            Subscribe
+            Create
           </Button>
         </DialogActions>
       </form>
