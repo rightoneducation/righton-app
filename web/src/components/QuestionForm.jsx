@@ -42,6 +42,11 @@ const useStyles = makeStyles(theme => ({
   number: {
     width: '40px',
   },
+
+  deleteButton: {
+    marginLeft: theme.spacing(1),
+    height: '56px',
+  },
 }));
 
 function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
@@ -71,6 +76,11 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
   const handleBack = useCallback(() => {
     history.push(`/games/${gameIndex}`);
   }, [gameIndex, history])
+  const handleRemoveInstruction = useCallback((index) => {
+    const newInstructions = [...question.instructions];
+    newInstructions.splice(index, 1);
+    setQuestion({ ...question, instructions: newInstructions });
+  }, [question, setQuestion]);
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -93,9 +103,12 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
       <h3>Solution Steps</h3>
       <List>
         {question.instructions.map((step, index) => (
-          <ListItem key={index}>
-            <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="outlined" required />
-          </ListItem>
+          <>
+            <ListItem key={index}>
+              <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="outlined" required inline />
+              <Button className={classes.deleteButton} onClick={() => handleRemoveInstruction(index)} inline>X</Button>
+            </ListItem>
+          </>
         ))}
         <ListItem>
           <Button variant="contained" onClick={addInstruction}>
