@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const INITIAL_STATE = {
@@ -30,7 +29,7 @@ export default function FormDialog({ open, onClose, submit }) {
             id="tite"
             label="Title"
             value={game.title}
-            onChange={({ currentTarget }) => { setGame({ title: currentTarget.value }); }}
+            onChange={({ currentTarget }) => { setGame({ ...game, title: currentTarget.value }); }}
             fullWidth
             required
           />
@@ -39,7 +38,7 @@ export default function FormDialog({ open, onClose, submit }) {
             id="tite"
             label="Description"
             value={game.description}
-            onChange={({ currentTarget }) => { setGame({ description: currentTarget.value }); }}
+            onChange={({ currentTarget }) => { setGame({ ...game, description: currentTarget.value }); }}
             fullWidth
             multiline
             rows={2}
