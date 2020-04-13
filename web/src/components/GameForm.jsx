@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: `0 ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(2)}px`,
   },
   input: {
     width: '100%',
@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2),
   },
   hr: {
+    marginTop: theme.spacing(4),
     marginBottom: theme.spacing(2),
   },
 }));
@@ -51,45 +52,46 @@ function GameForm({ saveGame, game: originalGame, gameIndex }) {
   const questions = [1, 2, 3, 4, 5].filter(index => !!game[`q${index}`]);
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
-      <Typography gutterBottom variant="h4" component="h1">
-        {originalGame ? 'Edit' : 'New'} game
-      </Typography>
-      <TextField className={classes.input} id="game-title" value={game.title} onChange={onChangeMaker('title')} label="Title" variant="outlined" required />
-      <TextField className={classes.input} id="game-description" value={game.description} onChange={onChangeMaker('description')} label="Description" variant="outlined" multiline rows={3} />
-
-      {questions.map(index => {
-        const { text, answer } = game[`q${index}`];
-        return (
-          <Paper className={classes.question}>
-            <Typography gutterBottom>
-              <strong>Q:</strong> {text}
-            </Typography>
-            <Typography>
-              <strong>A:</strong> {answer}
-            </Typography>
-            <Button size="small" onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</Button>
-          </Paper>
-        );
-      })}
-
+    <>
       {questions.length < 5 && (
-        <Button className={classes.addQuestion} type="button" variant="contained" onClick={() => history.push(`/games/${gameIndex}/questions/${questions.length + 1}`)}>
+        <Button className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={() => history.push(`/games/${gameIndex}/questions/${questions.length + 1}`)}>
           Add question
         </Button>
       )}
+      <form className={classes.root} noValidate autoComplete="off" onSubmit={(event) => event.preventDefault()}>
+        <Typography gutterBottom variant="h4" component="h1">
+          {originalGame ? 'Edit' : 'New'} game
+      </Typography>
+        <TextField className={classes.input} id="game-title" value={game.title} onChange={onChangeMaker('title')} label="Title" variant="outlined" required />
+        <TextField className={classes.input} id="game-description" value={game.description} onChange={onChangeMaker('description')} label="Description" variant="outlined" multiline rows={3} />
 
-      <Divider className={classes.hr} />
+        {questions.map(index => {
+          const { text, answer } = game[`q${index}`];
+          return (
+            <Paper className={classes.question}>
+              <Typography gutterBottom>
+                <strong>Q:</strong> {text}
+              </Typography>
+              <Typography>
+                <strong>A:</strong> {answer}
+              </Typography>
+              <Button size="small" onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</Button>
+            </Paper>
+          );
+        })}
 
-      <Box>
-        <Button type="button" variant="contained" color="primary" onClick={handleSubmit} disabled={game === originalGame} className={classes.button}>
-          Save
+        <Divider className={classes.hr} />
+
+        <Box>
+          <Button type="submit" variant="contained" color="primary" onClick={handleSubmit} disabled={game === originalGame} className={classes.button}>
+            Save
         </Button>
-        <Button type="button" onClick={() => history.push('/')}>
-          Cancel
+          <Button type="button" onClick={() => history.push('/')}>
+            Cancel
         </Button>
-      </Box>
-    </form>
+        </Box>
+      </form>
+    </>
   );
 }
 
