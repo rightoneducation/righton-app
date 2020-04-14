@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
 import Touchable from 'react-native-platform-touchable';
-import Portal from '../../../screens/Portal';
+// import Portal from '../../../screens/Portal';
 import ButtonBack from '../../../components/ButtonBack';
 import LocalStorage from '../../../../lib/Categories/LocalStorage';
 import { colors, deviceWidth, fonts } from '../../../utils/theme';
@@ -29,15 +29,15 @@ export default class GameRoomNewGame extends React.Component {
     IOTPublishMessage: PropTypes.func.isRequired,
     TeacherID: PropTypes.string,
   };
-  
+
   static defaultProps = {
     GameRoomID: '',
-    handleBackFromChild: () => {},
-    handleSetAppState: () => {},
-    IOTPublishMessage: () => {},
+    handleBackFromChild: () => { },
+    handleSetAppState: () => { },
+    IOTPublishMessage: () => { },
     TeacherID: '',
   };
-  
+
   constructor(props) {
     super(props);
 
@@ -109,7 +109,7 @@ export default class GameRoomNewGame extends React.Component {
         newGame: true,
       },
     };
-    
+
     this.props.handleSetAppState('gameState', gameState);
 
     const message = {
@@ -138,11 +138,11 @@ export default class GameRoomNewGame extends React.Component {
               :
               <Text style={gamesStyles.imageLabel}>RightOn!</Text>}
           </View>
-          <Text style={gamesStyles.gameTitle}>{ game.title }</Text>
+          <Text style={gamesStyles.gameTitle}>{game.title}</Text>
           <Text style={[gamesStyles.gameTitle, gamesStyles.gameDescription]}>
-            { game.description }
+            {game.description}
           </Text>
-          <Text style={gamesStyles.gameCount}>{ `${game.questions.length}Q` }</Text>
+          <Text style={gamesStyles.gameCount}>{`${game.questions.length}Q`}</Text>
         </View>
       </Touchable>
     );

@@ -9,7 +9,7 @@ import {
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import Touchable from 'react-native-platform-touchable';
 import Aicon from 'react-native-vector-icons/FontAwesome';
-import { NavigationEvents } from 'react-navigation';
+import { NavigationEvents } from '@react-navigation/native';
 import GamesBuilder from './GamesBuilder';
 import { colors } from '../../../utils/theme';
 import debug from '../../../utils/debug';

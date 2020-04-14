@@ -1,6 +1,6 @@
 import React from 'react';
 import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import Portal from '../../../screens/Portal';
+// import Portal from '../../../screens/Portal';
 import GameRoomSettings from './GameRoomSettings';
 import GameRoomStart from './GameRoomStart';
 import GameRoomOverview from './GameRoomOverview';
@@ -18,7 +18,7 @@ export default class GameRoom extends React.Component {
   static propTypes = {
     screenProps: screenPropsPropTypes,
   }
-  
+
   static defaultProps = {
     screenProps: screenPropsDefaultProps,
   }
@@ -27,7 +27,7 @@ export default class GameRoom extends React.Component {
     super(props);
     this.state = {
       nextTeam: 'team0',
-      portal: 'Creating Game..',      
+      portal: 'Creating Game..',
       preview: null,
       renderType: 'portal',
       teams: [],
@@ -48,16 +48,16 @@ export default class GameRoom extends React.Component {
       Object.keys(nextProps.screenProps.players).length) {
       const teams = [];
       const playerValues = Object.values(nextProps.screenProps.players);
-  
+
       for (let i = 0; i < playerValues.length; i += 1) {
-        teams[playerValues[i]] = 
+        teams[playerValues[i]] =
           teams[playerValues[i]] === undefined ? 1 : teams[playerValues[i]] + 1;
       }
       this.setState({ teams });
     }
   }
 
-  
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -78,7 +78,7 @@ export default class GameRoom extends React.Component {
         if (
           gameState[teamRef].tricks.length &&
           (gameState[teamRef].choices.length === 0 &&
-          !this.completedQuestions[teamRef]
+            !this.completedQuestions[teamRef]
           )
         ) {
           nextTeamRef = teamRef;
@@ -112,7 +112,7 @@ export default class GameRoom extends React.Component {
     // Create a random order of choices mixed with the correct answer.
     const { handleSetAppState, IOTPublishMessage } = this.props.screenProps;
     const updatedGameState = { ...gameState };
-    
+
     const selectedTricks = gameState[teamRef].tricks.filter(trick => trick.selected) || [];
     debug.log('selectedTricks:', selectedTricks);
 
@@ -149,16 +149,16 @@ export default class GameRoom extends React.Component {
 
     debug.log(`Choices for ${teamRef}:`, JSON.stringify(choices));
     const time = Date.now();
-    
+
     const message = {
       action: 'SET_TEAM_CHOICES',
       teamRef,
       uid: dualUid,
       payload: choices,
-      state: preview === false ? { startQuiz: true, teamRef, time } : {}, 
+      state: preview === false ? { startQuiz: true, teamRef, time } : {},
     };
     IOTPublishMessage(message);
-    
+
     updatedGameState[teamRef].choices = choices;
     if (teamRef && !preview) {
       // This is a specific handler for handleStartRandomGame() due to it not 
@@ -171,7 +171,7 @@ export default class GameRoom extends React.Component {
     this.setState({ renderType: 'preview', preview: teamRef }, () => {
       if (!preview) this.setNextTeam();
     });
-  } 
+  }
 
 
   handleStartGame = () => {
@@ -247,7 +247,7 @@ export default class GameRoom extends React.Component {
     handleSetAppState('gameState', updatedGameState);
   }
 
-  
+
   handleRenderNewGame = () => {
     this.props.screenProps.navigation.navigate('Explore');
     this.handleExitMessage();
@@ -309,7 +309,7 @@ export default class GameRoom extends React.Component {
       },
     };
     IOTPublishMessage(message);
-    
+
     this.setState({ renderType: 'results', preview: teamRef }, () => {
       const { gameState, handleSetAppState } = this.props.screenProps;
       const updatedGameState = { ...gameState, state: { startQuiz: true, teamRef } };
@@ -325,21 +325,21 @@ export default class GameRoom extends React.Component {
     } else {
       this.setState({ renderType: 'final', preview: '' }, () => {
         this.handleEndMessage();
-      //   debug.log('End of game! Updating teacher account and history!');
-      //   setTimeout(() => {
-      //     const {
-      //       account,
-      //       handleSetAppState,
-      //       gameState,
-      //       players,
-      //     } = this.props.screenProps;
-      //     this.updateTeacherAccountAndHistory(
-      //       account,
-      //       handleSetAppState,
-      //       gameState,
-      //       Object.keys(players).length,
-      //     );
-      //   }, 1500);
+        //   debug.log('End of game! Updating teacher account and history!');
+        //   setTimeout(() => {
+        //     const {
+        //       account,
+        //       handleSetAppState,
+        //       gameState,
+        //       players,
+        //     } = this.props.screenProps;
+        //     this.updateTeacherAccountAndHistory(
+        //       account,
+        //       handleSetAppState,
+        //       gameState,
+        //       Object.keys(players).length,
+        //     );
+        //   }, 1500);
       });
     }
   }
@@ -361,8 +361,8 @@ export default class GameRoom extends React.Component {
     const updatedGameState = { ...gameState, state: { endGame: true } };
     handleSetAppState('gameState', updatedGameState);
   }
-  
-  
+
+
   handleEndGame = () => {
     this.props.screenProps.navigation.navigate('Explore');
     this.handleExitMessage();
@@ -416,7 +416,7 @@ export default class GameRoom extends React.Component {
     teacherHistory.unshift(report);
     const updatedTeacherHistoryJSON = JSON.stringify(teacherHistory);
     LocalStorage.setItem(`@RightOn:${account.TeacherID}/History`, updatedTeacherHistoryJSON);
-    
+
     const TeacherID = account.TeacherID;
     updateTeacherHistoryInTeacherAccountInDynamoDB(
       TeacherID,
@@ -446,7 +446,7 @@ export default class GameRoom extends React.Component {
       players,
       uid: `${Math.random()}`,
     };
-    
+
     const gameStateKeys = Object.keys(gameState);
     for (let i = 0; i < gameStateKeys.length; i += 1) {
       if (gameStateKeys[i].includes('team')) {
@@ -534,7 +534,7 @@ export default class GameRoom extends React.Component {
             handleBackFromChild={this.handleBackFromChild}
             handleEndGame={this.handleEndGame}
             handleGamePreview={this.handleGamePreview}
-            handleRenderNewGame={this.handleRenderNewGame}          
+            handleRenderNewGame={this.handleRenderNewGame}
             handleStartRandomGame={this.handleStartRandomGame}
             nextTeam={nextTeam}
             players={players}

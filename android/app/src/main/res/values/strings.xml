@@ -1,4 +1,5 @@
 <resources>
-	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">tL2CH6qbf8XiUvTzSI0UZ8WxtF0u688ca8ed-6b04-4e89-961f-94741a45a40e</string>
     <string name="app_name">RightOn</string>
+    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
+    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
 </resources>

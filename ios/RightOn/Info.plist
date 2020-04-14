@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>52</string>
 	<key>CodePushDeploymentKey</key>
-	<string>wYic_DXp9qUCEO8zgpmQ_yQF7bE3688ca8ed-6b04-4e89-961f-94741a45a40e</string>
+	<string>ZdP7Za45eNhHO3zPnDB6NOSFcBio7gIavF5sU</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -47,10 +47,15 @@
 	<string>RightOn does not require lo access to photo library or use it in any form.</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
 		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fontisto.ttf</string>
 		<string>Foundation.ttf</string>
 		<string>Ionicons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>

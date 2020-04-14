@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { NativeMethodsMixin } from 'react';
 import {
   findNodeHandle,
   Text,
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
 import InputModal from '../../../components/InputModal';
 import { Auth } from 'aws-amplify';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { NativeMethodsMixin } from 'react';
 import {
   findNodeHandle,
   Image,
@@ -10,7 +10,6 @@ import {
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
 import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
-import NativeMethodsMixin from 'NativeMethodsMixin';
 import { scale, ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
 import Touchable from 'react-native-platform-touchable';

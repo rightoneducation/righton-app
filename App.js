@@ -34,7 +34,6 @@ YellowBox.ignoreWarnings(
   ]
 );
 
-
 Amplify.configure(awsconfig);
 
 
@@ -68,10 +67,14 @@ class App extends React.Component {
    * Sets up background listener to handle Websocket connectivity.
    */
   async componentDidMount() {
-    await LocalStorage.init();
+    try {
+      await LocalStorage.init();
+    } catch (err) {
+      debug.log(err)
+    }
     let session;
     try {
-      session = await Auth.currentSession();
+      session = await Auth.currentSession()
     } catch (err) {
       debug.log(err);
       session = null;
@@ -79,7 +82,7 @@ class App extends React.Component {
     this.setSession(session);
 
     AppState.addEventListener('change', this.handleAppStateChange);
-    codePush.notifyAppReady();
+    // codePush.notifyAppReady();
   }
 
 
@@ -133,7 +136,7 @@ class App extends React.Component {
    * @param username Email of user
    */
   loadAccountSettingsFromLocalStorage = async (username) => {
-    try { 
+    try {
       const accountString = await LocalStorage.getItem(`@RightOn:${username}`);
       if (typeof accountString === 'string') {
         const account = JSON.parse(accountString);
@@ -151,7 +154,7 @@ class App extends React.Component {
    * in user if username is provided from a previous session.
    */
   loadDeviceSettingsFromLocalStorage = async (signInWithoutPassword) => {
-    try { 
+    try {
       const deviceSettingsString = await LocalStorage.getItem('@RightOn:DeviceSettings');
       if (typeof deviceSettingsString === 'string') {
         const deviceSettings = JSON.parse(deviceSettingsString);
@@ -226,7 +229,7 @@ class App extends React.Component {
    */
   handleSetAppState = (property, value) => {
     switch (property) {
-      case 'session': 
+      case 'session':
         this.setSession(value);
         break;
       case 'account':
@@ -348,33 +351,33 @@ class App extends React.Component {
 
     return (
       <RootNavigator
-        screenProps={{
-          account,
-          deviceSettings,
-          GameRoomID,
-          gameState,
-          players,
-          points,
-          session,
-          team,
-          
-          handleSetAppState: this.handleSetAppState,
-          
-          auth: Auth,
-          doSignOut: this.handleOnSignOut,
+      // screenProps={{
+      //   account,
+      //   deviceSettings,
+      //   GameRoomID,
+      //   gameState,
+      //   players,
+      //   points,
+      //   session,
+      //   team,
 
-          IOTPublishMessage: this.IOTPublishMessage,
-          IOTSubscribeToTopic: this.IOTSubscribeToTopic,
-          IOTUnsubscribeFromTopic: this.IOTUnsubscribeFromTopic,
-        }}
+      //   handleSetAppState: this.handleSetAppState,
+
+      //   auth: Auth,
+      //   doSignOut: this.handleOnSignOut,
+
+      //   IOTPublishMessage: this.IOTPublishMessage,
+      //   IOTSubscribeToTopic: this.IOTSubscribeToTopic,
+      //   IOTUnsubscribeFromTopic: this.IOTUnsubscribeFromTopic,
+      // }}
       />
     );
   }
 }
 
-const codePushOptions = { 
-  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, 
-  installMode: codePush.InstallMode.ON_NEXT_RESUME 
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.ON_NEXT_RESUME
 };
 
 // Pass router to RootNavigator for hooking it into the navigation paradigm.

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { NativeMethodsMixin } from 'react';
 import {
   findNodeHandle,
   Image,
@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
 import { gamePropTypes, gameDefaultProps } from '../../../../config/propTypes';
 import Swiper from 'react-native-swiper';
@@ -26,7 +25,6 @@ import { domainSelection, domainSelectionHS, standardSelection, gradeSelection, 
 import GamesBuilderQuestion from './GamesBuilderQuestion';
 import { elevation, fonts } from '../../../../utils/theme';
 import styles from './styles';
-// import debug from '../../../../utils/debug';
 
 
 export default class GamesBuilder extends React.Component {

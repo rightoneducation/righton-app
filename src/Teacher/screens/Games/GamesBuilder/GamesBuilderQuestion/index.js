@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { NativeMethodsMixin } from 'react';
 import {
   ActivityIndicator,
   findNodeHandle,
@@ -8,12 +8,11 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
 import { verticalScale } from 'react-native-size-matters';
 import { Storage } from 'aws-amplify';
 import RNImagePicker from 'react-native-image-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import InputModal from '../../../../../components/InputModal';
 import ButtonWide from '../../../../../components/ButtonWide';

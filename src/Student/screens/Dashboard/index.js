@@ -12,7 +12,7 @@ import { screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/p
 import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import Aicon from 'react-native-vector-icons/FontAwesome';
 import Touchable from 'react-native-platform-touchable';
-import Portal from '../../../screens/Portal';
+// import Portal from '../../../screens/Portal';
 import ButtonWide from '../../../components/ButtonWide';
 import ButtonBack from '../../../components/ButtonBack';
 import Message from '../../../components/Message';
@@ -25,11 +25,11 @@ export default class Dashboard extends React.Component {
   static propTypes = {
     screenProps: screenPropsPropTypes,
   };
-  
+
   static defaultProps = {
     screenProps: screenPropsDefaultProps,
   };
-  
+
   constructor(props) {
     super(props);
 
@@ -85,7 +85,7 @@ export default class Dashboard extends React.Component {
         setTimeout(() => {
           this.startingGame = false;
           if (this.mounted) this.props.screenProps.navigation.navigate('GamePreview');
-        }, 6000);      
+        }, 6000);
       } else if (nextProps.screenProps.gameState.state.start === true &&
         !nextProps.screenProps.gameState.state.reenter &&
         !nextProps.screenProps.team &&
@@ -343,15 +343,15 @@ export default class Dashboard extends React.Component {
 
     return (
       <View style={styles.profileContainer}>
-        <Text style={styles.input}>{ gameState.room ? gameState.room : GameRoomID }</Text>
+        <Text style={styles.input}>{gameState.room ? gameState.room : GameRoomID}</Text>
         <View style={styles.profileValuesContainer}>
           <View style={styles.profileValueContainer}>
             <Text style={styles.profileValueLabel}>{'Games: '}</Text>
-            <Text style={styles.profileValue}>{ gamesPlayed || '--' }</Text>
+            <Text style={styles.profileValue}>{gamesPlayed || '--'}</Text>
           </View>
           <View style={styles.profileValueContainer}>
             <Text style={styles.profileValueLabel}>{'Points: '}</Text>
-            <Text style={styles.profileValue}>{ points || '--' }</Text>
+            <Text style={styles.profileValue}>{points || '--'}</Text>
           </View>
         </View>
       </View>
@@ -415,10 +415,10 @@ export default class Dashboard extends React.Component {
           value={room}
         />
         {roomEntry &&
-        <ButtonWide
-          label={'Enter game'}
-          onPress={this.handleGameEntry}
-        />}
+          <ButtonWide
+            label={'Enter game'}
+            onPress={this.handleGameEntry}
+          />}
       </View>
     );
   }
@@ -472,10 +472,10 @@ export default class Dashboard extends React.Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={colors.primary} />   
+        <StatusBar backgroundColor={colors.primary} />
         <Message {...messageProps} />
 
-        {this.renderHeader()}   
+        {this.renderHeader()}
         <View style={styles.dashContainer}>
           {this.renderProfileView()}
 

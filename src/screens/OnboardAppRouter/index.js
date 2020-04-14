@@ -2,119 +2,101 @@ import React from 'react';
 import {
   Text,
   View,
+  ImageBackground,
+  Image,
+  SafeAreaView
 } from 'react-native';
-import PropTypes from 'prop-types';
 import { ScaledSheet } from 'react-native-size-matters';
-import Touchable from 'react-native-platform-touchable';
 import { colors, fonts } from '../../utils/theme';
+import RoundButton from '../../components/RoundButton'
+import PurpleBackground from '../../components/PurpleBackground'
 
-
-export default function OnboardAppRouter({ navigation, screenProps }) {
+export default function OnboardAppRouter({ navigation }) {
   function handleTeacher() {
-    screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
+    // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
     setTimeout(() => navigation.navigate('OnboardTeacherRouter'), 250);
   }
 
   function handleStudent() {
-    screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
+    // screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
     setTimeout(() => navigation.navigate('StudentFirst'), 250);
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.placeholder}>RightOn!</Text>
-      <Text style={styles.version}>v1.1.50</Text>
-
-      <View style={styles.iamaButtonsContainer}>
-        <Touchable
-          activeOpacity={0.8}
-          background={Touchable.Ripple(colors.primary, false)}
-          onPress={handleTeacher}
-          style={[styles.iamaButton, styles.whiteBackground]}
-        >
-          <View style={styles.iamaView}>
-            <Text style={[styles.iama, styles.primaryColor]}>I am a</Text>
-            <Text style={[styles.role, styles.primaryColor]}>Teacher</Text>
-          </View>
-        </Touchable>
-        <Touchable
-          activeOpacity={0.8}
-          background={Touchable.Ripple(colors.primary, false)}
-          onPress={handleStudent}
-          style={[styles.iamaButton, styles.primaryBackground]}
-        >
-          <View style={styles.iamaView}>
-            <Text style={styles.iama}>I am a</Text>
-            <Text style={styles.role}>Student</Text>
-          </View>
-        </Touchable>
-      </View>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <PurpleBackground>
+        <ImageBackground style={styles.heroImage} source={require('../../assets/images/mathBottleHero.png')}>
+          <Image
+            style={styles.rightOnHeroImage}
+            resizeMode="contain"
+            resizeMethod="resize"
+            source={require('../../assets/images/rightOnLogo.png')}
+          />
+          <Text style={styles.headerText}>
+            Unlocking every student’s potential in math!
+          </Text>
+        </ImageBackground>
+        <View style={styles.buttonsContainer}>
+          <RoundButton
+            title="I'm a Student"
+            style={{ backgroundColor: colors.buttonSecondary }}
+            onPress={() => handleStudent()}
+          />
+          <RoundButton
+            title="I'm a Teacher"
+            style={{ backgroundColor: colors.buttonPrimary }}
+            onPress={() => handleTeacher()}
+          />
+        </View>
+        <Text style={styles.footerText}>
+          Legal notice legal notice legal notice legal notice legal notice legal notice
+        </Text>
+      </PurpleBackground>
+    </SafeAreaView>
   );
 }
 
-OnboardAppRouter.propTypes = {
-  onboardNavigator: PropTypes.shape({ type: PropTypes.func }),
-  screenProps: PropTypes.shape({
-    handleSetAppState: PropTypes.func,
-  }),
-};
-
-OnboardAppRouter.defaultProps = {
-  onboardNavigator: {},
-  screenProps: {
-    handleSetAppState: () => {},
-  },
-};
-
 const styles = ScaledSheet.create({
   container: {
-    alignItems: 'center',
-    backgroundColor: colors.dark,
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: colors.backgroundPurple
   },
-  iama: {
-    color: colors.white,
-    fontSize: fonts.medium,
+  buttonsContainer: {
+    height: 145,
+    marginLeft: 33,
+    marginRight: 33,
+    justifyContent: 'space-between'
   },
-  iamaButton: {
-    backgroundColor: colors.lightGray,
-    borderRadius: 10,
-    flex: 0.5,
-    marginHorizontal: '5@s',
-    paddingVertical: '25@vs',
-  },
-  iamaButtonsContainer: {
-    bottom: '15@vs',
-    flex: 1,
-    flexDirection: 'row',
-    position: 'absolute',
-  },
-  iamaView: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  placeholder: {
-    color: colors.white,
-    fontSize: fonts.large,
-  },
-  version: {
-    color: colors.white,
+  footerText: {
+    height: 30,
+    marginTop: 10,
+    marginLeft: 82,
+    marginRight: 74,
+    marginBottom: 12,
     fontSize: fonts.tiny,
+    lineHeight: 15,
+    alignItems: 'center',
+    textAlign: 'center',
+    letterSpacing: -0.04,
+    color: 'rgba(255, 255, 255, 0.7)'
   },
-  primaryBackground: {
-    backgroundColor: colors.primary,
+  heroImage: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center'
   },
-  primaryColor: {
-    color: colors.primary,
+  rightOnHeroImage: {
+    marginTop: 22,
+    width: 230,
+    height: 118,
+    alignSelf: 'center'
   },
-  role: {
-    color: colors.white,
-    fontSize: fonts.large,
+  headerText: {
+    fontSize: fonts.small,
     fontWeight: 'bold',
-  },
-  whiteBackground: {
-    backgroundColor: colors.white,
-  },
-});
+    color: colors.white,
+    marginTop: 9,
+    width: 230,
+    textAlign: 'center'
+  }
+})
