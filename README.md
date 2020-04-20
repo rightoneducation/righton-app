@@ -1,7 +1,7 @@
 # RightOn Education
 
 ### Project Description
-<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is an app-based classroom activity that increases engagement and helps more students feel better about math: think Kahoot/Fibbage + math + learning from and having fun with wrong answers. Rather than focusing on just increasing math proficiency -- which can leave behind many disengaged and underserved youth -- <strong><i>RightOn!</i></strong> is also working to increase self-confidence and self-efficacy through an engaging activity that applies research into learning from mistakes and common misconceptions.
+<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is a mobile app and dashboard that enables math educators to engage middle and high school students in thinking about and discussing misconceptions; fosters a positive culture of error that improves self-confidence; and ultimately increases math proficiency, especially among students who may not see themselves as “math people.” Think Kahoot/Fibbage + math + learning from and having fun with wrong answers. We focus on not only building student engagement, but also designing with less time pressure, more collaboration among peers, and a distinct focus on math learning outcomes, thus helping set the stage for a larger and more diverse STEM college and career pipeline.
 
 ### Getting Started
 
@@ -70,20 +70,26 @@ Coming soon!
 ### Acknowledgments
 
 #### Meet our team
-<strong>Andy Li</strong> - Mobile Developer<br>
+<strong>Andy Li</strong> - Mobile App Lead<br>
+<strong>Angela Dosalmas</strong> - Math Educator / Equity & Community Engagement<br>
+<strong>Anna Roberds</strong> - Math Educator / Community Engagement<br>
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Edward Tan</strong> - Architect Lead<br>
-<strong>Kai King</strong> - Math Educator<br>
+<strong>Iman Howard</strong> - STEM Educator<br>
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
+<strong>Mani Ramezan</strong> - Mobile App Lead<br>
+<strong>Marizza Bailey</strong> - Math Educator / Content & Pedagogy<br>
+<strong>Ryan Booth</strong> - Web App Lead<br>
 <strong>Sinclair Wu </strong> - Product Lead<br>
 #### Advisors
 <strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
 <strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
+<strong>Bunmi Esho</strong> - STEM Advocacy Executive Director<br>
 <strong>Esmeralda Ortiz</strong> - Senior Director, Boys & Girls Clubs of the Peninsula<br>
 <strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
 <strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
-<strong>Payton Richardson</strong> - Data Officer, Eastside Pathways
-
+<strong>Payton Richardson</strong> - Data Officer, Eastside Pathways<br>
+<strong>Ronald Towns</strong> - STEM Administrator
 <br>
 <br>
 <em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>
