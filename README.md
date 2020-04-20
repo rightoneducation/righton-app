@@ -1,7 +1,7 @@
 # RightOn Education
 
 ### Project Description
-<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is a mobile app and dashboard that enables math educators to engage middle and high school students in thinking about and discussing misconceptions; fosters a positive culture of error that improves self-confidence; and ultimately increases math proficiency, especially among students who may not see themselves as “math people.” Think Kahoot/Fibbage + math + learning from and having fun with wrong answers. We focus on not only building student engagement, but also designing with less time pressure, more collaboration among peers, and a distinct focus on math learning outcomes, thus helping set the stage for a larger and more diverse STEM college and career pipeline.
+<a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> is a mobile app and dashboard that enables math educators to engage middle and high school students in thinking about and discussing misconceptions; fosters a positive culture of error that improves self-confidence; and ultimately increases math proficiency, especially among students who may not see themselves as “math people.” Think Kahoot/Fibbage + math + learning from and having fun with wrong answers. We focus on not only building student engagement, but also designing with less time pressure, more collaboration among peers, and a distinct focus on math learning outcomes, setting the stage for a larger and more diverse STEM college and career pipeline.
 
 ### Getting Started
 
