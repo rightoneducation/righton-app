@@ -12,14 +12,14 @@ import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
 
-export default function Games({ games, saveGame, saveQuestion }) {
+export default function Games({ games, saveGame, saveQuestion, saveNewGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
   const [newGameOpen, setNewGameOpen] = useState(false);
   const handleNewGame = (game) => {
     setNewGameOpen(false);
-    saveGame(game, games.length);
+    saveNewGame(game);
   };
 
   return (

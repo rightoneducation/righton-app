@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 const INITIAL_STATE = {
   title: '',
-  description: '',
+  description: null,
 };
 
 export default function FormDialog({ open, onClose, submit }) {

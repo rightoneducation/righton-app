@@ -13,7 +13,8 @@ import Nav from './components/Nav';
 import Games from './components/Games';
 // use local storage instead of mock
 import awsconfig from './aws-exports';
-import { fetchGames } from './lib/games';
+import { fetchGames, createGame, updateGame } from './lib/games';
+import { Game } from './types';
 
 Amplify.configure(awsconfig);
 
@@ -29,10 +30,23 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState<(Game | null)[]>([]);
+
+  const getGames = async () => {
+    const games = await fetchGames();
+    setGames(games);
+  };
+
+  const saveNewGame = async (newGame: { title: string, description?: string }) => {
+    const game = await createGame(newGame);
+    if (game) {
+      const games = await fetchGames();
+      setGames(games);
+    }
+  }
 
   useEffect(() => {
-    fetchGames(setGames);
+    getGames();
   }, []);
 
   const saveGame = useCallback((game, gameIndex) => {
@@ -44,7 +58,9 @@ function App() {
   const saveQuestion = useCallback((question, gameIndex, questionIndex) => {
     const newGames = [...games];
     const game = { ...games[Number(gameIndex)] };
+    // @ts-ignore
     game[`q${Number(questionIndex)}`] = question;
+    // @ts-ignore
     newGames[Number(gameIndex)] = game;
     setGames(newGames);
   }, [games, setGames]);
@@ -55,7 +71,7 @@ function App() {
         <Box>
           <Nav />
           <Route path="/">
-            <Games games={games} saveGame={saveGame} saveQuestion={saveQuestion} />
+            <Games games={games} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={saveQuestion} />
           </Route>
         </Box>
       </ThemeProvider>

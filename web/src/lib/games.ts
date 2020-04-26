@@ -1,31 +1,54 @@
-// TODO: create create game method
-// TODO: create save game method
 import { API, graphqlOperation } from 'aws-amplify';
-import { ListGamesQuery } from '../API';
+import { ListGamesQuery, CreateGamesInput, CreateGamesMutation, UpdateGamesInput, UpdateGamesMutation } from '../API';
 import { listGames } from '../graphql/queries';
-import { Game, Question } from '../types';
+import { createGames, updateGames } from '../graphql/mutations';
+import { Game, Question, APIGame } from '../types';
 
 const deserializeQuestion = (question: string | null) => {
   return question === null ? question : (JSON.parse(question) as Question);
 }
 
-export const fetchGames = async (cb: (games: Game[]) => void) => {
+const deserializeQuestions = (game: APIGame | null): Game | null => {
+  if (game === null) return null;
+  return {
+    ...game,
+    q1: deserializeQuestion(game.q1),
+    q2: deserializeQuestion(game.q2),
+    q3: deserializeQuestion(game.q3),
+    q4: deserializeQuestion(game.q4),
+    q5: deserializeQuestion(game.q5),
+  }
+}
+
+const serializeQuestion = (question: Question | null) => {
+  return question === null ? question : JSON.stringify(question);
+}
+
+const serializeQuestions = (game: Game): APIGame | null => {
+  if (game === null) return null;
+  return {
+    ...game,
+    q1: serializeQuestion(game.q1),
+    q2: serializeQuestion(game.q2),
+    q3: serializeQuestion(game.q3),
+    q4: serializeQuestion(game.q4),
+    q5: serializeQuestion(game.q5),
+  }
+}
+
+export const fetchGames = async () => {
   const result = await API.graphql(graphqlOperation(listGames)) as { data: ListGamesQuery };
   const games = result?.data?.listGames?.items || [];
-  cb(
-    // @ts-ignore
-    games.map(
-      (game) => {
-        if (game === null) return null;
-        return {
-          ...game,
-          q1: deserializeQuestion(game.q1),
-          q2: deserializeQuestion(game.q2),
-          q3: deserializeQuestion(game.q3),
-          q4: deserializeQuestion(game.q4),
-          q5: deserializeQuestion(game.q5),
-        };
-      }
-    )
-  );
+  return games.map(deserializeQuestions);
+}
+
+export const createGame = async (game: CreateGamesInput) => {
+  const result = await API.graphql(graphqlOperation(createGames, { input: game })) as { data: CreateGamesMutation };
+  return result?.data?.createGames;
+}
+
+export const updateGame = async (game: Game) => {
+  const input = serializeQuestions(game) as UpdateGamesInput;
+  const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };
+  return result?.data?.updateGames;
 }

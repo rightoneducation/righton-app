@@ -20,3 +20,18 @@ export type Game = {
   q5: Question | null;
   standard: string | null;
 };
+
+export type APIGame = {
+  GameID: string;
+  title: string;
+  cluster: string | null;
+  description: string | null;
+  domain: string | null;
+  grade: string | null;
+  q1: string | null;
+  q2: string | null;
+  q3: string | null;
+  q4: string | null;
+  q5: string | null;
+  standard: string | null;
+};
