@@ -55,7 +55,7 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
   const [question, setQuestion] = useState(originalQuestion || {
-    text: '',
+    question: '',
     image: '',
     answer: '',
     instructions: [],
@@ -91,7 +91,7 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
         {originalQuestion ? 'Edit' : 'New'} question
       </Typography>
 
-      <TextField className={classes.input} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" multiline rows={4} required />
+      <TextField className={classes.input} id="question-text" value={question.question} onChange={onChangeMaker('question')} label="Question Text" variant="outlined" multiline rows={4} required />
       <TextField className={classnames(classes.input, classes.half)} id="image-url" value={question.image} onChange={onChangeMaker('image')} label="URL for Photo" variant="outlined" />
       <div className={classnames(classes.half, classes.imagePreview)}>
         {question.image && <img className={classes.image} src={question.image} alt="Preview" />}
