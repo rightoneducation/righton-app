@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-// import Amplify, { Auth } from 'aws-amplify';
+import React, { useEffect, useCallback, useState } from 'react';
+import Amplify from 'aws-amplify';
 import {
   BrowserRouter as Router,
   Route
@@ -12,22 +12,10 @@ import {
 import Nav from './components/Nav';
 import Games from './components/Games';
 // use local storage instead of mock
-import gamesMock from './data/Games.json';
-// import awsconfig from './aws-exports';
+import awsconfig from './aws-exports';
+import { fetchGames } from './lib/games';
 
-// Amplify.configure(awsconfig);
-
-// async function getInitialGamesFromDynamoDB(onSuccess, onError) {
-//   try {
-//     const apiName = 'GamesAPI';
-//     const path = '/items';
-//     const response = await API.get(apiName, path);
-//     onSuccess(response);
-//   } catch (exception) {
-//     onError(exception);
-//     console.log('Error getting initial Games from DynamoDB:', exception);
-//   }
-// }
+Amplify.configure(awsconfig);
 
 const theme = createMuiTheme({
   palette: {
@@ -41,16 +29,11 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const [games, setGames] = useState(gamesMock);
+  const [games, setGames] = useState([]);
 
-  // useEffect(() => {
-  //   getInitialGamesFromDynamoDB((data) => {
-  //     debugger;
-  //   }, (error) => {
-  //     debugger;
-  //     console.log(error);
-  //   });
-  // }, []);
+  useEffect(() => {
+    fetchGames(setGames);
+  }, []);
 
   const saveGame = useCallback((game, gameIndex) => {
     const newGames = [...games];

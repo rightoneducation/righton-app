@@ -66,11 +66,11 @@ function GameForm({ saveGame, game: originalGame, gameIndex }) {
         <TextField className={classes.input} id="game-description" value={game.description} onChange={onChangeMaker('description')} label="Description" variant="outlined" multiline rows={3} />
 
         {questions.map(index => {
-          const { text, answer } = game[`q${index}`];
+          const { question, answer } = game[`q${index}`];
           return (
             <Paper className={classes.question}>
               <Typography gutterBottom>
-                <strong>Q:</strong> {text}
+                <strong>Q:</strong> {question}
               </Typography>
               <Typography>
                 <strong>A:</strong> {answer}

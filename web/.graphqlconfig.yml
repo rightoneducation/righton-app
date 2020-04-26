@@ -1,0 +1,17 @@
+projects:
+  Game Manager Web:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: src/API.ts
+        docsFilePath: src/graphql
+        region: us-east-1
+        apiId: tsrn23zxs5ek5flg4we6speka4
+extensions:
+  amplify:
+    version: 3
