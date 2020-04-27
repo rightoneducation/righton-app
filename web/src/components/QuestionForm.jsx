@@ -8,6 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
+function QuestionForm({ loading, saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
   useEffect(() => {
     document.title = 'RightOn! | Edit question';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -82,6 +83,8 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
     setQuestion({ ...question, instructions: newInstructions });
   }, [question, setQuestion]);
 
+  if (loading) return <Skeleton variant="rect" width={210} height={118} />;
+
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <Button onClick={handleBack}>
@@ -105,7 +108,7 @@ function QuestionForm({ saveQuestion, question: originalQuestion, questionIndex,
         {question.instructions.map((step, index) => (
           <>
             <ListItem key={index}>
-              <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="outlined" required inline />
+              <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="outlined" required />
               <Button className={classes.deleteButton} onClick={() => handleRemoveInstruction(index)} inline>X</Button>
             </ListItem>
           </>

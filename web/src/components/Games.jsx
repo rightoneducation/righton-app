@@ -12,14 +12,14 @@ import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
 
-export default function Games({ games, saveGame, saveQuestion }) {
+export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
   const [newGameOpen, setNewGameOpen] = useState(false);
   const handleNewGame = (game) => {
     setNewGameOpen(false);
-    saveGame(game, games.length);
+    saveNewGame(game);
   };
 
   return (
@@ -55,13 +55,13 @@ export default function Games({ games, saveGame, saveQuestion }) {
           <Route path="/games/:gameIndex/questions/:questionIndex" render={
             ({ match }) => {
               const { questionIndex, gameIndex } = match.params;
-              return <QuestionForm saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
+              return <QuestionForm loading={loading} saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
             }
           } />
           <Route path="/games/:gameIndex" render={
             ({ match }) => {
               const { gameIndex } = match.params;
-              return <GameForm saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+              return <GameForm loading={loading} saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
             }
           } />
         </Switch>
@@ -81,9 +81,11 @@ const useStyles = makeStyles(theme => ({
   sidebar: {
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
+    height: 'calc(100vh - 105px)',
+    overflowY: 'scroll',
   },
   content: {
-    minHeight: 'calc(100vh - 72px)',
+    minHeight: 'calc(100vh - 105px)',
   },
   actions: {
     marginBottom: '16px',
