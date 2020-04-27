@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameForm({ saveGame, game: originalGame, gameIndex }) {
+function GameForm({ loading, saveGame, game: originalGame, gameIndex }) {
   const classes = useStyles();
   const history = useHistory();
   useEffect(() => {
@@ -45,9 +46,11 @@ function GameForm({ saveGame, game: originalGame, gameIndex }) {
   const onChangeMaker = (field) => ({ currentTarget }) => { setGame({ ...game, [field]: currentTarget.value }); };
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
-    saveGame(game, gameIndex - 1);
+    saveGame(game);
     history.push('/');
-  }, [game, gameIndex, history, saveGame]);
+  }, [game, history, saveGame]);
+
+  if (loading) return <Skeleton variant="rect" height={500} />;
 
   const questions = [1, 2, 3, 4, 5].filter(index => !!game[`q${index}`]);
 

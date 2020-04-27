@@ -30,40 +30,51 @@ const theme = createMuiTheme({
 });
 
 function App() {
+  const [startup, setStartup] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [games, setGames] = useState<(Game | null)[]>([]);
 
   const getGames = async () => {
+    setLoading(true);
     const games = await fetchGames();
     setGames(games);
+    setLoading(false);
   };
 
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
+    setLoading(true);
     const game = await createGame(newGame);
     if (game) {
       const games = await fetchGames();
       setGames(games);
     }
+    setLoading(false);
+  }
+
+  const saveGame = async (game: Game) => {
+    setLoading(true);
+    const result = await updateGame(game);
+    if (result) {
+      const games = await fetchGames();
+      setGames(games);
+    }
+    setLoading(false);
   }
 
   useEffect(() => {
     getGames();
+    setStartup(false);
   }, []);
 
-  const saveGame = useCallback((game, gameIndex) => {
-    const newGames = [...games];
-    newGames[Number(gameIndex)] = game;
-    setGames(newGames);
-  }, [games, setGames]);
-
-  const saveQuestion = useCallback((question, gameIndex, questionIndex) => {
-    const newGames = [...games];
+  const handleSaveQuestion = useCallback((question, gameIndex, questionIndex) => {
     const game = { ...games[Number(gameIndex)] };
-    // @ts-ignore
+    // @ts-ignore TODO: change how this is passed around
     game[`q${Number(questionIndex)}`] = question;
     // @ts-ignore
-    newGames[Number(gameIndex)] = game;
-    setGames(newGames);
-  }, [games, setGames]);
+    saveGame(game);
+  }, [games]);
+
+  if (startup) return null;
 
   return (
     <Router>
@@ -71,7 +82,7 @@ function App() {
         <Box>
           <Nav />
           <Route path="/">
-            <Games games={games} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={saveQuestion} />
+            <Games loading={loading} games={games} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} />
           </Route>
         </Box>
       </ThemeProvider>

@@ -21,6 +21,10 @@ const deserializeQuestions = (game: APIGame | null): Game | null => {
 }
 
 const serializeQuestion = (question: Question | null) => {
+  if (question !== null) {
+    // @ts-ignore
+    Object.keys(question).forEach((key) => { if (question[key] === '') question[key] = null; });
+  }
   return question === null ? question : JSON.stringify(question);
 }
 
@@ -43,12 +47,16 @@ export const fetchGames = async () => {
 }
 
 export const createGame = async (game: CreateGamesInput) => {
+  // @ts-ignore
+  Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
   const result = await API.graphql(graphqlOperation(createGames, { input: game })) as { data: CreateGamesMutation };
   return result?.data?.createGames;
 }
 
 export const updateGame = async (game: Game) => {
   const input = serializeQuestions(game) as UpdateGamesInput;
+  // @ts-ignore
+  Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
   const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };
   return result?.data?.updateGames;
 }
