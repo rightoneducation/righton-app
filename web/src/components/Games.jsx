@@ -22,6 +22,9 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     saveNewGame(game);
   };
 
+  // TODO: loading behavior
+  if (games.length < 1) return null;
+
   return (
     <Grid container className={classes.root} spacing={4}>
       <Grid item xs={3} className={classes.sidebar}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Amplify from 'aws-amplify';
 import {
   BrowserRouter as Router,
@@ -66,13 +66,14 @@ function App() {
     setStartup(false);
   }, []);
 
-  const handleSaveQuestion = useCallback((question, gameIndex, questionIndex) => {
+  // @ts-ignore
+  const handleSaveQuestion = async (question, gameIndex, questionIndex) => {
     const game = { ...games[Number(gameIndex)] };
     // @ts-ignore TODO: change how this is passed around
     game[`q${Number(questionIndex)}`] = question;
     // @ts-ignore
     saveGame(game);
-  }, [games]);
+  };
 
   if (startup) return null;
 
