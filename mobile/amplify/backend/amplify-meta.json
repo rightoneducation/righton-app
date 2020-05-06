@@ -1,0 +1,38 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-righton-app-staging-60204-authRole",
+			"UnauthRoleArn": "arn:aws:iam::484006752749:role/amplify-righton-app-staging-60204-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::484006752749:role/amplify-righton-app-staging-60204-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "amplify-righton-app-staging-60204-deployment",
+			"UnauthRoleName": "amplify-righton-app-staging-60204-unauthRole",
+			"StackName": "amplify-righton-app-staging-60204",
+			"StackId": "arn:aws:cloudformation:us-east-1:484006752749:stack/amplify-righton-app-staging-60204/0af24ba0-82ee-11ea-98d7-0ad9172a6ca8",
+			"AmplifyAppId": "d2jaszuhnkt11i"
+		}
+	},
+	"auth": {
+		"rightonapp54cf0d65": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false,
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-righton-app-staging-60204-deployment/amplify-cfn-templates/auth/rightonapp54cf0d65-cloudformation-template.yml",
+				"logicalId": "authrightonapp54cf0d65"
+			},
+			"lastPushTimeStamp": "2020-04-20T10:23:12.173Z",
+			"output": {
+				"AppClientSecret": "1qrm3g9k900eodcqp1t8vvce5lh2v70l0djii8ods9f6tvcqgv8d",
+				"UserPoolId": "us-east-1_hzVyrpWph",
+				"AppClientIDWeb": "4i9n6rcodofir700hd1119il9u",
+				"AppClientID": "652qhgvhvig87ca848ka958s61",
+				"IdentityPoolId": "us-east-1:5acbfbc7-43a3-47aa-b30a-ab15fd1452db",
+				"IdentityPoolName": "rightonapp54cf0d65_identitypool_54cf0d65__staging",
+				"UserPoolName": "rightonapp54cf0d65_userpool_54cf0d65"
+			},
+			"lastPushDirHash": "3Gl64fl4PZKHz177Th/YL7V3ggw="
+		}
+	}
+}

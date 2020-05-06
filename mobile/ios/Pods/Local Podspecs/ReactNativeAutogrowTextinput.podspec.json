@@ -1,0 +1,27 @@
+{
+  "name": "ReactNativeAutogrowTextinput",
+  "version": "5.4.0",
+  "summary": "React Native auto-growing multiline text input",
+  "authors": {
+    "name": "Artal Druk",
+    "email": "artald@wix.com"
+  },
+  "homepage": "https://github.com/wix/react-native-autogrow-textinput",
+  "license": "MIT",
+  "platforms": {
+    "ios": "9.0",
+    "tvos": "9.2"
+  },
+  "module_name": "ReactNativeAutogrowTextinput",
+  "source": {
+    "git": "https://github.com/wix/react-native-autogrow-textinput",
+    "tag": "5.4.0"
+  },
+  "source_files": "./ios/**/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ]
+  },
+  "frameworks": "UIKit"
+}
