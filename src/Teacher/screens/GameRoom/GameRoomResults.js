@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { NativeMethodsMixin } from 'react';
 import {
   Animated,
   findNodeHandle,
@@ -8,7 +8,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import NativeMethodsMixin from 'NativeMethodsMixin';
 import PropTypes from 'prop-types';
 import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';

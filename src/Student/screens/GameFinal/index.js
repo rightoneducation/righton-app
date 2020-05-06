@@ -7,7 +7,7 @@ import {
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { ScaledSheet } from 'react-native-size-matters';
 import KeepAwake from 'react-native-keep-awake';
-import Portal from '../../../screens/Portal';
+// import Portal from '../../../screens/Portal';
 import HeaderTeam from '../../components/HeaderTeam';
 import ButtonWide from '../../../components/ButtonWide';
 import gamePreviewStyles from '../GamePreview/styles';
@@ -135,7 +135,7 @@ export default class GameFinal extends React.Component {
       return (
         <Portal
           messageType={'single'}
-          messageValues={{ message: portal }} 
+          messageValues={{ message: portal }}
         />
       );
     }
@@ -148,24 +148,24 @@ export default class GameFinal extends React.Component {
         <View style={styles.container}>
           <View style={styles.row}>
             <View style={styles.centerAlign}>
-              <Text style={styles.label}>Team Score</Text>            
-              <Text style={styles.value}>{ teamScore }</Text>
+              <Text style={styles.label}>Team Score</Text>
+              <Text style={styles.value}>{teamScore}</Text>
             </View>
             <View style={styles.centerAlign}>
-              <Text style={styles.label}>Your score</Text>            
-              <Text style={styles.value}>{ playerScore }</Text>
+              <Text style={styles.label}>Your score</Text>
+              <Text style={styles.value}>{playerScore}</Text>
             </View>
           </View>
 
           <View style={styles.centerAlign}>
-            <Text style={styles.label}>Number of answers</Text>            
-            <Text style={[styles.label, styles.italic]}>correct</Text>            
-            <Text style={styles.value}>{ playerScore / 25 }</Text>
+            <Text style={styles.label}>Number of answers</Text>
+            <Text style={[styles.label, styles.italic]}>correct</Text>
+            <Text style={styles.value}>{playerScore / 25}</Text>
           </View>
           <View style={[styles.centerAlign, styles.marginTop]}>
             <Text style={styles.label}>Number of players</Text>
-            <Text style={[styles.label, styles.italic]}>tricked</Text>            
-            <Text style={styles.value}>{ totalTricks }</Text>
+            <Text style={[styles.label, styles.italic]}>tricked</Text>
+            <Text style={styles.value}>{totalTricks}</Text>
           </View>
         </View>
 

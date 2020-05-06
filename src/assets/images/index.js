@@ -1,4 +1,4 @@
-import GradCap from './grad_cap.jpeg';
+import GradCap from './grad_cap.jpeg'
 
 export default {
   GradCap,

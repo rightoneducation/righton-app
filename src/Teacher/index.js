@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Platform } from 'react-native';
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Explore from './screens/Explore';
 // import Launch from './screens/Launch';
 import Games from './screens/Games';

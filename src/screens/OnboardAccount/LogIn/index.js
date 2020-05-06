@@ -5,7 +5,6 @@ import {
   View,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import NativeMethodsMixin from 'NativeMethodsMixin';
 import Touchable from 'react-native-platform-touchable';
 import InputModal from '../../../components/InputModal';
 import Message from '../../../components/Message';

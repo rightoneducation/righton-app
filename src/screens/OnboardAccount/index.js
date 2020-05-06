@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Platform } from 'react-native';
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import LogIn from './LogIn';
 import SignUp from './SignUp';
 import TabBarComponent from '../../components/TabBarComponent';

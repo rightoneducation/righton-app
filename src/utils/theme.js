@@ -18,7 +18,7 @@ const fonts = {
 };
 
 const colors = {
-  primary: '#007dc0',
+  primary: '#384466',
   secondary: '#8cd5df',
   black: '#000',
   white: '#fff',
@@ -30,6 +30,9 @@ const colors = {
   grayIcon: '#828f9b',
   mask: 'rgba(52, 52, 52, 0.8)',
   red: '#c0001d',
+  buttonPrimary: '#FC1047',
+  buttonSecondary: '#159EFA',
+  backgroundPurple: "#483a82"
 };
 
 const elevation = {

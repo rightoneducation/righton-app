@@ -1,26 +1,45 @@
 import { scale, ScaledSheet } from 'react-native-size-matters';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { colors, fonts } from '../../../utils/theme';
 
 export default ScaledSheet.create({
   container: {
-    alignItems: 'center',
-    backgroundColor: colors.dark,
-    flex: 1,
-    justifyContent: 'center',
+    backgroundColor: colors.backgroundPurple,
+    flex: 1
+  },
+  innerContainer: {
+    alignContent: "center",
+    alignItems: "center"
   },
   input: {
-    borderColor: colors.white,
-    borderWidth: 1,
-    color: colors.white,
+    color: colors.primary,
     fontSize: fonts.medium,
-    paddingVertical: '15@vs',
-    width: deviceWidth - scale(75),
+    height: 68,
+    backgroundColor: colors.white,
+    borderRadius: 14,
+    paddingHorizontal: '14@vs',
+    marginBottom: 13,
   },
   title: {
     color: colors.white,
     fontSize: fonts.large,
     fontWeight: 'bold',
-    position: 'absolute',
-    top: '35@vs',
+    textAlign: 'center',
+    paddingBottom: 9
   },
+  entryContainer: {
+    alignSelf: 'center',
+    width: scale(265),
+  },
+  enterButton: {
+    backgroundColor: colors.buttonPrimary,
+  },
+  rightOnHeroImage: {
+    width: 230,
+    height: 118,
+    alignSelf: 'center'
+  },
+  logoContainer: {
+    marginTop: 22,
+    height: scale(166)
+  }
 });

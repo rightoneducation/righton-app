@@ -1,5 +1,5 @@
 import React from 'react';
-import { createSwitchNavigator } from 'react-navigation';
+import { createSwitchNavigator } from '@react-navigation/native';
 import Dashboard from './screens/Dashboard';
 import GamePreview from './screens/GamePreview';
 import GameQuiz from './screens/GameQuiz';

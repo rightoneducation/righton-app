@@ -1,22 +1,21 @@
 import React from 'react';
 import {
-  NetInfo,
-  StyleSheet,
   Text,
   TextInput,
-  View,
+  SafeAreaView,
+  Image,
+  View
 } from 'react-native';
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
 import { getGameFromDynamoDB } from '../../../../lib/Categories/DynamoDB/TeacherGameRoomAPI';
 import { verticalScale } from 'react-native-size-matters';
-import Touchable from 'react-native-platform-touchable';
-import Portal from '../../../screens/Portal';
-import Message from '../../../components/Message';
-import ButtonBack from '../../../components/ButtonBack';
-import ButtonWide from '../../../components/ButtonWide';
-import { colors, fonts } from '../../../utils/theme';
+import NetInfo from '@react-native-community/netinfo'
+import { colors } from '../../../utils/theme';
 import styles from './styles';
 import debug from '../../../utils/debug';
+import RoundButton from '../../../components/RoundButton';
+import PurpleBackground from '../../../components/PurpleBackground';
+
 
 
 export default class StudentFirst extends React.PureComponent {
@@ -50,16 +49,9 @@ export default class StudentFirst extends React.PureComponent {
 
   onRoomInput = room => this.setState({ room });
 
-
   onRoomSubmit = () => {
     this.handleGameEntry();
   }
-
-
-  onJoinLater = () => {
-    this.props.navigation.navigate('StudentApp');
-  }
-
 
   handleGameEntry = () => {
     const { room } = this.state;
@@ -69,9 +61,13 @@ export default class StudentFirst extends React.PureComponent {
     }
     const GameRoomID = room;
     this.setState({ portal: `Joining ${GameRoomID}` });
-    NetInfo.isConnected.fetch()
-      .then(async (isConnected) => {
-        if (isConnected) {
+    NetInfo.fetch()
+      .then(async (state) => {
+        if (state.isConnected) {
+          if (GameRoomID == '1234') {
+            this.props.navigation.navigate('StudentChooseTeam')
+          }
+          return
           getGameFromDynamoDB(GameRoomID, this.handleGameFound, this.handleGameError);
         } else {
           this.setState({
@@ -173,67 +169,44 @@ export default class StudentFirst extends React.PureComponent {
       portal,
       room,
     } = this.state;
-    
-    if (portal) {
-      return (
-        <Portal
-          messageType={'single'}
-          messageValues={{
-            message: portal,
-          }}
-        />
-      );
-    }
 
     return (
-      <View style={styles.container}>
-        <Message {...messageProps} />
+      <SafeAreaView style={styles.container}>
+        <PurpleBackground style={styles.innerContainer}>
 
-        <ButtonBack
-          buttonStyles={{ top: 40 }}
-          onPress={this.handleNavigateToOnboardApp}
-        />
-        <Text style={styles.title}>Game Code</Text>
-        <TextInput
-          keyboardType={'numeric'}
-          maxLength={4}
-          multiline={false}
-          onChangeText={this.onRoomInput}
-          onSubmitEditing={this.onRoomSubmit}
-          placeholder={'####'}
-          placeholderTextColor={colors.primary} 
-          ref={(ref) => { this.gameInput = ref; }}
-          returnKeyType={'done'}
-          style={styles.input}
-          textAlign={'center'}
-          underlineColorAndroid={colors.dark}   
-          value={room}
-        />
-        <Touchable
-          activeOpacity={0.8}
-          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          onPress={this.onJoinLater}
-          style={GameRoomStyles.skipButton}
-        >
-          <Text style={GameRoomStyles.skip}>Join later</Text>
-        </Touchable>
-        <ButtonWide
-          label={'Enter Game'}
-          onPress={this.onRoomSubmit}
-        />
-      </View>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.rightOnHeroImage}
+              resizeMode='contain'
+              source={require('../../../assets/images/rightOnLogo.png')} />
+          </View>
+          <View style={styles.entryContainer}>
+            <Text style={styles.title}>
+              Enter Game Code
+            </Text>
+            <TextInput
+              keyboardType={'number-pad'}
+              maxLength={4}
+              multiline={false}
+              onChangeText={this.onRoomInput}
+              onSubmitEditing={this.onRoomSubmit}
+              placeholder={'####'}
+              placeholderTextColor={colors.primary}
+              ref={(ref) => { this.gameInput = ref; }}
+              returnKeyType={'done'}
+              style={styles.input}
+              textAlign={'center'}
+              value={room}
+            />
+
+            <RoundButton
+              title="Enter"
+              style={styles.enterButton}
+              onPress={this.onRoomSubmit}
+            />
+          </View>
+        </PurpleBackground>
+      </SafeAreaView>
     );
   }
 }
-
-
-const GameRoomStyles = StyleSheet.create({
-  skip: {
-    color: colors.primary,
-    fontSize: fonts.medium,
-  },
-  skipButton: {
-    bottom: verticalScale(100),
-    position: 'absolute',
-  },
-});
