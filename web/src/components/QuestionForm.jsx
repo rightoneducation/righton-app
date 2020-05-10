@@ -61,6 +61,9 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, quest
     answer: '',
     instructions: [],
   });
+  useEffect(() => {
+    if (originalQuestion) setQuestion(originalQuestion)
+  }, [originalQuestion]);
   const classes = useStyles();
   const history = useHistory();
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); }, [question, setQuestion]);
@@ -71,8 +74,7 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, quest
   }, [question, setQuestion]);
   const addInstruction = useCallback(() => { setQuestion({ ...question, instructions: [...question.instructions, ''] }); }, [question, setQuestion]);
   const handleSaveQuestion = useCallback(() => {
-    saveQuestion(question, Number(gameIndex) - 1, questionIndex);
-    history.push(`/games/${gameIndex}`);
+    saveQuestion(question, Number(gameIndex) - 1, questionIndex).then(() => history.push(`/games/${gameIndex}`));
   }, [question, saveQuestion, gameIndex, questionIndex, history])
   const handleBack = useCallback(() => {
     history.push(`/games/${gameIndex}`);

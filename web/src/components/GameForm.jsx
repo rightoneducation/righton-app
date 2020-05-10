@@ -40,6 +40,9 @@ function GameForm({ loading, saveGame, game: originalGame, gameIndex }) {
     document.title = 'RightOn! | Edit game';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
+  useEffect(() => {
+    setGame(originalGame)
+  }, [originalGame]);
   const [game, setGame] = useState(originalGame || {
     title: '',
   });
