@@ -15,7 +15,16 @@ const fonts = {
   small: moderateScale(14, 0.2),
   medium: moderateScale(18, 0.2),
   large: moderateScale(24, 0.2),
+  xLarge: moderateScale(30, 0.2),
 };
+
+const fontFamilies = {
+  poppinsRegular: 'Poppins-Regular',
+  poppinsSemiBold: 'Poppins-SemiBold',
+  montserratBold: 'Montserrat-Bold',
+  karlaBold: 'Karla-Bold',
+  latoBold: 'Lato-Bold',
+}
 
 const colors = {
   primary: '#384466',
@@ -49,4 +58,5 @@ export {
   deviceWidth,
   elevation,
   fonts,
+  fontFamilies
 };

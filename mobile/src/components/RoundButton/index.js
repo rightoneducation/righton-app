@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
-import { colors, fonts } from '../../utils/theme';
+import { colors, fonts, fontFamilies } from '../../utils/theme';
 import { ScaledSheet } from 'react-native-size-matters';
 
 RoundButton.propTypes = {
@@ -9,7 +9,6 @@ RoundButton.propTypes = {
     onPress: PropTypes.func.isRequired
 }
 export default function RoundButton(props) {
-    const { backgroundColor } = props
     const style = { ...styles.roundButton, ...props.style }
     return (
         <TouchableOpacity
@@ -29,6 +28,7 @@ const styles = ScaledSheet.create({
     },
     buttonTitle: {
         fontSize: fonts.large,
+        fontFamily: fontFamilies.poppinsSemiBold,
         fontWeight: 'bold',
         color: colors.white
     },
