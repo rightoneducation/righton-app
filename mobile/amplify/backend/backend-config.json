@@ -1,0 +1,10 @@
+{
+	"auth": {
+		"rightonapp54cf0d65": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}
