@@ -100,7 +100,7 @@ Coming soon!
 <strong>Lybroan James</strong> - Chief Education Officer, STEMulate<br>
 <strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
 <strong>Payton Richardson</strong> - Data Officer, Eastside Pathways<br>
-<strong>Ronald Towns</strong> - STEM Administrator
+<strong>Ronald Towns</strong> - STEM Administrator<br>
 <strong>Yong Lin</strong> - UX
 <br>
 <br>
