@@ -12,25 +12,9 @@ We're currently developing two apps:
 
 We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a math-focused version of MrBeast's <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>, building upon the <a href="https://github.com/awslabs/aws-amplify-unicorntrivia-workshop"><strong>AWS Unicorn Trivia Workshop</strong></a> using Elemental Media Services.
 
-### Getting Started
+#### Setting up and app
 
-#### 1) Clone project
-
-`git clone https://github.com/righton-dev/righton-app.git`
-
-#### 2) Install node modules
-
-`npm install`
-
-#### 3) Install on device
-
-`npm run ios`
-<br>
-`npm run android`
-
-#### 4) Start your app
-
-`npm start`
+Click into the **web** or **mobile** directory to learn how to get started.
 
 ### Files needed / Additional notes
 
