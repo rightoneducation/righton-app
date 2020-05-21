@@ -1,9 +1,20 @@
 # RightOn Education
 
 ### Our Mission & Vision
-<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." Our mission is to unlock every student’s potential in math, and we're doing so by creating apps that make it more engaging, foster a positive culture of error, and focus not only on proficiency, but also self-confidence.
+<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." Our mission is to unlock every student’s potential in math, and we're doing so  by creating apps that make it more engaging, foster a positive culture of error, and focus not only on proficiency, but also self-confidence.<br>
+
+While many apps focus on showing students the correct answers, we're turning things around: our app not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers and, through learning from mistakes and misconceptions, everyone takes their learning to the next level.
 
 <strong>Vision:</strong> In the future, we envision <a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> to become a multi-channel learning platform and game show (spanning mobile apps and livestream video), one that eventually helps connect students of all ages and backgrounds to learn new subjects -- from math today to others in the future. 
+
+### Our Values
+We’re a team that sometimes falls down, always gets back up, and never stops having fun.<br>
+<strong>Trust and open communication:</strong> seeking to understand, then to be understood<br>
+<strong>Integrity:</strong> doing the right thing<br>
+<strong>Compassion:</strong> lending a hand to others, giving back, expressing gratitude<br>
+<strong>Humility:</strong> working together on something bigger than ourselves<br>
+<strong>Beginner’s mindset:</strong> going into things with an open mind, always learning and making new mistakes<br>
+<strong>Fun:</strong> having fun along the way!<br>
 
 ### Project Description
 We're currently developing two apps:
