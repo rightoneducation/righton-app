@@ -23,11 +23,11 @@ We're currently developing two apps:
 
 We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a math-focused version of MrBeast's <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>, building upon the <a href="https://github.com/awslabs/aws-amplify-unicorntrivia-workshop"><strong>AWS Unicorn Trivia Workshop</strong></a> using Elemental Media Services.
 
-#### Setting up and app
+### Getting Started
 
-Click into the **web** or **mobile** directory to learn how to get started.
+Click into the <a href="https://github.com/rightoneducation/righton-app/tree/dev/web">**web**</a> or <a href="https://github.com/rightoneducation/righton-app/tree/dev/mobile">**mobile**</a> directory to learn how to get started. 
 
-### Files needed / Additional notes
+### Files Needed
 
 The `react-native` npm package.
 <br>
@@ -36,7 +36,7 @@ A `local.properties` file if testing on Android.
 The Xcode editor if testing on iOS.
 <br>
 
-#### Note:
+#### Notes:
 Some NPM packages may be out of date and need to be updated for the Android build.
 <br>
 If you encounter the following error:
@@ -47,13 +47,11 @@ If you encounter the following error:
 Locate the `build.gradle` file in `node_modules/amazon-cognito-identity.js/android`, find the line mentioned in the `dependencies` object, and change `implementation` to `compile`.
 <br>
 <br>
-If you receive a `hasteImpl returning the same name for different files` error in your packager. This is due to identical path names created by AWS Amplify. To fix this issue, simply drag the `#current-cloud-backend` folder from `${root}/amplify` out, restart the packager and run again.
+If you receive a `hasteImpl returning the same name for different files` error in your packager: This is due to identical path names created by AWS Amplify. To fix this issue, simply drag the `#current-cloud-backend` folder from `${root}/amplify` out, restart the packager and run again.
 
 ### Contributing
 
-We welcome contributions from all, and each contribution truly makes a difference. Please report issues directly to us or make pull requests for any features or bug fixes. Our app strives to create an environment where students (and teachers alike) feel more comfortable with and less intimidated by making mistakes in math class -- indeed, that's how we all take our learning to the next level. In a similar way, we always appreciate help and guidance with fixing our bugs -- that's how we take our own work to the next level!
-
-Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md).
+We welcome contributions from all, and each contribution makes a difference! Please report issues directly to us or make pull requests for any features or bug fixes. Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md) for further details.
 
 ### Additional Documentation
 
