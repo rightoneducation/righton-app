@@ -57,9 +57,9 @@ We welcome contributions from all, and each contribution makes a difference! Ple
 
 Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/master/docs)
 
-### Communication channels
+### Communication Channels
 
-We are always happy to hear from people who are also interested in building learning apps and making math more fun and more achievable for all. We're building this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com.
+We are always happy to hear from people who are also interested in building learning apps and making math more fun and achievable for all. We're building this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com. You're also welcome to join our Slack community -- just let us know!
 
 ### Testing
 
