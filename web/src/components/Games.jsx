@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -25,6 +26,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
 
   if (games.length < 1) return null;
 
+  console.log(match)
+
   return (
     <Grid container className={classes.root} spacing={4}>
       <Grid item xs={3} className={classes.sidebar}>
@@ -37,7 +40,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
         {games.map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
           const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
           return (
-            <Card className={classes.game} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+            <Card className={classnames(classes.game, Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
                 <Typography gutterBottom>
                   {title}
@@ -86,6 +89,17 @@ const useStyles = makeStyles(theme => ({
   },
   game: {
     marginBottom: theme.spacing(2),
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+      cursor: 'pointer',
+    }
+  },
+  gameSelected: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+      cursor: 'default',
+    }
   },
   sidebar: {
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px !important`,
