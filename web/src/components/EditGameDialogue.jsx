@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,30 +7,27 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const INITIAL_STATE = {
-  title: '',
-  description: '',
-};
-
-export default function NewGameDialogue({ open, onClose, submit }) {
-  const [game, setGame] = useState(INITIAL_STATE);
+export default function EditGameDialogue({ game, open, onClose, submit }) {
+  const [updatedGameDetails, setUpdatedGameDetails] = useState({ ...game });
+  const history = useHistory();
+  const location = useLocation();
   const onSubmit = (event) => {
-    submit(game);
+    submit(updatedGameDetails);
     event.preventDefault();
-    setGame(INITIAL_STATE);
+    history.push(location.pathname.replace('/edit', ''));
   };
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="new-game-popup">
+    <Dialog open={open} onClose={onClose} aria-labelledby="edit-game-popup">
       <form onSubmit={onSubmit}>
-        <DialogTitle id="new-game-popup">New game</DialogTitle>
+        <DialogTitle id="edit-game-popup">Edit game</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="tite"
             label="Title"
-            value={game.title}
-            onChange={({ currentTarget }) => { setGame({ ...game, title: currentTarget.value }); }}
+            value={updatedGameDetails.title}
+            onChange={({ currentTarget }) => { setUpdatedGameDetails({ ...updatedGameDetails, title: currentTarget.value }); }}
             fullWidth
             required
           />
@@ -37,8 +35,8 @@ export default function NewGameDialogue({ open, onClose, submit }) {
             margin="dense"
             id="tite"
             label="Description"
-            value={game.description}
-            onChange={({ currentTarget }) => { setGame({ ...game, description: currentTarget.value }); }}
+            value={updatedGameDetails.description}
+            onChange={({ currentTarget }) => { setUpdatedGameDetails({ ...updatedGameDetails, description: currentTarget.value }); }}
             fullWidth
             multiline
             rows={2}
@@ -49,7 +47,7 @@ export default function NewGameDialogue({ open, onClose, submit }) {
             Cancel
           </Button>
           <Button color="primary" type="submit">
-            Create
+            Save
           </Button>
         </DialogActions>
       </form>

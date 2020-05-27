@@ -48,6 +48,10 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     height: '56px',
   },
+
+  back: {
+    marginLeft: theme.spacing(2),
+  }
 }));
 
 function QuestionForm({ loading, saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
@@ -89,11 +93,12 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, quest
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
-      <Button onClick={handleBack}>
-        Back
-      </Button>
       <Typography gutterBottom variant="h4" component="h1">
         {originalQuestion ? 'Edit' : 'New'} question
+
+        <Button className={classes.back} onClick={handleBack}>
+          Back
+        </Button>
       </Typography>
 
       <TextField className={classes.input} id="question-text" value={question.question} onChange={onChangeMaker('question')} label="Question Text" variant="outlined" multiline rows={4} required />
