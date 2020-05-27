@@ -6,6 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
 
 export default function EditGameDialogue({ game, open, onClose, submit }) {
   const [updatedGameDetails, setUpdatedGameDetails] = useState({ ...game });
@@ -17,7 +18,7 @@ export default function EditGameDialogue({ game, open, onClose, submit }) {
     history.push(location.pathname.replace('/edit', ''));
   };
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="edit-game-popup">
+    <Dialog open={open} onClose={onClose} aria-labelledby="edit-game-popup" maxWidth="sm" fullWidth>
       <form onSubmit={onSubmit}>
         <DialogTitle id="edit-game-popup">Edit game</DialogTitle>
         <DialogContent>
@@ -43,6 +44,9 @@ export default function EditGameDialogue({ game, open, onClose, submit }) {
           />
         </DialogContent>
         <DialogActions>
+          <Typography variant="caption">
+            Game ID: {game.GameID}
+          </Typography>
           <Button onClick={onClose}>
             Cancel
           </Button>
