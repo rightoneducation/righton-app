@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
+import EditGameDialogue from './EditGameDialogue';
 
 export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame }) {
   const classes = useStyles();
@@ -23,7 +24,6 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     history.push('/games/1');
   };
 
-  // TODO: loading behavior
   if (games.length < 1) return null;
 
   return (
@@ -38,7 +38,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
         {games.map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
           const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
           return (
-            <Card className={classes.game} key={GameID}>
+            <Card className={classes.game} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
                 <Typography gutterBottom>
                   {title}
@@ -48,7 +48,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" onClick={() => history.push(`/games/${index + 1}`)}>Edit</Button>
+                <Button size="small" onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</Button>
               </CardActions>
             </Card>
           );
@@ -70,6 +70,12 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
           } />
         </Switch>
       </Grid>
+      <Route path="/games/:gameIndex/edit" render={
+        ({ match }) => {
+          const { gameIndex } = match.params;
+          return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex + 1}`)} submit={saveGame} />;
+        }
+      } />
     </Grid>
   );
 }
