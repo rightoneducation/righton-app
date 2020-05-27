@@ -14,6 +14,7 @@ export type CreateGamesInput = {
   q5?: string | null,
   standard?: string | null,
   title: string,
+  updated?: number | null,
 };
 
 export type UpdateGamesInput = {
@@ -29,6 +30,7 @@ export type UpdateGamesInput = {
   q5?: string | null,
   standard?: string | null,
   title?: string | null,
+  updated?: number | null,
 };
 
 export type DeleteGamesInput = {
@@ -77,6 +79,7 @@ export type CreateGamesMutation = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };
 
@@ -99,6 +102,7 @@ export type UpdateGamesMutation = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };
 
@@ -121,6 +125,7 @@ export type DeleteGamesMutation = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };
 
@@ -143,6 +148,7 @@ export type GetGamesQuery = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };
 
@@ -169,6 +175,7 @@ export type ListGamesQuery = {
       q5: string | null,
       standard: string | null,
       title: string,
+      updated: number | null,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -197,6 +204,7 @@ export type OnCreateGamesSubscription = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };
 
@@ -223,6 +231,7 @@ export type OnUpdateGamesSubscription = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };
 
@@ -249,5 +258,6 @@ export type OnDeleteGamesSubscription = {
     q5: string | null,
     standard: string | null,
     title: string,
+    updated: number | null,
   } | null,
 };

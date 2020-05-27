@@ -29,6 +29,7 @@ export const onCreateGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;
@@ -59,6 +60,7 @@ export const onUpdateGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;
@@ -89,6 +91,7 @@ export const onDeleteGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;
