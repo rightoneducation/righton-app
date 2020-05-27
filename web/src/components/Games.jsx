@@ -41,7 +41,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
         {games.map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
           const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
           return (
-            <Card className={classnames(classes.game, Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+            <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
                 <Typography gutterBottom>
                   {title}
@@ -76,7 +76,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
       <Route path="/games/:gameIndex/edit" render={
         ({ match }) => {
           const { gameIndex } = match.params;
-          return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex + 1}`)} submit={saveGame} />;
+          return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
         }
       } />
     </Grid>
