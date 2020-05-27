@@ -40,21 +40,34 @@ const serializeQuestions = (game: Game): APIGame | null => {
   }
 }
 
+const sortByUpdated = (a: APIGame, b: APIGame) => {
+  if (a.updated === null) return 1;
+  if (b.updated === null) return -1;
+  if (a.updated > b.updated) return -1;
+  if (b.updated > a.updated) return 1;
+  return 0;
+};
+
 export const fetchGames = async () => {
   const result = await API.graphql(graphqlOperation(listGames)) as { data: ListGamesQuery };
-  const games = result?.data?.listGames?.items || [];
-  return games.map(deserializeQuestions);
+  const games = (result?.data?.listGames?.items || []) as APIGame[];
+  return games.sort(sortByUpdated).map(deserializeQuestions);
 }
 
 export const createGame = async (game: CreateGamesInput) => {
   // @ts-ignore
   Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
-  const result = await API.graphql(graphqlOperation(createGames, { input: game })) as { data: CreateGamesMutation };
+  const input = {
+    ...game,
+    updated: Date.now()// Add current timestamp
+  };
+  const result = await API.graphql(graphqlOperation(createGames, { input })) as { data: CreateGamesMutation };
   return result?.data?.createGames;
 }
 
 export const updateGame = async (game: Game) => {
   const input = serializeQuestions(game) as UpdateGamesInput;
+  input.updated = Date.now(); // Add current timestamp
   // @ts-ignore
   Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
   const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };

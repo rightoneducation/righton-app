@@ -17,6 +17,7 @@ export const getGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;
@@ -40,6 +41,7 @@ export const listGames = /* GraphQL */ `
         q5
         standard
         title
+        updated
       }
       nextToken
     }

@@ -17,9 +17,10 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
   const [newGameOpen, setNewGameOpen] = useState(false);
-  const handleNewGame = (game) => {
+  const handleNewGame = async (game) => {
     setNewGameOpen(false);
-    saveNewGame(game);
+    await saveNewGame(game);
+    history.push('/games/1');
   };
 
   // TODO: loading behavior

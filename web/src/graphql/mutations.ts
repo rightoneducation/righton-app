@@ -17,6 +17,7 @@ export const createGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;
@@ -35,6 +36,7 @@ export const updateGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;
@@ -53,6 +55,7 @@ export const deleteGames = /* GraphQL */ `
       q5
       standard
       title
+      updated
     }
   }
 `;

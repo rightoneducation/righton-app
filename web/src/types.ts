@@ -19,6 +19,7 @@ export type Game = {
   q4: Question | null;
   q5: Question | null;
   standard: string | null;
+  updated: number | null;
 };
 
 export type APIGame = {
@@ -34,4 +35,5 @@ export type APIGame = {
   q4: string | null;
   q5: string | null;
   standard: string | null;
+  updated: number | null;
 };
