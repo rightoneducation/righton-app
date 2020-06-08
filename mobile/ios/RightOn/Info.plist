@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>52</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
 	<string>ZdP7Za45eNhHO3zPnDB6NOSFcBio7gIavF5sU</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -48,9 +48,6 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Karla-Bold.ttf</string>
-		<string>Montserrat-Bold.ttf</string>
-		<string>Poppins-SemiBold.ttf</string>
-		<string>Poppins-Regular.ttf</string>
 		<string>Karla-BoldItalic.ttf</string>
 		<string>Karla-Italic.ttf</string>
 		<string>Karla-Regular.ttf</string>
@@ -66,6 +63,7 @@
 		<string>Lato-ThinItalic.ttf</string>
 		<string>Montserrat-Black.ttf</string>
 		<string>Montserrat-BlackItalic.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
 		<string>Montserrat-BoldItalic.ttf</string>
 		<string>Montserrat-ExtraBold.ttf</string>
 		<string>Montserrat-ExtraBoldItalic.ttf</string>
@@ -94,6 +92,8 @@
 		<string>Poppins-LightItalic.ttf</string>
 		<string>Poppins-Medium.ttf</string>
 		<string>Poppins-MediumItalic.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
 		<string>Poppins-SemiBoldItalic.ttf</string>
 		<string>Poppins-Thin.ttf</string>
 		<string>Poppins-ThinItalic.ttf</string>

@@ -7,19 +7,25 @@ import StudentFirst from '../Student/screens/StudentFirst';
 import StudentChooseTeam from '../Student/screens/StudentChooseTeam';
 // import OnboardAccount from '../screens/OnboardAccount';
 // import StudentApp from '../Student';
-// import TeacherApp from '../Teacher';
+import TeacherApp from '../Teacher';
 // import TeacherGameRoom from '../Teacher/screens/GameRoom';
 // import TeacherProfile from '../Teacher/screens/TeacherProfile';
+import GameDetailsScreen from '../Teacher/screens/Explore/GameDetails'
 
 const Stack = createStackNavigator();
 
 const AppContainer = (props) => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="OnboardAppRouter">
-        <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} options={{ headerShown: false }} />
-        <Stack.Screen name="StudentFirst" component={StudentFirst} options={{ headerShown: false }} />
-        <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="OnboardAppRouter" screenOptions={{
+        headerShown: false
+      }}
+      >
+        <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
+        <Stack.Screen name="StudentFirst" component={StudentFirst} />
+        <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />
+        <Stack.Screen name="TeacherApp" component={TeacherApp} />
+        <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

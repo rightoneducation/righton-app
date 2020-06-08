@@ -76,54 +76,6 @@ export default class TeacherProfile extends React.Component {
   }
 
 
-  // closeInputModal(input, inputLabel) {
-  //   switch (inputLabel) {
-  //     case 'trick0':
-  //       this.setState({ trick0Reason: input, showInput: false });
-  //       break;
-  //     case 'trick1':
-  //       this.setState({ trick1Reason: input, showInput: false });
-  //       break;
-  //     case 'trick2':
-  //       this.setState({ trick2Reason: input, showInput: false });
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
-
-  // handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
-  //   if (inputLabel === 'trick0') {
-  //     this.onTrick0Layout();
-  //   } else if (inputLabel === 'trick1') {
-  //     this.onTrick1Layout();
-  //   } else if (inputLabel === 'trick2') {
-  //     this.onTrick2Layout();
-  //   }
-  //   setTimeout(() => {
-  //     this.setState({
-  //       showInput: {
-  //         autoCapitalize: 'sentences',
-  //         closeModal: this.closeInputModal,
-  //         keyboardType,
-  //         height: 45,
-  //         input,
-  //         inputLabel,
-  //         maxLength,
-  //         multiline: false,
-  //         placeholder,
-  //         visible: true,
-  //         spellCheck: true,
-  //         width: deviceWidth - scale(30),
-  //         x: this[`${inputLabel}X`],
-  //         y: this[`${inputLabel}Y`],
-  //       }
-  //     });
-  //   }, 100);
-  // }
-
-
   render() {
     const {
       account,
@@ -133,8 +85,7 @@ export default class TeacherProfile extends React.Component {
     return (
       <ScrollView contentContainerStyle={styles.container}>
 
-        {/* {showInput &&
-          <InputModal {...showInput} />} */}
+        {}
 
         <ButtonBack
           buttonStyles={{
@@ -156,7 +107,7 @@ export default class TeacherProfile extends React.Component {
 
         <View style={[styles.itemContainer, styles.divider]}>
           <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{ account.TeacherID || 'Not logged in' }</Text>
+          <Text style={styles.value}>{account.TeacherID || 'Not logged in'}</Text>
         </View>
 
         <View style={styles.itemContainer}>

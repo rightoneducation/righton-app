@@ -12,15 +12,20 @@ const deviceWidth = width;
 
 const fonts = {
   tiny: moderateScale(10, 0.2),
+  xSmall: moderateScale(12, 0.2),
   small: moderateScale(14, 0.2),
+  xMedium: moderateScale(16, 0.2),
   medium: moderateScale(18, 0.2),
   large: moderateScale(24, 0.2),
   xLarge: moderateScale(30, 0.2),
+  xxLarge: moderateScale(36, 0.2),
+  xxxLarge: moderateScale(72, 0.2),
 };
 
 const fontFamilies = {
   poppinsRegular: 'Poppins-Regular',
   poppinsSemiBold: 'Poppins-SemiBold',
+  poppinsBold: 'Poppins-Bold',
   montserratBold: 'Montserrat-Bold',
   karlaBold: 'Karla-Bold',
   latoBold: 'Lato-Bold',

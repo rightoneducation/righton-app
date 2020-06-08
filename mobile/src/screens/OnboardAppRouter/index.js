@@ -4,7 +4,8 @@ import {
   View,
   ImageBackground,
   Image,
-  SafeAreaView
+  SafeAreaView,
+  StatusBar
 } from 'react-native';
 import { ScaledSheet } from 'react-native-size-matters';
 import { colors, fonts, fontFamilies } from '../../utils/theme';
@@ -14,7 +15,7 @@ import PurpleBackground from '../../components/PurpleBackground'
 export default function OnboardAppRouter({ navigation }) {
   function handleTeacher() {
     // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
-    setTimeout(() => navigation.navigate('OnboardTeacherRouter'), 250);
+    setTimeout(() => navigation.navigate('TeacherApp'), 250);
   }
 
   function handleStudent() {
@@ -24,6 +25,10 @@ export default function OnboardAppRouter({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor="#7215A2"
+        barStyle="light-content"
+      />
       <PurpleBackground>
         <ImageBackground style={styles.heroImage} source={require('../../assets/images/mathBottleHero.png')}>
           <Image

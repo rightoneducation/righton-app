@@ -151,3 +151,4 @@ lint/tmp/
 
 # Version control
 vcs.xml
+local-env-info.json
