@@ -133,6 +133,7 @@ build/
 gradle.properties
 local.properties
 keystore.properties
+output.json
 
 # Keystore files
 # Uncomment the following lines if you do not want to check your keystore files in.
@@ -152,3 +153,4 @@ lint/tmp/
 # Version control
 vcs.xml
 local-env-info.json
+

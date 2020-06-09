@@ -1,20 +1,22 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react'
 import {
-  ActivityIndicator,
-  // Image,
   ScrollView,
-  StatusBar,
   Text,
   View,
   SafeAreaView,
-  StyleSheet
-} from 'react-native';
-import { scale, ScaledSheet } from 'react-native-size-matters';
+  StyleSheet,
+  ActivityIndicator
+} from 'react-native'
+import { scale, ScaledSheet } from 'react-native-size-matters'
 import { colors, deviceWidth, fonts, fontFamilies } from '../../../utils/theme'
 import debug from '../../../utils/debug'
 import NavBarView from './NavBarView'
 import ContentItem from './ContentItem'
 import { createStackNavigator } from '@react-navigation/stack'
+import { listGames } from '../../../graphql/queries'
+import { API, graphqlOperation } from 'aws-amplify'
+import { FlatList } from 'react-native-gesture-handler'
+// import API from '../../../backend'
 
 const ExploreStack = createStackNavigator()
 
@@ -29,32 +31,51 @@ const ExploreStackScreen = () => {
 }
 
 const ExploreScreen = ({ props, navigation }) => {
+
+  const Mode = {
+    loading: 'loading',
+    succeeded: 'succeeded',
+    failed: 'failed',
+  }
   const onGameSelected = () => {
     navigation.navigate("GameDetails")
   }
+
+  const [mode, setMode] = useState(Mode.loading)
+  const [games, setGames] = useState([])
+
+  useEffect(() => {
+    async function fetchGames() {
+      API.graphql(graphqlOperation(listGames)).then(gamesList => {
+        console.log(gamesList.data.listGames.items)
+        setGames(gamesList.data.listGames.items)
+        setMode(Mode.succeeded)
+      }).catch(error => {
+        setMode(Mode.failed)
+        console.log(error)
+      })
+    }
+
+    fetchGames()
+  }, [])
+
   return (
     <Fragment>
       <SafeAreaView style={{ flex: 0, backgroundColor: '#003668' }} />
       <SafeAreaView style={styles.mainContainer}>
         <NavBarView title="Explore" avatar={require("../../../assets/images/profile.png")} />
-        <ScrollView>
-          <View style={styles.content}>
-            <ContentItem category="GENERAL" title="Fun Facts about Food" body="Things you might not know about foods you eat." style={{ marginBottom: 12 }} onPress={onGameSelected} />
-            <ContentItem category="GENERAL" title="International Trivia" body="Fun facts around the world." style={{ marginBottom: 12 }} />
-            <ContentItem category="7.RP.A.3" title="Practicing Percents: Let’s go Shopping!" body="User promotional relationships to solve multi-step ratio percent problems. Examples: simple interest, tax, markups and markdowns, gratuities and commissions." style={{ marginBottom: 12 }} />
-            <ContentItem category="GENERAL" title="Fun Facts about Food" body="Things you might not know about foods you eat." style={{ marginBottom: 12 }} />
-            <ContentItem category="GENERAL" title="International Trivia" body="Fun facts around the world." style={{ marginBottom: 12 }} />
-            <ContentItem category="7.RP.A.3" title="Practicing Percents: Let’s go Shopping!" body="User promotional relationships to solve multi-step ratio percent problems. Examples: simple interest, tax, markups and markdowns, gratuities and commissions." style={{ marginBottom: 12 }} />
-            <ContentItem category="GENERAL" title="Fun Facts about Food" body="Things you might not know about foods you eat." style={{ marginBottom: 12 }} />
-            <ContentItem category="GENERAL" title="International Trivia" body="Fun facts around the world." style={{ marginBottom: 12 }} />
-            <ContentItem category="7.RP.A.3" title="Practicing Percents: Let’s go Shopping!" body="User promotional relationships to solve multi-step ratio percent problems. Examples: simple interest, tax, markups and markdowns, gratuities and commissions." style={{ marginBottom: 12 }} />
-            <ContentItem category="GENERAL" title="Fun Facts about Food" body="Things you might not know about foods you eat." style={{ marginBottom: 12 }} />
-            <ContentItem category="GENERAL" title="International Trivia" body="Fun facts around the world." style={{ marginBottom: 12 }} />
-            <ContentItem category="7.RP.A.3" title="Practicing Percents: Let’s go Shopping!" body="User promotional relationships to solve multi-step ratio percent problems. Examples: simple interest, tax, markups and markdowns, gratuities and commissions." style={{ marginBottom: 12 }} />
-          </View>
-        </ScrollView>
+        {mode == Mode.loading ? <ActivityIndicator /> : (
+          <FlatList
+            style={styles.content}
+            data={games}
+            keyExtractor={({ GameID }, index) => GameID}
+            renderItem={({ item }) => (
+              <ContentItem category={item.grade || "General"} title={item.title || "No Title"} body={item.description || "No Description"} style={styles.contentItem} onPress={onGameSelected} />
+            )}
+          />
+        )}
       </SafeAreaView>
-    </Fragment >
+    </Fragment>
   )
 }
 
@@ -66,9 +87,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
+    marginTop: 18,
+    paddingBottom: 40,
+  },
+  contentItem: {
     marginStart: 25,
     marginEnd: 25,
-    marginTop: 18,
-    marginBottom: 18,
+    marginBottom: 12
   }
 })

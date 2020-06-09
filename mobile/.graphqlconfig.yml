@@ -1,0 +1,15 @@
+projects:
+  MobileAPIGames:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/backend/graphql/**/*js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+extensions:
+  amplify:
+    version: 3
