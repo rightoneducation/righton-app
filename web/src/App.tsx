@@ -16,6 +16,11 @@ import awsconfig from './aws-exports';
 import { fetchGames, createGame, updateGame } from './lib/games';
 import { Game } from './types';
 
+const filterGame = (game: Game | null, search: string) => {
+  if (game && game.title.toLowerCase().indexOf(search) > -1) return true;
+  return false;
+};
+
 Amplify.configure(awsconfig);
 
 const theme = createMuiTheme({
@@ -32,6 +37,7 @@ const theme = createMuiTheme({
 function App() {
   const [startup, setStartup] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
   const [games, setGames] = useState<(Game | null)[]>([]);
 
   const getGames = async () => {
@@ -77,13 +83,15 @@ function App() {
 
   if (startup) return null;
 
+  const filteredGames = games.filter((game: Game | null) => filterGame(game, searchInput.toLowerCase())) as Game[];
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
         <Box>
           <Nav />
           <Route path="/">
-            <Games loading={loading} games={games} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} />
+            <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} />
           </Route>
         </Box>
       </ThemeProvider>

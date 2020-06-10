@@ -16,17 +16,11 @@ import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
 import EditGameDialogue from './EditGameDialogue';
 
-const filterGame = ({ title }, search) => {
-  if (title.toLowerCase().indexOf(search) > -1) return true;
-  return false;
-};
-
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame }) {
+export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
   const [newGameOpen, setNewGameOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
   const handleNewGame = async (game) => {
     setNewGameOpen(false);
     await saveNewGame(game);
@@ -60,7 +54,6 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         {games
-          .filter((game) => filterGame(game, searchInput.toLowerCase()))
           .map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
             const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
             return (
