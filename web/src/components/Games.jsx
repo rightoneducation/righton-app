@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -9,16 +9,24 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
 import EditGameDialogue from './EditGameDialogue';
+
+const filterGame = ({ title }, search) => {
+  if (title.toLowerCase().indexOf(search) > -1) return true;
+  return false;
+};
 
 export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
   const [newGameOpen, setNewGameOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
   const handleNewGame = async (game) => {
     setNewGameOpen(false);
     await saveNewGame(game);
@@ -27,8 +35,6 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
 
   if (games.length < 1) return null;
 
-  console.log(match)
-
   return (
     <Grid container className={classes.root} spacing={4}>
       <Grid item xs={3} className={classes.sidebar}>
@@ -36,26 +42,43 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
           <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)} disabled={!!match}>
             Add game
           </Button>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search games…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              value={searchInput}
+              onChange={({ target }) => setSearchInput(target.value)}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
-        {games.map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
-          const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
-          return (
-            <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
-              <CardContent>
-                <Typography gutterBottom>
-                  {title}
-                </Typography>
-                <Typography color="textSecondary" gutterBottom>
-                  {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}{grade && ` — Grade ${grade}`}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</Button>
-              </CardActions>
-            </Card>
-          );
-        })}
+        {games
+          .filter((game) => filterGame(game, searchInput.toLowerCase()))
+          .map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
+            const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
+            return (
+              <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+                <CardContent>
+                  <Typography gutterBottom>
+                    {title}
+                  </Typography>
+                  <Typography color="textSecondary" gutterBottom>
+                    {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}{grade && ` — Grade ${grade}`}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</Button>
+                </CardActions>
+              </Card>
+            );
+          })}
       </Grid>
       <Grid item xs={9} className={classes.content}>
         <Switch>
@@ -113,5 +136,42 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     marginBottom: '16px',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+    display: 'inline-block',
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '18ch',
+    },
   },
 }));
