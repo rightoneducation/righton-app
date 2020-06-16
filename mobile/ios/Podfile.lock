@@ -217,7 +217,9 @@ PODS:
     - React
   - react-native-netinfo (5.9.2):
     - React
-  - react-native-safe-area-context (3.0.2):
+  - react-native-safe-area-context (3.0.5):
+    - React
+  - react-native-viewpager (4.0.1):
     - React
   - React-RCTActionSheet (0.62.2):
     - React-Core/RCTActionSheetHeaders (= 0.62.2)
@@ -326,6 +328,7 @@ DEPENDENCIES:
   - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -405,6 +408,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-viewpager:
+    :path: "../node_modules/@react-native-community/viewpager"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -455,7 +460,7 @@ SPEC CHECKSUMS:
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
-  CodePush: 4b21ce24113167513a6fd1602718b22e322069b2
+  CodePush: 3968d9e97ed70a1c8b029266dd5b6aa69cee4b0a
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   FBLazyVector: 4aab18c93cd9546e4bfed752b4084585eca8b245
   FBReactNativeSpec: 5465d51ccfeecb7faa12f9ae0024f2044ce4044e
@@ -472,10 +477,11 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
-  react-native-image-picker: 668e72d0277dc8c12ae90e835507c1eddd2e4f85
-  react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
-  react-native-netinfo: 9b9929fcfa4aabe92f49a9fb3f25394cc8721e87
-  react-native-safe-area-context: c23e140ee9a482e89991798aed110fbffefb2f51
+  react-native-image-picker: 6a850c41f57f0848d918c2a77aedd7aa272ffa30
+  react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
+  react-native-netinfo: cb74e17062b2af5a16a4b137f32495f241df1a8e
+  react-native-safe-area-context: e768fca90207ee68924b3d0877633f2ce9cc9d68
+  react-native-viewpager: 1af972f5a745647b51250285f4da26d3fb3d5f0f
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
   React-RCTBlob: a332773f0ebc413a0ce85942a55b064471587a71
@@ -486,11 +492,11 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  ReactNativeAutogrowTextinput: 67ccba730d624ed6b12aa04a0d423db286320b73
+  ReactNativeAutogrowTextinput: 571f3260e200d91ea22fab160452f26d2fd5d55b
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAWSCognito: cd5c8904204db774c630c49d222c3230f24ed77e
-  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
-  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNCAsyncStorage: d059c3ee71738c39834a627476322a5a8cd5bf36
+  RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244

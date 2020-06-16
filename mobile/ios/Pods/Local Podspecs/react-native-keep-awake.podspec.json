@@ -4,9 +4,7 @@
   "summary": "Keep the screen from going to sleep. iOS and Android.",
   "description": "Keep the screen from going to sleep. iOS and Android.",
   "license": "MIT",
-  "authors": {
-    "name": "Kyle Corbitt"
-  },
+  "authors": "Kyle Corbitt",
   "homepage": "https://github.com/corbt/react-native-keep-awake#readme",
   "source": {
     "git": "git+https://github.com/corbt/react-native-keep-awake.git",

@@ -1,10 +1,11 @@
-import React from 'react';
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import OnboardAppRouter from '../screens/OnboardAppRouter';
+import React from 'react'
+import { NavigationContainer, StackActions } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import OnboardAppRouter from '../screens/OnboardAppRouter'
 // import OnboardTeacherRouter from '../screens/OnboardTeacherRouter';
-import StudentFirst from '../Student/screens/StudentFirst';
-import StudentChooseTeam from '../Student/screens/StudentChooseTeam';
+import StudentFirst from '../Student/screens/StudentFirst'
+import StudentChooseTeam from '../Student/screens/StudentChooseTeam'
+import StudentGameIntro from '../Student/screens/StudentGameIntro'
 // import OnboardAccount from '../screens/OnboardAccount';
 // import StudentApp from '../Student';
 import TeacherApp from '../Teacher';
@@ -26,6 +27,7 @@ const AppContainer = (props) => {
         <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />
         <Stack.Screen name="TeacherApp" component={TeacherApp} />
         <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
+        <Stack.Screen name="StudentGameIntro" component={StudentGameIntro} />
       </Stack.Navigator>
     </NavigationContainer>
   );

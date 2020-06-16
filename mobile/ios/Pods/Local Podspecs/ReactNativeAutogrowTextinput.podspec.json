@@ -2,10 +2,7 @@
   "name": "ReactNativeAutogrowTextinput",
   "version": "5.4.0",
   "summary": "React Native auto-growing multiline text input",
-  "authors": {
-    "name": "Artal Druk",
-    "email": "artald@wix.com"
-  },
+  "authors": "Artal Druk <artald@wix.com>",
   "homepage": "https://github.com/wix/react-native-autogrow-textinput",
   "license": "MIT",
   "platforms": {
