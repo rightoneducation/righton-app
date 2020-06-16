@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
@@ -41,24 +39,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function GameForm({ loading, saveGame, game: originalGame, gameIndex }) {
+function GameForm({ loading, game, gameIndex }) {
   const classes = useStyles();
   const history = useHistory();
   useEffect(() => {
     document.title = 'RightOn! | Edit game';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
-  useEffect(() => {
-    setGame(originalGame)
-  }, [originalGame]);
-  const [game, setGame] = useState(originalGame || {
-    title: '',
-  });
-  const handleSubmit = useCallback((event) => {
-    event.preventDefault();
-    saveGame(game);
-    history.push('/');
-  }, [game, history, saveGame]);
   const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
@@ -73,9 +60,6 @@ function GameForm({ loading, saveGame, game: originalGame, gameIndex }) {
         </Button>
       )}
       <form className={classes.root} noValidate autoComplete="off" onSubmit={(event) => event.preventDefault()}>
-        <Typography gutterBottom variant="h4" component="h1">
-          Editing "{game.title}"
-        </Typography>
         {questions.length === 0 && (
           <Typography className={classes.noQuestions} gutterTop gutterBottom variant="h5" component="div">
             No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
@@ -95,17 +79,6 @@ function GameForm({ loading, saveGame, game: originalGame, gameIndex }) {
             </Paper>
           );
         })}
-
-        <Divider className={classes.hr} />
-
-        <Box>
-          <Button type="submit" variant="contained" color="primary" onClick={handleSubmit} disabled={game === originalGame} className={classes.button}>
-            Save
-        </Button>
-          <Button type="button" onClick={() => history.push('/')}>
-            Cancel
-        </Button>
-        </Box>
       </form>
     </>
   );
