@@ -58,6 +58,8 @@ const useStyles = makeStyles(theme => ({
   },
   questionText: {
     paddingRight: theme.spacing(2),
+    maxWidth: '500px',
+    whiteSpace: 'pre-wrap',
   },
   questionAnswer: {
     display: 'flex',
