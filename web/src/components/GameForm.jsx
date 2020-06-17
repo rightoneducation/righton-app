@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +22,8 @@ const useStyles = makeStyles(theme => ({
   question: {
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   addQuestion: {
     marginBottom: theme.spacing(2),
@@ -36,6 +39,22 @@ const useStyles = makeStyles(theme => ({
   noQuestions: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(2),
+  },
+  questionLeftContainer: {
+    display: 'flex',
+  },
+  questionIndex: {
+    minWidth: '32px',
+  },
+  questionText: {
+    paddingRight: theme.spacing(2),
+  },
+  questionAnswer: {
+    display: 'inline-block',
+    width: '100px',
+  },
+  image: {
+    width: '100px',
   }
 }));
 
@@ -66,16 +85,30 @@ function GameForm({ loading, game, gameIndex }) {
           </Typography>
         )}
         {questions.map(index => {
-          const { question, answer } = game[`q${index}`];
+          const { question, answer, image } = game[`q${index}`];
           return (
             <Paper className={classes.question}>
-              <Typography gutterBottom>
-                <strong>Q:</strong> {question}
-              </Typography>
-              <Typography>
-                <strong>A:</strong> {answer}
-              </Typography>
-              <Button size="small" onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</Button>
+              <Box className={classes.questionLeftContainer}>
+                <Box className={classes.questionIndex}>
+                  <Typography variant="h5">
+                    {index}.
+                  </Typography>
+                </Box>
+                <Box className={classes.questionText}>
+                  <Typography>
+                    {question}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box className={classes.questionAnswer}>
+                {image && <img className={classes.image} src={image} alt="" />}
+                <Typography align="center">
+                  {answer}
+                </Typography>
+                <Box>
+                  <Button size="small" onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</Button>
+                </Box>
+              </Box>
             </Paper>
           );
         })}
