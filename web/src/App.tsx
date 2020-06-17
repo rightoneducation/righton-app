@@ -58,13 +58,11 @@ function App() {
   }
 
   const saveGame = async (game: Game) => {
-    setLoading(true);
     const result = await updateGame(game);
     if (result) {
       const games = await fetchGames();
       setGames(games);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
