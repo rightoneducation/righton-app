@@ -1,8 +1,8 @@
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { colors, fonts, fontFamilies } from '../../utils/theme';
-import { ScaledSheet } from 'react-native-size-matters';
+import { colors, fonts, fontFamilies } from '../../utils/theme'
+import { ScaledSheet } from 'react-native-size-matters'
 
 RoundButton.propTypes = {
     title: PropTypes.string.isRequired,
@@ -30,7 +30,7 @@ const styles = ScaledSheet.create({
     },
     buttonTitle: {
         fontSize: fonts.large,
-        fontFamily: fontFamilies.poppinsSemiBold,
+        fontFamily: fontFamilies.poppinsRegular,
         fontWeight: 'bold',
         color: colors.white
     },
