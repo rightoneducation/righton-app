@@ -7,6 +7,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
+import CCSSField from './CCSSField';
 
 export default function EditGameDialogue({ game, open, onClose, submit }) {
   const [updatedGameDetails, setUpdatedGameDetails] = useState({ ...game });
@@ -41,6 +42,13 @@ export default function EditGameDialogue({ game, open, onClose, submit }) {
             fullWidth
             multiline
             rows={2}
+          />
+          <CCSSField
+            grade={updatedGameDetails.grade}
+            domain={updatedGameDetails.domain}
+            cluster={updatedGameDetails.cluster}
+            standard={updatedGameDetails.standard}
+            updateGame={(field, value) => setUpdatedGameDetails({ ...updatedGameDetails, [field]: value })}
           />
         </DialogContent>
         <DialogActions>

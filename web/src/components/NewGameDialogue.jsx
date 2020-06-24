@@ -5,6 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CCSSField from './CCSSField';
 
 const INITIAL_STATE = {
   title: '',
@@ -42,6 +43,13 @@ export default function NewGameDialogue({ open, onClose, submit }) {
             fullWidth
             multiline
             rows={2}
+          />
+          <CCSSField
+            grade={game.grade}
+            domain={game.domain}
+            cluster={game.cluster}
+            standard={game.standard}
+            updateGame={(field, value) => setGame({ ...game, [field]: value })}
           />
         </DialogContent>
         <DialogActions>
