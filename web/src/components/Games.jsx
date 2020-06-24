@@ -11,6 +11,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
+import Avatar from '@material-ui/core/Avatar';
+import ImageIcon from '@material-ui/icons/Image';
+import { getGameImage } from '../lib/games';
 import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
@@ -54,17 +57,32 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         {games
-          .map(({ GameID, title, grade, q1, q2, q3, q4, q5 }, index) => {
+          .map((game, index) => {
+            const { GameID, title, grade, q1, q2, q3, q4, q5 } = game;
             const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
+            const image = getGameImage(game);
             return (
               <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
                 <CardContent>
-                  <Typography gutterBottom>
+                  <Typography className={classes.title} gutterBottom>
                     {title}
                   </Typography>
-                  <Typography color="textSecondary" gutterBottom>
-                    {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}{grade && ` — Grade ${grade}`}
-                  </Typography>
+                  <Box className={classes.gameCardBox}>
+                    {image && <img className={classes.image} src={image} alt="" />}
+                    {!image && (
+                      <Avatar variant="square" className={classes.square}>
+                        <ImageIcon fontSize="large" />
+                      </Avatar>
+                    )}
+                  </Box>
+                  <Box className={classes.gameCardBox}>
+                    <Typography color="textSecondary" gutterBottom>
+                      {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
+                    </Typography>
+                    <Typography color="textSecondary" gutterBottom>
+                      {grade && `Grade ${grade}`}
+                    </Typography>
+                  </Box>
                 </CardContent>
                 <CardActions>
                   <Button size="small" onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</Button>
@@ -168,5 +186,21 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: '18ch',
     },
+  },
+  image: {
+    width: '80px',
+    marginRight: theme.spacing(2),
+  },
+  square: {
+    height: '80px',
+    width: '80px',
+    marginRight: theme.spacing(2),
+  },
+  gameCardBox: {
+    display: 'inline-block',
+    verticalAlign: 'top',
+  },
+  title: {
+    fontWeight: 500,
   },
 }));
