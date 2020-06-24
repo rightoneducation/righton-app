@@ -28,7 +28,7 @@ export default function PrimarySearchAppBar() {
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
-    marginBottom: '24px',
+    marginBottom: '1px',
   },
   title: {
     display: 'none',

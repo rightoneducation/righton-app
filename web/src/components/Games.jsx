@@ -102,7 +102,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(2),
+    marginTop: 0,
+    width: 'calc(100% + 16px) !important',
   },
   game: {
     marginBottom: theme.spacing(2),
@@ -112,20 +113,21 @@ const useStyles = makeStyles(theme => ({
     }
   },
   gameSelected: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: '#CAF0F3',
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+      backgroundColor: '#CAF0F3',
       cursor: 'default',
     }
   },
   sidebar: {
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
-    height: 'calc(100vh - 105px)',
+    height: 'calc(100vh - 64px)',
     overflowY: 'scroll',
   },
   content: {
-    minHeight: 'calc(100vh - 105px)',
+    minHeight: 'calc(100vh - 64px)',
+    backgroundColor: '#F2F2F2',
   },
   actions: {
     marginBottom: '16px',
