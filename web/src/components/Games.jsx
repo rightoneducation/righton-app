@@ -33,7 +33,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     <Grid container className={classes.root} spacing={4}>
       <Grid item xs={3} className={classes.sidebar}>
         <Box className={classes.actions}>
-          <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)} disabled={!!match}>
+          <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
             Add game
           </Button>
           <div className={classes.search}>
