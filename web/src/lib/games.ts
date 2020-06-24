@@ -73,3 +73,11 @@ export const updateGame = async (game: Game) => {
   const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };
   return result?.data?.updateGames;
 }
+
+export const getGameImage = (game: Game) => {
+  for (let i = 1; i < 6; i++) {
+    // @ts-ignore
+    if (game[`q${i}`]?.image) return game[`q${i}`]?.image;
+  }
+  return null;
+}
