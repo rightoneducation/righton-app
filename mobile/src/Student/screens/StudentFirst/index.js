@@ -41,7 +41,6 @@ export default class StudentFirst extends React.PureComponent {
     this.gameInput = null
   }
 
-
   componentWillUnmount() {
     this.props.screenProps.handleSetAppState('deviceSettings', { role: 'student' })
   }
@@ -72,7 +71,6 @@ export default class StudentFirst extends React.PureComponent {
     this.props.navigation.navigate('OnboardAppRouter')
   }
 
-
   render() {
     const {
       room,
@@ -83,7 +81,6 @@ export default class StudentFirst extends React.PureComponent {
         <SafeAreaView style={{ flex: 0, backgroundColor: '#483a82' }} />
         <SafeAreaView style={styles.container}>
           <PurpleBackground style={styles.innerContainer}>
-
             <View style={styles.logoContainer}>
               <Image
                 style={styles.rightOnHeroImage}
@@ -93,7 +90,7 @@ export default class StudentFirst extends React.PureComponent {
             <View style={styles.entryContainer}>
               <Text style={styles.title}>
                 Enter Game Code
-            </Text>
+              </Text>
               <TextInput
                 keyboardType={'number-pad'}
                 maxLength={4}
@@ -107,6 +104,7 @@ export default class StudentFirst extends React.PureComponent {
                 style={styles.input}
                 textAlign={'center'}
                 value={room}
+                autoFocus={true}
               />
 
               <RoundButton

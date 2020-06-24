@@ -1,5 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, Image, View, Dimensions } from 'react-native'
+import {
+    StyleSheet,
+    Text,
+    Image,
+    View,
+    Dimensions,
+    ScrollView
+} from 'react-native'
 import debug from '../../../utils/debug'
 import { colors, fonts } from '../../../utils/theme'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -26,7 +33,7 @@ const index = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <PurpleBackground>
-                <View style={styles.mainContainer}>
+                <ScrollView style={styles.mainContainer}>
                     <Text style={styles.titleText}>Pick a Team</Text>
                     <View style={styles.teamContainer}>
                         <TouchableOpacity onPress={() => tappedTeam(require('./img/Team1Picked.png'), 1)}>
@@ -45,7 +52,7 @@ const index = ({ navigation }) => {
                             <Image source={require('./img/Team5Small.png')} style={styles.teamImage} />
                         </TouchableOpacity>
                     </View>
-                </View>
+                </ScrollView>
                 <Modal
                     isVisible={overlayVisible}
                     animationOut='slideOutUp'

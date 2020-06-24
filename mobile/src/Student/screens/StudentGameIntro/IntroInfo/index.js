@@ -5,9 +5,7 @@ import { fontFamilies, fonts, colors } from '../../../../utils/theme'
 const IntroInfo = ({ image, text }) => {
     return (
         <View style={styles.container}>
-            <View style={{ height: 260, alignContent: 'center', alignItems: 'center' }}>
-                <Image source={image} style={styles.image} />
-            </View>
+            <Image source={image} style={styles.image} />
             <Text style={styles.text}>{text}</Text>
         </View>
     )
@@ -19,14 +17,14 @@ const styles = StyleSheet.create({
     container: {
         paddingLeft: 35,
         paddingRight: 35,
+        flex: 1,
+        flexDirection: 'column',
         alignItems: 'center',
         alignContent: 'center',
         backgroundColor: 'rgba(0,0,0,0)',
     },
     image: {
         resizeMode: 'cover',
-        position: 'absolute',
-        bottom: 0
     },
     text: {
         textAlign: 'center',

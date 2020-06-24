@@ -6,6 +6,8 @@ import OnboardAppRouter from '../screens/OnboardAppRouter'
 import StudentFirst from '../Student/screens/StudentFirst'
 import StudentChooseTeam from '../Student/screens/StudentChooseTeam'
 import StudentGameIntro from '../Student/screens/StudentGameIntro'
+import PregameCountDown from '../Student/screens/PregameCountDown'
+import GamePreview from '../Student/screens/GamePreview'
 // import OnboardAccount from '../screens/OnboardAccount';
 // import StudentApp from '../Student';
 import TeacherApp from '../Teacher';
@@ -28,6 +30,9 @@ const AppContainer = (props) => {
         <Stack.Screen name="TeacherApp" component={TeacherApp} />
         <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
         <Stack.Screen name="StudentGameIntro" component={StudentGameIntro} />
+        <Stack.Screen name="PregameCountDown" component={PregameCountDown} />
+        <Stack.Screen name="GamePreview" component={GamePreview} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

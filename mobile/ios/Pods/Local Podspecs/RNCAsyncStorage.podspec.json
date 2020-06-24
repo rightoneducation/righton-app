@@ -3,7 +3,10 @@
   "version": "1.11.0",
   "summary": "Asynchronous, persistent, key-value storage system for React Native.",
   "license": "MIT",
-  "authors": "Krzysztof Borowy <hello@krizzu.dev>",
+  "authors": {
+    "name": "Krzysztof Borowy",
+    "email": "hello@krizzu.dev"
+  },
   "homepage": "https://github.com/react-native-community/react-native-async-storage#readme",
   "platforms": {
     "ios": "9.0",

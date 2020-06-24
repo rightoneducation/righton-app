@@ -2,13 +2,13 @@
  * @providesModule theme
  */
 
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters'
 
-import { Dimensions } from 'react-native';
+import { Dimensions } from 'react-native'
 
-const { height, width } = Dimensions.get('screen');
-const deviceHeight = height;
-const deviceWidth = width;
+const { height, width } = Dimensions.get('screen')
+const deviceHeight = height
+const deviceWidth = width
 
 const fonts = {
   tiny: moderateScale(10, 0.2),
@@ -20,7 +20,7 @@ const fonts = {
   xLarge: moderateScale(30, 0.2),
   xxLarge: moderateScale(36, 0.2),
   xxxLarge: moderateScale(72, 0.2),
-};
+}
 
 const fontFamilies = {
   poppinsRegular: 'Poppins-Regular',
@@ -28,6 +28,7 @@ const fontFamilies = {
   poppinsBold: 'Poppins-Bold',
   montserratBold: 'Montserrat-Bold',
   karlaBold: 'Karla-Bold',
+  karlaRegular: 'Karla-Regular',
   latoBold: 'Lato-Bold',
 }
 
@@ -47,7 +48,7 @@ const colors = {
   buttonPrimary: '#FC1047',
   buttonSecondary: '#159EFA',
   backgroundPurple: "#483a82"
-};
+}
 
 const elevation = {
   elevation: 2,
@@ -55,7 +56,7 @@ const elevation = {
   shadowRadius: 2,
   shadowColor: colors.dark,
   shadowOffset: { height: 1, width: 0 },
-};
+}
 
 export {
   colors,
@@ -64,4 +65,4 @@ export {
   elevation,
   fonts,
   fontFamilies
-};
+}

@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native'
 import PurpleBackground from '../../../components/PurpleBackground'
 import { colors, fonts, fontFamilies } from '../../../utils/theme'
 import ViewPager from '@react-native-community/viewpager'
 import IntroInfo from './IntroInfo'
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters'
 
-const StudentGameIntro = ({ route }, navigation) => {
+const StudentGameIntro = ({ route, navigation }) => {
     const { selectedTeam } = route.params
+
+    useEffect(() => {
+        setTimeout(() => {
+            navigation.navigate('PregameCountDown', {
+                selectedTeam,
+            })
+        }, 5000)
+    })
 
     const [currentPage, setCurrentPage] = useState(0)
 
@@ -41,11 +50,7 @@ const StudentGameIntro = ({ route }, navigation) => {
                     </View>
                 </View>
                 <View style={styles.footer}>
-                    <Image source={require('./img/Team1Ready.png')} style={styles.footerImage} />
-                    <Image source={require('./img/Team2NotReady.png')} style={styles.footerImage} />
-                    <Image source={require('./img/Team3Ready.png')} style={styles.footerImage} />
-                    <Image source={require('./img/Team4NotReady.png')} style={styles.footerImage} />
-                    <Image source={require('./img/Team5NotReady.png')} style={styles.footerImage} />
+                    <Text style={styles.footerNote}>Waiting for the teacher to start the game...</Text>
                 </View>
             </PurpleBackground>
         </SafeAreaView>
@@ -104,17 +109,12 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
     },
     footer: {
-        height: 70,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginLeft: 5,
-        marginRight: 5,
-        marginBottom: 10,
+        marginBottom: moderateScale(30)
     },
-    footerImage: {
-        marginLeft: 5,
-        marginRight: 5,
-        width: 56,
-        resizeMode: 'contain'
+    footerNote: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.small,
+        color: 'white',
+        textAlign: 'center',
     }
 })

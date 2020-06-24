@@ -15,7 +15,7 @@ export default function RoundButton(props) {
             onPress={() => { props.onPress() }}
         >
             <View style={style}>
-                <Text style={styles.buttonTitle}>{props.title}</Text>
+                <Text style={[styles.buttonTitle, props.titleStyle]}>{props.title}</Text>
             </View>
         </TouchableOpacity>
     )

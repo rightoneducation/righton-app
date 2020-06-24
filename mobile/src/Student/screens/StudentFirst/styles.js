@@ -35,6 +35,7 @@ export default ScaledSheet.create({
     backgroundColor: colors.buttonPrimary,
     fontFamily: fontFamilies.karlaBold,
     fontSize: fonts.xLarge,
+    fontWeight: 'bold'
   },
   rightOnHeroImage: {
     width: 230,

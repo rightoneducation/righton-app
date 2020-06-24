@@ -1,9 +1,12 @@
 {
   "name": "react-native-safe-area-context",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "summary": "A flexible way to handle safe area, also works on Android and web.",
   "license": "MIT",
-  "authors": "Janic Duplessis <janicduplessis@gmail.com>",
+  "authors": {
+    "name": "Janic Duplessis",
+    "email": "janicduplessis@gmail.com"
+  },
   "homepage": "https://github.com/th3rdwave/react-native-safe-area-context#readme",
   "platforms": {
     "ios": "9.0",
@@ -11,7 +14,7 @@
   },
   "source": {
     "git": "https://github.com/th3rdwave/react-native-safe-area-context.git",
-    "tag": "v3.0.5"
+    "tag": "v3.0.6"
   },
   "source_files": "ios/**/*.{h,m}",
   "dependencies": {
