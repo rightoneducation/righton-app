@@ -1,7 +1,7 @@
 # RightOn Education
 
 ### Our Mission & Vision
-<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do math." Our mission is to unlock every student’s potential in math: building self-confidence, developing logic & conceptual understanding, and helping them overcome challenges in both school & life.
+<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do math." Our mission is to unlock every student’s potential in math: building self-confidence, developing conceptual understanding, and helping them overcome challenges in both school & life.
 
 While many apps focus on speed and accuracy, we're turning things around: our app not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers. Through learning from mistakes and misconceptions, everyone takes their learning to the next level.
 
@@ -19,9 +19,9 @@ We’re a team that sometimes falls down, always gets back up, and never stops h
 ### Project Description
 We're currently developing two apps:
 1. A React Native mobile app for middle/high school teachers to use in classroom environments. Think Balderdash/Fibbage + math + learning from and having fun with mistakes and misconceptions. 
-2. A React web app that enables teachers to create games/questions that appear in the mobile app.
+2. A React web app that enables teachers to create games/questions that appear in the mobile app and view classroom results.
 
-We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a math-focused version of MrBeast's <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>, building upon the <a href="https://github.com/awslabs/aws-amplify-unicorntrivia-workshop"><strong>AWS Unicorn Trivia Workshop</strong></a> using Elemental Media Services.
+We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a livestream game show with elements similar to the following <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>. 
 
 ### Getting Started
 
