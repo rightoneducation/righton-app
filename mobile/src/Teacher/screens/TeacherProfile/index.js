@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 import {
   ScrollView,
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+} from 'react-native'
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 // import Touchable from 'react-native-platform-touchable';
 // import InputModal from '../../../components/InputModal';
-import { colors, elevation, fonts } from '../../../utils/theme';
-import ButtonWide from '../../../components/ButtonWide';
-import ButtonBack from '../../../components/ButtonBack';
+import { colors, elevation, fonts } from '../../../utils/theme'
+import ButtonWide from '../../../components/ButtonWide'
+import ButtonBack from '../../../components/ButtonBack'
 
 
 export default class TeacherProfile extends React.Component {
@@ -27,114 +27,65 @@ export default class TeacherProfile extends React.Component {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.updatedAccount = false;
+    this.updatedAccount = false
 
     this.state = {
       account: props.screenProps.account,
       // showInput: null,
-    };
+    }
   }
 
   componentWillUnmount() {
-    this.props.navigation.state.params = {};
+    this.props.navigation.state.params = {}
   }
 
 
   handleNavigateBack = () => {
-    const { parent } = this.props.navigation.state.params;
+    const { parent } = this.props.navigation.state.params
     if (this.updatedAccount && this.state.account.TeacherID) {
-      const { account } = this.state;
-      const { handleSetAppState } = this.props.screenProps;
-      handleSetAppState('account', account);
+      const { account } = this.state
+      const { handleSetAppState } = this.props.screenProps
+      handleSetAppState('account', account)
     }
-    this.props.navigation.navigate(parent);
+    this.props.navigation.navigate(parent)
   }
 
 
   handleSignOut = () => {
-    const { doSignOut, handleSetAppState } = this.props.screenProps;
-    const { navigation } = this.props;
+    const { doSignOut, handleSetAppState } = this.props.screenProps
+    const { navigation } = this.props
 
-    handleSetAppState('reset');
+    handleSetAppState('reset')
 
-    doSignOut();
-    navigation.navigate('OnboardAppRouter');
+    doSignOut()
+    navigation.navigate('OnboardAppRouter')
   }
 
 
   handleSchoolInput = (input) => {
-    this.setState({ account: { ...this.state.account, schoolID: input } });
-    this.updatedAccount = true;
+    this.setState({ account: { ...this.state.account, schoolID: input } })
+    this.updatedAccount = true
   }
 
 
   handleOnboardNavigation = () => {
-    const { navigation } = this.props;
-    navigation.navigate('OnboardAppRouter');
+    const { navigation } = this.props
+    navigation.navigate('OnboardAppRouter')
   }
-
-
-  // closeInputModal(input, inputLabel) {
-  //   switch (inputLabel) {
-  //     case 'trick0':
-  //       this.setState({ trick0Reason: input, showInput: false });
-  //       break;
-  //     case 'trick1':
-  //       this.setState({ trick1Reason: input, showInput: false });
-  //       break;
-  //     case 'trick2':
-  //       this.setState({ trick2Reason: input, showInput: false });
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
-
-  // handleInputModal(inputLabel, placeholder, maxLength, input, keyboardType = 'default') {
-  //   if (inputLabel === 'trick0') {
-  //     this.onTrick0Layout();
-  //   } else if (inputLabel === 'trick1') {
-  //     this.onTrick1Layout();
-  //   } else if (inputLabel === 'trick2') {
-  //     this.onTrick2Layout();
-  //   }
-  //   setTimeout(() => {
-  //     this.setState({
-  //       showInput: {
-  //         autoCapitalize: 'sentences',
-  //         closeModal: this.closeInputModal,
-  //         keyboardType,
-  //         height: 45,
-  //         input,
-  //         inputLabel,
-  //         maxLength,
-  //         multiline: false,
-  //         placeholder,
-  //         visible: true,
-  //         spellCheck: true,
-  //         width: deviceWidth - scale(30),
-  //         x: this[`${inputLabel}X`],
-  //         y: this[`${inputLabel}Y`],
-  //       }
-  //     });
-  //   }, 100);
-  // }
 
 
   render() {
     const {
       account,
       // showInput,
-    } = this.state;
+    } = this.state
 
     return (
       <ScrollView contentContainerStyle={styles.container}>
 
-        {/* {showInput &&
-          <InputModal {...showInput} />} */}
+        {}
 
         <ButtonBack
           buttonStyles={{
@@ -156,7 +107,7 @@ export default class TeacherProfile extends React.Component {
 
         <View style={[styles.itemContainer, styles.divider]}>
           <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{ account.TeacherID || 'Not logged in' }</Text>
+          <Text style={styles.value}>{account.TeacherID || 'Not logged in'}</Text>
         </View>
 
         <View style={styles.itemContainer}>
@@ -181,7 +132,7 @@ export default class TeacherProfile extends React.Component {
           onPress={account.TeacherID ? this.handleSignOut : this.handleOnboardNavigation}
         />
       </ScrollView>
-    );
+    )
   }
 }
 
@@ -219,6 +170,6 @@ const styles = ScaledSheet.create({
   },
   value: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
-});
+})

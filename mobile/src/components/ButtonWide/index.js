@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 import {
   Keyboard,
   Text,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import Touchable from 'react-native-platform-touchable';
-import { colors, deviceWidth, elevation, fonts } from '../../utils/theme';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import Touchable from 'react-native-platform-touchable'
+import { colors, deviceWidth, elevation, fonts } from '../../utils/theme'
 
 export default class ButtonWide extends React.PureComponent {
   static propTypes = {
@@ -17,20 +17,20 @@ export default class ButtonWide extends React.PureComponent {
     ripple: PropTypes.string,
     textStyles: PropTypes.shape({ type: PropTypes.any }),
   };
-  
+
   static defaultProps = {
     buttonStyles: {},
     label: '',
-    onLongPress: () => {},
-    onPress: () => {},
+    onLongPress: () => { },
+    onPress: () => { },
     ripple: '',
     textStyles: {},
   };
 
 
   handlePress = () => {
-    Keyboard.dismiss();
-    this.props.onPress();
+    Keyboard.dismiss()
+    this.props.onPress()
   }
 
 
@@ -42,7 +42,7 @@ export default class ButtonWide extends React.PureComponent {
       label,
       ripple,
       textStyles,
-    } = this.props;
+    } = this.props
 
     return (
       <Touchable
@@ -53,9 +53,9 @@ export default class ButtonWide extends React.PureComponent {
         onPress={this.handlePress}
         style={[styles.button, buttonStyles, elevation]}
       >
-        <Text style={[styles.label, textStyles]}>{ label || 'Okay' }</Text>
+        <Text style={[styles.label, textStyles]}>{label || 'Okay'}</Text>
       </Touchable>
-    );
+    )
   }
 }
 
@@ -74,6 +74,6 @@ const styles = ScaledSheet.create({
   },
   label: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
-});
+})

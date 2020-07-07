@@ -1,0 +1,25 @@
+{
+  "name": "react-native-viewpager",
+  "version": "4.0.1",
+  "summary": "React Native ViewPager native view",
+  "license": "MIT",
+  "authors": {
+    "name": "Ferran Negre Pizarro",
+    "email": "fnp.developer@gmail.com"
+  },
+  "homepage": "https://github.com/react-native-community/react-native-viewpager#readme",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/react-native-community/react-native-viewpager.git",
+    "tag": "v4.0.1"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

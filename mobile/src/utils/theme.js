@@ -2,20 +2,36 @@
  * @providesModule theme
  */
 
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters'
 
-import { Dimensions } from 'react-native';
+import { Dimensions } from 'react-native'
 
-const { height, width } = Dimensions.get('screen');
-const deviceHeight = height;
-const deviceWidth = width;
+const { height, width } = Dimensions.get('screen')
+const deviceHeight = height
+const deviceWidth = width
 
 const fonts = {
   tiny: moderateScale(10, 0.2),
+  xSmall: moderateScale(12, 0.2),
   small: moderateScale(14, 0.2),
-  medium: moderateScale(18, 0.2),
+  xxMedium: moderateScale(16, 0.2),
+  xMedium: moderateScale(18, 0.2),
+  medium: moderateScale(20, 0.2),
   large: moderateScale(24, 0.2),
-};
+  xLarge: moderateScale(30, 0.2),
+  xxLarge: moderateScale(36, 0.2),
+  xxxLarge: moderateScale(72, 0.2),
+}
+
+const fontFamilies = {
+  poppinsRegular: 'Poppins-Regular',
+  poppinsSemiBold: 'Poppins-SemiBold',
+  poppinsBold: 'Poppins-Bold',
+  montserratBold: 'Montserrat-Bold',
+  karlaBold: 'Karla-Bold',
+  karlaRegular: 'Karla-Regular',
+  latoBold: 'Lato-Bold',
+}
 
 const colors = {
   primary: '#384466',
@@ -33,7 +49,7 @@ const colors = {
   buttonPrimary: '#FC1047',
   buttonSecondary: '#159EFA',
   backgroundPurple: "#483a82"
-};
+}
 
 const elevation = {
   elevation: 2,
@@ -41,7 +57,7 @@ const elevation = {
   shadowRadius: 2,
   shadowColor: colors.dark,
   shadowOffset: { height: 1, width: 0 },
-};
+}
 
 export {
   colors,
@@ -49,4 +65,5 @@ export {
   deviceWidth,
   elevation,
   fonts,
-};
+  fontFamilies
+}

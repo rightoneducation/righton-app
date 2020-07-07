@@ -1,6 +1,6 @@
 {
   "name": "appcenter-core",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "summary": "Node module that contains common functionality needed to appcenter-* modules",
   "license": "MIT",
   "homepage": "https://github.com/Microsoft/appcenter-sdk-react-native/blob/master/appcenter/README.md",

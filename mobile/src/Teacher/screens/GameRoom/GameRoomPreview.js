@@ -1,20 +1,20 @@
-import React from 'react';
+import React from 'react'
 import {
   Image,
   Platform,
   ScrollView,
   Text,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { gameStatePropTypes, gameStateDefaultProps } from '../../../config/propTypes'
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer'
 // import Aicon from 'react-native-vector-icons/FontAwesome';
-import KeepAwake from 'react-native-keep-awake';
-import ButtonBack from '../../../components/ButtonBack';
-import ButtonWide from '../../../components/ButtonWide';
-import Touchable from 'react-native-platform-touchable';
-import gamePreviewStyles from '../../../Student/screens/GamePreview/styles';
+import KeepAwake from 'react-native-keep-awake'
+import ButtonBack from '../../../components/ButtonBack'
+import ButtonWide from '../../../components/ButtonWide'
+import Touchable from 'react-native-platform-touchable'
+import gamePreviewStyles from '../../../Student/screens/GamePreview/styles'
 
 export default class GameRoomPreview extends React.Component {
   static propTypes = {
@@ -27,25 +27,25 @@ export default class GameRoomPreview extends React.Component {
 
   static defaultProps = {
     gameState: gameStateDefaultProps,
-    handleBackFromChild: () => {},
-    handleViewResults: () => {},
-    handleStartQuiz: () => {},
+    handleBackFromChild: () => { },
+    handleViewResults: () => { },
+    handleStartQuiz: () => { },
     teamRef: 'team0',
   }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       timeLeft: props.gameState.quizTime && props.gameState.quizTime !== '0:00' ?
         props.gameState.quizTime : 'No time limit',
-    };
+    }
   }
 
   componentDidMount() {
-    const { gameState } = this.props;
+    const { gameState } = this.props
     if (gameState.state.startQuiz) {
       if (gameState.quizTime && gameState.quizTime !== '0:00') {
-        startCountdownTimer(null, gameState.quizTime, this.setTime);
+        startCountdownTimer(null, gameState.quizTime, this.setTime)
       }
     }
   }
@@ -53,10 +53,10 @@ export default class GameRoomPreview extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.gameState.state.startQuiz !== nextProps.gameState.state.startQuiz) {
       if (nextProps.gameState.state.startQuiz) {
-        startCountdownTimer(null, nextProps.gameState.quizTime, this.setTime);
+        startCountdownTimer(null, nextProps.gameState.quizTime, this.setTime)
       } else {
-        cancelCountdownTimer();
-        this.setTime('Time is up!');
+        cancelCountdownTimer()
+        this.setTime('Time is up!')
       }
     }
   }
@@ -70,12 +70,11 @@ export default class GameRoomPreview extends React.Component {
       handleStartQuiz,
       handleViewResults,
       teamRef,
-    } = this.props;
+    } = this.props
 
-    const { timeLeft } = this.state;
+    const { timeLeft } = this.state
 
-    const startedQuiz = gameState.state.startQuiz;
-    // console.log('[GameRoomPreview] Enter: ' + timeLeft);
+    const startedQuiz = gameState.state.startQuiz
 
     return (
       <View style={gamePreviewStyles.flex}>
@@ -89,7 +88,7 @@ export default class GameRoomPreview extends React.Component {
           />
 
           <Text styles={[gamePreviewStyles.timeContainer, gamePreviewStyles.teamContainer]}>
-            { `Team ${parseInt(teamRef.substring(4), 10) + 1}` }
+            {`Team ${parseInt(teamRef.substring(4), 10) + 1}`}
           </Text>
 
           <View
@@ -98,7 +97,7 @@ export default class GameRoomPreview extends React.Component {
               gamePreviewStyles.questionContainerTeacher,
             ]}
           >
-            <Text style={gamePreviewStyles.question}>{ gameState[teamRef].question }</Text>
+            <Text style={gamePreviewStyles.question}>{gameState[teamRef].question}</Text>
             {Boolean(gameState[teamRef].image) &&
               <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />}
           </View>
@@ -108,14 +107,14 @@ export default class GameRoomPreview extends React.Component {
                 <Touchable
                   activeOpacity={0.8}
                   key={choice.uid}
-                  onPress={() => {}}
+                  onPress={() => { }}
                 >
                   <View style={gamePreviewStyles.choiceContainer}>
                     <View style={[gamePreviewStyles.choiceButton]}>
                       {choice.selected &&
                         <View style={gamePreviewStyles.choiceButton} />}
                     </View>
-                    <Text style={gamePreviewStyles.choiceValue}>{ choice.value }</Text>
+                    <Text style={gamePreviewStyles.choiceValue}>{choice.value}</Text>
                   </View>
                 </Touchable>
               ))}
@@ -134,8 +133,8 @@ export default class GameRoomPreview extends React.Component {
         </ScrollView>
 
         {Boolean(timeLeft) &&
-          <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
+          <Text style={gamePreviewStyles.timeContainer}>{timeLeft}</Text>}
       </View>
-    );
+    )
   }
 }

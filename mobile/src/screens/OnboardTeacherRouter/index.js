@@ -1,15 +1,15 @@
-import React from 'react';
+import React from 'react'
 import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { ScaledSheet, verticalScale } from 'react-native-size-matters';
-import ButtonBack from '../../components/ButtonBack';
-import ButtonWide from '../../components/ButtonWide';
-import { colors, fonts } from '../../utils/theme';
-import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { ScaledSheet, verticalScale } from 'react-native-size-matters'
+import ButtonBack from '../../components/ButtonBack'
+import ButtonWide from '../../components/ButtonWide'
+import { colors, fonts } from '../../utils/theme'
+import OnboardTeacherIntroSlides from '../OnboardTeacherIntroSlides'
 
 export default class OnboardTeacherRouter extends React.PureComponent {
   static propTypes = {
@@ -22,13 +22,13 @@ export default class OnboardTeacherRouter extends React.PureComponent {
   static defaultProps = {
     navigation: {},
     screenProps: {
-      handleSetAppState: () => {},
+      handleSetAppState: () => { },
     },
   }
 
 
   handleTeacherOnboard = () => {
-    this.props.navigation.navigate('OnboardAccount');
+    this.props.navigation.navigate('OnboardAccount')
   }
 
 
@@ -37,8 +37,8 @@ export default class OnboardTeacherRouter extends React.PureComponent {
       role: 'teacher',
       quizTime: '1:00',
       trickTime: '3:00',
-    });
-    this.props.navigation.navigate('TeacherApp');
+    })
+    this.props.navigation.navigate('TeacherApp')
   }
 
 
@@ -68,7 +68,7 @@ export default class OnboardTeacherRouter extends React.PureComponent {
           <Text style={styles.maybe}>Maybe later</Text>
         </TouchableOpacity>
       </View>
-    );
+    )
   }
 }
 
@@ -81,7 +81,7 @@ const styles = ScaledSheet.create({
   },
   maybe: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     textAlign: 'center',
   },
   maybeContainer: {
@@ -94,4 +94,4 @@ const styles = ScaledSheet.create({
     position: 'absolute',
     right: 0,
   },
-});
+})

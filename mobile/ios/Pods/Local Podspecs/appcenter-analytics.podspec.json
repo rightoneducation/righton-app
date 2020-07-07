@@ -1,6 +1,6 @@
 {
   "name": "appcenter-analytics",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "summary": "React Native plugin for AppCenter Analytics",
   "license": "MIT",
   "homepage": "https://github.com/Microsoft/appcenter-sdk-react-native/blob/master/appcenter-analytics/README.md",

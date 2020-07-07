@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Keyboard,
   Modal,
@@ -6,12 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
+} from 'react-native'
+import PropTypes from 'prop-types'
 // import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
-import { scale, ScaledSheet, verticalScale, moderateScale } from 'react-native-size-matters';
-import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { scale, ScaledSheet, verticalScale, moderateScale } from 'react-native-size-matters'
+import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme'
+import KeyboardSpacer from 'react-native-keyboard-spacer'
 
 export default class InputModal extends React.PureComponent {
   static propTypes = {
@@ -39,7 +39,7 @@ export default class InputModal extends React.PureComponent {
     autoCapitalize: 'none',
     autoCorrect: false,
     backgroundColor: colors.lightGray,
-    closeModal: () => {},
+    closeModal: () => { },
     keyboardType: 'default',
     height: 45,
     hiddenLabel: true,
@@ -57,54 +57,54 @@ export default class InputModal extends React.PureComponent {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       minY: deviceHeight / 2,
       input: props.input || '',
-    };
-    console.log('-----deviceHeight=' + deviceHeight);
+    }
+    console.log('-----deviceHeight=' + deviceHeight)
   }
 
 
   componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.keyboardDidShow(e));
-    setTimeout(() => this.inputRef.focus(), 100);
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e => this.keyboardDidShow(e))
+    setTimeout(() => this.inputRef.focus(), 100)
   }
 
 
   componentWillUnmount() {
-    Keyboard.removeListener('keyboardDidShow', this.keyboardDidShow);
+    Keyboard.removeListener('keyboardDidShow', this.keyboardDidShow)
   }
 
 
   keyboardDidShow = (e) => {
-    const minY = deviceHeight - e.endCoordinates.height;
-    console.log('deviceHeight='+deviceHeight + ' endCoord=' + e.endCoordinates.height + ' minY='+ minY);
+    const minY = deviceHeight - e.endCoordinates.height
+    console.log('deviceHeight=' + deviceHeight + ' endCoord=' + e.endCoordinates.height + ' minY=' + minY)
     if (this.state.minY !== minY) {
-      this.setState({ minY });
+      this.setState({ minY })
     }
   }
 
 
   handleInputBlur = () => {
-    this.props.closeModal(this.state.input, this.props.inputLabel);
+    this.props.closeModal(this.state.input, this.props.inputLabel)
   }
 
 
   handleInput = val => this.setState({ input: val });
 
 
-  handleInputRef = (ref) => { this.inputRef = ref; }
+  handleInputRef = (ref) => { this.inputRef = ref }
 
 
   handleInputSubmit = () => {
-    this.props.closeModal(this.state.input, this.props.inputLabel);
+    this.props.closeModal(this.state.input, this.props.inputLabel)
   }
 
 
   renderTextInput = (xAxis, yAxis, bottom, height) => {
-    const { input } = this.state;
+    const { input } = this.state
     const {
       autoCapitalize,
       autoCorrect,
@@ -114,15 +114,15 @@ export default class InputModal extends React.PureComponent {
       placeholder,
       spellCheck,
       width,
-    } = this.props;
-    console.log('---yAxis='+yAxis + ' bottom=' + bottom );
+    } = this.props
+    console.log('---yAxis=' + yAxis + ' bottom=' + bottom)
 
     return (
       <View
         style={[
           styles.inputContainer,
-          
-         {top: 250, left: 16}
+
+          { top: 250, left: 16 }
         ]}
       >
         <TextInput
@@ -139,17 +139,19 @@ export default class InputModal extends React.PureComponent {
           ref={this.handleInputRef}
           returnKeyType={'done'}
           spellCheck={spellCheck}
-          style={[styles.input, { height, width, backgroundColor: colors.white,
+          style={[styles.input, {
+            height, width, backgroundColor: colors.white,
             borderColor: colors.dark,
-            borderWidth: 1, }]}
+            borderWidth: 1,
+          }]}
           textAlign={'left'}
           underlineColorAndroid={colors.white}
           value={input}
         />
-        <Text style={styles.length}>{ maxLength - input.length }</Text>
-        <KeyboardSpacer/>
+        <Text style={styles.length}>{maxLength - input.length}</Text>
+        <KeyboardSpacer />
       </View>
-    );
+    )
   }
 
 
@@ -164,33 +166,33 @@ export default class InputModal extends React.PureComponent {
       visible,
       x,
       y,
-    } = this.props;
+    } = this.props
 
-    const { minY } = this.state;
+    const { minY } = this.state
 
-    let yAxis = minY;
-    let xAxis = scale(15);
-    let bottom;
-    const scaledHeight = verticalScale(height);
+    let yAxis = minY
+    let xAxis = scale(15)
+    let bottom
+    const scaledHeight = verticalScale(height)
     // console.log(':::scaledHeight='+scaledHeight + ' height=' + height + ' x='+x +' y='+y);
 
     if (y + height < minY) {
-      yAxis = y;
+      yAxis = y
     } else {
-      bottom = true;
+      bottom = true
     }
-    console.log(':::yAxis='+yAxis + ' bottom=' + bottom );
+    console.log(':::yAxis=' + yAxis + ' bottom=' + bottom)
 
     if (x < deviceWidth) {
-      xAxis = x;
+      xAxis = x
     }
     // TODO: Temporary hack since the calculated heights are not working on iOS
-    bottom = false;
+    bottom = false
 
-    const ms25 = moderateScale(25);
+    const ms25 = moderateScale(25)
 
-    let newY = 15 + ms25 + scaledHeight;
-    let newTop = yAxis - ms25;
+    let newY = 15 + ms25 + scaledHeight
+    let newTop = yAxis - ms25
 
     // console.log(':::newY='+newY + ' newTop=' + newTop );
 
@@ -205,7 +207,7 @@ export default class InputModal extends React.PureComponent {
           {this.renderTextInput(xAxis, yAxis, bottom, scaledHeight)}
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -219,7 +221,7 @@ const styles = ScaledSheet.create({
   },
   input: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
     paddingLeft: '10@s',
     paddingRight: '25@s',
@@ -242,4 +244,4 @@ const styles = ScaledSheet.create({
     position: 'absolute',
     right: '5@s',
   },
-});
+})

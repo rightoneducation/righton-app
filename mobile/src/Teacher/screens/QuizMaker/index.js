@@ -1,15 +1,15 @@
-import React from 'react';
+import React from 'react'
 import {
   ScrollView,
   StatusBar,
   Text,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
-import Aicon from 'react-native-vector-icons/FontAwesome';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { ScaledSheet } from 'react-native-size-matters'
+import Aicon from 'react-native-vector-icons/FontAwesome'
 // import Touchable from 'react-native-platform-touchable';
-import { colors, fonts } from '../../../utils/theme';
+import { colors, fonts } from '../../../utils/theme'
 
 
 class QuizMaker extends React.PureComponent {
@@ -20,21 +20,21 @@ class QuizMaker extends React.PureComponent {
       }),
     }),
   };
-  
+
   static defaultProps = {
     screenProps: {
       navigation: {
-        navigate: () => {},
+        navigate: () => { },
       },
     },
   };
-  
+
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
 
-    };
+    }
   }
 
 
@@ -50,7 +50,7 @@ class QuizMaker extends React.PureComponent {
       <Aicon name={'puzzle-piece'} style={styles.messageIcon} />
       <Text style={styles.messageTeaser}>
         Access our repository of questions and student generated {'&'} tested
-        distractors to include in your homework and exams. 
+        distractors to include in your homework and exams.
       </Text>
       <Text style={styles.messageDetail}>Coming soon!</Text>
     </View>
@@ -74,7 +74,7 @@ class QuizMaker extends React.PureComponent {
           {this.renderMessage()}
         </ScrollView>
       </View>
-    );
+    )
   }
 }
 
@@ -114,13 +114,13 @@ const styles = ScaledSheet.create({
   },
   messageTeaser: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     textAlign: 'center',
   },
   scrollview: {
     flexGrow: 1,
   },
-});
+})
 
 
-export default props => <QuizMaker screenProps={{ ...props }} />;
+export default props => <QuizMaker screenProps={{ ...props }} />

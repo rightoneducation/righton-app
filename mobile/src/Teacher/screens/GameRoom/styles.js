@@ -1,5 +1,5 @@
-import { ScaledSheet } from 'react-native-size-matters';
-import { colors, fonts } from '../../../utils/theme';
+import { ScaledSheet } from 'react-native-size-matters'
+import { colors, fonts } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   alignRight: {
@@ -26,7 +26,7 @@ export default ScaledSheet.create({
   },
   choiceValue: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   choiceSquare: {
     borderRadius: 0,
@@ -81,7 +81,7 @@ export default ScaledSheet.create({
   },
   textLabel: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
     marginTop: '10@vs',
   },
@@ -96,10 +96,10 @@ export default ScaledSheet.create({
   },
   timeContainer: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     position: 'absolute',
     right: '5@s',
     top: '25@vs',
     zIndex: 100,
   },
-});
+})

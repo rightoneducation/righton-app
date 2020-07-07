@@ -1,5 +1,5 @@
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import { colors, fonts } from '../../../utils/theme';
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { colors, fonts, fontFamilies } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   container: {
@@ -12,7 +12,8 @@ export default ScaledSheet.create({
   },
   input: {
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
+    fontFamily: fontFamilies.latoBold,
     height: 68,
     backgroundColor: colors.white,
     borderRadius: 14,
@@ -22,9 +23,9 @@ export default ScaledSheet.create({
   title: {
     color: colors.white,
     fontSize: fonts.large,
-    fontWeight: 'bold',
     textAlign: 'center',
-    paddingBottom: 9
+    paddingBottom: 9,
+    fontFamily: fontFamilies.montserratBold,
   },
   entryContainer: {
     alignSelf: 'center',
@@ -32,6 +33,9 @@ export default ScaledSheet.create({
   },
   enterButton: {
     backgroundColor: colors.buttonPrimary,
+    fontFamily: fontFamilies.karlaBold,
+    fontSize: fonts.xLarge,
+    fontWeight: 'bold'
   },
   rightOnHeroImage: {
     width: 230,
@@ -42,4 +46,4 @@ export default ScaledSheet.create({
     marginTop: 22,
     height: scale(166)
   }
-});
+})

@@ -1,13 +1,13 @@
-import React from 'react';
+import React from 'react'
 import {
   Modal,
   Text,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
-import Touchable from 'react-native-platform-touchable';
-import { colors, elevation, fonts } from '../../utils/theme';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { ScaledSheet } from 'react-native-size-matters'
+import Touchable from 'react-native-platform-touchable'
+import { colors, elevation, fonts } from '../../utils/theme'
 
 export default class Menu extends React.PureComponent {
   static propTypes = {
@@ -16,10 +16,10 @@ export default class Menu extends React.PureComponent {
     items: PropTypes.arrayOf(PropTypes.shape({})),
     textStyles: PropTypes.shape({ type: PropTypes.any }),
   };
-  
+
   static defaultProps = {
     menuStyles: {},
-    handleClose: () => {},
+    handleClose: () => { },
     items: [],
     textStyles: {},
   };
@@ -31,7 +31,7 @@ export default class Menu extends React.PureComponent {
       onPress={item.onPress}
       style={[styles.button, elevation]}
     >
-      <Text style={[styles.buttonLabel, textStyles]}>{ item.label }</Text>
+      <Text style={[styles.buttonLabel, textStyles]}>{item.label}</Text>
     </Touchable>
   );
 
@@ -42,7 +42,7 @@ export default class Menu extends React.PureComponent {
       handleClose,
       items,
       textStyles,
-    } = this.props;
+    } = this.props
 
     return (
       <Modal
@@ -64,7 +64,7 @@ export default class Menu extends React.PureComponent {
           </View>
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -88,7 +88,7 @@ const styles = ScaledSheet.create({
   },
   buttonLabel: {
     color: colors.darkGray,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   menuContainer: {
     backgroundColor: colors.white,
@@ -101,4 +101,4 @@ const styles = ScaledSheet.create({
     position: 'absolute',
     zIndex: 10,
   },
-});
+})

@@ -1,0 +1,129 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Games {
+  Description: String
+  GameID: String!
+  Grade: String
+  Question1: AWSJSON
+  Question2: AWSJSON
+  Question3: AWSJSON
+  Question4: AWSJSON
+  Question5: AWSJSON
+  Title: String!
+}
+
+type GamesConnection {
+  items: [Games]
+  nextToken: String
+}
+
+type Mutation {
+  createGames(input: CreateGamesInput!): Games
+  deleteGames(input: DeleteGamesInput!): Games
+  updateGames(input: UpdateGamesInput!): Games
+}
+
+type Query {
+  getGames(GameID: String!): Games
+  listGames(filter: TableGamesFilterInput, limit: Int, nextToken: String): GamesConnection
+}
+
+type Subscription {
+  onCreateGames(Description: String, GameID: String, Grade: String, Question1: AWSJSON, Title: String): Games @aws_subscribe(mutations : ["createGames"])
+  onDeleteGames(Description: String, GameID: String, Grade: String, Question1: AWSJSON, Title: String): Games @aws_subscribe(mutations : ["deleteGames"])
+  onUpdateGames(Description: String, GameID: String, Grade: String, Question1: AWSJSON, Title: String): Games @aws_subscribe(mutations : ["updateGames"])
+}
+
+input CreateGamesInput {
+  Description: String
+  GameID: String!
+  Grade: String
+  Question1: AWSJSON
+  Question2: AWSJSON
+  Question3: AWSJSON
+  Question4: AWSJSON
+  Question5: AWSJSON
+  Title: String!
+}
+
+input DeleteGamesInput {
+  GameID: String!
+}
+
+input TableBooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input TableFloatFilterInput {
+  between: [Float]
+  contains: Float
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+  notContains: Float
+}
+
+input TableGamesFilterInput {
+  Description: TableStringFilterInput
+  GameID: TableStringFilterInput
+  Grade: TableStringFilterInput
+  Title: TableStringFilterInput
+}
+
+input TableIDFilterInput {
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+}
+
+input TableIntFilterInput {
+  between: [Int]
+  contains: Int
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+  notContains: Int
+}
+
+input TableStringFilterInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+}
+
+input UpdateGamesInput {
+  Description: String
+  GameID: String!
+  Grade: String
+  Question1: AWSJSON
+  Question2: AWSJSON
+  Question3: AWSJSON
+  Question4: AWSJSON
+  Question5: AWSJSON
+  Title: String
+}

@@ -1,31 +1,31 @@
-import React from 'react';
+import React from 'react'
 import {
   Platform,
   Text,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
-import { colors, fonts } from '../../utils/theme';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { ScaledSheet } from 'react-native-size-matters'
+import { colors, fonts } from '../../utils/theme'
 
 export default function HeaderSimple({ title }) {
   return (
     <View style={[styles.container, Platform.OS === 'ios' ? styles.iosContainer : styles.androidContainer]}>
-      <Text style={styles.title}>{ title }</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.logoContainer}>
         <Text style={styles.logo}>?</Text>
       </View>
     </View>
-  );
+  )
 }
 
 HeaderSimple.propTypes = {
   title: PropTypes.string,
-};
+}
 
 HeaderSimple.defaultProps = {
   title: 'RIGHT ON!',
-};
+}
 
 const styles = ScaledSheet.create({
   androidContainer: {
@@ -59,6 +59,6 @@ const styles = ScaledSheet.create({
   },
   title: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
-});
+})

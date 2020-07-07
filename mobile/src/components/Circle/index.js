@@ -1,26 +1,26 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import PropTypes from 'prop-types';
-import { colors, fonts } from '../../utils/theme';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import PropTypes from 'prop-types'
+import { colors, fonts } from '../../utils/theme'
 
 
 export default function Circle(props) {
   return (
     <View style={[styles.circle, props.styles]}>
-      <Text style={styles.message}>{ props.message }</Text>
+      <Text style={styles.message}>{props.message}</Text>
     </View>
-  );
+  )
 }
 
 Circle.propTypes = {
   message: PropTypes.string,
   styles: PropTypes.shape({ type: PropTypes.string }),
-};
+}
 
 Circle.defaultProps = {
   message: '',
   styles: {},
-};
+}
 
 const styles = StyleSheet.create({
   circle: {
@@ -38,9 +38,9 @@ const styles = StyleSheet.create({
   },
   message: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontStyle: 'italic',
     textAlign: 'center',
     zIndex: 10,
   },
-});
+})

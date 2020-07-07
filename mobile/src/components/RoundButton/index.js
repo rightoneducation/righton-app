@@ -1,21 +1,22 @@
 import React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { colors, fonts } from '../../utils/theme';
-import { ScaledSheet } from 'react-native-size-matters';
+import { colors, fonts, fontFamilies } from '../../utils/theme'
+import { ScaledSheet } from 'react-native-size-matters'
 
 RoundButton.propTypes = {
     title: PropTypes.string.isRequired,
     onPress: PropTypes.func.isRequired
 }
 export default function RoundButton(props) {
-    const { backgroundColor } = props
     const style = { ...styles.roundButton, ...props.style }
     return (
         <TouchableOpacity
-            style={style}
-            onPress={() => { props.onPress() }}>
-            <Text style={styles.buttonTitle}>{props.title}</Text>
+            onPress={() => { props.onPress() }}
+        >
+            <View style={style}>
+                <Text style={[styles.buttonTitle, props.titleStyle]}>{props.title}</Text>
+            </View>
         </TouchableOpacity>
     )
 }
@@ -29,6 +30,7 @@ const styles = ScaledSheet.create({
     },
     buttonTitle: {
         fontSize: fonts.large,
+        fontFamily: fontFamilies.poppinsRegular,
         fontWeight: 'bold',
         color: colors.white
     },
