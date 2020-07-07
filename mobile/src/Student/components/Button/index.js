@@ -3,9 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { fontFamilies, fonts } from '../../../utils/theme'
 import { moderateScale } from 'react-native-size-matters'
 
-const Button = ({ onPress, titleStyle, buttonStyle, title }) => {
+const Button = ({ onPress, titleStyle, buttonStyle, title, disabled }) => {
     return (
         <TouchableOpacity
+            disabled={disabled}
             onPress={onPress}
         >
             <View style={[styles.container, buttonStyle]}>
@@ -28,6 +29,6 @@ const styles = StyleSheet.create({
     buttonTitle: {
         color: 'white',
         fontFamily: fontFamilies.karlaBold,
-        fontSize: fonts.medium
+        fontSize: fonts.xMedium
     }
 })

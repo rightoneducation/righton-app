@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'white',
-        fontSize: fonts.xMedium,
+        fontSize: fonts.xxMedium,
         fontFamily: fontFamilies.poppinsRegular,
         textAlign: 'center',
         includeFontPadding: false,

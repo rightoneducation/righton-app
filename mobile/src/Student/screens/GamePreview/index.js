@@ -10,11 +10,19 @@ import Card from '../../components/Card'
 import Spinner from './Spinner'
 import Question from './Question'
 import TrickAnswers from './TrickAnswers'
+import HintsView from './HintsView'
 
 
 const GamePreview = () => {
+  const [availableHints, setAvailableHints] = useState([
+    { hintNo: 1, hint: 'A stop sign is a regular octagon, a polygon with 8 congruent sides.' },
+    { hintNo: 2, hint: 'We can create triangles within the octagon. For example, starting with any vertex, or corner, we can draw a line to each of the 5 non-adjacent vertices (or corners) of the octagon.' },
+    { hintNo: 2, hint: 'Count the number of triangles that have been created.' },
+  ])
   const [countdown, setCountdown] = useState(300)
   const [progress, setProgress] = useState(1)
+  const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
+  const [hints, setHints] = useState([])
 
   useEffect(() => {
     if (countdown == 0) {
@@ -23,11 +31,19 @@ const GamePreview = () => {
     var refreshIntervalId = setInterval(() => {
       setCountdown(countdown - 1)
       setProgress(countdown / 300)
+      setShowTrickAnswersHint(countdown <= 240)
     }, 1000)
     return () => {
       clearInterval(refreshIntervalId)
     }
   })
+
+  const showNewHint = () => {
+    if (hints.length == availableHints.length) {
+      return
+    }
+    setHints([...hints, availableHints[hints.length]])
+  }
 
   return (
     <View style={styles.mainContainer}>
@@ -59,11 +75,18 @@ const GamePreview = () => {
             <Question />
           </Card>
           <Card headerTitle="Trick Answers">
-            <TrickAnswers />
-            {/* <Spinner text="You can enter trick answers after one minute." /> */}
+            {
+              showTrickAnswersHint
+                ? <TrickAnswers />
+                : <Spinner text="You can enter trick answers after one minute." />
+            }
           </Card>
           <Card headerTitle="Hints">
-            <Spinner text="Hints will be available after one minute." />
+            {
+              showTrickAnswersHint
+                ? <HintsView hints={hints} onTappedShowNextHint={() => showNewHint()} isMoreHintsAvailable={hints.length < availableHints.length} />
+                : <Spinner text="Hints will be available after one minute." />
+            }
           </Card>
         </HorizontalPageView>
       </View>

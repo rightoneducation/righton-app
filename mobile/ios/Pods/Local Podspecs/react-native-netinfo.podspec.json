@@ -1,6 +1,6 @@
 {
   "name": "react-native-netinfo",
-  "version": "5.9.3",
+  "version": "5.9.4",
   "summary": "React Native Network Info API for iOS & Android",
   "license": "MIT",
   "authors": {
@@ -15,7 +15,7 @@
   },
   "source": {
     "git": "https://github.com/react-native-community/react-native-netinfo.git",
-    "tag": "v5.9.3"
+    "tag": "v5.9.4"
   },
   "source_files": "ios/**/*.{h,m}",
   "dependencies": {

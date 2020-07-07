@@ -12,7 +12,7 @@ export default ScaledSheet.create({
   },
   input: {
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontFamily: fontFamilies.latoBold,
     height: 68,
     backgroundColor: colors.white,

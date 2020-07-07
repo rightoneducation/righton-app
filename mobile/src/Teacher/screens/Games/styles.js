@@ -1,5 +1,5 @@
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { colors, deviceWidth, fonts } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   alignCenter: {
@@ -64,7 +64,7 @@ export default ScaledSheet.create({
   gameCount: {
     bottom: '5@vs',
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
     position: 'absolute',
   },
@@ -80,7 +80,7 @@ export default ScaledSheet.create({
   },
   gameOpenText: {
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   gameStartButton: {
@@ -100,7 +100,7 @@ export default ScaledSheet.create({
   gameTitle: {
     color: colors.dark,
     flexWrap: 'wrap',
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
     padding: '10@ms',
   },
@@ -119,4 +119,4 @@ export default ScaledSheet.create({
     marginTop: '15@vs',
     paddingBottom: '25@vs',
   },
-});
+})

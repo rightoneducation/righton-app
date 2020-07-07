@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Modal,
   RefreshControl,
@@ -6,13 +6,13 @@ import {
   Text,
   TouchableHighlight,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { moderateScale, ScaledSheet } from 'react-native-size-matters';
-import Aicon from 'react-native-vector-icons/FontAwesome';
-import { colors, deviceWidth, fonts } from '../../utils/theme';
-import ButtonWide from '../ButtonWide';
-import renderHyperlinkedText from '../../utils/renderHyperlinkedText';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import Aicon from 'react-native-vector-icons/FontAwesome'
+import { colors, deviceWidth, fonts } from '../../utils/theme'
+import ButtonWide from '../ButtonWide'
+import renderHyperlinkedText from '../../utils/renderHyperlinkedText'
 
 
 export default class Instructions extends React.Component {
@@ -24,58 +24,58 @@ export default class Instructions extends React.Component {
     incrementInstruction: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
   };
-  
+
   static defaultProps = {
     data: [],
-    handleCloseModal: () => {},
-    handleOpenLink: () => {},
+    handleCloseModal: () => { },
+    handleOpenLink: () => { },
     instructionIndex: 0,
-    incrementInstruction: () => {},
+    incrementInstruction: () => { },
     visible: false,
   };
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       hyperlink: '',
       visibleItems: [],
-    };
+    }
   }
 
 
   componentDidMount() {
-    this.setVisibleItems();
+    this.setVisibleItems()
   }
 
 
   setVisibleItems() {
-    const { data, instructionIndex } = this.props;
-    let visibleItems = [];
+    const { data, instructionIndex } = this.props
+    let visibleItems = []
     if (instructionIndex) {
-      visibleItems = this.props.data.slice(0, instructionIndex + 1);
+      visibleItems = this.props.data.slice(0, instructionIndex + 1)
       if (this.props.data.length - 1 !== instructionIndex) {
-        visibleItems[this.props.data.length - 1] = undefined;
-        visibleItems.fill(undefined, instructionIndex + 1);
+        visibleItems[this.props.data.length - 1] = undefined
+        visibleItems.fill(undefined, instructionIndex + 1)
       }
     } else {
-      visibleItems = data.length === 1 ? [undefined] : [true];
+      visibleItems = data.length === 1 ? [undefined] : [true]
       if (this.props.data.length > 1) {
-        visibleItems[this.props.data.length - 1] = undefined;
-        visibleItems.fill(undefined, 1);
+        visibleItems[this.props.data.length - 1] = undefined
+        visibleItems.fill(undefined, 1)
       }
     }
-    this.setState({ visibleItems });
+    this.setState({ visibleItems })
   }
 
 
   handleReveal = () => {
-    const { visibleItems } = this.state;
-    const { incrementInstruction } = this.props;
-    const updatedVisibleItems = [...visibleItems];
-    const index = updatedVisibleItems.indexOf(undefined);
-    updatedVisibleItems[index] = true;
-    this.setState({ visibleItems: updatedVisibleItems }, incrementInstruction);
+    const { visibleItems } = this.state
+    const { incrementInstruction } = this.props
+    const updatedVisibleItems = [...visibleItems]
+    const index = updatedVisibleItems.indexOf(undefined)
+    updatedVisibleItems[index] = true
+    this.setState({ visibleItems: updatedVisibleItems }, incrementInstruction)
   }
 
 
@@ -108,9 +108,9 @@ export default class Instructions extends React.Component {
 
   renderRevealButton(visibleItems, data) {
     if (visibleItems[visibleItems.length - 1] === undefined) {
-      let label = 'Show next step';
+      let label = 'Show next step'
       if (visibleItems.indexOf(undefined) === data.length - 1) {
-        label = 'Show answer';
+        label = 'Show answer'
       }
       return (
         <ButtonWide
@@ -125,15 +125,15 @@ export default class Instructions extends React.Component {
           onPress={this.handleReveal}
           ripple={colors.black}
         />
-      );
+      )
     }
-    return null;
+    return null
   }
-  
-  
+
+
   render() {
-    const { data, handleCloseModal, visible } = this.props;
-    const { visibleItems } = this.state;
+    const { data, handleCloseModal, visible } = this.props
+    const { visibleItems } = this.state
     return (
       <Modal
         animationType={'slide'}
@@ -159,16 +159,16 @@ export default class Instructions extends React.Component {
             }
           >
             {data.map((instruction, idx) => {
-              if (!visibleItems[idx]) return null;
-              const alignment = idx % 2 === 0 ? 'left' : 'right';
-              return this.renderInstructionBox(instruction, alignment, idx === data.length - 1);
+              if (!visibleItems[idx]) return null
+              const alignment = idx % 2 === 0 ? 'left' : 'right'
+              return this.renderInstructionBox(instruction, alignment, idx === data.length - 1)
             })}
 
             {this.renderRevealButton(visibleItems, data)}
           </ScrollView>
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -221,7 +221,7 @@ const styles = ScaledSheet.create({
   },
   instruction: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   instructionsContainer: {
     flexGrow: 1,
@@ -252,4 +252,4 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
     width: '40@ms',
   },
-});
+})

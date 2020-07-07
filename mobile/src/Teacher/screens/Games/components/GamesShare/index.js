@@ -1,55 +1,55 @@
-import React from 'react';
+import React from 'react'
 import {
   Modal,
   Text,
   TextInput,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import { shareGameWithTeacher } from '../../../../../../lib/Categories/DynamoDB/TeacherAccountsAPI';
-import ButtonBack from '../../../../../components/ButtonBack';
-import ButtonWide from '../../../../../components/ButtonWide';
-import { colors, deviceWidth, elevation, fonts } from '../../../../../utils/theme';
-import debug from '../../../../../utils/debug';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { shareGameWithTeacher } from '../../../../../../lib/Categories/DynamoDB/TeacherAccountsAPI'
+import ButtonBack from '../../../../../components/ButtonBack'
+import ButtonWide from '../../../../../components/ButtonWide'
+import { colors, deviceWidth, elevation, fonts } from '../../../../../utils/theme'
+import debug from '../../../../../utils/debug'
 
 export default class GamesShare extends React.PureComponent {
   static propTypes = {
     handleClose: PropTypes.func,
     game: PropTypes.shape({}),
   };
-  
+
   static defaultProps = {
-    handleClose: () => {},
+    handleClose: () => { },
     game: {},
   };
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       email: '',
-    };
+    }
   }
 
 
   onSuccess = () => {
     // TODO Tell teacher
-    debug.log('Successfully shared game with teacher');
-    this.props.handleClose();
+    debug.log('Successfully shared game with teacher')
+    this.props.handleClose()
   }
 
 
   onError = (exception) => {
-    debug.warn('Caught exception sharing game:', JSON.stringify(exception));
+    debug.warn('Caught exception sharing game:', JSON.stringify(exception))
   }
 
 
   handleShareGame = () => {
-    const { email } = this.state;
-    if (!email) return;
-    const lowerCaseEmail = email.toLowerCase();
-    shareGameWithTeacher(lowerCaseEmail, this.props.game, this.onSuccess, this.onError);
+    const { email } = this.state
+    if (!email) return
+    const lowerCaseEmail = email.toLowerCase()
+    shareGameWithTeacher(lowerCaseEmail, this.props.game, this.onSuccess, this.onError)
   }
 
 
@@ -59,9 +59,9 @@ export default class GamesShare extends React.PureComponent {
   render() {
     const {
       handleClose,
-    } = this.props;
+    } = this.props
 
-    const { email } = this.state;
+    const { email } = this.state
 
     return (
       <Modal
@@ -101,7 +101,7 @@ export default class GamesShare extends React.PureComponent {
 
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -139,9 +139,9 @@ const styles = ScaledSheet.create({
   textinput: {
     backgroundColor: colors.white,
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     paddingVertical: '15@ms',
     paddingHorizontal: '20@ms',
     width: deviceWidth - scale(30),
   },
-});
+})

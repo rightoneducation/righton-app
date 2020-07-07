@@ -2,8 +2,9 @@ import React from 'react'
 import { StyleSheet, View, TextInput, Image } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const RoundTextInput = ({ icon, height, borderColor }) => {
+const RoundTextInput = ({ icon, height, borderColor, onTappedIcon, data, onChangeText }) => {
     return (
         <View style={[styles.container, { height, borderColor }]}>
             <TextInput
@@ -11,8 +12,11 @@ const RoundTextInput = ({ icon, height, borderColor }) => {
                 placeholder="Text Here"
                 onChangeText={(text) => console.log(text)}
                 underlineColorAndroid="transparent"
+                onChangeText={(text) => onChangeText(data, text)}
             />
-            <Image source={icon} style={styles.icon} />
+            <TouchableOpacity onPress={() => onTappedIcon(data)}>
+                <Image source={icon} style={styles.icon} />
+            </TouchableOpacity>
         </View>
     )
 }
@@ -40,7 +44,7 @@ const styles = StyleSheet.create({
     input: {
         color: '#384466',
         fontFamily: fontFamilies.karlaRegular,
-        fontSize: fonts.medium,
+        fontSize: fonts.xMedium,
         marginRight: scale(5),
         flex: 1,
     },

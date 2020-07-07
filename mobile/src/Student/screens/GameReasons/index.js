@@ -1,4 +1,4 @@
-import React, { NativeMethodsMixin } from 'react';
+import React, { NativeMethodsMixin } from 'react'
 import {
   findNodeHandle,
   Image,
@@ -6,18 +6,18 @@ import {
   ScrollView,
   Text,
   View,
-} from 'react-native';
-import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer';
-import renderHyperlinkedText from '../../../utils/renderHyperlinkedText';
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import KeepAwake from 'react-native-keep-awake';
-import Touchable from 'react-native-platform-touchable';
-import HeaderTeam from '../../components/HeaderTeam';
-import InputModal from '../../../components/InputModal';
-import gamePreviewStyles from '../GamePreview/styles';
-import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme';
-import { handleExitGame } from '../../../utils/studentGameUtils';
+} from 'react-native'
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes'
+import { cancelCountdownTimer, startCountdownTimer } from '../../../utils/countdownTimer'
+import renderHyperlinkedText from '../../../utils/renderHyperlinkedText'
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import KeepAwake from 'react-native-keep-awake'
+import Touchable from 'react-native-platform-touchable'
+import HeaderTeam from '../../components/HeaderTeam'
+import InputModal from '../../../components/InputModal'
+import gamePreviewStyles from '../GamePreview/styles'
+import { colors, deviceWidth, elevation, fonts } from '../../../utils/theme'
+import { handleExitGame } from '../../../utils/studentGameUtils'
 
 
 export default class GameReasons extends React.PureComponent {
@@ -32,15 +32,15 @@ export default class GameReasons extends React.PureComponent {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    const { quizTime } = props.screenProps.gameState;
-    const { params } = props.navigation.state;
-    let timeLeft;
+    const { quizTime } = props.screenProps.gameState
+    const { params } = props.navigation.state
+    let timeLeft
     if (params && params.time) {
-      timeLeft = quizTime === '0:00' ? 'No time limit' : params.time;
+      timeLeft = quizTime === '0:00' ? 'No time limit' : params.time
     } else {
-      timeLeft = quizTime === '0:00' ? 'No time limit' : quizTime;
+      timeLeft = quizTime === '0:00' ? 'No time limit' : quizTime
     }
 
     this.state = {
@@ -50,41 +50,41 @@ export default class GameReasons extends React.PureComponent {
       trick1Reason: '',
       trick2Reason: '',
       tricks: [],
-    };
+    }
 
-    this.timerInterval = undefined;
+    this.timerInterval = undefined
   }
 
 
   componentDidMount() {
-    this.parseTricks();
-    const { quizTime } = this.props.screenProps.gameState;
-    const { params } = this.props.navigation.state;
-    startCountdownTimer(params, quizTime, this.setTime);
+    this.parseTricks()
+    const { quizTime } = this.props.screenProps.gameState
+    const { params } = this.props.navigation.state
+    startCountdownTimer(params, quizTime, this.setTime)
   }
 
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.screenProps.gameState.state) {
-      const { navigation } = this.props;
+      const { navigation } = this.props
       if (nextProps.screenProps.gameState.state.endGame === true) {
-        navigation.navigate('GameFinal');
-        return;
+        navigation.navigate('GameFinal')
+        return
       }
       if (nextProps.screenProps.gameState.state.startQuiz &&
         nextProps.screenProps.gameState.state.teamRef !== `team${this.props.screenProps.team}`) {
-        navigation.navigate('GameQuiz');
+        navigation.navigate('GameQuiz')
       }
       if (nextProps.screenProps.gameState.state.exitGame === true) {
-        const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps;
-        handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation);
+        const { handleSetAppState, IOTUnsubscribeFromTopic } = this.props.screenProps
+        handleExitGame(handleSetAppState, IOTUnsubscribeFromTopic, navigation)
       }
     }
   }
 
 
   componentWillUnmount() {
-    cancelCountdownTimer();
+    cancelCountdownTimer()
   }
 
 
@@ -93,10 +93,10 @@ export default class GameReasons extends React.PureComponent {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.trick0Ref),
         (x, y) => {
-          this.trick0X = x;
-          this.trick0Y = y + 9 + fonts.medium;
+          this.trick0X = x
+          this.trick0Y = y + 9 + fonts.xMedium
         }
-      );
+      )
     }
   }
 
@@ -106,10 +106,10 @@ export default class GameReasons extends React.PureComponent {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.trick1Ref),
         (x, y) => {
-          this.trick1X = x;
-          this.trick1Y = y + 9 + fonts.medium;
+          this.trick1X = x
+          this.trick1Y = y + 9 + fonts.xMedium
         }
-      );
+      )
     }
   }
 
@@ -119,70 +119,70 @@ export default class GameReasons extends React.PureComponent {
       NativeMethodsMixin.measureInWindow.call(
         findNodeHandle(this.trick2Ref),
         (x, y) => {
-          this.trick2X = x;
-          this.trick2Y = y + 9 + fonts.medium;
+          this.trick2X = x
+          this.trick2Y = y + 9 + fonts.xMedium
         }
-      );
+      )
     }
   }
 
 
   setTime = timeLeft => this.setState({ timeLeft });
 
-  
+
   parseTricks() {
-    const { gameState, team } = this.props.screenProps;
-    const teamRef = `team${team}`;
-    const tricks = [];
+    const { gameState, team } = this.props.screenProps
+    const teamRef = `team${team}`
+    const tricks = []
     for (let i = 0; i < gameState[teamRef].tricks.length; i += 1) {
       if (gameState[teamRef].tricks[i].selected) {
-        tricks.push(gameState[teamRef].tricks[i].value);
+        tricks.push(gameState[teamRef].tricks[i].value)
       }
     }
-    this.setState({ tricks });
+    this.setState({ tricks })
   }
 
 
   handleTrick0Ref = (ref) => {
-    this.trick0Ref = ref;
+    this.trick0Ref = ref
   }
 
 
   handleTrick1Ref = (ref) => {
-    this.trick1Ref = ref;
+    this.trick1Ref = ref
   }
 
 
   handleTrick2Ref = (ref) => {
-    this.trick2Ref = ref;
+    this.trick2Ref = ref
   }
 
 
   closeInputModal = (input, inputLabel) => {
     switch (inputLabel) {
       case 'trick0':
-        this.setState({ trick0Reason: input, showInput: false });
-        break;
+        this.setState({ trick0Reason: input, showInput: false })
+        break
       case 'trick1':
-        this.setState({ trick1Reason: input, showInput: false });
-        break;
+        this.setState({ trick1Reason: input, showInput: false })
+        break
       case 'trick2':
-        this.setState({ trick2Reason: input, showInput: false });
-        break;
+        this.setState({ trick2Reason: input, showInput: false })
+        break
       default:
-        break;
+        break
     }
   }
 
 
   handleInputModal = (inputLabel, placeholder, maxLength, input, keyboardType = 'default') => {
     if (inputLabel === 'trick0') {
-      this.onTrick0Layout();
+      this.onTrick0Layout()
     } else if (inputLabel === 'trick1') {
-      this.onTrick1Layout();
+      this.onTrick1Layout()
     } else if (inputLabel === 'trick2') {
-      this.onTrick2Layout();
-    } 
+      this.onTrick2Layout()
+    }
     setTimeout(() => {
       this.setState({
         showInput: {
@@ -200,8 +200,8 @@ export default class GameReasons extends React.PureComponent {
           x: this[`${inputLabel}X`],
           y: this[`${inputLabel}Y`],
         }
-      });
-    }, 100);
+      })
+    }, 100)
   }
 
 
@@ -215,22 +215,22 @@ export default class GameReasons extends React.PureComponent {
 
 
   renderQuestion() {
-    const { gameState, team } = this.props.screenProps;
-    const teamRef = `team${team}`;
+    const { gameState, team } = this.props.screenProps
+    const teamRef = `team${team}`
 
     return (
       <View style={[gamePreviewStyles.questionContainer, styles.extraMarginBottom]}>
         <Text style={gamePreviewStyles.question}>
-          { renderHyperlinkedText(
+          {renderHyperlinkedText(
             gameState[teamRef].question,
             {},
             { color: colors.primary },
             this.handleOpenLink)}
         </Text>
         {Boolean(gameState[teamRef].image) &&
-          <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />} 
+          <Image source={{ uri: gameState[teamRef].image }} style={gamePreviewStyles.image} resizeMode={'contain'} />}
       </View>
-    );
+    )
   }
 
 
@@ -242,9 +242,9 @@ export default class GameReasons extends React.PureComponent {
       trick1Reason,
       trick2Reason,
       tricks,
-    } = this.state;
+    } = this.state
 
-    const { team } = this.props.screenProps;
+    const { team } = this.props.screenProps
 
     return (
       <View style={gamePreviewStyles.flex}>
@@ -282,7 +282,7 @@ export default class GameReasons extends React.PureComponent {
                   style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
                 >
                   <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                    { `Trick Answer #1. ${tricks[0]}` }
+                    {`Trick Answer #1. ${tricks[0]}`}
                   </Text>
                   <Touchable
                     onPress={() => this.handleInputModal('trick0', 'Enter your reason', 500, trick0Reason)}
@@ -314,7 +314,7 @@ export default class GameReasons extends React.PureComponent {
                   style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
                 >
                   <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                    { `Trick Answer #2. ${tricks[1]}` }
+                    {`Trick Answer #2. ${tricks[1]}`}
                   </Text>
                   <Touchable
                     onPress={() => this.handleInputModal('trick1', 'Enter your reason', 500, trick1Reason)}
@@ -331,7 +331,7 @@ export default class GameReasons extends React.PureComponent {
                   style={[styles.inputContainer, gamePreviewStyles.marginBottom]}
                 >
                   <Text style={[gamePreviewStyles.choiceValue, gamePreviewStyles.marginBottom]}>
-                    { `Trick Answer #3. ${tricks[2]}` }
+                    {`Trick Answer #3. ${tricks[2]}`}
                   </Text>
                   <Touchable
                     onPress={() => this.handleInputModal('trick2', 'Enter your reason', 500, trick2Reason)}
@@ -344,9 +344,9 @@ export default class GameReasons extends React.PureComponent {
           </View>
         </ScrollView>
 
-        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{ timeLeft }</Text>}
+        {Boolean(timeLeft) && <Text style={gamePreviewStyles.timeContainer}>{timeLeft}</Text>}
       </View>
-    );
+    )
   }
 }
 
@@ -368,7 +368,7 @@ const styles = ScaledSheet.create({
   },
   inputButtonText: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   inputContainer: {
@@ -380,4 +380,4 @@ const styles = ScaledSheet.create({
   placeholder: {
     color: colors.lightGray,
   },
-});
+})

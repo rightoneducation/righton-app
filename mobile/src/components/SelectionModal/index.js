@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 import {
   Modal,
   ScrollView,
   Text,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
-import Touchable from 'react-native-platform-touchable';
-import { colors, fonts } from '../../utils/theme';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { ScaledSheet } from 'react-native-size-matters'
+import Touchable from 'react-native-platform-touchable'
+import { colors, fonts } from '../../utils/theme'
 
 
 export default class SelectionModal extends React.PureComponent {
@@ -16,9 +16,9 @@ export default class SelectionModal extends React.PureComponent {
     if (item.value === 'section') {
       return (
         <View key={item.label} style={[styles.itemContainer, styles.center]}>
-          <Text style={styles.section}>{ item.label }</Text>
+          <Text style={styles.section}>{item.label}</Text>
         </View>
-      );
+      )
     }
     return (
       <Touchable
@@ -26,10 +26,10 @@ export default class SelectionModal extends React.PureComponent {
         onPress={() => onSelect(item.value)}
       >
         <View style={[styles.itemContainer, styles.center]}>
-          <Text style={styles.item}>{ item.label }</Text>
+          <Text style={styles.item}>{item.label}</Text>
         </View>
       </Touchable>
-    );
+    )
   }
 
 
@@ -39,8 +39,8 @@ export default class SelectionModal extends React.PureComponent {
       onPress={() => onSelect(item.value)}
     >
       <View style={styles.itemContainer}>
-        <Text style={styles.item}>{ item.label }</Text>
-        <Text style={styles.item}>{ item.label_2 }</Text>
+        <Text style={styles.item}>{item.label}</Text>
+        <Text style={styles.item}>{item.label_2}</Text>
       </View>
     </Touchable>
   );
@@ -52,24 +52,24 @@ export default class SelectionModal extends React.PureComponent {
       onPress={() => onSelect(item.value)}
     >
       <View style={styles.itemContainer}>
-        <Text style={[styles.item, styles.flexOne]}>{ item.label }</Text>
-        <Text style={[styles.item, styles.flexTwo]}>{ item.label_2 }</Text>
-        <Text style={[styles.item, styles.flexThree]}>{ item.label_3 }</Text>
+        <Text style={[styles.item, styles.flexOne]}>{item.label}</Text>
+        <Text style={[styles.item, styles.flexTwo]}>{item.label_2}</Text>
+        <Text style={[styles.item, styles.flexThree]}>{item.label_3}</Text>
       </View>
     </Touchable>
   );
 
 
   render() {
-    const { 
+    const {
       items,
       handleClose,
       onSelect,
       title,
       visible
-    } = this.props;
-    
-    const numberOfLabels = items.length && Object.keys(items[0]).length - 1;
+    } = this.props
+
+    const numberOfLabels = items.length && Object.keys(items[0]).length - 1
 
     return (
       <Modal
@@ -87,25 +87,25 @@ export default class SelectionModal extends React.PureComponent {
         </Touchable>
         <View style={styles.selectionContainer}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{ title }</Text>
+            <Text style={styles.title}>{title}</Text>
           </View>
           <ScrollView style={styles.scrollview}>
             {
-              numberOfLabels === 1 && 
+              numberOfLabels === 1 &&
               items.map(item => this.renderOneTouchableItem(item, onSelect))
             }
             {
-              numberOfLabels === 2 && 
+              numberOfLabels === 2 &&
               items.map(item => this.renderTwoTouchableItems(item, onSelect))
             }
             {
-              numberOfLabels === 3 && 
+              numberOfLabels === 3 &&
               items.map(item => this.renderThreeTouchableItems(item, onSelect))
             }
           </ScrollView>
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -115,15 +115,15 @@ SelectionModal.propTypes = {
   onSelect: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
-};
+}
 
 SelectionModal.defaultProps = {
-  handleClose: () => {},
+  handleClose: () => { },
   items: [],
-  onSelect: () => {},
+  onSelect: () => { },
   title: '',
   visible: false,
-};
+}
 
 const styles = ScaledSheet.create({
   center: {
@@ -144,7 +144,7 @@ const styles = ScaledSheet.create({
   },
   item: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     textAlign: 'center',
   },
   itemContainer: {
@@ -157,7 +157,7 @@ const styles = ScaledSheet.create({
     flex: 1,
   },
   section: {
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   selectionContainer: {
@@ -171,7 +171,7 @@ const styles = ScaledSheet.create({
   },
   title: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   titleContainer: {
@@ -183,4 +183,4 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
     paddingVertical: '15@vs',
   },
-});
+})

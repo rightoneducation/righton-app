@@ -68,26 +68,30 @@ export default LoadingIndicator = (
         theme,
         radius,
         fontSize,
+        textColor,
         shouldShowCountdown,
         timerStartInSecond,
-        onTimerFinished,
+        onTimerFinished
     }
 ) => {
     fontSize = fontSize || 24
+    textColor = textColor || 'white'
     const [colors, setColors] = useState(theme)
 
     const [remainingSecondsInMilliSeconds, setRemainingSecondsInMilliSeconds] = useState(timerStartInSecond * 1000)
-    const [remainingTimeInSecond, setremainingTimeInSecond] = useState(timerStartInSecond)
+    const [remainingTimeInSecond, setRemainingTimeInSecond] = useState(timerStartInSecond)
+    const [timerFinished, setTimerFinished] = useState(false)
 
     let timeInterval = 100
     useEffect(() => {
         if (shouldShowCountdown) {
-            if (remainingTimeInSecond == 0) {
-                onTimerFinished()
-                setRemainingSecondsInMilliSeconds(-1)
+            if (timerFinished) {
                 return
             }
-            if (remainingTimeInSecond < 0) {
+            else if (remainingTimeInSecond == 1) {
+                onTimerFinished()
+                clearInterval(refreshIntervalId)
+                setTimerFinished(true)
                 return
             }
         }
@@ -98,7 +102,7 @@ export default LoadingIndicator = (
                 return
             }
             setRemainingSecondsInMilliSeconds(remainingSecondsInMilliSeconds - timeInterval)
-            setremainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))
+            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))
         }, timeInterval)
         return () => {
             clearInterval(refreshIntervalId)
@@ -121,7 +125,11 @@ export default LoadingIndicator = (
                 />
             </Svg>
             <Text
-                style={[styles.text, { fontSize: fontSize, opacity: shouldShowCountdown ? 1 : 0 }]}
+                style={[styles.text, {
+                    fontSize: fontSize,
+                    color: textColor,
+                    opacity: shouldShowCountdown ? 1 : 0
+                }]}
             >
                 {remainingTimeInSecond}
             </Text>
@@ -133,6 +141,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
+        opacity: 1
     },
     text: {
         textAlign: 'center',

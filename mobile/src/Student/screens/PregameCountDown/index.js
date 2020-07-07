@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     text: {
         color: "white",
         fontFamily: fontFamilies.montserratBold,
-        fontSize: fonts.medium,
+        fontSize: fonts.xMedium,
         fontWeight: 'bold',
         marginLeft: 34,
         marginRight: 34,

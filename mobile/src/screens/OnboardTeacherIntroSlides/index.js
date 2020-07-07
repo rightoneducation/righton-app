@@ -1,14 +1,14 @@
-import React from 'react';
-import { 
+import React from 'react'
+import {
   Image,
   Text,
   View,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { ScaledSheet } from 'react-native-size-matters';
-import Swiper from 'react-native-swiper';
-import { GradCap } from '../../assets/images';
-import { colors, fonts } from '../../utils/theme';
+} from 'react-native'
+import PropTypes from 'prop-types'
+import { ScaledSheet } from 'react-native-size-matters'
+import Swiper from 'react-native-swiper'
+import { GradCap } from '../../assets/images'
+import { colors, fonts } from '../../utils/theme'
 
 
 export default class OnboardIntroSlides extends React.PureComponent {
@@ -75,18 +75,18 @@ export default class OnboardIntroSlides extends React.PureComponent {
         </View>
 
       </Swiper>
-    );
+    )
   }
 }
 
 const styles = ScaledSheet.create({
   accountCheck: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   accountLogin: {
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   bottomContainer: {
@@ -105,7 +105,7 @@ const styles = ScaledSheet.create({
   },
   // start: {
   //   color: colors.white,
-  //   fontSize: fonts.medium,
+  //   fontSize: fonts.xMedium,
   // },
   // startContainer: {
   //   alignItems: 'center',
@@ -122,7 +122,7 @@ const styles = ScaledSheet.create({
   // },
   subtitle: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     marginTop: '10@vs',
     textAlign: 'center',
   },
@@ -137,4 +137,4 @@ const styles = ScaledSheet.create({
     fontSize: fonts.large,
     fontWeight: 'bold',
   },
-});
+})

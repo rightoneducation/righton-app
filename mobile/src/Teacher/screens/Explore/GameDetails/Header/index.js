@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontFamily: fontFamilies.poppinsRegular,
-        fontSize: fonts.xMedium,
+        fontSize: fonts.xxMedium,
         color: 'white',
         textAlign: 'center',
     },

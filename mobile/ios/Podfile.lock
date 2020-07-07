@@ -1,12 +1,12 @@
 PODS:
-  - appcenter-analytics (3.0.3):
+  - appcenter-analytics (3.1.0):
     - AppCenter/Analytics
     - AppCenterReactNativeShared
     - React
-  - appcenter-core (3.0.3):
+  - appcenter-core (3.1.0):
     - AppCenterReactNativeShared
     - React
-  - appcenter-crashes (3.0.3):
+  - appcenter-crashes (3.1.0):
     - AppCenter/Crashes
     - AppCenterReactNativeShared
     - React
@@ -215,9 +215,9 @@ PODS:
     - React
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-netinfo (5.9.3):
+  - react-native-netinfo (5.9.4):
     - React
-  - react-native-safe-area-context (3.0.6):
+  - react-native-safe-area-context (3.0.7):
     - React
   - react-native-viewpager (4.0.1):
     - React
@@ -299,7 +299,7 @@ PODS:
     - React
   - RNSVG (12.1.0):
     - React
-  - RNVectorIcons (6.6.0):
+  - RNVectorIcons (7.0.0):
     - React
   - SSZipArchive (2.2.2)
   - Yoga (1.14.0)
@@ -458,9 +458,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: a1c30c47b7882a04a615ffa5ab26c007326436d8
-  appcenter-analytics: 4fdc885acb8a3bfac835515a8b9610d054ba8b9f
-  appcenter-core: 84a1c69361d10272bf08b2ff906c37f4e422b940
-  appcenter-crashes: e9008710be7612c585c39f3dc2cf3894172dc6e2
+  appcenter-analytics: cca12b5d07593a309e99db475f6da7f1a61ae694
+  appcenter-core: cd5eaa48cfc6dd87dad2912d6718f21f4955327f
+  appcenter-crashes: 369cc9160392c137b791304ee96957f28ef143d1
   AppCenterReactNativeShared: a18a3da01dd569fbfbdd264c8c43491af6efa88d
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -484,8 +484,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-image-picker: 668e72d0277dc8c12ae90e835507c1eddd2e4f85
   react-native-keep-awake: eba3137546b10003361b37c761f6c429b59814ae
-  react-native-netinfo: 19706b27df3a2b435171b3f1fad6085d6ac74324
-  react-native-safe-area-context: b26361b9f0a5a17c371a80bb37b88493ea68c77e
+  react-native-netinfo: eed0fb1d6a9424e98ce686f92aad62ff427d4bc9
+  react-native-safe-area-context: c39fc20a20cd66ebf1d56c6f8b8711142fbfee98
   react-native-viewpager: 5ff156ac42630c0c7275bf5fb95c259b90c5ff6f
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -506,7 +506,7 @@ SPEC CHECKSUMS:
   RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
-  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
   SSZipArchive: fa16b8cc4cdeceb698e5e5d9f67e9558532fbf23
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
 

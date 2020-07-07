@@ -1,5 +1,5 @@
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { colors, deviceWidth, fonts } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   activityIndicator: {
@@ -29,7 +29,7 @@ export default ScaledSheet.create({
   },
   inputButtonText: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   inputContainer: {
@@ -60,8 +60,8 @@ export default ScaledSheet.create({
     fontWeight: 'bold',
   },
   titleContainer: {
-    alignItems: 'center',  
+    alignItems: 'center',
     marginBottom: '55@vs',
     marginTop: '35@vs',
   },
-});
+})

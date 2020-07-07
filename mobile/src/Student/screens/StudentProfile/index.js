@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 import {
   ScrollView,
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes';
-import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+} from 'react-native'
+import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 // import Aicon from 'react-native-vector-icons/FontAwesome';
 // import Touchable from 'react-native-platform-touchable';
 // import InputModal from '../../../components/InputModal';
-import { colors, elevation, fonts } from '../../../utils/theme';
-import ButtonWide from '../../../components/ButtonWide';
-import ButtonBack from '../../../components/ButtonBack';
+import { colors, elevation, fonts } from '../../../utils/theme'
+import ButtonWide from '../../../components/ButtonWide'
+import ButtonBack from '../../../components/ButtonBack'
 
 
 export default class StudentProfile extends React.Component {
@@ -27,49 +27,49 @@ export default class StudentProfile extends React.Component {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.updatedAccount = false;
+    this.updatedAccount = false
 
     this.state = {
       account: props.screenProps.account,
-    };
+    }
   }
 
 
   handleNavigateBack = () => {
     if (this.updatedAccount && this.state.account.StudentID) {
-      const { account } = this.state;
-      const { handleSetAppState } = this.props.screenProps;
-      handleSetAppState('account', account);
+      const { account } = this.state
+      const { handleSetAppState } = this.props.screenProps
+      handleSetAppState('account', account)
     }
-    this.props.navigation.navigate('Dashboard');
+    this.props.navigation.navigate('Dashboard')
   }
 
 
   handleSignOut = () => {
-    const { doSignOut } = this.props.screenProps;
-    const { navigation } = this.props;
+    const { doSignOut } = this.props.screenProps
+    const { navigation } = this.props
 
-    doSignOut();
-    navigation.navigate('OnboardAppRouter');
+    doSignOut()
+    navigation.navigate('OnboardAppRouter')
   }
 
 
   handleSchoolInput = (input) => {
-    this.setState({ account: { ...this.state.account, schoolID: input } });
-    this.updatedAccount = true;
+    this.setState({ account: { ...this.state.account, schoolID: input } })
+    this.updatedAccount = true
   }
 
 
   handleOnboardNavigation = () => {
-    const { navigation } = this.props;
-    navigation.navigate('OnboardAccount');
+    const { navigation } = this.props
+    navigation.navigate('OnboardAccount')
   }
 
-  
+
   render() {
-    const { account } = this.state;
+    const { account } = this.state
 
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -93,7 +93,7 @@ export default class StudentProfile extends React.Component {
 
         <View style={[styles.itemContainer, styles.divider]}>
           <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{ account.StudentID || 'Not logged in' }</Text>
+          <Text style={styles.value}>{account.StudentID || 'Not logged in'}</Text>
         </View>
 
         <View style={styles.itemContainer}>
@@ -118,7 +118,7 @@ export default class StudentProfile extends React.Component {
           onPress={account.StudentID ? this.handleSignOut : this.handleOnboardNavigation}
         />
       </ScrollView>
-    );
+    )
   }
 }
 
@@ -156,6 +156,6 @@ const styles = ScaledSheet.create({
   },
   value: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
-});
+})

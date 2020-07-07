@@ -1,5 +1,5 @@
-import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters';
-import { colors, deviceWidth, fonts } from '../../../../utils/theme';
+import { scale, ScaledSheet, verticalScale } from 'react-native-size-matters'
+import { colors, deviceWidth, fonts } from '../../../../utils/theme'
 
 
 export default ScaledSheet.create({
@@ -32,7 +32,7 @@ export default ScaledSheet.create({
   },
   bannerLabel: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   caret: {
     fontSize: '18@ms0.2',
@@ -63,7 +63,7 @@ export default ScaledSheet.create({
   },
   createLabel: {
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   donePosition: {
@@ -87,7 +87,7 @@ export default ScaledSheet.create({
   },
   heartIcon: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     position: 'absolute',
   },
   heartIconBig: {
@@ -113,7 +113,7 @@ export default ScaledSheet.create({
   },
   inputButtonText: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   inputContainer: {
@@ -144,7 +144,7 @@ export default ScaledSheet.create({
   },
   questionAnswer: {
     flexWrap: 'wrap',
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   questionContainer: {
     backgroundColor: colors.white,
@@ -159,7 +159,7 @@ export default ScaledSheet.create({
     backgroundColor: colors.lightGray,
     height: '100@ms',
     justifyContent: 'center',
-    width: deviceWidth - scale(30),   
+    width: deviceWidth - scale(30),
   },
   questionImageText: {
     color: colors.white,
@@ -173,7 +173,7 @@ export default ScaledSheet.create({
   questionQuestion: {
     color: colors.dark,
     flexWrap: 'wrap',
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   questionTextContainer: {
     backgroundColor: colors.white,
@@ -216,7 +216,7 @@ export default ScaledSheet.create({
   },
   timeSelectionLabel: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   title: {
     color: colors.dark,
@@ -226,9 +226,9 @@ export default ScaledSheet.create({
   },
   warning: {
     color: colors.red,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     bottom: '5@vs',
     position: 'absolute',
     right: '5@s',
   },
-});
+})

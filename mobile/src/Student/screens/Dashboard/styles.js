@@ -1,6 +1,6 @@
 
-import { scale, ScaledSheet } from 'react-native-size-matters';
-import { colors, deviceWidth, fonts } from '../../../utils/theme';
+import { scale, ScaledSheet } from 'react-native-size-matters'
+import { colors, deviceWidth, fonts } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   button: {
@@ -14,7 +14,7 @@ export default ScaledSheet.create({
   },
   buttonText: {
     color: colors.white,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   container: {
     flex: 1,
@@ -84,7 +84,7 @@ export default ScaledSheet.create({
   },
   profileValue: {
     color: colors.dark,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
   },
   profileValueContainer: {
     alignItems: 'center',
@@ -113,7 +113,7 @@ export default ScaledSheet.create({
   },
   roomInput: {
     color: colors.primary,
-    fontSize: fonts.medium,
+    fontSize: fonts.xMedium,
     fontWeight: 'bold',
   },
   roomScrollView: {
@@ -137,4 +137,4 @@ export default ScaledSheet.create({
     fontSize: fonts.large,
     fontWeight: 'bold',
   },
-});
+})
