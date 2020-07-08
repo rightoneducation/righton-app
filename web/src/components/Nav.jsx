@@ -16,7 +16,7 @@ export default function PrimarySearchAppBar() {
         <Toolbar>
           <Link className={classes.link} to={'/'}>
             <Typography className={classes.title} variant="h6" noWrap>
-              Games
+              RightOn Game Builder
             </Typography>
           </Link>
         </Toolbar>
