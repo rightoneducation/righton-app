@@ -41,6 +41,23 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     setAnchorEl(null);
     setActiveIndex(null);
   };
+  const duplicateHandler = (game) => () => {
+    const newGame = {
+      cluster: game.cluster,
+      description: game.description,
+      domain: game.domain,
+      grade: game.grade,
+      q1: game.q1,
+      q2: game.q2,
+      q3: game.q3,
+      q4: game.q4,
+      q5: game.q5,
+      standard: game.standard,
+      title: `Copy of ${game.title}`,
+    };
+    saveNewGame(newGame);
+    handleClose();
+  };
   const deleteHandler = (id) => () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this game?');
     if (confirmDelete) {
@@ -99,7 +116,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                         onClose={handleClose}
                       >
                         <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</MenuItem>
-                        <MenuItem onClick={() => { }}>Duplicate</MenuItem>
+                        <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
                         <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
                       </Menu>
                     </Box>
