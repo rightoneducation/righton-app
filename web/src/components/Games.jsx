@@ -6,7 +6,6 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
@@ -41,6 +40,13 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
   const handleClose = () => {
     setAnchorEl(null);
     setActiveIndex(null);
+  };
+  const deleteHandler = (id) => () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+    if (confirmDelete) {
+      deleteGame(id);
+      handleClose();
+    }
   };
 
   if (games.length < 1) return null;
@@ -93,6 +99,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                         onClose={handleClose}
                       >
                         <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</MenuItem>
+                        <MenuItem onClick={() => { }}>Duplicate</MenuItem>
+                        <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
                       </Menu>
                     </Box>
                   </Box>
