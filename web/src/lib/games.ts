@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
-import { ListGamesQuery, CreateGamesInput, CreateGamesMutation, UpdateGamesInput, UpdateGamesMutation } from '../API';
+import { ListGamesQuery, CreateGamesInput, CreateGamesMutation, UpdateGamesInput, UpdateGamesMutation, DeleteGamesMutation } from '../API';
 import { listGames } from '../graphql/queries';
-import { createGames, updateGames } from '../graphql/mutations';
+import { createGames, updateGames, deleteGames } from '../graphql/mutations';
 import { Game, Question, APIGame } from '../types';
 
 const deserializeQuestion = (question: string | null) => {
@@ -72,6 +72,12 @@ export const updateGame = async (game: Game) => {
   Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
   const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };
   return result?.data?.updateGames;
+}
+
+export const deleteGame = async (id: number): Promise<APIGame | null> => {
+  const input = { GameID: id };
+  const result = await API.graphql(graphqlOperation(deleteGames, { input })) as { data: DeleteGamesMutation };
+  return result?.data?.deleteGames;
 }
 
 export const getGameImage = (game: Game) => {
