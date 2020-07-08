@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  ccss: {
+    display: 'inline-block',
+    lineHeight: '52px',
+  },
   input: {
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -119,6 +123,9 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
         <Button type="button" onClick={() => history.push(`/`)}>
           <ArrowBackIcon className={classes.back} />Exit Game
         </Button>
+        <Typography className={classes.ccss}>
+          <strong>CCSS: </strong>{game.grade}{game.domain}{game.cluster}{game.standard}
+        </Typography>
         <Button disabled={questions.length > 4} className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
           Add question
         </Button>
