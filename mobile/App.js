@@ -3,7 +3,7 @@ import Buffer from 'buffer'
 global.Buffer = global.Buffer || Buffer.Buffer // Required for aws sigv4 signing
 
 import React from 'react'
-import { AppState, YellowBox } from 'react-native'
+import { AppState, LogBox } from 'react-native'
 
 import codePush from 'react-native-code-push'
 
@@ -16,13 +16,7 @@ import debug from './src/utils/debug'
 // Import after Amplify to provide polyfill and avoid clashing with React.
 import 'babel-polyfill'
 
-YellowBox.ignoreWarnings([])
-YellowBox.ignoreWarnings(
-  [
-    'Module RNFetchBlob requires main queue setup',
-    'Require cycle:',
-  ]
-)
+// LogBox.ignoreAllLogs([])
 
 Amplify.configure(awsconfig)
 
