@@ -66,7 +66,6 @@ class QuizMaker extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={colors.primary} />
         {this.renderHeader()}
         <ScrollView
           contentContainerStyle={styles.scrollview}

@@ -1,18 +1,18 @@
 import React from 'react'
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
-import { StyleSheet, Text, View, ScrollView, Platform } from 'react-native'
+import { StyleSheet, Text, View, Platform } from 'react-native'
 import { fontFamilies, fonts } from '../../../utils/theme'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
 const Card = ({ extraStyle, headerTitle, children }) => {
-    const cardStyle = { ...extraStyle, ...styles.cardContent }
+    const cardStyle = { ...(extraStyle || {}), ...styles.cardContent }
     return (
         <View style={styles.cardContainer}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>{headerTitle}</Text>
             </View>
             <KeyboardAwareScrollView
-                style={styles.cardContent}
+                style={cardStyle}
                 showsVerticalScrollIndicator={false}
             >
                 {children}
@@ -28,10 +28,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'space-between',
-        alignContent: 'center'
+        alignContent: 'center',
     },
     cardContent: {
-        flex: 1,
         marginLeft: moderateScale(25),
         marginRight: moderateScale(25),
         borderRadius: 24,

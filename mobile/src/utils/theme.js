@@ -28,6 +28,7 @@ const fontFamilies = {
   poppinsSemiBold: 'Poppins-SemiBold',
   poppinsBold: 'Poppins-Bold',
   montserratBold: 'Montserrat-Bold',
+  montserratExtraBold: 'Montserrat-ExtraBold',
   karlaBold: 'Karla-Bold',
   karlaRegular: 'Karla-Regular',
   latoBold: 'Lato-Bold',

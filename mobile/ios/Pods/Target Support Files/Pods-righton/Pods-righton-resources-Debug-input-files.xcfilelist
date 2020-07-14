@@ -15,3 +15,4 @@ ${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.tt
 ${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf
 ${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf
 ${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf
+${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle

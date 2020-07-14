@@ -4,12 +4,13 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const RoundTextInput = ({ icon, height, borderColor, onTappedIcon, data, onChangeText }) => {
+const RoundTextInput = ({ icon, text, height, borderColor, onTappedIcon, data, onChangeText }) => {
     return (
         <View style={[styles.container, { height, borderColor }]}>
             <TextInput
                 style={styles.input}
                 placeholder="Text Here"
+                value={text || ''}
                 onChangeText={(text) => console.log(text)}
                 underlineColorAndroid="transparent"
                 onChangeText={(text) => onChangeText(data, text)}

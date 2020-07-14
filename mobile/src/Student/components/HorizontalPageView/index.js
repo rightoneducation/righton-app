@@ -6,7 +6,6 @@ import Card from '../Card'
 
 const HorizontalPageView = ({ children }) => {
     const [currentPage, setCurrentPage] = useState(0)
-
     const carousel = useRef(null)
     const _renderItem = ({ item, index }) => {
         return (
@@ -24,7 +23,7 @@ const HorizontalPageView = ({ children }) => {
                 ref={carousel}
                 data={children}
                 sliderWidth={Dimensions.get('window').width}
-                itemWidth={Dimensions.get('window').width - moderateScale(25) * 2}
+                itemWidth={Math.max(scale(275), Dimensions.get('window').width - moderateScale(50))}
                 renderItem={_renderItem}
                 onSnapToItem={index => setCurrentPage(index)}
             />
@@ -43,15 +42,13 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between'
     },
-    cardContainer: {
-        flex: 1,
-    },
     pageIndicatorContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         marginLeft: 5,
         marginRight: 5,
-        marginBottom: 10,
+        marginBottom: verticalScale(10),
+        marginTop: verticalScale(5),
     },
     pageIndicator: {
         marginLeft: 5,

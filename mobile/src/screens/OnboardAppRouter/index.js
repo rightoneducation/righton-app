@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   Text,
   View,
@@ -6,29 +6,25 @@ import {
   Image,
   SafeAreaView,
   StatusBar
-} from 'react-native';
-import { ScaledSheet } from 'react-native-size-matters';
-import { colors, fonts, fontFamilies } from '../../utils/theme';
+} from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
+import { colors, fonts, fontFamilies } from '../../utils/theme'
 import RoundButton from '../../components/RoundButton'
 import PurpleBackground from '../../components/PurpleBackground'
 
 export default function OnboardAppRouter({ navigation }) {
   function handleTeacher() {
     // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
-    setTimeout(() => navigation.navigate('TeacherApp'), 250);
+    setTimeout(() => navigation.navigate('TeacherApp'), 250)
   }
 
   function handleStudent() {
     // screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
-    setTimeout(() => navigation.navigate('StudentFirst'), 250);
+    setTimeout(() => navigation.navigate('StudentFirst'), 250)
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        backgroundColor="#7215A2"
-        barStyle="light-content"
-      />
       <PurpleBackground>
         <ImageBackground style={styles.heroImage} source={require('../../assets/images/mathBottleHero.png')}>
           <Image
@@ -58,7 +54,7 @@ export default function OnboardAppRouter({ navigation }) {
         </Text>
       </PurpleBackground>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = ScaledSheet.create({
