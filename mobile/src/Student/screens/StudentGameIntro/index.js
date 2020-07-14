@@ -37,7 +37,7 @@ const StudentGameIntro = ({ route, navigation }) => {
                         orientation='horizontal'
                         onPageSelected={onPageSelected}
                     >
-                        <IntroInfo key="1" image={require('./img/TeamIntroStep1.png')} text="Read the question..." />
+                        <IntroInfo key="1" image={require('../img/answer_question_team5.png')} text="Read the question..." />
                         <IntroInfo key="2" image={require('./img/TeamIntroStep2.png')} text="Think with your team..." />
                         <IntroInfo key="3" image={require('./img/TeamIntroStep3.png')} text="Understand the hints..." />
                         <IntroInfo key="4" image={require('./img/TeamIntroStep4.png')} text="Trick your class!" />

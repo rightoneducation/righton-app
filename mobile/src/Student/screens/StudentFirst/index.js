@@ -19,15 +19,15 @@ import PurpleBackground from '../../../components/PurpleBackground'
 
 
 export default class StudentFirst extends React.PureComponent {
-  static propTypes = {
-    screenProps: screenPropsPropTypes,
-    navigation: navigationPropTypes,
-  }
+  // static propTypes = {
+  //   screenProps: screenPropsPropTypes,
+  //   navigation: navigationPropTypes,
+  // }
 
-  static defaultProps = {
-    screenProps: screenPropsDefaultProps,
-    navigation: navigationDefaultProps,
-  }
+  // static defaultProps = {
+  //   screenProps: screenPropsDefaultProps,
+  //   navigation: navigationDefaultProps,
+  // }
 
   constructor(props) {
     super(props)

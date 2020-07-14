@@ -10,10 +10,6 @@ const NavBarView = (props, navigation) => {
 
     return (
         <View>
-            <StatusBar
-                backgroundColor="#003668"
-                barStyle="light-content"
-            />
             <LinearGradient
                 colors={['#003668', '#0B5EA2']}
                 style={styles.container}

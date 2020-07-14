@@ -47,7 +47,6 @@ const ExploreScreen = ({ props, navigation }) => {
   useEffect(() => {
     async function fetchGames() {
       API.graphql(graphqlOperation(listGames)).then(gamesList => {
-        console.log(gamesList.data.listGames.items)
         setGames(gamesList.data.listGames.items)
         setMode(Mode.succeeded)
       }).catch(error => {

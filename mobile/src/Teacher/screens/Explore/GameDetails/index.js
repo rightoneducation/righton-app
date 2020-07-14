@@ -14,10 +14,6 @@ const GameDetailsScreen = ({ navigation }) => {
     }
     return (
         <SafeAreaView style={styles.mainContainer}>
-            <StatusBar
-                backgroundColor="#003668"
-                barStyle="light-content"
-            />
             <LinearGradient
                 colors={["#0D68B1", "#02215F"]}
                 start={{ x: 0, y: 0 }}
