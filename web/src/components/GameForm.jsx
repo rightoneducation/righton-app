@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  ccss: {
+    display: 'inline-block',
+    lineHeight: '52px',
+  },
   input: {
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -119,13 +123,18 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
         <Button type="button" onClick={() => history.push(`/`)}>
           <ArrowBackIcon className={classes.back} />Exit Game
         </Button>
+        {(game.grade || game.domain || game.cluster || game.standard) && (
+          <Typography className={classes.ccss}>
+            <strong>CCSS: </strong>{game.grade}.{game.domain}.{game.cluster}.{game.standard}
+          </Typography>
+        )}
         <Button disabled={questions.length > 4} className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
           Add question
         </Button>
       </Box>
       <form className={classes.root} noValidate autoComplete="off" onSubmit={(event) => event.preventDefault()}>
         {questions.length === 0 && (
-          <Typography className={classes.noQuestions} gutterTop gutterBottom variant="h5" component="div">
+          <Typography className={classes.noQuestions} gutterBottom variant="h5" component="div">
             No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
           </Typography>
         )}

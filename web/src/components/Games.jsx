@@ -6,7 +6,6 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
@@ -18,8 +17,11 @@ import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
 import EditGameDialogue from './EditGameDialogue';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput }) {
+export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, duplicateGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -28,6 +30,41 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     setNewGameOpen(false);
     await saveNewGame(game);
     history.push('/games/1');
+  };
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setActiveIndex(event.currentTarget.dataset.gameIndex);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setActiveIndex(null);
+  };
+  const duplicateHandler = (game) => () => {
+    const newGame = {
+      cluster: game.cluster,
+      description: game.description,
+      domain: game.domain,
+      grade: game.grade,
+      q1: game.q1,
+      q2: game.q2,
+      q3: game.q3,
+      q4: game.q4,
+      q5: game.q5,
+      standard: game.standard,
+      updated: Date.now(),
+      title: `Copy of ${game.title}`,
+    };
+    duplicateGame(newGame);
+    handleClose();
+  };
+  const deleteHandler = (id) => () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+    if (confirmDelete) {
+      deleteGame(id);
+    }
+    handleClose();
   };
 
   if (games.length < 1) return null;
@@ -64,9 +101,28 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
             return (
               <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
                 <CardContent>
-                  <Typography className={classes.title} gutterBottom>
-                    {title}
-                  </Typography>
+                  <Box className={classes.titleRow}>
+                    <Typography className={classes.title} gutterBottom>
+                      {title}
+                    </Typography>
+                    <Box className={classes.more}>
+                      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
+                        <MoreVertIcon />
+                      </Button>
+                      <Menu
+                        id={`question-${index}-actions`}
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={activeIndex === String(index)}
+                        onClose={handleClose}
+                      >
+                        <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</MenuItem>
+                        <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
+                        <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
+                      </Menu>
+                    </Box>
+                  </Box>
+
                   <Box className={classes.gameCardBox}>
                     {image && <img className={classes.image} src={image} alt="" />}
                     {!image && (
@@ -84,9 +140,6 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                     </Typography>
                   </Box>
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</Button>
-                </CardActions>
               </Card>
             );
           })}
@@ -202,5 +255,16 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     fontWeight: 500,
+  },
+  titleRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  more: {
+    display: 'inline-block',
+  },
+  moreButton: {
+    minWidth: '28px',
+    margin: '0',
   },
 }));
