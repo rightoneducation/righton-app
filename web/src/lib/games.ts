@@ -4,6 +4,32 @@ import { listGames } from '../graphql/queries';
 import { createGames, updateGames, deleteGames } from '../graphql/mutations';
 import { Game, Question, APIGame } from '../types';
 
+export enum SORT_TYPES {
+  ALPHABETICAL,
+  UPDATED,
+}
+
+const sortByUpdated = (a: Game, b: Game) => {
+  if (a.updated === null) return 1;
+  if (b.updated === null) return -1;
+  if (a.updated > b.updated) return -1;
+  if (b.updated > a.updated) return 1;
+  return 0;
+};
+
+const sortAlphabetically = (a: Game, b: Game) => {
+  if (a.title === null) return 1;
+  if (b.title === null) return -1;
+  if (a.title > b.title) return 1;
+  if (b.title > a.title) return -1;
+  return 0;
+};
+
+const SORT_TYPE_TO_FUNCTION = {
+  [SORT_TYPES.ALPHABETICAL]: sortAlphabetically,
+  [SORT_TYPES.UPDATED]: sortByUpdated,
+}
+
 const deserializeQuestion = (question: string | null) => {
   return question === null ? question : (JSON.parse(question) as Question);
 }
@@ -40,19 +66,17 @@ const serializeQuestions = (game: Game): APIGame | null => {
   }
 }
 
-const sortByUpdated = (a: APIGame, b: APIGame) => {
-  if (a.updated === null) return 1;
-  if (b.updated === null) return -1;
-  if (a.updated > b.updated) return -1;
-  if (b.updated > a.updated) return 1;
-  return 0;
-};
-
-export const fetchGames = async () => {
+export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Promise<Game[]> => {
   const result = await API.graphql(graphqlOperation(listGames)) as { data: ListGamesQuery };
   const games = (result?.data?.listGames?.items || []) as APIGame[];
-  return games.sort(sortByUpdated).map(deserializeQuestions);
+  // @ts-ignore
+  return games.map(deserializeQuestions);
 }
+
+export const sortGames = (games: Game[], sortType: SORT_TYPES = SORT_TYPES.UPDATED) => {
+  const sortFunction = SORT_TYPE_TO_FUNCTION[sortType];
+  return [...games].sort(sortFunction);
+};
 
 export const createGame = async (game: CreateGamesInput) => {
   // @ts-ignore

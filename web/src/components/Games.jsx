@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { SORT_TYPES } from '../lib/games';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -20,8 +21,9 @@ import EditGameDialogue from './EditGameDialogue';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Select from '@material-ui/core/Select';
 
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, duplicateGame }) {
+export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, duplicateGame, sortType, setSortType }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -36,6 +38,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.gameIndex);
+    event.stopPropagation();
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -66,16 +69,19 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     }
     handleClose();
   };
+  const handleSortChange = (event) => {
+    setSortType(event.target.value);
+  };
 
   const renderGames = () => {
     if (games.length >= 1) {
       return games
         .map((game, index) => {
-          const { GameID, title, grade, q1, q2, q3, q4, q5 } = game;
+          const { GameID, title, q1, q2, q3, q4, q5 } = game;
           const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
           const image = getGameImage(game);
           return (
-            <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+            <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
                 <Box className={classes.titleRow}>
                   <Typography className={classes.title} gutterBottom>
@@ -92,7 +98,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                       open={activeIndex === String(index)}
                       onClose={handleClose}
                     >
-                      <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</MenuItem>
+                      <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                       <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
                       <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
                     </Menu>
@@ -111,9 +117,14 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                   <Typography color="textSecondary" gutterBottom>
                     {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
                   </Typography>
-                  <Typography color="textSecondary" gutterBottom>
-                    {grade && `Grade ${grade}`}
-                  </Typography>
+                  {(game.grade || game.domain || game.cluster || game.standard) && (
+                    <Typography color="textSecondary" gutterBottom>
+                      {game.grade === 'General' ?
+                        game.grade :
+                        `${game.grade}.${game.domain}.${game.cluster}.${game.standard}`
+                      }
+                    </Typography>
+                  )}
                 </Box>
               </CardContent>
             </Card>
@@ -129,10 +140,10 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
 
   return (
     <Grid container className={classes.root} spacing={4}>
-      <Grid item xs={3} className={classes.sidebar}>
+      <Grid item xs={match ? 3 : 12} className={classes.sidebar}>
         <Box className={classes.actions}>
           <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
-            Add game
+            New game
           </Button>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -149,26 +160,36 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          <Select
+            id="sort-select"
+            value={sortType}
+            onChange={handleSortChange}
+          >
+            <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
+            <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
+          </Select>
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         {renderGames()}
       </Grid>
-      <Grid item xs={9} className={classes.content}>
-        <Switch>
-          <Route path="/games/:gameIndex/questions/:questionIndex" render={
-            ({ match }) => {
-              const { questionIndex, gameIndex } = match.params;
-              return <QuestionForm loading={loading} saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
-            }
-          } />
-          <Route path="/games/:gameIndex" render={
-            ({ match }) => {
-              const { gameIndex } = match.params;
-              return <GameForm loading={loading} saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
-            }
-          } />
-        </Switch>
-      </Grid>
+      {match && (
+        <Grid item xs={9} className={classes.content}>
+          <Switch>
+            <Route path="/games/:gameIndex/questions/:questionIndex" render={
+              ({ match }) => {
+                const { questionIndex, gameIndex } = match.params;
+                return <QuestionForm loading={loading} saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
+              }
+            } />
+            <Route path="/games/:gameIndex" render={
+              ({ match }) => {
+                const { gameIndex } = match.params;
+                return <GameForm loading={loading} saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+              }
+            } />
+          </Switch>
+        </Grid>
+      )}
       <Route path="/games/:gameIndex/edit" render={
         ({ match }) => {
           const { gameIndex } = match.params;
@@ -186,11 +207,17 @@ const useStyles = makeStyles(theme => ({
     width: 'calc(100% + 16px) !important',
   },
   game: {
+    width: '350px',
     marginBottom: theme.spacing(2),
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.05)',
       cursor: 'pointer',
     }
+  },
+  gameGrid: {
+    display: 'inline-block',
+    marginRight: theme.spacing(4),
+    verticalAlign: 'top',
   },
   gameSelected: {
     backgroundColor: '#CAF0F3',
