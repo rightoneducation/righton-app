@@ -1,1 +1,0 @@
-../../../../../node_modules/amazon-cognito-identity-js/ios/RNAWSCognito.h
