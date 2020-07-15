@@ -1,21 +1,16 @@
 # RightOn Native App
 
-### Getting Started
+## Getting Started
 
-#### 1) Clone project
+### Prerequisite
 
-`git clone https://github.com/righton-dev/righton-app.git`
+- Already followed the steps in React Native to setup your environment. [React Native Getting Started](https://reactnative.dev/docs/0.61/getting-started)
 
-#### 2) Install node modules
+### Setup your repo
 
-`npm install`
+- Clone project `git clone https://github.com/righton-dev/righton-app.git`
 
-#### 3) Install on device
-
-`npm run ios`
-<br>
-`npm run android`
-
-#### 4) Start your app
-
-`npm start`
+- Go to `mobile` folder
+- Install node modules by running `npm install` inside `mobile` directory
+- Install Pods by going to iOS folder and running `pod install` or you can run `cd ios; pod install; cd ..` from mobile folder
+- Now, you can run `react-native run-ios` for running iOS app and `react-native run-android` for running the Android app
