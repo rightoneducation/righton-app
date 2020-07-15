@@ -13,7 +13,7 @@ import Nav from './components/Nav';
 import Games from './components/Games';
 // use local storage instead of mock
 import awsconfig from './aws-exports';
-import { fetchGames, createGame, updateGame, deleteGame } from './lib/games';
+import { fetchGames, createGame, updateGame, duplicateGame, deleteGame } from './lib/games';
 import { Game } from './types';
 
 const filterGame = (game: Game | null, search: string) => {
@@ -73,6 +73,15 @@ function App() {
     }
   }
 
+  // @ts-ignore
+  const handleDuplicateGame = async (game) => {
+    const result = await duplicateGame(game);
+    if (result) {
+      const games = await fetchGames();
+      setGames(games);
+    }
+  }
+
   useEffect(() => {
     getGames();
     setStartup(false);
@@ -97,7 +106,7 @@ function App() {
         <Box>
           <Nav />
           <Route path="/">
-            <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} />
+            <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} duplicateGame={handleDuplicateGame} />
           </Route>
         </Box>
       </ThemeProvider>

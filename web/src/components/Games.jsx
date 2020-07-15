@@ -21,7 +21,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame }) {
+export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, duplicateGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -53,17 +53,18 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
       q4: game.q4,
       q5: game.q5,
       standard: game.standard,
+      updated: Date.now(),
       title: `Copy of ${game.title}`,
     };
-    saveNewGame(newGame);
+    duplicateGame(newGame);
     handleClose();
   };
   const deleteHandler = (id) => () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this game?');
     if (confirmDelete) {
       deleteGame(id);
-      handleClose();
     }
+    handleClose();
   };
 
   if (games.length < 1) return null;

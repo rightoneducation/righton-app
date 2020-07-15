@@ -65,11 +65,18 @@ export const createGame = async (game: CreateGamesInput) => {
   return result?.data?.createGames;
 }
 
+// @ts-ignore
+export const duplicateGame = async (game) => {
+  const input = serializeQuestions(game);
+  const result = await API.graphql(graphqlOperation(createGames, { input })) as { data: CreateGamesMutation };
+  return result?.data?.createGames;
+}
+
 export const updateGame = async (game: Game) => {
   const input = serializeQuestions(game) as UpdateGamesInput;
   input.updated = Date.now(); // Add current timestamp
   // @ts-ignore
-  Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
+  Object.keys(input).forEach((key) => { if (input[key] === '') input[key] = null; });
   const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };
   return result?.data?.updateGames;
 }

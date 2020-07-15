@@ -134,7 +134,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
       </Box>
       <form className={classes.root} noValidate autoComplete="off" onSubmit={(event) => event.preventDefault()}>
         {questions.length === 0 && (
-          <Typography className={classes.noQuestions} gutterTop gutterBottom variant="h5" component="div">
+          <Typography className={classes.noQuestions} gutterBottom variant="h5" component="div">
             No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
           </Typography>
         )}
