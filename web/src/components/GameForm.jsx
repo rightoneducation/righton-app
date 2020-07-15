@@ -125,7 +125,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
         </Button>
         {(game.grade || game.domain || game.cluster || game.standard) && (
           <Typography className={classes.ccss}>
-            <strong>CCSS: </strong>{game.grade}{game.domain}{game.cluster}{game.standard}
+            <strong>CCSS: </strong>{game.grade}.{game.domain}.{game.cluster}.{game.standard}
           </Typography>
         )}
         <Button disabled={questions.length > 4} className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
