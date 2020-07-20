@@ -1,7 +1,7 @@
 # RightOn Education
 
 ### Our Mission & Vision
-<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do math." Our mission is to unlock every student’s potential in math: building self-confidence, developing conceptual understanding, and helping them overcome challenges in both school & life.
+<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do math." Our mission is to unlock every student’s potential in math: building self-confidence, developing conceptual understanding, and helping them overcome hurdles in both school & life: whether they'd like to  build apps, go to Mars, or become the next Beyonce!
 
 While many apps focus on speed and accuracy, we're turning things around: our app not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers. Through learning from mistakes and misconceptions, everyone takes their learning to the next level.
 
