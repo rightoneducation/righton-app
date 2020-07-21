@@ -1,28 +1,26 @@
 import React from 'react'
-import { StyleSheet, View, TextInput, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const RoundTextInput = ({ icon, text, height, borderColor, onTappedIcon, data, onChangeText }) => {
+const RoundTextIcon = ({ icon, text, height, borderColor, onPress, data }) => {
     return (
-        <View style={[styles.container, { height, borderColor }]}>
-            <TextInput
-                style={styles.input}
-                placeholder="Text Here"
-                value={text || ''}
-                onChangeText={(text) => console.log(text)}
-                underlineColorAndroid="transparent"
-                onChangeText={(text) => onChangeText(data, text)}
-            />
-            <TouchableOpacity onPress={() => onTappedIcon(data)}>
-                <Image source={icon} style={styles.icon} />
-            </TouchableOpacity>
+        <View>
+            <Pressable onPress={() => onPress(data)}>
+                <View style={[styles.container, { height, borderColor }]}>
+                    <Text style={styles.input}>
+                        {text}
+                    </Text>
+                    <Image source={icon} style={styles.icon} />
+                </View>
+            </Pressable>
         </View>
+
     )
 }
 
-export default RoundTextInput
+export default RoundTextIcon
 
 const styles = StyleSheet.create({
     container: {
@@ -36,6 +34,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: verticalScale(8),
         marginBottom: verticalScale(8),
+        alignSelf: 'stretch',
     },
     icon: {
         padding: scale(10),
@@ -47,6 +46,7 @@ const styles = StyleSheet.create({
         fontFamily: fontFamilies.karlaRegular,
         fontSize: fonts.xMedium,
         marginRight: scale(5),
+        paddingLeft: scale(5),
         flex: 1,
     },
 })

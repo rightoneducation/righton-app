@@ -4,8 +4,8 @@ import sharedStyles from '../../Components/sharedStyles'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts, colors } from '../../../../../utils/theme'
 import Button from '../../../../components/Button'
-import RoundTextInput from '../../../../components/RoundTextInput'
-import { FlatList } from 'react-native-gesture-handler'
+import RoundTextIcon from '../../../../components/RoundTextIcon'
+import { FlatList, State } from 'react-native-gesture-handler'
 import { KeyboardAwareFlatList } from '@codler/react-native-keyboard-aware-scroll-view'
 
 
@@ -14,24 +14,35 @@ const TrickAnswers = () => {
         none: 'none',
         hasAnsweredCorrectly: 'answered',
         hasAnsweredIncorrectly: 'incorrectAnswer',
+        alreadyAddedAnswer: 'alreadyAddedAnswer'
     }
     const [answers, setAnswers] = useState([])
     const [answer, setAnswer] = useState('')
-    const [lastWrongAnswer, setLastWrongAnswer] = useState('')
+    const [lastAnswer, setLastAnswer] = useState('')
     const [selectedAnswers, setSelectedAnswers] = useState({})
     const [status, setStatus] = useState(Status.none)
+    const [currentAnswer, setCurrentAnswer] = useState('')
+
 
     const onAddTrickAnswers = () => {
+        if (lastAnswer == '') {
+            return
+        }
         const newAnswers = answers
         newAnswers.push({
             id: answers.length,
-            text: lastWrongAnswer,
-            isSelected: status == Status.hasAnsweredIncorrectly && answers.length < 3
+            text: lastAnswer,
+            isSelected: answers.length < 3
         })
         setAnswers(newAnswers)
+        setCurrentAnswer('')
+        setLastAnswer('')
+        if (status == Status.hasAnsweredCorrectly) {
+            setStatus(Status.alreadyAddedAnswer)
+        }
     }
 
-    const onToggleIcon = (answer) => {
+    const onAnwerClicked = (answer) => {
         const newSelectedAnswers = selectedAnswers
         if (answer.isSelected) {
             delete newSelectedAnswers[answer.id]
@@ -55,12 +66,14 @@ const TrickAnswers = () => {
 
     const onRealAnswerChanged = (event) => {
         const text = event.nativeEvent.text
+        setLastAnswer(text)
         if (text == '1080') {
             setAnswer(text)
-            setLastWrongAnswer('')
+            if (status == Status.alreadyAddedAnswer) {
+                return
+            }
             setStatus(Status.hasAnsweredCorrectly)
-        } else {
-            setLastWrongAnswer(text)
+        } else if (status != Status.alreadyAddedAnswer) {
             setStatus(Status.hasAnsweredIncorrectly)
         }
     }
@@ -72,28 +85,32 @@ const TrickAnswers = () => {
                 style={[styles.answerTextInput, {
                     backgroundColor: status == Status.hasAnsweredCorrectly ? '#D7EFC3' : 'white',
                 }]}
-                editable={status != Status.hasAnsweredCorrectly}
+                value={currentAnswer}
+                onChangeText={text => setCurrentAnswer(text)}
                 onSubmitEditing={onRealAnswerChanged}
             />
-            <View style={{ opacity: status == Status.none ? 0 : 1, flex: 1 }}>
-                <Text style={sharedStyles.text}>
-                    {
-                        status == Status.hasAnsweredCorrectly ?
-                            'Nice job, that’s right! Now can you think of other answers that might trick your class?' :
-                            'Nice try! That’s not the correct answer, but it sounds like a great trick answer!'
-                    }
-                </Text>
+            <View style={{ opacity: status == Status.none ? 0 : 1, flex: 1, alignSelf: 'stretch' }}>
+                {
+                    status != Status.alreadyAddedAnswer &&
+                    <Text style={sharedStyles.text}>
+                        {
+                            status == Status.hasAnsweredCorrectly ?
+                                'Nice job, that’s right! Now can you think of other answers that might trick your class?' :
+                                'Nice try! That’s not the correct answer, but it sounds like a great trick answer!'
+                        }
+                    </Text>
+                }
                 <KeyboardAwareFlatList
                     style={styles.answers}
                     data={answers}
                     keyExtractor={item => `${item.id}`}
                     renderItem={({ item }) =>
-                        <RoundTextInput
+                        <RoundTextIcon
                             icon={item.isSelected ? require('../../img/checkmark_checked.png') : require('../../img/gray_circle.png')}
                             text={item.text}
                             height={43}
                             borderColor={item.isSelected ? '#8DCD53' : '#D9DFE5'}
-                            onTappedIcon={onToggleIcon}
+                            onPress={onAnwerClicked}
                             data={item}
                             onChangeText={onTrickyAnswerChanged}
                         />
@@ -104,7 +121,8 @@ const TrickAnswers = () => {
                         title="Add Trick Answer"
                         buttonStyle={styles.addTrickAnswer}
                         onPress={onAddTrickAnswers}
-                        titleStyle={styles.addTrickAnswerTitle}
+                        titleStyle={[styles.addTrickAnswerTitle, { color: lastAnswer == '' ? '#B1BACB' : 'white' }]}
+                        disabled={lastAnswer == ''}
                     />
                 </View>
             </View>
