@@ -1,9 +1,9 @@
 # RightOn Education
 
 ### Our Mission & Vision
-<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do math." Our mission is to unlock every student’s potential in math: building self-confidence, developing conceptual understanding, and helping them overcome hurdles in both school & life: whether they'd like to  build apps, go to Mars, or become the next Beyonce!
+<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do science." Our mission is to unlock every student’s potential in STEM: building self-confidence, developing conceptual understanding, and helping them overcome hurdles in both school & life: whether they'd like to build apps, go to Mars, or become the next Beyonce!
 
-While many apps focus on speed and accuracy, we're turning things around: our app not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers. Through learning from mistakes and misconceptions, everyone takes their learning to the next level.
+While many apps focus on getting answers as quickly as possible, we're turning things around: RightOn not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers. Through learning from mistakes and misconceptions, everyone takes their learning to the next level.
 
 <strong>Vision:</strong> In the future, we envision <a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> to become a multimedia learning platform and game show (spanning mobile apps and livestream video), one that eventually helps connect students of all ages and backgrounds to learn new subjects -- from math today to others in the future. 
 
@@ -18,7 +18,7 @@ We’re a team that sometimes falls down, always gets back up, and never stops h
 
 ### Project Description
 We're currently developing two apps:
-1. A React Native mobile app for middle/high school teachers to use in classroom environments. Think Balderdash/Fibbage + math + learning from and having fun with mistakes and misconceptions. 
+1. A React Native mobile app for middle/high school teachers to use in classroom environments. Think Balderdash/Fibbage + STEM + learning from and having fun with mistakes and misconceptions. 
 2. A React web app that enables teachers to create games/questions that appear in the mobile app and view classroom results.
 
 We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a livestream game show with elements similar to the following <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>. 
@@ -78,7 +78,6 @@ Coming soon!
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Edward Tan</strong> - Architect Lead<br>
 <strong>Iman Howard</strong> - STEM Educator<br>
-<strong>Jordan Fong</strong> - UX<br>
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
 <strong>Mani Ramezan</strong> - Mobile App Lead<br>
 <strong>Marizza Bailey</strong> - Math Educator / Content & Pedagogy<br>
