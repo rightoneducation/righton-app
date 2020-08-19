@@ -67,7 +67,65 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     handleClose();
   };
 
-  if (games.length < 1) return null;
+  const renderGames = () => {
+    if (games.length >= 1) {
+      return games
+        .map((game, index) => {
+          const { GameID, title, grade, q1, q2, q3, q4, q5 } = game;
+          const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
+          const image = getGameImage(game);
+          return (
+            <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+              <CardContent>
+                <Box className={classes.titleRow}>
+                  <Typography className={classes.title} gutterBottom>
+                    {title}
+                  </Typography>
+                  <Box className={classes.more}>
+                    <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
+                      <MoreVertIcon />
+                    </Button>
+                    <Menu
+                      id={`question-${index}-actions`}
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={activeIndex === String(index)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</MenuItem>
+                      <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
+                      <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
+                    </Menu>
+                  </Box>
+                </Box>
+
+                <Box className={classes.gameCardBox}>
+                  {image && <img className={classes.image} src={image} alt="" />}
+                  {!image && (
+                    <Avatar variant="square" className={classes.square}>
+                      <ImageIcon fontSize="large" />
+                    </Avatar>
+                  )}
+                </Box>
+                <Box className={classes.gameCardBox}>
+                  <Typography color="textSecondary" gutterBottom>
+                    {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
+                  </Typography>
+                  <Typography color="textSecondary" gutterBottom>
+                    {grade && `Grade ${grade}`}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          );
+        });
+    }
+    return (
+      <Typography gutterBottom>
+        No results found.
+      </Typography>
+    );
+  }
 
   return (
     <Grid container className={classes.root} spacing={4}>
@@ -93,56 +151,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
           </div>
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
-        {games
-          .map((game, index) => {
-            const { GameID, title, grade, q1, q2, q3, q4, q5 } = game;
-            const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
-            const image = getGameImage(game);
-            return (
-              <Card className={classnames(classes.game, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
-                <CardContent>
-                  <Box className={classes.titleRow}>
-                    <Typography className={classes.title} gutterBottom>
-                      {title}
-                    </Typography>
-                    <Box className={classes.more}>
-                      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
-                        <MoreVertIcon />
-                      </Button>
-                      <Menu
-                        id={`question-${index}-actions`}
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={activeIndex === String(index)}
-                        onClose={handleClose}
-                      >
-                        <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); }}>Edit</MenuItem>
-                        <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
-                        <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
-                      </Menu>
-                    </Box>
-                  </Box>
-
-                  <Box className={classes.gameCardBox}>
-                    {image && <img className={classes.image} src={image} alt="" />}
-                    {!image && (
-                      <Avatar variant="square" className={classes.square}>
-                        <ImageIcon fontSize="large" />
-                      </Avatar>
-                    )}
-                  </Box>
-                  <Box className={classes.gameCardBox}>
-                    <Typography color="textSecondary" gutterBottom>
-                      {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
-                    </Typography>
-                    <Typography color="textSecondary" gutterBottom>
-                      {grade && `Grade ${grade}`}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            );
-          })}
+        {renderGames()}
       </Grid>
       <Grid item xs={9} className={classes.content}>
         <Switch>
