@@ -73,7 +73,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     setSortType(event.target.value);
   };
 
-  const renderGames = () => {
+  const renderGames = (loading) => {
+    if (loading) return <Typography gutterBottom>Loading...</Typography>;
     if (games.length >= 1) {
       return games
         .map((game, index) => {
@@ -170,9 +171,9 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
           </Select>
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
-        {renderGames()}
+        {renderGames(loading)}
       </Grid>
-      {match && (
+      {match && games[Number(match.params.gameIndex) - 1] && (
         <Grid item xs={9} className={classes.content}>
           <Switch>
             <Route path="/games/:gameIndex/questions/:questionIndex" render={
