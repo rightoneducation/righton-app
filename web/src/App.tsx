@@ -11,9 +11,8 @@ import {
 } from '@material-ui/core/styles';
 import Nav from './components/Nav';
 import Games from './components/Games';
-// use local storage instead of mock
 import awsconfig from './aws-exports';
-import { fetchGames, createGame, updateGame, duplicateGame, deleteGame } from './lib/games';
+import { fetchGames, sortGames, createGame, updateGame, duplicateGame, deleteGame, SORT_TYPES } from './lib/games';
 import { Game } from './types';
 
 const filterGame = (game: Game | null, search: string) => {
@@ -37,21 +36,15 @@ const theme = createMuiTheme({
 function App() {
   const [startup, setStartup] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [sortType, setSortType] = useState(SORT_TYPES.UPDATED);
   const [searchInput, setSearchInput] = useState('');
   const [games, setGames] = useState<(Game | null)[]>([]);
-
-  const getGames = async () => {
-    setLoading(true);
-    const games = await fetchGames();
-    setGames(games);
-    setLoading(false);
-  };
 
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
     const game = await createGame(newGame);
     if (game) {
-      const games = await fetchGames();
+      const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
     setLoading(false);
@@ -60,7 +53,7 @@ function App() {
   const saveGame = async (game: Game) => {
     const result = await updateGame(game);
     if (result) {
-      const games = await fetchGames();
+      const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
   }
@@ -68,7 +61,7 @@ function App() {
   const handleDeleteGame = async (id: number) => {
     const result = await deleteGame(id);
     if (result) {
-      const games = await fetchGames();
+      const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
   }
@@ -77,15 +70,27 @@ function App() {
   const handleDuplicateGame = async (game) => {
     const result = await duplicateGame(game);
     if (result) {
-      const games = await fetchGames();
+      const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
   }
 
   useEffect(() => {
+    const getGames = async () => {
+      setLoading(true);
+      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+      setGames(games);
+      setLoading(false);
+    };
     getGames();
     setStartup(false);
   }, []);
+
+  useEffect(() => {
+    // @ts-ignore
+    setGames(sortGames(games, sortType));
+    // eslint-disable-next-line
+  }, [sortType]);
 
   // @ts-ignore
   const handleSaveQuestion = async (question, gameIndex, questionIndex) => {
@@ -106,7 +111,7 @@ function App() {
         <Box>
           <Nav />
           <Route path="/">
-            <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} duplicateGame={handleDuplicateGame} />
+            <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} duplicateGame={handleDuplicateGame} sortType={sortType} setSortType={setSortType} />
           </Route>
         </Box>
       </ThemeProvider>
