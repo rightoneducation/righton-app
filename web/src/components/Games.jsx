@@ -213,7 +213,8 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.05)',
       cursor: 'pointer',
-    }
+    },
+    height: '152px',
   },
   gameGrid: {
     display: 'inline-block',
@@ -279,6 +280,7 @@ const useStyles = makeStyles(theme => ({
   },
   image: {
     width: '80px',
+    maxHeight: '80px',
     marginRight: theme.spacing(2),
   },
   square: {
