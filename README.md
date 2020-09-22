@@ -95,5 +95,4 @@ Coming soon!
 <strong>Ronald Towns</strong> - STEM Administrator<br>
 <strong>Yong Lin</strong> - UX
 <br>
-<br>
 <em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>
