@@ -8,7 +8,7 @@ import TeamsReadinessFooter from '../../../components/TeamsReadinessFooter'
 import HorizontalPageView from '../../../components/HorizontalPageView'
 import Card from '../../../components/Card'
 import Spinner from './Spinner'
-import Question from '../Components/Question'
+import ScrollableQuestion from '../Components/ScrollableQuestion'
 import TrickAnswers from './TrickAnswers'
 import HintsView from '../Components/HintsView'
 
@@ -46,6 +46,11 @@ const GamePreview = ({ navigation }) => {
     setHints([...hints, availableHints[hints.length]])
   }
 
+  const showAllHints = () => {
+    setShowTrickAnswersHint(true)
+    setHints(availableHints)
+  }
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
@@ -73,10 +78,10 @@ const GamePreview = ({ navigation }) => {
       <View style={styles.carouselContainer}>
         <HorizontalPageView>
           <Card headerTitle="Question">
-            <Question />
+            <ScrollableQuestion />
           </Card>
           <Card headerTitle="Trick Answers">
-            <TrickAnswers />
+            <TrickAnswers onAnsweredCorrectly={() => showAllHints()} />
           </Card>
           <Card headerTitle="Hints">
             {

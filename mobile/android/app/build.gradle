@@ -223,31 +223,6 @@ dependencies {
 
     implementation project(':react-native-gesture-handler')
 
-//    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-//        exclude group:'com.facebook.fbjni'
-//    }
-//
-//    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-//        exclude group:'com.facebook.flipper'
-//    }
-//
-//    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
-//        exclude group:'com.facebook.flipper'
-//    }
-//
-//    releaseStagingImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-//        exclude group:'com.facebook.fbjni'
-//    }
-//
-//    releaseStagingImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-//        exclude group:'com.facebook.flipper'
-//    }
-//
-//    releaseStagingImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
-//        exclude group:'com.facebook.flipper'
-//    }
-//    implementation project(path: ':amazon-cognito-identity-js')
-
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
 

@@ -1,22 +1,25 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, Pressable } from 'react-native'
+import { StyleSheet, View, TextInput, Image, Pressable } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const RoundTextIcon = ({ icon, text, height, borderColor, onPress, data }) => {
+const RoundTextIcon = ({ icon, text, height, borderColor, onIconPress, data, onTextChanged }) => {
     return (
         <View>
-            <Pressable onPress={() => onPress(data)}>
-                <View style={[styles.container, { height, borderColor }]}>
-                    <Text style={styles.input}>
-                        {text}
-                    </Text>
-                    <Image source={icon} style={styles.icon} />
-                </View>
-            </Pressable>
+            <View style={[styles.container, { height, borderColor }]}>
+                <TextInput
+                    style={styles.input}
+                    onSubmitEditing={(event) => onTextChanged(data, event.nativeEvent.text)}
+                >
+                    {text}
+                </TextInput>
+                <Pressable onPress={() => onIconPress(data)}>
+                    <View style={styles.iconContainer}>
+                        <Image source={icon} style={styles.icon} />
+                    </View>
+                </Pressable>
+            </View>
         </View>
-
     )
 }
 
@@ -40,6 +43,10 @@ const styles = StyleSheet.create({
         padding: scale(10),
         width: 16,
         height: 16,
+    },
+    iconContainer: {
+        width: 44,
+        alignItems: 'flex-end'
     },
     input: {
         color: '#384466',
