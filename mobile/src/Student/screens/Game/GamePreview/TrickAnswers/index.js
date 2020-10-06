@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Platform } from 'react-native'
 import sharedStyles from '../../Components/sharedStyles'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts, colors } from '../../../../../utils/theme'
@@ -59,6 +59,7 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
     }
 
     const toggleAnswer = (answerId) => {
+        console.log(answerId)
         if (!isFacilitator) {
             return
         }
@@ -183,6 +184,11 @@ const styles = StyleSheet.create({
         borderColor: '#B1BACB',
         borderWidth: 1,
         alignSelf: 'stretch',
+        ...Platform.select({
+            ios: {
+                height: 43
+            },
+        }),
     },
     trickAnswerInput: {
         borderWidth: 2,

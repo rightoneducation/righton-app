@@ -6,11 +6,13 @@ import { fontFamilies, fonts } from '../../../utils/theme'
 const RoundTextIcon = ({ icon, text, height, borderColor, onPress, data, showIcon, readonly, onTextChanged }) => {
     return (
         <View>
+
             <Pressable onPress={() => onPress(data)}>
                 <View style={[styles.container, { height, borderColor }]}>
                     <TextInput
                         editable={!readonly}
                         style={styles.input}
+                        pointerEvents={readonly ? 'none' : 'auto'}
                         onSubmitEditing={(event) => onTextChanged(data, event.nativeEvent.text)}
                     >
                         {text}

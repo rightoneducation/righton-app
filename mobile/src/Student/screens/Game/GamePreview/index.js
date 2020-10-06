@@ -26,7 +26,6 @@ const GamePreview = ({ navigation, route }) => {
   const [hints, setHints] = useState([availableHints[0]])
 
   useEffect(() => {
-    console.log(`isFacilitator:${isFacilitator}`)
     if (countdown == 0) {
       return
     }

@@ -8,8 +8,7 @@ export default StyleSheet.create({
         fontFamily: fontFamilies.karlaBold,
         fontWeight: 'bold',
         fontSize: fonts.small,
-        color: '#384466',
-        height: verticalScale(43)
+        color: '#384466'
     },
     cardContainer: {
         padding: scale(24),
