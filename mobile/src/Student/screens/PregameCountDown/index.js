@@ -23,11 +23,10 @@ const PregameCountDown = ({ navigation, route }) => {
                 radius={Dimensions.get('window').width / 2 - scale(30) * 2}
                 shouldShowCountdown={true}
                 fontSize={scale(100)}
-                timerStartInSecond={1}
+                timerStartInSecond={5}
                 onTimerFinished={() => navigation.navigate('GamePreview', {
                     selectedTeam, isFacilitator: selectedTeam == 1
-                })
-                }
+                })}
             />
             <Text style={styles.text}>
                 Your team's question will appear soon.
