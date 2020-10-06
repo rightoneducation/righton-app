@@ -5,7 +5,8 @@ import LoadingIndicator from '../../components/LoadingIndicator'
 import { scale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
 
-const PregameCountDown = ({ navigation }) => {
+const PregameCountDown = ({ navigation, route }) => {
+    const { selectedTeam } = route.params
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator
@@ -22,8 +23,11 @@ const PregameCountDown = ({ navigation }) => {
                 radius={Dimensions.get('window').width / 2 - scale(30) * 2}
                 shouldShowCountdown={true}
                 fontSize={scale(100)}
-                timerStartInSecond={5}
-                onTimerFinished={() => navigation.navigate('GamePreview')}
+                timerStartInSecond={1}
+                onTimerFinished={() => navigation.navigate('GamePreview', {
+                    selectedTeam, isFacilitator: selectedTeam == 1
+                })
+                }
             />
             <Text style={styles.text}>
                 Your team's question will appear soon.

@@ -7,7 +7,7 @@ import RoundTextIcon from '../../../../components/RoundTextIcon'
 import { KeyboardAwareFlatList } from '@codler/react-native-keyboard-aware-scroll-view'
 import uuid from 'react-native-uuid'
 
-const TrickAnswers = ({ onAnsweredCorrectly }) => {
+const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
     const Status = {
         none: 'none',
         hasAnsweredCorrectly: 'answered',
@@ -59,6 +59,9 @@ const TrickAnswers = ({ onAnsweredCorrectly }) => {
     }
 
     const toggleAnswer = (answerId) => {
+        if (!isFacilitator) {
+            return
+        }
         const answers = trickAnswers.filter(answer => answer.isSelected)
         const newAnswerIndex = trickAnswers.findIndex(answer => answer.id == answerId)
         if (trickAnswers[newAnswerIndex].isSelected) {
@@ -151,7 +154,7 @@ const TrickAnswers = ({ onAnsweredCorrectly }) => {
                             height={43}
                             borderColor={item.isSelected ? '#8DCD53' : '#D9DFE5'}
                             onPress={toggleAnswer}
-                            showIcon={isItemReadOnly(item)}
+                            showIcon={isFacilitator && isItemReadOnly(item)}
                             readonly={isItemReadOnly(item)}
                             data={item.id}
                             onTextChanged={onTrickyAnswerChanged}

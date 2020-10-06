@@ -13,7 +13,8 @@ import TrickAnswers from './TrickAnswers'
 import HintsView from '../Components/HintsView'
 
 
-const GamePreview = ({ navigation }) => {
+const GamePreview = ({ navigation, route }) => {
+  const { selectedTeam, isFacilitator } = route.params
   const [availableHints, setAvailableHints] = useState([
     { hintNo: 1, hint: 'A stop sign is a regular octagon, a polygon with 8 congruent sides.' },
     { hintNo: 2, hint: 'We can create triangles within the octagon. For example, starting with any vertex, or corner, we can draw a line to each of the 5 non-adjacent vertices (or corners) of the octagon.' },
@@ -25,10 +26,11 @@ const GamePreview = ({ navigation }) => {
   const [hints, setHints] = useState([availableHints[0]])
 
   useEffect(() => {
+    console.log(`isFacilitator:${isFacilitator}`)
     if (countdown == 0) {
       return
     }
-    const totalNoSecondsLeftForShowingHints = 295//240
+    const totalNoSecondsLeftForShowingHints = 295
     var refreshIntervalId = setInterval(() => {
       setCountdown(countdown - 1)
       setProgress(countdown / 300)
@@ -81,7 +83,7 @@ const GamePreview = ({ navigation }) => {
             <ScrollableQuestion />
           </Card>
           <Card headerTitle="Trick Answers">
-            <TrickAnswers onAnsweredCorrectly={() => showAllHints()} />
+            <TrickAnswers isFacilitator={isFacilitator} onAnsweredCorrectly={() => showAllHints()} />
           </Card>
           <Card headerTitle="Hints">
             {
