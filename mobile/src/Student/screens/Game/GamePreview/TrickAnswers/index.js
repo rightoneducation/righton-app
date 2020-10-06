@@ -27,6 +27,14 @@ const TrickAnswers = ({ onAnsweredCorrectly }) => {
         }
     }
 
+    const isItemReadOnly = (item) => {
+        if (status == Status.hasAnsweredCorrectly) {
+            return item.id != trickAnswers[trickAnswers.length - 1].id
+        }
+
+        return true
+    }
+
     const onAnswerSubmitted = (event) => {
         const text = event.nativeEvent.text
         const newAnswer = createAnswer(text)
@@ -51,10 +59,6 @@ const TrickAnswers = ({ onAnsweredCorrectly }) => {
     }
 
     const toggleAnswer = (answerId) => {
-        if (status != Status.hasAnsweredCorrectly) {
-            return
-        }
-
         const answers = trickAnswers.filter(answer => answer.isSelected)
         const newAnswerIndex = trickAnswers.findIndex(answer => answer.id == answerId)
         if (trickAnswers[newAnswerIndex].isSelected) {
@@ -83,15 +87,6 @@ const TrickAnswers = ({ onAnsweredCorrectly }) => {
         setTimeout(() => {
             setShowTrickAnswers(true)
         }, 500)
-    }
-
-    const onAddTrickAnswer = () => {
-        setTrickAnswers([...trickAnswers, createAnswer('')])
-    }
-
-    const lastAnswer = () => {
-        const trickAnswersCount = trickAnswers.length - 1
-        return trickAnswersCount == 0 ? { text: '', id: 0 } : trickAnswers[trickAnswersCount - 1]
     }
 
     return (
@@ -155,7 +150,9 @@ const TrickAnswers = ({ onAnsweredCorrectly }) => {
                             text={item.text}
                             height={43}
                             borderColor={item.isSelected ? '#8DCD53' : '#D9DFE5'}
-                            onIconPress={toggleAnswer}
+                            onPress={toggleAnswer}
+                            showIcon={isItemReadOnly(item)}
+                            readonly={isItemReadOnly(item)}
                             data={item.id}
                             onTextChanged={onTrickyAnswerChanged}
                         />

@@ -3,22 +3,28 @@ import { StyleSheet, View, TextInput, Image, Pressable } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
 
-const RoundTextIcon = ({ icon, text, height, borderColor, onIconPress, data, onTextChanged }) => {
+const RoundTextIcon = ({ icon, text, height, borderColor, onPress, data, showIcon, readonly, onTextChanged }) => {
     return (
         <View>
-            <View style={[styles.container, { height, borderColor }]}>
-                <TextInput
-                    style={styles.input}
-                    onSubmitEditing={(event) => onTextChanged(data, event.nativeEvent.text)}
-                >
-                    {text}
-                </TextInput>
-                <Pressable onPress={() => onIconPress(data)}>
-                    <View style={styles.iconContainer}>
-                        <Image source={icon} style={styles.icon} />
-                    </View>
-                </Pressable>
-            </View>
+            <Pressable onPress={() => onPress(data)}>
+                <View style={[styles.container, { height, borderColor }]}>
+                    <TextInput
+                        editable={!readonly}
+                        style={styles.input}
+                        onSubmitEditing={(event) => onTextChanged(data, event.nativeEvent.text)}
+                    >
+                        {text}
+                    </TextInput>
+                    {
+                        (showIcon === undefined ? false : showIcon) ? (
+                            <Image
+                                source={icon}
+                                style={styles.icon}
+                            />
+                        ) : null
+                    }
+                </View>
+            </Pressable>
         </View>
     )
 }
@@ -44,16 +50,12 @@ const styles = StyleSheet.create({
         width: 16,
         height: 16,
     },
-    iconContainer: {
-        width: 44,
-        alignItems: 'flex-end'
-    },
     input: {
         color: '#384466',
         fontFamily: fontFamilies.karlaRegular,
         fontSize: fonts.xMedium,
         marginRight: scale(5),
-        paddingLeft: scale(5),
+        marginLeft: scale(5),
         flex: 1,
     },
 })
