@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { fontFamilies, fonts } from '../../../../utils/theme'
-import { scale } from 'react-native-size-matters'
+import { scale, verticalScale } from 'react-native-size-matters'
 
 export default StyleSheet.create({
     text: {

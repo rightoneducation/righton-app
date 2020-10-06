@@ -7,7 +7,7 @@ import * as Progress from 'react-native-progress'
 import TeamsReadinessFooter from '../../../components/TeamsReadinessFooter'
 import HorizontalPageView from '../../../components/HorizontalPageView'
 import Card from '../../../components/Card'
-import Question from '../Components/Question'
+import ScrollableQuestion from '../Components/ScrollableQuestion'
 import AnswerQuestion from './AnswerQuestion'
 import HintsView from '../Components/HintsView'
 
@@ -109,7 +109,7 @@ const GamePreview = ({ route, navigation }) => {
                     answeringOwnQuestion ?
                         <HorizontalPageView>
                             <Card headerTitle="Question">
-                                <Question />
+                                <ScrollableQuestion />
                             </Card>
                             <Card headerTitle="Choose One">
                                 <AnswerQuestion
@@ -136,6 +136,14 @@ const GamePreview = ({ route, navigation }) => {
             </View>
             <TeamsReadinessFooter
                 style={styles.footer}
+                onTappedFirst={() => {
+                    navigation.navigate('GameAnswer', {
+                    })
+                }}
+                onTappedLast={() => {
+                    navigation.navigate('GameAnswer', {
+                    })
+                }}
             />
         </View>
     )

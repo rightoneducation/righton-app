@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Dimensions, Image } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, SafeAreaView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../utils/theme'
@@ -8,12 +8,13 @@ import TeamsReadinessFooter from '../../../components/TeamsReadinessFooter'
 import HorizontalPageView from '../../../components/HorizontalPageView'
 import Card from '../../../components/Card'
 import Spinner from './Spinner'
-import Question from '../Components/Question'
+import ScrollableQuestion from '../Components/ScrollableQuestion'
 import TrickAnswers from './TrickAnswers'
 import HintsView from '../Components/HintsView'
 
 
-const GamePreview = ({ navigation }) => {
+const GamePreview = ({ navigation, route }) => {
+  const { selectedTeam, isFacilitator } = route.params
   const [availableHints, setAvailableHints] = useState([
     { hintNo: 1, hint: 'A stop sign is a regular octagon, a polygon with 8 congruent sides.' },
     { hintNo: 2, hint: 'We can create triangles within the octagon. For example, starting with any vertex, or corner, we can draw a line to each of the 5 non-adjacent vertices (or corners) of the octagon.' },
@@ -28,7 +29,7 @@ const GamePreview = ({ navigation }) => {
     if (countdown == 0) {
       return
     }
-    const totalNoSecondsLeftForShowingHints = 295//240
+    const totalNoSecondsLeftForShowingHints = 295
     var refreshIntervalId = setInterval(() => {
       setCountdown(countdown - 1)
       setProgress(countdown / 300)
@@ -46,8 +47,13 @@ const GamePreview = ({ navigation }) => {
     setHints([...hints, availableHints[hints.length]])
   }
 
+  const showAllHints = () => {
+    setShowTrickAnswersHint(true)
+    setHints(availableHints)
+  }
+
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
         colors={['rgba(62, 0, 172, 1)', 'rgba(98, 0, 204, 1)']}
         style={styles.headerContainer}
@@ -73,14 +79,10 @@ const GamePreview = ({ navigation }) => {
       <View style={styles.carouselContainer}>
         <HorizontalPageView>
           <Card headerTitle="Question">
-            <Question />
+            <ScrollableQuestion />
           </Card>
           <Card headerTitle="Trick Answers">
-            {
-              showTrickAnswersHint
-                ? <TrickAnswers />
-                : <Spinner text="You can enter trick answers after one minute." />
-            }
+            <TrickAnswers isFacilitator={isFacilitator} onAnsweredCorrectly={() => showAllHints()} />
           </Card>
           <Card headerTitle="Hints">
             {
@@ -108,7 +110,7 @@ const GamePreview = ({ navigation }) => {
           })
         }}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 

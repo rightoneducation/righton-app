@@ -7,7 +7,6 @@ import {
     Dimensions,
     ScrollView
 } from 'react-native'
-import debug from '../../../utils/debug'
 import { colors, fonts } from '../../../utils/theme'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import PurpleBackground from '../../../components/PurpleBackground'
