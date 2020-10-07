@@ -71,7 +71,9 @@ function App() {
     const result = await duplicateGame(game);
     if (result) {
       const games = sortGames(await fetchGames(), sortType);
+      const gameIndex = games.findIndex((game) => result.GameID === game.GameID);
       setGames(games);
+      if (gameIndex !== -1) return gameIndex;
     }
   }
 

@@ -59,7 +59,9 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
       updated: Date.now(),
       title: `Copy of ${game.title}`,
     };
-    duplicateGame(newGame);
+    duplicateGame(newGame).then((gameID) => {
+      if (gameID) history.push(`/games/${gameID + 1}`);
+    });
     handleClose();
   };
   const deleteHandler = (id) => () => {
