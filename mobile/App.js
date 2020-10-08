@@ -39,15 +39,16 @@ class App extends React.Component {
   }
 }
 
-// const codePushOptions = {
-//   checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-//   installMode: codePush.InstallMode.ON_NEXT_RESUME
-// }
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.ON_NEXT_RESUME,
+  updateDialog: true
+}
 
 // Pass router to RootNavigator for hooking it into the navigation paradigm.
 App.router = RootNavigator.router
 
 /* eslint no-class-assign: 0 */
-// App = codePush(codePushOptions)(App)
+App = codePush(codePushOptions)(App)
 
 export default App
