@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../utils/theme'
 import ExpandableQuestion from './ExpandableQuestion'
+import Answers from './Answers'
+import FooterView from './FooterView'
 
 const GamePreview = ({ navigation }) => {
   return (
@@ -18,15 +20,22 @@ const GamePreview = ({ navigation }) => {
           Who Guessed What?
         </Text>
       </LinearGradient>
-      <ScrollView style={styles.cardsContainer}>
-        <View style={styles.questionContainer}>
-          <ExpandableQuestion />
+      <View style={styles.footer}>
+        <FooterView />
+      </View>
+      <ScrollView
+        style={styles.contentScrollView}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.contentContainer}>
+          <View style={[styles.cardsContainer, styles.questionCard]}>
+            <ExpandableQuestion />
+          </View>
+          <View style={[styles.cardsContainer, styles.answersCard]}>
+            <Answers />
+          </View>
         </View>
       </ScrollView>
-      <View
-        style={styles.footer}
-
-      />
     </SafeAreaView>
   )
 }
@@ -53,15 +62,22 @@ const styles = StyleSheet.create({
     color: 'white',
     lineHeight: 32,
   },
-  cardsContainer: {
+  contentScrollView: {
+    marginTop: -scale(75),
+    marginBottom: 10,
+  },
+  contentContainer: {
     flex: 1,
     flexDirection: 'column',
-    marginBottom: 10,
-    marginTop: -scale(75),
+    justifyContent: 'space-between',
+    paddingBottom: 30,
+  },
+  cardsContainer: {
     marginLeft: scale(42),
     marginRight: scale(42),
     backgroundColor: 'white',
-    borderRadius: 24,
+    borderRadius: scale(24),
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -73,7 +89,14 @@ const styles = StyleSheet.create({
       }
     }),
   },
+  answersCard: {
+    marginTop: verticalScale(24),
+  },
   footer: {
-    marginBottom: moderateScale(30),
+    marginBottom: verticalScale(5),
+    justifyContent: 'flex-end',
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: verticalScale(5)
   }
 })
