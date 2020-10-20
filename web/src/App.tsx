@@ -9,6 +9,8 @@ import {
   createMuiTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
+import AlertContext, { Alert } from './context/AlertContext';
+import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
 import awsconfig from './aws-exports';
@@ -39,6 +41,7 @@ function App() {
   const [sortType, setSortType] = useState(SORT_TYPES.UPDATED);
   const [searchInput, setSearchInput] = useState('');
   const [games, setGames] = useState<(Game | null)[]>([]);
+  const [alert, setAlert] = useState<Alert | null>(null);
 
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
@@ -48,6 +51,7 @@ function App() {
       setGames(games);
     }
     setLoading(false);
+    setAlert({ message: 'New game created.', type: 'success' });
   }
 
   const saveGame = async (game: Game) => {
@@ -56,6 +60,7 @@ function App() {
       const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
+    setAlert({ message: 'Game saved.', type: 'success' });
   }
 
   const handleDeleteGame = async (id: number) => {
@@ -64,6 +69,7 @@ function App() {
       const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
+    setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
   // @ts-ignore
@@ -73,6 +79,7 @@ function App() {
       const games = sortGames(await fetchGames(), sortType);
       const gameIndex = games.findIndex((game) => result.GameID === game.GameID);
       setGames(games);
+      setAlert({ message: 'Game duplicated.', type: 'success' });
       if (gameIndex !== -1) return gameIndex;
     }
   }
@@ -107,15 +114,23 @@ function App() {
 
   const filteredGames = games.filter((game: Game | null) => filterGame(game, searchInput.toLowerCase())) as Game[];
 
+  const alertContext = {
+    alert,
+    setAlert,
+  };
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <Box>
-          <Nav />
-          <Route path="/">
-            <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} duplicateGame={handleDuplicateGame} sortType={sortType} setSortType={setSortType} />
-          </Route>
-        </Box>
+        <AlertContext.Provider value={alertContext}>
+          <Box>
+            <Nav />
+            <Route path="/">
+              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} duplicateGame={handleDuplicateGame} sortType={sortType} setSortType={setSortType} />
+            </Route>
+          </Box>
+          <AlertBar />
+        </AlertContext.Provider>
       </ThemeProvider>
     </Router>
   );
