@@ -59,7 +59,6 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
     }
 
     const toggleAnswer = (answerId) => {
-        console.log(answerId)
         if (!isFacilitator) {
             return
         }
@@ -97,7 +96,11 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         <View style={[sharedStyles.cardContainer, styles.container]}>
             <Text
                 style={[sharedStyles.text, { opacity: status == Status.none ? 1 : 0.3 }]}>
-                Help guide your team to guess the correct answer!
+                {
+                    isFacilitator ?
+                        "Help guide your team to guess the correct answer!" :
+                        "What do you think the correct answer is"
+                }
             </Text>
             <TextInput
                 style={
@@ -115,7 +118,17 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
             />
             <View style={{ opacity: status == Status.none ? 0 : 1, flex: 1, alignSelf: 'stretch' }}>
                 {
-                    status == Status.hasAnsweredCorrectly &&
+                    isFacilitator && (
+                        status == Status.hasAnsweredCorrectly || status == Status.hasAnsweredCorrectly
+                    ) &&
+                    <Text
+                        style={sharedStyles.text}
+                    >
+                        Pick your team’s favorite 3 to trick your class.
+                    </Text>
+                }
+                {
+                    !isFacilitator && status == Status.hasAnsweredCorrectly &&
                     <Text style={
                         [
                             sharedStyles.text,
@@ -124,22 +137,27 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
                             }
                         ]
                     }>
-                        {
-                            'Nice job, that’s right!'
-                        }
+                        Nice job, that’s right!
                     </Text>
                 }
                 {
-                    status == Status.hasAnsweredIncorrectly &&
+                    !isFacilitator && status == Status.hasAnsweredCorrectly && !showTrickAnswers &&
+                    <Text
+                        style={sharedStyles.text}
+                    >
+                        This unlocks the Hints for your team.
+                    </Text>
+
+                }
+                {
+                    !isFacilitator && status == Status.hasAnsweredIncorrectly &&
                     <Text style={sharedStyles.text}>
-                        {
-                            'Pick your team’s favorite 3 to trick your class.'
-                        }
+                        Nice try! That’s not the correct answer, but it sounds like a great trick answer! We’ve added it to your list of trick answers!
                     </Text>
                 }
                 {
-                    status == Status.hasAnsweredCorrectly &&
-                    <Text style={[sharedStyles.text, { marginTop: 10 }]}>
+                    !isFacilitator && status == Status.hasAnsweredCorrectly && showTrickAnswers &&
+                    <Text Text style={[sharedStyles.text, { marginTop: 10 }]}>
                         Now come up with other answers that might trick your class!
                     </Text>
                 }
