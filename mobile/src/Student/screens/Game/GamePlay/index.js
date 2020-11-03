@@ -107,7 +107,9 @@ const GamePreview = ({ route, navigation }) => {
             <View style={styles.carouselContainer}>
                 {
                     answeringOwnQuestion ?
-                        <HorizontalPageView>
+                        <HorizontalPageView
+                            initialPage={1}
+                        >
                             <Card headerTitle="Question">
                                 <ScrollableQuestion />
                             </Card>
@@ -118,7 +120,9 @@ const GamePreview = ({ route, navigation }) => {
                                 />
                             </Card>
                         </HorizontalPageView> :
-                        <HorizontalPageView>
+                        <HorizontalPageView
+                            initialPage={1}
+                        >
                             <Card headerTitle="Question">
                                 <Question />
                             </Card>
