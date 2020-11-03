@@ -107,7 +107,9 @@ const GamePreview = ({ route, navigation }) => {
             <View style={styles.carouselContainer}>
                 {
                     answeringOwnQuestion ?
-                        <HorizontalPageView>
+                        <HorizontalPageView
+                            initialPage={1}
+                        >
                             <Card headerTitle="Question">
                                 <ScrollableQuestion />
                             </Card>
@@ -118,7 +120,9 @@ const GamePreview = ({ route, navigation }) => {
                                 />
                             </Card>
                         </HorizontalPageView> :
-                        <HorizontalPageView>
+                        <HorizontalPageView
+                            initialPage={1}
+                        >
                             <Card headerTitle="Question">
                                 <Question />
                             </Card>
@@ -137,11 +141,11 @@ const GamePreview = ({ route, navigation }) => {
             <TeamsReadinessFooter
                 style={styles.footer}
                 onTappedFirst={() => {
-                    navigation.navigate('GameAnswer', {
+                    navigation.navigate('GameAnswerReview', {
                     })
                 }}
                 onTappedLast={() => {
-                    navigation.navigate('GameAnswer', {
+                    navigation.navigate('GameAnswerReview', {
                     })
                 }}
             />

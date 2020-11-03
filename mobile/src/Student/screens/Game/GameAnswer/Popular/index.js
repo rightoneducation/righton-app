@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, Dimensions, SafeAreaView, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
-import { fontFamilies, fonts } from '../../../../utils/theme'
-import ExpandableQuestion from './ExpandableQuestion'
-import Answers from './Answers'
-import FooterView from './FooterView'
+import { fontFamilies, fonts } from '../../../../../utils/theme'
+import ExpandableQuestion from '../Components/ExpandableQuestion'
+import Answers from '../Components/Answers'
+import FooterView from '../Components/FooterView'
 
-const GamePreview = ({ navigation }) => {
+const GameAnswerPopular = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
@@ -21,7 +21,9 @@ const GamePreview = ({ navigation }) => {
         </Text>
       </LinearGradient>
       <View style={styles.footer}>
-        <FooterView />
+        <FooterView
+          text={'First, let’s see which answer the tricksters guessed might be the most popular answer...'}
+        />
       </View>
       <ScrollView
         style={styles.contentScrollView}
@@ -32,7 +34,7 @@ const GamePreview = ({ navigation }) => {
             <ExpandableQuestion />
           </View>
           <View style={[styles.cardsContainer, styles.answersCard]}>
-            <Answers />
+            <Answers selectedAnswer={360} />
           </View>
         </View>
       </ScrollView>
@@ -40,7 +42,7 @@ const GamePreview = ({ navigation }) => {
   )
 }
 
-export default GamePreview
+export default GameAnswerPopular
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -97,6 +99,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     position: 'absolute',
     bottom: 0,
-    marginBottom: verticalScale(5)
+    right: 25,
+    left: 0,
+    marginBottom: verticalScale(5),
   }
 })

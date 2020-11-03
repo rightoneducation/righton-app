@@ -99,7 +99,7 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
                 {
                     isFacilitator ?
                         "Help guide your team to guess the correct answer!" :
-                        "What do you think the correct answer is"
+                        "What do you think the correct answer is?"
                 }
             </Text>
             <TextInput
