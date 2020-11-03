@@ -7,7 +7,7 @@ import ExpandableQuestion from './ExpandableQuestion'
 import Answers from './Answers'
 import FooterView from './FooterView'
 
-const GamePreview = ({ navigation }) => {
+const GameAnswer = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
@@ -40,7 +40,7 @@ const GamePreview = ({ navigation }) => {
   )
 }
 
-export default GamePreview
+export default GameAnswer
 
 const styles = StyleSheet.create({
   mainContainer: {
