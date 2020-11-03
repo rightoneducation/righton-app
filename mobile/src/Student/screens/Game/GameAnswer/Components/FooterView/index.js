@@ -1,15 +1,15 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { verticalScale } from 'react-native-size-matters'
-import { fontFamilies, fonts } from '../../../../../utils/theme'
+import { fontFamilies, fonts } from '../../../../../../utils/theme'
 
-const FooterView = () => {
+const FooterView = ({ text }) => {
     return (
         <View style={styles.container}>
             <Image
                 source={require('./img/narrator.png')}
             />
-            <Text style={styles.text}>Let’s see how everyone voted!</Text>
+            <Text style={styles.text}>{text}</Text>
         </View>
     )
 }
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignContent: 'space-between',
+        marginRight: 25,
     },
     text: {
         fontFamily: fontFamilies.karlaRegular,

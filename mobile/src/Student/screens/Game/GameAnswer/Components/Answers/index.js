@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, View, FlatList } from 'react-native'
 import Answer from './Answer'
 
-const Answers = () => {
+const Answers = ({ selectedAnswer }) => {
     const [answers, setAnswers] = useState([8, 540, 360, 1080])
     return (
         <View style={styles.mainContainer}>
@@ -17,7 +17,7 @@ const Answers = () => {
                             flexDirection: 'column',
                             margin: 10
                         }}>
-                        <Answer answer={item} />
+                        <Answer answer={item} isSelected={selectedAnswer == item} />
                     </View>
                 }
             />

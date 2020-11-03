@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable, Animated } from 'react-native'
 import { scale, verticalScale } from 'react-native-size-matters'
-import Question from '../../Components/Question'
+import Question from '../../../Components/Question'
 
 const ExpandableQuestion = () => {
     const [expanded, setExpanded] = useState(false)
