@@ -4,8 +4,8 @@ import sharedStyles from '../../Components/sharedStyles'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts, colors } from '../../../../../utils/theme'
 import RoundTextIcon from '../../../../components/RoundTextIcon'
-import { KeyboardAwareFlatList } from '@codler/react-native-keyboard-aware-scroll-view'
 import uuid from 'react-native-uuid'
+import { KeyboardAwareFlatList } from '@codler/react-native-keyboard-aware-scroll-view'
 
 const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
     const Status = {
@@ -27,29 +27,23 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         }
     }
 
-    const isItemReadOnly = (item) => {
-        if (status == Status.hasAnsweredCorrectly) {
-            return item.id != trickAnswers[trickAnswers.length - 1].id
-        }
-
-        return true
-    }
-
     const onAnswerSubmitted = (event) => {
         const text = event.nativeEvent.text
         const newAnswer = createAnswer(text)
+
+        setEstimatedAnswer('')
+
         if (newAnswer.text == '1080') {
             setAnswer(newAnswer)
             setStatus(Status.hasAnsweredCorrectly)
             if (onAnsweredCorrectly !== undefined) {
                 onAnsweredCorrectly()
             }
-            setTrickAnswers([...trickAnswers, createAnswer('')])
+            setTrickAnswers(trickAnswers)
             startTrickAnswersTimer()
             return
         }
 
-        setEstimatedAnswer('')
         setTrickAnswers([...trickAnswers, newAnswer])
 
         if (status == Status.none) {
@@ -92,56 +86,76 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         }, 500)
     }
 
+    const HeaderComponent = () => {
+        return (
+            status == Status.hasAnsweredCorrectly &&
+            <>
+                <Text style={sharedStyles.text}>
+                    Correct Answer
+                    </Text>
+                <TextInput
+                    style={styles.answerTextInput}
+                    value={answer === undefined ? '' : answer.text}
+                    editable={false}
+                    placeholderTextColor='#CECECE'
+                />
+            </>
+        )
+    }
+
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
-            <Text
-                style={[sharedStyles.text, { opacity: status == Status.none ? 1 : 0.3 }]}>
-                {
-                    isFacilitator ?
-                        "Help guide your team to guess the correct answer!" :
-                        "What do you think the correct answer is?"
-                }
-            </Text>
-            <TextInput
-                style={
-                    [
-                        styles.answerTextInput,
-                        {
-                            backgroundColor: status == Status.hasAnsweredCorrectly ? '#D7EFC3' : 'white',
-                        }
-                    ]
-                }
-                value={estimatedAnswer}
-                onChangeText={text => setEstimatedAnswer(text)}
-                onSubmitEditing={onAnswerSubmitted}
-                editable={status != Status.hasAnsweredCorrectly}
-            />
-            <View style={{ opacity: status == Status.none ? 0 : 1, flex: 1, alignSelf: 'stretch' }}>
-                {
-                    isFacilitator && (
-                        status == Status.hasAnsweredCorrectly || status == Status.hasAnsweredCorrectly
-                    ) &&
-                    <Text
-                        style={sharedStyles.text}
-                    >
-                        Pick your team’s favorite 3 to trick your class.
-                    </Text>
-                }
-                {
-                    !isFacilitator && status == Status.hasAnsweredCorrectly &&
-                    <Text style={
-                        [
-                            sharedStyles.text,
+            <View style={
+                [
+                    styles.answersContainer,
+                    { opacity: status == Status.none ? 0 : 1 }
+                ]
+            }>
+                <KeyboardAwareFlatList
+                    style={styles.answers}
+                    data={trickAnswers}
+                    extraData={[trickAnswers, status, answer, estimatedAnswer, showTrickAnswers]}
+                    keyExtractor={item => item.id.toString()}
+                    ListHeaderComponent={HeaderComponent}
+                    renderItem={({ item, index }) => (
+                        <>
                             {
-                                opacity: showTrickAnswers > 0 ? 0.3 : 1
+                                index == 0 &&
+                                <Text style={[sharedStyles.text, styles.trickAnswerText]}>
+                                    Our Trick Answers
+                                </Text>
                             }
-                        ]
-                    }>
-                        Nice job, that’s right!
+                            <RoundTextIcon
+                                icon={item.isSelected ? require('../../img/checkmark_checked.png') : require('../../img/gray_circle.png')}
+                                text={item.text}
+                                height={43}
+                                borderColor={item.isSelected ? '#8DCD53' : '#D9DFE5'}
+                                onPress={toggleAnswer}
+                                showIcon={isFacilitator}
+                                readonly={true}
+                                data={item.id}
+                                onTextChanged={onTrickyAnswerChanged}
+                            />
+                        </>
+                    )
+                    }
+                />
+            </View>
+            <View style={styles.answerInputContainer}>
+                {
+                    isFacilitator && status == Status.hasAnsweredCorrectly && !showTrickAnswers &&
+                    <Text style={sharedStyles.text}>
+                        Someone on your team got the correct answer!
                     </Text>
                 }
                 {
                     !isFacilitator && status == Status.hasAnsweredCorrectly && !showTrickAnswers &&
+                    <Text style={sharedStyles.text}>
+                        Nice job, that’s right!
+                    </Text>
+                }
+                {
+                    status == Status.hasAnsweredCorrectly && !showTrickAnswers &&
                     <Text
                         style={sharedStyles.text}
                     >
@@ -150,35 +164,41 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
 
                 }
                 {
-                    !isFacilitator && status == Status.hasAnsweredIncorrectly &&
+                    !isFacilitator && status == Status.hasAnsweredIncorrectly && !showTrickAnswers &&
                     <Text style={sharedStyles.text}>
                         Nice try! That’s not the correct answer, but it sounds like a great trick answer! We’ve added it to your list of trick answers!
                     </Text>
                 }
                 {
-                    !isFacilitator && status == Status.hasAnsweredCorrectly && showTrickAnswers &&
-                    <Text Text style={[sharedStyles.text, { marginTop: 10 }]}>
+                    status == Status.hasAnsweredCorrectly && showTrickAnswers &&
+                    <Text Text style={[
+                        sharedStyles.text,
+                        { marginTop: 10 }
+                    ]}>
                         Now come up with other answers that might trick your class!
                     </Text>
                 }
-                <KeyboardAwareFlatList
-                    style={[styles.answers, { opacity: showTrickAnswers ? 1 : 0 }]}
-                    data={trickAnswers}
-                    extraData={trickAnswers}
-                    keyExtractor={item => `${item.id}`}
-                    renderItem={({ item }) =>
-                        <RoundTextIcon
-                            icon={item.isSelected ? require('../../img/checkmark_checked.png') : require('../../img/gray_circle.png')}
-                            text={item.text}
-                            height={43}
-                            borderColor={item.isSelected ? '#8DCD53' : '#D9DFE5'}
-                            onPress={toggleAnswer}
-                            showIcon={isFacilitator && isItemReadOnly(item)}
-                            readonly={isItemReadOnly(item)}
-                            data={item.id}
-                            onTextChanged={onTrickyAnswerChanged}
-                        />
+                {
+                    status == Status.hasAnsweredIncorrectly && showTrickAnswers &&
+                    <Text style={sharedStyles.text}>
+                        What do you think the correct answer is?
+                    </Text>
+                }
+                <TextInput
+                    style={
+                        [
+                            styles.answerTextInput,
+                            {
+                                backgroundColor: 'white',
+                            }
+                        ]
                     }
+                    value={estimatedAnswer}
+                    onChangeText={text => setEstimatedAnswer(text)}
+                    onSubmitEditing={onAnswerSubmitted}
+                    editable={true}
+                    placeholder='Enter answer here'
+                    placeholderTextColor='#CECECE'
                 />
             </View>
         </View>
@@ -189,15 +209,27 @@ export default TrickAnswers
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
+        flex: 1,
         justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: -12
+    },
+    answersContainer: {
+        flex: 1,
+        alignSelf: 'stretch'
+    },
+    answerInputContainer: {
+        bottom: 0,
+        justifyContent: 'space-around',
+        alignContent: 'stretch',
+        alignSelf: 'stretch'
     },
     answerTextInput: {
         borderRadius: 8,
         marginTop: verticalScale(8),
         textAlign: 'center',
         fontFamily: fontFamilies.karlaRegular,
-        fontSize: fonts.xMedium,
+        fontSize: fonts.small,
         marginBottom: verticalScale(8),
         borderColor: '#B1BACB',
         borderWidth: 1,
@@ -207,6 +239,7 @@ const styles = StyleSheet.create({
                 height: 43
             },
         }),
+        backgroundColor: '#D7EFC3',
     },
     trickAnswerInput: {
         borderWidth: 2,
@@ -218,5 +251,9 @@ const styles = StyleSheet.create({
     answers: {
         marginTop: verticalScale(15),
         alignSelf: 'stretch'
+    },
+    trickAnswerText: {
+        marginTop: verticalScale(24),
+        marginBottom: verticalScale(8),
     }
 })

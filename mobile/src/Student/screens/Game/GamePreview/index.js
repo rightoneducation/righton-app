@@ -6,6 +6,7 @@ import { fontFamilies, fonts } from '../../../../utils/theme'
 import * as Progress from 'react-native-progress'
 import TeamsReadinessFooter from '../../../components/TeamsReadinessFooter'
 import HorizontalPageView from '../../../components/HorizontalPageView'
+import ScrollableContentCard from '../../../components/ScrollableContentCard'
 import Card from '../../../components/Card'
 import Spinner from './Spinner'
 import ScrollableQuestion from '../Components/ScrollableQuestion'
@@ -78,19 +79,19 @@ const GamePreview = ({ navigation, route }) => {
       </LinearGradient>
       <View style={styles.carouselContainer}>
         <HorizontalPageView>
-          <Card headerTitle="Question">
+          <ScrollableContentCard headerTitle="Question">
             <ScrollableQuestion />
-          </Card>
+          </ScrollableContentCard>
           <Card headerTitle="Trick Answers">
             <TrickAnswers isFacilitator={isFacilitator} onAnsweredCorrectly={() => showAllHints()} />
           </Card>
-          <Card headerTitle="Hints">
+          <ScrollableContentCard headerTitle="Hints">
             {
               showTrickAnswersHint
                 ? <HintsView hints={hints} onTappedShowNextHint={() => showNewHint()} isMoreHintsAvailable={hints.length < availableHints.length} />
                 : <Spinner text="Hints will be available after one minute." />
             }
-          </Card>
+          </ScrollableContentCard>
         </HorizontalPageView>
       </View>
       <TeamsReadinessFooter

@@ -4,24 +4,26 @@ import { StyleSheet, Text, View, Platform } from 'react-native'
 import { fontFamilies, fonts } from '../../../utils/theme'
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 
-const Card = ({ extraStyle, headerTitle, children }) => {
+const ScrollableContentCard = ({ extraStyle, headerTitle, children }) => {
     const cardStyle = { ...(extraStyle || {}), ...styles.cardContent }
 
+    console.log(children)
     return (
         <View style={styles.cardContainer}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>{headerTitle}</Text>
             </View>
-            <View
+            <KeyboardAwareScrollView
                 style={cardStyle}
+                showsVerticalScrollIndicator={false}
             >
                 {children}
-            </View>
+            </KeyboardAwareScrollView>
         </View>
     )
 }
 
-export default Card
+export default ScrollableContentCard
 
 const styles = StyleSheet.create({
     cardContainer: {
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
                 elevation: 5
             }
         }),
-        flex: 1,
     },
     headerContainer: {
         marginBottom: verticalScale(20),
