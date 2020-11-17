@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   Image,
   View,
-  StatusBar
+  StatusBar,
+  Keyboard
 } from 'react-native'
 import { navigationPropTypes, navigationDefaultProps, screenPropsPropTypes, screenPropsDefaultProps } from '../../../config/propTypes'
 import { verticalScale } from 'react-native-size-matters'
@@ -62,6 +63,7 @@ export default class StudentFirst extends React.PureComponent {
     NetInfo.fetch()
       .then(async (state) => {
         if (GameRoomID == '1234') {
+          Keyboard.dismiss()
           this.props.navigation.navigate('StudentChooseTeam')
         }
       })
