@@ -179,7 +179,8 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
                     </Text>
                 }
                 {
-                    status == Status.hasAnsweredIncorrectly && showTrickAnswers &&
+                    (status == Status.none ||
+                        (status == Status.hasAnsweredIncorrectly && showTrickAnswers)) &&
                     <Text style={sharedStyles.text}>
                         What do you think the correct answer is?
                     </Text>
