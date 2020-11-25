@@ -90,7 +90,7 @@ export const createGame = async (game: CreateGamesInput) => {
 }
 
 // @ts-ignore
-export const duplicateGame = async (game) => {
+export const cloneGame = async (game) => {
   const input = serializeQuestions(game);
   const result = await API.graphql(graphqlOperation(createGames, { input })) as { data: CreateGamesMutation };
   return result?.data?.createGames;

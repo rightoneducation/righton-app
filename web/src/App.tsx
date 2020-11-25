@@ -14,7 +14,7 @@ import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
 import awsconfig from './aws-exports';
-import { fetchGames, sortGames, createGame, updateGame, duplicateGame, deleteGame, SORT_TYPES } from './lib/games';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame, SORT_TYPES } from './lib/games';
 import { Game } from './types';
 
 const filterGame = (game: Game | null, search: string) => {
@@ -73,14 +73,14 @@ function App() {
   }
 
   // @ts-ignore
-  const handleDuplicateGame = async (game) => {
-    const result = await duplicateGame(game);
+  const handleCloneGame = async (game) => {
+    const result = await cloneGame(game);
     if (result) {
       const games = sortGames(await fetchGames(), sortType);
       const gameIndex = games.findIndex((game) => result.GameID === game.GameID);
       setGames(games);
-      setAlert({ message: 'Game duplicated.', type: 'success' });
-      if (gameIndex !== -1) return gameIndex;
+      setAlert({ message: 'Game cloned.', type: 'success' });
+      return gameIndex;
     }
   }
 
@@ -126,7 +126,7 @@ function App() {
           <Box>
             <Nav />
             <Route path="/">
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} duplicateGame={handleDuplicateGame} sortType={sortType} setSortType={setSortType} />
+              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
             </Route>
           </Box>
           <AlertBar />
