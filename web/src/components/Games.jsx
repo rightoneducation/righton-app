@@ -23,7 +23,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Select from '@material-ui/core/Select';
 
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, duplicateGame, sortType, setSortType }) {
+export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -44,7 +44,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const duplicateHandler = (game) => () => {
+  const cloneHandler = (game) => () => {
     const newGame = {
       cluster: game.cluster,
       description: game.description,
@@ -59,8 +59,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
       updated: Date.now(),
       title: `Copy of ${game.title}`,
     };
-    duplicateGame(newGame).then((gameID) => {
-      if (gameID) history.push(`/games/${gameID + 1}`);
+    cloneGame(newGame).then((index) => {
+      if (index > -1) history.push(`/games/${index + 1}`);
     });
     handleClose();
   };
@@ -103,7 +103,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                       onClick={(event) => event.stopPropagation()}
                     >
                       <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                      <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
+                      <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
                       <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
                     </Menu>
                   </Box>
