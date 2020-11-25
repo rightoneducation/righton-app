@@ -100,6 +100,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                       keepMounted
                       open={activeIndex === String(index)}
                       onClose={handleClose}
+                      onClick={(event) => event.stopPropagation()}
                     >
                       <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                       <MenuItem onClick={duplicateHandler(game)}>Duplicate</MenuItem>
