@@ -57,7 +57,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
       q5: game.q5,
       standard: game.standard,
       updated: Date.now(),
-      title: `Copy of ${game.title}`,
+      title: `Clone of ${game.title}`,
     };
     cloneGame(newGame).then((index) => {
       if (index > -1) history.push(`/games/${index + 1}`);
