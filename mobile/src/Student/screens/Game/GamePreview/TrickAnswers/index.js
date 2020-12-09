@@ -62,15 +62,24 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         if (!isFacilitator) {
             return
         }
-        const answers = trickAnswers.filter(answer => answer.isSelected)
-        const newAnswerIndex = trickAnswers.findIndex(answer => answer.id == answerId)
-        if (trickAnswers[newAnswerIndex].isSelected) {
-            trickAnswers[newAnswerIndex].isSelected = false
-        } else if (answers.length < 3 && trickAnswers[newAnswerIndex].text !== '') {
-            trickAnswers[newAnswerIndex].isSelected = !trickAnswers[newAnswerIndex].isSelected
-        }
 
-        setTrickAnswers(trickAnswers)
+        const answers = trickAnswers.filter(answer => answer.isSelected)
+        const modifiedTrickAnswers = trickAnswers.map((answer) => {
+            if (answer.id === answerId) {
+                return {
+                    ...answer,
+                    isSelected: (
+                        answer.isSelected ||
+                        answers.length < 3 && answer.text !== ''
+                    ) ?
+                        !answer.isSelected :
+                        answer.isSelected
+                }
+            }
+            return answer
+        })
+
+        setTrickAnswers(modifiedTrickAnswers)
     }
 
     const onTrickyAnswerChanged = (answerId, newText) => {
@@ -89,7 +98,7 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
     const startTrickAnswersTimer = () => {
         setTimeout(() => {
             setShowTrickAnswers(true)
-        }, 500)
+        }, 3000)
     }
 
     return (
