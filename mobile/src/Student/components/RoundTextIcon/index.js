@@ -8,11 +8,13 @@ const RoundTextIcon = ({ icon, text, height, borderColor, onPress, data, showIco
         <>
             <Pressable
                 onPress={() => onPress(data)}>
-                <View style={[styles.container, { height, borderColor }]}>
+                <View
+                    style={[styles.container, { height, borderColor }]}
+                    pointerEvents={readonly ? 'none' : 'auto'}
+                >
                     <TextInput
                         editable={!readonly}
                         style={styles.input}
-                        pointerEvents={readonly ? 'none' : 'auto'}
                         onSubmitEditing={(event) => onTextChanged(data, event.nativeEvent.text)}
                     >
                         {text}
