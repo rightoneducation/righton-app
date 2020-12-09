@@ -98,7 +98,7 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
     const startTrickAnswersTimer = () => {
         setTimeout(() => {
             setShowTrickAnswers(true)
-        }, 500)
+        }, 3000)
     }
 
     return (
