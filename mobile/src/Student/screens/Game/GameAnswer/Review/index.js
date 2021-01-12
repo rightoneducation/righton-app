@@ -39,7 +39,7 @@ const GameAnswerReview = ({ navigation }) => {
             <ExpandableQuestion />
           </View>
           <View style={[styles.cardsContainer, styles.answersCard]}>
-            <Answers />
+            <Answers numColumns={2} />
           </View>
         </View>
       </ScrollView>

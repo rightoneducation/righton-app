@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, Dimensions, SafeAreaView, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
@@ -34,7 +34,7 @@ const GameAnswerPopular = ({ navigation }) => {
             <ExpandableQuestion />
           </View>
           <View style={[styles.cardsContainer, styles.answersCard]}>
-            <Answers selectedAnswer={360} />
+            <Answers teamSelectedTrickAnswer={360} numColumns={1} />
           </View>
         </View>
       </ScrollView>
