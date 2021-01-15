@@ -31,7 +31,6 @@ const AppContainer = (props) => {
         <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
         <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />
-        <Stack.Screen name="TeacherApp" component={TeacherApp} />
         <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
         <Stack.Screen name="StudentGameIntro" component={StudentGameIntro} />
         <Stack.Screen name="PregameCountDown" component={PregameCountDown} />
@@ -40,6 +39,7 @@ const AppContainer = (props) => {
         <Stack.Screen name="TeamInfo" component={TeamInfo} />
         <Stack.Screen name="GameAnswerReview" component={GameAnswerReview} />
         <Stack.Screen name="GameAnswerPopular" component={GameAnswerPopular} />
+        <Stack.Screen name="TeacherApp" component={TeacherApp} />
         
       </Stack.Navigator>
     </NavigationContainer>
