@@ -17,6 +17,7 @@ import { listGames } from '../../../graphql/queries'
 import { API, graphqlOperation } from 'aws-amplify'
 import { FlatList } from 'react-native-gesture-handler'
 // import API from '../../../backend'
+import gamesList from './data.json'
 
 const ExploreStack = createStackNavigator()
 
@@ -43,18 +44,12 @@ const ExploreScreen = ({ props, navigation }) => {
 
   const [mode, setMode] = useState(Mode.loading)
   const [games, setGames] = useState([])
-
+  
   useEffect(() => {
-    async function fetchGames() {
-      API.graphql(graphqlOperation(listGames)).then(gamesList => {
+    const fetchGames = () => {
         setGames(gamesList.data.listGames.items)
         setMode(Mode.succeeded)
-      }).catch(error => {
-        setMode(Mode.failed)
-        console.log(error)
-      })
     }
-
     fetchGames()
   }, [])
 
