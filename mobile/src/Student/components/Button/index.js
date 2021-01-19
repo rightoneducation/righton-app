@@ -6,7 +6,7 @@ import { moderateScale } from 'react-native-size-matters'
 const Button = ({ onPress, titleStyle, buttonStyle, title, disabled }) => {
     return (
         <TouchableOpacity
-            disabled={disabled}
+            disabled={disabled || false}
             onPress={onPress}
         >
             <View style={[styles.container, buttonStyle]}>

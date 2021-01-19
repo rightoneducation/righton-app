@@ -1,13 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, Text, View, Dimensions, SafeAreaView, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
+import { scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../../utils/theme'
 import ExpandableQuestion from '../Components/ExpandableQuestion'
 import Answers from '../Components/Answers'
 import FooterView from '../Components/FooterView'
 
 const GameAnswerPopular = ({ navigation }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Leadership')
+    }, 2000)
+  }, [])
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient

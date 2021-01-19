@@ -12,7 +12,7 @@ const GameAnswerReview = ({ navigation }) => {
     setTimeout(() => {
       navigation.navigate('GameAnswerPopular')
     }, 2000)
-  })
+  }, [])
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient

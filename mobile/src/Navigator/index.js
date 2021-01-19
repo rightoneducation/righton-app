@@ -12,11 +12,8 @@ import TeamInfo from '../Student/screens/Game/GamePlay/TeamInfo'
 import GamePlay from '../Student/screens/Game/GamePlay'
 import GameAnswerReview from '../Student/screens/Game/GameAnswer/Review'
 import GameAnswerPopular from '../Student/screens/Game/GameAnswer/Popular'
-// import OnboardAccount from '../screens/OnboardAccount';
-// import StudentApp from '../Student';
+import Leadership from '../Student/screens/Game/Leadership'
 import TeacherApp from '../Teacher';
-// import TeacherGameRoom from '../Teacher/screens/GameRoom';
-// import TeacherProfile from '../Teacher/screens/TeacherProfile';
 import GameDetailsScreen from '../Teacher/screens/Explore/GameDetails'
 
 const Stack = createStackNavigator();
@@ -39,6 +36,7 @@ const AppContainer = (props) => {
         <Stack.Screen name="TeamInfo" component={TeamInfo} />
         <Stack.Screen name="GameAnswerReview" component={GameAnswerReview} />
         <Stack.Screen name="GameAnswerPopular" component={GameAnswerPopular} />
+        <Stack.Screen name="Leadership" component={Leadership} />
         <Stack.Screen name="TeacherApp" component={TeacherApp} />
         
       </Stack.Navigator>
