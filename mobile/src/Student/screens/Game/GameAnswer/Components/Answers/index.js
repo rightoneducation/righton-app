@@ -4,6 +4,18 @@ import Answer from './Answer'
 
 const Answers = ({ teamSelectedTrickAnswer, numColumns }) => {
     const [answers, setAnswers] = useState([8, 540, 360, 1080])
+    let totalPercentage = 0
+    let totalAnswers = 0
+    const generatePercentage = () => {
+        const remainingPercentage = 100 - totalPercentage
+        if (totalAnswers == 3) {
+            return remainingPercentage
+        }
+        const currentPercentage = Math.floor((Math.random() * remainingPercentage))
+        totalAnswers++
+        totalPercentage += currentPercentage
+        return currentPercentage
+    }
     return (
         <View style={styles.mainContainer}>
             <FlatList
@@ -16,14 +28,15 @@ const Answers = ({ teamSelectedTrickAnswer, numColumns }) => {
                             flex: 1,
                             flexDirection: 'column',
                             margin: 10
-                        }}>
+                        }}
+                    >
                         {
                             numColumns == 1 &&
                             <Answer
                                 answer={item}
                                 isPopular={teamSelectedTrickAnswer == item}
-                                percentage={Math.floor(Math.random() * 100)}
-                                isAnswer={8 == item}
+                                percentage={generatePercentage()}
+                                isAnswer={1080 == item}
                             />
                         }
                         {

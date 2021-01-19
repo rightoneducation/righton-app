@@ -8,6 +8,9 @@ import * as Progress from 'react-native-progress'
 const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
     const popularIconVisible = isPopular || false
     const percentageVisible = !popularIconVisible && (percentage || false)
+    const percentageTitle = (percentage) => {
+        return percentage + '%'
+    }
     return (
         <View style={[
             styles.container,
@@ -30,7 +33,7 @@ const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
                     (percentage || false) &&
                     <Progress.Bar
                         style={styles.progressBar}
-                        progress={0.5}
+                        progress={percentage / 100}
                         color={'#3AC449'}
                         unfilledColor={'rgba(255,255,255,0.8)'}
                     />
@@ -62,7 +65,7 @@ const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
                             }
                         ]}
                     >
-                        {percentage + '%'}
+                        {percentageTitle(percentage)}
                     </Text>
                 </LinearGradient>
             }
@@ -76,7 +79,7 @@ const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
                         }
                     ]}
                 >
-                    {percentage + '%'}
+                    {percentageTitle(percentage)}
                 </Text>
             }
 
