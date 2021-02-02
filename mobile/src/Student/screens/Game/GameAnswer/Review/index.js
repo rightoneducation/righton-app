@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Dimensions, SafeAreaView, ScrollView } from 're
 import LinearGradient from 'react-native-linear-gradient'
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../../utils/theme'
-import ExpandableQuestion from '../Components/ExpandableQuestion'
-import Answers from '../Components/Answers'
+import ExpandableQuestion from '../../../../components/ExpandableQuestion'
+import Answers from '../../../../components/Answers'
 import FooterView from '../Components/FooterView'
 
 const GameAnswerReview = ({ navigation }) => {
@@ -12,7 +12,7 @@ const GameAnswerReview = ({ navigation }) => {
     setTimeout(() => {
       navigation.navigate('GameAnswerPopular')
     }, 2000)
-  })
+  }, [])
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
@@ -39,7 +39,7 @@ const GameAnswerReview = ({ navigation }) => {
             <ExpandableQuestion />
           </View>
           <View style={[styles.cardsContainer, styles.answersCard]}>
-            <Answers />
+            <Answers numColumns={2} />
           </View>
         </View>
       </ScrollView>
