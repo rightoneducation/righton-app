@@ -1,21 +1,17 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Image, Pressable, Animated } from 'react-native'
 import { scale, verticalScale } from 'react-native-size-matters'
-import Question from '../../../Components/Question'
+import Question from '../../screens/Game/Components/Question'
 
 const ExpandableQuestion = () => {
     const [expanded, setExpanded] = useState(false)
 
-    const updateExpandState = (newValue) => {
-        setExpanded(newValue)
-    }
     return (
         <View style={styles.mainContainer}>
             <View
-                style={[
-                    expanded ? { flex: 1 } : { height: verticalScale(207) },
-                    styles.questionContainer
-                ]}
+                style={
+                    expanded ? { flex: 1 } : { height: verticalScale(207) }
+                }
             >
                 <Question />
             </View>
@@ -50,7 +46,8 @@ export default ExpandableQuestion
 const styles = StyleSheet.create({
     mainContainer: {
         backgroundColor: 'white',
-        flex: 1,
+        borderRadius: 24,
+        overflow: 'hidden',
         justifyContent: 'space-between',
         flexDirection: 'column',
     },

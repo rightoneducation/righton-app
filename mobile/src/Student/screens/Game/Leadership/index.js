@@ -1,11 +1,13 @@
-import React from 'react'
-import { StyleSheet, Text, SafeAreaView, View, FlatList } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, SafeAreaView, View, FlatList, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../utils/theme'
 import Button from '../../../components/Button'
 import Points from '../../../components/Points'
+import ExpandableQuestion from '../../../components/ExpandableQuestion'
 import TeamItem from './Components/TeamItem'
+import Answers from '../../../components/Answers'
 
 const Leadership = () => {
     const teams = [
@@ -35,31 +37,47 @@ const Leadership = () => {
             showPoints: true
         },
     ]
+
+    const [questionVisible, setQuestionVisible] = useState(false)
+
     return (
         <SafeAreaView style={styles.mainContainer}>
-            <LinearGradient
-                colors={['rgba(62, 0, 172, 1)', 'rgba(98, 0, 204, 1)']}
-                style={styles.headerContainer}
-                start={{ x: 0, y: 1 }}
-                end={{ x: 1, y: 1 }}
-            >
-                <Text style={styles.headerText}>
-                    Leaderboard
-                </Text>
-                <Button
-                    titleStyle={{
-                        fontFamilies: fontFamilies.karlaRegular,
-                        fontStyle: 'bold',
-                        fontSize: fonts.xxMedium
-                    }}
-                    buttonStyle={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                        marginTop: verticalScale(13),
-                        height: 40,
-                    }}
-                    title="Review Question"
-                />
-            </LinearGradient>
+            <ScrollView contentContainerStyle={{ marginBottom: verticalScale(22) }}>
+                <LinearGradient
+                    colors={['rgba(62, 0, 172, 1)', 'rgba(98, 0, 204, 1)']}
+                    style={styles.headerContainer}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 1 }}
+                >
+                    <Text style={styles.headerText}>
+                        Leaderboard
+                    </Text>
+                    <Button
+                        titleStyle={{
+                            fontFamily: fontFamilies.karlaRegular,
+                            fontWeight: 'bold',
+                            fontSize: fonts.xxMedium
+                        }}
+                        buttonStyle={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                            marginTop: verticalScale(13),
+                            height: 40,
+                            marginBottom: verticalScale(22),
+                        }}
+                        title={questionVisible ? "Hide Question" : "Review Question"}
+                        onPress={() => setQuestionVisible(prevState => !prevState)}
+                    />
+                    {
+                        questionVisible &&
+                        <View style={styles.questionContainer}>
+                            <ExpandableQuestion />
+                            <View style={styles.answersContainer}>
+                                <Answers teamSelectedTrickAnswer={360} numColumns={1} />
+                            </View>
+                        </View>
+                    }
+                </LinearGradient>
+            </ScrollView>
             <>
                 <View style={styles.textContainer}>
                     <View style={styles.rowLine}>
@@ -111,7 +129,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(247,249,250,1)'
     },
     headerContainer: {
-        height: verticalScale(136),
         shadowColor: 'rgba(0, 141, 239, 0.3)',
         paddingLeft: scale(30),
         paddingRight: scale(30),
@@ -147,5 +164,13 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         marginRight: 25,
         marginBottom: 25,
+    },
+    questionContainer: {
+        marginBottom: 10
+    },
+    answersContainer: {
+        backgroundColor: 'white',
+        borderRadius: 24,
+        marginTop: 24
     }
 })

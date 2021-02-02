@@ -1,13 +1,13 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { scale, verticalScale } from 'react-native-size-matters'
-import { fontFamilies, fonts } from '../../../../../../../utils/theme'
+import { fontFamilies, fonts } from '../../../../utils/theme'
 import LinearGradient from 'react-native-linear-gradient'
 import * as Progress from 'react-native-progress'
 
 const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
     const popularIconVisible = isPopular || false
-    const percentageVisible = !popularIconVisible && (percentage || false)
+    const percentageVisible = !popularIconVisible && percentage !== undefined
     const percentageTitle = (percentage) => {
         return percentage + '%'
     }
@@ -15,7 +15,7 @@ const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
         <View style={[
             styles.container,
             {
-                backgroundColor: isAnswer ? '#6515C9' : '#00000000'
+                backgroundColor: isAnswer ? '#6515C9' : 'white'
             }
         ]}>
             <View style={styles.answerContainer}>
@@ -47,7 +47,7 @@ const Answer = ({ answer, isPopular, percentage, isAnswer }) => {
                     end={{ x: 1, y: 1 }}
                 >
                     <Image
-                        source={require('../../../img/Team1Pick.png')}
+                        source={require('../img/Team1Pick.png')}
                         resizeMethod='resize'
                         resizeMode='contain'
                         width={scale(45)}
