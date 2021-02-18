@@ -1,12 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, Dimensions, Platform, StatusBar } from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions, Platform, StatusBar, Button, Pressable} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { colors, fonts, fontFamilies } from '../../../../utils/theme'
 import PropTypes from 'prop-types'
 import LinearGradient from 'react-native-linear-gradient'
 
 const NavBarView = (props, navigation) => {
-    const { title, avatar } = props
+    const { title, avatar, showHamburgerMenu = false } = props
 
     return (
         <View>
@@ -15,15 +15,20 @@ const NavBarView = (props, navigation) => {
                 style={styles.container}
             >
                 <View style={styles.navBarContainer}>
-                    <TouchableOpacity onPress={() => console.log('tapped avatar')}>
+                    {avatar ? <TouchableOpacity onPress={() => console.log('tapped avatar')}>
                         <View style={styles.avatar}>
                             <Image source={avatar} resizeMode='contain' />
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> : (
+                       <Pressable style={{flexDirection: 'row'}} onPress={props.onBack}>
+                           <Text style={{color: 'white', fontSize: 35, marginRight: 5, marginTop: 5,}}>{'<'}</Text>
+                           <Text style={{color: 'white', fontSize: 17, marginTop: 18}}>Explore</Text>
+                       </Pressable>
+                    )}
                     <Text style={styles.title}>{title}</Text>
-                    <TouchableOpacity style={styles.drawer} onPress={() => console.log('tapped drawer')}>
+                    {showHamburgerMenu && <TouchableOpacity style={styles.drawer} onPress={() => console.log('tapped drawer')}>
                         <Image source={require('../../../../assets/images/menu.png')} style={styles.drawer} resizeMode='contain' />
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
             </LinearGradient>
         </View>
