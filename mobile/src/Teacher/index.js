@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import ExploreStackScreen from './screens/Explore'
 import { colors } from '../utils/theme'
 import { HeaderTitle } from '@react-navigation/stack'
+import DetailScreen from './screens/Explore/DetailScreen'
 
 
 const Tab = createBottomTabNavigator()
@@ -34,10 +35,12 @@ const TeacherApp = ({ props, navigation }) => {
       tabBarOptions={{
         activeTintColor: 'white',
         inactiveTintColor: '#85C6FF',
-        style: { backgroundColor: '#043272' }
+        style: { backgroundColor: '#043272' },
+        tabBarVisible: false
+        
       }}
     >
-      <Tab.Screen name="Explore" component={ExploreStackScreen} navigation={navigation} />
+      <Tab.Screen name="Explore" component={ExploreStackScreen}/>
       <Tab.Screen name="My Games" component={ExploreStackScreen} />
       <Tab.Screen name="Quiz Maker" component={ExploreStackScreen} />
       <Tab.Screen name="Reports" component={ExploreStackScreen} />

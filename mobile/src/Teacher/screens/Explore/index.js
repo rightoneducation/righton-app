@@ -18,6 +18,7 @@ import { API, graphqlOperation } from 'aws-amplify'
 import { FlatList } from 'react-native-gesture-handler'
 // import API from '../../../backend'
 import gamesList from './data.json'
+import DetailScreen from './DetailScreen'
 
 const ExploreStack = createStackNavigator()
 
@@ -27,6 +28,7 @@ const ExploreStackScreen = () => {
       headerShown: false
     }}>
       <ExploreStack.Screen name="ExploreScreen" component={ExploreScreen} />
+      <ExploreStack.Screen name="GameDetails" component={DetailScreen} />
     </ExploreStack.Navigator>
   )
 }
@@ -37,9 +39,6 @@ const ExploreScreen = ({ props, navigation }) => {
     loading: 'loading',
     succeeded: 'succeeded',
     failed: 'failed',
-  }
-  const onGameSelected = () => {
-    navigation.navigate("GameDetails")
   }
 
   const [mode, setMode] = useState(Mode.loading)
@@ -57,14 +56,22 @@ const ExploreScreen = ({ props, navigation }) => {
     <Fragment>
       <SafeAreaView style={{ flex: 0, backgroundColor: '#003668' }} />
       <SafeAreaView style={styles.mainContainer}>
-        <NavBarView title="Explore" avatar={require("../../../assets/images/profile.png")} />
+        <NavBarView title="Explore" avatar={require("../../../assets/images/profile.png")} showHamBurgerMenu={true} />
         {mode == Mode.loading ? <ActivityIndicator /> : (
           <FlatList
             style={styles.content}
             data={games}
-            keyExtractor={({ GameID }, index) => GameID}
+            keyExtractor={({ GameID }) => GameID}
             renderItem={({ item }) => (
-              <ContentItem category={item.grade || "General"} title={item.title || "No Title"} body={item.description || "No Description"} style={styles.contentItem} onPress={onGameSelected} />
+              <ContentItem
+                category={item.grade || "General"} 
+                title={item.title || "No Title"} 
+                body={item.description || "No Description"} 
+                style={styles.contentItem} 
+                onPress={() => {
+                    navigation.navigate("GameDetails", {game: item})
+               }} 
+              />
             )}
           />
         )}
