@@ -15,20 +15,24 @@ const NavBarView = (props, navigation) => {
                 style={styles.container}
             >
                 <View style={styles.navBarContainer}>
-                    {avatar ? <TouchableOpacity onPress={() => console.log('tapped avatar')}>
-                        <View style={styles.avatar}>
-                            <Image source={avatar} resizeMode='contain' />
-                        </View>
-                    </TouchableOpacity> : (
-                       <Pressable style={{flexDirection: 'row'}} onPress={props.onBack}>
-                           <Text style={{color: 'white', fontSize: 35, marginRight: 5, marginTop: 5,}}>{'<'}</Text>
-                           <Text style={{color: 'white', fontSize: 17, marginTop: 18}}>Explore</Text>
-                       </Pressable>
-                    )}
+                    {
+                        avatar ? <TouchableOpacity onPress={() => console.log('tapped avatar')}>
+                            <View style={styles.avatar}>
+                                <Image source={avatar} resizeMode='contain' />
+                            </View>
+                        </TouchableOpacity> : (
+                        <Pressable style={{flexDirection: 'row'}} onPress={props.onBack}>
+                            <Text style={{color: 'white', fontSize: 35, marginRight: 5, marginTop: 5,}}>{'<'}</Text>
+                            <Text style={{color: 'white', fontSize: 17, marginTop: 18}}>Explore</Text>
+                        </Pressable>
+                        )
+                    }
                     <Text style={styles.title}>{title}</Text>
-                    {showHamburgerMenu && <TouchableOpacity style={styles.drawer} onPress={() => console.log('tapped drawer')}>
-                        <Image source={require('../../../../assets/images/menu.png')} style={styles.drawer} resizeMode='contain' />
-                    </TouchableOpacity>}
+                    {
+                        showHamburgerMenu && <TouchableOpacity style={styles.drawer} onPress={() => console.log('tapped drawer')}>
+                            <Image source={require('../../../../assets/images/menu.png')} style={styles.drawer} resizeMode='contain' />
+                        </TouchableOpacity>
+                    }
                 </View>
             </LinearGradient>
         </View>

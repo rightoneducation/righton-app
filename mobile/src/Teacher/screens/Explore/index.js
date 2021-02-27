@@ -64,12 +64,12 @@ const ExploreScreen = ({ props, navigation }) => {
             keyExtractor={({ GameID }) => GameID}
             renderItem={({ item }) => (
               <ContentItem
-               category={item.grade || "General"} 
-               title={item.title || "No Title"} 
-               body={item.description || "No Description"} 
-               style={styles.contentItem} 
-               onPress={() => {
-                  navigation.navigate("GameDetails", {game:item})
+                category={item.grade || "General"} 
+                title={item.title || "No Title"} 
+                body={item.description || "No Description"} 
+                style={styles.contentItem} 
+                onPress={() => {
+                    navigation.navigate("GameDetails", {game: item})
                }} 
               />
             )}

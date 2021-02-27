@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 import { StyleSheet, Text, View, Platform, Image, Button, Pressable } from 'react-native'
 import { fontFamilies, fonts } from '../../../utils/theme'
@@ -18,33 +18,36 @@ const Card = (props) => {
 
     return(
             <View style={styles.cardContainer}>   
-                    <Image
-                        style={styles.questionImage}
-                        source={{uri: props.image}}
-                    />
-                    <Text style={styles.headerText}>{props.question}</Text>
-                    <View style={styles.breakLine}></View>
+                <Image
+                    style={styles.questionImage}
+                    source={{uri: props.image}}
+                />
+                <Text style={styles.headerText}>{props.question}</Text>
+                <View style={styles.breakLine}></View>
 
-                    {hintsShown && props.instructions.map( (hint, index) => (
-                            <View style={styles.hintDirection}>
-                                <Text style={styles.hintNumber}>{index + 1}</Text>
-                                <Text style={styles.questionHint}>{hint}</Text>
-                            </View>
-                    ))}
+                {
+                    hintsShown && props.instructions.map( (hint, index) => (
+                        <View style={styles.hintDirection}>
+                            <Text style={styles.hintNumber}>{index + 1}</Text>
+                            <Text style={styles.questionHint}>{hint}</Text>
+                        </View>
+                    ))
+                }
 
-                    <View style={styles.hintButtonBackground}>
-                    {hintsShown ? 
+                <View style={styles.hintButtonBackground}>
+                    {
+                        hintsShown ? 
                             <Pressable onPress={hideHints}>
-                                    <Text style={styles.hintButton}>HIDE HINTS</Text>
+                                <Text style={styles.hintButton}>HIDE HINTS</Text>
                             </Pressable>
-                        : 
-                        <Pressable onPress={showHints}>
-                            <View style={styles.hintButtonDirection}>
-                                <Text style={styles.hintButton}>SHOW HINTS</Text>
-                            </View>
-                        </Pressable>
+                            : 
+                            <Pressable onPress={showHints}>
+                                <View style={styles.hintButtonDirection}>
+                                    <Text style={styles.hintButton}>SHOW HINTS</Text>
+                                </View>
+                            </Pressable>
                     }
-                    </View>
+                </View>
                     
             </View>
     );
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
     },
     hintButtonBackground: {
         backgroundColor: '#F4F4F4',
-        flex:1,
+        flex: 1,
         marginTop: 10,
         width: 330,
         height: 50,

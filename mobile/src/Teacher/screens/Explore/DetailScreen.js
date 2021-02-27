@@ -1,25 +1,13 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import NavBarView from './NavBarView'
-import { fontFamilies, fonts } from '../../../utils/theme'
+import { fontFamilies } from '../../../utils/theme'
 import { FlatList } from 'react-native-gesture-handler'
 import {
     StyleSheet,
     Text,
     SafeAreaView,
-    View,
-    Button,
-    TouchableOpacity,
-    Pressable
 } from 'react-native';
-import { inOut } from 'react-native/Libraries/Animated/src/Easing';
 import Card from './QuestionCard';
-import { createStackNavigator } from '@react-navigation/stack';
-import ButtonBack from '../../../components/ButtonBack/index';
-import Aicon from 'react-native-vector-icons/FontAwesome';
-import LinearGradient from 'react-native-linear-gradient'
-
-// import GameDetailsScreen from './GameDetails';
-// import Games from '../Games';
 
 const detailList = ({route, navigation}) => {
 
@@ -30,7 +18,7 @@ const detailList = ({route, navigation}) => {
     const parsedQuestions =  questions.map( (question) => JSON.parse(question)  )
 
     return(
-            <SafeAreaView style={{ flex: 1, width: '100%'}}>
+            <SafeAreaView style={styles.mainContainer}>
                     <NavBarView title={false} avatar={false} onBack={() => navigation.goBack()} />
                         <Text style={styles.gameTitle}>{game.title}</Text>
                         <Text style={styles.description}>{game.description}</Text>
@@ -55,8 +43,8 @@ const detailList = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        backgroundColor: '#F9F9F9',
         flex: 1,
+        width: '100%'
     },
     headerContainer: {
         backgroundColor: 'red',
