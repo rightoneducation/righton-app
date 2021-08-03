@@ -56,31 +56,26 @@ type Mutation {
 	saveGameSession(gameSession: GameSessionInput): GameSession!
 	joinGameSession(gameCode: Int!): GameSession!
 	joinGame(gameCode: Int!): GameSession!
-	createGame(
-		id: ID!,
-		title: String!,
-		description: String,
-		cluster: String,
-		domain: String,
-		grade: String,
-		standard: String,
-		updatedAt: AWSDateTime,
-		createdAt: AWSDateTime,
-		question: ID
-	): Game
-	updateGame(
-		id: ID!,
-		title: String!,
-		description: String,
-		cluster: String,
-		domain: String,
-		grade: String,
-		standard: String,
-		updatedAt: AWSDateTime,
-		createdAt: AWSDateTime,
-		question: ID
-	): Game!
+	createGame(game: NewGameInput): Game!
+	updateGame(game: UpdateGameInput): Game!
 	deleteGame(gameId: ID!): Game!
+}
+
+input NewGameInput {
+	title: String!
+	description: String
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+	questions: [NewQuestionInput]!
+}
+
+input NewQuestionInput {
+	text: String!
+	answer: String!
+	imageURL: String
+	instructions: AWSJSON
 }
 
 type Query {
@@ -98,6 +93,24 @@ type Question {
 	instructions: AWSJSON
 	updatedAt: AWSDateTime
 	createdAt: AWSDateTime
+}
+
+input UpdateGameInput {
+	id: ID!
+	title: String!
+	description: String
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+}
+
+input UpdateQuestionInput {
+	id: ID!
+	text: String!
+	answer: String!
+	imageURL: String
+	instructions: AWSJSON
 }
 
 schema {
