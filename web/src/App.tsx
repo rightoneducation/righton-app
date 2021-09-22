@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Amplify from 'aws-amplify';
 import {
   BrowserRouter as Router,
   Route
@@ -13,7 +12,6 @@ import AlertContext, { Alert } from './context/AlertContext';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import awsconfig from './aws-exports';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame, SORT_TYPES } from './lib/games';
 import { Game } from './types';
 
@@ -21,8 +19,6 @@ const filterGame = (game: Game | null, search: string) => {
   if (game && game.title.toLowerCase().indexOf(search) > -1) return true;
   return false;
 };
-
-Amplify.configure(awsconfig);
 
 const theme = createMuiTheme({
   palette: {
