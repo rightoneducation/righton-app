@@ -7,9 +7,6 @@ import { AppState, LogBox } from 'react-native'
 
 import codePush from 'react-native-code-push'
 
-import Amplify, { Auth } from 'aws-amplify'
-import awsconfig from './src/aws-exports'
-
 import RootNavigator from './src/Navigator'
 import debug from './src/utils/debug'
 
@@ -17,8 +14,6 @@ import debug from './src/utils/debug'
 import 'babel-polyfill'
 
 // LogBox.ignoreAllLogs([])
-
-Amplify.configure(awsconfig)
 
 
 class App extends React.Component {
