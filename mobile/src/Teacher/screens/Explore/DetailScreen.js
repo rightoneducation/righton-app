@@ -3,11 +3,14 @@ import NavBarView from './NavBarView'
 import { fontFamilies } from '../../../utils/theme'
 import { FlatList } from 'react-native-gesture-handler'
 import {
+    View,
     StyleSheet,
     Text,
     SafeAreaView,
 } from 'react-native';
-import Card from './QuestionCard';
+import Card from './QuestionCard'
+import FooterView from './FooterView'
+import { scale } from 'react-native-size-matters';
 
 const detailList = ({route, navigation}) => {
 
@@ -19,16 +22,20 @@ const detailList = ({route, navigation}) => {
 
     return(
             <SafeAreaView style={styles.mainContainer}>
+                <View style={styles.contentContainer}>
                     <NavBarView title={false} avatar={false} onBack={() => navigation.goBack()} />
+                      <View style={styles.textContainer}>
                         <Text style={styles.gameTitle}>{game.title}</Text>
                         <Text style={styles.description}>{game.description}</Text>
                         <Text style={styles.gameStandard}>Common Core Standard: {`${game.grade}.${game.domain}.${game.cluster}.${game.standard}`}</Text>
                         <Text style={styles.grade}>Grade {game.grade}</Text>
-
+                      </View>
+                        <View style={styles.flatListContainer}> 
                         <FlatList
                             style={styles.questionContainer}
                             data={parsedQuestions}
                             keyExtractor={(item) => item.question}
+                            showsVerticalScrollIndicator={false}
                             renderItem={({ item }) => (
                                 <Card
                                     image={item.image}
@@ -37,21 +44,33 @@ const detailList = ({route, navigation}) => {
                                 />
                             )}
                         />
+                        </View>
+                    <FooterView />
+                </View>
             </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
-        width: '100%'
-    },
-    headerContainer: {
-        backgroundColor: 'red',
-        width: '100%'
+      flex: 1,
+      height: '100%',
+      backgroundColor: '#0B5EA2'
     },
     questionContainer: {
-        paddingLeft: 40,
+      alignSelf: 'center',
+      padding: 10
+    },
+    textContainer: {
+      height: '20%'
+    },
+    contentContainer: { 
+      display: 'flex',
+      flex: 1, 
+      backgroundColor: 'white' 
+    },
+    flatListContainer:  {
+      flex: 1
     },
     gameTitle: {
         height: 36,
@@ -103,4 +122,4 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
 })
-export default detailList;
+export default detailList

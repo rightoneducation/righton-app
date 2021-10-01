@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { colors, fonts, fontFamilies } from '../../../../utils/theme'
 import PropTypes from 'prop-types'
 import LinearGradient from 'react-native-linear-gradient'
+import { scale } from 'react-native-size-matters'
 
 const NavBarView = (props, navigation) => {
     const { title, avatar, showHamburgerMenu = false } = props
@@ -48,7 +49,7 @@ export default NavBarView
 
 const styles = StyleSheet.create({
     container: {
-        height: 75,
+        height: scale(55),
     },
     navBarContainer: {
         flex: 1,
