@@ -44,16 +44,16 @@ const TeacherStack = () => {
   </Tab.Navigator>)
 }
 
-const ExploreStack = createStackNavigator()
+const TeacherAppStack = createStackNavigator()
 
 const TeacherApp = ({ props, navigation }) => {
   return (
-    <ExploreStack.Navigator screenOptions={{
+    <TeacherAppStack.Navigator screenOptions={{
       headerShown: false
     }}>
-      <ExploreStack.Screen name="ExploreScreen" component={TeacherStack} />
-      <ExploreStack.Screen name="GameDetails" component={DetailScreen} />
-    </ExploreStack.Navigator>
+      <TeacherAppStack.Screen name="ExploreScreen" component={TeacherStack} />
+      <TeacherAppStack.Screen name="GameDetails" component={DetailScreen} />
+    </TeacherAppStack.Navigator>
   )
 }
 
