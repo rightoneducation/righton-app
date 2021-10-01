@@ -141,11 +141,11 @@ const GamePreview = ({ route, navigation }) => {
             <TeamsReadinessFooter
                 style={styles.footer}
                 onTappedFirst={() => {
-                    navigation.navigate('GameAnswerReview', {
+                    navigation.navigate('GameAnswerPopular', {
                     })
                 }}
                 onTappedLast={() => {
-                    navigation.navigate('GameAnswerReview', {
+                    navigation.navigate('GameAnswerPopular', {
                     })
                 }}
             />

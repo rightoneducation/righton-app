@@ -31,5 +31,6 @@ const styles = StyleSheet.create({
         textAlignVertical: 'bottom',
         color: '#384466',
         marginBottom: verticalScale(25),
+        alignSelf: 'flex-end',
     }
 })
