@@ -18,10 +18,8 @@ import { API, graphqlOperation } from 'aws-amplify'
 import { FlatList } from 'react-native-gesture-handler'
 // import API from '../../../backend'
 import gamesList from './data.json'
-import DetailScreen from './DetailScreen'
 
 const ExploreScreen = ({ props, navigation }) => {
-
   const Mode = {
     loading: 'loading',
     succeeded: 'succeeded',

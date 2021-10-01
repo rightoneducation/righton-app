@@ -4,14 +4,14 @@ import React from 'react'
 import { Platform, Image, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import ExploreStackScreen from './screens/Explore'
+import Explore from './screens/Explore'
 import { colors } from '../utils/theme'
 import { HeaderTitle } from '@react-navigation/stack'
 import DetailScreen from './screens/Explore/DetailScreen'
 
 const Tab = createBottomTabNavigator()
 
-const ExploreScreen = () => {
+const TeacherStack = () => {
   return (<Tab.Navigator
     initialRouteName="Explore"
     screenOptions={({ route }) => ({
@@ -37,10 +37,10 @@ const ExploreScreen = () => {
       tabBarVisible: false
     }}
   >
-    <Tab.Screen name="Explore" component={ExploreStackScreen}/>
-    <Tab.Screen name="My Games" component={ExploreStackScreen} />
-    <Tab.Screen name="Quiz Maker" component={ExploreStackScreen} />
-    <Tab.Screen name="Reports" component={ExploreStackScreen} />
+    <Tab.Screen name="Explore" component={Explore}/>
+    <Tab.Screen name="My Games" component={Explore} />
+    <Tab.Screen name="Quiz Maker" component={Explore} />
+    <Tab.Screen name="Reports" component={Explore} />
   </Tab.Navigator>)
 }
 
@@ -51,7 +51,7 @@ const TeacherApp = ({ props, navigation }) => {
     <ExploreStack.Navigator screenOptions={{
       headerShown: false
     }}>
-      <ExploreStack.Screen name="ExploreScreen" component={ExploreScreen} />
+      <ExploreStack.Screen name="ExploreScreen" component={TeacherStack} />
       <ExploreStack.Screen name="GameDetails" component={DetailScreen} />
     </ExploreStack.Navigator>
   )
