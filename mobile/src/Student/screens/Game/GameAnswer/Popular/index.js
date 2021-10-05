@@ -31,19 +31,19 @@ const GameAnswerPopular = ({ navigation }) => {
         />
       </View>
       <View style={styles.scrollViewContainer}>
-      <ScrollView
-        style={styles.contentScrollView}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.contentContainer}>
-          <View style={[styles.cardsContainer, styles.questionCard]}>
-            <ExpandableQuestion />
+        <ScrollView
+          style={styles.contentScrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.contentContainer}>
+            <View style={[styles.cardsContainer, styles.questionCard]}>
+              <ExpandableQuestion />
+            </View>
+            <View style={[styles.cardsContainer, styles.answersCard]}>
+              <Answers teamSelectedTrickAnswer={360}  />
+            </View>
           </View>
-          <View style={[styles.cardsContainer, styles.answersCard]}>
-            <Answers teamSelectedTrickAnswer={360}  />
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
       </View>
     </SafeAreaView>
   )

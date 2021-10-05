@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
-import { StyleSheet, Text, View, Image, Animated } from "react-native";
-import { scale } from "react-native-size-matters";
-import LinearGradient from "react-native-linear-gradient";
-import * as Progress from "react-native-progress";
+import React, { useState, useRef } from "react"
+import { StyleSheet, Text, View, Image, Animated } from "react-native"
+import { scale } from "react-native-size-matters"
+import LinearGradient from "react-native-linear-gradient"
+import * as Progress from "react-native-progress"
 import { fontFamilies, fonts } from '../../../../utils/theme'
 
 const Answer = ({
@@ -11,64 +11,64 @@ const Answer = ({
   percentage,
   isAnswer,
   waitTime,
-  totalAns,
+  totalAnswer,
 }) => {
-  const popularIconVisible = isPopular || false;
-  const percentageVisible = !popularIconVisible && percentage !== undefined;
+  const popularIconVisible = isPopular || false
+  const percentageVisible = !popularIconVisible && percentage !== undefined
 
-  const [showAnswer, setshowAnswer] = useState(false);
-  const [showPercentage, setshowPercentage] = useState(false);
-  const [showPopularIcon, setShowPopularIcon] = useState(false);
+  const [showAnswer, setshowAnswer] = useState(false)
+  const [showPercentage, setshowPercentage] = useState(false)
+  const [showPopularIcon, setShowPopularIcon] = useState(false)
 
-  const popularIconAnimation = useRef(new Animated.Value(0)).current;
+  const popularIconAnimation = useRef(new Animated.Value(0)).current
   const handlePopularIconAnimation = () => {
     Animated.timing(popularIconAnimation, {
       toValue: 1,
       duration: 300,
       useNativeDriver: false,
-    }).start();
-  };
+    }).start()
+  }
 
-  const progressBarFade = useRef(new Animated.Value(0)).current;
+  const progressBarFade = useRef(new Animated.Value(0)).current
   const handleProgressFade = () => {
     Animated.timing(progressBarFade, {
       toValue: 1,
       duration: 300,
       useNativeDriver: false,
-    }).start();
-  };
+    }).start()
+  }
 
-  const backgroundColorFade = useRef(new Animated.Value(0)).current;
+  const backgroundColorFade = useRef(new Animated.Value(0)).current
   const handleBackgroundAnimation = () => {
     Animated.timing(backgroundColorFade, {
       toValue: 1,
       duration: 300,
       useNativeDriver: false,
-    }).start();
-  };
+    }).start()
+  }
   const interpolator = backgroundColorFade.interpolate({
     inputRange: [0, 1],
     outputRange: ["white", "#6515C9"],
-  });
+  })
 
   if (isAnswer) {
     setTimeout(() => {
-      setshowAnswer(true);
-      handleBackgroundAnimation();
-    }, totalAns * 4200);
+      setshowAnswer(true)
+      handleBackgroundAnimation()
+    }, totalAnswer * 4200)
   }
   setTimeout(() => {
-    handleProgressFade();
-    setshowPercentage(true);
-  }, waitTime);
+    handleProgressFade()
+    setshowPercentage(true)
+  }, waitTime)
   setTimeout(() => {
-    handlePopularIconAnimation();
-    setShowPopularIcon(true);
-  }, 700);
+    handlePopularIconAnimation()
+    setShowPopularIcon(true)
+  }, 700)
 
   const percentageTitle = (percentage) => {
-    return percentage + "%";
-  };
+    return `${percentage}%`
+  }
 
   return (
     <Animated.View
@@ -152,10 +152,10 @@ const Answer = ({
         </Animated.Text>
       )}
     </Animated.View>
-  );
-};
+  )
+}
 
-export default Answer;
+export default Answer
 
 const styles = StyleSheet.create({
   container: {
@@ -197,4 +197,4 @@ const styles = StyleSheet.create({
   headerContainer: {
     width: scale(44)
   }
-});
+})

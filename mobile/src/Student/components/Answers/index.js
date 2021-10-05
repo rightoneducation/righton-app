@@ -1,27 +1,27 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from "react"
 import {
   StyleSheet,
   View,
   Animated,
   Dimensions,
-} from "react-native";
-import { scale } from "react-native-size-matters";
-import Answer from "./Answer";
+} from "react-native"
+import { scale } from "react-native-size-matters"
+import Answer from "./Answer"
 
 const Answers = ({ teamSelectedTrickAnswer }) => {
-  const [answer, setAnswer] = useState();
-  let totalPercentage = 0;
-  let totalAnswers = 0;
+  const [answer, setAnswer] = useState()
+  let totalPercentage = 0
+  let totalAnswers = 0
   const generatePercentage = () => {
-    const remainingPercentage = 100 - totalPercentage;
+    const remainingPercentage = 100 - totalPercentage
     if (totalAnswers == 3) {
-      return remainingPercentage;
+      return remainingPercentage
     }
-    const currentPercentage = Math.floor(Math.random() * remainingPercentage);
-    totalAnswers++;
-    totalPercentage += currentPercentage;
-    return currentPercentage;
-  };
+    const currentPercentage = Math.floor(Math.random() * remainingPercentage)
+    totalAnswers++
+    totalPercentage += currentPercentage
+    return currentPercentage
+  }
   const [answers, setAnswers] = useState(
     [
       {
@@ -41,14 +41,14 @@ const Answers = ({ teamSelectedTrickAnswer }) => {
         percentage: generatePercentage(),
       },
     ].sort((a, b) => {
-      return a.percentage < b.percentage;
+      return a.percentage < b.percentage
     })
-  );
+  )
 
   //hoook to show the final answer and percentage
   setTimeout(() => {
-    setAnswer(1080);
-  }, 3000 * (answers.length + 1));
+    setAnswer(1080)
+  }, 3000 * (answers.length + 1))
 
   return (
     <View
@@ -63,17 +63,17 @@ const Answers = ({ teamSelectedTrickAnswer }) => {
                 ((index + 1) % 2 == 0 ? index - 1 : index) * scale(40) +
                 scale(10),
             })
-          ).current;
+          ).current
           const animationValue2 = useRef(
             new Animated.Value(
               index % 2 == 0 ? scale(30) : Dimensions.get("window").width * 0.4
             )
-          ).current;
+          ).current
           const animatedStyle = {
             width: animationValue.x,
             top: animationValue.y,
             left: animationValue2,
-          };
+          }
           setTimeout(() => {
             Animated.sequence([
               Animated.timing(animationValue.y, {
@@ -91,8 +91,8 @@ const Answers = ({ teamSelectedTrickAnswer }) => {
                 duration: 1000,
                 useNativeDriver: false,
               }).start(),
-            ]);
-          }, 3000 * (answers.length - index));
+            ])
+          }, 3000 * (answers.length - index))
           return (
             <Animated.View key={index} style={[styles.cardsContainer, animatedStyle]}>
               <Answer
@@ -101,16 +101,16 @@ const Answers = ({ teamSelectedTrickAnswer }) => {
                 percentage={ans.percentage}
                 waitTime={(answers.length - index) * 3000 + 1500}
                 isAnswer={1080 == ans.num}
-                totalAns={answers.length}
+                totalAnswer={answers.length}
               />
             </Animated.View>
-          );
+          )
         })}
     </View>
-  );
-};
+  )
+}
 
-export default Answers;
+export default Answers
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -125,4 +125,4 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: scale(50),
   },
-});
+})
