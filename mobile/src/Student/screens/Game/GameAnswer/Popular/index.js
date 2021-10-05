@@ -11,7 +11,7 @@ const GameAnswerPopular = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate('Leadership')
-    }, 2000)
+    }, 20000)
   }, [])
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -30,19 +30,21 @@ const GameAnswerPopular = ({ navigation }) => {
           text={'First, let’s see which answer the tricksters guessed might be the most popular answer...'}
         />
       </View>
-      <ScrollView
-        style={styles.contentScrollView}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.contentContainer}>
-          <View style={[styles.cardsContainer, styles.questionCard]}>
-            <ExpandableQuestion />
+      <View style={styles.scrollViewContainer}>
+        <ScrollView
+          style={styles.contentScrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.contentContainer}>
+            <View style={[styles.cardsContainer, styles.questionCard]}>
+              <ExpandableQuestion />
+            </View>
+            <View style={[styles.cardsContainer, styles.answersCard]}>
+              <Answers teamSelectedTrickAnswer={360}  />
+            </View>
           </View>
-          <View style={[styles.cardsContainer, styles.answersCard]}>
-            <Answers teamSelectedTrickAnswer={360} numColumns={1} />
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   contentScrollView: {
-    marginTop: -scale(75),
+    marginTop: -scale(180),
     marginBottom: 10,
   },
   contentContainer: {
@@ -79,12 +81,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 30,
   },
+  scrollViewContainer: {
+    height: scale(365)
+  },
   cardsContainer: {
     marginLeft: scale(42),
     marginRight: scale(42),
     backgroundColor: 'white',
     borderRadius: scale(24),
-    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -107,5 +111,6 @@ const styles = StyleSheet.create({
     right: 25,
     left: 0,
     marginBottom: verticalScale(5),
+    marginRight: scale(25)
   }
 })
