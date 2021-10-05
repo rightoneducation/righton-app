@@ -2,11 +2,10 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { Platform, Image, Text } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Explore from './screens/Explore'
 import { colors } from '../utils/theme'
-import { HeaderTitle } from '@react-navigation/stack'
+import OverseeGames from './screens/OverseeGames'
 import DetailScreen from './screens/Explore/DetailScreen'
 
 const Tab = createBottomTabNavigator()
@@ -53,6 +52,7 @@ const TeacherApp = ({ props, navigation }) => {
     }}>
       <TeacherAppStack.Screen name="ExploreScreen" component={TeacherStack} />
       <TeacherAppStack.Screen name="GameDetails" component={DetailScreen} />
+      <TeacherAppStack.Screen name="OverseeGamesStack" component={OverseeGames} />
     </TeacherAppStack.Navigator>
   )
 }

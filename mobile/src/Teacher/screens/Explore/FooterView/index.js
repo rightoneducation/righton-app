@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { scale } from "react-native-size-matters";
 import { colors, fonts, fontFamilies } from "../../../../utils/theme";
+import { useNavigation } from "@react-navigation/native";
 
 const FooterView = () => {
+  const navigation = useNavigation()
   return (
     <View>
       <LinearGradient colors={["#003668", "#0B5EA2"]} style={styles.container}>
@@ -12,7 +14,9 @@ const FooterView = () => {
           <Image source={require('./img/clone.png')} />
           <Text style={styles.footerText}>Clone</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.sectionContainer}>
+        <TouchableOpacity style={styles.sectionContainer}  onPress={() => {
+          navigation.navigate('OverseeGamesStack')
+        }}>
           <Text style={styles.footerText}>Create Session</Text>
           <Image source={require('./img/createSession.png')} />
         </TouchableOpacity>
