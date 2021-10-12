@@ -3,11 +3,13 @@ import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
 import AnimatedAccordion from "@dev-event/react-native-accordion";
 import { fontFamilies, fonts } from "../../../../../../utils/theme";
 import { scale } from "react-native-size-matters";
+import CollapsableContent from "../../../components/CollapsableContent";
 
 const TeamCards = ({ teamInfo }) => {
   const accordionRef = useRef(null);
 
   const [show, setShow] = useState(false);
+  const [expandedIndexes, setExpandedIndexes] = useState([]);
 
   const handleContentTouchable = useCallback((i, answers, picked) => {
     const opacityCheck = (value) => {
@@ -30,23 +32,43 @@ const TeamCards = ({ teamInfo }) => {
   }, []);
 
   const handleContent = useCallback(() => {
-    return <Text style={styles.message}>Sample content</Text>;
+    return <CollapsableContent />;
   }, []);
 
   const handleIcon = useCallback(() => {
     return <Image source={require("./img/arrow.png")} />;
   }, []);
 
+  const handleOpen = (isShow, i) => {
+    if (isShow) setExpandedIndexes([...expandedIndexes, i]);
+    else {
+      setExpandedIndexes(expandedIndexes.filter((item) => item !== i));
+    }
+    setShow(isShow);
+  };
+
   return (
-    <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.mainContainer}
+      showsVerticalScrollIndicator={false}
+    >
       {teamInfo.map((info, i) => {
         return (
           <AnimatedAccordion
+            key={i}
             ref={accordionRef}
             styleChevron={styles.icon}
             renderContent={handleContent}
-            onChangeState={(isShow) => setShow(isShow)}
-            styleTouchable={styles.touchable}
+            onChangeState={(isShow) => handleOpen(isShow, i)}
+            styleTouchable={[
+              styles.touchable,
+              expandedIndexes.indexOf(i) != -1
+                ? {
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius: 0,
+                  }
+                : {},
+            ]}
             activeBackgroundIcon={"grey"}
             inactiveBackgroundIcon={"grey"}
             handleContentTouchable={() =>
@@ -71,7 +93,7 @@ const styles = StyleSheet.create({
     height: scale(70),
     backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 20,
-    marginVertical: scale(6),
+    marginTop: scale(10),
   },
   title: {
     fontSize: fonts.xMedium,

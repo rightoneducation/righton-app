@@ -70,6 +70,7 @@ const Questions = ({ navigation }) => {
             navigation={navigation}
             nextPage={""}
             buttonLabel={"Skip to Review Phase"}
+            isBlue={true}
           />
         </View>
       </LinearGradient>

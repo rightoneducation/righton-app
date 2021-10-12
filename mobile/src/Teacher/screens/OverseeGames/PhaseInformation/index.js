@@ -6,7 +6,7 @@ import { colors, fontFamilies, fonts } from "../../../../utils/theme";
 import QuestionTabBar from "../components/QuestionTabBar";
 import * as Progress from "react-native-progress";
 import TeamCards from "./components/TeamCards";
-import Footer from '../components/Footer'
+import Footer from "../components/Footer";
 
 const PhaseInformation = ({ navigation }) => {
   const [countdown, setCountdown] = useState(300);
@@ -45,8 +45,8 @@ const PhaseInformation = ({ navigation }) => {
         style={styles.backgroundGradient}
       >
         <QuestionTabBar numQuestions={5} currentQuestion={0} />
-        <Text style={styles.phaseName}>Trick the Class</Text>
-        <Text style={styles.phaseDescription}>Trick Phase</Text>
+        <Text style={styles.phaseName}>Phase 1</Text>
+        <Text style={styles.phaseDescription}>Submission Phase</Text>
         <View style={styles.timerContainer}>
           <Progress.Bar
             style={styles.timerProgressBar}
@@ -61,7 +61,15 @@ const PhaseInformation = ({ navigation }) => {
           </Text>
         </View>
         <TeamCards style={styles.cardsContainer} teamInfo={teamInfo} />
-        <Footer style={styles.footer} noPicked={2} teams={teamInfo.length} navigation={navigation} navigation={navigation} nextPage={'Questions'} buttonLabel={'Skip to Review Phase'} />
+        <Footer
+          style={styles.footer}
+          noPicked={2}
+          teams={teamInfo.length}
+          navigation={navigation}
+          navigation={navigation}
+          nextPage={"Questions"}
+          buttonLabel={"Skip to Review Phase"}
+        />
       </LinearGradient>
     </SafeAreaView>
   );
@@ -95,12 +103,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignContent: "flex-start",
     alignItems: "flex-start",
-    marginBottom: scale(20)
+    marginBottom: scale(20),
   },
   timerProgressBar: {
     marginRight: 9,
     marginTop: 5,
-    borderWidth: 0
+    borderWidth: 0,
   },
   timerText: {
     color: "white",
@@ -110,9 +118,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   cardsContainer: {
-    flex: 1
+    flex: 1,
   },
   footer: {
-    marginTop: scale(10)
-  }
+    marginTop: scale(10),
+  },
 });
