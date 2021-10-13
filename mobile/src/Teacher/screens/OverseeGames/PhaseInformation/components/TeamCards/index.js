@@ -36,7 +36,7 @@ const TeamCards = ({ teamInfo }) => {
   }, []);
 
   const handleIcon = useCallback(() => {
-    return <Image source={require("./img/arrow.png")} />;
+    return <Image source={require("../../../img/arrow.png")} />;
   }, []);
 
   const handleOpen = (isShow, i) => {

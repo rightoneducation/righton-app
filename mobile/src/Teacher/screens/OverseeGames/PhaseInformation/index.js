@@ -66,9 +66,9 @@ const PhaseInformation = ({ navigation }) => {
           noPicked={2}
           teams={teamInfo.length}
           navigation={navigation}
-          navigation={navigation}
+          questionNum={1}
           nextPage={"Questions"}
-          buttonLabel={"Skip to Review Phase"}
+          buttonLabel={"Skip to next phase"}
         />
       </LinearGradient>
     </SafeAreaView>

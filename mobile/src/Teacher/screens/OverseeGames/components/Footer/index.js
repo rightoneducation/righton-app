@@ -16,6 +16,7 @@ const Footer = ({
   teams,
   nextPage,
   buttonLabel,
+  questionNum,
   isBlue,
 }) => {
   return (
@@ -39,7 +40,7 @@ const Footer = ({
           isBlue && { backgroundColor: "#159EFA" },
         ]}
         onPress={() => {
-          navigation.navigate(nextPage);
+          navigation.push(nextPage, { questionNum });
         }}
       >
         <Text style={[styles.actionText, isBlue && { color: "white" }]}>

@@ -31,38 +31,25 @@ const CollapsableContent = () => {
       <View style={styles.breaker} />
       <Text style={styles.question}>Question: {question}</Text>
       <View style={styles.breaker} />
-      {selectedId && (
-        <View style={styles.chosenAnswer}>
-          <Text style={styles.label}>
-            {selectedId == 1 ? "Correct Answer:" : "Answer:"}
-          </Text>
-          <View
-            style={[
-              styles.correctAnswerContainer,
-              selectedId == 1
-                ? { backgroundColor: "#4DED66" }
-                : { backgroundColor: "#FC1047" },
-            ]}
-          >
-            <Text style={styles.answer}>{answers[selectedId - 1].answer}</Text>
-          </View>
-        </View>
-      )}
       <View style={styles.chosenAnswer}>
-        <Text style={styles.label}>Trick Selections:</Text>
+        <Text style={styles.label}>Answer Selections:</Text>
         <View>
-          {answers
-            .filter((answer) => answer.id != 1)
-            .map((answer, i) => {
-              return (
-                <Text
-                  key={i}
-                  style={[styles.answer, { marginRight: scale(15) }]}
-                >
-                  {answer.answer}
-                </Text>
-              );
-            })}
+          {answers.map((answer, i) => {
+            return (
+              <Text key={i} style={[styles.answer, { marginRight: scale(15) }]}>
+                {answer.answer}
+              </Text>
+            );
+          })}
+        </View>
+      </View>
+      <View style={styles.breaker} />
+      <View style={styles.bottomContainer}>
+        <Text style={styles.question}>Selected Answer Explaination:</Text>
+        <View style={styles.explainationContainer}>
+          <Text style={styles.question}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do v
+          </Text>
         </View>
       </View>
     </View>
@@ -114,5 +101,17 @@ const styles = StyleSheet.create({
     paddingVertical: scale(1),
     paddingHorizontal: scale(15),
     borderRadius: 20,
+  },
+  bottomContainer: {
+    padding: scale(15),
+    width: "100%",
+  },
+  explainationContainer: {
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.2)",
+    padding: scale(10),
+    borderRadius: 22,
+    marginHorizontal: scale(-10),
+    marginTop: scale(10),
   },
 });
