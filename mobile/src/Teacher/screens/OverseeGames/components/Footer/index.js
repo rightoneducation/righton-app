@@ -1,14 +1,14 @@
-import React from "react";
+import React from "react"
 import {
   StyleSheet,
   View,
   Text,
   Dimensions,
   TouchableOpacity,
-} from "react-native";
-import { scale } from "react-native-size-matters";
-import { colors, fontFamilies, fonts } from "../../../../../utils/theme";
-import * as Progress from "react-native-progress";
+} from "react-native"
+import { scale } from "react-native-size-matters"
+import { colors, fontFamilies, fonts } from "../../../../../utils/theme"
+import * as Progress from "react-native-progress"
 
 const Footer = ({
   navigation,
@@ -18,29 +18,34 @@ const Footer = ({
   buttonLabel,
   questionNum,
   isBlue,
+  showPicked = true,
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Groups that picked 3 trick answers</Text>
-      <View style={styles.timerContainer}>
-        <Progress.Bar
-          style={styles.timerProgressBar}
-          progress={(noPicked * 12.5) / 100}
-          color={colors.white}
-          unfilledColor={"rgba(255,255,255,0.2)"}
-          width={Dimensions.get("window").width - scale(90)}
-          height={scale(15)}
-          borderRadius={0}
-        />
-        <Text style={styles.timerText}>{teams}</Text>
-      </View>
+      {showPicked && (
+        <View>
+          <Text style={styles.label}>Groups that picked 3 trick answers</Text>
+          <View style={styles.timerContainer}>
+            <Progress.Bar
+              style={styles.timerProgressBar}
+              progress={(noPicked * 12.5) / 100}
+              color={colors.white}
+              unfilledColor={"rgba(255,255,255,0.2)"}
+              width={Dimensions.get("window").width - scale(90)}
+              height={scale(15)}
+              borderRadius={0}
+            />
+            <Text style={styles.timerText}>{teams}</Text>
+          </View>
+        </View>
+      )}
       <TouchableOpacity
         style={[
           styles.nextActionContainer,
           isBlue && { backgroundColor: "#159EFA" },
         ]}
         onPress={() => {
-          navigation.push(nextPage, { questionNum });
+          navigation.push(nextPage, { questionNum })
         }}
       >
         <Text style={[styles.actionText, isBlue && { color: "white" }]}>
@@ -48,10 +53,10 @@ const Footer = ({
         </Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
 
 const styles = StyleSheet.create({
   container: {
@@ -96,4 +101,4 @@ const styles = StyleSheet.create({
     fontSize: fonts.medium,
     fontFamily: fontFamilies.poppinsBold,
   },
-});
+})

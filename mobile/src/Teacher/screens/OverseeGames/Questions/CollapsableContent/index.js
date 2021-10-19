@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view";
-import { scale, verticalScale } from "react-native-size-matters";
-import { colors, fontFamilies, fonts } from "../../../../../utils/theme";
+import React, { useState } from "react"
+import { View, Text, StyleSheet, Image } from "react-native"
+import { scale, verticalScale } from "react-native-size-matters"
+import { colors, fontFamilies, fonts } from "../../../../../utils/theme"
 
 const CollapsableContent = () => {
   const question =
-    "In many countries, a stop sign is represented as a red eight-sided shape with the word “STOP” in the middle. \n\nThis eight-sided shape is known as an octagon. \n\nHow many degrees are in the interior angles of a stop sign?";
+    "In many countries, a stop sign is represented as a red eight-sided shape with the word “STOP” in the middle. \n\nThis eight-sided shape is known as an octagon. \n\nHow many degrees are in the interior angles of a stop sign?"
   const answers = [
     {
       id: 1,
@@ -24,22 +23,29 @@ const CollapsableContent = () => {
       id: 4,
       answer: 8,
     },
-  ];
-  const selectedId = 1;
+  ]
+  const selectedId = 1
   return (
     <View style={styles.container}>
       <View style={styles.breaker} />
       <Text style={styles.question}>Question: {question}</Text>
       <View style={styles.breaker} />
-      <View style={styles.chosenAnswer}>
+      <View style={styles.answerChoices}>
         <Text style={styles.label}>Answer Selections:</Text>
-        <View>
+        <View style={styles.selections}>
           {answers.map((answer, i) => {
-            return (
-              <Text key={i} style={[styles.answer, { marginRight: scale(15) }]}>
+            return answer.id == selectedId ? (
+              <View style={styles.chosenAnswer}>
+                <Text key={i} style={styles.answer}>
+                  {answer.answer}
+                </Text>
+                <Image source={require("../img/Ellipse.png")}></Image>
+              </View>
+            ) : (
+              <Text key={i} style={styles.answer}>
                 {answer.answer}
               </Text>
-            );
+            )
           })}
         </View>
       </View>
@@ -53,10 +59,10 @@ const CollapsableContent = () => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default CollapsableContent;
+export default CollapsableContent
 
 const styles = StyleSheet.create({
   container: {
@@ -79,7 +85,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(255,255,255,0.25)",
   },
-  chosenAnswer: {
+  answerChoices: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -114,4 +120,21 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(-10),
     marginTop: scale(10),
   },
-});
+  chosenAnswer: {
+    borderWidth: 2,
+    borderColor: "#4DED66",
+    borderRadius: 20,
+    width: scale(80),
+    paddingHorizontal: scale(10),
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  selections: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    marginRight: scale(15),
+  },
+})

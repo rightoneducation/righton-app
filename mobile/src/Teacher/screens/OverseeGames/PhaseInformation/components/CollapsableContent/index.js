@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view";
-import { scale, verticalScale } from "react-native-size-matters";
-import { colors, fontFamilies, fonts } from "../../../../../utils/theme";
+import React, { useState } from "react"
+import { View, Text, StyleSheet } from "react-native"
+import { scale, verticalScale } from "react-native-size-matters"
+import { colors, fontFamilies, fonts } from "../../../../../../utils/theme"
 
 const CollapsableContent = () => {
   const question =
-    "In many countries, a stop sign is represented as a red eight-sided shape with the word “STOP” in the middle. \n\nThis eight-sided shape is known as an octagon. \n\nHow many degrees are in the interior angles of a stop sign?";
+    "In many countries, a stop sign is represented as a red eight-sided shape with the word “STOP” in the middle. \n\nThis eight-sided shape is known as an octagon. \n\nHow many degrees are in the interior angles of a stop sign?"
   const answers = [
     {
       id: 1,
@@ -24,8 +23,8 @@ const CollapsableContent = () => {
       id: 4,
       answer: 8,
     },
-  ];
-  const selectedId = 1;
+  ]
+  const selectedId = 1
   return (
     <View style={styles.container}>
       <View style={styles.breaker} />
@@ -61,15 +60,15 @@ const CollapsableContent = () => {
                 >
                   {answer.answer}
                 </Text>
-              );
+              )
             })}
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default CollapsableContent;
+export default CollapsableContent
 
 const styles = StyleSheet.create({
   container: {
@@ -115,4 +114,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(15),
     borderRadius: 20,
   },
-});
+})

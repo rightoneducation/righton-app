@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react"
 import {
   View,
   SafeAreaView,
@@ -6,20 +6,20 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-} from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { scale } from "react-native-size-matters";
-import { fontFamilies, fonts, colors } from "../../../../utils/theme";
-import QuestionTabBar from "../components/QuestionTabBar";
-import Footer from "../components/Footer";
-import AnimatedAccordion from "@dev-event/react-native-accordion";
-import CollapsableContent from "./CollapsableContent";
+} from "react-native"
+import LinearGradient from "react-native-linear-gradient"
+import { scale } from "react-native-size-matters"
+import { fontFamilies, fonts, colors } from "../../../../utils/theme"
+import QuestionTabBar from "../components/QuestionTabBar"
+import Footer from "../components/Footer"
+import AnimatedAccordion from "@dev-event/react-native-accordion"
+import CollapsableContent from "./CollapsableContent"
 
 // add a prop for second question
 const Questions = ({ route, navigation }) => {
-  const [allTeamAnswers, setAllTeamAnswers] = useState(false);
-  const { questionNum } = route.params;
-  const accordionRef = useRef(null);
+  const [allTeamAnswers, setAllTeamAnswers] = useState(false)
+  const { questionNum } = route.params
+  const accordionRef = useRef(null)
 
   const teamInfo = [
     {
@@ -50,17 +50,17 @@ const Questions = ({ route, navigation }) => {
       points: 70,
       voted: true,
     },
-  ];
+  ]
 
-  const [show, setShow] = useState(false);
-  const [expandedIndexes, setExpandedIndexes] = useState([]);
+  const [show, setShow] = useState(false)
+  const [expandedIndexes, setExpandedIndexes] = useState([])
 
   const handleContentTouchable = useCallback((i) => {
     if (i == questionNum) {
-      teamDescription = "Tricksters";
+      teamDescription = "Tricksters"
     } else if (teamInfo[i - 1].voted) {
-      teamDescription = "Voted";
-    } else teamDescription = "Not Yet Voted";
+      teamDescription = "Voted"
+    } else teamDescription = "Not Yet Voted"
     return (
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Team {i}</Text>
@@ -69,28 +69,29 @@ const Questions = ({ route, navigation }) => {
           <Text style={styles.points}>{teamInfo[i - 1].points}</Text>
         </View>
       </View>
-    );
-  }, []);
+    )
+  }, [])
 
   const handleContent = useCallback(() => {
-    return <CollapsableContent />;
-  }, []);
+    return <CollapsableContent />
+  }, [])
 
   const handleIcon = useCallback(() => {
-    return <Image source={require("../img/arrow.png")} />;
-  }, []);
+    return <Image source={require("../img/arrow.png")} />
+  }, [])
 
   const handleOpen = (isShow, i) => {
-    if (isShow) setExpandedIndexes([...expandedIndexes, i]);
+    if (!expandedIndexes.includes(i))
+      setExpandedIndexes([...expandedIndexes, i])
     else {
-      setExpandedIndexes(expandedIndexes.filter((item) => item !== i));
+      setExpandedIndexes(expandedIndexes.filter((item) => item !== i))
     }
-    setShow(isShow);
-  };
+    setShow(isShow)
+  }
 
   setTimeout(() => {
-    setAllTeamAnswers(true);
-  }, 2000);
+    setAllTeamAnswers(true)
+  }, 2000)
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -125,13 +126,13 @@ const Questions = ({ route, navigation }) => {
                         }
                       : {},
                   ]}
-                  activeBackgroundIcon={"grey"}
-                  inactiveBackgroundIcon={"grey"}
+                  activeBackgroundIcon={"transparent"}
+                  inactiveBackgroundIcon={"transparent"}
                   handleContentTouchable={() => handleContentTouchable(i + 1)}
                   initialMountedContent={true}
                   handleIcon={handleIcon}
                 />
-              );
+              )
             })}
           </ScrollView>
         </View>
@@ -142,18 +143,18 @@ const Questions = ({ route, navigation }) => {
             noPicked={2}
             teams={teamInfo.length}
             navigation={navigation}
-            questionNum={2}
-            nextPage={"Questions"}
+            questionNum={questionNum}
+            nextPage={"Results"}
             buttonLabel={"Skip to Results"}
             isBlue={allTeamAnswers}
           />
         </View>
       </LinearGradient>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Questions;
+export default Questions
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -261,4 +262,4 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: fontFamilies.poppinsRegular,
   },
-});
+})

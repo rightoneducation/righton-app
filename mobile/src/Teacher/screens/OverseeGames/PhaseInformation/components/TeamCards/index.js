@@ -1,20 +1,20 @@
-import React, { useState, useRef, useCallback } from "react";
-import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
-import AnimatedAccordion from "@dev-event/react-native-accordion";
-import { fontFamilies, fonts } from "../../../../../../utils/theme";
-import { scale } from "react-native-size-matters";
-import CollapsableContent from "../../../components/CollapsableContent";
+import React, { useState, useRef, useCallback } from "react"
+import { View, Text, ScrollView, StyleSheet, Image } from "react-native"
+import AnimatedAccordion from "@dev-event/react-native-accordion"
+import { fontFamilies, fonts } from "../../../../../../utils/theme"
+import { scale } from "react-native-size-matters"
+import CollapsableContent from "../CollapsableContent"
 
 const TeamCards = ({ teamInfo }) => {
-  const accordionRef = useRef(null);
+  const accordionRef = useRef(null)
 
-  const [show, setShow] = useState(false);
-  const [expandedIndexes, setExpandedIndexes] = useState([]);
+  const [show, setShow] = useState(false)
+  const [expandedIndexes, setExpandedIndexes] = useState([])
 
   const handleContentTouchable = useCallback((i, answers, picked) => {
     const opacityCheck = (value) => {
-      return value == 0 ? { opacity: 0.3 } : {};
-    };
+      return value == 0 ? { opacity: 0.3 } : {}
+    }
     return (
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Team {i}</Text>
@@ -28,24 +28,25 @@ const TeamCards = ({ teamInfo }) => {
           </Text>
         </View>
       </View>
-    );
-  }, []);
+    )
+  }, [])
 
   const handleContent = useCallback(() => {
-    return <CollapsableContent />;
-  }, []);
+    return <CollapsableContent />
+  }, [])
 
   const handleIcon = useCallback(() => {
-    return <Image source={require("../../../img/arrow.png")} />;
-  }, []);
+    return <Image source={require("../../../img/arrow.png")} />
+  }, [])
 
   const handleOpen = (isShow, i) => {
-    if (isShow) setExpandedIndexes([...expandedIndexes, i]);
+    if (!expandedIndexes.includes(i))
+      setExpandedIndexes([...expandedIndexes, i])
     else {
-      setExpandedIndexes(expandedIndexes.filter((item) => item !== i));
+      setExpandedIndexes(expandedIndexes.filter((item) => item !== i))
     }
-    setShow(isShow);
-  };
+    setShow(isShow)
+  }
 
   return (
     <ScrollView
@@ -56,7 +57,6 @@ const TeamCards = ({ teamInfo }) => {
         return (
           <AnimatedAccordion
             key={i}
-            ref={accordionRef}
             styleChevron={styles.icon}
             renderContent={handleContent}
             onChangeState={(isShow) => handleOpen(isShow, i)}
@@ -69,21 +69,21 @@ const TeamCards = ({ teamInfo }) => {
                   }
                 : {},
             ]}
-            activeBackgroundIcon={"grey"}
-            inactiveBackgroundIcon={"grey"}
+            activeBackgroundIcon={"transparent"}
+            inactiveBackgroundIcon={"transparent"}
             handleContentTouchable={() =>
               handleContentTouchable(i + 1, info.answers, info.picked)
             }
             initialMountedContent={true}
             handleIcon={handleIcon}
           />
-        );
+        )
       })}
     </ScrollView>
-  );
-};
+  )
+}
 
-export default TeamCards;
+export default TeamCards
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
     fontFamily: fontFamilies.poppinsBold,
     fontSize: fonts.medium,
   },
-});
+})
