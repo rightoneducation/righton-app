@@ -1,9 +1,9 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { scale } from "react-native-size-matters";
-import { colors, fonts, fontFamilies } from "../../../../utils/theme";
-import { useNavigation } from "@react-navigation/native";
+import React from "react"
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"
+import LinearGradient from "react-native-linear-gradient"
+import { scale } from "react-native-size-matters"
+import { colors, fonts, fontFamilies } from "../../../../utils/theme"
+import { useNavigation } from "@react-navigation/native"
 
 const FooterView = () => {
   const navigation = useNavigation()
@@ -22,10 +22,10 @@ const FooterView = () => {
         </TouchableOpacity>
       </LinearGradient>
     </View>
-  );
-};
+  )
+}
 
-export default FooterView;
+export default FooterView
 
 const styles = StyleSheet.create({
   container: {
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   }
-});
+})
