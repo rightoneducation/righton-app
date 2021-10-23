@@ -1,0 +1,104 @@
+input CreateGameInput {
+  title: String!
+  description: String
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
+  questions: [CreateQuestionInput]
+}
+
+input CreateQuestionInput {
+  text: String!
+  answer: String!
+  imageUrl: String
+  instructions: AWSJSON
+}
+
+type Game {
+  id: Int!
+  title: String
+  description: String
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
+  questions: [Question]
+  updatedAt: AWSDateTime!
+  createdAt: AWSDateTime!
+}
+
+input GameSessionInput {
+  gameCode: Int
+  gameId: Int!
+  hintsRevealTime: Int
+  id: Int!
+  multiDeviceMode: Boolean!
+  startedDateTimeUTC: AWSDateTime
+  teamIds: [Int]
+  votingTime: Int
+}
+
+enum GameSessionState {
+  CHOOSINGTRICKANSWER
+  FINISHED
+  INITIALINTRO
+  NOTSTARTED
+  REVIEWINGRESULT
+  VOTING
+}
+
+type Mutation {
+  deleteGame(id: Int!): Game
+  createGame(game: CreateGameInput!): Game
+  updateGame(game: UpdateGameInput!): Game
+  deleteQuestion(id: Int!): Question
+  createQuestion(question: CreateQuestionInput!): Question
+  updateQuestion(question: UpdateQuestionInput!): Question
+}
+
+type Query {
+  getGame(id: Int!): Game
+  listGames: [Game]
+  getQuestion(id: Int!): Question
+  listQuestions: [Question]
+}
+
+type Question {
+  id: Int!
+  text: String!
+  answer: String!
+  imageUrl: String
+  instructions: AWSJSON
+  updatedAt: AWSDateTime!
+  createdAt: AWSDateTime!
+}
+
+type Subscription {
+  onCreateGame: Game @aws_subscribe(mutations: ["createGame"])
+  onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
+}
+
+input UpdateGameInput {
+  id: Int!
+  title: String
+  description: String
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
+}
+
+input UpdateQuestionInput {
+  id: Int!
+  text: String
+  answer: String
+  imageUrl: String
+  instructions: AWSJSON
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}

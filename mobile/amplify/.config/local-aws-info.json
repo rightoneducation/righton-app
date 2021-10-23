@@ -1,7 +1,5 @@
 {
-    "staging": {
-        "configLevel": "project",
-        "useProfile": true,
-        "profileName": "righton"
-    }
+  "staging": {
+    "configLevel": "amplifyAdmin"
+  }
 }
