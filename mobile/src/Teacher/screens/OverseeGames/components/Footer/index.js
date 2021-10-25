@@ -4,7 +4,7 @@ import {
   View,
   Text,
   Dimensions,
-  TouchableOpacity,
+  Pressable,
 } from "react-native"
 import { scale } from "react-native-size-matters"
 import { colors, fontFamilies, fonts } from "../../../../../utils/theme"
@@ -17,7 +17,8 @@ const Footer = ({
   nextPage,
   buttonLabel,
   questionNum,
-  isBlue,
+  backgroundColor,
+  textColor,
   showPicked = true,
 }) => {
   return (
@@ -28,7 +29,7 @@ const Footer = ({
           <View style={styles.timerContainer}>
             <Progress.Bar
               style={styles.timerProgressBar}
-              progress={(noPicked * 12.5) / 100}
+              progress={(noPicked / teams)}
               color={colors.white}
               unfilledColor={"rgba(255,255,255,0.2)"}
               width={Dimensions.get("window").width - scale(90)}
@@ -39,19 +40,18 @@ const Footer = ({
           </View>
         </View>
       )}
-      <TouchableOpacity
+      <Pressable
         style={[
-          styles.nextActionContainer,
-          isBlue && { backgroundColor: "#159EFA" },
+          styles.nextActionContainer, { backgroundColor: backgroundColor },
         ]}
         onPress={() => {
           navigation.push(nextPage, { questionNum })
         }}
       >
-        <Text style={[styles.actionText, isBlue && { color: "white" }]}>
+        <Text style={[styles.actionText, { color: textColor }]}>
           {buttonLabel}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 }
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
     marginVertical: scale(10),
   },
   actionText: {
-    color: "#159EFA",
     fontSize: fonts.medium,
     fontFamily: fontFamilies.poppinsBold,
   },

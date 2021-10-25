@@ -39,7 +39,7 @@ const CollapsableContent = () => {
             style={[
               styles.correctAnswerContainer,
               selectedId == 1
-                ? { backgroundColor: "#4DED66" }
+                ? { backgroundColor: colors.lightgreen }
                 : { backgroundColor: "#FC1047" },
             ]}
           >

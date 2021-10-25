@@ -40,8 +40,9 @@ const TeamCards = ({ teamInfo }) => {
   }, [])
 
   const handleOpen = (isShow, i) => {
-    if (!expandedIndexes.includes(i))
+    if (!expandedIndexes.includes(i)) {
       setExpandedIndexes([...expandedIndexes, i])
+    }
     else {
       setExpandedIndexes(expandedIndexes.filter((item) => item !== i))
     }

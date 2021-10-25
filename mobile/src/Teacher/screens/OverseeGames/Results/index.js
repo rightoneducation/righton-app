@@ -89,7 +89,8 @@ const Results = ({ route, navigation }) => {
             buttonLabel={
               questionNum == teamPoints.length ? "End Game" : "Next Question"
             }
-            isBlue={true}
+            backgroundColor={colors.lightblue}
+            textColor={colors.white}
           />
         </View>
       </LinearGradient>

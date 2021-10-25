@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   chosenAnswer: {
     borderWidth: 2,
-    borderColor: "#4DED66",
+    borderColor: colors.lightgreen,
     borderRadius: 20,
     width: scale(80),
     paddingHorizontal: scale(10),

@@ -16,9 +16,9 @@ const TeacherStack = () => {
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused }) => {
         let iconName
-
+        
         if (route.name === 'Explore') {
-          iconName = focused ? require('./../assets/images/explore_selected.png') : require('./../assets/images/explore.png')
+          iconName = focused ? require('../assets/images/explore_selected.png') : require('../assets/images/explore.png')
         } else if (route.name === 'My Games') {
           iconName = focused ? require('./../assets/images/mygames_selected.png') : require('./../assets/images/mygames.png')
         } else if (route.name === 'Quiz Maker') {
@@ -26,6 +26,7 @@ const TeacherStack = () => {
         } else if (route.name === 'Reports') {
           iconName = focused ? require('./../assets/images/reports_selected.png') : require('./../assets/images/reports.png')
         }
+        
         return <Image source={iconName} />
       },
     }), {headerShown: false}}

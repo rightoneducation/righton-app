@@ -14,7 +14,7 @@ const FooterView = () => {
           <Image source={require('./img/clone.png')} />
           <Text style={styles.footerText}>Clone</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.sectionContainer}  onPress={() => {
+        <TouchableOpacity style={styles.sectionContainer} onPress={() => {
           navigation.navigate('OverseeGamesStack')
         }}>
           <Text style={styles.footerText}>Create Session</Text>

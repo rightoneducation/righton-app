@@ -8,7 +8,7 @@ import {
     Text,
     SafeAreaView,
 } from 'react-native';
-import Card from './QuestionCard'
+import QuestionCard from './QuestionCard'
 import FooterView from './FooterView'
 import { scale } from 'react-native-size-matters';
 
@@ -37,7 +37,7 @@ const detailList = ({route, navigation}) => {
                             keyExtractor={(item) => item.question}
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item }) => (
-                                <Card
+                                <QuestionCard
                                     image={item.image}
                                     question={item.question || "Question"}
                                     instructions={item.instructions || []}
