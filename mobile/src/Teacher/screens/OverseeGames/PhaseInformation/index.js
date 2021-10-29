@@ -52,15 +52,15 @@ const PhaseInformation = ({ navigation }) => {
 				</View>
 				<TeamCards style={styles.cardsContainer} teamInfo={teamInfo} />
 				<Footer
-				style={styles.footer}
-				noPicked={2}
-				teams={teamInfo.length}
-				navigation={navigation}
-				questionNum={1}
-				nextPage={"Questions"}
-				buttonLabel={"Skip to next phase"}
-				textColor={colors.lightblue}
-					/>
+          style={styles.footer}
+          noPicked={2}
+          teams={teamInfo.length}
+          navigation={navigation}
+          questionNum={1}
+          nextPage={"Questions"}
+          buttonLabel={"Skip to next phase"}
+          textColor={colors.lightblue}
+				/>
       </RootComponent>
   );
 };
