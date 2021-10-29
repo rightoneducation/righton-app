@@ -50,7 +50,9 @@ const colors = {
   red: '#c0001d',
   buttonPrimary: '#FC1047',
   buttonSecondary: '#159EFA',
-  backgroundPurple: "#483a82"
+  backgroundPurple: '#483a82',
+  lightgreen: '#4DED66',
+  lightblue: '#159EFA'
 }
 
 const elevation = {

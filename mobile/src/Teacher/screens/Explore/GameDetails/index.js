@@ -39,7 +39,7 @@ const GameDetailsScreen = ({ navigation }) => {
                     <RoundButton
                         style={styles.startGame}
                         title="Start Game"
-                        onPress={() => console.log("Start Game")} />
+                        onPress={() => navigation.navigate("PhaseInformation")} />
                 </View>
             </LinearGradient>
         </SafeAreaView>

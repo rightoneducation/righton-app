@@ -5,7 +5,7 @@ import { fontFamilies, fonts } from '../../../utils/theme'
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Card = (props) => {
+const QuestionCard = (props) => {
     const [hintsShown, setHintsShown] = useState(false);
 
     const showHints = () => {
@@ -132,4 +132,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Card;
+export default QuestionCard;

@@ -18,23 +18,8 @@ import { API, graphqlOperation } from 'aws-amplify'
 import { FlatList } from 'react-native-gesture-handler'
 // import API from '../../../backend'
 import gamesList from './data.json'
-import DetailScreen from './DetailScreen'
-
-const ExploreStack = createStackNavigator()
-
-const ExploreStackScreen = () => {
-  return (
-    <ExploreStack.Navigator screenOptions={{
-      headerShown: false
-    }}>
-      <ExploreStack.Screen name="ExploreScreen" component={ExploreScreen} />
-      <ExploreStack.Screen name="GameDetails" component={DetailScreen} />
-    </ExploreStack.Navigator>
-  )
-}
 
 const ExploreScreen = ({ props, navigation }) => {
-
   const Mode = {
     loading: 'loading',
     succeeded: 'succeeded',
@@ -62,12 +47,13 @@ const ExploreScreen = ({ props, navigation }) => {
             style={styles.content}
             data={games}
             keyExtractor={({ GameID }) => GameID}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <ContentItem
                 category={item.grade || "General"} 
                 title={item.title || "No Title"} 
                 body={item.description || "No Description"} 
-                style={styles.contentItem} 
+                style={styles.contentItem}
+                key={index}
                 onPress={() => {
                     navigation.navigate("GameDetails", {game: item})
                }} 
@@ -80,7 +66,7 @@ const ExploreScreen = ({ props, navigation }) => {
   )
 }
 
-export default ExploreStackScreen
+export default ExploreScreen
 
 const styles = StyleSheet.create({
   mainContainer: {
