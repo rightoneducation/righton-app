@@ -1,101 +1,99 @@
-[![](/assets/images/right_on_banner.png)](https://www.rightoneducation.com/)
-
 # RightOn Education
 
-## Project Description
+### Our Mission & Vision
+<strong>Mission:</strong> Maybe you too know kids (or even adults) who'll say things like, "I'm not a math person." or "I just can't do science." Our mission is to unlock every student’s potential in STEM: building self-confidence, developing conceptual understanding, and helping them overcome hurdles in both school & life: whether they'd like to build apps, go to Mars, or become the next Beyonce!
 
-[**_RightOn!_**](https://www.rightoneducation.com) is an app-based classroom activity that increases engagement and helps more students feel better about math: think Kahoot/Fibbage + math + learning from and having fun with wrong answers. Rather than focusing on just increasing math proficiency -- which can leave behind many disengaged and underserved youth -- **_RightOn!_** is also working to increase self-confidence and self-efficacy through an engaging activity that applies research into learning from mistakes and common misconceptions.
+While many apps focus on getting answers as quickly as possible, we're turning things around: RightOn not only makes it OK to make mistakes: players get rewarded for the most popular wrong answers. Through learning from mistakes and misconceptions, everyone takes their learning to the next level.
 
-## Getting Started
+<strong>Vision:</strong> In the future, we envision <a href="https://www.rightoneducation.com"><strong><i>RightOn!</i></strong></a> to become a multimedia learning platform and game show (spanning mobile apps and livestream video), one that eventually helps connect students of all ages and backgrounds to learn new subjects -- from math today to others in the future. 
 
-### 1) Clone project
+### Our Values
+We’re a team that sometimes falls down, always gets back up, and never stops having fun.<br>
+<strong>Trust and open communication:</strong> first seeking to understand, then to be understood<br>
+<strong>Integrity:</strong> doing the right thing<br>
+<strong>Compassion:</strong> lending a hand to others, giving back, expressing gratitude<br>
+<strong>Humility:</strong> working together on something bigger than ourselves<br>
+<strong>Beginner’s mindset:</strong> going into things with an open mind, always learning and making new mistakes<br>
+<strong>Fun:</strong> having fun along the way!<br>
 
-`git clone https://github.com/righton-dev/righton-app.git`
+### Project Description
+We're currently developing two apps:
+1. A React Native mobile app for middle/high school teachers to use in classroom environments. Think Balderdash/Fibbage + STEM + learning from and having fun with mistakes and misconceptions. 
+2. A React web app that enables teachers to create games/questions that appear in the mobile app and view classroom results.
 
-### 2) Install node modules
+We're running on AWS, including AppSync/GraphQL, DynamoDB, and Lambda. A future phase might include a livestream game show with elements similar to the following <a href="https://www.tubefilter.com/2020/04/27/mrbeast-youtube-creator-games-nadeshot-ninja/"><strong>online rock-papers-scissors tournament</strong></a>. 
 
-`npm install`
+### Getting Started
 
-### 3) Install on device
+Click into the <a href="https://github.com/rightoneducation/righton-app/tree/dev/web">**web**</a> or <a href="https://github.com/rightoneducation/righton-app/tree/dev/mobile">**mobile**</a> directory to learn how to get started. 
 
-`npm run ios`
-
-`npm run android`
-
-### 4) Start your app
-
-`npm start`
-
-## Files needed / Additional notes
+### Files Needed
 
 The `react-native` npm package.
-
+<br>
 A `local.properties` file if testing on Android.
-
+<br>
 The Xcode editor if testing on iOS.
+<br>
 
-### AWS
-
-There has to be a file `aws-exports.js` file placed under `src/` directory. This file is not checked into the Github. It must be obtained separately from the admin of this project so that the project can properly communicate with the AWS cloud services during runtime.
-
-### Note
-
+#### Notes:
 Some NPM packages may be out of date and need to be updated for the Android build.
-
+<br>
 If you encounter the following error:
-
+<br>
 > A problem occurred evaluating project ':amazon-cognito-identity-js'.
 > Could not find method implementation() for arguments [com.facebook.react:react-native:+]
-
+<br>
 Locate the `build.gradle` file in `node_modules/amazon-cognito-identity.js/android`, find the line mentioned in the `dependencies` object, and change `implementation` to `compile`.
+<br>
+<br>
+If you receive a `hasteImpl returning the same name for different files` error in your packager: This is due to identical path names created by AWS Amplify. To fix this issue, simply drag the `#current-cloud-backend` folder from `${root}/amplify` out, restart the packager and run again.
 
-If you receive a `hasteImpl returning the same name for different files` error in your packager. This is due to identical path names created by AWS Amplify. To fix this issue, simply drag the `#current-cloud-backend` folder from `${root}/amplify` out, restart the packager and run again.
+### Contributing
 
-## Help Wanted!
+We welcome contributions from all, and each contribution makes a difference! Please report issues directly to us or make pull requests for any features or bug fixes. Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md) for further details.
 
-We’re looking to work with people who are interested in making a difference in youth education. We are building mobile apps on AWS using technologies including React Native, Node.js, DynamoDB, and Amplify/Lambda. Experience with AI/ML is a plus.
-
-## Contributing
-
-We welcome contributions from everyone. Please report issues directly to us or make Pull Requests for any features or bug fixes. As much as we like to reward mistakes, we want to fix as many of them as possible too. Your contribution counts!
-
-Please refer to our [Contribution Guide](https://github.com/righton-dev/righton-app/tree/master/CONTRIBUTING.md).
-
-## Additional Documentation
+### Additional Documentation
 
 Please refer to our [docs](https://github.com/righton-dev/righton-app/tree/master/docs)
 
-## Communication channels
+### Communication Channels
 
-We are always happy to hear from people who are also interested in building learning apps and making math more fun for more people. We're trying to build this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com.
+We are always happy to hear from people who are also interested in building learning apps and making math more fun and achievable for all. We're building this plane as we fly it, and suggestions are always welcome and appreciated. Give us a shout anytime at info@rightoneducation.com. You're also welcome to join our Slack community -- just let us know!
 
-## Tests
+### Testing
 
-You are welcome to download our latest beta version to test and give feedback. Please use Test Flight to install our app from this link: [https://testflight.apple.com/join/2l8414MU](https://testflight.apple.com/join/2l8414MU)
+You are welcome to download our latest beta version to test and give feedback. Please use Test Flight to install our app from this link: https://testflight.apple.com/join/2l8414MU
 
-## Deployment
+### Deployment
 
 Coming soon!
 
-## Acknowledgments
+### Acknowledgments
 
-
-### Meet our team
-
-__Andy Li__ - Mobile Developer <br />
-__Daz Yang__ - Full-Stack Web Developer <br />
-__Edward Tan__ - Architect Lead <br />
-__Kai King__ - Math Educator <br />
-__Katerina Schenke__ - Research & Learning Scientist <br />
-__Sinclair Wu__ - Product Lead <br />
-
-### Advisors
-
-__Ay-Nur Najm__ - Independent math consultant and computer science teacher <br />
-__Ben Woodford__ - Doctoral scholar at Stanford specializing in math education <br />
-__Esmeralda Ortiz__ - Senior Director, Boys & Girls Clubs of the Peninsula <br />
-__Eric Boucher__ - Cofounder & CEO of Ovio <br />
-__Paul Chin__ - Assistant Professor of Practice, Relay Graduate School of Education <br />
-__Payton Richardson__ - Data Officer, Eastside Pathways <br />
-
-*Learn more about RightOn! & our team at [https://rightoneducation.com](https://rightoneducation.com)*
+#### Meet our team
+<strong>Andy Li</strong> - Mobile App Lead<br>
+<strong>Angela Dosalmas</strong> - Math Educator / Equity & Community Engagement<br>
+<strong>Anna Roberds</strong> - Math Educator / Community Engagement<br>
+<strong>Daz Yang</strong> - Full-Stack Web Developer<br>
+<strong>Edward Tan</strong> - Architect Lead<br>
+<strong>Iman Howard</strong> - STEM Educator<br>
+<strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
+<strong>Mani Ramezan</strong> - Mobile App Lead<br>
+<strong>Marizza Bailey</strong> - Math Educator / Content & Pedagogy<br>
+<strong>Ryan Booth</strong> - Web App Lead<br>
+<strong>Sinclair Wu </strong> - Product Lead<br>
+#### Advisors
+<strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
+<strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
+<strong>Bunmi Esho</strong> - STEM Advocacy Executive Director<br>
+<strong>Esmeralda Ortiz</strong> - Senior Director, Boys & Girls Clubs of the Peninsula<br>
+<strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
+<strong>Lybroan James</strong> - Chief Education Officer, STEMulate<br>
+<strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
+<strong>Payton Richardson</strong> - Data Officer, Eastside Pathways<br>
+<strong>Ronald Towns</strong> - STEM Administrator<br>
+<strong>Yong Lin</strong> - UX
+<br>
+<br>
+<em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>

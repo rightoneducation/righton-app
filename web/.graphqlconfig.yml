@@ -1,0 +1,15 @@
+projects:
+  RightOn-staging:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - src/graphql/**/*.ts
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: typescript
+        generatedFileName: src/API.ts
+        docsFilePath: src/graphql
+        region: us-east-1
+        apiId: mz6btgo62nhu5dcl67k5namuwe
+        maxDepth: 2

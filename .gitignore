@@ -1,36 +1,6 @@
 # OSX
 #
 .DS_Store
-_DS_Store
-
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-project.xcworkspace
-
-# Android/IntelliJ
-#
-build/
-.idea
-.gradle
-gradle.properties
-local.properties
-*.iml
 
 # node.js
 #
@@ -42,17 +12,6 @@ yarn-error.log
 buck-out/
 \.buckd/
 *.keystore
-
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
-
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
 
 # Bundle artifact
 *.jsbundle
@@ -72,13 +31,17 @@ package-lock.json
 amplify/\#current-cloud-backend
 aws-info.json
 project-config.json
-*/aws-exports.js
 amplify/backend/function/*/src/node_modules/
 amplify/backend/function/*/dist/
 
 # Tests
 coverage/
 cache/
+
+# Generated files
+bin/
+gen/
+out/
 
 #amplify
 amplify/\#current-cloud-backend
@@ -89,5 +52,26 @@ amplify/backend/awscloudformation
 build/
 dist/
 node_modules/
-aws-exports.js
 awsconfiguration.json
+amplifyconfiguration.json
+amplify-build-config.json
+amplify-gradle-config.json
+amplifyxc.config
+
+### Android related files
+
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
+
+# lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
+# Version control
+vcs.xml
+local-env-info.json
+
