@@ -31,7 +31,6 @@ package-lock.json
 amplify/\#current-cloud-backend
 aws-info.json
 project-config.json
-*/aws-exports.js
 amplify/backend/function/*/src/node_modules/
 amplify/backend/function/*/dist/
 
@@ -53,7 +52,6 @@ amplify/backend/awscloudformation
 build/
 dist/
 node_modules/
-aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplify-build-config.json

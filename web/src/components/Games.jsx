@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { SORT_TYPES } from '../lib/games';
+import { SORT_TYPES } from '../lib/sorting';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -22,6 +22,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Select from '@material-ui/core/Select';
+import CCSS from './CCSS';
 
 export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
@@ -121,14 +122,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                   <Typography color="textSecondary" gutterBottom>
                     {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
                   </Typography>
-                  {(game.grade || game.domain || game.cluster || game.standard) && (
-                    <Typography color="textSecondary" gutterBottom>
-                      {game.grade === 'General' ?
-                        game.grade :
-                        `${game.grade}.${game.domain}.${game.cluster}.${game.standard}`
-                      }
-                    </Typography>
-                  )}
+                  <CCSS game={game} />
                 </Box>
               </CardContent>
             </Card>
