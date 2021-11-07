@@ -12,11 +12,12 @@ import AlertContext, { Alert } from './context/AlertContext';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame, SORT_TYPES } from './lib/games';
-import { Game } from './types';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame } from './lib/games';
+import { SORT_TYPES } from './lib/sorting';
+import { Game } from './API';
 
 const filterGame = (game: Game | null, search: string) => {
-  if (game && game.title.toLowerCase().indexOf(search) > -1) return true;
+  if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
   return false;
 };
 
@@ -42,42 +43,42 @@ function App() {
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
     const game = await createGame(newGame);
-    if (game) {
-      const games = sortGames(await fetchGames(), sortType);
-      setGames(games);
-    }
-    setLoading(false);
+    // if (game) {
+    //   const games = sortGames(await fetchGames(), sortType);
+    //   setGames(games);
+    // }
+    // setLoading(false);
     setAlert({ message: 'New game created.', type: 'success' });
   }
 
   const saveGame = async (game: Game) => {
     const result = await updateGame(game);
-    if (result) {
-      const games = sortGames(await fetchGames(), sortType);
-      setGames(games);
-    }
+    // if (result) {
+    //   const games = sortGames(await fetchGames(), sortType);
+    //   setGames(games);
+    // }
     setAlert({ message: 'Game saved.', type: 'success' });
   }
 
   const handleDeleteGame = async (id: number) => {
     const result = await deleteGame(id);
-    if (result) {
-      const games = sortGames(await fetchGames(), sortType);
-      setGames(games);
-    }
+    // if (result) {
+    //   const games = sortGames(await fetchGames(), sortType);
+    //   setGames(games);
+    // }
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
   // @ts-ignore
   const handleCloneGame = async (game) => {
     const result = await cloneGame(game);
-    if (result) {
-      const games = sortGames(await fetchGames(), sortType);
-      const gameIndex = games.findIndex((game) => result.GameID === game.GameID);
-      setGames(games);
-      setAlert({ message: 'Game cloned.', type: 'success' });
-      return gameIndex;
-    }
+    // if (result) {
+    //   const games = sortGames(await fetchGames(), sortType);
+    //   const gameIndex = games.findIndex((game) => result.GameID === game.GameID);
+    //   setGames(games);
+    //   setAlert({ message: 'Game cloned.', type: 'success' });
+    //   return gameIndex;
+    // }
   }
 
   useEffect(() => {

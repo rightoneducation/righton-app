@@ -13,6 +13,7 @@ import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CCSS from './CCSS';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -123,15 +124,11 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
         <Button type="button" onClick={() => history.push(`/`)}>
           <ArrowBackIcon className={classes.back} />Exit Game
         </Button>
-        {(game.grade || game.domain || game.cluster || game.standard) && (
-          <Typography className={classes.ccss}>
-            {game.grade !== 'General' && (
-              <>
-                <strong>CCSS: </strong>
-                {`${game.grade}.${game.domain}.${game.cluster}.${game.standard}`}
-              </>
-            )}
-          </Typography>
+        {game.grade !== 'General' && (
+          <>
+          <strong>CCSS: </strong>
+          <CCSS game={game} />
+          </>
         )}
         <Button disabled={questions.length > 4} className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
           Add question
