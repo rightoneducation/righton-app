@@ -4,7 +4,7 @@ import { listGames } from '../graphql/queries';
 import { SORT_TYPES, sortGamesBySortType } from './sorting';
 
 export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Promise<Array<Game | null>> => {
-  const result: { data: ListGamesQuery } = await API.graphql(graphqlOperation(listGames));
+  const result = await API.graphql(graphqlOperation(listGames)) as { data: ListGamesQuery | null | undefined };
   const games = result?.data?.listGames || [];
   return games;
 }
