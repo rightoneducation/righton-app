@@ -113,3 +113,48 @@ export const updateQuestion = /* GraphQL */ `
     }
   }
 `;
+export const createGameStatus = /* GraphQL */ `
+  mutation CreateGameStatus($gameID: Int!) {
+    createGameStatus(gameID: $gameID) {
+      gameID
+      screenID
+      title
+      text
+      ... on QuestionScreen {
+        answers
+      }
+      ... on JoinScreen {
+        gameCode
+      }
+      ... on ScorecardScreen {
+        scores {
+          teamName
+          teamScore
+        }
+      }
+    }
+  }
+`;
+export const updateGameStatus = /* GraphQL */ `
+  mutation UpdateGameStatus($gameID: Int!, $screenData: ScreenInput!) {
+    updateGameStatus(gameID: $gameID, screenData: $screenData) {
+      __typename
+      gameID
+      screenID
+      title
+      text
+      ... on QuestionScreen {
+        answers
+      }
+      ... on JoinScreen {
+        gameCode
+      }
+      ... on ScorecardScreen {
+        scores {
+          teamName
+          teamScore
+        }
+      }
+    }
+  }
+`;

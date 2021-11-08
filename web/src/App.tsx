@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Switch
 } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import {
@@ -15,6 +16,7 @@ import Games from './components/Games';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame } from './lib/games';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
+import StatusPageContainer from './components/StatusPageContainer';
 
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
@@ -118,17 +120,20 @@ function App() {
 
   return (
     <Router>
-      <ThemeProvider theme={theme}>
-        <AlertContext.Provider value={alertContext}>
-          <Box>
-            <Nav />
-            <Route path="/">
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
-            </Route>
-          </Box>
-          <AlertBar />
-        </AlertContext.Provider>
-      </ThemeProvider>
+      <Switch>
+        <Route path="/status/:gameID" component={StatusPageContainer} />
+        <ThemeProvider theme={theme}>
+          <AlertContext.Provider value={alertContext}>
+            <Box>
+              <Nav />
+              <Route path="/">
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
+              </Route>
+            </Box>
+            <AlertBar />
+          </AlertContext.Provider>
+        </ThemeProvider>
+      </ Switch>
     </Router>
   );
 }

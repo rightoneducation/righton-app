@@ -48,6 +48,15 @@ enum GameSessionState {
   VOTING
 }
 
+type JoinScreen implements Screen {
+  __typename: String
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+  gameCode: String!
+}
+
 type Mutation {
   deleteGame(id: Int!): Game
   createGame(game: CreateGameInput!): Game
@@ -55,6 +64,8 @@ type Mutation {
   deleteQuestion(id: Int!): Question
   createQuestion(question: CreateQuestionInput!): Question
   updateQuestion(question: UpdateQuestionInput!): Question
+  createGameStatus(gameID: Int!): Screen
+  updateGameStatus(gameID: Int!, screenData: ScreenInput!): Screen
 }
 
 type Query {
@@ -74,9 +85,65 @@ type Question {
   createdAt: AWSDateTime!
 }
 
+type QuestionScreen implements Screen {
+  __typename: String
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+  answers: [String]!
+}
+
+type Score {
+  teamName: String!
+  teamScore: Int!
+}
+
+input ScoreInput {
+  teamName: String!
+  teamScore: Int!
+}
+
+type ScorecardScreen implements Screen {
+  __typename: String
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+  scores: [Score]!
+}
+
+interface Screen {
+  __typename: String
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+}
+
+enum ScreenID {
+  JOIN
+  QUESTION
+  SCORECARD
+}
+
+input ScreenInput {
+  __typename: String
+  screenID: ScreenID!
+  title: String!
+  text: String!
+  answers: [String]
+  scores: [ScoreInput]
+  gameCode: String
+}
+
 type Subscription {
-  onCreateGame: Game @aws_subscribe(mutations: ["createGame"])
-  onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
+  onCreateGame: Game
+    @aws_subscribe(mutations: ["createGame"])
+  onCreateQuestion: Question
+    @aws_subscribe(mutations: ["createQuestion"])
+  subscribeToGameStatusUpdates(gameID: Int!): Screen
+    @aws_subscribe(mutations: ["updateGameStatus"])
 }
 
 input UpdateGameInput {
