@@ -49,12 +49,10 @@ enum GameSessionState {
 }
 
 type JoinScreen implements Screen {
-  __typename: String
   gameID: Int!
   screenID: ScreenID!
   title: String!
   text: String
-  gameCode: String!
 }
 
 type Mutation {
@@ -86,7 +84,6 @@ type Question {
 }
 
 type QuestionScreen implements Screen {
-  __typename: String
   gameID: Int!
   screenID: ScreenID!
   title: String!
@@ -105,7 +102,6 @@ input ScoreInput {
 }
 
 type ScorecardScreen implements Screen {
-  __typename: String
   gameID: Int!
   screenID: ScreenID!
   title: String!
@@ -114,7 +110,6 @@ type ScorecardScreen implements Screen {
 }
 
 interface Screen {
-  __typename: String
   gameID: Int!
   screenID: ScreenID!
   title: String!
@@ -122,19 +117,17 @@ interface Screen {
 }
 
 enum ScreenID {
-  JOIN
-  QUESTION
-  SCORECARD
+  JoinScreen
+  QuestionScreen
+  ScorecardScreen
 }
 
 input ScreenInput {
-  __typename: String
   screenID: ScreenID!
   title: String!
   text: String!
   answers: [String]
   scores: [ScoreInput]
-  gameCode: String
 }
 
 type Subscription {

@@ -46,17 +46,14 @@ export const subscribeToGameStatusUpdates = /* GraphQL */ `
       screenID
       title
       text
-      ... on QuestionScreen {
-        answers
-      }
-      ... on JoinScreen {
-        gameCode
-      }
       ... on ScorecardScreen {
         scores {
           teamName
           teamScore
         }
+      }
+      ... on QuestionScreen {
+        answers
       }
     }
   }

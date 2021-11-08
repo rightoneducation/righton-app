@@ -1,10 +1,10 @@
 import React from "react";
 import { Score, JoinScreen, QuestionScreen, ScorecardScreen } from '../API';
 
-const Join = ({ gameCode }: JoinScreen) => {
+const Join = ({ gameID }: JoinScreen) => {
   return (
     <form>
-      <p>{gameCode}</p>
+      <p>{gameID}</p>
       <input type="text" />
       <br />
       <br />

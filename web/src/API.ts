@@ -70,31 +70,6 @@ export type Screen = {
   text?: string | null,
 };
 
-export type QuestionScreen = {
-  __typename: "QuestionScreen",
-  gameID: number,
-  screenID: ScreenID,
-  title: string,
-  text?: string | null,
-  answers: Array< string | null >,
-};
-
-export enum ScreenID {
-  JOIN = "JOIN",
-  QUESTION = "QUESTION",
-  SCORECARD = "SCORECARD",
-}
-
-
-export type JoinScreen = {
-  __typename: "JoinScreen",
-  gameID: number,
-  screenID: ScreenID,
-  title: string,
-  text?: string | null,
-  gameCode: string,
-};
-
 export type ScorecardScreen = {
   __typename: "ScorecardScreen",
   gameID: number,
@@ -104,10 +79,34 @@ export type ScorecardScreen = {
   scores:  Array<Score | null >,
 };
 
+export enum ScreenID {
+  JoinScreen = "JoinScreen",
+  QuestionScreen = "QuestionScreen",
+  ScorecardScreen = "ScorecardScreen",
+}
+
+
 export type Score = {
   __typename: "Score",
   teamName: string,
   teamScore: number,
+};
+
+export type QuestionScreen = {
+  __typename: "QuestionScreen",
+  gameID: number,
+  screenID: ScreenID,
+  title: string,
+  text?: string | null,
+  answers: Array< string | null >,
+};
+
+export type JoinScreen = {
+  __typename: "JoinScreen",
+  gameID: number,
+  screenID: ScreenID,
+  title: string,
+  text?: string | null,
 };
 
 export type ScreenInput = {
@@ -116,7 +115,6 @@ export type ScreenInput = {
   text: string,
   answers?: Array< string | null > | null,
   scores?: Array< ScoreInput | null > | null,
-  gameCode?: string | null,
 };
 
 export type ScoreInput = {
@@ -268,6 +266,17 @@ export type CreateGameStatusMutationVariables = {
 
 export type CreateGameStatusMutation = {
   createGameStatus: ( {
+      __typename: "ScorecardScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+      scores:  Array< {
+        __typename: string,
+        teamName: string,
+        teamScore: number,
+      } | null >,
+    } | {
       __typename: "QuestionScreen",
       gameID: number,
       screenID: ScreenID,
@@ -280,18 +289,6 @@ export type CreateGameStatusMutation = {
       screenID: ScreenID,
       title: string,
       text?: string | null,
-      gameCode: string,
-    } | {
-      __typename: "ScorecardScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
-      scores:  Array< {
-        __typename: string,
-        teamName: string,
-        teamScore: number,
-      } | null >,
     }
   ) | null,
 };
@@ -303,6 +300,17 @@ export type UpdateGameStatusMutationVariables = {
 
 export type UpdateGameStatusMutation = {
   updateGameStatus: ( {
+      __typename: "ScorecardScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+      scores:  Array< {
+        __typename: string,
+        teamName: string,
+        teamScore: number,
+      } | null >,
+    } | {
       __typename: "QuestionScreen",
       gameID: number,
       screenID: ScreenID,
@@ -315,18 +323,6 @@ export type UpdateGameStatusMutation = {
       screenID: ScreenID,
       title: string,
       text?: string | null,
-      gameCode: string,
-    } | {
-      __typename: "ScorecardScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
-      scores:  Array< {
-        __typename: string,
-        teamName: string,
-        teamScore: number,
-      } | null >,
     }
   ) | null,
 };
@@ -459,6 +455,17 @@ export type SubscribeToGameStatusUpdatesSubscriptionVariables = {
 
 export type SubscribeToGameStatusUpdatesSubscription = {
   subscribeToGameStatusUpdates: ( {
+      __typename: "ScorecardScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+      scores:  Array< {
+        __typename: string,
+        teamName: string,
+        teamScore: number,
+      } | null >,
+    } | {
       __typename: "QuestionScreen",
       gameID: number,
       screenID: ScreenID,
@@ -471,18 +478,6 @@ export type SubscribeToGameStatusUpdatesSubscription = {
       screenID: ScreenID,
       title: string,
       text?: string | null,
-      gameCode: string,
-    } | {
-      __typename: "ScorecardScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
-      scores:  Array< {
-        __typename: string,
-        teamName: string,
-        teamScore: number,
-      } | null >,
     }
   ) | null,
 };

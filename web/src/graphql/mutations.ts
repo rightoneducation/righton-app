@@ -120,17 +120,14 @@ export const createGameStatus = /* GraphQL */ `
       screenID
       title
       text
-      ... on QuestionScreen {
-        answers
-      }
-      ... on JoinScreen {
-        gameCode
-      }
       ... on ScorecardScreen {
         scores {
           teamName
           teamScore
         }
+      }
+      ... on QuestionScreen {
+        answers
       }
     }
   }
@@ -138,22 +135,18 @@ export const createGameStatus = /* GraphQL */ `
 export const updateGameStatus = /* GraphQL */ `
   mutation UpdateGameStatus($gameID: Int!, $screenData: ScreenInput!) {
     updateGameStatus(gameID: $gameID, screenData: $screenData) {
-      __typename
       gameID
       screenID
       title
       text
-      ... on QuestionScreen {
-        answers
-      }
-      ... on JoinScreen {
-        gameCode
-      }
       ... on ScorecardScreen {
         scores {
           teamName
           teamScore
         }
+      }
+      ... on QuestionScreen {
+        answers
       }
     }
   }
