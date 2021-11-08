@@ -39,3 +39,22 @@ export const onCreateQuestion = /* GraphQL */ `
     }
   }
 `;
+export const subscribeToGameStatusUpdates = /* GraphQL */ `
+  subscription SubscribeToGameStatusUpdates($gameID: Int!) {
+    subscribeToGameStatusUpdates(gameID: $gameID) {
+      gameID
+      screenID
+      title
+      text
+      ... on ScorecardScreen {
+        scores {
+          teamName
+          teamScore
+        }
+      }
+      ... on QuestionScreen {
+        answers
+      }
+    }
+  }
+`;
