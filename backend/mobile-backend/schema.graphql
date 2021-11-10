@@ -10,28 +10,28 @@ type GameSession @model(subscriptions: null) {
 }
 
 type Game @model(subscriptions: null) {
-	id: ID!
-	title: String
-	description: String
+  id: ID!
+  title: String
+  description: String
   isAdvanced: Boolean
   gameCode: Int
-	grade: String
-	questions: [Question] @connection(keyName: "byGame", fields: ["id"])
+  grade: String
+  questions: [Question] @connection(keyName: "byGame", fields: ["id"])
 }
 
-type Question @model
-@key(name: "byGame", fields: ["gameId", "question"]) {
-	id: ID!
-	gameId: ID!
+type Question @model @key(name: "byGame", fields: ["gameId", "question"]) {
+  id: ID!
+  gameId: ID!
   question: String!
-	answer: String
+  answer: String
   trickAnswers: AWSJSON
-	imageUrl: String
+  imageUrl: String
   instructions: AWSJSON
 }
 
-type Team @model(subscriptions: null)
-@key(name: "byGameSession", fields: ["gameSessionId"]) {
+type Team
+  @model(subscriptions: null)
+  @key(name: "byGameSession", fields: ["gameSessionId"]) {
   id: ID!
   name: String!
   gameSessionId: ID!
@@ -43,8 +43,9 @@ type Team @model(subscriptions: null)
   createdAt: AWSDateTime!
 }
 
-type TeamMember @model(subscriptions: null)
-@key(name: "byTeams", fields: ["teamId"]) {
+type TeamMember
+  @model(subscriptions: null)
+  @key(name: "byTeams", fields: ["teamId"]) {
   id: ID!
   teamId: ID!
   team: Team!
@@ -53,8 +54,7 @@ type TeamMember @model(subscriptions: null)
   isFacilitator: Boolean
 }
 
-type TeamAnswer @model
-@key(name: "byTeams", fields: ["teamId"]) {
+type TeamAnswer @model @key(name: "byTeams", fields: ["teamId"]) {
   id: ID!
   teamId: ID!
   isChosen: Boolean
