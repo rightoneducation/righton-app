@@ -1,0 +1,64 @@
+type GameSession @model(subscriptions: null) {
+  id: ID!
+  gameId: ID!
+  game: Game! @connection
+  startTime: AWSDateTime
+  votingTime: Int
+  hintsRevealTime: Int
+  createdAt: AWSDateTime!
+  teams: [Team] @connection(keyName: "byGameSession", fields: ["id"])
+}
+
+type Game @model(subscriptions: null) {
+	id: ID!
+	title: String
+	description: String
+  isAdvanced: Boolean
+  gameCode: Int
+	grade: String
+	questions: [Question] @connection(keyName: "byGame", fields: ["id"])
+}
+
+type Question @model
+@key(name: "byGame", fields: ["gameId", "question"]) {
+	id: ID!
+	gameId: ID!
+  question: String!
+	answer: String
+  trickAnswers: AWSJSON
+	imageUrl: String
+  instructions: AWSJSON
+}
+
+type Team @model(subscriptions: null)
+@key(name: "byGameSession", fields: ["gameSessionId"]) {
+  id: ID!
+  name: String!
+  gameSessionId: ID!
+  gameId: ID!
+  questionId: ID!
+  trickiestAnswerID: ID!
+  teamMembers: [TeamMember] @connection(keyName: "byTeams", fields: ["id"])
+  teamAnswers: [TeamAnswer] @connection(keyName: "byTeams", fields: ["id"])
+  createdAt: AWSDateTime!
+}
+
+type TeamMember @model(subscriptions: null)
+@key(name: "byTeams", fields: ["teamId"]) {
+  id: ID!
+  teamId: ID!
+  team: Team!
+  deviceId: ID!
+  questionId: ID!
+  isFacilitator: Boolean
+}
+
+type TeamAnswer @model
+@key(name: "byTeams", fields: ["teamId"]) {
+  id: ID!
+  teamId: ID!
+  isChosen: Boolean
+  questionId: ID!
+  text: String
+  deviceId: ID!
+}
