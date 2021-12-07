@@ -151,3 +151,28 @@ export const updateGameStatus = /* GraphQL */ `
     }
   }
 `;
+
+export const createGameQuestion = /* GraphQL */ `
+  mutation CreateGameQuestion($gameId: ID!, $questionId: ID!) {
+    createGameQuestion(gameQuestion: { gameId: $gameId, questionId: $questionId }) {
+      id
+      title
+      description
+      cluster
+      domain
+      grade
+      standard
+      questions {
+        id
+        text
+        answer
+        imageUrl
+        instructions
+        updatedAt
+        createdAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

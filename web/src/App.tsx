@@ -13,7 +13,7 @@ import AlertContext, { Alert } from './context/AlertContext';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame } from './lib/games';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame, updateQuestion, createQuestion } from './lib/games';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
 import StatusPageContainer from './components/StatusPageContainer';
@@ -45,20 +45,29 @@ function App() {
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
     const game = await createGame(newGame);
-    // if (game) {
-    //   const games = sortGames(await fetchGames(), sortType);
-    //   setGames(games);
-    // }
-    // setLoading(false);
+    if (game) {
+     const games = sortGames(await fetchGames(), sortType);
+     setGames(games);
+    }
+    setLoading(false);
     setAlert({ message: 'New game created.', type: 'success' });
   }
 
   const saveGame = async (game: Game) => {
-    const result = await updateGame(game);
-    // if (result) {
-    //   const games = sortGames(await fetchGames(), sortType);
-    //   setGames(games);
-    // }
+    let updatedGame = {
+      id: game.id,
+      title: game.title,
+      cluster: game.cluster,
+      description: game.description,
+      domain: game.domain,
+      grade: game.grade,
+      standard: game.standard,
+    }
+    const result = await updateGame(updatedGame);
+    if (result) {
+      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+      setGames(games);
+    }
     setAlert({ message: 'Game saved.', type: 'success' });
   }
 
@@ -74,19 +83,18 @@ function App() {
   // @ts-ignore
   const handleCloneGame = async (game) => {
     const result = await cloneGame(game);
-    // if (result) {
-    //   const games = sortGames(await fetchGames(), sortType);
-    //   const gameIndex = games.findIndex((game) => result.GameID === game.GameID);
-    //   setGames(games);
-    //   setAlert({ message: 'Game cloned.', type: 'success' });
-    //   return gameIndex;
-    // }
+    if (result) {
+      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+      setGames(games);
+      setAlert({ message: 'Game cloned.', type: 'success' });
+    }
   }
 
   useEffect(() => {
     const getGames = async () => {
       setLoading(true);
-      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+      const fetchedGames = await fetchGames();
+      const games = sortGames(fetchedGames, SORT_TYPES.UPDATED);
       setGames(games);
       setLoading(false);
     };
@@ -101,12 +109,24 @@ function App() {
   }, [sortType]);
 
   // @ts-ignore
-  const handleSaveQuestion = async (question, gameIndex, questionIndex) => {
-    const game = { ...games[Number(gameIndex)] };
+  const handleSaveQuestion = async (question, gameId) => {
     // @ts-ignore TODO: change how this is passed around
-    game[`q${Number(questionIndex)}`] = question;
+    let result;
+    if (question.id) {
+      result = await updateQuestion(question);
+      setAlert({ message: 'Question Updated', type: 'success' });
+    }
+    else {
+      result = await createQuestion(question, gameId);
+      setAlert({ message: 'Question Created', type: 'success' });
+    }
+    if (result) {
+      setLoading(true);
+      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+      setGames(games);
+      setLoading(false);
+    }
     // @ts-ignore
-    saveGame(game);
   };
 
   if (startup) return null;

@@ -103,6 +103,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
     setAnchorEl(null);
     setActiveIndex(null);
   };
+  //not sure if this should stay
   const changeQuestionIndex = (currentIndex, newIndex) => {
     const newGame = { ...game };
     const copy = { ...newGame[`q${newIndex}`] };
@@ -116,7 +117,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
 
   if (loading) return <Skeleton variant="rect" height={500} />;
 
-  const questions = [1, 2, 3, 4, 5].filter(index => !!game[`q${index}`]);
+  const questions = game?.questions || [];
 
   return (
     <>
@@ -140,26 +141,27 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
             No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
           </Typography>
         )}
-        {questions.map(index => {
-          const { question, answer, image } = game[`q${index}`];
+        {questions.map((question, index) => {
+          if (question === null) return null;
+          const { text, answer, imageUrl } = question;
           return (
             <Paper key={index} className={classes.question}>
               <Box className={classes.questionLeftContainer}>
                 <Box className={classes.questionIndex}>
                   <Typography variant="h5">
-                    {index}.
+                    {index+1}.
                   </Typography>
                 </Box>
                 <Box className={classes.questionText}>
                   <Typography>
-                    {question}
+                    {text}
                   </Typography>
                 </Box>
               </Box>
               <Box className={classes.questionAnswer}>
                 <Box>
-                  {image && <img className={classes.image} src={image} alt="" />}
-                  {!image && <Avatar variant="square" className={classes.square}>
+                  {imageUrl && <img className={classes.image} src={imageUrl} alt="" />}
+                  {!imageUrl && <Avatar variant="square" className={classes.square}>
                     <ImageIcon fontSize="large" />
                   </Avatar>}
                   <Typography align="center">

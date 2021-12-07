@@ -27,6 +27,12 @@ export type Question = {
   createdAt: string,
 };
 
+export type GameQuestion = {
+  __typename: "GameQuestion",
+  gameId: number,
+  questionId: number,
+}
+
 export type CreateGameInput = {
   title: string,
   description?: string | null,
@@ -42,6 +48,11 @@ export type CreateQuestionInput = {
   answer: string,
   imageUrl?: string | null,
   instructions?: string | null,
+};
+
+export type CreateGameQuestionInput = {
+  gameId: number,
+  questionId: number,
 };
 
 export type UpdateGameInput = {
@@ -242,6 +253,14 @@ export type CreateQuestionMutation = {
     createdAt: string,
   } | null,
 };
+
+export type CreateGameQuestionMutation = {
+  createGameQuestion?:  {
+    __typename: "GameQuestion",
+    gameId: number,
+    questionId: number,
+  } | null,
+}
 
 export type UpdateQuestionMutationVariables = {
   question: UpdateQuestionInput,

@@ -1,6 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { Game, ListGamesQuery } from '../API';
 import { listGames } from '../graphql/queries';
+import { createGame as CG, updateGame as UG, updateQuestion as UQ, createQuestion as CQ, createGameQuestion as CGQ } from '../graphql/mutations';
 import { SORT_TYPES, sortGamesBySortType } from './sorting';
 
 export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Promise<Array<Game | null>> => {
@@ -13,7 +14,10 @@ export const sortGames = (games: Array<Game | null>, sortType: SORT_TYPES = SORT
   return sortGamesBySortType(games, sortType);
 };
 
-export const createGame = async (game: any) => { };
+export const createGame = async (game: any) => {
+  const result = await API.graphql(graphqlOperation(CG, { game })) as { data: any };
+  return result?.data?.createGame;
+};
 // TODO: replace this old implementation
 // 
 // (game: CreateGamesInput) => {
@@ -28,7 +32,19 @@ export const createGame = async (game: any) => { };
 // }
 
 // @ts-ignore
-export const cloneGame = async (game: any) => { };
+export const cloneGame = async (game: any) => { 
+  const questions = game.questions;
+  delete game.questions;
+  const newGame = await API.graphql(graphqlOperation(CG, { game })) as { data: any };
+  const newGameId = newGame?.data?.createGame?.id;
+  let result = {data: {createGameQuestion: null}};
+  for (let i = 0; i < questions.length; i++) {
+    result = await API.graphql(graphqlOperation(CGQ, { gameId: newGameId, questionId: questions[i].id })) as { data: any };
+  }
+  return newGame?.data?.createGame;
+  //console.log(result);
+  //return result?.data?.createGame;
+ };
 // TODO: replace this old implementation
 // 
 // async (game) => {
@@ -37,7 +53,10 @@ export const cloneGame = async (game: any) => { };
 //   return result?.data?.createGames;
 // }
 
-export const updateGame = async (game: any) => { };
+export const updateGame = async (game: any) => { 
+  const result = await API.graphql(graphqlOperation(UG, { game })) as { data: any };
+  return result?.data?.updateGame || [];
+ };
 // TODO: replace this old implementation
 // 
 // async (game: Game) => {
@@ -66,3 +85,17 @@ export const getGameImage = (game: Game) => {
   // }
   return null;
 }
+
+export const createQuestion = async(question: any, gameId: any) => {
+  const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
+  const questionId = createdQuestion?.data?.createQuestion?.id;
+  const result = await API.graphql(graphqlOperation(CGQ, { gameId, questionId })) as { data: any };
+  return result.data.createGameQuestion;
+}
+
+export const updateQuestion = async (question: any) => {
+  delete question.updatedAt;
+  delete question.createdAt;
+  const result = await API.graphql(graphqlOperation(UQ, { question })) as { data: any };
+  return result?.data?.updateQuestion || [];
+};

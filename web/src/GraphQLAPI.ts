@@ -89,11 +89,20 @@ export type GameQuestion = {
   id: string,
   gameId: string,
   questionId: string,
-  game: Game,
-  question: Question,
-  createdAt: string,
-  updatedAt: string,
 };
+
+export type CreateGameQuestionInput = {
+  gameId: number,
+  questionId: number,
+};
+
+export type CreateGameQuestionMutation = {
+  createGameQuestion?:  {
+    __typename: "GameQuestion",
+    gameId: number,
+    questionId: number,
+  } | null,
+}
 
 export type Question = {
   __typename: "Question",

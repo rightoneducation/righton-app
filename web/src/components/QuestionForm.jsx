@@ -58,16 +58,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function QuestionForm({ loading, saveQuestion, question: originalQuestion, questionIndex, gameIndex }) {
+function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameId, gameIndex }) {
   useEffect(() => {
     document.title = 'RightOn! | Edit question';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
   const [question, setQuestion] = useState(originalQuestion || {
-    question: '',
-    image: '',
+    text: '',
+    imageUrl: '',
     answer: '',
-    instructions: [],
+    //instructions come back as a string which is causing issues
+    //instructions: null,
+    gameId
   });
   useEffect(() => {
     if (originalQuestion) setQuestion(originalQuestion)
@@ -82,8 +84,8 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, quest
   }, [question, setQuestion]);
   const addInstruction = useCallback(() => { setQuestion({ ...question, instructions: [...question.instructions, ''] }); }, [question, setQuestion]);
   const handleSaveQuestion = useCallback(() => {
-    saveQuestion(question, Number(gameIndex) - 1, questionIndex).then(() => history.push(`/games/1`));
-  }, [question, saveQuestion, gameIndex, questionIndex, history])
+    saveQuestion(question, gameId).then(() => history.push(`/games/${gameIndex}`));
+  }, [question, saveQuestion, history, gameId])
   const handleBack = useCallback(() => {
     history.push(`/games/${gameIndex}`);
   }, [gameIndex, history])
@@ -105,10 +107,10 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, quest
         </Button>
       </Typography>
 
-      <TextField className={classes.input} id="question-text" value={question.question} onChange={onChangeMaker('question')} label="Question Text" variant="filled" multiline rows={4} required />
-      <TextField className={classnames(classes.input, classes.half)} id="image-url" value={question.image} onChange={onChangeMaker('image')} label="URL for Photo" variant="filled" />
+      <TextField className={classes.input} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="filled" multiline rows={4} required />
+      <TextField className={classnames(classes.input, classes.half)} id="image-url" value={question.imageUrl} onChange={onChangeMaker('imageUrl')} label="URL for Photo" variant="filled" />
       <div className={classnames(classes.half, classes.imagePreview)}>
-        {question.image && <img className={classes.image} src={question.image} alt="Preview" />}
+        {question.imageUrl && <img className={classes.image} src={question.imageUrl} alt="Preview" />}
       </div>
 
       <Divider className={classes.divider} />
@@ -116,14 +118,14 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, quest
       <TextField className={classes.input} id="answer" value={question.answer} onChange={onChangeMaker('answer')} label="Answer" variant="filled" required />
       <h3>Solution Steps</h3>
       <List>
-        {question.instructions.map((step, index) => (
+        {/*question?.instructions?.map((step, index) => (
           <React.Fragment key={index}>
             <ListItem className={classes.instruction}>
               <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="filled" required />
               <Button className={classes.deleteButton} onClick={() => handleRemoveInstruction(index)}>X</Button>
             </ListItem>
           </React.Fragment>
-        ))}
+        ))*/}
         <ListItem className={classes.instruction}>
           <Button variant="contained" onClick={addInstruction}>
             Add step
