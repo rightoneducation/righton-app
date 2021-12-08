@@ -63,16 +63,22 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameI
     document.title = 'RightOn! | Edit question';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
-  const [question, setQuestion] = useState(originalQuestion || {
+  const [question, setQuestion] = useState( {
     text: '',
     imageUrl: '',
     answer: '',
     //instructions come back as a string which is causing issues
-    //instructions: null,
+    instructions: [],
     gameId
   });
   useEffect(() => {
-    if (originalQuestion) setQuestion(originalQuestion)
+    if (originalQuestion) {
+      if (originalQuestion.instructions !== null && originalQuestion.instructions !== [] && typeof originalQuestion.instructions === 'string') {
+        originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
+        originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
+      }
+      setQuestion(originalQuestion)
+    }
   }, [originalQuestion]);
   const classes = useStyles();
   const history = useHistory();
@@ -80,10 +86,14 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameI
   const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
     const newInstructions = [...question.instructions];
     newInstructions[index] = currentTarget.value;
-    setQuestion({ ...question, instructions: newInstructions });
+    setQuestion({ ...question, instructions: newInstructions});
   }, [question, setQuestion]);
-  const addInstruction = useCallback(() => { setQuestion({ ...question, instructions: [...question.instructions, ''] }); }, [question, setQuestion]);
+  const addInstruction = useCallback(() => {
+    const instructions = question.instructions == null ? [''] : [...question.instructions, ''];
+    setQuestion({ ...question, instructions }); 
+  }, [question, setQuestion]);
   const handleSaveQuestion = useCallback(() => {
+    if (question.instructions != null) question.instructions = JSON.stringify(question.instructions);
     saveQuestion(question, gameId).then(() => history.push(`/games/${gameIndex}`));
   }, [question, saveQuestion, history, gameId])
   const handleBack = useCallback(() => {
@@ -94,9 +104,7 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameI
     newInstructions.splice(index, 1);
     setQuestion({ ...question, instructions: newInstructions });
   }, [question, setQuestion]);
-
-  if (loading) return <Skeleton variant="rect" width={210} height={118} />;
-
+  if (loading) return <Skeleton variant="rect" width={210} height={118} />
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <Typography gutterBottom variant="h4" component="h1">
@@ -118,14 +126,14 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameI
       <TextField className={classes.input} id="answer" value={question.answer} onChange={onChangeMaker('answer')} label="Answer" variant="filled" required />
       <h3>Solution Steps</h3>
       <List>
-        {/*question?.instructions?.map((step, index) => (
+        {typeof question.instructions != "string" && question?.instructions?.map((step, index) => (
           <React.Fragment key={index}>
             <ListItem className={classes.instruction}>
               <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="filled" required />
               <Button className={classes.deleteButton} onClick={() => handleRemoveInstruction(index)}>X</Button>
             </ListItem>
           </React.Fragment>
-        ))*/}
+        ))}
         <ListItem className={classes.instruction}>
           <Button variant="contained" onClick={addInstruction}>
             Add step
