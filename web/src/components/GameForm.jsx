@@ -131,7 +131,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
           <CCSS game={game} />
           </>
         )}
-        <Button disabled={questions.length > 4} className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
+        <Button className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
           Add question
         </Button>
       </Box>

@@ -93,9 +93,9 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameI
     setQuestion({ ...question, instructions }); 
   }, [question, setQuestion]);
   const handleSaveQuestion = useCallback(() => {
-    if (question.instructions != null) question.instructions = JSON.stringify(question.instructions);
+    if (question.instructions != null && question.instructions !== []) question.instructions = JSON.stringify(question.instructions);
     saveQuestion(question, gameId).then(() => history.push(`/games/${gameIndex}`));
-  }, [question, saveQuestion, history, gameId])
+  }, [question, saveQuestion, history, gameId, gameIndex])
   const handleBack = useCallback(() => {
     history.push(`/games/${gameIndex}`);
   }, [gameIndex, history])
