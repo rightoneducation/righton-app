@@ -67,7 +67,6 @@ function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameI
     text: '',
     imageUrl: '',
     answer: '',
-    //instructions come back as a string which is causing issues
     instructions: [],
     gameId
   });

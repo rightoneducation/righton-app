@@ -18,18 +18,6 @@ export const createGame = async (game: any) => {
   const result = await API.graphql(graphqlOperation(CG, { game })) as { data: any };
   return result?.data?.createGame;
 };
-// TODO: replace this old implementation
-// 
-// (game: CreateGamesInput) => {
-//   // @ts-ignore
-//   Object.keys(game).forEach((key) => { if (game[key] === '') game[key] = null; });
-//   const input = {
-//     ...game,
-//     updated: Date.now() // Add current timestamp
-//   };
-//   const result = await API.graphql(graphqlOperation(createGames, { input })) as { data: CreateGamesMutation };
-//   return result?.data?.createGames;
-// }
 
 // @ts-ignore
 export const cloneGame = async (game: any) => { 
@@ -42,31 +30,12 @@ export const cloneGame = async (game: any) => {
     result = await API.graphql(graphqlOperation(CGQ, { gameId: newGameId, questionId: questions[i].id })) as { data: any };
   }
   return newGame?.data?.createGame;
-  //console.log(result);
-  //return result?.data?.createGame;
  };
-// TODO: replace this old implementation
-// 
-// async (game) => {
-//   const input = serializeQuestions(game);
-//   const result = await API.graphql(graphqlOperation(createGames, { input })) as { data: CreateGamesMutation };
-//   return result?.data?.createGames;
-// }
 
 export const updateGame = async (game: any) => { 
   const result = await API.graphql(graphqlOperation(UG, { game })) as { data: any };
   return result?.data?.updateGame || [];
  };
-// TODO: replace this old implementation
-// 
-// async (game: Game) => {
-//   const input = serializeQuestions(game) as UpdateGamesInput;
-//   input.updated = Date.now(); // Add current timestamp
-//   // @ts-ignore
-//   Object.keys(input).forEach((key) => { if (input[key] === '') input[key] = null; });
-//   const result = await API.graphql(graphqlOperation(updateGames, { input })) as { data: UpdateGamesMutation };
-//   return result?.data?.updateGames;
-// }
 
 export const deleteGame = async (game: any) => { };
 // TODO: replace this old implementation
