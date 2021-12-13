@@ -160,8 +160,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
               </Box>
               <Box className={classes.questionAnswer}>
                 <Box>
-                  {imageUrl && <img className={classes.image} src={imageUrl} alt="" />}
-                  {!imageUrl && <Avatar variant="square" className={classes.square}>
+                  {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <Avatar variant="square" className={classes.square}>
                     <ImageIcon fontSize="large" />
                   </Avatar>}
                   <Typography align="center">

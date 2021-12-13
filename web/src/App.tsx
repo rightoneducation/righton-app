@@ -13,7 +13,8 @@ import AlertContext, { Alert } from './context/AlertContext';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame, updateQuestion, createQuestion } from './lib/games';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame } from './lib/games';
+import { updateQuestion, createQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
 import StatusPageContainer from './components/StatusPageContainer';
@@ -53,6 +54,11 @@ function App() {
     setAlert({ message: 'New game created.', type: 'success' });
   }
 
+  const getSortedGames = async () => {
+    const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+    setGames(games);
+  }
+
   const saveGame = async (game: Game) => {
     let updatedGame = {
       id: game.id,
@@ -65,8 +71,7 @@ function App() {
     }
     const result = await updateGame(updatedGame);
     if (result) {
-      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
-      setGames(games);
+      getSortedGames();
     }
     setAlert({ message: 'Game saved.', type: 'success' });
   }
@@ -84,8 +89,7 @@ function App() {
   const handleCloneGame = async (game) => {
     const result = await cloneGame(game);
     if (result) {
-      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
-      setGames(games);
+      getSortedGames();
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
   }
@@ -93,9 +97,7 @@ function App() {
   useEffect(() => {
     const getGames = async () => {
       setLoading(true);
-      const fetchedGames = await fetchGames();
-      const games = sortGames(fetchedGames, SORT_TYPES.UPDATED);
-      setGames(games);
+      getSortedGames();
       setLoading(false);
     };
     getGames();
@@ -122,8 +124,7 @@ function App() {
     }
     if (result) {
       setLoading(true);
-      const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
-      setGames(games);
+      getSortedGames();
       setLoading(false);
     }
     // @ts-ignore
