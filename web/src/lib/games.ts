@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { Game, ListGamesQuery } from '../API';
 import { listGames } from '../graphql/queries';
-import { createGame as CG, updateGame as UG, updateQuestion as UQ, createQuestion as CQ, createGameQuestion as CGQ } from '../graphql/mutations';
+import { createGame as CG, updateGame as UG, createGameQuestion as CGQ } from '../graphql/mutations';
 import { SORT_TYPES, sortGamesBySortType } from './sorting';
 
 export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Promise<Array<Game | null>> => {
@@ -27,7 +27,7 @@ export const cloneGame = async (game: any) => {
   const newGameId = newGame?.data?.createGame?.id;
   let result = {data: {createGameQuestion: null}};
   for (let i = 0; i < questions.length; i++) {
-    result = await API.graphql(graphqlOperation(CGQ, { gameId: newGameId, questionId: questions[i].id })) as { data: any };
+    result = await API.graphql(graphqlOperation(CGQ, { gameQuestion : { gameId: newGameId, questionId: questions[i].id } })) as { data: any };
   }
   return newGame?.data?.createGame;
  };
@@ -54,17 +54,3 @@ export const getGameImage = (game: Game) => {
   // }
   return null;
 }
-
-export const createQuestion = async(question: any, gameId: any) => {
-  const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
-  const questionId = createdQuestion?.data?.createQuestion?.id;
-  const result = await API.graphql(graphqlOperation(CGQ, { gameId, questionId })) as { data: any };
-  return result.data.createGameQuestion;
-}
-
-export const updateQuestion = async (question: any) => {
-  delete question.updatedAt;
-  delete question.createdAt;
-  const result = await API.graphql(graphqlOperation(UQ, { question })) as { data: any };
-  return result?.data?.updateQuestion || [];
-};
