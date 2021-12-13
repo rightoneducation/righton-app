@@ -20,6 +20,10 @@ export const getGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -44,6 +48,10 @@ export const listGames = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -60,6 +68,10 @@ export const getQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
@@ -73,6 +85,10 @@ export const listQuestions = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;

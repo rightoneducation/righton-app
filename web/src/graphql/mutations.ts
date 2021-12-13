@@ -20,6 +20,10 @@ export const deleteGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -44,6 +48,10 @@ export const createGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -68,6 +76,10 @@ export const updateGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -84,6 +96,10 @@ export const deleteQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
@@ -97,6 +113,10 @@ export const createQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
@@ -110,51 +130,16 @@ export const updateQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
-export const createGameStatus = /* GraphQL */ `
-  mutation CreateGameStatus($gameID: Int!) {
-    createGameStatus(gameID: $gameID) {
-      gameID
-      screenID
-      title
-      text
-      ... on ScorecardScreen {
-        scores {
-          teamName
-          teamScore
-        }
-      }
-      ... on QuestionScreen {
-        answers
-      }
-    }
-  }
-`;
-export const updateGameStatus = /* GraphQL */ `
-  mutation UpdateGameStatus($gameID: Int!, $screenData: ScreenInput!) {
-    updateGameStatus(gameID: $gameID, screenData: $screenData) {
-      gameID
-      screenID
-      title
-      text
-      ... on ScorecardScreen {
-        scores {
-          teamName
-          teamScore
-        }
-      }
-      ... on QuestionScreen {
-        answers
-      }
-    }
-  }
-`;
-
 export const createGameQuestion = /* GraphQL */ `
-  mutation CreateGameQuestion($gameId: ID!, $questionId: ID!) {
-    createGameQuestion(gameQuestion: { gameId: $gameId, questionId: $questionId }) {
+  mutation CreateGameQuestion($gameQuestion: CreateGameQuestionInput!) {
+    createGameQuestion(gameQuestion: $gameQuestion) {
       id
       title
       description
@@ -170,9 +155,51 @@ export const createGameQuestion = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
-      createdAt
       updatedAt
+      createdAt
+    }
+  }
+`;
+export const createGameStatus = /* GraphQL */ `
+  mutation CreateGameStatus($gameID: Int!) {
+    createGameStatus(gameID: $gameID) {
+      gameID
+      screenID
+      title
+      text
+      ... on QuestionScreen {
+        answers
+      }
+      ... on ScorecardScreen {
+        scores {
+          teamName
+          teamScore
+        }
+      }
+    }
+  }
+`;
+export const updateGameStatus = /* GraphQL */ `
+  mutation UpdateGameStatus($gameID: Int!, $screenData: ScreenInput!) {
+    updateGameStatus(gameID: $gameID, screenData: $screenData) {
+      gameID
+      screenID
+      title
+      text
+      ... on QuestionScreen {
+        answers
+      }
+      ... on ScorecardScreen {
+        scores {
+          teamName
+          teamScore
+        }
+      }
     }
   }
 `;

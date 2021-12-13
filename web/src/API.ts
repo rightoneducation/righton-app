@@ -25,13 +25,11 @@ export type Question = {
   instructions?: string | null,
   updatedAt: string,
   createdAt: string,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
 };
-
-export type GameQuestion = {
-  __typename: "GameQuestion",
-  gameId: number,
-  questionId: number,
-}
 
 export type CreateGameInput = {
   title: string,
@@ -46,13 +44,13 @@ export type CreateGameInput = {
 export type CreateQuestionInput = {
   text: string,
   answer: string,
+  gameId?: string | null,
   imageUrl?: string | null,
   instructions?: string | null,
-};
-
-export type CreateGameQuestionInput = {
-  gameId: number,
-  questionId: number,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
 };
 
 export type UpdateGameInput = {
@@ -71,6 +69,15 @@ export type UpdateQuestionInput = {
   answer?: string | null,
   imageUrl?: string | null,
   instructions?: string | null,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
+};
+
+export type CreateGameQuestionInput = {
+  questionId: string,
+  gameId: string,
 };
 
 export type Screen = {
@@ -79,6 +86,30 @@ export type Screen = {
   screenID: ScreenID,
   title: string,
   text?: string | null,
+};
+
+export type JoinScreen = {
+  __typename: "JoinScreen",
+  gameID: number,
+  screenID: ScreenID,
+  title: string,
+  text?: string | null,
+};
+
+export enum ScreenID {
+  JoinScreen = "JoinScreen",
+  QuestionScreen = "QuestionScreen",
+  ScorecardScreen = "ScorecardScreen",
+}
+
+
+export type QuestionScreen = {
+  __typename: "QuestionScreen",
+  gameID: number,
+  screenID: ScreenID,
+  title: string,
+  text?: string | null,
+  answers: Array< string | null >,
 };
 
 export type ScorecardScreen = {
@@ -90,34 +121,10 @@ export type ScorecardScreen = {
   scores:  Array<Score | null >,
 };
 
-export enum ScreenID {
-  JoinScreen = "JoinScreen",
-  QuestionScreen = "QuestionScreen",
-  ScorecardScreen = "ScorecardScreen",
-}
-
-
 export type Score = {
   __typename: "Score",
   teamName: string,
   teamScore: number,
-};
-
-export type QuestionScreen = {
-  __typename: "QuestionScreen",
-  gameID: number,
-  screenID: ScreenID,
-  title: string,
-  text?: string | null,
-  answers: Array< string | null >,
-};
-
-export type JoinScreen = {
-  __typename: "JoinScreen",
-  gameID: number,
-  screenID: ScreenID,
-  title: string,
-  text?: string | null,
 };
 
 export type ScreenInput = {
@@ -156,6 +163,10 @@ export type DeleteGameMutation = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -185,6 +196,10 @@ export type CreateGameMutation = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -214,6 +229,10 @@ export type UpdateGameMutation = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -234,6 +253,10 @@ export type DeleteQuestionMutation = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
   } | null,
 };
 
@@ -251,16 +274,12 @@ export type CreateQuestionMutation = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
   } | null,
 };
-
-export type CreateGameQuestionMutation = {
-  createGameQuestion?:  {
-    __typename: "GameQuestion",
-    gameId: number,
-    questionId: number,
-  } | null,
-}
 
 export type UpdateQuestionMutationVariables = {
   question: UpdateQuestionInput,
@@ -276,6 +295,43 @@ export type UpdateQuestionMutation = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+  } | null,
+};
+
+export type CreateGameQuestionMutationVariables = {
+  gameQuestion: CreateGameQuestionInput,
+};
+
+export type CreateGameQuestionMutation = {
+  createGameQuestion?:  {
+    __typename: "Game",
+    id: number,
+    title?: string | null,
+    description?: string | null,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+    questions?:  Array< {
+      __typename: "Question",
+      id: number,
+      text: string,
+      answer: string,
+      imageUrl?: string | null,
+      instructions?: string | null,
+      updatedAt: string,
+      createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
+    } | null > | null,
+    updatedAt: string,
+    createdAt: string,
   } | null,
 };
 
@@ -285,6 +341,19 @@ export type CreateGameStatusMutationVariables = {
 
 export type CreateGameStatusMutation = {
   createGameStatus: ( {
+      __typename: "JoinScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+    } | {
+      __typename: "QuestionScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+      answers: Array< string | null >,
+    } | {
       __typename: "ScorecardScreen",
       gameID: number,
       screenID: ScreenID,
@@ -295,19 +364,6 @@ export type CreateGameStatusMutation = {
         teamName: string,
         teamScore: number,
       } | null >,
-    } | {
-      __typename: "QuestionScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
-      answers: Array< string | null >,
-    } | {
-      __typename: "JoinScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
     }
   ) | null,
 };
@@ -319,6 +375,19 @@ export type UpdateGameStatusMutationVariables = {
 
 export type UpdateGameStatusMutation = {
   updateGameStatus: ( {
+      __typename: "JoinScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+    } | {
+      __typename: "QuestionScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+      answers: Array< string | null >,
+    } | {
       __typename: "ScorecardScreen",
       gameID: number,
       screenID: ScreenID,
@@ -329,19 +398,6 @@ export type UpdateGameStatusMutation = {
         teamName: string,
         teamScore: number,
       } | null >,
-    } | {
-      __typename: "QuestionScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
-      answers: Array< string | null >,
-    } | {
-      __typename: "JoinScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
     }
   ) | null,
 };
@@ -369,6 +425,10 @@ export type GetGameQuery = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -394,6 +454,10 @@ export type ListGamesQuery = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -414,6 +478,10 @@ export type GetQuestionQuery = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
   } | null,
 };
 
@@ -427,6 +495,10 @@ export type ListQuestionsQuery = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
   } | null > | null,
 };
 
@@ -449,6 +521,10 @@ export type OnCreateGameSubscription = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -465,6 +541,10 @@ export type OnCreateQuestionSubscription = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
   } | null,
 };
 
@@ -474,6 +554,19 @@ export type SubscribeToGameStatusUpdatesSubscriptionVariables = {
 
 export type SubscribeToGameStatusUpdatesSubscription = {
   subscribeToGameStatusUpdates: ( {
+      __typename: "JoinScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+    } | {
+      __typename: "QuestionScreen",
+      gameID: number,
+      screenID: ScreenID,
+      title: string,
+      text?: string | null,
+      answers: Array< string | null >,
+    } | {
       __typename: "ScorecardScreen",
       gameID: number,
       screenID: ScreenID,
@@ -484,19 +577,6 @@ export type SubscribeToGameStatusUpdatesSubscription = {
         teamName: string,
         teamScore: number,
       } | null >,
-    } | {
-      __typename: "QuestionScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
-      answers: Array< string | null >,
-    } | {
-      __typename: "JoinScreen",
-      gameID: number,
-      screenID: ScreenID,
-      title: string,
-      text?: string | null,
     }
   ) | null,
 };
