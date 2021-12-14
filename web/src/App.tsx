@@ -13,7 +13,7 @@ import AlertContext, { Alert } from './context/AlertContext';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame } from './lib/games';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
 import { updateQuestion, createQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
@@ -77,12 +77,24 @@ function App() {
   }
 
   const handleDeleteGame = async (id: number) => {
-    const result = await deleteGame(id);
-    // if (result) {
-    //   const games = sortGames(await fetchGames(), sortType);
-    //   setGames(games);
-    // }
+    const result = await deleteGames(id);
+    
+    if (result) {
+      const games = sortGames(await fetchGames(), sortType);
+      setGames(games);
+    }
     setAlert({ message: 'Game deleted.', type: 'success' });
+  }
+
+  const handleDeteleQuestion = async (id: number) => {
+    console.log(id)
+    const result = await deleteQuestions(id)
+
+    if(result) {
+      getSortedGames()
+      
+    } 
+    setAlert({ message: 'Question deleted.', type: 'success' });
   }
 
   // @ts-ignore
@@ -148,7 +160,7 @@ function App() {
             <Box>
               <Nav />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeteleQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
               </Route>
             </Box>
             <AlertBar />

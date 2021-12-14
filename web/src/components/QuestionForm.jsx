@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function QuestionForm({ loading, saveQuestion, question: originalQuestion, gameId, gameIndex }) {
+function QuestionForm({ loading, saveQuestion, deleteQuestion, question: originalQuestion, gameId, gameIndex }) {
   useEffect(() => {
     document.title = 'RightOn! | Edit question';
     return () => { document.title = 'RightOn! | Game management'; }
