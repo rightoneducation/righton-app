@@ -77,12 +77,21 @@ function App() {
   }
 
   const handleDeleteGame = async (id: number) => {
-    const result = await deleteGame(id);
-    // if (result) {
-    //   const games = sortGames(await fetchGames(), sortType);
-    //   setGames(games);
-    // }
+    const result = await deleteGames(id);
+    
+    if (result) {
+      const games = sortGames(await fetchGames(), sortType);
+      setGames(games);
+    }
     setAlert({ message: 'Game deleted.', type: 'success' });
+  }
+
+  const handleDeteleQuestion = async (id: number) => {
+    const result = await deleteQuestions(id)
+
+    if(result) {
+      setAlert({ message: 'Question deleted.', type: 'success' });
+    } 
   }
 
   // @ts-ignore
