@@ -24,7 +24,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Select from '@material-ui/core/Select';
 import CCSS from './CCSS';
 
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -81,11 +81,11 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     if (games.length >= 1) {
       return games
         .map((game, index) => {
-          const { GameID, title, q1, q2, q3, q4, q5 } = game;
+          const { id, title, q1, q2, q3, q4, q5 } = game;
           const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
           const image = getGameImage(game);
           return (
-            <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+            <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
                 <Box className={classes.titleRow}>
                   <Typography className={classes.title} gutterBottom>
@@ -105,7 +105,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                     >
                       <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                       <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-                      <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
+                      <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
                     </Menu>
                   </Box>
                 </Box>

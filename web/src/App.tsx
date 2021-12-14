@@ -13,7 +13,7 @@ import AlertContext, { Alert } from './context/AlertContext';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGame } from './lib/games';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
 import StatusPageContainer from './components/StatusPageContainer';
@@ -63,12 +63,21 @@ function App() {
   }
 
   const handleDeleteGame = async (id: number) => {
-    const result = await deleteGame(id);
-    // if (result) {
-    //   const games = sortGames(await fetchGames(), sortType);
-    //   setGames(games);
-    // }
+    const result = await deleteGames(id);
+    
+    if (result) {
+      const games = sortGames(await fetchGames(), sortType);
+      setGames(games);
+    }
     setAlert({ message: 'Game deleted.', type: 'success' });
+  }
+
+  const handleDeteleQuestion = async (id: number) => {
+    const result = await deleteQuestions(id)
+
+    if(result) {
+      setAlert({ message: 'Question deleted.', type: 'success' });
+    } 
   }
 
   // @ts-ignore

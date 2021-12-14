@@ -21,8 +21,6 @@ export const deleteGame = /* GraphQL */ `
         updatedAt
         createdAt
       }
-      updatedAt
-      createdAt
     }
   }
 `;
