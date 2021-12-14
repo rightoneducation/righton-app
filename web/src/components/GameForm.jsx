@@ -14,6 +14,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CCSS from './CCSS';
+import { deleteQuestion } from '../graphql/mutations';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -86,7 +87,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function GameForm({ loading, game, gameIndex, saveGame }) {
+function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   useEffect(() => {
@@ -181,7 +182,7 @@ function GameForm({ loading, game, gameIndex, saveGame }) {
                     <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</MenuItem>
                     {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
                     {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
-                    <MenuItem onClick={() => { saveGame({ ...game, [`q${index}`]: null }).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                    <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                   </Menu>
                 </Box>
               </Box>

@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
-import { Game, ListGamesQuery, DeleteGameMutation, DeleteQuestionMutation, CreateQuestionMutation } from '../API';
+import { Game, ListGamesQuery, DeleteGameMutation, DeleteQuestionMutation } from '../API';
 import { listGames } from '../graphql/queries';
-import { createGame as CG, updateGame as UG, createGameQuestion as CGQ } from '../graphql/mutations';
+import { createGame as CG, updateGame as UG, createGameQuestion as CGQ, deleteGame, deleteQuestion } from '../graphql/mutations';
 import { SORT_TYPES, sortGamesBySortType } from './sorting';
 
 export const fetchGames = async (sortType: SORT_TYPES = SORT_TYPES.UPDATED): Promise<Array<Game | null>> => {
@@ -44,14 +44,11 @@ export const deleteGames = async (id: number) => {
 
 export const deleteQuestions = async (id: number) => { 
   const result = await API.graphql(graphqlOperation(deleteQuestion, {id})) as { data: DeleteQuestionMutation | null | undefined }
+  console.log(result)
+
   return result?.data?.deleteQuestion || [];
 };
 
-export const createQuestions = async (question: any) => {
-  const result = await API.graphql(graphqlOperation(createQuestion, {question})) as { data: CreateQuestionMutation | null | undefined };
-  const questions = result?.data?.createQuestion;
-  return questions;
-}
 
 export const getGameImage = async (game: Game) => {
   // TODO: replace this old implementation

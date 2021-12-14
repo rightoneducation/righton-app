@@ -177,7 +177,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <Route path="/games/:gameIndex" render={
               ({ match }) => {
                 const { gameIndex } = match.params;
-                return <GameForm loading={loading} saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+                return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
               }
             } />
           </Switch>
