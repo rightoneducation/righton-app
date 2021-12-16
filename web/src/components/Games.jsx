@@ -78,7 +78,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
         .map((game, index) => {
           const { id, title } = game;
           const questionCount = game?.questions?.length || 0;
-          const image = getGameImage(game);
+          //const image = getGameImage(game); // figure out what this function does/ should do
+          const image = null;
           return (
             <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
@@ -106,8 +107,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
                 </Box>
 
                 <Box className={classes.gameCardBox}>
-                  {image && <img className={classes.image} src={image} alt="" />}
-                  {!image && (
+                  {image ? <img className={classes.image} src={image} alt="" /> : (
                     <Avatar variant="square" className={classes.square}>
                       <ImageIcon fontSize="large" />
                     </Avatar>

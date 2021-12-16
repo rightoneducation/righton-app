@@ -87,7 +87,6 @@ function App() {
   }
 
   const handleDeteleQuestion = async (id: number) => {
-    console.log(id)
     const result = await deleteQuestions(id)
 
     if(result) {
@@ -109,18 +108,12 @@ function App() {
   useEffect(() => {
     const getGames = async () => {
       setLoading(true);
-      getSortedGames();
+      await getSortedGames();
       setLoading(false);
     };
     getGames();
     setStartup(false);
   }, []);
-
-  useEffect(() => {
-    // @ts-ignore
-    setGames(sortGames(games, sortType));
-    // eslint-disable-next-line
-  }, [sortType]);
 
   // @ts-ignore
   const handleSaveQuestion = async (question, gameId) => {
