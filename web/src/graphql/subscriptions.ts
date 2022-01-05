@@ -20,6 +20,10 @@ export const onCreateGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -36,6 +40,10 @@ export const onCreateQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
@@ -46,14 +54,14 @@ export const subscribeToGameStatusUpdates = /* GraphQL */ `
       screenID
       title
       text
+      ... on QuestionScreen {
+        answers
+      }
       ... on ScorecardScreen {
         scores {
           teamName
           teamScore
         }
-      }
-      ... on QuestionScreen {
-        answers
       }
     }
   }

@@ -24,7 +24,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Select from '@material-ui/core/Select';
 import CCSS from './CCSS';
 
-export default function Games({ loading, games, saveGame, saveQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -51,13 +51,8 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
       description: game.description,
       domain: game.domain,
       grade: game.grade,
-      q1: game.q1,
-      q2: game.q2,
-      q3: game.q3,
-      q4: game.q4,
-      q5: game.q5,
+      questions: game.questions,
       standard: game.standard,
-      updated: Date.now(),
       title: `Clone of ${game.title}`,
     };
     cloneGame(newGame).then((index) => {
@@ -81,11 +76,12 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
     if (games.length >= 1) {
       return games
         .map((game, index) => {
-          const { GameID, title, q1, q2, q3, q4, q5 } = game;
-          const questionCount = [q1, q2, q3, q4, q5].filter(q => !!q).length;
-          const image = getGameImage(game);
+          const { id, title } = game;
+          const questionCount = game?.questions?.length || 0;
+          //const image = getGameImage(game); // figure out what this function does/ should do
+          const image = null;
           return (
-            <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={GameID} onClick={() => history.push(`/games/${index + 1}`)}>
+            <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => history.push(`/games/${index + 1}`)}>
               <CardContent>
                 <Box className={classes.titleRow}>
                   <Typography className={classes.title} gutterBottom>
@@ -105,14 +101,13 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
                     >
                       <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                       <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-                      <MenuItem onClick={deleteHandler(GameID)}>Delete</MenuItem>
+                      <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
                     </Menu>
                   </Box>
                 </Box>
 
                 <Box className={classes.gameCardBox}>
-                  {image && <img className={classes.image} src={image} alt="" />}
-                  {!image && (
+                  {image ? <img className={classes.image} src={image} alt="" /> : (
                     <Avatar variant="square" className={classes.square}>
                       <ImageIcon fontSize="large" />
                     </Avatar>
@@ -176,13 +171,13 @@ export default function Games({ loading, games, saveGame, saveQuestion, saveNewG
             <Route path="/games/:gameIndex/questions/:questionIndex" render={
               ({ match }) => {
                 const { questionIndex, gameIndex } = match.params;
-                return <QuestionForm loading={loading} saveQuestion={saveQuestion} question={games[Number(gameIndex) - 1][`q${Number(questionIndex)}`]} {...match.params} />;
+                return <QuestionForm loading={loading} saveQuestion={saveQuestion} gameId={games[Number(match.params.gameIndex) - 1].id} question={games[Number(gameIndex) - 1].questions[questionIndex]} {...match.params} />;
               }
             } />
             <Route path="/games/:gameIndex" render={
               ({ match }) => {
                 const { gameIndex } = match.params;
-                return <GameForm loading={loading} saveGame={saveGame} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+                return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
               }
             } />
           </Switch>

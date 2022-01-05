@@ -20,6 +20,10 @@ export const deleteGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -44,6 +48,10 @@ export const createGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -68,6 +76,10 @@ export const updateGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+        cluster
+        domain
+        grade
+        standard
       }
       updatedAt
       createdAt
@@ -84,6 +96,10 @@ export const deleteQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
@@ -97,6 +113,10 @@ export const createQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
     }
   }
 `;
@@ -110,6 +130,38 @@ export const updateQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+      cluster
+      domain
+      grade
+      standard
+    }
+  }
+`;
+export const createGameQuestion = /* GraphQL */ `
+  mutation CreateGameQuestion($gameQuestion: CreateGameQuestionInput!) {
+    createGameQuestion(gameQuestion: $gameQuestion) {
+      id
+      title
+      description
+      cluster
+      domain
+      grade
+      standard
+      questions {
+        id
+        text
+        answer
+        imageUrl
+        instructions
+        updatedAt
+        createdAt
+        cluster
+        domain
+        grade
+        standard
+      }
+      updatedAt
+      createdAt
     }
   }
 `;
@@ -120,14 +172,14 @@ export const createGameStatus = /* GraphQL */ `
       screenID
       title
       text
+      ... on QuestionScreen {
+        answers
+      }
       ... on ScorecardScreen {
         scores {
           teamName
           teamScore
         }
-      }
-      ... on QuestionScreen {
-        answers
       }
     }
   }
@@ -139,14 +191,14 @@ export const updateGameStatus = /* GraphQL */ `
       screenID
       title
       text
+      ... on QuestionScreen {
+        answers
+      }
       ... on ScorecardScreen {
         scores {
           teamName
           teamScore
         }
-      }
-      ... on QuestionScreen {
-        answers
       }
     }
   }
