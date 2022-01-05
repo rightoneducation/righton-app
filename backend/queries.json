@@ -126,3 +126,51 @@
         }
     ]
 }
+{
+    "resolvers": [
+        {
+            "typeName": "Query",
+            "fieldName": "getGame",
+            "resolverArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/types/Query/resolvers/getGame",
+            "requestMappingTemplate": "## By default in a before template, all you need is a valid JSON payload.\n## You can also stash data to be made available to the functions in the pipeline.\n## Examples: \n## - $ctx.stash.put(\"email\", $ctx.args.email)\n## - $ctx.stash.put(\"badgeNumber\", $ctx.args.input.badgeNumber)\n## - $ctx.stash.put(\"username\", $ctx.identity.username)\n\n$util.qr($ctx.stash.put(\"gameId\", $ctx.args.id))\n\n{}",
+            "responseMappingTemplate": "## The after mapping template is used to collect the final value that is returned by the resolver. \n$util.toJson($ctx.result)",
+            "kind": "PIPELINE",
+            "pipelineConfig": {
+                "functions": [
+                    "kjv3c3lzfnejbiepnfhsnuhjvq"
+                ]
+            }
+        },
+        {
+            "typeName": "Query",
+            "fieldName": "getQuestion",
+            "resolverArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/types/Query/resolvers/getQuestion",
+            "requestMappingTemplate": "## By default in a before template, all you need is a valid JSON payload.\n## You can also stash data to be made available to the functions in the pipeline.\n## Examples: \n## - $ctx.stash.put(\"email\", $ctx.args.email)\n## - $ctx.stash.put(\"badgeNumber\", $ctx.args.input.badgeNumber)\n## - $ctx.stash.put(\"username\", $ctx.identity.username)\n$util.qr($ctx.stash.put(\"id\", $ctx.args.id))\n{} ## intentional",
+            "responseMappingTemplate": "## The after mapping template is used to collect the final value that is returned by the resolver. \n$util.toJson($ctx.result)",
+            "kind": "PIPELINE",
+            "pipelineConfig": {
+                "functions": [
+                    "gwxe6btrtra6xipi4emp4exvjm"
+                ]
+            }
+        },
+        {
+            "typeName": "Query",
+            "fieldName": "listGames",
+            "dataSourceName": "WebRDSDev",
+            "resolverArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/types/Query/resolvers/listGames",
+            "requestMappingTemplate": "#**\n  Select statement for a relational database data source\n*#\n{\n    \"version\": \"2018-05-29\",\n    \"statements\": [\n        \"SELECT g.*, to_char(g.created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS created_date_time, to_char(g.updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS updated_date_time, q.id AS question_id, q.text AS question_text, q.answer AS question_answer, q.image_url AS question_image_url, q.instructions AS question_instructions, to_char(q.created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS question_created_date_time, to_char(q.updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS question_updated_date_time, q.cluster AS question_cluster, q.domain AS question_domain, q.grade AS question_grade, q.standard AS question_standard FROM games AS g LEFT JOIN games_questions AS gq ON gq.game_id = g.id LEFT JOIN questions AS q ON q.id = gq.question_id ORDER BY g.id\"\n    ]\n}",
+            "responseMappingTemplate": "#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.isEmpty() )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.isEmpty() )\n  #return\n#end\n#set ( $result = [] )\n#set ( $lastInsertedGame = { \"id\": -1 } )\n#foreach ( $game in $output )\n\t#if ( $util.isNull($lastInsertedGame) || $lastInsertedGame[\"id\"] != $game[\"id\"] )\n    \t#set ( $lastInsertedGame = {\n          \"id\": $game[\"id\"],\n          \"title\": $game[\"title\"],\n          \"grade\": $game[\"grade\"],\n          \"domain\": $game[\"domain\"],\n          \"cluster\": $game[\"cluster\"],\n          \"description\": $game[\"description\"],\n          \"standard\": $game[\"standard\"],\n          \"updatedAt\": $game[\"updated_date_time\"],\n          \"createdAt\": $game[\"created_date_time\"],\n          \"questions\": []\n      })\n    $util.qr($result.add($lastInsertedGame))\n    #end\n    #if ( $game[\"question_id\"] )\n      #set( $question = {\n        \"id\": $game[\"question_id\"],\n        \"instructions\": $game[\"question_instructions\"],\n        \"text\": $game[\"question_text\"],\n        \"answer\": $game[\"question_answer\"],\n        \"imageUrl\": $game[\"question_image_url\"],\n        \"updatedAt\": $game[\"question_updated_date_time\"],\n        \"createdAt\": $game[\"question_created_date_time\"],\n        \"standard\": $game[\"question_standard\"],\n        \"domain\": $game[\"question_domain\"],\n        \"grade\": $game[\"question_grade\"],\n        \"cluster\": $game[\"question_cluster\"]\n      } )\n      $util.qr($lastInsertedGame.questions.add($question))\n    #end\n#end\n\n$utils.toJson($result)",
+            "kind": "UNIT"
+        },
+        {
+            "typeName": "Query",
+            "fieldName": "listQuestions",
+            "dataSourceName": "WebRDSDev",
+            "resolverArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/types/Query/resolvers/listQuestions",
+            "requestMappingTemplate": "{\n  \"version\": \"2018-05-29\",\n  \"statements\":   [\"SELECT *, to_char(created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS created_date_time, to_char(updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS updated_date_time FROM questions\"]\n}",
+            "responseMappingTemplate": "#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.isEmpty() )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.isEmpty() )\n  #return\n#end\n#set ( $questions = [] )\n#foreach ( $record in $output )\n\t#set( $question = {\n      \"id\": $record[\"id\"],\n      \"instructions\": $record[\"instructions\"],\n      \"text\": $record[\"text\"],\n      \"answer\": $record[\"answer\"],\n      \"imageUrl\": $record[\"image_url\"],\n      \"updatedAt\": $record[\"updated_date_time\"],\n      \"createdAt\": $record[\"created_date_time\"],\n      \"cluster\": $record[\"cluster\"],\n      \"grade\": $record[\"grade\"],\n      \"standard\": $record[\"standard\"],\n      \"domain\": $record[\"domain\"]\n\t} )\n\t$util.qr($questions.add($question))\n#end\n\n$utils.toJson($questions)",
+            "kind": "UNIT"
+        }
+    ]
+}

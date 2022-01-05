@@ -59,3 +59,74 @@
         }
     ]
 }
+{
+    "functions": [
+        {
+            "functionId": "gwxe6btrtra6xipi4emp4exvjm",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/gwxe6btrtra6xipi4emp4exvjm",
+            "name": "Query_getQuestion_Function",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "{\n    \"statements\": [\n        \"SELECT *, to_char(created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS created_date_time, to_char(updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS updated_date_time FROM questions WHERE id = :ID\"\n    ],\n    \"variableMap\": {\n    \t\":ID\": $ctx.stash.id\n  \t}\n}",
+            "responseMappingTemplate": "## Raise a GraphQL field error in case of a datasource invocation error\n#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.length() < 1 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n\n#set( $output = $output[0] )\n#if( $question.isEmpty() )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n\n#set( $question = $output[0] )\n\n#set( $result = {\n  \"id\": $question[\"id\"],\n  \"instructions\": $question[\"instructions\"],\n  \"text\": $question[\"text\"],\n  \"answer\": $question[\"answer\"],\n  \"imageUrl\": $question[\"image_url\"],\n  \"updatedAt\": $question[\"updated_date_time\"],\n  \"createdAt\": $question[\"created_date_time\"],\n  \"grade\": $question[\"grade\"],\n  \"standard\": $question[\"standard\"],\n  \"cluster\": $question[\"cluster\"],\n  \"domain\": $question[\"domain\"]\n} )\n\n$utils.toJson($result)",
+            "functionVersion": "2018-05-29"
+        },
+        {
+            "functionId": "h524rlkjyjgbfjtql2ysqlxcoq",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/h524rlkjyjgbfjtql2ysqlxcoq",
+            "name": "Mutation_createQuestion_Function",
+            "description": "Created automatically when converting the Mutation.createQuestion resolver to a pipeline.",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "{\n  \"version\": \"2018-05-29\",\n  \"statements\": [\n  \t\"INSERT INTO questions $ctx.stash.colStr VALUES $ctx.stash.valStr RETURNING id, to_char(created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS created_at, to_char(updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS updated_at, cluster, domain, grade, standard, text, answer, instructions\"\n  ],\n  \"variableMap\": {\n    \":NOW\": $util.toJson($util.time.nowISO8601())\n   }\n}",
+            "responseMappingTemplate": "#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.length() < 1 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.length() < 1 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#set( $result = {\n\t\"id\": $output[\"id\"],\n    \"instructions\": $output[\"instructions\"],\n    \"text\": $output[\"text\"],\n    \"answer\": $output[\"answer\"],\n    \"imageUrl\": $output[\"image_url\"],\n    \"updatedAt\": $output[\"updated_at\"],\n    \"createdAt\": $output[\"created_at\"],\n    \"cluster\": $output[\"cluster\"],\n    \"domain\": $output[\"domain\"],\n    \"grade\": $output[\"grade\"],\n    \"standard\": $output[\"standard\"]\n} )\n$utils.toJson($result)",
+            "functionVersion": "2018-05-29"
+        },
+        {
+            "functionId": "kjv3c3lzfnejbiepnfhsnuhjvq",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/kjv3c3lzfnejbiepnfhsnuhjvq",
+            "name": "Query_getGame_Function",
+            "description": "Created automatically when converting the Query.getGame resolver to a pipeline.",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "{\n  \"version\": \"2018-05-29\",\n  \"statements\":   [\"SELECT g.*, to_char(g.created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS created_date_time, to_char(g.updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS updated_date_time, q.id AS question_id, q.text AS question_text, q.answer AS question_answer, q.image_url AS question_image_url, q.instructions AS question_instructions, to_char(q.created_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS question_created_date_time, to_char(q.updated_at, 'YYYY-MM-DD\\\"T\\\"HH24:MI:SS\\\"Z\\\"') AS question_updated_date_time, q.cluster AS question_cluster, q.domain AS question_domain, q.grade AS question_grade, q.standard AS question_standard FROM games AS g LEFT JOIN games_questions AS gq ON gq.game_id = g.id LEFT JOIN questions AS q ON q.id = gq.question_id WHERE g.id = :ID\"],\n  \"variableMap\": {\n\t\":ID\": $util.toJson($ctx.stash.gameId)\n  }\n}",
+            "responseMappingTemplate": "## In order to retain the same execution behavior for 2017-02-28 templates\n## you might have to uncomment the following code below.\n## For more details about changes from 2017-02-28 to 2018-05-29 see \n## https://docs-aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-changelog.html\n##\n## #if($ctx.error)\n##   $util.error($ctx.error.message, $ctx.error.type)\n## #end\n## #if($util.isNull($ctx.result))\n##   #return\n## #end\n\n#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.isEmpty() )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.isEmpty() )\n  #return\n#end\n#set ( $game = $output[0] )\n#set ( $result = {\n\t\"id\": $game[\"id\"],\n\t\"title\": $game[\"title\"],\n    \"grade\": $game[\"grade\"],\n    \"domain\": $game[\"domain\"],\n    \"cluster\": $game[\"cluster\"],\n    \"description\": $game[\"description\"],\n    \"standard\": $game[\"standard\"],\n    \"updatedAt\": $game[\"updated_date_time\"],\n    \"createdAt\": $game[\"created_date_time\"],\n    \"questions\": []\n})\n#foreach( $gameQuestion in $output )\n\t#if ( $gameQuestion[\"question_id\"] )\n      #set( $question = {\n        \"id\": $gameQuestion[\"question_id\"],\n        \"instructions\": $gameQuestion[\"question_instructions\"],\n        \"text\": $gameQuestion[\"question_text\"],\n        \"answer\": $gameQuestion[\"question_answer\"],\n        \"imageUrl\": $gameQuestion[\"question_image_url\"],\n        \"updatedAt\": $gameQuestion[\"question_updated_date_time\"],\n        \"createdAt\": $gameQuestion[\"question_created_date_time\"],\n        \"standard\": $game[\"question_standard\"],\n        \"domain\": $game[\"question_domain\"],\n        \"grade\": $game[\"question_grade\"],\n        \"cluster\": $game[\"question_cluster\"]\n      } )\n      $util.qr($result.questions.add($question))\n    #end\n#end\n$utils.toJson($result)",
+            "functionVersion": "2018-05-29"
+        },
+        {
+            "functionId": "lbqdn54dpzemlllexxj27zc2u4",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/lbqdn54dpzemlllexxj27zc2u4",
+            "name": "Mutation_createGame_Function",
+            "description": "Created automatically when converting the Mutation.createGame resolver to a pipeline.",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "{\n  \"version\": \"2018-05-29\",\n  \"statements\": [\n  \t\"INSERT INTO games $ctx.stash.colStr VALUES $ctx.stash.valStr RETURNING id\"\n  ],\n  \"variableMap\": {\n    \":NOW\": $ctx.stash.now\n  }\n}",
+            "responseMappingTemplate": "## In order to retain the same execution behavior for 2017-02-28 templates\n## you might have to uncomment the following code below.\n## For more details about changes from 2017-02-28 to 2018-05-29 see \n## https://docs-aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-changelog.html\n##\n#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.length() < 1 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.length() < 1 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n$util.qr($ctx.stash.put(\"gameId\", $output[\"id\"]))\n\n#return",
+            "functionVersion": "2018-05-29"
+        },
+        {
+            "functionId": "llosfgwk5faerpprbdbng3t3wq",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/llosfgwk5faerpprbdbng3t3wq",
+            "name": "Query_getQuestion_Function",
+            "description": "Created automatically when converting the Query.getQuestion resolver to a pipeline.",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "{\n  \"version\": \"2018-05-29\",\n  \"statements\":   [\"SELECT * FROM Question WHERE ID=$ctx.args.ID\"]\n}",
+            "responseMappingTemplate": "## In order to retain the same execution behavior for 2017-02-28 templates\n## you might have to uncomment the following code below.\n## For more details about changes from 2017-02-28 to 2018-05-29 see \n## https://docs-aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-changelog.html\n##\n## #if($ctx.error)\n##   $util.error($ctx.error.message, $ctx.error.type)\n## #end\n## #if($util.isNull($ctx.result))\n##   #return\n## #end\n\n#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.isEmpty() )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.isEmpty() )\n  #return\n#end\n$utils.toJson($output[0])",
+            "functionVersion": "2018-05-29"
+        },
+        {
+            "functionId": "qap33ng4m5cmrcfptcd6fz72ti",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/qap33ng4m5cmrcfptcd6fz72ti",
+            "name": "Mutation_createGameQuestion_Function",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "{\n  \"version\": \"2018-05-29\",\n  \"statements\":   [\"INSERT INTO games_questions (game_id, question_id) VALUES $ctx.stash.gameQuestionValStr RETURNING game_id\"],\n  \"variableMap\": {\n    \":NOW\": $util.toJson($util.time.nowISO8601())\n  }\n}",
+            "responseMappingTemplate": "## Raise a GraphQL field error in case of a datasource invocation error\n#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.length() < 2 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.isEmpty() )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#return",
+            "functionVersion": "2018-05-29"
+        },
+        {
+            "functionId": "r4a2kkvv2na4bhwujvtgw2lpby",
+            "functionArn": "arn:aws:appsync:us-east-1:484006752749:apis/mz6btgo62nhu5dcl67k5namuwe/functions/r4a2kkvv2na4bhwujvtgw2lpby",
+            "name": "Mutation_createQuestions_Function",
+            "dataSourceName": "WebRDSDev",
+            "requestMappingTemplate": "#**\n  Select statement for a relational database data source\n*#\n{\n    \"statements\": [\n        \"INSERT INTO questions $ctx.stash.questionsColStr VALUES $ctx.stash.questionsValStr RETURNING id\"\n    ],\n    \"variableMap\": {\n    \t\":NOW\": $ctx.stash.now\n    }\n}",
+            "responseMappingTemplate": "## Raise a GraphQL field error in case of a datasource invocation error\n#if($ctx.error)\n    $utils.error($ctx.error.message, $ctx.error.type)\n#end\n\n#set( $output = $utils.rds.toJsonObject($ctx.result) )\n#if( $output.length() < 1 )\n  $util.error(\"Invalid response from RDS DataSource. See info for the full response.\", \"InvalidResponse\", {}, $output)\n#end\n#set( $output = $output[0] )\n#if( $output.isEmpty() )\n  #return\n#end\n\n#set ( $game = $output[0] )\n\n#if ($output.isEmpty())\n\t$utils.error(\"Failed to insert the questions\")\n#end\n\n#set ($isFirst = true)\n#set ($gameQuestionValsStr = \"\")\n#foreach( $question in $output )\n\t#if ($isFirst == false)\n    \t#set( $gameQuestionValsStr = \"$gameQuestionValsStr,\")\n    #end\n    #set( $questionId = $question[\"id\"])\n    #set( $gameQuestionValsStr = \"$gameQuestionValsStr ($ctx.stash.gameId, $questionId)\")\n    #set( $isFirst = false)\n#end\n\n#util.qr($ctx.stash.put(\"gameQuestionValsStr\", $gameQuestionValsStr))\n\n#return\n",
+            "functionVersion": "2018-05-29"
+        }
+    ]
+}
