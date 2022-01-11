@@ -9,8 +9,6 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 import { getGameImage } from '../lib/games';
@@ -24,7 +22,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Select from '@material-ui/core/Select';
 import CCSS from './CCSS';
 
-export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, searchInput, setSearchInput, deleteGame, cloneGame, sortType, setSortType }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -138,29 +136,15 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
             New game
           </Button>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search games…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              value={searchInput}
-              onChange={({ target }) => setSearchInput(target.value)}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <Select
+          {/* Search filtering dropdown */}
+          {/* <Select
             id="sort-select"
             value={sortType}
             onChange={handleSortChange}
           >
             <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
             <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
-          </Select>
+          </Select> */}
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         {renderGames(loading)}
@@ -232,43 +216,6 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     marginBottom: '16px',
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-    display: 'inline-block',
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '18ch',
-    },
   },
   image: {
     width: '80px',

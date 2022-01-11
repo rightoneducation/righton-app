@@ -86,7 +86,7 @@ function App() {
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeteleQuestion = async (id: number) => {
+  const handleDeleteQuestion = async (id: number) => {
     const result = await deleteQuestions(id)
 
     if(result) {
@@ -151,9 +151,9 @@ function App() {
         <ThemeProvider theme={theme}>
           <AlertContext.Provider value={alertContext}>
             <Box>
-              <Nav />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeteleQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
               </Route>
             </Box>
             <AlertBar />
