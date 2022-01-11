@@ -2,14 +2,16 @@ import React from 'react';
 import {
   NavLink
 } from "react-router-dom";
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import exploreIcon from './../images/Explore.svg';
 import quizMakerIcon from './../images/QuizMaker.svg';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({ setSearchInput, searchInput}) {
   const classes = useStyles();
 
   return (
@@ -35,6 +37,21 @@ export default function PrimarySearchAppBar() {
           </grid>
           <grid>
           </grid>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search games…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              value={searchInput}
+              onChange={({ target }) => setSearchInput(target.value)}
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </div>
         </Toolbar>
       </AppBar>
     </div>
@@ -65,5 +82,47 @@ const useStyles = makeStyles(theme => ({
   },
   active: {
     opacity: '1',
-  }
+  },
+  search: {
+    position: 'absolute',
+    right: 0,
+    borderRadius: '20px',
+    border: '3px solid #87B8DB',
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    marginRight: 20,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+    display: 'inline-block',
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    paddingLeft: '6px',
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#87B8DB'
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '18ch',
+    },
+  },
 }));
