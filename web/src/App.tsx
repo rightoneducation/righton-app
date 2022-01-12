@@ -55,7 +55,7 @@ function App() {
   }
 
   const getSortedGames = async () => {
-    const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+    const games = sortGames(await fetchGames(), sortType);
     setGames(games);
   }
 
@@ -114,7 +114,7 @@ function App() {
     getGames();
     setStartup(false);
     listOfQuestions();
-  }, []);
+  }, [sortType]);
 
   // @ts-ignore
   const handleSaveQuestion = async (question, gameId) => {
@@ -152,9 +152,9 @@ function App() {
         <ThemeProvider theme={theme}>
           <AlertContext.Provider value={alertContext}>
             <Box>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} sortType={sortType} setSortType={setSortType} />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} />
               </Route>
             </Box>
             <AlertBar />

@@ -10,9 +10,16 @@ import exploreIcon from './../images/Explore.svg';
 import quizMakerIcon from './../images/QuizMaker.svg';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import { SORT_TYPES } from '../lib/sorting';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput}) {
+export default function PrimarySearchAppBar({ setSearchInput, searchInput, sortType, setSortType }) {
   const classes = useStyles();
+
+  const handleSortChange = (event) => {
+    setSortType(event.target.value);
+  };
 
   return (
     <div className={classes.grow}>
@@ -37,6 +44,17 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput}) {
           </grid>
           <grid>
           </grid>
+          <div className={classes.sortSelect}>
+            <Select
+              value={sortType}
+              onChange={handleSortChange}
+              label="Filter"
+              style={{margin: 'auto'}}
+            >
+              <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
+              <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
+            </Select>
+          </div>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -124,5 +142,16 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: '18ch',
     },
+  },
+  sortSelect: {
+    position: 'absolute',
+    display: 'inline-block',
+    padding: '6px',
+    // width: 140,
+    right: 260,
+    backgroundColor: 'white',
+    borderRadius: '18px',
+    boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
+    textAlign: 'center'
   },
 }));

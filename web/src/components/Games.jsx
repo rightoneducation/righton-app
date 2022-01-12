@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import GameDashboard from './GameDashboard';
 
-export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -31,15 +31,6 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
             New game
           </Button>
-          {/* Search filtering dropdown */}
-          {/* <Select
-            id="sort-select"
-            value={sortType}
-            onChange={handleSortChange}
-          >
-            <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
-            <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
-          </Select> */}
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         <Grid container>
