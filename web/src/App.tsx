@@ -14,7 +14,7 @@ import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
-import { updateQuestion, createQuestion } from './lib/questions';
+import { updateQuestion, createQuestion, listOfQuestions } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
 import StatusPageContainer from './components/StatusPageContainer';
@@ -113,6 +113,7 @@ function App() {
     };
     getGames();
     setStartup(false);
+    listOfQuestions();
   }, []);
 
   // @ts-ignore
