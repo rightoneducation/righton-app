@@ -152,9 +152,9 @@ function App() {
         <ThemeProvider theme={theme}>
           <AlertContext.Provider value={alertContext}>
             <Box>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} sortType={sortType} setSortType={setSortType} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} />
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
               </Route>
             </Box>
             <AlertBar />

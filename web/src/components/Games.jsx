@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import GameDashboard from './GameDashboard';
 
-export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -23,6 +23,9 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
     await saveNewGame(game);
     history.push('/games/1');
   };
+  const handleSortChange = (event) => {
+    setSortType(event.target.value);
+  };
 
   return (
     <Grid container className={classes.root} spacing={4}>
@@ -31,6 +34,17 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
             New game
           </Button>
+          <div className={classes.sortSelect}>
+            <Select
+              value={sortType}
+              onChange={handleSortChange}
+              label="Filter"
+              style={{margin: 'auto'}}
+            >
+              <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
+              <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
+            </Select>
+          </div>
           <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
         </Box>
         <Grid container>
@@ -83,5 +97,14 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     marginBottom: '16px',
+  },
+  sortSelect: {
+    display: 'inline-block',
+    padding: '6px',
+    marginLeft: 15,
+    backgroundColor: 'white',
+    borderRadius: '18px',
+    boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
+    textAlign: 'center'
   },
 }));
