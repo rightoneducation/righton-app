@@ -11,7 +11,7 @@ import quizMakerIcon from './../images/QuizMaker.svg';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput}) {
+export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
   const classes = useStyles();
 
   return (

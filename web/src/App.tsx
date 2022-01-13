@@ -55,7 +55,7 @@ function App() {
   }
 
   const getSortedGames = async () => {
-    const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+    const games = sortGames(await fetchGames(), sortType);
     setGames(games);
   }
 
@@ -114,7 +114,7 @@ function App() {
     getGames();
     setStartup(false);
     listOfQuestions();
-  }, []);
+  }, [sortType]);
 
   // @ts-ignore
   const handleSaveQuestion = async (question, gameId) => {
