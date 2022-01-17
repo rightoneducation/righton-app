@@ -30,7 +30,6 @@ export type Question = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
-  correctAnswer?: string | null,
   wrongAnswers?: string | null,
 };
 
@@ -54,7 +53,6 @@ export type CreateQuestionInput = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
-  correctAnswer?: string | null,
   wrongAnswers?: string | null,
 };
 
@@ -78,7 +76,6 @@ export type UpdateQuestionInput = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
-  correctAnswer?: string | null,
   wrongAnswers?: string | null,
 };
 
@@ -175,7 +172,6 @@ export type DeleteGameMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -211,7 +207,6 @@ export type CreateGameMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -247,7 +242,6 @@ export type UpdateGameMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -274,7 +268,6 @@ export type DeleteQuestionMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    correctAnswer?: string | null,
     wrongAnswers?: string | null,
   } | null,
 };
@@ -298,7 +291,6 @@ export type CreateQuestionMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    correctAnswer?: string | null,
     wrongAnswers?: string | null,
   } | null,
 };
@@ -322,7 +314,6 @@ export type UpdateQuestionMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    correctAnswer?: string | null,
     wrongAnswers?: string | null,
   } | null,
 };
@@ -355,7 +346,6 @@ export type CreateGameQuestionMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -458,7 +448,6 @@ export type GetGameQuery = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -490,7 +479,6 @@ export type ListGamesQuery = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -517,7 +505,6 @@ export type GetQuestionQuery = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    correctAnswer?: string | null,
     wrongAnswers?: string | null,
   } | null,
 };
@@ -537,7 +524,6 @@ export type ListQuestionsQuery = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    correctAnswer?: string | null,
     wrongAnswers?: string | null,
   } | null > | null,
 };
@@ -566,7 +552,6 @@ export type OnCreateGameSubscription = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      correctAnswer?: string | null,
       wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
@@ -589,7 +574,6 @@ export type OnCreateQuestionSubscription = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    correctAnswer?: string | null,
     wrongAnswers?: string | null,
   } | null,
 };
