@@ -12,6 +12,7 @@ import EditGameDialogue from './EditGameDialogue';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import GameDashboard from './GameDashboard';
+import SortByDropdown from './SortByDropdown';
 
 export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
@@ -51,7 +52,20 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           <Grid container>
             <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame}/>
           </Grid>
+          
         </Grid>
+      <Grid item xs={match ? 3 : 12} className={classes.sidebar}>
+        <Box className={classes.actions}>
+          <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
+            New Game
+          </Button>
+          <SortByDropdown handleSortChange={handleSortChange} />
+          <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
+        </Box>
+        <Grid container>
+          <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame}/>
+        </Grid>
+      </Grid>
       </Route>
       {match && games[Number(match.params.gameIndex) - 1] && (
         <Grid item xs={12} className={classes.content}>

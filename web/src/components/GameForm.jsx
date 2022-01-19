@@ -16,7 +16,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CCSS from './CCSS';
 import Grid from '@material-ui/core/Grid';
 import { deleteQuestion } from '../graphql/mutations';
-import RightOnLogo from './../images/RightOnLogo.svg';
+import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import { blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   rightComponent: {
-    display: 'inline',
   },
   actions: {
     display: 'flex',
@@ -43,7 +42,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
   question: {
-    width: '50%',
     marginBottom: theme.spacing(2),
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.05)',
@@ -170,12 +168,14 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
         <Grid xs={4} className={classes.leftComponent}>
             <h3 style={{color:'#0075FF'}}>{game.title}</h3>
             <p>{game.description}</p>
-            <img src={RightOnLogo} width={'60%'}/>
+            <img src={RightOnPlaceHolder} width={'60%'}/>
             {/* {game} */}
             <button className={classes.launchButton}>Launch Game {'>'}</button>
         </Grid>
-        <Grid xs={8} className={classes.rightComponent} >
-          <h3 style={{color:'#0075FF', textAlign:'center'}}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
+        <Grid container item xs={8} className={classes.rightComponent} >
+          <Grid item xs={12}>
+            <h3 style={{color:'#0075FF', textAlign:'center'}}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
+          </Grid>
           {questions.length === 0 && (
             <Typography className={classes.noQuestions} gutterBottom variant="h5" component="div">
               No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
@@ -185,6 +185,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
             if (question === null) return null;
             const { text, answer, imageUrl } = question;
             return (
+              <Grid item xs={6}>
               <Paper key={index} className={classes.question}>
                 <Box>
                   <Box className={classes.questionIndex}>
@@ -226,6 +227,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                   </Box>
                 </Box>
               </Paper>
+            </Grid> 
             );
           })}
         </Grid>
