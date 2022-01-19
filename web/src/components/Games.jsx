@@ -29,30 +29,32 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
 
   return (
     <Grid container className={classes.root} spacing={4}>
-      <Grid item xs={match ? 3 : 12} className={classes.sidebar}>
-        <Box className={classes.actions}>
-          <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
-            New game
-          </Button>
-          <div className={classes.sortSelect}>
-            <Select
-              value={sortType}
-              onChange={handleSortChange}
-              label="Filter"
-              style={{margin: 'auto'}}
-            >
-              <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
-              <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
-            </Select>
-          </div>
-          <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
-        </Box>
-        <Grid container>
-          <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame}/>
+      <Route path="/" exact>
+        <Grid item xs={12} className={classes.sidebar}>
+          <Box className={classes.actions}>
+            <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
+              New game
+            </Button>
+            <div className={classes.sortSelect}>
+              <Select
+                value={sortType}
+                onChange={handleSortChange}
+                label="Filter"
+                style={{margin: 'auto'}}
+              >
+                <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
+                <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
+              </Select>
+            </div>
+            <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
+          </Box>
+          <Grid container>
+            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame}/>
+          </Grid>
         </Grid>
-      </Grid>
+      </Route>
       {match && games[Number(match.params.gameIndex) - 1] && (
-        <Grid item xs={9} className={classes.content}>
+        <Grid item xs={12} className={classes.content}>
           <Switch>
             <Route path="/games/:gameIndex/questions/:questionIndex" render={
               ({ match }) => {

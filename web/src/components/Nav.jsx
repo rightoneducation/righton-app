@@ -16,8 +16,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
 
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.bar} position="static">
-        <p style={{color: 'black', margin: 'auto', marginLeft: '0'}}>Teacher / ExploreChromebook </p>
+      <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
           <grid>
           </grid>
