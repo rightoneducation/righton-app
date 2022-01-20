@@ -36,17 +36,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <Button variant="contained" color="primary" onClick={() => setNewGameOpen(true)}>
               New game
             </Button>
-            <div className={classes.sortSelect}>
-              <Select
-                value={sortType}
-                onChange={handleSortChange}
-                label="Filter"
-                style={{margin: 'auto'}}
-              >
-                <MenuItem value={SORT_TYPES.UPDATED}>Last Updated</MenuItem>
-                <MenuItem value={SORT_TYPES.ALPHABETICAL}>Alphabetical</MenuItem>
-              </Select>
-            </div>
+            <SortByDropdown handleSortChange={handleSortChange} />
             <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
           </Box>
           <Grid container>
