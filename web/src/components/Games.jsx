@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { SORT_TYPES } from '../lib/sorting';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -9,8 +8,9 @@ import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
 import NewGameDialogue from './NewGameDialogue';
 import EditGameDialogue from './EditGameDialogue';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import Select from '@material-ui/core/Select';
+// import { SORT_TYPES } from '../lib/sorting';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 
