@@ -188,6 +188,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
               <Grid item xs={6}>
               <Paper key={index} className={classes.question}>
                 <Box>
+                  <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
                   <Box className={classes.questionIndex}>
                     <Typography variant="h9">
                       Question{index+1}
