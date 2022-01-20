@@ -14,11 +14,17 @@ import ImageIcon from '@material-ui/icons/Image';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CCSS from './CCSS';
+import Grid from '@material-ui/core/Grid';
 import { deleteQuestion } from '../graphql/mutations';
+import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import { blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
   root: {
     padding: `${theme.spacing(2)}px`,
+    display: 'flex',
+  },
+  rightComponent: {
   },
   actions: {
     display: 'flex',
@@ -36,10 +42,16 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
   question: {
-    padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+      cursor: 'pointer',
+    },
+    height: '152px',
+    padding: theme.spacing(2),
     display: 'flex',
     justifyContent: 'space-between',
+    overflow: 'hidden',
   },
   addQuestion: {
     marginBottom: theme.spacing(2),
@@ -56,11 +68,9 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(2),
   },
-  questionLeftContainer: {
-    display: 'flex',
-  },
   questionIndex: {
     minWidth: '32px',
+    fontWeight: 'bold',
   },
   questionText: {
     paddingRight: theme.spacing(2),
@@ -84,7 +94,23 @@ const useStyles = makeStyles(theme => ({
   },
   back: {
     marginRight: theme.spacing(1),
-  }
+  },
+  leftComponent: {
+    textAlign: 'center',
+  },
+  launchButton: {
+    display:'block',
+    marginLeft:'auto',
+    marginRight:'auto',
+    marginTop:'15px',
+    backgroundColor: '#17B2FA',
+    color:'white',
+    border: 'none',
+    borderRadius: '20px',
+    height: '40px',
+    width: '120px',
+    boxShadow: '5px 1.5px grey'
+  },
 }));
 
 function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
@@ -120,16 +146,18 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
 
   const questions = game?.questions || [];
 
+  const questionCount = game?.questions?.length || 0;
+
   return (
     <>
       <Box className={classes.actions}>
         <Button type="button" onClick={() => history.push(`/`)}>
-          <ArrowBackIcon className={classes.back} />Exit Game
+          <ArrowBackIcon className={classes.back} />Back to Explore Page
         </Button>
+        <h3 style={{width:'10%', textAlign:'center',textDecoration:'und'}}><strong>Games</strong></h3>
         {game.grade !== 'General' && (
           <>
-          <strong>CCSS: </strong>
-          <CCSS game={game} />
+          {/* <CCSS game={game} /> */}
           </>
         )}
         <Button className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
@@ -137,58 +165,73 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
         </Button>
       </Box>
       <form className={classes.root} noValidate autoComplete="off" onSubmit={(event) => event.preventDefault()}>
-        {questions.length === 0 && (
-          <Typography className={classes.noQuestions} gutterBottom variant="h5" component="div">
-            No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
-          </Typography>
-        )}
-        {questions.map((question, index) => {
-          if (question === null) return null;
-          const { text, answer, imageUrl } = question;
-          return (
-            <Paper key={index} className={classes.question}>
-              <Box className={classes.questionLeftContainer}>
-                <Box className={classes.questionIndex}>
-                  <Typography variant="h5">
-                    {index+1}.
-                  </Typography>
-                </Box>
-                <Box className={classes.questionText}>
-                  <Typography>
-                    {text}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box className={classes.questionAnswer}>
+        <Grid xs={4} className={classes.leftComponent}>
+            <h3 style={{color:'#0075FF'}}>{game.title}</h3>
+            <p>{game.description}</p>
+            <img src={RightOnPlaceHolder} width={'60%'}/>
+            {/* {game} */}
+            <button className={classes.launchButton}>Launch Game {'>'}</button>
+        </Grid>
+        <Grid container item xs={8} className={classes.rightComponent} >
+          <Grid item xs={12}>
+            <h3 style={{color:'#0075FF', textAlign:'center'}}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
+          </Grid>
+          {questions.length === 0 && (
+            <Typography className={classes.noQuestions} gutterBottom variant="h5" component="div">
+              No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
+            </Typography>
+          )}
+          {questions.map((question, index) => {
+            if (question === null) return null;
+            const { text, answer, imageUrl } = question;
+            return (
+              <Grid item xs={6}>
+              <Paper key={index} className={classes.question}>
                 <Box>
-                  {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <Avatar variant="square" className={classes.square}>
-                    <ImageIcon fontSize="large" />
-                  </Avatar>}
-                  <Typography align="center">
-                    {answer}
-                  </Typography>
+                  <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
+                  <Box className={classes.questionIndex}>
+                    <Typography variant="h9">
+                      Question{index+1}
+                    </Typography>
+                  </Box>
+                  <Box className={classes.questionText}>
+                    <Typography>
+                      {text}
+                    </Typography>
+                  </Box>
                 </Box>
-                <Box>
-                  <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
-                    <MoreVertIcon />
-                  </Button>
-                  <Menu
-                    id={`question-${index}-actions`}
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={activeIndex === String(index)}
-                    onClose={handleClose}
-                  >
-                    <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</MenuItem>
-                    {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
-                    {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
-                    <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
-                  </Menu>
+                <Box className={classes.questionAnswer}>
+                  <Box>
+                    {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <Avatar variant="square" className={classes.square}>
+                      <ImageIcon fontSize="large" />
+                    </Avatar>}
+                    <Typography align="center">
+                      {answer}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
+                      <MoreVertIcon />
+                    </Button>
+                    <Menu
+                      id={`question-${index}-actions`}
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={activeIndex === String(index)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</MenuItem>
+                      {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
+                      {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
+                      <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                    </Menu>
+                  </Box>
                 </Box>
-              </Box>
-            </Paper>
-          );
-        })}
+              </Paper>
+            </Grid> 
+            );
+          })}
+        </Grid>
       </form>
     </>
   );
