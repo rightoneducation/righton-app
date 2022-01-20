@@ -16,20 +16,19 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
 
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.bar} position="static">
-        <p style={{color: 'black', margin: 'auto', marginLeft: '0'}}>Teacher / ExploreChromebook </p>
+      <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
           <grid>
           </grid>
           <grid style={{display: "flex", margin: 'auto'}}>
             <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
-              <img src={exploreIcon} alt={'Explore Icon'} className={classes.icon} />
+              <img src={exploreIcon} className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Explore
               </Typography>
             </NavLink>
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'}>
-              <img src={quizMakerIcon} alt={'Quiz Maker Icon'} className={classes.icon} />
+              <img src={quizMakerIcon} className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
               </Typography>
