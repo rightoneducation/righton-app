@@ -140,7 +140,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}`);
+  const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/edit`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
 
@@ -186,7 +186,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
             const { text, answer, imageUrl } = question;
             return (
               <Grid item xs={6}>
-              <Paper key={index} className={classes.question}>
+              <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>
                 <Box>
                   <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
                   <Box className={classes.questionIndex}>
@@ -202,9 +202,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                 </Box>
                 <Box className={classes.questionAnswer}>
                   <Box>
-                    {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <Avatar variant="square" className={classes.square}>
-                      <ImageIcon fontSize="large" />
-                    </Avatar>}
+                    {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} width={'100%'}/>}
                     <Typography align="center">
                       {answer}
                     </Typography>
@@ -220,7 +218,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                       open={activeIndex === String(index)}
                       onClose={handleClose}
                     >
-                      <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>Edit</MenuItem>
+                      <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}/edit`)}>Edit</MenuItem>
                       {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
                       {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
                       <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>

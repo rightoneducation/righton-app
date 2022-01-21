@@ -7,14 +7,13 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
-import { getGameImage } from '../lib/games';
+// import Avatar from '@material-ui/core/Avatar';
+// import ImageIcon from '@material-ui/icons/Image';
+import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
-import { Paper } from '@material-ui/core';
 
 export default function GameDashboard({ loading, games, deleteGame, cloneGame }) {
   const classes = useStyles();
@@ -101,11 +100,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame })
 
                     <Grid container item xs={4}>
                       <Grid item xs={10}>
-                        {image ? <img className={classes.image} src={image} alt="" /> : (
-                          <Avatar variant="square" className={classes.square}>
-                            <ImageIcon fontSize="large" />
-                          </Avatar>
-                        )}
+                        {image ? <img className={classes.image} src={image} alt="" /> : <img src={RightOnPlaceHolder} width={'100%'}/>}
                       </Grid>
 
                       <Grid item xs={2}>
@@ -148,7 +143,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame })
 
 const useStyles = makeStyles(theme => ({
   game: {
-    width: '500px',
+    width: '100%',
     borderRadius: '10px',
     marginBottom: theme.spacing(2),
     '&:hover': {
@@ -175,14 +170,12 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700,
     fontSize: '110%',
     color: '#384466',
-    // fontFamily: 'Poppins',
   },
   question: {
     fontWeight: 700,
     color: '#159EFA',
     textAlign: 'right',
     paddingRight: '15px',
-    // fontFamily: 'Poppins',
   },
   image: {
     width: '80px',

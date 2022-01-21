@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import {
-  createMuiTheme,
+  createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
 import AlertContext, { Alert } from './context/AlertContext';
@@ -24,7 +24,7 @@ const filterGame = (game: Game | null, search: string) => {
   return false;
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#307583',
@@ -32,6 +32,9 @@ const theme = createMuiTheme({
     secondary: {
       main: '#8e2e9d',
     },
+  },
+  typography: {
+    fontFamily: 'Poppins',
   },
 });
 
