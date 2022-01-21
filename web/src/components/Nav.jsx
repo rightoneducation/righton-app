@@ -10,6 +10,7 @@ import exploreIcon from './../images/Explore.svg';
 import quizMakerIcon from './../images/QuizMaker.svg';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
+import ComingSoon from './../images/ComingSoon.svg';
 
 export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
   const classes = useStyles();
@@ -18,23 +19,21 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
-          <grid>
-          </grid>
           <grid style={{display: "flex", margin: 'auto'}}>
             <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
-              <img src={exploreIcon} className={classes.icon} />
+              <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Explore
               </Typography>
             </NavLink>
+            <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} />
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'}>
-              <img src={quizMakerIcon} className={classes.icon} />
+              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
               </Typography>
             </NavLink>
-          </grid>
-          <grid>
+            <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} />
           </grid>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -72,12 +71,13 @@ const useStyles = makeStyles(theme => ({
   link: {
     color: 'inherit',
     textDecoration: 'none',
-    width: '150px',
+    width: '190px',
     display: 'flex',
     opacity: '0.5',
   },
   icon: {
     height: '80%',
+    marginRight: 10,
   },
   active: {
     opacity: '1',
