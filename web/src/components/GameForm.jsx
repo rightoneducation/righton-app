@@ -52,6 +52,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     overflow: 'hidden',
+    borderRadius: '18px',
+    marginRight: theme.spacing(2),
   },
   addQuestion: {
     marginBottom: theme.spacing(2),
@@ -191,7 +193,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                   <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
                   <Box className={classes.questionIndex}>
                     <Typography variant="h9">
-                      Question{index+1}
+                      Question {index+1}
                     </Typography>
                   </Box>
                   <Box className={classes.questionText}>

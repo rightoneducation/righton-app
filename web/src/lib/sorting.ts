@@ -1,10 +1,11 @@
-import { setOriginalNode } from 'typescript';
 import { Game } from '../API'
 
 export enum SORT_TYPES {
   ALPHABETICAL,
-  ASCENDING,
-  DESCENDING,
+  QUESTIONASCENDING,
+  QUESTIONDESCENDING,
+  GRADEASCENDING,
+  GRADEDESCENDING,
   OLDEST,
   REVERSEALPHABETICAL,
   UPDATED,
@@ -34,7 +35,7 @@ const sortByReverseAlphabetical = (a: Game | null, b: Game | null) => {
   return sortAlphabetically(a, b) * -1;
 };
 
-const sortByAscending = (a: Game | null, b: Game | null) => {  
+const sortByQuestionAscending = (a: Game | null, b: Game | null) => {  
   // @ts-ignore: Object is possibly 'null'.
   if(!a || a.questions === null) return -1;
   if(!b || b.questions === null) return 1;
@@ -45,8 +46,22 @@ const sortByAscending = (a: Game | null, b: Game | null) => {
   return 0;
 };
 
-const sortByDescending = (a: Game | null, b: Game | null) => {
-  return sortByAscending(a, b) * -1;
+const sortByQuestionDescending = (a: Game | null, b: Game | null) => {
+  return sortByQuestionAscending(a, b) * -1;
+};
+
+const sortByGradeAscending = (a: Game | null, b: Game | null) => {
+  if(!a || a.grade === null) return -1;
+  if(!b || b.grade === null) return 1;
+  // @ts-ignore: Object is possibly 'undefined'.
+  if(a.grade > b.grade) return 1;
+  // @ts-ignore: Object is possibly 'undefined'.
+  if(b.grade > a.grade) return -1;
+  return 0;
+};
+
+const sortByGradeDescending = (a: Game | null, b: Game | null) => {
+  return sortByGradeAscending(a, b) * -1;
 };
 
 const SORT_TYPE_TO_FUNCTION = {
@@ -54,8 +69,10 @@ const SORT_TYPE_TO_FUNCTION = {
   [SORT_TYPES.UPDATED]: sortByUpdated,
   [SORT_TYPES.OLDEST]: sortByOldest,
   [SORT_TYPES.REVERSEALPHABETICAL]: sortByReverseAlphabetical,
-  [SORT_TYPES.ASCENDING]: sortByAscending,
-  [SORT_TYPES.DESCENDING]: sortByDescending,
+  [SORT_TYPES.QUESTIONASCENDING]: sortByQuestionAscending,
+  [SORT_TYPES.QUESTIONDESCENDING]: sortByQuestionDescending,
+  [SORT_TYPES.GRADEASCENDING]: sortByGradeAscending,
+  [SORT_TYPES.GRADEDESCENDING]: sortByGradeDescending,
 };
 
 export const sortGamesBySortType = (games: Array<Game | null>, sortType: SORT_TYPES): Game[] => {

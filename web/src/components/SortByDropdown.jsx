@@ -7,12 +7,10 @@ import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 export default function SortByDropdown({ handleSortChange }) {
     const classes = useStyles();
     const [sortByCheck, setSortByCheck] = React.useState(false);
-    const [lastUpdated] = React.useState(SORT_TYPES.UPDATED);
     const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
 
     return(
         <div className={classes.sortByWrapper}>
-          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet" />
             <div className={classes.sortByHeader} onClick={() => {setSortByCheck((prev) => !prev)}}>
               <p className={classes.sortByTitle}>Sort by</p>
               <ArrowIcon className={classes[arrowClass]} />
@@ -56,15 +54,15 @@ export default function SortByDropdown({ handleSortChange }) {
                           MenuProps={{classes: {paper: classes.MenuProps}}}
                         >
                           <MenuItem value="">---</MenuItem>
-                          <MenuItem value={SORT_TYPES.ASCENDING}>Ascending</MenuItem>
-                          <MenuItem value={SORT_TYPES.DESCENDING}>Descending</MenuItem>
+                          <MenuItem value={SORT_TYPES.QUESTIONASCENDING}>Ascending</MenuItem>
+                          <MenuItem value={SORT_TYPES.QUESTIONDESCENDING}>Descending</MenuItem>
                         </Select>
                       </div>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <p className={classes.sortByName}>Grade Level (U/C)</p>
+                      <p className={classes.sortByName}>Grade Level</p>
                     </td>
                     <td style={{textAlign: 'right'}}>
                       <div className={classes.sortByOptions}>
@@ -73,19 +71,13 @@ export default function SortByDropdown({ handleSortChange }) {
                           name="Grade Level"
                           disableUnderline
                           displayEmpty
-                          // onChange={handleSortChange}
+                          onChange={handleSortChange}
                           defaultValue=""
                           MenuProps={{classes: {paper: classes.MenuProps}}}
                         >
                           <MenuItem value="">---</MenuItem>
-                          <MenuItem value={20}>General</MenuItem>
-                          <MenuItem value={21}>6</MenuItem>
-                          <MenuItem value={22}>7</MenuItem>
-                          <MenuItem value={23}>8</MenuItem>
-                          <MenuItem value={24}>9</MenuItem>
-                          <MenuItem value={25}>10</MenuItem>
-                          <MenuItem value={26}>11</MenuItem>
-                          <MenuItem value={27}>12</MenuItem>
+                          <MenuItem value={SORT_TYPES.GRADEASCENDING}>Ascending</MenuItem>
+                          <MenuItem value={SORT_TYPES.GRADEDESCENDING}>Descending</MenuItem>
                         </Select>
                       </div>
                     </td>
