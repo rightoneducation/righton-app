@@ -42,7 +42,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
           </Box>
           <Grid container>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame}/>
+            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${index + 1}`)}/>
           </Grid>
           
         </Grid>
@@ -50,6 +50,11 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
       {match && games[Number(match.params.gameIndex) - 1] && (
         <Grid item xs={12} className={classes.content}>
           <Switch>
+            <Route exact path="/games/:gameIndex/questions/copy" render={
+              ({ match }) => {
+                return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} saveQuestion={saveQuestion}/>;
+              }
+            } />
             <Route exact path="/games/:gameIndex/questions/:questionIndex" render={
               ({ match }) => {
                 const { questionIndex, gameIndex } = match.params;
@@ -66,11 +71,6 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
               ({ match }) => {
                 const { questionIndex, gameIndex } = match.params;
                 return <QuestionForm loading={loading} saveQuestion={saveQuestion} gameId={games[Number(match.params.gameIndex) - 1].id} question={games[Number(gameIndex) - 1].questions[questionIndex]} {...match.params} />;
-              }
-            } />
-            <Route exact path="/games/:gameIndex/questions/copy" render={
-              ({ match }) => {
-                return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} saveQuestion={saveQuestion}/>;
               }
             } />
           </Switch>
