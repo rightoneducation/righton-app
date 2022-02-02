@@ -15,7 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 
-export default function GameDashboard({ loading, games, deleteGame, cloneGame }) {
+export default function GameDashboard({ loading, games, deleteGame, cloneGame, onClickGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -64,7 +64,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame })
           const image = null;
           return (
             <Grid container item xs={12} md={6} lg={4}>
-              <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => history.push(`/games/${index + 1}`)}>
+              <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(index)}>
                 <CardContent>
                   <Grid container>
                     <Grid container item xs={8}>
