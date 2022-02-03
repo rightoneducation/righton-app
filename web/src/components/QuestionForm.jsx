@@ -287,8 +287,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
       </div>
 
       <div style={{textAlign: 'center', marginTop: 50}}>
-        <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => window.alert('This Button Has No Functionality')}>Add to Game</Button>
-        <Button className={classes.greenButton} variant="contained" color="primary" onClick={handleSaveQuestion}>Save Question</Button>
+        <Button className={classes.addGameButton} variant="contained" color="primary" onClick={handleSaveQuestion}>Add to Game</Button>
       </div>
     </form>
   );
