@@ -221,8 +221,6 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
           <Button className={classes.back} onClick={handleBack}>Back</Button>
         </Typography>
         
-        {/* Below TextField needs onChange={onChangeMaker(''); find out argument} */}
-        <TextField className={classes.input} style={{width: 632}} id="question-topic" value={question.cluster} label="Question Topic - No Functionality" variant="outlined" size="small" />
         <TextField className={classes.input} style={{width: 632}} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" multiline rows={12} required />
         <div className={classes.imagePreview}>
           <img className={classes.image} src={imgPreview} alt="Invalid Image URL" />
