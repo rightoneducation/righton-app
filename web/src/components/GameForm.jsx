@@ -144,7 +144,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
   };
   const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/edit`);
 
-  const copyQuestion = () => history.push(`/games/${gameIndex}/questions/copy`);
+  const copyQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/copy`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
 

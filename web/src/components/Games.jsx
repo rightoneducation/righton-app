@@ -50,9 +50,10 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
       {match && games[Number(match.params.gameIndex) - 1] && (
         <Grid item xs={12} className={classes.content}>
           <Switch>
-            <Route exact path="/games/:gameIndex/questions/copy" render={
+            <Route path="/games/:gameIndex/questions/:questionIndex/copy" render={
               ({ match }) => {
-                return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} saveQuestion={saveQuestion}/>;
+                const { questionIndex, gameIndex } = match.params;
+                return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} saveQuestion={saveQuestion} gameId={games[Number(match.params.gameIndex) - 1].id} question={games[Number(gameIndex) - 1].questions[questionIndex]} {...match.params}/>;
               }
             } />
             <Route exact path="/games/:gameIndex/questions/:questionIndex" render={
