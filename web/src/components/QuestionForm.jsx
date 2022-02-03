@@ -86,7 +86,6 @@ const useStyles = makeStyles(theme => ({
   },
 
   addGameButton: {
-    marginRight: 150,
     color: 'white',
     fontSize: 17,
     background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)',
@@ -214,7 +213,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
-      <div style={{position: 'relative'}}>
+      <div style={{position: 'relative', height: 420, marginTop: 30}}>
         <Typography gutterBottom variant="h4" component="h1">
           Question
 
@@ -267,21 +266,6 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
             </Collapse>
           </Paper>
         </Grid>
-        {/* <List>
-          {typeof question.instructions != "string" && question?.instructions?.map((step, index) => (
-            <React.Fragment key={index}>
-              <ListItem className={classes.instruction}>
-                <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label={`Step ${index + 1}`} variant="filled" required />
-                <Button className={classes.deleteButton} onClick={() => handleRemoveInstruction(index)}>X</Button>
-              </ListItem>
-            </React.Fragment>
-          ))}
-          <ListItem className={classes.instruction}>
-            <Button variant="contained" onClick={addInstruction}>
-              Add step
-            </Button>
-          </ListItem>
-        </List> */}
       </div>
 
       <div style={{textAlign: 'center', marginTop: 50}}>
