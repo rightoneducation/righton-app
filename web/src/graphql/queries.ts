@@ -12,6 +12,9 @@ export const getGame = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -24,6 +27,7 @@ export const getGame = /* GraphQL */ `
         domain
         grade
         standard
+        wrongAnswers
       }
       updatedAt
       createdAt
@@ -40,6 +44,9 @@ export const listGames = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -52,6 +59,7 @@ export const listGames = /* GraphQL */ `
         domain
         grade
         standard
+        wrongAnswers
       }
       updatedAt
       createdAt
@@ -72,6 +80,7 @@ export const getQuestion = /* GraphQL */ `
       domain
       grade
       standard
+      wrongAnswers
     }
   }
 `;
@@ -89,6 +98,7 @@ export const listQuestions = /* GraphQL */ `
       domain
       grade
       standard
+      wrongAnswers
     }
   }
 `;
