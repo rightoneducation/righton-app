@@ -1,23 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import {
-  createTheme,
-  ThemeProvider,
-} from '@material-ui/core/styles';
+import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
+import { updateQuestion, createQuestion } from './lib/questions';
+import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
+import { Game } from './API';
 import AlertBar from './components/AlertBar';
+import StatusPageContainer from './components/StatusPageContainer';
+import GameMaker from './components/GameMaker';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
-import { updateQuestion, createQuestion, listOfQuestions } from './lib/questions';
-import { SORT_TYPES } from './lib/sorting';
-import { Game } from './API';
-import StatusPageContainer from './components/StatusPageContainer';
 
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
@@ -116,7 +110,6 @@ function App() {
     };
     getGames();
     setStartup(false);
-    listOfQuestions();
   }, [sortType]);
 
   // @ts-ignore
@@ -158,6 +151,9 @@ function App() {
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
+              </Route>
+              <Route path='/gamemaker'>
+                <GameMaker/>
               </Route>
             </Box>
             <AlertBar />

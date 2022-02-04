@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { Game, ListGamesQuery, DeleteGameMutation, DeleteQuestionMutation } from '../API';
-import { listGames } from '../graphql/queries';
+import { listGames, getGame as GG } from '../graphql/queries';
 import { createGame as CG, updateGame as UG, createGameQuestion as CGQ, deleteGame, deleteQuestion } from '../graphql/mutations';
 import { SORT_TYPES, sortGamesBySortType } from './sorting';
 
@@ -58,4 +58,10 @@ export const getGameImage = async (game: Game) => {
   // }
 
   return null;
+};
+
+export const getGame = async (id: any) => {
+  const result = await API.graphql(graphqlOperation(GG, { id })) as { data: any };
+  console.log(result);
+  return result.data;
 }
