@@ -9,12 +9,15 @@ import Typography from '@material-ui/core/Typography';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Avatar from '@material-ui/core/Avatar';
+import ImageIcon from '@material-ui/icons/Image';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CCSS from './CCSS';
 import Grid from '@material-ui/core/Grid';
-// import { deleteQuestion } from '../graphql/mutations';
+import { deleteQuestion } from '../graphql/mutations';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import { blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -164,10 +167,10 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
         </Button>
       </Box>
       <form className={classes.root} noValidate autoComplete="off" onSubmit={(event) => event.preventDefault()}>
-        <Grid item xs={4} className={classes.leftComponent}>
+        <Grid xs={4} className={classes.leftComponent}>
             <h3 style={{color:'#0075FF'}}>{game.title}</h3>
             <p>{game.description}</p>
-            <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>
+            <img src={RightOnPlaceHolder} width={'60%'}/>
             {/* {game} */}
             <button className={classes.launchButton}>Launch Game {'>'}</button>
         </Grid>
@@ -201,22 +204,22 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                 </Box>
                 <Box className={classes.questionAnswer}>
                   <Box>
-                      {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'}/>}
-                      <Typography align="center">
-                        {answer}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
-                        <MoreVertIcon />
-                      </Button>
-                      <Menu
-                        id={`question-${index}-actions`}
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={activeIndex === String(index)}
-                        onClose={handleClose}
-                      >
+                    {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} width={'100%'}/>}
+                    <Typography align="center">
+                      {answer}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
+                      <MoreVertIcon />
+                    </Button>
+                    <Menu
+                      id={`question-${index}-actions`}
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={activeIndex === String(index)}
+                      onClose={handleClose}
+                    >
                       <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}/edit`)}>Edit</MenuItem>
                       {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
                       {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}

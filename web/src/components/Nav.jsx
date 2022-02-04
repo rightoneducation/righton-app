@@ -1,6 +1,8 @@
 import React from 'react';
-import { NavLink } from "react-router-dom";
-import { alpha, makeStyles } from '@material-ui/core/styles';
+import {
+  NavLink
+} from "react-router-dom";
+import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -18,14 +20,14 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
           <grid style={{display: "flex", margin: 'auto'}}>
-            <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
+            <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Explore
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} />
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker'}>
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
@@ -85,9 +87,9 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     borderRadius: '20px',
     border: '3px solid #87B8DB',
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     marginRight: 20,
