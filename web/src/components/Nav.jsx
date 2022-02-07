@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   NavLink
 } from "react-router-dom";
@@ -8,26 +8,26 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import exploreIcon from './../images/Explore.svg';
 import quizMakerIcon from './../images/QuizMaker.svg';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
 import ComingSoon from './../images/ComingSoon.svg';
+import SearchBar from './SearchBar.jsx';
 
 export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
   const classes = useStyles();
+   const [showSB, setShowSB] = useState(true);
 
   return (
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
           <grid style={{display: "flex", margin: 'auto'}}>
-            <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
+             <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'} onClick={() => setShowSB(true)}> 
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Explore
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} />
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'}>
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'} onClick={() => setShowSB(false)}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
@@ -35,21 +35,9 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} />
           </grid>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search games…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              value={searchInput}
-              onChange={({ target }) => setSearchInput(target.value)}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
+          { showSB
+             ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> 
+            : null }
         </Toolbar>
       </AppBar>
     </div>
