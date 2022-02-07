@@ -27,31 +27,7 @@ export default function SearchBar({ setSearchInput, searchInput }) {
 
 
 const useStyles = makeStyles(theme => ({
-    bar: {
-        background: 'linear-gradient(right,#0F78BD,#043373)',
-    },
-    grow: {
-        flexGrow: 1,
-    },
-    title: {
-        [theme.breakpoints.up('sm')]: {
-            display: 'block',
-        },
-    },
-    link: {
-        color: 'inherit',
-        textDecoration: 'none',
-        width: '190px',
-        display: 'flex',
-        opacity: '0.5',
-    },
-    icon: {
-        height: '80%',
-        marginRight: 10,
-    },
-    active: {
-        opacity: '1',
-    },
+    
     search: {
         position: 'absolute',
         right: 0,
