@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GameDashboard from './GameDashboard';
 import { Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 import GameForm from "./GameForm";
+import AddQuestion from "./AddQuestion";
 
 
 
@@ -16,27 +17,27 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame }) {
+function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, questionIndex, gameIndex }) {
     const classes = useStyles();
     const match = useRouteMatch('/games/:gameIndex');
     const history = useHistory();
 
-    
+    console.log(games[0]);
     return (
         <Grid container className={classes.root}>
           <Route>
             <Grid item xs={12} className={classes.sidebar}>
                 <h3>Browse Games</h3>
-                <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/${index + 1}`)}/>
+                <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${gameIndex}/questions/${questionIndex}/copy/gameSelected/${index + 1}`)}/>
             </Grid>
           </Route>
           {match && games[Number(match.params.gameIndex) - 1] && (
             <Grid item xs={7} className={classes.content}>
               <Switch>
-                <Route exact path="/games/:gameIndex/questions/copy/:gameIndex" render={
+                <Route exact path="/games/:gameIndex/questions/:questionIndex/copy/gameSelected/:selectedIndex" render={
                   ({ match }) => {
-                    const { gameIndex } = match.params;
-                    return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+                    const { gameIndex, questionIndex, selectedIndex } = match.params;
+                    return <AddQuestion loading={loading} saveGame={saveGame} game={games[Number(selectedIndex-1)]} gameIndex={selectedIndex}/>;
                   }
                 } />
               </Switch>

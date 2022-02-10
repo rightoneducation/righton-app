@@ -53,7 +53,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <Route path="/games/:gameIndex/questions/:questionIndex/copy" render={
               ({ match }) => {
                 const { questionIndex, gameIndex } = match.params;
-                return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} saveQuestion={saveQuestion} gameId={games[Number(match.params.gameIndex) - 1].id} question={games[Number(gameIndex) - 1].questions[questionIndex]} {...match.params}/>;
+                return <AddQuestionForm gameIndex={gameIndex} questionIndex={questionIndex} loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} saveQuestion={saveQuestion} gameId={games[Number(match.params.gameIndex) - 1].id} question={games[Number(gameIndex) - 1].questions[questionIndex]} {...match.params}/>;
               }
             } />
             <Route exact path="/games/:gameIndex/questions/:questionIndex" render={
