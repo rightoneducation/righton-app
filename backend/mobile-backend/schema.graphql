@@ -3,8 +3,8 @@ type GameSession @model(subscriptions: null) {
   gameId: ID!
   game: Game! @connection
   startTime: AWSDateTime
-  votingTime: Int
-  hintsRevealTime: Int
+  phaseOneTime: Int
+  phaseTwoTime: Int
   createdAt: AWSDateTime!
   teams: [Team] @connection(keyName: "byGameSession", fields: ["id"])
 }
@@ -13,6 +13,7 @@ type Game @model(subscriptions: null) {
   id: ID!
   title: String
   description: String
+  imageUrl: String
   isAdvanced: Boolean
   gameCode: Int
   grade: String
@@ -27,6 +28,7 @@ type Question @model @key(name: "byGame", fields: ["gameId", "question"]) {
   trickAnswers: AWSJSON
   imageUrl: String
   instructions: AWSJSON
+  grade: String
 }
 
 type Team
