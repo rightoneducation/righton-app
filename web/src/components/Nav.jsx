@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import {
-  NavLink
-} from "react-router-dom";
+import React from 'react';
+import { NavLink, useRouteMatch } from "react-router-dom";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,31 +11,31 @@ import SearchBar from './SearchBar.jsx';
 
 export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
   const classes = useStyles();
-   const [showSB, setShowSB] = useState(true);
+  const matchSearchBar = useRouteMatch('/');
+  const matchGamesPage = useRouteMatch('/games');
 
   return (
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
           <grid style={{display: "flex", margin: 'auto'}}>
-             <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'} onClick={() => setShowSB(true)}> 
-              <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
+            <NavLink className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
+              <img src={exploreIcon} alt="Explore Icon" className={classes.icon}  />
               <Typography className={classes.title} variant="h6" noWrap>
                 Explore
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} />
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'} onClick={() => setShowSB(false)}>
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/GameMaker'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} />
+            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : null}
+            {!matchGamesPage.isExact ? console.log("found it") : null}
           </grid>
-          { showSB
-             ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> 
-            : null }
         </Toolbar>
       </AppBar>
     </div>
@@ -69,5 +67,47 @@ const useStyles = makeStyles(theme => ({
   },
   active: {
     opacity: '1',
+  },
+  search: {
+    position: 'absolute',
+    right: 0,
+    borderRadius: '20px',
+    border: '3px solid #87B8DB',
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    marginRight: 20,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+    display: 'inline-block',
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    paddingLeft: '6px',
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#87B8DB'
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+   paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '18ch',
+    },
   },
 }));
