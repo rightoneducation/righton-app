@@ -12,8 +12,7 @@ import SearchBar from './SearchBar.jsx';
 export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
   const classes = useStyles();
   const matchSearchBar = useRouteMatch('/');
-  const matchGamesPage = useRouteMatch('/games');
-
+  
   return (
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
@@ -33,8 +32,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} />
-            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : null}
-            {!matchGamesPage.isExact ? console.log("found it") : null}
+            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
           </grid>
         </Toolbar>
       </AppBar>
