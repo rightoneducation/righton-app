@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Switch
+  Switch,
+  Redirect
 } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import {
@@ -18,6 +19,10 @@ import { updateQuestion, createQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import { Game } from './API';
 import StatusPageContainer from './components/StatusPageContainer';
+import SignUp from './components/auth/SignUp';
+import LogIn from './components/auth/LogIn';
+import Confirmation from './components/auth/Confirmation';
+import { Auth } from 'aws-amplify';
 
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
@@ -42,6 +47,8 @@ function App() {
   const [searchInput, setSearchInput] = useState('');
   const [games, setGames] = useState<(Game | null)[]>([]);
   const [alert, setAlert] = useState<Alert | null>(null);
+  const [isAuthenticated, setLoggedIn] = useState(false);
+  const [userLoading, setUserLoading] = useState(true);
 
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
@@ -105,14 +112,32 @@ function App() {
     }
   }
 
+  const getWhatToDo = (async () => {
+    let user = null;
+    try {
+      user = await Auth.currentAuthenticatedUser();
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+      setUserLoading(false);
+    } catch (e) {
+      setLoggedIn(false);
+      setUserLoading(false);
+    }
+  });
+
+  const getGames = async () => {
+    setLoading(true);
+    await getSortedGames();
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const getGames = async () => {
-      setLoading(true);
-      await getSortedGames();
-      setLoading(false);
-    };
     getGames();
     setStartup(false);
+    getWhatToDo();
   }, []);
 
   // @ts-ignore
@@ -147,8 +172,17 @@ function App() {
   return (
     <Router>
       <Switch>
+      <Route path="/login">
+          <LogIn />
+        </Route>
+        <Route path="/signup">
+          <SignUp />
+        </Route>
+        <Route path="/confirmation">
+          <Confirmation />
+        </Route>
         <Route path="/status/:gameID" component={StatusPageContainer} />
-        <ThemeProvider theme={theme}>
+        {userLoading ? <div>Loading</div> : (isAuthenticated ? (<ThemeProvider theme={theme}>
           <AlertContext.Provider value={alertContext}>
             <Box>
               <Nav />
@@ -158,7 +192,7 @@ function App() {
             </Box>
             <AlertBar />
           </AlertContext.Provider>
-        </ThemeProvider>
+        </ThemeProvider>) : <Redirect to="/login" />) }
       </ Switch>
     </Router>
   );
