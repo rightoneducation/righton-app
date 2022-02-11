@@ -15,6 +15,9 @@ const useStyles = makeStyles(theme => ({
     height: 'calc(100vh - 64px)',
     overflowY: 'scroll',
     },
+  rightSideButton: {
+    
+  },
   }));
 
 function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, questionIndex, gameIndex }) {
@@ -26,21 +29,36 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
     return (
         <Grid container className={classes.root}>
           <Route>
-            <Grid item xs={12} className={classes.sidebar}>
+            <Grid item xs={6} className={classes.sidebar}>
                 <h3>Browse Games</h3>
                 <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${gameIndex}/questions/${questionIndex}/copy/gameSelected/${index + 1}`)}/>
             </Grid>
           </Route>
           {match && games[Number(match.params.gameIndex) - 1] && (
-            <Grid item xs={7} className={classes.content}>
+            <Grid item xs={6} className={classes.content}>
               <Switch>
+                <Route exact path="/games/:gameIndex/questions/:questionIndex/copy" render={
+                  ({}) => {
+                    return (
+                      <Grid style={{height: 'calc(100vh - 64px)'}}>
+                        <p style={{color:"#797979", fontWeight:"bold"}}>No Game Selected</p>
+                        <h2 style={{width: "60%",color:"#797979", marginLeft:"auto", marginRight:"auto", marginTop:"30%"}}>In order to view questions, you must select a game from the section on the left</h2>
+                      </Grid>
+                    );
+                  }
+                }/>
                 <Route exact path="/games/:gameIndex/questions/:questionIndex/copy/gameSelected/:selectedIndex" render={
                   ({ match }) => {
-                    const { gameIndex, questionIndex, selectedIndex } = match.params;
-                    return <AddQuestion loading={loading} saveGame={saveGame} game={games[Number(selectedIndex-1)]} gameIndex={selectedIndex}/>;
+                    const { questionIndex, selectedIndex, gameIndex} = match.params;
+                    return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex}/>;
                   }
                 } />
               </Switch>
+              <Grid style={{marginTop:"auto", display:"felx"}}>
+                <button className="rightSideButton">Add to Game</button>
+                <button className="rightSideButton">Clone and Edit</button>
+                <button className="rightSideButton">View Question</button>
+              </Grid>
             </Grid>
           )}
         </Grid>
