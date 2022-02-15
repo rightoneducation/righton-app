@@ -63,7 +63,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, o
           //const image = getGameImage(game); // figure out what this function does or should do
           const image = null;
           return (
-            <Grid container item xs={12} md={6} lg={4}>
+            <Grid container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4}>
               <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(index)}>
                 <CardContent>
                   <Grid container>

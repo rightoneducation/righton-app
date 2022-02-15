@@ -13,9 +13,75 @@ import CCSS from './CCSS';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({}));
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: `${theme.spacing(2)}px`,
+    display: 'flex',
+  },
+  actions: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  question: {
+    marginBottom: theme.spacing(2),
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+      cursor: 'pointer',
+    },
+    height: '152px',
+    padding: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'space-between',
+    overflow: 'hidden',
+    borderRadius: '18px',
+    marginRight: theme.spacing(2),
+  },
+  addQuestion: {
+    marginBottom: theme.spacing(2),
+  },
+  addLink: {
+    padding: 0,
+    verticalAlign: 'top',
+  },
+  noQuestions: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(2),
+  },
+  questionIndex: {
+    minWidth: '32px',
+    fontWeight: 'bold',
+  },
+  questionText: {
+    paddingRight: theme.spacing(2),
+    maxWidth: '500px',
+    whiteSpace: 'pre-wrap',
+  },
+  questionAnswer: {
+    display: 'flex',
+    width: '148px',
+  },
+  image: {
+    width: '100px',
+  },
+  moreButton: {
+    minWidth: '32px',
+    margin: '0 8px',
+  },
+  sidebar: {
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px !important`,
+    borderRight: '1px #0000003b solid',
+    height: 'calc(100vh - 64px)',
+    overflowY: 'scroll',
+  },
+  rightComponent:{
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px !important`,
+    borderRight: '1px #0000003b solid',
+    height: 'calc(100vh - 64px)',
+    overflowY: 'scroll',
+  },
+}));
 
-function AddQuestion(loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex){
+function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex }){
   console.log(gameIndex);
   const classes = useStyles();
   const history = useHistory();
@@ -47,7 +113,7 @@ function AddQuestion(loading, gameIndex, game, saveGame, deleteQuestion, selecte
   const questionCount = game?.questions?.length || 0;
 
     return (
-      <Grid container item xs={8} className={classes.rightComponent} >
+      <Grid container item xs={12} className={classes.rightComponent} >
       <Grid item xs={12}>
         <h3 style={{color:'#0075FF', textAlign:'center'}}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
       </Grid>
@@ -60,7 +126,7 @@ function AddQuestion(loading, gameIndex, game, saveGame, deleteQuestion, selecte
         if (question === null) return null;
         const { text, answer, imageUrl } = question;
         return (
-          <Grid item xs={6}>
+        <Grid item xs={12}>
           <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${selectedIndex}`)}>
             <Box>
               <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />

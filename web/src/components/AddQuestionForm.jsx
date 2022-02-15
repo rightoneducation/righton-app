@@ -9,12 +9,17 @@ import AddQuestion from "./AddQuestion";
 
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    marginTop: 0,
+    width: 'calc(100% + 16px) !important',
+  },
   sidebar: {
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
     height: 'calc(100vh - 64px)',
     overflowY: 'scroll',
-    },
+  },
   rightSideButton: {
     
   },
@@ -29,13 +34,13 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
     return (
         <Grid container className={classes.root}>
           <Route>
-            <Grid item xs={6} className={classes.sidebar}>
+            <Grid item xs={match ? 5 : 12} className={classes.sidebar}>
                 <h3>Browse Games</h3>
                 <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${gameIndex}/questions/${questionIndex}/copy/gameSelected/${index + 1}`)}/>
             </Grid>
           </Route>
           {match && games[Number(match.params.gameIndex) - 1] && (
-            <Grid item xs={6} className={classes.content}>
+            <Grid item xs={7} className={classes.content}>
               <Switch>
                 <Route exact path="/games/:gameIndex/questions/:questionIndex/copy" render={
                   ({}) => {
