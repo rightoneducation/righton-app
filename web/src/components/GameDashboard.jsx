@@ -100,7 +100,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, o
 
                     <Grid container item xs={4}>
                       <Grid item xs={10}>
-                        {image ? <img className={classes.image} src={image} alt="" /> : <img src={RightOnPlaceHolder} width={'100%'}/>}
+                        {image ? <img className={classes.image} src={image} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'}/>}
                       </Grid>
 
                       <Grid item xs={2}>

@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateQuestion as UQ, createQuestion as CQ, createGameQuestion as CGQ } from '../graphql/mutations';
-import { listQuestions } from '../graphql/queries';
+import { listQuestions, getQuestion as GQ } from '../graphql/queries';
 
 export const createQuestion = async(question: any, gameId: any) => {
   const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
@@ -21,3 +21,9 @@ export const listOfQuestions = async () => {
   // console.log(listedQuestions);
   return listedQuestions.data.listQuestions;
 };
+
+export const getQuestion = async (id: any) => {
+  const result = await API.graphql(graphqlOperation(GQ, { id })) as { data: any };
+  // console.log(result);
+  return result.data;
+}
