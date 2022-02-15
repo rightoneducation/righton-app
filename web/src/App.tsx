@@ -116,6 +116,7 @@ function App() {
     let user = null;
     try {
       user = await Auth.currentAuthenticatedUser();
+      // Auth.signOut();
       if (user) {
         setLoggedIn(true);
       } else {
@@ -172,17 +173,25 @@ function App() {
   return (
     <Router>
       <Switch>
-      <Route path="/login">
+      <ThemeProvider theme={theme}>
+        {(isAuthenticated) ? (<Redirect to="/" />) : 
+          <Switch>
+            <Route path="/login">
+          <Nav />
           <LogIn />
         </Route>
         <Route path="/signup">
+          <Nav />
           <SignUp />
         </Route>
         <Route path="/confirmation">
+          <Nav />
           <Confirmation />
         </Route>
         <Route path="/status/:gameID" component={StatusPageContainer} />
-        {userLoading ? <div>Loading</div> : (isAuthenticated ? (<ThemeProvider theme={theme}>
+          </Switch>
+        }
+        {userLoading ? <div>Loading</div> : (isAuthenticated ? (
           <AlertContext.Provider value={alertContext}>
             <Box>
               <Nav />
@@ -192,7 +201,8 @@ function App() {
             </Box>
             <AlertBar />
           </AlertContext.Provider>
-        </ThemeProvider>) : <Redirect to="/login" />) }
+        ) : <Redirect to="/login" />) }
+        </ThemeProvider>
       </ Switch>
     </Router>
   );
