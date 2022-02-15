@@ -5,17 +5,10 @@ import { Auth } from "aws-amplify";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
+import { Grid } from '@material-ui/core';
+import RightOnLogo from "./RightOnLogo.png";
 
-const Field = styled(TextField)({
-  margin: "10px 0",
-});
-
-const DLink = styled(Link)({
-  margin: "15px 0",
-  textAlign: "right",
-});
-
-const Signup: React.FC = () => {
+const Confirmation: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -36,33 +29,70 @@ const Signup: React.FC = () => {
   };
 
   return (
+    <Grid container direction="column"
+    alignItems="center"
+    justifyContent="center">
+      <img src={RightOnLogo} style={{
+        marginTop: "3%",
+        width: "20%",
+        marginBottom: "3%",
+        maxHeight: "2%",
+      }} alt="Right On" />
+      <Grid item xs={6}>
     <form
       style={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        width: "120%"
       }}
       onSubmit={handleSubmit}
     >
-      <h1 style={{ fontSize: "22px", fontWeight: 800 }}>
+      <h1 style={{ fontSize: "22px", color: "grey" }}>
         {" "}
         Verify Your Account
       </h1>
-      <Field label="Email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
-      <Field label="Verification Code" value={code} onChange={(e) => setCode(e.target.value)} />
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        type="submit"
-        disabled={loading}
-      >
-        {loading && <CircularProgress size={20} style={{ marginRight: 20 }} />}
-        Verify your account
-      </Button>
-      <DLink to="/signup">make an account &rarr;</DLink>
+      <Field variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
+      <Field variant="outlined" label="Verification Code" value={code} onChange={(e) => setCode(e.target.value)} />
+      <ButtonGrid item direction="row" justifyContent="space-between" spacing={4}>
+      <SignUpLink to="/signup">Sign Up</SignUpLink>
+      <LogInLink to="#" onClick={(e) => {handleSubmit(e)}}>Verify Account</LogInLink>
+      </ButtonGrid>
     </form>
+    </Grid>
+    </Grid>
   );
 };
 
-export default Signup;
+export default Confirmation;
+
+const Field = styled(TextField)({
+  margin: "10px 0",
+  borderRadius: "20px"
+});
+
+const SignUpLink = styled(Link)({
+  backgroundColor: "#FC1047",
+  textDecoration: "none",
+  color: "white",
+  borderRadius: "34px",
+  padding: "5%",
+  fontWeight: "bold"
+});
+
+const LogInLink = styled(Link)({
+  backgroundColor: "#159EFA",
+  textDecoration: "none",
+  color: "white",
+  borderRadius: "34px",
+  padding: "5%",
+  fontWeight: "bold",
+});
+
+const ButtonGrid = styled(Grid) ({
+  marginTop: "10%",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-around",
+})
+
