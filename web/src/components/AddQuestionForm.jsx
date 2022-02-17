@@ -56,7 +56,6 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
     const classes = useStyles();
     const history = useHistory();
     const selectedIndex = window.location.pathname.split('/')[3];
-    const index = window.location.pathname.split('/')[5];
 
     return (
         <Grid container className={classes.root}>
@@ -82,12 +81,7 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
                   return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex}/>;
                 }
               } />
-            </Switch>
-            <Grid className={classes.parent}>
-              <button className={classes.greenButton} onClick={() => addQuestion(games[Number(selectedIndex)].questions[index])}>Add to Game</button>
-              <button className={classes.blueButton}>Clone and Edit</button>
-              <button className={classes.redButton} >View Question</button>
-            </Grid>
+            </Switch>           
           </Grid>
         </Grid>
     );

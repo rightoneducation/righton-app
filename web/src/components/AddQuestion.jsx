@@ -86,6 +86,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [activeIndex, setActiveIndex] = React.useState(null);
+  const index = window.location.pathname.split('/')[6];
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.questionIndex);
@@ -169,6 +170,11 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
         </Grid> 
         );
       })}
+      <Grid className={classes.parent}>
+              <button className={classes.greenButton} onClick={() => addQuestion(questions[index])}>Add to Game</button>
+              <button className={classes.blueButton}>Clone and Edit</button>
+              <button className={classes.redButton} >View Question</button>
+      </Grid>
     </Grid>
     );
 }
