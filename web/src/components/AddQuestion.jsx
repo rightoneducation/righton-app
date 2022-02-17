@@ -82,7 +82,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex }){
-  console.log(gameIndex);
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -127,7 +126,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
         const { text, answer, imageUrl } = question;
         return (
         <Grid item xs={12}>
-          <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${selectedIndex}`)}>
+          <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
             <Box>
               <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
               <Box className={classes.questionIndex}>

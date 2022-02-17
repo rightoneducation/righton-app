@@ -4,6 +4,7 @@ import { Button, IconButton, Checkbox, Divider, FormControlLabel, Grid, MenuItem
 import { Cancel } from '@material-ui/icons';
 import CCSS from './CCSS';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import { useHistory } from 'react-router-dom';
 
 const newGame = {
     title: '',
@@ -29,6 +30,10 @@ export default function GameMaker() {
     const handlePhaseTwo = (event) => {
         setPhaseTwo(event.target.value);
     };
+
+    const history = useHistory();
+
+    const copyQuestion = () => history.push(`/gamemaker/addquestion`);
 
     const times = [
         {
@@ -193,7 +198,7 @@ export default function GameMaker() {
 
                         <Grid container item xs={12} className={classes.questionAddition}>
                             <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
-                                <Button variant='contained' disableElevation className={classes.blueButton}>
+                                <Button className={classes.blueButton} color="primary" type="button" variant="contained" onClick={copyQuestion}>
                                     Add Question
                                 </Button>
                             </Grid>

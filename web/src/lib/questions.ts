@@ -9,6 +9,11 @@ export const createQuestion = async(question: any, gameId: any) => {
   return result.data.createGameQuestion;
 }
 
+export const addQuestion = async(question: any) => {
+  const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
+  return createdQuestion.data.createQuestion;
+}
+
 export const updateQuestion = async (question: any) => {
   delete question.updatedAt;
   delete question.createdAt;
