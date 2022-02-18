@@ -161,9 +161,6 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
           {/* <CCSS game={game} /> */}
           </>
         )}
-        <Button className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={copyQuestion}>
-          Add question (copy question)
-        </Button>
         <Button className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
           Add question
         </Button>

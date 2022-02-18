@@ -79,6 +79,34 @@ const useStyles = makeStyles(theme => ({
     height: 'calc(100vh - 64px)',
     overflowY: 'scroll',
   },
+  parent: {
+    position: "fixed",
+    alignSelf: "end",
+  },
+  blueButton: {
+    background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%);',
+    borderRadius: '50px',
+    textTransform: 'none',
+    fontSize: '17px',
+    fontWeight: 500,
+    color: 'white',
+  },
+  greenButton: {
+      background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
+      borderRadius: '50px',
+      textTransform: 'none',
+      fontSize: '17px',
+      fontWeight: 500,
+      color: 'white',
+  },
+  redButton: {
+    background: 'linear-gradient(90deg, #E2215D 0%, #FC2164 100%)',
+      borderRadius: '50px',
+      textTransform: 'none',
+      fontSize: '17px',
+      fontWeight: 500,
+      color: 'white',
+  }
 }));
 
 function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex }){
@@ -126,7 +154,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
         if (question === null) return null;
         const { text, answer, imageUrl } = question;
         return (
-        <Grid item xs={12}>
+        <Grid item xs={12} >
           <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
             <Box>
               <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
@@ -148,32 +176,22 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
                   {answer}
                 </Typography>
               </Box>
-              <Box>
-                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
-                  <MoreVertIcon />
-                </Button>
-                <Menu
-                  id={`question-${index}-actions`}
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={activeIndex === String(index)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}/edit`)}>Edit</MenuItem>
-                  {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
-                  {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
-                  <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
-                </Menu>
-              </Box>
+
             </Box>
           </Paper>
         </Grid> 
         );
       })}
-      <Grid className={classes.parent}>
-              <button className={classes.greenButton} onClick={() => addQuestion(questions[index])}>Add to Game</button>
-              <button className={classes.blueButton}>Clone and Edit</button>
-              <button className={classes.redButton} >View Question</button>
+      <Grid container className={classes.parent}>
+        <Grid item xs={2}>
+          <button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => addQuestion(questions[index])}>Add to Game</button>
+        </Grid>
+        <Grid item xs={2}>
+          <button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</button>
+        </Grid>
+        <Grid item xs={2}>
+          <button className={classes.redButton} color="primary" type="button" variant="contained">View Question</button>
+        </Grid> 
       </Grid>
     </Grid>
     );
