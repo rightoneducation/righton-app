@@ -25,7 +25,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} />
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker'}>
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker

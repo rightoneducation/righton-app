@@ -14,6 +14,7 @@ import EditGameDialogue from './EditGameDialogue';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
+import GameMaker from './GameMaker';
 
 export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType }) {
   const classes = useStyles();
@@ -74,6 +75,12 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
         ({ match }) => {
           const { gameIndex } = match.params;
           return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
+        }
+      } />
+      <Route path='/gamemaker/:gameIndex' render={
+        ({ match }) => {
+          const { gameIndex } = match.params;
+          return <GameMaker game={games[Number(gameIndex) - 1]} newSave={saveNewGame} editSave={saveGame}/>;
         }
       } />
     </Grid>

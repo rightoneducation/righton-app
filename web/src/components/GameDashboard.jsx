@@ -115,7 +115,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame })
                           onClose={handleClose}
                           onClick={(event) => { if (!match) event.stopPropagation(); }}
                         >
-                          <MenuItem onClick={(event) => { history.push(`/games/${index + 1}/edit`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                           <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
                           <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
                         </Menu>
