@@ -5,8 +5,8 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 
 export default function SearchBar({ setSearchInput, searchInput }) {
     const classes = useStyles();
-
-    return (
+    
+    return ( 
     <div className = { classes.search } >
         <div className={classes.searchIcon}>
          <SearchIcon />
@@ -17,9 +17,9 @@ export default function SearchBar({ setSearchInput, searchInput }) {
           root: classes.inputRoot,
           input: classes.inputInput,
          }}
-         value={searchInput}
+         value={ searchInput}
          onChange={({ target }) => setSearchInput(target.value)}
-       inputProps={{ 'aria-label': 'search' }}
+        inputProps={{ 'aria-label': 'search' }}
        />
      </div>
     );

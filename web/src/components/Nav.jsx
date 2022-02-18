@@ -32,7 +32,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
               </Typography>
             </NavLink>
             <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} />
-            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
+            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : null} 
           </grid>
         </Toolbar>
       </AppBar>
