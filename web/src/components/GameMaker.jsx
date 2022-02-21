@@ -38,25 +38,9 @@ const newGame = {
     cluster: '',
     standard: '',
     phaseOneTime: 600,
-    phaseTwoTime: 120,
+    phaseTwoTime: 300,
     imageUrl: '',
-    questions: [
-        // {
-        //     text: '',
-        //     answer: '',
-        //     instructions: '',
-        //     wrongAnswers: [{
-        //         wrongAnswer: '',
-        //         reason: '',
-        //     }],
-        //     imageUrl: '',
-        //     grade: '',
-        //     domain: '',
-        //     cluster: '',
-        //     standard: '',
-        // }
-        mockQuestion, mockQuestion, mockQuestion, mockQuestion
-    ],
+    questions: [ mockQuestion, mockQuestion, mockQuestion, mockQuestion ],
 }
 
 // Preset times
@@ -91,34 +75,29 @@ export default function GameMaker({game, newSave, editSave}) {
             return newGame;
         }
     });
-    const [phaseOne, setPhaseOne] = useState(60);
-    const [phaseTwo, setPhaseTwo] = useState(120);
+    const [phaseOne, setPhaseOne] = useState(() => {
+        if (gameDetails.phaseOneTime == null) {
+            return 60;
+        }
+        else {
+            return gameDetails.phaseOneTime;
+        }
+    });
+    const [phaseTwo, setPhaseTwo] = useState(() => {
+        if (gameDetails.phaseTwoTime == null) {
+            return 120;
+        }
+        else {
+            return gameDetails.phaseTwoTime;
+        }
+    });
     const [questions, setQuestions] = useState([...gameDetails.questions]);
 
-    // Save New or Exisiting Game
-    // const onNewSubmit = (event) => {
-    //     newSave(gameDetails);
-    //     event.preventDefault();
-    //     setGameDetails(gameDetails);
-    // };
-    // const onEditSubmit = (event) => {
-    //     editSave(gameDetails);
-    //     event.preventDefault();
-    //     history.push(location.pathname.replace('/edit', ''));
-    // };
-    // 
-    // Callback Function -> What's its use now???
-    // function handleGameData(data) {
-    //     setGameDetails(data)
-    // }
-
-    // Phase Timers -> Currently updates the game with previous time before new click according to console logs (can be different now that games actually have that attribute)
+    // Phase Timers -> Functionality to change the time in the dropdown exists, but it does not actually update the game's phase timer attributes to the newly selected one
     const handlePhaseOne = (event) => {
         setPhaseOne(event.target.value);
-        // setGameDetails({ ...gameDetails, phaseOneTime: phaseOne });
     };
     const handlePhaseTwo = (event) => {
-        // setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
         setPhaseTwo(event.target.value);
     };
 
@@ -363,9 +342,6 @@ const useStyles = makeStyles(theme => ({
                         color: '#384466',
                     },
                     image: {
-                        // width: 'auto',
-                        // height: 'auto',
-                        // maxHeight: '120px'
                         width: '80%',
                     },
                 questionAddition: {

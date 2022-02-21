@@ -24,12 +24,12 @@ export default function Helper({text}) {
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'right',
+                    vertical: 'center',
+                    horizontal: 'right',
                 }}
                 transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
+                    vertical: 'center',
+                    horizontal: 'left',
                 }}
             >
                 <Typography sx={{fontWeight: 400, fontSize: '20px'}}>{text}</Typography>
