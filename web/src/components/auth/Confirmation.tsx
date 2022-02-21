@@ -20,10 +20,9 @@ const Confirmation: React.FC = () => {
 
     try {
       await Auth.confirmSignUp(email, String(code));
-      alert("Success");
       history.push("/signin");
     } catch (error) {
-      alert("Error");
+      console.log(error);
     }
     setLoading(false);
   };

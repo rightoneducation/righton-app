@@ -8,11 +8,6 @@ import { Link, useHistory } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
 
-const DLink = styled(Link)({
-  margin: "15px 0",
-  textAlign: "right",
-});
-
 const Signup: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
 
@@ -40,11 +35,9 @@ const Signup: React.FC = () => {
           name,
         },
       });
-      alert("Success");
       history.push("/confirmation");
     } catch (error) {
       console.error(error);
-      alert("Error");
     }
     setLoading(false);
   };

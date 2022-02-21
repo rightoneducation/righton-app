@@ -177,18 +177,18 @@ function App() {
         {(isAuthenticated) ? (<Redirect to="/" />) : 
           <Switch>
             <Route path="/login">
-          <Nav />
-          <LogIn />
-        </Route>
-        <Route path="/signup">
-          <Nav />
-          <SignUp />
-        </Route>
-        <Route path="/confirmation">
-          <Nav />
-          <Confirmation />
-        </Route>
-        <Route path="/status/:gameID" component={StatusPageContainer} />
+              <Nav />
+              <LogIn />
+            </Route>
+            <Route path="/signup">
+              <Nav />
+              <SignUp />
+            </Route>
+            <Route path="/confirmation">
+              <Nav />
+              <Confirmation />
+            </Route>
+            <Route path="/status/:gameID" component={StatusPageContainer} />
           </Switch>
         }
         {userLoading ? <div>Loading</div> : (isAuthenticated ? (
@@ -201,7 +201,8 @@ function App() {
             </Box>
             <AlertBar />
           </AlertContext.Provider>
-        ) : <Redirect to="/login" />) }
+        ) : <Redirect to="/login" />
+        )}
         </ThemeProvider>
       </ Switch>
     </Router>
