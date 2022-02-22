@@ -17,7 +17,7 @@ export default function SearchBar({ setSearchInput, searchInput }) {
           root: classes.inputRoot,
           input: classes.inputInput,
          }}
-         value={ searchInput}
+         value={ searchInput }
          onChange={({ target }) => setSearchInput(target.value)}
         inputProps={{ 'aria-label': 'search' }}
        />
