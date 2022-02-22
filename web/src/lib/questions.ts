@@ -9,9 +9,10 @@ export const createQuestion = async(question: any, gameId: any) => {
   return result.data.createGameQuestion;
 }
 
-export const addQuestion = async(question: any) => {
-  const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
-  return createdQuestion.data.createQuestion;
+export const cloneQuestion = async(question: any) => {
+  const result = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
+  console.log(result)
+  return result.data.result;
 }
 
 export const updateQuestion = async (question: any) => {

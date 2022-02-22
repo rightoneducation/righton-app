@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
@@ -109,30 +109,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex }){
+function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, cloneQuestion }){
   const classes = useStyles();
   const history = useHistory();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [activeIndex, setActiveIndex] = React.useState(null);
+  const [setAnchorEl] = React.useState(null);
+  const [setActiveIndex] = React.useState(null);
   const index = window.location.pathname.split('/')[6];
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setActiveIndex(event.currentTarget.dataset.questionIndex);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-    setActiveIndex(null);
-  };
-  //not sure if this should stay
-  const changeQuestionIndex = (currentIndex, newIndex) => {
-    const newGame = { ...game };
-    const copy = { ...newGame[`q${newIndex}`] };
-    newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
-    newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push('/games/1'));
-    setAnchorEl(null);
-    setActiveIndex(null);
-  };
+  
+  const handleColoneQuestion = async (question) => {
+    delete question.id;
+    delete question.updatedAt;
+    delete question.createdAt;
+    await cloneQuestion(question);
+  }
 
   const addQuestion = () => history.push(`/games/${selectedIndex}/questions/${questions.length + 1}/edit`);
 
@@ -184,7 +173,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
       })}
       <Grid container className={classes.parent}>
         <Grid item xs={2}>
-          <button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => addQuestion(questions[index])}>Add to Game</button>
+          <button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => handleColoneQuestion(questions[index-1])}>Add to Game</button>
         </Grid>
         <Grid item xs={2}>
           <button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</button>

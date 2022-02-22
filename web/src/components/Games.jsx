@@ -16,7 +16,7 @@ import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import AddQuestionForm from './AddQuestionForm';
 
-export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, addQuestion }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -85,7 +85,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
       } />
       <Route path="/gamemaker/addquestion" render={
         ({ match }) => {
-          return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} addQuestion={addQuestion} saveQuestion={saveQuestion} {...match.params}/>;
+          return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} cloneQuestion={cloneQuestion} saveQuestion={saveQuestion} {...match.params}/>;
         }
       } />
     </Grid>
