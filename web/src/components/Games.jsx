@@ -15,8 +15,9 @@ import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import GameMaker from './GameMaker';
+import AddQuestionForm from './AddQuestionForm';
 
-export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType }) {
+export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, addQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -42,7 +43,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
           </Box>
           <Grid container>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame}/>
+            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${index + 1}`)}/>
           </Grid>
           
         </Grid>
@@ -77,10 +78,16 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
         }
       } />
-      <Route path='/gamemaker/:gameIndex' render={
+      <Route exact path='/gamemaker/:gamemakerIndex' render={
         ({ match }) => {
-          const { gameIndex } = match.params;
-          return <GameMaker game={games[Number(gameIndex) - 1]} newSave={saveNewGame} editSave={saveGame}/>;
+          const { gamemakerIndex } = match.params;
+          return <GameMaker game={games[Number(gamemakerIndex) - 1]} newSave={saveNewGame} editSave={saveGame} gamemakerIndex={gamemakerIndex}/>
+        }
+      } />;
+      <Route path="/gamemaker/:gamemakerIndex/addquestion" render={
+        ({ match }) => {
+          const { gamemakerIndex } = match.params;
+          return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} addQuestion={addQuestion} saveQuestion={saveQuestion} gamemakerIndex={gamemakerIndex}/>;
         }
       } />
     </Grid>

@@ -9,6 +9,11 @@ export const createQuestion = async(question: any, gameId: any) => {
   return result.data.createGameQuestion;
 }
 
+export const addQuestion = async(question: any) => {
+  const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
+  return createdQuestion.data.createQuestion;
+}
+
 export const updateQuestion = async (question: any) => {
   delete question.updatedAt;
   delete question.createdAt;
@@ -29,7 +34,7 @@ export const getQuestion = async (id: any) => {
 }
 
 // Used by Zach for Save Game button
-export const addQuestion = async(questionId: any, gameId: any) => {
+export const gameQuestion = async(questionId: any, gameId: any) => {
   const result = await API.graphql(graphqlOperation(CGQ, {gameQuestion: { gameId, questionId }})) as { data: any };
   return result.data.createGameQuestion;
 }

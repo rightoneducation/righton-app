@@ -6,6 +6,7 @@ import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
+
 // Mock question info
 const mockQuestion = {
     id : '8',
@@ -63,7 +64,7 @@ const times = [
     },
 ]
 
-export default function GameMaker({game, newSave, editSave}) {
+export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
     const classes = useStyles();
     const history = useHistory();
     const location = useLocation();
@@ -268,7 +269,7 @@ export default function GameMaker({game, newSave, editSave}) {
 
                             <Grid container item xs={12} className={classes.questionAddition}>
                                 <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
-                                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`gamemaker/addquestion`)}>
+                                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion`)}>
                                         Add Question
                                     </Button>
                                 </Grid>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
-import { updateQuestion, createQuestion } from './lib/questions';
+import { updateQuestion, createQuestion, addQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
 import { Game } from './API';
@@ -154,7 +154,7 @@ function App() {
             <Box>
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType}/>
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
               </Route>
             </Box>
             <AlertBar />

@@ -7,18 +7,17 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-// import Avatar from '@material-ui/core/Avatar';
-// import ImageIcon from '@material-ui/icons/Image';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 
-export default function GameDashboard({ loading, games, deleteGame, cloneGame }) {
+export default function GameDashboard({ loading, games, deleteGame, cloneGame, gamemakerIndex, onClickGame }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
+  const addquestion = useRouteMatch('/gamemaker/:gamemakerIndex/addquestion');
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const handleClick = (event) => {
@@ -63,8 +62,8 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame })
           //const image = getGameImage(game); // figure out what this function does or should do
           const image = null;
           return (
-            <Grid container item xs={12} md={6} lg={4}>
-              <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => history.push(`/games/${index + 1}`)}>
+            <Grid container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
+              <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(index, gamemakerIndex)}>
                 <CardContent>
                   <Grid container>
                     <Grid container item xs={8}>
