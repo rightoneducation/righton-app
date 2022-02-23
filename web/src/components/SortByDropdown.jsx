@@ -5,88 +5,113 @@ import { Collapse, MenuItem, Select } from '@material-ui/core';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 
 export default function SortByDropdown({ handleSortChange }) {
-    const classes = useStyles();
-    const [sortByCheck, setSortByCheck] = React.useState(false);
-    const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
+  const classes = useStyles();
+  const [sortByCheck, setSortByCheck] = React.useState(false);
+  const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
 
-    return(
-        <div className={classes.sortByWrapper}>
-            <div className={classes.sortByHeader} onClick={() => {setSortByCheck((prev) => !prev)}}>
-              <p className={classes.sortByTitle}>Sort by</p>
-              <ArrowIcon className={classes[arrowClass]} />
-            </div>
-            <Collapse in={sortByCheck}>
-              <div className={classes.sortByBody}>
-                <table width="100%">
-                  <tr>
-                    <td>
-                      <p className={classes.sortByName}>Last Updated</p>
-                    </td>
-                    <td style={{textAlign: 'right'}}>
-                      <div className={classes.sortByOptions}>
-                        <Select
-                          className={classes.sortByDropDowns}
-                          name="Last Updated"
-                          disableUnderline
-                          onChange={handleSortChange}
-                          defaultValue={SORT_TYPES.UPDATED}
-                          MenuProps={{classes: {paper: classes.MenuProps}}}
-                        >
-                          <MenuItem value={SORT_TYPES.UPDATED}>Newest</MenuItem>
-                          <MenuItem value={SORT_TYPES.OLDEST}>Oldest</MenuItem>
-                        </Select>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p className={classes.sortByName}>Question Count</p>
-                    </td>
-                    <td style={{textAlign: 'right'}}>
-                      <div className={classes.sortByOptions}>
-                        <Select
-                          className={classes.sortByDropDowns}
-                          name="Question Count"
-                          disableUnderline
-                          displayEmpty
-                          onChange={handleSortChange}
-                          defaultValue=""
-                          MenuProps={{classes: {paper: classes.MenuProps}}}
-                        >
-                          <MenuItem value="">---</MenuItem>
-                          <MenuItem value={SORT_TYPES.QUESTIONASCENDING}>Ascending</MenuItem>
-                          <MenuItem value={SORT_TYPES.QUESTIONDESCENDING}>Descending</MenuItem>
-                        </Select>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p className={classes.sortByName}>Grade Level</p>
-                    </td>
-                    <td style={{textAlign: 'right'}}>
-                      <div className={classes.sortByOptions}>
-                        <Select
-                          className={classes.sortByDropDowns}
-                          name="Grade Level"
-                          disableUnderline
-                          displayEmpty
-                          onChange={handleSortChange}
-                          defaultValue=""
-                          MenuProps={{classes: {paper: classes.MenuProps}}}
-                        >
-                          <MenuItem value="">---</MenuItem>
-                          <MenuItem value={SORT_TYPES.GRADEASCENDING}>Ascending</MenuItem>
-                          <MenuItem value={SORT_TYPES.GRADEDESCENDING}>Descending</MenuItem>
-                        </Select>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </Collapse>
+  const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
+  const [qcValue, setQCValue] = React.useState("");
+  const [gradeValue, setGradeValue] = React.useState("");
+
+  const handleUpdatedValue = (event) => {
+    setUpdatedValue(event.target.value);
+    setQCValue("");
+    setGradeValue("");
+    handleSortChange(event);
+  };
+  const handleQCValue = (event) => {
+    setQCValue(event.target.value);
+    setUpdatedValue("");
+    setGradeValue("");
+    handleSortChange(event);
+  };
+  const handleGradeValue = (event) => {
+    setGradeValue(event.target.value);
+    setUpdatedValue("");
+    setQCValue("");
+    handleSortChange(event);
+  };
+
+  return(
+    <div className={classes.sortByWrapper}>
+      <div className={classes.sortByHeader} onClick={() => {setSortByCheck((prev) => !prev)}}>
+        <p className={classes.sortByTitle}>Sort by</p>
+        <ArrowIcon className={classes[arrowClass]} />
+      </div>
+      <Collapse in={sortByCheck}>
+        <div className={classes.sortByBody}>
+          <table width="100%">
+            <tr>
+              <td>
+                <p className={classes.sortByName}>Last Updated</p>
+              </td>
+              <td style={{textAlign: 'right'}}>
+                <div className={classes.sortByOptions}>
+                  <Select
+                    className={classes.sortByDropDowns}
+                    name="Last Updated"
+                    disableUnderline
+                    displayEmpty
+                    onChange={handleUpdatedValue}
+                    value={updatedValue}
+                    MenuProps={{classes: {paper: classes.MenuProps}}}
+                  >
+                    <MenuItem value="">---</MenuItem>
+                    <MenuItem value={SORT_TYPES.UPDATED}>Newest</MenuItem>
+                    <MenuItem value={SORT_TYPES.OLDEST}>Oldest</MenuItem>
+                  </Select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p className={classes.sortByName}>Question Count</p>
+              </td>
+              <td style={{textAlign: 'right'}}>
+                <div className={classes.sortByOptions}>
+                  <Select
+                    className={classes.sortByDropDowns}
+                    name="Question Count"
+                    disableUnderline
+                    displayEmpty
+                    onChange={handleQCValue}
+                    value={qcValue}
+                    MenuProps={{classes: {paper: classes.MenuProps}}}
+                  >
+                    <MenuItem value="">---</MenuItem>
+                    <MenuItem value={SORT_TYPES.QUESTIONASCENDING}>Ascending</MenuItem>
+                    <MenuItem value={SORT_TYPES.QUESTIONDESCENDING}>Descending</MenuItem>
+                  </Select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p className={classes.sortByName}>Grade Level</p>
+              </td>
+              <td style={{textAlign: 'right'}}>
+                <div className={classes.sortByOptions}>
+                  <Select
+                    className={classes.sortByDropDowns}
+                    name="Grade Level"
+                    disableUnderline
+                    displayEmpty
+                    onChange={handleGradeValue}
+                    value={gradeValue}
+                    MenuProps={{classes: {paper: classes.MenuProps}}}
+                  >
+                    <MenuItem value="">---</MenuItem>
+                    <MenuItem value={SORT_TYPES.GRADEASCENDING}>Ascending</MenuItem>
+                    <MenuItem value={SORT_TYPES.GRADEDESCENDING}>Descending</MenuItem>
+                  </Select>
+                </div>
+              </td>
+            </tr>
+          </table>
         </div>
-    );
+      </Collapse>
+    </div>
+  );
 };
 
 const useStyles = makeStyles(theme => ({
@@ -105,7 +130,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: 'white',
       borderRadius: '18px',
       boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      zIndex: 3,
+      zIndex: 2,
         '&:hover': {
           cursor: 'pointer' 
         },
@@ -142,7 +167,7 @@ const useStyles = makeStyles(theme => ({
       background: 'white',
       borderRadius: '18px',
       boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      zIndex: 2,
+      zIndex: 1,
     },
     sortByName: {
       fontSize: '16px',
