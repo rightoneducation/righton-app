@@ -116,7 +116,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
   const [setActiveIndex] = React.useState(null);
   const index = window.location.pathname.split('/')[7];
   
-  const handleColoneQuestion = async (question) => {
+  const handleCloneQuestion = async (question) => {
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
@@ -175,13 +175,13 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
       })}
       <Grid container className={classes.parent}>
         <Grid item xs={2}>
-          <button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => handleColoneQuestion(questions[index-1])}>Add to Game</button>
+          <Button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => handleCloneQuestion(questions[index-1])}>Add to Game</Button>
         </Grid>
         <Grid item xs={2}>
-          <button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</button>
+          <Button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</Button>
         </Grid>
         <Grid item xs={2}>
-          <button className={classes.redButton} color="primary" type="button" variant="contained">View Question</button>
+          <Button className={classes.redButton} color="primary" type="button" variant="contained">View Question</Button>
         </Grid> 
       </Grid>
     </Grid>

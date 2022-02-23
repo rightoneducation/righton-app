@@ -301,8 +301,6 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex, clon
 
                 <Grid container item xs={2}></Grid>
             </Grid>
-
-            <Grid container xs={2}></Grid>
     </form>
 )
 if (history.location.pathname = "/gamemaker/:gamemakerIndex/addquestion"){
