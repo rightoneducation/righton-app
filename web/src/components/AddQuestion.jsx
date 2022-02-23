@@ -109,12 +109,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex }){
+function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, gamemakerIndex }){
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [activeIndex, setActiveIndex] = React.useState(null);
-  const index = window.location.pathname.split('/')[6];
+  const index = window.location.pathname.split('/')[7];
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.questionIndex);
@@ -155,7 +155,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
         const { text, answer, imageUrl } = question;
         return (
         <Grid item xs={12} >
-          <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
+          <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
             <Box>
               <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
               <Box className={classes.questionIndex}>
@@ -184,13 +184,13 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
       })}
       <Grid container className={classes.parent}>
         <Grid item xs={2}>
-          <button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => addQuestion(questions[index])}>Add to Game</button>
+          <Button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => addQuestion(questions[index])}>Add to Game</Button>
         </Grid>
         <Grid item xs={2}>
-          <button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</button>
+          <Button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</Button>
         </Grid>
         <Grid item xs={2}>
-          <button className={classes.redButton} color="primary" type="button" variant="contained">View Question</button>
+          <Button className={classes.redButton} color="primary" type="button" variant="contained">View Question</Button>
         </Grid> 
       </Grid>
     </Grid>

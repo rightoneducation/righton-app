@@ -12,6 +12,9 @@ export const deleteGame = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -24,6 +27,7 @@ export const deleteGame = /* GraphQL */ `
         domain
         grade
         standard
+        wrongAnswers
       }
       updatedAt
       createdAt
@@ -40,6 +44,9 @@ export const createGame = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -52,6 +59,7 @@ export const createGame = /* GraphQL */ `
         domain
         grade
         standard
+        wrongAnswers
       }
       updatedAt
       createdAt
@@ -68,6 +76,9 @@ export const updateGame = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -80,6 +91,7 @@ export const updateGame = /* GraphQL */ `
         domain
         grade
         standard
+        wrongAnswers
       }
       updatedAt
       createdAt
@@ -100,6 +112,7 @@ export const deleteQuestion = /* GraphQL */ `
       domain
       grade
       standard
+      wrongAnswers
     }
   }
 `;
@@ -117,6 +130,7 @@ export const createQuestion = /* GraphQL */ `
       domain
       grade
       standard
+      wrongAnswers
     }
   }
 `;
@@ -134,6 +148,7 @@ export const updateQuestion = /* GraphQL */ `
       domain
       grade
       standard
+      wrongAnswers
     }
   }
 `;
@@ -147,6 +162,9 @@ export const createGameQuestion = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -159,6 +177,7 @@ export const createGameQuestion = /* GraphQL */ `
         domain
         grade
         standard
+        wrongAnswers
       }
       updatedAt
       createdAt
