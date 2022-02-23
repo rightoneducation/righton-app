@@ -14,6 +14,7 @@ import EditGameDialogue from './EditGameDialogue';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
+import GameMaker from './GameMaker';
 import AddQuestionForm from './AddQuestionForm';
 
 export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion }) {
@@ -83,7 +84,18 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
         }
       } />
-      
+      <Route exact path='/gamemaker/:gamemakerIndex' render={
+        ({ match }) => {
+          const { gamemakerIndex } = match.params;
+          return <GameMaker game={games[Number(gamemakerIndex) - 1]} newSave={saveNewGame} editSave={saveGame} gamemakerIndex={gamemakerIndex} games={games} cloneQuestion={cloneQuestion}/>
+        }
+      } />;
+      <Route path="/gamemaker/:gamemakerIndex/addquestion" render={
+        ({ match }) => {
+          const { gamemakerIndex } = match.params;
+          return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} cloneQuestion={cloneQuestion} saveQuestion={saveQuestion} gamemakerIndex={gamemakerIndex}/>;
+        }
+      } />
     </Grid>
   );
 }
@@ -106,14 +118,6 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     marginBottom: '16px',
-  },
-  sortSelect: {
-    display: 'inline-block',
-    padding: '6px',
-    marginLeft: 15,
-    backgroundColor: 'white',
-    borderRadius: '18px',
-    boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-    textAlign: 'center'
+    display: 'inline-flex',
   },
 }));

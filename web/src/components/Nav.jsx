@@ -24,14 +24,14 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
                 Explore
               </Typography>
             </NavLink>
-            <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} />
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker'}>
+            {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} /> */}
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
               </Typography>
             </NavLink>
-            <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} />
+            {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
             {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
           </grid>
         </Toolbar>

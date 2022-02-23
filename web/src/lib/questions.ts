@@ -33,3 +33,9 @@ export const getQuestion = async (id: any) => {
   // console.log(result);
   return result.data;
 }
+
+// Used by Zach for Save Game button
+export const gameQuestion = async(questionId: any, gameId: any) => {
+  const result = await API.graphql(graphqlOperation(CGQ, {gameQuestion: { gameId, questionId }})) as { data: any };
+  return result.data.createGameQuestion;
+}

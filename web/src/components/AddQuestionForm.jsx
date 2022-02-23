@@ -52,20 +52,20 @@ const useStyles = makeStyles(theme => ({
   }
   }));
 
-function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, cloneQuestion, submit }) {
+function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, cloneQuestion, submit, gamemakerIndex }) {
     const classes = useStyles();
     const history = useHistory();
-    const selectedIndex = window.location.pathname.split('/')[3];
+    const selectedIndex = window.location.pathname.split('/')[4];
 
     return (
         <Grid container className={classes.root}>
           <Grid item xs={5} className={classes.sidebar}>
             <h3>Browse Games</h3>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/gamemaker/addquestion/gameSelected/${index + 1}`)}/>
+            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} gamemakerIndex={gamemakerIndex} onClickGame={(index, gamemakerIndex) => history.push(`/gamemaker/${gamemakerIndex}/addquestion/gameSelected/${index + 1}`)}/>
           </Grid>
           <Grid item xs={7} className={classes.content}>
             <Switch>
-              <Route exact path="/gamemaker/addquestion" render={
+              <Route exact path="/gamemaker/:gamemakerIndex/addquestion" render={
                 ({}) => {
                   return (
                     <Grid style={{height: 'calc(100vh - 64px)'}}>
@@ -75,10 +75,10 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
                   );
                 }
               }/>
-              <Route path="/gamemaker/addquestion/gameSelected/:selectedIndex" render={
+              <Route path="/gamemaker/:gamemakerIndex/addquestion/gameSelected/:selectedIndex" render={
                 ({ match }) => {
                   const { questionIndex, selectedIndex, gameIndex} = match.params;
-                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} cloneQuestion={cloneQuestion} submit={submit}/>;
+                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} gamemakerIndex={gamemakerIndex} cloneQuestion={cloneQuestion} submit={submit}/>;
                 }
               } />
             </Switch>           

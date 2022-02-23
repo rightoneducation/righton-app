@@ -12,6 +12,9 @@ export const getGame = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text
@@ -41,6 +44,9 @@ export const listGames = /* GraphQL */ `
       domain
       grade
       standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questions {
         id
         text

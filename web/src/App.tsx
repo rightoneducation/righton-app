@@ -9,7 +9,6 @@ import AlertContext, { Alert } from './context/AlertContext';
 import { Game } from './API';
 import AlertBar from './components/AlertBar';
 import StatusPageContainer from './components/StatusPageContainer';
-import GameMaker from './components/GameMaker';
 import Nav from './components/Nav';
 import Games from './components/Games';
 
@@ -40,6 +39,7 @@ function App() {
   const [games, setGames] = useState<(Game | null)[]>([]);
   const [alert, setAlert] = useState<Alert | null>(null);
 
+  // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
     const game = await createGame(newGame);
@@ -56,6 +56,7 @@ function App() {
     setGames(games);
   }
 
+  // Update saveGame let statement to include other attributes of game that have now been created and possibly add the createGameQuestion here (if functionaloity is not in updateGame) with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveGame = async (game: Game) => {
     let updatedGame = {
       id: game.id,
@@ -121,6 +122,9 @@ function App() {
       setAlert({ message: 'Question Updated', type: 'success' });
     }
     else {
+      // needs to be update to new createQuestion function
+      // Jared - will use handleSaveQuestion for Add to Game button
+      // Ray - will use new createQuestion function for Add to Game button (pass down as new prop seperate from handleSaveQuestion?)
       result = await createQuestion(question, gameId);
       setAlert({ message: 'Question Created', type: 'success' });
     }
@@ -151,9 +155,6 @@ function App() {
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
-              </Route>
-              <Route path='/gamemaker'>
-                <GameMaker cloneQuestion={cloneQuestion} games={filteredGames}/>
               </Route>
             </Box>
             <AlertBar />

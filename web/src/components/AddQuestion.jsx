@@ -109,12 +109,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, cloneQuestion, submit }){
+function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, cloneQuestion, submit, gamemakerIndex }){
   const classes = useStyles();
   const history = useHistory();
   const [setAnchorEl] = React.useState(null);
   const [setActiveIndex] = React.useState(null);
-  const index = window.location.pathname.split('/')[6];
+  const index = window.location.pathname.split('/')[7];
   
   const handleColoneQuestion = async (question) => {
     delete question.id;
@@ -146,7 +146,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
         const { text, answer, imageUrl } = question;
         return (
         <Grid item xs={12} >
-          <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
+          <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
             <Box>
               <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
               <Box className={classes.questionIndex}>
