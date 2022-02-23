@@ -152,8 +152,8 @@ function App() {
               <Route path="/">
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
               </Route>
-              <Route exact path='/gamemaker'>
-                <GameMaker/>
+              <Route path='/gamemaker'>
+                <GameMaker cloneQuestion={cloneQuestion} games={filteredGames}/>
               </Route>
             </Box>
             <AlertBar />

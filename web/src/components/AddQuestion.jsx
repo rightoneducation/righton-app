@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, cloneQuestion }){
+function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, cloneQuestion, submit }){
   const classes = useStyles();
   const history = useHistory();
   const [setAnchorEl] = React.useState(null);
@@ -120,7 +120,9 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
-    await cloneQuestion(question);
+    const newQuestion = await cloneQuestion(question);
+    submit(newQuestion);
+    history.push('/gamemaker');
   }
 
   const addQuestion = () => history.push(`/games/${selectedIndex}/questions/${questions.length + 1}/edit`);

@@ -83,11 +83,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
         }
       } />
-      <Route path="/gamemaker/addquestion" render={
-        ({ match }) => {
-          return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} cloneQuestion={cloneQuestion} saveQuestion={saveQuestion} {...match.params}/>;
-        }
-      } />
+      
     </Grid>
   );
 }

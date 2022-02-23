@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Checkbox, Divider, FormControlLabel, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import CCSS from './CCSS';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import { useHistory } from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
+import AddQuestionForm from './AddQuestionForm';
 
 const newGame = {
     title: '',
@@ -18,11 +19,34 @@ const newGame = {
     imageUrl: '',
 }
 
-export default function GameMaker() {
+const question = {
+    id : '8',
+    text : "How many total squares (of any size) are there on a checkerboard?",
+    answer: '204 squares',
+    imageURL: 'https://media.istockphoto.com/photos/wooden-chess-board-picture-id476469645?s=612x612',
+    grade: '7',
+    domain: 'G',
+    cluster: 'B',
+    standard: '6',
+    instructions: 'To get this answer, you not only need to count all of the 1x1 squares, but you need to consider the 2x2, 3x3, 4x4, etc. all the way up to the full 8x8 square. Counting every one of those squares together will return a sum of 204 total squares.',
+    choices : [
+        'Wrong Answer 1',
+        'Wrong Answer 2',
+        'Wrong Answer 3',
+    ],
+    explanations : [
+        'wrong choice explanation 1',
+        'wrong choice explanation 2',
+        'wrong choice explanation 3',
+    ]
+}
+
+export default function GameMaker({games, cloneQuestion}) {
     const classes = useStyles();
     const [gameDetails, setGameDetails] = React.useState(newGame)
     const [phaseOne, setPhaseOne] = React.useState(60);
     const [phaseTwo, setPhaseTwo] = React.useState(120);
+    const [questions, setQuestions] = useState([question])
 
     const handlePhaseOne = (event) => {
         setPhaseOne(event.target.value);
@@ -30,6 +54,10 @@ export default function GameMaker() {
     const handlePhaseTwo = (event) => {
         setPhaseTwo(event.target.value);
     };
+
+    const handleSubmitQuestion = (newQuestion) => {
+        setQuestions([ ...questions, newQuestion ])
+    }
 
     const history = useHistory();
 
@@ -54,30 +82,10 @@ export default function GameMaker() {
         },
     ];
 
-    const question = {
-        id : '8',
-        text : "How many total squares (of any size) are there on a checkerboard?",
-        answer: '204 squares',
-        imageURL: 'https://media.istockphoto.com/photos/wooden-chess-board-picture-id476469645?s=612x612',
-        grade: '7',
-        domain: 'G',
-        cluster: 'B',
-        standard: '6',
-        instructions: 'To get this answer, you not only need to count all of the 1x1 squares, but you need to consider the 2x2, 3x3, 4x4, etc. all the way up to the full 8x8 square. Counting every one of those squares together will return a sum of 204 total squares.',
-        choices : [
-            'Wrong Answer 1',
-            'Wrong Answer 2',
-            'Wrong Answer 3',
-        ],
-        explanations : [
-            'wrong choice explanation 1',
-            'wrong choice explanation 2',
-            'wrong choice explanation 3',
-        ]
-    } 
+     
     const CCSSSuggestion = '7.Misc.'
 
-    return(
+    let content = (
         <Grid container>
             <Grid container xs={2}></Grid>
 
@@ -233,6 +241,20 @@ export default function GameMaker() {
 
             <Grid container xs={2}></Grid>
         </Grid>
+    )
+if (history.location.pathname = "/gamemaker/addquestion"){
+    content = (
+        <Route path="/gamemaker/addquestion" render={
+            ({ match }) => {
+            return <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSubmitQuestion} {...match.params}/>;
+            }
+        } />
+    )
+}
+    
+
+    return(
+        content
     );
 }
 

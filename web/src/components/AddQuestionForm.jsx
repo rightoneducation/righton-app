@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   }
   }));
 
-function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, cloneQuestion }) {
+function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, cloneQuestion, submit }) {
     const classes = useStyles();
     const history = useHistory();
     const selectedIndex = window.location.pathname.split('/')[3];
@@ -78,7 +78,7 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
               <Route path="/gamemaker/addquestion/gameSelected/:selectedIndex" render={
                 ({ match }) => {
                   const { questionIndex, selectedIndex, gameIndex} = match.params;
-                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} cloneQuestion={cloneQuestion}/>;
+                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} cloneQuestion={cloneQuestion} submit={submit}/>;
                 }
               } />
             </Switch>           
