@@ -110,14 +110,6 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     marginBottom: '16px',
-  },
-  sortSelect: {
-    display: 'inline-block',
-    padding: '6px',
-    marginLeft: 15,
-    backgroundColor: 'white',
-    borderRadius: '18px',
-    boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-    textAlign: 'center'
+    display: 'inline-flex',
   },
 }));
