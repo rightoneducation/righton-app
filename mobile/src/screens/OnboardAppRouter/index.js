@@ -13,44 +13,44 @@ import RoundButton from '../../components/RoundButton'
 import PurpleBackground from '../../components/PurpleBackground'
 
 export default function OnboardAppRouter({ navigation }) {
-  function handleTeacher() {
+  function handleJoinGame() {
     // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
-    setTimeout(() => navigation.navigate('TeacherApp'), 250)
+    setTimeout(() => navigation.navigate('StudentFirst'), 250)
   }
 
-  function handleStudent() {
+  function handleSignIn() {
     // screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
-    setTimeout(() => navigation.navigate('StudentFirst'), 250)
+    setTimeout(() => navigation.navigate('SignIn'), 250)
+  }
+
+  function handleSignUp() {
+    setTimeout(() => navigation.navigate('SignUp'), 250)
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <PurpleBackground>
-        <ImageBackground style={styles.heroImage} source={require('../../assets/images/mathBottleHero.png')}>
-          <Image
-            style={styles.rightOnHeroImage}
-            resizeMode="contain"
-            resizeMethod="resize"
-            source={require('../../assets/images/rightOnLogo.png')}
-          />
-          <Text style={styles.headerText}>
-            Unlocking every student’s potential in math!
-          </Text>
-        </ImageBackground>
+      <PurpleBackground style={styles.background}>
+        <Image
+          style={styles.rightOnHeroImage}
+          resizeMode="contain"
+          resizeMethod="resize"
+          source={require('../../assets/images/rightOnLogo.png')}
+        />
         <View style={styles.buttonsContainer}>
           <RoundButton
-            title="I'm a Student"
-            style={{ backgroundColor: colors.buttonSecondary }}
-            onPress={() => handleStudent()}
+            title="Join Game"
+            style={{ backgroundColor: colors.buttonPrimary }}
+            onPress={() => handleJoinGame()}
           />
           <RoundButton
-            title="I'm a Teacher"
-            style={{ backgroundColor: colors.buttonPrimary }}
-            onPress={() => handleTeacher()}
+            title="Sign In"
+            style={{ backgroundColor: colors.buttonSecondary }}
+            onPress={() => handleSignIn()}
           />
         </View>
         <Text style={styles.footerText}>
-          Legal notice legal notice legal notice legal notice legal notice legal notice
+          Making an account lets you join a game quicker! Don’t have an account? 
+          <Text onPress={() => handleSignUp()} style={{ color: colors.lightblue }}>Tap Here to make one!</Text>
         </Text>
       </PurpleBackground>
     </SafeAreaView>
@@ -63,29 +63,24 @@ const styles = ScaledSheet.create({
     backgroundColor: colors.backgroundPurple
   },
   buttonsContainer: {
-    height: 145,
+    height: 180,
     marginLeft: 33,
     marginRight: 33,
     justifyContent: 'space-between'
   },
   footerText: {
-    height: 30,
-    marginTop: 10,
-    marginLeft: 82,
-    marginRight: 74,
-    marginBottom: 12,
-    fontSize: fonts.tiny,
-    lineHeight: 15,
+    fontSize: fonts.medium,
+    fontWeight: 'bold',
     alignItems: 'center',
     textAlign: 'center',
-    letterSpacing: -0.04,
-    fontFamily: fontFamilies.poppinsRegular,
-    color: 'rgba(255, 255, 255, 0.7)'
+    marginHorizontal: 50,
+    marginTop: -90,
+    fontFamily: fontFamilies.montserratRegular,
+    color: 'rgba(255, 255, 255, 0.9)'
   },
-  heroImage: {
+  background: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center'
+    justifyContent: "space-around"
   },
   rightOnHeroImage: {
     marginTop: 22,

@@ -14,6 +14,9 @@ import GameAnswerPopular from '../Student/screens/Game/GameAnswer/Popular'
 import Leadership from '../Student/screens/Game/Leadership'
 import TeacherApp from '../Teacher';
 import GameDetailsScreen from '../Teacher/screens/Explore/GameDetails'
+import SignIn from '../Auth/screens/SignIn'
+import SignUp from '../Auth/screens/SignUp'
+import PersonalDetails from '../Auth/screens/PersonalDetails'
 
 const Stack = createStackNavigator();
 
@@ -26,6 +29,9 @@ const AppContainer = (props) => {
       >
         <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="PersonalDetails" component={PersonalDetails} />
         <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />
         <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
         <Stack.Screen name="StudentGameIntro" component={StudentGameIntro} />
