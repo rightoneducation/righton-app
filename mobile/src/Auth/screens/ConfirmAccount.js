@@ -6,15 +6,13 @@ import { ScaledSheet } from 'react-native-size-matters'
 import { colors, fonts, fontFamilies } from '../../utils/theme'
 import RoundButton from '../../components/RoundButton'
 
-const SignIn = ({ navigation }) => {
+const ConfirmAccount = ({ navigation }) => {
   const [error, setError] = React.useState('')
   const [username, setUsername] = React.useState('')
   const [code, setCode] = React.useState('')
 
   const handleSignIn = async () => {
     try {
-      console.log(username)
-      console.log(code)
       await Auth.confirmSignUp(username, String(code))
       navigation.navigate('SignIn')
     } catch (e) {
@@ -45,7 +43,7 @@ const SignIn = ({ navigation }) => {
   )
 }
 
-export default SignIn;
+export default ConfirmAccount;
 
 const styles = ScaledSheet.create({
   container: {

@@ -14,7 +14,7 @@ const SignIn = ({ navigation }) => {
   const handleSignIn = async () => {
     try {
       await Auth.signIn(username, password)
-      navigation.navigate('StudentFirst')
+      navigation.navigate('StudentFirst', { user: true })
     } catch (e) {
       console.log(e)
       setError("Invalid username or password")
