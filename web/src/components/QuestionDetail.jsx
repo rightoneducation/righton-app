@@ -11,7 +11,15 @@ export default function QuestionDetails({gameIndex, gameTitle, questionIndex, qu
     const history = useHistory();
 
     const explanation = JSON.parse(JSON.parse(question.instructions));
-    const wrongAnswerSet = JSON.parse(JSON.parse(question.wrongAnswers));
+    let wrongAnswerSet = JSON.parse(JSON.parse(question.wrongAnswers));
+
+    if(wrongAnswerSet == null) {
+        wrongAnswerSet = [
+            {choice: "Wrong Answer Choice 1", explanation: "N/A"},
+            {choice: "Wrong Answer Choice 2", explanation: "N/A"},
+            {choice: "Wrong Answer Choice 3", explanation: "N/A"},
+        ];
+    };
 
     return(
         <Grid container>
@@ -52,9 +60,9 @@ export default function QuestionDetails({gameIndex, gameTitle, questionIndex, qu
                     <Divider className={classes.divider}/>
                 </Grid>
 
-                {wrongAnswerSet.map((choice) => {
+                {wrongAnswerSet.map((wrongAnswer) => {
                     return(
-                        <AnswerDropdown answer={choice.wrongAnswer} explanation={choice.reason} correct={false}/>
+                        <AnswerDropdown answer={wrongAnswer.choice} explanation={wrongAnswer.explanation} correct={false}/>
                     );
                 })}
             </Grid>

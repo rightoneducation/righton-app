@@ -4,9 +4,9 @@ import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import exploreIcon from './../images/Explore.svg';
 import quizMakerIcon from './../images/QuizMaker.svg';
-import ComingSoon from './../images/ComingSoon.svg';
 import SearchBar from './SearchBar.jsx';
 
 export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
@@ -17,7 +17,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
-          <grid style={{display: "flex", margin: 'auto'}}>
+          <Grid style={{display: "flex", margin: 'auto'}}>
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
@@ -33,7 +33,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
             </NavLink>
             {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
             {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
-          </grid>
+          </Grid>
         </Toolbar>
       </AppBar>
     </div>

@@ -123,7 +123,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
     text: '',
     imageUrl: '',
     answer: '',
-    wrongAnswers: [{choice: "Choice0", explanation: "Explanation0"}, {choice: "Choice1", explanation: "Explanation1"}, {choice: "Choice2", explanation: "Explanation2"}],
+    wrongAnswers: [{choice: "", explanation: ""}, {choice: "", explanation: ""}, {choice: "", explanation: ""}],
     instructions: [],
     gameId
   });
@@ -173,6 +173,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
     const newWrongAnswers = [...question.wrongAnswers];
     newWrongAnswers[wrongAnswersIndex].choice = currentTarget.value;
     setQuestion({ ...question, wrongAnswers: newWrongAnswers});
+    console.log("Wrong Answer 1: " + question.wrongAnswers[0].choice);
   }, [question, setQuestion]);
 
   const onWrongExplanationChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
@@ -187,19 +188,19 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
   }, [question, setQuestion]);
 
   const handleSaveQuestion = useCallback(() => {
-    if(question.text == null || question.text == "") {
+    if(question.text == null || question.text === "") {
       window.alert("Please enter a question");
       return;
     }
-    if(question.answer == null || question.answer == "") {
+    if(question.answer == null || question.answer === "") {
       window.alert("Please enter an answer");
       return;
     }
-    if(question.grade == null || question.grade == "") {
+    if(question.grade == null || question.grade === "") {
       window.alert("Please enter a grade level");
       return;
     }
-    if(question.domain == null || question.domain == "") {
+    if(question.domain == null || question.domain === "") {
       window.alert("Please enter a domain/subject");
       return;
     }
@@ -210,7 +211,12 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
   }, [question, saveQuestion, history, gameId, gameIndex]);
 
   const handleBack = useCallback(() => {
-    history.push(`/games/${gameIndex}`);
+    if(gameIndex != null) {
+      history.push(`/games/${gameIndex}`);
+    }
+    else {
+      history.push(`/gamemaker/0`);
+    }
   }, [gameIndex, history]);
 
   const handleRemoveInstruction = useCallback((index) => {
@@ -231,7 +237,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
         
         <TextField className={classes.input} style={{width: 632}} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" multiline rows={12} required />
         <div className={classes.imagePreview}>
-          <img className={classes.image} src={imgPreview} alt="Invalid Image URL" />
+          <img className={classes.image} src={imgPreview} alt="Invalid URL" />
         </div>
         <TextField style={{width: 199, position: 'absolute', top: 300, right: 30}} id="image-url" onChange={onChangeMaker('imageUrl')} value={question.imageUrl} label="URL for Photo" variant="outlined" />
         <Button className={classes.addURLButton} variant="contained" onClick={checkURL}>Add</Button>
@@ -256,6 +262,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
             label="Grade Level" 
             onChange={onSelectMaker('grade')}
             disableUnderline
+            defaultValue=""
             required
             MenuProps={{classes: {paper: classes.MenuProps}}}
           >
@@ -275,6 +282,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
             label="Domain/Subject" 
             onChange={onSelectMaker('domain')}
             disableUnderline
+            defaultValue=""
             required
             MenuProps={{classes: {paper: classes.MenuProps}}}
           >
@@ -292,6 +300,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
             className={classes.dropdown} 
             label="Cluster" 
             onChange={onSelectMaker('cluster')}
+            defaultValue=""
             disableUnderline
             MenuProps={{classes: {paper: classes.MenuProps}}}
           >
@@ -306,6 +315,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
             className={classes.dropdown} 
             label="Standard" 
             onChange={onSelectMaker('standard')}
+            defaultValue=""
             disableUnderline
             MenuProps={{classes: {paper: classes.MenuProps}}}
           >
