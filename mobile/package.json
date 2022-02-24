@@ -24,6 +24,7 @@
     "@codler/react-native-keyboard-aware-scroll-view": "^2.0.0",
     "@dev-event/react-native-accordion": "^2.0.3",
     "@react-native-async-storage/async-storage": "^1.15.7",
+    "@react-native-community/checkbox": "^0.5.11",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/netinfo": "^6.2.1",
     "@react-native-community/viewpager": "^5.0.11",
