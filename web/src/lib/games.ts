@@ -55,3 +55,7 @@ export const getGame = async (id: any) => {
   console.log(result);
   return result.data;
 };
+
+export const getGameById = (games: Game[], id: number) => {
+  return games.find((game) => game.id === id)
+}

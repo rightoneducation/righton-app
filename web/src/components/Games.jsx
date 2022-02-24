@@ -16,11 +16,12 @@ import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import GameMaker from './GameMaker';
 import AddQuestionForm from './AddQuestionForm';
+import { getGameById } from '../lib/games'
 
 export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, addQuestion }) {
   const classes = useStyles();
   const history = useHistory();
-  const match = useRouteMatch('/games/:gameIndex');
+  const match = useRouteMatch('/games/:gameId');
   const [newGameOpen, setNewGameOpen] = useState(false);
   const handleNewGame = async (game) => {
     setNewGameOpen(false);
@@ -48,7 +49,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           
         </Grid>
       </Route>
-      {match && games[Number(match.params.gameIndex) - 1] && (
+      {/* {match && games[Number(match.params.gameIndex) - 1] && ( */}
         <Grid item xs={12} className={classes.content}>
           <Switch>
             <Route exact path="/games/:gameIndex/questions/:questionIndex" render={
@@ -57,10 +58,13 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
                 return <QuestionDetails gameIndex={gameIndex} gameTitle={games[Number(gameIndex) - 1].title} questionIndex={questionIndex} question={games[Number(gameIndex) - 1].questions[questionIndex]} />
               }
             } />
-            <Route exact path="/games/:gameIndex" render={
+            <Route exact path="/games/:gameId" render={
+
               ({ match }) => {
-                const { gameIndex } = match.params;
-                return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={games[Number(gameIndex) - 1]} gameIndex={gameIndex} />;
+                debugger
+                const { gameId } = match.params;
+                const game = getGameById(games, gameId)
+                return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game}  />;
               }
             } />
             <Route exact path="/games/:gameIndex/questions/:questionIndex/edit" render={
@@ -71,7 +75,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             } />
           </Switch>
         </Grid>
-      )}
+      
       <Route path="/games/:gameIndex/edit" render={
         ({ match }) => {
           const { gameIndex } = match.params;
