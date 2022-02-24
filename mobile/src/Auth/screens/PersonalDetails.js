@@ -5,6 +5,7 @@ import { colors, fontFamilies, fonts } from '../../utils/theme'
 import PurpleBackground from '../../components/PurpleBackground'
 import DropDownPicker from 'react-native-dropdown-picker'
 import RoundButton from '../../components/RoundButton'
+import { Auth } from '@aws-amplify/auth'
 
 const PersonalDetails = ({ route, navigation }) => {
   const { username, password, email } = route.params
@@ -37,8 +38,29 @@ const PersonalDetails = ({ route, navigation }) => {
     { label: '12', value: '12' },
   ])
 
-  const handleSignUp = () => {
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [zip, setZip] = useState('')
 
+  const handleSignUp = async () => {
+    try {
+      await Auth.signUp({
+        username,
+        password,
+        attributes: {
+          email,
+          gender,
+          name: `${firstname} ${lastname}`,
+          'custom:zipcode': zip,
+          'custom:ethnicity': race,
+          'custom:grade': grade,
+          preferred_username: username
+      }})
+      navigation.navigate("ConfirmAccount")
+    }
+    catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -53,17 +75,17 @@ const PersonalDetails = ({ route, navigation }) => {
         <View style={styles.rowContainer}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>First Name</Text>
-            <TextInput style={styles.inputField} />
+            <TextInput style={styles.inputField} onChangeText={setFirstname} />
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Last Name</Text>
-            <TextInput style={styles.inputField} />
+            <TextInput style={styles.inputField} onChangeText={setLastname} />
           </View>
         </View>
         <View style={styles.rowContainer}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>School Zip</Text>
-            <TextInput style={styles.inputField} />
+            <TextInput style={styles.inputField} onChangeText={setZip} />
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Race/Ethnicity</Text>
