@@ -75,7 +75,6 @@ export default class StudentFirst extends React.PureComponent {
     const {
       room,
     } = this.state
-
     return (
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: '#483a82' }} />
