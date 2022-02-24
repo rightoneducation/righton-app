@@ -16,6 +16,7 @@ const SignIn = ({ navigation }) => {
       await Auth.signIn(username, password)
       navigation.navigate('StudentFirst')
     } catch (e) {
+      console.log(e)
       setError("Invalid username or password")
     }
   }
@@ -31,9 +32,9 @@ const SignIn = ({ navigation }) => {
         />
         <View style={styles.formContainer}>
           <Text style={styles.label}>Username/Email</Text>
-          <TextInput style={styles.inputField} onChange={setUsername} />
+          <TextInput style={styles.inputField} onChangeText={setUsername} autoCapitalize="none" />
           <Text style={styles.label}>Password</Text>
-          <TextInput style={styles.inputField} secureTextEntry={true} onChange={setPassword} />
+          <TextInput style={styles.inputField} secureTextEntry={true} onChangeText={setPassword} autoCapitalize="none" />
           <RoundButton title='Enter' style={{ backgroundColor: colors.buttonPrimary, width: '60%', marginLeft: '20%' }} onPress={() => {handleSignIn()}} />
         </View>
         {error != '' && <Text style={styles.errorText}>{error}</Text>}

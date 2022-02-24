@@ -35,9 +35,9 @@ const SignIn = ({ navigation }) => {
           />
           <View style={styles.formContainer}>
             <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.inputField} onChangeText={setEmail} />
+            <TextInput style={styles.inputField} onChangeText={setEmail} autoCapitalize="none" />
             <Text style={styles.label}>Username</Text>
-            <TextInput style={styles.inputField} onChangeText={setUsername} />
+            <TextInput style={styles.inputField} onChangeText={setUsername} autoCapitalize="none" />
             <Text style={styles.label}>Password</Text>
             <TextInput style={styles.inputField} secureTextEntry={true} onChangeText={setPassword} />
             <Text style={styles.label}>Confirm Password</Text>
