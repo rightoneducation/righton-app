@@ -18,6 +18,7 @@ import SignIn from '../Auth/screens/SignIn'
 import SignUp from '../Auth/screens/SignUp'
 import PersonalDetails from '../Auth/screens/PersonalDetails'
 import ConfirmAccount from '../Auth/screens/ConfirmAccount'
+import EnterInfo from '../Student/screens/EnterInfo'
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ const AppContainer = (props) => {
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="EnterInfo" component={EnterInfo} />
         <Stack.Screen name="ConfirmAccount" component={ConfirmAccount} />
         <Stack.Screen name="PersonalDetails" component={PersonalDetails} />
         <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />

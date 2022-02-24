@@ -62,7 +62,11 @@ export default class StudentFirst extends React.PureComponent {
     NetInfo.fetch()
       .then(async (state) => {
         if (GameRoomID == '1234') {
-          this.props.navigation.navigate('StudentChooseTeam')
+          if (this.props.route.params.user) {
+            this.props.navigation.navigate('StudentChooseTeam')
+          } else {
+            this.props.navigation.navigate('EnterInfo')
+          }
         }
       })
   }
