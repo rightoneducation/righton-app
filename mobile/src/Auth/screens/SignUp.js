@@ -6,6 +6,7 @@ import { ScaledSheet } from 'react-native-size-matters'
 import { colors, fonts, fontFamilies } from '../../utils/theme'
 import RoundButton from '../../components/RoundButton'
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
+import CheckBox from '@react-native-community/checkbox'
 
 const SignIn = ({ navigation }) => {
   const [error, setError] = React.useState('')
@@ -13,13 +14,16 @@ const SignIn = ({ navigation }) => {
   const [password, setPassword] = React.useState('')
   const [username, setUsername] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+  const [toggleCheckBox, setToggleCheckBox] = React.useState(false)
 
   const handleSignUp = async () => {
-    try {
-      if (password.length < 8 || (password != confirmPassword)) throw new Error()
-      navigation.navigate('PersonalDetails', { username, email, password })
-    } catch (e) {
-      setError("Passwords do not match")
+    if (toggleCheckBox) {
+      try {
+        if (password.length < 8 || (password != confirmPassword)) throw new Error()
+        navigation.navigate('PersonalDetails', { username, email, password })
+      } catch (e) {
+        setError("Passwords do not match")
+      }
     }
   }
   
@@ -42,6 +46,14 @@ const SignIn = ({ navigation }) => {
             <TextInput style={styles.inputField} secureTextEntry={true} onChangeText={setPassword} />
             <Text style={styles.label}>Confirm Password</Text>
             <TextInput style={styles.inputField} secureTextEntry={true} onChangeText={setConfirmPassword} />
+            <View style={styles.checkBoxContainer}>
+              <CheckBox
+                disabled={false}
+                value={toggleCheckBox}
+                onValueChange={(newValue) => setToggleCheckBox(newValue)}
+              />
+              <Text style={styles.checkBoxText}>By clicking this checkbox, I agree that I am atleast 13 years of age and I agree to RightOn's Privacy Policy</Text>
+            </View>
             <RoundButton title='Enter' style={{ backgroundColor: colors.buttonPrimary, width: '60%', marginLeft: '20%' }} onPress={() => {handleSignUp()}} />
           </View>
           {error != '' && <Text style={styles.errorText}>{error}</Text>}
@@ -96,4 +108,14 @@ const styles = ScaledSheet.create({
     marginBottom: '10@vs',
     marginTop: '10@vs'
   },
+  checkBoxContainer: {
+    flexDirection: 'row',
+    marginBottom: 10
+  },
+  checkBoxText: {
+    fontFamily: fontFamilies.montserratRegular,
+    fontSize: 10,
+    marginLeft: '10@s',
+    color: colors.white
+  }
 })
