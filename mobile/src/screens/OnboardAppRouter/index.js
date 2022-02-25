@@ -18,12 +18,15 @@ export default function OnboardAppRouter({ navigation }) {
 
   function handleJoinGame() {
     // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
-    setTimeout(() => navigation.navigate('StudentFirst', { user: true }), 250)
+    if (user == null) {
+      setTimeout(() => navigation.navigate('StudentFirst', { user: false }), 250)
+    } else {
+      setTimeout(() => navigation.navigate('StudentFirst', { user: true }), 250)
+    }
   }
 
   function handleSignIn() {
     // screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
-    Auth.signOut()
     setTimeout(() => navigation.navigate('SignIn'), 250)
   }
 
