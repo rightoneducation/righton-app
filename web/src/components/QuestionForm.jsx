@@ -207,7 +207,7 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
     if (question.instructions != null && question.instructions !== []) question.instructions = JSON.stringify(question.instructions);
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
     // saveQuestion(question, gameId).then(() => history.push(`/games/${gameIndex}`));
-    saveQuestion(question, gameId).then(() => history.push(`/`));
+    saveQuestion(question, gameId).then(() => history.push(`/games/${gameId}`));
   }, [question, saveQuestion, history, gameId, gameIndex]);
 
   const handleBack = useCallback(() => {

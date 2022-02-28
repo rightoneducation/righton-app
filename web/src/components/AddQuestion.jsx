@@ -129,12 +129,12 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
     const copy = { ...newGame[`q${newIndex}`] };
     newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
     newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push('/games/1'));
+    saveGame(newGame).then(() => history.push(`/games/${game.id}`));
     setAnchorEl(null);
     setActiveIndex(null);
   };
 
-  const addQuestion = () => history.push(`/games/${selectedIndex}/questions/${questions.length + 1}/edit`);
+  const addQuestion = () => history.push(`/games/${game.id}/questions/${questions.length + 1}/edit`);
 
   const questions = game?.questions || [];
 

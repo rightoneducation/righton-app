@@ -136,7 +136,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
     const copy = { ...newGame[`q${newIndex}`] };
     newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
     newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push('/games/1'));
+    saveGame(newGame).then(() => history.push(`/games/${game.id}`));
     setAnchorEl(null);
     setActiveIndex(null);
   };
