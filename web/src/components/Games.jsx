@@ -66,10 +66,11 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
                 return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game}  />;
               }
             } />
-            <Route exact path="/games/:gameIndex/questions/:questionIndex/edit" render={
+            <Route exact path="/games/:gameId/questions/:questionIndex/edit" render={
               ({ match }) => {
-                const { questionIndex, gameIndex } = match.params;
-                return <QuestionForm loading={loading} saveQuestion={saveQuestion} gameId={games[Number(match.params.gameIndex) - 1].id} question={games[Number(gameIndex) - 1].questions[questionIndex]} {...match.params} />;
+                const { questionIndex, gameId } = match.params;
+                const game = getGameById(games, gameId);
+                return <QuestionForm loading={loading} saveQuestion={saveQuestion} gameId={game.id} question={game.questions[questionIndex]} {...match.params} />;
               }
             } />
           </Switch>

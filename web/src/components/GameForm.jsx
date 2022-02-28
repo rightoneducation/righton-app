@@ -122,6 +122,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [activeIndex, setActiveIndex] = React.useState(null);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.questionIndex);
   };
