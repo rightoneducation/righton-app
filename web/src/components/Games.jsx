@@ -44,7 +44,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
           </Box>
           <Grid container>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${index + 1}`)}/>
+            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)}/>
           </Grid>
           
         </Grid>
@@ -52,10 +52,11 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
       {match && getGameById(games, match.params.gameId) && (
         <Grid item xs={12} className={classes.content}>
           <Switch>
-            <Route exact path="/games/:gameIndex/questions/:questionIndex" render={
+            <Route exact path="/games/:gameId/questions/:questionIndex" render={
               ({ match }) => {
-                const { questionIndex, gameIndex } = match.params;
-                return <QuestionDetails gameIndex={gameIndex} gameTitle={games[Number(gameIndex) - 1].title} questionIndex={questionIndex} question={games[Number(gameIndex) - 1].questions[questionIndex]} />
+                const { questionIndex, gameId } = match.params;
+                const game = getGameById(games, gameId);
+                return <QuestionDetails backUrl={`/games/${gameId}`} gameTitle={game.title} questionIndex={questionIndex} question={game.questions[questionIndex]} />
               }
             } />
             <Route exact path="/games/:gameId" render={
