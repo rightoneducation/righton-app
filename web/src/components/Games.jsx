@@ -49,7 +49,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           
         </Grid>
       </Route>
-      {/* {match && games[Number(match.params.gameIndex) - 1] && ( */}
+      {match && getGameById(games, match.params.gameId) && (
         <Grid item xs={12} className={classes.content}>
           <Switch>
             <Route exact path="/games/:gameIndex/questions/:questionIndex" render={
@@ -59,9 +59,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
               }
             } />
             <Route exact path="/games/:gameId" render={
-
               ({ match }) => {
-                debugger
                 const { gameId } = match.params;
                 const game = getGameById(games, gameId)
                 return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game}  />;
@@ -75,7 +73,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             } />
           </Switch>
         </Grid>
-      
+      )}
       <Route path="/games/:gameIndex/edit" render={
         ({ match }) => {
           const { gameIndex } = match.params;

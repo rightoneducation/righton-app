@@ -56,6 +56,7 @@ export const getGame = async (id: any) => {
   return result.data;
 };
 
-export const getGameById = (games: Game[], id: number) => {
-  return games.find((game) => game.id === id)
+export const getGameById = (games: Game[], id: number | string) => {
+  const numericalId = Number(id);
+  return games.find((game) => game.id === numericalId)
 }
