@@ -140,7 +140,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/edit`);
+  const addQuestion = () => history.push(`/games/${game.id}/questions/${questions.length + 1}/edit`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
 

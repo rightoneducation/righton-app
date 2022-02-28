@@ -211,13 +211,13 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
   }, [question, saveQuestion, history, gameId, gameIndex]);
 
   const handleBack = useCallback(() => {
-    if(gameIndex != null) {
-      history.push(`/games/${gameIndex}`);
+    if(gameId != null) {
+      history.push(`/games/${gameId}`);
     }
     else {
       history.push(`/gamemaker/0`);
     }
-  }, [gameIndex, history]);
+  }, [gameId, history]);
 
   const handleRemoveInstruction = useCallback((index) => {
     const newInstructions = [...question.instructions];
