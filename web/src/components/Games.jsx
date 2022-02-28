@@ -76,10 +76,11 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           </Switch>
         </Grid>
       )}
-      <Route path="/games/:gameIndex/edit" render={
+      <Route path="/games/:gameId/edit" render={
         ({ match }) => {
-          const { gameIndex } = match.params;
-          return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
+          const { gameId } = match.params;
+          const game = getGameById(games, gameId);
+          return <EditGameDialogue open game={game} onClose={() => history.push(`/games/${gameId}`)} submit={saveGame} />;
         }
       } />
       <Route exact path='/gamemaker/:gamemakerIndex' render={

@@ -53,7 +53,7 @@ export default function EditGameDialogue({ game, open, onClose, submit }) {
         </DialogContent>
         <DialogActions>
           <Typography variant="caption">
-            Game ID: {game.GameId}
+            {/* Game ID: {game.GameId} */}
           </Typography>
           <Button onClick={onClose}>
             Cancel
