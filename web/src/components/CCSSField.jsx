@@ -40,6 +40,7 @@ export default function CCSSField({ grade, domain, cluster, standard, updateGame
           value={grade}
           onChange={onChangeMaker('grade')}
           label="Grade"
+          defaultValue=""
         >
           {GRADES.map(({ label, value }) => (
             <MenuItem key={value} value={value}>{label}</MenuItem>
@@ -55,6 +56,7 @@ export default function CCSSField({ grade, domain, cluster, standard, updateGame
           value={domain}
           onChange={onChangeMaker('domain')}
           label="Domain"
+          defaultValue=""
         >
           {DOMAINS.map(({ label, value }) => (
             <MenuItem key={value} value={value}>{label}</MenuItem>
@@ -70,6 +72,7 @@ export default function CCSSField({ grade, domain, cluster, standard, updateGame
           value={cluster}
           onChange={onChangeMaker('cluster')}
           label="Cluster"
+          defaultValue=""
         >
           {CLUSTERS.map(({ label, value }) => (
             <MenuItem key={value} value={value}>{label}</MenuItem>
@@ -85,6 +88,7 @@ export default function CCSSField({ grade, domain, cluster, standard, updateGame
           value={standard}
           onChange={onChangeMaker('standard')}
           label="Standard"
+          defaultValue=""
         >
           {STANDARDS.map(({ label, value }) => (
             <MenuItem key={value} value={value}>{label}</MenuItem>
