@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selectedIndex, questionIndex, cloneQuestion, submit, gamemakerIndex }){
+function AddQuestion({ game, selectedIndex, cloneQuestion, submit, gamemakerIndex }){
   const classes = useStyles();
   const history = useHistory();
   const [setAnchorEl] = React.useState(null);
@@ -122,7 +122,7 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
     delete question.createdAt;
     const newQuestion = await cloneQuestion(question);
     submit(newQuestion);
-    history.push('/gamemaker');
+    history.push('/gamemaker/:selectedIndex');
   }
 
   const addQuestion = () => history.push(`/games/${selectedIndex}/questions/${questions.length + 1}/edit`);
@@ -178,10 +178,10 @@ function AddQuestion({ loading, gameIndex, game, saveGame, deleteQuestion, selec
           <Button className={classes.greenButton} color="primary" type="button" variant="contained" onClick={() => handleCloneQuestion(questions[index-1])}>Add to Game</Button>
         </Grid>
         <Grid item xs={2}>
-          <Button className={classes.blueButton} color="primary" type="button" variant="contained">Clone and Edit</Button>
+          <Button className={classes.blueButton} color="primary" type="button" variant="contained" onClick={() => handleCloneQuestion(questions[index-1])}>Clone and Edit</Button>
         </Grid>
         <Grid item xs={2}>
-          <Button className={classes.redButton} color="primary" type="button" variant="contained">View Question</Button>
+          <Button className={classes.redButton} color="primary" type="button" variant="contained" onClick={() => history.push(`/games/${selectedIndex}/questions/${index+1}`)}>View Question</Button>
         </Grid> 
       </Grid>
     </Grid>

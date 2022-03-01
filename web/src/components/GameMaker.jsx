@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Route, useHistory, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
@@ -298,24 +298,25 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex, clon
                         </Button>
                     </Grid>
                 </Grid>
-
-                <Grid container item xs={2}></Grid>
             </Grid>
-    </form>
-)
-if (history.location.pathname = "/gamemaker/:gamemakerIndex/addquestion"){
-    content = (
-        <Route exact path="/gamemaker/:gamemakerIndex/addquestion" render={
-            ({ match }) => {
-            return <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSubmitQuestion} gamemakerIndex={gamemakerIndex} {...match.params}/>;
-            }
-        } />
+        </form>
     )
-}
+// if (history.location.pathname == "/gamemaker/:gamemakerIndex/addquestion"){
+//     content = (
+//         <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSubmitQuestion} gamemakerIndex={gamemakerIndex}/>
+//     )
+// }
     
 
 return(
-    content
+    <Switch>
+        <Route exact path="/gamemaker/:gamemakerIndex">
+            {content}
+        </Route>
+        <Route path="/gamemaker/:gamemakerIndex/addquestion">
+            <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSubmitQuestion} gamemakerIndex={gamemakerIndex}/>
+        </Route>
+    </Switch>
 );
 }
 

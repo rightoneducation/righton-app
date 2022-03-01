@@ -55,7 +55,6 @@ const useStyles = makeStyles(theme => ({
 function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, cloneQuestion, submit, gamemakerIndex }) {
     const classes = useStyles();
     const history = useHistory();
-    const selectedIndex = window.location.pathname.split('/')[4];
 
     return (
         <Grid container className={classes.root}>
