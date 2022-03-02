@@ -1,164 +1,58 @@
-input CreateGameInput {
-  title: String!
-  description: String
-  cluster: String
-  domain: String
-  grade: String
-  standard: String
-  questions: [CreateQuestionInput]
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type GameSession @model {
+  id: ID! @primaryKey(sortKeyFields: ["updatedAt"])
+  game: Game! @hasOne
+  startTime: AWSDateTime
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  teams: [Team] @hasMany
+  updatedAt: AWSDateTime!
 }
 
-input CreateQuestionInput {
-  text: String!
-  answer: String!
-  imageUrl: String
-  instructions: AWSJSON
-}
-
-type Game {
-  id: Int!
+type Game @model {
+  id: ID!
   title: String
   description: String
-  cluster: String
-  domain: String
-  grade: String
-  standard: String
-  questions: [Question]
-  updatedAt: AWSDateTime!
-  createdAt: AWSDateTime!
-}
-
-input GameSessionInput {
+  imageUrl: String
+  isAdvanced: Boolean
   gameCode: Int
-  gameId: Int!
-  hintsRevealTime: Int
-  id: Int!
-  multiDeviceMode: Boolean!
-  startedDateTimeUTC: AWSDateTime
-  teamIds: [Int]
-  votingTime: Int
-}
-
-enum GameSessionState {
-  CHOOSINGTRICKANSWER
-  FINISHED
-  INITIALINTRO
-  NOTSTARTED
-  REVIEWINGRESULT
-  VOTING
-}
-
-type JoinScreen implements Screen {
-  gameID: Int!
-  screenID: ScreenID!
-  title: String!
-  text: String
-}
-
-type Mutation {
-  deleteGame(id: Int!): Game
-  createGame(game: CreateGameInput!): Game
-  updateGame(game: UpdateGameInput!): Game
-  deleteQuestion(id: Int!): Question
-  createQuestion(question: CreateQuestionInput!): Question
-  updateQuestion(question: UpdateQuestionInput!): Question
-  createGameStatus(gameID: Int!): Screen
-  updateGameStatus(gameID: Int!, screenData: ScreenInput!): Screen
-}
-
-type Query {
-  getGame(id: Int!): Game
-  listGames: [Game]
-  getQuestion(id: Int!): Question
-  listQuestions: [Question]
-}
-
-type Question {
-  id: Int!
-  text: String!
-  answer: String!
-  imageUrl: String
-  instructions: AWSJSON
-  updatedAt: AWSDateTime!
-  createdAt: AWSDateTime!
-}
-
-type QuestionScreen implements Screen {
-  gameID: Int!
-  screenID: ScreenID!
-  title: String!
-  text: String
-  answers: [String]!
-}
-
-type Score {
-  teamName: String!
-  teamScore: Int!
-}
-
-input ScoreInput {
-  teamName: String!
-  teamScore: Int!
-}
-
-type ScorecardScreen implements Screen {
-  gameID: Int!
-  screenID: ScreenID!
-  title: String!
-  text: String
-  scores: [Score]!
-}
-
-interface Screen {
-  gameID: Int!
-  screenID: ScreenID!
-  title: String!
-  text: String
-}
-
-enum ScreenID {
-  JoinScreen
-  QuestionScreen
-  ScorecardScreen
-}
-
-input ScreenInput {
-  screenID: ScreenID!
-  title: String!
-  text: String!
-  answers: [String]
-  scores: [ScoreInput]
-}
-
-type Subscription {
-  onCreateGame: Game
-    @aws_subscribe(mutations: ["createGame"])
-  onCreateQuestion: Question
-    @aws_subscribe(mutations: ["createQuestion"])
-  subscribeToGameStatusUpdates(gameID: Int!): Screen
-    @aws_subscribe(mutations: ["updateGameStatus"])
-}
-
-input UpdateGameInput {
-  id: Int!
-  title: String
-  description: String
-  cluster: String
-  domain: String
   grade: String
-  standard: String
+  questions: [Question] @hasMany
 }
 
-input UpdateQuestionInput {
-  id: Int!
-  text: String
+type Question @model {
+  id: ID!
+  question: String!
   answer: String
+  trickAnswers: AWSJSON
   imageUrl: String
   instructions: AWSJSON
+  grade: String
 }
 
-schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+type Team @model(subscriptions: null){
+  id: ID!
+  name: String!
+  gameId: ID!
+  questionId: ID!
+  trickiestAnswerID: ID!
+  teamMembers: [TeamMember] @hasMany
+}
+
+type TeamMember @model(subscriptions: null) {
+  id: ID!
+  team: Team!
+  questionId: ID!
+  isFacilitator: Boolean
+  memberAnswers: [TeamAnswer] @hasMany
+}
+
+type TeamAnswer @model {
+  id: ID!
+  isChosen: Boolean
+  text: String
+  deviceId: ID!
 }
