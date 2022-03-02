@@ -1,58 +1,164 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
-
-type GameSession @model {
-  id: ID! @primaryKey(sortKeyFields: ["updatedAt"])
-  game: Game! @hasOne
-  startTime: AWSDateTime
-  phaseOneTime: Int
-  phaseTwoTime: Int
-  teams: [Team] @hasMany
-  updatedAt: AWSDateTime!
-}
-
-type Game @model {
-  id: ID!
-  title: String
+input CreateGameInput {
+  title: String!
   description: String
-  imageUrl: String
-  isAdvanced: Boolean
-  gameCode: Int
+  cluster: String
+  domain: String
   grade: String
-  questions: [Question] @hasMany
+  standard: String
+  questions: [CreateQuestionInput]
 }
 
-type Question @model {
-  id: ID!
-  question: String!
-  answer: String
-  trickAnswers: AWSJSON
+input CreateQuestionInput {
+  text: String!
+  answer: String!
   imageUrl: String
   instructions: AWSJSON
+}
+
+type Game {
+  id: Int!
+  title: String
+  description: String
+  cluster: String
+  domain: String
   grade: String
+  standard: String
+  questions: [Question]
+  updatedAt: AWSDateTime!
+  createdAt: AWSDateTime!
 }
 
-type Team @model(subscriptions: null){
-  id: ID!
-  name: String!
-  gameId: ID!
-  questionId: ID!
-  trickiestAnswerID: ID!
-  teamMembers: [TeamMember] @hasMany
+input GameSessionInput {
+  gameCode: Int
+  gameId: Int!
+  hintsRevealTime: Int
+  id: Int!
+  multiDeviceMode: Boolean!
+  startedDateTimeUTC: AWSDateTime
+  teamIds: [Int]
+  votingTime: Int
 }
 
-type TeamMember @model(subscriptions: null) {
-  id: ID!
-  team: Team!
-  questionId: ID!
-  isFacilitator: Boolean
-  memberAnswers: [TeamAnswer] @hasMany
+enum GameSessionState {
+  CHOOSINGTRICKANSWER
+  FINISHED
+  INITIALINTRO
+  NOTSTARTED
+  REVIEWINGRESULT
+  VOTING
 }
 
-type TeamAnswer @model {
-  id: ID!
-  isChosen: Boolean
+type JoinScreen implements Screen {
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
   text: String
-  deviceId: ID!
+}
+
+type Mutation {
+  deleteGame(id: Int!): Game
+  createGame(game: CreateGameInput!): Game
+  updateGame(game: UpdateGameInput!): Game
+  deleteQuestion(id: Int!): Question
+  createQuestion(question: CreateQuestionInput!): Question
+  updateQuestion(question: UpdateQuestionInput!): Question
+  createGameStatus(gameID: Int!): Screen
+  updateGameStatus(gameID: Int!, screenData: ScreenInput!): Screen
+}
+
+type Query {
+  getGame(id: Int!): Game
+  listGames: [Game]
+  getQuestion(id: Int!): Question
+  listQuestions: [Question]
+}
+
+type Question {
+  id: Int!
+  text: String!
+  answer: String!
+  imageUrl: String
+  instructions: AWSJSON
+  updatedAt: AWSDateTime!
+  createdAt: AWSDateTime!
+}
+
+type QuestionScreen implements Screen {
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+  answers: [String]!
+}
+
+type Score {
+  teamName: String!
+  teamScore: Int!
+}
+
+input ScoreInput {
+  teamName: String!
+  teamScore: Int!
+}
+
+type ScorecardScreen implements Screen {
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+  scores: [Score]!
+}
+
+interface Screen {
+  gameID: Int!
+  screenID: ScreenID!
+  title: String!
+  text: String
+}
+
+enum ScreenID {
+  JoinScreen
+  QuestionScreen
+  ScorecardScreen
+}
+
+input ScreenInput {
+  screenID: ScreenID!
+  title: String!
+  text: String!
+  answers: [String]
+  scores: [ScoreInput]
+}
+
+type Subscription {
+  onCreateGame: Game
+    @aws_subscribe(mutations: ["createGame"])
+  onCreateQuestion: Question
+    @aws_subscribe(mutations: ["createQuestion"])
+  subscribeToGameStatusUpdates(gameID: Int!): Screen
+    @aws_subscribe(mutations: ["updateGameStatus"])
+}
+
+input UpdateGameInput {
+  id: Int!
+  title: String
+  description: String
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
+}
+
+input UpdateQuestionInput {
+  id: Int!
+  text: String
+  answer: String
+  imageUrl: String
+  instructions: AWSJSON
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
