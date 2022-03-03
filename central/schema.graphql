@@ -1,0 +1,34 @@
+type Game 
+  @model(queries: { list: "games", get: "game" }, subscriptions: null) {
+  id: ID!
+  title: String!
+  cluster: String
+  description: String
+  domain: String
+  grade: String
+  standard: String
+  questions: [GameQuestion] @connection(keyName: "byGame", fields: ["id"])
+}
+
+type Question @model(queries: { list: "questions", get: "question" }, subscriptions: null) {
+  id: ID!
+  text: String!
+  answer: String!
+  imageURL: String
+  instructions: AWSJSON
+  games: [GameQuestion] @connection(keyName: "byQuestion", fields: ["id"])
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
+}
+
+type GameQuestion @model(queries: null, mutations: null, subscriptions: null)
+  @key(name: "byGame", fields: ["gameId", "questionId"])
+  @key(name: "byQuestion", fields: ["questionId", "gameId"]) {
+  id: ID!
+  gameId: ID!
+  questionId: ID!
+  game: Game! @connection(fields: ["gameId"])
+  question: Question! @connection(fields: ["questionId"])
+}
