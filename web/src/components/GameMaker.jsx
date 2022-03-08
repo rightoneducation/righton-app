@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import AddQuestionForm from './AddQuestionForm';
 import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
 
 // Mock question info
 const mockQuestion = {
-    id : '8',
+    id : '1389',
     text : "How many total squares (of any size) are there on a checkerboard?",
     answer: '204 squares',
     imageUrl: 'https://media.istockphoto.com/photos/wooden-chess-board-picture-id476469645?s=612x612',
@@ -36,12 +37,10 @@ const newGame = {
     description: '',
     grade: '',
     domain: '',
-    cluster: '',
-    standard: '',
-    phaseOneTime: 600,
-    phaseTwoTime: 300,
+    phaseOneTime: 180,
+    phaseTwoTime: 180,
     imageUrl: '',
-    questions: [ mockQuestion, mockQuestion, mockQuestion, mockQuestion ],
+    questions: [ mockQuestion ],
 }
 
 // Preset times
@@ -55,6 +54,10 @@ const times = [
         label: '2:00',
     },
     {
+        value: 180,
+        label: '3:00',
+    },
+    {
         value: 300,
         label: '5:00',
     },
@@ -65,6 +68,11 @@ const times = [
 ]
 
 export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
+    useEffect(() => {
+        document.title = 'RightOn! | Game editor';
+        return () => { document.title = 'RightOn! | Game management'; }
+    }, []);
+
     const classes = useStyles();
     const history = useHistory();
     const location = useLocation();
@@ -78,7 +86,7 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
     });
     const [phaseOne, setPhaseOne] = useState(() => {
         if (gameDetails.phaseOneTime == null) {
-            return 60;
+            return 180;
         }
         else {
             return gameDetails.phaseOneTime;
@@ -86,7 +94,7 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
     });
     const [phaseTwo, setPhaseTwo] = useState(() => {
         if (gameDetails.phaseTwoTime == null) {
-            return 120;
+            return 180;
         }
         else {
             return gameDetails.phaseTwoTime;
@@ -94,22 +102,62 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
     });
     const [questions, setQuestions] = useState([...gameDetails.questions]);
 
-    // Phase Timers -> Functionality to change the time in the dropdown exists, but it does not actually update the game's phase timer attributes to the newly selected one
+    // Handles changing and storing of new values for the Phase Timers
     const handlePhaseOne = (event) => {
         setPhaseOne(event.target.value);
+        setGameDetails({ ...gameDetails, phaseOneTime: phaseOne });
     };
     const handlePhaseTwo = (event) => {
         setPhaseTwo(event.target.value);
+        setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
     };
 
+    // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
     const handleDelete = (index) => {
         const newQuestions = [...questions];
         newQuestions.splice(index, 1);
         setQuestions(newQuestions);
     }
 
+    // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
+    const handleDisable = () => {
+        if (gameDetails.title && questions.length >= 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    // Save New or Exisiting Game (preliminary submit)
+    const handleSubmit = (event) => {
+        if (gameDetails.id) {
+            let questionIDs = questions.map(question => ({id: question.id}))
+            delete gameDetails.questions
+            editSave(gameDetails, questionIDs);
+        }
+        else {
+            let questionIDs = questions.map(question => question.id)
+            delete gameDetails.questions
+            newSave(gameDetails, questionIDs);
+        }
+        event.preventDefault();
+        history.push('/');
+    };
+
+    // Callback Function -> Save current game info (unsaved) by passing down in params/props and then this function will re-set the game to be that data and also have/add back the new questions into the Game Maker page without ever actually saving any of these changes
+    function handleGameData(gameData, questionData) {
+        setGameDetails(gameData)
+        setQuestions([...gameDetails.questions, questionData]) // Is this needed or does setGameDetails handle that as well? Also will it loop bc the state is above the function?
+        // setQuestions(...gameDetails.questions.append(questionData)) Is gameDeatils already an Array and if so is putting [] around it redundant or unnecessary
+    }
+
+    function handleCCSS(grade, domain) {
+        setGameDetails({ ...gameDetails, grade: grade, domain: domain });
+    }
+
     return(
-        <form action="">
+        <form onSubmit={handleSubmit}>
             <Grid container>
                 <Grid container item xs={2}></Grid>
                 
@@ -200,7 +248,7 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
                             </Grid>
 
                             <Grid container item xs={4} justifyContent='center'>
-                                {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
+                                {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'}/>}
                             </Grid>
                         </Grid>
                     </Grid>
@@ -249,7 +297,7 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
 
                                                     <Grid container item xs={2}>
                                                         <Grid container item xs={10} justifyContent='center'>
-                                                            {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'80%'}/>}
+                                                            {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'}/>}
                                                         </Grid>
 
                                                         <Grid container direction='column' item xs={2}>
@@ -275,7 +323,7 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
                                 </Grid>
 
                                 <Grid container item xs={6} justifyContent='center' className={classes.createQuestion}>
-                                    <Button variant='contained' disableElevation className={classes.greenButton}>
+                                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/createquestion/0`)}>
                                         Create Question
                                     </Button>
                                 </Grid>
@@ -283,10 +331,17 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
                         </Grid>
                     </Grid>
 
-                    <GameCCSS questions={questions}/>
+                    {() => {
+                        if (questions == []) {
+                            return ( <Grid container item xs={12}></Grid> );
+                        }
+                        else {
+                            return (<GameCCSS questions={questions} handleCCSS={handleCCSS}/>);
+                        }
+                    }}
 
                     <Grid container item xs={12} justifyContent='center'>
-                        <Button variant='contained' type='submit' disableElevation className={classes.greenButton}>
+                        <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
                             Save Game
                         </Button>
                     </Grid>
@@ -316,7 +371,7 @@ const useStyles = makeStyles(theme => ({
                 paddingBottom: '10px',
             },
         divider: {
-            height: '2px',
+            height: '1px',
             width: '100%',
             marginBottom: '10px',
             marginTop: '10px',
@@ -343,7 +398,7 @@ const useStyles = makeStyles(theme => ({
                         color: '#384466',
                     },
                     image: {
-                        width: '80%',
+                        maxHeight: '128px',
                     },
                 questionAddition: {
                     border: '5px solid #C4C4C4',
@@ -366,5 +421,14 @@ const useStyles = makeStyles(theme => ({
                             fontSize: '17px',
                             fontWeight: 500,
                             color: 'white',
+                            '&:disabled': {
+                                background: 'linear-gradient(180deg, #D4D4D4 0%, #9F9F9F 100%)',
+                                borderRadius: '50px',
+                                textTransform: 'none',
+                                fontSize: '17px',
+                                fontWeight: 500,
+                                color: 'white',
+                                cursor: 'not-allowed',
+                            },
                         },
 }));

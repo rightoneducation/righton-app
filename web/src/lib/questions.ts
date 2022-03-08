@@ -9,9 +9,10 @@ export const createQuestion = async(question: any, gameId: any) => {
   return result.data.createGameQuestion;
 }
 
-export const addQuestion = async(question: any) => {
-  const createdQuestion = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
-  return createdQuestion.data.createQuestion;
+export const cloneQuestion = async(question: any) => {
+  const result = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
+  console.log(result)
+  return result.data.result;
 }
 
 export const updateQuestion = async (question: any) => {
@@ -23,18 +24,10 @@ export const updateQuestion = async (question: any) => {
 
 export const listOfQuestions = async () => {
   const listedQuestions = await API.graphql(graphqlOperation(listQuestions)) as { data: any };
-  // console.log(listedQuestions);
   return listedQuestions.data.listQuestions;
 };
 
 export const getQuestion = async (id: any) => {
   const result = await API.graphql(graphqlOperation(GQ, { id })) as { data: any };
-  // console.log(result);
   return result.data;
-}
-
-// Used by Zach for Save Game button
-export const gameQuestion = async(questionId: any, gameId: any) => {
-  const result = await API.graphql(graphqlOperation(CGQ, {gameQuestion: { gameId, questionId }})) as { data: any };
-  return result.data.createGameQuestion;
 }
