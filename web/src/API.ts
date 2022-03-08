@@ -72,6 +72,7 @@ export type UpdateGameInput = {
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+  questions?: Array< UpdateQuestionInput | null > | null,
 };
 
 export type UpdateQuestionInput = {
