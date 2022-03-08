@@ -3,16 +3,17 @@
 input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
 
 type GameSession @model {
-  id: ID! @primaryKey(sortKeyFields: ["updatedAt"])
+  id: ID! @primaryKey
   game: Game! @hasOne
   startTime: AWSDateTime
   phaseOneTime: Int
   phaseTwoTime: Int
   teams: [Team] @hasMany
-  updatedAt: AWSDateTime!
+  currentQuestion: Int!
+  isPhaseOne: Boolean!
 }
 
-type Game @model {
+type Game @model(subscriptions: null, timestamps: null) {
   id: ID!
   title: String
   description: String
@@ -23,7 +24,7 @@ type Game @model {
   questions: [Question] @hasMany
 }
 
-type Question @model {
+type Question @model(subscriptions: null, timestamps: null) {
   id: ID!
   question: String!
   answer: String
@@ -33,16 +34,16 @@ type Question @model {
   grade: String
 }
 
-type Team @model(subscriptions: null){
+type Team @model {
   id: ID!
   name: String!
   gameId: ID!
   questionId: ID!
-  trickiestAnswerID: ID!
+  trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
 }
 
-type TeamMember @model(subscriptions: null) {
+type TeamMember @model {
   id: ID!
   team: Team!
   questionId: ID!
