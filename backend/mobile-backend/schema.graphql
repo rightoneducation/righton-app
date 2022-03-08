@@ -10,7 +10,16 @@ type GameSession @model {
   phaseTwoTime: Int
   teams: [Team] @hasMany
   currentQuestion: Int!
-  isPhaseOne: Boolean!
+  isPhaseOne: GameSessionState!
+}
+
+enum GameSessionState {
+	CHOOSINGTRICKANSWER
+	FINISHED
+	INITIALINTRO
+	NOTSTARTED
+	REVIEWINGRESULT
+	VOTING
 }
 
 type Game @model(subscriptions: null, timestamps: null) {
@@ -37,24 +46,22 @@ type Question @model(subscriptions: null, timestamps: null) {
 type Team @model {
   id: ID!
   name: String!
-  gameId: ID!
-  questionId: ID!
+  question: Question! @hasOne
   trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
-  score: Int
+  score: Int!
 }
 
 type TeamMember @model {
   id: ID!
   team: Team!
-  questionId: ID!
   isFacilitator: Boolean
   memberAnswers: [TeamAnswer] @hasMany
+  deviceId: ID!
 }
 
 type TeamAnswer @model {
   id: ID!
   isChosen: Boolean
   text: String
-  deviceId: ID!
 }
