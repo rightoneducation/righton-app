@@ -41,6 +41,7 @@ type Team @model {
   questionId: ID!
   trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
+  score: Int
 }
 
 type TeamMember @model {
