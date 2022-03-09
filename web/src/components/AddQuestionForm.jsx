@@ -1,9 +1,9 @@
-import { Grid } from "@material-ui/core";
-import React, { useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import GameDashboard from './GameDashboard';
+import React, { useState, useCallback } from "react";
 import { Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
-import GameForm from "./GameForm";
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Button } from "@material-ui/core";
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import GameDashboard from './GameDashboard';
 import AddQuestion from "./AddQuestion";
 
 
@@ -49,20 +49,38 @@ const useStyles = makeStyles(theme => ({
       fontSize: '17px',
       fontWeight: 500,
       color: 'white',
-  }
+  },
+  back: {
+    position: 'absolute',
+    top: 100,
+    left: 0,
+    paddingBottom: 10
+  },
   }));
 
-function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, addQuestion, gamemakerIndex }) {
+export default function AddQuestionForm({ loading, games, deleteGame, cloneGame, cloneQuestion, submit, gamemakerIndex }) {
     const classes = useStyles();
     const history = useHistory();
-    const selectedIndex = window.location.pathname.split('/')[4];
+    const handleBack = useCallback(() => {
+      if(gamemakerIndex != null) {
+        history.push(`/gamemaker/${gamemakerIndex}`);
+      }
+      else {
+        history.push(`/gamemaker/0`);
+      }
+    }, [gamemakerIndex, history]);
 
     return (
         <Grid container className={classes.root}>
+          <Button type="button" className={classes.back} onClick={handleBack}>
+            <ArrowBack style={{marginRight: 8}} />Back to Game Maker
+          </Button>
+
           <Grid item xs={5} className={classes.sidebar}>
             <h3>Browse Games</h3>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} gamemakerIndex={gamemakerIndex} onClickGame={(index, gamemakerIndex) => history.push(`/gamemaker/${gamemakerIndex}/addquestion/gameSelected/${index + 1}`)}/>
+            <GameDashboard loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} gamemakerIndex={gamemakerIndex} onClickGame={(index, gamemakerIndex) => history.push(`/gamemaker/${gamemakerIndex}/addquestion/gameSelected/${index + 1}`)}/>
           </Grid>
+
           <Grid item xs={7} className={classes.content}>
             <Switch>
               <Route exact path="/gamemaker/:gamemakerIndex/addquestion" render={
@@ -77,15 +95,13 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
               }/>
               <Route path="/gamemaker/:gamemakerIndex/addquestion/gameSelected/:selectedIndex" render={
                 ({ match }) => {
-                  const { questionIndex, selectedIndex, gameIndex} = match.params;
-                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} gamemakerIndex={gamemakerIndex}/>;
+                  const { selectedIndex, gamemakerIndex} = match.params;
+                  return <AddQuestion game={games[Number(selectedIndex-1)]}  cloneQuestion={cloneQuestion} submit={submit} selectedIndex={selectedIndex} gamemakerIndex={gamemakerIndex} />;
                 }
               } />
             </Switch>           
           </Grid>
+
         </Grid>
     );
 }
-
-
-export default AddQuestionForm;

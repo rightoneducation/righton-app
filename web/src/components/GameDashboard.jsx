@@ -57,16 +57,15 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
     if (games.length >= 1) {
       return games
         .map((game, index) => {
-          const { id, title, description, cluster, domain, grade, standard } = game;
+          const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
           const questionCount = game?.questions?.length || 0;
-          //const image = getGameImage(game); // figure out what this function does or should do
-          const image = null;
+          
           return (
             <Grid container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
               <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(index, gamemakerIndex)}>
                 <CardContent>
                   <Grid container>
-                    <Grid container item xs={8}>
+                    <Grid container item xs={9}>
                       <Grid item xs={7}>
                         <CCSS grade={grade} domain={domain} cluster={cluster} standard={standard} />
                       </Grid>
@@ -97,12 +96,12 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                       </Grid> */}
                     </Grid>
 
-                    <Grid container item xs={4}>
+                    <Grid container item xs={3}>
                       <Grid item xs={10}>
-                        {image ? <img className={classes.image} src={image} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'}/>}
+                        {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'125px'}/>}
                       </Grid>
 
-                      <Grid item xs={2}>
+                      <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
                         <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
                           <MoreVertIcon />
                         </Button>
@@ -177,15 +176,22 @@ const useStyles = makeStyles(theme => ({
     paddingRight: '15px',
   },
   image: {
-    width: '80px',
-    maxHeight: '80px',
-    marginRight: theme.spacing(2),
+    height: '125px',
+    width: '100%',
+    borderRadius: '10px',
+    // marginRight: theme.spacing(2),
   },
   square: {
     height: '120px',
     width: '120px',
     borderRadius: '10px',
     marginRight: theme.spacing(2),
+  },
+  show: {
+    display: 'block'
+  },
+  hide: {
+      display: 'none'
   },
   moreButton: {
     minWidth: '28px',

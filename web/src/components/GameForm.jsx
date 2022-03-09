@@ -123,9 +123,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
   const addQuestion = () => history.push(`/gamemaker/${gameIndex}/createquestion/${questions.length + 1}`);
 
   // if (loading) return <Skeleton variant="rect" height={500} />;
-
   const questions = game?.questions || [];
-
   const questionCount = game?.questions?.length || 0;
 
   return (

@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import QuestionForm from './QuestionForm';
 import GameForm from './GameForm';
-import NewGameDialogue from './NewGameDialogue';
+// import NewGameDialogue from './NewGameDialogue';
 import EditGameDialogue from './EditGameDialogue';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
@@ -17,12 +17,12 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
-  const [newGameOpen, setNewGameOpen] = useState(false);
-  const handleNewGame = async (game) => {
-    setNewGameOpen(false);
-    await saveNewGame(game);
-    history.push('/games/1');
-  };
+  // const [newGameOpen, setNewGameOpen] = useState(false);
+  // const handleNewGame = async (game) => {
+  //   setNewGameOpen(false);
+  //   await saveNewGame(game);
+  //   history.push('/games/1');
+  // };
   const handleSortChange = (event) => {
     setSortType(event.target.value);
   };
@@ -33,7 +33,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
         <Grid item xs={12} className={classes.sidebar}>
           <Box className={classes.actions}>
             <SortByDropdown handleSortChange={handleSortChange} />
-            <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} />
+            {/* <NewGameDialogue open={newGameOpen} onClose={() => setNewGameOpen(false)} submit={handleNewGame} /> */}
           </Box>
           <Grid container>
             <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(index) => history.push(`/games/${index + 1}`)}/>
@@ -59,31 +59,25 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
           </Switch>
         </Grid>
       )}
-      <Route path="/games/:gameIndex/edit" render={
-        ({ match }) => {
-          const { gameIndex } = match.params;
-          return <EditGameDialogue open game={games[Number(gameIndex) - 1]} onClose={() => history.push(`/games/${gameIndex}`)} submit={saveGame} />;
-        }
-      } />
-      <Route exact path='/gamemaker/:gamemakerIndex' render={
+      <Route path='/gamemaker/:gamemakerIndex' render={
         ({ match }) => {
           const { gamemakerIndex } = match.params;
-          return <GameMaker game={games[Number(gamemakerIndex) - 1]} newSave={saveNewGame} editSave={saveGame} gamemakerIndex={gamemakerIndex}/>
+          return <GameMaker game={games[Number(gamemakerIndex) - 1]} newSave={saveNewGame} editSave={saveGame} gamemakerIndex={gamemakerIndex} games={games} cloneQuestion={cloneQuestion}/>
         }
       } />;
-      <Route path="/gamemaker/:gamemakerIndex/addquestion" render={
+      {/* <Route path="/gamemaker/:gamemakerIndex/addquestion" render={
         ({ match }) => {
           const { gamemakerIndex } = match.params;
           return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} cloneQuestion={cloneQuestion} saveQuestion={saveQuestion} gamemakerIndex={gamemakerIndex}/>;
         }
-      } />
-      <Route exact path="/gamemaker/:gamemakerIndex/createquestion/:createQuestionIndex" render={
+      } /> */}
+      {/* <Route exact path="/gamemaker/:gamemakerIndex/createquestion/:createQuestionIndex" render={
         ({ match }) => {
           const { gamemakerIndex, createQuestionIndex } = match.params;
           const gameNumber = Number(gamemakerIndex) - 1 == -1;
           return <QuestionForm loading={loading} question={gameNumber ? null : games[Number(gamemakerIndex) - 1].questions[Number(createQuestionIndex) - 1]} saveQuestion={saveQuestion} gamemakerIndex={gamemakerIndex} createQuestionIndex={createQuestionIndex}/>;
         }
-      } />
+      } /> */}
     </Grid>
   );
 }

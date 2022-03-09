@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import AddQuestionForm from './AddQuestionForm';
+import QuestionForm from './QuestionForm';
 import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
 
@@ -67,7 +68,7 @@ const times = [
     },
 ]
 
-export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
+export default function GameMaker({game, newSave, editSave, gamemakerIndex, cloneQuestion, games}) {
     useEffect(() => {
         document.title = 'RightOn! | Game editor';
         return () => { document.title = 'RightOn! | Game management'; }
@@ -75,7 +76,9 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
 
     const classes = useStyles();
     const history = useHistory();
-    const location = useLocation();
+    const match = useRouteMatch('/gamemaker/:gamemakerIndex');
+    console.log(match)
+
     const [gameDetails, setGameDetails] = useState(() => {
         if (game) {
             return {...game};
@@ -102,7 +105,7 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
     });
     const [questions, setQuestions] = useState([...gameDetails.questions]);
 
-    // Handles changing and storing of new values for the Phase Timers
+    // Handles changing and storing of new values for both Phase Timers
     const handlePhaseOne = (event) => {
         setPhaseOne(event.target.value);
         setGameDetails({ ...gameDetails, phaseOneTime: phaseOne });
@@ -112,12 +115,22 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
         setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
     };
 
+    // Handles changing the Game CCSS code when the question set is changed/updated
+    function handleCCSS(grade, domain) {
+        setGameDetails({ ...gameDetails, grade: grade, domain: domain });
+    }
+
     // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
     const handleDelete = (index) => {
         const newQuestions = [...questions];
         newQuestions.splice(index, 1);
         setQuestions(newQuestions);
     }
+
+    // Handles any new questions added to the game, either through Add Question or Create Question
+    const handleSaveQuestion = (newQuestion) => {
+        setQuestions([ ...questions, newQuestion ])
+    };
 
     // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
     const handleDisable = () => {
@@ -145,215 +158,230 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
         history.push('/');
     };
 
-    // Callback Function -> Save current game info (unsaved) by passing down in params/props and then this function will re-set the game to be that data and also have/add back the new questions into the Game Maker page without ever actually saving any of these changes
-    function handleGameData(gameData, questionData) {
-        setGameDetails(gameData)
-        setQuestions([...gameDetails.questions, questionData]) // Is this needed or does setGameDetails handle that as well? Also will it loop bc the state is above the function?
-        // setQuestions(...gameDetails.questions.append(questionData)) Is gameDeatils already an Array and if so is putting [] around it redundant or unnecessary
-    }
+    let content = (
+        <div className={match.isExact ? classes.show : classes.hide}>
+            <form onSubmit={handleSubmit}>
+                <Grid container>
+                    <Grid container item xs={2}></Grid>
+                    
+                    <Grid item container xs={8} className={classes.page}>
+                        <Grid container item xs={12} className={classes.game}>
+                            <Grid container item xs={12}>
+                                <Typography style={{fontWeight: 500, fontSize: '20px'}}>
+                                    Create Game
+                                </Typography>
+                            </Grid>
 
-    function handleCCSS(grade, domain) {
-        setGameDetails({ ...gameDetails, grade: grade, domain: domain });
-    }
+                            <Grid container item xs={12}>
+                                <Typography style={{fontWeight: 700, fontSize: '16px', color: '#FC1047', paddingBottom: '10px'}}>
+                                    Note: In order for this game to be playable in advanced mode, there must be a minimum of 5 questions.
+                                </Typography>
+                            </Grid>
 
-    return(
-        <form onSubmit={handleSubmit}>
-            <Grid container>
-                <Grid container item xs={2}></Grid>
-                
-                <Grid item container xs={8} className={classes.page}>
-                    <Grid container item xs={12} className={classes.game}>
-                        <Grid container item xs={12}>
-                            <Typography style={{fontWeight: 500, fontSize: '20px'}}>
-                                Create Game
-                            </Typography>
-                        </Grid>
-
-                        <Grid container item xs={12}>
-                            <Typography style={{fontWeight: 700, fontSize: '16px', color: '#FC1047', paddingBottom: '10px'}}>
-                                Note: In order for this game to be playable in advanced mode, there must be a minimum of 5 questions.
-                            </Typography>
-                        </Grid>
-
-                        <Grid container item xs={12}>
-                            <Grid container item xs={8}>
-                                <Grid container item xs={12}>
-                                    <TextField
-                                        variant='outlined'
-                                        label='Game Title'
-                                        value={gameDetails.title}
-                                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: currentTarget.value }); }}
-                                        fullWidth
-                                        required
-                                        className={classes.gameTitle}
-                                    />
-                                </Grid>
-
-                                <Grid container item xs={12}>
-                                    <TextField
-                                        variant='outlined'
-                                        label='Game Text'
-                                        value={gameDetails.description}
-                                        onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: currentTarget.value }); }}
-                                        fullWidth
-                                        multiline
-                                        rows={3}
-                                        className={classes.gameText}
-                                    />
-                                </Grid>
-
-                                <Grid container item xs={12} className={classes.thirdRow}>
-                                    <Grid container item xs={2}>
+                            <Grid container item xs={12}>
+                                <Grid container item xs={8}>
+                                    <Grid container item xs={12}>
                                         <TextField
                                             variant='outlined'
-                                            select
-                                            label='Phase 1'
-                                            value={phaseOne}
-                                            onChange={handlePhaseOne}
-                                        >
-                                            {times.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-
-                                    <Grid container item xs={2}>
-                                        <TextField
-                                            variant='outlined'
-                                            select
-                                            label='Phase 2'
-                                            value={phaseTwo}
-                                            onChange={handlePhaseTwo} 
-                                        >
-                                            {times.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-
-                                    <Grid container item xs={8}>
-                                        <TextField
-                                            variant='outlined'
-                                            label='Image URL'
+                                            label='Game Title'
+                                            value={gameDetails.title}
+                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: currentTarget.value }); }}
                                             fullWidth
-                                            value={gameDetails.imageUrl}
-                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); }}
+                                            required
+                                            className={classes.gameTitle}
                                         />
                                     </Grid>
+
+                                    <Grid container item xs={12}>
+                                        <TextField
+                                            variant='outlined'
+                                            label='Game Text'
+                                            value={gameDetails.description}
+                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: currentTarget.value }); }}
+                                            fullWidth
+                                            multiline
+                                            rows={3}
+                                            className={classes.gameText}
+                                        />
+                                    </Grid>
+
+                                    <Grid container item xs={12} className={classes.thirdRow}>
+                                        <Grid container item xs={2}>
+                                            <TextField
+                                                variant='outlined'
+                                                select
+                                                label='Phase 1'
+                                                value={phaseOne}
+                                                onChange={handlePhaseOne}
+                                            >
+                                                {times.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+
+                                        <Grid container item xs={2}>
+                                            <TextField
+                                                variant='outlined'
+                                                select
+                                                label='Phase 2'
+                                                value={phaseTwo}
+                                                onChange={handlePhaseTwo} 
+                                            >
+                                                {times.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+
+                                        <Grid container item xs={8}>
+                                            <TextField
+                                                variant='outlined'
+                                                label='Image URL'
+                                                fullWidth
+                                                value={gameDetails.imageUrl}
+                                                onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid container item xs={4} justifyContent='center'>
+                                    {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'}/>}
                                 </Grid>
                             </Grid>
+                        </Grid>
+                        
+                        <Grid item xs={12}>
+                            <Divider className={classes.divider}/>
+                        </Grid>
 
-                            <Grid container item xs={4} justifyContent='center'>
-                                {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'}/>}
+                        <Grid container item xs={12}>
+                            <Grid container item xs={12}>
+                                <Typography style={{fontWeight: 400, fontSize: '20px'}}>
+                                    Questions
+                                </Typography>
                             </Grid>
-                        </Grid>
-                    </Grid>
-                    
-                    <Grid item xs={12}>
-                        <Divider className={classes.divider}/>
-                    </Grid>
 
-                    <Grid container item xs={12}>
-                        <Grid container item xs={12}>
-                            <Typography style={{fontWeight: 400, fontSize: '20px'}}>
-                                Questions
-                            </Typography>
-                        </Grid>
+                            <Grid container item xs={12}>
+                                <Typography style={{fontWeight: 400, fontSize: '14px', color: '#A7A7A7'}}>
+                                    To add an exisiting question from another game into this one, click the Add Question button. To create a new question, click the Create Question button. Once you have added a question to the game, the question will appear in the space below.
+                                </Typography>
+                            </Grid>
 
-                        <Grid container item xs={12}>
-                            <Typography style={{fontWeight: 400, fontSize: '14px', color: '#A7A7A7'}}>
-                                To add an exisiting question from another game into this one, click the Add Question button. To create a new question, click the Create Question button. Once you have added a question to the game, the question will appear in the space below.
-                            </Typography>
-                        </Grid>
+                            <Grid container item xs={12} className={classes.questionHolder}>
+                                {questions.map((question, index) => {
+                                    return(
+                                        <Grid container item xs={12}>
+                                            <Card className={classes.question}>
+                                                <CardContent>
+                                                    <Grid container item>
+                                                        <Grid container item xs={10}>
+                                                            <Grid item xs={12}>
+                                                                <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                                                            </Grid>
 
-                        <Grid container item xs={12} className={classes.questionHolder}>
-                            {questions.map((question, index) => {
-                                return(
-                                    <Grid container item xs={12}>
-                                        <Card className={classes.question}>
-                                            <CardContent>
-                                                <Grid container item>
-                                                    <Grid container item xs={10}>
-                                                        <Grid item xs={12}>
-                                                            <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                                                            <Grid item xs={12}>
+                                                                <Typography className={classes.title}>
+                                                                Question {index + 1}
+                                                                </Typography>
+                                                            </Grid>
+
+                                                            <Grid item xs={12}>
+                                                                <Typography color="textSecondary" gutterBottom>
+                                                                {question.text}
+                                                                </Typography>
+                                                            </Grid>
                                                         </Grid>
 
-                                                        <Grid item xs={12}>
-                                                            <Typography className={classes.title}>
-                                                            Question {index + 1}
-                                                            </Typography>
-                                                        </Grid>
+                                                        <Grid container item xs={2}>
+                                                            <Grid container item xs={10} justifyContent='center'>
+                                                                {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'}/>}
+                                                            </Grid>
 
-                                                        <Grid item xs={12}>
-                                                            <Typography color="textSecondary" gutterBottom>
-                                                            {question.text}
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-
-                                                    <Grid container item xs={2}>
-                                                        <Grid container item xs={10} justifyContent='center'>
-                                                            {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'}/>}
-                                                        </Grid>
-
-                                                        <Grid container direction='column' item xs={2}>
-                                                            <Grid container item xs={2}>
-                                                                <IconButton size='small' onClick={() => handleDelete(index)}>
-                                                                    <Cancel/>
-                                                                </IconButton>
+                                                            <Grid container direction='column' item xs={2}>
+                                                                <Grid container item xs={2}>
+                                                                    <IconButton size='small' onClick={() => handleDelete(index)}>
+                                                                        <Cancel/>
+                                                                    </IconButton>
+                                                                </Grid>
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
-                                                </Grid>
-                                            </CardContent>
-                                        </Card>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    );
+                                })}
+
+                                <Grid container item xs={12} className={classes.questionAddition}>
+                                    <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
+                                        <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion`)}>
+                                            Add Question
+                                        </Button>
                                     </Grid>
-                                );
-                            })}
 
-                            <Grid container item xs={12} className={classes.questionAddition}>
-                                <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
-                                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion`)}>
-                                        Add Question
-                                    </Button>
-                                </Grid>
-
-                                <Grid container item xs={6} justifyContent='center' className={classes.createQuestion}>
-                                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/createquestion/0`)}>
-                                        Create Question
-                                    </Button>
+                                    <Grid container item xs={6} justifyContent='center' className={classes.createQuestion}>
+                                        <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/createquestion/0`)}>
+                                            Create Question
+                                        </Button>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
+
+                        {() => {
+                            if (questions == []) {
+                                return ( <Grid container item xs={12}></Grid> );
+                            }
+                            else {
+                                return (<GameCCSS questions={questions} handleCCSS={handleCCSS}/>);
+                            }
+                        }}
+
+                        <Grid container item xs={12} justifyContent='center'>
+                            <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
+                                Save Game
+                            </Button>
+                        </Grid>
                     </Grid>
 
-                    {() => {
-                        if (questions == []) {
-                            return ( <Grid container item xs={12}></Grid> );
-                        }
-                        else {
-                            return (<GameCCSS questions={questions} handleCCSS={handleCCSS}/>);
-                        }
-                    }}
-
-                    <Grid container item xs={12} justifyContent='center'>
-                        <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
-                            Save Game
-                        </Button>
-                    </Grid>
+                    <Grid container item xs={2}></Grid>
                 </Grid>
+            </form>
+        </div>
+    )
 
-                <Grid container item xs={2}></Grid>
-            </Grid>
-        </form>
+    return(
+        <Switch>
+            <Route exact path="/gamemaker/:gamemakerIndex">
+                {content}
+            </Route>
+            <Route path="/gamemaker/:gamemakerIndex/addquestion">
+                <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gamemakerIndex={gamemakerIndex}/>
+            </Route>
+            <Route path="/gamemaker/:gamemakerIndex/createquestion/:createQuestionIndex" render={
+                ({ match }) => {
+                const { gamemakerIndex, createQuestionIndex } = match.params;
+                const gameNumber = Number(gamemakerIndex) - 1 == -1;
+                return <QuestionForm question={gameNumber ? null : games[Number(gamemakerIndex) - 1].questions[Number(createQuestionIndex) - 1]} saveQuestion={handleSaveQuestion} gamemakerIndex={gamemakerIndex}/>;
+                }
+            } />
+        </Switch>
     );
 }
 
 const useStyles = makeStyles(theme => ({
+    show: {
+        display: 'block'
+    },
+    hide: {
+        display: 'none'
+    },
     page: {
         marginTop: '1%',
         paddingBottom: '10px',
