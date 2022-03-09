@@ -52,10 +52,9 @@ const useStyles = makeStyles(theme => ({
   }
   }));
 
-function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, addQuestion, gamemakerIndex }) {
+function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestion, deleteGame, cloneGame, cloneQuestion, submit, gamemakerIndex }) {
     const classes = useStyles();
     const history = useHistory();
-    const selectedIndex = window.location.pathname.split('/')[4];
 
     return (
         <Grid container className={classes.root}>
@@ -78,7 +77,7 @@ function AddQuestionForm({ loading, games, saveGame, saveQuestion, deleteQuestio
               <Route path="/gamemaker/:gamemakerIndex/addquestion/gameSelected/:selectedIndex" render={
                 ({ match }) => {
                   const { questionIndex, selectedIndex, gameIndex} = match.params;
-                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} gamemakerIndex={gamemakerIndex}/>;
+                  return <AddQuestion loading={loading} deleteQuestion={deleteQuestion} saveGame={saveGame} game={games[Number(selectedIndex-1)]} selectedIndex={selectedIndex} questionIndex={questionIndex} gameIndex={gameIndex} gamemakerIndex={gamemakerIndex} cloneQuestion={cloneQuestion} submit={submit}/>;
                 }
               } />
             </Switch>           

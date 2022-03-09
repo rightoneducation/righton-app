@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import AddQuestionForm from './AddQuestionForm';
 import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
 
@@ -64,7 +65,7 @@ const times = [
     },
 ]
 
-export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
+export default function GameMaker({game, newSave, editSave, gamemakerIndex, cloneQuestion, games}) {
     const classes = useStyles();
     const history = useHistory();
     const location = useLocation();
@@ -102,13 +103,19 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
         setPhaseTwo(event.target.value);
     };
 
+    const handleSubmitQuestion = (newQuestion) => {
+        setQuestions([ ...questions, newQuestion ])
+    };
+
+    const copyQuestion = () => history.push(`/gamemaker/addquestion`);
+
     const handleDelete = (index) => {
         const newQuestions = [...questions];
         newQuestions.splice(index, 1);
         setQuestions(newQuestions);
     }
 
-    return(
+    let content = (
         <form action="">
             <Grid container>
                 <Grid container item xs={2}></Grid>
@@ -291,11 +298,26 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex}) {
                         </Button>
                     </Grid>
                 </Grid>
-
-                <Grid container item xs={2}></Grid>
             </Grid>
         </form>
-    );
+    )
+// if (history.location.pathname == "/gamemaker/:gamemakerIndex/addquestion"){
+//     content = (
+//         <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSubmitQuestion} gamemakerIndex={gamemakerIndex}/>
+//     )
+// }
+    
+
+return(
+    <Switch>
+        <Route exact path="/gamemaker/:gamemakerIndex">
+            {content}
+        </Route>
+        <Route path="/gamemaker/:gamemakerIndex/addquestion">
+            <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSubmitQuestion} gamemakerIndex={gamemakerIndex}/>
+        </Route>
+    </Switch>
+);
 }
 
 const useStyles = makeStyles(theme => ({
