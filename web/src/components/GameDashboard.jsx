@@ -63,7 +63,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
           const image = null;
           return (
             <Grid container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
-              <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(index, gamemakerIndex)}>
+              <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(game.id, gamemakerIndex)}>
                 <CardContent>
                   <Grid container>
                     <Grid container item xs={8}>

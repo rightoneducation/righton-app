@@ -125,7 +125,7 @@ function AddQuestion({ game, selectedIndex, cloneQuestion, submit, gamemakerInde
     history.push('/gamemaker/:selectedIndex');
   }
 
-  const addQuestion = () => history.push(`/games/${selectedIndex}/questions/${questions.length + 1}/edit`);
+  const addQuestion = () => history.push(`/games/${game.id}/questions/${questions.length + 1}/edit`);
 
   const questions = game?.questions || [];
 
@@ -181,7 +181,7 @@ function AddQuestion({ game, selectedIndex, cloneQuestion, submit, gamemakerInde
           <Button className={classes.blueButton} color="primary" type="button" variant="contained" onClick={() => handleCloneQuestion(questions[index-1])}>Clone and Edit</Button>
         </Grid>
         <Grid item xs={2}>
-          <Button className={classes.redButton} color="primary" type="button" variant="contained" onClick={() => history.push(`/games/${selectedIndex}/questions/${index+1}`)}>View Question</Button>
+          <Button className={classes.redButton} color="primary" type="button" variant="contained" onClick={() => history.push(`/games/${game.id}/questions/${index+1}`)}>View Question</Button>
         </Grid> 
       </Grid>
     </Grid>

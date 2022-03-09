@@ -122,6 +122,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [activeIndex, setActiveIndex] = React.useState(null);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.questionIndex);
   };
@@ -135,11 +136,11 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
     const copy = { ...newGame[`q${newIndex}`] };
     newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
     newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push('/games/1'));
+    saveGame(newGame).then(() => history.push(`/games/${game.id}`));
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const addQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/edit`);
+  const addQuestion = () => history.push(`/games/${game.id}/questions/${questions.length + 1}/edit`);
 
   const copyQuestion = () => history.push(`/games/${gameIndex}/questions/${questions.length + 1}/copy`);
 
@@ -187,7 +188,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
             const { text, answer, imageUrl } = question;
             return (
               <Grid item xs={6}>
-              <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>
+              <Paper key={index} className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
                 <Box>
                   <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
                   <Box className={classes.questionIndex}>
@@ -219,10 +220,10 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                       open={activeIndex === String(index)}
                       onClose={handleClose}
                     >
-                      <MenuItem onClick={() => history.push(`/games/${gameIndex}/questions/${index}/edit`)}>Edit</MenuItem>
+                      <MenuItem onClick={() => history.push(`/games/${game.id}/questions/${index}/edit`)}>Edit</MenuItem>
                       {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
                       {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
-                      <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                      <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                     </Menu>
                   </Box>
                 </Box>

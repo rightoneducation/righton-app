@@ -207,17 +207,17 @@ export default function QuestionForm({ loading, saveQuestion, deleteQuestion, qu
     if (question.instructions != null && question.instructions !== []) question.instructions = JSON.stringify(question.instructions);
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
     // saveQuestion(question, gameId).then(() => history.push(`/games/${gameIndex}`));
-    saveQuestion(question, gameId).then(() => history.push(`/`));
+    saveQuestion(question, gameId).then(() => history.push(`/games/${gameId}`));
   }, [question, saveQuestion, history, gameId, gameIndex]);
 
   const handleBack = useCallback(() => {
-    if(gameIndex != null) {
-      history.push(`/games/${gameIndex}`);
+    if(gameId != null) {
+      history.push(`/games/${gameId}`);
     }
     else {
       history.push(`/gamemaker/0`);
     }
-  }, [gameIndex, history]);
+  }, [gameId, history]);
 
   const handleRemoveInstruction = useCallback((index) => {
     const newInstructions = [...question.instructions];
