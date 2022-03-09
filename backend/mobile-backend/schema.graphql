@@ -3,23 +3,22 @@
 input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
 
 type GameSession @model {
-  id: ID! @primaryKey(sortKeyFields: [updatedAt])
+  id: ID! @primaryKey
   game: Game! @hasOne
   startTime: AWSDateTime
   phaseOneTime: Int
   phaseTwoTime: Int
   teams: [Team] @hasMany
   currentQuestion: Int!
-  isPhaseOne: GameSessionState!
-  updatedAt: AWSTimeStamp!
+  currentState: GameSessionState!
 }
 
 enum GameSessionState {
-	CHOOSINGTRICKANSWER
+	CHOOSING_TRICK_ANSWER
 	FINISHED
-	INITIALINTRO
-	NOTSTARTED
-	REVIEWINGRESULT
+	INITIAL_INTRO
+	NOT_STARTED
+	REVIEWING_RESULT
 	VOTING
 }
 
