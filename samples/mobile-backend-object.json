@@ -1,0 +1,72 @@
+{
+  "id":"1234biodef",
+  "game":{
+     "id":"1234abcdef",
+     "title":"Game Title",
+     "description":"Game description",
+     "imageUrl":"https://source.unsplash.com/random/300×300",
+     "isAdvanced":false,
+     "gameCode":1234,
+     "questions":[
+        {
+           "id":"1234uihsfsifh",
+           "question":"Questions",
+           "answer":"Answer",
+           "trickAnswers":[
+              {
+                 "answer":"Answer 1",
+                 "explanation":"Explation 1"
+              },
+              {
+                 "answer":"Answer 2",
+                 "explanation":"Explation 2"
+              },
+              {
+                 "answer":"Answer 3",
+                 "explanation":"Explation 3"
+              }
+           ],
+           "imageUrl":"",
+           "instructions":[
+              "Instruction 1",
+              "Instruction 2"
+           ],
+           "grade":5
+        }
+     ]
+  },
+  "startTime":"AWS Time",
+  "phaseOneTimeLimit":"500",
+  "phaseTwoTimeLimit":"500",
+  "teams":[
+     {
+        "id":"Team1",
+        "name":"Team name",
+        "question":{
+           "id":"Question id",
+           "question":"title"
+        },
+        "trickiestAnswersIds":[
+           15,
+           20,
+           30
+        ],
+        "teamMembers":[
+           {
+              "id":"Team member 1",
+              "isFacilitator":true,
+              "deviceId":"12ajdl",
+              "memberAnswers":[
+                 {
+                    "id":"12jlfjalf",
+                    "isChosen":false,
+                    "text":"Answer 1"
+                 }
+              ]
+           }
+        ]
+     }
+  ],
+  "currentQuestion":2,
+  "currentState":"CHOOSING_TRICK_ANSWERS"
+}
