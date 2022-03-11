@@ -105,7 +105,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AddQuestion({ game, cloneQuestion, submit, selectedIndex, gamemakerIndex }){
+export default function AddQuestion({ game, cloneQuestion, submit, selectedId, gameId }){
   const classes = useStyles();
   const history = useHistory();
   const index = window.location.pathname.split('/')[7];
@@ -117,7 +117,7 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedIndex
     delete question.createdAt;
     const newQuestion = await cloneQuestion(question);
     submit(newQuestion);
-    history.push(`/gamemaker/${gamemakerIndex}`);
+    history.push(`/gamemaker/${gameId}`);
   }
   const handleCloneQuestion = async (question) => {
     delete question.id;
@@ -125,8 +125,8 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedIndex
     delete question.createdAt;
   }
 
-
-  const addQuestion = () => history.push(`/games/${selectedIndex}/questions/${questions.length + 1}/edit`);
+  // Should be deleted as it is a temporary code for when a game has no questions, which wont exist in MVP
+  const addQuestion = () => history.push(`/games/${game.id}/questions/${questions.length + 1}/edit`);
 
   const questions = game?.questions || [];
   const questionCount = game?.questions?.length || 0;
@@ -148,7 +148,7 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedIndex
         const { text, answer, imageUrl } = question;
         return (
           <Grid item xs={12} >
-            <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion/gameSelected/${selectedIndex}/questionSelected/${index+1}`)}>
+            <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/${gameId}/addquestion/gameSelected/${selectedId}/questionSelected/${index+1}`)}>
               <Box>
                 <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
 
@@ -187,7 +187,7 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedIndex
           <Button className={classes.blueButton} variant="contained" onClick={() => handleCloneQuestion(questions[index-1])}>Clone and Edit</Button>
         {/* </Grid>
         <Grid item xs={4}> */}
-          <Button className={classes.redButton} variant="contained" onClick={() => history.push(`/games/${selectedIndex}/questions/${match.params.questionSelectedIndex-1}`)}>View Question</Button>
+          <Button className={classes.redButton} variant="contained" onClick={() => history.push(`/games/${game.id}/questions/${match.params.questionSelectedIndex-1}`)}>View Question</Button>
         {/* </Grid>  */}
       </Grid>
     </Grid>

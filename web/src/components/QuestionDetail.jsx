@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
-export default function QuestionDetails({gameIndex, gameTitle, questionIndex, question}) {
+export default function QuestionDetails({ backUrl, gameTitle, questionIndex, question }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -24,7 +24,7 @@ export default function QuestionDetails({gameIndex, gameTitle, questionIndex, qu
     return(
         <Grid container>
             <Grid item xs={12}>
-                <Button type="button" onClick={() => history.push(`/games/${gameIndex}`)}>
+                <Button type="button" onClick={() => history.push(backUrl)}>
                     <ArrowBackIcon className={classes.back} />Back to {gameTitle}
                 </Button>
             </Grid>

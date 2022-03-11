@@ -56,3 +56,8 @@ export const getGame = async (id: any) => {
   const result = await API.graphql(graphqlOperation(GG, { id })) as { data: any };
   return result.data;
 };
+
+export const getGameById = (games: Game[], id: number | string) => {
+  const numericalId = Number(id);
+  return games.find((game) => game.id === numericalId)
+}

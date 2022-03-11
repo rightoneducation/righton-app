@@ -79,6 +79,15 @@ function App() {
     setAlert({ message: 'Game saved.', type: 'success' });
   }
 
+  // @ts-ignore
+  const handleCloneGame = async (game) => {
+    const result = await cloneGame(game);
+    if (result) {
+      getSortedGames();
+      setAlert({ message: 'Game cloned.', type: 'success' });
+    }
+  }
+
   const handleDeleteGame = async (id: number) => {
     const result = await deleteGames(id);
     
@@ -89,6 +98,24 @@ function App() {
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
+  // @ts-ignore
+  const handleSaveQuestion = async (question) => {
+    let result;
+    if (question.id) {
+      result = await updateQuestion(question);
+      setAlert({ message: 'Question Updated', type: 'success' });
+    }
+    else {
+      result = await cloneQuestion(question);
+      setAlert({ message: 'Question Created', type: 'success' });
+    }
+    if (result) {
+      setLoading(true);
+      getSortedGames();
+      setLoading(false);
+    }
+  };
+  
   const handleDeleteQuestion = async (id: number) => {
     const result = await deleteQuestions(id)
 
@@ -97,15 +124,6 @@ function App() {
       
     } 
     setAlert({ message: 'Question deleted.', type: 'success' });
-  }
-
-  // @ts-ignore
-  const handleCloneGame = async (game) => {
-    const result = await cloneGame(game);
-    if (result) {
-      getSortedGames();
-      setAlert({ message: 'Game cloned.', type: 'success' });
-    }
   }
 
   useEffect(() => {
@@ -117,29 +135,6 @@ function App() {
     getGames();
     setStartup(false);
   }, [sortType]);
-
-  // @ts-ignore
-  const handleSaveQuestion = async (question, gameId) => {
-    // @ts-ignore TODO: change how this is passed around
-    let result;
-    if (question.id) {
-      result = await updateQuestion(question);
-      setAlert({ message: 'Question Updated', type: 'success' });
-    }
-    else {
-      // needs to be update to new createQuestion function
-      // Jared - will use handleSaveQuestion for Add to Game button
-      // Ray - will use new createQuestion function for Add to Game button (pass down as new prop seperate from handleSaveQuestion?)
-      result = await cloneQuestion(question);
-      setAlert({ message: 'Question Created', type: 'success' });
-    }
-    if (result) {
-      setLoading(true);
-      getSortedGames();
-      setLoading(false);
-    }
-    // @ts-ignore
-  };
 
   if (startup) return null;
 

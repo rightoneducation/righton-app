@@ -8,6 +8,7 @@ import AddQuestionForm from './AddQuestionForm';
 import QuestionForm from './QuestionForm';
 import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
+import { getGameById } from '../lib/games';
 
 // Mock question info
 const mockQuestion = {
@@ -34,6 +35,7 @@ const mockQuestion = {
 
 // New "empty" game
 const newGame = {
+    id: 0,
     title: '',
     description: '',
     grade: '',
@@ -68,7 +70,7 @@ const times = [
     },
 ]
 
-export default function GameMaker({game, newSave, editSave, gamemakerIndex, cloneQuestion, games}) {
+export default function GameMaker({loading, game, newSave, editSave, gameId, cloneQuestion, games, saveQuestion}) {
     useEffect(() => {
         document.title = 'RightOn! | Game editor';
         return () => { document.title = 'RightOn! | Game management'; }
@@ -77,7 +79,6 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex, clon
     const classes = useStyles();
     const history = useHistory();
     const match = useRouteMatch('/gamemaker/:gamemakerIndex');
-    console.log(match)
 
     const [gameDetails, setGameDetails] = useState(() => {
         if (game) {
@@ -158,9 +159,16 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex, clon
         history.push('/');
     };
 
+    // if (history.location.pathname == "/gamemaker/:gameId/addquestion") {
+    //     console.log('train')
+    //     return (
+    //         <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gameId={gameId}/>
+    //     );
+    // }
+    
     let content = (
-        <div className={match.isExact ? classes.show : classes.hide}>
-            <form onSubmit={handleSubmit}>
+        <div>
+            <form onSubmit={handleSubmit} className={match.isExact ? classes.show : classes.hide}>
                 <Grid container>
                     <Grid container item xs={2}></Grid>
                     
@@ -320,13 +328,13 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex, clon
 
                                 <Grid container item xs={12} className={classes.questionAddition}>
                                     <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
-                                        <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/addquestion`)}>
+                                        <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/addquestion`)}>
                                             Add Question
                                         </Button>
                                     </Grid>
 
                                     <Grid container item xs={6} justifyContent='center' className={classes.createQuestion}>
-                                        <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gamemakerIndex}/createquestion/0`)}>
+                                        <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/createquestion/0`)}>
                                             Create Question
                                         </Button>
                                     </Grid>
@@ -353,25 +361,38 @@ export default function GameMaker({game, newSave, editSave, gamemakerIndex, clon
                     <Grid container item xs={2}></Grid>
                 </Grid>
             </form>
+
+            {/* {() => {
+                if (history.location.pathname == "/gamemaker/:gameId/addquestion") {
+                    console.log('train')
+                    return (
+                        <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gameId={gameId}/>
+                    );
+                }
+            }} */}
+            sdvishdjifbuoshfoehrgoheuiorghiuerhiergiuheriuh
         </div>
-    )
+    );
 
     return(
-        <Switch>
-            <Route exact path="/gamemaker/:gamemakerIndex">
-                {content}
-            </Route>
-            <Route path="/gamemaker/:gamemakerIndex/addquestion">
-                <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gamemakerIndex={gamemakerIndex}/>
-            </Route>
-            <Route path="/gamemaker/:gamemakerIndex/createquestion/:createQuestionIndex" render={
-                ({ match }) => {
-                const { gamemakerIndex, createQuestionIndex } = match.params;
-                const gameNumber = Number(gamemakerIndex) - 1 == -1;
-                return <QuestionForm question={gameNumber ? null : games[Number(gamemakerIndex) - 1].questions[Number(createQuestionIndex) - 1]} saveQuestion={handleSaveQuestion} gamemakerIndex={gamemakerIndex}/>;
-                }
-            } />
-        </Switch>
+        <div>
+            <Switch>
+                <Route exact path="/gamemaker/:gameId">
+                    {content}
+                </Route>
+                <Route path="/gamemaker/:gameId/addquestion" render=
+                {({ match }) => {
+                    const {gameId} = match.params
+                    return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gameId={gameDetails.id}/>
+                }}/>
+                <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
+                {({ match }) => {
+                    const {gameId, createQuestionIndex} = match.params
+                    const gameNumber = Number(gameId) == 0;
+                    return <QuestionForm question={gameNumber ? null : getGameById(games, gameId).questions[Number(createQuestionIndex) - 1]} saveQuestion={saveQuestion} gameId={gameDetails.id}/>;
+                }}/>
+            </Switch>
+        </div>
     );
 }
 

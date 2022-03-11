@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
+function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
   useEffect(() => {
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -96,10 +96,11 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
 
   const classes = useStyles();
   const history = useHistory();
-  const match = useRouteMatch('/games/:gameIndex/question/:questionIndex');
+  const match = useRouteMatch('/games/:gameId/question/:questionIndex');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [activeIndex, setActiveIndex] = React.useState(null);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.questionIndex);
     event.stopPropagation();
@@ -115,12 +116,12 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
     const copy = { ...newGame[`q${newIndex}`] };
     newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
     newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push('/games/1'));
+    saveGame(newGame).then(() => history.push(`/games/${game.id}`));
     setAnchorEl(null);
     setActiveIndex(null);
   };
 
-  const addQuestion = () => history.push(`/gamemaker/${gameIndex}/createquestion/${questions.length + 1}`);
+  const addQuestion = () => history.push(`/gamemaker/${game.id}/createquestion/${questions.length + 1}`);
 
   // if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questions || [];
@@ -174,7 +175,7 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
             const { text, answer, imageUrl } = question;
             return (
               <Grid item xs={6}>
-                <Card key={index} className={classes.question} onClick={() => history.push(`/games/${gameIndex}/questions/${index}`)}>
+                <Card key={index} className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
                   <Grid container item xs={8}>
                     <Grid item xs={12}>
                       <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
@@ -213,13 +214,13 @@ function GameForm({ loading, game, gameIndex, saveGame, deleteQuestion }) {
                           onClose={handleClose}
                           onClick={(event) => { if (!match) event.stopPropagation(); }}
                         >
-                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameIndex}/createquestion/${index+1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index+1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
 
                           {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
 
                           {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
 
-                          <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push('/games/1')); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                          <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                         </Menu>
                       </Grid>
                   </Grid>

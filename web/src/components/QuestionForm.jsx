@@ -107,7 +107,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function QuestionForm({ saveQuestion, question: originalQuestion, gamemakerIndex }) {
+export default function QuestionForm({ saveQuestion, question: originalQuestion, gameId }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -140,13 +140,13 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
   
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
-    if(gamemakerIndex != null) {
-      history.push(`/gamemaker/${gamemakerIndex}`);
+    if(gameId != null) {
+      history.push(`/gamemaker/${gameId}`);
     }
     else {
       history.push(`/gamemaker/0`);
     }
-  }, [gamemakerIndex, history]);
+  }, [gameId, history]);
 
   // When the correct answer is changed/update this function handles that change
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); }, [question, setQuestion]);
@@ -195,23 +195,28 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
       window.alert("Please enter a question");
       return;
     }
+    
     if(question.answer == null || question.answer === "") {
       window.alert("Please enter an answer");
       return;
     }
+
     if(question.grade == null || question.grade === "") {
       window.alert("Please enter a grade level");
       return;
     }
+
     if(question.domain == null || question.domain === "") {
       window.alert("Please enter a domain/subject");
       return;
     }
+
     if (question.instructions != null && question.instructions !== []) question.instructions = JSON.stringify(question.instructions);
+
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
-    // saveQuestion(question, gameId).then(() => history.push(`/games/${gameIndex}`));
-    saveQuestion(question).then(() => history.push(`/gamemaker/:gamemakerIndex`));
-  }, [question, saveQuestion, history, gamemakerIndex]);
+
+    saveQuestion(question).then(() => history.push(`/gamemaker/:gameId`));
+  }, [question, saveQuestion, history, gameId]);
 
   // if (loading) return <Skeleton variant="rect" width={210} height={118} />
 
