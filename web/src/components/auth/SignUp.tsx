@@ -23,7 +23,6 @@ const Signup: React.FC = () => {
     setLoading(true);
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
       return;
     }
     try {
