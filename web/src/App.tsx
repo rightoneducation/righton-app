@@ -7,17 +7,17 @@ import {
 } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import {
-  createMuiTheme,
+  createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import AlertContext, { Alert } from './context/AlertContext';
-import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
-import { updateQuestion, createQuestion } from './lib/questions';
+import { updateQuestion, createQuestion, addQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
+import AlertContext, { Alert } from './context/AlertContext';
 import { Game } from './API';
+import AlertBar from './components/AlertBar';
 import StatusPageContainer from './components/StatusPageContainer';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
@@ -29,7 +29,7 @@ const filterGame = (game: Game | null, search: string) => {
   return false;
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#307583',
@@ -37,6 +37,9 @@ const theme = createMuiTheme({
     secondary: {
       main: '#8e2e9d',
     },
+  },
+  typography: {
+    fontFamily: 'Poppins',
   },
 });
 
@@ -50,6 +53,7 @@ function App() {
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
 
+  // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveNewGame = async (newGame: { title: string, description?: string }) => {
     setLoading(true);
     const game = await createGame(newGame);
@@ -62,10 +66,11 @@ function App() {
   }
 
   const getSortedGames = async () => {
-    const games = sortGames(await fetchGames(), SORT_TYPES.UPDATED);
+    const games = sortGames(await fetchGames(), sortType);
     setGames(games);
   }
 
+  // Update saveGame let statement to include other attributes of game that have now been created and possibly add the createGameQuestion here (if functionaloity is not in updateGame) with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveGame = async (game: Game) => {
     let updatedGame = {
       id: game.id,
@@ -93,7 +98,7 @@ function App() {
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeteleQuestion = async (id: number) => {
+  const handleDeleteQuestion = async (id: number) => {
     const result = await deleteQuestions(id)
 
     if(result) {
@@ -136,10 +141,10 @@ function App() {
   };
 
   useEffect(() => {
+    getWhatToDo();
     getGames();
     setStartup(false);
-    getWhatToDo();
-  }, []);
+  }, [sortType]);
 
   // @ts-ignore
   const handleSaveQuestion = async (question, gameId) => {
@@ -150,6 +155,9 @@ function App() {
       setAlert({ message: 'Question Updated', type: 'success' });
     }
     else {
+      // needs to be update to new createQuestion function
+      // Jared - will use handleSaveQuestion for Add to Game button
+      // Ray - will use new createQuestion function for Add to Game button (pass down as new prop seperate from handleSaveQuestion?)
       result = await createQuestion(question, gameId);
       setAlert({ message: 'Question Created', type: 'success' });
     }
@@ -177,15 +185,15 @@ function App() {
         {(isAuthenticated) ? (<Redirect to="/" />) : 
           <Switch>
             <Route path="/login">
-              <Nav />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <LogIn />
             </Route>
             <Route path="/signup">
-              <Nav />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <SignUp />
             </Route>
             <Route path="/confirmation">
-              <Nav />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} />
@@ -194,9 +202,9 @@ function App() {
         {userLoading ? <div>Loading</div> : (isAuthenticated ? (
           <AlertContext.Provider value={alertContext}>
             <Box>
-              <Nav />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeteleQuestion} setSearchInput={setSearchInput} searchInput={searchInput} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} />
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
               </Route>
             </Box>
             <AlertBar />
