@@ -8,7 +8,7 @@ import Menu from '@material-ui/core/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import CCSS from './CCSS';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';

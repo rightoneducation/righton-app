@@ -5,8 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import exploreIcon from './../images/Explore.svg';
-import quizMakerIcon from './../images/QuizMaker.svg';
+import exploreIcon from '../images/Explore.svg';
+import quizMakerIcon from '../images/QuizMaker.svg';
 import SearchBar from './SearchBar.jsx';
 
 export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {

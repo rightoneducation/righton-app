@@ -14,7 +14,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CCSS from './CCSS';
 import Grid from '@material-ui/core/Grid';
 // import { deleteQuestion } from '../graphql/mutations';
-import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 
 const useStyles = makeStyles(theme => ({
   root: {
