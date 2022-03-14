@@ -121,7 +121,7 @@ function App() {
     let user = null;
     try {
       user = await Auth.currentAuthenticatedUser();
-      // Auth.signOut();
+      //Auth.signOut();
       if (user) {
         setLoggedIn(true);
       } else {
@@ -185,15 +185,15 @@ function App() {
         {(isAuthenticated) ? (<Redirect to="/" />) : 
           <Switch>
             <Route path="/login">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <LogIn />
             </Route>
             <Route path="/signup">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <SignUp />
             </Route>
             <Route path="/confirmation">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} />
@@ -202,7 +202,7 @@ function App() {
         {userLoading ? <div>Loading</div> : (isAuthenticated ? (
           <AlertContext.Provider value={alertContext}>
             <Box>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={true} />
               <Route path="/">
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
               </Route>
