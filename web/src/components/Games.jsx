@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import GameForm from './GameForm';
+import { Box, Grid } from '@material-ui/core';
+import GameLaunch from './GameLaunch';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import GameMaker from './GameMaker';
 import { getGameById } from '../lib/games';
-import AddQuestionForm from './AddQuestionForm';
-// import QuestionForm from './QuestionForm';
 
 
-export default function Games({ loading, games, saveGame, saveQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion }) {
+export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -29,7 +26,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
             <SortByDropdown handleSortChange={handleSortChange} />
           </Box>
           <Grid container>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} saveQuestion={saveQuestion} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)}/>
+            <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)}/>
           </Grid>
           
         </Grid>
@@ -48,7 +45,7 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
               ({ match }) => {
                 const { gameId } = match.params;
                 const game = getGameById(games, gameId)
-                return <GameForm loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId}  />;
+                return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId}  />;
               }
             } />
           </Switch>
@@ -57,23 +54,10 @@ export default function Games({ loading, games, saveGame, saveQuestion, deleteQu
       <Route path='/gamemaker/:gameId' render={
         ({ match }) => {
           const { gameId } = match.params;
-          const newGame = Number(gameId) == 0;
-          return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} saveQuestion={saveQuestion}/>
+          const newGame = Number(gameId) === 0;
+          return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion}/>
         }
       } />;
-      {/* <Route exact path="/gamemaker/:gameId/addquestion" render={
-        ({ match }) => {
-          const { gameId } = match.params;
-          return <AddQuestionForm loading={loading} games={games} deleteGame={deleteGame} cloneGame={cloneGame} cloneQuestion={cloneQuestion} saveQuestion={saveQuestion} gameId={gameId}/>;
-        }
-      } /> */}
-      {/* <Route exact path="/gamemaker/:gamemakerIndex/createquestion/:createQuestionIndex" render={
-        ({ match }) => {
-          const { gamemakerIndex, createQuestionIndex } = match.params;
-          const gameNumber = Number(gamemakerIndex) - 1 == -1;
-          return <QuestionForm loading={loading} question={gameNumber ? null : games[Number(gamemakerIndex) - 1].questions[Number(createQuestionIndex) - 1]} saveQuestion={saveQuestion} gamemakerIndex={gamemakerIndex} createQuestionIndex={createQuestionIndex}/>;
-        }
-      } /> */}
     </Grid>
   );
 }

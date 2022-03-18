@@ -3,19 +3,14 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
-import { updateQuestion, createQuestion, cloneQuestion } from './lib/questions';
+import { updateQuestion, cloneQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
-import { Game, Question } from './API';
+import { Game } from './API';
 import AlertBar from './components/AlertBar';
 import StatusPageContainer from './components/StatusPageContainer';
 import Nav from './components/Nav';
 import Games from './components/Games';
-
-const filterGame = (game: Game | null, search: string) => {
-  if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
-  return false;
-};
 
 const theme = createTheme({
   palette: {
@@ -30,6 +25,11 @@ const theme = createTheme({
     fontFamily: 'Poppins',
   },
 });
+
+const filterGame = (game: Game | null, search: string) => {
+  if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
+  return false;
+};
 
 function App() {
   const [startup, setStartup] = useState(true);
@@ -48,7 +48,6 @@ function App() {
   const saveNewGame = async ( newGame: { title: string, description?: string, phaseOneTime?: string, phaseTwoTime?: string, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[] ) => {
     setLoading(true);
     const game = await createGame(newGame, questionIDSet);
-    // questionSet.map((questionID) => { gameQuestion(game.id, questionID) })
     if (game) {
      const games = sortGames(await fetchGames(), sortType);
      setGames(games);
@@ -99,22 +98,24 @@ function App() {
   }
 
   // @ts-ignore
-  const handleSaveQuestion = async (question) => {
-    let result;
-    if (question.id) {
-      result = await updateQuestion(question);
-      setAlert({ message: 'Question Updated', type: 'success' });
-    }
-    else {
-      result = await cloneQuestion(question);
-      setAlert({ message: 'Question Created', type: 'success' });
-    }
-    if (result) {
-      setLoading(true);
-      getSortedGames();
-      setLoading(false);
-    }
-  };
+  // const handleSaveQuestion = async (question) => {
+  //   let result;
+  //   if (question.id) {
+  //     // result = await updateQuestion(question);
+  //     console.log('update')
+  //     setAlert({ message: 'Question Updated', type: 'success' });
+  //   }
+  //   else {
+  //     // result = await cloneQuestion(question);
+  //     console.log('create')
+  //     setAlert({ message: 'Question Created', type: 'success' });
+  //   }
+  //   if (result) {
+  //     setLoading(true);
+  //     getSortedGames();
+  //     setLoading(false);
+  //   }
+  // };
   
   const handleDeleteQuestion = async (id: number) => {
     const result = await deleteQuestions(id)
@@ -154,7 +155,7 @@ function App() {
             <Box>
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
               <Route path="/">
-                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
               </Route>
             </Box>
             <AlertBar />

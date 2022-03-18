@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, Box, Button, Link, Typography, Menu, MenuItem, Grid } from '@material-ui/core';
 import { MoreVert, ArrowBack } from '@material-ui/icons'; 
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import CCSS from './CCSS';
-// import Skeleton from '@material-ui/lab/Skeleton';
-// import { deleteQuestion } from '../graphql/mutations';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,7 +15,6 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     display: 'flex',
-    justifyContent: 'space-between',
   },
   gameImage: {
     width: '60%'
@@ -123,7 +122,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
 
   const addQuestion = () => history.push(`/gamemaker/${game.id}/createquestion/${questions.length + 1}`);
 
-  // if (loading) return <Skeleton variant="rect" height={500} />;
+  if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questions || [];
   const questionCount = game?.questions?.length || 0;
 
@@ -134,27 +133,16 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
           <ArrowBack className={classes.back} />Back to Explore Page
         </Button>
 
-        <h3 style={{width:'10%', textAlign:'center',textDecoration:'und'}}><strong>Games</strong></h3>
-
-        {/* {game.grade !== 'General' && (
-          <>
-          <CCSS game={game} />
-          </>
-        )}
-        <Button className={classes.addQuestion} color="primary" type="button" variant="contained" onClick={addQuestion}>
-          Add question
-        </Button> */}
+        {/* <h3 style={{width:'40%', textAlign:'right', textDecoration:'underline'}}><strong>Games</strong></h3> */}
       </Box>
 
-      <Grid container xs={12}>
+      <Grid container>
         <Grid item xs={4} className={classes.leftComponent}>
             <h3 style={{color:'#0075FF'}}>{game.title}</h3>
 
             <p>{game.description}</p>
 
             {game.imageUrl ? <img className={classes.gameImage} src={game.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
-
-            {/* {game} */}
 
             <Button className={classes.launchButton}>Launch Game {'>'}</Button>
         </Grid>
@@ -172,13 +160,13 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
 
           {questions.map((question, index) => {
             if (question === null) return null;
-            const { text, answer, imageUrl } = question;
+            const { text, imageUrl } = question;
             return (
               <Grid item xs={6}>
                 <Card key={index} className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
                   <Grid container item xs={8}>
                     <Grid item xs={12}>
-                      <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
+                      <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
                       <Typography className={classes.questionIndex} >
                         Question {index+1}
@@ -188,12 +176,6 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
                         {text}
                       </Typography>
                     </Grid>
-
-                    {/* <Grid item xs={12}>
-                      <Typography>
-                          Answer: {answer}
-                      </Typography>
-                    </Grid> */}
                   </Grid>
                   
                   <Grid container item xs={4}>

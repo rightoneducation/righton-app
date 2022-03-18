@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Link, Paper, Button, Box } from '@material-ui/core';
@@ -47,8 +47,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
   },
   questionText: {
-    paddingRight: theme.spacing(2),
-    maxWidth: '500px',
+    paddingRight: theme.spacing(1),
+    maxWidth: '100%',
     whiteSpace: 'pre-wrap',
   },
   questionAnswer: {
@@ -109,16 +109,22 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
   const classes = useStyles();
   const history = useHistory();
   const index = window.location.pathname.split('/')[7];
-  const match = useRouteMatch('/gamemaker/:gamemakerIndex/addquestion/gameSelected/:selectedIndex/questionSelected/:questionSelectedIndex');
+  const match = useRouteMatch('/gamemaker/:gameId/addquestion/gameSelected/:selectedIndex/questionSelected/:questionSelectedIndex');
   
   const handleAddQuestion = async (question) => {
+    console.log(question)
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
+    question.wrongAnswers = JSON.parse(question.wrongAnswers)
+    question.instructions = JSON.parse(JSON.parse(question.instructions))
+    console.log(question)
     const newQuestion = await cloneQuestion(question);
+    console.log(newQuestion)
     submit(newQuestion);
     history.push(`/gamemaker/${gameId}`);
   }
+
   const handleCloneQuestion = async (question) => {
     delete question.id;
     delete question.updatedAt;
@@ -152,22 +158,18 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
               <Box>
                 <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
 
-                <Box className={classes.questionIndex}>
-                  <Typography variant="h9">
+                  <Typography className={classes.questionIndex}>
                     Question {index+1}
                   </Typography>
-                </Box>
 
-                <Box className={classes.questionText}>
                   <Typography>
                     {text}
                   </Typography>
-                </Box>
               </Box>
 
               <Box className={classes.questionAnswer}>
                 <Box>
-                  {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} width={'100%'}/>}
+                  {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'70%'}/>}
 
                   <Typography align="center">
                     {answer}
@@ -180,15 +182,17 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
       })}
 
       <Grid container item className={classes.parent}>
-        {/* <Grid item xs={4}> */}
           <Button className={classes.greenButton} variant="contained" onClick={() => handleAddQuestion(questions[index-1])}>Add to Game</Button>
-        {/* </Grid>
-        <Grid item xs={4}> */}
-          <Button className={classes.blueButton} variant="contained" onClick={() => handleCloneQuestion(questions[index-1])}>Clone and Edit</Button>
-        {/* </Grid>
-        <Grid item xs={4}> */}
+        
+          <Button className={classes.blueButton} variant="contained"
+          onClick={() => history.push({
+            pathname: `/gamemaker/${game.id}/createquestion/0`,
+            state: questions
+          })}>
+            Clone and Edit
+          </Button>
+        
           <Button className={classes.redButton} variant="contained" onClick={() => history.push(`/games/${game.id}/questions/${match.params.questionSelectedIndex-1}`)}>View Question</Button>
-        {/* </Grid>  */}
       </Grid>
     </Grid>
   );

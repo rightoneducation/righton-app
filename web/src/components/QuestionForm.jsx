@@ -107,7 +107,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function QuestionForm({ saveQuestion, question: originalQuestion, gameId }) {
+
+export default function QuestionForm({ updateQuestion, question: originalQuestion, gameId, gameQuestion, cloneQuestion }) {
+
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -115,13 +117,21 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
 
   const classes = useStyles();
   const history = useHistory();
+  const data = history.state || {};
+  console.log(data)
+
   const [question, setQuestion] = useState( {
     text: '',
     imageUrl: '',
     answer: '',
     wrongAnswers: [{choice: "", explanation: ""}, {choice: "", explanation: ""}, {choice: "", explanation: ""}],
     instructions: [],
+    grade: null,
+    domain: null,
+    cluster: null,
+    standard: null,
   });
+
 
   // Parses through JSON string of instructions and wrong answer objects (wrong answers and reasons) twice because of how it is saved on backend (turns data into a string twice so needs to be parsed twice)
   useEffect(() => {
@@ -138,6 +148,8 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
     }
   }, [originalQuestion]);
   
+console.log(question)
+
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if(gameId != null) {
@@ -190,7 +202,7 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
 
 
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
-  const handleSaveQuestion = useCallback(() => {
+  const handleSaveQuestion = async (question) => {
     if(question.text == null || question.text === "") {
       window.alert("Please enter a question");
       return;
@@ -215,10 +227,21 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
 
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
 
-    saveQuestion(question).then(() => history.push(`/gamemaker/:gameId`));
-  }, [question, saveQuestion, history, gameId]);
-
-  // if (loading) return <Skeleton variant="rect" width={210} height={118} />
+    let newQuestion;
+    if (question.id) {
+      console.log(question)
+      newQuestion = await updateQuestion(question);
+      console.log('update')
+    }
+    else {
+      console.log(question)
+      newQuestion = await cloneQuestion(question);
+      console.log('create')
+    }
+    console.log(newQuestion);
+    gameQuestion(newQuestion);
+    history.push(`/gamemaker/:gameId`);
+  }
 
 
   return (
@@ -271,10 +294,11 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
                 label="Grade Level" 
                 onChange={onSelectMaker('grade')}
                 disableUnderline
-                defaultValue=""
+                value={question.grade}
                 required
                 MenuProps={{classes: {paper: classes.MenuProps}}}
               >
+                <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"6"}>6</MenuItem>
                 <MenuItem value={"7"}>7</MenuItem>
                 <MenuItem value={"8"}>8</MenuItem>
@@ -292,10 +316,11 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
                 label="Domain/Subject" 
                 onChange={onSelectMaker('domain')}
                 disableUnderline
-                defaultValue=""
+                value={question.domain}
                 required
                 MenuProps={{classes: {paper: classes.MenuProps}}}
               >
+                <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"RP"}>RP: Ratios & Proportional Relationships</MenuItem>
                 <MenuItem value={"NS"}>NS: Number System</MenuItem>
                 <MenuItem value={"EE"}>EE: Expressions & Equations</MenuItem>
@@ -311,10 +336,11 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
                 className={classes.dropdown} 
                 label="Cluster" 
                 onChange={onSelectMaker('cluster')}
-                defaultValue=""
+                value={question.cluster}
                 disableUnderline
                 MenuProps={{classes: {paper: classes.MenuProps}}}
               >
+                <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"A"}>A</MenuItem>
                 <MenuItem value={"B"}>B</MenuItem>
                 <MenuItem value={"C"}>C</MenuItem>
@@ -327,10 +353,11 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
                 className={classes.dropdown} 
                 label="Standard" 
                 onChange={onSelectMaker('standard')}
-                defaultValue=""
+                value={question.standard}
                 disableUnderline
                 MenuProps={{classes: {paper: classes.MenuProps}}}
               >
+                <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"1"}>1</MenuItem>
                 <MenuItem value={"2"}>2</MenuItem>
                 <MenuItem value={"3"}>3</MenuItem>
@@ -345,7 +372,7 @@ export default function QuestionForm({ saveQuestion, question: originalQuestion,
           </Grid>
 
           <Grid style={{marginTop: 50}} item container xs={12} justifyContent='center'>
-            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={handleSaveQuestion}>Add to Game</Button>
+            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Game</Button>
           </Grid>
 
         </Grid>

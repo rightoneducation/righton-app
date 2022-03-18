@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import React from "react";
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button } from "@material-ui/core";
 import ArrowBack from '@material-ui/icons/ArrowBack';
@@ -62,18 +62,10 @@ const useStyles = makeStyles(theme => ({
 export default function AddQuestionForm({ loading, games, cloneQuestion, submit, gameId }) {
     const classes = useStyles();
     const history = useHistory();
-    // const handleBack = useCallback(() => {
-    //   if(gameId != 0) {
-    //     history.push(`/gamemaker/${gameId}`);
-    //   }
-    //   else {
-    //     history.push(`/gamemaker/0`);
-    //   }
-    // }, [gamemakerIndex, history]);
 
     return (
         <Grid container className={classes.root}>
-          <Button type="button" className={classes.back} onClick={history.push(`/gamemaker/${gameId}`)}>
+          <Button type="button" className={classes.back} onClick={() => history.push(`/gamemaker/${gameId}`)}>
             <ArrowBack style={{marginRight: 8}} />Back to Game Maker
           </Button>
 
@@ -85,8 +77,15 @@ export default function AddQuestionForm({ loading, games, cloneQuestion, submit,
 
           <Grid item xs={7} className={classes.content}>
             <Switch>
-              <Route exact path="/gamemaker/:gameId/addquestion" render={
-                ({}) => {
+              <Route path="/gamemaker/:gameId/addquestion/gameSelected/:selectedId" render={
+                ({ match }) => {
+                  const {gameId, selectedId} = match.params;
+                  return <AddQuestion game={getGameById(games, selectedId)}  cloneQuestion={cloneQuestion} submit={submit} selectedId={selectedId} gameId={gameId} />;
+                }
+              } />
+
+              <Route path="/gamemaker/:gameId/addquestion" render={
+                ({ match }) => {
                   return (
                     <Grid style={{height: 'calc(100vh - 64px)'}}>
                       <p style={{color:"#797979", fontWeight:"bold"}}>No Game Selected</p>
@@ -96,13 +95,6 @@ export default function AddQuestionForm({ loading, games, cloneQuestion, submit,
                   );
                 }
               }/>
-
-              <Route path="/gamemaker/:gameId/addquestion/gameSelected/:selectedId" render={
-                ({ match }) => {
-                  const selectedId = match.params;
-                  return <AddQuestion game={getGameById(games, selectedId)}  cloneQuestion={cloneQuestion} submit={submit} selectedId={selectedId} gameId={gameId} />;
-                }
-              } />
             </Switch>           
           </Grid>
 

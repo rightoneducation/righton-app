@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
@@ -10,28 +10,6 @@ import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
 import { getGameById } from '../lib/games';
 
-// Mock question info
-const mockQuestion = {
-    id : '1389',
-    text : "How many total squares (of any size) are there on a checkerboard?",
-    answer: '204 squares',
-    imageUrl: 'https://media.istockphoto.com/photos/wooden-chess-board-picture-id476469645?s=612x612',
-    grade: '7',
-    domain: 'G',
-    cluster: 'B',
-    standard: '6',
-    instructions: 'To get this answer, you not only need to count all of the 1x1 squares, but you need to consider the 2x2, 3x3, 4x4, etc. all the way up to the full 8x8 square. Counting every one of those squares together will return a sum of 204 total squares.',
-    choices : [
-        'Wrong Answer 1',
-        'Wrong Answer 2',
-        'Wrong Answer 3',
-    ],
-    explanations : [
-        'wrong choice explanation 1',
-        'wrong choice explanation 2',
-        'wrong choice explanation 3',
-    ]
-}
 
 // New "empty" game
 const newGame = {
@@ -43,7 +21,7 @@ const newGame = {
     phaseOneTime: 180,
     phaseTwoTime: 180,
     imageUrl: '',
-    questions: [ mockQuestion ],
+    questions: [],
 }
 
 // Preset times
@@ -70,7 +48,7 @@ const times = [
     },
 ]
 
-export default function GameMaker({loading, game, newSave, editSave, gameId, cloneQuestion, games, saveQuestion}) {
+export default function GameMaker({loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion}) {
     useEffect(() => {
         document.title = 'RightOn! | Game editor';
         return () => { document.title = 'RightOn! | Game management'; }
@@ -78,7 +56,6 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     const classes = useStyles();
     const history = useHistory();
-    const match = useRouteMatch('/gamemaker/:gamemakerIndex');
 
     const [gameDetails, setGameDetails] = useState(() => {
         if (game) {
@@ -89,7 +66,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
         }
     });
     const [phaseOne, setPhaseOne] = useState(() => {
-        if (gameDetails.phaseOneTime == null) {
+        if (gameDetails.phaseOneTime === null) {
             return 180;
         }
         else {
@@ -97,7 +74,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
         }
     });
     const [phaseTwo, setPhaseTwo] = useState(() => {
-        if (gameDetails.phaseTwoTime == null) {
+        if (gameDetails.phaseTwoTime === null) {
             return 180;
         }
         else {
@@ -129,7 +106,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
     }
 
     // Handles any new questions added to the game, either through Add Question or Create Question
-    const handleSaveQuestion = (newQuestion) => {
+    const handleGameQuestion = (newQuestion) => {
         setQuestions([ ...questions, newQuestion ])
     };
 
@@ -145,30 +122,28 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     // Save New or Exisiting Game (preliminary submit)
     const handleSubmit = (event) => {
-        if (gameDetails.id) {
+        if (gameDetails.id !== 0) {
             let questionIDs = questions.map(question => ({id: question.id}))
             delete gameDetails.questions
+            console.log(gameDetails)
             editSave(gameDetails, questionIDs);
+            console.log('edit')
         }
         else {
             let questionIDs = questions.map(question => question.id)
             delete gameDetails.questions
+            delete gameDetails.id
             newSave(gameDetails, questionIDs);
+            console.log('new')
         }
         event.preventDefault();
         history.push('/');
     };
-
-    // if (history.location.pathname == "/gamemaker/:gameId/addquestion") {
-    //     console.log('train')
-    //     return (
-    //         <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gameId={gameId}/>
-    //     );
-    // }
     
+
     let content = (
         <div>
-            <form onSubmit={handleSubmit} className={match.isExact ? classes.show : classes.hide}>
+            <form onSubmit={handleSubmit}>
                 <Grid container>
                     <Grid container item xs={2}></Grid>
                     
@@ -342,14 +317,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                             </Grid>
                         </Grid>
 
-                        {() => {
-                            if (questions == []) {
-                                return ( <Grid container item xs={12}></Grid> );
-                            }
-                            else {
-                                return (<GameCCSS questions={questions} handleCCSS={handleCCSS}/>);
-                            }
-                        }}
+                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS}/> : <Grid container item xs={12}></Grid>}
 
                         <Grid container item xs={12} justifyContent='center'>
                             <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
@@ -361,48 +329,32 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                     <Grid container item xs={2}></Grid>
                 </Grid>
             </form>
-
-            {/* {() => {
-                if (history.location.pathname == "/gamemaker/:gameId/addquestion") {
-                    console.log('train')
-                    return (
-                        <AddQuestionForm games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gameId={gameId}/>
-                    );
-                }
-            }} */}
-            sdvishdjifbuoshfoehrgoheuiorghiuerhiergiuheriuh
         </div>
     );
 
     return(
         <div>
             <Switch>
-                <Route exact path="/gamemaker/:gameId">
-                    {content}
-                </Route>
                 <Route path="/gamemaker/:gameId/addquestion" render=
                 {({ match }) => {
                     const {gameId} = match.params
-                    return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleSaveQuestion} gameId={gameDetails.id}/>
+                    return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId}/>
                 }}/>
                 <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
                 {({ match }) => {
                     const {gameId, createQuestionIndex} = match.params
-                    const gameNumber = Number(gameId) == 0;
-                    return <QuestionForm question={gameNumber ? null : getGameById(games, gameId).questions[Number(createQuestionIndex) - 1]} saveQuestion={saveQuestion} gameId={gameDetails.id}/>;
+                    const gameNumber = Number(gameId) === 0;
+                    return <QuestionForm question={gameNumber ? null : getGameById(games, gameId).questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion}/>;
                 }}/>
+                <Route path="/gamemaker/:gameId">
+                    {content}
+                </Route>
             </Switch>
         </div>
     );
 }
 
 const useStyles = makeStyles(theme => ({
-    show: {
-        display: 'block'
-    },
-    hide: {
-        display: 'none'
-    },
     page: {
         marginTop: '1%',
         paddingBottom: '10px',
