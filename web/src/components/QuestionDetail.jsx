@@ -7,11 +7,14 @@ import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
 export default function QuestionDetails({ backUrl, gameTitle, questionIndex, question }) {
+    console.log(question)
     const classes = useStyles();
     const history = useHistory();
 
+    console.log(question.wrongAnswers)
     const explanation = JSON.parse(JSON.parse(question.instructions));
     let wrongAnswerSet = JSON.parse(JSON.parse(question.wrongAnswers));
+    console.log(wrongAnswerSet)
 
     if(wrongAnswerSet == null) {
         wrongAnswerSet = [
@@ -24,7 +27,7 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
     return(
         <Grid container>
             <Grid item xs={12}>
-                <Button type="button" onClick={() => history.push(backUrl)}>
+                <Button type="button" onClick={() => history.goBack()}>
                     <ArrowBackIcon className={classes.back} />Back to {gameTitle}
                 </Button>
             </Grid>
@@ -42,7 +45,7 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
                     </Typography>
                 </Grid>
 
-                <Grid container item xs={12} alignItems='center' justify='center'>
+                <Grid container item xs={12} alignItems='center' justifyContent='center'>
                     {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
                 </Grid>
             </Grid>

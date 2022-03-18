@@ -118,7 +118,8 @@ const useStyles = makeStyles(theme => ({
     sortByWrapper: {
       display: 'inline',
       position: 'relative',
-      marginLeft: 15,
+      // marginLeft: 15,
+      marginBottom: '30px',
       color: '#9BA9D0',
       fontFamily: 'Poppins',
     },
