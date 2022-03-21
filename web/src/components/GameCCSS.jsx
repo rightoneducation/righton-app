@@ -5,7 +5,7 @@ import Helper from './GameHelper';
 // GameCCSS Function Logic
 // If all grade attributes in questions array are the saame, game ccss is that value. if not the value is NULL, empty, or otherwise not there/displayed
 // If all domain attributes in questions array are the saame, game ccss is that value. if not it is "Misc" no exceptions
-export default function GameCCSS({questions, handleCCSS}) {
+export default function GameCCSS({questions, handleCCSS, currentGameGrade}) {
     const allEqual = (arr) => {
         return arr.every(val => val === arr[0])
     };
@@ -59,15 +59,15 @@ export default function GameCCSS({questions, handleCCSS}) {
         }
     }
 
-    const [check, setCheck] = useState(true);
-    // () => {
-    //     if (grade === 'Mashup') {
-    //         return false;
-    //     }
-    //     else {
-    //         return true;
-    //     }
-    // }
+    const [check, setCheck] = useState(
+    () => {
+        if (currentGameGrade === 'Mashup') {
+            return false;
+        }
+        else {
+            return true;
+        }
+    });
     const [CCSS, setCCSS] = useState(checker);
 
     const handleCheck = (checkmark) => {

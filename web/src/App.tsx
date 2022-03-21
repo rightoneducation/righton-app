@@ -89,40 +89,17 @@ function App() {
 
   const handleDeleteGame = async (id: number) => {
     const result = await deleteGames(id);
-    
     if (result) {
       const games = sortGames(await fetchGames(), sortType);
       setGames(games);
     }
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
-
-  // @ts-ignore
-  // const handleSaveQuestion = async (question) => {
-  //   let result;
-  //   if (question.id) {
-  //     // result = await updateQuestion(question);
-  //     console.log('update')
-  //     setAlert({ message: 'Question Updated', type: 'success' });
-  //   }
-  //   else {
-  //     // result = await cloneQuestion(question);
-  //     console.log('create')
-  //     setAlert({ message: 'Question Created', type: 'success' });
-  //   }
-  //   if (result) {
-  //     setLoading(true);
-  //     getSortedGames();
-  //     setLoading(false);
-  //   }
-  // };
   
   const handleDeleteQuestion = async (id: number) => {
     const result = await deleteQuestions(id)
-
-    if(result) {
+    if (result) {
       getSortedGames()
-      
     } 
     setAlert({ message: 'Question deleted.', type: 'success' });
   }

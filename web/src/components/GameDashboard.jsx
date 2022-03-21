@@ -61,7 +61,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
           const questionCount = game?.questions?.length || 0;
           
           return (
-            <Grid container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
+            <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
               <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(game.id, gameId)}>
                 <CardContent>
                   <Grid container>

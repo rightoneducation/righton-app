@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack';
@@ -117,8 +117,8 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
   const classes = useStyles();
   const history = useHistory();
-  const data = history.state || {};
-  console.log(data)
+  const location = useLocation();
+  const data = location.state || null;
 
   const [question, setQuestion] = useState( {
     text: '',
@@ -135,6 +135,9 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
   // Parses through JSON string of instructions and wrong answer objects (wrong answers and reasons) twice because of how it is saved on backend (turns data into a string twice so needs to be parsed twice)
   useEffect(() => {
+    if (data) {
+      originalQuestion = data.question;
+    }
     if (originalQuestion) {
       if (originalQuestion.instructions !== null && originalQuestion.instructions !== [] && typeof originalQuestion.instructions === 'string') {
         originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
@@ -148,7 +151,6 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
     }
   }, [originalQuestion]);
   
-console.log(question)
 
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {

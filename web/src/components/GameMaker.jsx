@@ -125,16 +125,13 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
         if (gameDetails.id !== 0) {
             let questionIDs = questions.map(question => ({id: question.id}))
             delete gameDetails.questions
-            console.log(gameDetails)
             editSave(gameDetails, questionIDs);
-            console.log('edit')
         }
         else {
             let questionIDs = questions.map(question => question.id)
             delete gameDetails.questions
             delete gameDetails.id
             newSave(gameDetails, questionIDs);
-            console.log('new')
         }
         event.preventDefault();
         history.push('/');
@@ -259,7 +256,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                             <Grid container item xs={12} className={classes.questionHolder}>
                                 {questions.map((question, index) => {
                                     return(
-                                        <Grid container item xs={12}>
+                                        <Grid key={index} container item xs={12}>
                                             <Card className={classes.question}>
                                                 <CardContent>
                                                     <Grid container item>
@@ -317,7 +314,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                             </Grid>
                         </Grid>
 
-                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS}/> : <Grid container item xs={12}></Grid>}
+                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade}/> : <Grid container item xs={12}></Grid>}
 
                         <Grid container item xs={12} justifyContent='center'>
                             <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
