@@ -11,7 +11,7 @@ import AlertBar from './components/AlertBar';
 import StatusPageContainer from './components/StatusPageContainer';
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { StartGame } from './host/StartGame';
+import { StartGame } from './components/host/pages/StartGame';
 
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
