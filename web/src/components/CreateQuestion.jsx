@@ -4,9 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
-import QuestionFormAnswerDropdown from './QuestionFormAnswerDropdown';
-import QuestionIcon from './QuestionIcon';
-// import Skeleton from '@material-ui/lab/Skeleton';
+import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
+import QuestionHelper from './QuestionHelper';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -285,7 +285,7 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
           <Grid item container xs={12}>
             <Typography gutterBottom variant="h4" component="h1" style={{marginRight: 30, display: 'inline'}}>Enter CCSS</Typography>
 
-            <QuestionIcon />
+            <QuestionHelper />
           </Grid>
 
           <Grid item container xs={12} justifyContent='space-between'>

@@ -5,7 +5,7 @@ import { HelpOutline } from '@material-ui/icons';
 import SpeechBubble from '../images/SpeechBubble.svg';
 
 
-export default function Helper({text}) {
+export default function GameHelper({text}) {
     const classes = useStyles();
 
     return(

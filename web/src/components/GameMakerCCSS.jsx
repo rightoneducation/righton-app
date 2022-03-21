@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Checkbox, FormControlLabel, Grid, Typography } from '@material-ui/core';
-import Helper from './GameHelper';
+import GameHelper from './GameHelper';
 
 // GameCCSS Function Logic
 // If all grade attributes in questions array are the saame, game ccss is that value. if not the value is NULL, empty, or otherwise not there/displayed
@@ -87,12 +87,12 @@ export default function GameCCSS({questions, handleCCSS, currentGameGrade}) {
                 <Typography style={{fontWeight: 400, fontSize: '20px', paddingTop: '9px'}}>
                     CCSS Suggestion: {CCSS}
                 </Typography>
-                <Helper text='Suggested Common Core Standard code. This is to help teachers accurately find your content.'/>
+                <GameHelper text='Suggested Common Core Standard code. This is to help teachers accurately find your content.'/>
             </Grid>
 
             <Grid container item xs={5} justifyContent='flex-end'>
                 <FormControlLabel control={<Checkbox checked={check} onClick={() => handleCheck(!check)}/>} label='Standards Aligned?' style={{marginRight: '0px'}} />
-                <Helper text='Only check this box if the content of your game aligns with Common Core Standards.'/>
+                <GameHelper text='Only check this box if the content of your game aligns with Common Core Standards.'/>
             </Grid>
         </Grid>
     );

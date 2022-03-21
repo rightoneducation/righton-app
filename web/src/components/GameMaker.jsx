@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import AddQuestionForm from './AddQuestionForm';
-import QuestionForm from './QuestionForm';
+import AddQuestionForm from './AddQuestionSidebar';
+import QuestionForm from './CreateQuestion';
 import CCSS from './CCSS';
-import GameCCSS from './GameCCSS';
+import GameCCSS from './GameMakerCCSS';
 import { getGameById } from '../lib/games';
 
 
@@ -337,12 +337,14 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                     const {gameId} = match.params
                     return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId}/>
                 }}/>
+
                 <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
                 {({ match }) => {
                     const {gameId, createQuestionIndex} = match.params
                     const gameNumber = Number(gameId) === 0;
                     return <QuestionForm question={gameNumber ? null : getGameById(games, gameId).questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion}/>;
                 }}/>
+
                 <Route path="/gamemaker/:gameId">
                     {content}
                 </Route>
