@@ -19,7 +19,9 @@ const classes = useStyles()
         Basic Mode
       </div>
       <CurrentStudents/>
+      
       <Button className={classes.startGameButton} variant="contained">Start Game</Button>
+      
     </div>
   
     
@@ -30,12 +32,19 @@ const useStyles = makeStyles(theme => ({
   background: {
     height: "100vh",
     width: "100%",
-    background: 'linear-gradient(right,#0F78BD,#043373)'
+    background: 'linear-gradient(right,#0F78BD,#043373)',
+   
   },
+  
   startGameButton: {
     background: 'linear-gradient(90deg, #FC1047 0%, #FC2468 100%)',
-    boxShadow: '0px 5px 8px rgba(0, 0, 0, 0.8)',
-    borderRadius: '34px',
-    color: 'white'
+    borderRadius: '22px',
+    color: 'white',
+    width: "233.28px",
+    height: "39.45px",
+    position: "fixed",
+    bottom: "2%",
+    marginLeft: "22%",
+    
   }
 }))
