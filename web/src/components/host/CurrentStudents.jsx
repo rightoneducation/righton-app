@@ -8,11 +8,20 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 const students = ["Ray W.", "Zach T.", "Jared J."]
 const x = "X"
+const studentCount = 12
 
 const CurrentStudents = () => {
     const classes = useStyles()
   return (
       <div>
+          <Grid className={classes.studentCount}>
+              {studentCount}
+          </Grid>
+            <div className={classes.inSessionDiv}>
+                <p className={classes.inSession}>
+                Students in Session
+                </p>
+            </div>
           <hr className={classes.hr}/>
           {students.map((student) => (
               <MenuItem  container className={classes.studentCards} >  
@@ -32,6 +41,29 @@ const CurrentStudents = () => {
   )
 }
 const useStyles = makeStyles(theme => ({
+
+    studentCount: {
+        color: "rgba(255, 255, 255, 1)",
+        fontWeight: "bold",
+        fontSize: "72px",
+        textAlign: "center",
+        marginTop: "4%"
+    },
+
+    inSessionDiv: {
+        width: "80px",
+        height: "40px",
+        margin: "auto"
+    },
+
+    inSession: {
+        color: "rgba(255, 255, 255, 1)",
+        textAlign: "center",
+        margin: "auto",
+        fontSize: "16px"
+        
+    },
+
     studentCards: {
         margin: "auto",
         marginBottom: "15px",

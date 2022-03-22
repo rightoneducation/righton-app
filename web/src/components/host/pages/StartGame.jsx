@@ -15,13 +15,16 @@ const classes = useStyles()
     <div className={classes.background}>
      <HostHeader/>
       <GameCard/>
-      <div>
+      <div className={classes.gameMode}>
         Basic Mode
       </div>
       <CurrentStudents/>
       
-      <Button className={classes.startGameButton} variant="contained">Start Game</Button>
-      
+      <div classname={classes.startButtonDiv}>
+        <div classname={classes.startButtonCenter}>
+        <Button className={classes.startGameButton} variant="contained">Start Game</Button>
+        </div>
+      </div>
     </div>
   
     
@@ -35,16 +38,40 @@ const useStyles = makeStyles(theme => ({
     background: 'linear-gradient(right,#0F78BD,#043373)',
    
   },
+
+  gameMode: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontStyle: "Italic",
+    fontSize: "18px",
+    color: "rgba(255, 255, 255, 0.46)",
+    paddingTop: "10%",
+    fontFamiy: "Poppins"
+  },
   
+  //trying to figure out how to position the start game button here, will circle back
+  // startButtonDiv:{
+  //   height: "200px",
+  //   position: "relative"
+  // },
+
+  // startButtonCenter: {
+  //   margin: "auto",
+  //   position: "absolute",
+  //   top: "50%",
+  //   left: "50%"
+  // },
+
   startGameButton: {
     background: 'linear-gradient(90deg, #FC1047 0%, #FC2468 100%)',
-    borderRadius: '22px',
+    borderRadius: '34px',
     color: 'white',
-    width: "233.28px",
-    height: "39.45px",
-    position: "fixed",
+    fontWeight: "bold",
+    width: "300px",
+    height: "48px",
+    position: "absolute",
     bottom: "2%",
-    marginLeft: "22%",
+    marginLeft: "15%",
     
   }
 }))
