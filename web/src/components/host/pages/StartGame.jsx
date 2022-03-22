@@ -19,7 +19,7 @@ const classes = useStyles()
       
       <div classname={classes.startButtonDiv}>
         <div classname={classes.startButtonCenter}>
-        <Button className={classes.startGameButton} variant="contained">Start Game</Button>
+        <button className={classes.startGameButton} variant="contained">Start Game</button>
         </div>
       </div>
     </div>
@@ -31,8 +31,8 @@ const classes = useStyles()
 const useStyles = makeStyles(theme => ({
   background: {
     height: "100vh",
-    width: "100%",
-    background: 'linear-gradient(right,#0F78BD,#043373)',
+    width: "100vw",
+    background: 'linear-gradient(#0D68B1 0%, #02215F 100%)',
    
   },
 
@@ -68,6 +68,7 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     bottom: "2%",
     marginLeft: "12%",
+    fontSize: "20px"
     
   }
 }))
