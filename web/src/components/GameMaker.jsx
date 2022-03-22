@@ -86,7 +86,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
     // Handles changing and storing of new values for both Phase Timers
     const handlePhaseOne = (event) => {
         setPhaseOne(event.target.value);
-        setGameDetails({ ...gameDetails, phaseOneTime: phaseOne });
+        setGameDetails({ ...gameDetails, phaseOneTime: event.target.value });
     };
     const handlePhaseTwo = (event) => {
         setPhaseTwo(event.target.value);
@@ -107,6 +107,12 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     // Handles any new questions added to the game, either through Add Question or Create Question
     const handleGameQuestion = (newQuestion) => {
+        for (let i=0; i< questions.length; i++) {
+            if (newQuestion.id === questions[i].id) {
+                questions[i] = newQuestion
+                return null;
+            }
+        }
         setQuestions([ ...questions, newQuestion ])
     };
 

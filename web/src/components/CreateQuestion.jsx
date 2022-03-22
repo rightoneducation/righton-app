@@ -230,7 +230,8 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
 
     let newQuestion;
-    if (question.id) {
+    console.log(question.id)
+    if (question.id !== null) {
       console.log(question)
       newQuestion = await updateQuestion(question);
       console.log('update')
@@ -239,9 +240,9 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
       console.log(question)
       newQuestion = await cloneQuestion(question);
       console.log('create')
+      gameQuestion(newQuestion);
     }
     console.log(newQuestion);
-    gameQuestion(newQuestion);
     history.push(`/gamemaker/:gameId`);
   }
 

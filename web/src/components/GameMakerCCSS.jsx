@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox, FormControlLabel, Grid, Typography } from '@material-ui/core';
 import GameHelper from './GameHelper';
 
@@ -81,6 +81,12 @@ export default function GameCCSS({questions, handleCCSS, currentGameGrade}) {
         }
     }
     
+    useEffect(() => {
+        if (currentGameGrade === 'Mashup') {
+            handleCheck(false)
+        }
+    }, [])
+
     return(
         <Grid container item xs={12}>
             <Grid container item xs={7} justifyContent='flex-start'>
