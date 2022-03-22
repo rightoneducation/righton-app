@@ -27,8 +27,23 @@ const theme = createTheme({
 });
 
 const filterGame = (game: Game | null, search: string) => {
-  if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
-  return false;
+  if (!game || !game?.title) {
+    return false;
+  }
+  if (game.title.toLowerCase().indexOf(search) > -1) {
+    return true;
+  }
+  else {
+    if (game?.questions) {
+      for (let i = 0; i < game.questions.length; i++) {
+        let questionText = game.questions[i]?.text;
+        if (questionText !== undefined && questionText.toLowerCase().indexOf(search) > -1) {
+          return true;
+        }
+      }
+  }
+    return false;
+  }
 };
 
 function App() {
