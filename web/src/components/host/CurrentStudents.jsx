@@ -1,10 +1,8 @@
 import React from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-import Skeleton from '@material-ui/lab/Skeleton';
+
 
 const students = ["Ray W.", "Zach T.", "Jared J."]
 const x = "X"
@@ -72,6 +70,7 @@ const useStyles = makeStyles(theme => ({
         height: "62px",
         background: "rgba(255, 255, 255, 0.25)",
         color: "rgba(255, 255, 255, 1)",
+        fontSize: "24px"
        
     },
     name: {

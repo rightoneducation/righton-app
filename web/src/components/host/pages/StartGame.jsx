@@ -5,9 +5,6 @@ import HostHeader from '../HostHeader';
 import GameCard from '../GameCard';
 import CurrentStudents from '../CurrentStudents';
 
-
-
-
 export const StartGame = () => {
 
 const classes = useStyles()
@@ -46,7 +43,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: "18px",
     color: "rgba(255, 255, 255, 0.46)",
     paddingTop: "10%",
-    fontFamiy: "Poppins"
   },
   
   //trying to figure out how to position the start game button here, will circle back
@@ -71,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     height: "48px",
     position: "absolute",
     bottom: "2%",
-    marginLeft: "15%",
+    marginLeft: "12%",
     
   }
 }))
