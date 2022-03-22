@@ -34,10 +34,9 @@ const CurrentStudents = () => {
 const useStyles = makeStyles(theme => ({
     studentCards: {
         margin: "auto",
-       
         marginBottom: "15px",
         borderRadius: "14px",
-        width: "80%",
+        width: "311px",
         height: "62px",
         background: "rgba(255, 255, 255, 0.25)",
         color: "rgba(255, 255, 255, 1)",
@@ -55,8 +54,8 @@ const useStyles = makeStyles(theme => ({
     hr: {
         marginTop: "30px",
         marginBottom: "25px",
-        marginRight: "11%",
-        marginLeft: "11%",
+        width: "266px",
+        height: "1px",
         borderRadius: "1.54px",
         border: "0",
         borderTop: "1px solid rgba(255, 255, 255, 0.25)"
