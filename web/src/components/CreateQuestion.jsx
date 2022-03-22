@@ -230,8 +230,8 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
 
     let newQuestion;
-    console.log(question.id)
-    if (question.id !== null) {
+    console.log(question)
+    if (question.id) {
       console.log(question)
       newQuestion = await updateQuestion(question);
       console.log('update')
