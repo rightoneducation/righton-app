@@ -7,14 +7,11 @@ import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
 export default function QuestionDetails({ backUrl, gameTitle, questionIndex, question }) {
-    console.log(question)
     const classes = useStyles();
     const history = useHistory();
 
-    console.log(question.wrongAnswers)
     const explanation = JSON.parse(JSON.parse(question.instructions));
     let wrongAnswerSet = JSON.parse(JSON.parse(question.wrongAnswers));
-    console.log(wrongAnswerSet)
 
     if(wrongAnswerSet == null) {
         wrongAnswerSet = [
@@ -63,9 +60,9 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
                     <Divider className={classes.divider}/>
                 </Grid>
 
-                {wrongAnswerSet.map((wrongAnswer) => {
+                {wrongAnswerSet.map((wrongAnswer, index) => {
                     return(
-                        <AnswerDropdown answer={wrongAnswer.choice} explanation={wrongAnswer.explanation} correct={false}/>
+                        <AnswerDropdown key={index} answer={wrongAnswer.choice} explanation={wrongAnswer.explanation} correct={false}/>
                     );
                 })}
             </Grid>

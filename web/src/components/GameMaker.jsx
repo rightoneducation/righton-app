@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import AddQuestionForm from './AddQuestionForm';
-import QuestionForm from './QuestionForm';
+import AddQuestionForm from './AddQuestionSidebar';
+import QuestionForm from './CreateQuestion';
 import CCSS from './CCSS';
-import GameCCSS from './GameCCSS';
+import GameCCSS from './GameMakerCCSS';
 import { getGameById } from '../lib/games';
 
 
@@ -86,7 +86,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
     // Handles changing and storing of new values for both Phase Timers
     const handlePhaseOne = (event) => {
         setPhaseOne(event.target.value);
-        setGameDetails({ ...gameDetails, phaseOneTime: phaseOne });
+        setGameDetails({ ...gameDetails, phaseOneTime: event.target.value });
     };
     const handlePhaseTwo = (event) => {
         setPhaseTwo(event.target.value);
@@ -107,6 +107,12 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     // Handles any new questions added to the game, either through Add Question or Create Question
     const handleGameQuestion = (newQuestion) => {
+        for (let i=0; i< questions.length; i++) {
+            if (newQuestion.id === questions[i].id) {
+                questions[i] = newQuestion
+                return null;
+            }
+        }
         setQuestions([ ...questions, newQuestion ])
     };
 
@@ -125,16 +131,13 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
         if (gameDetails.id !== 0) {
             let questionIDs = questions.map(question => ({id: question.id}))
             delete gameDetails.questions
-            console.log(gameDetails)
             editSave(gameDetails, questionIDs);
-            console.log('edit')
         }
         else {
             let questionIDs = questions.map(question => question.id)
             delete gameDetails.questions
             delete gameDetails.id
             newSave(gameDetails, questionIDs);
-            console.log('new')
         }
         event.preventDefault();
         history.push('/');
@@ -259,7 +262,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                             <Grid container item xs={12} className={classes.questionHolder}>
                                 {questions.map((question, index) => {
                                     return(
-                                        <Grid container item xs={12}>
+                                        <Grid key={index} container item xs={12}>
                                             <Card className={classes.question}>
                                                 <CardContent>
                                                     <Grid container item>
@@ -317,7 +320,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                             </Grid>
                         </Grid>
 
-                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS}/> : <Grid container item xs={12}></Grid>}
+                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade}/> : <Grid container item xs={12}></Grid>}
 
                         <Grid container item xs={12} justifyContent='center'>
                             <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
@@ -340,12 +343,14 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                     const {gameId} = match.params
                     return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId}/>
                 }}/>
+
                 <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
                 {({ match }) => {
                     const {gameId, createQuestionIndex} = match.params
                     const gameNumber = Number(gameId) === 0;
                     return <QuestionForm question={gameNumber ? null : getGameById(games, gameId).questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion}/>;
                 }}/>
+
                 <Route path="/gamemaker/:gameId">
                     {content}
                 </Route>

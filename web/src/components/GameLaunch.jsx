@@ -162,8 +162,8 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
             if (question === null) return null;
             const { text, imageUrl } = question;
             return (
-              <Grid item xs={6}>
-                <Card key={index} className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
+              <Grid key={index} item xs={6}>
+                <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
                   <Grid container item xs={8}>
                     <Grid item xs={12}>
                       <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />

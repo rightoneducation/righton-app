@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import QuestionIconSVG from '../images/QuestionIcon.svg';
 import SpeechBubble from '../images/SpeechBubble.svg';
 
-export default function QuestionIcon() {
+export default function QuestionHelper() {
     const classes = useStyles();
 
     return(

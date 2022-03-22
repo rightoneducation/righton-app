@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
-import QuestionFormAnswerDropdown from './QuestionFormAnswerDropdown';
-import QuestionIcon from './QuestionIcon';
-// import Skeleton from '@material-ui/lab/Skeleton';
+import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
+import QuestionHelper from './QuestionHelper';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -117,8 +117,8 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
   const classes = useStyles();
   const history = useHistory();
-  const data = history.state || {};
-  console.log(data)
+  const location = useLocation();
+  const data = location.state || null;
 
   const [question, setQuestion] = useState( {
     text: '',
@@ -135,6 +135,9 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
   // Parses through JSON string of instructions and wrong answer objects (wrong answers and reasons) twice because of how it is saved on backend (turns data into a string twice so needs to be parsed twice)
   useEffect(() => {
+    if (data) {
+      originalQuestion = data.question;
+    }
     if (originalQuestion) {
       if (originalQuestion.instructions !== null && originalQuestion.instructions !== [] && typeof originalQuestion.instructions === 'string') {
         originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
@@ -148,7 +151,6 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
     }
   }, [originalQuestion]);
   
-console.log(question)
 
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
@@ -228,6 +230,7 @@ console.log(question)
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
 
     let newQuestion;
+    console.log(question)
     if (question.id) {
       console.log(question)
       newQuestion = await updateQuestion(question);
@@ -237,9 +240,9 @@ console.log(question)
       console.log(question)
       newQuestion = await cloneQuestion(question);
       console.log('create')
+      gameQuestion(newQuestion);
     }
     console.log(newQuestion);
-    gameQuestion(newQuestion);
     history.push(`/gamemaker/:gameId`);
   }
 
@@ -283,7 +286,7 @@ console.log(question)
           <Grid item container xs={12}>
             <Typography gutterBottom variant="h4" component="h1" style={{marginRight: 30, display: 'inline'}}>Enter CCSS</Typography>
 
-            <QuestionIcon />
+            <QuestionHelper />
           </Grid>
 
           <Grid item container xs={12} justifyContent='space-between'>

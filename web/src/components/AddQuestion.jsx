@@ -112,15 +112,12 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
   const match = useRouteMatch('/gamemaker/:gameId/addquestion/gameSelected/:selectedIndex/questionSelected/:questionSelectedIndex');
   
   const handleAddQuestion = async (question) => {
-    console.log(question)
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
     question.wrongAnswers = JSON.parse(question.wrongAnswers)
-    question.instructions = JSON.parse(JSON.parse(question.instructions))
-    console.log(question)
+    question.instructions = JSON.parse(question.instructions)
     const newQuestion = await cloneQuestion(question);
-    console.log(newQuestion)
     submit(newQuestion);
     history.push(`/gamemaker/${gameId}`);
   }
@@ -129,6 +126,10 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
+    history.push(
+      `/gamemaker/${game.id}/createquestion/0`,
+      { question }
+    )
   }
 
   // Should be deleted as it is a temporary code for when a game has no questions, which wont exist in MVP
@@ -153,7 +154,7 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
         if (question === null) return null;
         const { text, answer, imageUrl } = question;
         return (
-          <Grid item xs={12} >
+          <Grid key={index} item xs={12} >
             <Paper key={index} className={classes.question} onClick={() => history.push(`/gamemaker/${gameId}/addquestion/gameSelected/${selectedId}/questionSelected/${index+1}`)}>
               <Box>
                 <CCSS grade={game.grade} domain={game.domain} cluster={game.cluster} standard={game.standard} />
@@ -185,10 +186,7 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
           <Button className={classes.greenButton} variant="contained" onClick={() => handleAddQuestion(questions[index-1])}>Add to Game</Button>
         
           <Button className={classes.blueButton} variant="contained"
-          onClick={() => history.push({
-            pathname: `/gamemaker/${game.id}/createquestion/0`,
-            state: questions
-          })}>
+          onClick={() => handleCloneQuestion(questions[index-1])}>
             Clone and Edit
           </Button>
         
