@@ -5,6 +5,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, Box, Button, Link, Typography, Menu, MenuItem, Grid } from '@material-ui/core';
 import { MoreVert, ArrowBack } from '@material-ui/icons'; 
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import MoreCircle from './../images/MoreCircularIcon.png';
 import CCSS from './CCSS';
 
 
@@ -169,7 +170,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
 
         <Grid>
           <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleGameClick} className={classes.moreButton} data-game-id={gameId}>
-            <MoreVert />
+            <img src={MoreCircle} alt='More Circular Icon' width={'30px'}/>
           </Button>
           <Menu
             id={`game-${gameId}-actions`}
