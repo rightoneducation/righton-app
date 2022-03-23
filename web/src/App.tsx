@@ -30,7 +30,7 @@ const filterGame = (game: Game | null, search: string) => {
   if (!game || !game?.title) {
     return false;
   }
-  if (game.title.toLowerCase().indexOf(search) > -1) {
+  if (game.title.toLowerCase().indexOf(search) > -1 || (game.description && game.description.toLowerCase().indexOf(search) > -1)) {
     return true;
   }
   else {
