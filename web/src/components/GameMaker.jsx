@@ -56,6 +56,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     const classes = useStyles();
     const history = useHistory();
+    const [disabled, setDisabled] = useState(true);
 
     const [gameDetails, setGameDetails] = useState(() => {
         if (game) {
@@ -85,10 +86,12 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     // Handles changing and storing of new values for both Phase Timers
     const handlePhaseOne = (event) => {
+        setDisabled(false || handleDisable());
         setPhaseOne(event.target.value);
         setGameDetails({ ...gameDetails, phaseOneTime: event.target.value });
     };
     const handlePhaseTwo = (event) => {
+        setDisabled(false || handleDisable());
         setPhaseTwo(event.target.value);
         setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
     };
@@ -100,6 +103,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
     const handleDelete = (index) => {
+        setDisabled(false || handleDisable());
         const newQuestions = [...questions];
         newQuestions.splice(index, 1);
         setQuestions(newQuestions);
@@ -107,6 +111,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     // Handles any new questions added to the game, either through Add Question or Create Question
     const handleGameQuestion = (newQuestion) => {
+        setDisabled(false || handleDisable());
         for (let i=0; i< questions.length; i++) {
             if (newQuestion.id === questions[i].id) {
                 questions[i] = newQuestion
@@ -125,6 +130,8 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
             return true;
         }
     }
+
+    console.log(disabled);
 
     // Save New or Exisiting Game (preliminary submit)
     const handleSubmit = (event) => {
@@ -171,7 +178,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                                             variant='outlined'
                                             label='Game Title'
                                             value={gameDetails.title}
-                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: currentTarget.value }); }}
+                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: currentTarget.value }); setDisabled(false || handleDisable()) }}
                                             fullWidth
                                             required
                                             className={classes.gameTitle}
@@ -183,7 +190,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                                             variant='outlined'
                                             label='Game Text'
                                             value={gameDetails.description}
-                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: currentTarget.value }); }}
+                                            onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: currentTarget.value }); setDisabled(false || handleDisable()) }}
                                             fullWidth
                                             multiline
                                             rows={3}
@@ -230,7 +237,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                                                 label='Image URL'
                                                 fullWidth
                                                 value={gameDetails.imageUrl}
-                                                onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); }}
+                                                onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, imageUrl: currentTarget.value }); setDisabled(false && handleDisable()) }}
                                             />
                                         </Grid>
                                     </Grid>
@@ -323,7 +330,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                         {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade}/> : <Grid container item xs={12}></Grid>}
 
                         <Grid container item xs={12} justifyContent='center'>
-                            <Button variant='contained' type='submit' disabled={handleDisable()} disableElevation className={classes.greenButton}>
+                            <Button variant='contained' type='submit' disabled={disabled} disableElevation className={classes.greenButton}>
                                 Save Game
                             </Button>
                         </Grid>
