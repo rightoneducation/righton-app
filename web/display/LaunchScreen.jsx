@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import MonsterPink from '../images/monsters/Monster-Pink.svg';
-import MonsterRed from '../images/monsters/Monster-Red.svg';
-import RightOnLogo from '../images/logos/righton-med.svg';
+import MonsterPink from './images/monsters/Monster-Pink.svg';
+import MonsterRed from './images/monsters/Monster-Red.svg';
+import RightOnLogo from './images/logos/righton-med.svg';
 import CachedIcon from '@material-ui/icons/Cached';
 import Button from '@material-ui/core/Button';
 
