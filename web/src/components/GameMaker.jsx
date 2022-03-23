@@ -94,8 +94,8 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
     };
 
     // Handles changing the Game CCSS code when the question set is changed/updated
-    function handleCCSS(grade, domain) {
-        setGameDetails({ ...gameDetails, grade: grade, domain: domain });
+    function handleCCSS(grade, domain, cluster, standard) {
+        setGameDetails({ ...gameDetails, grade: grade, domain: domain, cluster: cluster, standard: standard });
     }
 
     // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)

@@ -224,6 +224,10 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
       window.alert("Please enter a domain/subject");
       return;
     }
+    if(question.cluster == null && question.standard != null) {
+      window.alert("Please enter a cluster to save the game");
+      return;
+    }
 
     if (question.instructions != null && question.instructions !== []) question.instructions = JSON.stringify(question.instructions);
 
