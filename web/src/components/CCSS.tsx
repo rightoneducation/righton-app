@@ -7,9 +7,12 @@ export default function CCSS(game: Game) {
   if (game.grade === 'Misc' && game.domain === 'Misc') return <Typography style={{fontWeight: 700, color: '#9139F8'}} >Misc.</Typography>;
   if (game.grade === 'Misc') return <Typography style={{fontWeight: 700, color: '#9139F8'}} >{`${game.domain}`}</Typography>;
   if (game.grade && game.domain) {
+    let cluster = game.cluster ? '.' + game.cluster  : '';
+    let standard = game.standard ? '.' + game.standard : '';
+    let domain = game.domain ? '.' + game.domain : '';
     return (
       <Typography style={{fontWeight: 700, color: '#9139F8'}}>
-        {`${game.grade}.${game.domain}.`}
+        {`${game.grade}${domain}${cluster}${standard}`}
       </Typography>
     );
   }; 

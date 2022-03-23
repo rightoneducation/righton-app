@@ -12,51 +12,60 @@ export default function GameCCSS({questions, handleCCSS, currentGameGrade}) {
 
     const gameGrade = () => {
         const gradeSet = questions.map((question) => {
-            return question.grade;
+          return question.grade;
         });
-        if (gradeSet[0] !== null) {
-            return allEqual(gradeSet);
+        if (gradeSet[0] !== null && allEqual(gradeSet)) {
+          return questions[0].grade;
         }
         else {
-            return false;
+          return 'Misc';
         }
     };
     const gameDomain = () => {
         const domainSet = questions.map((question) => {
         return question.domain;
         });
-        if (domainSet[0] !== null) {
-            return allEqual(domainSet);
+        if (domainSet[0] !== null && allEqual(domainSet)) {
+          return questions[0].domain;
         }
         else {
-            return false;
+          return 'Misc';
         }
     };
+    const gameCluster = () => {
+      const clusterSet = questions.map((question) => {
+      return question.cluster;
+      });
+      if (clusterSet[0] !== null && allEqual(clusterSet)) {
+          return questions[0].cluster;
+      }
+      else {
+          return 'Misc';
+      }
+  };
+
+    const gameStandard = () => {
+      const standardSet = questions.map((question) => {
+      return question.standard;
+      });
+      if (standardSet[0] !== null && allEqual(standardSet)) {
+        return questions[0].standard;
+      }
+      else {
+        return 'Misc';
+      }
+  };
 
     const checker = () => {
         if (questions === []) {
             return 'N/A'
         }
-        else if (gameGrade() === true) {
-            if (gameDomain() === true) {
-                handleCCSS(questions[0].grade, questions[0].domain)
-                return questions[0].grade + '.' + questions[0].domain;
-            }
-            else {
-                handleCCSS(questions[0].grade, 'Misc')
-                return questions[0].grade + '.Misc.';
-            }
+        if (gameGrade() === 'Misc' && gameDomain() === 'Misc' && gameCluster() === 'Misc' && gameStandard() === 'Misc') {
+          handleCCSS('Mashup', 'Misc', 'Misc', 'Misc');
+          return 'Mashup';
         }
-        else {
-            if (gameDomain() === true) {
-                handleCCSS('Misc', questions[0].domain)
-                return questions[0].domain;
-            }
-            else {
-                handleCCSS('Misc', 'Misc')
-                return 'Misc.';
-            }
-        }
+        handleCCSS(gameGrade(), gameDomain(), gameCluster(), gameStandard());
+        return gameGrade() + '.' + gameDomain() + '.' + gameCluster() + '.' + gameStandard();
     }
 
     const [check, setCheck] = useState(

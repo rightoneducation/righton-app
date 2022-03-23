@@ -17,15 +17,17 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
   const handleSortChange = (event) => {
     setSortType(event.target.value);
   };
+  const [sortByCheck, setSortByCheck] = React.useState(false);
 
   return (
     <Grid container className={classes.root} spacing={4}>
       <Route path="/" exact>
         <Grid item xs={12} className={classes.sidebar}>
           <Box className={classes.actions}>
-            <SortByDropdown handleSortChange={handleSortChange} />
+            <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} />
+            <div style={{ width: '100vw', height: 45 }} onClick={() => setSortByCheck(false)}></div>
           </Box>
-          <Grid container>
+          <Grid container onClick={() => setSortByCheck(false)}>
             <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)}/>
           </Grid>
           
