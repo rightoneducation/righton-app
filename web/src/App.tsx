@@ -85,6 +85,7 @@ function App() {
       getSortedGames();
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
+    return result
   }
 
   const handleDeleteGame = async (id: number) => {

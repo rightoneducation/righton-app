@@ -45,7 +45,7 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
               ({ match }) => {
                 const { gameId } = match.params;
                 const game = getGameById(games, gameId)
-                return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId}  />;
+                return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} />;
               }
             } />
           </Switch>
