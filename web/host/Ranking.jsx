@@ -42,8 +42,8 @@ export default function Ranking() {
             </div>
 
             <div className={classes.ranking}>
-                {scores.sort((a,b) => b[scores] - a[scores] ? 1 : -1).map((scores, index) => (
-                    <MenuItem container className={classes.ranks} id={index+1} key={scores.name} value={scores.name}>
+                {scores.sort((a,b) => b[scores.score] - a[scores.score] ? 1 : -1).map((scores, index) => (
+                    <MenuItem container className={classes.ranks} id={index+1} key={scores.score} value={scores.name}>
                         <grid item xs={8} className={classes.rankName}>
                             #{index+1}:{scores.name}
                         </grid>
