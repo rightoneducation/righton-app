@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     display: 'flex',
+    justifyContent: 'space-between'
   },
   gameImage: {
     width: '60%'
@@ -87,7 +88,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
+function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame, cloneGame }) {
   useEffect(() => {
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -96,8 +97,8 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId/question/:questionIndex');
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [activeIndex, setActiveIndex] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
   const handleClick = (event) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -107,6 +108,39 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
   const handleClose = () => {
     setAnchorEl(null);
     setActiveIndex(null);
+  };
+
+  const [anchorElGame, setAnchorElGame] = useState(null);
+  const [activeGameId, setActiveGameId] = useState(null);
+  const handleGameClick = (event) => {
+    setAnchorElGame(event.currentTarget);
+    setActiveGameId(event.currentTarget.dataset.gameId);
+    event.stopPropagation();
+  };
+  const handleGameClose = () => {
+    setAnchorElGame(null);
+    setActiveGameId(null);
+  };
+  const cloneHandler = (game) => () => {
+    const newGame = {
+      cluster: game.cluster,
+      description: game.description,
+      domain: game.domain,
+      grade: game.grade,
+      questions: game.questions,
+      standard: game.standard,
+      title: `Clone of ${game.title}`,
+    };
+    const gameClone = cloneGame(newGame)
+    console.log(gameClone)
+    history.push(`/`)
+  };
+  const deleteHandler = (id) => () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+    if (confirmDelete) {
+      deleteGame(id);
+    }
+    history.push(`/`)
   };
 
   //not sure if this should stay
@@ -133,7 +167,23 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion }) {
           <ArrowBack className={classes.back} />Back to Explore Page
         </Button>
 
-        {/* <h3 style={{width:'40%', textAlign:'right', textDecoration:'underline'}}><strong>Games</strong></h3> */}
+        <Grid>
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleGameClick} className={classes.moreButton} data-game-id={gameId}>
+            <MoreVert />
+          </Button>
+          <Menu
+            id={`game-${gameId}-actions`}
+            anchorEl={anchorElGame}
+            keepMounted
+            open={activeGameId === String(gameId)}
+            onClose={handleGameClose}
+            onClick={(event) => { if (!match) event.stopPropagation(); }}
+          >
+            <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleGameClose(); }}>Edit</MenuItem>
+            <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
+            <MenuItem onClick={deleteHandler(gameId)}>Delete</MenuItem>
+          </Menu>
+        </Grid>
       </Box>
 
       <Grid container>
