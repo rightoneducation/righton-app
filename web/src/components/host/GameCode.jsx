@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     height: "48px",
     margin: "auto",
     marginBottom: "3.5%",
-    textAlign: "center"  
+    justifyContent: "center"  
   }
 }))
 
