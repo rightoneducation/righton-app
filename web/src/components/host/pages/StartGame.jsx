@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     height: "48px",
     position: "absolute",
     bottom: "2%",
-    marginLeft: "12%",
+    marginLeft: "14.2%",
     fontSize: "20px"
     
   }
