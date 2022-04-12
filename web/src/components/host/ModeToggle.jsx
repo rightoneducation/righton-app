@@ -21,7 +21,6 @@ const useStyles = makeStyles(themes => ({
         color: 'white',
         fontSize: '15.19px',
         textDecoration: 'underline',
-       
         marginTop: '1px',      
     },
 }))
