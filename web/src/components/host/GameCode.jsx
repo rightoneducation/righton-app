@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 
   gameCodeCard: {
+    position: 'relative',
     border: "1px solid rgba(255, 255, 255, 0.25)",
     borderRadius: "8px",
     width: "212px",
