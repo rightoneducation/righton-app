@@ -2,6 +2,8 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+//onUpdateGameSession
+
 export const onCreateGame = /* GraphQL */ `
   subscription OnCreateGame {
     onCreateGame {
