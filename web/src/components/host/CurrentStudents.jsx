@@ -2,10 +2,10 @@ import React from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import ClearIcon from '@material-ui/icons/Clear';
 
 
 const students = ["Ray W.", "Zach T.", "Jared J."]
-const x = "X"
 const studentCount = 12
 
 const CurrentStudents = () => {
@@ -28,7 +28,7 @@ const CurrentStudents = () => {
                     {student}
                 </Grid>
                 <Button className={classes.removeStudent}>
-                    {x}
+                    <ClearIcon />
                 </Button>
                 
               </MenuItem>
@@ -70,7 +70,8 @@ const useStyles = makeStyles(theme => ({
         height: "62px",
         background: "rgba(255, 255, 255, 0.25)",
         color: "rgba(255, 255, 255, 1)",
-        fontSize: "24px"
+        fontSize: "24px",
+        
        
     },
     name: {

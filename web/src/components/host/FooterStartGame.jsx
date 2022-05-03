@@ -1,31 +1,29 @@
 import React from 'react'
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 
 const FooterStartGame = () => {
     const classes = useStyles()
   return (
-    <div classname={classes.startButtonDiv}>
-        <div classname={classes.startButtonCenter}>
-        <button className={classes.startGameButton} variant="contained">Start Game</button>
-        </div>
-      </div>
+    <BottomNavigation style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: "7%"}}>
+          <button className={classes.startGameButton} >Start Game</button>
+          <p className={classes.clickToPair}>Got a desktop and projector? Click here to pair it!</p>      
+    </BottomNavigation>
   )
 }
 const useStyles = makeStyles(theme => ({
    
-    //trying to figure out how to position the start game button here, will circle back
-    // startButtonDiv:{
-    //   height: "200px",
-    //   position: "relative"
-    // },
-  
-    // startButtonCenter: {
-    //   margin: "auto",
-    //   position: "absolute",
-    //   top: "50%",
-    //   left: "50%"
-    // },
-  
+    clickToPair: {
+        position: "absolute",
+        fontSize: "12px",
+        marginTop: "52px",
+        marginBottom: "75px",
+        textAlign: "center",
+        fontWeight: "700",
+        color: "rgba(0, 117, 255, 1)",
+        textDecoration: 'underline',
+       
+    },
+
     startGameButton: {
       background: 'linear-gradient(90deg, #FC1047 0%, #FC2468 100%)',
       borderRadius: '34px',
@@ -33,10 +31,9 @@ const useStyles = makeStyles(theme => ({
       fontWeight: "bold",
       width: "300px",
       height: "48px",
-      position: "absolute",
-      bottom: "2%",
-      marginLeft: "14.2%",
-      fontSize: "20px"
+      marginTop: "-2%",
+      fontSize: "20px",
+      border: "none"
       
     }
   }))

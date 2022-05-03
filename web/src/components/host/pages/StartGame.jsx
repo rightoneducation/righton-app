@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
     height: "100vh",
     width: "100vw",
     background: 'linear-gradient(#0D68B1 0%, #02215F 100%)',
+    
    
   },
 
