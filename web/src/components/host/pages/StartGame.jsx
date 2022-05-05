@@ -25,8 +25,8 @@ const classes = useStyles()
 
 const useStyles = makeStyles(theme => ({
   background: {
-    height: "100vh",
-    width: "100vw",
+    height: "100%",
+    width: "100%",
     background: 'linear-gradient(#0D68B1 0%, #02215F 100%)',
     
    
