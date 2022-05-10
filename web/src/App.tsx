@@ -12,6 +12,7 @@ import StatusPageContainer from './components/StatusPageContainer';
 import Nav from './components/Nav';
 import Games from './components/Games';
 import { StartGame } from './components/host/pages/StartGame';
+import GameInProgress from './components/host/pages/GameInProgress';
 
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
@@ -147,31 +148,38 @@ function App() {
   };
 
   return (
-    // <Router>
-    //   <Switch>
-    //     <Route path="/status/:gameID" component={StatusPageContainer} />
-    //     <ThemeProvider theme={theme}>
-    //       <AlertContext.Provider value={alertContext}>
-    //         <Box>
-    //           <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
-    //           <Route path="/">
-    //             <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
-    //           </Route>
-    //         </Box>
-    //         <AlertBar />
-    //       </AlertContext.Provider>
-    //     </ThemeProvider>
-    //   </ Switch>
-    // </Router>
     <Router>
-    <Switch>
-      
-            <Route path="/host">
-              <StartGame/>
-            </Route>
+       <Switch>
+         <Route exact path="/host"> 
+            <StartGame/> 
+         </Route>
+         <Route path="/host/:sessionID" render={
+              ({ match }) => {
+                const { sessionID } = match.params;
+                return <GameInProgress sessionID={sessionID} /> 
+          }
+          } />
+         <Route>
+          <Route path="/status/:gameID" component={StatusPageContainer} />
+          <ThemeProvider theme={theme}>
+            <AlertContext.Provider value={alertContext}>
+              <Box>
+                <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+                <Route path="/">
+                    <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
+                </Route>
+             </Box>
+              <AlertBar />
+           </AlertContext.Provider>
+          </ThemeProvider>
+         </Route>
+       </Switch>
+    </Router>
+        
+        
           
-    </ Switch>
-  </Router>
+ 
+ 
   );
 }
 
