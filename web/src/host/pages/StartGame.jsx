@@ -1,9 +1,9 @@
 import React from 'react'
 import { makeStyles } from "@material-ui/core";
-import HostHeader from '../HostHeader';
-import GameCard from '../GameCard';
-import CurrentStudents from '../CurrentStudents';
-import FooterStartGame from '../FooterStartGame';
+import HostHeader from '../components/HostHeader';
+import GameCard from '../components/GameCard';
+import CurrentStudents from '../components/CurrentStudents';
+import FooterStartGame from '../components/FooterStartGame';
 
 export const StartGame = () => {
 

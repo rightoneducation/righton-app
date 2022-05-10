@@ -22,7 +22,9 @@ import StatusPageContainer from './components/StatusPageContainer';
 
 import Nav from './components/Nav';
 import Games from './components/Games';
-import { StartGame } from './components/host/pages/StartGame';
+import { StartGame } from './host/pages/StartGame';
+import Ranking  from './host/pages/Ranking';
+import GameInProgress from './host/pages/GameInProgress';
 
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
@@ -221,7 +223,7 @@ function App() {
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} />
             <Route path="/host">
-              <StartGame/>
+              <GameInProgress/>
             </Route>
           </Switch>
         }
