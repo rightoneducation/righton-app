@@ -37,9 +37,11 @@ const useStyles = makeStyles(theme => ({
 
     questionCard: {
       height: "95px",
-      width: "311px",
+      width: "350px",
       borderRadius: "18px",
-      margin: "auto"
+      margin: "auto",
+      marginTop: "20px",
+      marginBottom: "20px"
     },
 
     question: {
