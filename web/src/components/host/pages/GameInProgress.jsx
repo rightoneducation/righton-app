@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import FooterGameInProgress from '../FooterGameInProgress';
-import FooterStartGame from '../FooterStartGame.jsx';
-import Button from '@material-ui/core/Button'; 
+import HostHeader from '../HostHeader';
+import GameCard from '../GameCard';
+import CurrentStudents from '../CurrentStudents';
 
 export default function GameInProgress({sessionID}) { 
     const classes = useStyles();
@@ -11,8 +12,14 @@ export default function GameInProgress({sessionID}) {
                {/*<header component /> 
                   <QuestionCard component />
                   <AnswerChoices component />*/}
-                
-                  <FooterStartGame className={classes.footer} />
+                  <HostHeader/>
+      <GameCard/>
+      <div className={classes.gameMode}>
+        Basic Mode
+      </div>
+      <CurrentStudents/>
+
+                  <FooterGameInProgress />
         </div>
     )
 }
@@ -21,10 +28,5 @@ const useStyles = makeStyles(theme => ({
     root: {
         minHeight: '100vh',
         background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
-    },
-    footer: {
-        position: 'absolute',
-        top: '500px',
-        padding: "7%", 
     },
 }));
