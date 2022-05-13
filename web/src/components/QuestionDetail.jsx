@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Button, Divider } from "@material-ui/core";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
 export default function QuestionDetails({gameIndex, gameTitle, questionIndex, question}) {

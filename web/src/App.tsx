@@ -19,10 +19,16 @@ import AlertContext, { Alert } from './context/AlertContext';
 import { Game } from './API';
 import AlertBar from './components/AlertBar';
 import StatusPageContainer from './components/StatusPageContainer';
+
+import Nav from './components/Nav';
+import Games from './components/Games';
+import { StartGame } from './components/host/pages/StartGame';
+
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
+
 
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
@@ -179,7 +185,24 @@ function App() {
   };
 
   return (
+    // <Router>
+    //   <Switch>
+    //     <Route path="/status/:gameID" component={StatusPageContainer} />
+    //     <ThemeProvider theme={theme}>
+    //       <AlertContext.Provider value={alertContext}>
+    //         <Box>
+    //           <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
+    //           <Route path="/">
+    //             <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
+    //           </Route>
+    //         </Box>
+    //         <AlertBar />
+    //       </AlertContext.Provider>
+    //     </ThemeProvider>
+    //   </ Switch>
+    // </Router>
     <Router>
+
       <Switch>
       <ThemeProvider theme={theme}>
         {(isAuthenticated) ? (<Redirect to="/" />) : 
@@ -197,6 +220,9 @@ function App() {
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} />
+            <Route path="/host">
+              <StartGame/>
+            </Route>
           </Switch>
         }
         {userLoading ? <div>Loading</div> : (isAuthenticated ? (
@@ -212,8 +238,9 @@ function App() {
         ) : <Redirect to="/login" />
         )}
         </ThemeProvider>
-      </ Switch>
+      </Switch>
     </Router>
+
   );
 }
 

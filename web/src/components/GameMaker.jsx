@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
-import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import CCSS from './CCSS';
 import GameCCSS from './GameCCSS';
 

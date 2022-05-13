@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
+import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
