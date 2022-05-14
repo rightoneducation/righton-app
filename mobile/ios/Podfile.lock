@@ -301,7 +301,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-netinfo (6.0.2):
+  - react-native-netinfo (6.2.1):
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
@@ -375,10 +375,16 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
+  - RNAWSCognito (5.2.6):
+    - React-Core
   - RNCAsyncStorage (1.15.8):
+    - React-Core
+  - RNCCheckbox (0.5.11):
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
+  - RNCPicker (2.3.0):
+    - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNReanimated (2.2.3):
@@ -485,8 +491,11 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeAutogrowTextinput (from `../node_modules/react-native-autogrow-textinput`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
+  - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -596,10 +605,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-autogrow-textinput"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
+  RNAWSCognito:
+    :path: "../node_modules/amazon-cognito-identity-js"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCCheckbox:
+    :path: "../node_modules/@react-native-community/checkbox"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -654,7 +669,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 41e58e5b8e3e0bf061fdf725b03f2144014a8fb0
   react-native-image-picker: 92f51a85a62c2d829dcbd0dda5af99e6f988a113
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-netinfo: 92e6e4476eb8bf6fc2d7c0a6ca0a1406f663d73a
+  react-native-netinfo: 3d3769f0d65de15c83a9bf1346f8be71de5a24bf
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-viewpager: b99b53127d830885917ef84809c5065edd614a78
   React-perflogger: fd28ee1f2b5b150b00043f0301d96bd417fdc339
@@ -671,8 +686,11 @@ SPEC CHECKSUMS:
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
   ReactNativeAutogrowTextinput: 571f3260e200d91ea22fab160452f26d2fd5d55b
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
+  RNAWSCognito: d2db2cc6adffe0a2452cc44d7776dadc21541c75
   RNCAsyncStorage: e8b8d6320a0dd90eb610fb0d0b1ef90596697c69
+  RNCCheckbox: ebf3ecc7a766d8a28d4b0504ea6084757bb59bc5
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
+  RNCPicker: c796ddf16cd93e980a5a5642eebcee9eb9da1e76
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: aaf2cf65595b293daae808015761a6014a97b284
   RNScreens: 0591543e343c7444ea1756b6265d81a4295922c9
