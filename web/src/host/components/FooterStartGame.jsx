@@ -1,12 +1,12 @@
-import React from 'react'
+import React from 'react';
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 
 const FooterStartGame = () => {
-    const classes = useStyles()
+  const classes = useStyles();
   return (
     
     <BottomNavigation style={{ position: 'sticky', bottom: 0, padding: "7%",  marginTop: "43%"}}>
-          <button className={classes.startGameButton} >Start Game</button>
+           <button className={classes.startGameButton} >Start Game</button>
           <p className={classes.clickToPair}>Got a desktop and projector? Click here to pair it!</p>      
     </BottomNavigation>
     

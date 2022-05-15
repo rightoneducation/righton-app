@@ -1,12 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCard from "../components/QuestionCard";
-
+import FooterGameInProgress from '../components/FooterGameInProgress';
 
 const ProgressBar = (props) => {
     const {bgcolor, completed} = props;
     return (
         <div>
+          
         </div>
     );
 };
@@ -67,13 +68,7 @@ export default function GameInProgress() {
             <div>
                 {/* results and drop down bar goes here */}
             </div>
-            Players that answered
-            <div>
-                <progress value={15} max={24}></progress>
-            </div>
-            <button className={classes.button}>
-                Skip to Results
-            </button>
+            <FooterGameInProgress /> 
         </div>
     );
 }

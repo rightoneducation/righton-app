@@ -187,24 +187,7 @@ function App() {
   };
 
   return (
-    // <Router>
-    //   <Switch>
-    //     <Route path="/status/:gameID" component={StatusPageContainer} />
-    //     <ThemeProvider theme={theme}>
-    //       <AlertContext.Provider value={alertContext}>
-    //         <Box>
-    //           <Nav setSearchInput={setSearchInput} searchInput={searchInput} />
-    //           <Route path="/">
-    //             <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
-    //           </Route>
-    //         </Box>
-    //         <AlertBar />
-    //       </AlertContext.Provider>
-    //     </ThemeProvider>
-    //   </ Switch>
-    // </Router>
     <Router>
-
       <Switch>
       <ThemeProvider theme={theme}>
         {(isAuthenticated) ? (<Redirect to="/" />) : 
