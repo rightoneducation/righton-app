@@ -10,8 +10,7 @@ import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import Nav from './components/Nav';
-import Games from './components/Games';
+
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
 import { updateQuestion, createQuestion, addQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
