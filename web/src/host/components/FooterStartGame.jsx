@@ -10,7 +10,7 @@ const FooterStartGame = () => {
   return (
     
     <BottomNavigation style={{ position: 'sticky', bottom: 0, padding: "7%",  marginTop: "43%"}}>
-          <Button className={classes.startGameButton} onClick={() => history.push(`/host/${sessionID}`)}>Start Game</Button>
+           <button className={classes.startGameButton} >Start Game</button>
           <p className={classes.clickToPair}>Got a desktop and projector? Click here to pair it!</p>      
     </BottomNavigation>
     
