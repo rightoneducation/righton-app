@@ -1,12 +1,8 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
 
 const FooterStartGame = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const sessionID = '12345';
   return (
     
     <BottomNavigation style={{ position: 'sticky', bottom: 0, padding: "7%",  marginTop: "43%"}}>
