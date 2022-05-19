@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import MonsterPink from '../../images/monsters/Monster-Pink.svg';
-import MonsterRed from '../../images/monsters/Monster-Red.svg';
-import RightOnLogo from '../../images/logos/righton-med.svg';
+import MonsterPink from '../../images/Monster-Pink.svg';
+import MonsterRed from '../../images/Monster-Red.svg';
+import RightOnLogo from '../../images/righton-med.svg';
 import CachedIcon from '@material-ui/icons/Cached';
 import Button from '@material-ui/core/Button';
-import SessionHelper from './SessionHelper.jsx';
-import { graphqlReturn } from './graphqlMock.js';
-
-
 
 export default function LaunchScreen() {
     const classes = useStyles();
@@ -18,18 +14,11 @@ export default function LaunchScreen() {
     const gameCode = 9349;
     const students = 28;
     const history = useHistory();
-    
-   /* const [gameAuthor, setGameAuthor] = useState({});
-    useEffect(() => {
-      const gameArray = Object.values(graphqlReturn()); 
-      console.log(Object.values(graphqlReturn()));
-      setGameAuthor(gameArray[0]);
-    },[]);*/
 
     return(
         <div className={classes.page}>
 
-            <SessionHelper />
+           
             <div className={classes.monsterPink}><img src={MonsterPink} alt="Pink Monster" /></div>
             <div className={classes.monsterRed}><img src={MonsterRed} alt="Red Monster" /></div>
 
