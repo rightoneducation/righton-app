@@ -24,13 +24,14 @@ import Games from './components/Games';
 import { StartGame } from './host/pages/StartGame';
 import Ranking  from './host/pages/Ranking';
 import GameInProgress from './host/pages/GameInProgress';
+import LaunchScreen from './display/pages/LaunchScreen.jsx';
+import MobilePair from './display/pages/MobilePair.jsx';
 
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
-import LaunchScreen from './display/pages/LaunchScreen.jsx';
-import MobilePair from './display/pages/MobilePair.jsx';
+
 
 
 const filterGame = (game: Game | null, search: string) => {
@@ -191,15 +192,38 @@ function App() {
     <Router>
       <Switch>
       <ThemeProvider theme={theme}>
-        
-            <Route path="/display">
-              <LaunchScreen />
+      {(isAuthenticated) ? (<Redirect to="/" />) : 
+          <Switch>
+            <Route path="/login">
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <LogIn />
             </Route>
-            <Route path="/display/mobilepair">
-              <MobilePair />
+            <Route path="/signup">
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <SignUp />
             </Route>
-         
-    
+            <Route path="/confirmation">
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Confirmation />
+            </Route>
+            <Route path="/status/:gameID" component={StatusPageContainer} /> 
+            <Route path="/host">
+              <GameInProgress />
+            </Route>         
+      </Switch>
+        }
+        {userLoading ? <div>Loading</div> : (isAuthenticated ? (
+          <AlertContext.Provider value={alertContext}>
+            <Box>
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={true} />
+              <Route path="/">
+                <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
+              </Route>
+            </Box>
+            <AlertBar />
+          </AlertContext.Provider>
+        ) : <Redirect to="/login" />
+        )}
         </ThemeProvider>
       </Switch>
     </Router>
