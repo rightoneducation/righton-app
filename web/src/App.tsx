@@ -203,7 +203,7 @@ function App() {
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <Confirmation />
             </Route>
-            <Route path="/status/:gameID" component={StatusPageContainer} />
+            <Route path="/status/:gameID" component={StatusPageContainer} /> 
             <Route path="/host">
               <GameInProgress/>
             </Route>
