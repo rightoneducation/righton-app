@@ -62,11 +62,7 @@ export default class StudentFirst extends React.PureComponent {
     NetInfo.fetch()
       .then(async (state) => {
         if (GameRoomID == '1234') {
-          if (this.props.route.params.user) {
-            this.props.navigation.navigate('StudentChooseTeam')
-          } else {
-            this.props.navigation.navigate('EnterInfo')
-          }
+          this.props.navigation.navigate('StudentChooseTeam')
         }
       })
   }
@@ -79,6 +75,7 @@ export default class StudentFirst extends React.PureComponent {
     const {
       room,
     } = this.state
+
     return (
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: '#483a82' }} />
