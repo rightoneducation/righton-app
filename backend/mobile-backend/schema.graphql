@@ -1,0 +1,67 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type GameSession @model {
+  id: ID! @primaryKey
+  game: Game! @hasOne
+  startTime: AWSDateTime
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  teams: [Team] @hasMany
+  currentQuestion: Int!
+  currentState: GameSessionState!
+}
+
+enum GameSessionState {
+	CHOOSING_TRICK_ANSWER
+	FINISHED
+	INITIAL_INTRO
+	NOT_STARTED
+	REVIEWING_RESULT
+	VOTING
+}
+
+type Game @model(subscriptions: null, timestamps: null) {
+  id: ID!
+  title: String
+  description: String
+  imageUrl: String
+  isAdvanced: Boolean
+  gameCode: Int
+  grade: String
+  questions: [Question] @hasMany
+}
+
+type Question @model(subscriptions: null, timestamps: null) {
+  id: ID!
+  question: String!
+  answer: String
+  trickAnswers: AWSJSON
+  imageUrl: String
+  instructions: AWSJSON
+  grade: String
+}
+
+type Team @model {
+  id: ID!
+  name: String!
+  question: Question! @hasOne
+  trickiestAnswerIDs: [ID]
+  teamMembers: [TeamMember] @hasMany
+  score: Int!
+}
+
+type TeamMember @model {
+  id: ID!
+  team: Team!
+  isFacilitator: Boolean
+  memberAnswers: [TeamAnswer] @hasMany
+  deviceId: ID!
+}
+
+type TeamAnswer @model {
+  id: ID!
+  isChosen: Boolean
+  text: String
+}
