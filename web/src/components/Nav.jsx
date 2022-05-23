@@ -9,7 +9,7 @@ import exploreIcon from '../images/Explore.svg';
 import quizMakerIcon from '../images/QuizMaker.svg';
 import SearchBar from './SearchBar.jsx';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
+export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth }) {
   const classes = useStyles();
   const matchSearchBar = useRouteMatch('/');
   
@@ -17,6 +17,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
+        {isUserAuth && (
           <Grid style={{display: "flex", margin: 'auto'}}>
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
@@ -24,7 +25,6 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
                 Explore
               </Typography>
             </NavLink>
-            {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginRight: 50}} /> */}
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
               <Typography className={classes.title} variant="h6" noWrap>
@@ -34,6 +34,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput }) {
             {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
             {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
           </Grid>
+          )}
         </Toolbar>
       </AppBar>
     </div>
