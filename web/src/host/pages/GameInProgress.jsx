@@ -12,36 +12,10 @@ const ProgressBar = (props) => {
     );
 };
 
-const questions = [
-    {
-        id: 1,
-        question: "How many degreess are in the interior angles of a stop sign?",
-        rightAnswer: "360",
-        wrontAnswer1: "8",
-        wrongAnswer2: "720",
-        wrongAnswer3: "1080",
-    },
-    {
-        id: 2,
-        question: "question2",
-        rightAnswer: "1",
-        wrontAnswer1: "2",
-        wrongAnswer2: "3",
-        wrongAnswer3: "4",
-    },
-    {
-        id: 3,
-        question: "question3",
-        rightAnswer: "1",
-        wrontAnswer1: "2",
-        wrongAnswer2: "3",
-        wrongAnswer3: "4",
-    },
-]
 
 
 
-export default function GameInProgress() {
+export default function GameInProgress({ questions }) {
     const classes = useStyles();
 
     
@@ -50,14 +24,14 @@ export default function GameInProgress() {
         // Ray been here
         <div className={classes.background}>
             <div>
-                {questions.map((id,index) => (
+                {questions.items.map((id,index) => (
                     <grid className={classes.number} key={id}>
                         {index+1}
                     </grid>
                 ))}
             </div>
             <div className={classes.title}>
-                <h1>Question 1 of 5</h1>
+                <h1>Question 1 of asdfsadfa 5</h1>
                 <p>Phase 1 of 2</p>
             </div>
             <div className={classes.timebar}>
