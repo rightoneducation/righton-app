@@ -4,10 +4,10 @@ import QuestionCard from "../components/QuestionCard";
 import FooterGameInProgress from '../components/FooterGameInProgress';
 
 const ProgressBar = (props) => {
-    const {bgcolor, completed} = props;
+    const { bgcolor, completed } = props;
     return (
         <div>
-          
+
         </div>
     );
 };
@@ -15,34 +15,34 @@ const ProgressBar = (props) => {
 
 
 
-export default function GameInProgress({ questions }) {
+export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
     const classes = useStyles();
 
-    
-    
+    const currentQuestion = questions[currentQuestionId - 1];
+
     return (
         // Ray been here
         <div className={classes.background}>
             <div>
-                {questions.items.map((id,index) => (
-                    <grid className={classes.number} key={id}>
-                        {index+1}
+                {questions.map((question, index) => (
+                    <grid className={classes.number} key={question.id}>
+                        {index + 1}
                     </grid>
                 ))}
             </div>
             <div className={classes.title}>
-                <h1>Question 1 of asdfsadfa 5</h1>
+                <h1>Question {currentQuestionId} of {questions.length}</h1>
                 <p>Phase 1 of 2</p>
             </div>
             <div className={classes.timebar}>
                 <progress value={15} max={24} class={classes.timebar1} />
                 <button>add time</button>
             </div>
-                    <QuestionCard/>
+            <QuestionCard title={currentQuestion.question} />
             <div>
                 {/* results and drop down bar goes here */}
             </div>
-            <FooterGameInProgress /> 
+            <FooterGameInProgress handleSkipToResults={handleSkipToResults} />
         </div>
     );
 }
