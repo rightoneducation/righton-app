@@ -4,71 +4,45 @@ import QuestionCard from "../components/QuestionCard";
 import FooterGameInProgress from '../components/FooterGameInProgress';
 
 const ProgressBar = (props) => {
-    const {bgcolor, completed} = props;
+    const { bgcolor, completed } = props;
     return (
         <div>
-          
+
         </div>
     );
 };
 
-const questions = [
-    {
-        id: 1,
-        question: "How many degreess are in the interior angles of a stop sign?",
-        rightAnswer: "360",
-        wrontAnswer1: "8",
-        wrongAnswer2: "720",
-        wrongAnswer3: "1080",
-    },
-    {
-        id: 2,
-        question: "question2",
-        rightAnswer: "1",
-        wrontAnswer1: "2",
-        wrongAnswer2: "3",
-        wrongAnswer3: "4",
-    },
-    {
-        id: 3,
-        question: "question3",
-        rightAnswer: "1",
-        wrontAnswer1: "2",
-        wrongAnswer2: "3",
-        wrongAnswer3: "4",
-    },
-]
 
 
 
-export default function GameInProgress() {
+export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
     const classes = useStyles();
 
-    
-    
+    const currentQuestion = questions[currentQuestionId - 1];
+
     return (
         // Ray been here
         <div className={classes.background}>
             <div>
-                {questions.map((id,index) => (
-                    <grid className={classes.number} key={id}>
-                        {index+1}
+                {questions.map((question, index) => (
+                    <grid className={classes.number} key={question.id}>
+                        {index + 1}
                     </grid>
                 ))}
             </div>
             <div className={classes.title}>
-                <h1>Question 1 of 5</h1>
+                <h1>Question {currentQuestionId} of {questions.length}</h1>
                 <p>Phase 1 of 2</p>
             </div>
             <div className={classes.timebar}>
                 <progress value={15} max={24} class={classes.timebar1} />
                 <button>add time</button>
             </div>
-                    <QuestionCard/>
+            <QuestionCard title={currentQuestion.question} />
             <div>
                 {/* results and drop down bar goes here */}
             </div>
-            <FooterGameInProgress /> 
+            <FooterGameInProgress handleSkipToResults={handleSkipToResults} />
         </div>
     );
 }
