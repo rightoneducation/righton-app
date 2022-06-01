@@ -5,17 +5,17 @@ import GameCard from '../components/GameCard';
 import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
-export const StartGame = () => {
+export default function StartGame ({teams: {items: teams}, questions: {items: questions}, title }) {
 
 const classes = useStyles()
   return (
     <div className={classes.background}>
      <HostHeader/>
-      <GameCard/>
+      <GameCard questions={questions} title={title}/>  
       <div className={classes.gameMode}>
         Basic Mode
       </div>
-      <CurrentStudents/>
+       <CurrentStudents teams={teams} />
       <FooterStartGame/>
     </div>
   

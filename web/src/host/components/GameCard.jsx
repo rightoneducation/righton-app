@@ -6,10 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 const gameCCSS = '7. RP. A. 3';
-const gameTitle = "Practicing Percents: Let’s Go Shopping!"
-const questions = "5 Questions"
 
-const GameCard = () => {
+const GameCard = ({questions, title}) => {
   const classes = useStyles()
     return(
             <Grid container item xs={12}>
@@ -25,13 +23,13 @@ const GameCard = () => {
 
                       <Grid item xs={5}>
                         <Typography className={classes.questionCount}>
-                          {questions}
+                          { (questions ? questions.length : 0) + " questions"}
                         </Typography>
                       </Grid>
 
                       <Grid item xs={12}>
                         <Typography className={classes.gameTitle} gutterBottom>
-                        {gameTitle}
+                         {title}
                         </Typography>
                       </Grid>        
                     </Grid>       

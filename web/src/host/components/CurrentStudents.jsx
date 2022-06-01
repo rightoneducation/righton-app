@@ -5,15 +5,12 @@ import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
 
 
-const students = ["Ray W.", "Zach T.", "Jared J."]
-const studentCount = 12
-
-const CurrentStudents = () => {
+const CurrentStudents = ({teams}) => {
     const classes = useStyles()
   return (
       <div>
           <Grid className={classes.studentCount}>
-              {studentCount}
+              { teams ? teams.length : 0 }
           </Grid>
             <div className={classes.inSessionDiv}>
                 <p className={classes.inSession}>
@@ -21,18 +18,17 @@ const CurrentStudents = () => {
                 </p>
             </div>
           <hr className={classes.hr}/>
-          {students.map((student) => (
+          { teams && 
+          teams.map((name, index) => (
               <MenuItem  container className={classes.studentCards} >  
-              
                 <Grid className={classes.name}>
-                    {student}
+                { teams[index].name }
                 </Grid>
                 <Button className={classes.removeStudent}>
                     <ClearIcon />
                 </Button>
-                
               </MenuItem>
-          ))}
+          ))} 
           
       </div>
     
