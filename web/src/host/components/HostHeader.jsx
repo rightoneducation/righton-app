@@ -5,14 +5,14 @@ import ModeToggle from './ModeToggle'
 import ClearIcon from '@material-ui/icons/Clear';
 
 
-const HostHeader = () => {
+const HostHeader = ({gameCode}) => {
   const classes = useStyles()
   return (
     <div>
       <ModeToggle/>
       <div>
       <ClearIcon className={classes.clearIconGameCode}/>
-      <GameCode/>
+      <GameCode gameCode={gameCode} />
       </div>
     </div>
     
