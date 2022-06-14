@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     background: {
         height: "100vh",
         width: "100%",
-        background: 'linear-gradient(right,#0F78BD,#043373)',
+        background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
     },
     number: {
         color: "white",

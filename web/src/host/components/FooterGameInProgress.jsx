@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import PlayersAnsweredBar from './PlayersAnsweredBar';
 
 
 export default function FooterStartGame({ handleSkipToResults }) {
@@ -18,13 +18,7 @@ export default function FooterStartGame({ handleSkipToResults }) {
       <BottomNavigation className={classes.footer}>
         <div className={classes.footerContainer}>
           <div className={classes.playerNum}>Players that answered</div>
-          <div className={classes.bargroup}>
-            <div className={classes.barContainer}>
-              <LinearProgress variant='determinate' classes={{ colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary }} className={classes.progressBar} value={progressPercent}></LinearProgress>
-              <div style={{ position: 'absolute', top: '0', left: '0', width: `${progressPercent - 2}%`, textAlign: 'right', fontSize: '12px', fontWeight: 'bold', zIndex: '1', lineHeight: '18px' }}> {numPlayerJoin} </div>
-            </div>
-            <div className={classes.totalPlayers}>{numPlayerTotal}</div>
-          </div>
+          <PlayersAnsweredBar numPlayers={numPlayerTotal} numAnswers={numPlayerJoin} progressPercent={progressPercent} />
           <Button className={classes.startGameButton} onClick={handleSkipToResults}>Skip to Results</Button>
         </div>
       </BottomNavigation>
@@ -39,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     height: '132px',
     marginBottom: "22px",
     width: "100%",
+    backgroundColor: 'transparent',
   },
   footerContainer: {
     display: 'flex',
