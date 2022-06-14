@@ -208,7 +208,7 @@ function App() {
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} /> 
             <Route path="/host">
-              <GameInProgress />
+              <Ranking/>
             </Route>         
       </Switch>
         }
@@ -220,7 +220,7 @@ function App() {
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} saveQuestion={handleSaveQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} addQuestion={addQuestion} />
               </Route>
             </Box>
-            <AlertBar />
+            <AlertBar/>
           </AlertContext.Provider>
         ) : <Redirect to="/login" />
         )}
