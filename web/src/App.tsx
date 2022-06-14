@@ -207,8 +207,8 @@ function App() {
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} /> 
-            <Route path="/host">
-              <Ranking />
+            <Route path="/host/:gameID" >
+              <StartGame/>
             </Route>         
       </Switch>
         }
