@@ -26,6 +26,7 @@ import Ranking  from './host/pages/Ranking';
 import GameInProgress from './host/pages/GameInProgress';
 import LaunchScreen from './display/pages/LaunchScreen.jsx';
 import MobilePair from './display/pages/MobilePair.jsx';
+import Header from './host/components/HeaderGameInProgress';
 
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
@@ -192,7 +193,7 @@ function App() {
     <Router>
       <Switch>
       <ThemeProvider theme={theme}>
-      {(isAuthenticated) ? (<Redirect to="/" />) : 
+      {/* {(isAuthenticated) ? (<Redirect to="/" />) :  */}
           <Switch>
             <Route path="/login">
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
@@ -207,12 +208,13 @@ function App() {
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} /> 
-            <Route path="/host/:gameID" >
-              <StartGame/>
+            <Route path="/host/" >
+              {/* <StartGame/> */}
+              <Header />
             </Route>         
       </Switch>
-        }
-        {userLoading ? <div>Loading</div> : (isAuthenticated ? (
+        {/* }
+        {userLoading ? <div>Loading</div> : (isAuthenticated ? ( */}
           <AlertContext.Provider value={alertContext}>
             <Box>
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={true} />
@@ -222,8 +224,8 @@ function App() {
             </Box>
             <AlertBar />
           </AlertContext.Provider>
-        ) : <Redirect to="/login" />
-        )}
+        {/* ) : <Redirect to="/login" />
+        )} */}
         </ThemeProvider>
       </Switch>
     </Router>
