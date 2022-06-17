@@ -14,7 +14,6 @@ export default function FooterStartGame({ handleSkipToResults }) {
   const [progressPercent, setProgressPercent] = useState(50);
 
   return (
-    <div className={classes.footer}>
       <BottomNavigation className={classes.footer}>
         <div className={classes.footerContainer}>
           <div className={classes.playerNum}>Players that answered</div>
@@ -22,23 +21,21 @@ export default function FooterStartGame({ handleSkipToResults }) {
           <Button className={classes.startGameButton} onClick={handleSkipToResults}>Skip to Results</Button>
         </div>
       </BottomNavigation>
-    </div>
   )
 }
 
 const useStyles = makeStyles(theme => ({
-  footer: {
+  footer:{
     position: 'sticky',
     bottom: '0',
-    height: '132px',
-    marginBottom: "22px",
-    width: "100%",
-    backgroundColor: 'transparent',
+    padding: '7%',
+    background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
+    gap: '10px',
   },
   playerNum: {
     fontSize: '16px',

@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
       position: 'sticky',
       bottom: '0',
       padding: '7%',
+      background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
     },
     clickToPair: {
         position: "absolute",
