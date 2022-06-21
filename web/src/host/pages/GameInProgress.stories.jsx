@@ -24,3 +24,13 @@ SecondQuestion.args = {
   currentState: "IN_PROGRESS",
   currentQuestionId: 2,
 };
+
+export const Phase2 = Template.bind({});
+Phase2.args = {
+  ...MockGameSession,
+  currentState: "IN_PROGRESS",
+}
+
+
+
+;
