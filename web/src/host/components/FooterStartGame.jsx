@@ -4,16 +4,18 @@ import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 const FooterStartGame = () => {
   const classes = useStyles();
   return (
-    
-    <BottomNavigation style={{ position: 'sticky', bottom: 0, padding: "7%",  marginTop: "43%"}}>
+    <BottomNavigation className={classes.footer}>
            <button className={classes.startGameButton} >Start Game</button>
           <p className={classes.clickToPair}>Got a desktop and projector? Click here to pair it!</p>      
     </BottomNavigation>
-    
   )
 }
 const useStyles = makeStyles(theme => ({
-   
+    footer:{
+      position: 'sticky',
+      bottom: '0',
+      padding: '7%',
+    },
     clickToPair: {
         position: "absolute",
         fontSize: "12px",
@@ -23,7 +25,6 @@ const useStyles = makeStyles(theme => ({
         fontWeight: "700",
         color: "rgba(0, 117, 255, 1)",
         textDecoration: 'underline',
-       
     },
 
     startGameButton: {

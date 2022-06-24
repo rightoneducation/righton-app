@@ -1,16 +1,14 @@
 import React from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
-;
 
-const gameCode = 9349;
 
-const GameCode = () => {
-    const classes = useStyles()
+const GameCode = ({gameCode}) => {
+  const classes = useStyles()
   return (
       <Grid  container className={classes.gameCodeCard} >  
           <p className={classes.p}>Game Code: </p>
-          <Grid className={classes.gameCode}>
+          <Grid className={classes.gameCodeText}>
               {gameCode}
           </Grid>      
       </Grid>        
@@ -20,7 +18,7 @@ const GameCode = () => {
 }
 const useStyles = makeStyles(theme => ({
   
-  gameCode: {
+  gameCodeText: {
     margin: "auto",
     justifyContent: "center",
     fontSize: "28px",
