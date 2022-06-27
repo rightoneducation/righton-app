@@ -1,46 +1,14 @@
-# Getting Started with Create React App
+## Launching Debug Panel Locally
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. `cd` into the `networking` folder
+2. run `npm install -g` (mac users might need to run `sudo npm install -g`)
+3. run `npm run build`
+4. then `npm link`
+5. `cd` out of the `networking` folder then `cd` into the `debug-panel` folder
+6. run `npm link @righton/networking`
+7. then `npm install`
+8. `npm start` :crossed_fingers:
 
-## Available Scripts
+** One thing to note is that it can take a few times of clicking the Create Game Session button for it to actually connect. Usually get an internal server error the first handful of times trying to connect to the Lambda, but it will go through. (Helpful to inspect and watch the console here)
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Once it does connect and hit the endpoint - you should see the game session ID returned in the browser.
