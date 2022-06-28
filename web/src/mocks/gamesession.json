@@ -42,6 +42,17 @@
     ]
   },
   "teams": {
-    "items": []
+    "items": [{
+      "id": 1,
+      "name": "Ryan r000ls"
+    },
+    {
+      "id": 11,
+      "name": "Ryan dr00ls"
+    },
+    {
+      "id": 111,
+      "name": "Ryan is c00ls"
+    }]
   }
 }

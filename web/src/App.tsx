@@ -31,6 +31,7 @@ import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
+import StartGameContainer from './host/containers/StartGameContainer';
 
 
 
@@ -188,13 +189,15 @@ function App() {
     setAlert,
   };
 
+ 
   return (
     <Router>
       <Switch>
-      <ThemeProvider theme={theme}>
+      {/* <ThemeProvider theme={theme}>
       {(isAuthenticated) ? (<Redirect to="/" />) : 
-          <Switch>
-            <Route path="/login">
+
+          <Switch> */}
+            {/* <Route path="/login">
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <LogIn />
             </Route>
@@ -206,11 +209,11 @@ function App() {
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <Confirmation />
             </Route>
-            <Route path="/status/:gameID" component={StatusPageContainer} /> 
+            <Route path="/status/:gameID" component={StatusPageContainer} />  */}
             <Route path="/host/:gameID" >
-              <StartGame/>
+              <StartGameContainer gameSessionId="123"/>
             </Route>         
-      </Switch>
+      {/* </Switch>
         }
         {userLoading ? <div>Loading</div> : (isAuthenticated ? (
           <AlertContext.Provider value={alertContext}>
@@ -224,7 +227,7 @@ function App() {
           </AlertContext.Provider>
         ) : <Redirect to="/login" />
         )}
-        </ThemeProvider>
+        </ThemeProvider> */}
       </Switch>
     </Router>
 
