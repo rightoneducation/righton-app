@@ -27,11 +27,11 @@ export default function GameDetails() {
                 </Typography>
             </Grid>
 
-            <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true}/>
+            <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} phase2={true}/>
 
             {answerSet.map((answer, index) => {
                 return(
-                    <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false}/>
+                    <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false} phase2={false}/>
                 );
             })}
         </Grid>    

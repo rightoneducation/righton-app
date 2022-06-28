@@ -4,7 +4,7 @@ import { Grid, Typography, Card, CardContent, Collapse, IconButton, LinearProgre
 import { ExpandMore } from '@material-ui/icons';
 
 
-export default function HostAnswerDropdown({answer, explanation, correct}) {
+export default function HostAnswerDropdown({answer, explanation, correct, phase2}) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [progress, setProgress] = React.useState(0);
@@ -24,7 +24,59 @@ export default function HostAnswerDropdown({answer, explanation, correct}) {
           clearInterval(timer);
         };
       }, []);
-    
+
+    // <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
+    //     <ExpandMore fontSize='15px'/>
+    // </IconButton>
+
+    const ExpandButton = (phase2) => {
+        if (phase2) {
+            return (   
+                <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
+                    <ExpandMore fontSize='15px'/>
+                </IconButton>);
+        } else {
+            return (
+            <button>test</button>);
+        }
+    };
+
+
+    if (phase2) {
+        return (
+            <Grid>
+                <Card className={correct ? classes.correctCardInPhase2 : classes.card} style={{ cursor: 'pointer'}}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
+                        <CardContent>
+                            <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
+                                <Typography className={classes.answer}>
+                                    {answer}
+                                </Typography>
+                                <ExpandButton ExpandButton={phase2}/>
+                            </Box>
+                            <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>
+                        </CardContent>
+                        <Collapse in={expanded}>
+                            <CardContent>
+                                <Typography className={classes.explanationTitle}>
+                                    Explanation:
+                                </Typography>
+                                <Typography className={classes.explanationText}>
+                                    {explanation}
+                                </Typography>
+                            </CardContent>
+                        </Collapse>
+                    </Box>
+                    <Box className={classes.cardAnswers}>
+                        <div>
+                            <h3>1</h3>
+                        </div>
+                    </Box>
+                </Card>
+            </Grid>
+        )
+    }
+
     return (
         <Grid>
             <Card className={correct ? classes.correctCard : classes.card} onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer'}}>
@@ -95,6 +147,20 @@ const useStyles = makeStyles(theme => ({
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         border: "2px solid rgba(255, 255, 255, 0.2)",
         position: "relative"
+    },
+    correctCardInPhase2: {
+        display: "flex",
+        flexDirection: "row",
+        borderRadius: '10px',
+        backgroundColor: "gray",
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginBottom: '10px',
+        width: '80%',
+        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+        border: "2px solid rgba(255, 255, 255, 0.2)",
+        position: "relative",
+        opacity: "0.5"
     },
     cardAnswers: {
         fontWeight: 500,
