@@ -43,18 +43,16 @@ export default function Timer({timer}) {
     //pass state of parent component as props for host instead of using state here 
     //allowing other components access to timer
     const [time, setTime] = useState(timer)
-    
 
     useEffect(() => {
         countdown.current = setInterval(() => {
             if(time > 0) {
                 setTime(time - 1) //anytime the timer hits 0, unmount - clearInterval
-            }
-            clearInterval(countdown.current)
+            } 
         }, 1000)
         
         return () => clearInterval(countdown.current)
-    },)
+    }, [time])
 
     return(
         <div>

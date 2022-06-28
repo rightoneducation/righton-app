@@ -35,6 +35,7 @@ import { Auth } from 'aws-amplify';
 
 
 
+
 const filterGame = (game: Game | null, search: string) => {
   if (game && game.title && game.title.toLowerCase().indexOf(search) > -1) return true;
   return false;
@@ -208,8 +209,8 @@ function App() {
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} /> 
-            <Route path="/host/" >
-              {/* <StartGame/> */}
+            <Route path="/host" >
+              
               <Header />
             </Route>         
       </Switch>
