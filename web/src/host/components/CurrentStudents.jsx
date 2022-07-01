@@ -1,11 +1,20 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
+import { removeTeam } from '../../lib/hostAPI'
 
 
-const CurrentStudents = ({ teams, removeTeam }) => {
+const CurrentStudents = ({ teams, teamId }) => {
+
+    const [currentTeam, setCurrentTeam] = useState();
+    
+    const handleRemoveTeam = () => {
+        removeTeam(teamId).then((response) => {
+           setCurrentTeam(response)
+    })}
+    
     const classes = useStyles()
     return (
         <div>
@@ -19,13 +28,13 @@ const CurrentStudents = ({ teams, removeTeam }) => {
             </div>
             <hr className={classes.hr} />
             {teams &&
-                teams.map((name, index) => (
-                    <MenuItem container className={classes.studentCards} >
+                teams.map((name, id) => (
+                    <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
-                            {teams[index].name}
+                            {name.name}
                         </Grid>
                         <Button className={classes.removeStudent} >
-                            <ClearIcon onClick={() => removeTeam(index)}/>
+                            <ClearIcon onClick={handleRemoveTeam}/>
                         </Button>
                     </MenuItem>
                 ))}
