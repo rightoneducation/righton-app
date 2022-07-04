@@ -42,36 +42,6 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     color: 'white',
   },
-  bargroup: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    gap: '10px',
-  },
-  totalPlayers: {
-    fontSize: '12px',
-    lineHeight: '18px',
-    fontWeight: '700',
-    color: 'white',
-  },
-  barContainer: {
-    position: 'relative',
-    width: '291px',
-  },
-  progressBar: {
-    position: 'relative',
-    top: '0',
-    left: '0',
-    height: '18px',
-    width: '100%',
-    borderRadius: '3px',
-  },
-  colorPrimary: {
-    background: 'rgba(255,255,255,0.2)',
-  },
-  barColorPrimary: {
-    background: 'white',
-  },
   startGameButton: {
     border: '4px solid #159EFA',
     borderRadius: '34px',
