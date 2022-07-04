@@ -24,8 +24,8 @@ const CurrentStudents = ({ teams, removeTeam }) => {
                         <Grid className={classes.name}>
                             {teams[index].name}
                         </Grid>
-                        <Button className={classes.removeStudent} onClick={() => removeTeam(index)}>
-                            <ClearIcon />
+                        <Button className={classes.removeStudent} >
+                            <ClearIcon onClick={() => removeTeam(index)}/>
                         </Button>
                     </MenuItem>
                 ))}
