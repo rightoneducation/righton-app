@@ -11,11 +11,14 @@ const CurrentStudents = ({ teams }) => {
     const [currentTeam, setCurrentTeam] = useState(teams);
     console.log(currentTeam);
     
-    const handleRemoveTeam = (team) => {
-        removeTeam(team).then((response) => {
-            setCurrentTeam(response);
-            console.log(response);
-        })
+    
+    const handleRemoveTeam = (player) => {
+        removeTeam(player.id).then((teams) => {
+            setCurrentTeam(teams);
+            
+            console.log("player is", player.id)
+            console.log(teams)})
+    
     }
 
     
@@ -24,7 +27,7 @@ const CurrentStudents = ({ teams }) => {
     return (
         <div>
             <Grid className={classes.studentCount}>
-                {teams ? teams.length : 0}
+                {currentTeam ? currentTeam.length : 0}
             </Grid>
             <div className={classes.inSessionDiv}>
                 <p className={classes.inSession}>
@@ -32,14 +35,15 @@ const CurrentStudents = ({ teams }) => {
                 </p>
             </div>
             <hr className={classes.hr} />
-            {currentTeam &&
-                currentTeam.map((name, id) => (
+            
+                {currentTeam && currentTeam.map((team, id, index) => (
+                    console.log(team),
                     <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
-                            {name.name}
+                            {team.name}
                         </Grid>
                         <Button className={classes.removeStudent} >
-                            <ClearIcon onClick={() => handleRemoveTeam(id)}/>
+                            <ClearIcon onClick={() => handleRemoveTeam(team)}/>
                         </Button>
                     </MenuItem>
                 ))}
