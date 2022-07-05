@@ -15,7 +15,7 @@ export default function QuestionFormAnswerDropdown({question, correct, onChangeM
                         <Typography className={classes.answer}>
                             {"Correct Answer:"}
                         </Typography>
-                        <TextField size="small" style={{width: 577, margin: 0}} id={"answer"} value={question.answer} onChange={onChangeMaker('answer')} label="Type Answer Here" variant="outlined" required />
+                        <TextField size="small" style={{width: 700, margin: 0}} id={"answer"} value={question.answer} onChange={onChangeMaker('answer')} label="Type Answer Here" variant="outlined" required />
                         <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
                             <ExpandMore fontSize='large' />
                         </IconButton>
@@ -52,9 +52,9 @@ export default function QuestionFormAnswerDropdown({question, correct, onChangeM
                 <Card className={classes.wrongCard}>
                     <CardContent style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Typography className={classes.answer}>
-                            {`Wrong Answer ${wrongAnswersIndex + 1}`}
+                            {`Wrong Answer ${wrongAnswersIndex + 1}:`}
                         </Typography>
-                        <TextField size="small" style={{width: 577, margin: 0}} id={`wrongAnswers${wrongAnswersIndex + 1}`} value={question.wrongAnswers[wrongAnswersIndex].choice} onChange={onWrongChoiceChangeMaker(wrongAnswersIndex)} label="Type Answer Here" variant="outlined" required />
+                        <TextField size="small" style={{width: 700, margin: 0}} id={`wrongAnswers${wrongAnswersIndex + 1}`} value={question.wrongAnswers[wrongAnswersIndex].choice} onChange={onWrongChoiceChangeMaker(wrongAnswersIndex)} label="Type Answer Here" variant="outlined" required />
                         <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
                             <ExpandMore fontSize='large' />
                         </IconButton>
@@ -86,13 +86,13 @@ const useStyles = makeStyles(theme => ({
     wrongCard: {
         borderRadius: '10px',
         boxShadow: '1px 4px 10px lightgrey',
-        width: '86%',
+        width: '90%',
         marginBottom: '20px',
     },
     correctCard: {
         borderRadius: '10px',
         boxShadow: '1px 4px 10px lightgrey',
-        width: '85%',
+        width: '90%',
         border: '5px solid #4DED66',
         marginBottom: '20px',
     },
