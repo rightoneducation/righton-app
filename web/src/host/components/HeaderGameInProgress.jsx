@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export default function Header() {
+export default function GameInProgressHeader() {
     const classes = useStyles();
 
     return(

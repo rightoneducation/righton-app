@@ -26,7 +26,7 @@ import Ranking  from './host/pages/Ranking';
 import GameInProgress from './host/pages/GameInProgress';
 import LaunchScreen from './display/pages/LaunchScreen.jsx';
 import MobilePair from './display/pages/MobilePair.jsx';
-import Header from './host/components/HeaderGameInProgress';
+import GameInProgressHeader from './host/components/HeaderGameInProgress';
 
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
@@ -206,6 +206,7 @@ function App() {
 
             <Route path="/host">
               {/* <GameInProgress /> */}
+              <GameInProgressHeader/>
             </Route>
 
 
