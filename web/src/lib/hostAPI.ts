@@ -5,11 +5,12 @@ export const loadGameSession = async (gameSessionId: string) => {
     return gameSession
 }
 
-export const removeTeam = async (gameSessionId: string, teamId: number) => {
+export const removeTeam = async (id: number) => {
     const gameSession = await Promise.resolve(mockGameSession)
-    const updatedGameSession = gameSession.teams.items.filter(team => team.id !== teamId)
+    const updatedGameSession = gameSession.teams.items.filter(team => team.id !== id)
     return updatedGameSession
   }
 
+console.log(removeTeam(1))
   
  

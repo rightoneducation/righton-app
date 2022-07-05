@@ -6,14 +6,19 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { removeTeam } from '../../lib/hostAPI'
 
 
-const CurrentStudents = ({ teams, teamId }) => {
+const CurrentStudents = ({ teams }) => {
 
-    const [currentTeam, setCurrentTeam] = useState();
+    const [currentTeam, setCurrentTeam] = useState(teams);
+    console.log(currentTeam);
     
-    const handleRemoveTeam = () => {
-        removeTeam(teamId).then((response) => {
-           setCurrentTeam(response)
-    })}
+    const handleRemoveTeam = (team) => {
+        removeTeam(team).then((response) => {
+            setCurrentTeam(response);
+            console.log(response);
+        })
+    }
+
+    
     
     const classes = useStyles()
     return (
@@ -27,14 +32,14 @@ const CurrentStudents = ({ teams, teamId }) => {
                 </p>
             </div>
             <hr className={classes.hr} />
-            {teams &&
-                teams.map((name, id) => (
+            {currentTeam &&
+                currentTeam.map((name, id) => (
                     <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
                             {name.name}
                         </Grid>
                         <Button className={classes.removeStudent} >
-                            <ClearIcon onClick={handleRemoveTeam}/>
+                            <ClearIcon onClick={() => handleRemoveTeam(id)}/>
                         </Button>
                     </MenuItem>
                 ))}

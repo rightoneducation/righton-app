@@ -212,7 +212,7 @@ function App() {
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} />  */}
             <Route path="/host/:gameID" >
-              <StartGameContainer gameSessionId="123"  />
+              <StartGameContainer gameSessionId="123"/>
             </Route>         
       {/* </Switch>
         }
