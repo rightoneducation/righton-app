@@ -5,12 +5,9 @@ import PlayersAnsweredBar from './PlayersAnsweredBar';
 
 
 
-export default function FooterStartGame({ 
-  teams: { items: teams }, 
-  currentState,
-  handleSkipToResults }) {
+export default function FooterStartGame({ teams, currentState, handleSkipToResults }) {
   const classes = useStyles();
-  const [numPlayers,setNumPlayers] = useState(teams.length);
+  const [numPlayers, setNumPlayers] = useState(Object.keys(teams.items).length);
   const [buttonText, setButtonText] = useState("Skip to Results");
   const [buttonStyle, setButtonStyle] = useState(classes.startGameButton);
   const [numPlayersAnswered, setNumPlayersAnswered] = useState(0);
@@ -27,9 +24,9 @@ export default function FooterStartGame({
       setButtonText("Next Phase");
       setButtonStyle(classes.nextPhaseButton);
     }
-
     let count = 0;
-    teams.forEach(item => {
+    Object.values(teams.items).forEach(item => {
+      console.log(item);
       if (item.answered === "true"){
         count++;
       }

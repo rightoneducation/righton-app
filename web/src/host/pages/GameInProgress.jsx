@@ -13,13 +13,12 @@ const ProgressBar = (props) => {
 };
 
 
-export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
+export default function GameInProgress({teams, questions: { items: questions }, currentState, currentQuestionId, handleSkipToResults }) {
     const classes = useStyles();
 
     const currentQuestion = questions[currentQuestionId - 1];
 
     return (
-        // Ray been here
         <div className={classes.background}>
             <div>
                 <div>
@@ -42,7 +41,7 @@ export default function GameInProgress({ teams: { items: teams }, questions: { i
                         {/* results and drop down bar goes here */}
                 </div>
             </div>
-            <FooterGameInProgress teams={teams} handleSkipToResults={handleSkipToResults} />
+            <FooterGameInProgress teams={teams} currentState={currentState} handleSkipToResults={handleSkipToResults} />
         </div>
     );
 }
