@@ -4,17 +4,12 @@ import QuestionCard from "../components/QuestionCard";
 import FooterGameInProgress from '../components/FooterGameInProgress';
 import GameDetails from "../components/AnswersInProgressDetails";
 
-
-
-
 export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
     const classes = useStyles();
 
     return (
         <div>
-            <QuestionCard/>
             <GameDetails/>
-            <FooterGameInProgress/>
         </div>
     );
 }

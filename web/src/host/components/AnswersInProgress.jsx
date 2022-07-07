@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Card, CardContent, Collapse, IconButton, LinearProgress, Box } from "@material-ui/core";
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore, Check } from '@material-ui/icons';
+
 
 
 export default function HostAnswerDropdown({answer, explanation, correct, phase2}) {
@@ -25,14 +26,10 @@ export default function HostAnswerDropdown({answer, explanation, correct, phase2
         };
       }, []);
 
-    // <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
-    //     <ExpandMore fontSize='15px'/>
-    // </IconButton>
-
     const ExpandButton = (phase2) => {
         if (phase2) {
             return (   
-                <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
+                <IconButton size='small' className={expanded ? classes.expanded : classes.expand}>
                     <ExpandMore fontSize='15px'/>
                 </IconButton>);
         } else {
@@ -69,7 +66,8 @@ export default function HostAnswerDropdown({answer, explanation, correct, phase2
                     </Box>
                     <Box className={classes.cardAnswers}>
                         <div>
-                            <h3>1</h3>
+                            {/* <h3>1</h3> */}
+                            <Check fontSize="large" />
                         </div>
                     </Box>
                 </Card>
@@ -79,14 +77,14 @@ export default function HostAnswerDropdown({answer, explanation, correct, phase2
 
     return (
         <Grid>
-            <Card className={correct ? classes.correctCard : classes.card} onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer'}}>
+            <Card className={correct ? classes.correctCard : classes.card} style={{ cursor: 'pointer'}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                     <CardContent>
                         <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
                             <Typography className={classes.answer}>
                                 {answer}
                             </Typography>
-                            <IconButton size='small' className={expanded ? classes.expanded : classes.expand}>
+                            <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
                                     <ExpandMore fontSize='15px'/>
                              </IconButton>
                         </Box>
