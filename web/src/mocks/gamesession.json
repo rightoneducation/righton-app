@@ -42,6 +42,35 @@
     ]
   },
   "teams": {
-    "items": []
+    "items": [
+      {
+        "name": "Ray W",
+        "answered": "false"
+      },
+      {
+        "name": "Zach T",
+        "answered": "true"
+      },
+      {
+        "name": "Jared J",
+        "answered": "false"
+      },
+      {
+        "name": "Lucha E",
+        "answered": "true"
+      },
+      {
+        "name": "Josephina I",
+        "answered": "false"
+      },
+      {
+        "name": "Eric N",
+        "answered": "false"
+      },
+      {
+        "name": "Alex K",
+        "answered": "false"
+      }
+    ]
   }
 }

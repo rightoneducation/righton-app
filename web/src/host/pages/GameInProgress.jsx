@@ -13,9 +13,7 @@ const ProgressBar = (props) => {
 };
 
 
-
-
-export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
+export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
     const classes = useStyles();
 
     const currentQuestion = questions[currentQuestionId - 1];
@@ -44,7 +42,7 @@ export default function GameInProgress({ questions: { items: questions }, curren
                         {/* results and drop down bar goes here */}
                 </div>
             </div>
-            <FooterGameInProgress handleSkipToResults={handleSkipToResults} />
+            <FooterGameInProgress teams={teams} handleSkipToResults={handleSkipToResults} />
         </div>
     );
 }
