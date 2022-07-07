@@ -1,33 +1,16 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ClearIcon from '@material-ui/icons/Clear';
-import { removeTeam } from '../../lib/hostAPI'
 
 
-const CurrentStudents = ({ teams }) => {
-
-    const [currentTeam, setCurrentTeam] = useState(teams);
-    console.log(currentTeam);
-    
-    
-    const handleRemoveTeam = (player) => {
-        removeTeam(player.id).then((teams) => {
-            setCurrentTeam(teams);
-            
-            console.log("player is", player.id)
-            console.log(teams)})
-    
-    }
-
-    
-    
+const CurrentStudents = ({ teams, removeTeam }) => {
     const classes = useStyles()
     return (
         <div>
             <Grid className={classes.studentCount}>
-                {currentTeam ? currentTeam.length : 0}
+                {teams ? teams.length : 0}
             </Grid>
             <div className={classes.inSessionDiv}>
                 <p className={classes.inSession}>
@@ -36,14 +19,14 @@ const CurrentStudents = ({ teams }) => {
             </div>
             <hr className={classes.hr} />
             
-                {currentTeam && currentTeam.map((team, id, index) => (
+                {teams && teams.map((team, id) => (
                     console.log(team),
                     <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
                             {team.name}
                         </Grid>
                         <Button className={classes.removeStudent} >
-                            <ClearIcon onClick={() => handleRemoveTeam(team)}/>
+                            <ClearIcon onClick={() => removeTeam(team)}/>
                         </Button>
                     </MenuItem>
                 ))}

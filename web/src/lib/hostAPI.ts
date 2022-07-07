@@ -1,16 +1,13 @@
-import mockGameSession from'../mocks/gamesession.json'
+import mockGameSession from '../mocks/gamesession.json'
 
 export const loadGameSession = async (gameSessionId: string) => {
   const gameSession = await Promise.resolve(mockGameSession)
-    return gameSession
+  return gameSession
 }
 
-export const removeTeam = async (teamId: number) => {
-    const gameSession = await Promise.resolve(mockGameSession)
-    const updatedGameSession = gameSession.teams.items.filter(team => team.id !== teamId)
-    return updatedGameSession
-  }
-
-console.log(removeTeam(1))
-  
- 
+export const removeTeam = async (teamId: number, gameSession: any) => {
+  const updatedGameSession = {...gameSession,
+    teams: {
+      items: gameSession.teams.items.filter((team: { id: number }) => team.id !== teamId),}}
+  return updatedGameSession
+}

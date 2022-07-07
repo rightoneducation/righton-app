@@ -4,6 +4,12 @@ import { loadGameSession, removeTeam } from '../../lib/hostAPI'
 
 const StartGameContainer = ({ gameSessionId }) => {
   const [gameSession, setGameSession] = useState()
+  
+  const handleRemoveTeam = (player) => {
+      removeTeam(player.id, gameSession).then((response) => {
+          setGameSession(response);      
+      })
+  }
 
   useEffect(() => {
     loadGameSession(gameSessionId).then((response) => {
@@ -15,7 +21,7 @@ const StartGameContainer = ({ gameSessionId }) => {
     return null
   }
   return (
-    <StartGame {...gameSession} />
+    <StartGame {...gameSession} removeTeam={handleRemoveTeam}/>
   )
 }
 
