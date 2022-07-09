@@ -1,48 +1,54 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCard from "../components/QuestionCard";
 import FooterGameInProgress from '../components/FooterGameInProgress';
+import MockGameSession from '../../mocks/gamesession.json';
 
-const ProgressBar = (props) => {
-    const { bgcolor, completed } = props;
-    return (
-        <div>
-
-        </div>
-    );
-};
-
-
-export default function GameInProgress({teams, questions: { items: questions }, currentState, currentQuestionId, handleSkipToResults }) {
+export default function GameInProgress() { 
     const classes = useStyles();
-
+    const [gameData, setGameData] = useState(MockGameSession);
+    const teams = gameData.teams.items;
+    const questions = gameData.questions.items;
+    const currentQuestionId = gameData.currentQuestionId;
     const currentQuestion = questions[currentQuestionId - 1];
 
+    const numAnswers = teams => {
+      let count = 0;
+      teams.map(teamsItem => {
+        if(teamsItem.answered === "true")
+          count++;
+        });
+      return count;
+    };
+
+
     return (
-        <div className={classes.background}>
-            <div>
-                <div>
-                     {questions.map((question, index) => (
-                          <grid className={classes.number} key={question.id}>
-                             {index + 1}
-                         </grid>
-                     ))}
-                </div>
-                 <div className={classes.title}>
-                     <h1>Question {currentQuestionId} of {questions.length}</h1>
-                     <p>Phase 1 of 2</p>
-                 </div>
-                 <div className={classes.timebar}>
-                     <progress value={15} max={24} class={classes.timebar1} />
-                     <button>add time</button>
-                 </div>
-                 <QuestionCard title={currentQuestion.question} />
-                 <div>
-                        {/* results and drop down bar goes here */}
-                </div>
-            </div>
-            <FooterGameInProgress teams={teams} currentState={currentState} handleSkipToResults={handleSkipToResults} />
+      <div className={classes.background}>
+        <div>
+          {/*divs in this block replaced with UI components being worked on by Eric, Zach and Lucah */}
+          <div>
+            {questions.map((question, index) => (
+              <grid className={classes.number} key={question.id}>
+                {index + 1}
+              </grid>
+            ))}
+          </div>
+          <div className={classes.title}>
+            <h1>Question {currentQuestionId} of {questions.length}</h1>
+            <p>Phase 1 of 2</p>
+          </div>
+          <div className={classes.timebar}>
+            <progress value={15} max={24} className={classes.timebar1} />
+            <button>add time</button>
+          </div>
+          <QuestionCard title={currentQuestion.question} />
+          <div>
+            {/* results and drop down bar goes here */}
+          </div>
         </div>
+
+        <FooterGameInProgress teams={teams} currentState={gameData.currentState} numPlayers={teams.length} numAnswers={numAnswers(teams)} />
+      </div>
     );
 }
 

@@ -1,48 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import PlayersAnsweredBar from './PlayersAnsweredBar';
 
 
 
-export default function FooterStartGame({ teams, currentState, handleSkipToResults }) {
+export default function FooterGameInProgress({currentState, numPlayers, numAnswers }) {
   const classes = useStyles();
-  const [numPlayers, setNumPlayers] = useState(Object.keys(teams.items).length);
-  const [buttonText, setButtonText] = useState("Skip to Results");
-  const [buttonStyle, setButtonStyle] = useState(classes.startGameButton);
-  const [numPlayersAnswered, setNumPlayersAnswered] = useState(0);
-  const [progressPercent, setProgressPercent] = useState(0);
-
-  useEffect(()=> {
+  
+  const button = currentState => {
     if (currentState === "PHASE 1"){
-      setButtonText("Skip to Results");
-      setButtonStyle(classes.startGameButton);
+      return ( <Button className={classes.startGameButton}> {"Skip to Results"} </Button>);
     } else if (currentState === "PHASE 2"){
-      setButtonText("Skip to Next Question");
-      setButtonStyle(classes.startGameButton);
+      return ( <Button className={classes.startGameButton}> {"Skip to Next Question"} </Button>);
     } else {
-      setButtonText("Next Phase");
-      setButtonStyle(classes.nextPhaseButton);
+      return ( <Button className={classes.nextPhaseButton}> {"Next Phase"} </Button>);
     }
-    let count = 0;
-    Object.values(teams.items).forEach(item => {
-      console.log(item);
-      if (item.answered === "true"){
-        count++;
-      }
-    });
-    setNumPlayersAnswered(count);
-
-    setProgressPercent((numPlayersAnswered/numPlayers)*100);
-  });
+  };
 
 
   return (
       <BottomNavigation className={classes.footer}>
         <div className={classes.footerContainer}>
           <div className={classes.playerNum}>Players who have answered</div>
-          <PlayersAnsweredBar numPlayers={numPlayers} numPlayersAnswered={numPlayersAnswered} progressPercent={progressPercent} />
-          <Button className={buttonStyle} onClick={handleSkipToResults}> {buttonText} </Button>
+          <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers}/>
+          {button(currentState)}
         </div>
       </BottomNavigation>
   )
