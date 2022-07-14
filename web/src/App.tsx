@@ -34,6 +34,7 @@ import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
 import StartGameContainer from './host/containers/StartGameContainer';
 import { loadGameSession } from './lib/hostAPI';
+import GameInProgressContainer from './host/containers/GameInProgressContainer';
 
 
 
@@ -210,7 +211,8 @@ function App() {
 
             <Route path="/status/:gameID" component={StatusPageContainer} />  */}
             <Route path="/host/:gameID" >
-              <StartGameContainer gameSessionId="123"/>
+              {/* <StartGameContainer gameSessionId="123"/> */}
+              <GameInProgressContainer gameSessionId="123"/>
             </Route>         
       {/* </Switch>
         }

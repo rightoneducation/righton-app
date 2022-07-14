@@ -19,6 +19,7 @@ export default function GameInProgress({ questions: { items: questions }, curren
     const classes = useStyles();
 
     const currentQuestion = questions[currentQuestionId - 1];
+    console.log(currentQuestion);
 
     return (
         // Ray been here
@@ -38,7 +39,7 @@ export default function GameInProgress({ questions: { items: questions }, curren
                 <progress value={15} max={24} class={classes.timebar1} />
                 <button>add time</button>
             </div>
-            <QuestionCard title={currentQuestion.question} />
+            <QuestionCard title={currentQuestion} />
             <div>
                 {/* results and drop down bar goes here */}
             </div>
