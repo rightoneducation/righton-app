@@ -19,7 +19,6 @@ export default function GameInProgress({ questions: { items: questions }, curren
     const classes = useStyles();
 
     const currentQuestion = questions[currentQuestionId - 1];
-    console.log(currentQuestion);
 
     return (
         // Ray been here
