@@ -226,7 +226,7 @@ function App() {
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
               </Route>
             </Box>
-            <AlertBar />
+            <AlertBar/>
           </AlertContext.Provider>
 
         ) : <Redirect to="/login" />
