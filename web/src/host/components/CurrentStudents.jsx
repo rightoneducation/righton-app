@@ -18,9 +18,7 @@ const CurrentStudents = ({ teams, removeTeam }) => {
                 </p>
             </div>
             <hr className={classes.hr} />
-            
                 {teams && teams.map((team, id) => (
-                    console.log(team),
                     <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
                             {team.name}
@@ -30,9 +28,7 @@ const CurrentStudents = ({ teams, removeTeam }) => {
                         </Button>
                     </MenuItem>
                 ))}
-
         </div>
-
     )
 }
 const useStyles = makeStyles(theme => ({

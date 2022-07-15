@@ -1,6 +1,6 @@
 import mockGameSession from '../mocks/gamesession.json'
 
-export const loadGameSession = async (gameSessionId: string) => {
+export const loadGameSession = async (gameSessionId: any) => {
   const gameSession = await Promise.resolve(mockGameSession)
   return gameSession
 }

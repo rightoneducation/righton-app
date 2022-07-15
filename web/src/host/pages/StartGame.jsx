@@ -9,6 +9,7 @@ export default function StartGame({
   teams: { items: teams },
   questions: { items: questions },
   title,
+  gameId,
   gameCode,
   removeTeam,
 }) {
@@ -24,7 +25,7 @@ export default function StartGame({
         </div>
         <CurrentStudents teams={teams} removeTeam={removeTeam}/>
       </div>
-      <FooterStartGame />
+      <FooterStartGame gameId={gameId}/>
     </div>
   )
 }
