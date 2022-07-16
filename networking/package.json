@@ -1,0 +1,20 @@
+{
+  "name": "@righton/networking",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "/lib"
+  ],
+  "main": "./lib/src/index.js",
+  "module": "./lib/src/index.js",
+  "types": "./lib/src/index.d.ts"
+}

@@ -18,20 +18,17 @@ const CurrentStudents = ({ teams, removeTeam }) => {
                 </p>
             </div>
             <hr className={classes.hr} />
-            {teams &&
-                teams.map((name, index) => (
-                    <MenuItem container className={classes.studentCards} >
+                {teams && teams.map((team, id) => (
+                    <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
-                            {teams[index].name}
+                            {team.name}
                         </Grid>
                         <Button className={classes.removeStudent} >
-                            <ClearIcon onClick={() => removeTeam(index)}/>
+                            <ClearIcon onClick={() => removeTeam(team)}/>
                         </Button>
                     </MenuItem>
                 ))}
-
         </div>
-
     )
 }
 const useStyles = makeStyles(theme => ({

@@ -1,11 +1,19 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 
-const FooterStartGame = () => {
+const FooterStartGame = ({ gameId }) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const handleStartGame = (e) => {
+    e.preventDefault();
+    history.push(`/game-in-progress/${gameId}`);
+  }
+  
   return (
     <BottomNavigation className={classes.footer}>
-           <button className={classes.startGameButton} >Start Game</button>
+           <button className={classes.startGameButton} onClick={handleStartGame}>Start Game</button>
           <p className={classes.clickToPair}>Got a desktop and projector? Click here to pair it!</p>      
     </BottomNavigation>
   )

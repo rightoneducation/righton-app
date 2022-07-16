@@ -1,0 +1,615 @@
+input CreateGameSessionInput {
+  id: ID
+  gameId: Int!
+  startTime: AWSDateTime
+  phaseOneTime: Int!
+  phaseTwoTime: Int!
+  currentQuestionId: Int
+  currentState: GameSessionState!
+  gameCode: Int!
+  isAdvanced: Boolean!
+  imageUrl: String
+  description: String
+  title: String
+  createdAt: AWSDateTime
+}
+
+input CreateQuestionInput {
+  id: Int
+  text: String!
+  answer: String
+  wrongAnswers: AWSJSON
+  imageUrl: String
+  instructions: AWSJSON
+  standard: String
+  cluster: String
+  domain: String
+  grade: String
+  gameSessionId: ID!
+}
+
+input CreateTeamAnswerInput {
+  id: ID
+  isChosen: Boolean
+  text: String
+  teamMemberMemberAnswersId: ID
+}
+
+input CreateTeamInput {
+  id: ID
+  name: String!
+  trickiestAnswerIDs: [ID]
+  score: Int!
+  gameSessionTeamsId: ID
+  teamQuestionId: ID!
+}
+
+input CreateTeamMemberInput {
+  id: ID
+  isFacilitator: Boolean
+  deviceId: ID!
+  teamTeamMembersId: ID
+}
+
+input DeleteGameSessionInput {
+  id: ID!
+}
+
+input DeleteQuestionInput {
+  id: Int!
+  gameSessionId: ID!
+}
+
+input DeleteTeamAnswerInput {
+  id: ID!
+}
+
+input DeleteTeamInput {
+  id: ID!
+}
+
+input DeleteTeamMemberInput {
+  id: ID!
+}
+
+type GameSession {
+  id: ID!
+  gameId: Int!
+  startTime: AWSDateTime
+  phaseOneTime: Int!
+  phaseTwoTime: Int!
+  teams(
+    filter: ModelTeamFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelTeamConnection
+  currentQuestionId: Int
+  currentState: GameSessionState!
+  gameCode: Int!
+  isAdvanced: Boolean!
+  imageUrl: String
+  description: String
+  title: String
+  createdAt: AWSDateTime!
+  questions(
+    id: ModelIntKeyConditionInput
+    filter: ModelQuestionFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelQuestionConnection
+  updatedAt: AWSDateTime!
+}
+
+enum GameSessionState {
+  CHOOSING_TRICK_ANSWER
+  FINISHED
+  INITIAL_INTRO
+  NOT_STARTED
+  REVIEWING_RESULT
+  VOTING
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelGameSessionConditionInput {
+  gameId: ModelIntInput
+  startTime: ModelStringInput
+  phaseOneTime: ModelIntInput
+  phaseTwoTime: ModelIntInput
+  currentQuestionId: ModelIntInput
+  currentState: ModelGameSessionStateInput
+  gameCode: ModelIntInput
+  isAdvanced: ModelBooleanInput
+  imageUrl: ModelStringInput
+  description: ModelStringInput
+  title: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelGameSessionConditionInput]
+  or: [ModelGameSessionConditionInput]
+  not: ModelGameSessionConditionInput
+}
+
+type ModelGameSessionConnection {
+  items: [GameSession]!
+  nextToken: String
+}
+
+input ModelGameSessionFilterInput {
+  id: ModelIDInput
+  gameId: ModelIntInput
+  startTime: ModelStringInput
+  phaseOneTime: ModelIntInput
+  phaseTwoTime: ModelIntInput
+  currentQuestionId: ModelIntInput
+  currentState: ModelGameSessionStateInput
+  gameCode: ModelIntInput
+  isAdvanced: ModelBooleanInput
+  imageUrl: ModelStringInput
+  description: ModelStringInput
+  title: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelGameSessionFilterInput]
+  or: [ModelGameSessionFilterInput]
+  not: ModelGameSessionFilterInput
+}
+
+input ModelGameSessionStateInput {
+  eq: GameSessionState
+  ne: GameSessionState
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDKeyConditionInput {
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  between: [ID]
+  beginsWith: ID
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIntKeyConditionInput {
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelQuestionConditionInput {
+  text: ModelStringInput
+  answer: ModelStringInput
+  wrongAnswers: ModelStringInput
+  imageUrl: ModelStringInput
+  instructions: ModelStringInput
+  standard: ModelStringInput
+  cluster: ModelStringInput
+  domain: ModelStringInput
+  grade: ModelStringInput
+  and: [ModelQuestionConditionInput]
+  or: [ModelQuestionConditionInput]
+  not: ModelQuestionConditionInput
+}
+
+type ModelQuestionConnection {
+  items: [Question]!
+  nextToken: String
+}
+
+input ModelQuestionFilterInput {
+  id: ModelIntInput
+  text: ModelStringInput
+  answer: ModelStringInput
+  wrongAnswers: ModelStringInput
+  imageUrl: ModelStringInput
+  instructions: ModelStringInput
+  standard: ModelStringInput
+  cluster: ModelStringInput
+  domain: ModelStringInput
+  grade: ModelStringInput
+  gameSessionId: ModelIDInput
+  and: [ModelQuestionFilterInput]
+  or: [ModelQuestionFilterInput]
+  not: ModelQuestionFilterInput
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelTeamAnswerConditionInput {
+  isChosen: ModelBooleanInput
+  text: ModelStringInput
+  and: [ModelTeamAnswerConditionInput]
+  or: [ModelTeamAnswerConditionInput]
+  not: ModelTeamAnswerConditionInput
+  teamMemberMemberAnswersId: ModelIDInput
+}
+
+type ModelTeamAnswerConnection {
+  items: [TeamAnswer]!
+  nextToken: String
+}
+
+input ModelTeamAnswerFilterInput {
+  id: ModelIDInput
+  isChosen: ModelBooleanInput
+  text: ModelStringInput
+  and: [ModelTeamAnswerFilterInput]
+  or: [ModelTeamAnswerFilterInput]
+  not: ModelTeamAnswerFilterInput
+  teamMemberMemberAnswersId: ModelIDInput
+}
+
+input ModelTeamConditionInput {
+  name: ModelStringInput
+  trickiestAnswerIDs: ModelIDInput
+  score: ModelIntInput
+  and: [ModelTeamConditionInput]
+  or: [ModelTeamConditionInput]
+  not: ModelTeamConditionInput
+  gameSessionTeamsId: ModelIDInput
+  teamQuestionId: ModelIDInput
+}
+
+type ModelTeamConnection {
+  items: [Team]!
+  nextToken: String
+}
+
+input ModelTeamFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  trickiestAnswerIDs: ModelIDInput
+  score: ModelIntInput
+  and: [ModelTeamFilterInput]
+  or: [ModelTeamFilterInput]
+  not: ModelTeamFilterInput
+  gameSessionTeamsId: ModelIDInput
+  teamQuestionId: ModelIDInput
+}
+
+input ModelTeamMemberConditionInput {
+  isFacilitator: ModelBooleanInput
+  deviceId: ModelIDInput
+  and: [ModelTeamMemberConditionInput]
+  or: [ModelTeamMemberConditionInput]
+  not: ModelTeamMemberConditionInput
+  teamTeamMembersId: ModelIDInput
+}
+
+type ModelTeamMemberConnection {
+  items: [TeamMember]!
+  nextToken: String
+}
+
+input ModelTeamMemberFilterInput {
+  id: ModelIDInput
+  isFacilitator: ModelBooleanInput
+  deviceId: ModelIDInput
+  and: [ModelTeamMemberFilterInput]
+  or: [ModelTeamMemberFilterInput]
+  not: ModelTeamMemberFilterInput
+  teamTeamMembersId: ModelIDInput
+}
+
+type Mutation {
+  createGameSession(
+    input: CreateGameSessionInput!
+    condition: ModelGameSessionConditionInput
+  ): GameSession
+  updateGameSession(
+    input: UpdateGameSessionInput!
+    condition: ModelGameSessionConditionInput
+  ): GameSession
+  deleteGameSession(
+    input: DeleteGameSessionInput!
+    condition: ModelGameSessionConditionInput
+  ): GameSession
+  createQuestion(
+    input: CreateQuestionInput!
+    condition: ModelQuestionConditionInput
+  ): Question
+  updateQuestion(
+    input: UpdateQuestionInput!
+    condition: ModelQuestionConditionInput
+  ): Question
+  deleteQuestion(
+    input: DeleteQuestionInput!
+    condition: ModelQuestionConditionInput
+  ): Question
+  createTeam(input: CreateTeamInput!, condition: ModelTeamConditionInput): Team
+  updateTeam(input: UpdateTeamInput!, condition: ModelTeamConditionInput): Team
+  deleteTeam(input: DeleteTeamInput!, condition: ModelTeamConditionInput): Team
+  createTeamMember(
+    input: CreateTeamMemberInput!
+    condition: ModelTeamMemberConditionInput
+  ): TeamMember
+  updateTeamMember(
+    input: UpdateTeamMemberInput!
+    condition: ModelTeamMemberConditionInput
+  ): TeamMember
+  deleteTeamMember(
+    input: DeleteTeamMemberInput!
+    condition: ModelTeamMemberConditionInput
+  ): TeamMember
+  createTeamAnswer(
+    input: CreateTeamAnswerInput!
+    condition: ModelTeamAnswerConditionInput
+  ): TeamAnswer
+  updateTeamAnswer(
+    input: UpdateTeamAnswerInput!
+    condition: ModelTeamAnswerConditionInput
+  ): TeamAnswer
+  deleteTeamAnswer(
+    input: DeleteTeamAnswerInput!
+    condition: ModelTeamAnswerConditionInput
+  ): TeamAnswer
+}
+
+type Query {
+  getGameSession(id: ID!): GameSession
+  listGameSessions(
+    filter: ModelGameSessionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelGameSessionConnection
+  getQuestion(id: Int!, gameSessionId: ID!): Question
+  listQuestions(
+    id: Int
+    gameSessionId: ModelIDKeyConditionInput
+    filter: ModelQuestionFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelQuestionConnection
+  getTeam(id: ID!): Team
+  listTeams(
+    filter: ModelTeamFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTeamConnection
+  getTeamMember(id: ID!): TeamMember
+  listTeamMembers(
+    filter: ModelTeamMemberFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTeamMemberConnection
+  getTeamAnswer(id: ID!): TeamAnswer
+  listTeamAnswers(
+    filter: ModelTeamAnswerFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelTeamAnswerConnection
+  gameSessionByState(
+    currentState: GameSessionState!
+    sortDirection: ModelSortDirection
+    filter: ModelGameSessionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelGameSessionConnection
+  gameSessionByCode(
+    gameCode: Int!
+    sortDirection: ModelSortDirection
+    filter: ModelGameSessionFilterInput
+    limit: Int
+    nextToken: String
+  ): ModelGameSessionConnection
+}
+
+type Question {
+  id: Int!
+  text: String!
+  answer: String
+  wrongAnswers: AWSJSON
+  imageUrl: String
+  instructions: AWSJSON
+  standard: String
+  cluster: String
+  domain: String
+  grade: String
+  gameSessionId: ID!
+  gameSession: GameSession
+}
+
+type Subscription {
+  onCreateGameSession: GameSession
+    @aws_subscribe(mutations: ["createGameSession"])
+  onUpdateGameSession: GameSession
+    @aws_subscribe(mutations: ["updateGameSession"])
+  onDeleteGameSession: GameSession
+    @aws_subscribe(mutations: ["deleteGameSession"])
+  onCreateTeam: Team @aws_subscribe(mutations: ["createTeam"])
+  onUpdateTeam: Team @aws_subscribe(mutations: ["updateTeam"])
+  onDeleteTeam: Team @aws_subscribe(mutations: ["deleteTeam"])
+  onCreateTeamMember: TeamMember @aws_subscribe(mutations: ["createTeamMember"])
+  onUpdateTeamMember: TeamMember @aws_subscribe(mutations: ["updateTeamMember"])
+  onDeleteTeamMember: TeamMember @aws_subscribe(mutations: ["deleteTeamMember"])
+  onCreateTeamAnswer: TeamAnswer @aws_subscribe(mutations: ["createTeamAnswer"])
+  onUpdateTeamAnswer: TeamAnswer @aws_subscribe(mutations: ["updateTeamAnswer"])
+  onDeleteTeamAnswer: TeamAnswer @aws_subscribe(mutations: ["deleteTeamAnswer"])
+}
+
+type Team {
+  id: ID!
+  name: String!
+  question: Question!
+  trickiestAnswerIDs: [ID]
+  teamMembers(
+    filter: ModelTeamMemberFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelTeamMemberConnection
+  score: Int!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  gameSessionTeamsId: ID
+  teamQuestionId: ID!
+}
+
+type TeamAnswer {
+  id: ID!
+  isChosen: Boolean
+  text: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  teamMemberMemberAnswersId: ID
+}
+
+type TeamMember {
+  id: ID!
+  team: Team!
+  isFacilitator: Boolean
+  memberAnswers(
+    filter: ModelTeamAnswerFilterInput
+    sortDirection: ModelSortDirection
+    limit: Int
+    nextToken: String
+  ): ModelTeamAnswerConnection
+  deviceId: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  teamTeamMembersId: ID
+}
+
+input UpdateGameSessionInput {
+  id: ID!
+  gameId: Int
+  startTime: AWSDateTime
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  currentQuestionId: Int
+  currentState: GameSessionState
+  gameCode: Int
+  isAdvanced: Boolean
+  imageUrl: String
+  description: String
+  title: String
+  createdAt: AWSDateTime
+}
+
+input UpdateQuestionInput {
+  id: Int!
+  text: String
+  answer: String
+  wrongAnswers: AWSJSON
+  imageUrl: String
+  instructions: AWSJSON
+  standard: String
+  cluster: String
+  domain: String
+  grade: String
+  gameSessionId: ID!
+}
+
+input UpdateTeamAnswerInput {
+  id: ID!
+  isChosen: Boolean
+  text: String
+  teamMemberMemberAnswersId: ID
+}
+
+input UpdateTeamInput {
+  id: ID!
+  name: String
+  trickiestAnswerIDs: [ID]
+  score: Int
+  gameSessionTeamsId: ID
+  teamQuestionId: ID
+}
+
+input UpdateTeamMemberInput {
+  id: ID!
+  isFacilitator: Boolean
+  deviceId: ID
+  teamTeamMembersId: ID
+}

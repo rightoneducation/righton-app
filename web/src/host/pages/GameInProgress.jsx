@@ -1,53 +1,23 @@
 import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCard from "../components/QuestionCard";
+import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from '../components/FooterGameInProgress';
-import mockGameSession from '../../mocks/gamesession.json';
+import HeaderGameInProgress from '../components/HeaderGameInProgress';
+import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
 
-export default function GameInProgress() { 
+export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus }) {
     const classes = useStyles();
-    const [gameData, setGameData] = useState(mockGameSession);
-    const teams = gameData.teams.items;
-    const questions = gameData.questions.items;
-    const currentQuestionId = gameData.currentQuestionId;
     const currentQuestion = questions[currentQuestionId - 1];
-
-    const numAnswers = teams => {
-      let count = 0;
-      teams.map(teamsItem => {
-        if(teamsItem.answered === "true")
-          count++;
-        });
-      return count;
-    };
-
+    const numAnswers = 9; //this is a temporary value until we can figure out how to discern team answers from the mock
 
     return (
       <div className={classes.background}>
         <div>
-          {/*divs in this block replaced with UI components being worked on by Eric, Zach and Lucah */}
-          <div>
-            {questions.map((question, index) => (
-              <grid className={classes.number} key={question.id}>
-                {index + 1}
-              </grid>
-            ))}
-          </div>
-          <div className={classes.title}>
-            <h1>Question {currentQuestionId} of {questions.length}</h1>
-            <p>Phase 1 of 2</p>
-          </div>
-          <div className={classes.timebar}>
-            <progress value={15} max={24} className={classes.timebar1} />
-            <button>add time</button>
-          </div>
-          <QuestionCard title={currentQuestion.question} />
-          <div>
-            {/* results and drop down bar goes here */}
-          </div>
+           <HeaderGameInProgress/>
+           <QuestionCardDetails title={currentQuestion} />
+           <AnswersInProgressDetails/>
         </div>
-
-        <FooterGameInProgress teams={teams} currentState={gameData.currentState} numPlayers={teams.length} numAnswers={numAnswers(teams)} />
+        <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers} handleChangeGameStatus={handleChangeGameStatus}/>
       </div>
     );
 }

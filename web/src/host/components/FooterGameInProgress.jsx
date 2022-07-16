@@ -5,19 +5,21 @@ import PlayersAnsweredBar from './PlayersAnsweredBar';
 
 
 
-export default function FooterGameInProgress({currentState, numPlayers, numAnswers }) {
+export default function FooterGameInProgress({currentState, numPlayers, numAnswers, handleChangeGameStatus}) {
   const classes = useStyles();
   
   const currentStateToButtonText = {
-    "PHASE 1" : "Skip to  Results",
-    "PHASE 2" : "Skip to Next Question",
-    "PHASE 3" : "Next Phase",
+    "INITIAL_INTRO" : "Skip to Results",
+    "REVIEWING_RESULT": "Next Phase",
+    "CHOOSING_TRICK_ANSWER" : "Skip to Results",
+    "FINISHED" : "Skip to Next Question",
   }
 
   const currentStateToClassName = {
-    "PHASE 1" : classes.startGameButton,
-    "PHASE 2" : classes.startGameButton,
-    "PHASE 3" : classes.nextPhaseButton,
+    "INITIAL_INTRO" : classes.startGameButton,
+    "REVIEWING_RESULT" : classes.nextPhaseButton,
+    "CHOOSING_TRICK_ANSWER" : classes.startGameButton,
+    "FINISHED" : classes.startGameButton,
   }
 
   return (
@@ -25,7 +27,7 @@ export default function FooterGameInProgress({currentState, numPlayers, numAnswe
         <div className={classes.footerContainer}>
           <div className={classes.playerNum}>Players who have answered</div>
           <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers}/>
-          <Button className={currentStateToClassName[currentState]}>{currentStateToButtonText[currentState]}</Button>
+          <Button className={currentStateToClassName[currentState]} onClick={() => handleChangeGameStatus(currentState)}>{currentStateToButtonText[currentState]} </Button>
         </div>
       </BottomNavigation>
   )

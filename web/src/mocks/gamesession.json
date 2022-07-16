@@ -3,7 +3,7 @@
   "gameId": 926,
   "isAdvanced": false,
   "title": "Updated new game",
-  "currentState": "NOT_STARTED",
+  "currentState": "INITIAL_INTRO",
   "phaseOneTime": 300,
   "phaseTwoTime": 300,
   "startTime": null,
@@ -43,34 +43,17 @@
   },
   "teams": {
     "items": [
-      {
-        "name": "Ray W",
-        "answered": "false"
-      },
-      {
-        "name": "Zach T",
-        "answered": "true"
-      },
-      {
-        "name": "Jared J",
-        "answered": "false"
-      },
-      {
-        "name": "Lucha E",
-        "answered": "true"
-      },
-      {
-        "name": "Josephina I",
-        "answered": "false"
-      },
-      {
-        "name": "Eric N",
-        "answered": "false"
-      },
-      {
-        "name": "Alex K",
-        "answered": "false"
-      }
-    ]
+    {
+      "id": 1,
+      "name": "Drew"
+    },
+    {
+      "id": 2,
+      "name": "Eric"
+    },
+    {
+      "id": 3,
+      "name": "Zach"
+    }]
   }
 }

@@ -12,14 +12,14 @@ const Template = (args) => <GameInProgress {...args} />
 export const Initial = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Initial.args = {
-  MockGameSession,
-  currentState: "IN_PROGRESS",
+  ...MockGameSession,
+  currentState: "INITIAL_INTRO",
   currentQuestionId: 1,
 };
 
 export const SecondQuestion = Template.bind({});
 SecondQuestion.args = {
-  MockGameSession,
-  currentState: "IN_PROGRESS",
+  ...MockGameSession,
+  currentState: "CHOOSING_TRICK_ANSWER",
   currentQuestionId: 2,
 };
