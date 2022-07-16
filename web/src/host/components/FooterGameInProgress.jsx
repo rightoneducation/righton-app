@@ -8,23 +8,24 @@ import PlayersAnsweredBar from './PlayersAnsweredBar';
 export default function FooterGameInProgress({currentState, numPlayers, numAnswers }) {
   const classes = useStyles();
   
-  const button = currentState => {
-    if (currentState === "PHASE 1"){
-      return ( <Button className={classes.startGameButton}> {"Skip to Results"} </Button>);
-    } else if (currentState === "PHASE 2"){
-      return ( <Button className={classes.startGameButton}> {"Skip to Next Question"} </Button>);
-    } else {
-      return ( <Button className={classes.nextPhaseButton}> {"Next Phase"} </Button>);
-    }
-  };
+  const currentStateToButtonText = {
+    "PHASE 1" : "Skip to  Results",
+    "PHASE 2" : "Skip to Next Question",
+    "PHASE 3" : "Next Phase",
+  }
 
+  const currentStateToClassName = {
+    "PHASE 1" : classes.startGameButton,
+    "PHASE 2" : classes.startGameButton,
+    "PHASE 3" : classes.nextPhaseButton,
+  }
 
   return (
       <BottomNavigation className={classes.footer}>
         <div className={classes.footerContainer}>
           <div className={classes.playerNum}>Players who have answered</div>
           <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers}/>
-          {button(currentState)}
+          <Button className={currentStateToClassName[currentState]}>currentStateToButtonText[currentState]</Button>
         </div>
       </BottomNavigation>
   )
