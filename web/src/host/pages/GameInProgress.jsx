@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCard from "../components/QuestionCard";
 import FooterGameInProgress from '../components/FooterGameInProgress';
-import MockGameSession from '../../mocks/gamesession.json';
+import mockGameSession from '../../mocks/gamesession.json';
 
 export default function GameInProgress() { 
     const classes = useStyles();
-    const [gameData, setGameData] = useState(MockGameSession);
+    const [gameData, setGameData] = useState(mockGameSession);
     const teams = gameData.teams.items;
     const questions = gameData.questions.items;
     const currentQuestionId = gameData.currentQuestionId;

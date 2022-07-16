@@ -25,7 +25,7 @@ export default function FooterGameInProgress({currentState, numPlayers, numAnswe
         <div className={classes.footerContainer}>
           <div className={classes.playerNum}>Players who have answered</div>
           <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers}/>
-          <Button className={currentStateToClassName[currentState]}>currentStateToButtonText[currentState]</Button>
+          <Button className={currentStateToClassName[currentState]}>{currentStateToButtonText[currentState]}</Button>
         </div>
       </BottomNavigation>
   )
