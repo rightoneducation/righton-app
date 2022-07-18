@@ -1,23 +1,16 @@
-export enum GameSessionState {
-    ChoosingTrickAnswer = "CHOOSING_TRICK_ANSWER",
-    Finished = "FINISHED",
-    InitialIntro = "INITIAL_INTRO",
-    NotStarted = "NOT_STARTED",
-    ReviewingResult = "REVIEWING_RESULT",
-    Voting = "VOTING",
-}
+import { GameSessionState } from "./AWSMobileApi"
 
 export interface IGameSession {
     id: String
     gameId: number
-    startTime?: Date
+    startTime?: string | null
     phaseOneTime: number
     phaseTwoTime: number
     // teams: [Team]?
-    currentQuestionId?: number
+    currentQuestionId?: number | null
     currentState: GameSessionState
     gameCode: number
     // questions: [Question]?
-    updatedAt: Date
-    createdAt: Date
+    updatedAt: string
+    createdAt: string
 }
