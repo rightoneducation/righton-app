@@ -6,9 +6,9 @@ const StartGameContainer = ({ gameSessionId }) => {
   const [gameSession, setGameSession] = useState()
   
   const handleRemoveTeam = (player) => {
-      removeTeam(player.id, gameSession).then((response) => {
-          setGameSession(response);      
-      })
+    removeTeam(player.id, gameSession).then((response) => {
+      setGameSession(response);      
+    })
   }
 
   useEffect(() => {

@@ -1,22 +1,24 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from '../components/FooterGameInProgress';
 import HeaderGameInProgress from '../components/HeaderGameInProgress';
 import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
 
-export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
+export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus }) {
     const classes = useStyles();
-
     const currentQuestion = questions[currentQuestionId - 1];
+    const numAnswers = 9; //this is a temporary value until we can figure out how to discern team answers from the mock
 
     return (
-        <div className={classes.background}>
-            <HeaderGameInProgress/>
-                <QuestionCardDetails title={currentQuestion} />
-                <AnswersInProgressDetails/>
-            <FooterGameInProgress handleSkipToResults={handleSkipToResults} />
+      <div className={classes.background}>
+        <div>
+           <HeaderGameInProgress/>
+           <QuestionCardDetails title={currentQuestion} />
+           <AnswersInProgressDetails/>
         </div>
+        <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers} handleChangeGameStatus={handleChangeGameStatus}/>
+      </div>
     );
 }
 
@@ -24,7 +26,11 @@ const useStyles = makeStyles(theme => ({
     background: {
         height: "100vh",
         width: "100%",
-        background: 'linear-gradient(right,#0F78BD,#043373)',
+        display: 'flex',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
     },
     number: {
         color: "white",

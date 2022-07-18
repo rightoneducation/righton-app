@@ -22,6 +22,9 @@ Initial.args = {
   ...MockGameSession,
   currentState: "INITAL_INTRO",
   currentQuestionId: 1,
+  teams: {
+    items: []
+  }
 };
 
 export const ThreePlayers = Template.bind({});

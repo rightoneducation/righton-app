@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import GameInProgress from '../pages/GameInProgress'
-import { loadGameSession } from '../../lib/hostAPI'
+import { loadGameSession, changeGameStatus } from '../../lib/hostAPI'
 
 const GameInProgressContainer = ({ gameSessionId }) => {
   const [gameSession, setGameSession] = useState()
+
+  const handleChangeGameStatus = (currentState) => {
+    changeGameStatus(currentState, gameSession).then((response) => {
+      setGameSession(response);
+    })
+  }
 
   useEffect(() => {
     loadGameSession(gameSessionId).then((response) => {
@@ -16,7 +22,7 @@ const GameInProgressContainer = ({ gameSessionId }) => {
   }
 
   return (
-    <GameInProgress {...gameSession} />
+    <GameInProgress {...gameSession} handleChangeGameStatus={handleChangeGameStatus} />
   )
 }
 
