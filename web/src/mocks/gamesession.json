@@ -42,6 +42,17 @@
     ]
   },
   "teams": {
-    "items": []
+    "items": [{
+      "id": 1,
+      "name": "Drew"
+    },
+    {
+      "id": 2,
+      "name": "Eric"
+    },
+    {
+      "id": 3,
+      "name": "Zach"
+    }]
   }
 }

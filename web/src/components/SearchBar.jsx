@@ -1,7 +1,7 @@
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from '@material-ui/core/styles';
 
 export default function SearchBar({ setSearchInput, searchInput }) {
     const classes = useStyles();
@@ -33,9 +33,9 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         borderRadius: '20px',
         border: '3px solid #87B8DB',
-        backgroundColor: fade(theme.palette.common.white, 0.15),
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
         },
         marginLeft: 0,
         marginRight: 20,

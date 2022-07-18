@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
-export default function QuestionDetails({gameIndex, gameTitle, questionIndex, question}) {
+export default function QuestionDetails({ backUrl, gameTitle, questionIndex, question }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -24,7 +24,7 @@ export default function QuestionDetails({gameIndex, gameTitle, questionIndex, qu
     return(
         <Grid container>
             <Grid item xs={12}>
-                <Button type="button" onClick={() => history.push(`/games/${gameIndex}`)}>
+                <Button type="button" onClick={() => history.goBack()}>
                     <ArrowBackIcon className={classes.back} />Back to {gameTitle}
                 </Button>
             </Grid>
@@ -42,7 +42,7 @@ export default function QuestionDetails({gameIndex, gameTitle, questionIndex, qu
                     </Typography>
                 </Grid>
 
-                <Grid container item xs={12} alignItems='center' justify='center'>
+                <Grid container item xs={12} alignItems='center' justifyContent='center'>
                     {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
                 </Grid>
             </Grid>
@@ -60,9 +60,9 @@ export default function QuestionDetails({gameIndex, gameTitle, questionIndex, qu
                     <Divider className={classes.divider}/>
                 </Grid>
 
-                {wrongAnswerSet.map((wrongAnswer) => {
+                {wrongAnswerSet.map((wrongAnswer, index) => {
                     return(
-                        <AnswerDropdown answer={wrongAnswer.choice} explanation={wrongAnswer.explanation} correct={false}/>
+                        <AnswerDropdown key={index} answer={wrongAnswer.choice} explanation={wrongAnswer.explanation} correct={false}/>
                     );
                 })}
             </Grid>

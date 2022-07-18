@@ -9,6 +9,7 @@ export default function StartGame({
   teams: { items: teams },
   questions: { items: questions },
   title,
+  gameId,
   gameCode,
   removeTeam,
 }) {
@@ -22,9 +23,9 @@ export default function StartGame({
         <div className={classes.gameMode}>
           Basic Mode
         </div>
-        <CurrentStudents teams={teams} removeTeam={removeTeam} />
+        <CurrentStudents teams={teams} removeTeam={removeTeam}/>
       </div>
-      <FooterStartGame />
+      <FooterStartGame gameId={gameId}/>
     </div>
   )
 }
