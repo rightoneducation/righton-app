@@ -1,5 +1,7 @@
 {
   "dev": {
-    "configLevel": "amplifyAdmin"
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "righton"
   }
 }

@@ -6,17 +6,7 @@ export const onCreateGameSession = /* GraphQL */ `
   subscription OnCreateGameSession {
     onCreateGameSession {
       id
-      game {
-        id
-        title
-        description
-        imageUrl
-        isAdvanced
-        grade
-        questions {
-          nextToken
-        }
-      }
+      gameId
       startTime
       phaseOneTime
       phaseTwoTime
@@ -30,15 +20,35 @@ export const onCreateGameSession = /* GraphQL */ `
           updatedAt
           gameSessionTeamsId
           teamQuestionId
+          teamQuestionGameSessionId
         }
         nextToken
       }
-      currentQuestion
+      currentQuestionId
       currentState
       gameCode
-      updatedAt
+      isAdvanced
+      imageUrl
+      description
+      title
+      questions {
+        items {
+          id
+          text
+          answer
+          wrongAnswers
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          gameSessionId
+        }
+        nextToken
+      }
       createdAt
-      gameSessionGameId
+      updatedAt
     }
   }
 `;
@@ -46,17 +56,7 @@ export const onUpdateGameSession = /* GraphQL */ `
   subscription OnUpdateGameSession {
     onUpdateGameSession {
       id
-      game {
-        id
-        title
-        description
-        imageUrl
-        isAdvanced
-        grade
-        questions {
-          nextToken
-        }
-      }
+      gameId
       startTime
       phaseOneTime
       phaseTwoTime
@@ -70,15 +70,35 @@ export const onUpdateGameSession = /* GraphQL */ `
           updatedAt
           gameSessionTeamsId
           teamQuestionId
+          teamQuestionGameSessionId
         }
         nextToken
       }
-      currentQuestion
+      currentQuestionId
       currentState
       gameCode
-      updatedAt
+      isAdvanced
+      imageUrl
+      description
+      title
+      questions {
+        items {
+          id
+          text
+          answer
+          wrongAnswers
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          gameSessionId
+        }
+        nextToken
+      }
       createdAt
-      gameSessionGameId
+      updatedAt
     }
   }
 `;
@@ -86,17 +106,7 @@ export const onDeleteGameSession = /* GraphQL */ `
   subscription OnDeleteGameSession {
     onDeleteGameSession {
       id
-      game {
-        id
-        title
-        description
-        imageUrl
-        isAdvanced
-        grade
-        questions {
-          nextToken
-        }
-      }
+      gameId
       startTime
       phaseOneTime
       phaseTwoTime
@@ -110,15 +120,35 @@ export const onDeleteGameSession = /* GraphQL */ `
           updatedAt
           gameSessionTeamsId
           teamQuestionId
+          teamQuestionGameSessionId
         }
         nextToken
       }
-      currentQuestion
+      currentQuestionId
       currentState
       gameCode
-      updatedAt
+      isAdvanced
+      imageUrl
+      description
+      title
+      questions {
+        items {
+          id
+          text
+          answer
+          wrongAnswers
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          gameSessionId
+        }
+        nextToken
+      }
       createdAt
-      gameSessionGameId
+      updatedAt
     }
   }
 `;
@@ -129,13 +159,32 @@ export const onCreateTeam = /* GraphQL */ `
       name
       question {
         id
-        question
+        text
         answer
-        trickAnswers
+        wrongAnswers
         imageUrl
         instructions
+        standard
+        cluster
+        domain
         grade
-        gameQuestionsId
+        gameSessionId
+        gameSession {
+          id
+          gameId
+          startTime
+          phaseOneTime
+          phaseTwoTime
+          currentQuestionId
+          currentState
+          gameCode
+          isAdvanced
+          imageUrl
+          description
+          title
+          createdAt
+          updatedAt
+        }
       }
       trickiestAnswerIDs
       teamMembers {
@@ -154,6 +203,7 @@ export const onCreateTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
+      teamQuestionGameSessionId
     }
   }
 `;
@@ -164,13 +214,32 @@ export const onUpdateTeam = /* GraphQL */ `
       name
       question {
         id
-        question
+        text
         answer
-        trickAnswers
+        wrongAnswers
         imageUrl
         instructions
+        standard
+        cluster
+        domain
         grade
-        gameQuestionsId
+        gameSessionId
+        gameSession {
+          id
+          gameId
+          startTime
+          phaseOneTime
+          phaseTwoTime
+          currentQuestionId
+          currentState
+          gameCode
+          isAdvanced
+          imageUrl
+          description
+          title
+          createdAt
+          updatedAt
+        }
       }
       trickiestAnswerIDs
       teamMembers {
@@ -189,6 +258,7 @@ export const onUpdateTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
+      teamQuestionGameSessionId
     }
   }
 `;
@@ -199,13 +269,32 @@ export const onDeleteTeam = /* GraphQL */ `
       name
       question {
         id
-        question
+        text
         answer
-        trickAnswers
+        wrongAnswers
         imageUrl
         instructions
+        standard
+        cluster
+        domain
         grade
-        gameQuestionsId
+        gameSessionId
+        gameSession {
+          id
+          gameId
+          startTime
+          phaseOneTime
+          phaseTwoTime
+          currentQuestionId
+          currentState
+          gameCode
+          isAdvanced
+          imageUrl
+          description
+          title
+          createdAt
+          updatedAt
+        }
       }
       trickiestAnswerIDs
       teamMembers {
@@ -224,6 +313,7 @@ export const onDeleteTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
+      teamQuestionGameSessionId
     }
   }
 `;
@@ -236,13 +326,16 @@ export const onCreateTeamMember = /* GraphQL */ `
         name
         question {
           id
-          question
+          text
           answer
-          trickAnswers
+          wrongAnswers
           imageUrl
           instructions
+          standard
+          cluster
+          domain
           grade
-          gameQuestionsId
+          gameSessionId
         }
         trickiestAnswerIDs
         teamMembers {
@@ -253,16 +346,17 @@ export const onCreateTeamMember = /* GraphQL */ `
         updatedAt
         gameSessionTeamsId
         teamQuestionId
+        teamQuestionGameSessionId
       }
       isFacilitator
-      memberAnswers {
+      answers {
         items {
           id
           isChosen
           text
           createdAt
           updatedAt
-          teamMemberMemberAnswersId
+          teamMemberAnswersId
         }
         nextToken
       }
@@ -282,13 +376,16 @@ export const onUpdateTeamMember = /* GraphQL */ `
         name
         question {
           id
-          question
+          text
           answer
-          trickAnswers
+          wrongAnswers
           imageUrl
           instructions
+          standard
+          cluster
+          domain
           grade
-          gameQuestionsId
+          gameSessionId
         }
         trickiestAnswerIDs
         teamMembers {
@@ -299,16 +396,17 @@ export const onUpdateTeamMember = /* GraphQL */ `
         updatedAt
         gameSessionTeamsId
         teamQuestionId
+        teamQuestionGameSessionId
       }
       isFacilitator
-      memberAnswers {
+      answers {
         items {
           id
           isChosen
           text
           createdAt
           updatedAt
-          teamMemberMemberAnswersId
+          teamMemberAnswersId
         }
         nextToken
       }
@@ -328,13 +426,16 @@ export const onDeleteTeamMember = /* GraphQL */ `
         name
         question {
           id
-          question
+          text
           answer
-          trickAnswers
+          wrongAnswers
           imageUrl
           instructions
+          standard
+          cluster
+          domain
           grade
-          gameQuestionsId
+          gameSessionId
         }
         trickiestAnswerIDs
         teamMembers {
@@ -345,16 +446,17 @@ export const onDeleteTeamMember = /* GraphQL */ `
         updatedAt
         gameSessionTeamsId
         teamQuestionId
+        teamQuestionGameSessionId
       }
       isFacilitator
-      memberAnswers {
+      answers {
         items {
           id
           isChosen
           text
           createdAt
           updatedAt
-          teamMemberMemberAnswersId
+          teamMemberAnswersId
         }
         nextToken
       }
@@ -373,7 +475,7 @@ export const onCreateTeamAnswer = /* GraphQL */ `
       text
       createdAt
       updatedAt
-      teamMemberMemberAnswersId
+      teamMemberAnswersId
     }
   }
 `;
@@ -385,7 +487,7 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
       text
       createdAt
       updatedAt
-      teamMemberMemberAnswersId
+      teamMemberAnswersId
     }
   }
 `;
@@ -397,7 +499,7 @@ export const onDeleteTeamAnswer = /* GraphQL */ `
       text
       createdAt
       updatedAt
-      teamMemberMemberAnswersId
+      teamMemberAnswersId
     }
   }
 `;

@@ -3,20 +3,10 @@
 // this is an auto generated file. This will be overwritten
 
 export const getGameSession = /* GraphQL */ `
-  query GetGameSession($id: ID!, $updatedAt: AWSDateTime!) {
-    getGameSession(id: $id, updatedAt: $updatedAt) {
+  query GetGameSession($id: ID!) {
+    getGameSession(id: $id) {
       id
-      game {
-        id
-        title
-        description
-        imageUrl
-        isAdvanced
-        grade
-        questions {
-          nextToken
-        }
-      }
+      gameId
       startTime
       phaseOneTime
       phaseTwoTime
@@ -30,30 +20,122 @@ export const getGameSession = /* GraphQL */ `
           updatedAt
           gameSessionTeamsId
           teamQuestionId
+          teamQuestionGameSessionId
         }
         nextToken
       }
-      currentQuestion
+      currentQuestionId
       currentState
       gameCode
-      updatedAt
+      isAdvanced
+      imageUrl
+      description
+      title
+      questions {
+        items {
+          id
+          text
+          answer
+          wrongAnswers
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          gameSessionId
+        }
+        nextToken
+      }
       createdAt
-      gameSessionGameId
+      updatedAt
     }
   }
 `;
 export const listGameSessions = /* GraphQL */ `
   query ListGameSessions(
-    $id: ID
-    $updatedAt: ModelStringKeyConditionInput
     $filter: ModelGameSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        teams {
+          nextToken
+        }
+        currentQuestionId
+        currentState
+        gameCode
+        isAdvanced
+        imageUrl
+        description
+        title
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getQuestion = /* GraphQL */ `
+  query GetQuestion($id: Int!, $gameSessionId: ID!) {
+    getQuestion(id: $id, gameSessionId: $gameSessionId) {
+      id
+      text
+      answer
+      wrongAnswers
+      imageUrl
+      instructions
+      standard
+      cluster
+      domain
+      grade
+      gameSessionId
+      gameSession {
+        id
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        teams {
+          nextToken
+        }
+        currentQuestionId
+        currentState
+        gameCode
+        isAdvanced
+        imageUrl
+        description
+        title
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const listQuestions = /* GraphQL */ `
+  query ListQuestions(
+    $id: Int
+    $gameSessionId: ModelIDKeyConditionInput
+    $filter: ModelQuestionFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
-    listGameSessions(
+    listQuestions(
       id: $id
-      updatedAt: $updatedAt
+      gameSessionId: $gameSessionId
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -61,108 +143,32 @@ export const listGameSessions = /* GraphQL */ `
     ) {
       items {
         id
-        game {
-          id
-          title
-          description
-          imageUrl
-          isAdvanced
-          grade
-        }
-        startTime
-        phaseOneTime
-        phaseTwoTime
-        teams {
-          nextToken
-        }
-        currentQuestion
-        currentState
-        gameCode
-        updatedAt
-        createdAt
-        gameSessionGameId
-      }
-      nextToken
-    }
-  }
-`;
-export const getGame = /* GraphQL */ `
-  query GetGame($id: ID!) {
-    getGame(id: $id) {
-      id
-      title
-      description
-      imageUrl
-      isAdvanced
-      grade
-      questions {
-        items {
-          id
-          question
-          answer
-          trickAnswers
-          imageUrl
-          instructions
-          grade
-          gameQuestionsId
-        }
-        nextToken
-      }
-    }
-  }
-`;
-export const listGames = /* GraphQL */ `
-  query ListGames(
-    $filter: ModelGameFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listGames(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        title
-        description
-        imageUrl
-        isAdvanced
-        grade
-        questions {
-          nextToken
-        }
-      }
-      nextToken
-    }
-  }
-`;
-export const getQuestion = /* GraphQL */ `
-  query GetQuestion($id: ID!) {
-    getQuestion(id: $id) {
-      id
-      question
-      answer
-      trickAnswers
-      imageUrl
-      instructions
-      grade
-      gameQuestionsId
-    }
-  }
-`;
-export const listQuestions = /* GraphQL */ `
-  query ListQuestions(
-    $filter: ModelQuestionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        question
+        text
         answer
-        trickAnswers
+        wrongAnswers
         imageUrl
         instructions
+        standard
+        cluster
+        domain
         grade
-        gameQuestionsId
+        gameSessionId
+        gameSession {
+          id
+          gameId
+          startTime
+          phaseOneTime
+          phaseTwoTime
+          currentQuestionId
+          currentState
+          gameCode
+          isAdvanced
+          imageUrl
+          description
+          title
+          createdAt
+          updatedAt
+        }
       }
       nextToken
     }
@@ -175,13 +181,32 @@ export const getTeam = /* GraphQL */ `
       name
       question {
         id
-        question
+        text
         answer
-        trickAnswers
+        wrongAnswers
         imageUrl
         instructions
+        standard
+        cluster
+        domain
         grade
-        gameQuestionsId
+        gameSessionId
+        gameSession {
+          id
+          gameId
+          startTime
+          phaseOneTime
+          phaseTwoTime
+          currentQuestionId
+          currentState
+          gameCode
+          isAdvanced
+          imageUrl
+          description
+          title
+          createdAt
+          updatedAt
+        }
       }
       trickiestAnswerIDs
       teamMembers {
@@ -200,6 +225,7 @@ export const getTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
+      teamQuestionGameSessionId
     }
   }
 `;
@@ -215,13 +241,16 @@ export const listTeams = /* GraphQL */ `
         name
         question {
           id
-          question
+          text
           answer
-          trickAnswers
+          wrongAnswers
           imageUrl
           instructions
+          standard
+          cluster
+          domain
           grade
-          gameQuestionsId
+          gameSessionId
         }
         trickiestAnswerIDs
         teamMembers {
@@ -232,6 +261,7 @@ export const listTeams = /* GraphQL */ `
         updatedAt
         gameSessionTeamsId
         teamQuestionId
+        teamQuestionGameSessionId
       }
       nextToken
     }
@@ -246,13 +276,16 @@ export const getTeamMember = /* GraphQL */ `
         name
         question {
           id
-          question
+          text
           answer
-          trickAnswers
+          wrongAnswers
           imageUrl
           instructions
+          standard
+          cluster
+          domain
           grade
-          gameQuestionsId
+          gameSessionId
         }
         trickiestAnswerIDs
         teamMembers {
@@ -263,16 +296,17 @@ export const getTeamMember = /* GraphQL */ `
         updatedAt
         gameSessionTeamsId
         teamQuestionId
+        teamQuestionGameSessionId
       }
       isFacilitator
-      memberAnswers {
+      answers {
         items {
           id
           isChosen
           text
           createdAt
           updatedAt
-          teamMemberMemberAnswersId
+          teamMemberAnswersId
         }
         nextToken
       }
@@ -301,9 +335,10 @@ export const listTeamMembers = /* GraphQL */ `
           updatedAt
           gameSessionTeamsId
           teamQuestionId
+          teamQuestionGameSessionId
         }
         isFacilitator
-        memberAnswers {
+        answers {
           nextToken
         }
         deviceId
@@ -323,7 +358,7 @@ export const getTeamAnswer = /* GraphQL */ `
       text
       createdAt
       updatedAt
-      teamMemberMemberAnswersId
+      teamMemberAnswersId
     }
   }
 `;
@@ -340,7 +375,7 @@ export const listTeamAnswers = /* GraphQL */ `
         text
         createdAt
         updatedAt
-        teamMemberMemberAnswersId
+        teamMemberAnswersId
       }
       nextToken
     }
@@ -363,26 +398,66 @@ export const gameSessionByState = /* GraphQL */ `
     ) {
       items {
         id
-        game {
-          id
-          title
-          description
-          imageUrl
-          isAdvanced
-          grade
-        }
+        gameId
         startTime
         phaseOneTime
         phaseTwoTime
         teams {
           nextToken
         }
-        currentQuestion
+        currentQuestionId
         currentState
         gameCode
-        updatedAt
+        isAdvanced
+        imageUrl
+        description
+        title
+        questions {
+          nextToken
+        }
         createdAt
-        gameSessionGameId
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const gameSessionByCode = /* GraphQL */ `
+  query GameSessionByCode(
+    $gameCode: Int!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGameSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    gameSessionByCode(
+      gameCode: $gameCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        teams {
+          nextToken
+        }
+        currentQuestionId
+        currentState
+        gameCode
+        isAdvanced
+        imageUrl
+        description
+        title
+        questions {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       nextToken
     }

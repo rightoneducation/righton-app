@@ -1,5 +1,19 @@
 import { IGameSession } from './IGameSession'
 import { IApiClient } from './IApiClient'
+import {
+    GameSessionState,
+    OnUpdateGameSessionSubscription,
+    UpdateGameSessionInput,
+    UpdateGameSessionMutation,
+    UpdateGameSessionMutationVariables
+} from './AWSMobileApi'
+import { updateGameSession } from './graphql/mutations'
+import { Amplify, API, graphqlOperation } from "aws-amplify"
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
+import { onUpdateGameSession } from './graphql'
+import awsconfig from "./aws-exports"
+
+Amplify.configure(awsconfig)
 
 export enum Environment {
     Staging = "staging"
@@ -7,6 +21,16 @@ export enum Environment {
 
 enum HTTPMethod {
     Post = "POST"
+}
+
+interface GraphQLOptions {
+    input?: object
+    variables?: object
+    authMode?: GRAPHQL_AUTH_MODE
+}
+
+interface SubscriptionValue<T> {
+    value: { data: T }
 }
 
 export class ApiClient implements IApiClient {
@@ -41,4 +65,92 @@ export class ApiClient implements IApiClient {
             return response as IGameSession
         })
     }
+
+    async updateGameSession(id: string, gameState: GameSessionState): Promise<IGameSession> {
+        let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState }
+        let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
+        let result = await this.callGraphQL<UpdateGameSessionMutation>(updateGameSession, variables)
+        if (result.errors != null) {
+            throw new Error(`failed to update game session: ${result.errors}`)
+        }
+
+        if (result.data == null) {
+            throw new Error("Failed to update the game session")
+        }
+
+        return result.data.updateGameSession as IGameSession
+    }
+
+    subscribeUpdateGameSession(callback: (result: IGameSession) => void) {
+        return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(
+            onUpdateGameSession, (value: OnUpdateGameSessionSubscription) => {
+                let gameSession = this.mapOnUpdateGameSessionSubscription(value)
+                callback(gameSession)
+            })
+    }
+
+    private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
+        //@ts-ignore
+        return API.graphql(graphqlOperation(subscription)).subscribe({
+            next: (response: SubscriptionValue<T>) => {
+                callback(response.value.data)
+            },
+        })
+    }
+
+    private async callGraphQL<T>(query: any, options?: GraphQLOptions): Promise<GraphQLResult<T>> {
+        return (await API.graphql(graphqlOperation(query, options))) as GraphQLResult<T>
+    }
+
+    private mapOnUpdateGameSessionSubscription(subscription: OnUpdateGameSessionSubscription): IGameSession {
+        const {
+            id,
+            gameId,
+            startTime,
+            phaseOneTime,
+            phaseTwoTime,
+            // teams,
+            currentQuestionId,
+            currentState,
+            gameCode,
+            // questions,
+            updatedAt,
+            createdAt
+        } = subscription.onUpdateGameSession || {}
+
+        if (
+            isNullOrUndefined(id) ||
+            isNullOrUndefined(currentState) ||
+            isNullOrUndefined(gameCode) ||
+            isNullOrUndefined(gameId) ||
+            isNullOrUndefined(phaseOneTime) ||
+            isNullOrUndefined(phaseTwoTime) ||
+            isNullOrUndefined(updatedAt) ||
+            isNullOrUndefined(createdAt)
+        ) {
+            throw new Error("GameSession.id can't be null.")
+        }
+
+        const gameSession: IGameSession = {
+            id,
+            gameId,
+            startTime,
+            phaseOneTime,
+            phaseTwoTime,
+            // teams,
+            currentQuestionId,
+            currentState,
+            gameCode,
+            // questions,
+            updatedAt,
+            createdAt
+        }
+        return gameSession
+
+    }
+}
+
+
+function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
+    return value === null || value === undefined
 }

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@aws-amplify/ui-react": "^3.0.4",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@fontsource/roboto": "^4.5.7",
@@ -15,6 +16,7 @@
     "@types/node": "^16.11.39",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
+    "aws-amplify": "^4.3.27",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1",
@@ -22,8 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm run build --prefix ../networking; react-scripts start",
+    "build": "npm run build --prefix ../networking; react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
