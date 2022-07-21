@@ -4,44 +4,25 @@ import { Grid, Typography } from "@material-ui/core";
 import HostAnswerDropdown from './AnswersInProgress';
 
 
-export default function GameDetails() {
+export default function GameDetails({questions, gameStatus}) {
     const classes = useStyles();
+
+    let isPhase2 = false;
+
+    if (gameStatus === "PHASE2") {
+        isPhase2 = true;
+    }
     
-    let correctAnswer = [
-        {
-            choice: "D: 120", 
-            explanation: "1. 360 is the sum of a circle"
-        }
-    ];
-
-    let answerSet = [
-        {
-            choice: "A. 360", 
-            explanation: "1. 360 is the sum of a circle"
-        },
-        {
-            choice: "B. 720", 
-            explanation: "1. 360 is the sum of a circle"
-        },
-        {   
-            choice: "C. 1080", 
-            explanation: "1. 360 is the sum of a circle"
-        }
-    ];
-
     return (
         <Grid className={classes.background}>
             <Grid>
-                <Typography className={classes.answerTitle}>
-                    Real-time Answers
-                </Typography>
+                <Typography className={classes.answerTitle}>Real-time Answers</Typography>
             </Grid>
-            {answerSet.map((answer, index) => {
-                return(
-                    <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false} phase2={false}/>
-                );
+            {questions &&
+                questions.map((question, index) => {
+                <HostAnswerDropdown key={index} answer={questions.wrongAnswer} correct={false} phase2={isPhase2}/>
             })}
-            <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} phase2={true}/>
+            <HostAnswerDropdown answer={question.rightAnswer} correct={true} phase2={isPhase2}/>
         </Grid>    
     );
 }

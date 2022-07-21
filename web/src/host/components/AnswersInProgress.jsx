@@ -3,9 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Card, CardContent, Collapse, IconButton, LinearProgress, Box } from "@material-ui/core";
 import { ExpandMore, Check } from '@material-ui/icons';
 
-
-
-export default function HostAnswerDropdown({answer, explanation, correct, phase2}) {
+export default function HostAnswerDropdown({answer, correct, phase2}) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [progress, setProgress] = React.useState(0);
@@ -26,30 +24,18 @@ export default function HostAnswerDropdown({answer, explanation, correct, phase2
         };
       }, []);
 
-    const ExpandButton = (phase2) => {
-        if (phase2) {
-            return (   
-                <IconButton size='small' className={expanded ? classes.expanded : classes.expand}>
-                    <ExpandMore fontSize='15px'/>
-                </IconButton>);
-        } else {
-            return (
-            <button>test</button>);
-        }
-    };
-
+    
 
     if (phase2) {
         return (
             <Grid>
-                <Card className={correct ? classes.correctCardInPhase2 : classes.card} style={{ cursor: 'pointer'}}>
+                <Card className={correct ? classes.correctCardInPhase2 : classes.correctCard} style={{ cursor: 'pointer'}}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                         <CardContent>
                             <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
                                 <Typography className={classes.answer}>
                                     {answer}
                                 </Typography>
-                                <ExpandButton ExpandButton={phase2}/>
                             </Box>
                             <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>
                         </CardContent>
@@ -59,34 +45,31 @@ export default function HostAnswerDropdown({answer, explanation, correct, phase2
                                     Explanation:
                                 </Typography>
                                 <Typography className={classes.explanationText}>
-                                    {explanation}
+                                    Explanation Text
                                 </Typography>
                             </CardContent>
                         </Collapse>
                     </Box>
                     <Box className={classes.cardAnswers}>
                         <div>
-                            {/* <h3>1</h3> */}
-                            <Check fontSize="large" />
+                            <h3>7</h3>
                         </div>
                     </Box>
                 </Card>
             </Grid>
-        )
+        );
     }
+
 
     return (
         <Grid>
-            <Card className={correct ? classes.correctCard : classes.card} style={{ cursor: 'pointer'}}>
+            <Card className={correct ? classes.correctCardInPhase2 : classes.card} style={{ cursor: 'pointer'}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                     <CardContent>
                         <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
                             <Typography className={classes.answer}>
                                 {answer}
                             </Typography>
-                            <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
-                                    <ExpandMore fontSize='15px'/>
-                             </IconButton>
                         </Box>
                         <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>
                     </CardContent>
@@ -96,14 +79,14 @@ export default function HostAnswerDropdown({answer, explanation, correct, phase2
                                 Explanation:
                             </Typography>
                             <Typography className={classes.explanationText}>
-                                {explanation}
+                                Explanation Text
                             </Typography>
                         </CardContent>
                     </Collapse>
                 </Box>
                 <Box className={classes.cardAnswers}>
                     <div>
-                        <h3>1</h3>
+                        <h3>7</h3>
                     </div>
                 </Box>
             </Card>
