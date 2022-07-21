@@ -8,7 +8,13 @@ import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
 export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus }) {
     const classes = useStyles();
     const currentQuestion = questions[currentQuestionId - 1];
-    const numAnswers = 9; //this is a temporary value until we can figure out how to discern team answers from the mock
+    const numAnswers = (teams) =>
+    {
+      let count = 0;
+      teams.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));//.map(teamMember => (teamMember.answers.map((answer) => answer.isAnswered && count++)))))
+      console.log("numAnswers" + count);
+      return count;
+    }
 
     return (
       <div className={classes.background}>
@@ -17,7 +23,7 @@ export default function GameInProgress({ teams: { items: teams }, questions: { i
            <QuestionCardDetails title={currentQuestion} />
            <AnswersInProgressDetails/>
         </div>
-        <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers} handleChangeGameStatus={handleChangeGameStatus}/>
+        <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers(teams)} handleChangeGameStatus={handleChangeGameStatus}/>
       </div>
     );
 }

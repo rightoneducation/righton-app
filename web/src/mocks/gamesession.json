@@ -43,17 +43,69 @@
   },
   "teams": {
     "items": [
-    {
-      "id": 1,
-      "name": "Drew"
-    },
-    {
-      "id": 2,
-      "name": "Eric"
-    },
-    {
-      "id": 3,
-      "name": "Zach"
-    }]
+      {
+        "name": "Eric",
+        "id": "teamEric",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberEric",
+              "deviceId": "223344",
+              "answers": {
+                "items": [
+                  {
+                    "id": "990088",
+                    "teamMemberAnswersId": "teamMemberEric",
+                    "isChosen": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Lucah",
+        "id": "teamLucah",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberLucah",
+              "deviceId": "4321",
+              "answers": {
+                "items": [
+                  {
+                    "id": "009988",
+                    "teamMemberAnswersId": "teamMemberLucah",
+                    "isChosen": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Zach",
+        "id": "teamZach",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberZach",
+              "deviceId": "1234",
+              "answers": {
+                "items": [
+                  {
+                    "id": "889900",
+                    "teamMemberAnswersId": "teamMemberZach",
+                    "isChosen": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 }
