@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Card, CardContent, Collapse, IconButton, LinearProgress, Box } from "@material-ui/core";
 import { ExpandMore, Check } from '@material-ui/icons';
 
-export default function HostAnswerDropdown({answer, correct, phase2}) {
+export default function HostAnswerDropdown({questions: {items: questions}, answer, correct, phase2}) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [progress, setProgress] = React.useState(0);
@@ -34,7 +34,7 @@ export default function HostAnswerDropdown({answer, correct, phase2}) {
                         <CardContent>
                             <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
                                 <Typography className={classes.answer}>
-                                    {answer}
+                                    {questions.rightAnswer}
                                 </Typography>
                             </Box>
                             <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>

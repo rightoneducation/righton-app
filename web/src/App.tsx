@@ -31,6 +31,7 @@ import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
+import GameInProgressStories from './host/pages/GameInProgress.stories';
 
 
 
@@ -207,8 +208,8 @@ function App() {
               <Confirmation />
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} /> 
-            <Route path="/host">
-              <Ranking />
+            <Route path="/host" >
+              <GameInProgress />
             </Route>         
       </Switch>
         }
