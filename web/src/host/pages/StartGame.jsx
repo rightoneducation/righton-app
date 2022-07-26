@@ -9,6 +9,7 @@ export default function StartGame({
   teams: { items: teams },
   questions: { items: questions },
   title,
+  gameId,
   gameCode,
   removeTeam,
 }) {
@@ -22,9 +23,9 @@ export default function StartGame({
         <div className={classes.gameMode}>
           Basic Mode
         </div>
-        <CurrentStudents teams={teams} removeTeam={removeTeam} />
+        <CurrentStudents teams={teams} removeTeam={removeTeam}/>
       </div>
-      <FooterStartGame />
+      <FooterStartGame gameId={gameId}/>
     </div>
   )
 }
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    background: 'linear-gradient(#0D68B1 0%, #02215F 100%)',
+    background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   },
 
   gameMode: {

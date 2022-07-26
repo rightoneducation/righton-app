@@ -32,6 +32,9 @@ import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
+import StartGameContainer from './host/containers/StartGameContainer';
+import { loadGameSession } from './lib/hostAPI';
+import GameInProgressContainer from './host/containers/GameInProgressContainer';
 
 
 
@@ -183,13 +186,17 @@ function App() {
     setAlert,
   };
 
+ 
   return (
     <Router>
       <Switch>
-      <ThemeProvider theme={theme}>
-      {/* {(isAuthenticated) ? (<Redirect to="/" />) :  */}
-          <Switch>
-            <Route path="/login">
+
+      {/* <ThemeProvider theme={theme}>
+      {(isAuthenticated) ? (<Redirect to="/" />) : 
+
+          <Switch> */}
+            {/* <Route path="/login">
+
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <LogIn />
             </Route>
@@ -202,20 +209,18 @@ function App() {
               <Confirmation />
             </Route>
 
-            <Route path="/status/:gameID" component={StatusPageContainer} /> 
-
-            <Route path="/host">
-              {/* <GameInProgress /> */}
-              <GameInProgressHeader/>
-            </Route>
-
-
+            <Route path="/status/:gameID" component={StatusPageContainer} />  */}
             <Route path="/host/:gameID" >
-              {/* <StartGame/> */}
+              <StartGameContainer gameSessionId="123"/>   
+            </Route>
+            <Route path="/game-in-progress/:gameID" >
+              <GameInProgressContainer gameSessionId="123"/>
             </Route>         
-      </Switch>
-        {/* }
-        {userLoading ? <div>Loading</div> : (isAuthenticated ? ( */}
+      {/* </Switch>
+        }
+        {userLoading ? <div>Loading</div> : (isAuthenticated ? (
+
+
           <AlertContext.Provider value={alertContext}>
             <Box>
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={true} />
@@ -223,11 +228,13 @@ function App() {
                 <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
               </Route>
             </Box>
-            <AlertBar />
+            <AlertBar/>
           </AlertContext.Provider>
-        {/* ) : <Redirect to="/login" />
-        )} */}
-        </ThemeProvider>
+
+        ) : <Redirect to="/login" />
+        )}
+        </ThemeProvider> */}
+
       </Switch>
     </Router>
 

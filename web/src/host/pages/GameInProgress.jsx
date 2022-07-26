@@ -1,49 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCard from "../components/QuestionCard";
+import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from '../components/FooterGameInProgress';
+import HeaderGameInProgress from '../components/HeaderGameInProgress';
+import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
 
-const ProgressBar = (props) => {
-    const { bgcolor, completed } = props;
-    return (
-        <div>
-
-        </div>
-    );
-};
-
-
-
-
-export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
+export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus }) {
     const classes = useStyles();
-
     const currentQuestion = questions[currentQuestionId - 1];
+    const numAnswers = (teams) =>
+    {
+      let count = 0;
+      teams.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));//.map(teamMember => (teamMember.answers.map((answer) => answer.isAnswered && count++)))))
+      console.log("numAnswers" + count);
+      return count;
+    }
 
     return (
-        // Ray been here
-        <div className={classes.background}>
-            <div>
-                {questions.map((question, index) => (
-                    <grid className={classes.number} key={question.id}>
-                        {index + 1}
-                    </grid>
-                ))}
-            </div>
-            <div className={classes.title}>
-                <h1>Question {currentQuestionId} of {questions.length}</h1>
-                <p>Phase 1 of 2</p>
-            </div>
-            <div className={classes.timebar}>
-                <progress value={15} max={24} class={classes.timebar1} />
-                <button>add time</button>
-            </div>
-            <QuestionCard title={currentQuestion.question} />
-            <div>
-                {/* results and drop down bar goes here */}
-            </div>
-            <FooterGameInProgress handleSkipToResults={handleSkipToResults} />
+      <div className={classes.background}>
+        <div>
+           <HeaderGameInProgress/>
+           <QuestionCardDetails title={currentQuestion} />
+           <AnswersInProgressDetails/>
         </div>
+        <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers(teams)} handleChangeGameStatus={handleChangeGameStatus}/>
+      </div>
     );
 }
 
@@ -51,7 +32,11 @@ const useStyles = makeStyles(theme => ({
     background: {
         height: "100vh",
         width: "100%",
-        background: 'linear-gradient(right,#0F78BD,#043373)',
+        display: 'flex',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
     },
     number: {
         color: "white",
