@@ -13,19 +13,17 @@ export default function GameDetails({questions: {items: questions}, gameStatus})
         isPhase2 = true;
     }
     //map through questions then map through wrong answers
+   
   return (
     
-    questions.map((question, index) => {
-        question.wrongAnswers.map((wrongAnswer, index) => {
+            questions[0].wrongAnswers.map((wrongAnswer, index) => {
                 <HostAnswerDropdown
                     key={index}
                     wrongAnswer={wrongAnswer.wrong}
-                    questionId={question.id}
                     isPhase2={isPhase2}
                 />
-             
         })
-    })
+        
   );
 }
 
