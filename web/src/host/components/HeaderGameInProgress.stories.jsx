@@ -16,7 +16,8 @@ PhaseOne.args = {
   ...MockGameSession,
   currentState: "PHASE_ONE",
   phaseOneTime: 60,
-  currentQuestionId: 1,
+  currentQuestion: 1,
+  totalQuestions: 3,
 };
 
 export const PhaseOneResults = Template.bind({});
@@ -24,7 +25,8 @@ export const PhaseOneResults = Template.bind({});
 PhaseOneResults.args = {
   ...MockGameSession,
   currentState: "PHASE_ONE_RESULTS",
-  currentQuestionId: 1,
+  currentQuestion: 1,
+  totalQuestions: 3,
 };
 
 export const PhaseTwo = Template.bind({});
@@ -33,7 +35,8 @@ PhaseTwo.args = {
   ...MockGameSession,
   currentState: "PHASE_TWO",
   phaseTwoTime: 300,
-  currentQuestionId: 1,
+  currentQuestion: 1,
+  totalQuestions: 3,
 };
 
 
@@ -42,12 +45,14 @@ export const PhaseTwoResults = Template.bind({});
 PhaseTwoResults.args = {
   ...MockGameSession,
   currentState: "PHASE_TWO_RESULTS",
-  currentQuestionId: 1,
+  currentQuestion: 1,
+  totalQuestions: 3,
 };
 
 export const SecondQuestion = Template.bind({});
 SecondQuestion.args = {
   ...MockGameSession,
   currentState: "PHASE_ONE",
-  currentQuestionId: 2,
+  currentQuestion: 2,
+  totalQuestions: 3,
 };

@@ -53,7 +53,7 @@ const label = {
     "PHASE_TWO_RESULTS" : "Phase 2 Results"
 }
 
-export default function GameInProgressHeader({ questions: { items: questions }, currentQuestionId, currentState, phaseOneTime, phaseTwoTime }) {
+export default function GameInProgressHeader({ totalQuestions, currentQuestion, currentState, phaseOneTime, phaseTwoTime }) {
     const classes = useStyles();
 
     var time = 0;
@@ -73,12 +73,12 @@ export default function GameInProgressHeader({ questions: { items: questions }, 
                 variant='outlined'
                 shape='rounded'
                 classes={{ ul: classes.ul }}
-                count={questions.length}
-                page={currentQuestionId}
+                count={totalQuestions}
+                page={currentQuestion}
             />
 
             <Typography className={classes.title}>
-                Question {currentQuestionId} of {questions.length} {/* Replace with current question number and total questions info from query */}
+                Question {currentQuestion} of {totalQuestions} {/* Replace with current question number and total questions info from query */}
             </Typography>
 
             <Typography className={classes.phases}>
