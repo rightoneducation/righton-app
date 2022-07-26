@@ -209,7 +209,7 @@ function App() {
             </Route>
             <Route path="/status/:gameID" component={StatusPageContainer} /> 
             <Route path="/host" >
-              <GameInProgress />
+              <GameInProgress/>
             </Route>         
       </Switch>
         }

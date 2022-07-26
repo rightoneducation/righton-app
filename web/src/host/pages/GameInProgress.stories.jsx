@@ -20,17 +20,15 @@ Phase1.args = {
       {
         "id": 1,
         "question": "How many degrees are in the interior angles of a stop sign?",
-        "rightAnswer": "360",
-        wrongAnswers: {
-          items: [
-            {"wrongAnswer": "8"},
-            {"wrongAnswer": "720"},
-            {"wrongAnswer": "1080"}
-          ]
-        }
+        "answer": "360",
+        "wrongAnswers": [
+          {"wrong": "8"}, 
+          {"wrong": "720"}, 
+          {"wrong": "1080"}]
       }
     ]
   }
-};
+}
+
 
 

@@ -4,7 +4,7 @@ import { Grid, Typography } from "@material-ui/core";
 import HostAnswerDropdown from './AnswersInProgress';
 
 
-export default function GameDetails({questions: {items: questions}, wrongAnswers: {items: wrongAnswers}, gameStatus}) {
+export default function GameDetails({questions: {items: questions}, gameStatus}) {
     const classes = useStyles();
 
     let isPhase2 = false;
@@ -12,45 +12,21 @@ export default function GameDetails({questions: {items: questions}, wrongAnswers
     if (gameStatus === "PHASE2") {
         isPhase2 = true;
     }
-
     //map through questions then map through wrong answers
-    const questionList = questions.items.map((question, index) => {
-        const wrongAnswers = question.wrongAnswers.items.map((wrongAnswer, index) => {
-            return (
+  return (
+    
+    questions.map((question, index) => {
+        question.wrongAnswers.map((wrongAnswer, index) => {
                 <HostAnswerDropdown
                     key={index}
-                    wrongAnswer={wrongAnswer.wrongAnswer}
+                    wrongAnswer={wrongAnswer.wrong}
                     questionId={question.id}
                     isPhase2={isPhase2}
                 />
-            )
-        }
-        )
-        return (
-            <Grid key={index} item xs={12}>
-                <Typography variant="h6">{question.question}</Typography>
-                {wrongAnswers}
-            </Grid>
-        )
+             
+        })
     })
-
-    return (
-        <Grid container spacing={3}>
-            {questionList}
-            </Grid>)
-    
-    // return (
-    //     <Grid className={classes.background}>
-    //         <Grid>
-    //             <Typography className={classes.answerTitle}>Real-time Answers</Typography>
-    //         </Grid>
-    //         {questions &&
-    //             questions.items.wrongAnswers.map((question, index) => {
-    //             <HostAnswerDropdown key={index} answer={question.items.wrongAnswers.wrongAnswer} correct={false} phase2={isPhase2}/>
-    //         })}
-    //         <HostAnswerDropdown answer={questions.rightAnswer} correct={true} phase2={isPhase2}/>
-    //     </Grid>    
-    // );
+  );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -66,4 +42,4 @@ const useStyles = makeStyles(theme => ({
         fontSize: '24px',
         marginBottom: '10px',
     }
-  }));
+}));

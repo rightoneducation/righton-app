@@ -9,7 +9,7 @@ export default function GameInProgress({ questions: { items: questions }, curren
 
     return (
         <div>
-            <GameDetails/>
+            <GameDetails questions={questions}/>
         </div>
     );
 }
