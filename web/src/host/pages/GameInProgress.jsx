@@ -1,30 +1,35 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from '../components/FooterGameInProgress';
 import HeaderGameInProgress from '../components/HeaderGameInProgress';
 import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
+import CheckMark from '../../images/Union.png'
 
 export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus, phaseOneTime, phaseTwoTime }) {
     const classes = useStyles();
     const currentQuestion = questions[currentQuestionId - 1];
-    const numAnswers = (teams) =>
-    {
-      let count = 0;
-      teams.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));//.map(teamMember => (teamMember.answers.map((answer) => answer.isAnswered && count++)))))
-      console.log("numAnswers" + count);
-      return count;
+    const numAnswers = (teams) => {
+        let count = 0;
+        teams.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));//.map(teamMember => (teamMember.answers.map((answer) => answer.isAnswered && count++)))))
+        console.log("numAnswers" + count);
+        return count;
     }
 
     return (
-      <div className={classes.background}>
-        <div>
-           <HeaderGameInProgress totalQuestions={questions.length} currentState={currentState} currentQuestion={currentQuestionId} phaseOneTime={phaseOneTime} phaseTwoTime={phaseTwoTime}/>
-           <QuestionCardDetails title={currentQuestion} />
-           <AnswersInProgressDetails/>
+        <div className={classes.background}>
+            <div style={{
+                backgroundImage: `url(${CheckMark})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPositionX: "10px",
+                backgroundPositionY: "-300px"
+            }}>
+                <HeaderGameInProgress totalQuestions={questions.length} currentState={currentState} currentQuestion={currentQuestionId} phaseOneTime={phaseOneTime} phaseTwoTime={phaseTwoTime} />
+                <QuestionCardDetails title={currentQuestion} />
+                <AnswersInProgressDetails />
+            </div>
+            <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers(teams)} handleChangeGameStatus={handleChangeGameStatus} />
         </div>
-        <FooterGameInProgress currentState={currentState} numPlayers={teams.length} numAnswers={numAnswers(teams)} handleChangeGameStatus={handleChangeGameStatus}/>
-      </div>
     );
 }
 

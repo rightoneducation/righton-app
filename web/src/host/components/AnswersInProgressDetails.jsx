@@ -40,7 +40,7 @@ export default function GameDetails() {
 
 const useStyles = makeStyles(theme => ({
     background: {
-        height: "100vh",
+        //height: "100vh",
         width: "100%",
         //background: 'linear-gradient(top,#0F78BD, #043373)',
     },
