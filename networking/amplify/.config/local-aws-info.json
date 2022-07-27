@@ -1,7 +1,7 @@
 {
   "dev": {
     "configLevel": "project",
-    "useProfile": true,
-    "profileName": "righton"
+    "useProfile": false,
+    "awsConfigFilePath": "/Users/lucahendicott/.amplify/awscloudformation/DclhzWjWPr"
   }
 }

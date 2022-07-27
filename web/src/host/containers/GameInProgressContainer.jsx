@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import GameInProgress from '../pages/GameInProgress'
 import { loadGameSession, changeGameStatus } from '../../lib/hostAPI'
+import { ApiClient, Environment, GameSessionState, IGameSession } from '@righton/networking'
 
 const GameInProgressContainer = ({ gameSessionId }) => {
   const [gameSession, setGameSession] = useState()

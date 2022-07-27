@@ -77,9 +77,12 @@ export class ApiClient implements IApiClient {
         if (result.data == null) {
             throw new Error("Failed to update the game session")
         }
-
+        
         return result.data.updateGameSession as IGameSession
+
     }
+
+    
 
     subscribeUpdateGameSession(callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(
