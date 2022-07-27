@@ -46,8 +46,24 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export default function GameInProgressHeader() {
+const label = {
+    "PHASE_ONE" : "Phase 1 of 2",
+    "PHASE_ONE_RESULTS" : "Phase 1 Results",
+    "PHASE_TWO" : "Phase 2 of 2",
+    "PHASE_TWO_RESULTS" : "Phase 2 Results"
+}
+
+export default function GameInProgressHeader({ totalQuestions, currentQuestion, currentState, phaseOneTime, phaseTwoTime }) {
     const classes = useStyles();
+
+    var time = 0;
+
+    if (currentState == 'PHASE_ONE') {
+        time = phaseOneTime;
+    }
+    else if (currentState == 'PHASE_TWO') {
+        time = phaseTwoTime;
+    }
 
     return(
         <div className={classes.div}>
@@ -57,19 +73,19 @@ export default function GameInProgressHeader() {
                 variant='outlined'
                 shape='rounded'
                 classes={{ ul: classes.ul }}
-                count={5}
-                page={questionNumber}
+                count={totalQuestions}
+                page={currentQuestion}
             />
 
             <Typography className={classes.title}>
-                Question {questionNumber} of 5 {/* Replace with current question number and total questions info from query */}
+                Question {currentQuestion} of {totalQuestions} {/* Replace with current question number and total questions info from query */}
             </Typography>
 
             <Typography className={classes.phases}>
-                Phase 1 of 2 {/* Replace with phase info from query */}
+                {label[currentState]} {/* Replace with phase info from query */}
             </Typography>
 
-		    <Timer timer={60}/>
+		    <Timer timer={time}/>
         </div>
 	);
 }

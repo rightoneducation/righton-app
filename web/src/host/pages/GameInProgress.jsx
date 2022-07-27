@@ -5,7 +5,7 @@ import FooterGameInProgress from '../components/FooterGameInProgress';
 import HeaderGameInProgress from '../components/HeaderGameInProgress';
 import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
 
-export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus }) {
+export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus, phaseOneTime, phaseTwoTime }) {
     const classes = useStyles();
     const currentQuestion = questions[currentQuestionId - 1];
     const numAnswers = (teams) =>
@@ -19,7 +19,7 @@ export default function GameInProgress({ teams: { items: teams }, questions: { i
     return (
       <div className={classes.background}>
         <div>
-           <HeaderGameInProgress/>
+           <HeaderGameInProgress totalQuestions={questions.length} currentState={currentState} currentQuestion={currentQuestionId} phaseOneTime={phaseOneTime} phaseTwoTime={phaseTwoTime}/>
            <QuestionCardDetails title={currentQuestion} />
            <AnswersInProgressDetails/>
         </div>
