@@ -9,7 +9,7 @@ const GameCode = ({gameCode}) => {
       <Grid  container className={classes.gameCodeCard} >  
           <p className={classes.p}>Game Code: </p>
           <Grid className={classes.gameCodeText}>
-              {gameCode}
+              {gameCode} 
           </Grid>      
       </Grid>        
               
