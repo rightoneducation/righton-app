@@ -6,7 +6,7 @@ import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
 export default function StartGame({
-  teams: { items: teams },
+  teams,
   questions: { items: questions },
   title,
   gameId,
