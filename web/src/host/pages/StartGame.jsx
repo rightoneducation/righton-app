@@ -6,7 +6,8 @@ import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
 export default function StartGame({
-  
+  teams: { items: teams },
+  questions: { items: questions },
   title,
   gameId,
   gameCode,
@@ -19,11 +20,11 @@ export default function StartGame({
     <div className={classes.background}>
       <div>
         <HostHeader gameCode={gameCode} currentState={currentState}/>
-        {/* <GameCard questions={questions} title={title} /> */}
+        <GameCard questions={questions} title={title} />
         <div className={classes.gameMode}>
           Basic Mode
         </div>
-        {/* <CurrentStudents teams={teams} removeTeam={removeTeam}/> */}
+        <CurrentStudents teams={teams} removeTeam={removeTeam}/>
       </div>
       <FooterStartGame gameId={gameId}/>
     </div>

@@ -20,7 +20,7 @@ const StartGameContainer = () => {
     })
 
     const subscription = apiClient.subscribeUpdateGameSession(response => {
-      setGameSession(response)
+      console.log(response)
     })
   
     // @ts-ignore

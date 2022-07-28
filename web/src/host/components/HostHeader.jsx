@@ -5,7 +5,7 @@ import ModeToggle from './ModeToggle'
 import ClearIcon from '@material-ui/icons/Clear';
 
 
-const HostHeader = ({gameCode, currentState}) => {
+const HostHeader = ({gameCode}) => {
   const classes = useStyles()
   return (
     <div>
@@ -14,9 +14,6 @@ const HostHeader = ({gameCode, currentState}) => {
       <ClearIcon className={classes.clearIconGameCode}/>
       <GameCode gameCode={gameCode} />
       </div>
-        <div className={classes.currentState}>
-        {currentState}
-        </div>
     </div>
     
   )
@@ -28,13 +25,6 @@ const useStyles = makeStyles(theme => ({
     padding: "3%",
     marginLeft: "3%"
   }, 
-  currentState: {
-    padding: "5%",
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: "30px"
-  }
 }))
 
 export default HostHeader
