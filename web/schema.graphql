@@ -17,10 +17,13 @@ type Question @model(queries: { list: "questions", get: "question" }, subscripti
   imageURL: String
   instructions: AWSJSON
   games: [GameQuestion] @connection(keyName: "byQuestion", fields: ["id"])
+<<<<<<< HEAD
   cluster: String
   domain: String
   grade: String
   standard: String
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 }
 
 type GameQuestion @model(queries: null, mutations: null, subscriptions: null)

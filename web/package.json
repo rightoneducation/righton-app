@@ -6,17 +6,25 @@
     "@material-ui/core": "^4.9.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
+<<<<<<< HEAD
     "@mui/icons-material": "^5.6.2",
     "@types/react-router-dom": "^5.1.5",
     "aws-amplify": "^4.3.14",
     "aws-amplify-react": "^3.1.9",
     "axios": "^0.24.0",
     "babel-loader": "8.1.0",
+=======
+    "@types/react-router-dom": "^5.1.5",
+    "aws-amplify": "^4.3.4",
+    "aws-amplify-react": "^3.1.7",
+    "axios": "^0.24.0",
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     "classnames": "^2.2.6",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
+<<<<<<< HEAD
     "typescript": "^3.8.3",
     "webpack": "4.44.2"
   },
@@ -38,11 +46,23 @@
     "file-system-cache": "1.0.5",
     "react-dev-utils": "^11.0.4",
     "react-scripts": "^4.0.3"
+=======
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "react-dev-utils": "^11.0.4",
+    "react-scripts": "^4.0.3",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2"
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+<<<<<<< HEAD
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
@@ -59,6 +79,12 @@
         }
       }
     ]
+=======
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   },
   "browserslist": {
     "production": [

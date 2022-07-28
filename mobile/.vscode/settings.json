@@ -8,5 +8,9 @@
     "amplify/backend/amplify-meta.json": true,
     "amplify/backend/awscloudformation": true
   },
+<<<<<<< HEAD
+=======
+  "editor.formatOnSave": true,
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   "eslint.enable": true
 }

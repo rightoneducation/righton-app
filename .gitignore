@@ -43,7 +43,11 @@ bin/
 gen/
 out/
 
+<<<<<<< HEAD
 #amplify-do-not-edit-begin
+=======
+#amplify
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -54,9 +58,9 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
+<<<<<<< HEAD
 amplifyconfiguration.dart
 amplify-build-config.json
 amplify-gradle-config.json
@@ -64,6 +68,11 @@ amplifytools.xcconfig
 .secret-*
 #amplify-do-not-edit-end
 
+=======
+amplify-build-config.json
+amplify-gradle-config.json
+amplifyxc.config
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 
 ### Android related files
 

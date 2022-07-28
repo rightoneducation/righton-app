@@ -2,8 +2,11 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+<<<<<<< HEAD
 //onUpdateGameSession
 
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 export const onCreateGame = /* GraphQL */ `
   subscription OnCreateGame {
     onCreateGame {
@@ -14,9 +17,12 @@ export const onCreateGame = /* GraphQL */ `
       domain
       grade
       standard
+<<<<<<< HEAD
       phaseOneTime
       phaseTwoTime
       imageUrl
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       questions {
         id
         text
@@ -25,11 +31,14 @@ export const onCreateGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+<<<<<<< HEAD
         cluster
         domain
         grade
         standard
         wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       }
       updatedAt
       createdAt
@@ -46,6 +55,7 @@ export const onCreateQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+<<<<<<< HEAD
       cluster
       domain
       grade
@@ -70,6 +80,8 @@ export const subscribeToGameStatusUpdates = /* GraphQL */ `
           teamScore
         }
       }
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     }
   }
 `;

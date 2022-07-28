@@ -12,9 +12,12 @@ export const getGame = /* GraphQL */ `
       domain
       grade
       standard
+<<<<<<< HEAD
       phaseOneTime
       phaseTwoTime
       imageUrl
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       questions {
         id
         text
@@ -23,11 +26,14 @@ export const getGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+<<<<<<< HEAD
         cluster
         domain
         grade
         standard
         wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       }
       updatedAt
       createdAt
@@ -44,9 +50,12 @@ export const listGames = /* GraphQL */ `
       domain
       grade
       standard
+<<<<<<< HEAD
       phaseOneTime
       phaseTwoTime
       imageUrl
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       questions {
         id
         text
@@ -55,11 +64,14 @@ export const listGames = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+<<<<<<< HEAD
         cluster
         domain
         grade
         standard
         wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       }
       updatedAt
       createdAt
@@ -76,11 +88,14 @@ export const getQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+<<<<<<< HEAD
       cluster
       domain
       grade
       standard
       wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     }
   }
 `;
@@ -94,11 +109,14 @@ export const listQuestions = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+<<<<<<< HEAD
       cluster
       domain
       grade
       standard
       wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     }
   }
 `;

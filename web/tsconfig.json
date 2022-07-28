@@ -22,5 +22,9 @@
   },
   "include": [
     "src"
+<<<<<<< HEAD
 , "host/StartGame.jsx"  ]
+=======
+  ]
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 }

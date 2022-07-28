@@ -14,11 +14,14 @@ import GameAnswerPopular from '../Student/screens/Game/GameAnswer/Popular'
 import Leadership from '../Student/screens/Game/Leadership'
 import TeacherApp from '../Teacher';
 import GameDetailsScreen from '../Teacher/screens/Explore/GameDetails'
+<<<<<<< HEAD
 import SignIn from '../Auth/screens/SignIn'
 import SignUp from '../Auth/screens/SignUp'
 import PersonalDetails from '../Auth/screens/PersonalDetails'
 import ConfirmAccount from '../Auth/screens/ConfirmAccount'
 import EnterInfo from '../Student/screens/EnterInfo'
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 
 const Stack = createStackNavigator();
 
@@ -31,11 +34,14 @@ const AppContainer = (props) => {
       >
         <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
+<<<<<<< HEAD
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="EnterInfo" component={EnterInfo} />
         <Stack.Screen name="ConfirmAccount" component={ConfirmAccount} />
         <Stack.Screen name="PersonalDetails" component={PersonalDetails} />
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
         <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />
         <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
         <Stack.Screen name="StudentGameIntro" component={StudentGameIntro} />

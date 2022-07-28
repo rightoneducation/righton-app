@@ -12,9 +12,12 @@ export const deleteGame = /* GraphQL */ `
       domain
       grade
       standard
+<<<<<<< HEAD
       phaseOneTime
       phaseTwoTime
       imageUrl
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       questions {
         id
         text
@@ -23,11 +26,14 @@ export const deleteGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+<<<<<<< HEAD
         cluster
         domain
         grade
         standard
         wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       }
       updatedAt
       createdAt
@@ -44,9 +50,12 @@ export const createGame = /* GraphQL */ `
       domain
       grade
       standard
+<<<<<<< HEAD
       phaseOneTime
       phaseTwoTime
       imageUrl
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       questions {
         id
         text
@@ -55,11 +64,14 @@ export const createGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+<<<<<<< HEAD
         cluster
         domain
         grade
         standard
         wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       }
       updatedAt
       createdAt
@@ -76,9 +88,12 @@ export const updateGame = /* GraphQL */ `
       domain
       grade
       standard
+<<<<<<< HEAD
       phaseOneTime
       phaseTwoTime
       imageUrl
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       questions {
         id
         text
@@ -87,11 +102,14 @@ export const updateGame = /* GraphQL */ `
         instructions
         updatedAt
         createdAt
+<<<<<<< HEAD
         cluster
         domain
         grade
         standard
         wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
       }
       updatedAt
       createdAt
@@ -108,11 +126,14 @@ export const deleteQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+<<<<<<< HEAD
       cluster
       domain
       grade
       standard
       wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     }
   }
 `;
@@ -126,11 +147,14 @@ export const createQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+<<<<<<< HEAD
       cluster
       domain
       grade
       standard
       wrongAnswers
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     }
   }
 `;
@@ -144,6 +168,7 @@ export const updateQuestion = /* GraphQL */ `
       instructions
       updatedAt
       createdAt
+<<<<<<< HEAD
       cluster
       domain
       grade
@@ -219,6 +244,8 @@ export const updateGameStatus = /* GraphQL */ `
           teamScore
         }
       }
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     }
   }
 `;

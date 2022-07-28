@@ -13,6 +13,9 @@ projects:
         region: us-east-1
         apiId: mz6btgo62nhu5dcl67k5namuwe
         maxDepth: 2
+<<<<<<< HEAD
 extensions:
   amplify:
     version: 3
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864

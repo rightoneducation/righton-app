@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import { NavLink, useRouteMatch } from "react-router-dom";
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -35,6 +36,28 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
             {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
           </Grid>
           )}
+=======
+import {
+  Link
+} from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+
+export default function PrimarySearchAppBar() {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.grow}>
+      <AppBar className={classes.bar} position="static">
+        <Toolbar>
+          <Link className={classes.link} to={'/'}>
+            <Typography className={classes.title} variant="h6" noWrap>
+              RightOn Game Builder
+            </Typography>
+          </Link>
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
         </Toolbar>
       </AppBar>
     </div>
@@ -42,6 +65,7 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
 }
 
 const useStyles = makeStyles(theme => ({
+<<<<<<< HEAD
   bar: {
     background: 'linear-gradient(right,#0F78BD,#043373)',
   },
@@ -49,6 +73,14 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   title: {
+=======
+  grow: {
+    flexGrow: 1,
+    marginBottom: '1px',
+  },
+  title: {
+    display: 'none',
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -56,6 +88,7 @@ const useStyles = makeStyles(theme => ({
   link: {
     color: 'inherit',
     textDecoration: 'none',
+<<<<<<< HEAD
     width: '190px',
     display: 'flex',
     opacity: '0.5',
@@ -108,5 +141,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: '18ch',
     },
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   },
 }));

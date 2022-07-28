@@ -48,6 +48,7 @@ enum GameSessionState {
   VOTING
 }
 
+<<<<<<< HEAD
 type JoinScreen implements Screen {
   gameID: Int!
   screenID: ScreenID!
@@ -55,6 +56,8 @@ type JoinScreen implements Screen {
   text: String
 }
 
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 type Mutation {
   deleteGame(id: Int!): Game
   createGame(game: CreateGameInput!): Game
@@ -62,8 +65,11 @@ type Mutation {
   deleteQuestion(id: Int!): Question
   createQuestion(question: CreateQuestionInput!): Question
   updateQuestion(question: UpdateQuestionInput!): Question
+<<<<<<< HEAD
   createGameStatus(gameID: Int!): Screen
   updateGameStatus(gameID: Int!, screenData: ScreenInput!): Screen
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 }
 
 type Query {
@@ -83,6 +89,7 @@ type Question {
   createdAt: AWSDateTime!
 }
 
+<<<<<<< HEAD
 type QuestionScreen implements Screen {
   gameID: Int!
   screenID: ScreenID!
@@ -137,6 +144,11 @@ type Subscription {
     @aws_subscribe(mutations: ["createQuestion"])
   subscribeToGameStatusUpdates(gameID: Int!): Screen
     @aws_subscribe(mutations: ["updateGameStatus"])
+=======
+type Subscription {
+  onCreateGame: Game @aws_subscribe(mutations: ["createGame"])
+  onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 }
 
 input UpdateGameInput {
@@ -161,4 +173,8 @@ schema {
   query: Query
   mutation: Mutation
   subscription: Subscription
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864

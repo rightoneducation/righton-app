@@ -11,9 +11,12 @@ export type Game = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
+<<<<<<< HEAD
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   questions?:  Array<Question | null > | null,
   updatedAt: string,
   createdAt: string,
@@ -28,11 +31,14 @@ export type Question = {
   instructions?: string | null,
   updatedAt: string,
   createdAt: string,
+<<<<<<< HEAD
   cluster?: string | null,
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
   wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 };
 
 export type CreateGameInput = {
@@ -42,15 +48,19 @@ export type CreateGameInput = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
+<<<<<<< HEAD
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   questions?: Array< CreateQuestionInput | null > | null,
 };
 
 export type CreateQuestionInput = {
   text: string,
   answer: string,
+<<<<<<< HEAD
   gameId?: string | null,
   imageUrl?: string | null,
   instructions?: string | null,
@@ -59,6 +69,10 @@ export type CreateQuestionInput = {
   grade?: string | null,
   standard?: string | null,
   wrongAnswers?: string | null,
+=======
+  imageUrl?: string | null,
+  instructions?: string | null,
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 };
 
 export type UpdateGameInput = {
@@ -69,10 +83,13 @@ export type UpdateGameInput = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
+<<<<<<< HEAD
   phaseOneTime?: number | null,
   phaseTwoTime?: number | null,
   imageUrl?: string | null,
   questions?: Array< UpdateQuestionInput | null > | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 };
 
 export type UpdateQuestionInput = {
@@ -81,6 +98,7 @@ export type UpdateQuestionInput = {
   answer?: string | null,
   imageUrl?: string | null,
   instructions?: string | null,
+<<<<<<< HEAD
   cluster?: string | null,
   domain?: string | null,
   grade?: string | null,
@@ -151,6 +169,8 @@ export type ScreenInput = {
 export type ScoreInput = {
   teamName: string,
   teamScore: number,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 };
 
 export type DeleteGameMutationVariables = {
@@ -167,9 +187,12 @@ export type DeleteGameMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
+<<<<<<< HEAD
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     questions?:  Array< {
       __typename: "Question",
       id: number,
@@ -179,11 +202,14 @@ export type DeleteGameMutation = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+<<<<<<< HEAD
       cluster?: string | null,
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
       wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -204,9 +230,12 @@ export type CreateGameMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
+<<<<<<< HEAD
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     questions?:  Array< {
       __typename: "Question",
       id: number,
@@ -216,11 +245,14 @@ export type CreateGameMutation = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+<<<<<<< HEAD
       cluster?: string | null,
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
       wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -241,9 +273,12 @@ export type UpdateGameMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
+<<<<<<< HEAD
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     questions?:  Array< {
       __typename: "Question",
       id: number,
@@ -253,11 +288,14 @@ export type UpdateGameMutation = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+<<<<<<< HEAD
       cluster?: string | null,
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
       wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -278,11 +316,14 @@ export type DeleteQuestionMutation = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+<<<<<<< HEAD
     cluster?: string | null,
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
     wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   } | null,
 };
 
@@ -300,11 +341,14 @@ export type CreateQuestionMutation = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+<<<<<<< HEAD
     cluster?: string | null,
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
     wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   } | null,
 };
 
@@ -322,6 +366,7 @@ export type UpdateQuestionMutation = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+<<<<<<< HEAD
     cluster?: string | null,
     domain?: string | null,
     grade?: string | null,
@@ -434,6 +479,11 @@ export type UpdateGameStatusMutation = {
   ) | null,
 };
 
+=======
+  } | null,
+};
+
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
 export type GetGameQueryVariables = {
   id: number,
 };
@@ -448,9 +498,12 @@ export type GetGameQuery = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
+<<<<<<< HEAD
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     questions?:  Array< {
       __typename: "Question",
       id: number,
@@ -460,11 +513,14 @@ export type GetGameQuery = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+<<<<<<< HEAD
       cluster?: string | null,
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
       wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -481,9 +537,12 @@ export type ListGamesQuery = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
+<<<<<<< HEAD
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     questions?:  Array< {
       __typename: "Question",
       id: number,
@@ -493,11 +552,14 @@ export type ListGamesQuery = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+<<<<<<< HEAD
       cluster?: string | null,
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
       wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -518,11 +580,14 @@ export type GetQuestionQuery = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+<<<<<<< HEAD
     cluster?: string | null,
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
     wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   } | null,
 };
 
@@ -536,11 +601,14 @@ export type ListQuestionsQuery = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+<<<<<<< HEAD
     cluster?: string | null,
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
     wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
   } | null > | null,
 };
 
@@ -554,9 +622,12 @@ export type OnCreateGameSubscription = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
+<<<<<<< HEAD
     phaseOneTime?: number | null,
     phaseTwoTime?: number | null,
     imageUrl?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     questions?:  Array< {
       __typename: "Question",
       id: number,
@@ -566,11 +637,14 @@ export type OnCreateGameSubscription = {
       instructions?: string | null,
       updatedAt: string,
       createdAt: string,
+<<<<<<< HEAD
       cluster?: string | null,
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
       wrongAnswers?: string | null,
+=======
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -587,6 +661,7 @@ export type OnCreateQuestionSubscription = {
     instructions?: string | null,
     updatedAt: string,
     createdAt: string,
+<<<<<<< HEAD
     cluster?: string | null,
     domain?: string | null,
     grade?: string | null,
@@ -627,3 +702,7 @@ export type SubscribeToGameStatusUpdatesSubscription = {
     }
   ) | null,
 };
+=======
+  } | null,
+};
+>>>>>>> a5965acc48bb423681b99f6268caf083ccb85864
