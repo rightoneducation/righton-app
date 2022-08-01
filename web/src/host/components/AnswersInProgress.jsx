@@ -4,41 +4,41 @@ import { Grid, Typography, Card, CardContent, Collapse, IconButton, LinearProgre
 import { ExpandMore } from '@material-ui/icons';
 
 
-export default function HostAnswerDropdown({answer, explanation, correct}) {
+export default function HostAnswerDropdown({ answer, explanation, correct }) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [progress, setProgress] = React.useState(0);
 
     React.useEffect(() => {
         const timer = setInterval(() => {
-          setProgress((oldProgress) => {
-            if (oldProgress === 100) {
-              return 0;
-            }
-            const diff = Math.random() * 10;
-            return Math.min(oldProgress + diff, 100);
-          });
+            setProgress((oldProgress) => {
+                if (oldProgress === 100) {
+                    return 0;
+                }
+                const diff = Math.random() * 10;
+                return Math.min(oldProgress + diff, 100);
+            });
         }, 500);
-    
+
         return () => {
-          clearInterval(timer);
+            clearInterval(timer);
         };
-      }, []);
-    
+    }, []);
+
     return (
         <Grid>
-            <Card className={correct ? classes.correctCard : classes.card} onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer'}}>
+            <Card className={correct ? classes.correctCard : classes.card} onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                     <CardContent>
-                        <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Typography className={classes.answer}>
                                 {answer}
                             </Typography>
                             <IconButton size='small' className={expanded ? classes.expanded : classes.expand}>
-                                    <ExpandMore fontSize='15px'/>
-                             </IconButton>
+                                <ExpandMore fontSize='15px' />
+                            </IconButton>
                         </Box>
-                        <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>
+                        <LinearProgress variant="determinate" value={progress} classes={{ colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary }} />
                     </CardContent>
                     <Collapse in={expanded}>
                         <CardContent>
@@ -66,10 +66,10 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "rgba(158, 195, 255, 0.2)",
         width: "100%"
     },
-      barColorPrimary: {
+    barColorPrimary: {
         backgroundColor: 'white',
         width: "100%"
-    },    
+    },
     card: {
         display: "flex",
         flexDirection: "row",
