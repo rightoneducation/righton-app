@@ -9,7 +9,7 @@ export default function GameDetails() {
 
     let correctAnswer = [
         {
-            choice: "A: 120", explanation: "1. 360 is the sum of a circle"
+            choice: "A. 120", explanation: "1. 360 is the sum of a circle"
         }
     ];
 
@@ -21,10 +21,7 @@ export default function GameDetails() {
 
     return (
         <Grid className={classes.background}>
-
-
             <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} />
-
             {answerSet.map((answer, index) => {
                 return (
                     <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false} />

@@ -5,36 +5,36 @@ import PlayersAnsweredBar from './PlayersAnsweredBar';
 
 
 
-export default function FooterGameInProgress({currentState, numPlayers, numAnswers, handleChangeGameStatus}) {
+export default function FooterGameInProgress({ currentState, numPlayers, numAnswers, handleChangeGameStatus }) {
   const classes = useStyles();
-  
+
   const currentStateToButtonText = {
-    "INITIAL_INTRO" : "Skip to Results",
+    "INITIAL_INTRO": "Skip to Results",
     "REVIEWING_RESULT": "Next Phase",
-    "CHOOSING_TRICK_ANSWER" : "Skip to Results",
-    "FINISHED" : "Skip to Next Question",
+    "CHOOSING_TRICK_ANSWER": "Skip to Results",
+    "FINISHED": "Skip to Next Question",
   }
 
   const currentStateToClassName = {
-    "INITIAL_INTRO" : classes.startGameButton,
-    "REVIEWING_RESULT" : classes.nextPhaseButton,
-    "CHOOSING_TRICK_ANSWER" : classes.startGameButton,
-    "FINISHED" : classes.startGameButton,
+    "INITIAL_INTRO": classes.startGameButton,
+    "REVIEWING_RESULT": classes.nextPhaseButton,
+    "CHOOSING_TRICK_ANSWER": classes.startGameButton,
+    "FINISHED": classes.startGameButton,
   }
 
   return (
-      <BottomNavigation className={classes.footer}>
-        <div className={classes.footerContainer}>
-          <div className={classes.playerNum}>Players who have answered</div>
-          <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers}/>
-          <Button className={currentStateToClassName[currentState]} onClick={() => handleChangeGameStatus(currentState)}>{currentStateToButtonText[currentState]} </Button>
-        </div>
-      </BottomNavigation>
+    <BottomNavigation className={classes.footer}>
+      <div className={classes.footerContainer}>
+        <div className={classes.playerNum}>Players that answered</div>
+        <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
+        <Button className={currentStateToClassName[currentState]} onClick={() => handleChangeGameStatus(currentState)}>{currentStateToButtonText[currentState]} </Button>
+      </div>
+    </BottomNavigation>
   )
 }
 
 const useStyles = makeStyles(theme => ({
-  footer:{
+  footer: {
     position: 'sticky',
     bottom: '0',
     padding: '14%',
@@ -44,13 +44,16 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    gap: '10px',
+    //gap: '10px',
   },
   playerNum: {
     fontSize: '16px',
     textAlign: 'left',
     color: 'white',
-    fontFamily: 'Helvetica',
+    fontFamily: 'Poppins',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: '24px'
   },
   startGameButton: {
     border: '4px solid #159EFA',
@@ -61,7 +64,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: '20px',
     fontWeight: '700',
     lineHeight: '30px',
-    
+
   },
   nextPhaseButton: {
     border: '4px solid #159EFA',

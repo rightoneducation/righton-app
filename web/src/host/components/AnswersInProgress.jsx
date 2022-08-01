@@ -3,6 +3,107 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Card, CardContent, Collapse, IconButton, LinearProgress, Box } from "@material-ui/core";
 import { ExpandMore } from '@material-ui/icons';
 
+const useStyles = makeStyles(theme => ({
+    answerCard: {
+        width: '280px',
+        height: 'auto',
+        marginTop: '12px',
+        borderRadius: '17px',
+        background: 'rgba(255, 255, 255, 0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '3px',
+        boxShadow: 'none !important'
+    },
+    incorrectChoice: {
+        width: '100%',
+        height: '48px',
+        padding: '0px !important',
+        borderRadius: '14px 0px 0px 14px',
+        background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column'
+    },
+    correctChoice: {
+        width: '100%',
+        height: '48px',
+        padding: '0px !important',
+        borderRadius: '14px 0px 0px 14px',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column'
+    },
+    answer: {
+        fontFamily: 'Poppins',
+        fontStyle: 'normal',
+        fontWeight: '600',
+        fontSize: '18px',
+        lineHeight: '27px',
+        color: '#FFFFFF',
+        paddingLeft: '10px'
+    },
+    numAnswered: {
+        width: '18%',
+        height: '45px',
+        padding: '0px !important'
+    },
+    expand: {
+        display: "flex",
+        float: 'right',
+        color: 'white',
+        height: '25px',
+        width: '25px',
+        '& svg': {
+            fontSize: '39px'
+        },
+        marginBottom: '3px',
+        padding: '0px !important',
+        transform: 'rotate(270deg)',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    expanded: {
+        float: 'right',
+        color: 'white',
+        height: '25px',
+        width: '25px',
+        '& svg': {
+            fontSize: '39px'
+        },
+        marginBottom: '3px',
+        padding: '0px !important',
+        transform: 'rotate(0deg)',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    colorPrimary: {
+        backgroundColor: "rgba(158, 195, 255, 0.2)",
+        width: "92%",
+        borderRadius: '2px'
+    },
+    barColorPrimary: {
+        backgroundColor: 'white',
+        width: "92%",
+        borderRadius: '2px'
+    },
+    explanationTitle: {
+        fontWeight: '700',
+        fontSize: '20px',
+        color: 'white',
+        fontFamily: 'Poppins',
+        fontStyle: 'normal'
+    },
+    explanationText: {
+        fontWeight: '600',
+        fontSize: '14px',
+        color: 'white',
+        fontFamily: 'Poppins',
+        fontStyle: 'normal'
+    }
+}))
 
 export default function HostAnswerDropdown({ answer, explanation, correct }) {
     const classes = useStyles();
@@ -26,7 +127,38 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
     }, []);
 
     return (
-        <Grid>
+        <Grid style={{ display: "flex", justifyContent: "center" }}>
+            <Card className={classes.answerCard} onClick={() => setExpanded(!expanded)}>
+                <div style={{ width: '80%' }}>
+                    <CardContent className={correct ? classes.correctChoice : classes.incorrectChoice}>
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', width: '100%', paddingTop: '5px', marginBottom: '3px' }}>
+                            <Typography className={classes.answer}>
+                                {answer}
+                            </Typography>
+                            <IconButton size='small' className={expanded ? classes.expanded : classes.expand}>
+                                <ExpandMore />
+                            </IconButton>
+                        </Box>
+                        <LinearProgress variant="determinate" value={progress} classes={{ colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary }} />
+                    </CardContent>
+                    <Collapse in={expanded}>
+                        <CardContent>
+                            <Typography className={classes.explanationTitle}>
+                                Explanation:
+                            </Typography>
+                            <Typography className={classes.explanationText}>
+                                {explanation}
+                            </Typography>
+                        </CardContent>
+                    </Collapse>
+                </div>
+                <CardContent className={classes.numAnswered}>
+
+                </CardContent>
+
+            </Card>
+        </Grid>
+        /*<Grid>
             <Card className={correct ? classes.correctCard : classes.card} onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                     <CardContent>
@@ -57,11 +189,11 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
                     </div>
                 </Box>
             </Card>
-        </Grid>
+        </Grid>*/
     );
 }
 
-const useStyles = makeStyles(theme => ({
+/*const useStyles = makeStyles(theme => ({
     colorPrimary: {
         backgroundColor: "rgba(158, 195, 255, 0.2)",
         width: "100%"
@@ -71,6 +203,8 @@ const useStyles = makeStyles(theme => ({
         width: "100%"
     },
     card: {
+        width: '311px',
+        height: '47px'
         display: "flex",
         flexDirection: "row",
         borderRadius: '10px',
@@ -138,4 +272,4 @@ const useStyles = makeStyles(theme => ({
         fontSize: '14px',
         color: 'white',
     }
-}))
+}))*/
