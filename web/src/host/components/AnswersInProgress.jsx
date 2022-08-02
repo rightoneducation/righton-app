@@ -44,9 +44,20 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: '10px'
     },
     numAnswered: {
-        width: '18%',
+        width: '20%',
         height: '45px',
-        padding: '0px !important'
+        paddingBottom: '0px !important',
+        paddingTop: '0px !important',
+        paddingRight: '0px !important',
+        paddingLeft: '10px !important',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        fontFamily: 'Poppins',
+        fontWeight: '900',
+        fontSize: '18px',
+        lineHeight: '27px',
+        color: '#FFFFFF'
     },
     expand: {
         display: "flex",
@@ -153,9 +164,8 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
                     </Collapse>
                 </div>
                 <CardContent className={classes.numAnswered}>
-
+                    <h3>2</h3>
                 </CardContent>
-
             </Card>
         </Grid>
         /*<Grid>

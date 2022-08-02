@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
     div: {
         paddingLeft: '10px',
         paddingTop: '10px',
-        background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+        //background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
     },
     title: {
         fontWeight: 700,

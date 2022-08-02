@@ -4,6 +4,7 @@ import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from '../components/FooterGameInProgress';
 import HeaderGameInProgress from '../components/HeaderGameInProgress';
 import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
+import CheckMark from '../../images/Union.png'
 
 export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus, phaseOneTime, phaseTwoTime }) {
     const classes = useStyles();
@@ -18,7 +19,12 @@ export default function GameInProgress({ teams: { items: teams }, questions: { i
 
     return (
       <div className={classes.background}>
-        <div>
+         <div style={{
+                backgroundImage: `url(${CheckMark})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPositionX: "10px",
+                backgroundPositionY: "-300px"
+            }}>
            <HeaderGameInProgress totalQuestions={questions.length} currentState={currentState} currentQuestion={currentQuestionId} phaseOneTime={phaseOneTime} phaseTwoTime={phaseTwoTime}/>
            <QuestionCardDetails title={currentQuestion} />
            <AnswersInProgressDetails/>
