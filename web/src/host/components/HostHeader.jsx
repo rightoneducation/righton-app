@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     padding: "3%",
     marginLeft: "3%"
-  }
+  }, 
 }))
 
 export default HostHeader

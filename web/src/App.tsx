@@ -32,9 +32,10 @@ import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
-import StartGameContainer from './host/containers/StartGameContainer';
 import { loadGameSession } from './lib/hostAPI';
 import GameInProgressContainer from './host/containers/GameInProgressContainer';
+import { GameSessionState } from '@righton/networking';
+import GameSessionContainer from './host/containers/GameSessionContainer';
 
 
 
@@ -189,13 +190,13 @@ function App() {
  
   return (
     <Router>
-      <Switch>
+      {/* <Switch>
 
-      {/* <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
       {(isAuthenticated) ? (<Redirect to="/" />) : 
 
-          <Switch> */}
-            {/* <Route path="/login">
+          <Switch>
+            <Route path="/login">
 
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <LogIn />
@@ -210,12 +211,12 @@ function App() {
             </Route>
 
             <Route path="/status/:gameID" component={StatusPageContainer} />  */}
-            <Route path="/host/:gameID" >
-              <StartGameContainer gameSessionId="123"/>   
+          <Switch>
+            <Route path="/host/:gameSessionId" >
+              <GameSessionContainer />   
             </Route>
-            <Route path="/game-in-progress/:gameID" >
-              <GameInProgressContainer gameSessionId="123"/>
-            </Route>         
+          </Switch>
+                    
       {/* </Switch>
         }
         {userLoading ? <div>Loading</div> : (isAuthenticated ? (
@@ -233,9 +234,9 @@ function App() {
 
         ) : <Redirect to="/login" />
         )}
-        </ThemeProvider> */}
+        </ThemeProvider>
 
-      </Switch>
+      </Switch> */}
     </Router>
 
   );

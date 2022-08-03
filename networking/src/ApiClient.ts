@@ -10,7 +10,7 @@ import {
 import { updateGameSession } from './graphql/mutations'
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { onUpdateGameSession } from './graphql'
+import { onUpdateGameSession, getGameSession } from './graphql'
 import awsconfig from "./aws-exports"
 
 Amplify.configure(awsconfig)
@@ -66,6 +66,11 @@ export class ApiClient implements IApiClient {
         })
     }
 
+    async loadGameSession(id: string): Promise<IGameSession> {
+        let result = await API.graphql(graphqlOperation(getGameSession,  { id } )) as { data: any }
+        return result.data.getGameSession as IGameSession
+    }
+
     async updateGameSession(id: string, gameState: GameSessionState): Promise<IGameSession> {
         let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState }
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
@@ -81,8 +86,6 @@ export class ApiClient implements IApiClient {
         return result.data.updateGameSession as IGameSession
 
     }
-
-    
 
     subscribeUpdateGameSession(callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(

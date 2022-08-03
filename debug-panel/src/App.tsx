@@ -61,8 +61,8 @@ function App() {
           // }
           // let gameSessionId = gameSession!.id
 
-          let gameSessionId = "a2438402-f9d3-436b-9d87-c4ffea8a1edb"
-          apiClient.updateGameSession(gameSessionId, GameSessionState.CHOOSING_TRICK_ANSWER)
+          let gameSessionId = "a32a65bb-dd1f-4d06-a5ad-76d4f9db7074"
+          apiClient.updateGameSession(gameSessionId, GameSessionState.INITIAL_INTRO)
             .then(gameSession => {
               setUpdatedGameSession(gameSession)
               setError(null)
