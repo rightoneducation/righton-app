@@ -32,10 +32,10 @@ import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
-import StartGameContainer from './host/containers/StartGameContainer';
 import { loadGameSession } from './lib/hostAPI';
 import GameInProgressContainer from './host/containers/GameInProgressContainer';
 import { GameSessionState } from '@righton/networking';
+import GameSessionContainer from './host/containers/GameSessionContainer';
 
 
 
@@ -212,8 +212,8 @@ function App() {
 
             <Route path="/status/:gameID" component={StatusPageContainer} />  */}
           <Switch>
-            <Route path="/host/:gameID" >
-              <StartGameContainer />   
+            <Route path="/host/:gameSessionId" >
+              <GameSessionContainer />   
             </Route>
           </Switch>
                     

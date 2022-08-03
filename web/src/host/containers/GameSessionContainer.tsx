@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
+ BrowserRouter as Router, Route, useParams, useRouteMatch
 } from "react-router-dom";
 import StartGame from '../pages/StartGame'
 import { ApiClient, Environment, GameSessionState, IGameSession } from '@righton/networking'
@@ -11,20 +8,17 @@ import GameInProgress from '../pages/GameInProgress'
 import Ranking from '../pages/Ranking';
 
 
-const StartGameContainer = () => {
-  
+const GameSessionContainer = () => {  
   const [gameSession, setGameSession] = useState<IGameSession | null>()
-  
+
 
   let apiClient = new ApiClient(Environment.Staging)
   
-  let gameSessionId = "a32a65bb-dd1f-4d06-a5ad-76d4f9db7074"
+  // paste this game session id into the url path a32a65bb-dd1f-4d06-a5ad-76d4f9db7074
 
-  // const handleChangeGameStatus = (currentState) => {
-  //   changeGameStatus(currentState, gameSession).then((response) => {
-  //     setGameSession(response);
-  //   })
-  // }
+   let { gameSessionId } = useParams<{gameSessionId: string}>()
+   let { path } = useRouteMatch();
+
 
   useEffect(() => {
     apiClient.loadGameSession(gameSessionId).then(response => {
@@ -39,29 +33,36 @@ const StartGameContainer = () => {
     // @ts-ignore
     return () => subscription.unsubscribe()
   }, [])
-
+  
   if(!gameSession) {
     return null
   }
-  switch (gameSession.currentState) {
 
+  switch (gameSession.currentState) {
+    
     case GameSessionState.INITIAL_INTRO:
-      <Route path="/host/:gameID">
-        <StartGame {...gameSession} />
+      return (
+      <Route path={`${path}/que`}>
+        <StartGame {...gameSession} gameSessionId={gameSessionId} />
       </Route>
-      break;
-    case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      <Route path="/game-in-progress/:gameID">
+      )
+      
+    case GameSessionState.CHOOSING_TRICK_ANSWER:
+      return(
+      <Route path={`${path}/start`}>
         <GameInProgress {...gameSession} />
       </Route>
-      break;
+      )
+      
     case GameSessionState.REVIEWING_RESULT:
-      <Route path="/ranking/:gameID">
-        <Ranking/>
+      return(
+      <Route path={`${path}/ranking`}>
+        <Ranking {...gameSession}/>
       </Route>
+      )
   }
 }
 
-export default StartGameContainer
+export default GameSessionContainer
 
 

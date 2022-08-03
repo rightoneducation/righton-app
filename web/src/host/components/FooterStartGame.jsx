@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 
-const FooterStartGame = ({ gameId }) => {
+
+const FooterStartGame = ({ gameSessionId }) => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleStartGame = (e) => {
     e.preventDefault();
-    history.push(`/game-in-progress/${gameId}`);
+    history.push(`/host/${gameSessionId}/start`);
   }
   
   return (

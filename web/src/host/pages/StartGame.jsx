@@ -9,10 +9,10 @@ export default function StartGame({
   teams: { items: teams },
   questions: { items: questions },
   title,
-  gameId,
+  gameSessionId,
   gameCode,
   removeTeam,
-  currentState
+  currentState,
 }) {
 
   const classes = useStyles()
@@ -26,7 +26,7 @@ export default function StartGame({
         </div>
         <CurrentStudents teams={teams} removeTeam={removeTeam}/>
       </div>
-      <FooterStartGame gameId={gameId}/>
+      <FooterStartGame gameSessionId={gameSessionId} currentState={currentState} />
     </div>
   )
 }
