@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { makeStyles } from "@material-ui/core";
 import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Collapse, IconButton, Box, Container, Button } from "@material-ui/core";
 import { AddBox, IndeterminateCheckBox, IndeterminateCheckBoxSharp } from '@material-ui/icons';
-import "@fontsource/karla";
 
 
 const useStyles = makeStyles(theme => ({
