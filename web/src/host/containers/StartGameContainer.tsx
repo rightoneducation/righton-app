@@ -44,9 +44,7 @@ const StartGameContainer = () => {
     return null
   }
   switch (gameSession.currentState) {
-    //switch statement to determine which page to display - routing will go here
-    //switch case for current game sessions state to render page components
-    
+
     case GameSessionState.INITIAL_INTRO:
       <Route path="/host/:gameID">
         <StartGame {...gameSession} />

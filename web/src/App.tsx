@@ -215,9 +215,6 @@ function App() {
             <Route path="/host/:gameID" >
               <StartGameContainer />   
             </Route>
-            <Route path="/game-in-progress/:gameID" >
-              <GameInProgressContainer gameSessionId="123"/>
-            </Route> 
           </Switch>
                     
       {/* </Switch>
