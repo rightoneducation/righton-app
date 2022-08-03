@@ -71,16 +71,6 @@ export class ApiClient implements IApiClient {
         return result.data.getGameSession as IGameSession
     }
 
-    //get game session by id
-    //  loadGameSession(id: string): Promise<IGameSession> {
-    //     return API.graphql(graphqlOperation(getGameSession,  { id } )) as Promise<IGameSession>
-    // }
-
-    // async getGameSessionById(gameSessions: GameSession[],  id: number | string){
-    //     const numericalId = Number(id);
-    //     return gameSessions.find((session) => session.id === numericalId)
-    // }
-
     async updateGameSession(id: string, gameState: GameSessionState): Promise<IGameSession> {
         let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState }
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
@@ -96,8 +86,6 @@ export class ApiClient implements IApiClient {
         return result.data.updateGameSession as IGameSession
 
     }
-
-    
 
     subscribeUpdateGameSession(callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(
