@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from "@material-ui/core";
-import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Collapse, IconButton, Box, Container, Button } from "@material-ui/core";
-import { AddBox, IndeterminateCheckBox, IndeterminateCheckBoxSharp } from '@material-ui/icons';
+import { Grid, Typography, Card, CardContent, CardActions, Collapse, Button } from "@material-ui/core";
+import { AddBox, IndeterminateCheckBox } from '@material-ui/icons';
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,8 +64,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function QuestionCard({ explanation1, explanation2, question, hints }) {
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-    const [stat, setStat] = React.useState(0)
+    const [expanded, setExpanded] = useState(false);
+    const [stat, setStat] = useState(0)
     const hideaway = ['Show More', 'Show Less'];
     const box = [<AddBox />, <IndeterminateCheckBox />];
 

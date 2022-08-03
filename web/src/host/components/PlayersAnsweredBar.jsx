@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles, BottomNavigation } from "@material-ui/core";
+import React from 'react';
+import { makeStyles } from "@material-ui/core";
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default function PlayersAnsweredBar({numPlayers, numAnswers}) {

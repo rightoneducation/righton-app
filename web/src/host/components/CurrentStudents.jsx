@@ -1,11 +1,9 @@
 import React from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import ClearIcon from '@material-ui/icons/Clear';
 
 
-const CurrentStudents = ({ teams, removeTeam }) => {
+const CurrentStudents = ({ teams }) => {
     const classes = useStyles()
     return (
         <div>
@@ -23,9 +21,6 @@ const CurrentStudents = ({ teams, removeTeam }) => {
                         <Grid className={classes.name}>
                             {team.name}
                         </Grid>
-                        <Button className={classes.removeStudent} >
-                            <ClearIcon onClick={() => removeTeam(team)}/>
-                        </Button>
                     </MenuItem>
                 ))}
         </div>
