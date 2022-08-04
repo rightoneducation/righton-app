@@ -12,12 +12,9 @@ export default function GameInProgress({ teams: { items: teams }, questions: { i
     const numAnswers = (teams) =>
     {
       let count = 0;
-      teams.items.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));//.map(teamMember => (teamMember.answers.map((answer) => answer.isAnswered && count++)))))
-      console.log("numAnswers" + count);
+      teams.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));
       return count;
     }
-
-    console.log(currentState)
 
     return (
       <div className={classes.background}>

@@ -14,7 +14,7 @@ const GameSessionContainer = () => {
 
   let apiClient = new ApiClient(Environment.Staging)
   
-  // paste this game session id into the url path a32a65bb-dd1f-4d06-a5ad-76d4f9db7074
+  // paste this game session id into the url path 833503b7-0c6c-41f4-95b1-70549e6d6590
 
    let { gameSessionId } = useParams<{gameSessionId: string}>()
    let { path } = useRouteMatch();
@@ -40,21 +40,21 @@ const GameSessionContainer = () => {
 
   switch (gameSession.currentState) {
     
-    case GameSessionState.INITIAL_INTRO:
-      return (
-      <Route path={`${path}/que`}>
-        <StartGame {...gameSession} gameSessionId={gameSessionId} />
-      </Route>
-      )
+    // case GameSessionState.TEAMS_JOINING:
+    //   return (
+    //   <Route path={`${path}/que`}>
+    //     <StartGame {...gameSession} gameSessionId={gameSessionId} />
+    //   </Route>
+    //   )
       
-    case GameSessionState.CHOOSING_TRICK_ANSWER:
+    case GameSessionState.TEAMS_JOINING:
       return(
       <Route path={`${path}/start`}>
         <GameInProgress {...gameSession} />
       </Route>
       )
       
-    case GameSessionState.REVIEWING_RESULT:
+    case GameSessionState.FINAL_RESULTS:
       return(
       <Route path={`${path}/ranking`}>
         <Ranking {...gameSession}/>
