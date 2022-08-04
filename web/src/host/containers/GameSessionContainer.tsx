@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
- BrowserRouter as Router, Route, useParams, useRouteMatch
+ BrowserRouter as Router, Route, useParams, useRouteMatch, Redirect
 } from "react-router-dom";
 import StartGame from '../pages/StartGame'
 import { ApiClient, Environment, GameSessionState, IGameSession } from '@righton/networking'
@@ -42,23 +42,31 @@ const GameSessionContainer = () => {
     
     case GameSessionState.TEAMS_JOINING:
       return (
-      <Route path={`${path}/que`}>
+      <Route path={`${path}/join`}>
         <StartGame {...gameSession} gameSessionId={gameSessionId} />
       </Route>
       )
       
-    case GameSessionState.CHOOSE_CORRECT_ANSWER || GameSessionState.CHOOSE_TRICKIEST_ANSWER || GameSessionState.PHASE_1_RESULTS || GameSessionState.PHASE_2_RESULTS:
+    case GameSessionState.CHOOSE_CORRECT_ANSWER: 
+    case GameSessionState.CHOOSE_TRICKIEST_ANSWER: 
+    case GameSessionState.PHASE_1_RESULTS: 
+    case GameSessionState.PHASE_2_RESULTS:
       return(
-      <Route path={`${path}/start`}>
+      <Route path={`${path}/play`}>
         <GameInProgress {...gameSession} />
       </Route>
       )
       
     case GameSessionState.FINAL_RESULTS:
       return(
-      <Route path={`${path}/ranking`}>
+      <Route path={`${path}/results`}>
         <Ranking {...gameSession}/>
       </Route>
+      )
+
+      default: 
+      return(
+      <Redirect to="/" />
       )
   }
 }
