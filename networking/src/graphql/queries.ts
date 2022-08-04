@@ -31,6 +31,7 @@ export const getGameSession = /* GraphQL */ `
       imageUrl
       description
       title
+      currentTimer
       questions {
         items {
           id
@@ -75,6 +76,7 @@ export const listGameSessions = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }
@@ -115,6 +117,7 @@ export const getQuestion = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }
@@ -166,6 +169,7 @@ export const listQuestions = /* GraphQL */ `
           imageUrl
           description
           title
+          currentTimer
           createdAt
           updatedAt
         }
@@ -204,6 +208,7 @@ export const getTeam = /* GraphQL */ `
           imageUrl
           description
           title
+          currentTimer
           createdAt
           updatedAt
         }
@@ -412,6 +417,7 @@ export const gameSessionByState = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }
@@ -453,6 +459,7 @@ export const gameSessionByCode = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }

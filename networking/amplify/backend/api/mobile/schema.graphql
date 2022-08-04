@@ -18,16 +18,19 @@ type GameSession @model {
   imageUrl: String
   description: String
   title: String
+  currentTimer: Int
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
 
 enum GameSessionState {
-  CHOOSING_TRICK_ANSWER
-  FINISHED
-  INITIAL_INTRO
   NOT_STARTED
-  REVIEWING_RESULT
-  VOTING
+  TEAMS_JOINING
+  CHOOSE_CORRECT_ANSWER
+  PHASE_1_RESULTS
+  CHOOSE_TRICKIEST_ANSWER
+  PHASE_2_RESULTS
+  FINAL_RESULTS
+  FINISHED
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
