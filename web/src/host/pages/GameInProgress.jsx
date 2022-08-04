@@ -6,13 +6,13 @@ import HeaderGameInProgress from '../components/HeaderGameInProgress';
 import AnswersInProgressDetails from '../components/AnswersInProgressDetails';
 import CheckMark from '../../images/Union.png'
 
-export default function GameInProgress({ teams: { items: teams }, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus, phaseOneTime, phaseTwoTime }) {
+export default function GameInProgress({ teams, questions: { items: questions }, currentState, currentQuestionId, handleChangeGameStatus, phaseOneTime, phaseTwoTime }) {
     const classes = useStyles();
     const currentQuestion = questions[currentQuestionId - 1];
     const numAnswers = (teams) =>
     {
       let count = 0;
-      teams.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));
+      teams.items.map(team => (team.teamMembers.items.map(teamMember => (teamMember.answers.items.map(answer => (answer.isChosen && count++))))));
       return count;
     }
 

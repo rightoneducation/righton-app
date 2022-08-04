@@ -20,6 +20,19 @@ function App() {
     return () => subscription.unsubscribe()
 }, []);
 
+let gameSessionId = "833503b7-0c6c-41f4-95b1-70549e6d6590"
+
+const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => 
+  {apiClient.updateGameSession(gameSessionId, gameSessionState)
+  .then(gameSession => {
+    setUpdatedGameSession(gameSession)
+    setError(null)
+    }).catch(error => {
+    console.error(error.message)
+    setError(error.message)
+    setUpdatedGameSession(null)
+    })}
+
   return (
     <div>
       <span>
@@ -56,24 +69,50 @@ function App() {
       <Button
         variant="contained"
         onClick={() => {
-          // if (gameSession == null) {
-          //   return
-          // }
-          // let gameSessionId = gameSession!.id
-
-          let gameSessionId = "a32a65bb-dd1f-4d06-a5ad-76d4f9db7074"
-          apiClient.updateGameSession(gameSessionId, GameSessionState.INITIAL_INTRO)
-            .then(gameSession => {
-              setUpdatedGameSession(gameSession)
-              setError(null)
-          }).catch(error => {
-              console.error(error.message)
-              setError(error.message)
-              setUpdatedGameSession(null)
-            })
+          handleUpdateGameSessionState(GameSessionState.TEAMS_JOINING)
         }}
       >
-        Update game session
+        Teams Joining
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.CHOOSE_CORRECT_ANSWER)
+        }}
+      >
+        Choose Correct
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.PHASE_1_RESULTS)
+        }}
+      >
+        Phase 1 Results
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+        }}
+      >
+        Choose Trickiest Answer
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.PHASE_2_RESULTS)
+        }}
+      >
+        Phase 2 Results
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.FINAL_RESULTS)
+        }}
+      >
+        Rankings
       </Button>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
- BrowserRouter as Router, Route, useParams, useRouteMatch, Redirect
+ BrowserRouter as Router, useParams, Redirect
 } from "react-router-dom";
 import StartGame from '../pages/StartGame'
 import { ApiClient, Environment, GameSessionState, IGameSession } from '@righton/networking'
@@ -17,7 +17,6 @@ const GameSessionContainer = () => {
   // paste this game session id into the url path 833503b7-0c6c-41f4-95b1-70549e6d6590
 
    let { gameSessionId } = useParams<{gameSessionId: string}>()
-   let { path } = useRouteMatch();
 
 
   useEffect(() => {
@@ -27,7 +26,10 @@ const GameSessionContainer = () => {
     })
 
     const subscription = apiClient.subscribeUpdateGameSession(response => {
-      console.log(response)
+      setGameSession(
+        {...gameSession, 
+          ...response}
+        )
     })
   
     // @ts-ignore
@@ -42,9 +44,9 @@ const GameSessionContainer = () => {
     
     case GameSessionState.TEAMS_JOINING:
       return (
-      <Route path={`${path}/join`}>
+      
         <StartGame {...gameSession} gameSessionId={gameSessionId} />
-      </Route>
+      
       )
       
     case GameSessionState.CHOOSE_CORRECT_ANSWER: 
@@ -52,16 +54,14 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_RESULTS: 
     case GameSessionState.PHASE_2_RESULTS:
       return(
-      <Route path={`${path}/play`}>
+      
         <GameInProgress {...gameSession} />
-      </Route>
+      
       )
       
     case GameSessionState.FINAL_RESULTS:
       return(
-      <Route path={`${path}/results`}>
         <Ranking {...gameSession}/>
-      </Route>
       )
 
       default: 
