@@ -24,7 +24,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run build --prefix ../networking; set PORT=8080 && react-scripts start",
+    "start": "npm run build --prefix ../networking; react-scripts start",
     "build": "npm run build --prefix ../networking; react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -2,7 +2,6 @@ import React from 'react'
 import { makeStyles, MenuItem } from "@material-ui/core";
 import Grid from '@material-ui/core/Grid';
 
-
 const CurrentStudents = ({ teams }) => {
     const classes = useStyles()
     return (
@@ -16,7 +15,7 @@ const CurrentStudents = ({ teams }) => {
                 </p>
             </div>
             <hr className={classes.hr} />
-                {teams && teams.items.map((team, id) => (
+                {teams && teams.map((team, id) => (
                     <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
                             {team.name}

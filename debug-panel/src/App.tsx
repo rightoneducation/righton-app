@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState } from 'react';
 import { Button } from '@mui/material'
 import { ApiClient, Environment, GameSessionState } from '@righton/networking'
 import { IGameSession } from '@righton/networking'
@@ -20,29 +20,33 @@ function App() {
     return () => subscription.unsubscribe()
 }, []);
 
-const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => 
-  {
+
+  const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
     if (gameSession == null) {
-            return
-          }
-          
+          return
+    }
+
     let gameSessionId = gameSession!.id
-    
+
     apiClient.updateGameSession(gameSessionId, gameSessionState)
-    .then(gameSession => {
-    setUpdatedGameSession(gameSession)
-    setError(null)
-    }).catch(error => {
-    console.error(error.message)
-    setError(error.message)
-    setUpdatedGameSession(null)
-    })}
+      .then(response => {
+        setUpdatedGameSession(response)
+        setError(null)
+      }).catch(error => {
+        console.error(error.message)
+        setError(error.message)
+        setUpdatedGameSession(null)
+      })
+  }
+
+    console.log(gameSession)
+    
 
   return (
     <div>
       <span>
         {
-          (gameSession == null ? "" : gameSession.id) +
+          (gameSession == null ? "" : gameSession.id.toLocaleLowerCase()) +
           (error == null ? "" : error)
         }
       </span>
