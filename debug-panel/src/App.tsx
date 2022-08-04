@@ -38,10 +38,7 @@ function App() {
         setUpdatedGameSession(null)
       })
   }
-
-    console.log(gameSession)
-    
-
+   
   return (
     <div>
       <span>
