@@ -56,13 +56,12 @@ function App() {
       <Button
         variant="contained"
         onClick={() => {
-          // if (gameSession == null) {
-          //   return
-          // }
-          // let gameSessionId = gameSession!.id
+          if (gameSession == null) {
+            return
+          }
+          let gameSessionId = gameSession!.id
 
-          let gameSessionId = "a32a65bb-dd1f-4d06-a5ad-76d4f9db7074"
-          apiClient.updateGameSession(gameSessionId, GameSessionState.INITIAL_INTRO)
+          apiClient.updateGameSession(gameSessionId, GameSessionState.TEAMS_JOINING)
             .then(gameSession => {
               setUpdatedGameSession(gameSession)
               setError(null)

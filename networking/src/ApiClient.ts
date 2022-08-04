@@ -67,12 +67,12 @@ export class ApiClient implements IApiClient {
     }
 
     async loadGameSession(id: string): Promise<IGameSession> {
-        let result = await API.graphql(graphqlOperation(getGameSession,  { id } )) as { data: any }
+        let result = await API.graphql(graphqlOperation(getGameSession, { id })) as { data: any }
         return result.data.getGameSession as IGameSession
     }
 
     async updateGameSession(id: string, gameState: GameSessionState): Promise<IGameSession> {
-        let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState }
+        let updateGameSessionInput: UpdateGameSessionInput = { id: id.toLowerCase(), currentState: gameState }
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
         let result = await this.callGraphQL<UpdateGameSessionMutation>(updateGameSession, variables)
         if (result.errors != null) {
@@ -82,7 +82,7 @@ export class ApiClient implements IApiClient {
         if (result.data == null) {
             throw new Error("Failed to update the game session")
         }
-        
+
         return result.data.updateGameSession as IGameSession
 
     }
@@ -120,6 +120,7 @@ export class ApiClient implements IApiClient {
             currentState,
             gameCode,
             // questions,
+            currentTimer,
             updatedAt,
             createdAt
         } = subscription.onUpdateGameSession || {}
@@ -131,6 +132,7 @@ export class ApiClient implements IApiClient {
             isNullOrUndefined(gameId) ||
             isNullOrUndefined(phaseOneTime) ||
             isNullOrUndefined(phaseTwoTime) ||
+            isNullOrUndefined(currentTimer) ||
             isNullOrUndefined(updatedAt) ||
             isNullOrUndefined(createdAt)
         ) {
@@ -147,6 +149,7 @@ export class ApiClient implements IApiClient {
             currentQuestionId,
             currentState,
             gameCode,
+            currentTimer,
             // questions,
             updatedAt,
             createdAt
