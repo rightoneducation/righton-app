@@ -40,14 +40,14 @@ const GameSessionContainer = () => {
 
   switch (gameSession.currentState) {
     
-    // case GameSessionState.TEAMS_JOINING:
-    //   return (
-    //   <Route path={`${path}/que`}>
-    //     <StartGame {...gameSession} gameSessionId={gameSessionId} />
-    //   </Route>
-    //   )
-      
     case GameSessionState.TEAMS_JOINING:
+      return (
+      <Route path={`${path}/que`}>
+        <StartGame {...gameSession} gameSessionId={gameSessionId} />
+      </Route>
+      )
+      
+    case GameSessionState.CHOOSE_CORRECT_ANSWER || GameSessionState.CHOOSE_TRICKIEST_ANSWER || GameSessionState.PHASE_1_RESULTS || GameSessionState.PHASE_2_RESULTS:
       return(
       <Route path={`${path}/start`}>
         <GameInProgress {...gameSession} />
