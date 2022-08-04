@@ -54,9 +54,9 @@ const GameSessionContainer = () => {
         <Ranking {...gameSession}/>
       )
 
-      default: 
+    default: 
       return(
-        <Redirect to="/" />
+        < Redirect to="/" />
       )
   }
 }

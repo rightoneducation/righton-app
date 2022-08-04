@@ -23,7 +23,7 @@ function App() {
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
     if (gameSession == null) {
-          return
+      return
     }
 
     let gameSessionId = gameSession!.id
