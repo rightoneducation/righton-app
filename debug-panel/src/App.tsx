@@ -20,11 +20,16 @@ function App() {
     return () => subscription.unsubscribe()
 }, []);
 
-let gameSessionId = "833503b7-0c6c-41f4-95b1-70549e6d6590"
-
 const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => 
-  {apiClient.updateGameSession(gameSessionId, gameSessionState)
-  .then(gameSession => {
+  {
+    if (gameSession == null) {
+            return
+          }
+          
+    let gameSessionId = gameSession!.id
+    
+    apiClient.updateGameSession(gameSessionId, gameSessionState)
+    .then(gameSession => {
     setUpdatedGameSession(gameSession)
     setError(null)
     }).catch(error => {
