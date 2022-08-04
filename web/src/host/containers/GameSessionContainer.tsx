@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {
- BrowserRouter as Router, Route, useParams, useRouteMatch
+ BrowserRouter as Router, useParams, Redirect
 } from "react-router-dom";
 import StartGame from '../pages/StartGame'
 import { ApiClient, Environment, GameSessionState, IGameSession } from '@righton/networking'
@@ -14,10 +14,9 @@ const GameSessionContainer = () => {
 
   let apiClient = new ApiClient(Environment.Staging)
   
-  // paste this game session id into the url path a32a65bb-dd1f-4d06-a5ad-76d4f9db7074
+  // paste this game session id into the url path 833503b7-0c6c-41f4-95b1-70549e6d6590
 
    let { gameSessionId } = useParams<{gameSessionId: string}>()
-   let { path } = useRouteMatch();
 
 
   useEffect(() => {
@@ -27,7 +26,10 @@ const GameSessionContainer = () => {
     })
 
     const subscription = apiClient.subscribeUpdateGameSession(response => {
-      console.log(response)
+      setGameSession(
+        {...gameSession, 
+          ...response}
+        )
     })
   
     // @ts-ignore
@@ -40,25 +42,31 @@ const GameSessionContainer = () => {
 
   switch (gameSession.currentState) {
     
-    case GameSessionState.INITIAL_INTRO:
+    case GameSessionState.TEAMS_JOINING:
       return (
-      <Route path={`${path}/que`}>
+      
         <StartGame {...gameSession} gameSessionId={gameSessionId} />
-      </Route>
+      
       )
       
-    case GameSessionState.CHOOSING_TRICK_ANSWER:
+    case GameSessionState.CHOOSE_CORRECT_ANSWER: 
+    case GameSessionState.CHOOSE_TRICKIEST_ANSWER: 
+    case GameSessionState.PHASE_1_RESULTS: 
+    case GameSessionState.PHASE_2_RESULTS:
       return(
-      <Route path={`${path}/start`}>
+      
         <GameInProgress {...gameSession} />
-      </Route>
+      
       )
       
-    case GameSessionState.REVIEWING_RESULT:
+    case GameSessionState.FINAL_RESULTS:
       return(
-      <Route path={`${path}/ranking`}>
         <Ranking {...gameSession}/>
-      </Route>
+      )
+
+      default: 
+      return(
+      <Redirect to="/" />
       )
   }
 }

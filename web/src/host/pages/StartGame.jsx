@@ -6,8 +6,8 @@ import CurrentStudents from '../components/CurrentStudents';
 import FooterStartGame from '../components/FooterStartGame';
 
 export default function StartGame({
-  teams: { items: teams },
-  questions: { items: questions },
+  teams,
+  questions,
   title,
   gameSessionId,
   gameCode,

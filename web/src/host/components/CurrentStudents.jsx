@@ -16,7 +16,7 @@ const CurrentStudents = ({ teams }) => {
                 </p>
             </div>
             <hr className={classes.hr} />
-                {teams && teams.map((team, id) => (
+                {teams && teams.items.map((team, id) => (
                     <MenuItem container className={classes.studentCards} key={id}>
                         <Grid className={classes.name}>
                             {team.name}
