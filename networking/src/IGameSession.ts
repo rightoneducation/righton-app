@@ -10,7 +10,7 @@ export interface IGameSession {
     currentQuestionId?: number | null
     currentState: GameSessionState
     gameCode: number
-    currentTimer: number
+    currentTimer?: number | null
     // questions: [Question]?
     updatedAt: string
     createdAt: string
