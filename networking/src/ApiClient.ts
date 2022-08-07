@@ -30,7 +30,10 @@ interface GraphQLOptions {
 }
 
 interface SubscriptionValue<T> {
-    value: { data: T }
+    value: {
+        data: T,
+        errors: Array<any> | null
+    }
 }
 
 export class ApiClient implements IApiClient {
@@ -72,7 +75,7 @@ export class ApiClient implements IApiClient {
     }
 
     async updateGameSession(id: string, gameState: GameSessionState): Promise<IGameSession> {
-        let updateGameSessionInput: UpdateGameSessionInput = { id: id.toLowerCase(), currentState: gameState }
+        let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState }
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
         let result = await this.callGraphQL<UpdateGameSessionMutation>(updateGameSession, variables)
         if (result.errors != null) {
@@ -87,9 +90,19 @@ export class ApiClient implements IApiClient {
 
     }
 
-    subscribeUpdateGameSession(callback: (result: IGameSession) => void) {
+    subscribeUpdateGameSession(id: string, callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(
-            onUpdateGameSession, (value: OnUpdateGameSessionSubscription) => {
+            {
+                query: onUpdateGameSession,
+                variables: {
+                    filter: {
+                        id: {
+                            eq: id
+                        }
+                    }
+                }
+            }
+            , (value: OnUpdateGameSessionSubscription) => {
                 let gameSession = this.mapOnUpdateGameSessionSubscription(value)
                 callback(gameSession)
             })
@@ -97,10 +110,14 @@ export class ApiClient implements IApiClient {
 
     private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
         //@ts-ignore
-        return API.graphql(graphqlOperation(subscription)).subscribe({
+        return API.graphql(subscription).subscribe({
             next: (response: SubscriptionValue<T>) => {
+                if (!isNullOrUndefined(response.value.errors)) {
+                    console.error(response.value.errors)
+                }
                 callback(response.value.data)
             },
+            error: (error: any) => console.warn(error)
         })
     }
 
@@ -132,7 +149,6 @@ export class ApiClient implements IApiClient {
             isNullOrUndefined(gameId) ||
             isNullOrUndefined(phaseOneTime) ||
             isNullOrUndefined(phaseTwoTime) ||
-            isNullOrUndefined(currentTimer) ||
             isNullOrUndefined(updatedAt) ||
             isNullOrUndefined(createdAt)
         ) {

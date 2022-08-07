@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material'
 import { ApiClient, Environment, GameSessionState } from '@righton/networking'
 import { IGameSession } from '@righton/networking'
@@ -9,16 +9,12 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   
   let apiClient = new ApiClient(Environment.Staging)
+  let gameSessionSubscription: any | null = null
 
-  useEffect(() => {
-    
-    const subscription = apiClient.subscribeUpdateGameSession(gameSession => {
-      console.log(gameSession.currentState)
-    })
-  
+  useEffect(() => {  
     // @ts-ignore
-    return () => subscription.unsubscribe()
-}, []);
+    return () => gameSessionSubscription?.unsubscribe()
+  }, [])
 
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
@@ -62,6 +58,9 @@ function App() {
               setGameSession(gameSession)
               setError(null)
               setUpdatedGameSession(null)
+              gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
+                  console.log(gameSession.currentState)
+              })
             }).catch(error => {
               console.error(error.message)
               setGameSession(null)
