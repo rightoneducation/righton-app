@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
+import FooterRanking from "../components/FooterRanking";
 
 const scores = [
   {
@@ -57,22 +58,8 @@ export default function Ranking() {
             </MenuItem>
           ))}
       </div>
-      <hr
-        style={{ width: "95%", color: "#00296D", backgroundColor: "#002A6E" }}
-      />
-      <button
-        className={classes.button}
-        style={{
-          marginBottom: "2%",
-          backgroundColor: "#00A1FF",
-          color: "white"
-        }}
-      >
-        View individual Data
-      </button>
-      <button className={classes.button} style={{ color: "#00A1FF" }}>
-        Back to Menu
-      </button>
+     <FooterRanking/>
+      
     </div>
   );
 }
@@ -110,19 +97,5 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     right: "20px",
     backgroundColor: "#375F94"
-  },
-  button: {
-    fontWeight: "bold",
-    width: "90%",
-    height: "45px",
-    display: "center",
-    background: "none",
-    borderRadius: "24px",
-    borderColor: "#00A1FF",
-    borderStyle: "solid",
-    borderWidth: "thick",
-    textAlign: "center",
-    marginLeft: "5%",
-    marginRight: "5%"
   }
 }));
