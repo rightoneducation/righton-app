@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import { MenuItem } from "@material-ui/core";
+import HeaderRanking from "../components/HeaderRanking";
 
 const scores = [
   {
@@ -30,12 +31,7 @@ export default function Ranking() {
 
   return (
     <div className={classes.background}>
-      <div className={classes.color}>
-        <h1>Final Results</h1>
-      </div>
-      <div className={classes.color}>
-        <p>LeaderBoard</p>
-      </div>
+      <HeaderRanking/>
 
       <div className={classes.ranking}>
         {scores
@@ -81,11 +77,7 @@ const useStyles = makeStyles(theme => ({
   background: {
     height: "100vh",
     width: "100%",
-    background: "linear-gradient(right,#0F78BD,#043373)"
-  },
-  color: {
-    color: "white",
-    marginLeft: "5%"
+    background: "linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)"
   },
   ranking: {
     // height: "60%",

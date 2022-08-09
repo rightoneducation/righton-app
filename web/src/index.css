@@ -22,3 +22,7 @@ code {
 .MuiBottomNavigation-root	{
   background-color: #02215F !important;
 }
+
+p {
+  margin: 0 auto;
+}
