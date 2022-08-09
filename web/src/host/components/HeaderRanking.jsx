@@ -6,7 +6,7 @@ export default function HeaderRanking() {
   return (
     <div>
       <div className={classes.results}>
-        <p >Final Results</p>
+        <p>Final Results</p>
       </div>
       <div className={classes.leader}>
         <p>Leaderboard</p>
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     fontStyle: "normal",
     fontWeight: "700",
     fontSize: "36px",
-    lineHeight: "36px",
+    lineHeight: "54px",
     color: "#FFFFFF"
   },
   leader: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
     fontStyle: "normal",
     fontWeight: "400",
     fontSize: "16px",
-    lineHeight: "16px",
+    lineHeight: "24px",
     color: "#FFFFFF"
   }
 }));

@@ -58,7 +58,9 @@ export default function PlayerScores() {
         {highToLow.map((score, index) => {
           return (
             <Card className={rank(index)[0]}>
-              <p className={classes.text}>#{index + 1}: {score.name}</p>
+              <Box>
+                <p className={classes.text}>#{index + 1}: {score.name}</p>
+              </Box>
               <Box className={rank(index)[1]}>
                 <p className={classes.text}>{score.score}</p>
               </Box>
@@ -74,10 +76,9 @@ const useStyles = makeStyles(theme => ({
     padding: "0px"
   },
   rankingFirstPlace: {
-    height: "47px",
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "10px",
+    marginBottom: "5%",
     boxShadow: "none",
     border: "2px solid #EAA657",
     display: "flex",
@@ -85,10 +86,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between"
   },
   rankingSecondPlace: {
-    height: "47px",
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "10px",
+    marginBottom: "5%",
     boxShadow: "none",
     border: "2px solid #9D9D9D",
     display: "flex",
@@ -96,10 +96,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between"
   },
   rankingThirdPlace: {
-    height: "47px",
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "10px",
+    marginBottom: "5%",
     boxShadow: "none",
     border: "2px solid #E3694E",
     display: "flex",
@@ -107,10 +106,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between"
   },
   rankingOther: {
-    height: "47px",
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "10px",
+    marginBottom: "5%",
     boxShadow: "none",
     border: "2px solid rgba(255, 255, 255, 0.2)",
     display: "flex",
@@ -119,7 +117,7 @@ const useStyles = makeStyles(theme => ({
   },
   text: {
     fontFamily: "Poppins",
-    fontWeight: "400px",
+    fontWeight: "700",
     fontSize: "18px",
     lineHeight: "27px",
     color: "#FFFFFF",
