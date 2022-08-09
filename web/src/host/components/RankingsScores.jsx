@@ -36,6 +36,11 @@ const scores = [
     id: 7,
     name: "Player 7",
     score: 20
+  },
+  {
+    id: 8,
+    name: "Player 8",
+    score: 40
   }
 ];
 
