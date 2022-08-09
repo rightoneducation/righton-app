@@ -12,6 +12,7 @@ import Ranking from "../pages/Ranking";
 
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
+  const [updatedGameSession, setUpdatedGameSession] = useState<IGameSession | null>()
 
   let apiClient = new ApiClient(Environment.Staging);
   let gameSessionSubscription: any | null = null
@@ -32,6 +33,13 @@ const GameSessionContainer = () => {
     return () => gameSessionSubscription?.unsubscribe()
   }, []);
 
+  const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
+    apiClient.updateGameSession(gameSessionId, gameSessionState)
+      .then(response => {
+        setUpdatedGameSession(response)
+      })
+  }
+
   if (!gameSession) {
     return null;
   }
@@ -39,7 +47,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSessionId} />;
+      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -56,7 +64,5 @@ const GameSessionContainer = () => {
 };
 
 export default GameSessionContainer;
-function callback(callback: any, arg1: (response: IGameSession) => void) {
-  throw new Error("Function not implemented.");
-}
+
 

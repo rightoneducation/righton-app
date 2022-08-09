@@ -11,7 +11,8 @@ export default function StartGame({
   title,
   gameSessionId,
   gameCode,
-  currentState
+  currentState,
+  handleUpdateGameSessionState
 }) {
   const classes = useStyles();
   return (
@@ -25,6 +26,8 @@ export default function StartGame({
       <FooterStartGame
         gameSessionId={gameSessionId}
         currentState={currentState}
+        handleUpdateGameSessionState={handleUpdateGameSessionState}
+        
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from "../components/FooterGameInProgress";
@@ -15,6 +15,7 @@ export default function GameInProgress({
   phaseOneTime,
   phaseTwoTime
 }) {
+  
   const classes = useStyles();
 
   const numAnswers = teams => {
