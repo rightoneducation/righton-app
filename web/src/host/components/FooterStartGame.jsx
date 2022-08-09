@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 import { GameSessionState } from "@righton/networking";
