@@ -71,6 +71,8 @@ function App() {
       >
         Create game session
       </Button>
+      <br/>
+      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -79,6 +81,8 @@ function App() {
       >
         Teams Joining
       </Button>
+      <br/>
+      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -87,6 +91,8 @@ function App() {
       >
         Choose Correct
       </Button>
+      <br/>
+      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -95,6 +101,8 @@ function App() {
       >
         Phase 1 Results
       </Button>
+      <br/>
+      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -103,6 +111,8 @@ function App() {
       >
         Choose Trickiest Answer
       </Button>
+      <br/>
+      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -111,13 +121,15 @@ function App() {
       >
         Phase 2 Results
       </Button>
+      <br/>
+      <br/>
       <Button
         variant="contained"
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.FINAL_RESULTS)
         }}
       >
-        Rankings
+        Leaderboard
       </Button>
     </div>
   );
