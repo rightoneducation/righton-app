@@ -1,91 +1,97 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import { Pagination } from '@material-ui/lab';
+import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
-const questionNumber = 2
+const questionNumber = 2;
 
 const useStyles = makeStyles(() => ({
-    div: {
-        paddingLeft: '10px',
-        paddingTop: '10px',
-        //background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  div: {
+    paddingLeft: "10px",
+    paddingTop: "10px"
+    //background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
+  },
+  title: {
+    fontWeight: 700,
+    fontSize: "36px",
+    lineHeight: "54px",
+    color: "white"
+  },
+  phases: {
+    fontWeight: 400,
+    fontSize: "16px",
+    lineHeight: "24px",
+    color: "white"
+  },
+  roundedItem: {
+    background: "red"
+  },
+  ul: {
+    "& .MuiPaginationItem-page.Mui-selected": {
+      backgroundColor: "white",
+      color: "rgba(56, 68, 102, 1)",
+      border: "white solid 3px",
+      borderRadius: "3px"
     },
-    title: {
-        fontWeight: 700,
-        fontSize: '36px',
-        lineHeight: '54px',
-        color: 'white',
-    },
-    phases: {
-        fontWeight: 400,
-        fontSize: '16px',
-        lineHeight: '24px',
-        color: 'white',
-    },
-    roundedItem: {
-        background: 'red'
-    },
-    ul: {
-        "& .MuiPaginationItem-page.Mui-selected": {
-            backgroundColor: "white",
-            color: 'rgba(56, 68, 102, 1)',
-            border: 'white solid 3px',
-            borderRadius: '3px',
-        },
-         "& .MuiPaginationItem-root": {
-            color: "rgba(255,255,255, 0.5)",
-            border: 'rgba(255,255,255, 0.5) solid 3px',
-            borderRadius: '3px',
-            paddingLeft: '15px',
-            paddingRight: '15px',
-            opacity:'1',
-            cursor: "default",
-            pointerEvents: "none"
-        },
+    "& .MuiPaginationItem-root": {
+      color: "rgba(255,255,255, 0.5)",
+      border: "rgba(255,255,255, 0.5) solid 3px",
+      borderRadius: "3px",
+      paddingLeft: "15px",
+      paddingRight: "15px",
+      opacity: "1",
+      cursor: "default",
+      pointerEvents: "none"
     }
+  }
 }));
 
 const label = {
-    "PHASE_ONE" : "Phase 1 of 2",
-    "PHASE_ONE_RESULTS" : "Phase 1 Results",
-    "PHASE_TWO" : "Phase 2 of 2",
-    "PHASE_TWO_RESULTS" : "Phase 2 Results"
-}
+  PHASE_ONE: "Phase 1 of 2",
+  PHASE_ONE_RESULTS: "Phase 1 Results",
+  PHASE_TWO: "Phase 2 of 2",
+  PHASE_TWO_RESULTS: "Phase 2 Results"
+};
 
-export default function GameInProgressHeader({ totalQuestions, currentQuestion, currentState, phaseOneTime, phaseTwoTime }) {
-    const classes = useStyles();
+export default function GameInProgressHeader({
+  totalQuestions,
+  currentQuestion,
+  currentState,
+  phaseOneTime,
+  phaseTwoTime
+}) {
+  const classes = useStyles();
 
-    var time = 0;
+  var time = 0;
 
-    if (currentState == 'PHASE_ONE') {
-        time = phaseOneTime;
-    }
-    else if (currentState == 'PHASE_TWO') {
-        time = phaseTwoTime;
-    }
+  if (currentState == "PHASE_ONE") {
+    time = phaseOneTime;
+  } else if (currentState == "PHASE_TWO") {
+    time = phaseTwoTime;
+  }
 
-    return(
-        <div className={classes.div}>
-            <Pagination
-                hideNextButton
-                hidePrevButton
-                variant='outlined'
-                shape='rounded'
-                classes={{ ul: classes.ul }}
-                count={totalQuestions}
-                page={currentQuestion}
-            />
+  return (
+    <div className={classes.div}>
+      <Pagination
+        hideNextButton
+        hidePrevButton
+        variant="outlined"
+        shape="rounded"
+        classes={{ ul: classes.ul }}
+        count={totalQuestions}
+        page={currentQuestion}
+      />
 
-            <Typography className={classes.title}>
-                Question {currentQuestion} of {totalQuestions} {/* Replace with current question number and total questions info from query */}
-            </Typography>
+      <Typography className={classes.title}>
+        Question {currentQuestion} of {totalQuestions}{" "}
+        {/* Replace with current question number and total questions info from query */}
+      </Typography>
 
-            <Typography className={classes.phases}>
-                {label[currentState]} {/* Replace with phase info from query */}
-            </Typography>
+      <Typography className={classes.phases}>
+        {label[currentState]} {/* Replace with phase info from query */}
+      </Typography>
 
-		    <Timer timer={time}/>
-        </div>
-	);
+      <Timer timer={time} />
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import { makeStyles, BottomNavigation } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
-import PlayersAnsweredBar from './PlayersAnsweredBar';
+import Button from "@material-ui/core/Button";
+import PlayersAnsweredBar from "./PlayersAnsweredBar";
 
 
 
@@ -25,12 +25,17 @@ export default function FooterGameInProgress({ currentState, numPlayers, numAnsw
   return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}>
-        <div className={classes.playerNum}>Players that answered</div>
+        <div className={classes.playerNum}>Players who have answered</div>
         <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
-        <Button className={currentStateToClassName[currentState]} onClick={() => handleChangeGameStatus(currentState)}>{currentStateToButtonText[currentState]} </Button>
+        <Button
+          className={currentStateToClassName[currentState]}
+          onClick={() => handleChangeGameStatus(currentState)}
+        >
+          {currentStateToButtonText[currentState]}{" "}
+        </Button>
       </div>
     </BottomNavigation>
-  )
+  );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -67,16 +72,15 @@ const useStyles = makeStyles(theme => ({
 
   },
   nextPhaseButton: {
-    border: '4px solid #159EFA',
-    background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
-    borderRadius: '34px',
-    width: '300px',
-    height: '48px',
-    color: 'white',
-    fontSize: '20px',
-    fontWeight: '700',
-    lineHeight: '30px',
-    boxShadow: '0px 5px 22px 0px #47D9FF4D',
-  },
+    border: "4px solid #159EFA",
+    background: "linear-gradient(#159EFA 100%,#19BCFB 100%)",
+    borderRadius: "34px",
+    width: "300px",
+    height: "48px",
+    color: "white",
+    fontSize: "20px",
+    fontWeight: "700",
+    lineHeight: "30px",
+    boxShadow: "0px 5px 22px 0px #47D9FF4D"
+  }
 }));
-

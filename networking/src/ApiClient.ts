@@ -10,7 +10,7 @@ import {
 import { updateGameSession } from './graphql/mutations'
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { onUpdateGameSession } from './graphql'
+import { onUpdateGameSession, getGameSession } from './graphql'
 import awsconfig from "./aws-exports"
 
 Amplify.configure(awsconfig)
@@ -30,7 +30,10 @@ interface GraphQLOptions {
 }
 
 interface SubscriptionValue<T> {
-    value: { data: T }
+    value: {
+        data: T,
+        errors: Array<any> | null
+    }
 }
 
 export class ApiClient implements IApiClient {
@@ -66,6 +69,11 @@ export class ApiClient implements IApiClient {
         })
     }
 
+    async loadGameSession(id: string): Promise<IGameSession> {
+        let result = await API.graphql(graphqlOperation(getGameSession, { id })) as { data: any }
+        return result.data.getGameSession as IGameSession
+    }
+
     async updateGameSession(id: string, gameState: GameSessionState): Promise<IGameSession> {
         let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState }
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
@@ -77,16 +85,24 @@ export class ApiClient implements IApiClient {
         if (result.data == null) {
             throw new Error("Failed to update the game session")
         }
-        
+
         return result.data.updateGameSession as IGameSession
 
     }
 
-    
-
-    subscribeUpdateGameSession(callback: (result: IGameSession) => void) {
+    subscribeUpdateGameSession(id: string, callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(
-            onUpdateGameSession, (value: OnUpdateGameSessionSubscription) => {
+            {
+                query: onUpdateGameSession,
+                variables: {
+                    filter: {
+                        id: {
+                            eq: id
+                        }
+                    }
+                }
+            }
+            , (value: OnUpdateGameSessionSubscription) => {
                 let gameSession = this.mapOnUpdateGameSessionSubscription(value)
                 callback(gameSession)
             })
@@ -94,10 +110,14 @@ export class ApiClient implements IApiClient {
 
     private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
         //@ts-ignore
-        return API.graphql(graphqlOperation(subscription)).subscribe({
+        return API.graphql(subscription).subscribe({
             next: (response: SubscriptionValue<T>) => {
+                if (!isNullOrUndefined(response.value.errors)) {
+                    console.error(response.value.errors)
+                }
                 callback(response.value.data)
             },
+            error: (error: any) => console.warn(error)
         })
     }
 
@@ -117,6 +137,7 @@ export class ApiClient implements IApiClient {
             currentState,
             gameCode,
             // questions,
+            currentTimer,
             updatedAt,
             createdAt
         } = subscription.onUpdateGameSession || {}
@@ -144,6 +165,7 @@ export class ApiClient implements IApiClient {
             currentQuestionId,
             currentState,
             gameCode,
+            currentTimer,
             // questions,
             updatedAt,
             createdAt

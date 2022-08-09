@@ -34,6 +34,7 @@ export const createGameSession = /* GraphQL */ `
       imageUrl
       description
       title
+      currentTimer
       questions {
         items {
           id
@@ -87,6 +88,7 @@ export const updateGameSession = /* GraphQL */ `
       imageUrl
       description
       title
+      currentTimer
       questions {
         items {
           id
@@ -140,6 +142,7 @@ export const deleteGameSession = /* GraphQL */ `
       imageUrl
       description
       title
+      currentTimer
       questions {
         items {
           id
@@ -194,6 +197,7 @@ export const createQuestion = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }
@@ -236,6 +240,7 @@ export const updateQuestion = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }
@@ -278,6 +283,7 @@ export const deleteQuestion = /* GraphQL */ `
         imageUrl
         description
         title
+        currentTimer
         questions {
           nextToken
         }
@@ -320,6 +326,7 @@ export const createTeam = /* GraphQL */ `
           imageUrl
           description
           title
+          currentTimer
           createdAt
           updatedAt
         }
@@ -378,6 +385,7 @@ export const updateTeam = /* GraphQL */ `
           imageUrl
           description
           title
+          currentTimer
           createdAt
           updatedAt
         }
@@ -436,6 +444,7 @@ export const deleteTeam = /* GraphQL */ `
           imageUrl
           description
           title
+          currentTimer
           createdAt
           updatedAt
         }
