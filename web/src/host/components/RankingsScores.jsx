@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
   rankingFirstPlace: {
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "5%",
+    marginBottom: "7px",
     boxShadow: "none",
     border: "2px solid #EAA657",
     display: "flex",
@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
   rankingSecondPlace: {
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "5%",
+    marginBottom: "7px",
     boxShadow: "none",
     border: "2px solid #9D9D9D",
     display: "flex",
@@ -98,7 +98,7 @@ const useStyles = makeStyles(theme => ({
   rankingThirdPlace: {
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "5%",
+    marginBottom: "7px",
     boxShadow: "none",
     border: "2px solid #E3694E",
     display: "flex",
@@ -108,7 +108,7 @@ const useStyles = makeStyles(theme => ({
   rankingOther: {
     background: "transparent",
     borderRadius: "12px",
-    marginBottom: "5%",
+    marginBottom: "7px",
     boxShadow: "none",
     border: "2px solid rgba(255, 255, 255, 0.2)",
     display: "flex",
