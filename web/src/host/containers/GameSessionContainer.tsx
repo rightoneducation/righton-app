@@ -12,7 +12,6 @@ import Ranking from "../pages/Ranking";
 
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
-  const [updatedGameSession, setUpdatedGameSession] = useState<IGameSession | null>()
 
   let apiClient = new ApiClient(Environment.Staging);
   let gameSessionSubscription: any | null = null
@@ -36,7 +35,7 @@ const GameSessionContainer = () => {
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
     apiClient.updateGameSession(gameSessionId, gameSessionState)
       .then(response => {
-        setUpdatedGameSession(response)
+        setGameSession(response)
       })
   }
 

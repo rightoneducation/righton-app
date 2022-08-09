@@ -5,7 +5,6 @@ import { GameSessionState } from "@righton/networking";
 
 const FooterStartGame = ({ handleUpdateGameSessionState }) => {
   const classes = useStyles();
-  const history = useHistory();
 
   return (
     <BottomNavigation className={classes.footer}>
