@@ -14,6 +14,7 @@ const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
 
   let apiClient = new ApiClient(Environment.Staging);
+  let gameSessionSubscription: any | null = null
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
@@ -23,12 +24,12 @@ const GameSessionContainer = () => {
       console.log(response);
     });
 
-    const subscription = apiClient.subscribeUpdateGameSession(response => {
+    apiClient.subscribeUpdateGameSession(gameSessionId, response => {
       setGameSession({ ...gameSession, ...response });
     });
 
     // @ts-ignore
-    return () => subscription.unsubscribe();
+    return () => gameSessionSubscription?.unsubscribe()
   }, []);
 
   if (!gameSession) {
@@ -55,3 +56,7 @@ const GameSessionContainer = () => {
 };
 
 export default GameSessionContainer;
+function callback(callback: any, arg1: (response: IGameSession) => void) {
+  throw new Error("Function not implemented.");
+}
+

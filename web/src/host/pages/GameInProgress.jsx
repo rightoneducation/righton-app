@@ -7,8 +7,8 @@ import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
 import CheckMark from "../../images/Union.png";
 
 export default function GameInProgress({
-  teams: { items: teams },
-  questions: { items: questions },
+  teams,
+  questions,
   currentState,
   currentQuestionId,
   handleChangeGameStatus,
@@ -16,15 +16,14 @@ export default function GameInProgress({
   phaseTwoTime
 }) {
   const classes = useStyles();
-  const currentQuestion = questions[currentQuestionId - 1];
 
   const numAnswers = teams => {
     let count = 0;
-    teams.map(team =>
+    {teams && teams.items.map(team =>
       team.teamMembers.items.map(teamMember =>
         teamMember.answers.items.map(answer => answer.isChosen && count++)
       )
-    );
+    )};
 
     return count;
   };
@@ -40,13 +39,13 @@ export default function GameInProgress({
         }}
       >
         <HeaderGameInProgress
-          totalQuestions={questions.length}
+          totalQuestions={questions.items.length}
           currentState={currentState}
           currentQuestion={currentQuestionId}
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
-        <QuestionCardDetails title={currentQuestion} />
+        <QuestionCardDetails />
         <AnswersInProgressDetails />
       </div>
       <FooterGameInProgress
