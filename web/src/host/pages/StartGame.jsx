@@ -27,7 +27,6 @@ export default function StartGame({
         gameSessionId={gameSessionId}
         currentState={currentState}
         handleUpdateGameSessionState={handleUpdateGameSessionState}
-        
       />
     </div>
   );
