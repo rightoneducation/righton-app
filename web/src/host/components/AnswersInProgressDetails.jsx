@@ -8,8 +8,7 @@ export default function GameDetails() {
 
   let correctAnswer = [
     {
-      choice: "A: 120",
-      explanation: "1. 360 is the sum of a circle"
+      choice: "A. 120", explanation: "1. 360 is the sum of a circle"
     }
   ];
 
@@ -21,26 +20,10 @@ export default function GameDetails() {
 
   return (
     <Grid className={classes.background}>
-      <Grid>
-        <Typography className={classes.answerTitle}>
-          Real-time Answers
-        </Typography>
-      </Grid>
-
-      <HostAnswerDropdown
-        answer={correctAnswer[0].choice}
-        explanation={correctAnswer[0].explanation}
-        correct={true}
-      />
-
+      <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} />
       {answerSet.map((answer, index) => {
         return (
-          <HostAnswerDropdown
-            key={index}
-            answer={answer.choice}
-            explanation={answer.explanation}
-            correct={false}
-          />
+          <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false} />
         );
       })}
     </Grid>
@@ -50,14 +33,14 @@ export default function GameDetails() {
 const useStyles = makeStyles(theme => ({
   background: {
     //height: "100vh",
-    width: "100%"
+    width: "100%",
     //background: 'linear-gradient(top,#0F78BD, #043373)',
   },
   answerTitle: {
     fontWeight: 500,
-    color: "white",
-    textAlign: "center",
-    fontSize: "24px",
-    marginBottom: "10px"
+    color: 'white',
+    textAlign: 'center',
+    fontSize: '24px',
+    marginBottom: '10px',
   }
 }));
