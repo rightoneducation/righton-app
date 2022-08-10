@@ -1,21 +1,31 @@
 import React from "react";
-import { makeStyles, Grid, Box } from "@material-ui/core";
+import { makeStyles, Grid, Box, BottomNavigation } from "@material-ui/core";
 
 export default function Header() {
   const classes = useStyles();
   return (
-    <Grid>
-      <hr className={classes.line} />
-      <Box className={classes.button}>
+    <BottomNavigation className={classes.footer}>
+      <div className={classes.footerContainer}>
+        <hr className={classes.line} />
         <button className={classes.backButton}>
           <p className={classes.backButtonText}>Exit To RightOn Central</p>
         </button>
-      </Box>
-    </Grid >
+      </div>
+    </BottomNavigation >
   );
 }
 
 const useStyles = makeStyles(() => ({
+  footer: {
+    position: 'sticky',
+    bottom: '0px',
+    padding: '0px 40px 40px 40px',
+    width: '100%',
+    background: 'linear-gradient(top, #042c6c, #02215f)'
+  },
+  footerContainer: {
+    width: '80%'
+  },
   line: {
     backgroundColor: "rgba(255, 255, 255, 0.25)",
     height: "1px",

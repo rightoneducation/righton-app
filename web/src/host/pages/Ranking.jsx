@@ -12,11 +12,9 @@ export default function Ranking() {
     <div className={classes.background}>
       <div className={classes.content}>
         <HeaderRanking />
-        <div className={classes.scores}>
-          <PlayerScores />
-        </div>
-        <FooterRanking />
+        <PlayerScores />
       </div>
+      <FooterRanking />
     </div>
   );
 }
@@ -25,9 +23,11 @@ const useStyles = makeStyles(theme => ({
   background: {
     height: "100vh",
     width: "100%",
+    minHeight: "100vh",
     background: "linear-gradient(bottom,#02215F,#0D68B1)",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-between",
     alignItems: "center"
   },
   content: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "column",
-    padding: "0px",
+    padding: "0px"
   },
   scores: {
     overflow: "scroll",

@@ -41,6 +41,31 @@ const scores = [
     id: 8,
     name: "Player 8",
     score: 40
+  },
+  {
+    id: 4,
+    name: "Player 4",
+    score: 30
+  },
+  {
+    id: 5,
+    name: "Player 5",
+    score: 10
+  },
+  {
+    id: 6,
+    name: "Player 6",
+    score: 100
+  },
+  {
+    id: 7,
+    name: "Player 7",
+    score: 20
+  },
+  {
+    id: 8,
+    name: "Player 8",
+    score: 40
   }
 ];
 
@@ -78,7 +103,8 @@ export default function PlayerScores() {
 
 const useStyles = makeStyles(theme => ({
   rankings: {
-    padding: "0px"
+    padding: "0px",
+    height: "auto"
   },
   rankingFirstPlace: {
     background: "transparent",
