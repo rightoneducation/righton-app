@@ -28,7 +28,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    overflowY: "scroll",
+    overflowX: "hidden"
   },
   content: {
     width: "85%",

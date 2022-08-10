@@ -43,27 +43,27 @@ const scores = [
     score: 40
   },
   {
-    id: 4,
-    name: "Player 4",
+    id: 9,
+    name: "Player 9",
     score: 30
   },
   {
-    id: 5,
-    name: "Player 5",
+    id: 10,
+    name: "Player 10",
     score: 10
   },
   {
-    id: 6,
-    name: "Player 6",
+    id: 11,
+    name: "Player 11",
     score: 100
   },
   {
-    id: 7,
-    name: "Player 7",
+    id: 12,
+    name: "Player 12",
     score: 20
   },
   {
-    id: 8,
+    id: 13,
     name: "Player 8",
     score: 40
   }

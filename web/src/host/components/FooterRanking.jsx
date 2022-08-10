@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, Grid, Box, BottomNavigation } from "@material-ui/core";
 
-export default function Header() {
+export default function Footer() {
   const classes = useStyles();
   return (
     <BottomNavigation className={classes.footer}>
