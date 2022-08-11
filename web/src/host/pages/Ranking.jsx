@@ -7,10 +7,7 @@ import FooterRanking from "../components/FooterRanking";
 
 export default function Ranking({
   teams,
-  questions,
-  title,
   gameSessionId,
-  gameCode,
   currentState,
   handleUpdateGameSessionState
 }) {
@@ -24,7 +21,10 @@ export default function Ranking({
         <HeaderRanking />
         <PlayerScores players={players} />
       </div>
-      <FooterRanking />
+      <FooterRanking
+        gameSessionId={gameSessionId}
+        currentState={currentState}
+        handleUpdateGameSessionState={handleUpdateGameSessionState} />
     </div>
   );
 }
