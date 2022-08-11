@@ -5,14 +5,24 @@ import PlayerScores from "../components/RankingsScores";
 import HeaderRanking from "../components/HeaderRanking";
 import FooterRanking from "../components/FooterRanking";
 
-export default function Ranking() {
+export default function Ranking({
+  teams,
+  questions,
+  title,
+  gameSessionId,
+  gameCode,
+  currentState,
+  handleUpdateGameSessionState
+}) {
   const classes = useStyles();
+  const players = { teams }.teams.items;
+  console.log(players);
 
   return (
     <div className={classes.background}>
       <div className={classes.content}>
         <HeaderRanking />
-        <PlayerScores />
+        <PlayerScores players={players} />
       </div>
       <FooterRanking />
     </div>

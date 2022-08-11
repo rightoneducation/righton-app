@@ -8,7 +8,7 @@ export default function Footer() {
       <div className={classes.footerContainer}>
         <hr className={classes.line} />
         <button className={classes.backButton}>
-          <p className={classes.backButtonText}>Exit To RightOn Central</p>
+          <p className={classes.backButtonText}>Exit to RightOn Central</p>
         </button>
       </div>
     </BottomNavigation >

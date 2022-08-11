@@ -69,8 +69,10 @@ const scores = [
   }
 ];
 
-export default function PlayerScores() {
+export default function PlayerScores(players) {
   const classes = useStyles();
+  const scores = players.players;
+  console.log(players.players);
   const highToLow = scores.sort((a, b) => b.score - a.score);
 
   function rank(index) {
