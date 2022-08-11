@@ -3,8 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import QuestionCard from "./QuestionCard";
 
-export default function QuestionDetails() {
+export default function QuestionDetails(questions) {
   const classes = useStyles();
+  const questionsDetails = questions.questions
+  console.log(questionsDetails);
 
   let question = [
     {
@@ -19,10 +21,10 @@ export default function QuestionDetails() {
   return (
     <Grid>
       <QuestionCard
-        explanation1={question[0].explanation1}
-        explanation2={question[0].explanation2}
-        question={question[0].question}
-        hints={question[0].hint}
+        explanation1={questionsDetails[0].explanation1}
+        explanation2={questionsDetails[0].explanation2}
+        question={questionsDetails[0].text}
+        hints={questionsDetails[0].answer}
       ></QuestionCard>
     </Grid>
   );
