@@ -55,7 +55,7 @@ const GameSessionContainer = () => {
       return <GameInProgress {...gameSession} />;
 
     case GameSessionState.FINAL_RESULTS:
-      return <Ranking {...gameSession} />;
+      return <Ranking {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
 
     default:
       return <Redirect to="/" />;
