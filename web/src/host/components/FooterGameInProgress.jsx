@@ -2,36 +2,40 @@ import React from "react";
 import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
+import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGameInProgress({ currentState, numPlayers, numAnswers, handleChangeGameStatus }) {
+export default function FooterGameInProgress({ currentState, nextState, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, currentQuestion, totalQuestions,  handleUpdateGameSessionState }) {
   const classes = useStyles();
 
   const currentStateToButtonText = {
-    "INITIAL_INTRO": "Skip to Results",
-    "REVIEWING_RESULT": "Next Phase",
-    "CHOOSING_TRICK_ANSWER": "Skip to Results",
-    "FINISHED": "Skip to Next Question",
+    "CHOOSE_CORRECT_ANSWER": "Next Phase",
+    "PHASE_1_RESULTS": "Next Phase",
+    "CHOOSING_TRICKIEST_ANSWER": "Next Question",
+    "PHASE_2_RESULTS": "Next Questions",
   }
 
   const currentStateToClassName = {
-    "INITIAL_INTRO": classes.startGameButton,
-    "REVIEWING_RESULT": classes.nextPhaseButton,
-    "CHOOSING_TRICK_ANSWER": classes.startGameButton,
-    "FINISHED": classes.startGameButton,
+    "CHOOSE_CORRECT_ANSWER": classes.startGameButton,
+    "PHASE_1_RESULTS": classes.nextPhaseButton,
+    "CHOOSING_TRICKIEST_ANSWER": classes.startGameButton,
+    "PHASE_2_RESULTS": classes.startGameButton,
   }
+
+
 
   return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}>
+      {console.log(currentState + " "+ nextState)}
         <div className={classes.playerNum}>Players who have answered</div>
         <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
         <Button
           className={currentStateToClassName[currentState]}
-          onClick={() => handleChangeGameStatus(currentState)}
+          onClick={() =>  handleUpdateGameSessionState(GameSessionState[nextState])}
         >
-          {currentStateToButtonText[currentState]}{" "}
+          {currentStateToButtonText[currentState]}
         </Button>
       </div>
     </BottomNavigation>
@@ -81,6 +85,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: "20px",
     fontWeight: "700",
     lineHeight: "30px",
-    boxShadow: "0px 5px 22px 0px #47D9FF4D"
+    boxShadow: "0px 5px 22px 0px #47D9FF4D",
   }
 }));

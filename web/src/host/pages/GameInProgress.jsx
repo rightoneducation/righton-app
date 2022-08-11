@@ -5,6 +5,8 @@ import FooterGameInProgress from "../components/FooterGameInProgress";
 import HeaderGameInProgress from "../components/HeaderGameInProgress";
 import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
 import CheckMark from "../../images/Union.png";
+import { ConstructionOutlined } from "@mui/icons-material";
+import { GameSessionState } from "@righton/networking";
 
 export default function GameInProgress({
   teams,
@@ -13,20 +15,25 @@ export default function GameInProgress({
   currentQuestionId,
   handleChangeGameStatus,
   phaseOneTime,
-  phaseTwoTime
+  phaseTwoTime,
+  handleUpdateGameSessionState
 }) {
   
   const classes = useStyles();
 
+  const stateArray = Object.values(GameSessionState);
+
   const numAnswers = teams => {
     let count = 0;
-    {teams && teams.items.map(team =>
-      team.teamMembers.items.map(teamMember =>
-        teamMember.answers.items.map(answer => answer.isChosen && count++)
-      )
-    )};
-
+    teams && teams.items.map(team => 
+       team.teamMembers && team.teamMembers.items.map(teamMember => 
+        teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
+    )))
     return count;
+  };
+
+  const nextState = currentState => {
+    return stateArray[stateArray.indexOf(currentState) + 1]; 
   };
 
   return (
@@ -40,7 +47,7 @@ export default function GameInProgress({
         }}
       >
         <HeaderGameInProgress
-          totalQuestions={questions.items.length}
+          totalQuestions={questions ? questions.items.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionId}
           phaseOneTime={phaseOneTime}
@@ -51,9 +58,14 @@ export default function GameInProgress({
       </div>
       <FooterGameInProgress
         currentState={currentState}
-        numPlayers={teams.length}
+        nextState = {nextState(currentState)}
+        numPlayers={teams ? teams.items.length : 0}
         numAnswers={numAnswers(teams)}
-        handleChangeGameStatus={handleChangeGameStatus}
+        phaseOneTime={phaseOneTime}
+        phaseTwoTime={phaseTwoTime}
+        currentQuestion={currentQuestionId}
+        totalQuestions={questions ? questions.items.length : 0}
+        handleUpdateGameSessionState={ handleUpdateGameSessionState}        
       />
     </div>
   );

@@ -21,21 +21,21 @@ const GameSessionContainer = () => {
   useEffect(() => {
     apiClient.loadGameSession(gameSessionId).then(response => {
       setGameSession(response);
-      console.log(response);
     });
 
-    apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-      setGameSession({ ...gameSession, ...response });
-    });
+    // apiClient.subscribeUpdateGameSession(gameSessionId, response => {
+    //   setGameSession({ ...gameSession, ...response });
+    // });
 
     // @ts-ignore
     return () => gameSessionSubscription?.unsubscribe()
   }, []);
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
+    console.log(gameSessionState);
     apiClient.updateGameSession(gameSessionId, gameSessionState)
       .then(response => {
-        setGameSession(response)
+        setGameSession(response);
       })
   }
 
@@ -52,7 +52,7 @@ const GameSessionContainer = () => {
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
-      return <GameInProgress {...gameSession} />;
+      return <GameInProgress {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState}/>;
 
     case GameSessionState.FINAL_RESULTS:
       return <Ranking {...gameSession} />;
