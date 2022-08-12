@@ -13,7 +13,6 @@ export default function Ranking({
 }) {
   const classes = useStyles();
   const players = { teams }.teams.items;
-  console.log(players);
 
   return (
     <div className={classes.background}>

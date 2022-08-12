@@ -15,16 +15,19 @@ export default function GameInProgress({
   phaseOneTime,
   phaseTwoTime
 }) {
-  
-  const classes = useStyles();
 
+  const classes = useStyles();
+  const questionDetails = questions.items
+  console.log(questionDetails);
   const numAnswers = teams => {
     let count = 0;
-    {teams && teams.items.map(team =>
-      team.teamMembers.items.map(teamMember =>
-        teamMember.answers.items.map(answer => answer.isChosen && count++)
+    {
+      teams && teams.items.map(team =>
+        team.teamMembers.items.map(teamMember =>
+          teamMember.answers.items.map(answer => answer.isChosen && count++)
+        )
       )
-    )};
+    };
 
     return count;
   };
@@ -46,7 +49,7 @@ export default function GameInProgress({
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
-        <QuestionCardDetails />
+        <QuestionCardDetails questions={questions.items} />
         <AnswersInProgressDetails />
       </div>
       <FooterGameInProgress
