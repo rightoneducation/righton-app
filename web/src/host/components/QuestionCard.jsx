@@ -29,9 +29,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     textAlign: "center",
     padding: "20px 20px 5px 20px",
-    //marginTop: "10px",
     fontSize: "10px",
-    //width: "240px"
   },
   questionCard: {
     display: "flex",
@@ -40,11 +38,8 @@ const useStyles = makeStyles(theme => ({
     padding: "0px",
     backgroundColor: "white",
     width: "80%",
-    //marginLeft: "auto",
-    //marginRight: "auto",
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     border: "2px solid rgba(255, 255, 255, 0.2)",
-    //position: "relative"
   },
   expand: {
     display: "flex",
