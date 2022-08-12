@@ -5,24 +5,30 @@ import HostAnswerDropdown from './AnswersInProgress';
 
 
 export default function GameDetails({questions: {items: questions}, gameStatus}) {
+    const classes = useStyles();
     let isPhase2 = false;
 
     if (gameStatus === "PHASE2") {
         isPhase2 = true;
     }
-    //map through questions then map through wrong answers
+
+    var wrongAnswersInfo = questions[0].wrongAnswers;
+    var listofWrongAnswers = [];
+    for (let wrongAnswerNumber in wrongAnswersInfo) {
+        let wrongAnswer = wrongAnswersInfo[wrongAnswerNumber].wrong
+        listofWrongAnswers.push(wrongAnswer);
+    }
+
     return (
-        questions[0].wrongAnswers.map((wrongAnswer, index) => {
-            console.log(wrongAnswer.wrong);
-            <HostAnswerDropdown
-                key={index}
-                answer={wrongAnswer.wrong}
-                correct={false}
-                isPhase2={isPhase2}
-            />
-        }
-    )   
-);
+        <Grid className={classes.background}>
+            <Grid>
+                <Typography className={classes.answerTitle}>Real-time Answers</Typography>
+            </Grid>
+            {listofWrongAnswers.map((wrongAnswer, index) => <HostAnswerDropdown key={index} correct={false} answer={wrongAnswer} phase2={isPhase2}/>)}
+            <HostAnswerDropdown answer={questions[0].answer} correct={true} phase2={isPhase2}/>
+        </Grid>    
+    );
+
 }
 
 const useStyles = makeStyles(theme => ({

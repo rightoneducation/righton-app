@@ -23,17 +23,25 @@ export default function HostAnswerDropdown({answer, correct, phase2}) {
           clearInterval(timer);
         };
       }, []);
+ 
+    const ExpandButton = () => {
+        return (
+            <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
+                <ExpandMore fontSize='15px'/>
+            </IconButton>);
+    };
 
     if (phase2) {
         return (
             <Grid>
-                <Card className={correct ? classes.correctCardInPhase2 : classes.correctCard} style={{ cursor: 'pointer'}}>
+                <Card className={correct ? classes.correctCardInPhase2 : classes.card} style={{ cursor: 'pointer'}}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                         <CardContent>
                             <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
                                 <Typography className={classes.answer}>
                                     {answer}
                                 </Typography>
+                                <ExpandButton ExpandButton={phase2}/>
                             </Box>
                             <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>
                         </CardContent>
@@ -61,13 +69,14 @@ export default function HostAnswerDropdown({answer, correct, phase2}) {
 
     return (
         <Grid>
-            <Card className={correct ? classes.correctCardInPhase2 : classes.card} style={{ cursor: 'pointer'}}>
+            <Card className={correct ? classes.correctCard : classes.card} style={{ cursor: 'pointer'}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', width: "80%", "borderTopLeftRadius": "10px", "backgroundColor": "rgba(0, 27, 73, 0.5)", "borderBottomLeftRadius": "10px" }}>
                     <CardContent>
                         <Box sx={{ display: 'flex',  justifyContent: 'space-between' }}>
                             <Typography className={classes.answer}>
                                 {answer}
                             </Typography>
+                            <ExpandButton ExpandButton={phase2}/>
                         </Box>
                         <LinearProgress variant="determinate" value={progress} classes={{colorPrimary: classes.colorPrimary, barColorPrimary: classes.barColorPrimary}}/>
                     </CardContent>
@@ -105,7 +114,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "row",
         borderRadius: '10px',
-        backgroundColor: "rgba(158, 195, 255, 0.2)",
+        backgroundColor: "rgba(158, 195, 255, 0.2)", // blue
         marginLeft: 'auto',
         marginRight: 'auto',
         marginBottom: '10px',
@@ -118,7 +127,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "row",
         borderRadius: '10px',
-        backgroundColor: "rgba(124, 251, 113, 0.5)",
+        backgroundColor: "rgba(124, 251, 113, 0.5)", // green
         marginLeft: 'auto',
         marginRight: 'auto',
         marginBottom: '10px',
@@ -131,15 +140,14 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "row",
         borderRadius: '10px',
-        backgroundColor: "gray",
+        backgroundColor: "gray", // gray
         marginLeft: 'auto',
         marginRight: 'auto',
         marginBottom: '10px',
         width: '80%',
         boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         border: "2px solid rgba(255, 255, 255, 0.2)",
-        position: "relative",
-        opacity: "0.5"
+        position: "relative"
     },
     cardAnswers: {
         fontWeight: 500,
