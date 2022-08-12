@@ -3,12 +3,12 @@
   "gameId": 926,
   "isAdvanced": false,
   "title": "Updated new game",
-  "currentState": "NOT_STARTED",
+  "currentState": "INITIAL_INTRO",
   "phaseOneTime": 300,
   "phaseTwoTime": 300,
   "startTime": null,
   "createdAt": "2022-05-24T15:54:05Z",
-  "currentQuestionId": null,
+  "currentQuestionId": 1,
   "description": "",
   "id": "732f47ab-0f9a-4dad-880e-b5cf2ad8e812",
   "imageUrl": "",
@@ -42,6 +42,70 @@
     ]
   },
   "teams": {
-    "items": []
+    "items": [
+      {
+        "name": "Eric",
+        "id": "teamEric",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberEric",
+              "deviceId": "223344",
+              "answers": {
+                "items": [
+                  {
+                    "id": "990088",
+                    "teamMemberAnswersId": "teamMemberEric",
+                    "isChosen": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Lucah",
+        "id": "teamLucah",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberLucah",
+              "deviceId": "4321",
+              "answers": {
+                "items": [
+                  {
+                    "id": "009988",
+                    "teamMemberAnswersId": "teamMemberLucah",
+                    "isChosen": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Zach",
+        "id": "teamZach",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberZach",
+              "deviceId": "1234",
+              "answers": {
+                "items": [
+                  {
+                    "id": "889900",
+                    "teamMemberAnswersId": "teamMemberZach",
+                    "isChosen": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 }

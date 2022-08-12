@@ -4,9 +4,8 @@ import { SORT_TYPES } from '../lib/sorting';
 import { Collapse, MenuItem, Select } from '@material-ui/core';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 
-export default function SortByDropdown({ handleSortChange }) {
+export default function SortByDropdown({ handleSortChange, sortByCheck, setSortByCheck }) {
   const classes = useStyles();
-  const [sortByCheck, setSortByCheck] = React.useState(false);
   const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
 
   const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
@@ -118,7 +117,8 @@ const useStyles = makeStyles(theme => ({
     sortByWrapper: {
       display: 'inline',
       position: 'relative',
-      marginLeft: 15,
+      // marginLeft: 15,
+      marginBottom: '30px',
       color: '#9BA9D0',
       fontFamily: 'Poppins',
     },

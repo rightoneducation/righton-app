@@ -1,0 +1,72 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY {
+  globalAuthRule: AuthRule = { allow: public }
+} # FOR TESTING ONLY!
+type GameSession @model {
+  id: ID!
+  gameId: Int!
+  startTime: AWSDateTime
+  phaseOneTime: Int!
+  phaseTwoTime: Int!
+  teams: [Team] @hasMany
+  currentQuestionId: Int
+  currentState: GameSessionState!
+    @index(name: "byState", queryField: "gameSessionByState")
+  gameCode: Int! @index(name: "byCode", queryField: "gameSessionByCode")
+  isAdvanced: Boolean!
+  imageUrl: String
+  description: String
+  title: String
+  currentTimer: Int!
+  questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
+}
+
+enum GameSessionState {
+  NOT_STARTED
+  TEAMS_JOINING
+  CHOOSE_CORRECT_ANSWER
+  PHASE_1_RESULTS
+  CHOOSE_TRICKIEST_ANSWER
+  PHASE_2_RESULTS
+  FINAL_RESULTS
+  FINISHED
+}
+
+type Question @model(subscriptions: null, timestamps: null) {
+  id: Int! @primaryKey(sortKeyFields: ["gameSessionId"])
+  text: String!
+  answer: String
+  wrongAnswers: AWSJSON
+  imageUrl: String
+  instructions: AWSJSON
+  standard: String
+  cluster: String
+  domain: String
+  grade: String
+  gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
+  gameSession: GameSession @belongsTo(fields: ["gameSessionId"])
+}
+
+type Team @model {
+  id: ID!
+  name: String!
+  question: Question! @hasOne
+  trickiestAnswerIDs: [ID]
+  teamMembers: [TeamMember] @hasMany
+  score: Int!
+}
+
+type TeamMember @model {
+  id: ID!
+  team: Team!
+  isFacilitator: Boolean
+  answers: [TeamAnswer] @hasMany
+  deviceId: ID!
+}
+
+type TeamAnswer @model {
+  id: ID!
+  isChosen: Boolean
+  text: String
+}

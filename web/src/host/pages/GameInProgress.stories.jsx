@@ -30,6 +30,7 @@ Phase1.args = {
   }
 }
 
+
 export const Phase2 = Template.bind({});
 Phase2.args = {
   ...MockGameSession,
@@ -49,6 +50,3 @@ Phase2.args = {
     ]
   }
 }
-
-
-

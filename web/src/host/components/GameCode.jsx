@@ -1,30 +1,24 @@
-import React from 'react'
-import { makeStyles, MenuItem } from "@material-ui/core";
-import Grid from '@material-ui/core/Grid';
+import React from "react";
+import { makeStyles } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 
-
-const GameCode = ({gameCode}) => {
-  const classes = useStyles()
+const GameCode = ({ gameCode }) => {
+  const classes = useStyles();
   return (
-      <Grid  container className={classes.gameCodeCard} >  
-          <p className={classes.p}>Game Code: </p>
-          <Grid className={classes.gameCodeText}>
-              {gameCode}
-          </Grid>      
-      </Grid>        
-              
-   
-  )
-}
+    <Grid container className={classes.gameCodeCard}>
+      <p className={classes.p}>Game Code: </p>
+      <Grid className={classes.gameCodeText}>{gameCode}</Grid>
+    </Grid>
+  );
+};
 const useStyles = makeStyles(theme => ({
-  
   gameCodeText: {
     margin: "auto",
     justifyContent: "center",
     fontSize: "28px",
     fontWeight: "bold",
-    color: "rgba(255, 255, 255, 1)",
-  }, 
+    color: "rgba(255, 255, 255, 1)"
+  },
 
   p: {
     fontSize: "16px",
@@ -42,9 +36,8 @@ const useStyles = makeStyles(theme => ({
     margin: "auto",
     marginTop: "-1%",
     marginBottom: "4%",
-    justifyContent: "center",
-     
+    justifyContent: "center"
   }
-}))
+}));
 
-export default GameCode
+export default GameCode;

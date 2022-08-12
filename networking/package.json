@@ -1,0 +1,22 @@
+{
+  "name": "@righton/networking",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "create-ts-index": "^1.14.0",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "aws-amplify": "^4.3.30",
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "build": "cti create ./src -s false -b; tsc --build tsconfig.json"
+  },
+  "files": [
+    "/lib"
+  ],
+  "main": "./lib/src/index.js",
+  "module": "./lib/src/index.js",
+  "types": "./lib/src/index.d.ts"
+}

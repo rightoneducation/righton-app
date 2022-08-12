@@ -9,13 +9,13 @@ export default function AnswerDropdown({answer, explanation, correct}) {
 
     return(
         <Grid item xs={12}>
-            <Card className={correct ? classes.correctCard : classes.card}>
+            <Card className={correct ? classes.correctCard : classes.card} onClick={() => setExpanded(!expanded)} style={{ cursor: 'pointer' }}>
                 <CardContent>
                     <Typography className={classes.answer}>
                         {answer}
                     </Typography>
                 
-                    <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
+                    <IconButton size='small' className={expanded ? classes.expanded : classes.expand}>
                         <ExpandMore fontSize='large'/>
                     </IconButton>
                 </CardContent>
