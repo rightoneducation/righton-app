@@ -3,44 +3,44 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import HostAnswerDropdown from "./AnswersInProgress";
 
-export default function GameDetails() {
-  const classes = useStyles();
+export default function GameDetails({questions: {items: questions}, gameStatus}) {
+    const classes = useStyles();
+    let isPhase2 = false;
 
-  let correctAnswer = [
-    {
-      choice: "A. 120", explanation: "1. 360 is the sum of a circle"
+    if (gameStatus === "PHASE2") {
+        isPhase2 = true;
     }
-  ];
 
-  let answerSet = [
-    { choice: "B. 360", explanation: "1. 360 is the sum of a circle" },
-    { choice: "C. 720", explanation: "1. 360 is the sum of a circle" },
-    { choice: "D. 1080", explanation: "1. 360 is the sum of a circle" }
-  ];
+    var wrongAnswersInfo = questions[0].wrongAnswers;
+    var listofWrongAnswers = [];
+    for (let wrongAnswerNumber in wrongAnswersInfo) {
+        let wrongAnswer = wrongAnswersInfo[wrongAnswerNumber].wrong
+        listofWrongAnswers.push(wrongAnswer);
+    }
 
-  return (
-    <Grid className={classes.background}>
-      <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} />
-      {answerSet.map((answer, index) => {
-        return (
-          <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false} />
-        );
-      })}
-    </Grid>
-  );
+    return (
+        <Grid className={classes.background}>
+            <Grid>
+                <Typography className={classes.answerTitle}>Real-time Answers</Typography>
+            </Grid>
+            {listofWrongAnswers.map((wrongAnswer, index) => <HostAnswerDropdown key={index} correct={false} answer={wrongAnswer} phase2={isPhase2}/>)}
+            <HostAnswerDropdown answer={questions[0].answer} correct={true} phase2={isPhase2}/>
+        </Grid>    
+    );
+
 }
 
 const useStyles = makeStyles(theme => ({
-  background: {
-    //height: "100vh",
-    width: "100%",
-    //background: 'linear-gradient(top,#0F78BD, #043373)',
-  },
-  answerTitle: {
-    fontWeight: 500,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: '24px',
-    marginBottom: '10px',
-  }
+    background: {
+        height: "100vh",
+        width: "100%",
+        background: 'linear-gradient(top,#0F78BD, #043373)',
+    },
+    answerTitle: {
+        fontWeight: 500,
+        color: 'white',
+        textAlign: 'center',
+        fontSize: '24px',
+        marginBottom: '10px',
+    }
 }));

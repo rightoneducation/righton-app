@@ -21,22 +21,14 @@ import StatusPageContainer from './components/StatusPageContainer';
 
 import Nav from './components/Nav';
 import Games from './components/Games';
-import StartGame from './host/pages/StartGame';
-import Ranking  from './host/pages/Ranking';
-import GameInProgress from './host/pages/GameInProgress';
 import LaunchScreen from './display/pages/LaunchScreen.jsx';
 import MobilePair from './display/pages/MobilePair.jsx';
-import GameInProgressHeader from './host/components/HeaderGameInProgress';
 
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
-import { loadGameSession } from './lib/hostAPI';
 import GameInProgressContainer from './host/containers/GameInProgressContainer';
-import { GameSessionState } from '@righton/networking';
-import GameSessionContainer from './host/containers/GameSessionContainer';
-
 
 
 const theme = createTheme({
@@ -209,7 +201,7 @@ function App() {
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
               <Confirmation />
             </Route>
-
+            
             <Route path="/status/:gameID" component={StatusPageContainer} />  */}
             
           <Switch>

@@ -1,65 +1,18 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCardDetails from "../components/QuestionCardDetails";
-import FooterGameInProgress from "../components/FooterGameInProgress";
-import HeaderGameInProgress from "../components/HeaderGameInProgress";
-import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
-import CheckMark from "../../images/Union.png";
+import QuestionCard from "../components/QuestionCard";
+import FooterGameInProgress from '../components/FooterGameInProgress';
+import GameDetails from "../components/AnswersInProgressDetails";
 
-export default function GameInProgress({
-  teams,
-  questions,
-  currentState,
-  currentQuestionId,
-  handleChangeGameStatus,
-  phaseOneTime,
-  phaseTwoTime
-}) {
+export default function GameInProgress({ questions: { items: questions }, currentQuestionId, handleSkipToResults }) {
+    const classes = useStyles();
 
-  const classes = useStyles();
-  const questionDetails = questions.items
-  console.log(questionDetails);
-  const numAnswers = teams => {
-    let count = 0;
-    {
-      teams && teams.items.map(team =>
-        team.teamMembers.items.map(teamMember =>
-          teamMember.answers.items.map(answer => answer.isChosen && count++)
-        )
-      )
-    };
+    return (
+        <div>
+            <GameDetails questions={questions}/>
+        </div>
+    );
 
-    return count;
-  };
-
-  return (
-    <div className={classes.background}>
-      <div
-        style={{
-          backgroundImage: `url(${CheckMark})`,
-          backgroundRepeat: "no-repeat",
-          backgroundPositionX: "10px",
-          backgroundPositionY: "-300px"
-        }}
-      >
-        <HeaderGameInProgress
-          totalQuestions={questions.items.length}
-          currentState={currentState}
-          currentQuestion={currentQuestionId}
-          phaseOneTime={phaseOneTime}
-          phaseTwoTime={phaseTwoTime}
-        />
-        <QuestionCardDetails questions={questions.items} />
-        <AnswersInProgressDetails />
-      </div>
-      <FooterGameInProgress
-        currentState={currentState}
-        numPlayers={teams.length}
-        numAnswers={numAnswers(teams)}
-        handleChangeGameStatus={handleChangeGameStatus}
-      />
-    </div>
-  );
 }
 
 const useStyles = makeStyles(theme => ({
