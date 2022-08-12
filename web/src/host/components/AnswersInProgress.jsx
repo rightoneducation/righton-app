@@ -34,7 +34,33 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
   }, []);
 
   return (
-    <Grid>
+    <Grid className={classes.choices}>
+      <Card className={correct ? classes.rightAnswer : classes.wrongAnswer}>
+        <Box className={classes.answerBox}>
+          <Box className={correct ? classes.answerBoxRight : classes.answerBoxWrong}>
+            <Typography className={classes.answerText}>ek</Typography>
+            <IconButton
+              size="medium"
+              className={expanded ? classes.expanded : classes.expand}
+            >
+              <ExpandMore />
+            </IconButton>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            classes={{
+              colorPrimary: classes.colorPrimary,
+              barColorPrimary: classes.barColorPrimary
+            }}
+          />
+        </Box>
+        <Box className={correct ? classes.numAnsweredBoxRight : classes.numAnsweredBoxWrong}>
+          <Typography className={classes.numAnsweredText}>kw</Typography>
+        </Box>
+      </Card>
+    </Grid >
+    /*<Grid>
       <Card
         className={correct ? classes.correctCard : classes.card}
         onClick={() => setExpanded(!expanded)}
@@ -86,12 +112,109 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
           </div>
         </Box>
       </Card>
-    </Grid>
+    </Grid> */
   );
 }
 
 const useStyles = makeStyles(theme => ({
+  choices: {
+    display: "flex",
+    justifyContent: "center"
+  },
+  rightAnswer: {
+    background: "rgba(255, 255, 255, 0.2)",
+    borderRadius: "12px",
+    width: "75%",
+    boxShadow: "none",
+    marginBottom: "8px",
+    display: "flex",
+    flexDirection: "row"
+  },
+  wrongAnswer: {
+    background: "transparent",
+    borderRadius: "12px",
+    width: "75%",
+    border: "2px solid rgba(255, 255, 255, 0.2)",
+    boxShadow: "none",
+    marginBottom: "8px",
+    display: "flex",
+    flexDirection: "row"
+  },
+  answerText: {
+    fontFamily: 'Poppins',
+    fontStyle: "normal",
+    fontWeight: "500",
+    fontSize: "18px",
+    lineHeight: "27px",
+    color: "#FFFFFF"
+  },
+  numAnsweredText: {
+    fontFamily: 'Poppins',
+    fontStyle: "normal",
+    fontWeight: "700",
+    fontSize: "18px",
+    lineHeight: "27px",
+    color: "#FFFFFF",
+    padding: "0px 5px"
+  },
+  answerBox: {
+    display: "flex",
+    flexDirection: "column",
+    width: "80%",
+    padding: "8px"
+  },
+  answerBoxRight: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "2px"
+  },
+  answerBoxWrong: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  numAnsweredBoxRight: {
+    width: "20%",
+    background: "transparent",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end"
+  },
+  numAnsweredBoxWrong: {
+    width: "20%",
+    background: "rgba(255, 255, 255, 0.2)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end"
+  },
+  expand: {
+    display: "flex",
+    float: "right",
+    color: "white",
+    transform: "rotate(270deg)",
+    padding: "0px",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  expanded: {
+    float: "right",
+    color: "white",
+    transform: "rotate(0deg)",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest
+    })
+  },
   colorPrimary: {
+    backgroundColor: "rgba(158, 195, 255, 0.2)",
+    width: "100%"
+  },
+  barColorPrimary: {
+    backgroundColor: "white",
+    width: "100%"
+  }
+  /*colorPrimary: {
     backgroundColor: "rgba(158, 195, 255, 0.2)",
     width: "100%"
   },
@@ -166,5 +289,5 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 600,
     fontSize: "14px",
     color: "white"
-  }
+  }*/
 }));
