@@ -1,76 +1,9 @@
 import React from "react";
 import { makeStyles, Card, Box, Grid } from "@material-ui/core";
 
-const scores = [
-  {
-    id: 1,
-    name: "Player 1",
-    score: 80
-  },
-  {
-    id: 2,
-    name: "Player 2",
-    score: 60
-  },
-  {
-    id: 3,
-    name: "Player 3",
-    score: 40
-  },
-  {
-    id: 4,
-    name: "Player 4",
-    score: 30
-  },
-  {
-    id: 5,
-    name: "Player 5",
-    score: 10
-  },
-  {
-    id: 6,
-    name: "Player 6",
-    score: 100
-  },
-  {
-    id: 7,
-    name: "Player 7",
-    score: 20
-  },
-  {
-    id: 8,
-    name: "Player 8",
-    score: 40
-  },
-  {
-    id: 9,
-    name: "Player 9",
-    score: 30
-  },
-  {
-    id: 10,
-    name: "Player 10",
-    score: 10
-  },
-  {
-    id: 11,
-    name: "Player 11",
-    score: 100
-  },
-  {
-    id: 12,
-    name: "Player 12",
-    score: 20
-  },
-  {
-    id: 13,
-    name: "Player 8",
-    score: 40
-  }
-];
-
-export default function PlayerScores() {
+export default function PlayerScores(players) {
   const classes = useStyles();
+  const scores = players.players;
   const highToLow = scores.sort((a, b) => b.score - a.score);
 
   function rank(index) {

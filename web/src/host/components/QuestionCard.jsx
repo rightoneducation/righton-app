@@ -28,9 +28,8 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     textAlign: "center",
-    marginTop: "10px",
+    padding: "20px 20px 5px 20px",
     fontSize: "10px",
-    width: "240px"
   },
   questionCard: {
     display: "flex",
@@ -38,12 +37,9 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     padding: "0px",
     backgroundColor: "white",
-    marginLeft: "auto",
-    marginRight: "auto",
-    width: "309px",
+    width: "80%",
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     border: "2px solid rgba(255, 255, 255, 0.2)",
-    position: "relative"
   },
   expand: {
     display: "flex",
@@ -58,7 +54,8 @@ const useStyles = makeStyles(theme => ({
   },
   centerContent: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    padding: "20px 40px"
   },
   expandButton: {
     display: "flex",
@@ -69,16 +66,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function QuestionCard({
-  explanation1,
-  explanation2,
   question,
-  hints
+  hint,
+  image
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [stat, setStat] = useState(0);
   const hideaway = ["Show More", "Show Less"];
   const box = [<AddBox />, <IndeterminateCheckBox />];
+
+  const fromJson = (json) => {
+    return json.slice(2, json.length - 2);
+  }
 
   const handleExpandClick = () => {
     if (expanded === true) {
@@ -89,17 +89,18 @@ export default function QuestionCard({
     }
     setExpanded(!expanded);
   };
+
+  console.log({ image });
   return (
-    <Grid container item xs={12} className={classes.centerContent}>
+    <Grid container className={classes.centerContent}>
       <Card className={classes.QuestionCard} style={{ borderRadius: "18px" }}>
         <CardContent className={classes.content}>
-          <Typography className={classes.fontStyle}>{explanation1}</Typography>
-          <Typography className={classes.fontStyle}>{explanation2}</Typography>
+          <Typography className={classes.fontStyle}>{fromJson(hint)}</Typography>
           <Typography className={classes.questionStyle}>{question}</Typography>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent className={classes.centerContent}>
-            <Typography>{hints}</Typography>
+          <CardContent className={classes.content}>
+            <img src={image} alt="" />
           </CardContent>
         </Collapse>
         <CardActions disableSpacing className={classes.expandButton}>

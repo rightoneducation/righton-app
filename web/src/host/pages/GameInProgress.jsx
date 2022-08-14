@@ -18,8 +18,9 @@ export default function GameInProgress({
   phaseTwoTime,
   handleUpdateGameSessionStateFooter
 }) {
-  
-  const classes = useStyles();
+const classes = useStyles();
+const questionDetails = questions.items
+ console.log(questionDetails);
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
@@ -30,6 +31,7 @@ export default function GameInProgress({
        team.teamMembers && team.teamMembers.items.map(teamMember => 
         teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
     )))
+
     return count;
   };
 
@@ -60,7 +62,7 @@ export default function GameInProgress({
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
-        <QuestionCardDetails />
+        <QuestionCardDetails questions={questions.items} />
         <AnswersInProgressDetails />
       </div>
     

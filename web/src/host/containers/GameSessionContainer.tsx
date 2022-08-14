@@ -57,10 +57,11 @@ const GameSessionContainer = () => {
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
-      return <GameInProgress {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
+
+    return <GameInProgress {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
 
     case GameSessionState.FINAL_RESULTS:
-      return <Ranking {...gameSession} />;
+      return <Ranking {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
 
     default:
       return <Redirect to="/" />;
