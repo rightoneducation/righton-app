@@ -21,10 +21,10 @@ export default function GameInProgress({
   
   const classes = useStyles();
 
-  const stateArray = Object.values(GameSessionState);
+  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
  
-  const numAnswersFunc = teams => {
+  const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
     let count = 0;
     teams && teams.items.map(team => 
        team.teamMembers && team.teamMembers.items.map(teamMember => 
@@ -33,7 +33,7 @@ export default function GameInProgress({
     return count;
   };
 
-  const nextStateFunc = currentState => {
+  const nextStateFunc = currentState => { //determines next state for use by footer
     if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.items.length : 0)){
       return "FINAL_RESULTS";
     } else if (currentState === "PHASE_2_RESULTS" && currentQuestionId !== (questions ? questions.items.length : 0)) {
@@ -66,8 +66,8 @@ export default function GameInProgress({
     
       <FooterGameInProgress
         currentState={currentState}
-        nextState = {nextState= nextStateFunc(currentState)}
-        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionId+1 : currentQuestionId}
+        nextState = {nextState= nextStateFunc(currentState)} 
+        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionId+1 : currentQuestionId} 
         numPlayers={teams ? teams.items.length : 0}
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}

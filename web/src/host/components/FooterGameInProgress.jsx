@@ -9,7 +9,7 @@ import { GameSessionState } from "@righton/networking";
 export default function FooterGameInProgress({ currentState, nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  handleUpdateGameSessionStateFooter }) {
   const classes = useStyles();
 
-  const currentStateToButtonText = {
+  const currentStateToButtonText = { //dictionary used to assign button text based on the next state 
     "PHASE_1_RESULTS": "Skip to Results",
     "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
     "PHASE_2_RESULTS": "Skip to Results",
