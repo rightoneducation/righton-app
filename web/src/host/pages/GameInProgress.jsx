@@ -16,14 +16,15 @@ export default function GameInProgress({
   handleChangeGameStatus,
   phaseOneTime,
   phaseTwoTime,
-  handleUpdateGameSessionState
+  handleUpdateGameSessionStateFooter
 }) {
   
   const classes = useStyles();
 
   const stateArray = Object.values(GameSessionState);
-
-  const numAnswers = teams => {
+  let nextState;
+ 
+  const numAnswersFunc = teams => {
     let count = 0;
     teams && teams.items.map(team => 
        team.teamMembers && team.teamMembers.items.map(teamMember => 
@@ -32,8 +33,14 @@ export default function GameInProgress({
     return count;
   };
 
-  const nextState = currentState => {
+  const nextStateFunc = currentState => {
+    if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.items.length : 0)){
+      return "FINAL_RESULTS";
+    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionId !== (questions ? questions.items.length : 0)) {
+      return "CHOOSE_CORRECT_ANSWER";
+    } else {
     return stateArray[stateArray.indexOf(currentState) + 1]; 
+    }
   };
 
   return (
@@ -56,16 +63,16 @@ export default function GameInProgress({
         <QuestionCardDetails />
         <AnswersInProgressDetails />
       </div>
+    
       <FooterGameInProgress
         currentState={currentState}
-        nextState = {nextState(currentState)}
+        nextState = {nextState= nextStateFunc(currentState)}
+        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionId+1 : currentQuestionId}
         numPlayers={teams ? teams.items.length : 0}
-        numAnswers={numAnswers(teams)}
+        numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
-        currentQuestion={currentQuestionId}
-        totalQuestions={questions ? questions.items.length : 0}
-        handleUpdateGameSessionState={ handleUpdateGameSessionState}        
+        handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}        
       />
     </div>
   );

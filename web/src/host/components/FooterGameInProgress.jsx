@@ -6,36 +6,29 @@ import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGameInProgress({ currentState, nextState, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, currentQuestion, totalQuestions,  handleUpdateGameSessionState }) {
+export default function FooterGameInProgress({ currentState, nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  handleUpdateGameSessionStateFooter }) {
   const classes = useStyles();
 
   const currentStateToButtonText = {
-    "CHOOSE_CORRECT_ANSWER": "Next Phase",
-    "PHASE_1_RESULTS": "Next Phase",
-    "CHOOSING_TRICKIEST_ANSWER": "Next Question",
-    "PHASE_2_RESULTS": "Next Questions",
+    "PHASE_1_RESULTS": "Skip to Results",
+    "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
+    "PHASE_2_RESULTS": "Skip to Results",
+    "CHOOSE_CORRECT_ANSWER": "Next Question",
+    "FINAL_RESULTS": "View Final Results"
   }
 
-  const currentStateToClassName = {
-    "CHOOSE_CORRECT_ANSWER": classes.startGameButton,
-    "PHASE_1_RESULTS": classes.nextPhaseButton,
-    "CHOOSING_TRICKIEST_ANSWER": classes.startGameButton,
-    "PHASE_2_RESULTS": classes.startGameButton,
-  }
-
-
-
-  return (
+   return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}>
-      {console.log(currentState + " "+ nextState)}
         <div className={classes.playerNum}>Players who have answered</div>
+        {console.log("currentState: " + currentState + " phaseOneTimer: " + phaseOneTime + " phaseTwoTimer: " + phaseTwoTime)}
         <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
         <Button
-          className={currentStateToClassName[currentState]}
-          onClick={() =>  handleUpdateGameSessionState(GameSessionState[nextState])}
+          disabled = {phaseOneTime <= 0 ? true : false || phaseTwoTime <= 0 ? true : false}
+          className={classes.nextPhaseButton}
+          onClick={() =>  handleUpdateGameSessionStateFooter(GameSessionState[nextState], nextQuestion, 30, 30)}
         >
-          {currentStateToButtonText[currentState]}
+          {currentStateToButtonText[nextState]}
         </Button>
       </div>
     </BottomNavigation>
@@ -73,7 +66,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: '20px',
     fontWeight: '700',
     lineHeight: '30px',
-
   },
   nextPhaseButton: {
     border: "4px solid #159EFA",
@@ -85,6 +77,19 @@ const useStyles = makeStyles(theme => ({
     fontSize: "20px",
     fontWeight: "700",
     lineHeight: "30px",
-    boxShadow: "0px 5px 22px 0px #47D9FF4D",
+    boxShadow: "0px 5px 22px 0px #47D9FF4D", 
+    "&:disabled": {
+      background: 'transparent',
+      border: '4px solid #159EFA',
+      borderRadius: '34px',
+      width: '300px',
+      height: '48px',
+      color: '#159EFA',
+      fontSize: '20px',
+      fontWeight: '700',
+      lineHeight: '30px',
+      opacity: '25%',
+      cursor: "not-allowed",
+    }
   }
 }));
