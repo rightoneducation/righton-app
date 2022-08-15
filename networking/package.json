@@ -2,18 +2,16 @@
   "name": "@righton/networking",
   "version": "0.0.1",
   "devDependencies": {
-    "@aws-amplify/api": "^4.0.48",
     "@types/node": "^18.0.0",
-    "aws-amplify": "^4.3.30",
     "create-ts-index": "^1.14.0",
-    "typescript": "^4.7.4",
-    "babel-loader": "8.1.0"
+    "typescript": "^4.6.3"
   },
   "dependencies": {
+    "aws-amplify": "^4.3.30",
     "reflect-metadata": "^0.1.13"
   },
   "scripts": {
-    "build": "cti create ./src -s false -b && tsc --build tsconfig.json"
+    "build": "cti create ./src -s false -b; tsc --build tsconfig.json"
   },
   "files": [
     "/lib"
