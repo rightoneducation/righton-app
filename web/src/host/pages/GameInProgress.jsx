@@ -64,7 +64,7 @@ export default function GameInProgress({
 
 const useStyles = makeStyles(theme => ({
   background: {
-    height: "100vh",
+    height: "100%",
     width: "100%",
     display: "flex",
     minHeight: "100vh",

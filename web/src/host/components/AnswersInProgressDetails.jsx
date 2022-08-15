@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   background: {
     //height: "100vh",
     width: "100%",
-    //background: 'linear-gradient(top,#0F78BD, #043373)',
+    background: 'transparent',
   },
   answerTitle: {
     fontWeight: 500,
