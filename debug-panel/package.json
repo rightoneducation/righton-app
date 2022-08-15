@@ -24,8 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run build --prefix ../networking && react-scripts start",
-    "build": "npm run build --prefix ../networking && react-scripts build",
+    "start": "npm run build --prefix ../networking; react-scripts start",
+    "build": "npm run build --prefix ../networking; react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -49,9 +49,5 @@
   },
   "devDependencies": {
     "ts-loader": "^9.3.0"
-  },
-  "description": "1. `cd` into the `networking` folder\r 2. run `npm install -g` (mac users might need to run `sudo npm install -g`)\r 3. run `npm run build`\r 4. then `npm link`\r 5. `cd` out of the `networking` folder then `cd` into the `debug-panel` folder\r 6. run `npm link @righton/networking`\r 7. then `npm install`\r 8. `npm start` :crossed_fingers:",
-  "main": "config-overrides.js",
-  "author": "",
-  "license": "ISC"
+  }
 }
