@@ -60,7 +60,7 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
             />
           </CardContent>
           <Collapse in={expanded}>
-            <CardContent>
+            <CardContent className={classes.dropdownContent}>
               <Typography className={classes.explanationTitle}>
                 {correct ? "Correct Answer Explanation" : "Wrong Answer Explanation"}
               </Typography>
@@ -70,9 +70,11 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
             </CardContent>
           </Collapse>
         </Box>
-        <Box className={correct ? classes.numAnsweredBoxRight : classes.numAnsweredBoxWrong}>
-          <Typography className={classes.numAnsweredText}>kw</Typography>
-        </Box>
+        <CardContent className={expanded ? classes.expandedBox : classes.expandBox}>
+          <Box className={correct ? classes.numAnsweredBoxRight : classes.numAnsweredBoxWrong}>
+            <Typography className={classes.numAnsweredText}>kw</Typography>
+          </Box>
+        </CardContent>
       </Card>
     </Grid >
     /*<Grid>
@@ -189,19 +191,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-between",
   },
-  numAnsweredBoxRight: {
-    width: "20%",
-    background: "transparent",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-end"
-  },
-  numAnsweredBoxWrong: {
-    width: "20%",
-    background: "rgba(255, 255, 255, 0.2)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-end"
+  dropdownContent: {
+    width: "115%",
+    padding: "10px 10px 5px 0px !important"
   },
   expand: {
     display: "flex",
@@ -217,7 +209,6 @@ const useStyles = makeStyles(theme => ({
     float: "right",
     color: "white",
     transform: "rotate(0deg)",
-    padding: "0px",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest
     })
@@ -273,7 +264,34 @@ const useStyles = makeStyles(theme => ({
     fontSize: "12px",
     lineHeight: "18px",
     color: "#FFFFFF"
-  }
+  },
+  expandedBox: {
+    display: "none"
+  },
+  expandBox: {
+    display: "block",
+    width: "20%",
+    height: "100%",
+    padding: "0px !important"
+  },
+  numAnsweredBoxRight: {
+    width: "100%",
+    height: "100%",
+    background: "transparent",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    padding: "0px !important"
+  },
+  numAnsweredBoxWrong: {
+    width: "100%",
+    height: "100%",
+    background: "rgba(255, 255, 255, 0.2)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    padding: "0px !important"
+  },
   /*colorPrimary: {
     backgroundColor: "rgba(158, 195, 255, 0.2)",
     width: "100%"
