@@ -53,7 +53,7 @@ function App() {
       <Button
         variant="contained"
         onClick={() => {
-          apiClient.createGameSession(926, false)
+          apiClient.createGameSession(1156, false)
             .then(gameSession => {
               setGameSession(gameSession)
               setError(null)
