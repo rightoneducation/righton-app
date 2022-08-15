@@ -5,6 +5,8 @@ import FooterGameInProgress from "../components/FooterGameInProgress";
 import HeaderGameInProgress from "../components/HeaderGameInProgress";
 import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
 import CheckMark from "../../images/Union.png";
+import { ConstructionOutlined } from "@mui/icons-material";
+import { GameSessionState } from "@righton/networking";
 
 export default function GameInProgress({
   teams,
@@ -13,23 +15,34 @@ export default function GameInProgress({
   currentQuestionId,
   handleChangeGameStatus,
   phaseOneTime,
-  phaseTwoTime
+  phaseTwoTime,
+  handleUpdateGameSessionStateFooter
 }) {
+const classes = useStyles();
+const questionDetails = questions.items
+ console.log(questionDetails);
 
-  const classes = useStyles();
-  const questionDetails = questions.items
-  console.log(questionDetails);
-  const numAnswers = teams => {
+  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
+  let nextState;
+ 
+  const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
     let count = 0;
-    {
-      teams && teams.items.map(team =>
-        team.teamMembers.items.map(teamMember =>
-          teamMember.answers.items.map(answer => answer.isChosen && count++)
-        )
-      )
-    };
+    teams && teams.items.map(team => 
+       team.teamMembers && team.teamMembers.items.map(teamMember => 
+        teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
+    )))
 
     return count;
+  };
+
+  const nextStateFunc = currentState => { //determines next state for use by footer
+    if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.items.length : 0)){
+      return "FINAL_RESULTS";
+    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionId !== (questions ? questions.items.length : 0)) {
+      return "CHOOSE_CORRECT_ANSWER";
+    } else {
+    return stateArray[stateArray.indexOf(currentState) + 1]; 
+    }
   };
 
   return (
@@ -43,7 +56,7 @@ export default function GameInProgress({
         }}
       >
         <HeaderGameInProgress
-          totalQuestions={questions.items.length}
+          totalQuestions={questions ? questions.items.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionId}
           phaseOneTime={phaseOneTime}
@@ -52,11 +65,16 @@ export default function GameInProgress({
         <QuestionCardDetails questions={questions.items} />
         <AnswersInProgressDetails questions={questions.items} />
       </div>
+    
       <FooterGameInProgress
         currentState={currentState}
-        numPlayers={teams.length}
-        numAnswers={numAnswers(teams)}
-        handleChangeGameStatus={handleChangeGameStatus}
+        nextState = {nextState= nextStateFunc(currentState)} 
+        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionId+1 : currentQuestionId} 
+        numPlayers={teams ? teams.items.length : 0}
+        numAnswers={numAnswersFunc(teams)}
+        phaseOneTime={phaseOneTime}
+        phaseTwoTime={phaseTwoTime}
+        handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}        
       />
     </div>
   );
