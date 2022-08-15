@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   },
   barContainer: {
     position: 'relative',
-    width: '291px',
+    width: '291px'
   },
   progressBar: {
     position: 'relative',

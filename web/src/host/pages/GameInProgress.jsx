@@ -50,7 +50,7 @@ export default function GameInProgress({
           phaseTwoTime={phaseTwoTime}
         />
         <QuestionCardDetails questions={questions.items} />
-        <AnswersInProgressDetails />
+        <AnswersInProgressDetails questions={questions.items} />
       </div>
       <FooterGameInProgress
         currentState={currentState}
@@ -64,7 +64,7 @@ export default function GameInProgress({
 
 const useStyles = makeStyles(theme => ({
   background: {
-    height: "100vh",
+    height: "100%",
     width: "100%",
     display: "flex",
     minHeight: "100vh",
