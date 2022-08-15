@@ -11,7 +11,7 @@
     "reflect-metadata": "^0.1.13"
   },
   "scripts": {
-    "build": "cti create ./src -s false -b; tsc --build tsconfig.json"
+    "build": "cti create ./src -s false -b && tsc --build tsconfig.json"
   },
   "files": [
     "/lib"

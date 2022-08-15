@@ -90,6 +90,22 @@ export class ApiClient implements IApiClient {
 
     }
 
+    async updateGameSessionFooter(id: string, gameState: GameSessionState, nextQuestion: number, phaseOneTimeReset: number, phaseTwoTimeReset: number): Promise<IGameSession> {
+      let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState, currentQuestionId : nextQuestion, phaseOneTime: phaseOneTimeReset, phaseTwoTime : phaseTwoTimeReset }
+      let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
+      let result = await this.callGraphQL<UpdateGameSessionMutation>(updateGameSession, variables)
+      if (result.errors != null) {
+          throw new Error(`failed to update game session: ${result.errors}`)
+      }
+
+      if (result.data == null) {
+          throw new Error("Failed to update the game session")
+      }
+
+      return result.data.updateGameSession as IGameSession
+    }
+
+
     subscribeUpdateGameSession(id: string, callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnUpdateGameSessionSubscription>(
             {
