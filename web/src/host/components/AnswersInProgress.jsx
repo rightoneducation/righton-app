@@ -35,25 +35,40 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
 
   return (
     <Grid className={classes.choices}>
-      <Card className={correct ? classes.rightAnswer : classes.wrongAnswer}>
+      <Card
+        className={correct ? classes.rightAnswer : classes.wrongAnswer}
+        onClick={() => setExpanded(!expanded)}
+      >
         <Box className={classes.answerBox}>
-          <Box className={correct ? classes.answerBoxRight : classes.answerBoxWrong}>
-            <Typography className={classes.answerText}>ek</Typography>
-            <IconButton
-              size="medium"
-              className={expanded ? classes.expanded : classes.expand}
-            >
-              <ExpandMore />
-            </IconButton>
-          </Box>
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            classes={{
-              colorPrimary: classes.colorPrimary,
-              barColorPrimary: classes.barColorPrimary
-            }}
-          />
+          <CardContent className={classes.cardContent}>
+            <Box className={correct ? classes.answerBoxRight : classes.answerBoxWrong}>
+              <Typography className={classes.answerText}>ek</Typography>
+              <IconButton
+                size="small"
+                className={expanded ? classes.expanded : classes.expand}
+              >
+                <ExpandMore />
+              </IconButton>
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              classes={{
+                colorPrimary: classes.colorPrimary,
+                barColorPrimary: classes.barColorPrimary
+              }}
+            />
+          </CardContent>
+          <Collapse in={expanded}>
+            <CardContent>
+              <Typography className={classes.explanationTitle}>
+                {correct ? "Correct Answer Explanation" : "Wrong Answer Explanation"}
+              </Typography>
+              <Typography className={classes.explanationText}>
+                {explanation}
+              </Typography>
+            </CardContent>
+          </Collapse>
         </Box>
         <Box className={correct ? classes.numAnsweredBoxRight : classes.numAnsweredBoxWrong}>
           <Typography className={classes.numAnsweredText}>kw</Typography>
@@ -202,6 +217,7 @@ const useStyles = makeStyles(theme => ({
     float: "right",
     color: "white",
     transform: "rotate(0deg)",
+    padding: "0px",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest
     })
@@ -213,6 +229,50 @@ const useStyles = makeStyles(theme => ({
   barColorPrimary: {
     backgroundColor: "white",
     width: "100%"
+  },
+  colorPrimary: {
+    backgroundColor: "rgba(158, 195, 255, 0.2)",
+    width: "100%"
+  },
+  barColorPrimary: {
+    backgroundColor: "white",
+    width: "100%"
+  },
+  expand: {
+    display: "flex",
+    float: "right",
+    color: "white",
+    transform: "rotate(270deg)",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  expanded: {
+    float: "right",
+    color: "white",
+    transform: "rotate(0deg)",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  cardContent: {
+    padding: "0px"
+  },
+  explanationTitle: {
+    fontFamily: "Poppins",
+    fontStyle: "normal",
+    fontWeight: "700",
+    fontSize: "16px",
+    lineHeight: "24px",
+    color: "#FFFFFF"
+  },
+  explanationText: {
+    fontFamily: "Poppins",
+    fontStyle: "normal",
+    fontWeight: "400",
+    fontSize: "12px",
+    lineHeight: "18px",
+    color: "#FFFFFF"
   }
   /*colorPrimary: {
     backgroundColor: "rgba(158, 195, 255, 0.2)",
