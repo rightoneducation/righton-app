@@ -42,7 +42,7 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
         <Box className={classes.answerBox}>
           <CardContent className={classes.cardContent}>
             <Box className={correct ? classes.answerBoxRight : classes.answerBoxWrong}>
-              <Typography className={classes.answerText}>ek</Typography>
+              <Typography className={classes.answerText}>{answer}</Typography>
               <IconButton
                 size="small"
                 className={expanded ? classes.expanded : classes.expand}
@@ -77,59 +77,6 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
         </CardContent>
       </Card>
     </Grid >
-    /*<Grid>
-      <Card
-        className={correct ? classes.correctCard : classes.card}
-        onClick={() => setExpanded(!expanded)}
-        style={{ cursor: "pointer" }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            borderTopLeftRadius: "10px",
-            backgroundColor: "rgba(0, 27, 73, 0.5)",
-            borderBottomLeftRadius: "10px"
-          }}
-        >
-          <CardContent>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography className={classes.answer}>{answer}</Typography>
-              <IconButton
-                size="small"
-                className={expanded ? classes.expanded : classes.expand}
-              >
-                <ExpandMore fontSize="15px" />
-              </IconButton>
-            </Box>
-            <LinearProgress
-              variant="determinate"
-              value={progress}
-              classes={{
-                colorPrimary: classes.colorPrimary,
-                barColorPrimary: classes.barColorPrimary
-              }}
-            />
-          </CardContent>
-          <Collapse in={expanded}>
-            <CardContent>
-              <Typography className={classes.explanationTitle}>
-                Explanation:
-              </Typography>
-              <Typography className={classes.explanationText}>
-                {explanation}
-              </Typography>
-            </CardContent>
-          </Collapse>
-        </Box>
-        <Box className={classes.cardAnswers}>
-          <div>
-            <h3>1</h3>
-          </div>
-        </Box>
-      </Card>
-    </Grid> */
   );
 }
 
@@ -193,7 +140,7 @@ const useStyles = makeStyles(theme => ({
   },
   dropdownContent: {
     width: "115%",
-    padding: "10px 10px 5px 0px !important"
+    padding: "10px 5px 5px 0px !important"
   },
   expand: {
     display: "flex",

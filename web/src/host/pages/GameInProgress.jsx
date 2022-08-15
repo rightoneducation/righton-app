@@ -50,7 +50,7 @@ export default function GameInProgress({
           phaseTwoTime={phaseTwoTime}
         />
         <QuestionCardDetails questions={questions.items} />
-        <AnswersInProgressDetails />
+        <AnswersInProgressDetails questions={questions.items} />
       </div>
       <FooterGameInProgress
         currentState={currentState}
