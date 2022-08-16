@@ -24,7 +24,7 @@ export default function FooterGameInProgress({ currentState, nextState, nextQues
         {console.log("currentState: " + currentState + " phaseOneTimer: " + phaseOneTime + " phaseTwoTimer: " + phaseTwoTime)}
         <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
         <Button
-          disabled = {phaseOneTime <= 0 ? true : false || phaseTwoTime <= 0 ? true : false}
+          disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={classes.nextPhaseButton}
           onClick={() =>  handleUpdateGameSessionStateFooter(GameSessionState[nextState], nextQuestion, 30, 30)}
         >
