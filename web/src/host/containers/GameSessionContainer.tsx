@@ -51,14 +51,14 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
+      return <StartGame {...gameSession} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
 
-    return <GameInProgress {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
+    return <GameInProgress {...gameSession} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
 
     case GameSessionState.FINAL_RESULTS:
       return <Ranking {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
