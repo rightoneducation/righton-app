@@ -145,15 +145,15 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
   };
 
   //not sure if this should stay
-  const changeQuestionIndex = (currentIndex, newIndex) => {
-    const newGame = { ...game };
-    const copy = { ...newGame[`q${newIndex}`] };
-    newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
-    newGame[`q${currentIndex}`] = copy;
-    saveGame(newGame).then(() => history.push(`/games/${game.id}`));
-    setAnchorEl(null);
-    setActiveIndex(null);
-  };
+  // const changeQuestionIndex = (currentIndex, newIndex) => {
+  //   const newGame = { ...game };
+  //   const copy = { ...newGame[`q${newIndex}`] };
+  //   newGame[`q${newIndex}`] = newGame[`q${currentIndex}`];
+  //   newGame[`q${currentIndex}`] = copy;
+  //   saveGame(newGame).then(() => history.push(`/games/${game.id}`));
+  //   setAnchorEl(null);
+  //   setActiveIndex(null);
+  // };
 
   const addQuestion = () => history.push(`/gamemaker/${game.id}/createquestion/${questions.length + 1}`);
 
@@ -234,7 +234,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                       {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'}/>}
                       </Grid>
 
-                      <Grid item xs={3}>
+                      {/* <Grid item xs={3}>
                         <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
                           <MoreVert />
                         </Button>
@@ -255,7 +255,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
 
                           <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                         </Menu>
-                      </Grid>
+                      </Grid> */}
                   </Grid>
                 </Card>
               </Grid> 

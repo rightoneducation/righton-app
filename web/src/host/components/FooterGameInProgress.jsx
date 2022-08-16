@@ -13,7 +13,7 @@ export default function FooterGameInProgress({ currentState, nextState, nextQues
     "PHASE_1_RESULTS": "Skip to Results",
     "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
     "PHASE_2_RESULTS": "Skip to Results",
-    "CHOOSE_CORRECT_ANSWER": "Next Question",
+    "c": "Next Question",
     "FINAL_RESULTS": "View Final Results"
   }
 

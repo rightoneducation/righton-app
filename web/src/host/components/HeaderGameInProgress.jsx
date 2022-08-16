@@ -3,7 +3,6 @@ import { Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
-const questionNumber = 2;
 
 const useStyles = makeStyles(() => ({
   div: {
@@ -64,11 +63,14 @@ export default function GameInProgressHeader({
 
   var time = 0;
 
-  if (currentState == "PHASE_ONE") {
+  if (currentState == "CHOOSE_TRICKIEST_ANSWER") {
     time = phaseOneTime;
-  } else if (currentState == "PHASE_TWO") {
+  } else if (currentState == "CHOOSE_CORRECT_ANSWER") {
     time = phaseTwoTime;
   }
+
+  console.log(time);
+  console.log(totalQuestions);
 
   return (
     <div className={classes.div}>
@@ -83,8 +85,7 @@ export default function GameInProgressHeader({
       />
 
       <Typography className={classes.title}>
-        Question {currentQuestion} of {totalQuestions}{" "}
-        {/* Replace with current question number and total questions info from query */}
+        Question {currentQuestion} of {totalQuestions}{" "} {/* Replace with current question number and total questions info from query */}
       </Typography>
 
       <Typography className={classes.phases}>

@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "40px",
     display: "inline-block",
     marginRight: "10px",
-    width: "50%"
+    width: "80%"
   },
   colorPrimary: {
     backgroundColor: "rgba(255, 255, 255, 0.2)"
@@ -54,7 +54,7 @@ export default function Timer({ timer }) {
   }, [time]);
 
   return (
-    <div>
+    <div style={{marginLeft: "10px"}}>
       <LinearProgress
         classes={{
           root: classes.timerBar,
@@ -69,7 +69,8 @@ export default function Timer({ timer }) {
         {Math.floor(time / 60)}:
         {time % 60 < 10 ? `0${time % 60}` : `${time % 60}`}
       </p>
-
+      
+      {/* Add 30 Seconds Button - Post MVP
       <IconButton
         className={classes.blueButton}
         color="primary"
@@ -79,7 +80,7 @@ export default function Timer({ timer }) {
         onClick={() => setTime(time + 30)}
       >
         <AvTimer /> + 30 Sec.
-      </IconButton>
+      </IconButton> */}
     </div>
   );
 }
