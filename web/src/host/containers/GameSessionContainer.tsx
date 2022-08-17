@@ -23,12 +23,12 @@ const GameSessionContainer = () => {
       setGameSession(response);
     });
 
-    // apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-    //   setGameSession({ ...gameSession, ...response });
-    // });
+    gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
+      setGameSession({ ...gameSession, ...response });
+    });
 
     //@ts-ignore
-    //return () => gameSessionSubscription?.unsubscribe()
+    return () => gameSessionSubscription?.unsubscribe()
   }, []);
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {

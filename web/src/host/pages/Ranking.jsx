@@ -12,7 +12,7 @@ export default function Ranking({
   handleUpdateGameSessionState
 }) {
   const classes = useStyles();
-  const players = { teams }.teams.items;
+  const players = { teams }.teams;
 
   return (
     <div className={classes.background}>
