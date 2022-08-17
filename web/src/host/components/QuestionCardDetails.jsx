@@ -5,9 +5,6 @@ import QuestionCard from "./QuestionCard";
 
 export default function QuestionDetails({questions}) {
   const classes = useStyles();
-  //const questionsDetails = questions.questions
-  //console.log(questionsDetails);
-  console.log(questions);
 
   return (
     <Grid>

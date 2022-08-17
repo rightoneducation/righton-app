@@ -5,7 +5,6 @@ import { GameSessionState } from "@righton/networking";
 
 const FooterStartGame = ({ handleUpdateGameSessionState }) => {
   const classes = useStyles();
-
   return (
     <BottomNavigation className={classes.footer}>
       <button className={classes.startGameButton} onClick={() => 

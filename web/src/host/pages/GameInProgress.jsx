@@ -13,7 +13,6 @@ export default function GameInProgress({
   questions,
   currentState,
   currentQuestionId,
-  handleChangeGameStatus,
   phaseOneTime,
   phaseTwoTime,
   handleUpdateGameSessionStateFooter

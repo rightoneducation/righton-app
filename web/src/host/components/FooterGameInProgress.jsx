@@ -6,7 +6,7 @@ import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGameInProgress({ currentState, nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  handleUpdateGameSessionStateFooter }) {
+export default function FooterGameInProgress({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  handleUpdateGameSessionStateFooter }) {
   const classes = useStyles();
 
   const currentStateToButtonText = { //dictionary used to assign button text based on the next state 
@@ -21,7 +21,6 @@ export default function FooterGameInProgress({ currentState, nextState, nextQues
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}>
         <div className={classes.playerNum}>Players who have answered</div>
-        {console.log("currentState: " + currentState + " phaseOneTimer: " + phaseOneTime + " phaseTwoTimer: " + phaseTwoTime)}
         <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
         <Button
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}

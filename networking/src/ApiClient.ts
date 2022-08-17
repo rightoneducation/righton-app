@@ -73,7 +73,6 @@ export class ApiClient implements IApiClient {
 
     async getGameSession(id: string): Promise<IGameSession> {
         let result = await API.graphql(graphqlOperation(getGameSession, { id })) as { data: any }
-        console.log(result)
         return GameSessionParser.gameSessionFromAWSGameSession(result.data.getGameSession)
     }
 

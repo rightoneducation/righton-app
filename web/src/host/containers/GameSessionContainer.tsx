@@ -5,7 +5,7 @@ import {
   ApiClient,
   Environment,
   GameSessionState,
-  IGameSession
+  IGameSession,
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
@@ -20,7 +20,6 @@ const GameSessionContainer = () => {
 
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
-      console.log(response);
       setGameSession(response);
     });
 
@@ -33,8 +32,8 @@ const GameSessionContainer = () => {
   }, []);
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
-    apiClient.updateGameSession(gameSessionId, gameSessionState)
-      .then(response => {
+    apiClient.updateGameSession({id: gameSessionId, currentState: gameSessionState})
+    .then(response => {
         setGameSession(response);
       })
   }
