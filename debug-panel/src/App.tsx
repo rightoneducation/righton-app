@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Button, TextField } from '@mui/material'
 import { ApiClient, Environment, GameSessionState } from '@righton/networking'
+import { IApiClient } from '@righton/networking'
 import { IGameSession } from '@righton/networking'
 
 function App() {
   const [gameSession, setGameSession] = useState<IGameSession | null>()
   const [updatedGameSession, setUpdatedGameSession] = useState<IGameSession | null>()
   const [error, setError] = useState<string | null>(null)
-  
-  let apiClient = new ApiClient(Environment.Staging)
+  const [gameCode, setGameCode] = useState<number>(0)
+  const [gameSessionID, setGameSessionID] = useState<string>("")
+
+  let apiClient: IApiClient = new ApiClient(Environment.Staging)
   let gameSessionSubscription: any | null = null
 
-  useEffect(() => {  
+  useEffect(() => {
     // @ts-ignore
     return () => gameSessionSubscription?.unsubscribe()
   }, [])
@@ -24,7 +27,7 @@ function App() {
 
     let gameSessionId = gameSession!.id
 
-    apiClient.updateGameSession(gameSessionId, gameSessionState)
+    apiClient.updateGameSession({ id: gameSessionId, currentState: gameSessionState })
       .then(response => {
         setUpdatedGameSession(response)
         setError(null)
@@ -34,7 +37,7 @@ function App() {
         setUpdatedGameSession(null)
       })
   }
-   
+
   return (
     <div>
       <span>
@@ -59,7 +62,7 @@ function App() {
               setError(null)
               setUpdatedGameSession(null)
               gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
-                  console.log(gameSession.currentState)
+                console.log(gameSession.currentState)
               })
             }).catch(error => {
               console.error(error.message)
@@ -71,8 +74,6 @@ function App() {
       >
         Create game session
       </Button>
-      <br/>
-      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -81,8 +82,6 @@ function App() {
       >
         Teams Joining
       </Button>
-      <br/>
-      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -91,8 +90,6 @@ function App() {
       >
         Choose Correct
       </Button>
-      <br/>
-      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -101,8 +98,6 @@ function App() {
       >
         Phase 1 Results
       </Button>
-      <br/>
-      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -111,8 +106,6 @@ function App() {
       >
         Choose Trickiest Answer
       </Button>
-      <br/>
-      <br/>
       <Button
         variant="contained"
         onClick={() => {
@@ -121,18 +114,75 @@ function App() {
       >
         Phase 2 Results
       </Button>
-      <br/>
-      <br/>
       <Button
         variant="contained"
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.FINAL_RESULTS)
         }}
       >
-        Leaderboard
+        Rankings
+      </Button>
+      <TextField
+        value={gameCode}
+        label="Outlined"
+        variant="outlined"
+        placeholder='Game code'
+        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+        onChange={(e) => setGameCode(Number(e.target.value))}
+      />
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => {
+          apiClient.getGameSessionByCode(gameCode)
+            .then(response => {
+              if (response == null) {
+                setError(`No game found for ${gameCode}`)
+                setGameSession(null)
+                return
+              }
+              console.log(response)
+              setGameSession(response)
+              setError(null)
+            }).catch(error => {
+              console.error(error.message)
+              setError(error.message)
+              setGameSession(null)
+            })
+        }}>
+        Get Game Session by Code
+      </Button>
+      <TextField
+        value={gameSessionID}
+        label="Outlined"
+        variant="outlined"
+        placeholder='Game code'
+        onChange={(e) => setGameSessionID(e.target.value)}
+      />
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => {
+          apiClient.getGameSession(gameSessionID)
+            .then(response => {
+              if (response == null) {
+                setError(`No game found for ${gameSessionID}`)
+                setGameSession(null)
+                return
+              }
+              console.log(response)
+              setGameSession(response)
+              setError(null)
+            }).catch(error => {
+              console.error(error.message)
+              setError(error.message)
+              setGameSession(null)
+            })
+        }}>
+        Get Game Session by ID
       </Button>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

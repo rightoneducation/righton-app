@@ -82,3 +82,6 @@ lint/tmp/
 vcs.xml
 local-env-info.json
 
+# Ignore vscode settings until https://github.com/Microsoft/vscode/issues/32693 is ready
+# or all project agree on using a same structure
+.vscode/settings.json

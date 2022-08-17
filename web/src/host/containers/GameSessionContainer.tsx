@@ -19,7 +19,7 @@ const GameSessionContainer = () => {
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
   useEffect(() => {
-    apiClient.loadGameSession(gameSessionId).then(response => {
+    apiClient.getGameSession(gameSessionId).then(response => {
       setGameSession(response);
     });
 
