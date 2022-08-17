@@ -68,5 +68,5 @@ type TeamMember @model {
 type TeamAnswer @model {
   id: ID!
   isChosen: Boolean
-  text: String
+  text: String!
 }
