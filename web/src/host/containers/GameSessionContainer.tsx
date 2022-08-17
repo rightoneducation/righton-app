@@ -20,6 +20,7 @@ const GameSessionContainer = () => {
 
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
+      console.log(response);
       setGameSession(response);
     });
 
@@ -28,7 +29,7 @@ const GameSessionContainer = () => {
     // });
 
     //@ts-ignore
-    return () => gameSessionSubscription?.unsubscribe()
+    //return () => gameSessionSubscription?.unsubscribe()
   }, []);
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
@@ -51,7 +52,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
+      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:

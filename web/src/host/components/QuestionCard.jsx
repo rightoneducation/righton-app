@@ -90,7 +90,6 @@ export default function QuestionCard({
     setExpanded(!expanded);
   };
 
-  console.log({ image });
   return (
     <Grid container className={classes.centerContent}>
       <Card className={classes.QuestionCard} style={{ borderRadius: "18px" }}>

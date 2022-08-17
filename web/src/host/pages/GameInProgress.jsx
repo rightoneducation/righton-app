@@ -19,15 +19,13 @@ export default function GameInProgress({
   handleUpdateGameSessionStateFooter
 }) {
 const classes = useStyles();
-const questionDetails = questions.items
- console.log(questionDetails);
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
  
   const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
     let count = 0;
-    teams && teams.items.map(team => 
+    teams && teams.map(team => 
        team.teamMembers && team.teamMembers.items.map(teamMember => 
         teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
     )))
@@ -36,9 +34,9 @@ const questionDetails = questions.items
   };
 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.items.length : 0)){
+    if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.length : 0)){
       return "FINAL_RESULTS";
-    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionId !== (questions ? questions.items.length : 0)) {
+    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionId !== (questions ? questions.length : 0)) {
       return "CHOOSE_CORRECT_ANSWER";
     } else {
     return stateArray[stateArray.indexOf(currentState) + 1]; 
@@ -56,21 +54,21 @@ const questionDetails = questions.items
         }}
       >
         <HeaderGameInProgress
-          totalQuestions={questions ? questions.items.length : 0}
+          totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionId}
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
-        <QuestionCardDetails questions={questions.items} />
-        <AnswersInProgressDetails questions={questions.items} />
+        <QuestionCardDetails questions={questions} />
+        <AnswersInProgressDetails questions={questions} />
       </div>
     
       <FooterGameInProgress
         currentState={currentState}
         nextState = {nextState= nextStateFunc(currentState)} 
         nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionId+1 : currentQuestionId} 
-        numPlayers={teams ? teams.items.length : 0}
+        numPlayers={teams ? teams.length : 0}
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
