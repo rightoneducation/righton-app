@@ -9,7 +9,7 @@ export interface IGameSession {
     phaseOneTime: number
     phaseTwoTime: number
     teams?: Array<ITeam>
-    currentQuestionId?: number | null
+    currentQuestionIndex?: number | null
     currentState: GameSessionState
     gameCode: number
     currentTimer?: number | null

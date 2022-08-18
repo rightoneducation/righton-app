@@ -10,7 +10,7 @@ type GameSession @model {
   phaseOneTime: Int!
   phaseTwoTime: Int!
   teams: [Team] @hasMany
-  currentQuestionId: Int
+  currentQuestionIndex: Int
   currentState: GameSessionState!
     @index(name: "byState", queryField: "gameSessionByState")
   gameCode: Int! @index(name: "byCode", queryField: "gameSessionByCode")
@@ -34,7 +34,7 @@ enum GameSessionState {
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["gameSessionId"])
+  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   answer: String
   wrongAnswers: AWSJSON
@@ -44,14 +44,14 @@ type Question @model(subscriptions: null, timestamps: null) {
   cluster: String
   domain: String
   grade: String
+  order: Int!
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
-  gameSession: GameSession @belongsTo(fields: ["gameSessionId"])
 }
 
 type Team @model {
   id: ID!
   name: String!
-  question: Question! @hasOne
+  question: Question @hasOne
   trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
   score: Int!
@@ -67,6 +67,7 @@ type TeamMember @model {
 
 type TeamAnswer @model {
   id: ID!
+  questionId: Int!
   isChosen: Boolean
   text: String!
 }

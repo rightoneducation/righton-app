@@ -18,7 +18,7 @@ type GameSession @model {
   imageUrl: String
   description: String
   title: String
-  currentTimer: Int!
+  currentTimer: Int
   questions: [Question] @hasMany(indexName: "byGameSession", fields: ["id"])
 }
 
@@ -51,7 +51,7 @@ type Question @model(subscriptions: null, timestamps: null) {
 type Team @model {
   id: ID!
   name: String!
-  question: Question! @hasOne
+  question: Question @hasOne
   trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
   score: Int!
@@ -67,6 +67,7 @@ type TeamMember @model {
 
 type TeamAnswer @model {
   id: ID!
+  question: Question! @hasOne
   isChosen: Boolean
-  text: String
+  text: String!
 }

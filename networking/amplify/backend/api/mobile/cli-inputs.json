@@ -3,10 +3,11 @@
   "serviceConfiguration": {
     "apiName": "mobile",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/Users/maniramezan/Developer/righton-app/networking/amplify/backend/api/mobile/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
-      "expirationTime": 7
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2023-08-18T15:06:59.936Z",
+      "keyDescription": "mobiledev"
     }
   }
 }
