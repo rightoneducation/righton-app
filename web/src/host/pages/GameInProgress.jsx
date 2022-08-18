@@ -32,6 +32,10 @@ const classes = useStyles();
     return count;
   };
 
+  if(currentQuestionId == null) {
+    currentQuestionId = 1;
+  }
+
   const nextStateFunc = currentState => { //determines next state for use by footer
     if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.length : 0)){
       return "FINAL_RESULTS";
