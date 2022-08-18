@@ -20,6 +20,7 @@ const GameSessionContainer = () => {
 
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
+      console.log(response);
       setGameSession(response);
     });
 

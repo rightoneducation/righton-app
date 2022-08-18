@@ -5,13 +5,16 @@ import QuestionCard from "./QuestionCard";
 
 export default function QuestionDetails({questions}) {
   const classes = useStyles();
+  //pass current question in based off current index
+
+  const currentQuestion = questions[0];
 
   return (
     <Grid>
       <QuestionCard
-        question={questions[0].text}
-        hint={questions[0].instructions}
-        image={questions[0].imageUrl}
+        question={currentQuestion.text}
+        hint={currentQuestion.instructions}
+        image={currentQuestion.imageUrl}
       ></QuestionCard>
     </Grid>
   );
