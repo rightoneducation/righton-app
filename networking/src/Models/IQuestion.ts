@@ -1,5 +1,3 @@
-import { IGameSession } from "./IGameSession"
-
 export interface IQuestion {
     id: number
     text: string
@@ -11,5 +9,6 @@ export interface IQuestion {
     cluster?: string | null
     domain?: string | null
     grade?: string | null
-    gameSession?: IGameSession | null
+    gameSessionId: string
+    order: number
 }

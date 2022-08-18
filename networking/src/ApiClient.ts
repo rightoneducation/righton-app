@@ -93,7 +93,7 @@ export class ApiClient implements IApiClient {
 
     // TODO: Remove this method and instead use `updateGameSession`
     async updateGameSessionFooter(id: string, gameState: GameSessionState, nextQuestion: number, phaseOneTimeReset: number, phaseTwoTimeReset: number): Promise<IGameSession> {
-        let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState, currentQuestionId: nextQuestion, phaseOneTime: phaseOneTimeReset, phaseTwoTime: phaseTwoTimeReset }
+        let updateGameSessionInput: UpdateGameSessionInput = { id, currentState: gameState, currentQuestionIndex: nextQuestion, phaseOneTime: phaseOneTimeReset, phaseTwoTime: phaseTwoTimeReset }
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
         let result = await this.callGraphQL<UpdateGameSessionMutation>(updateGameSession, variables)
         if (result.errors != null) {
@@ -177,7 +177,7 @@ type AWSGameSession = {
     teams?: {
         items: Array<AWSTeam | null>
     } | null
-    currentQuestionId?: number | null
+    currentQuestionIndex?: number | null
     currentState: GameSessionState
     gameCode: number
     isAdvanced: boolean
@@ -200,8 +200,8 @@ type AWSTeam = {
     createdAt: string,
     updatedAt: string,
     gameSessionTeamsId?: string | null,
-    teamQuestionId: string,
-    teamQuestionGameSessionId: string,
+    teamQuestionId?: string | null,
+    teamQuestionGameSessionId?: string | null,
 }
 
 type AWSQuestion = {
@@ -244,7 +244,7 @@ class GameSessionParser {
             phaseOneTime,
             phaseTwoTime,
             teams,
-            currentQuestionId,
+            currentQuestionIndex,
             currentState,
             gameCode,
             questions,
@@ -277,7 +277,7 @@ class GameSessionParser {
             phaseOneTime,
             phaseTwoTime,
             teams: GameSessionParser.mapTeams(teams),
-            currentQuestionId,
+            currentQuestionIndex,
             currentState,
             gameCode,
             currentTimer,
@@ -303,15 +303,12 @@ class GameSessionParser {
         })
     }
 
-    private static mapQuestions(awsQuestions: Array<AWSQuestion | null>): Map<number, IQuestion> {
-        return new Map(
-            awsQuestions.map(awsQuestion => {
-                if (isNullOrUndefined(awsQuestion)) {
-                    throw new Error("Question can't be null")
-                }
-                return [awsQuestion.id, awsQuestion as IQuestion]
-            })
-        )
+    private static mapQuestions(awsQuestions: Array<AWSQuestion | null>): Array<IQuestion> {
+        return awsQuestions.map(awsQuestion => {
+            return awsQuestion as IQuestion
+        }).sort((lhs, rhs) => {
+            return lhs.order - rhs.order
+        })
     }
 }
 
