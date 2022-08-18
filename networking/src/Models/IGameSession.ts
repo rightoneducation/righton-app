@@ -13,7 +13,7 @@ export interface IGameSession {
     currentState: GameSessionState
     gameCode: number
     currentTimer?: number | null
-    questions: Array<IQuestion>
+    questions: Map<number, IQuestion>
     title?: string | null
     updatedAt: string
     createdAt: string

@@ -252,7 +252,7 @@ class GameSessionParser {
             updatedAt,
             createdAt,
             title
-            
+
         } = awsGameSession || {}
 
         if (
@@ -303,10 +303,15 @@ class GameSessionParser {
         })
     }
 
-    private static mapQuestions(awsQuestions: Array<AWSQuestion | null>): Array<IQuestion> {
-        return awsQuestions.map(awsQuestion => {
-            return awsQuestion as IQuestion
-        })
+    private static mapQuestions(awsQuestions: Array<AWSQuestion | null>): Map<number, IQuestion> {
+        return new Map(
+            awsQuestions.map(awsQuestion => {
+                if (isNullOrUndefined(awsQuestion)) {
+                    throw new Error("Question can't be null")
+                }
+                return [awsQuestion.id, awsQuestion as IQuestion]
+            })
+        )
     }
 }
 
