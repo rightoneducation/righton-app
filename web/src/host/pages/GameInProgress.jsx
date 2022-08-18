@@ -12,7 +12,7 @@ export default function GameInProgress({
   teams,
   questions,
   currentState,
-  currentQuestionId,
+  currentQuestionIndex,
   phaseOneTime,
   phaseTwoTime,
   handleUpdateGameSessionStateFooter
@@ -32,14 +32,14 @@ const classes = useStyles();
     return count;
   };
 
-  if(currentQuestionId == null) {
-    currentQuestionId = 1;
-  }
+  // if(currentQuestionId == null) {
+  //   currentQuestionId = 1;
+  // }
 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS" && currentQuestionId === (questions ? questions.length : 0)){
+    if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex === (questions ? questions.length : 0)){
       return "FINAL_RESULTS";
-    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionId !== (questions ? questions.length : 0)) {
+    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex !== (questions ? questions.length : 0)) {
       return "CHOOSE_CORRECT_ANSWER";
     } else {
     return stateArray[stateArray.indexOf(currentState) + 1]; 
@@ -59,7 +59,7 @@ const classes = useStyles();
         <HeaderGameInProgress
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
-          currentQuestion={currentQuestionId}
+          currentQuestion={currentQuestionIndex}
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
@@ -70,7 +70,7 @@ const classes = useStyles();
       <FooterGameInProgress
         currentState={currentState}
         nextState = {nextState= nextStateFunc(currentState)} 
-        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionId+1 : currentQuestionId} 
+        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionIndex+1 : currentQuestionIndex} 
         numPlayers={teams ? teams.length : 0}
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
