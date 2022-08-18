@@ -5,7 +5,7 @@ import {
   ApiClient,
   Environment,
   GameSessionState,
-  IGameSession
+  IGameSession,
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
@@ -23,17 +23,17 @@ const GameSessionContainer = () => {
       setGameSession(response);
     });
 
-    // apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-    //   setGameSession({ ...gameSession, ...response });
-    // });
+    gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
+      setGameSession({ ...gameSession, ...response });
+    });
 
     //@ts-ignore
     return () => gameSessionSubscription?.unsubscribe()
   }, []);
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
-    apiClient.updateGameSession(gameSessionId, gameSessionState)
-      .then(response => {
+    apiClient.updateGameSession({id: gameSessionId, currentState: gameSessionState})
+    .then(response => {
         setGameSession(response);
       })
   }
@@ -51,7 +51,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
+      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:

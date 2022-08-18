@@ -250,7 +250,9 @@ class GameSessionParser {
             questions,
             currentTimer,
             updatedAt,
-            createdAt
+            createdAt,
+            title
+            
         } = awsGameSession || {}
 
         if (
@@ -281,7 +283,8 @@ class GameSessionParser {
             currentTimer,
             questions: GameSessionParser.mapQuestions(questions.items),
             updatedAt,
-            createdAt
+            createdAt,
+            title
         }
         return gameSession
     }

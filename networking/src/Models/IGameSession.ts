@@ -14,6 +14,7 @@ export interface IGameSession {
     gameCode: number
     currentTimer?: number | null
     questions: Array<IQuestion>
+    title?: string | null
     updatedAt: string
     createdAt: string
 }
