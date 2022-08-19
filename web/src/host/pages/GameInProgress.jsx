@@ -14,9 +14,10 @@ export default function GameInProgress({
   currentQuestionIndex,
   phaseOneTime,
   phaseTwoTime,
-  handleUpdateGameSessionStateFooter
+  handleUpdateGameSession
 }) {
-const classes = useStyles();
+  
+  const classes = useStyles();
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
@@ -70,7 +71,7 @@ const classes = useStyles();
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
-        handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}        
+        handleUpdateGameSession={handleUpdateGameSession}        
       />
     </div>
   );

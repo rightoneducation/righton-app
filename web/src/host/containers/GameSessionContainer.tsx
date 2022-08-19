@@ -27,18 +27,13 @@ const GameSessionContainer = () => {
       setGameSession(({...gameSession, ...response}));
      });
      
+     // @ts-ignore
     return () => gameSessionSubscription?.unsubscribe();
-  },[]);
+  }, );
   
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({id: gameSessionId, ...newUpdates})
     .then(response => {
-        setGameSession(response);
-      });
-  };
-  const handleUpdateGameSessionStateFooter = (gameSessionState: GameSessionState, nextQuestion: number, phaseOneTimeReset: number, phaseTwoTimeReset: number) => {
-    apiClient.updateGameSessionFooter(gameSessionId, gameSessionState, nextQuestion, phaseOneTimeReset, phaseTwoTimeReset)
-      .then(response => {
         setGameSession(response);
       });
   };
@@ -50,16 +45,16 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSession={handleUpdateGameSession} />;
+      return <StartGame {...gameSession} handleUpdateGameSession={handleUpdateGameSession} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
-      return <GameInProgress {...gameSession} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
+      return <GameInProgress {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
 
     case GameSessionState.FINAL_RESULTS:
-      return <Ranking {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSession={handleUpdateGameSession} />;
+      return <Ranking {...gameSession} handleUpdateGameSession={handleUpdateGameSession} />;
 
     default:
       return <Redirect to="/" />;

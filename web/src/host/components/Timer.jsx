@@ -39,15 +39,15 @@ const useStyles = makeStyles(theme => ({
 export default function Timer({ timer }) {
   const classes = useStyles();
   let countdown = useRef(); //useRef here
-  //pass state of parent component as props for host instead of using state here
+  //pass state of parent component as props vs. using state here
   //allowing other components access to timer
   const [time, setTime] = useState(timer);
 
   useEffect(() => {
     countdown.current = setInterval(() => {
       if (time > 0) {
-        setTime(time - 1); //anytime the timer hits 0, unmount - clearInterval
-      }
+        setTime(time - 1);
+      } 
     }, 1000);
 
     return () => clearInterval(countdown.current);
@@ -70,7 +70,7 @@ export default function Timer({ timer }) {
         {time % 60 < 10 ? `0${time % 60}` : `${time % 60}`}
       </p>
 
-      <IconButton
+      {/* <IconButton
         className={classes.blueButton}
         color="primary"
         type="button"
@@ -79,7 +79,7 @@ export default function Timer({ timer }) {
         onClick={() => setTime(time + 30)}
       >
         <AvTimer /> + 30 Sec.
-      </IconButton>
+      </IconButton> */}
     </div>
   );
 }

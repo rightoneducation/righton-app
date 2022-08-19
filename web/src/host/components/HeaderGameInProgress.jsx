@@ -3,8 +3,6 @@ import { Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
-const questionNumber = 2;
-
 const useStyles = makeStyles(() => ({
   div: {
     paddingLeft: "10px",
@@ -47,10 +45,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const label = {
-  PHASE_ONE: "Phase 1 of 2",
-  PHASE_ONE_RESULTS: "Phase 1 Results",
-  PHASE_TWO: "Phase 2 of 2",
-  PHASE_TWO_RESULTS: "Phase 2 Results"
+  CHOOSE_CORRECT_ANSWER: "Phase 1 of 2",
+  PHASE_1_RESULTS: "Phase 1 Results",
+  CHOOSE_TRICKIEST_ANSWER: "Phase 2 of 2",
+  PHASE_2_RESULTS: "Phase 2 Results"
 };
 
 export default function GameInProgressHeader({
@@ -58,21 +56,21 @@ export default function GameInProgressHeader({
   currentQuestion,
   currentState,
   phaseOneTime,
-  phaseTwoTime
+  phaseTwoTime,
 }) {
   const classes = useStyles();
 
   var time = 0;
 
-  if (currentState == "PHASE_ONE") {
+  if (currentState == "CHOOSE_CORRECT_ANSWER" ) {
     time = phaseOneTime;
-  } else if (currentState == "PHASE_TWO") {
+  } else if (currentState == "CHOOSE_TRICKIEST_ANSWER") {
     time = phaseTwoTime;
   }
 
   return (
     <div className={classes.div}>
-      <Pagination
+      {/* <Pagination
         hideNextButton
         hidePrevButton
         variant="outlined"
@@ -80,10 +78,10 @@ export default function GameInProgressHeader({
         classes={{ ul: classes.ul }}
         count={totalQuestions}
         page={currentQuestion}
-      />
+      /> */}
 
       <Typography className={classes.title}>
-        Question {currentQuestion} of {totalQuestions}{" "}
+        Game On!{" "}
         {/* Replace with current question number and total questions info from query */}
       </Typography>
 
