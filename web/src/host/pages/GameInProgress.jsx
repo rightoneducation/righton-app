@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from "../components/FooterGameInProgress";
 import HeaderGameInProgress from "../components/HeaderGameInProgress";
 import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
 import CheckMark from "../../images/Union.png";
-import { ConstructionOutlined } from "@mui/icons-material";
 import { GameSessionState } from "@righton/networking";
 
 export default function GameInProgress({
@@ -32,12 +31,8 @@ const classes = useStyles();
     return count;
   };
 
-  // if(currentQuestionId == null) {
-  //   currentQuestionId = 1;
-  // }
-
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex === (questions ? questions.length : 0)){
+    if (currentState === "PHASE_2_RESULTS"){
       return "FINAL_RESULTS";
     } else if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex !== (questions ? questions.length : 0)) {
       return "CHOOSE_CORRECT_ANSWER";
@@ -69,8 +64,8 @@ const classes = useStyles();
     
       <FooterGameInProgress
         currentState={currentState}
-        nextState = {nextState= nextStateFunc(currentState)} 
-        nextQuestion = {(nextState === 'CHOOSE_CORRECT_ANSWER') ? currentQuestionIndex+1 : currentQuestionIndex} 
+        nextState={nextState= nextStateFunc(currentState)} 
+        nextQuestion={currentQuestionIndex} 
         numPlayers={teams ? teams.length : 0}
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}

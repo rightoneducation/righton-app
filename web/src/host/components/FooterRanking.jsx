@@ -2,14 +2,15 @@ import React from "react";
 import { makeStyles, Grid, Box, BottomNavigation } from "@material-ui/core";
 import { GameSessionState } from "@righton/networking";
 
-const FooterRankings = ({ handleUpdateGameSessionState }) => {
+const FooterRankings = ({ handleUpdateGameSession }) => {
   const classes = useStyles();
+
   return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}>
         <hr className={classes.line} />
         <button className={classes.backButton} onClick={() =>
-          handleUpdateGameSessionState(GameSessionState.FINISHED)}>
+          handleUpdateGameSession({ currentState: GameSessionState.FINISHED })}>
           <p className={classes.backButtonText}>Exit to RightOn Central</p>
         </button>
       </div>

@@ -12,57 +12,54 @@ import Ranking from "../pages/Ranking";
 
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
-
-  let apiClient = new ApiClient(Environment.Staging);
-  let gameSessionSubscription: any | null = null
+  
+  const apiClient = new ApiClient(Environment.Staging);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
-
+  
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
-      console.log(response);
       setGameSession(response);
     });
 
+    let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-      setGameSession({ ...gameSession, ...response });
-    });
-
-    //@ts-ignore
-    return () => gameSessionSubscription?.unsubscribe()
-  }, []);
-
-  const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
-    apiClient.updateGameSession({id: gameSessionId, currentState: gameSessionState})
+      setGameSession(({...gameSession, ...response}));
+     });
+     
+    return () => gameSessionSubscription?.unsubscribe();
+  },[]);
+  
+  const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
+    apiClient.updateGameSession({id: gameSessionId, ...newUpdates})
     .then(response => {
         setGameSession(response);
-      })
-  }
+      });
+  };
   const handleUpdateGameSessionStateFooter = (gameSessionState: GameSessionState, nextQuestion: number, phaseOneTimeReset: number, phaseTwoTimeReset: number) => {
     apiClient.updateGameSessionFooter(gameSessionId, gameSessionState, nextQuestion, phaseOneTimeReset, phaseTwoTimeReset)
       .then(response => {
         setGameSession(response);
-      })
-  }
+      });
+  };
 
   if (!gameSession) {
     return null;
-  }
+  };
 
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
+      return <StartGame {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSession={handleUpdateGameSession} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
-
-    return <GameInProgress {...gameSession} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
+      return <GameInProgress {...gameSession} handleUpdateGameSessionStateFooter={handleUpdateGameSessionStateFooter}/>;
 
     case GameSessionState.FINAL_RESULTS:
-      return <Ranking {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSessionState={handleUpdateGameSessionState} />;
+      return <Ranking {...gameSession} gameSessionId={gameSessionId} handleUpdateGameSession={handleUpdateGameSession} />;
 
     default:
       return <Redirect to="/" />;

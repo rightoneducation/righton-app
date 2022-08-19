@@ -6,7 +6,7 @@ import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGameInProgress({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  handleUpdateGameSessionStateFooter }) {
+export default function FooterGameInProgress({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSessionStateFooter }) {
   const classes = useStyles();
 
   const currentStateToButtonText = { //dictionary used to assign button text based on the next state 

@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { MenuItem } from "@material-ui/core";
 import PlayerScores from "../components/RankingsScores";
 import HeaderRanking from "../components/HeaderRanking";
 import FooterRanking from "../components/FooterRanking";
@@ -9,7 +8,7 @@ export default function Ranking({
   teams,
   gameSessionId,
   currentState,
-  handleUpdateGameSessionState
+  handleUpdateGameSession
 }) {
   const classes = useStyles();
   const players = { teams }.teams;
@@ -23,7 +22,7 @@ export default function Ranking({
       <FooterRanking
         gameSessionId={gameSessionId}
         currentState={currentState}
-        handleUpdateGameSessionState={handleUpdateGameSessionState} />
+        handleUpdateGameSession={handleUpdateGameSession} />
     </div>
   );
 }
