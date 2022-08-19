@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Timer({ timer }) {
   const classes = useStyles();
-  let countdown = useRef(); //useRef here
+  let countdown = useRef();
   //pass state of parent component as props vs. using state here
   //allowing other components access to timer
   const [time, setTime] = useState(timer);
