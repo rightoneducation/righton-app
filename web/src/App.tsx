@@ -33,7 +33,6 @@ import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
 import { Auth } from 'aws-amplify';
 import { loadGameSession } from './lib/hostAPI';
-import GameInProgressContainer from './host/containers/GameInProgressContainer';
 import { GameSessionState } from '@righton/networking';
 import GameSessionContainer from './host/containers/GameSessionContainer';
 
