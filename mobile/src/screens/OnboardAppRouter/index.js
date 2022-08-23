@@ -2,27 +2,26 @@ import React from 'react'
 import {
   Text,
   View,
-  ImageBackground,
   Image,
-  SafeAreaView,
-  StatusBar
+  SafeAreaView
 } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 import { colors, fonts, fontFamilies } from '../../utils/theme'
 import RoundButton from '../../components/RoundButton'
 import PurpleBackground from '../../components/PurpleBackground'
-import { Auth } from 'aws-amplify'
+// import { Auth } from 'aws-amplify'
 
 export default function OnboardAppRouter({ navigation }) {
   const [user, setUser] = React.useState(null)
 
   function handleJoinGame() {
     // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
-    if (user == null) {
-      setTimeout(() => navigation.navigate('StudentFirst', { user: false }), 250)
-    } else {
-      setTimeout(() => navigation.navigate('StudentFirst', { user: true }), 250)
-    }
+    // if (user == null) {
+    //   setTimeout(() => navigation.navigate('StudentFirst', { user: false }), 250)
+    // } else {
+    //   setTimeout(() => navigation.navigate('StudentFirst', { user: true }), 250)
+    // }
+    navigation.navigate('StudentFirst')
   }
 
   function handleSignIn() {
@@ -67,27 +66,27 @@ export default function OnboardAppRouter({ navigation }) {
             style={{ backgroundColor: colors.buttonPrimary }}
             onPress={() => handleJoinGame()}
           />
-          {!user ?
+          {/* {!user ?
             <RoundButton
               title="Sign In"
               style={{ backgroundColor: colors.buttonSecondary }}
               onPress={() => handleSignIn()}
-            /> : 
+            /> :
             <RoundButton
               title="Sign Out"
               style={{ backgroundColor: colors.buttonSecondary }}
               onPress={() => handleSignOut()}
             />
-          }
+          } */}
         </View>
-        <Text style={styles.footerText}>
-          Making an account lets you join a game quicker! Don’t have an account? 
-        <Text onPress={() => handleSignUp()} style={{ color: colors.lightblue }}>Tap Here to make one!</Text>
-        </Text>
-        <View style={styles.userContainer}>
-          {user !== null ? (<Text style={styles.bottomUser}>{user.username}</Text>) 
-          : (<Text style={styles.bottomUser}>Not signed in</Text>)}
-        </View>
+        {/* <Text style={styles.footerText}>
+          Making an account lets you join a game quicker! Don’t have an account?
+          <Text onPress={() => handleSignUp()} style={{ color: colors.lightblue }}>Tap Here to make one!</Text>
+        </Text> */}
+        {/* <View style={styles.userContainer}>
+          {user !== null ? (<Text style={styles.bottomUser}>{user.username}</Text>)
+            : (<Text style={styles.bottomUser}>Not signed in</Text>)}
+        </View> */}
       </PurpleBackground>
     </SafeAreaView>
   )

@@ -10,11 +10,11 @@ type GameSession @model {
   phaseOneTime: Int!
   phaseTwoTime: Int!
   teams: [Team] @hasMany
-  currentQuestionId: Int
+  currentQuestionIndex: Int
   currentState: GameSessionState!
     @index(name: "byState", queryField: "gameSessionByState")
   gameCode: Int! @index(name: "byCode", queryField: "gameSessionByCode")
-  isAdvanced: Boolean!
+  isAdvancedMode: Boolean!
   imageUrl: String
   description: String
   title: String
@@ -34,7 +34,7 @@ enum GameSessionState {
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["gameSessionId"])
+  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   answer: String
   wrongAnswers: AWSJSON
@@ -44,8 +44,8 @@ type Question @model(subscriptions: null, timestamps: null) {
   cluster: String
   domain: String
   grade: String
+  order: Int!
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
-  gameSession: GameSession @belongsTo(fields: ["gameSessionId"])
 }
 
 type Team @model {
@@ -54,12 +54,11 @@ type Team @model {
   question: Question @hasOne
   trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
-  score: Int!
+  score: Int! @default(value: "0")
 }
 
 type TeamMember @model {
   id: ID!
-  team: Team!
   isFacilitator: Boolean
   answers: [TeamAnswer] @hasMany
   deviceId: ID!
@@ -67,7 +66,12 @@ type TeamMember @model {
 
 type TeamAnswer @model {
   id: ID!
-  question: Question! @hasOne
+  questionId: Int!
   isChosen: Boolean
   text: String!
+}
+
+type Subscription {
+  onGameSessionUpdatedById(id: ID!): GameSession
+    @aws_subscribe(mutations: ["updateGameSession"])
 }

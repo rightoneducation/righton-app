@@ -1,12 +1,12 @@
 import React, { useState, useRef, useCallback } from "react"
 import { View, Text, ScrollView, StyleSheet, Image } from "react-native"
-import AnimatedAccordion from "@dev-event/react-native-accordion"
+// import AnimatedAccordion from "@dev-event/react-native-accordion"
 import { fontFamilies, fonts } from "../../../../../../utils/theme"
 import { scale } from "react-native-size-matters"
 import CollapsableContent from "../CollapsableContent"
 
 const TeamCards = ({ teamInfo }) => {
-  const accordionRef = useRef(null)
+  // const accordionRef = useRef(null)
 
   const [show, setShow] = useState(false)
   const [expandedIndexes, setExpandedIndexes] = useState([])
@@ -56,7 +56,8 @@ const TeamCards = ({ teamInfo }) => {
     >
       {teamInfo.map((info, i) => {
         return (
-          <AnimatedAccordion
+          <View />
+          /*{ <AnimatedAccordion
             key={i}
             styleChevron={styles.icon}
             renderContent={handleContent}
@@ -65,9 +66,9 @@ const TeamCards = ({ teamInfo }) => {
               styles.touchable,
               expandedIndexes.indexOf(i) != -1
                 ? {
-                    borderBottomLeftRadius: 0,
-                    borderBottomRightRadius: 0,
-                  }
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                }
                 : {},
             ]}
             activeBackgroundIcon={"transparent"}
@@ -77,7 +78,7 @@ const TeamCards = ({ teamInfo }) => {
             }
             initialMountedContent={true}
             handleIcon={handleIcon}
-          />
+          /> }*/
         )
       })}
     </ScrollView>

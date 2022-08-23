@@ -12,6 +12,7 @@ export interface IGameSession {
     currentQuestionIndex?: number | null
     currentState: GameSessionState
     gameCode: number
+    isAdvancedMode: boolean
     currentTimer?: number | null
     questions: Array<IQuestion>
     title?: string | null

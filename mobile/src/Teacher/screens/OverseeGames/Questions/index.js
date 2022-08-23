@@ -9,7 +9,7 @@ import {
 import { scale } from "react-native-size-matters"
 import { fontFamilies, fonts, colors } from "../../../../utils/theme"
 import Footer from "../components/Footer"
-import AnimatedAccordion from "@dev-event/react-native-accordion"
+// import AnimatedAccordion from "@dev-event/react-native-accordion"
 import CollapsableContent from "./CollapsableContent"
 import RootComponent from "../components/RootComponent"
 
@@ -17,7 +17,7 @@ import RootComponent from "../components/RootComponent"
 const Questions = ({ route, navigation }) => {
   const [allTeamAnswers, setAllTeamAnswers] = useState(false)
   const { questionNum } = route.params
-  const accordionRef = useRef(null)
+  // const accordionRef = useRef(null)
 
   const teamInfo = [
     {
@@ -93,52 +93,53 @@ const Questions = ({ route, navigation }) => {
 
   return (
     <RootComponent heading="Question" subheading="Multiple Choice Questions">
-        <View style={{ flex: 1 }}>
-          <ScrollView
-            style={styles.teamInfoContainer}
-            showsVerticalScrollIndicator={false}
-          >
-            {teamInfo.map((info, i) => {
-              return (
-                <AnimatedAccordion
-                  key={i}
-                  ref={accordionRef}
-                  styleChevron={styles.icon}
-                  renderContent={handleContent}
-                  onChangeState={(isShow) => handleOpen(isShow, i)}
-                  styleTouchable={[
-                    styles.touchable,
-                    expandedIndexes.indexOf(i) != -1
-                      ? {
-                          borderBottomLeftRadius: 0,
-                          borderBottomRightRadius: 0,
-                        }
-                      : {},
-                  ]}
-                  activeBackgroundIcon={"transparent"}
-                  inactiveBackgroundIcon={"transparent"}
-                  handleContentTouchable={() => handleContentTouchable(i + 1)}
-                  initialMountedContent={true}
-                  handleIcon={handleIcon}
-                />
-              )
-            })}
-          </ScrollView>
-        </View>
-        <View style={styles.footerContainer}>
-          <View style={styles.scrollDivider} />
-          <Footer
-            style={styles.footer}
-            noPicked={2}
-            teams={teamInfo.length}
-            navigation={navigation}
-            questionNum={questionNum}
-            nextPage={"Results"}
-            buttonLabel={"Skip to Results"}
-            backgroundColor={allTeamAnswers ? colors.lightblue : "transparent"}
-            textColor={allTeamAnswers ? colors.white : colors.lightblue}
-          />
-        </View>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          style={styles.teamInfoContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {teamInfo.map((info, i) => {
+            return (
+              <View />
+              /*{ <AnimatedAccordion
+                key={i}
+                ref={accordionRef}
+                styleChevron={styles.icon}
+                renderContent={handleContent}
+                onChangeState={(isShow) => handleOpen(isShow, i)}
+                styleTouchable={[
+                  styles.touchable,
+                  expandedIndexes.indexOf(i) != -1
+                    ? {
+                        borderBottomLeftRadius: 0,
+                        borderBottomRightRadius: 0,
+                      }
+                    : {},
+                ]}
+                activeBackgroundIcon={"transparent"}
+                inactiveBackgroundIcon={"transparent"}
+                handleContentTouchable={() => handleContentTouchable(i + 1)}
+                initialMountedContent={true}
+                handleIcon={handleIcon}
+              /> }*/
+            )
+          })}
+        </ScrollView>
+      </View>
+      <View style={styles.footerContainer}>
+        <View style={styles.scrollDivider} />
+        <Footer
+          style={styles.footer}
+          noPicked={2}
+          teams={teamInfo.length}
+          navigation={navigation}
+          questionNum={questionNum}
+          nextPage={"Results"}
+          buttonLabel={"Skip to Results"}
+          backgroundColor={allTeamAnswers ? colors.lightblue : "transparent"}
+          textColor={allTeamAnswers ? colors.white : colors.lightblue}
+        />
+      </View>
     </RootComponent>
   )
 }

@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
-import { StyleSheet, Text, View, Platform, Image, Button, Pressable } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
 import { fontFamilies, fonts } from '../../../utils/theme'
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const QuestionCard = (props) => {
-    const [hintsShown, setHintsShown] = useState(false);
+    const [hintsShown, setHintsShown] = useState(false)
 
     const showHints = () => {
         setHintsShown(true)
@@ -16,41 +13,41 @@ const QuestionCard = (props) => {
         setHintsShown(false)
     }
 
-    return(
-            <View style={styles.cardContainer}>   
-                <Image
-                    style={styles.questionImage}
-                    source={{uri: props.image}}
-                />
-                <Text style={styles.headerText}>{props.question}</Text>
-                <View style={styles.breakLine}></View>
+    return (
+        <View style={styles.cardContainer}>
+            <Image
+                style={styles.questionImage}
+                source={{ uri: props.image }}
+            />
+            <Text style={styles.headerText}>{props.question}</Text>
+            <View style={styles.breakLine}></View>
 
+            {
+                hintsShown && props.instructions.map((hint, index) => (
+                    <View style={styles.hintDirection}>
+                        <Text style={styles.hintNumber}>{index + 1}</Text>
+                        <Text style={styles.questionHint}>{hint}</Text>
+                    </View>
+                ))
+            }
+
+            <View style={styles.hintButtonBackground}>
                 {
-                    hintsShown && props.instructions.map( (hint, index) => (
-                        <View style={styles.hintDirection}>
-                            <Text style={styles.hintNumber}>{index + 1}</Text>
-                            <Text style={styles.questionHint}>{hint}</Text>
-                        </View>
-                    ))
+                    hintsShown ?
+                        <Pressable onPress={hideHints}>
+                            <Text style={styles.hintButton}>HIDE HINTS</Text>
+                        </Pressable>
+                        :
+                        <Pressable onPress={showHints}>
+                            <View style={styles.hintButtonDirection}>
+                                <Text style={styles.hintButton}>SHOW HINTS</Text>
+                            </View>
+                        </Pressable>
                 }
-
-                <View style={styles.hintButtonBackground}>
-                    {
-                        hintsShown ? 
-                            <Pressable onPress={hideHints}>
-                                <Text style={styles.hintButton}>HIDE HINTS</Text>
-                            </Pressable>
-                            : 
-                            <Pressable onPress={showHints}>
-                                <View style={styles.hintButtonDirection}>
-                                    <Text style={styles.hintButton}>SHOW HINTS</Text>
-                                </View>
-                            </Pressable>
-                    }
-                </View>
-                    
             </View>
-    );
+
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -89,7 +86,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     questionHint: {
-        fontWeight:'normal',
+        fontWeight: 'normal',
         fontSize: 16,
         color: '#384466',
         marginRight: 70
@@ -104,7 +101,7 @@ const styles = StyleSheet.create({
     },
     hintDirection: {
         flexDirection: 'row',
-        flex:1,
+        flex: 1,
         marginTop: 20,
         width: '100%',
         padding: 10,
@@ -120,7 +117,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 24,
         alignItems: 'center',
     },
-    hintButton : {
+    hintButton: {
         marginTop: 15,
         color: '#1C55FD',
         fontWeight: 'bold',
@@ -132,4 +129,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default QuestionCard;
+export default QuestionCard

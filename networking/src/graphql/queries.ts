@@ -53,7 +53,7 @@ export const getGameSession = /* GraphQL */ `
       currentQuestionIndex
       currentState
       gameCode
-      isAdvanced
+      isAdvancedMode
       imageUrl
       description
       title
@@ -128,7 +128,7 @@ export const listGameSessions = /* GraphQL */ `
         currentQuestionIndex
         currentState
         gameCode
-        isAdvanced
+        isAdvancedMode
         imageUrl
         description
         title
@@ -233,35 +233,6 @@ export const getTeam = /* GraphQL */ `
       teamMembers {
         items {
           id
-          team {
-            id
-            name
-            question {
-              id
-              text
-              answer
-              wrongAnswers
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              gameSessionId
-            }
-            trickiestAnswerIDs
-            teamMembers {
-              nextToken
-            }
-            score
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
-          }
           isFacilitator
           answers {
             items {
@@ -320,18 +291,6 @@ export const listTeams = /* GraphQL */ `
         teamMembers {
           items {
             id
-            team {
-              id
-              name
-              trickiestAnswerIDs
-              score
-              createdAt
-              updatedAt
-              gameSessionTeamsId
-              teamQuestionId
-              teamQuestionOrder
-              teamQuestionGameSessionId
-            }
             isFacilitator
             answers {
               nextToken
@@ -359,58 +318,6 @@ export const getTeamMember = /* GraphQL */ `
   query GetTeamMember($id: ID!) {
     getTeamMember(id: $id) {
       id
-      team {
-        id
-        name
-        question {
-          id
-          text
-          answer
-          wrongAnswers
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
-        trickiestAnswerIDs
-        teamMembers {
-          items {
-            id
-            team {
-              id
-              name
-              trickiestAnswerIDs
-              score
-              createdAt
-              updatedAt
-              gameSessionTeamsId
-              teamQuestionId
-              teamQuestionOrder
-              teamQuestionGameSessionId
-            }
-            isFacilitator
-            answers {
-              nextToken
-            }
-            deviceId
-            createdAt
-            updatedAt
-            teamTeamMembersId
-          }
-          nextToken
-        }
-        score
-        createdAt
-        updatedAt
-        gameSessionTeamsId
-        teamQuestionId
-        teamQuestionOrder
-        teamQuestionGameSessionId
-      }
       isFacilitator
       answers {
         items {
@@ -440,43 +347,6 @@ export const listTeamMembers = /* GraphQL */ `
     listTeamMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        team {
-          id
-          name
-          question {
-            id
-            text
-            answer
-            wrongAnswers
-            imageUrl
-            instructions
-            standard
-            cluster
-            domain
-            grade
-            order
-            gameSessionId
-          }
-          trickiestAnswerIDs
-          teamMembers {
-            items {
-              id
-              isFacilitator
-              deviceId
-              createdAt
-              updatedAt
-              teamTeamMembersId
-            }
-            nextToken
-          }
-          score
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-        }
         isFacilitator
         answers {
           items {
@@ -588,7 +458,7 @@ export const gameSessionByState = /* GraphQL */ `
         currentQuestionIndex
         currentState
         gameCode
-        isAdvanced
+        isAdvancedMode
         imageUrl
         description
         title
@@ -673,7 +543,7 @@ export const gameSessionByCode = /* GraphQL */ `
         currentQuestionIndex
         currentState
         gameCode
-        isAdvanced
+        isAdvancedMode
         imageUrl
         description
         title

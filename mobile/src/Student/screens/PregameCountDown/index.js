@@ -4,9 +4,10 @@ import PurpleBackground from '../../../components/PurpleBackground'
 import LoadingIndicator from '../../components/LoadingIndicator'
 import { scale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../utils/theme'
+import { GameSessionState } from '@righton/networking'
 
 const PregameCountDown = ({ navigation, route }) => {
-    const { selectedTeam } = route.params
+    const { gameSession } = route.params
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator
@@ -24,9 +25,13 @@ const PregameCountDown = ({ navigation, route }) => {
                 shouldShowCountdown={true}
                 fontSize={scale(100)}
                 timerStartInSecond={5}
-                onTimerFinished={() => navigation.navigate('GamePreview', {
-                    selectedTeam, isFacilitator: selectedTeam == 1
-                })}
+                onTimerFinished={() => {
+                    if (gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+                        navigation.navigate('GamePreview', route.params)
+                    } else {
+                        navigation.navigate('GamePlay', route.params)
+                    }
+                }}
             />
             <Text style={styles.text}>
                 Your team's question will appear soon.

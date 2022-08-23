@@ -6,12 +6,14 @@ import { ScaledSheet } from 'react-native-size-matters'
 
 RoundButton.propTypes = {
     title: PropTypes.string.isRequired,
-    onPress: PropTypes.func.isRequired
+    onPress: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
 }
 export default function RoundButton(props) {
     const style = { ...styles.roundButton, ...props.style }
     return (
         <TouchableOpacity
+            disabled={props.disabled || false}
             onPress={() => { props.onPress() }}
         >
             <View style={style}>
