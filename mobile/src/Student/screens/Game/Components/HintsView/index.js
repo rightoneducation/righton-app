@@ -21,10 +21,18 @@ const HintsView = ({ hints, onTappedShowNextHint, isMoreHintsAvailable }) => {
             backgroundColor: isShowHintsDisabled ? '#9BA5B4' : colors.buttonSecondary,
         }
     }
+
+    const mappedHints = hints.map((hint, idx) => {
+        return {
+            hintNo: idx,
+            hint: hint
+        }
+    })
+
     return (
         <View>
             <FlatList
-                data={hints}
+                data={mappedHints}
                 keyExtractor={item => `${item.hintNo}`}
                 renderItem={({ item }) =>
                     <Hint hintNo={item.hintNo} hint={item.hint} />

@@ -7,16 +7,17 @@ import RoundTextIcon from '../../../../components/RoundTextIcon'
 import { KeyboardAwareFlatList } from '@codler/react-native-keyboard-aware-scroll-view'
 import uuid from 'react-native-uuid'
 
-const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
+const TrickAnswers = ({ onAnswered, isFacilitator, isAdvancedMode, answers }) => {
     const Status = {
         none: 'none',
         hasAnsweredCorrectly: 'answered',
         hasAnsweredIncorrectly: 'incorrectAnswer',
+        basicMode: 'basicMode'
     }
     const [estimatedAnswer, setEstimatedAnswer] = useState('')
     const [showTrickAnswers, setShowTrickAnswers] = useState(false)
-    const [trickAnswers, setTrickAnswers] = useState([])
-    const [status, setStatus] = useState(Status.none)
+    const [trickAnswers, setTrickAnswers] = useState(answers)
+    const [status, setStatus] = useState(isAdvancedMode ? Status.none : Status.basicMode)
     const [answer, setAnswer] = useState(undefined)
 
     const createAnswer = (text) => {
@@ -41,8 +42,8 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         if (newAnswer.text == '1080') {
             setAnswer(newAnswer)
             setStatus(Status.hasAnsweredCorrectly)
-            if (onAnsweredCorrectly !== undefined) {
-                onAnsweredCorrectly()
+            if (onAnswered !== undefined) {
+                onAnswered(newAnswer)
             }
             setTrickAnswers([...trickAnswers, createAnswer('')])
             startTrickAnswersTimer()
@@ -58,28 +59,28 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         }
     }
 
-    const toggleAnswer = (answerId) => {
+    const toggleAnswer = (answer) => {
         if (!isFacilitator) {
             return
         }
 
-        const answers = trickAnswers.filter(answer => answer.isSelected)
-        const modifiedTrickAnswers = trickAnswers.map((answer) => {
-            if (answer.id === answerId) {
+        const modifiedTrickAnswers = trickAnswers.map((a) => {
+            if (a.id === answer.id) {
                 return {
-                    ...answer,
+                    ...a,
                     isSelected: (
-                        answer.isSelected ||
-                        answers.length < 3 && answer.text !== ''
+                        a.isSelected ||
+                        a.length < 3 && a.text !== ''
                     ) ?
-                        !answer.isSelected :
-                        answer.isSelected
+                        !a.isSelected :
+                        a.isSelected
                 }
             }
-            return answer
+            return a
         })
 
         setTrickAnswers(modifiedTrickAnswers)
+        onAnswered(answer)
     }
 
     const onTrickyAnswerChanged = (answerId, newText) => {
@@ -101,30 +102,49 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
         }, 3000)
     }
 
+    const chooseAnswer = (selectedAnswer) => {
+        const modifiedTrickAnswers = trickAnswers.map((answer) => {
+            if (answer.id === selectedAnswer.id) {
+                return {
+                    ...answer,
+                    isSelected: true
+                }
+            } else {
+                answer.isSelected = false
+            }
+            return answer
+        })
+
+        setTrickAnswers(modifiedTrickAnswers)
+        onAnswered(selectedAnswer)
+    }
+
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
             <Text
                 style={[sharedStyles.text, { opacity: status == Status.none ? 1 : 0.3 }]}>
                 {
-                    isFacilitator ?
+                    (isFacilitator && status !== Status.basicMode) ?
                         "Help guide your team to guess the correct answer!" :
                         "What do you think the correct answer is?"
                 }
             </Text>
-            <TextInput
-                style={
-                    [
-                        styles.answerTextInput,
-                        {
-                            backgroundColor: status == Status.hasAnsweredCorrectly ? '#D7EFC3' : 'white',
-                        }
-                    ]
-                }
-                value={estimatedAnswer}
-                onChangeText={text => setEstimatedAnswer(text)}
-                onSubmitEditing={onAnswerSubmitted}
-                editable={status != Status.hasAnsweredCorrectly}
-            />
+            {status !== Status.basicMode &&
+                <TextInput
+                    style={
+                        [
+                            styles.answerTextInput,
+                            {
+                                backgroundColor: status == Status.hasAnsweredCorrectly ? '#D7EFC3' : 'white',
+                            }
+                        ]
+                    }
+                    value={estimatedAnswer}
+                    onChangeText={text => setEstimatedAnswer(text)}
+                    onSubmitEditing={onAnswerSubmitted}
+                    editable={status != Status.hasAnsweredCorrectly}
+                />
+            }
             <View style={{ opacity: status == Status.none ? 0 : 1, flex: 1, alignSelf: 'stretch' }}>
                 {
                     isFacilitator && (
@@ -170,7 +190,28 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
                         Now come up with other answers that might trick your class!
                     </Text>
                 }
-                <KeyboardAwareFlatList
+                {status === Status.basicMode &&
+                    <KeyboardAwareFlatList
+                        style={[styles.answers]}
+                        data={trickAnswers}
+                        extraData={trickAnswers}
+                        keyExtractor={item => `${item.id}`}
+                        renderItem={({ item }) =>
+                            <RoundTextIcon
+                                icon={item.isSelected ? require('../../img/checkmark_checked.png') : require('../../img/gray_circle.png')}
+                                text={item.text}
+                                height={43}
+                                borderColor={item.isSelected ? '#8DCD53' : '#D9DFE5'}
+                                onPress={chooseAnswer}
+                                showIcon={item.isSelected}
+                                readonly={true}
+                                data={item}
+                            />
+                        }
+                    />
+                }
+                {/* //TODO: Handle advance mode */}
+                {status !== Status.basicMode && <KeyboardAwareFlatList
                     style={[styles.answers, { opacity: showTrickAnswers ? 1 : 0 }]}
                     data={trickAnswers}
                     extraData={trickAnswers}
@@ -184,11 +225,12 @@ const TrickAnswers = ({ onAnsweredCorrectly, isFacilitator }) => {
                             onPress={toggleAnswer}
                             showIcon={isFacilitator && isItemReadOnly(item)}
                             readonly={isItemReadOnly(item)}
-                            data={item.id}
+                            data={item}
                             onTextChanged={onTrickyAnswerChanged}
                         />
                     }
                 />
+                }
             </View>
         </View>
     )

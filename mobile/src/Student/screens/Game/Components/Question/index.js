@@ -3,15 +3,16 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import sharedStyles from '../sharedStyles'
 import { verticalScale } from 'react-native-size-matters'
 
-const Question = () => {
+const Question = ({ question }) => {
     return (
         <View style={[sharedStyles.cardContainer, { alignItems: 'center' }]}>
-            <Image
-                source={require('../../img/Stop.png')}
+            {question.imageUrl != null && <Image
+                source={question.imageUrl}
                 resizeMethod='resize'
                 style={styles.image} />
+            }
             <Text style={[sharedStyles.text, styles.text]}>
-                In many countries, a stop sign is represented as a red eight-sided shape with the word “STOP” in the middle.{"\n\n"}This eight-sided shape is known as an octagon.{"\n\n"}How many degrees are in the interior angles of a stop sign?
+                {question.text}
             </Text>
         </View>
     )

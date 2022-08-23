@@ -145,9 +145,6 @@ android {
             abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
         }
     }
-    dexOptions {
-        jumboMode true  // This for string limit
-    }
     splits {
         abi {
             reset()
@@ -164,6 +161,11 @@ android {
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
+        }
+    }
+    packagingOptions {
+        jniLibs {
+            pickFirsts += ['lib/armeabi-v7a/libc++_shared.so', 'lib/arm64-v8a/libc++_shared.so', 'lib/x86/libc++_shared.so', 'lib/x86_64/libc++_shared.so']
         }
     }
     buildTypes {
@@ -191,12 +193,6 @@ android {
         }
     }
 
-    packagingOptions {
-        pickFirst "lib/armeabi-v7a/libc++_shared.so"
-        pickFirst "lib/arm64-v8a/libc++_shared.so"
-        pickFirst "lib/x86/libc++_shared.so"
-        pickFirst "lib/x86_64/libc++_shared.so"
-    }
 
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->

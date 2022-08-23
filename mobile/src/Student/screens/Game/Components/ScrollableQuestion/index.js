@@ -4,13 +4,13 @@ import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../../utils/theme'
 import Question from '../Question'
 
-const ScrollableQuestion = () => {
+const ScrollableQuestion = ({ question }) => {
     return (
         <ScrollView
             style={styles.container}
             showsVerticalScrollIndicator={false}
         >
-            <Question />
+            <Question question={question} />
         </ScrollView>
     )
 }

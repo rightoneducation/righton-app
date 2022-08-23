@@ -56,7 +56,7 @@ export const createGameSession = /* GraphQL */ `
       currentQuestionIndex
       currentState
       gameCode
-      isAdvanced
+      isAdvancedMode
       imageUrl
       description
       title
@@ -137,7 +137,7 @@ export const updateGameSession = /* GraphQL */ `
       currentQuestionIndex
       currentState
       gameCode
-      isAdvanced
+      isAdvancedMode
       imageUrl
       description
       title
@@ -218,7 +218,7 @@ export const deleteGameSession = /* GraphQL */ `
       currentQuestionIndex
       currentState
       gameCode
-      isAdvanced
+      isAdvancedMode
       imageUrl
       description
       title
@@ -334,35 +334,6 @@ export const createTeam = /* GraphQL */ `
       teamMembers {
         items {
           id
-          team {
-            id
-            name
-            question {
-              id
-              text
-              answer
-              wrongAnswers
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              gameSessionId
-            }
-            trickiestAnswerIDs
-            teamMembers {
-              nextToken
-            }
-            score
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
-          }
           isFacilitator
           answers {
             items {
@@ -419,35 +390,6 @@ export const updateTeam = /* GraphQL */ `
       teamMembers {
         items {
           id
-          team {
-            id
-            name
-            question {
-              id
-              text
-              answer
-              wrongAnswers
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              gameSessionId
-            }
-            trickiestAnswerIDs
-            teamMembers {
-              nextToken
-            }
-            score
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
-          }
           isFacilitator
           answers {
             items {
@@ -504,35 +446,6 @@ export const deleteTeam = /* GraphQL */ `
       teamMembers {
         items {
           id
-          team {
-            id
-            name
-            question {
-              id
-              text
-              answer
-              wrongAnswers
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              gameSessionId
-            }
-            trickiestAnswerIDs
-            teamMembers {
-              nextToken
-            }
-            score
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
-          }
           isFacilitator
           answers {
             items {
@@ -570,58 +483,6 @@ export const createTeamMember = /* GraphQL */ `
   ) {
     createTeamMember(input: $input, condition: $condition) {
       id
-      team {
-        id
-        name
-        question {
-          id
-          text
-          answer
-          wrongAnswers
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
-        trickiestAnswerIDs
-        teamMembers {
-          items {
-            id
-            team {
-              id
-              name
-              trickiestAnswerIDs
-              score
-              createdAt
-              updatedAt
-              gameSessionTeamsId
-              teamQuestionId
-              teamQuestionOrder
-              teamQuestionGameSessionId
-            }
-            isFacilitator
-            answers {
-              nextToken
-            }
-            deviceId
-            createdAt
-            updatedAt
-            teamTeamMembersId
-          }
-          nextToken
-        }
-        score
-        createdAt
-        updatedAt
-        gameSessionTeamsId
-        teamQuestionId
-        teamQuestionOrder
-        teamQuestionGameSessionId
-      }
       isFacilitator
       answers {
         items {
@@ -649,58 +510,6 @@ export const updateTeamMember = /* GraphQL */ `
   ) {
     updateTeamMember(input: $input, condition: $condition) {
       id
-      team {
-        id
-        name
-        question {
-          id
-          text
-          answer
-          wrongAnswers
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
-        trickiestAnswerIDs
-        teamMembers {
-          items {
-            id
-            team {
-              id
-              name
-              trickiestAnswerIDs
-              score
-              createdAt
-              updatedAt
-              gameSessionTeamsId
-              teamQuestionId
-              teamQuestionOrder
-              teamQuestionGameSessionId
-            }
-            isFacilitator
-            answers {
-              nextToken
-            }
-            deviceId
-            createdAt
-            updatedAt
-            teamTeamMembersId
-          }
-          nextToken
-        }
-        score
-        createdAt
-        updatedAt
-        gameSessionTeamsId
-        teamQuestionId
-        teamQuestionOrder
-        teamQuestionGameSessionId
-      }
       isFacilitator
       answers {
         items {
@@ -728,58 +537,6 @@ export const deleteTeamMember = /* GraphQL */ `
   ) {
     deleteTeamMember(input: $input, condition: $condition) {
       id
-      team {
-        id
-        name
-        question {
-          id
-          text
-          answer
-          wrongAnswers
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
-        trickiestAnswerIDs
-        teamMembers {
-          items {
-            id
-            team {
-              id
-              name
-              trickiestAnswerIDs
-              score
-              createdAt
-              updatedAt
-              gameSessionTeamsId
-              teamQuestionId
-              teamQuestionOrder
-              teamQuestionGameSessionId
-            }
-            isFacilitator
-            answers {
-              nextToken
-            }
-            deviceId
-            createdAt
-            updatedAt
-            teamTeamMembersId
-          }
-          nextToken
-        }
-        score
-        createdAt
-        updatedAt
-        gameSessionTeamsId
-        teamQuestionId
-        teamQuestionOrder
-        teamQuestionGameSessionId
-      }
       isFacilitator
       answers {
         items {

@@ -14,7 +14,7 @@ type GameSession @model {
   currentState: GameSessionState!
     @index(name: "byState", queryField: "gameSessionByState")
   gameCode: Int! @index(name: "byCode", queryField: "gameSessionByCode")
-  isAdvanced: Boolean!
+  isAdvancedMode: Boolean!
   imageUrl: String
   description: String
   title: String
@@ -54,12 +54,11 @@ type Team @model {
   question: Question @hasOne
   trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
-  score: Int!
+  score: Int! @default(value: "0")
 }
 
 type TeamMember @model {
   id: ID!
-  team: Team!
   isFacilitator: Boolean
   answers: [TeamAnswer] @hasMany
   deviceId: ID!
@@ -70,4 +69,9 @@ type TeamAnswer @model {
   questionId: Int!
   isChosen: Boolean
   text: String!
+}
+
+type Subscription {
+  onGameSessionUpdatedById(id: ID!): GameSession
+    @aws_subscribe(mutations: ["updateGameSession"])
 }

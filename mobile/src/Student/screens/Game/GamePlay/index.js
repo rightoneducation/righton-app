@@ -11,25 +11,33 @@ import ScrollableQuestion from '../Components/ScrollableQuestion'
 import AnswerQuestion from './AnswerQuestion'
 import HintsView from '../Components/HintsView'
 
-const GamePreview = ({ route, navigation }) => {
+const GamePlay = ({ route, navigation }) => {
+    const { gameSession, team, teamMember, question } = route.params
+
     const { answeringOwnQuestion, availableHints } = route.params
     const [countdown, setCountdown] = useState(300)
     const [progress, setProgress] = useState(1)
-    const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
     const [hints, setHints] = useState([availableHints[0]])
 
     useEffect(() => {
         if (countdown == 0) {
             return
         }
-        const totalNoSecondsLeftForShowingHints = 295//240
         var refreshIntervalId = setInterval(() => {
             setCountdown(countdown - 1)
             setProgress(countdown / 300)
-            setShowTrickAnswersHint(countdown <= totalNoSecondsLeftForShowingHints)
         }, 1000)
+
+        const subscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
+            if (gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+                navigateToNextScreen()
+            }
+        })
+
+
         return () => {
             clearInterval(refreshIntervalId)
+            subscription.unsubscribe()
         }
     })
 
@@ -38,6 +46,10 @@ const GamePreview = ({ route, navigation }) => {
             return
         }
         setHints([...hints, availableHints[hints.length]])
+    }
+
+    const navigateToNextScreen = () => {
+
     }
 
     var answers = []
@@ -153,7 +165,7 @@ const GamePreview = ({ route, navigation }) => {
     )
 }
 
-export default GamePreview
+export default GamePlay
 
 const styles = StyleSheet.create({
     mainContainer: {

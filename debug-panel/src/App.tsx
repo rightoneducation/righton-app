@@ -1,23 +1,47 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, TextField } from '@mui/material'
-import { ApiClient, Environment, GameSessionState } from '@righton/networking'
+import { ApiClient, Environment, GameSessionState, ITeamAnswer } from '@righton/networking'
 import { IApiClient } from '@righton/networking'
-import { IGameSession } from '@righton/networking'
+import { IGameSession, ITeam, ITeamMember } from '@righton/networking'
 
 function App() {
   const [gameSession, setGameSession] = useState<IGameSession | null>()
-  const [updatedGameSession, setUpdatedGameSession] = useState<IGameSession | null>()
+  const [prevGameSessionId, setPrevGameSessionId] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
   const [gameCode, setGameCode] = useState<number>(0)
-  const [gameSessionID, setGameSessionID] = useState<string>("")
+  const [gameSessionId, setgameSessionId] = useState<string>("")
+  const [teamName, setTeamName] = useState<string>("")
+  const [team, setTeam] = useState<ITeam | null>()
+  const [teamMember, setTeamMember] = useState<ITeamMember | null>()
+  const [teamAnswer, setTeamAnswer] = useState<ITeamAnswer | null>()
 
-  let apiClient: IApiClient = new ApiClient(Environment.Staging)
-  let gameSessionSubscription: any | null = null
+
+  const [apiClient, _] = useState<IApiClient>(new ApiClient(Environment.Staging))
+  const gameSessionSubscription = useRef<any | null>(null)
 
   useEffect(() => {
     // @ts-ignore
-    return () => gameSessionSubscription?.unsubscribe()
+    return () => gameSessionSubscription.current?.unsubscribe()
   }, [])
+
+  const updateGameSession = (gameSession: IGameSession | null) => {
+    setGameSession(gameSession)
+    if (gameSession == null) {
+      gameSessionSubscription.current?.unsubscribe()
+      return
+    }
+
+    if (prevGameSessionId === gameSession.id) {
+      return
+    }
+
+    setPrevGameSessionId(gameSession.id)
+
+    gameSessionSubscription.current?.unsubscribe()
+    gameSessionSubscription.current = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
+      console.log(gameSession.currentState)
+    })
+  }
 
 
   const handleUpdateGameSessionState = (gameSessionState: GameSessionState) => {
@@ -25,16 +49,16 @@ function App() {
       return
     }
 
-    let gameSessionId = gameSession!.id
+    let gameSessionId = gameSession.id
 
     apiClient.updateGameSession({ id: gameSessionId, currentState: gameSessionState })
       .then(response => {
-        setUpdatedGameSession(response)
+        updateGameSession(response)
         setError(null)
       }).catch(error => {
         console.error(error.message)
         setError(error.message)
-        setUpdatedGameSession(null)
+        updateGameSession(null)
       })
   }
 
@@ -48,8 +72,8 @@ function App() {
       </span>
       <span>
         {
-          (updatedGameSession != null) ?
-            `Updated game session state to ${updatedGameSession?.currentState} for ${updatedGameSession?.id}` :
+          (gameSession != null) ?
+            `Updated game session state to ${gameSession?.currentState} for ${gameSession?.id}` :
             ""
         }
       </span>
@@ -58,17 +82,11 @@ function App() {
         onClick={() => {
           apiClient.createGameSession(1156, false)
             .then(gameSession => {
-              setGameSession(gameSession)
+              updateGameSession(gameSession)
               setError(null)
-              setUpdatedGameSession(null)
-              gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
-                console.log(gameSession.currentState)
-              })
             }).catch(error => {
               console.error(error.message)
-              setGameSession(null)
-              setError(error.message)
-              setUpdatedGameSession(null)
+              updateGameSession(null)
             })
         }}
       >
@@ -76,6 +94,7 @@ function App() {
       </Button>
       <Button
         variant="contained"
+        color='secondary'
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.TEAMS_JOINING)
         }}
@@ -84,6 +103,7 @@ function App() {
       </Button>
       <Button
         variant="contained"
+        color='secondary'
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.CHOOSE_CORRECT_ANSWER)
         }}
@@ -92,6 +112,7 @@ function App() {
       </Button>
       <Button
         variant="contained"
+        color='secondary'
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.PHASE_1_RESULTS)
         }}
@@ -100,6 +121,7 @@ function App() {
       </Button>
       <Button
         variant="contained"
+        color='secondary'
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.CHOOSE_TRICKIEST_ANSWER)
         }}
@@ -108,6 +130,7 @@ function App() {
       </Button>
       <Button
         variant="contained"
+        color='secondary'
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.PHASE_2_RESULTS)
         }}
@@ -116,6 +139,7 @@ function App() {
       </Button>
       <Button
         variant="contained"
+        color='secondary'
         onClick={() => {
           handleUpdateGameSessionState(GameSessionState.FINAL_RESULTS)
         }}
@@ -138,51 +162,146 @@ function App() {
             .then(response => {
               if (response == null) {
                 setError(`No game found for ${gameCode}`)
-                setGameSession(null)
+                updateGameSession(null)
                 return
               }
               console.log(response)
-              setGameSession(response)
+              updateGameSession(response)
               setError(null)
             }).catch(error => {
               console.error(error.message)
               setError(error.message)
-              setGameSession(null)
+              updateGameSession(null)
             })
         }}>
         Get Game Session by Code
       </Button>
       <TextField
-        value={gameSessionID}
-        label="Outlined"
-        variant="outlined"
-        placeholder='Game code'
-        onChange={(e) => setGameSessionID(e.target.value)}
+        value={gameSessionId}
+        variant="standard"
+        placeholder='gameSessionId'
+        onChange={(e) => setgameSessionId(e.target.value)}
       />
       <Button
         variant="outlined"
         color="secondary"
         onClick={() => {
-          apiClient.getGameSession(gameSessionID)
+          apiClient.getGameSession(gameSessionId)
             .then(response => {
               if (response == null) {
-                setError(`No game found for ${gameSessionID}`)
-                setGameSession(null)
+                setError(`No game found for ${gameSessionId}`)
+                updateGameSession(null)
                 return
               }
               console.log(response)
-              setGameSession(response)
+              updateGameSession(response)
               setError(null)
             }).catch(error => {
               console.error(error.message)
               setError(error.message)
-              setGameSession(null)
+              updateGameSession(null)
             })
         }}>
         Get Game Session by ID
       </Button>
+      <TextField
+        value={teamName}
+        variant="standard"
+        placeholder='Team name'
+        onChange={(e) => setTeamName(e.target.value)}
+      />
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => {
+          if (isNullOrUndefined(gameSession)) {
+            return
+          }
+          apiClient.addTeamToGameSessionId(gameSession.id, teamName, null)
+            .then(team => {
+              if (team == null) {
+                setError(`Failed to create team`)
+                return
+              }
+              console.log(team)
+              setTeam(team)
+              setError(null)
+            }).catch(error => {
+              console.error(error.message)
+              setError(error.message)
+              setTeam(null)
+            })
+        }}>
+        Add team
+      </Button>
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => {
+          if (isNullOrUndefined(team)) {
+            return
+          }
+          apiClient.addTeamMemberToTeam(team.id, false, 'some-device-id')
+            .then(teamMember => {
+              if (teamMember == null) {
+                setError(`Failed to create team member`)
+                return
+              }
+              console.log(teamMember)
+              setError(null)
+              setTeamMember(teamMember)
+            }).catch(error => {
+              console.error(error.message)
+              setError(error.message)
+              setTeamMember(null)
+            })
+        }}>
+        Add team member
+      </Button>
+      <Button
+        variant="outlined"
+        color="secondary"
+        onClick={() => {
+          if (isNullOrUndefined(gameSession) ||
+            isNullOrUndefined(gameSession.questions) ||
+            isNullOrUndefined(team)
+            || isNullOrUndefined(teamMember)) {
+            return
+          }
+          const question = gameSession.questions[0]
+          if (isNullOrUndefined(question)) {
+            return null
+          }
+          const wrongAnswer = (question.wrongAnswers ?? [])[0]
+          if (isNullOrUndefined(wrongAnswer)) {
+            return
+          }
+          apiClient.addTeamAnswer(teamMember.id,
+            gameSession.questions[0].id,
+            wrongAnswer.wrongAnswer,
+            true)
+            .then(teamAnswer => {
+              if (teamAnswer == null) {
+                setError(`Failed to create answer`)
+                return
+              }
+              console.log(teamAnswer)
+              setError(null)
+              setTeamAnswer(teamAnswer)
+            }).catch(error => {
+              console.error(error.message)
+              setError(error.message)
+              setTeamAnswer(null)
+            })
+        }}>
+        Add team answer (basic)
+      </Button>
     </div>
   )
+}
+
+function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
+  return value === null || value === undefined
 }
 
 export default App

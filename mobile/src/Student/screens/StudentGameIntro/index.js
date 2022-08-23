@@ -5,16 +5,20 @@ import { colors, fonts, fontFamilies } from '../../../utils/theme'
 import ViewPager from '@react-native-community/viewpager'
 import IntroInfo from './IntroInfo'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters'
+import { GameSessionState } from '@righton/networking'
 
 const StudentGameIntro = ({ route, navigation }) => {
-    const { selectedTeam } = route.params
+    const { gameSession, team, teamMember } = route.params
 
     useEffect(() => {
-        setTimeout(() => {
-            navigation.navigate('PregameCountDown', {
-                selectedTeam,
-            })
-        }, 5000)
+        const subscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
+            if (gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+                navigation.navigate('PregameCountDown', {
+                    gameSession, team, teamMember
+                })
+            }
+        })
+        return () => subscription.unsubscribe()
     })
 
     const [currentPage, setCurrentPage] = useState(0)
@@ -28,7 +32,7 @@ const StudentGameIntro = ({ route, navigation }) => {
             <PurpleBackground style={styles.mainContainer}>
                 <View style={styles.header}>
                     <Text style={styles.headerTeam}>Team</Text>
-                    <Text style={styles.headerTeamNo}>{selectedTeam}</Text>
+                    <Text style={styles.headerTeamNo}>{team.name}</Text>
                 </View>
                 <View style={styles.carouselContainer}>
                     <ViewPager

@@ -11,15 +11,18 @@ import Spinner from './Spinner'
 import ScrollableQuestion from '../Components/ScrollableQuestion'
 import TrickAnswers from './TrickAnswers'
 import HintsView from '../Components/HintsView'
+import { GameSessionState } from '@righton/networking'
+import uuid from 'react-native-uuid'
 
 
 const GamePreview = ({ navigation, route }) => {
-  const { selectedTeam, isFacilitator } = route.params
-  const [availableHints, setAvailableHints] = useState([
-    { hintNo: 1, hint: 'A stop sign is a regular octagon, a polygon with 8 congruent sides.' },
-    { hintNo: 2, hint: 'We can create triangles within the octagon. For example, starting with any vertex, or corner, we can draw a line to each of the 5 non-adjacent vertices (or corners) of the octagon.' },
-    { hintNo: 3, hint: 'Count the number of triangles that have been created.' },
-  ])
+  const { gameSession, team, teamMember } = route.params
+
+  const question = gameSession.isAdvanced ?
+    team.question :
+    gameSession.questions[gameSession.currentQuestionIndex == null ? 0 : gameSession.currentQuestionIndex]
+  const availableHints = question.instructions
+
   const [countdown, setCountdown] = useState(300)
   const [progress, setProgress] = useState(1)
   const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
@@ -27,6 +30,7 @@ const GamePreview = ({ navigation, route }) => {
 
   useEffect(() => {
     if (countdown == 0) {
+      navigateToNextScreen()
       return
     }
     const totalNoSecondsLeftForShowingHints = 295
@@ -35,10 +39,24 @@ const GamePreview = ({ navigation, route }) => {
       setProgress(countdown / 300)
       setShowTrickAnswersHint(countdown <= totalNoSecondsLeftForShowingHints)
     }, 1000)
+
+    const subscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
+      if (gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+        navigateToNextScreen()
+      }
+    })
+
     return () => {
       clearInterval(refreshIntervalId)
+      subscription.unsubscribe()
     }
   })
+
+  const navigateToNextScreen = () => {
+    navigation.navigate('Leadership', {
+      gameSession, team, teamMember, question
+    })
+  }
 
   const showNewHint = () => {
     if (hints.length == availableHints.length) {
@@ -50,6 +68,25 @@ const GamePreview = ({ navigation, route }) => {
   const showAllHints = () => {
     setShowTrickAnswersHint(true)
     setHints(availableHints)
+  }
+
+  const submitAnswer = (answer) => {
+    global.apiClient.addTeamAnswer(teamMember.id,
+      question.id,
+      answer.text,
+      answer.isSelected)
+      .then(teamAnswer => {
+        if (teamAnswer == null) {
+          console.error("Failed to create team.")
+          return
+        }
+        console.log(teamAnswer)
+      }).catch(error => {
+        console.error(error.message)
+      })
+    if (!gameSession.isAdvancedMode) {
+      navigateToNextScreen()
+    }
   }
 
   return (
@@ -79,21 +116,38 @@ const GamePreview = ({ navigation, route }) => {
       <View style={styles.carouselContainer}>
         <HorizontalPageView>
           <Card headerTitle="Question">
-            <ScrollableQuestion />
+            <ScrollableQuestion question={question} />
           </Card>
           <Card headerTitle="Trick Answers">
-            <TrickAnswers isFacilitator={isFacilitator} onAnsweredCorrectly={() => showAllHints()} />
+            <TrickAnswers
+              isAdvancedMode={gameSession.isAdvanced}
+              isFacilitator={teamMember.isFacilitator}
+              onAnswered={(answer) => {
+                showAllHints()
+                submitAnswer(answer)
+              }}
+              answers={gameSession.isAdvanced ? [] : [...(question.wrongAnswers.map(a => a.wrongAnswer)), question.answer].map(a => {
+                return {
+                  id: uuid.v4(),
+                  text: a,
+                  isSelected: false,
+                  isCorrectAnswer: a == question.answer
+                }
+              })}
+            />
           </Card>
-          <Card headerTitle="Hints">
-            {
-              showTrickAnswersHint
-                ? <HintsView hints={hints} onTappedShowNextHint={() => showNewHint()} isMoreHintsAvailable={hints.length < availableHints.length} />
-                : <Spinner text="Hints will be available after one minute." />
-            }
-          </Card>
+          {gameSession.isAdvanced &&
+            <Card headerTitle="Hints">
+              {
+                showTrickAnswersHint
+                  ? <HintsView hints={hints} onTappedShowNextHint={() => showNewHint()} isMoreHintsAvailable={hints.length < availableHints.length} />
+                  : <Spinner text="Hints will be available after one minute." />
+              }
+            </Card>
+          }
         </HorizontalPageView>
       </View>
-      <TeamsReadinessFooter
+      {gameSession.isAdvancedMode && <TeamsReadinessFooter
         style={styles.footer}
         onTappedFirst={() => {
           navigation.navigate('TeamInfo', {
@@ -110,6 +164,7 @@ const GamePreview = ({ navigation, route }) => {
           })
         }}
       />
+      }
     </SafeAreaView>
   )
 }

@@ -13,7 +13,7 @@ import PurpleBackground from '../../../components/PurpleBackground'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import Modal from 'react-native-modal'
 
-const index = ({ navigation }) => {
+const StudentChooseTeam = ({ navigation }) => {
 
     var [overlayVisible, setOverlayVisibility] = React.useState(false)
     var [currentOverlayImage, setCurrentOverlayImage] = React.useState()
@@ -66,7 +66,7 @@ const index = ({ navigation }) => {
     )
 }
 
-export default index
+export default StudentChooseTeam
 
 const styles = StyleSheet.create({
     container: {
