@@ -3,18 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import HostAnswerDropdown from "./AnswersInProgress";
 
-export default function GameDetails(questions) {
+export default function GameDetails({ questions }) {
   const classes = useStyles();
 
-  //currentQuestionId should be passed into GameDetails from GameInProgress 
-  //which should be passed in from GameSession. Then there can be a filter 
-  //function which returns a question object based on the current id. For now, 
-  // currentQuestionId is hard coded.
-  const question = questions.questions[0]
+  const question = questions[0]
 
-  const wrongAnswerArray = ((question.wrongAnswers).split('}')).map(wrongAnswer => wrongAnswer.split("\\\""))
-  wrongAnswerArray.pop();
-  let answerSet = wrongAnswerArray.map(array => ({ choice: array[3], explanation: array[7] }));
+  const wrongAnswerArray = ((question.wrongAnswers)).map(answer => answer)
 
   let correctAnswer = [
     {
@@ -25,9 +19,9 @@ export default function GameDetails(questions) {
   return (
     <Grid className={classes.background}>
       <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} />
-      {answerSet.map((answer, index) => {
+      {wrongAnswerArray.map((answer, index) => {
         return (
-          <HostAnswerDropdown key={index} answer={answer.choice} explanation={answer.explanation} correct={false} />
+          <HostAnswerDropdown key={index} answer={answer.wrongAnswer} explanation={answer.reason} correct={false} />
         );
       })}
     </Grid>
