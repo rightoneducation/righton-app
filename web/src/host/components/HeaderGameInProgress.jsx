@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
@@ -53,8 +53,6 @@ const label = {
 };
 
 export default function GameInProgressHeader({
-  totalQuestions,
-  currentQuestion,
   currentState,
   phaseOneTime,
   phaseTwoTime,
@@ -70,7 +68,15 @@ export default function GameInProgressHeader({
     return 60;
   };
 
-  //use state to set the current time
+  let pauseTime = () => {
+    if (
+      currentState !== "CHOOSE_CORRECT_ANSWER" &&
+      currentState !== "CHOOSE_TRICKIEST_ANSWER"
+    ) {
+      return true;
+    }
+  };
+
   const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
 
   useEffect(() => {
@@ -78,8 +84,9 @@ export default function GameInProgressHeader({
       currentState === "CHOOSE_CORRECT_ANSWER" ||
       currentState === "CHOOSE_TRICKIEST_ANSWER"
     ) {
-      //pause timer
       setCurrentTime(totalRoundTime());
+    } else {
+      pauseTime();
     }
   }, [currentState]);
 
@@ -108,6 +115,7 @@ export default function GameInProgressHeader({
         currentTime={currentTime}
         totalRoundTime={totalRoundTime()}
         setTime={setCurrentTime}
+        pauseTime={pauseTime()}
       />
     </div>
   );

@@ -36,19 +36,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Timer({ currentTime, totalRoundTime, setTime }) {
+export default function Timer({
+  currentTime,
+  totalRoundTime,
+  setTime,
+  pauseTime,
+}) {
   const classes = useStyles();
   let countdown = useRef();
 
   useEffect(() => {
     countdown.current = setInterval(() => {
-      if (currentTime > 0) {
+      if (!pauseTime) {
         setTime(currentTime - 1);
       }
     }, 1000);
 
     return () => clearInterval(countdown.current);
-  }, [currentTime]);
+  }, [currentTime, pauseTime]);
 
   return (
     <div>
