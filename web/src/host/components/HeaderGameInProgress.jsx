@@ -80,13 +80,8 @@ export default function GameInProgressHeader({
   const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
 
   useEffect(() => {
-    if (
-      currentState === "CHOOSE_CORRECT_ANSWER" ||
-      currentState === "CHOOSE_TRICKIEST_ANSWER"
-    ) {
+    if (!pauseTime()) {
       setCurrentTime(totalRoundTime());
-    } else {
-      pauseTime();
     }
   }, [currentState]);
 
