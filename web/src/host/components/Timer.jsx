@@ -47,13 +47,13 @@ export default function Timer({
 
   useEffect(() => {
     countdown.current = setInterval(() => {
-      if (!pauseTime) {
+      if (!pauseTime && currentTime > 0) {
         setTime(currentTime - 1);
       }
     }, 1000);
 
     return () => clearInterval(countdown.current);
-  }, [currentTime, pauseTime]);
+  }, [currentTime]);
 
   return (
     <div>
