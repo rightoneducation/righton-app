@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { LinearProgress, IconButton } from "@material-ui/core";
 import { AvTimer } from "@material-ui/icons";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   blueButton: {
     marginLeft: "10px",
     marginTop: "10px",
@@ -19,35 +19,32 @@ const useStyles = makeStyles(theme => ({
     "&:disabled": {
       background: "rgba(255, 255, 255, 0.5)",
       opacity: 0.5,
-      cursor: "not-allowed"
-    }
+      cursor: "not-allowed",
+    },
   },
   timerBar: {
     borderRadius: "40px",
     display: "inline-block",
     marginRight: "10px",
-    width: "50%"
+    width: "50%",
   },
   colorPrimary: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)"
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   barColorPrimary: {
-    backgroundColor: "white"
-  }
+    backgroundColor: "white",
+  },
 }));
 
 export default function Timer({ currentTime, totalRoundTime, setTime }) {
   const classes = useStyles();
   let countdown = useRef();
-  //pass state of parent component as props vs. using state here
-  //allowing other components access to timer
-  //const [time, setTime] = useState(timer);
 
   useEffect(() => {
     countdown.current = setInterval(() => {
       if (currentTime > 0) {
         setTime(currentTime - 1);
-      } 
+      }
     }, 1000);
 
     return () => clearInterval(countdown.current);
@@ -59,7 +56,7 @@ export default function Timer({ currentTime, totalRoundTime, setTime }) {
         classes={{
           root: classes.timerBar,
           colorPrimary: classes.colorPrimary,
-          barColorPrimary: classes.barColorPrimary
+          barColorPrimary: classes.barColorPrimary,
         }}
         value={(currentTime / totalRoundTime) * 100}
         variant={"determinate"}
