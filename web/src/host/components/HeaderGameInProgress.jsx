@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
@@ -59,14 +60,24 @@ export default function GameInProgressHeader({
   phaseTwoTime,
 }) {
   const classes = useStyles();
-
-  var time = 0;
-
-  if (currentState == "CHOOSE_CORRECT_ANSWER" ) {
-    time = phaseOneTime;
-  } else if (currentState == "CHOOSE_TRICKIEST_ANSWER") {
-    time = phaseTwoTime;
+  
+  let totalRoundTime = () => {
+    if (currentState == "CHOOSE_CORRECT_ANSWER" ) {
+      return phaseOneTime;
+    } else if (currentState == "CHOOSE_TRICKIEST_ANSWER") {
+      return phaseTwoTime;
+    } return 60;
   }
+  //use state to set the current time
+  const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
+
+  useEffect(() => {
+    if (currentState == "CHOOSE_CORRECT_ANSWER" || currentState == "CHOOSE_TRICKIEST_ANSWER") {
+    //pause timer
+      setCurrentTime(totalRoundTime());
+    }
+      
+  }, [currentState]);
 
   return (
     <div className={classes.div}>
@@ -89,7 +100,7 @@ export default function GameInProgressHeader({
         {label[currentState]} {/* Replace with phase info from query */}
       </Typography>
 
-      <Timer timer={time} />
+      <Timer currentTime={currentTime} totalRoundTime={totalRoundTime()} setTime={setCurrentTime} />
     </div>
   );
 }

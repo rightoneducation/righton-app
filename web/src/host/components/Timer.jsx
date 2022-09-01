@@ -36,22 +36,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Timer({ timer }) {
+export default function Timer({ currentTime, totalRoundTime, setTime }) {
   const classes = useStyles();
   let countdown = useRef();
   //pass state of parent component as props vs. using state here
   //allowing other components access to timer
-  const [time, setTime] = useState(timer);
+  //const [time, setTime] = useState(timer);
 
   useEffect(() => {
     countdown.current = setInterval(() => {
-      if (time > 0) {
-        setTime(time - 1);
+      if (currentTime > 0) {
+        setTime(currentTime - 1);
       } 
     }, 1000);
 
     return () => clearInterval(countdown.current);
-  }, [time]);
+  }, [currentTime]);
 
   return (
     <div>
@@ -61,13 +61,13 @@ export default function Timer({ timer }) {
           colorPrimary: classes.colorPrimary,
           barColorPrimary: classes.barColorPrimary
         }}
-        value={(time / timer) * 100}
+        value={(currentTime / totalRoundTime) * 100}
         variant={"determinate"}
       />
 
       <p style={{ display: "inline-block", color: "white" }}>
-        {Math.floor(time / 60)}:
-        {time % 60 < 10 ? `0${time % 60}` : `${time % 60}`}
+        {Math.floor(currentTime / 60)}:
+        {currentTime % 60 < 10 ? `0${currentTime % 60}` : `${currentTime % 60}`}
       </p>
 
       {/* <IconButton
