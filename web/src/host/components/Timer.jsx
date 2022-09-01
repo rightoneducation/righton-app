@@ -53,7 +53,13 @@ export default function Timer({
     }, 1000);
 
     return () => clearInterval(countdown.current);
-  }, [currentTime]);
+  }, [currentTime, pauseTime]);
+
+  let percentage = () => {
+    if (!pauseTime) {
+      return currentTime / totalRoundTime;
+    }
+  };
 
   return (
     <div>
@@ -63,7 +69,7 @@ export default function Timer({
           colorPrimary: classes.colorPrimary,
           barColorPrimary: classes.barColorPrimary,
         }}
-        value={(currentTime / totalRoundTime) * 100}
+        value={percentage() * 100}
         variant={"determinate"}
       />
 
