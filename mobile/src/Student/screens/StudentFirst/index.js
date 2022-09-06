@@ -17,11 +17,11 @@ import PurpleBackground from '../../../components/PurpleBackground'
 import { getUniqueId } from 'react-native-device-info'
 import { GameSessionState } from '@righton/networking'
 
+
 export default function StudentFirst({ navigation, route }) {
 
   const [portal, setPortal] = useState(null)
   const [gameCode, setGameCode] = useState("")
-  const [name, setName] = useState("")
   const [gameSession, setGameSession] = useState(null)
 
   onGameCodeSubmit = () => {
@@ -31,6 +31,7 @@ export default function StudentFirst({ navigation, route }) {
   handleGameEntry = () => {
     if (!gameCode && this.gameInput) {
       this.gameInput.focus()
+      
       return
     }
 
@@ -44,47 +45,22 @@ export default function StudentFirst({ navigation, route }) {
         }
 
         if (gameSession.currentState != GameSessionState.TEAMS_JOINING) {
+         
           return
         }
 
         if (gameSession.isAdvanced) {
           return
         }
+        
         setGameSession(gameSession)
+        navigation.navigate('StudentName', {gameSession})
       }).catch(error => {
         setPortal(`error joining ${gameCode}: ${error}`)
       })
   }
 
-  onNameSubmit = () => {
-    if (!name && nameInput) {
-      this.nameInput.focus()
-      return
-    }
-    global.apiClient.addTeamToGameSessionId(gameSession.id, name, null)
-      .then(team => {
-        console.debug(team)
-        if (!team) {
-          console.error('Failed to add team')
-          return
-        }
-        getUniqueId().then((uniqueId) => {
-          global.apiClient.addTeamMemberToTeam(team.id, true, uniqueId)
-            .then(teamMember => {
-              if (!teamMember) {
-                console.error('Failed to add team member')
-                return
-              }
-              console.debug(teamMember)
-              navigation.navigate('StudentGameIntro', { gameSession, team, teamMember })
-            }).catch(error => {
-              console.error(error)
-            })
-        }).catch(error => {
-          console.error(error)
-        })
-      })
-  }
+
 
   handleNavigateToOnboardApp = () => {
     navigation.navigate('OnboardAppRouter')
@@ -127,28 +103,7 @@ export default function StudentFirst({ navigation, route }) {
               style={styles.enterButton}
               onPress={this.onGameCodeSubmit}
             />
-            {gameSession != null && !gameSession.isAdvanced && (
-              <>
-                <Text style={styles.title}>
-                  Enter Your Name
-                </Text><TextInput
-                  multiline={false}
-                  onChangeText={setName}
-                  onSubmitEditing={this.onNameSubmit}
-                  placeholder={'Your name'}
-                  placeholderTextColor={colors.primary}
-                  ref={(ref) => { this.nameInput = ref }}
-                  returnKeyType={'done'}
-                  style={styles.input}
-                  textAlign={'center'}
-                  value={name}
-                  autoFocus={true} /><RoundButton
-                  title="Enter"
-                  style={styles.enterButton}
-                  onPress={this.onNameSubmit} />
-              </>
-            )
-            }
+           
           </View>
         </PurpleBackground>
       </SafeAreaView>
