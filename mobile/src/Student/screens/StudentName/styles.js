@@ -14,10 +14,11 @@ export default ScaledSheet.create({
     color: colors.primary,
     fontSize: fonts.xMedium,
     fontFamily: fontFamilies.latoBold,
-    height: 68,
+    height: 45,
     backgroundColor: colors.white,
     borderRadius: 14,
-    paddingHorizontal: '14@vs',
+    paddingHorizontal: '24@vs',
+    marginHorizontal: 10,
     marginBottom: 13,
   },
   title: {
@@ -29,13 +30,18 @@ export default ScaledSheet.create({
   },
   entryContainer: {
     alignSelf: 'center',
-    width: scale(265),
+    //width: scale(265)
+  },
+  inputContainer: {
+    flexDirection: 'row',
   },
   enterButton: {
     backgroundColor: colors.buttonPrimary,
     fontFamily: fontFamilies.karlaBold,
     fontSize: fonts.xLarge,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    height: 50,
+    marginBottom: 13
   },
   rightOnHeroImage: {
     width: 230,

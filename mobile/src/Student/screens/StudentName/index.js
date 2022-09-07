@@ -18,10 +18,10 @@ import { getUniqueId } from 'react-native-device-info'
 import { GameSessionState } from '@righton/networking'
 
 export default function StudentName({ navigation, route }) {
-  
+
 
   const [name, setName] = useState("")
-  const { gameSession} = route.params
+  const { gameSession } = route.params
 
 
   console.log(gameSession)
@@ -77,24 +77,40 @@ export default function StudentName({ navigation, route }) {
               <>
                 <Text style={styles.title}>
                   Enter Your Name
-                </Text><TextInput
+                </Text>
+                <View style={styles.inputContainer}>
+                <TextInput
                   multiline={false}
                   onChangeText={setName}
                   onSubmitEditing={this.onNameSubmit}
-                  placeholder={'Your name'}
+                  placeholder={'First Name'}
                   placeholderTextColor={colors.primary}
                   ref={(ref) => { this.nameInput = ref }}
                   returnKeyType={'done'}
                   style={styles.input}
                   textAlign={'center'}
                   value={name}
-                  autoFocus={true} /><RoundButton
+                  autoFocus={true} />
+                <TextInput
+                  multiline={false}
+                  onChangeText={setName}
+                  onSubmitEditing={this.onNameSubmit}
+                  placeholder={'Last Name'}
+                  placeholderTextColor={colors.primary}
+                  ref={(ref) => { this.nameInput = ref }}
+                  returnKeyType={'done'}
+                  style={styles.input}
+                  textAlign={'center'}
+                  value={name}
+                  autoFocus={true} />
+                  </View>
+                  <RoundButton
                   title="Enter"
                   style={styles.enterButton}
                   onPress={this.onNameSubmit} />
               </>
-           )
-           }
+            )
+            }
           </View>
         </PurpleBackground>
       </SafeAreaView>
