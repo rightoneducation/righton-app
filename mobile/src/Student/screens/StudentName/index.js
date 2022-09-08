@@ -22,16 +22,16 @@ export default function StudentName({ navigation, route }) {
   const [lastName, setLastName] = useState("");
   const { gameSession } = route.params;
 
+  const teamName = `${firstName} ${lastName}`;
+
   onNameSubmit = () => {
     if (!firstName && !lastName && nameInput) {
       this.nameInput.focus();
       return;
     }
 
-    const name = firstName + " " + lastName;
-
     global.apiClient
-      .addTeamToGameSessionId(gameSession.id, name, null)
+      .addTeamToGameSessionId(gameSession.id, teamName, null)
       .then((team) => {
         console.debug(team);
         if (!team) {
