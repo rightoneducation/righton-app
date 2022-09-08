@@ -42,11 +42,11 @@ const StudentGameIntro = ({ route, navigation }) => {
                         orientation='horizontal'
                         onPageSelected={onPageSelected}
                     >
-                        <IntroInfo key="1" image={require('../img/answer_question_team5.png')} text="Read the multiple-choice question" />
+                        <IntroInfo key="1" image={require('./img/TeamIntroStep1.png')} text="Read the multiple-choice question" />
                         <IntroInfo key="2" image={require('./img/TeamIntroStep2.png')} text="Gain points by choosing the correct answer..." />
                         <IntroInfo key="3" image={require('./img/TeamIntroStep3.png')} text="Read step-by-step solutions" />
                         <IntroInfo key="4" image={require('./img/TeamIntroStep4.png')} text="Gain more points by guessing the most popular incorrect answer!" />
-                        <IntroInfo key="5" image={require('./img/TeamIntroStep4.png')} text="The most total points wins!" />
+                        <IntroInfo key="5" image={require('./img/TeamIntroStep5.png')} text="The most total points wins!" />
                     </ViewPager>
                     <View style={styles.pageIndicatorContainer}>
                         <Image source={currentPage == 0 ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />

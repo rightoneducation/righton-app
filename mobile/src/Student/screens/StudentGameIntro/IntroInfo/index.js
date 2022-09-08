@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'bottom',
         fontFamily: fontFamilies.montserratBold,
-        fontSize: fonts.xMedium,
+        fontSize: fonts.xxMedium,
         color: colors.white,
         marginTop: 30,
     }
