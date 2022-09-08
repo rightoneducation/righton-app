@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     headerTeam: {
         color: colors.white,
         fontFamily: fontFamilies.montserratBold,
-        fontSize: fonts.large,
+        fontSize: fonts.xxLarge,
         textAlign: 'center',
     },
     headerTeamNo: {
