@@ -20,18 +20,19 @@ import { GameSessionState } from '@righton/networking'
 export default function StudentName({ navigation, route }) {
 
 
-  const [name, setName] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const { gameSession } = route.params
 
 
   console.log(gameSession)
   onNameSubmit = () => {
-    if (!name && nameInput) {
+    if (!firstName && !lastName && nameInput) {
       this.nameInput.focus()
       return
     }
 
-    global.apiClient.addTeamToGameSessionId(gameSession.id, name, null)
+    global.apiClient.addTeamToGameSessionId(gameSession.id, firstName, lastName, null)
       .then(team => {
         console.debug(team)
         if (!team) {
@@ -81,7 +82,7 @@ export default function StudentName({ navigation, route }) {
                 <View style={styles.inputContainer}>
                 <TextInput
                   multiline={false}
-                  onChangeText={setName}
+                  onChangeText={setFirstName}
                   onSubmitEditing={this.onNameSubmit}
                   placeholder={'First Name'}
                   placeholderTextColor={colors.primary}
@@ -89,11 +90,11 @@ export default function StudentName({ navigation, route }) {
                   returnKeyType={'done'}
                   style={styles.input}
                   textAlign={'center'}
-                  value={name}
+                  value={firstName}
                   autoFocus={true} />
                 <TextInput
                   multiline={false}
-                  onChangeText={setName}
+                  onChangeText={setLastName}
                   onSubmitEditing={this.onNameSubmit}
                   placeholder={'Last Name'}
                   placeholderTextColor={colors.primary}
@@ -101,7 +102,7 @@ export default function StudentName({ navigation, route }) {
                   returnKeyType={'done'}
                   style={styles.input}
                   textAlign={'center'}
-                  value={name}
+                  value={lastName}
                   autoFocus={true} />
                   </View>
                   <RoundButton

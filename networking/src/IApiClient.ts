@@ -9,7 +9,7 @@ export interface IApiClient {
     updateGameSession(awsGameSessionInput: UpdateGameSessionInput): Promise<IGameSession>
     subscribeUpdateGameSession(id: string, callback: (result: IGameSession) => void): any
     getGameSessionByCode(gameCode: number): Promise<IGameSession | null>
-    addTeamToGameSessionId(gameSessionId: string, name: string, questionId: string | null): Promise<ITeam>
+    addTeamToGameSessionId(gameSessionId: string, firstName: string, lastName: string, questionId: string | null): Promise<ITeam>
     addTeamMemberToTeam(teamId: string, isFacilitator: boolean, deviceId: string): Promise<ITeamMember>
     addTeamAnswer(teamMemberId: string, questionId: number, text: string, isChosen: boolean | null): Promise<ITeamAnswer>
 }

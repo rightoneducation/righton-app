@@ -31,8 +31,9 @@ const StudentGameIntro = ({ route, navigation }) => {
         <SafeAreaView style={styles.container}>
             <PurpleBackground style={styles.mainContainer}>
                 <View style={styles.header}>
-                    <Text style={styles.headerTeam}>Team</Text>
-                    <Text style={styles.headerTeamNo}>{team.name}</Text>
+                    {/* <Text style={styles.headerTeam}>Team</Text>
+                    <Text style={styles.headerTeamNo}>{team.name}</Text> */}
+                    <Text style={styles.headerTeam}>How to Play!</Text>
                 </View>
                 <View style={styles.carouselContainer}>
                     <ViewPager
