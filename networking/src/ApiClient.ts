@@ -128,10 +128,9 @@ export class ApiClient implements IApiClient {
         return GameSessionParser.gameSessionFromAWSGameSession(result.data.gameSessionByCode.items[0])
     }
 
-    async addTeamToGameSessionId(gameSessionId: string, firstName: string, lastName: string, questionId: string | null): Promise<ITeam> {
+    async addTeamToGameSessionId(gameSessionId: string, name: string, questionId: string | null): Promise<ITeam> {
         const input: CreateTeamInput = {
-            firstName,
-            lastName,
+            name,
             score: 0,
             teamQuestionId: questionId,
             gameSessionTeamsId: gameSessionId,
