@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import OnboardAppRouter from '../screens/OnboardAppRouter'
 // import OnboardTeacherRouter from '../screens/OnboardTeacherRouter';
 import StudentFirst from '../Student/screens/StudentFirst'
+import StudentName from '../Student/screens/StudentName'
 import StudentChooseTeam from '../Student/screens/StudentChooseTeam'
 import StudentGameIntro from '../Student/screens/StudentGameIntro'
 import PregameCountDown from '../Student/screens/PregameCountDown'
@@ -32,6 +33,8 @@ const AppContainer = (props) => {
       >
         <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
+        <Stack.Screen name="StudentName" component={StudentName} />
+        
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="EnterInfo" component={EnterInfo} />
