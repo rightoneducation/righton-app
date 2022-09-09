@@ -1,6 +1,7 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
 import { fontFamilies, fonts, colors } from '../../../../utils/theme'
+const win = Dimensions.get('window');
 
 const IntroInfo = ({ image, text }) => {
     return (
@@ -24,6 +25,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0)',
     },
     image: {
+        // width: win.width,
+        // height: win.width,
         resizeMode: 'cover',
     },
     text: {
