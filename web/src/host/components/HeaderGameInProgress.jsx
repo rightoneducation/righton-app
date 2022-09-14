@@ -52,14 +52,18 @@ const label = {
   PHASE_2_RESULTS: "Phase 2 Results",
 };
 
-const chooseTotalRoundTime = (currentState, phaseOneRoundTime, phaseTwoRoundTime) => {
+const chooseTotalRoundTime = (
+  currentState,
+  phaseOneRoundTime,
+  phaseTwoRoundTime
+) => {
   if (currentState === "CHOOSE_CORRECT_ANSWER") {
     return phaseOneRoundTime;
   } else if (currentState === "CHOOSE_TRICKIEST_ANSWER") {
     return phaseTwoRoundTime;
   }
   return 60;
-}
+};
 
 export default function GameInProgressHeader({
   currentState,
@@ -67,18 +71,24 @@ export default function GameInProgressHeader({
   phaseTwoTime,
 }) {
   const classes = useStyles();
-  const totalRoundTime = chooseTotalRoundTime(currentState, phaseOneTime, phaseTwoTime);
+  const totalRoundTime = chooseTotalRoundTime(
+    currentState,
+    phaseOneTime,
+    phaseTwoTime
+  );
   const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
   const [timeIsPaused, setTimeIsPaused] = React.useState(false);
 
   useEffect(() => {
-    // when switching to the timed states, 
-    if (currentState === "CHOOSE_CORRECT_ANSWER" &&
-      currentState === "CHOOSE_TRICKIEST_ANSWER") {
+    // when switching to the timed states,
+    if (
+      currentState === "CHOOSE_CORRECT_ANSWER" ||
+      currentState === "CHOOSE_TRICKIEST_ANSWER"
+    ) {
       setCurrentTime(totalRoundTime);
       setTimeIsPaused(false);
     } else {
-      // any either state change pauses time
+      // any ther state change pauses time
       setTimeIsPaused(true);
     }
   }, [currentState, totalRoundTime]);
