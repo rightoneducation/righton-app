@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { LinearProgress, IconButton } from "@material-ui/core";
-import { AvTimer } from "@material-ui/icons";
+import { LinearProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   blueButton: {
@@ -40,25 +39,27 @@ export default function Timer({
   currentTime,
   totalRoundTime,
   setTime,
-  pauseTime,
+  timeIsPaused,
 }) {
   const classes = useStyles();
   let countdown = useRef();
 
   useEffect(() => {
     countdown.current = setInterval(() => {
-      if (!pauseTime && currentTime > 0) {
+      if (currentTime > 0) {
         setTime(currentTime - 1);
       }
     }, 1000);
-
     return () => clearInterval(countdown.current);
-  }, [currentTime, pauseTime]);
+  }, [currentTime, setTime]);
+
+  useEffect(() => {
+    if (timeIsPaused) clearInterval(countdown.current);
+  }, [timeIsPaused]);
 
   let percentage = () => {
-    if (!pauseTime) {
-      return currentTime / totalRoundTime;
-    }
+    if (!timeIsPaused) return currentTime / totalRoundTime;
+    return 100;
   };
 
   return (
