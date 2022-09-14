@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+// import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
 const useStyles = makeStyles(() => ({
@@ -52,36 +52,46 @@ const label = {
   PHASE_2_RESULTS: "Phase 2 Results",
 };
 
+const chooseTotalRoundTime = (
+  currentState,
+  phaseOneRoundTime,
+  phaseTwoRoundTime
+) => {
+  if (currentState === "CHOOSE_CORRECT_ANSWER") {
+    return phaseOneRoundTime;
+  } else if (currentState === "CHOOSE_TRICKIEST_ANSWER") {
+    return phaseTwoRoundTime;
+  }
+  return 60;
+};
+
 export default function GameInProgressHeader({
-  totalQuestions,
-  currentQuestion,
   currentState,
   phaseOneTime,
   phaseTwoTime,
 }) {
   const classes = useStyles();
-
-  let totalRoundTime = () => {
-    if (currentState === "CHOOSE_CORRECT_ANSWER") {
-      return phaseOneTime;
-    } else if (currentState === "CHOOSE_TRICKIEST_ANSWER") {
-      return phaseTwoTime;
-    }
-    return 60;
-  };
-
-  //use state to set the current time
+  const totalRoundTime = chooseTotalRoundTime(
+    currentState,
+    phaseOneTime,
+    phaseTwoTime
+  );
   const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
+  const [timeIsPaused, setTimeIsPaused] = React.useState(false);
 
   useEffect(() => {
+    // when switching to the timed states,
     if (
       currentState === "CHOOSE_CORRECT_ANSWER" ||
       currentState === "CHOOSE_TRICKIEST_ANSWER"
     ) {
-      //pause timer
-      setCurrentTime(totalRoundTime());
+      setCurrentTime(totalRoundTime);
+      setTimeIsPaused(false);
+    } else {
+      // any ther state change pauses time
+      setTimeIsPaused(true);
     }
-  }, [currentState]);
+  }, [currentState, totalRoundTime]);
 
   return (
     <div className={classes.div}>
@@ -106,8 +116,9 @@ export default function GameInProgressHeader({
 
       <Timer
         currentTime={currentTime}
-        totalRoundTime={totalRoundTime()}
+        totalRoundTime={totalRoundTime}
         setTime={setCurrentTime}
+        timeIsPaused={timeIsPaused}
       />
     </div>
   );
