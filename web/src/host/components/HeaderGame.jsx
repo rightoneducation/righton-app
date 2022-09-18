@@ -65,10 +65,11 @@ const chooseTotalRoundTime = (
   return 60;
 };
 
-export default function GameInProgressHeader({
+export default function HeaderGame({
   currentState,
   phaseOneTime,
   phaseTwoTime,
+  gameInProgress
 }) {
   const classes = useStyles();
   const totalRoundTime = chooseTotalRoundTime(
@@ -78,6 +79,8 @@ export default function GameInProgressHeader({
   );
   const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
   const [timeIsPaused, setTimeIsPaused] = React.useState(false);
+    
+
 
   useEffect(() => {
     // when switching to the timed states,
@@ -92,6 +95,7 @@ export default function GameInProgressHeader({
       setTimeIsPaused(true);
     }
   }, [currentState, totalRoundTime]);
+
 
   return (
     <div className={classes.div}>
@@ -113,13 +117,8 @@ export default function GameInProgressHeader({
       <Typography className={classes.phases}>
         {label[currentState]} {/* Replace with phase info from query */}
       </Typography>
-
-      <Timer
-        currentTime={currentTime}
-        totalRoundTime={totalRoundTime}
-        setTime={setCurrentTime}
-        timeIsPaused={timeIsPaused}
-      />
+      {gameInProgress && <Timer currentTime={currentTime} totalRoundTime={totalRoundTime} setTime={setCurrentTime} timeIsPaused={timeIsPaused} />} 
+     
     </div>
   );
 }

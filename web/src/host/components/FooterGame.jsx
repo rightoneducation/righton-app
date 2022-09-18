@@ -6,30 +6,30 @@ import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGameInProgress({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession }) {
+export default function FooterGame({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession, gameInProgress }) {
   const classes = useStyles();
 
   const currentStateToButtonText = { //dictionary used to assign button text based on the next state 
-    "PHASE_1_RESULTS": "Skip to Results",
-    "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
-    "PHASE_2_RESULTS": "Skip to Results",
+    "PHASE_1_RESULTS": "End Answering",
     "CHOOSE_CORRECT_ANSWER": "Next Question",
+    "PHASE_2_RESULTS": "Skip to Results",
+    "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
     "FINAL_RESULTS": "View Final Results"
   }
 
    return (
     <BottomNavigation className={classes.footer}>
-      <div className={classes.footerContainer}>
-        <div className={classes.playerNum}>Players who have answered</div>
-        <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
-        <Button
+      <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
+      <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={classes.nextPhaseButton}
           onClick={() =>  handleUpdateGameSession({currentState: GameSessionState[nextState]})}
         >
           {currentStateToButtonText[nextState]}
         </Button>
-      </div>
+        {gameInProgress && <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />}
+        {gameInProgress && <div className={classes.playerNum}>Players who have answered</div>}
+        </div>
     </BottomNavigation>
   );
 }
@@ -38,14 +38,13 @@ const useStyles = makeStyles(theme => ({
   footer: {
     position: 'sticky',
     bottom: '0',
-    padding: '14%',
+    padding: '10.5%',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    //gap: '10px',
+    flexDirection: 'column-reverse',
+    justifyContent: 'flex-start',
   },
   playerNum: {
     fontSize: '16px',
@@ -74,6 +73,7 @@ const useStyles = makeStyles(theme => ({
     height: "48px",
     color: "white",
     fontSize: "20px",
+    bottom: '0',
     fontWeight: "700",
     lineHeight: "30px",
     boxShadow: "0px 5px 22px 0px #47D9FF4D", 

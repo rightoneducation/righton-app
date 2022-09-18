@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
-import FooterGameInProgress from "../components/FooterGameInProgress";
-import HeaderGameInProgress from "../components/HeaderGameInProgress";
+import FooterGame from "../components/FooterGame";
+import HeaderGame from "../components/HeaderGame";
 import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
 import CheckMark from "../../images/Union.png";
 import { GameSessionState } from "@righton/networking";
@@ -52,7 +52,7 @@ export default function GameInProgress({
           backgroundPositionY: "-300px"
         }}
       >
-        <HeaderGameInProgress
+        <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
@@ -63,7 +63,7 @@ export default function GameInProgress({
         <AnswersInProgressDetails questions={questions} />
       </div>
     
-      <FooterGameInProgress
+      <FooterGame
         currentState={currentState}
         nextState={nextState= nextStateFunc(currentState)} 
         nextQuestion={currentQuestionIndex} 

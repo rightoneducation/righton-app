@@ -1,12 +1,12 @@
 import React from "react";
-import FooterGameInProgress from "./FooterGameInProgress.jsx";
+import FooterGame from "./FooterGame.jsx";
 
 export default {
-  title: "FooterGameInProgress",
-  component: FooterGameInProgress
+  title: "FooterGame",
+  component: FooterGame
 };
 
-const Template = args => <FooterGameInProgress {...args} />;
+const Template = args => <FooterGame {...args} />;
 
 export const Phase1 = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
