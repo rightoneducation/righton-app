@@ -81,10 +81,8 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
   }
 `;
 export const onCreateGameSession = /* GraphQL */ `
-  subscription OnCreateGameSession(
-    $filter: ModelSubscriptionGameSessionFilterInput
-  ) {
-    onCreateGameSession(filter: $filter) {
+  subscription OnCreateGameSession {
+    onCreateGameSession {
       id
       gameId
       startTime
@@ -161,10 +159,8 @@ export const onCreateGameSession = /* GraphQL */ `
   }
 `;
 export const onUpdateGameSession = /* GraphQL */ `
-  subscription OnUpdateGameSession(
-    $filter: ModelSubscriptionGameSessionFilterInput
-  ) {
-    onUpdateGameSession(filter: $filter) {
+  subscription OnUpdateGameSession {
+    onUpdateGameSession {
       id
       gameId
       startTime
@@ -241,10 +237,8 @@ export const onUpdateGameSession = /* GraphQL */ `
   }
 `;
 export const onDeleteGameSession = /* GraphQL */ `
-  subscription OnDeleteGameSession(
-    $filter: ModelSubscriptionGameSessionFilterInput
-  ) {
-    onDeleteGameSession(filter: $filter) {
+  subscription OnDeleteGameSession {
+    onDeleteGameSession {
       id
       gameId
       startTime
@@ -321,8 +315,8 @@ export const onDeleteGameSession = /* GraphQL */ `
   }
 `;
 export const onCreateTeam = /* GraphQL */ `
-  subscription OnCreateTeam($filter: ModelSubscriptionTeamFilterInput) {
-    onCreateTeam(filter: $filter) {
+  subscription OnCreateTeam {
+    onCreateTeam {
       id
       name
       question {
@@ -374,8 +368,8 @@ export const onCreateTeam = /* GraphQL */ `
   }
 `;
 export const onUpdateTeam = /* GraphQL */ `
-  subscription OnUpdateTeam($filter: ModelSubscriptionTeamFilterInput) {
-    onUpdateTeam(filter: $filter) {
+  subscription OnUpdateTeam {
+    onUpdateTeam {
       id
       name
       question {
@@ -427,8 +421,8 @@ export const onUpdateTeam = /* GraphQL */ `
   }
 `;
 export const onDeleteTeam = /* GraphQL */ `
-  subscription OnDeleteTeam($filter: ModelSubscriptionTeamFilterInput) {
-    onDeleteTeam(filter: $filter) {
+  subscription OnDeleteTeam {
+    onDeleteTeam {
       id
       name
       question {
@@ -480,10 +474,8 @@ export const onDeleteTeam = /* GraphQL */ `
   }
 `;
 export const onCreateTeamMember = /* GraphQL */ `
-  subscription OnCreateTeamMember(
-    $filter: ModelSubscriptionTeamMemberFilterInput
-  ) {
-    onCreateTeamMember(filter: $filter) {
+  subscription OnCreateTeamMember {
+    onCreateTeamMember {
       id
       isFacilitator
       answers {
@@ -506,10 +498,8 @@ export const onCreateTeamMember = /* GraphQL */ `
   }
 `;
 export const onUpdateTeamMember = /* GraphQL */ `
-  subscription OnUpdateTeamMember(
-    $filter: ModelSubscriptionTeamMemberFilterInput
-  ) {
-    onUpdateTeamMember(filter: $filter) {
+  subscription OnUpdateTeamMember {
+    onUpdateTeamMember {
       id
       isFacilitator
       answers {
@@ -532,10 +522,8 @@ export const onUpdateTeamMember = /* GraphQL */ `
   }
 `;
 export const onDeleteTeamMember = /* GraphQL */ `
-  subscription OnDeleteTeamMember(
-    $filter: ModelSubscriptionTeamMemberFilterInput
-  ) {
-    onDeleteTeamMember(filter: $filter) {
+  subscription OnDeleteTeamMember {
+    onDeleteTeamMember {
       id
       isFacilitator
       answers {
@@ -558,10 +546,8 @@ export const onDeleteTeamMember = /* GraphQL */ `
   }
 `;
 export const onCreateTeamAnswer = /* GraphQL */ `
-  subscription OnCreateTeamAnswer(
-    $filter: ModelSubscriptionTeamAnswerFilterInput
-  ) {
-    onCreateTeamAnswer(filter: $filter) {
+  subscription OnCreateTeamAnswer {
+    onCreateTeamAnswer {
       id
       questionId
       isChosen
@@ -573,10 +559,8 @@ export const onCreateTeamAnswer = /* GraphQL */ `
   }
 `;
 export const onUpdateTeamAnswer = /* GraphQL */ `
-  subscription OnUpdateTeamAnswer(
-    $filter: ModelSubscriptionTeamAnswerFilterInput
-  ) {
-    onUpdateTeamAnswer(filter: $filter) {
+  subscription OnUpdateTeamAnswer {
+    onUpdateTeamAnswer {
       id
       questionId
       isChosen
@@ -588,10 +572,8 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
   }
 `;
 export const onDeleteTeamAnswer = /* GraphQL */ `
-  subscription OnDeleteTeamAnswer(
-    $filter: ModelSubscriptionTeamAnswerFilterInput
-  ) {
-    onDeleteTeamAnswer(filter: $filter) {
+  subscription OnDeleteTeamAnswer {
+    onDeleteTeamAnswer {
       id
       questionId
       isChosen
