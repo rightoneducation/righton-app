@@ -23,7 +23,9 @@ export enum GameSessionState {
   TEAMS_JOINING = "TEAMS_JOINING",
   CHOOSE_CORRECT_ANSWER = "CHOOSE_CORRECT_ANSWER",
   PHASE_1_RESULTS = "PHASE_1_RESULTS",
+  PHASE_1_DISCUSS = "PHASE_1_DISCUSS",
   CHOOSE_TRICKIEST_ANSWER = "CHOOSE_TRICKIEST_ANSWER",
+  PHASE_2_DISCUSS = "PHASE_2_DISCUSS",
   PHASE_2_RESULTS = "PHASE_2_RESULTS",
   FINAL_RESULTS = "FINAL_RESULTS",
   FINISHED = "FINISHED",
@@ -493,97 +495,6 @@ export type ModelTeamAnswerFilterInput = {
   teamMemberAnswersId?: ModelIDInput | null,
 };
 
-export type ModelSubscriptionGameSessionFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  gameId?: ModelSubscriptionIntInput | null,
-  startTime?: ModelSubscriptionStringInput | null,
-  phaseOneTime?: ModelSubscriptionIntInput | null,
-  phaseTwoTime?: ModelSubscriptionIntInput | null,
-  currentQuestionIndex?: ModelSubscriptionIntInput | null,
-  currentState?: ModelSubscriptionStringInput | null,
-  gameCode?: ModelSubscriptionIntInput | null,
-  isAdvancedMode?: ModelSubscriptionBooleanInput | null,
-  imageUrl?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  currentTimer?: ModelSubscriptionIntInput | null,
-  and?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
-  or?: Array< ModelSubscriptionGameSessionFilterInput | null > | null,
-};
-
-export type ModelSubscriptionIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
-};
-
-export type ModelSubscriptionIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
-};
-
-export type ModelSubscriptionStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
-};
-
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-};
-
-export type ModelSubscriptionTeamFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  trickiestAnswerIDs?: ModelSubscriptionIDInput | null,
-  score?: ModelSubscriptionIntInput | null,
-  and?: Array< ModelSubscriptionTeamFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTeamFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTeamMemberFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  isFacilitator?: ModelSubscriptionBooleanInput | null,
-  deviceId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionTeamMemberFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTeamMemberFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTeamAnswerFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  questionId?: ModelSubscriptionIntInput | null,
-  isChosen?: ModelSubscriptionBooleanInput | null,
-  text?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
-};
-
 export type CreateGameSessionMutationVariables = {
   input: CreateGameSessionInput,
   condition?: ModelGameSessionConditionInput | null,
@@ -603,7 +514,35 @@ export type CreateGameSessionMutation = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -665,7 +604,35 @@ export type UpdateGameSessionMutation = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -727,7 +694,35 @@ export type DeleteGameSessionMutation = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -871,6 +866,20 @@ export type CreateTeamMutation = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -920,6 +929,20 @@ export type UpdateTeamMutation = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -969,6 +992,20 @@ export type DeleteTeamMutation = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -1151,7 +1188,35 @@ export type GetGameSessionQuery = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -1212,6 +1277,38 @@ export type ListGameSessionsQuery = {
       phaseTwoTime: number,
       teams?:  {
         __typename: "ModelTeamConnection",
+        items:  Array< {
+          __typename: "Team",
+          id: string,
+          name: string,
+          question?:  {
+            __typename: "Question",
+            id: number,
+            text: string,
+            answer?: string | null,
+            wrongAnswers?: string | null,
+            imageUrl?: string | null,
+            instructions?: string | null,
+            standard?: string | null,
+            cluster?: string | null,
+            domain?: string | null,
+            grade?: string | null,
+            order: number,
+            gameSessionId: string,
+          } | null,
+          trickiestAnswerIDs?: Array< string | null > | null,
+          teamMembers?:  {
+            __typename: "ModelTeamMemberConnection",
+            nextToken?: string | null,
+          } | null,
+          score: number,
+          createdAt: string,
+          updatedAt: string,
+          gameSessionTeamsId?: string | null,
+          teamQuestionId?: string | null,
+          teamQuestionOrder?: number | null,
+          teamQuestionGameSessionId?: string | null,
+        } | null >,
         nextToken?: string | null,
       } | null,
       currentQuestionIndex?: number | null,
@@ -1224,6 +1321,21 @@ export type ListGameSessionsQuery = {
       currentTimer?: number | null,
       questions?:  {
         __typename: "ModelQuestionConnection",
+        items:  Array< {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null >,
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1319,6 +1431,20 @@ export type GetTeamQuery = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -1367,6 +1493,19 @@ export type ListTeamsQuery = {
       trickiestAnswerIDs?: Array< string | null > | null,
       teamMembers?:  {
         __typename: "ModelTeamMemberConnection",
+        items:  Array< {
+          __typename: "TeamMember",
+          id: string,
+          isFacilitator?: boolean | null,
+          answers?:  {
+            __typename: "ModelTeamAnswerConnection",
+            nextToken?: string | null,
+          } | null,
+          deviceId: string,
+          createdAt: string,
+          updatedAt: string,
+          teamTeamMembersId?: string | null,
+        } | null >,
         nextToken?: string | null,
       } | null,
       score: number,
@@ -1426,6 +1565,16 @@ export type ListTeamMembersQuery = {
       isFacilitator?: boolean | null,
       answers?:  {
         __typename: "ModelTeamAnswerConnection",
+        items:  Array< {
+          __typename: "TeamAnswer",
+          id: string,
+          questionId: number,
+          isChosen?: boolean | null,
+          text: string,
+          createdAt: string,
+          updatedAt: string,
+          teamMemberAnswersId?: string | null,
+        } | null >,
         nextToken?: string | null,
       } | null,
       deviceId: string,
@@ -1497,6 +1646,38 @@ export type GameSessionByStateQuery = {
       phaseTwoTime: number,
       teams?:  {
         __typename: "ModelTeamConnection",
+        items:  Array< {
+          __typename: "Team",
+          id: string,
+          name: string,
+          question?:  {
+            __typename: "Question",
+            id: number,
+            text: string,
+            answer?: string | null,
+            wrongAnswers?: string | null,
+            imageUrl?: string | null,
+            instructions?: string | null,
+            standard?: string | null,
+            cluster?: string | null,
+            domain?: string | null,
+            grade?: string | null,
+            order: number,
+            gameSessionId: string,
+          } | null,
+          trickiestAnswerIDs?: Array< string | null > | null,
+          teamMembers?:  {
+            __typename: "ModelTeamMemberConnection",
+            nextToken?: string | null,
+          } | null,
+          score: number,
+          createdAt: string,
+          updatedAt: string,
+          gameSessionTeamsId?: string | null,
+          teamQuestionId?: string | null,
+          teamQuestionOrder?: number | null,
+          teamQuestionGameSessionId?: string | null,
+        } | null >,
         nextToken?: string | null,
       } | null,
       currentQuestionIndex?: number | null,
@@ -1509,6 +1690,21 @@ export type GameSessionByStateQuery = {
       currentTimer?: number | null,
       questions?:  {
         __typename: "ModelQuestionConnection",
+        items:  Array< {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null >,
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1538,6 +1734,38 @@ export type GameSessionByCodeQuery = {
       phaseTwoTime: number,
       teams?:  {
         __typename: "ModelTeamConnection",
+        items:  Array< {
+          __typename: "Team",
+          id: string,
+          name: string,
+          question?:  {
+            __typename: "Question",
+            id: number,
+            text: string,
+            answer?: string | null,
+            wrongAnswers?: string | null,
+            imageUrl?: string | null,
+            instructions?: string | null,
+            standard?: string | null,
+            cluster?: string | null,
+            domain?: string | null,
+            grade?: string | null,
+            order: number,
+            gameSessionId: string,
+          } | null,
+          trickiestAnswerIDs?: Array< string | null > | null,
+          teamMembers?:  {
+            __typename: "ModelTeamMemberConnection",
+            nextToken?: string | null,
+          } | null,
+          score: number,
+          createdAt: string,
+          updatedAt: string,
+          gameSessionTeamsId?: string | null,
+          teamQuestionId?: string | null,
+          teamQuestionOrder?: number | null,
+          teamQuestionGameSessionId?: string | null,
+        } | null >,
         nextToken?: string | null,
       } | null,
       currentQuestionIndex?: number | null,
@@ -1550,6 +1778,21 @@ export type GameSessionByCodeQuery = {
       currentTimer?: number | null,
       questions?:  {
         __typename: "ModelQuestionConnection",
+        items:  Array< {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null >,
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1577,7 +1820,35 @@ export type OnGameSessionUpdatedByIdSubscription = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -1618,10 +1889,6 @@ export type OnGameSessionUpdatedByIdSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateGameSessionSubscriptionVariables = {
-  filter?: ModelSubscriptionGameSessionFilterInput | null,
 };
 
 export type OnCreateGameSessionSubscription = {
@@ -1638,7 +1905,35 @@ export type OnCreateGameSessionSubscription = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -1679,10 +1974,6 @@ export type OnCreateGameSessionSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnUpdateGameSessionSubscriptionVariables = {
-  filter?: ModelSubscriptionGameSessionFilterInput | null,
 };
 
 export type OnUpdateGameSessionSubscription = {
@@ -1699,7 +1990,35 @@ export type OnUpdateGameSessionSubscription = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -1740,10 +2059,6 @@ export type OnUpdateGameSessionSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnDeleteGameSessionSubscriptionVariables = {
-  filter?: ModelSubscriptionGameSessionFilterInput | null,
 };
 
 export type OnDeleteGameSessionSubscription = {
@@ -1760,7 +2075,35 @@ export type OnDeleteGameSessionSubscription = {
         __typename: "Team",
         id: string,
         name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          answer?: string | null,
+          wrongAnswers?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          gameSessionId: string,
+        } | null,
         trickiestAnswerIDs?: Array< string | null > | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         score: number,
         createdAt: string,
         updatedAt: string,
@@ -1801,10 +2144,6 @@ export type OnDeleteGameSessionSubscription = {
     createdAt: string,
     updatedAt: string,
   } | null,
-};
-
-export type OnCreateTeamSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamFilterInput | null,
 };
 
 export type OnCreateTeamSubscription = {
@@ -1834,6 +2173,20 @@ export type OnCreateTeamSubscription = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -1849,10 +2202,6 @@ export type OnCreateTeamSubscription = {
     teamQuestionOrder?: number | null,
     teamQuestionGameSessionId?: string | null,
   } | null,
-};
-
-export type OnUpdateTeamSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamFilterInput | null,
 };
 
 export type OnUpdateTeamSubscription = {
@@ -1882,6 +2231,20 @@ export type OnUpdateTeamSubscription = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -1897,10 +2260,6 @@ export type OnUpdateTeamSubscription = {
     teamQuestionOrder?: number | null,
     teamQuestionGameSessionId?: string | null,
   } | null,
-};
-
-export type OnDeleteTeamSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamFilterInput | null,
 };
 
 export type OnDeleteTeamSubscription = {
@@ -1930,6 +2289,20 @@ export type OnDeleteTeamSubscription = {
         __typename: "TeamMember",
         id: string,
         isFacilitator?: boolean | null,
+        answers?:  {
+          __typename: "ModelTeamAnswerConnection",
+          items:  Array< {
+            __typename: "TeamAnswer",
+            id: string,
+            questionId: number,
+            isChosen?: boolean | null,
+            text: string,
+            createdAt: string,
+            updatedAt: string,
+            teamMemberAnswersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
         deviceId: string,
         createdAt: string,
         updatedAt: string,
@@ -1945,10 +2318,6 @@ export type OnDeleteTeamSubscription = {
     teamQuestionOrder?: number | null,
     teamQuestionGameSessionId?: string | null,
   } | null,
-};
-
-export type OnCreateTeamMemberSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamMemberFilterInput | null,
 };
 
 export type OnCreateTeamMemberSubscription = {
@@ -1977,10 +2346,6 @@ export type OnCreateTeamMemberSubscription = {
   } | null,
 };
 
-export type OnUpdateTeamMemberSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamMemberFilterInput | null,
-};
-
 export type OnUpdateTeamMemberSubscription = {
   onUpdateTeamMember?:  {
     __typename: "TeamMember",
@@ -2005,10 +2370,6 @@ export type OnUpdateTeamMemberSubscription = {
     updatedAt: string,
     teamTeamMembersId?: string | null,
   } | null,
-};
-
-export type OnDeleteTeamMemberSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamMemberFilterInput | null,
 };
 
 export type OnDeleteTeamMemberSubscription = {
@@ -2037,10 +2398,6 @@ export type OnDeleteTeamMemberSubscription = {
   } | null,
 };
 
-export type OnCreateTeamAnswerSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamAnswerFilterInput | null,
-};
-
 export type OnCreateTeamAnswerSubscription = {
   onCreateTeamAnswer?:  {
     __typename: "TeamAnswer",
@@ -2054,10 +2411,6 @@ export type OnCreateTeamAnswerSubscription = {
   } | null,
 };
 
-export type OnUpdateTeamAnswerSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamAnswerFilterInput | null,
-};
-
 export type OnUpdateTeamAnswerSubscription = {
   onUpdateTeamAnswer?:  {
     __typename: "TeamAnswer",
@@ -2069,10 +2422,6 @@ export type OnUpdateTeamAnswerSubscription = {
     updatedAt: string,
     teamMemberAnswersId?: string | null,
   } | null,
-};
-
-export type OnDeleteTeamAnswerSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamAnswerFilterInput | null,
 };
 
 export type OnDeleteTeamAnswerSubscription = {
