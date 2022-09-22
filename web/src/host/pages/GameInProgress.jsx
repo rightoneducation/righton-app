@@ -1,11 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
-import FooterGameInProgress from "../components/FooterGameInProgress";
-import HeaderGameInProgress from "../components/HeaderGameInProgress";
+import FooterGame from "../components/FooterGame";
+import HeaderGame from "../components/HeaderGame";
 import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
 import CheckMark from "../../images/Union.png";
 import { GameSessionState } from "@righton/networking";
+import GameModal from "../components/GameModal";
 
 export default function GameInProgress({
   teams,
@@ -21,7 +22,12 @@ export default function GameInProgress({
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
+  let [modalOpen, setModalOpen] = useState(false);
  
+  const handleModalOpenClose = modalOpen =>{ //callback function for opening and closing the modal with onclicks
+    setModalOpen(modalOpen);
+  }
+
   const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
     let count = 0;
     teams && teams.map(team => 
@@ -52,7 +58,7 @@ export default function GameInProgress({
           backgroundPositionY: "-300px"
         }}
       >
-        <HeaderGameInProgress
+        <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
@@ -62,8 +68,8 @@ export default function GameInProgress({
         <QuestionCardDetails questions={questions} />
         <AnswersInProgressDetails questions={questions} />
       </div>
-    
-      <FooterGameInProgress
+        <GameModal nextState={nextStateFunc(currentState)} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
+      <FooterGame
         currentState={currentState}
         nextState={nextState= nextStateFunc(currentState)} 
         nextQuestion={currentQuestionIndex} 
@@ -71,7 +77,9 @@ export default function GameInProgress({
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
-        handleUpdateGameSession={handleUpdateGameSession}        
+        handleUpdateGameSession={handleUpdateGameSession}
+        endAnswer ={ nextStateFunc(currentState)=== "PHASE_1_RESULTS" || nextStateFunc(currentState)=== "PHASE_2_RESULTS" ? true : false}   
+        handleModalOpenClose = {handleModalOpenClose}
       />
     </div>
   );
