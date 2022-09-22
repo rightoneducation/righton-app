@@ -17,8 +17,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -62,8 +61,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -77,6 +75,30 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
       }
       createdAt
       updatedAt
+    }
+  }
+`;
+export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
+  subscription OnTeamMemberUpdateByTeamId($teamId: ID!) {
+    onTeamMemberUpdateByTeamId(teamId: $teamId) {
+      id
+      isFacilitator
+      answers {
+        items {
+          id
+          questionId
+          isChosen
+          text
+          createdAt
+          updatedAt
+          teamMemberAnswersId
+        }
+        nextToken
+      }
+      deviceId
+      createdAt
+      updatedAt
+      teamTeamMembersId
     }
   }
 `;
@@ -95,8 +117,7 @@ export const onCreateGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -140,8 +161,7 @@ export const onCreateGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -173,8 +193,7 @@ export const onUpdateGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -218,8 +237,7 @@ export const onUpdateGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -251,8 +269,7 @@ export const onDeleteGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -296,8 +313,7 @@ export const onDeleteGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -322,8 +338,7 @@ export const onCreateTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
@@ -375,8 +390,7 @@ export const onUpdateTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
@@ -428,8 +442,7 @@ export const onDeleteTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
