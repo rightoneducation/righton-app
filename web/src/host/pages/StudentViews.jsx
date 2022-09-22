@@ -23,9 +23,9 @@ export default function StudentViews({
   let nextState;
  
   const studentViewImage = currentState => { //determines which student view image to show
-    if (currentState === "PHASE_1_RESULTS"){
+    if (currentState === stateArray[3]){
       return SVP1Results;
-    } else if (currentState === "PHASE_2_RESULTS"){
+    } else if (currentState === stateArray[7]){
       return SVP2Results;
     }
     else 
@@ -33,10 +33,10 @@ export default function StudentViews({
   };
 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS"){
-      return "FINAL_RESULTS";
-    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex !== (questions ? questions.length : 0)) {
-      return "CHOOSE_CORRECT_ANSWER";
+    if (currentState === stateArray[7]){
+      return stateArray[8];
+    } else if (currentState === stateArray[7] && currentQuestionIndex !== (questions ? questions.length : 0)) {
+      return stateArray[2];
     } else {
     return stateArray[stateArray.indexOf(currentState) + 1]; 
     }
@@ -68,7 +68,8 @@ export default function StudentViews({
                   phaseOneTime={phaseOneTime}
                   phaseTwoTime={phaseTwoTime}
                   handleUpdateGameSession={handleUpdateGameSession}
-                  gameInProgress={false}        
+                  gameInProgress={false}      
+                  statePosition={stateArray.indexOf(nextState)}
                 />
           </div>
        

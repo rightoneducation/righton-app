@@ -6,15 +6,18 @@ import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGame({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession, gameInProgress, endAnswer, handleModalOpenClose}) {
+export default function FooterGame({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession, gameInProgress, endAnswer, handleModalOpenClose, statePosition}) {
   const classes = useStyles();
 
-  const currentStateToButtonText = { //dictionary used to assign button text based on the next state 
-    "PHASE_1_RESULTS": "End Answering",
-    "CHOOSE_CORRECT_ANSWER": "Next Question",
-    "PHASE_2_RESULTS": "Skip to Results",
-    "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
-    "FINAL_RESULTS": "View Final Results"
+  const nextStateToButtonText = { //dictionary used to assign button text based on the next state 
+    
+    
+    3 : "End Answering",
+    4 : ""
+    2 : "Next Question",
+    7 : "Skip to Results",
+    5 : "Next Phase",
+    8 : "View Final Results"
   }
 
    return (
@@ -25,7 +28,7 @@ export default function FooterGame({nextState, nextQuestion, numPlayers, numAnsw
           className={classes.nextPhaseButton}
           onClick={() =>  {!endAnswer ? handleUpdateGameSession({currentState: GameSessionState[nextState]}) : handleModalOpenClose(true)}}
         >
-          {currentStateToButtonText[nextState]}
+          {nextStateToButtonText[statePosition]}
         </Button>
         {gameInProgress && <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />}
         {gameInProgress && <div className={classes.playerNum}>Players who have answered</div>}

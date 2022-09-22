@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import StartGame from "../pages/StartGame";
+import StudentViews from "../pages/StudentViews";
 import {
   ApiClient,
   Environment,
@@ -49,9 +50,12 @@ const GameSessionContainer = () => {
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+      return <GameInProgress {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
+
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
-      return <GameInProgress {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
+      return <StudentViews {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
+
 
     case GameSessionState.FINAL_RESULTS:
       return <Ranking {...gameSession} handleUpdateGameSession={handleUpdateGameSession} />;

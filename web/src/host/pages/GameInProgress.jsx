@@ -37,12 +37,12 @@ export default function GameInProgress({
 
     return count;
   };
-
+ 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS"){
-      return "FINAL_RESULTS";
-    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex !== (questions ? questions.length : 0)) {
-      return "CHOOSE_CORRECT_ANSWER";
+    if (currentState === stateArray[7]){
+      return stateArray[8];
+    } else if (currentState === stateArray[7] && currentQuestionIndex !== (questions ? questions.length : 0)) {
+      return stateArray[2];
     } else {
     return stateArray[stateArray.indexOf(currentState) + 1]; 
     }
@@ -78,8 +78,9 @@ export default function GameInProgress({
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
         handleUpdateGameSession={handleUpdateGameSession}
-        endAnswer ={ nextStateFunc(currentState)=== "PHASE_1_RESULTS" || nextStateFunc(currentState)=== "PHASE_2_RESULTS" ? true : false}   
+        endAnswer ={ nextStateFunc(currentState)=== stateArray[3]|| nextStateFunc(currentState)=== stateArray[7] ? true : false}   
         handleModalOpenClose = {handleModalOpenClose}
+        statePosition={stateArray.indexOf(nextState)}
       />
     </div>
   );
