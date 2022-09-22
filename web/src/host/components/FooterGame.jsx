@@ -6,7 +6,7 @@ import { GameSessionState } from "@righton/networking";
 
 
 
-export default function FooterGame({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession, gameInProgress }) {
+export default function FooterGame({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession, gameInProgress, endAnswer, handleModalOpenClose}) {
   const classes = useStyles();
 
   const currentStateToButtonText = { //dictionary used to assign button text based on the next state 
@@ -23,7 +23,7 @@ export default function FooterGame({nextState, nextQuestion, numPlayers, numAnsw
       <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={classes.nextPhaseButton}
-          onClick={() =>  handleUpdateGameSession({currentState: GameSessionState[nextState]})}
+          onClick={() =>  {!endAnswer ? handleUpdateGameSession({currentState: GameSessionState[nextState]}) : handleModalOpenClose(true)}}
         >
           {currentStateToButtonText[nextState]}
         </Button>
