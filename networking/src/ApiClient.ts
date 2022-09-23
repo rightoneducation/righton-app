@@ -1,5 +1,5 @@
-import { IGameSession } from "./Models/IGameSession";
-import { IApiClient } from "./IApiClient";
+import { IGameSession } from "./Models/IGameSession"
+import { IApiClient } from "./IApiClient"
 import {
   CreateTeamAnswerInput,
   CreateTeamAnswerMutation,
@@ -16,26 +16,26 @@ import {
   UpdateGameSessionInput,
   UpdateGameSessionMutation,
   UpdateGameSessionMutationVariables,
-} from "./AWSMobileApi";
+} from "./AWSMobileApi"
 import {
   createTeam,
   createTeamAnswer,
   createTeamMember,
   updateGameSession,
-} from "./graphql/mutations";
-import { Amplify, API, graphqlOperation } from "aws-amplify";
-import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
+} from "./graphql/mutations"
+import { Amplify, API, graphqlOperation } from "aws-amplify"
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
 import {
   getGameSession,
   gameSessionByCode,
   onGameSessionUpdatedById,
-} from "./graphql";
-import awsconfig from "./aws-exports";
-import { ITeam } from "./Models/ITeam";
-import { IQuestion, ITeamAnswer, ITeamMember } from "./Models";
+} from "./graphql"
+import awsconfig from "./aws-exports"
+import { ITeam } from "./Models/ITeam"
+import { IQuestion, ITeamAnswer, ITeamMember } from "./Models"
 // import { IQuestion } from './Models/IQuestion'
 
-Amplify.configure(awsconfig);
+Amplify.configure(awsconfig)
 
 export enum Environment {
   Staging = "staging",
@@ -46,23 +46,23 @@ enum HTTPMethod {
 }
 
 interface GraphQLOptions {
-  input?: object;
-  variables?: object;
-  authMode?: GRAPHQL_AUTH_MODE;
+  input?: object
+  variables?: object
+  authMode?: GRAPHQL_AUTH_MODE
 }
 
 interface SubscriptionValue<T> {
   value: {
-    data: T;
-    errors: Array<any> | null;
-  };
+    data: T
+    errors: Array<any> | null
+  }
 }
 
 export class ApiClient implements IApiClient {
-  private endpoint: string;
+  private endpoint: string
 
   constructor(env: Environment) {
-    this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
+    this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
   }
 
   createGameSession(
@@ -83,44 +83,44 @@ export class ApiClient implements IApiClient {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          throw new Error(response.statusText)
         }
-        return response.json();
+        return response.json()
       })
       .then((response) => {
-        return GameSessionParser.gameSessionFromAWSGameSession(response);
-      });
+        return GameSessionParser.gameSessionFromAWSGameSession(response)
+      })
   }
 
   async getGameSession(id: string): Promise<IGameSession> {
     let result = (await API.graphql(
       graphqlOperation(getGameSession, { id })
-    )) as { data: any };
+    )) as { data: any }
     return GameSessionParser.gameSessionFromAWSGameSession(
       result.data.getGameSession
-    );
+    )
   }
 
   async updateGameSession(
     awsGameSessionInput: UpdateGameSessionInput
   ): Promise<IGameSession> {
-    let updateGameSessionInput: UpdateGameSessionInput = awsGameSessionInput;
+    let updateGameSessionInput: UpdateGameSessionInput = awsGameSessionInput
     let variables: UpdateGameSessionMutationVariables = {
       input: updateGameSessionInput,
-    };
+    }
     let result = await this.callGraphQL<UpdateGameSessionMutation>(
       updateGameSession,
       variables
-    );
+    )
     if (result.errors != null) {
-      throw new Error(`failed to update game session: ${result.errors}`);
+      throw new Error(`failed to update game session: ${result.errors}`)
     }
 
     if (result.data == null) {
-      throw new Error("Failed to update the game session");
+      throw new Error("Failed to update the game session")
     }
 
-    return this.mapUpdateGameSessionMutation(result.data);
+    return this.mapUpdateGameSessionMutation(result.data)
   }
 
   subscribeUpdateGameSession(
@@ -135,30 +135,30 @@ export class ApiClient implements IApiClient {
         },
       },
       (value: OnGameSessionUpdatedByIdSubscription) => {
-        let gameSession = this.mapOnGameSessionUpdatedByIdSubscription(value);
-        callback(gameSession);
+        let gameSession = this.mapOnGameSessionUpdatedByIdSubscription(value)
+        callback(gameSession)
       }
-    );
+    )
   }
 
   async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
     let result = (await API.graphql(
       graphqlOperation(gameSessionByCode, { gameCode })
-    )) as { data: any };
+    )) as { data: any }
     if (
       isNullOrUndefined(result.data) ||
       isNullOrUndefined(result.data.gameSessionByCode) ||
       isNullOrUndefined(result.data.gameSessionByCode.items) ||
       result.data.gameSessionByCode.items.length == 0
     ) {
-      return null;
+      return null
     }
     if (result.data.gameSessionByCode.items.length > 1) {
-      throw new Error(`Multiple game sessions exist for ${gameCode}`);
+      throw new Error(`Multiple game sessions exist for ${gameCode}`)
     }
     return GameSessionParser.gameSessionFromAWSGameSession(
       result.data.gameSessionByCode.items[0]
-    );
+    )
   }
 
   async addTeamToGameSessionId(
@@ -172,19 +172,19 @@ export class ApiClient implements IApiClient {
       teamQuestionId: questionId,
       gameSessionTeamsId: gameSessionId,
       teamQuestionGameSessionId: gameSessionId,
-    };
-    const variables: CreateTeamMutationVariables = { input };
+    }
+    const variables: CreateTeamMutationVariables = { input }
     const team = await this.callGraphQL<CreateTeamMutation>(
       createTeam,
       variables
-    );
+    )
     if (
       isNullOrUndefined(team.data) ||
       isNullOrUndefined(team.data.createTeam)
     ) {
-      throw new Error(`Failed to create team`);
+      throw new Error(`Failed to create team`)
     }
-    return team.data.createTeam as ITeam;
+    return team.data.createTeam as ITeam
   }
 
   async addTeamMemberToTeam(
@@ -196,19 +196,19 @@ export class ApiClient implements IApiClient {
       isFacilitator,
       deviceId,
       teamTeamMembersId: teamId,
-    };
-    const variables: CreateTeamMemberMutationVariables = { input };
+    }
+    const variables: CreateTeamMemberMutationVariables = { input }
     const member = await this.callGraphQL<CreateTeamMemberMutation>(
       createTeamMember,
       variables
-    );
+    )
     if (
       isNullOrUndefined(member.data) ||
       isNullOrUndefined(member.data.createTeamMember)
     ) {
-      throw new Error(`Failed to create team member`);
+      throw new Error(`Failed to create team member`)
     }
-    return member.data.createTeamMember as ITeamMember;
+    return member.data.createTeamMember as ITeamMember
   }
 
   async addTeamAnswer(
@@ -222,19 +222,19 @@ export class ApiClient implements IApiClient {
       isChosen,
       text,
       teamMemberAnswersId: teamMemberId,
-    };
-    const variables: CreateTeamAnswerMutationVariables = { input };
+    }
+    const variables: CreateTeamAnswerMutationVariables = { input }
     const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
       createTeamAnswer,
       variables
-    );
+    )
     if (
       isNullOrUndefined(answer.data) ||
       isNullOrUndefined(answer.data.createTeamAnswer)
     ) {
-      throw new Error(`Failed to create team answer`);
+      throw new Error(`Failed to create team answer`)
     }
-    return answer.data.createTeamAnswer as ITeamAnswer;
+    return answer.data.createTeamAnswer as ITeamAnswer
   }
 
   private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
@@ -242,12 +242,12 @@ export class ApiClient implements IApiClient {
     return API.graphql(subscription).subscribe({
       next: (response: SubscriptionValue<T>) => {
         if (!isNullOrUndefined(response.value.errors)) {
-          console.error(response.value.errors);
+          console.error(response.value.errors)
         }
-        callback(response.value.data);
+        callback(response.value.data)
       },
       error: (error: any) => console.warn(error),
-    });
+    })
   }
 
   private async callGraphQL<T>(
@@ -256,89 +256,89 @@ export class ApiClient implements IApiClient {
   ): Promise<GraphQLResult<T>> {
     return (await API.graphql(
       graphqlOperation(query, options)
-    )) as GraphQLResult<T>;
+    )) as GraphQLResult<T>
   }
 
   private mapUpdateGameSessionMutation(
     updateGameSession: UpdateGameSessionMutation
   ): IGameSession {
-    return GameSessionParser.gameSessionFromMutation(updateGameSession);
+    return GameSessionParser.gameSessionFromMutation(updateGameSession)
   }
 
   private mapOnGameSessionUpdatedByIdSubscription(
     subscription: OnGameSessionUpdatedByIdSubscription
   ): IGameSession {
-    return GameSessionParser.gameSessionFromSubscriptionById(subscription);
+    return GameSessionParser.gameSessionFromSubscriptionById(subscription)
   }
 }
 
 type AWSGameSession = {
-  id: string;
-  gameId: number;
-  startTime?: string | null;
-  phaseOneTime: number;
-  phaseTwoTime: number;
+  id: string
+  gameId: number
+  startTime?: string | null
+  phaseOneTime: number
+  phaseTwoTime: number
   teams?: {
-    items: Array<AWSTeam | null>;
-  } | null;
-  currentQuestionIndex?: number | null;
-  currentState: GameSessionState;
-  gameCode: number;
-  isAdvancedMode: boolean;
-  imageUrl?: string | null;
-  description?: string | null;
-  title?: string | null;
-  currentTimer?: number | null;
+    items: Array<AWSTeam | null>
+  } | null
+  currentQuestionIndex?: number | null
+  currentState: GameSessionState
+  gameCode: number
+  isAdvancedMode: boolean
+  imageUrl?: string | null
+  description?: string | null
+  title?: string | null
+  currentTimer?: number | null
   questions?: {
-    items: Array<AWSQuestion | null>;
-  } | null;
-  createdAt: string;
-  updatedAt: string;
-};
+    items: Array<AWSQuestion | null>
+  } | null
+  createdAt: string
+  updatedAt: string
+}
 
 type AWSTeam = {
-  id: string;
-  name: string;
-  trickiestAnswerIDs?: Array<string | null> | null;
-  score: number;
-  createdAt: string;
-  updatedAt: string;
-  gameSessionTeamsId?: string | null;
-  teamQuestionId?: string | null;
-  teamQuestionGameSessionId?: string | null;
-};
+  id: string
+  name: string
+  trickiestAnswerIDs?: Array<string | null> | null
+  score: number
+  createdAt: string
+  updatedAt: string
+  gameSessionTeamsId?: string | null
+  teamQuestionId?: string | null
+  teamQuestionGameSessionId?: string | null
+}
 
 type AWSQuestion = {
-  id: number;
-  text: string;
-  choices?: string | null;
-  imageUrl?: string | null;
-  instructions?: string | null;
-  standard?: string | null;
-  cluster?: string | null;
-  domain?: string | null;
-  grade?: string | null;
-  gameSessionId: string;
-  order: number;
-};
+  id: number
+  text: string
+  choices?: string | null
+  imageUrl?: string | null
+  instructions?: string | null
+  standard?: string | null
+  cluster?: string | null
+  domain?: string | null
+  grade?: string | null
+  gameSessionId: string
+  order: number
+}
 
 class GameSessionParser {
   static gameSessionFromSubscription(
     subscription: OnUpdateGameSessionSubscription
   ): IGameSession {
-    const updateGameSession = subscription.onUpdateGameSession;
+    const updateGameSession = subscription.onUpdateGameSession
     if (isNullOrUndefined(updateGameSession)) {
-      throw new Error("subscription.onUpdateGameSession can't be null.");
+      throw new Error("subscription.onUpdateGameSession can't be null.")
     }
-    return this.gameSessionFromAWSGameSession(updateGameSession);
+    return this.gameSessionFromAWSGameSession(updateGameSession)
   }
 
   static gameSessionFromMutation(mutation: UpdateGameSessionMutation) {
-    const updateGameSession = mutation.updateGameSession;
+    const updateGameSession = mutation.updateGameSession
     if (isNullOrUndefined(updateGameSession)) {
-      throw new Error("mutation.updateGameSession can't be null.");
+      throw new Error("mutation.updateGameSession can't be null.")
     }
-    return this.gameSessionFromAWSGameSession(updateGameSession);
+    return this.gameSessionFromAWSGameSession(updateGameSession)
   }
 
   static gameSessionFromAWSGameSession(
@@ -360,7 +360,7 @@ class GameSessionParser {
       createdAt,
       title,
       isAdvancedMode,
-    } = awsGameSession || {};
+    } = awsGameSession || {}
 
     if (
       isNullOrUndefined(id) ||
@@ -377,7 +377,7 @@ class GameSessionParser {
     ) {
       throw new Error(
         "GameSession has null field for the attributes that are not nullable"
-      );
+      )
     }
 
     const gameSession: IGameSession = {
@@ -396,34 +396,34 @@ class GameSessionParser {
       updatedAt,
       createdAt,
       title,
-    };
-    return gameSession;
+    }
+    return gameSession
   }
 
   static gameSessionFromSubscriptionById(
     subscription: OnGameSessionUpdatedByIdSubscription
   ): IGameSession {
-    const updateGameSession = subscription.onGameSessionUpdatedById;
+    const updateGameSession = subscription.onGameSessionUpdatedById
     if (isNullOrUndefined(updateGameSession)) {
-      throw new Error("subscription.onUpdateGameSession can't be null.");
+      throw new Error("subscription.onUpdateGameSession can't be null.")
     }
-    return this.gameSessionFromAWSGameSession(updateGameSession);
+    return this.gameSessionFromAWSGameSession(updateGameSession)
   }
 
   static mapTeams(
     awsTeams: { items: (AWSTeam | null)[] } | null | undefined
   ): Array<ITeam> {
     if (isNullOrUndefined(awsTeams) || isNullOrUndefined(awsTeams.items)) {
-      return [];
+      return []
     }
 
     return awsTeams.items.map((awsTeam) => {
       if (isNullOrUndefined(awsTeam)) {
-        throw new Error("Team can't be null in the backend.");
+        throw new Error("Team can't be null in the backend.")
       }
 
-      return awsTeam as ITeam;
-    });
+      return awsTeam as ITeam
+    })
   }
 
   private static mapQuestions(
@@ -432,7 +432,7 @@ class GameSessionParser {
     return awsQuestions
       .map((awsQuestion) => {
         if (isNullOrUndefined(awsQuestion)) {
-          throw new Error("Question cannot be null.");
+          throw new Error("Question cannot be null.")
         }
         const question: IQuestion = {
           id: awsQuestion.id,
@@ -450,17 +450,17 @@ class GameSessionParser {
           grade: awsQuestion.grade,
           gameSessionId: awsQuestion.gameSessionId,
           order: awsQuestion.order,
-        };
-        return question;
+        }
+        return question
       })
       .sort((lhs, rhs) => {
-        return lhs.order - rhs.order;
-      });
+        return lhs.order - rhs.order
+      })
   }
 }
 
 function isNullOrUndefined<T>(
   value: T | null | undefined
 ): value is null | undefined {
-  return value === null || value === undefined;
+  return value === null || value === undefined
 }
