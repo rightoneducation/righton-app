@@ -26,8 +26,9 @@ enum GameSessionState {
   NOT_STARTED
   TEAMS_JOINING
   CHOOSE_CORRECT_ANSWER
-  PHASE_1_RESULTS
   PHASE_1_DISCUSS
+  PHASE_1_RESULTS
+  PHASE_2_START
   CHOOSE_TRICKIEST_ANSWER
   PHASE_2_DISCUSS
   PHASE_2_RESULTS
@@ -38,8 +39,7 @@ enum GameSessionState {
 type Question @model(subscriptions: null, timestamps: null) {
   id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
-  answer: String
-  wrongAnswers: AWSJSON
+  choices: AWSJSON
   imageUrl: String
   instructions: AWSJSON
   standard: String
@@ -76,4 +76,6 @@ type TeamAnswer @model {
 type Subscription {
   onGameSessionUpdatedById(id: ID!): GameSession
     @aws_subscribe(mutations: ["updateGameSession"])
+  onTeamMemberUpdateByTeamId(teamId: ID!): TeamMember
+    @aws_subscribe(mutations: ["updateTeamMember"])
 }

@@ -17,8 +17,7 @@ export const getGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -62,8 +61,7 @@ export const getGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -100,8 +98,7 @@ export const listGameSessions = /* GraphQL */ `
             question {
               id
               text
-              answer
-              wrongAnswers
+              choices
               imageUrl
               instructions
               standard
@@ -137,8 +134,7 @@ export const listGameSessions = /* GraphQL */ `
           items {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -162,8 +158,7 @@ export const getQuestion = /* GraphQL */ `
     getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
       id
       text
-      answer
-      wrongAnswers
+      choices
       imageUrl
       instructions
       standard
@@ -195,8 +190,7 @@ export const listQuestions = /* GraphQL */ `
       items {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
@@ -218,8 +212,7 @@ export const getTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
@@ -276,8 +269,7 @@ export const listTeams = /* GraphQL */ `
         question {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -430,8 +422,7 @@ export const gameSessionByState = /* GraphQL */ `
             question {
               id
               text
-              answer
-              wrongAnswers
+              choices
               imageUrl
               instructions
               standard
@@ -467,8 +458,7 @@ export const gameSessionByState = /* GraphQL */ `
           items {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -515,8 +505,7 @@ export const gameSessionByCode = /* GraphQL */ `
             question {
               id
               text
-              answer
-              wrongAnswers
+              choices
               imageUrl
               instructions
               standard
@@ -552,8 +541,7 @@ export const gameSessionByCode = /* GraphQL */ `
           items {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard

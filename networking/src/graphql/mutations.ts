@@ -20,8 +20,7 @@ export const createGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -65,8 +64,7 @@ export const createGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -101,8 +99,7 @@ export const updateGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -146,8 +143,7 @@ export const updateGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -182,8 +178,7 @@ export const deleteGameSession = /* GraphQL */ `
           question {
             id
             text
-            answer
-            wrongAnswers
+            choices
             imageUrl
             instructions
             standard
@@ -227,8 +222,7 @@ export const deleteGameSession = /* GraphQL */ `
         items {
           id
           text
-          answer
-          wrongAnswers
+          choices
           imageUrl
           instructions
           standard
@@ -253,8 +247,7 @@ export const createQuestion = /* GraphQL */ `
     createQuestion(input: $input, condition: $condition) {
       id
       text
-      answer
-      wrongAnswers
+      choices
       imageUrl
       instructions
       standard
@@ -274,8 +267,7 @@ export const updateQuestion = /* GraphQL */ `
     updateQuestion(input: $input, condition: $condition) {
       id
       text
-      answer
-      wrongAnswers
+      choices
       imageUrl
       instructions
       standard
@@ -295,8 +287,7 @@ export const deleteQuestion = /* GraphQL */ `
     deleteQuestion(input: $input, condition: $condition) {
       id
       text
-      answer
-      wrongAnswers
+      choices
       imageUrl
       instructions
       standard
@@ -319,8 +310,7 @@ export const createTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
@@ -375,8 +365,7 @@ export const updateTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
@@ -431,8 +420,7 @@ export const deleteTeam = /* GraphQL */ `
       question {
         id
         text
-        answer
-        wrongAnswers
+        choices
         imageUrl
         instructions
         standard
