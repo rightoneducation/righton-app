@@ -13,7 +13,7 @@ export default function FooterGame({nextState, nextQuestion, numPlayers, numAnsw
     
     
     3 : "End Answering",
-    4 : ""
+    4 : "",
     2 : "Next Question",
     7 : "Skip to Results",
     5 : "Next Phase",
