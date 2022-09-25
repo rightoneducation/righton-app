@@ -5,14 +5,27 @@ input CreateGameInput {
   domain: String
   grade: String
   standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
   questions: [CreateQuestionInput]
+}
+
+input CreateGameQuestionInput {
+  questionId: ID!
+  gameId: ID!
 }
 
 input CreateQuestionInput {
   text: String!
-  answer: String!
+  choices: AWSJSON!
+  gameId: ID
   imageUrl: String
   instructions: AWSJSON
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
 }
 
 type Game {
@@ -23,29 +36,12 @@ type Game {
   domain: String
   grade: String
   standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
   questions: [Question]
   updatedAt: AWSDateTime!
   createdAt: AWSDateTime!
-}
-
-input GameSessionInput {
-  gameCode: Int
-  gameId: Int!
-  hintsRevealTime: Int
-  id: Int!
-  multiDeviceMode: Boolean!
-  startedDateTimeUTC: AWSDateTime
-  teamIds: [Int]
-  votingTime: Int
-}
-
-enum GameSessionState {
-  CHOOSINGTRICKANSWER
-  FINISHED
-  INITIALINTRO
-  NOTSTARTED
-  REVIEWINGRESULT
-  VOTING
 }
 
 type JoinScreen implements Screen {
@@ -62,6 +58,7 @@ type Mutation {
   deleteQuestion(id: Int!): Question
   createQuestion(question: CreateQuestionInput!): Question
   updateQuestion(question: UpdateQuestionInput!): Question
+  createGameQuestion(gameQuestion: CreateGameQuestionInput!): Game
   createGameStatus(gameID: Int!): Screen
   updateGameStatus(gameID: Int!, screenData: ScreenInput!): Screen
 }
@@ -76,11 +73,15 @@ type Query {
 type Question {
   id: Int!
   text: String!
-  answer: String!
+  choices: AWSJSON!
   imageUrl: String
   instructions: AWSJSON
   updatedAt: AWSDateTime!
   createdAt: AWSDateTime!
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
 }
 
 type QuestionScreen implements Screen {
@@ -131,10 +132,8 @@ input ScreenInput {
 }
 
 type Subscription {
-  onCreateGame: Game
-    @aws_subscribe(mutations: ["createGame"])
-  onCreateQuestion: Question
-    @aws_subscribe(mutations: ["createQuestion"])
+  onCreateGame: Game @aws_subscribe(mutations: ["createGame"])
+  onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
   subscribeToGameStatusUpdates(gameID: Int!): Screen
     @aws_subscribe(mutations: ["updateGameStatus"])
 }
@@ -147,14 +146,22 @@ input UpdateGameInput {
   domain: String
   grade: String
   standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
+  questions: [UpdateQuestionInput]
 }
 
 input UpdateQuestionInput {
   id: Int!
   text: String
-  answer: String
+  choices: AWSJSON
   imageUrl: String
   instructions: AWSJSON
+  cluster: String
+  domain: String
+  grade: String
+  standard: String
 }
 
 schema {
