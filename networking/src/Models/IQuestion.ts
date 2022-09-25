@@ -1,8 +1,7 @@
 export interface IQuestion {
     id: number
     text: string
-    answer?: string | null
-    wrongAnswers?: Array<QuestionWrongAnswer> | null
+    choices?: Array<Choice> | null
     imageUrl?: string | null
     instructions?: Array<string> | null
     standard?: string | null
@@ -13,7 +12,8 @@ export interface IQuestion {
     order: number
 }
 
-interface QuestionWrongAnswer {
-    wrongAnswer: string
-    reason: string
+interface Choice {
+    text: string
+    reason?: string
+    isAnswer: boolean
 }

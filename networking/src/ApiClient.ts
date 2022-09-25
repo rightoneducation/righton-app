@@ -241,8 +241,7 @@ type AWSTeam = {
 type AWSQuestion = {
     id: number,
     text: string,
-    answer?: string | null,
-    wrongAnswers?: string | null,
+    choices?: string | null,
     imageUrl?: string | null,
     instructions?: string | null,
     standard?: string | null,
@@ -358,8 +357,7 @@ class GameSessionParser {
             const question: IQuestion = {
                 id: awsQuestion.id,
                 text: awsQuestion.text,
-                answer: awsQuestion.answer,
-                wrongAnswers: isNullOrUndefined(awsQuestion.wrongAnswers) ? [] : JSON.parse(JSON.parse(awsQuestion.wrongAnswers)),
+                choices: isNullOrUndefined(awsQuestion.choices) ? [] : JSON.parse(JSON.parse(awsQuestion.choices)),
                 imageUrl: awsQuestion.imageUrl,
                 instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : JSON.parse(JSON.parse(awsQuestion.instructions)),
                 standard: awsQuestion.standard,

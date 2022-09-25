@@ -272,13 +272,16 @@ function App() {
           if (isNullOrUndefined(question)) {
             return null
           }
-          const wrongAnswer = (question.wrongAnswers ?? [])[0]
-          if (isNullOrUndefined(wrongAnswer)) {
+          if (isNullOrUndefined(question.choices) || question.choices.length == 0) {
+            return null
+          }
+          const choice = question.choices[0]
+          if (isNullOrUndefined(choice)) {
             return
           }
           apiClient.addTeamAnswer(teamMember.id,
             gameSession.questions[0].id,
-            wrongAnswer.wrongAnswer,
+            choice.text,
             true)
             .then(teamAnswer => {
               if (teamAnswer == null) {
