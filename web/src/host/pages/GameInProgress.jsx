@@ -65,8 +65,8 @@ export default function GameInProgress({
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
-        <QuestionCardDetails questions={questions} />
-        <AnswersInProgressDetails questions={questions} />
+          <QuestionCardDetails questions={questions} />
+        
       </div>
         <GameModal nextState={nextStateFunc(currentState)} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
       <FooterGame
@@ -74,7 +74,7 @@ export default function GameInProgress({
         nextState={nextState= nextStateFunc(currentState)} 
         nextQuestion={currentQuestionIndex} 
         numPlayers={teams ? teams.length : 0}
-        numAnswers={numAnswersFunc(teams)}
+        numAnswers={12} //numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
         handleUpdateGameSession={handleUpdateGameSession}
