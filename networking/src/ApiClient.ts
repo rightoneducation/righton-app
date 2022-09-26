@@ -23,7 +23,7 @@ import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
 import { getGameSession, gameSessionByCode, onGameSessionUpdatedById } from './graphql'
 import awsconfig from "./aws-exports"
 import { ITeam } from './Models/ITeam'
-import { IQuestion, ITeamAnswer, ITeamMember } from './Models'
+import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
 // import { IQuestion } from './Models/IQuestion'
 
 Amplify.configure(awsconfig)
@@ -241,9 +241,9 @@ type AWSTeam = {
 type AWSQuestion = {
     id: number,
     text: string,
-    choices?: string | null,
+    choices?: Array<Choice> | null,
     imageUrl?: string | null,
-    instructions?: string | null,
+    instructions?: Array<string> | null,
     standard?: string | null,
     cluster?: string | null,
     domain?: string | null,
@@ -259,6 +259,7 @@ class GameSessionParser {
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
+        //@ts-ignore
         return this.gameSessionFromAWSGameSession(updateGameSession)
     }
 
@@ -267,6 +268,7 @@ class GameSessionParser {
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("mutation.updateGameSession can't be null.")
         }
+        //@ts-ignore
         return this.gameSessionFromAWSGameSession(updateGameSession)
     }
 
@@ -331,6 +333,7 @@ class GameSessionParser {
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
+        //@ts-ignore
         return this.gameSessionFromAWSGameSession(updateGameSession)
 
     }
@@ -357,9 +360,9 @@ class GameSessionParser {
             const question: IQuestion = {
                 id: awsQuestion.id,
                 text: awsQuestion.text,
-                choices: isNullOrUndefined(awsQuestion.choices) ? [] : JSON.parse(JSON.parse(awsQuestion.choices)),
+                choices: isNullOrUndefined(awsQuestion.choices) ? [] : awsQuestion.choices,
                 imageUrl: awsQuestion.imageUrl,
-                instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : JSON.parse(JSON.parse(awsQuestion.instructions)),
+                instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : awsQuestion.instructions,
                 standard: awsQuestion.standard,
                 cluster: awsQuestion.cluster,
                 domain: awsQuestion.domain,
