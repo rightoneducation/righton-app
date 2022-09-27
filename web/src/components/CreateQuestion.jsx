@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
@@ -7,109 +7,7 @@ import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
 
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    marginTop: '1%',
-    paddingBottom: '10px',
-  },
-  input: {
-    margin: `${theme.spacing(2)}px 0`,
-    width: '100%',
-  },
-  half: {
-    width: '50%'
-  },
-  imagePreview: {
-    padding: 0,
-    display: 'inline-block',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    boxSizing: 'border-box',
-    width: '375px',
-    height: '290px',
-  },
-  image: {
-    maxHeight: '320px',
-  },
-  divider: {
-    height: '1px',
-    width: '100%',
-    marginBottom: '20px',
-    marginTop: '20px',
-    backgroundColor: '#A7A7A7',
-  },
-  number: {
-    width: '40px',
-  },
-  deleteButton: {
-    background: 'rgba(0, 0, 0, 0.12)',
-    borderRadius: 18,
-    fontWeight: 500,
-    color: 'rgba(0, 0, 0, 0.54)',
-    padding: 0,
-    minHeight: 25,
-    minWidth: 25,
-    display: 'relative',
-    top: -40,
-    right: 30,
-  },
-  back: {
-    position: 'absolute',
-    top: 100,
-    left: 0,
-  },
-  instruction: {
-    padding: 0,
-  },
-  addURLButton: {
-    background: 'linear-gradient(90deg, #0A4178 0%, #0F56A1 100%)',
-    borderRadius: 50,
-    color: 'white',
-  },
-  greenButton: {
-    background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
-    borderRadius: 50,
-    color: 'white',
-    fontSize: 17,
-  },
-  addGameButton: {
-    color: 'white',
-    fontSize: 16,
-    background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
-    borderRadius: 60,
-    width: 170,
-    height: 58
-  },
-  dropdown: {
-    width: 120,
-    height: 44,
-    background: '#FFFFFF',
-    border: '1px solid #BDBDBD',
-    boxSizing: 'border-box',
-    borderRadius: '8px',
-    padding: 20,
-    fontSize: 20,
-  },
-  dropdownWrapper: {
-    textAlign: 'left',
-    '& p': {
-      fontSize: '14px',
-      fontWeight: 700,
-    }
-  },
-  MenuProps: {
-    '& .MuiMenuItem-root.Mui-selected': {
-      color: 'white',
-      background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)',
-    },
-  },
-}));
-
-
 export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
-
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -132,6 +30,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     standard: null,
   });
 
+  const choices = useMemo(() => (
+    question.choices ? JSON.parse(question.choices) : []
+  ), [question.choices]);
 
   // Parses through JSON string of instructions and wrong answer objects (wrong answers and reasons) twice because of how it is saved on backend (turns data into a string twice so needs to be parsed twice)
   useEffect(() => {
@@ -160,39 +61,19 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   // When the correct answer is changed/update this function handles that change
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); }, [question, setQuestion]);
 
-  // Handles addition of new step in the correct answer instructions set
-  const addInstruction = useCallback(() => {
-    const instructions = question.instructions == null ? [''] : [...question.instructions, ''];
-    setQuestion({ ...question, instructions });
-  }, [question, setQuestion]);
-
-  // Handles the edit/updating of a step in correct answers instructions set
-  const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
-    const newInstructions = [...question.instructions];
-    newInstructions[index] = currentTarget.value;
-    setQuestion({ ...question, instructions: newInstructions });
-  }, [question, setQuestion]);
-
-  // Handles removal of a step in the correct answer instructionsset
-  const handleRemoveInstruction = useCallback((index) => {
-    const newInstructions = [...question.instructions];
-    newInstructions.splice(index, 1);
-    setQuestion({ ...question, instructions: newInstructions });
-  }, [question, setQuestion]);
-
   // When a wrong answer is changed/update this function handles that change
-  const onWrongChoiceChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
-    const newWrongAnswers = [...question.wrongAnswers];
-    newWrongAnswers[wrongAnswersIndex].choice = currentTarget.value;
-    setQuestion({ ...question, wrongAnswers: newWrongAnswers });
-  }, [question, setQuestion]);
+  const onChoiceTextChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
+    const newChoices = [...choices];
+    newChoices[wrongAnswersIndex].text = currentTarget.value;
+    setQuestion({ ...question, choices: newChoices });
+  }, [choices, question, setQuestion]);
 
   // When the wrong answer reasoning is changed/update this function handles that change
-  const onWrongExplanationChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
-    const newWrongAnswers = [...question.wrongAnswers];
-    newWrongAnswers[wrongAnswersIndex].explanation = currentTarget.value;
-    setQuestion({ ...question, wrongAnswers: newWrongAnswers });
-  }, [question, setQuestion]);
+  const onChoiceReasonChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
+    const newChoices = [...choices];
+    newChoices[wrongAnswersIndex].reason = currentTarget.value;
+    setQuestion({ ...question, choices: newChoices });
+  }, [choices, question, setQuestion]);
 
   // Handles grade, domain, cluster, or standard change/update
   const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
@@ -229,19 +110,12 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
 
     let newQuestion;
-    console.log(question)
     if (question.id) {
-      console.log(question)
       newQuestion = await updateQuestion(question);
-      console.log('update')
-    }
-    else {
-      console.log(question)
+    } else {
       newQuestion = await cloneQuestion(question);
-      console.log('create')
       gameQuestion(newQuestion);
     }
-    console.log(newQuestion);
     history.push(`/gamemaker/:gameId`);
   }
 
@@ -257,7 +131,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
         <Grid item container xs={8}>
           <Grid item container xs={12}>
-            <Typography gutterBottom variant="h4" component="h1">Question</Typography>
+            <Typography gutterBottom variant="h4" component="h1">
+              {initialState ? 'Edit' : 'Create'}{' '}Question
+            </Typography>
           </Grid>
 
           <Grid item container xs={8}>
@@ -273,13 +149,15 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
           <Divider className={classes.divider} />
 
           <Grid item container xs={12}>
-            <QuestionFormAnswerDropdown question={question} correct={true} onChangeMaker={onChangeMaker} onStepChangeMaker={onStepChangeMaker} handleRemoveInstruction={handleRemoveInstruction} addInstruction={addInstruction} />
-
-            <QuestionFormAnswerDropdown question={question} correct={false} onChangeMaker={onChangeMaker} onStepChangeMaker={onStepChangeMaker} handleRemoveInstruction={handleRemoveInstruction} addInstruction={addInstruction} wrongAnswersIndex={0} onWrongChoiceChangeMaker={onWrongChoiceChangeMaker} onWrongExplanationChangeMaker={onWrongExplanationChangeMaker} />
-
-            <QuestionFormAnswerDropdown question={question} correct={false} onChangeMaker={onChangeMaker} onStepChangeMaker={onStepChangeMaker} handleRemoveInstruction={handleRemoveInstruction} addInstruction={addInstruction} wrongAnswersIndex={1} onWrongChoiceChangeMaker={onWrongChoiceChangeMaker} onWrongExplanationChangeMaker={onWrongExplanationChangeMaker} />
-
-            <QuestionFormAnswerDropdown question={question} correct={false} onChangeMaker={onChangeMaker} onStepChangeMaker={onStepChangeMaker} handleRemoveInstruction={handleRemoveInstruction} addInstruction={addInstruction} wrongAnswersIndex={2} onWrongChoiceChangeMaker={onWrongChoiceChangeMaker} onWrongExplanationChangeMaker={onWrongExplanationChangeMaker} />
+            {choices.sort((a, b) => Number(b.isAnswer) - Number(a.isAnswer)).map((choice, index) => (
+              <QuestionFormAnswerDropdown
+                key={`choice${index}`}
+                index={index}
+                choice={choice}
+                onChoiceTextChangeMaker={onChoiceTextChangeMaker}
+                onChoiceReasonChangeMaker={onChoiceReasonChangeMaker}
+              />
+            ))}
           </Grid>
 
           <Grid item container xs={12}>
@@ -384,3 +262,103 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     </form>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    marginTop: '1%',
+    paddingTop: '32px',
+    paddingBottom: '10px',
+  },
+  input: {
+    margin: `${theme.spacing(2)}px 0`,
+    width: '100%',
+  },
+  half: {
+    width: '50%'
+  },
+  imagePreview: {
+    padding: 0,
+    display: 'inline-block',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    boxSizing: 'border-box',
+    width: '375px',
+    height: '290px',
+  },
+  image: {
+    maxHeight: '320px',
+  },
+  divider: {
+    height: '1px',
+    width: '100%',
+    marginBottom: '20px',
+    marginTop: '20px',
+    backgroundColor: '#A7A7A7',
+  },
+  number: {
+    width: '40px',
+  },
+  deleteButton: {
+    background: 'rgba(0, 0, 0, 0.12)',
+    borderRadius: 18,
+    fontWeight: 500,
+    color: 'rgba(0, 0, 0, 0.54)',
+    padding: 0,
+    minHeight: 25,
+    minWidth: 25,
+    display: 'relative',
+    top: -40,
+    right: 30,
+  },
+  back: {
+    position: 'absolute',
+    top: 100,
+    left: 0,
+  },
+  instruction: {
+    padding: 0,
+  },
+  addURLButton: {
+    background: 'linear-gradient(90deg, #0A4178 0%, #0F56A1 100%)',
+    borderRadius: 50,
+    color: 'white',
+  },
+  greenButton: {
+    background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
+    borderRadius: 50,
+    color: 'white',
+    fontSize: 17,
+  },
+  addGameButton: {
+    color: 'white',
+    fontSize: 16,
+    background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
+    borderRadius: 60,
+    width: 170,
+    height: 58
+  },
+  dropdown: {
+    width: 120,
+    height: 44,
+    background: '#FFFFFF',
+    border: '1px solid #BDBDBD',
+    boxSizing: 'border-box',
+    borderRadius: '8px',
+    padding: 20,
+    fontSize: 20,
+  },
+  dropdownWrapper: {
+    textAlign: 'left',
+    '& p': {
+      fontSize: '14px',
+      fontWeight: 700,
+    }
+  },
+  MenuProps: {
+    '& .MuiMenuItem-root.Mui-selected': {
+      color: 'white',
+      background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)',
+    },
+  },
+}));
