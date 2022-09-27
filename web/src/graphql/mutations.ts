@@ -18,7 +18,7 @@ export const deleteGame = /* GraphQL */ `
       questions {
         id
         text
-        answer
+        choices
         imageUrl
         instructions
         updatedAt
@@ -27,7 +27,6 @@ export const deleteGame = /* GraphQL */ `
         domain
         grade
         standard
-        wrongAnswers
       }
       updatedAt
       createdAt
@@ -50,7 +49,7 @@ export const createGame = /* GraphQL */ `
       questions {
         id
         text
-        answer
+        choices
         imageUrl
         instructions
         updatedAt
@@ -59,7 +58,6 @@ export const createGame = /* GraphQL */ `
         domain
         grade
         standard
-        wrongAnswers
       }
       updatedAt
       createdAt
@@ -82,7 +80,7 @@ export const updateGame = /* GraphQL */ `
       questions {
         id
         text
-        answer
+        choices
         imageUrl
         instructions
         updatedAt
@@ -91,7 +89,6 @@ export const updateGame = /* GraphQL */ `
         domain
         grade
         standard
-        wrongAnswers
       }
       updatedAt
       createdAt
@@ -103,7 +100,7 @@ export const deleteQuestion = /* GraphQL */ `
     deleteQuestion(id: $id) {
       id
       text
-      answer
+      choices
       imageUrl
       instructions
       updatedAt
@@ -112,7 +109,6 @@ export const deleteQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      wrongAnswers
     }
   }
 `;
@@ -121,7 +117,7 @@ export const createQuestion = /* GraphQL */ `
     createQuestion(question: $question) {
       id
       text
-      answer
+      choices
       imageUrl
       instructions
       updatedAt
@@ -130,7 +126,6 @@ export const createQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      wrongAnswers
     }
   }
 `;
@@ -139,7 +134,7 @@ export const updateQuestion = /* GraphQL */ `
     updateQuestion(question: $question) {
       id
       text
-      answer
+      choices
       imageUrl
       instructions
       updatedAt
@@ -148,7 +143,6 @@ export const updateQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      wrongAnswers
     }
   }
 `;
@@ -168,7 +162,7 @@ export const createGameQuestion = /* GraphQL */ `
       questions {
         id
         text
-        answer
+        choices
         imageUrl
         instructions
         updatedAt
@@ -177,7 +171,6 @@ export const createGameQuestion = /* GraphQL */ `
         domain
         grade
         standard
-        wrongAnswers
       }
       updatedAt
       createdAt

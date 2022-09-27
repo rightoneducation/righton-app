@@ -6,9 +6,9 @@ import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
 
 export default function StartGame({
-  teams,
+  teams = [],
   questions,
-  title,
+  title = "",
   gameSessionId,
   gameCode,
   currentState,

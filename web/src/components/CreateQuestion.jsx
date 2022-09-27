@@ -95,7 +95,7 @@ const useStyles = makeStyles(theme => ({
   dropdownWrapper: {
     textAlign: 'left',
     '& p': {
-      fontSize: '14px', 
+      fontSize: '14px',
       fontWeight: 700,
     }
   },
@@ -108,7 +108,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function QuestionForm({ updateQuestion, question: originalQuestion, gameId, gameQuestion, cloneQuestion }) {
+export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
 
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
@@ -118,13 +118,13 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
-  const data = location.state || null;
+  const originalQuestion = location.state || initialState || null;
 
-  const [question, setQuestion] = useState( {
+  const [question, setQuestion] = useState({
     text: '',
     imageUrl: '',
     answer: '',
-    wrongAnswers: [{choice: "", explanation: ""}, {choice: "", explanation: ""}, {choice: "", explanation: ""}],
+    wrongAnswers: [{ choice: "", explanation: "" }, { choice: "", explanation: "" }, { choice: "", explanation: "" }],
     instructions: [],
     grade: null,
     domain: null,
@@ -135,26 +135,21 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
   // Parses through JSON string of instructions and wrong answer objects (wrong answers and reasons) twice because of how it is saved on backend (turns data into a string twice so needs to be parsed twice)
   useEffect(() => {
-    if (data) {
-      originalQuestion = data.question;
-    }
     if (originalQuestion) {
       if (originalQuestion.instructions !== null && originalQuestion.instructions !== [] && typeof originalQuestion.instructions === 'string') {
         originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
-        originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
       }
       if (originalQuestion.wrongAnswers !== null && originalQuestion.wrongAnswers !== [] && typeof originalQuestion.wrongAnswers === 'string') {
-        originalQuestion.wrongAnswers = JSON.parse(originalQuestion.wrongAnswers);
         originalQuestion.wrongAnswers = JSON.parse(originalQuestion.wrongAnswers);
       }
       setQuestion(originalQuestion);
     }
   }, [originalQuestion]);
-  
+
 
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
-    if(gameId != null) {
+    if (gameId != null) {
       history.push(`/gamemaker/${gameId}`);
     }
     else {
@@ -168,14 +163,14 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
   // Handles addition of new step in the correct answer instructions set
   const addInstruction = useCallback(() => {
     const instructions = question.instructions == null ? [''] : [...question.instructions, ''];
-    setQuestion({ ...question, instructions }); 
+    setQuestion({ ...question, instructions });
   }, [question, setQuestion]);
 
   // Handles the edit/updating of a step in correct answers instructions set
   const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
     const newInstructions = [...question.instructions];
     newInstructions[index] = currentTarget.value;
-    setQuestion({ ...question, instructions: newInstructions});
+    setQuestion({ ...question, instructions: newInstructions });
   }, [question, setQuestion]);
 
   // Handles removal of a step in the correct answer instructionsset
@@ -189,42 +184,42 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
   const onWrongChoiceChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
     const newWrongAnswers = [...question.wrongAnswers];
     newWrongAnswers[wrongAnswersIndex].choice = currentTarget.value;
-    setQuestion({ ...question, wrongAnswers: newWrongAnswers});
+    setQuestion({ ...question, wrongAnswers: newWrongAnswers });
   }, [question, setQuestion]);
 
   // When the wrong answer reasoning is changed/update this function handles that change
   const onWrongExplanationChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
     const newWrongAnswers = [...question.wrongAnswers];
     newWrongAnswers[wrongAnswersIndex].explanation = currentTarget.value;
-    setQuestion({ ...question, wrongAnswers: newWrongAnswers});
+    setQuestion({ ...question, wrongAnswers: newWrongAnswers });
   }, [question, setQuestion]);
 
   // Handles grade, domain, cluster, or standard change/update
-  const onSelectMaker = useCallback((field) => ({target}) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
+  const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
 
 
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
   const handleSaveQuestion = async (question) => {
-    if(question.text == null || question.text === "") {
+    if (question.text == null || question.text === "") {
       window.alert("Please enter a question");
       return;
     }
-    
-    if(question.answer == null || question.answer === "") {
+
+    if (question.answer == null || question.answer === "") {
       window.alert("Please enter an answer");
       return;
     }
 
-    if(question.grade == null || question.grade === "") {
+    if (question.grade == null || question.grade === "") {
       window.alert("Please enter a grade level");
       return;
     }
 
-    if(question.domain == null || question.domain === "") {
+    if (question.domain == null || question.domain === "") {
       window.alert("Please enter a domain/subject");
       return;
     }
-    if(question.cluster == null && question.standard != null) {
+    if (question.cluster == null && question.standard != null) {
       window.alert("Please enter a cluster to save the game");
       return;
     }
@@ -254,12 +249,12 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <Button type="button" className={classes.back} onClick={handleBack}>
-        <ArrowBack style={{marginRight: 8}} />Back to Game Maker
+        <ArrowBack style={{ marginRight: 8 }} />Back to Game Maker
       </Button>
 
       <Grid container>
         <Grid container item xs={2}></Grid>
-            
+
         <Grid item container xs={8}>
           <Grid item container xs={12}>
             <Typography gutterBottom variant="h4" component="h1">Question</Typography>
@@ -272,7 +267,7 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
           </Grid>
 
           <Grid item container justifyContent='center' xs={4}>
-              {question.imageUrl ? <img src={question.imageUrl} alt="" width={'60%'} /> : <img className={classes.image} src={Placeholder} alt="Invalid URL" />}
+            {question.imageUrl ? <img src={question.imageUrl} alt="" width={'60%'} /> : <img className={classes.image} src={Placeholder} alt="Invalid URL" />}
           </Grid>
 
           <Divider className={classes.divider} />
@@ -286,9 +281,9 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
             <QuestionFormAnswerDropdown question={question} correct={false} onChangeMaker={onChangeMaker} onStepChangeMaker={onStepChangeMaker} handleRemoveInstruction={handleRemoveInstruction} addInstruction={addInstruction} wrongAnswersIndex={2} onWrongChoiceChangeMaker={onWrongChoiceChangeMaker} onWrongExplanationChangeMaker={onWrongExplanationChangeMaker} />
           </Grid>
-        
+
           <Grid item container xs={12}>
-            <Typography gutterBottom variant="h4" component="h1" style={{marginRight: 30, display: 'inline'}}>Enter CCSS</Typography>
+            <Typography gutterBottom variant="h4" component="h1" style={{ marginRight: 30, display: 'inline' }}>Enter CCSS</Typography>
 
             <QuestionHelper />
           </Grid>
@@ -296,14 +291,14 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
           <Grid item container xs={12} justifyContent='space-between'>
             <div className={classes.dropdownWrapper}>
               <p>Grade Level*</p>
-              <Select 
-                className={classes.dropdown} 
-                label="Grade Level" 
+              <Select
+                className={classes.dropdown}
+                label="Grade Level"
                 onChange={onSelectMaker('grade')}
                 disableUnderline
                 value={question.grade}
                 required
-                MenuProps={{classes: {paper: classes.MenuProps}}}
+                MenuProps={{ classes: { paper: classes.MenuProps } }}
               >
                 <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"6"}>6</MenuItem>
@@ -318,14 +313,14 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
             <div className={classes.dropdownWrapper}>
               <p>Domain/Subject*</p>
-              <Select 
-                className={classes.dropdown} 
-                label="Domain/Subject" 
+              <Select
+                className={classes.dropdown}
+                label="Domain/Subject"
                 onChange={onSelectMaker('domain')}
                 disableUnderline
                 value={question.domain}
                 required
-                MenuProps={{classes: {paper: classes.MenuProps}}}
+                MenuProps={{ classes: { paper: classes.MenuProps } }}
               >
                 <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"RP"}>RP: Ratios & Proportional Relationships</MenuItem>
@@ -339,13 +334,13 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
             <div className={classes.dropdownWrapper}>
               <p>Cluster</p>
-              <Select 
-                className={classes.dropdown} 
-                label="Cluster" 
+              <Select
+                className={classes.dropdown}
+                label="Cluster"
                 onChange={onSelectMaker('cluster')}
                 value={question.cluster}
                 disableUnderline
-                MenuProps={{classes: {paper: classes.MenuProps}}}
+                MenuProps={{ classes: { paper: classes.MenuProps } }}
               >
                 <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"A"}>A</MenuItem>
@@ -356,13 +351,13 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
 
             <div className={classes.dropdownWrapper}>
               <p>Standard</p>
-              <Select 
-                className={classes.dropdown} 
-                label="Standard" 
+              <Select
+                className={classes.dropdown}
+                label="Standard"
                 onChange={onSelectMaker('standard')}
                 value={question.standard}
                 disableUnderline
-                MenuProps={{classes: {paper: classes.MenuProps}}}
+                MenuProps={{ classes: { paper: classes.MenuProps } }}
               >
                 <MenuItem value={null}>---</MenuItem>
                 <MenuItem value={"1"}>1</MenuItem>
@@ -378,7 +373,7 @@ export default function QuestionForm({ updateQuestion, question: originalQuestio
             </div>
           </Grid>
 
-          <Grid style={{marginTop: 50}} item container xs={12} justifyContent='center'>
+          <Grid style={{ marginTop: 50 }} item container xs={12} justifyContent='center'>
             <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Game</Button>
           </Grid>
 

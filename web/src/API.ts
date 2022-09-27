@@ -23,7 +23,7 @@ export type Question = {
   __typename: "Question",
   id: number,
   text: string,
-  answer: string,
+  choices: string,
   imageUrl?: string | null,
   instructions?: string | null,
   updatedAt: string,
@@ -32,7 +32,6 @@ export type Question = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
-  wrongAnswers?: string | null,
 };
 
 export type CreateGameInput = {
@@ -50,7 +49,7 @@ export type CreateGameInput = {
 
 export type CreateQuestionInput = {
   text: string,
-  answer: string,
+  choices: string,
   gameId?: string | null,
   imageUrl?: string | null,
   instructions?: string | null,
@@ -58,7 +57,6 @@ export type CreateQuestionInput = {
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
-  wrongAnswers?: string | null,
 };
 
 export type UpdateGameInput = {
@@ -78,14 +76,13 @@ export type UpdateGameInput = {
 export type UpdateQuestionInput = {
   id: number,
   text?: string | null,
-  answer?: string | null,
+  choices?: string | null,
   imageUrl?: string | null,
   instructions?: string | null,
   cluster?: string | null,
   domain?: string | null,
   grade?: string | null,
   standard?: string | null,
-  wrongAnswers?: string | null,
 };
 
 export type CreateGameQuestionInput = {
@@ -174,7 +171,7 @@ export type DeleteGameMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -183,7 +180,6 @@ export type DeleteGameMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -211,7 +207,7 @@ export type CreateGameMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -220,7 +216,6 @@ export type CreateGameMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -248,7 +243,7 @@ export type UpdateGameMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -257,7 +252,6 @@ export type UpdateGameMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -273,7 +267,7 @@ export type DeleteQuestionMutation = {
     __typename: "Question",
     id: number,
     text: string,
-    answer: string,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     updatedAt: string,
@@ -282,7 +276,6 @@ export type DeleteQuestionMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    wrongAnswers?: string | null,
   } | null,
 };
 
@@ -295,7 +288,7 @@ export type CreateQuestionMutation = {
     __typename: "Question",
     id: number,
     text: string,
-    answer: string,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     updatedAt: string,
@@ -304,7 +297,6 @@ export type CreateQuestionMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    wrongAnswers?: string | null,
   } | null,
 };
 
@@ -317,7 +309,7 @@ export type UpdateQuestionMutation = {
     __typename: "Question",
     id: number,
     text: string,
-    answer: string,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     updatedAt: string,
@@ -326,7 +318,6 @@ export type UpdateQuestionMutation = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    wrongAnswers?: string | null,
   } | null,
 };
 
@@ -351,7 +342,7 @@ export type CreateGameQuestionMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -360,7 +351,6 @@ export type CreateGameQuestionMutation = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -455,7 +445,7 @@ export type GetGameQuery = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -464,7 +454,6 @@ export type GetGameQuery = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -488,7 +477,7 @@ export type ListGamesQuery = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -497,7 +486,6 @@ export type ListGamesQuery = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -513,7 +501,7 @@ export type GetQuestionQuery = {
     __typename: "Question",
     id: number,
     text: string,
-    answer: string,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     updatedAt: string,
@@ -522,7 +510,6 @@ export type GetQuestionQuery = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    wrongAnswers?: string | null,
   } | null,
 };
 
@@ -531,7 +518,7 @@ export type ListQuestionsQuery = {
     __typename: "Question",
     id: number,
     text: string,
-    answer: string,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     updatedAt: string,
@@ -540,7 +527,6 @@ export type ListQuestionsQuery = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    wrongAnswers?: string | null,
   } | null > | null,
 };
 
@@ -561,7 +547,7 @@ export type OnCreateGameSubscription = {
       __typename: "Question",
       id: number,
       text: string,
-      answer: string,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       updatedAt: string,
@@ -570,7 +556,6 @@ export type OnCreateGameSubscription = {
       domain?: string | null,
       grade?: string | null,
       standard?: string | null,
-      wrongAnswers?: string | null,
     } | null > | null,
     updatedAt: string,
     createdAt: string,
@@ -582,7 +567,7 @@ export type OnCreateQuestionSubscription = {
     __typename: "Question",
     id: number,
     text: string,
-    answer: string,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     updatedAt: string,
@@ -591,7 +576,6 @@ export type OnCreateQuestionSubscription = {
     domain?: string | null,
     grade?: string | null,
     standard?: string | null,
-    wrongAnswers?: string | null,
   } | null,
 };
 

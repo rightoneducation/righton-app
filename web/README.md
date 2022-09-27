@@ -13,11 +13,11 @@ The web app was bootstrapped with Create React App. It uses React 16.12, and a c
 
 #### 2) Install node modules
 
-`yarn install`
+`npm install`
 
 #### 3) Start your app (in development mode)
 
-`yarn start`
+`npm start`
 
 ### Current focus
 

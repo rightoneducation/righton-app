@@ -10,18 +10,20 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
     const classes = useStyles();
     const history = useHistory();
 
-    const explanation = JSON.parse(JSON.parse(question.instructions));
-    let wrongAnswerSet = JSON.parse(JSON.parse(question.wrongAnswers));
+    const choices = JSON.parse(question.choices);
+    const explanation = JSON.parse(question.instructions);
+    const answer = choices.find(({ isAnswer }) => isAnswer)?.text;
+    let wrongAnswerSet = choices.filter(({ isAnswer }) => !isAnswer);
 
-    if(wrongAnswerSet == null) {
+    if (wrongAnswerSet.length < 1) {
         wrongAnswerSet = [
-            {choice: "Wrong Answer Choice 1", explanation: "N/A"},
-            {choice: "Wrong Answer Choice 2", explanation: "N/A"},
-            {choice: "Wrong Answer Choice 3", explanation: "N/A"},
+            { choice: "Wrong Answer Choice 1", explanation: "N/A" },
+            { choice: "Wrong Answer Choice 2", explanation: "N/A" },
+            { choice: "Wrong Answer Choice 3", explanation: "N/A" },
         ];
     };
 
-    return(
+    return (
         <Grid container>
             <Grid item xs={12}>
                 <Button type="button" onClick={() => history.goBack()}>
@@ -32,7 +34,7 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
             <Grid container item xs={6}>
                 <Grid item xs={12}>
                     <Typography className={classes.title}>
-                        Question {Number(questionIndex)+1}
+                        Question {Number(questionIndex) + 1}
                     </Typography>
                 </Grid>
 
@@ -43,7 +45,7 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
                 </Grid>
 
                 <Grid container item xs={12} alignItems='center' justifyContent='center'>
-                    {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
+                    {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'} />}
                 </Grid>
             </Grid>
 
@@ -54,17 +56,15 @@ export default function QuestionDetails({ backUrl, gameTitle, questionIndex, que
                     </Typography>
                 </Grid>
 
-                <AnswerDropdown answer={question.answer} explanation={explanation} correct={true}/>
+                <AnswerDropdown answer={answer} explanation={explanation} correct={true} />
 
                 <Grid item xs={12}>
-                    <Divider className={classes.divider}/>
+                    <Divider className={classes.divider} />
                 </Grid>
 
-                {wrongAnswerSet.map((wrongAnswer, index) => {
-                    return(
-                        <AnswerDropdown key={index} answer={wrongAnswer.choice} explanation={wrongAnswer.explanation} correct={false}/>
-                    );
-                })}
+                {wrongAnswerSet.map((wrongAnswer, index) => (
+                    <AnswerDropdown key={index} answer={wrongAnswer.text} explanation={wrongAnswer.reason} correct={false} />
+                ))}
             </Grid>
         </Grid>
     );
@@ -75,10 +75,10 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(1),
     },
     title: {
-      fontWeight: 700,
-      color: '#0075FF',
-      textAlign: 'center',
-      fontSize: '24px',
+        fontWeight: 700,
+        color: '#0075FF',
+        textAlign: 'center',
+        fontSize: '24px',
     },
     answerTitle: {
         fontWeight: 700,
@@ -111,4 +111,4 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#B5B5B5',
         marginBottom: '20px',
     },
-  }));
+}));

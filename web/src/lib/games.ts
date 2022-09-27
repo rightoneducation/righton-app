@@ -17,38 +17,38 @@ export const sortGames = (games: Array<Game | null>, sortType: SORT_TYPES = SORT
 export const createGame = async (game: any, questionIDSet: any) => {
   const newGame = await API.graphql(graphqlOperation(CG, { game })) as { data: any };
   const newGameId = newGame?.data?.createGame?.id;
-  let result = {data: {createGameQuestion: null}};
+  let result = { data: { createGameQuestion: null } };
   for (let i = 0; i < questionIDSet.length; i++) {
-    result = await API.graphql(graphqlOperation(CGQ, { gameQuestion : { gameId: newGameId, questionId: questionIDSet[i] } })) as { data: any };
+    result = await API.graphql(graphqlOperation(CGQ, { gameQuestion: { gameId: newGameId, questionId: questionIDSet[i] } })) as { data: any };
   }
   return newGame?.data?.createGame;
 };
 
-export const updateGame = async (game: any) => { 
+export const updateGame = async (game: any) => {
   const editGame = await API.graphql(graphqlOperation(UG, { game })) as { data: any };
   return editGame?.data?.updateGame || [];
 };
 
 // @ts-ignore
-export const cloneGame = async (game: any) => { 
+export const cloneGame = async (game: any) => {
   const questions = game.questions;
   delete game.questions;
   const newGame = await API.graphql(graphqlOperation(CG, { game })) as { data: any };
   const newGameId = newGame?.data?.createGame?.id;
-  let result = {data: {createGameQuestion: null}};
+  let result = { data: { createGameQuestion: null } };
   for (let i = 0; i < questions.length; i++) {
-    result = await API.graphql(graphqlOperation(CGQ, { gameQuestion : { gameId: newGameId, questionId: questions[i].id } })) as { data: any };
+    result = await API.graphql(graphqlOperation(CGQ, { gameQuestion: { gameId: newGameId, questionId: questions[i].id } })) as { data: any };
   }
   return newGame?.data?.createGame;
 };
 
-export const deleteGames = async (id: number) => { 
-  const result = await API.graphql(graphqlOperation(DG, {id})) as { data: DeleteGameMutation | null | undefined }
+export const deleteGames = async (id: number) => {
+  const result = await API.graphql(graphqlOperation(DG, { id })) as { data: DeleteGameMutation | null | undefined }
   return result?.data?.deleteGame || [];
 };
 
-export const deleteQuestions = async (id: number) => { 
-  const result = await API.graphql(graphqlOperation(deleteQuestion, {id})) as { data: DeleteQuestionMutation | null | undefined }
+export const deleteQuestions = async (id: number) => {
+  const result = await API.graphql(graphqlOperation(deleteQuestion, { id })) as { data: DeleteQuestionMutation | null | undefined }
   return result?.data?.deleteQuestion || [];
 };
 

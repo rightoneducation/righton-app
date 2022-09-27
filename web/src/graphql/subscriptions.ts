@@ -2,8 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-//onUpdateGameSession
-
 export const onCreateGame = /* GraphQL */ `
   subscription OnCreateGame {
     onCreateGame {
@@ -20,7 +18,7 @@ export const onCreateGame = /* GraphQL */ `
       questions {
         id
         text
-        answer
+        choices
         imageUrl
         instructions
         updatedAt
@@ -29,7 +27,6 @@ export const onCreateGame = /* GraphQL */ `
         domain
         grade
         standard
-        wrongAnswers
       }
       updatedAt
       createdAt
@@ -41,7 +38,7 @@ export const onCreateQuestion = /* GraphQL */ `
     onCreateQuestion {
       id
       text
-      answer
+      choices
       imageUrl
       instructions
       updatedAt
@@ -50,7 +47,6 @@ export const onCreateQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      wrongAnswers
     }
   }
 `;

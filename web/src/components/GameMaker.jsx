@@ -48,7 +48,7 @@ const times = [
     },
 ]
 
-export default function GameMaker({loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion}) {
+export default function GameMaker({ loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion }) {
     useEffect(() => {
         document.title = 'RightOn! | Game editor';
         return () => { document.title = 'RightOn! | Game management'; }
@@ -60,7 +60,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
     const [gameDetails, setGameDetails] = useState(() => {
         if (game) {
-            return {...game};
+            return { ...game };
         }
         else {
             return newGame;
@@ -112,13 +112,13 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
     // Handles any new questions added to the game, either through Add Question or Create Question
     const handleGameQuestion = (newQuestion) => {
         setDisabled(false || handleDisable());
-        for (let i=0; i< questions.length; i++) {
+        for (let i = 0; i < questions.length; i++) {
             if (newQuestion.id === questions[i].id) {
                 questions[i] = newQuestion
                 return null;
             }
         }
-        setQuestions([ ...questions, newQuestion ])
+        setQuestions([...questions, newQuestion])
     };
 
     // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
@@ -136,7 +136,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
     // Save New or Exisiting Game (preliminary submit)
     const handleSubmit = (event) => {
         if (gameDetails.id !== 0) {
-            let questionIDs = questions.map(question => ({id: question.id}))
+            let questionIDs = questions.map(question => ({ id: question.id }))
             delete gameDetails.questions
             editSave(gameDetails, questionIDs);
         }
@@ -149,24 +149,24 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
         event.preventDefault();
         history.push('/');
     };
-    
+
 
     let content = (
         <div>
             <form onSubmit={handleSubmit}>
                 <Grid container>
                     <Grid container item xs={2}></Grid>
-                    
+
                     <Grid item container xs={8} className={classes.page}>
                         <Grid container item xs={12} className={classes.game}>
                             <Grid container item xs={12}>
-                                <Typography style={{fontWeight: 500, fontSize: '20px'}}>
+                                <Typography style={{ fontWeight: 500, fontSize: '20px' }}>
                                     Create Game
                                 </Typography>
                             </Grid>
 
                             <Grid container item xs={12}>
-                                <Typography style={{fontWeight: 700, fontSize: '16px', color: '#FC1047', paddingBottom: '10px'}}>
+                                <Typography style={{ fontWeight: 700, fontSize: '16px', color: '#FC1047', paddingBottom: '10px' }}>
                                     Note: In order for this game to be playable in advanced mode, there must be a minimum of 5 questions.
                                 </Typography>
                             </Grid>
@@ -221,7 +221,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                                                 select
                                                 label='Phase 2'
                                                 value={phaseTwo}
-                                                onChange={handlePhaseTwo} 
+                                                onChange={handlePhaseTwo}
                                             >
                                                 {times.map((option) => (
                                                     <MenuItem key={option.value} value={option.value}>
@@ -244,31 +244,31 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                                 </Grid>
 
                                 <Grid container item xs={4} justifyContent='center'>
-                                    {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'}/>}
+                                    {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'} />}
                                 </Grid>
                             </Grid>
                         </Grid>
-                        
+
                         <Grid item xs={12}>
-                            <Divider className={classes.divider}/>
+                            <Divider className={classes.divider} />
                         </Grid>
 
                         <Grid container item xs={12}>
                             <Grid container item xs={12}>
-                                <Typography style={{fontWeight: 400, fontSize: '20px'}}>
+                                <Typography style={{ fontWeight: 400, fontSize: '20px' }}>
                                     Questions
                                 </Typography>
                             </Grid>
 
                             <Grid container item xs={12}>
-                                <Typography style={{fontWeight: 400, fontSize: '14px', color: '#A7A7A7'}}>
+                                <Typography style={{ fontWeight: 400, fontSize: '14px', color: '#A7A7A7' }}>
                                     To add an exisiting question from another game into this one, click the Add Question button. To create a new question, click the Create Question button. Once you have added a question to the game, the question will appear in the space below.
                                 </Typography>
                             </Grid>
 
                             <Grid container item xs={12} className={classes.questionHolder}>
                                 {questions.map((question, index) => {
-                                    return(
+                                    return (
                                         <Grid key={index} container item xs={12}>
                                             <Card className={classes.question}>
                                                 <CardContent>
@@ -280,26 +280,26 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
 
                                                             <Grid item xs={12}>
                                                                 <Typography className={classes.title}>
-                                                                Question {index + 1}
+                                                                    Question {index + 1}
                                                                 </Typography>
                                                             </Grid>
 
                                                             <Grid item xs={12}>
                                                                 <Typography color="textSecondary" gutterBottom>
-                                                                {question.text}
+                                                                    {question.text}
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>
 
                                                         <Grid container item xs={2}>
                                                             <Grid container item xs={10} justifyContent='center'>
-                                                                {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'}/>}
+                                                                {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'} />}
                                                             </Grid>
 
                                                             <Grid container direction='column' item xs={2}>
                                                                 <Grid container item xs={2}>
                                                                     <IconButton size='small' onClick={() => handleDelete(index)}>
-                                                                        <Cancel/>
+                                                                        <Cancel />
                                                                     </IconButton>
                                                                 </Grid>
                                                             </Grid>
@@ -327,7 +327,7 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
                             </Grid>
                         </Grid>
 
-                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade}/> : <Grid container item xs={12}></Grid>}
+                        {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade} /> : <Grid container item xs={12}></Grid>}
 
                         <Grid container item xs={12} justifyContent='center'>
                             <Button variant='contained' type='submit' disabled={disabled} disableElevation className={classes.greenButton}>
@@ -342,21 +342,21 @@ export default function GameMaker({loading, game, newSave, editSave, gameId, clo
         </div>
     );
 
-    return(
+    return (
         <div>
             <Switch>
                 <Route path="/gamemaker/:gameId/addquestion" render=
-                {({ match }) => {
-                    const {gameId} = match.params
-                    return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId}/>
-                }}/>
+                    {({ match }) => {
+                        const { gameId } = match.params
+                        return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId} />
+                    }} />
 
                 <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
-                {({ match }) => {
-                    const {gameId, createQuestionIndex} = match.params
-                    const gameNumber = Number(gameId) === 0;
-                    return <QuestionForm question={gameNumber ? null : getGameById(games, gameId).questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion}/>;
-                }}/>
+                    {({ match }) => {
+                        const { gameId, createQuestionIndex } = match.params
+                        const gameNumber = Number(gameId) === 0;
+                        return <QuestionForm question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion} />;
+                    }} />
 
                 <Route path="/gamemaker/:gameId">
                     {content}
@@ -371,77 +371,77 @@ const useStyles = makeStyles(theme => ({
         marginTop: '1%',
         paddingBottom: '10px',
     },
-            gameTitle: {
-                paddingTop: '10px',
-                paddingBottom: '10px',
-            },
-            gameText: {
-                paddingTop: '10px',
-                paddingBottom: '10px',
-            },
-            thirdRow: {
-                paddingTop: '10px',
-                paddingBottom: '10px',
-            },
-        divider: {
-            height: '1px',
-            width: '100%',
-            marginBottom: '10px',
-            marginTop: '10px',
-            backgroundColor: '#A7A7A7',
+    gameTitle: {
+        paddingTop: '10px',
+        paddingBottom: '10px',
+    },
+    gameText: {
+        paddingTop: '10px',
+        paddingBottom: '10px',
+    },
+    thirdRow: {
+        paddingTop: '10px',
+        paddingBottom: '10px',
+    },
+    divider: {
+        height: '1px',
+        width: '100%',
+        marginBottom: '10px',
+        marginTop: '10px',
+        backgroundColor: '#A7A7A7',
+    },
+    questionHolder: {
+        background: '#E0E0E0',
+        border: '1px solid #BDBDBD',
+        borderRadius: '14px',
+        padding: '3%',
+        marginTop: '10px',
+        marginBottom: '10px',
+    },
+    question: {
+        width: '100%',
+        borderRadius: '10px',
+        marginBottom: theme.spacing(2),
+        height: '152px',
+        boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
+    },
+    title: {
+        fontWeight: 700,
+        fontSize: '110%',
+        color: '#384466',
+    },
+    image: {
+        maxHeight: '128px',
+    },
+    questionAddition: {
+        border: '5px solid #C4C4C4',
+        borderRadius: '18px',
+        paddingTop: '3%',
+        paddingBottom: '3%',
+    },
+    blueButton: {
+        background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%);',
+        borderRadius: '50px',
+        textTransform: 'none',
+        fontSize: '17px',
+        fontWeight: 500,
+        color: 'white',
+    },
+    greenButton: {
+        background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
+        borderRadius: '50px',
+        textTransform: 'none',
+        fontSize: '17px',
+        fontWeight: 500,
+        color: 'white',
+        '&:disabled': {
+            background: 'linear-gradient(180deg, #D4D4D4 0%, #9F9F9F 100%)',
+            borderRadius: '50px',
+            textTransform: 'none',
+            fontSize: '17px',
+            fontWeight: 500,
+            color: 'white',
+            cursor: 'not-allowed',
         },
-            questionHolder: {
-                background: '#E0E0E0',
-                border: '1px solid #BDBDBD',
-                borderRadius: '14px',
-                padding: '3%',
-                marginTop: '10px',
-                marginBottom: '10px',
-            },
-                question: {
-                    width: '100%',
-                    borderRadius: '10px',
-                    marginBottom: theme.spacing(2),
-                    height: '152px',
-                    boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-                },
-                    title: {
-                        fontWeight: 700,
-                        fontSize: '110%',
-                        color: '#384466',
-                    },
-                    image: {
-                        maxHeight: '128px',
-                    },
-                questionAddition: {
-                    border: '5px solid #C4C4C4',
-                    borderRadius: '18px',
-                    paddingTop: '3%',
-                    paddingBottom: '3%',
-                },
-                        blueButton: {
-                            background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%);',
-                            borderRadius: '50px',
-                            textTransform: 'none',
-                            fontSize: '17px',
-                            fontWeight: 500,
-                            color: 'white',
-                        },
-                        greenButton: {
-                            background: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
-                            borderRadius: '50px',
-                            textTransform: 'none',
-                            fontSize: '17px',
-                            fontWeight: 500,
-                            color: 'white',
-                            '&:disabled': {
-                                background: 'linear-gradient(180deg, #D4D4D4 0%, #9F9F9F 100%)',
-                                borderRadius: '50px',
-                                textTransform: 'none',
-                                fontSize: '17px',
-                                fontWeight: 500,
-                                color: 'white',
-                                cursor: 'not-allowed',
-                            },
-                        },
+    },
 }));
