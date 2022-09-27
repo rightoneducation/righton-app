@@ -12,7 +12,7 @@ export interface IQuestion {
     order: number
 }
 
-interface Choice {
+export interface Choice {
     text: string
     reason?: string
     isAnswer: boolean
