@@ -24,6 +24,8 @@ import EnterInfo from '../Student/screens/EnterInfo'
 const Stack = createStackNavigator()
 
 const AppContainer = (props) => {
+//load the user and the previous app state
+//sets the intial route for the navigator below
 
   return (
     <NavigationContainer>
@@ -31,10 +33,10 @@ const AppContainer = (props) => {
         headerShown: false
       }}
       >
+        {/* sort screens for basic vs. advanced flow */}
         <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
         <Stack.Screen name="StudentName" component={StudentName} />
-        
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="EnterInfo" component={EnterInfo} />

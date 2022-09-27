@@ -38,7 +38,6 @@ export default function StudentFirst({ navigation, route }) {
     setPortal(`Joining ${gameCode}`)
     global.apiClient.getGameSessionByCode(gameCode)
       .then(gameSession => {
-        console.debug(gameSession)
         if (!gameSession) {
           console.debug('Invalid game code.')
           return
@@ -59,8 +58,6 @@ export default function StudentFirst({ navigation, route }) {
         setPortal(`error joining ${gameCode}: ${error}`)
       })
   }
-
-
 
   handleNavigateToOnboardApp = () => {
     navigation.navigate('OnboardAppRouter')

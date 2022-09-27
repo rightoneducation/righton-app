@@ -89,6 +89,13 @@ const GamePreview = ({ navigation, route }) => {
     }
   }
 
+  const answerOptions = question.choices.split('","').map((choice, index) => {
+    return choice.replace(/"/g, '')
+      // id: uuid.v4(),
+      // text: choice,
+      // isSelected: false
+    })
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
@@ -126,14 +133,7 @@ const GamePreview = ({ navigation, route }) => {
                 showAllHints()
                 submitAnswer(answer)
               }}
-              answers={gameSession.isAdvanced ? [] : [...(question.wrongAnswers.map(a => a.wrongAnswer)), question.answer].map(a => {
-                return {
-                  id: uuid.v4(),
-                  text: a,
-                  isSelected: false,
-                  isCorrectAnswer: a == question.answer
-                }
-              })}
+              answers={gameSession.isAdvanced ? [] : [...answerOptions]}
             />
           </Card>
           {gameSession.isAdvanced &&
