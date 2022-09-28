@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import HeaderGame from "../components/HeaderGame";
 import FooterGame from "../components/FooterGame";
@@ -18,14 +18,13 @@ export default function StudentViews({
 }) {
   
   const classes = useStyles();
-
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
  
   const studentViewImage = currentState => { //determines which student view image to show
-    if (currentState === stateArray[3]){
+    if (currentState === stateArray[4]){
       return SVP1Results;
-    } else if (currentState === stateArray[7]){
+    } else if (currentState === stateArray[8]){
       return SVP2Results;
     }
     else 
@@ -33,18 +32,15 @@ export default function StudentViews({
   };
 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === stateArray[7]){
-      return stateArray[8];
-    } else if (currentState === stateArray[7] && currentQuestionIndex !== (questions ? questions.length : 0)) {
+    if (currentState === stateArray[8] && (currentQuestionIndex+1) !== (questions ? questions.length : 0)) {
       return stateArray[2];
     } else {
-    return stateArray[stateArray.indexOf(currentState) + 1]; 
+      return stateArray[stateArray.indexOf(currentState) + 1]; 
     }
   };
-
+  
   return (
-    <div className={classes.background}>
-      
+    <div className={classes.background}>      
         <div style={{height: "100%", width: "100%", display: "flex", minHeight: "100vh", flexDirection: "column", justifyContent: "space-between"}}>
           <HeaderGame
             totalQuestions={questions ? questions.length : 0}
@@ -54,23 +50,20 @@ export default function StudentViews({
             phaseTwoTime={phaseTwoTime}
             gameInProgress={false}
             />
-
             <div className={classes.studentViewsCont}>
               <div className = {classes.headText}> Current Student View: </div>
               <img src={studentViewImage(currentState)} alt="Student View" />
             </div>
-            
-
-                <FooterGame
-                  currentState={currentState}
-                  nextState={nextState= nextStateFunc(currentState)} 
-                  nextQuestion={currentQuestionIndex} 
-                  phaseOneTime={phaseOneTime}
-                  phaseTwoTime={phaseTwoTime}
-                  handleUpdateGameSession={handleUpdateGameSession}
-                  gameInProgress={false}      
-                  statePosition={stateArray.indexOf(nextState)}
-                />
+            <FooterGame
+              nextState={nextStateFunc(currentState)} 
+              currentQuestion={currentQuestionIndex} 
+              phaseOneTime={phaseOneTime}
+              phaseTwoTime={phaseTwoTime}
+              handleUpdateGameSession={handleUpdateGameSession}
+              gameInProgress={false} //flag studentview vs GameInProgress      
+              statePosition={stateArray.indexOf(currentState)} 
+              lastQuestion={(((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]) ? true : false )} //need to check if it's final screen of last question
+            />
           </div>
        
     </div>

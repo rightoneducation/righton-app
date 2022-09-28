@@ -21,7 +21,7 @@ export default function GameInProgress({
   const classes = useStyles();
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
-  let nextState;
+  let nextState = stateArray[stateArray.indexOf(currentState) + 1];
   let [modalOpen, setModalOpen] = useState(false);
  
   const handleModalOpenClose = modalOpen =>{ //callback function for opening and closing the modal with onclicks
@@ -38,16 +38,6 @@ export default function GameInProgress({
     return count;
   };
  
-  const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === stateArray[7]){
-      return stateArray[8];
-    } else if (currentState === stateArray[7] && currentQuestionIndex !== (questions ? questions.length : 0)) {
-      return stateArray[2];
-    } else {
-    return stateArray[stateArray.indexOf(currentState) + 1]; 
-    }
-  };
-
   return (
     <div className={classes.background}>
       <div
@@ -65,26 +55,27 @@ export default function GameInProgress({
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
         />
-          <QuestionCardDetails questions={questions} />
-        
+        <QuestionCardDetails questions={questions} />
       </div>
-        <GameModal nextState={nextStateFunc(currentState)} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
+      <GameModal nextState={nextState} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
       <FooterGame
-        currentState={currentState}
-        nextState={nextState= nextStateFunc(currentState)} 
-        nextQuestion={currentQuestionIndex} 
-        numPlayers={teams ? teams.length : 0}
-        numAnswers={12} //numAnswersFunc(teams)}
-        phaseOneTime={phaseOneTime}
+        nextState={nextState} //passing down nextState to handle the state update onClick
+        numPlayers={teams ? teams.length : 0} //need # for answer bar
+        numAnswers={12} //numAnswersFunc(teams)} //need # for answer bar
+        phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
-        handleUpdateGameSession={handleUpdateGameSession}
-        endAnswer ={ nextStateFunc(currentState)=== stateArray[3]|| nextStateFunc(currentState)=== stateArray[7] ? true : false}   
-        handleModalOpenClose = {handleModalOpenClose}
-        statePosition={stateArray.indexOf(nextState)}
+        handleUpdateGameSession={handleUpdateGameSession} //onClick handler
+        gameInProgress={true} //flag GameInProgress vs StudentView
+        endAnswer ={ nextState === stateArray[3] || nextState === stateArray[7] ? true : false}  //determine if state matches screen where teacher might end before all students have answered
+        handleModalOpenClose = {handleModalOpenClose} //handler to open/close modal
+        statePosition={stateArray.indexOf(currentState)} //provides index of current state for use in footer dictionary
+        lastQuestion={false} //this will only be true on StudentView
       />
     </div>
   );
 }
+
+
 
 const useStyles = makeStyles(theme => ({
   background: {

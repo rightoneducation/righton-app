@@ -49,10 +49,14 @@ const GameSessionContainer = () => {
       return <StartGame {...gameSession} handleUpdateGameSession={handleUpdateGameSession} />;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
+    case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+    case GameSessionState.PHASE_2_DISCUSS:
       return <GameInProgress {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
 
+
     case GameSessionState.PHASE_1_RESULTS:
+    case GameSessionState.PHASE_2_START:
     case GameSessionState.PHASE_2_RESULTS:
       return <StudentViews {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
 

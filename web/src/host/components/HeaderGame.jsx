@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-// import { Pagination } from "@material-ui/lab";
+import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
 const useStyles = makeStyles(() => ({
@@ -66,7 +66,9 @@ const chooseTotalRoundTime = (
 };
 
 export default function HeaderGame({
+  totalQuestions,
   currentState,
+  currentQuestion,
   phaseOneTime,
   phaseTwoTime,
   gameInProgress
@@ -99,18 +101,18 @@ export default function HeaderGame({
 
   return (
     <div className={classes.div}>
-      {/* <Pagination
+      <Pagination
         hideNextButton
         hidePrevButton
         variant="outlined"
         shape="rounded"
         classes={{ ul: classes.ul }}
         count={totalQuestions}
-        page={currentQuestion}
-      /> */}
+        page={currentQuestion+1}
+      /> 
 
       <Typography className={classes.title}>
-        Game On!{" "}
+        Question {currentQuestion+1} of {totalQuestions}
         {/* Replace with current question number and total questions info from query */}
       </Typography>
 
