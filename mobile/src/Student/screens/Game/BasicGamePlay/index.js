@@ -14,7 +14,7 @@ import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
 import uuid from "react-native-uuid"
 
-const GamePreview = ({ navigation, route }) => {
+const BasicGamePlay = ({ navigation, route }) => {
   const { gameSession, team, teamMember } = route.params
 
   const question = gameSession.isAdvanced
@@ -192,7 +192,7 @@ const GamePreview = ({ navigation, route }) => {
   )
 }
 
-export default GamePreview
+export default BasicGamePlay
 
 const styles = StyleSheet.create({
   mainContainer: {

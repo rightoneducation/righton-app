@@ -1,14 +1,9 @@
-import React from 'react'
-import {
-  Text,
-  View,
-  Image,
-  SafeAreaView
-} from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
-import { colors, fonts, fontFamilies } from '../../utils/theme'
-import RoundButton from '../../components/RoundButton'
-import PurpleBackground from '../../components/PurpleBackground'
+import React from "react"
+import { Text, View, Image, SafeAreaView } from "react-native"
+import { ScaledSheet } from "react-native-size-matters"
+import { colors, fonts, fontFamilies } from "../../utils/theme"
+import RoundButton from "../../components/RoundButton"
+import PurpleBackground from "../../components/PurpleBackground"
 // import { Auth } from 'aws-amplify'
 
 export default function OnboardAppRouter({ navigation }) {
@@ -21,16 +16,16 @@ export default function OnboardAppRouter({ navigation }) {
     // } else {
     //   setTimeout(() => navigation.navigate('StudentFirst', { user: true }), 250)
     // }
-    navigation.navigate('StudentFirst')
+    navigation.navigate("StudentFirst")
   }
 
   function handleSignIn() {
     // screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
-    setTimeout(() => navigation.navigate('SignIn'), 250)
+    setTimeout(() => navigation.navigate("SignIn"), 250)
   }
 
   function handleSignUp() {
-    setTimeout(() => navigation.navigate('SignUp'), 250)
+    setTimeout(() => navigation.navigate("SignUp"), 250)
   }
 
   async function handleSignOut() {
@@ -41,6 +36,7 @@ export default function OnboardAppRouter({ navigation }) {
   async function getUser() {
     try {
       const user = await Auth.currentUserInfo()
+      debugger
       if (user) setUser(user)
     } catch (e) {
       console.log(e)
@@ -58,7 +54,7 @@ export default function OnboardAppRouter({ navigation }) {
           style={styles.rightOnHeroImage}
           resizeMode="contain"
           resizeMethod="resize"
-          source={require('../../assets/images/rightOnLogo.png')}
+          source={require("../../assets/images/rightOnLogo.png")}
         />
         <View style={styles.buttonsContainer}>
           <RoundButton
@@ -95,54 +91,54 @@ export default function OnboardAppRouter({ navigation }) {
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundPurple
+    backgroundColor: colors.backgroundPurple,
   },
   buttonsContainer: {
     height: 180,
     marginLeft: 33,
     marginRight: 33,
-    justifyContent: 'space-between'
+    justifyContent: "space-between",
   },
   footerText: {
     fontSize: fonts.medium,
-    fontWeight: 'bold',
-    alignItems: 'center',
-    textAlign: 'center',
+    fontWeight: "bold",
+    alignItems: "center",
+    textAlign: "center",
     marginHorizontal: 50,
     marginTop: -90,
     fontFamily: fontFamilies.montserratRegular,
-    color: 'rgba(255, 255, 255, 0.9)'
+    color: "rgba(255, 255, 255, 0.9)",
   },
   background: {
     flex: 1,
-    justifyContent: "space-around"
+    justifyContent: "space-around",
   },
   rightOnHeroImage: {
     marginTop: 22,
     width: 230,
     height: 118,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   headerText: {
     fontSize: fonts.small,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontFamily: fontFamilies.montserratBold,
     color: colors.white,
     marginTop: 9,
     width: 230,
-    textAlign: 'center'
+    textAlign: "center",
   },
   bottomUser: {
     fontSize: fonts.medium,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontFamily: fontFamilies.montserratBold,
     color: colors.white,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   userContainer: {
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 10,
-  }
+  },
 })
