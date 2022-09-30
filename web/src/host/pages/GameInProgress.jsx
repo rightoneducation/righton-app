@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
-import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
+import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../../images/Union.png";
 import { GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
@@ -29,7 +29,7 @@ export default function GameInProgress({
     setModalOpen(modalOpen);
   }
 
-  const numAnswersFunc = (questions, currentQuestionIndex) => { //finds all answers in choices, for use in footer progress bar
+  const numAnswersFunc = (questions, currentQuestionIndex) => { //finds all answers in choices,  for use in footer progress bar
     let count = 0;
     questions && questions.map((question, index) => {
       if (index === currentQuestionIndex){
@@ -40,8 +40,6 @@ export default function GameInProgress({
     });
     return count;
   };
-
-  numAnswersFunc(questions, currentQuestionIndex);
 
   return (
     <div className={classes.background}>
@@ -63,6 +61,7 @@ export default function GameInProgress({
           statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
         <QuestionCardDetails questions={questions} />
+        <GameAnswers questions={questions} />
       </div>
       <GameModal nextState={nextState} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
       <FooterGame

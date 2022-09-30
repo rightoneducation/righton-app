@@ -1,29 +1,25 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
-import HostAnswerDropdown from "./AnswersInProgress";
+import GameAnswersDropdown from "./GameAnswersDropdown";
+import AnswerDropdown from "./AnswerDropdown";
 
-export default function GameDetails({ questions }) {
+export default function GameAnswers({ questions }) {
   const classes = useStyles();
 
   const question = questions[0]
 
-  const wrongAnswerArray = ((question.wrongAnswers)).map(answer => answer)
+ //const wrongAnswerArray = ((question.wrongAnswers)).map(answer => answer)
 
-  let correctAnswer = [
+  /*let correctAnswer = [
     {
       choice: question.answer, explanation: "not available"
     }
-  ];
+  ];*/
 
   return (
     <Grid className={classes.background}>
-      <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} />
-      {wrongAnswerArray.map((answer, index) => {
-        return (
-          <HostAnswerDropdown key={index} answer={answer.wrongAnswer} explanation={answer.reason} correct={false} />
-        );
-      })}
+       <GameAnswersDropdown answer={"Test"} explanation={"test"} correct={true} />
     </Grid>
   );
 }
