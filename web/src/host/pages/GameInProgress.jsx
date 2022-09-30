@@ -22,22 +22,27 @@ export default function GameInProgress({
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState = stateArray[stateArray.indexOf(currentState) + 1];
+  let statePosition;
   let [modalOpen, setModalOpen] = useState(false);
  
   const handleModalOpenClose = modalOpen =>{ //callback function for opening and closing the modal with onclicks
     setModalOpen(modalOpen);
   }
 
-  const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
+  const numAnswersFunc = (questions, currentQuestionIndex) => { //finds all answers in choices, for use in footer progress bar
     let count = 0;
-    teams && teams.map(team => 
-       team.teamMembers && team.teamMembers.items.map(teamMember => 
-        teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
-    )))
-
+    questions && questions.map((question, index) => {
+      if (index === currentQuestionIndex){
+        JSON.parse(question.choices, function (key,value){
+          if (key === "isAnswer" && value === true) count++;
+        })
+      };
+    });
     return count;
   };
- 
+
+  numAnswersFunc(questions, currentQuestionIndex);
+
   return (
     <div className={classes.background}>
       <div
@@ -54,6 +59,8 @@ export default function GameInProgress({
           currentQuestion={currentQuestionIndex}
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
+          gameInProgress={true}
+          statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
         <QuestionCardDetails questions={questions} />
       </div>
@@ -61,14 +68,14 @@ export default function GameInProgress({
       <FooterGame
         nextState={nextState} //passing down nextState to handle the state update onClick
         numPlayers={teams ? teams.length : 0} //need # for answer bar
-        numAnswers={12} //numAnswersFunc(teams)} //need # for answer bar
+        numAnswers={numAnswersFunc(questions, currentQuestionIndex)} //number of answers 
         phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
         handleUpdateGameSession={handleUpdateGameSession} //onClick handler
         gameInProgress={true} //flag GameInProgress vs StudentView
         endAnswer ={ nextState === stateArray[3] || nextState === stateArray[7] ? true : false}  //determine if state matches screen where teacher might end before all students have answered
         handleModalOpenClose = {handleModalOpenClose} //handler to open/close modal
-        statePosition={stateArray.indexOf(currentState)} //provides index of current state for use in footer dictionary
+        statePosition={statePosition} //provides index of current state for use in footer dictionary
         lastQuestion={false} //this will only be true on StudentView
       />
     </div>

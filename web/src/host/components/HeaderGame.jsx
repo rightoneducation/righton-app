@@ -46,10 +46,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 const label = {
-  CHOOSE_CORRECT_ANSWER: "Phase 1 of 2",
-  PHASE_1_RESULTS: "Phase 1 Results",
-  CHOOSE_TRICKIEST_ANSWER: "Phase 2 of 2",
-  PHASE_2_RESULTS: "Phase 2 Results",
+    2 : "Phase 1 of 2 - Choose Correct Answer",
+    3 : "Phase 1 of 2 - Answer Explanation",
+    4 : "Phase 1 of 2 - Results",
+    5 : "Phase 2 of 2 - Instructions",
+    6 : "Phase 2 of 2 - Choose Trickiest Answer",
+    7 : "Phase 2 of 2 - Discussion",
+    8 : "Phase 2 of 2 - Results",
+    9 : "Proceed to RightOn Central"
 };
 
 const chooseTotalRoundTime = (
@@ -71,7 +75,8 @@ export default function HeaderGame({
   currentQuestion,
   phaseOneTime,
   phaseTwoTime,
-  gameInProgress
+  gameInProgress,
+  statePosition
 }) {
   const classes = useStyles();
   const totalRoundTime = chooseTotalRoundTime(
@@ -113,11 +118,10 @@ export default function HeaderGame({
 
       <Typography className={classes.title}>
         Question {currentQuestion+1} of {totalQuestions}
-        {/* Replace with current question number and total questions info from query */}
       </Typography>
 
       <Typography className={classes.phases}>
-        {label[currentState]} {/* Replace with phase info from query */}
+        {label[statePosition]} 
       </Typography>
       {gameInProgress && <Timer currentTime={currentTime} totalRoundTime={totalRoundTime} setTime={setCurrentTime} timeIsPaused={timeIsPaused} />} 
      

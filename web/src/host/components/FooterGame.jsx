@@ -44,7 +44,6 @@ export default function FooterGame({nextState, currentQuestion, numPlayers, numA
       handleUpdateGameSession({currentState: GameSessionState[nextState]}) 
     }
   }
-console.log( nextState + " " + lastQuestion + " " + statePosition + " " + nextStateToButtonText[statePosition]);
    return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}

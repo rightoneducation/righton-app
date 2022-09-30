@@ -20,6 +20,7 @@ export default function StudentViews({
   const classes = useStyles();
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
+  let statePosition;
  
   const studentViewImage = currentState => { //determines which student view image to show
     if (currentState === stateArray[4]){
@@ -49,6 +50,7 @@ export default function StudentViews({
             phaseOneTime={phaseOneTime}
             phaseTwoTime={phaseTwoTime}
             gameInProgress={false}
+            statePosition = {statePosition = stateArray.indexOf(currentState)}
             />
             <div className={classes.studentViewsCont}>
               <div className = {classes.headText}> Current Student View: </div>
@@ -61,7 +63,7 @@ export default function StudentViews({
               phaseTwoTime={phaseTwoTime}
               handleUpdateGameSession={handleUpdateGameSession}
               gameInProgress={false} //flag studentview vs GameInProgress      
-              statePosition={stateArray.indexOf(currentState)} 
+              statePosition={statePosition} 
               lastQuestion={(((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]) ? true : false )} //need to check if it's final screen of last question
             />
           </div>
