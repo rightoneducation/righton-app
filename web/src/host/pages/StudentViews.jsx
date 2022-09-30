@@ -17,11 +17,37 @@ export default function StudentViews({
   handleUpdateGameSession
 }) {
   
-  const classes = useStyles();
-  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
-  let nextState;
   let statePosition;
- 
+  let isLastQuestion = ((currentQuestionIndex+1) === (questions ? questions.length : 0));
+
+  const classes = useStyles();  
+  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
+  const footerButtonTextDictionary=  { //dictionary used to assign button text based on the next state 
+    
+    //0-not started
+    //1-teams joining
+    //2-choose correct answer
+    //3-phase_1_discuss
+    //4-phase_1_results
+    //5-phase_2_start
+    //6-choose_trickiest_answer
+    //7_phase_2_discuss
+    //8-phase_2_results
+    //9-final_results
+    //10-finished
+
+    //put this in gameinprogress
+
+    2 : "End Answering",
+    3 : "Go to Results",
+    4 : "Go to Phase 2",
+    5 : "Start Phase 2 Question",
+    6 : "End Answering",
+    7 : "Go to Results",
+    8 : "Go to Next Question",
+    9 : "Proceed to RightOn Central"
+  };
+
   const studentViewImage = currentState => { //determines which student view image to show
     if (currentState === stateArray[4]){
       return SVP1Results;
@@ -33,13 +59,27 @@ export default function StudentViews({
   };
 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === stateArray[8] && (currentQuestionIndex+1) !== (questions ? questions.length : 0)) {
+    if (currentState === stateArray[8] && !isLastQuestion) {
       return stateArray[2];
     } else {
       return stateArray[stateArray.indexOf(currentState) + 1]; 
     }
   };
-  
+
+  let isLastGameScreen = ((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]); //if last screen of last question, head to view final results
+  let nextState = nextStateFunc(currentState);
+
+  const handleFooterOnClick = () => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
+    if (!isLastQuestion && statePosition === 8){ //if they are on the last page a\nd need to advance to the next question
+      handleUpdateGameSession({currentState: GameSessionState[nextState], currentQuestionIndex: currentQuestionIndex+1}) 
+    }
+    else { 
+      handleUpdateGameSession({currentState: GameSessionState[nextState]}) 
+    }
+  }
+
+ 
+ 
   return (
     <div className={classes.background}>      
         <div style={{height: "100%", width: "100%", display: "flex", minHeight: "100vh", flexDirection: "column", justifyContent: "space-between"}}>
@@ -57,14 +97,12 @@ export default function StudentViews({
               <img src={studentViewImage(currentState)} alt="Student View" />
             </div>
             <FooterGame
-              nextState={nextStateFunc(currentState)} 
-              currentQuestion={currentQuestionIndex} 
               phaseOneTime={phaseOneTime}
               phaseTwoTime={phaseTwoTime}
+              isGameInProgress={false} //flag studentview vs GameInProgress      
+              footerButtonText={isLastGameScreen ? "View Final Results" : footerButtonTextDictionary[statePosition]} 
               handleUpdateGameSession={handleUpdateGameSession}
-              gameInProgress={false} //flag studentview vs GameInProgress      
-              statePosition={statePosition} 
-              lastQuestion={(((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]) ? true : false )} //need to check if it's final screen of last question
+              handleFooterOnClick =  {handleFooterOnClick} //handler for button
             />
           </div>
        

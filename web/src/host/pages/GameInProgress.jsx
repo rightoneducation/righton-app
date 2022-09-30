@@ -25,6 +25,32 @@ export default function GameInProgress({
   let statePosition;
   let [modalOpen, setModalOpen] = useState(false);
  
+  const footerButtonTextDictionary =  { //dictionary used to assign button text based on the next state 
+    
+    //0-not started
+    //1-teams joining
+    //2-choose correct answer
+    //3-phase_1_discuss
+    //4-phase_1_results
+    //5-phase_2_start
+    //6-choose_trickiest_answer
+    //7_phase_2_discuss
+    //8-phase_2_results
+    //9-final_results
+    //10-finished
+
+    //put this in gameinprogress
+
+    2 : "End Answering",
+    3 : "Go to Results",
+    4 : "Go to Phase 2",
+    5 : "Start Phase 2 Question",
+    6 : "End Answering",
+    7 : "Go to Results",
+    8 : "Go to Next Question",
+    9 : "Proceed to RightOn Central"
+  }
+
   const handleModalOpenClose = modalOpen =>{ //callback function for opening and closing the modal with onclicks
     setModalOpen(modalOpen);
   }
@@ -40,6 +66,15 @@ export default function GameInProgress({
     });
     return count;
   };
+
+  const handleFooterOnClick = () => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
+    if ( nextState === stateArray[3] || nextState === stateArray[7]){ //if teacher is ending early, pop modal, need to add about answers here
+      setModalOpen(true);
+    }
+    else { 
+      handleUpdateGameSession({currentState: GameSessionState[nextState]}) 
+    }
+  }
 
   return (
     <div className={classes.background}>
@@ -65,17 +100,14 @@ export default function GameInProgress({
       </div>
       <GameModal nextState={nextState} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
       <FooterGame
-        nextState={nextState} //passing down nextState to handle the state update onClick
         numPlayers={teams ? teams.length : 0} //need # for answer bar
         numAnswers={numAnswersFunc(questions, currentQuestionIndex)} //number of answers 
         phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
+        isGameInProgress={true} //flag GameInProgress vs StudentView
+        footerButtonText={footerButtonTextDictionary[statePosition]} //provides index of current state for use in footer dictionary
         handleUpdateGameSession={handleUpdateGameSession} //onClick handler
-        gameInProgress={true} //flag GameInProgress vs StudentView
-        endAnswer ={ nextState === stateArray[3] || nextState === stateArray[7] ? true : false}  //determine if state matches screen where teacher might end before all students have answered
-        handleModalOpenClose = {handleModalOpenClose} //handler to open/close modal
-        statePosition={statePosition} //provides index of current state for use in footer dictionary
-        lastQuestion={false} //this will only be true on StudentView
+        handleFooterOnClick = {handleFooterOnClick} //handler for button
       />
     </div>
   );
