@@ -7,8 +7,8 @@ import IntroInfo from "./IntroInfo"
 import { scale, verticalScale, moderateScale } from "react-native-size-matters"
 import { GameSessionState } from "@righton/networking"
 
-const StudentGameIntro = ({ route, navigation }) => {
-  const { gameSession, team, teamMember } = route.params
+const StudentGameIntro = ({ navigation, route, gameSession }) => {
+  const { team, teamMember } = route.params
 
   useEffect(() => {
     const subscription = apiClient.subscribeUpdateGameSession(
@@ -29,7 +29,7 @@ const StudentGameIntro = ({ route, navigation }) => {
       }
     )
     return () => subscription.unsubscribe()
-  })
+  }, [])
 
   const [currentPage, setCurrentPage] = useState(0)
 

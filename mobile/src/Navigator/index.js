@@ -24,10 +24,10 @@ import GameSessionContainer from "../containers/GameSessionContainer"
 
 const Stack = createStackNavigator()
 
-const AppContainer = (props) => {
+const AppContainer = () => {
   return (
     <GameSessionContainer>
-      {({ gameSession, setGameCode, setTeamId, user }) => (
+      {({ gameSession, setGameCode, teamId, teamMember, setTeamInfo }) => (
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="OnboardAppRouter"
@@ -50,14 +50,17 @@ const AppContainer = (props) => {
                 <StudentName
                   {...props}
                   gameSession={gameSession}
-                  setGlobalTeamId={setTeamId}
+                  //teamId={teamId}
+                  //teamMember={teamMember}
+                  setTeamInfo={setTeamInfo}
                 />
               )}
             </Stack.Screen>
-            <Stack.Screen
-              name="StudentGameIntro"
-              component={StudentGameIntro}
-            />
+            <Stack.Screen name="StudentGameIntro">
+              {(props) => (
+                <StudentGameIntro {...props} gameSession={gameSession} />
+              )}
+            </Stack.Screen>
             <Stack.Screen
               name="PregameCountDown"
               component={PregameCountDown}

@@ -21,7 +21,7 @@ export default function StudentName({
   navigation,
   route,
   gameSession,
-  setGlobalTeamId,
+  setTeamInfo,
 }) {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -43,20 +43,19 @@ export default function StudentName({
           return
         }
 
-        debugger
-        setGlobalTeamId(team.id)
-
         getUniqueId()
           .then((uniqueId) => {
             global.apiClient
-              .addTeamMemberToTeam(team.id, true, uniqueId)
+              .addTeamMemberToTeam(team.id, false, uniqueId)
               .then((teamMember) => {
                 if (!teamMember) {
                   console.error("Failed to add team member")
                   return
                 }
 
-                console.debug("student joined, team member:", teamMember)
+                setTeamInfo(team, teamMember)
+                console.log("where u at?", team.teamMembers)
+                //setTeamMember(team.teamMember)
                 navigation.navigate("StudentGameIntro", {
                   gameSession,
                   team,
