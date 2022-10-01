@@ -51,9 +51,15 @@ export default function GameInProgress({
     9 : "Proceed to RightOn Central"
   };
 
-  const handleModalOpenClose = modalOpen =>{ //callback function for opening and closing the modal with onclicks
+  const handleModalClose = modalOpen =>{ //handles closing the modal by clicking outside of it or with the "Im done" text
     setModalOpen(modalOpen);
   };
+
+  const handleModalButtonOnClick = () =>{ //handles modal button
+    handleUpdateGameSession({currentState: GameSessionState[nextState]});
+    setModalOpen(false);
+  };
+
   const getQuestionChoices = (questions, currentQuestionIndex) => {
     let choices;
     questions && questions.map((question, index) => {
@@ -81,7 +87,7 @@ export default function GameInProgress({
       setModalOpen(true);
     }
     else { 
-      handleUpdateGameSession({currentState: GameSessionState[nextState]}) 
+      handleUpdateGameSession({currentState: GameSessionState[nextState]});
     }
   };
 
@@ -107,7 +113,7 @@ export default function GameInProgress({
         <QuestionCardDetails questions={questions} />
         <GameAnswers questionChoices={getQuestionChoices(questions, currentQuestionIndex)} />
       </div>
-      <GameModal nextState={nextState} handleUpdateGameSession={handleUpdateGameSession} handleModalOpenClose={handleModalOpenClose} modalOpen={modalOpen} /> 
+      <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 
       <FooterGame
         numPlayers={teams ? teams.length : 0} //need # for answer bar
         numAnswers={numAnswersFunc(teams, questions, currentQuestionIndex)} //number of answers 
@@ -115,7 +121,6 @@ export default function GameInProgress({
         phaseTwoTime={phaseTwoTime}
         isGameInProgress={true} //flag GameInProgress vs StudentView
         footerButtonText={footerButtonTextDictionary[statePosition]} //provides index of current state for use in footer dictionary
-        handleUpdateGameSession={handleUpdateGameSession} //onClick handler
         handleFooterOnClick = {handleFooterOnClick} //handler for button
       />
     </div>

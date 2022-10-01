@@ -1,11 +1,10 @@
 import React from "react";
 import { makeStyles} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { GameSessionState } from "@righton/networking";
 import Modal from 'react-modal';
 
 
-export default function GameModal({nextState, handleUpdateGameSession, handleModalOpenClose, modalOpen}) {
+export default function GameModal({handleModalButtonOnClick, handleModalClose, modalOpen}) {
   const classes = useStyles();
 
    return (
@@ -33,7 +32,7 @@ export default function GameModal({nextState, handleUpdateGameSession, handleMod
                 minHeight: '100vh',
                 backgroundColor: 'rgba(0, 0, 0, 0.65)'
             }}}
-            onRequestClose={() => handleModalOpenClose(false)}
+            onRequestClose={() => handleModalClose(false)}
             shouldCloseOnOverlayClick={true}
             appElement={document.getElementById('root') || undefined}
            >
@@ -41,12 +40,11 @@ export default function GameModal({nextState, handleUpdateGameSession, handleMod
            <Button 
              className={classes.endAnswerButton}
              onClick={() => { 
-               handleUpdateGameSession({currentState: GameSessionState[nextState]});
-               handleModalOpenClose(false);
+               handleModalButtonOnClick();
             }}>
             Yes
             </Button>
-            <div className={classes.modalClose} onClick={() => handleModalOpenClose(false)}>No, I'm not done. </div>
+            <div className={classes.modalClose} onClick={() => handleModalClose(false)}>No, I'm not done. </div>
         </Modal> 
   );
 }
