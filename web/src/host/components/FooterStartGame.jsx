@@ -11,17 +11,20 @@ const FooterStartGame = ({ handleUpdateGameSession }) => {
         handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0})}>
         Start Game
       </button>
-      <p className={classes.clickToPair}>
+      {/* <p className={classes.clickToPair}>
         Got a desktop and projector? Click here to pair it!
-      </p>
+      </p> */}
     </BottomNavigation>
   );
 };
 const useStyles = makeStyles(theme => ({
   footer: {
     position: "sticky",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     bottom: "0",
-    padding: "7%",
+    padding: "9.5%",
     background: "linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)"
   },
   clickToPair: {
@@ -36,15 +39,17 @@ const useStyles = makeStyles(theme => ({
   },
 
   startGameButton: {
-    background: "linear-gradient(90deg, #FC1047 0%, #FC2468 100%)",
+    border: "4px solid #159EFA",
+    background: "linear-gradient(#159EFA 100%,#19BCFB 100%)",
     borderRadius: "34px",
-    color: "white",
-    fontWeight: "bold",
     width: "300px",
     height: "48px",
-    marginTop: "-2%",
+    color: "white",
     fontSize: "20px",
-    border: "none"
+    bottom: '0',
+    fontWeight: "700",
+    lineHeight: "30px",
+    boxShadow: "0px 5px 22px 0px #47D9FF4D", 
   }
 }));
 

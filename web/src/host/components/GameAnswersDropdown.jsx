@@ -52,7 +52,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct }) {
             </Box>
             <LinearProgress
               variant="determinate"
-              value={progress}
+              value={0}
               classes={{
                 colorPrimary: classes.colorPrimary,
                 barColorPrimary: classes.barColorPrimary
