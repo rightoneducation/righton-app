@@ -3,23 +3,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
 import AnswerDropdown from "./AnswerDropdown";
+import { ChatBubbleOutlineSharp } from "@material-ui/icons";
 
-export default function GameAnswers({ questions }) {
+export default function GameAnswers({ questionChoices }) {
   const classes = useStyles();
-
-  const question = questions[0]
-
- //const wrongAnswerArray = ((question.wrongAnswers)).map(answer => answer)
-
-  /*let correctAnswer = [
-    {
-      choice: question.answer, explanation: "not available"
-    }
-  ];*/
 
   return (
     <Grid className={classes.background}>
-       <GameAnswersDropdown answer={"Test"} explanation={"test"} correct={true} />
+    {questionChoices.map(choice => {
+      return (<GameAnswersDropdown answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} />)
+    })}
     </Grid>
   );
 }

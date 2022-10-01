@@ -78,8 +78,6 @@ export default function StudentViews({
     }
   }
 
- 
- 
   return (
     <div className={classes.background}>      
         <div style={{height: "100%", width: "100%", display: "flex", minHeight: "100vh", flexDirection: "column", justifyContent: "space-between"}}>
