@@ -26,7 +26,6 @@
     "@react-navigation/drawer": "^6.4.3",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/stack": "^6.2.2",
-    
     "appcenter": "^4.4.5",
     "appcenter-analytics": "^4.4.5",
     "appcenter-crashes": "^4.4.5",
@@ -45,6 +44,7 @@
     "react-native-code-push": "^7.0.5",
     "react-native-device-info": "^10.0.2",
     "react-native-dropdown-picker": "^5.4.2",
+    "react-native-encrypted-storage": "^4.0.2",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-hyperlink-text": "^0.2.1",
     "react-native-image-picker": "^4.9.0",
