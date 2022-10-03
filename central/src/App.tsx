@@ -16,14 +16,11 @@ import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
 import { Game } from './API';
 import AlertBar from './components/AlertBar';
-import StatusPageContainer from './components/StatusPageContainer';
 import Nav from './components/Nav';
 import Games from './components/Games';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
-
-import GameSessionContainer from './host/containers/GameSessionContainer';
 
 const theme = createTheme({
   palette: {
@@ -193,13 +190,7 @@ function App() {
               <Confirmation />
             </Route>
 
-            <Route path="/status/:gameID" component={StatusPageContainer} />
-
-            <Route path="/host/:gameSessionId" >
-              <GameSessionContainer />
-            </Route>
-
-            <Route path="/">
+            <Route>
               <Nav setSearchInput={setSearchInput} searchInput={searchInput}
                 isUserAuth={true} />
               <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />

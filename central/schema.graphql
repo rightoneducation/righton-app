@@ -1,0 +1,173 @@
+input CreateGameInput {
+	title: String!
+	description: String
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+	phaseOneTime: Int
+	phaseTwoTime: Int
+	imageUrl: String
+	questions: [CreateQuestionInput]
+}
+
+input CreateGameQuestionInput {
+	questionId: ID!
+	gameId: ID!
+}
+
+input CreateQuestionInput {
+	text: String!
+	choices: AWSJSON!
+	gameId: ID
+	imageUrl: String
+	instructions: AWSJSON
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+}
+
+type Game {
+	id: Int!
+	title: String
+	description: String
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+	phaseOneTime: Int
+	phaseTwoTime: Int
+	imageUrl: String
+	questions: [Question]
+	updatedAt: AWSDateTime!
+	createdAt: AWSDateTime!
+}
+
+type JoinScreen implements Screen {
+	gameID: Int!
+	screenID: ScreenID!
+	title: String!
+	text: String
+}
+
+type Mutation {
+	deleteGame(id: Int!): Game
+	createGame(game: CreateGameInput!): Game
+	updateGame(game: UpdateGameInput!): Game
+	deleteQuestion(id: Int!): Question
+	createQuestion(question: CreateQuestionInput!): Question
+	updateQuestion(question: UpdateQuestionInput!): Question
+	createGameQuestion(gameQuestion: CreateGameQuestionInput!): Game
+	createGameStatus(gameID: Int!): Screen
+	updateGameStatus(gameID: Int!, screenData: ScreenInput!): Screen
+}
+
+type Query {
+	getGame(id: Int!): Game
+	listGames: [Game]
+	getQuestion(id: Int!): Question
+	listQuestions: [Question]
+}
+
+type Question {
+	id: Int!
+	text: String!
+	choices: AWSJSON!
+	imageUrl: String
+	instructions: AWSJSON
+	updatedAt: AWSDateTime!
+	createdAt: AWSDateTime!
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+}
+
+type QuestionScreen implements Screen {
+	gameID: Int!
+	screenID: ScreenID!
+	title: String!
+	text: String
+	answers: [String]!
+}
+
+type Score {
+	teamName: String!
+	teamScore: Int!
+}
+
+input ScoreInput {
+	teamName: String!
+	teamScore: Int!
+}
+
+type ScorecardScreen implements Screen {
+	gameID: Int!
+	screenID: ScreenID!
+	title: String!
+	text: String
+	scores: [Score]!
+}
+
+interface Screen {
+	gameID: Int!
+	screenID: ScreenID!
+	title: String!
+	text: String
+}
+
+enum ScreenID {
+	JoinScreen
+	QuestionScreen
+	ScorecardScreen
+}
+
+input ScreenInput {
+	screenID: ScreenID!
+	title: String!
+	text: String!
+	answers: [String]
+	scores: [ScoreInput]
+}
+
+type Subscription {
+	onCreateGame: Game
+		@aws_subscribe(mutations: ["createGame"])
+	onCreateQuestion: Question
+		@aws_subscribe(mutations: ["createQuestion"])
+	subscribeToGameStatusUpdates(gameID: Int!): Screen
+		@aws_subscribe(mutations: ["updateGameStatus"])
+}
+
+input UpdateGameInput {
+	id: Int!
+	title: String
+	description: String
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+	phaseOneTime: Int
+	phaseTwoTime: Int
+	imageUrl: String
+	questions: [UpdateQuestionInput]
+}
+
+input UpdateQuestionInput {
+	id: Int!
+	text: String
+	choices: AWSJSON
+	imageUrl: String
+	instructions: AWSJSON
+	cluster: String
+	domain: String
+	grade: String
+	standard: String
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}

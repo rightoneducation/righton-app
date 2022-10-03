@@ -4,7 +4,7 @@ import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGameInProgress from "../components/FooterGameInProgress";
 import HeaderGameInProgress from "../components/HeaderGameInProgress";
 import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
-import CheckMark from "../../images/Union.png";
+import CheckMark from "../images/Union.png";
 import { GameSessionState } from "@righton/networking";
 
 export default function GameInProgress({
@@ -16,29 +16,29 @@ export default function GameInProgress({
   phaseTwoTime,
   handleUpdateGameSession
 }) {
-  
+
   const classes = useStyles();
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState;
- 
+
   const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
     let count = 0;
-    teams && teams.map(team => 
-       team.teamMembers && team.teamMembers.items.map(teamMember => 
+    teams && teams.map(team =>
+      team.teamMembers && team.teamMembers.items.map(teamMember =>
         teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
-    )))
+        )))
 
     return count;
   };
 
   const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS"){
+    if (currentState === "PHASE_2_RESULTS") {
       return "FINAL_RESULTS";
     } else if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex !== (questions ? questions.length : 0)) {
       return "CHOOSE_CORRECT_ANSWER";
     } else {
-    return stateArray[stateArray.indexOf(currentState) + 1]; 
+      return stateArray[stateArray.indexOf(currentState) + 1];
     }
   };
 
@@ -62,16 +62,16 @@ export default function GameInProgress({
         <QuestionCardDetails questions={questions} />
         <AnswersInProgressDetails questions={questions} />
       </div>
-    
+
       <FooterGameInProgress
         currentState={currentState}
-        nextState={nextState= nextStateFunc(currentState)} 
-        nextQuestion={currentQuestionIndex} 
+        nextState={nextState = nextStateFunc(currentState)}
+        nextQuestion={currentQuestionIndex}
         numPlayers={teams ? teams.length : 0}
         numAnswers={numAnswersFunc(teams)}
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
-        handleUpdateGameSession={handleUpdateGameSession}        
+        handleUpdateGameSession={handleUpdateGameSession}
       />
     </div>
   );
