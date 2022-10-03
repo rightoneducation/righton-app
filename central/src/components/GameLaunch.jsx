@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Card, Box, Button, Link, Typography, Menu, MenuItem, Grid } from '@material-ui/core';
-import { MoreVert, ArrowBack } from '@material-ui/icons'; 
+import { MoreVert, ArrowBack } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import MoreCircle from './../images/MoreCircularIcon.png';
 import CCSS from './CCSS';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   gameImage: {
     width: '60%'
   },
-  question: {    
+  question: {
     padding: theme.spacing(1.5),
     display: 'flex',
     marginRight: theme.spacing(2),
@@ -161,6 +161,8 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
   const questions = game?.questions || [];
   const questionCount = game?.questions?.length || 0;
 
+  const LAUNCH_GAME_URL = `http://host.rightoneducation.com/new/${game.id}`;
+
   return (
     <>
       <Box className={classes.actions}>
@@ -170,7 +172,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
 
         <Grid>
           <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleGameClick} className={classes.moreButton} data-game-id={gameId}>
-            <img src={MoreCircle} alt='More Circular Icon' width={'30px'}/>
+            <img src={MoreCircle} alt='More Circular Icon' width={'30px'} />
           </Button>
           <Menu
             id={`game-${gameId}-actions`}
@@ -189,18 +191,18 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
 
       <Grid container>
         <Grid item xs={4} className={classes.leftComponent}>
-            <h3 style={{color:'#0075FF'}}>{game.title}</h3>
+          <h3 style={{ color: '#0075FF' }}>{game.title}</h3>
 
-            <p>{game.description}</p>
+          <p>{game.description}</p>
 
-            {game.imageUrl ? <img className={classes.gameImage} src={game.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
+          {game.imageUrl ? <img className={classes.gameImage} src={game.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'} />}
 
-            <Button className={classes.launchButton}>Launch Game {'>'}</Button>
+          <Button onClick={() => { window.location.href = LAUNCH_GAME_URL }} className={classes.launchButton} >Launch Game {'>'}</Button>
         </Grid>
 
         <Grid container item xs={8} className={classes.rightComponent} >
           <Grid item xs={12}>
-            <h3 style={{color:'#0075FF', textAlign:'center'}}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
+            <h3 style={{ color: '#0075FF', textAlign: 'center' }}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
           </Grid>
 
           {questions.length === 0 && (
@@ -220,7 +222,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                       <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
                       <Typography className={classes.questionIndex} >
-                        Question {index+1}
+                        Question {index + 1}
                       </Typography>
 
                       <Typography>
@@ -228,37 +230,37 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                       </Typography>
                     </Grid>
                   </Grid>
-                  
+
                   <Grid container item xs={4}>
-                      <Grid item xs={9}>
-                      {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'}/>}
-                      </Grid>
+                    <Grid item xs={9}>
+                      {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
+                    </Grid>
 
-                      <Grid item xs={3}>
-                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
-                          <MoreVert />
-                        </Button>
+                    <Grid item xs={3}>
+                      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
+                        <MoreVert />
+                      </Button>
 
-                        <Menu
-                          id={`question-${index}-actions`}
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={activeIndex === String(index)}
-                          onClose={handleClose}
-                          onClick={(event) => { if (!match) event.stopPropagation(); }}
-                        >
-                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index+1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                      <Menu
+                        id={`question-${index}-actions`}
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={activeIndex === String(index)}
+                        onClose={handleClose}
+                        onClick={(event) => { if (!match) event.stopPropagation(); }}
+                      >
+                        <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
 
-                          {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
+                        {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
 
-                          {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
+                        {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
 
-                          <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
-                        </Menu>
-                      </Grid>
+                        <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                      </Menu>
+                    </Grid>
                   </Grid>
                 </Card>
-              </Grid> 
+              </Grid>
             );
           })}
         </Grid>

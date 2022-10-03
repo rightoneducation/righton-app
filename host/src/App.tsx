@@ -9,6 +9,7 @@ import {
   ThemeProvider,
 } from '@material-ui/core/styles';
 import GameSessionContainer from './containers/GameSessionContainer';
+import CreateNewGameSession from './containers/CreateNewGameSession';
 
 const theme = createTheme({
   palette: {
@@ -25,7 +26,7 @@ const theme = createTheme({
 });
 
 const RedirectToCentralIfMissing = () => {
-  // window.location.href = 'https://app.rightoneducation.com/';
+  window.location.href = 'http://central.rightoneducation.com/';
   return null;
 }
 
@@ -36,6 +37,9 @@ function App() {
         <Switch>
           <Route path="/host/:gameSessionId" >
             <GameSessionContainer />
+          </Route>
+          <Route path="/new/:gameId" >
+            <CreateNewGameSession />
           </Route>
           <Route>
             <RedirectToCentralIfMissing />
