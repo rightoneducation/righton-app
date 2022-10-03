@@ -3,34 +3,23 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import HostAnswerDropdown from "./AnswersInProgress";
 
-export default function GameDetails({ questions }) {
+export default function AnswersInProgressDetails({ questions }) {
   const classes = useStyles();
 
-  const question = questions[0]
-
-  const wrongAnswerArray = ((question.wrongAnswers)).map(answer => answer)
-
-  let correctAnswer = [
-    {
-      choice: question.answer, explanation: "not available"
-    }
-  ];
+  const question = questions[0];
+  const choices = JSON.parse(question.choices);
 
   return (
     <Grid className={classes.background}>
-      <HostAnswerDropdown answer={correctAnswer[0].choice} explanation={correctAnswer[0].explanation} correct={true} />
-      {wrongAnswerArray.map((answer, index) => {
-        return (
-          <HostAnswerDropdown key={index} answer={answer.wrongAnswer} explanation={answer.reason} correct={false} />
-        );
-      })}
+      {choices.map((answer, index) =>
+        <HostAnswerDropdown key={index} answer={answer.text} explanation={answer.reason} correct={answer.isAnswer} />
+      )}
     </Grid>
   );
 }
 
 const useStyles = makeStyles(theme => ({
   background: {
-    //height: "100vh",
     width: "100%",
     background: 'transparent',
   },
