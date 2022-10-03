@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
-  Redirect
+  Switch
 } from "react-router-dom";
 import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
+import { Auth } from 'aws-amplify';
 
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
 import { updateQuestion, cloneQuestion } from './lib/questions';
@@ -17,25 +17,13 @@ import AlertContext, { Alert } from './context/AlertContext';
 import { Game } from './API';
 import AlertBar from './components/AlertBar';
 import StatusPageContainer from './components/StatusPageContainer';
-
 import Nav from './components/Nav';
 import Games from './components/Games';
-import StartGame from './host/pages/StartGame';
-import Ranking from './host/pages/Ranking';
-import GameInProgress from './host/pages/GameInProgress';
-import LaunchScreen from './display/pages/LaunchScreen.jsx';
-import MobilePair from './display/pages/MobilePair.jsx';
-import GameInProgressHeader from './host/components/HeaderGameInProgress';
-
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
-import { Auth } from 'aws-amplify';
-import { loadGameSession } from './lib/hostAPI';
-import { GameSessionState } from '@righton/networking';
+
 import GameSessionContainer from './host/containers/GameSessionContainer';
-
-
 
 const theme = createTheme({
   palette: {
@@ -220,7 +208,8 @@ function App() {
           </Switch>
         </Router>
       </AlertContext.Provider>
-    </ThemeProvider>);
+    </ThemeProvider>
+  );
 }
 
 export default App;

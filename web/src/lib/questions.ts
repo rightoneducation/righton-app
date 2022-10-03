@@ -2,7 +2,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { updateQuestion as UQ, createQuestion as CQ } from '../graphql/mutations';
 import { listQuestions, getQuestion as GQ } from '../graphql/queries';
 
-export const cloneQuestion = async(question: any) => {
+export const cloneQuestion = async (question: any) => {
   const result = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
   console.log(result);
   return result.data.createQuestion;

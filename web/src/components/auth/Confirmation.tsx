@@ -29,8 +29,8 @@ const Confirmation: React.FC = () => {
 
   return (
     <Grid container direction="column"
-    alignItems="center"
-    justifyContent="center">
+      alignItems="center"
+      justifyContent="center">
       <img src={RightOnLogo} style={{
         marginTop: "3%",
         width: "20%",
@@ -38,27 +38,27 @@ const Confirmation: React.FC = () => {
         maxHeight: "2%",
       }} alt="Right On" />
       <Grid item xs={6}>
-    <form
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        width: "120%"
-      }}
-      onSubmit={handleSubmit}
-    >
-      <h1 style={{ fontSize: "22px", color: "grey" }}>
-        {" "}
-        Verify Your Account
-      </h1>
-      <Field variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
-      <Field variant="outlined" label="Verification Code" value={code} onChange={(e) => setCode(e.target.value)} />
-      <ButtonGrid item direction="row" justifyContent="space-between" spacing={4}>
-      <SignUpLink to="/signup">Sign Up</SignUpLink>
-      <LogInLink to="#" onClick={(e) => {handleSubmit(e)}}>Verify Account</LogInLink>
-      </ButtonGrid>
-    </form>
-    </Grid>
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            width: "120%"
+          }}
+          onSubmit={handleSubmit}
+        >
+          <h1 style={{ fontSize: "22px", color: "grey" }}>
+            {" "}
+            Verify Your Account
+          </h1>
+          <Field variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
+          <Field variant="outlined" label="Verification Code" value={code} onChange={(e) => setCode(e.target.value)} />
+          <ButtonGrid item direction="row" justifyContent="space-between" spacing={4}>
+            <SignUpLink to="/signup">Sign Up</SignUpLink>
+            <LogInLink to="#" onClick={(e) => { handleSubmit(e) }}>Verify Account</LogInLink>
+          </ButtonGrid>
+        </form>
+      </Grid>
     </Grid>
   );
 };
@@ -88,7 +88,7 @@ const LogInLink = styled(Link)({
   fontWeight: "bold",
 });
 
-const ButtonGrid = styled(Grid) ({
+const ButtonGrid = styled(Grid)({
   marginTop: "10%",
   display: "flex",
   flexDirection: "row",

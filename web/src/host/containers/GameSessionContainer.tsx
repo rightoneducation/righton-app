@@ -30,7 +30,7 @@ const GameSessionContainer = () => {
 
     // @ts-ignore
     return () => gameSessionSubscription?.unsubscribe();
-  },);
+  }, []);
 
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
