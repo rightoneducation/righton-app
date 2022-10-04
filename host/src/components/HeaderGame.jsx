@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-// import { Pagination } from "@material-ui/lab";
+import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
 const useStyles = makeStyles(() => ({
@@ -46,10 +46,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 const label = {
-  CHOOSE_CORRECT_ANSWER: "Phase 1 of 2",
-  PHASE_1_RESULTS: "Phase 1 Results",
-  CHOOSE_TRICKIEST_ANSWER: "Phase 2 of 2",
-  PHASE_2_RESULTS: "Phase 2 Results",
+    2 : "Phase 1 of 2 - Choose Correct Answer",
+    3 : "Phase 1 of 2 - Answer Explanation",
+    4 : "Phase 1 of 2 - Results",
+    5 : "Phase 2 of 2 - Instructions",
+    6 : "Phase 2 of 2 - Choose Trickiest Answer",
+    7 : "Phase 2 of 2 - Discussion",
+    8 : "Phase 2 of 2 - Results",
+    9 : "Proceed to RightOn Central"
 };
 
 const chooseTotalRoundTime = (
@@ -65,10 +69,14 @@ const chooseTotalRoundTime = (
   return 60;
 };
 
-export default function GameInProgressHeader({
+export default function HeaderGame({
+  totalQuestions,
   currentState,
+  currentQuestion,
   phaseOneTime,
   phaseTwoTime,
+  gameInProgress,
+  statePosition
 }) {
   const classes = useStyles();
   const totalRoundTime = chooseTotalRoundTime(
@@ -78,6 +86,8 @@ export default function GameInProgressHeader({
   );
   const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
   const [timeIsPaused, setTimeIsPaused] = React.useState(false);
+    
+
 
   useEffect(() => {
     // when switching to the timed states,
@@ -93,33 +103,28 @@ export default function GameInProgressHeader({
     }
   }, [currentState, totalRoundTime]);
 
+
   return (
     <div className={classes.div}>
-      {/* <Pagination
+      <Pagination
         hideNextButton
         hidePrevButton
         variant="outlined"
         shape="rounded"
         classes={{ ul: classes.ul }}
         count={totalQuestions}
-        page={currentQuestion}
-      /> */}
+        page={currentQuestion+1}
+      /> 
 
       <Typography className={classes.title}>
-        Game On!{" "}
-        {/* Replace with current question number and total questions info from query */}
+        Question {currentQuestion+1} of {totalQuestions}
       </Typography>
 
       <Typography className={classes.phases}>
-        {label[currentState]} {/* Replace with phase info from query */}
+        {label[statePosition]} 
       </Typography>
-
-      <Timer
-        currentTime={currentTime}
-        totalRoundTime={totalRoundTime}
-        setTime={setCurrentTime}
-        timeIsPaused={timeIsPaused}
-      />
+      {gameInProgress && <Timer currentTime={currentTime} totalRoundTime={totalRoundTime} setTime={setCurrentTime} timeIsPaused={timeIsPaused} />} 
+     
     </div>
   );
 }

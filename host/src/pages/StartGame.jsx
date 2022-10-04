@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: "100vh",
     flexDirection: "column",
     justifyContent: "space-between",
+    alignItems: "center",
     background: "linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)"
   },
 

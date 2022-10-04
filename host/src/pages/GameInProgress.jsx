@@ -1,11 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCardDetails from "../components/QuestionCardDetails";
-import FooterGameInProgress from "../components/FooterGameInProgress";
-import HeaderGameInProgress from "../components/HeaderGameInProgress";
-import AnswersInProgressDetails from "../components/AnswersInProgressDetails";
-import CheckMark from "../images/Union.png";
+import FooterGame from "../components/FooterGame";
+import HeaderGame from "../components/HeaderGame";
+import GameAnswers from "../components/GameAnswers";
+import CheckMark from "../../images/Union.png";
 import { GameSessionState } from "@righton/networking";
+import GameModal from "../components/GameModal";
 
 export default function GameInProgress({
   teams,
@@ -16,29 +17,77 @@ export default function GameInProgress({
   phaseTwoTime,
   handleUpdateGameSession
 }) {
-
+  
   const classes = useStyles();
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
-  let nextState;
+  let nextState = stateArray[stateArray.indexOf(currentState) + 1];
+  let statePosition;
+  let [modalOpen, setModalOpen] = useState(false);
+ 
+  const footerButtonTextDictionary =  { //dictionary used to assign button text based on the next state 
+    
+    //0-not started
+    //1-teams joining
+    //2-choose correct answer
+    //3-phase_1_discuss
+    //4-phase_1_results
+    //5-phase_2_start
+    //6-choose_trickiest_answer
+    //7_phase_2_discuss
+    //8-phase_2_results
+    //9-final_results
+    //10-finished
 
-  const numAnswersFunc = teams => { //finds all answers using isChosen, for use in footer progress bar
+    //put this in gameinprogress
+
+    2 : "End Answering",
+    3 : "Go to Results",
+    4 : "Go to Phase 2",
+    5 : "Start Phase 2 Question",
+    6 : "End Answering",
+    7 : "Go to Results",
+    8 : "Go to Next Question",
+    9 : "Proceed to RightOn Central"
+  };
+
+  const handleModalClose = modalOpen =>{ //handles closing the modal by clicking outside of it or with the "Im done" text
+    setModalOpen(modalOpen);
+  };
+
+  const handleModalButtonOnClick = () =>{ //handles modal button
+    handleUpdateGameSession({currentState: GameSessionState[nextState]});
+    setModalOpen(false);
+  };
+
+  const getQuestionChoices = (questions, currentQuestionIndex) => {
+    let choices;
+    questions && questions.map((question, index) => {
+      if (index === currentQuestionIndex)
+        choices = JSON.parse(question.choices);
+    })
+    return choices;
+  };
+  const numAnswersFunc = (teams, questions, currentQuestionIndex) => { //finds all answers for current question using isChosen, for use in footer progress bar
     let count = 0;
-    teams && teams.map(team =>
-      team.teamMembers && team.teamMembers.items.map(teamMember =>
-        teamMember.answers && teamMember.answers.items.map(answer => answer.isChosen && count++
-        )))
+    teams && teams.map(team => {
+       team.teamMembers && team.teamMembers.items.map(teamMember => {
+        // teamMember.answers && teamMember.answers.items.map(answer => {
+        //   console.log(answer.questionId + " " + questions[currentQuestionIndex].id + " " +answer.isChosen)
+        //   if (answer.questionId === questions[currentQuestionIndex].id && answer.isChosen)
+        //     count++
+        // })
+    })})
 
     return count;
   };
 
-  const nextStateFunc = currentState => { //determines next state for use by footer
-    if (currentState === "PHASE_2_RESULTS") {
-      return "FINAL_RESULTS";
-    } else if (currentState === "PHASE_2_RESULTS" && currentQuestionIndex !== (questions ? questions.length : 0)) {
-      return "CHOOSE_CORRECT_ANSWER";
-    } else {
-      return stateArray[stateArray.indexOf(currentState) + 1];
+  const handleFooterOnClick = () => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
+    if ( nextState === stateArray[3] || nextState === stateArray[7]){ //if teacher is ending early, pop modal, need to add about answers here
+      setModalOpen(true);
+    }
+    else { 
+      handleUpdateGameSession({currentState: GameSessionState[nextState]});
     }
   };
 
@@ -52,30 +101,33 @@ export default function GameInProgress({
           backgroundPositionY: "-300px"
         }}
       >
-        <HeaderGameInProgress
+        <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
           phaseOneTime={phaseOneTime}
           phaseTwoTime={phaseTwoTime}
+          gameInProgress={true}
+          statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
         <QuestionCardDetails questions={questions} />
-        <AnswersInProgressDetails questions={questions} />
+        <GameAnswers questionChoices={getQuestionChoices(questions, currentQuestionIndex)} />
       </div>
-
-      <FooterGameInProgress
-        currentState={currentState}
-        nextState={nextState = nextStateFunc(currentState)}
-        nextQuestion={currentQuestionIndex}
-        numPlayers={teams ? teams.length : 0}
-        numAnswers={numAnswersFunc(teams)}
-        phaseOneTime={phaseOneTime}
+      <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 
+      <FooterGame
+        numPlayers={teams ? teams.length : 0} //need # for answer bar
+        numAnswers={numAnswersFunc(teams, questions, currentQuestionIndex)} //number of answers 
+        phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
-        handleUpdateGameSession={handleUpdateGameSession}
+        isGameInProgress={true} //flag GameInProgress vs StudentView
+        footerButtonText={footerButtonTextDictionary[statePosition]} //provides index of current state for use in footer dictionary
+        handleFooterOnClick = {handleFooterOnClick} //handler for button
       />
     </div>
   );
 }
+
+
 
 const useStyles = makeStyles(theme => ({
   background: {

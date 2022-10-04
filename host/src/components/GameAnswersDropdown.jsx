@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
-export default function HostAnswerDropdown({ answer, explanation, correct }) {
+export default function GameAnswersDropdown({ answer, explanation, correct }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [progress, setProgress] = React.useState(0);
@@ -52,7 +52,7 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
             </Box>
             <LinearProgress
               variant="determinate"
-              value={progress}
+              value={0}
               classes={{
                 colorPrimary: classes.colorPrimary,
                 barColorPrimary: classes.barColorPrimary
@@ -76,7 +76,7 @@ export default function HostAnswerDropdown({ answer, explanation, correct }) {
           </Box>
         </CardContent>
       </Card>
-    </Grid >
+    </Grid>
   );
 }
 

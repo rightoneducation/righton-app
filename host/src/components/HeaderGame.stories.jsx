@@ -1,14 +1,14 @@
 import React from "react";
-import GameInProgressHeader from "./HeaderGameInProgress";
+import HeaderGame from "./HeaderGame";
 import MockGameSession from "../../mocks/gamesession.json";
 
 export default {
-  title: "GameInProgressHeader",
-  component: GameInProgressHeader,
+  title: "HeaderGame",
+  component: HeaderGame,
   argTypes: { handleSkipToResults: { action: "handleSkipToResults" } }
 };
 
-const Template = args => <GameInProgressHeader {...args} />;
+const Template = args => <HeaderGame {...args} />;
 
 export const PhaseOne = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args

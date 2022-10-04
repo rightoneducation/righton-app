@@ -2,34 +2,22 @@ import React from "react";
 import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
-import { GameSessionState } from "@righton/networking";
 
-
-
-export default function FooterGameInProgress({nextState, nextQuestion, numPlayers, numAnswers, phaseOneTime, phaseTwoTime, handleUpdateGameSession }) {
-  const classes = useStyles();
-
-  const currentStateToButtonText = { //dictionary used to assign button text based on the next state 
-    "PHASE_1_RESULTS": "Skip to Results",
-    "CHOOSE_TRICKIEST_ANSWER": "Next Phase",
-    "PHASE_2_RESULTS": "Skip to Results",
-    "CHOOSE_CORRECT_ANSWER": "Next Question",
-    "FINAL_RESULTS": "View Final Results"
-  }
-
+export default function FooterGame({numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  isGameInProgress, footerButtonText, handleFooterOnClick}) {
+ const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
-      <div className={classes.footerContainer}>
-        <div className={classes.playerNum}>Players who have answered</div>
-        <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />
-        <Button
+      <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
+      <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={classes.nextPhaseButton}
-          onClick={() =>  handleUpdateGameSession({currentState: GameSessionState[nextState]})}
+          onClick={() =>  handleFooterOnClick()}
         >
-          {currentStateToButtonText[nextState]}
+           {footerButtonText}
         </Button>
-      </div>
+        {isGameInProgress && <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
+        {isGameInProgress && <div className={classes.playerNum}>Players who have answered</div>}
+        </div>
     </BottomNavigation>
   );
 }
@@ -38,17 +26,18 @@ const useStyles = makeStyles(theme => ({
   footer: {
     position: 'sticky',
     bottom: '0',
-    padding: '14%',
+    padding: '10.5%',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    //gap: '10px',
+    flexDirection: 'column-reverse',
+    justifyContent: 'flex-start',
+    alignItems:'center',
   },
   playerNum: {
     fontSize: '16px',
+    width: '300px',
     textAlign: 'left',
     color: 'white',
     fontFamily: 'Poppins',
@@ -74,6 +63,7 @@ const useStyles = makeStyles(theme => ({
     height: "48px",
     color: "white",
     fontSize: "20px",
+    bottom: '0',
     fontWeight: "700",
     lineHeight: "30px",
     boxShadow: "0px 5px 22px 0px #47D9FF4D", 
