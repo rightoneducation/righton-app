@@ -1,12 +1,12 @@
-import React, {useState} from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core";
 import HeaderGame from "../components/HeaderGame";
 import FooterGame from "../components/FooterGame";
-import CheckMark from "../../images/Union.png";
+import CheckMark from "../images/Union.png";
 import { GameSessionState } from "@righton/networking";
-import SVP1Results from '../../images/SVP1Results.svg';
-import SVP2Start from '../../images/SVP2Start.svg';
-import SVP2Results from '../../images/SVP2Results.svg';
+import SVP1Results from '../images/SVP1Results.svg';
+import SVP2Start from '../images/SVP2Start.svg';
+import SVP2Results from '../images/SVP2Results.svg';
 
 export default function StudentViews({
   questions,

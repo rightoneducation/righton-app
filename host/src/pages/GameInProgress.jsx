@@ -4,7 +4,7 @@ import QuestionCardDetails from "../components/QuestionCardDetails";
 import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
-import CheckMark from "../../images/Union.png";
+import CheckMark from "../images/Union.png";
 import { GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
 
