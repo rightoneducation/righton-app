@@ -25,71 +25,107 @@ import GameSessionContainer from "../containers/GameSessionContainer"
 const Stack = createStackNavigator()
 
 const AppContainer = () => {
-  return (
-    <GameSessionContainer>
-      {({ gameSession, setGameCode, teamId, teamMember, setTeamInfo }) => (
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="OnboardAppRouter"
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            {/* sort screens for basic vs. advanced flow */}
-            <Stack.Screen
-              name="OnboardAppRouter"
-              component={OnboardAppRouter}
-            />
-            <Stack.Screen name="StudentFirst">
-              {(props) => (
-                <StudentFirst {...props} setGlobalGameCode={setGameCode} />
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="StudentName">
-              {(props) => (
-                <StudentName
-                  {...props}
-                  gameSession={gameSession}
-                  //teamId={teamId}
-                  //teamMember={teamMember}
-                  setTeamInfo={setTeamInfo}
-                />
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="StudentGameIntro">
-              {(props) => (
-                <StudentGameIntro {...props} gameSession={gameSession} />
-              )}
-            </Stack.Screen>
-            <Stack.Screen
-              name="PregameCountDown"
-              component={PregameCountDown}
-            />
-            <Stack.Screen name="GamePreview" component={GamePreview} />
-            <Stack.Screen name="Leadership" component={Leadership} />
+    return (
+        <GameSessionContainer>
+            {({
+                gameSession,
+                setGameCode,
+                teamId,
+                teamMember,
+                setTeamInfo,
+            }) => (
+                <NavigationContainer>
+                    <Stack.Navigator
+                        initialRouteName="OnboardAppRouter"
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
+                        {/* sort screens for basic vs. advanced flow */}
+                        <Stack.Screen name="OnBoardAppRouter">
+                            {(props) => (
+                                <OnboardAppRouter
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="StudentFirst">
+                            {(props) => (
+                                <StudentFirst
+                                    {...props}
+                                    setGlobalGameCode={setGameCode}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="StudentName">
+                            {(props) => (
+                                <StudentName
+                                    {...props}
+                                    gameSession={gameSession}
+                                    //teamId={teamId}
+                                    //teamMember={teamMember}
+                                    setTeamInfo={setTeamInfo}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="StudentGameIntro">
+                            {(props) => (
+                                <StudentGameIntro
+                                    {...props}
+                                    gameSession={gameSession}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen
+                            name="PregameCountDown"
+                            component={PregameCountDown}
+                        />
+                        <Stack.Screen
+                            name="GamePreview"
+                            component={GamePreview}
+                        />
+                        <Stack.Screen
+                            name="Leadership"
+                            component={Leadership}
+                        />
 
-            <Stack.Screen name="PersonalDetails" component={PersonalDetails} />
-            <Stack.Screen
-              name="StudentChooseTeam"
-              component={StudentChooseTeam}
-            />
-            <Stack.Screen name="GameDetails" component={GameDetailsScreen} />
-            <Stack.Screen name="GamePlay" component={GamePlay} />
-            <Stack.Screen name="TeamInfo" component={TeamInfo} />
-            <Stack.Screen
-              name="GameAnswerPopular"
-              component={GameAnswerPopular}
-            />
-            <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="EnterInfo" component={EnterInfo} />
-            <Stack.Screen name="ConfirmAccount" component={ConfirmAccount} />
-            <Stack.Screen name="TeacherApp" component={TeacherApp} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      )}
-    </GameSessionContainer>
-  )
+                        <Stack.Screen
+                            name="PersonalDetails"
+                            component={PersonalDetails}
+                        />
+                        <Stack.Screen
+                            name="StudentChooseTeam"
+                            component={StudentChooseTeam}
+                        />
+                        <Stack.Screen
+                            name="GameDetails"
+                            component={GameDetailsScreen}
+                        />
+                        <Stack.Screen name="GamePlay" component={GamePlay} />
+                        <Stack.Screen name="TeamInfo" component={TeamInfo} />
+                        <Stack.Screen
+                            name="GameAnswerPopular"
+                            component={GameAnswerPopular}
+                        />
+                        <Stack.Screen name="SignIn" component={SignIn} />
+                        <Stack.Screen name="SignUp" component={SignUp} />
+                        <Stack.Screen name="EnterInfo" component={EnterInfo} />
+                        <Stack.Screen
+                            name="ConfirmAccount"
+                            component={ConfirmAccount}
+                        />
+                        <Stack.Screen
+                            name="TeacherApp"
+                            component={TeacherApp}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            )}
+        </GameSessionContainer>
+    )
 }
 
 export default AppContainer

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react"
 import EncryptedStorage from "react-native-encrypted-storage"
+import { useNavigation } from "@react-navigation/native"
 
 const GameSessionContainer = ({ children }) => {
+    // const navigation = useNavigation()
     const [gameCode, setGameCode] = useState(null)
     const [teamId, setTeamId] = useState(null)
     const [gameSession, setGameSession] = useState(null)
@@ -23,6 +25,13 @@ const GameSessionContainer = ({ children }) => {
                 setTeamMember(localGameSession.teamMember)
                 setGameCode(localGameSession.gameCode)
             }
+            // if (
+            //     localGameSession &&
+            //     gameSession?.currentState === "CHOOSE_CORRECT_ANSWER"
+            // ) {
+            //     // navigation.navigate("StudentName", { gameSession })
+            //     Screen.GamePreview
+            // }
         })
         if (gameSession) {
             storeGameSessionLocal()
@@ -47,6 +56,7 @@ const GameSessionContainer = ({ children }) => {
                                     )
                                     //TODO: update the team object everytime the game session is updated
                                     //only update the team member if the team member is found
+                                    //if(teamMember){setTeamMember(teamMember)}
                                 }
                             )
                     }
@@ -60,7 +70,7 @@ const GameSessionContainer = ({ children }) => {
     //     // TODO: this is how you get to the correct page initially
     //     if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
     //         // navigate to pregame countdown screen
-    //         Screen.GamePreview
+    //         navigation.navigate("GamePreivew")
     //     }
     // }, [gameSession?.currentState])
 
