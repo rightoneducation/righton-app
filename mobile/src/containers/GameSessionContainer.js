@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react"
 import EncryptedStorage from "react-native-encrypted-storage"
-import { useNavigation } from "@react-navigation/native"
 
 const GameSessionContainer = ({ children }) => {
-    // const navigation = useNavigation()
     const [gameCode, setGameCode] = useState(null)
     const [teamId, setTeamId] = useState(null)
     const [gameSession, setGameSession] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
-
-    //add a way to save the updates to a session storage
-    //load the session storage when the game session container loads
-
-    //based on intial values - redirect to the current game screen
-
-    //update initial useState values to load data from local storage
 
     useEffect(() => {
         loadLocalGameSession().then((localGameSession) => {
@@ -25,13 +16,6 @@ const GameSessionContainer = ({ children }) => {
                 setTeamMember(localGameSession.teamMember)
                 setGameCode(localGameSession.gameCode)
             }
-            // if (
-            //     localGameSession &&
-            //     gameSession?.currentState === "CHOOSE_CORRECT_ANSWER"
-            // ) {
-            //     // navigation.navigate("StudentName", { gameSession })
-            //     Screen.GamePreview
-            // }
         })
         if (gameSession) {
             storeGameSessionLocal()
@@ -65,14 +49,6 @@ const GameSessionContainer = ({ children }) => {
 
         return () => subscription?.unsubscribe()
     }, [gameCode])
-
-    // useEffect(() => {
-    //     // TODO: this is how you get to the correct page initially
-    //     if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
-    //         // navigate to pregame countdown screen
-    //         navigation.navigate("GamePreivew")
-    //     }
-    // }, [gameSession?.currentState])
 
     async function storeGameSessionLocal() {
         try {

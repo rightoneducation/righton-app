@@ -15,23 +15,19 @@ export default function OnboardAppRouter({
     const [user, setUser] = React.useState(null)
 
     useEffect(() => {
-        // TODO: this is how you get to the correct page initially
         if (gameSession?.currentState === "TEAMS_JOINING") {
-            // navigate to pregame countdown screen
             navigation.navigate("StudentFirst", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),
                 teamMember,
             })
         } else if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
-            // navigate to pregame countdown screen
             navigation.navigate("GamePreview", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),
                 teamMember,
             })
         } else if (gameSession?.currentState === "FINAL_RESULTS") {
-            // navigate to pregame countdown screen
             navigation.navigate("Leadership", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),

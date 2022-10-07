@@ -16,7 +16,7 @@ import uuid from "react-native-uuid"
 
 const GamePreview = ({ navigation, route }) => {
     const { gameSession, team, teamMember } = route.params
-
+    console.log(gameSession.phaseOneTime)
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[
@@ -26,7 +26,7 @@ const GamePreview = ({ navigation, route }) => {
           ]
     const availableHints = question.instructions
 
-    const [countdown, setCountdown] = useState(300)
+    const [countdown, setCountdown] = useState(gameSession.phaseOneTime)
     const [progress, setProgress] = useState(1)
     const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
     const [hints, setHints] = useState([availableHints[0]])

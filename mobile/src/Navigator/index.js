@@ -41,7 +41,6 @@ const AppContainer = () => {
                             headerShown: false,
                         }}
                     >
-                        {/* sort screens for basic vs. advanced flow */}
                         <Stack.Screen name="OnBoardAppRouter">
                             {(props) => (
                                 <OnboardAppRouter
@@ -65,8 +64,6 @@ const AppContainer = () => {
                                 <StudentName
                                     {...props}
                                     gameSession={gameSession}
-                                    //teamId={teamId}
-                                    //teamMember={teamMember}
                                     setTeamInfo={setTeamInfo}
                                 />
                             )}
