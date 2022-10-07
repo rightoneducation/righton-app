@@ -19,7 +19,7 @@ import SignIn from '../Auth/screens/SignIn'
 import SignUp from '../Auth/screens/SignUp'
 import PersonalDetails from '../Auth/screens/PersonalDetails'
 import ConfirmAccount from '../Auth/screens/ConfirmAccount'
-import EnterInfo from '../Student/screens/EnterInfo'
+import SelectTeam from '../Student/screens/SelectTeam'
 
 const Stack = createStackNavigator()
 
@@ -34,10 +34,9 @@ const AppContainer = (props) => {
         <Stack.Screen name="OnboardAppRouter" component={OnboardAppRouter} />
         <Stack.Screen name="StudentFirst" component={StudentFirst} />
         <Stack.Screen name="StudentName" component={StudentName} />
-        
+
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="EnterInfo" component={EnterInfo} />
         <Stack.Screen name="ConfirmAccount" component={ConfirmAccount} />
         <Stack.Screen name="PersonalDetails" component={PersonalDetails} />
         <Stack.Screen name="StudentChooseTeam" component={StudentChooseTeam} />
@@ -50,9 +49,10 @@ const AppContainer = (props) => {
         <Stack.Screen name="GameAnswerPopular" component={GameAnswerPopular} />
         <Stack.Screen name="Leadership" component={Leadership} />
         <Stack.Screen name="TeacherApp" component={TeacherApp} />
+        <Stack.Screen name="SelectTeam" component={SelectTeam} />
 
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   )
 }
 

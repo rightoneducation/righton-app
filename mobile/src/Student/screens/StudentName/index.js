@@ -1,42 +1,36 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { useState } from "react"
 import {
-  Text,
-  TextInput,
-  SafeAreaView,
-  Image,
-  View,
-  StatusBar,
-} from "react-native";
-import { verticalScale } from "react-native-size-matters";
-import NetInfo from "@react-native-community/netinfo";
-import { colors } from "../../../utils/theme";
-import styles from "./styles";
-import debug from "../../../utils/debug";
-import RoundButton from "../../../components/RoundButton";
-import PurpleBackground from "../../../components/PurpleBackground";
-import { getUniqueId } from "react-native-device-info";
-import { GameSessionState } from "@righton/networking";
+  Image, SafeAreaView, Text,
+  TextInput, View
+} from "react-native"
+import { getUniqueId } from "react-native-device-info"
+import PurpleBackground from "../../../components/PurpleBackground"
+import RoundButton from "../../../components/RoundButton"
+import { colors } from "../../../utils/theme"
+import styles from "./styles"
 
-export default function StudentName({ navigation, route }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const { gameSession } = route.params;
+const StudentName = ({ navigation, route }) => {
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const { gameSession } = route.params
 
-  const teamName = `${firstName} ${lastName}`;
+  const teamName = `${firstName} ${lastName}`
 
   onNameSubmit = () => {
-    if (!firstName && !lastName && nameInput) {
-      this.nameInput.focus();
-      return;
+    if (!firstName) {
+      firstNameInput.focus()
+    }
+
+    if (!lastName) {
+      this.lastNameInput.focus()
     }
 
     global.apiClient
       .addTeamToGameSessionId(gameSession.id, teamName, null)
       .then((team) => {
-        console.debug(team);
         if (!team) {
-          console.error("Failed to add team");
-          return;
+          console.error("Failed to add team")
+          return
         }
         getUniqueId()
           .then((uniqueId) => {
@@ -44,34 +38,33 @@ export default function StudentName({ navigation, route }) {
               .addTeamMemberToTeam(team.id, true, uniqueId)
               .then((teamMember) => {
                 if (!teamMember) {
-                  console.error("Failed to add team member");
-                  return;
+                  console.error("Failed to add team member")
+                  return
                 }
 
-                console.debug(teamMember);
-                navigation.navigate("StudentGameIntro", {
+                console.debug(teamMember)
+                navigation.navigate("SelectTeam", {
                   gameSession,
                   team,
                   teamMember,
-                });
+                })
               })
               .catch((error) => {
-                console.error(error);
-              });
+                console.error(error)
+              })
           })
           .catch((error) => {
-            console.error(error);
-          });
-      });
-  };
+            console.error(error)
+          })
+      })
+  }
 
   handleNavigateToOnboardApp = () => {
-    navigation.navigate("OnboardAppRouter");
-  };
+    navigation.navigate("OnboardAppRouter")
+  }
 
   return (
-    <Fragment>
-      <SafeAreaView style={{ flex: 0, backgroundColor: "#483a82" }} />
+    <>
       <SafeAreaView style={styles.container}>
         <PurpleBackground style={styles.innerContainer}>
           <View style={styles.logoContainer}>
@@ -91,11 +84,11 @@ export default function StudentName({ navigation, route }) {
                     onChangeText={setFirstName}
                     onSubmitEditing={this.onNameSubmit}
                     placeholder={"First Name"}
-                    placeholderTextColor={colors.primary}
+                    placeholderTextColor={colors.grey}
                     ref={(ref) => {
-                      this.nameInput = ref;
+                      this.firstNameInput = ref
                     }}
-                    returnKeyType={"done"}
+                    returnKeyType={"next"}
                     style={styles.input}
                     textAlign={"center"}
                     value={firstName}
@@ -106,15 +99,14 @@ export default function StudentName({ navigation, route }) {
                     onChangeText={setLastName}
                     onSubmitEditing={this.onNameSubmit}
                     placeholder={"Last Name"}
-                    placeholderTextColor={colors.primary}
+                    placeholderTextColor={colors.grey}
                     ref={(ref) => {
-                      this.nameInput = ref;
+                      this.lastNameInput = ref
                     }}
-                    returnKeyType={"done"}
+                    returnKeyType={"join"}
                     style={styles.input}
                     textAlign={"center"}
                     value={lastName}
-                    autoFocus={true}
                   />
                 </View>
                 <RoundButton
@@ -127,6 +119,8 @@ export default function StudentName({ navigation, route }) {
           </View>
         </PurpleBackground>
       </SafeAreaView>
-    </Fragment>
-  );
+    </>
+  )
 }
+
+export default StudentName

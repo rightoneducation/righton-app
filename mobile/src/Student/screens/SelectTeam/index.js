@@ -1,0 +1,209 @@
+import { useState } from 'react'
+import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { scale, verticalScale } from 'react-native-size-matters'
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
+import PurpleBackground from '../../../components/PurpleBackground'
+import RoundButton from '../../../components/RoundButton'
+import { colors, fontFamilies, fonts } from '../../../utils/theme'
+
+const SelectTeam = ({ navigation, route }) => {
+  const { gameSession, team, teamMember } = route.params
+  const icons = [
+    {
+      id: 1,
+      src: require('./img/MonsterIcon1.png')
+    },
+    {
+      id: 2,
+      src: require('./img/MonsterIcon2.png')
+    },
+    {
+      id: 3,
+      src: require('./img/MonsterIcon3.png')
+    },
+    {
+      id: 4,
+      src: require('./img/MonsterIcon4.png')
+    },
+    {
+      id: 5,
+      src: require('./img/MonsterIcon5.png')
+    },
+    {
+      id: 6,
+      src: require('./img/MonsterIcon6.png')
+    }
+  ]
+
+  const teamLargeIcon = [
+    {
+      id: 1,
+      src: require('./img/Monster1.png')
+    },
+    {
+      id: 2,
+      src: require('./img/Monster2.png')
+    },
+    {
+      id: 3,
+      src: require('./img/Monster3.png')
+    },
+    {
+      id: 4,
+      src: require('./img/Monster4.png')
+    },
+    {
+      id: 5,
+      src: require('./img/Monster5.png')
+    },
+    {
+      id: 6,
+      src: require('./img/Monster6.png')
+    }
+  ]
+
+  const [largeIcon, setLargeIcon] = useState(null)
+  const [smallIcon, setSmallIcon] = useState(null)
+  const [enabledSubmitButton, setEnabledSubmitButton] = useState(false)
+
+  const goBack = () => {
+    navigation.navigate("StudentName")
+  }
+
+  const selectTeam = (icon) => {
+    setSmallIcon(icon)
+    const largeIcon = teamLargeIcon.find(val => val.id === icon.id)
+    setLargeIcon(largeIcon)
+    setEnabledSubmitButton(true)
+  }
+
+  const submit = () => {
+    navigation.navigate("StudentGameIntro", {
+      gameSession,
+      team,
+      teamMember,
+      smallAvatar,
+      largeAvatar,
+    })
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <PurpleBackground>
+        <View style={styles.headerContainer}>
+          <Pressable
+            onPress={goBack}
+            style={styles.backButton}
+          >
+            <Image source={require('./img/BackButton.png')} />
+          </Pressable>
+          <Text style={styles.headerText}>
+            Choose an Avatar!
+          </Text>
+        </View>
+        <View style={styles.teamIcons}>
+          <FlatList
+            data={icons}
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}
+            keyExtractor={item => `${item.id}`}
+            columnWrapperStyle={{ justifyContent: 'space-between' }}
+            contentContainerStyle={{ alignContent: 'stretch' }}
+            renderItem={({ item }) =>
+              <View
+                onStartShouldSetResponder={() => true}
+                onResponderRelease={() => selectTeam(item)}
+                style={styles.teamIconContainer}
+              >
+                <Image source={item.src} style={styles.teamIcon} />
+              </View>
+            }
+          />
+        </View>
+        <View style={styles.teamIconNameContainer}>
+          <Image style={styles.largeIcon} source={largeIcon && largeIcon.src} />
+          <Text style={styles.fullNameText}>
+            {team.name}
+          </Text>
+        </View>
+        <View>
+          <RoundButton
+            title='Submit'
+            style={{
+              backgroundColor: colors.buttonSecondary,
+              width: 84,
+              height: 30,
+              alignSelf: 'center'
+            }}
+            disabled={!enabledSubmitButton}
+            titleStyle={{
+              fontSize: fonts.xxMedium,
+              fontFamily: fontFamilies.karlaRegular,
+              fontWeight: '700',
+              color: enabledSubmitButton ? 'white' : colors.lightGray
+            }}
+            onPress={submit} />
+        </View>
+      </PurpleBackground>
+    </SafeAreaView>
+  )
+}
+
+export default SelectTeam
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.backgroundPurple,
+    flex: 1
+  },
+  headerText: {
+    color: 'white',
+    fontSize: fonts.xLarge,
+    fontFamily: fontFamilies.karlaBold,
+    textAlign: 'center',
+    flex: 1,
+    marginLeft: -30
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginLeft: 20
+  },
+  backButton: {
+    width: 20,
+    height: 20
+  },
+  teamIcons: {
+    marginHorizontal: scale(32),
+    marginTop: verticalScale(40),
+    flex: 1
+  },
+  teamIconContainer: {
+    width: scale(80),
+    height: verticalScale(106)
+  },
+  teamIcon: {
+    resizeMode: 'contain',
+    flex: 1,
+    alignSelf: 'center'
+  },
+  largeIcon: {
+    alignSelf: 'center',
+    resizeMode: 'contain',
+  },
+  fullNameText: {
+    color: 'white',
+    fontFamily: fontFamilies.montserratRegular,
+    fontWeight: '800',
+    fontSize: fonts.xMedium,
+    textAlign: 'center',
+    marginBottom: verticalScale(30),
+    marginTop: verticalScale(10)
+  },
+  teamIconNameContainer: {
+    marginTop: verticalScale(50)
+  }
+})
