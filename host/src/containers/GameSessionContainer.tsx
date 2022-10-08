@@ -48,32 +48,56 @@ const GameSessionContainer = () => {
   // for each team in this array, set up a subscription by the team id  using a foreach loop
   // do this by calling subscribeUpdateTeamMember and supplying a callback 
   // updating the state here for the one teammember
-      
+  
       
   const handleStartGame = () =>{
-    console.log(gameSession.currentState);
+    console.log(gameSession.currentState);  //I'm keeping this in unti
     if (gameSession.currentState === "TEAMS_JOINING")
     {
-    const teamDataRequests = gameSession.teams.map(team => {
-      return apiClient.getTeam(team.id);
-    });
+      const teamDataRequests = gameSession.teams.map(team => {
+        return apiClient.getTeam(team.id);
+      });
 
-    Promise.all(teamDataRequests)
-      .then(responses => {
-        setTeamsArray(responses);
-        responses.forEach(teamResponse => {
-          let teamSubscription: any | null = null;
-          teamSubscription = apiClient.subscribeUpdateTeamMemberByTeamId(teamResponse.id, teamMemberResponse => {
-            console.log(teamMemberResponse);
-            //setTeamsArray(({ ...teamsArray, ...response }));
-         });
+      Promise.all(teamDataRequests)
+        .then(responses => {
+             //----testing subscription handling-----, get test object
+            // -----subscription response -> teamMember object
+
+            const sampleSubResponse =  JSON.parse(JSON.stringify(responses[0].teamMembers.items[0])); 
+            sampleSubResponse.answers.items[0].isChosen = false; //change test object
+
+            //put subscriptions here so if they change it updates before the teamsarray is set
+
+            // end testing
+            
+
+            responses.forEach(team => {
+              team.teamMembers.items.forEach(teamMemberOriginal => { 
+                if (teamMemberOriginal.id === sampleSubResponse.id){
+                  console.log(sampleSubResponse);
+                  teamMemberOriginal = Object.assign(teamMemberOriginal, sampleSubResponse); 
+                  
+                }
+              })
+            }); 
+
+           // subscription will end here, so each new teamMember updates the object accordingly
+
+            setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
+            
+            
+            //~~~~~~~~~~~~~~~~subscription when AWS stuff is confirmed~~~~~~~~~~~~~~~~~
+            //use responses for subscriptions and useeffect for update
+            // let teamSubscription: any | null = null;
+            // teamSubscription = apiClient.subscribeUpdateTeamMemberByTeamId(teamResponse.id, teamMemberResponse => {
+            //   console.log(teamMemberResponse);
+            //   setTeamsArray(({ ...teamsArray, ...response }));
+            // });
+         
+          //handleUpdateTeamMemberByTeamId({isFacilitator: false});
+          handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
         })
-        //handleUpdateTeamMemberByTeamId({isFacilitator: false});
-        handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
-      })
-      .catch(reason => console.log(reason));
-
- 
+        .catch(reason => console.log(reason));
     }
     else
       handleUpdateGameSession({currentState: GameSessionState.TEAMS_JOINING, currentQuestionIndex: 0});
