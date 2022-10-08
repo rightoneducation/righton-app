@@ -15,13 +15,12 @@ import {
     OnUpdateGameSessionSubscription,
     UpdateGameSessionInput,
     UpdateGameSessionMutation,
-    UpdateGameSessionMutationVariables//,
-   // OnTeamMemberUpdateByTeamIdSubscription
+    UpdateGameSessionMutationVariables
 } from './AWSMobileApi'
 import { createTeam, createTeamAnswer, createTeamMember, updateGameSession } from './graphql/mutations'
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { getGameSession, getTeam, gameSessionByCode, onGameSessionUpdatedById/*, onTeamMemberUpdateByTeamId*/ } from './graphql'
+import { getGameSession, gameSessionByCode, onGameSessionUpdatedById } from './graphql'
 import awsconfig from "./aws-exports"
 import { ITeam } from './Models/ITeam'
 import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
@@ -88,11 +87,6 @@ export class ApiClient implements IApiClient {
         return GameSessionParser.gameSessionFromAWSGameSession(result.data.getGameSession)
     }
 
-    async getTeam(id: string): Promise<ITeam> {
-      let result = await API.graphql(graphqlOperation(getTeam, { id })) as { data: any }
-      return TeamParser.teamFromAWSTeam(result.data.getTeam)
-    }
-
     async updateGameSession(awsGameSessionInput: UpdateGameSessionInput): Promise<IGameSession> {
         let updateGameSessionInput: UpdateGameSessionInput = awsGameSessionInput
         let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
@@ -119,17 +113,6 @@ export class ApiClient implements IApiClient {
             callback(gameSession)
         })
     }
-
-  //   subscribeUpdateTeamMember(id: string, callback: (result?: ITeamMember | null) => void) {
-  //     return this.subscribeGraphQL<OnTeamMemberUpdateByTeamIdSubscription>({
-  //         query: onTeamMemberUpdateByTeamId,
-  //         variables: {
-  //             id: id
-  //         }
-  //     }, (value: OnTeamMemberUpdateByTeamIdSubscription) => {
-  //         callback(value.onTeamMemberUpdateByTeamId)
-  //     })
-  // }
 
     async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
         let result = await API.graphql(graphqlOperation(gameSessionByCode, { gameCode })) as { data: any }
@@ -247,10 +230,9 @@ type AWSTeam = {
     id: string,
     name: string,
     trickiestAnswerIDs?: Array<string | null> | null,
-    teamMembers?: Array<ITeamMember | null> | null,
     score: number,
     createdAt: string,
-    updatedAt?: string,
+    updatedAt: string,
     gameSessionTeamsId?: string | null,
     teamQuestionId?: string | null,
     teamQuestionGameSessionId?: string | null,
@@ -268,16 +250,6 @@ type AWSQuestion = {
     grade?: string | null,
     gameSessionId: string,
     order: number,
-}
-
-type AWSTeamMember= {
-  id: string,
-  isFacilitator?: boolean | null,
-  answers?: Array<ITeamAnswer> | null,
-  deviceId: string | null,
-  createdAt: string | null,
-  updatedAt: string | null,
-  teamTeamMembersId?: string | null,
 }
 
 class GameSessionParser {
@@ -404,60 +376,6 @@ class GameSessionParser {
         })
     }
 }
-
-class TeamParser {
-  static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
-    const {
-      id,
-      name,
-      trickiestAnswerIDs,
-      teamMembers,
-      score,
-      createdAt,
-      updatedAt,
-      gameSessionTeamsId,
-      teamQuestionId,
-      teamQuestionGameSessionId
-
-    } = awsTeam || {}
-
-    if (
-      isNullOrUndefined(id) ||
-      isNullOrUndefined(teamMembers) 
-     ) {
-      throw new Error("Team has null field for the attributes that are not nullable")
-    }
-    
-    const team: ITeam = {
-      id,
-      name,
-      trickiestAnswerIDs,
-      teamMembers,
-      score,
-      createdAt,
-      updatedAt,
-      gameSessionTeamsId,
-      teamQuestionId,
-      teamQuestionGameSessionId
-    }
-    return team
-  }
-
-
-  static mapTeamMembers(awsTeamMembers: Array<AWSTeamMember | null>): Array<ITeamMember> {
-    if (isNullOrUndefined(awsTeamMembers)) {
-        return []
-    }
-
-    return awsTeamMembers.map(awsTeamMember => {
-        if (isNullOrUndefined(awsTeamMember)) {
-            throw new Error("Team can't be null in the backend.")
-        }
-        return awsTeamMember as ITeamMember
-    })
-  }
-}
-
 
 function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
     return value === null || value === undefined

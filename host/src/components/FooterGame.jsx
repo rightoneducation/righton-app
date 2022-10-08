@@ -3,7 +3,7 @@ import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
 
-export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  isGameInProgress, footerButtonText, handleFooterOnClick}) {
+export default function FooterGame({numPlayers, numAnswers, phaseOneTime, phaseTwoTime,  isGameInProgress, footerButtonText, handleFooterOnClick}) {
  const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
@@ -15,7 +15,7 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
         >
            {footerButtonText}
         </Button>
-        {isGameInProgress && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
+        {isGameInProgress && <PlayersAnsweredBar numPlayers={numPlayers} numAnswers={numAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
         {isGameInProgress && <div className={classes.playerNum}>Players who have answered</div>}
         </div>
     </BottomNavigation>

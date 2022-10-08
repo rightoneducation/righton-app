@@ -9,8 +9,8 @@ export interface ITeam {
     teamMembers?: Array<ITeamMember | null> | null
     score: number
     createdAt: string
-    updatedAt?: string | null
+    updatedAt: string
     gameSessionTeamsId?: string | null
     teamQuestionId?: string | null
-    teamQuestionGameSessionId?: string | null
+    teamQuestionGameSessionId: string | null
 }

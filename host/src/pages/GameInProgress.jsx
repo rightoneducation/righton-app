@@ -15,8 +15,7 @@ export default function GameInProgress({
   currentQuestionIndex,
   phaseOneTime,
   phaseTwoTime,
-  handleUpdateGameSession,
-  teamsArray
+  handleUpdateGameSession
 }) {
   
   const classes = useStyles();
@@ -24,11 +23,8 @@ export default function GameInProgress({
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let nextState = stateArray[stateArray.indexOf(currentState) + 1];
   let statePosition;
-  let choices;
-  let answerArray;
-  let totalAnswers;
-  
   let [modalOpen, setModalOpen] = useState(false);
+ 
   const footerButtonTextDictionary =  { //dictionary used to assign button text based on the next state 
     
     //0-not started
@@ -54,6 +50,7 @@ export default function GameInProgress({
     8 : "Go to Next Question",
     9 : "Proceed to RightOn Central"
   };
+
   const handleModalClose = modalOpen =>{ //handles closing the modal by clicking outside of it or with the "Im done" text
     setModalOpen(modalOpen);
   };
@@ -63,7 +60,7 @@ export default function GameInProgress({
     setModalOpen(false);
   };
 
-  const getQuestionChoices = (questions, currentQuestionIndex) => { //returns the choices object for an individual quesiton
+  const getQuestionChoices = (questions, currentQuestionIndex) => {
     let choices;
     questions && questions.map((question, index) => {
       if (index === currentQuestionIndex)
@@ -71,36 +68,18 @@ export default function GameInProgress({
     })
     return choices;
   };
-
-  const getTotalAnswers = (answerArray) => { //finds all answers for current question using isChosen, for use in footer progress bar
+  const numAnswersFunc = (teams, questions, currentQuestionIndex) => { //finds all answers for current question using isChosen, for use in footer progress bar
     let count = 0;
-    answerArray.forEach(answerCount => {
-      count = count + answerCount;
-    });
-    return count;
-  };
+    teams && teams.map(team => {
+       team.teamMembers && team.teamMembers.items.map(teamMember => {
+        // teamMember.answers && teamMember.answers.items.map(answer => {
+        //   console.log(answer.questionId + " " + questions[currentQuestionIndex].id + " " +answer.isChosen)
+        //   if (answer.questionId === questions[currentQuestionIndex].id && answer.isChosen)
+        //     count++
+        // })
+    })})
 
-  const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { //returns an array ordered to match the order of answer choices, containing the total number of each answer
-    let choicesTextArray = [choices.length];
-    let answersArray = new Array(choices.length).fill(0);
-    let currentQuestionId = questions[currentQuestionIndex].id;
-    choices.forEach((choice,index) =>{
-      choicesTextArray[index] = choice.text;
-    });
-    teamsArray.forEach(team => {
-      team.teamMembers.items.forEach(teamMember => {
-        teamMember.answers.items.forEach(answer =>{
-         if (answer.questionId === currentQuestionId && answer.isChosen){
-            choices.forEach(choice =>{
-              if (answer.text === choice.text){
-                answersArray[choicesTextArray.indexOf(choice.text)]+=1;
-              }
-            })
-          }
-        })
-      })
-    });             
-    return answersArray;
+    return count;
   };
 
   const handleFooterOnClick = () => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
@@ -111,8 +90,6 @@ export default function GameInProgress({
       handleUpdateGameSession({currentState: GameSessionState[nextState]});
     }
   };
-
-
 
   return (
     <div className={classes.background}>
@@ -134,12 +111,12 @@ export default function GameInProgress({
           statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
         <QuestionCardDetails questions={questions} />
-        <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
+        <GameAnswers questionChoices={getQuestionChoices(questions, currentQuestionIndex)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 
       <FooterGame
         numPlayers={teams ? teams.length : 0} //need # for answer bar
-        totalAnswers={totalAnswers} //number of answers 
+        numAnswers={numAnswersFunc(teams, questions, currentQuestionIndex)} //number of answers 
         phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
         isGameInProgress={true} //flag GameInProgress vs StudentView
