@@ -1,14 +1,13 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
-import { GameSessionState } from "@righton/networking";
 
-const FooterStartGame = ({ handleUpdateGameSession }) => {
+const FooterStartGame = ({ handleStartGame }) => {
   const classes = useStyles();
   return (
     <BottomNavigation className={classes.footer}>
-      <button className={classes.startGameButton} onClick={() => 
-        handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0})}>
+      <button className={classes.startGameButton} onClick={() => {
+        handleStartGame();
+        }}>
         Start Game
       </button>
       {/* <p className={classes.clickToPair}>

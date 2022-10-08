@@ -12,26 +12,9 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
-export default function GameAnswersDropdown({ answer, explanation, correct }) {
+export default function GameAnswersDropdown({ answer, explanation, correct, numQuestionAnswers, totalAnswers }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const [progress, setProgress] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress(oldProgress => {
-        if (oldProgress === 100) {
-          return 0;
-        }
-        const diff = Math.random() * 10;
-        return Math.min(oldProgress + diff, 100);
-      });
-    }, 500);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   return (
     <Grid className={classes.choices}>
@@ -52,7 +35,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct }) {
             </Box>
             <LinearProgress
               variant="determinate"
-              value={0}
+              value={((numQuestionAnswers/totalAnswers)*100)}
               classes={{
                 colorPrimary: classes.colorPrimary,
                 barColorPrimary: classes.barColorPrimary
@@ -72,7 +55,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct }) {
         </Box>
         <CardContent className={expanded ? classes.expandedBox : classes.expandBox}>
           <Box className={correct ? classes.numAnsweredBoxRight : classes.numAnsweredBoxWrong}>
-            <Typography className={classes.numAnsweredText}>kw</Typography>
+            <Typography className={classes.numAnsweredText}> {numQuestionAnswers ? numQuestionAnswers : 0}</Typography>
           </Box>
         </CardContent>
       </Card>
