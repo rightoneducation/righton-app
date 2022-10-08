@@ -297,7 +297,7 @@ PODS:
     - React-jsi (= 0.65.1)
     - React-perflogger (= 0.65.1)
   - React-jsinspector (0.65.1)
-  - react-native-image-picker (4.10.0):
+  - react-native-image-picker (4.9.0):
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
@@ -379,7 +379,7 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNCAsyncStorage (1.17.10):
+  - RNCAsyncStorage (1.17.9):
     - React-Core
   - RNCCheckbox (0.5.12):
     - React-Core
@@ -387,7 +387,7 @@ PODS:
     - React
   - RNDeviceInfo (10.0.2):
     - React-Core
-  - RNGestureHandler (2.6.0):
+  - RNGestureHandler (2.5.0):
     - React-Core
   - RNReanimated (2.10.0):
     - DoubleConversion
@@ -416,7 +416,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.17.0):
+  - RNScreens (3.16.0):
     - React-Core
     - React-RCTImage
   - RNSVG (13.0.0):
@@ -664,7 +664,7 @@ SPEC CHECKSUMS:
   React-jsi: 12913c841713a15f64eabf5c9ad98592c0ec5940
   React-jsiexecutor: 43f2542aed3c26e42175b339f8d37fe3dd683765
   React-jsinspector: 41e58e5b8e3e0bf061fdf725b03f2144014a8fb0
-  react-native-image-picker: 4bc9ed38c8be255b515d8c88babbaf74973f91a8
+  react-native-image-picker: ebb7ad7f6ac50248989d6560e8aa07c412a32241
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
@@ -683,13 +683,13 @@ SPEC CHECKSUMS:
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
   ReactNativeAutogrowTextinput: 571f3260e200d91ea22fab160452f26d2fd5d55b
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
+  RNCAsyncStorage: b2489b49e38c85e10ed45a888d13a2a4c7b32ea1
   RNCCheckbox: ed1b4ca295475b41e7251ebae046360a703b6eb5
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
-  RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
+  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNReanimated: 297665fc9f18101ff029e80d789d65ddd34bf44a
-  RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
+  RNScreens: ee31ecdf23fe81e93c74feaa086cf173d758ab58
   RNSVG: 42a0c731b11179ebbd27a3eeeafa7201ebb476ff
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
