@@ -7,13 +7,13 @@ import {
   ApiClient,
   Environment,
   GameSessionState,
-  IGameSession,
-  ITeam
+  IGameSession
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
 import { isCompositeComponent } from "react-dom/test-utils";
 import { responsiveFontSizes } from "@material-ui/core";
+import { AMPLIFY_SYMBOL } from "@aws-amplify/pubsub/lib-esm/Providers/constants";
 
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
@@ -51,16 +51,32 @@ const GameSessionContainer = () => {
       
       
   const handleStartGame = () =>{
+    console.log(gameSession.currentState);
+    if (gameSession.currentState === "TEAMS_JOINING")
+    {
     const teamDataRequests = gameSession.teams.map(team => {
       return apiClient.getTeam(team.id);
     });
 
     Promise.all(teamDataRequests)
       .then(responses => {
-      setTeamsArray(responses);
-      handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0})
-    })
+        setTeamsArray(responses);
+        responses.forEach(teamResponse => {
+          let teamSubscription: any | null = null;
+          teamSubscription = apiClient.subscribeUpdateTeamMemberByTeamId(teamResponse.id, teamMemberResponse => {
+            console.log(teamMemberResponse);
+            //setTeamsArray(({ ...teamsArray, ...response }));
+         });
+        })
+        //handleUpdateTeamMemberByTeamId({isFacilitator: false});
+        handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
+      })
       .catch(reason => console.log(reason));
+
+ 
+    }
+    else
+      handleUpdateGameSession({currentState: GameSessionState.TEAMS_JOINING, currentQuestionIndex: 0});
   };
 
   //could update game session on line 72-73 
@@ -73,7 +89,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSession.id} handleStartGame={handleStartGame} />;
+      return <StartGame {...gameSession} gameSessionId={gameSession.id} handleStartGame={handleStartGame}/>;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:

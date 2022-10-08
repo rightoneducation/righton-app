@@ -44,12 +44,11 @@ export default function GameInProgress({
     //10-finished
 
     //put this in gameinprogress
-
-    2 : "End Answering",
+    2 : "Continue",
     3 : "Go to Results",
     4 : "Go to Phase 2",
     5 : "Start Phase 2 Question",
-    6 : "End Answering",
+    6 : "Continue",
     7 : "Go to Results",
     8 : "Go to Next Question",
     9 : "Proceed to RightOn Central"
@@ -103,15 +102,27 @@ export default function GameInProgress({
     return answersArray;
   };
 
-  const handleFooterOnClick = () => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
+  const handleFooterOnClick = (numPlayers, totalAnswers) => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
     if ( nextState === stateArray[3] || nextState === stateArray[7]){ //if teacher is ending early, pop modal, need to add about answers here
-      setModalOpen(true);
+      if (totalAnswers < numPlayers)
+        setModalOpen(true);
+      else
+        handleUpdateGameSession({currentState: GameSessionState[nextState]});
     }
     else { 
       handleUpdateGameSession({currentState: GameSessionState[nextState]});
     }
   };
 
+  const getFooterText = (numPlayers, totalAnswers, statePosition) => { //used to determine which button text to show based on the dictionary above and whether all players have answered
+    if (statePosition === 2 || statePosition === 6){
+      if(totalAnswers < numPlayers)
+        return "End Answering";
+      else 
+        return footerButtonTextDictionary[statePosition];
+    }
+    return  footerButtonTextDictionary[statePosition];
+  };
 
 
   return (
@@ -143,7 +154,7 @@ export default function GameInProgress({
         phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
         isGameInProgress={true} //flag GameInProgress vs StudentView
-        footerButtonText={footerButtonTextDictionary[statePosition]} //provides index of current state for use in footer dictionary
+        footerButtonText={getFooterText(teams ? teams.length : 0, totalAnswers, statePosition)} //provides index of current state for use in footer dictionary
         handleFooterOnClick = {handleFooterOnClick} //handler for button
       />
     </div>

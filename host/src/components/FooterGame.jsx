@@ -10,8 +10,8 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
       <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
       <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
-          className={classes.nextPhaseButton}
-          onClick={() =>  handleFooterOnClick()}
+          className={totalAnswers < numPlayers ? classes.EndAnsweringButton : classes.nextPhaseButton}
+          onClick={() =>  handleFooterOnClick(numPlayers, totalAnswers)}
         >
            {footerButtonText}
         </Button>
@@ -62,6 +62,31 @@ const useStyles = makeStyles(theme => ({
     width: "300px",
     height: "48px",
     color: "white",
+    fontSize: "20px",
+    bottom: '0',
+    fontWeight: "700",
+    lineHeight: "30px",
+    boxShadow: "0px 5px 22px 0px #47D9FF4D", 
+    "&:disabled": {
+      background: 'transparent',
+      border: '4px solid #159EFA',
+      borderRadius: '34px',
+      width: '300px',
+      height: '48px',
+      color: '#159EFA',
+      fontSize: '20px',
+      fontWeight: '700',
+      lineHeight: '30px',
+      opacity: '25%',
+      cursor: "not-allowed",
+    }
+  },
+  EndAnsweringButton: {
+    border: "4px solid #159EFA",
+    borderRadius: "34px",
+    width: "300px",
+    height: "48px",
+    color: "#159EFA",
     fontSize: "20px",
     bottom: '0',
     fontWeight: "700",
