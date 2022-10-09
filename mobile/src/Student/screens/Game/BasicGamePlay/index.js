@@ -14,9 +14,10 @@ import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
 import uuid from "react-native-uuid"
 
-const GamePreview = ({ navigation, route }) => {
-    const { gameSession, team, teamMember } = route.params
-    console.log(gameSession.phaseOneTime)
+const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
+    //const { gameSession } = route.params
+    console.log(teamMember)
+
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[
@@ -160,7 +161,13 @@ const GamePreview = ({ navigation, route }) => {
                                 showAllHints()
                                 submitAnswer(answer)
                             }}
-                            answers={answerChoices}
+                            answers={answerChoices.map((choice) => {
+                                return {
+                                    id: uuid.v4(),
+                                    text: choice,
+                                    isSelected: false,
+                                }
+                            })}
                         />
                     </Card>
                     {gameSession.isAdvanced && (

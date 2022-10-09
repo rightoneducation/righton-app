@@ -46,7 +46,7 @@ export default function StudentName({
                 getUniqueId()
                     .then((uniqueId) => {
                         global.apiClient
-                            .addTeamMemberToTeam(team.id, false, uniqueId)
+                            .addTeamMemberToTeam(team.id, true, uniqueId)
                             .then((teamMember) => {
                                 if (!teamMember) {
                                     console.error("Failed to add team member")
@@ -54,7 +54,6 @@ export default function StudentName({
                                 }
 
                                 setTeamInfo(team, teamMember)
-                                console.log("where u at?", team.teamMembers)
 
                                 navigation.navigate("StudentGameIntro", {
                                     gameSession,

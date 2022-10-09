@@ -77,14 +77,24 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
+                        <Stack.Screen name="BasicGamePlay">
+                            {(props) => (
+                                <BasicGamePlay
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
                         <Stack.Screen
                             name="PregameCountDown"
                             component={PregameCountDown}
                         />
-                        <Stack.Screen
+                        {/* <Stack.Screen
                             name="BasicGamePlay"
                             component={BasicGamePlay}
-                        />
+                        /> */}
                         <Stack.Screen
                             name="GamePreview"
                             component={GamePreview}
