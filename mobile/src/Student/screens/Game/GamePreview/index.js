@@ -16,7 +16,7 @@ import uuid from "react-native-uuid"
 
 const GamePreview = ({ navigation, route }) => {
     const { gameSession, team, teamMember } = route.params
-    console.log(gameSession.phaseOneTime)
+
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[
@@ -26,7 +26,7 @@ const GamePreview = ({ navigation, route }) => {
           ]
     const availableHints = question.instructions
 
-    const [countdown, setCountdown] = useState(gameSession.phaseOneTime)
+    const [countdown, setCountdown] = useState(300)
     const [progress, setProgress] = useState(1)
     const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
     const [hints, setHints] = useState([availableHints[0]])
@@ -43,7 +43,6 @@ const GamePreview = ({ navigation, route }) => {
             setShowTrickAnswersHint(
                 countdown <= totalNoSecondsLeftForShowingHints
             )
-            console.log(countdown)
         }, 1000)
 
         const subscription = apiClient.subscribeUpdateGameSession(
@@ -108,22 +107,6 @@ const GamePreview = ({ navigation, route }) => {
         }
     }
 
-    const answersParsed = JSON.parse(question.choices)
-
-    const answerChoices = answersParsed.map((choice) => {
-        return choice.text
-    })
-
-    console.log("answersParsed", answersParsed)
-    console.log("answerChoices", answerChoices)
-
-    // const answerOptions = question.choices.split('","').map((choice, index) => {
-    //   return choice.replace(/"/g, "");
-    //   // id: uuid.v4(),
-    //   // text: choice,
-    //   // isSelected: false
-    // });
-
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -132,7 +115,7 @@ const GamePreview = ({ navigation, route }) => {
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-                <Text style={styles.headerText}>Trick Your Class!</Text>
+                <Text style={styles.headerText}>Answer The Question</Text>
                 <View style={styles.timerContainer}>
                     <Progress.Bar
                         style={styles.timerProgressBar}
@@ -155,12 +138,29 @@ const GamePreview = ({ navigation, route }) => {
                     <Card headerTitle="Trick Answers">
                         <TrickAnswers
                             isAdvancedMode={gameSession.isAdvanced}
-                            isFacilitator={teamMember?.isFacilitator}
+                            isFacilitator={teamMember.isFacilitator}
                             onAnswered={(answer) => {
                                 showAllHints()
                                 submitAnswer(answer)
                             }}
-                            answers={answerChoices}
+                            answers={
+                                gameSession.isAdvanced
+                                    ? []
+                                    : [
+                                          ...question.wrongAnswers.map(
+                                              (a) => a.wrongAnswer
+                                          ),
+                                          question.answer,
+                                      ].map((a) => {
+                                          return {
+                                              id: uuid.v4(),
+                                              text: a,
+                                              isSelected: false,
+                                              isCorrectAnswer:
+                                                  a == question.answer,
+                                          }
+                                      })
+                            }
                         />
                     </Card>
                     {gameSession.isAdvanced && (

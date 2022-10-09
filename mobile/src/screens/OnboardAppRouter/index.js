@@ -22,7 +22,7 @@ export default function OnboardAppRouter({
                 teamMember,
             })
         } else if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
-            navigation.navigate("GamePreview", {
+            navigation.navigate("BasicGamePlay", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),
                 teamMember,

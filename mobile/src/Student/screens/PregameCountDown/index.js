@@ -30,7 +30,7 @@ const PregameCountDown = ({ navigation, route }) => {
                         gameSession.currentState ===
                         GameSessionState.CHOOSE_CORRECT_ANSWER
                     ) {
-                        navigation.navigate("GamePreview", route.params)
+                        navigation.navigate("BasicGamePlay", route.params)
                     } else {
                         navigation.navigate("GamePlay", route.params)
                     }
