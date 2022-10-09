@@ -7,5 +7,5 @@ export interface ITeamMember {
     deviceId?: string | null
     createdAt?: string | null
     updatedAt?: string | null
-    teamTeamMembersId?: string | null,
+    teamTeamMembersId?: string | null
 }

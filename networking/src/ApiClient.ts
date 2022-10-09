@@ -16,12 +16,12 @@ import {
     UpdateGameSessionInput,
     UpdateGameSessionMutation,
     UpdateGameSessionMutationVariables,
-    OnTeamMemberUpdateByTeamIdSubscription
+    OnUpdateTeamMemberSubscription
 } from './AWSMobileApi'
 import { createTeam, createTeamAnswer, createTeamMember, updateGameSession } from './graphql/mutations'
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { getGameSession, getTeam, gameSessionByCode, onGameSessionUpdatedById, onTeamMemberUpdateByTeamId } from './graphql'
+import { getGameSession, getTeam, gameSessionByCode, onGameSessionUpdatedById, onUpdateTeamMember} from './graphql'
 import awsconfig from "./aws-exports"
 import { ITeam } from './Models/ITeam'
 import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
@@ -108,21 +108,6 @@ export class ApiClient implements IApiClient {
         return this.mapUpdateGameSessionMutation(result.data)
     }
 
-  //   async updateTeamMemberByTeamId(awsGameSessionInput: UpdateGameSessionInput): Promise<ITeamMember> {
-  //     let updateGameSessionInput: UpdateGameSessionInput = awsGameSessionInput
-  //     let variables: UpdateGameSessionMutationVariables = { input: updateGameSessionInput }
-  //     let result = await this.callGraphQL<UpdateGameSessionMutation>(updateGameSession, variables)
-  //     if (result.errors != null) {
-  //         throw new Error(`failed to update game session: ${result.errors}`)
-  //     }
-
-  //     if (result.data == null) {
-  //         throw new Error("Failed to update the game session")
-  //     }
-
-  //     return this.mapUpdateGameSessionMutation(result.data)
-  //  }
-
     subscribeUpdateGameSession(id: string, callback: (result: IGameSession) => void) {
         return this.subscribeGraphQL<OnGameSessionUpdatedByIdSubscription>({
             query: onGameSessionUpdatedById,
@@ -135,14 +120,14 @@ export class ApiClient implements IApiClient {
         })
     }
 
-    subscribeUpdateTeamMemberByTeamId(id: string, callback: (result: ITeamMember) => void) {
-      return this.subscribeGraphQL<OnTeamMemberUpdateByTeamIdSubscription>({
-          query: onTeamMemberUpdateByTeamId,
+    subscribeUpdateTeamMember(id: string, callback: (result: ITeamMember) => void) {
+      return this.subscribeGraphQL<OnUpdateTeamMemberSubscription>({
+          query: onUpdateTeamMember,
           variables: {
-              teamId: id
+              id: id
           }
-      }, (value: OnTeamMemberUpdateByTeamIdSubscription) => {
-          let teamMember = this.mapOnTeamMemberUpdatedByTeamIdSubscription(value)
+      }, (value: OnUpdateTeamMemberSubscription) => {
+          let teamMember = this.mapOnUpdateTeamMemberSubscription(value)
           callback(teamMember)
       })
     }
@@ -234,8 +219,8 @@ export class ApiClient implements IApiClient {
         return GameSessionParser.gameSessionFromSubscriptionById(subscription)
     }
 
-    private mapOnTeamMemberUpdatedByTeamIdSubscription(subscription: OnTeamMemberUpdateByTeamIdSubscription): ITeamMember {
-      return TeamMemberParser.teamMemberFromSubscriptionByTeamId(subscription)
+    private mapOnUpdateTeamMemberSubscription(subscription: OnUpdateTeamMemberSubscription): ITeamMember {
+      return TeamMemberParser.teamMemberFromTeamMemberSubscription(subscription)
     }
 }
 
@@ -294,9 +279,9 @@ type AWSTeamMember= {
   id: string,
   isFacilitator?: boolean | null,
   answers?: Array<ITeamAnswer> | null,
-  deviceId: string | null,
-  createdAt: string | null,
-  updatedAt: string | null,
+  deviceId?: string | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
   teamTeamMembersId?: string | null,
 }
 
@@ -482,13 +467,13 @@ class TeamParser {
 
 class TeamMemberParser{
 
-  static teamMemberFromSubscriptionByTeamId(subscription: OnTeamMemberUpdateByTeamIdSubscription): ITeamMember {
-    const updateTeamMember = subscription.onTeamMemberUpdateByTeamId
+  static teamMemberFromTeamMemberSubscription(subscription: OnUpdateTeamMemberSubscription): ITeamMember {
+    const updateTeamMember = subscription.onUpdateTeamMember
     if (isNullOrUndefined(updateTeamMember)) {
         throw new Error("subscription.onUpdateGameSession can't be null.")
     }
     //@ts-ignore
-    return this.teamMemberFromAWSGameSession(updateTeamMember)
+    return this.teamMemberFromAWSTeamMember(updateTeamMember)
   }
 
   static teamMemberFromAWSTeamMember(awsTeamMember: AWSTeamMember): ITeamMember {
@@ -505,8 +490,8 @@ class TeamMemberParser{
 
     if (
       isNullOrUndefined(id) ||
-      isNullOrUndefined(answers) ||
       isNullOrUndefined(teamTeamMembersId)
+
      ) {
       throw new Error("Team member has null field for the attributes that are not nullable")
     }
