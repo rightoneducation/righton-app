@@ -21,28 +21,18 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const [question, setQuestion] = useState({
     text: '',
     imageUrl: '',
-    answer: '',
-    wrongAnswers: [{ choice: "", explanation: "" }, { choice: "", explanation: "" }, { choice: "", explanation: "" }],
-    instructions: [],
+    choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '' }, { text: '', reason: '' }, { text: '', reason: '' }],
     grade: null,
     domain: null,
     cluster: null,
     standard: null,
   });
 
-  const choices = useMemo(() => (
-    question.choices ? JSON.parse(question.choices) : []
-  ), [question.choices]);
-
-  // Parses through JSON string of instructions and wrong answer objects (wrong answers and reasons) twice because of how it is saved on backend (turns data into a string twice so needs to be parsed twice)
+  // overrides default new question state if an original state is given
   useEffect(() => {
     if (originalQuestion) {
-      if (originalQuestion.instructions !== null && originalQuestion.instructions !== [] && typeof originalQuestion.instructions === 'string') {
-        originalQuestion.instructions = JSON.parse(originalQuestion.instructions);
-      }
-      if (originalQuestion.wrongAnswers !== null && originalQuestion.wrongAnswers !== [] && typeof originalQuestion.wrongAnswers === 'string') {
-        originalQuestion.wrongAnswers = JSON.parse(originalQuestion.wrongAnswers);
-      }
+      const copyOfOriginal = { ...originalQuestion }
+      copyOfOriginal.choices = JSON.parse(choices)
       setQuestion(originalQuestion);
     }
   }, [originalQuestion]);
@@ -62,18 +52,18 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
-    const newChoices = [...choices];
-    newChoices[wrongAnswersIndex].text = currentTarget.value;
+  const onChoiceTextChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
+    const newChoices = [...question.choices];
+    newChoices[choiceIndex].text = currentTarget.value;
     setQuestion({ ...question, choices: newChoices });
-  }, [choices, question, setQuestion]);
+  }, [question, setQuestion]);
 
   // When the wrong answer reasoning is changed/update this function handles that change
-  const onChoiceReasonChangeMaker = useCallback((wrongAnswersIndex) => ({ currentTarget }) => {
-    const newChoices = [...choices];
-    newChoices[wrongAnswersIndex].reason = currentTarget.value;
+  const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
+    const newChoices = [...question.choices];
+    newChoices[choiceIndex].reason = currentTarget.value;
     setQuestion({ ...question, choices: newChoices });
-  }, [choices, question, setQuestion]);
+  }, [question, setQuestion]);
 
   // Handles grade, domain, cluster, or standard change/update
   const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
@@ -83,11 +73,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const handleSaveQuestion = async (question) => {
     if (question.text == null || question.text === "") {
       window.alert("Please enter a question");
-      return;
-    }
-
-    if (question.answer == null || question.answer === "") {
-      window.alert("Please enter an answer");
       return;
     }
 
@@ -105,15 +90,20 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       return;
     }
 
-    if (question.instructions != null && question.instructions !== []) question.instructions = JSON.stringify(question.instructions);
-
-    if (question.wrongAnswers != null && question.wrongAnswers !== []) question.wrongAnswers = JSON.stringify(question.wrongAnswers);
+    const questionToSend = { ...question }
+    question.text = JSON.stringify(question.text)
+    questionToSend.choices = questionToSend.choices.map(({ text, reason, ...other }) => ({
+      text: JSON.stringify(text),
+      reason: JSON.stringify(reason),
+      ...other
+    }))
+    questionToSend.choices = JSON.stringify(questionToSend.choices)
 
     let newQuestion;
-    if (question.id) {
-      newQuestion = await updateQuestion(question);
+    if (questionToSend.id) {
+      newQuestion = await updateQuestion(questionToSend);
     } else {
-      newQuestion = await cloneQuestion(question);
+      newQuestion = await cloneQuestion(questionToSend);
       gameQuestion(newQuestion);
     }
     history.push(`/gamemaker/:gameId`);
@@ -149,7 +139,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
           <Divider className={classes.divider} />
 
           <Grid item container xs={12}>
-            {choices.sort((a, b) => Number(b.isAnswer) - Number(a.isAnswer)).map((choice, index) => (
+            {question.choices.sort((a, b) => Number(b.isAnswer) - Number(a.isAnswer)).map((choice, index) => (
               <QuestionFormAnswerDropdown
                 key={`choice${index}`}
                 index={index}
