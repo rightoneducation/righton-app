@@ -8,18 +8,18 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
+        if (gameSession) {
+            storeGameSessionLocal()
+        }
+
         loadLocalGameSession().then((localGameSession) => {
             if (localGameSession) {
-                console.log("local game session", localGameSession)
                 setGameSession(localGameSession.gameSession)
                 setTeamId(localGameSession.teamId)
                 setTeamMember(localGameSession.teamMember)
                 setGameCode(localGameSession.gameCode)
             }
         })
-        if (gameSession) {
-            storeGameSessionLocal()
-        }
     }, [])
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const GameSessionContainer = ({ children }) => {
                     currentState: gameSession?.currentState,
                 })
             )
-            console.log("stored game session locally", localGameSession)
+            console.log("stored new game session locally:", localGameSession)
         } catch (error) {
             // There was an error on the native side
             console.log("error storing game session", error)
@@ -74,7 +74,10 @@ const GameSessionContainer = ({ children }) => {
             const value = await EncryptedStorage.getItem("localGameSession")
             if (value !== null) {
                 // We have data!!
-                console.log("local game session orig", value)
+                console.log(
+                    "loaded existing game session from local storage:",
+                    value
+                )
                 return JSON.parse(value)
             }
         } catch (error) {

@@ -60,7 +60,7 @@ const GamePreview = ({ navigation, team, gameSession, teamMember }) => {
             clearInterval(countdown.current)
             subscription.unsubscribe()
         }
-    }, [currentTime])
+    })
 
     const navigateToNextScreen = () => {
         navigation.navigate("Leadership", {
