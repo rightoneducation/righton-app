@@ -88,16 +88,12 @@ const AppContainer = () => {
                             )}
                         </Stack.Screen>
                         <Stack.Screen
-                            name="PregameCountDown"
-                            component={PregameCountDown}
-                        />
-                        {/* <Stack.Screen
-                            name="BasicGamePlay"
-                            component={BasicGamePlay}
-                        /> */}
-                        <Stack.Screen
                             name="GamePreview"
                             component={GamePreview}
+                        />
+                        <Stack.Screen
+                            name="PregameCountDown"
+                            component={PregameCountDown}
                         />
                         <Stack.Screen
                             name="Leadership"

@@ -14,7 +14,7 @@ import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
 import uuid from "react-native-uuid"
 
-const GamePreview = ({ navigation, team, gameSession, teamMember }) => {
+const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[

@@ -8,9 +8,7 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
-        if (gameSession) {
-            storeGameSessionLocal()
-        }
+        //removeGameSessionLocal()
 
         loadLocalGameSession().then((localGameSession) => {
             if (localGameSession) {
@@ -50,6 +48,12 @@ const GameSessionContainer = ({ children }) => {
         return () => subscription?.unsubscribe()
     }, [gameCode])
 
+    useEffect(() => {
+        if (gameSession) {
+            storeGameSessionLocal()
+        }
+    }, [gameSession])
+
     async function storeGameSessionLocal() {
         try {
             const localGameSession = await EncryptedStorage.setItem(
@@ -83,6 +87,16 @@ const GameSessionContainer = ({ children }) => {
         } catch (error) {
             // Error retrieving data
             console.log("error loading game session", error)
+        }
+    }
+
+    async function removeGameSessionLocal() {
+        try {
+            await EncryptedStorage.removeItem("localGameSession")
+        } catch (error) {
+            // There was an error on the native side
+            // You can find out more about this error by using the `error.code` property
+            console.log(error.code) // ex: -25300 (errSecItemNotFound)
         }
     }
 

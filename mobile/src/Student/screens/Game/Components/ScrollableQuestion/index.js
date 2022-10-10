@@ -1,8 +1,8 @@
-import React from 'react'
-import { StyleSheet, Text, ScrollView, Image, View } from 'react-native'
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
-import { fontFamilies, fonts } from '../../../../../utils/theme'
-import Question from '../Question'
+import React from "react"
+import { StyleSheet, Text, ScrollView, Image, View } from "react-native"
+import { scale, moderateScale, verticalScale } from "react-native-size-matters"
+import { fontFamilies, fonts } from "../../../../../utils/theme"
+import Question from "../Question"
 
 const ScrollableQuestion = ({ question }) => {
     return (
@@ -19,6 +19,6 @@ export default ScrollableQuestion
 
 const styles = StyleSheet.create({
     container: {
-        alignContent: 'center'
+        alignContent: "center",
     },
 })
