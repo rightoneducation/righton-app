@@ -18,25 +18,23 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
 
-  const [question, setQuestion] = useState({
-    text: '',
-    imageUrl: '',
-    choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '' }, { text: '', reason: '' }, { text: '', reason: '' }],
-    grade: null,
-    domain: null,
-    cluster: null,
-    standard: null,
-  });
-
-  // overrides default new question state if an original state is given
-  useEffect(() => {
+  const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
       const copyOfOriginal = { ...originalQuestion }
-      copyOfOriginal.choices = JSON.parse(choices)
-      setQuestion(originalQuestion);
+      copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
+      return copyOfOriginal
     }
-  }, [originalQuestion]);
 
+    return {
+      text: '',
+      imageUrl: '',
+      choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '' }, { text: '', reason: '' }, { text: '', reason: '' }],
+      grade: null,
+      domain: null,
+      cluster: null,
+      standard: null,
+    }
+  });
 
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
@@ -91,12 +89,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
 
     const questionToSend = { ...question }
-    question.text = JSON.stringify(question.text)
-    questionToSend.choices = questionToSend.choices.map(({ text, reason, ...other }) => ({
-      text: JSON.stringify(text),
-      reason: JSON.stringify(reason),
-      ...other
-    }))
     questionToSend.choices = JSON.stringify(questionToSend.choices)
 
     let newQuestion;
