@@ -9,7 +9,7 @@ export default function GameAnswers({ questionChoices, answersByQuestion, totalA
   return (
     <Grid className={classes.background}>
     {questionChoices.map((choice,index) => {
-      return (<GameAnswersDropdown answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} />)
+      return (<GameAnswersDropdown key={index} answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} />)
     })}
     </Grid>
   );

@@ -1,18 +1,17 @@
 import React from "react";
+import Button from "@material-ui/core/Button";
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 
 const FooterStartGame = ({ handleStartGame }) => {
   const classes = useStyles();
+  
   return (
     <BottomNavigation className={classes.footer}>
-      <button className={classes.startGameButton} onClick={() => {
-        handleStartGame();
-        }}>
+    <div>
+      <Button className={classes.startGameButton} onClick={() => handleStartGame()}>
         Start Game
-      </button>
-      {/* <p className={classes.clickToPair}>
-        Got a desktop and projector? Click here to pair it!
-      </p> */}
+      </Button>
+      </div>
     </BottomNavigation>
   );
 };

@@ -45,17 +45,12 @@ const GameSessionContainer = () => {
       });
   };
 
-  // to do
-  // for each team in this array, set up a subscription by the team id  using a foreach loop
-  // do this by calling subscribeUpdateTeamMember and supplying a callback 
-  // updating the state here for the one teammember
-
   const handleTimerFinished = () =>{
     handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
   }
       
   const handleStartGame = () =>{
-    console.log(gameSession.currentState);  //I'm keeping this in unti
+    console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
     setIsTimerActive(true);
     document.body.style.overflow = "hidden"
     setIsModalOpen(true);
@@ -68,10 +63,6 @@ const GameSessionContainer = () => {
 
       Promise.all(teamDataRequests)
         .then(responses => {
-            
-
-            //~~~~~~~~~~~~~~~~subscription when AWS stuff is confirmed~~~~~~~~~~~~~~~~~
-            //use responses for subscriptions and useeffect for update
             responses.forEach(response => {
             let teamMemberSubscription: any | null = null;
               teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
@@ -82,21 +73,9 @@ const GameSessionContainer = () => {
                     }
                   })
                 }); 
-                console.log(response);
               });
             });
-
-            //----testing subscription handling-----, get test object
-            // -----subscription response -> teamMember object
-            // const sampleSubResponse =  JSON.parse(JSON.stringify(responses[0].teamMembers.items[0])); 
-            // sampleSubResponse.answers.items[0].isChosen = false; //change test object
-
-            //put subscriptions here so if they change it updates before the teamsarray is set
-
-            // end testing
             setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
-          //if(!isTimerActive)
-           // handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
         })
         .catch(reason => console.log(reason));
     }
@@ -104,9 +83,6 @@ const GameSessionContainer = () => {
       handleUpdateGameSession({currentState: GameSessionState.TEAMS_JOINING, currentQuestionIndex: 0});
   };
 
-  //could update game session on line 72-73 
-
- 
   if (!gameSession) {
     return null;
   };

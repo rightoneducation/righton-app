@@ -27,6 +27,7 @@ export default function GameInProgress({
   let choices;
   let answerArray;
   let totalAnswers;
+
   
   let [modalOpen, setModalOpen] = useState(false);
   const footerButtonTextDictionary =  { //dictionary used to assign button text based on the next state 

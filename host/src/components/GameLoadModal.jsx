@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import Modal from 'react-modal';
 import RadialLoaderImage from '../images/RadialLoaderImage.svg';
 
@@ -38,7 +37,6 @@ export default function GameLoadModal({ handleModalClose, modalOpen, countdown})
               background: 'linear-gradient(#483a82 0%, #7962c4 30%,  #483a82 100%)'
             }
             }}
-            //onRequestClose={() => handleModalClose(false)}
             appElement={document.getElementById('root') || undefined}
            >
            <div className={classes.counterContainer}> {/*loader + text*/} 
