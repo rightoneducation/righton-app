@@ -24,10 +24,12 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
           ]
     const availableHints = question.instructions
 
-    const phaseTime = gameSession?.phaseOneTime
+    const phaseTime = gameSession?.phaseOneTime ?? 300
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
+    const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
+    const [hints, setHints] = useState([availableHints[0]])
 
     let countdown = useRef()
 

@@ -24,7 +24,7 @@ const PregameCountDown = ({ navigation, route }) => {
                 radius={Dimensions.get("window").width / 2 - scale(30) * 2}
                 shouldShowCountdown={true}
                 fontSize={scale(100)}
-                timerStartInSecond={5}
+                timerStartInSecond={3}
                 onTimerFinished={() => {
                     if (
                         gameSession.currentState ===

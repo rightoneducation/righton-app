@@ -17,14 +17,14 @@ const StudentGameIntro = ({ navigation, route, gameSession }) => {
                 // TODO: remove this and add it to your GameSessionContainer
                 // there will be many current state -> navigation changes
                 // you can remove the route params, pass the gameSession in from the screen props
-                if (
-                    gameSession?.currentState ===
-                    GameSessionState.CHOOSE_CORRECT_ANSWER
-                ) {
-                    navigation.navigate("PregameCountDown", {
-                        gameSession,
-                    })
-                }
+                // if (
+                //     gameSession?.currentState ===
+                //     GameSessionState.CHOOSE_CORRECT_ANSWER
+                // ) {
+                //     navigation.navigate("PregameCountDown", {
+                //         gameSession,
+                //     })
+                // }
             }
         )
         return () => subscription.unsubscribe()
