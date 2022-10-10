@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
+import GameLoadModal from "../components/GameLoadModal";
 
 export default function StartGame({
   teams = [],
@@ -12,12 +13,34 @@ export default function StartGame({
   gameSessionId,
   gameCode,
   currentState,
-  handleStartGame
+  handleStartGame,
+  isTimerActive,
+  isModalOpen,
+  handleTimerFinished
 }) {
   const classes = useStyles();
+  const [countdown, setCountdown] = useState(3);
+  
+
+  useEffect(() => {
+    let timer= null;
+    if (isTimerActive){
+        if (countdown > 0){
+          timer = setInterval(() => {
+               setCountdown(countdown - 1);
+           }, 1000);
+        }
+        else
+          handleTimerFinished();
+    }
+    return () => {
+      clearInterval(timer);
+    };
+  });
 
   return (
     <div className={classes.background}>
+      <GameLoadModal modalOpen={isModalOpen} countdown={countdown}/>
       <div>
         <HostHeader gameCode={gameCode} currentState={currentState} />
         <GameCard questions={questions} title={title} />

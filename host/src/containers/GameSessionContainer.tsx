@@ -18,7 +18,8 @@ import { AMPLIFY_SYMBOL } from "@aws-amplify/pubsub/lib-esm/Providers/constants"
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
-  
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
@@ -48,12 +49,19 @@ const GameSessionContainer = () => {
   // for each team in this array, set up a subscription by the team id  using a foreach loop
   // do this by calling subscribeUpdateTeamMember and supplying a callback 
   // updating the state here for the one teammember
-  
+
+  const handleTimerFinished = () =>{
+    handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
+  }
       
   const handleStartGame = () =>{
     console.log(gameSession.currentState);  //I'm keeping this in unti
+    setIsTimerActive(true);
+    document.body.style.overflow = "hidden"
+    setIsModalOpen(true);
     if (gameSession.currentState === "TEAMS_JOINING")
     {
+    
       const teamDataRequests = gameSession.teams.map(team => {
         return apiClient.getTeam(team.id);
       });
@@ -86,9 +94,9 @@ const GameSessionContainer = () => {
             //put subscriptions here so if they change it updates before the teamsarray is set
 
             // end testing
-            
             setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
-          handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
+          //if(!isTimerActive)
+           // handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
         })
         .catch(reason => console.log(reason));
     }
@@ -106,7 +114,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSession.id} handleStartGame={handleStartGame}/>;
+      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleTimerFinished={handleTimerFinished} handleStartGame={handleStartGame}/>;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
