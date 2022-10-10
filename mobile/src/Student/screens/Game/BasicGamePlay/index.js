@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { StyleSheet, Text, View, Dimensions, SafeAreaView } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { scale, moderateScale, verticalScale } from "react-native-size-matters"
@@ -14,10 +14,7 @@ import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
 import uuid from "react-native-uuid"
 
-const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
-    //const { gameSession } = route.params
-    console.log(teamMember)
-
+const GamePreview = ({ navigation, team, gameSession, teamMember }) => {
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[
@@ -27,24 +24,24 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
           ]
     const availableHints = question.instructions
 
-    const [countdown, setCountdown] = useState(gameSession.phaseOneTime)
+    const phaseTime = gameSession?.phaseOneTime
+
+    const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
-    const [hints, setHints] = useState([availableHints[0]])
+
+    let countdown = useRef()
 
     useEffect(() => {
-        if (countdown == 0) {
+        if (currentTime == 0) {
             navigateToNextScreen()
             return
         }
-        const totalNoSecondsLeftForShowingHints = 295
-        var refreshIntervalId = setInterval(() => {
-            setCountdown(countdown - 1)
-            setProgress(countdown / 300)
-            setShowTrickAnswersHint(
-                countdown <= totalNoSecondsLeftForShowingHints
-            )
-            console.log(countdown)
+
+        countdown.current = setInterval(() => {
+            if (currentTime > 0) {
+                setCurrentTime(currentTime - 1)
+            }
+            setProgress(currentTime / phaseTime)
         }, 1000)
 
         const subscription = apiClient.subscribeUpdateGameSession(
@@ -60,10 +57,10 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
         )
 
         return () => {
-            clearInterval(refreshIntervalId)
+            clearInterval(countdown.current)
             subscription.unsubscribe()
         }
-    })
+    }, [currentTime])
 
     const navigateToNextScreen = () => {
         navigation.navigate("Leadership", {
@@ -115,16 +112,6 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
         return choice.text
     })
 
-    console.log("answersParsed", answersParsed)
-    console.log("answerChoices", answerChoices)
-
-    // const answerOptions = question.choices.split('","').map((choice, index) => {
-    //   return choice.replace(/"/g, "");
-    //   // id: uuid.v4(),
-    //   // text: choice,
-    //   // isSelected: false
-    // });
-
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -143,8 +130,8 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
                         width={Dimensions.get("window").width - scale(90)}
                     />
                     <Text style={styles.timerText}>
-                        {Math.floor(countdown / 60)}:
-                        {("0" + Math.floor(countdown % 60)).slice(-2)}
+                        {Math.floor(currentTime / 60)}:
+                        {("0" + Math.floor(currentTime % 60)).slice(-2)}
                     </Text>
                 </View>
             </LinearGradient>
