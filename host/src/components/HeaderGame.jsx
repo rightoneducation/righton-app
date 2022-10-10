@@ -76,7 +76,7 @@ export default function HeaderGame({
   phaseOneTime,
   phaseTwoTime,
   gameInProgress,
-  statePosition
+  statePosition,
 }) {
   const classes = useStyles();
   const totalRoundTime = chooseTotalRoundTime(

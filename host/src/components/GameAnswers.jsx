@@ -4,13 +4,12 @@ import { Grid } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
 import { ChatBubbleOutlineSharp } from "@material-ui/icons";
 
-export default function GameAnswers({ questionChoices }) {
+export default function GameAnswers({ questionChoices, answersByQuestion, totalAnswers}) {
   const classes = useStyles();
-
   return (
     <Grid className={classes.background}>
-    {questionChoices.map(choice => {
-      return (<GameAnswersDropdown answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} />)
+    {questionChoices.map((choice,index) => {
+      return (<GameAnswersDropdown key={index} answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} />)
     })}
     </Grid>
   );

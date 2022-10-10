@@ -4,8 +4,8 @@ export interface ITeamMember {
     id: string
     isFacilitator?: boolean | null
     answers?: Array<ITeamAnswer | null> | null
-    deviceId: string
-    createdAt: string
-    updatedAt: string
-    teamTeamMembersId?: string | null,
+    deviceId?: string | null
+    createdAt?: string | null
+    updatedAt?: string | null
+    teamTeamMembersId?: string | null
 }

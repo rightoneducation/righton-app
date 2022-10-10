@@ -6,14 +6,14 @@ const CurrentStudents = ({ teams }) => {
   const classes = useStyles();
   return (
     <div>
-      <Grid className={classes.studentCount}>{teams ? teams.length : 0}</Grid>
+     <Grid className={classes.studentCount}>{teams ? teams.length : 0}</Grid>
       <div className={classes.inSessionDiv}>
         <p className={classes.inSession}>Students in Session</p>
       </div>
       <hr className={classes.hr} />
       {teams &&
         teams.map((team, id) => (
-          <MenuItem container className={classes.studentCards} key={id}>
+          <MenuItem className={classes.studentCards} key={id}>
             <Grid className={classes.name}>{team.name}</Grid>
           </MenuItem>
         ))}
