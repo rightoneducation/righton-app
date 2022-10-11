@@ -20,7 +20,6 @@ import SignIn from "../Auth/screens/SignIn"
 import SignUp from "../Auth/screens/SignUp"
 import PersonalDetails from "../Auth/screens/PersonalDetails"
 import ConfirmAccount from "../Auth/screens/ConfirmAccount"
-import EnterInfo from "../Student/screens/EnterInfo"
 import GameSessionContainer from "../containers/GameSessionContainer"
 
 const Stack = createStackNavigator()
@@ -120,7 +119,7 @@ const AppContainer = () => {
                         />
                         <Stack.Screen name="SignIn" component={SignIn} />
                         <Stack.Screen name="SignUp" component={SignUp} />
-                        <Stack.Screen name="EnterInfo" component={EnterInfo} />
+
                         <Stack.Screen
                             name="ConfirmAccount"
                             component={ConfirmAccount}
