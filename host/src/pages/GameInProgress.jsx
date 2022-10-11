@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCardDetails from "../components/QuestionCardDetails";
+import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import { GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
+
 
 export default function GameInProgress({
   teams,
@@ -146,7 +147,7 @@ export default function GameInProgress({
           gameInProgress={true}
           statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
-        <QuestionCardDetails questions={questions} />
+        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].image} />
         <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 

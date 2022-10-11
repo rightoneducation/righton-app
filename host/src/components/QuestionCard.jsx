@@ -67,18 +67,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function QuestionCard({
   question,
-  hint,
   image
 }) {
+
+  console.log(question, image);
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [stat, setStat] = useState(0);
   const hideaway = ["Show More", "Show Less"];
   const box = [<AddBox />, <IndeterminateCheckBox />];
-
-  const fromJson = (json) => {
-    return json.slice(2, json.length - 2);
-  }
 
   const handleExpandClick = () => {
     if (expanded === true) {
@@ -94,7 +91,6 @@ export default function QuestionCard({
     <Grid container className={classes.centerContent}>
       <Card className={classes.QuestionCard} style={{ borderRadius: "18px" }}>
         <CardContent className={classes.content}>
-          <Typography className={classes.fontStyle}>{fromJson(hint)}</Typography>
           <Typography className={classes.questionStyle}>{question}</Typography>
         </CardContent>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
