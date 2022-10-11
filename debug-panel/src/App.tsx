@@ -146,6 +146,15 @@ function App() {
       >
         Rankings
       </Button>
+      <Button
+        variant="contained"
+        color='secondary'
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.FINISHED)
+        }}
+      >
+        Finished
+      </Button>
       <TextField
         value={gameCode}
         label="Outlined"
