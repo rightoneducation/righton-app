@@ -50,7 +50,8 @@ const GameSessionContainer = ({ children }) => {
         if (gameSession) {
             storeGameSessionLocal()
         }
-        if (gameSession?.currentState === "CHOOSING_TRICKIEST_ANSWER") {
+        //clear local storage when the game is finished
+        if (gameSession?.currentState === "FINISHED") {
             removeGameSessionLocal()
         }
     }, [gameSession])
