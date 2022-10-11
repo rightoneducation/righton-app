@@ -48,6 +48,7 @@ export default function StartGame({
         <CurrentStudents teams={teams} />
       </div>
       <FooterStartGame
+        teamsLength={(teams ? teams.length:0)}
         gameSessionId={gameSessionId}
         currentState={currentState}
         handleStartGame={handleStartGame}

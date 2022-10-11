@@ -52,9 +52,9 @@ const GameSessionContainer = () => {
   const handleStartGame = () =>{
     console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
     setIsTimerActive(true);
-    document.body.style.overflow = "hidden"
+    document.body.style.overflow = "hidden";
     setIsModalOpen(true);
-    if (gameSession.currentState === "TEAMS_JOINING")
+    if (gameSession.currentState === "TEAMS_JOINING" || gameSession.currentState === "NOT_STARTED" )
     {
     
       const teamDataRequests = gameSession.teams.map(team => {
