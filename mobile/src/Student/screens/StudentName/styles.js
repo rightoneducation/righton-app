@@ -1,5 +1,5 @@
 import { scale, ScaledSheet } from 'react-native-size-matters'
-import { colors, fonts, fontFamilies } from '../../../utils/theme'
+import { colors, fontFamilies, fonts } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   container: {
@@ -8,7 +8,7 @@ export default ScaledSheet.create({
   },
   innerContainer: {
     alignContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   input: {
     color: colors.primary,
@@ -20,6 +20,7 @@ export default ScaledSheet.create({
     paddingHorizontal: '24@vs',
     marginHorizontal: 10,
     marginBottom: 13,
+    width: '50%'
   },
   title: {
     color: colors.white,
@@ -29,11 +30,11 @@ export default ScaledSheet.create({
     fontFamily: fontFamilies.montserratBold,
   },
   entryContainer: {
-    alignSelf: 'center',
-    //width: scale(265)
+    margin: scale(20)
   },
   inputContainer: {
     flexDirection: 'row',
+    width: '100%'
   },
   enterButton: {
     backgroundColor: colors.buttonPrimary,

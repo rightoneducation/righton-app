@@ -134,3 +134,5 @@ export default function StudentName({
         </Fragment>
     )
 }
+
+export default StudentName

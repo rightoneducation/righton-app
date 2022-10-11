@@ -1,0 +1,15 @@
+{
+  "short_name": "Right On",
+  "name": "Right On Game Management App",
+  "icons": [
+    {
+      "src": "icong.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#30285b"
+}
