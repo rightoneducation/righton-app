@@ -26,9 +26,37 @@ const GameSessionContainer = () => {
 
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
-      setGameSession(response);
-    });
+    setGameSession(response);
 
+      if (!response.currentState === "TEAMS_JOINING" || !response.currentState === "NOT_STARTED" )
+      {
+        
+
+        let teamDataRequests = gameSession.teams.map(team => {
+          return apiClient.getTeam(team.id);
+         });
+  
+        Promise.all(teamDataRequests)
+          .then(responses => {
+              responses.forEach(response => {
+              let teamMemberSubscription: any | null = null;
+                teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
+                  responses.forEach(team => {
+                    response.teamMembers.items.forEach(teamMemberOriginal => { 
+                      if (teamMemberOriginal.id === teamMemberResponse.id){
+                        teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
+                      }
+                    })
+                  }); 
+                });
+              });
+              setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
+          })
+      }
+    });
+    
+
+     
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
       setGameSession(({ ...gameSession, ...response }));

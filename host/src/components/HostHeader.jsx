@@ -7,16 +7,19 @@ import ClearIcon from "@material-ui/icons/Clear";
 const HostHeader = ({ gameCode }) => {
   const classes = useStyles();
   return (
-    <div>
-      <ModeToggle />
+    <div className={classes.headerContainer}>
+      {/*<ModeToggle /> removing per integration test #1*/}
       <div>
-        <ClearIcon className={classes.clearIconGameCode} />
+        {/*<ClearIcon className={classes.clearIconGameCode} /> removing per integration test #1*/}
         <GameCode gameCode={gameCode} />
       </div>
     </div>
   );
 };
 const useStyles = makeStyles(theme => ({
+  headerContainer: {
+    padding: '8%'
+  },
   clearIconGameCode: {
     color: "white",
     position: "absolute",
