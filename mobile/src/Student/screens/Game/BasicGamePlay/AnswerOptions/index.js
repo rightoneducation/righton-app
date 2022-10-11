@@ -7,7 +7,7 @@ import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
 import uuid from "react-native-uuid"
 
-const TrickAnswers = ({
+const AnswerOptions = ({
     onAnswered,
     isFacilitator,
     isAdvancedMode,
@@ -134,7 +134,7 @@ const TrickAnswers = ({
             >
                 {isFacilitator && status !== Status.basicMode
                     ? "Help guide your team to guess the correct answer!"
-                    : "What do you think the correct answer is?"}
+                    : "Choose the correct answer"}
             </Text>
             {status !== Status.basicMode && (
                 <TextInput
@@ -266,7 +266,7 @@ const TrickAnswers = ({
     )
 }
 
-export default TrickAnswers
+export default AnswerOptions
 
 const styles = StyleSheet.create({
     container: {

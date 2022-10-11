@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { StyleSheet, Text, View, Dimensions, SafeAreaView } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { scale, moderateScale, verticalScale } from "react-native-size-matters"
@@ -9,14 +9,12 @@ import HorizontalPageView from "../../../components/HorizontalPageView"
 import Card from "../../../components/Card"
 import Spinner from "./Spinner"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import TrickAnswers from "./TrickAnswers"
+import AnswerOptions from "./AnswerOptions"
 import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
 import uuid from "react-native-uuid"
 
-const GamePreview = ({ navigation, route }) => {
-    const { gameSession, team, teamMember } = route.params
-
+const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[
@@ -26,23 +24,26 @@ const GamePreview = ({ navigation, route }) => {
           ]
     const availableHints = question.instructions
 
-    const [countdown, setCountdown] = useState(300)
+    const phaseTime = gameSession?.phaseOneTime ?? 300
+
+    const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
     const [hints, setHints] = useState([availableHints[0]])
 
+    let countdown = useRef()
+
     useEffect(() => {
-        if (countdown == 0) {
+        if (currentTime == 0) {
             navigateToNextScreen()
             return
         }
-        const totalNoSecondsLeftForShowingHints = 295
-        var refreshIntervalId = setInterval(() => {
-            setCountdown(countdown - 1)
-            setProgress(countdown / 300)
-            setShowTrickAnswersHint(
-                countdown <= totalNoSecondsLeftForShowingHints
-            )
+
+        countdown.current = setInterval(() => {
+            if (currentTime > 0) {
+                setCurrentTime(currentTime - 1)
+            }
+            setProgress(currentTime / phaseTime)
         }, 1000)
 
         const subscription = apiClient.subscribeUpdateGameSession(
@@ -58,7 +59,7 @@ const GamePreview = ({ navigation, route }) => {
         )
 
         return () => {
-            clearInterval(refreshIntervalId)
+            clearInterval(countdown.current)
             subscription.unsubscribe()
         }
     })
@@ -107,6 +108,12 @@ const GamePreview = ({ navigation, route }) => {
         }
     }
 
+    const answersParsed = JSON.parse(question.choices)
+
+    const answerChoices = answersParsed.map((choice) => {
+        return choice.text
+    })
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -125,8 +132,8 @@ const GamePreview = ({ navigation, route }) => {
                         width={Dimensions.get("window").width - scale(90)}
                     />
                     <Text style={styles.timerText}>
-                        {Math.floor(countdown / 60)}:
-                        {("0" + Math.floor(countdown % 60)).slice(-2)}
+                        {Math.floor(currentTime / 60)}:
+                        {("0" + Math.floor(currentTime % 60)).slice(-2)}
                     </Text>
                 </View>
             </LinearGradient>
@@ -135,32 +142,21 @@ const GamePreview = ({ navigation, route }) => {
                     <Card headerTitle="Question">
                         <ScrollableQuestion question={question} />
                     </Card>
-                    <Card headerTitle="Trick Answers">
-                        <TrickAnswers
+                    <Card headerTitle="Answers">
+                        <AnswerOptions
                             isAdvancedMode={gameSession.isAdvanced}
-                            isFacilitator={teamMember.isFacilitator}
+                            isFacilitator={teamMember?.isFacilitator}
                             onAnswered={(answer) => {
                                 showAllHints()
                                 submitAnswer(answer)
                             }}
-                            answers={
-                                gameSession.isAdvanced
-                                    ? []
-                                    : [
-                                          ...question.wrongAnswers.map(
-                                              (a) => a.wrongAnswer
-                                          ),
-                                          question.answer,
-                                      ].map((a) => {
-                                          return {
-                                              id: uuid.v4(),
-                                              text: a,
-                                              isSelected: false,
-                                              isCorrectAnswer:
-                                                  a == question.answer,
-                                          }
-                                      })
-                            }
+                            answers={answerChoices.map((choice) => {
+                                return {
+                                    id: uuid.v4(),
+                                    text: choice,
+                                    isSelected: false,
+                                }
+                            })}
                         />
                     </Card>
                     {gameSession.isAdvanced && (
@@ -217,7 +213,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         marginTop: scale(24),
-        marginLeft: scale(30),
+        marginLeft: scale(50),
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
         fontWeight: "bold",
@@ -247,7 +243,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: 10,
-        marginTop: -scale(75),
+        marginTop: -scale(150),
     },
     footer: {
         marginBottom: moderateScale(30),

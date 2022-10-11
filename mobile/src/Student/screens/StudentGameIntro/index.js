@@ -1,25 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native'
-import PurpleBackground from '../../../components/PurpleBackground'
-import { colors, fonts, fontFamilies } from '../../../utils/theme'
-import ViewPager from '@react-native-community/viewpager'
-import IntroInfo from './IntroInfo'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters'
-import { GameSessionState } from '@righton/networking'
+import React, { useState, useEffect } from "react"
+import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native"
+import PurpleBackground from "../../../components/PurpleBackground"
+import { colors, fonts, fontFamilies } from "../../../utils/theme"
+import ViewPager from "@react-native-community/viewpager"
+import IntroInfo from "./IntroInfo"
+import { scale, verticalScale, moderateScale } from "react-native-size-matters"
+import { GameSessionState } from "@righton/networking"
 
-const StudentGameIntro = ({ route, navigation }) => {
-    const { gameSession, team, teamMember } = route.params
+const StudentGameIntro = ({ navigation, route, gameSession }) => {
+    //const { team, teamMember } = route.params
 
     useEffect(() => {
-        const subscription = apiClient.subscribeUpdateGameSession(gameSession.id, gameSession => {
-            if (gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-                navigation.navigate('PregameCountDown', {
-                    gameSession, team, teamMember
-                })
+        const subscription = apiClient.subscribeUpdateGameSession(
+            gameSession.id,
+            (gameSession) => {
+                // TODO: remove this and add it to your GameSessionContainer
+                // there will be many current state -> navigation changes
+                // you can remove the route params, pass the gameSession in from the screen props
+                // if (
+                //     gameSession?.currentState ===
+                //     GameSessionState.CHOOSE_CORRECT_ANSWER
+                // ) {
+                //     navigation.navigate("PregameCountDown", {
+                //         gameSession,
+                //     })
+                // }
             }
-        })
+        )
         return () => subscription.unsubscribe()
-    })
+    }, [])
 
     const [currentPage, setCurrentPage] = useState(0)
 
@@ -39,25 +48,82 @@ const StudentGameIntro = ({ route, navigation }) => {
                     <ViewPager
                         style={styles.carousel}
                         initialPage={currentPage}
-                        orientation='horizontal'
+                        orientation="horizontal"
                         onPageSelected={onPageSelected}
                     >
-                        <IntroInfo key="1" image={require('./img/TeamIntroStep1.png')} text="Read the multiple-choice question" />
-                        <IntroInfo key="2" image={require('./img/TeamIntroStep2.png')} text="Gain points by choosing the correct answer..." />
-                        <IntroInfo key="3" image={require('./img/TeamIntroStep3.png')} text="Read step-by-step solutions" />
-                        <IntroInfo key="4" image={require('./img/TeamIntroStep4.png')} text="Gain more points by guessing the most popular incorrect answer!" />
-                        <IntroInfo key="5" image={require('./img/TeamIntroStep5.png')} text="The most total points wins!" />
+                        <IntroInfo
+                            key="1"
+                            image={require("./img/TeamIntroStep1.png")}
+                            text="Read the multiple-choice question"
+                        />
+                        <IntroInfo
+                            key="2"
+                            image={require("./img/TeamIntroStep2.png")}
+                            text="Gain points by choosing the correct answer..."
+                        />
+                        <IntroInfo
+                            key="3"
+                            image={require("./img/TeamIntroStep3.png")}
+                            text="Read step-by-step solutions"
+                        />
+                        <IntroInfo
+                            key="4"
+                            image={require("./img/TeamIntroStep4.png")}
+                            text="Gain more points by guessing the most popular incorrect answer!"
+                        />
+                        <IntroInfo
+                            key="5"
+                            image={require("./img/TeamIntroStep5.png")}
+                            text="The most total points wins!"
+                        />
                     </ViewPager>
                     <View style={styles.pageIndicatorContainer}>
-                        <Image source={currentPage == 0 ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />
-                        <Image source={currentPage == 1 ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />
-                        <Image source={currentPage == 2 ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />
-                        <Image source={currentPage == 3 ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />
-                        <Image source={currentPage == 4 ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />
+                        <Image
+                            source={
+                                currentPage == 0
+                                    ? require("../../../assets/images/PageIndicatorActive.png")
+                                    : require("../../../assets/images/PageIndicatorInactive.png")
+                            }
+                            style={styles.pageIndicator}
+                        />
+                        <Image
+                            source={
+                                currentPage == 1
+                                    ? require("../../../assets/images/PageIndicatorActive.png")
+                                    : require("../../../assets/images/PageIndicatorInactive.png")
+                            }
+                            style={styles.pageIndicator}
+                        />
+                        <Image
+                            source={
+                                currentPage == 2
+                                    ? require("../../../assets/images/PageIndicatorActive.png")
+                                    : require("../../../assets/images/PageIndicatorInactive.png")
+                            }
+                            style={styles.pageIndicator}
+                        />
+                        <Image
+                            source={
+                                currentPage == 3
+                                    ? require("../../../assets/images/PageIndicatorActive.png")
+                                    : require("../../../assets/images/PageIndicatorInactive.png")
+                            }
+                            style={styles.pageIndicator}
+                        />
+                        <Image
+                            source={
+                                currentPage == 4
+                                    ? require("../../../assets/images/PageIndicatorActive.png")
+                                    : require("../../../assets/images/PageIndicatorInactive.png")
+                            }
+                            style={styles.pageIndicator}
+                        />
                     </View>
                 </View>
                 <View style={styles.footer}>
-                    <Text style={styles.footerNote}>Waiting for the game to start...</Text>
+                    <Text style={styles.footerNote}>
+                        Waiting for the game to start...
+                    </Text>
                 </View>
             </PurpleBackground>
         </SafeAreaView>
@@ -75,36 +141,35 @@ const styles = StyleSheet.create({
         zIndex: 100,
         paddingTop: 21,
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: "column",
     },
-    header: {
-    },
+    header: {},
     headerTeam: {
         color: colors.white,
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.xxLarge,
-        textAlign: 'center',
+        textAlign: "center",
     },
     headerTeamNo: {
         color: colors.white,
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.xxxLarge,
-        textAlign: 'center',
+        textAlign: "center",
     },
     carouselContainer: {
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: "column",
         marginBottom: 37,
         marginTop: 40,
-        justifyContent: 'space-between',
+        justifyContent: "space-between",
     },
     carousel: {
         flex: 1,
     },
     pageIndicatorContainer: {
         marginTop: 30,
-        flexDirection: 'row',
-        justifyContent: 'center',
+        flexDirection: "row",
+        justifyContent: "center",
         marginLeft: 5,
         marginRight: 5,
         marginBottom: 10,
@@ -113,15 +178,15 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         width: 20,
-        resizeMode: 'contain'
+        resizeMode: "contain",
     },
     footer: {
-        marginBottom: moderateScale(30)
+        marginBottom: moderateScale(30),
     },
     footerNote: {
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.small,
-        color: 'white',
-        textAlign: 'center',
-    }
+        color: "white",
+        textAlign: "center",
+    },
 })
