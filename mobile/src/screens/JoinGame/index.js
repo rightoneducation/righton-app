@@ -6,7 +6,7 @@ import RoundButton from "../../components/RoundButton"
 import PurpleBackground from "../../components/PurpleBackground"
 // import { Auth } from 'aws-amplify'
 
-export default function OnboardAppRouter({
+export default function JoinGame({
     navigation,
     gameSession,
     teamId,
@@ -16,7 +16,7 @@ export default function OnboardAppRouter({
 
     useEffect(() => {
         if (gameSession?.currentState === "TEAMS_JOINING") {
-            navigation.navigate("StudentFirst", {
+            navigation.navigate("EnterGameCode", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),
                 teamMember,
@@ -39,11 +39,11 @@ export default function OnboardAppRouter({
     function handleJoinGame() {
         // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
         // if (user == null) {
-        //   setTimeout(() => navigation.navigate('StudentFirst', { user: false }), 250)
+        //   setTimeout(() => navigation.navigate('EnterGameCode', { user: false }), 250)
         // } else {
-        //   setTimeout(() => navigation.navigate('StudentFirst', { user: true }), 250)
+        //   setTimeout(() => navigation.navigate('EnterGameCode', { user: true }), 250)
         // }
-        navigation.navigate("StudentFirst")
+        navigation.navigate("EnterGameCode")
     }
 
     function handleSignIn() {

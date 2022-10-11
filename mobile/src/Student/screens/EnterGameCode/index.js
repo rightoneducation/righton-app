@@ -17,7 +17,11 @@ import PurpleBackground from "../../../components/PurpleBackground"
 import { getUniqueId } from "react-native-device-info"
 import { GameSessionState } from "@righton/networking"
 
-export default function StudentFirst({ navigation, route, setGlobalGameCode }) {
+export default function EnterGameCode({
+    navigation,
+    route,
+    setGlobalGameCode,
+}) {
     const [portal, setPortal] = useState(null)
     const [gameCode, setGameCode] = useState("")
     const [gameSession, setGameSession] = useState(null)
@@ -60,8 +64,8 @@ export default function StudentFirst({ navigation, route, setGlobalGameCode }) {
         //   })
     }
 
-    handleNavigateToOnboardApp = () => {
-        navigation.navigate("OnboardAppRouter")
+    handleNavigateToJoinGame = () => {
+        navigation.navigate("JoinGame")
     }
 
     return (

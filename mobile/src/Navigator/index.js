@@ -1,9 +1,9 @@
 import React from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import OnboardAppRouter from "../screens/OnboardAppRouter"
+import JoinGame from "../screens/JoinGame"
 // import OnboardTeacherRouter from '../screens/OnboardTeacherRouter';
-import StudentFirst from "../Student/screens/StudentFirst"
+import EnterGameCode from "../Student/screens/EnterGameCode"
 import StudentName from "../Student/screens/StudentName"
 import StudentChooseTeam from "../Student/screens/StudentChooseTeam"
 import StudentGameIntro from "../Student/screens/StudentGameIntro"
@@ -36,14 +36,14 @@ const AppContainer = () => {
             }) => (
                 <NavigationContainer>
                     <Stack.Navigator
-                        initialRouteName="OnboardAppRouter"
+                        initialRouteName="JoinGame"
                         screenOptions={{
                             headerShown: false,
                         }}
                     >
-                        <Stack.Screen name="OnboardAppRouter">
+                        <Stack.Screen name="JoinGame">
                             {(props) => (
-                                <OnboardAppRouter
+                                <JoinGame
                                     {...props}
                                     gameSession={gameSession}
                                     teamId={teamId}
@@ -51,9 +51,9 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
-                        <Stack.Screen name="StudentFirst">
+                        <Stack.Screen name="EnterGameCode">
                             {(props) => (
-                                <StudentFirst
+                                <EnterGameCode
                                     {...props}
                                     setGlobalGameCode={setGameCode}
                                 />
