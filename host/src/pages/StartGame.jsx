@@ -4,6 +4,7 @@ import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
+import { GameSessionState } from "@righton/networking";
 import GameLoadModal from "../components/GameLoadModal";
 
 export default function StartGame({
@@ -16,7 +17,7 @@ export default function StartGame({
   handleStartGame,
   isTimerActive,
   isModalOpen,
-  handleTimerFinished
+  handleStartGameModalTimerFinished
 }) {
   const classes = useStyles();
   const [countdown, setCountdown] = useState(3);
@@ -31,7 +32,7 @@ export default function StartGame({
            }, 1000);
         }
         else
-          handleTimerFinished();
+          handleStartGameModalTimerFinished({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
     }
     return () => {
       clearInterval(timer);

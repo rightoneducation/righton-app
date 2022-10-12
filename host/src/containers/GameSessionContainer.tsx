@@ -76,14 +76,6 @@ const GameSessionContainer = () => {
     }
   }, [isModalOpen]);
 
-  const handleBeginGameSession = (newUpdates: Partial<IGameSession>) => {
-    apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
-      .then(response => {
-        setGameSession(response);
-        setIsModalOpen(false);
-      });
-  };
-
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
@@ -91,9 +83,13 @@ const GameSessionContainer = () => {
       });
   };
 
-  const handleTimerFinished = () =>{
-   handleBeginGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
-  }
+  const handleStartGameModalTimerFinished = (newUpdates: Partial<IGameSession>) =>{
+    apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+      .then(response => {
+        setGameSession(response);
+        setIsModalOpen(false);
+      });
+  };
       
   const handleStartGame = () =>{
     console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
@@ -135,7 +131,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleTimerFinished={handleTimerFinished} handleStartGame={handleStartGame}/>;
+      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} handleStartGame={handleStartGame}/>;
 
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
