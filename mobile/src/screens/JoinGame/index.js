@@ -22,7 +22,7 @@ export default function JoinGame({
                 teamMember,
             })
         } else if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
-            navigation.navigate("PregameCountDown", {
+            navigation.navigate("BasicGamePlay", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),
                 teamMember,

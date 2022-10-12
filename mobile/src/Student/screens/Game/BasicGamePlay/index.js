@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react"
-import { StyleSheet, Text, View, Dimensions, SafeAreaView } from "react-native"
+import {
+    StyleSheet,
+    Text,
+    View,
+    Dimensions,
+    SafeAreaView,
+    Alert,
+} from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { scale, moderateScale, verticalScale } from "react-native-size-matters"
 import { fontFamilies, fonts } from "../../../../utils/theme"
@@ -14,22 +21,32 @@ import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
 import uuid from "react-native-uuid"
 
-const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
-    const question = gameSession.isAdvanced
-        ? team.question
-        : gameSession.questions[
-              gameSession.currentQuestionIndex == null
-                  ? 0
-                  : gameSession.currentQuestionIndex
-          ]
-    const availableHints = question.instructions
+const BasicGamePlay = ({
+    navigation,
+    route,
+    gameSession,
+    team,
+    teamMember,
+}) => {
+    console.log(gameSession)
+
+    // const question = gameSession?.isAdvanced
+    //     ? team.question
+    //     : gameSession?.questions[
+    //           gameSession?.currentQuestionIndex == null
+    //               ? 0
+    //               : gameSession?.currentQuestionIndex
+    //       ]
+    const question = gameSession?.questions[1]
+    const availableHints = JSON.parse(question.instructions)
+    console.log("availableHints", availableHints)
 
     const phaseTime = gameSession?.phaseOneTime ?? 300
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    const [showTrickAnswersHint, setShowTrickAnswersHint] = useState(false)
-    const [hints, setHints] = useState([availableHints[0]])
+    const [selectedAnswer, setSelectedAnswer] = useState(null)
+    const [hints, setHints] = useState([availableHints])
 
     let countdown = useRef()
 
@@ -49,10 +66,7 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
         const subscription = apiClient.subscribeUpdateGameSession(
             gameSession.id,
             (gameSession) => {
-                if (
-                    gameSession.currentState ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER
-                ) {
+                if (gameSession?.currentState === "CHOOSE_TRICKIEST_ANSWER") {
                     navigateToNextScreen()
                 }
             }
@@ -62,7 +76,7 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
             clearInterval(countdown.current)
             subscription.unsubscribe()
         }
-    })
+    }, [gameSession])
 
     const navigateToNextScreen = () => {
         navigation.navigate("Leadership", {
@@ -73,46 +87,93 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
         })
     }
 
-    const showNewHint = () => {
-        if (hints.length == availableHints.length) {
-            return
-        }
-        setHints([...hints, availableHints[hints.length]])
-    }
-
-    const showAllHints = () => {
-        setShowTrickAnswersHint(true)
-        setHints(availableHints)
-    }
-
     const submitAnswer = (answer) => {
-        global.apiClient
-            .addTeamAnswer(
-                teamMember.id,
-                question.id,
-                answer.text,
-                answer.isSelected
-            )
-            .then((teamAnswer) => {
-                if (teamAnswer == null) {
-                    console.error("Failed to create team.")
-                    return
-                }
-                console.log(teamAnswer)
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
-        if (!gameSession.isAdvancedMode) {
-            navigateToNextScreen()
-        }
+        Alert.alert(
+            "Are you sure?",
+            "You will not be able to change your answer",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        global.apiClient
+                            .addTeamAnswer(
+                                teamMember.id,
+                                question.id,
+                                answer.text,
+                                //TODO: update these fields to isChosen
+                                answer.isSelected,
+                                answer.isChosen
+                            )
+                            .then((teamAnswer) => {
+                                if (teamAnswer == null) {
+                                    console.error(
+                                        "Failed to create team Answer."
+                                    )
+                                    return
+                                }
+                                teamAnswer.isChosen = true
+                                console.log("this is team answer", teamAnswer)
+                            })
+                            // .then(() => {
+                            //     if (!gameSession?.isAdvanced) {
+                            //         navigateToNextScreen()
+                            //     }
+                            // })
+                            .catch((error) => {
+                                console.error(error.message)
+                            })
+                    },
+                },
+            ]
+        )
     }
 
     const answersParsed = JSON.parse(question.choices)
 
     const answerChoices = answersParsed.map((choice) => {
-        return choice.text
+        return {
+            id: uuid.v4(),
+            text: choice.text,
+            isCorrectAnswer: choice.isAnswer,
+            isSelected: false,
+        }
     })
+
+    //if isCorrect answer is true, add 10 points to the team's score
+    // const addPoints = (answer) => {
+    //     if (answer.isCorrectAnswer) {
+    //         team.score += 10
+    //     }
+    // }
+
+    const handleAnswerSelection = (answer) => {
+        setSelectedAnswer(answer)
+        submitAnswer(answer)
+    }
+    const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+    const hintsViewTitle = () => {
+        if (selectedAnswer.isCorrectAnswer) {
+            return `Correct! 
+            
+    ${correctAnswer.text} 
+    is the correct answer.`
+        } else {
+            return `Nice Try! 
+            
+    ${correctAnswer.text}
+    is the correct answer.`
+        }
+    }
+
+    console.log("correctAnswer", correctAnswer.text)
+
+    console.log("selectedAnswer", selectedAnswer)
+
+    console.log("this is answer choices", answerChoices)
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -122,20 +183,28 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-                <Text style={styles.headerText}>Answer The Question</Text>
-                <View style={styles.timerContainer}>
-                    <Progress.Bar
-                        style={styles.timerProgressBar}
-                        progress={progress}
-                        color={"#349E15"}
-                        unfilledColor={"rgba(255,255,255,0.8)"}
-                        width={Dimensions.get("window").width - scale(90)}
-                    />
-                    <Text style={styles.timerText}>
-                        {Math.floor(currentTime / 60)}:
-                        {("0" + Math.floor(currentTime % 60)).slice(-2)}
-                    </Text>
-                </View>
+                {gameSession?.currentState === "CHOOSE_CORRECT_ANSWER" ? (
+                    <>
+                        <Text style={styles.headerText}>
+                            Answer The Question
+                        </Text>
+                        <View style={styles.timerContainer}>
+                            <Progress.Bar
+                                style={styles.timerProgressBar}
+                                progress={progress}
+                                color={"#349E15"}
+                                unfilledColor={"rgba(255,255,255,0.8)"}
+                                width={
+                                    Dimensions.get("window").width - scale(90)
+                                }
+                            />
+                            <Text style={styles.timerText}>
+                                {Math.floor(currentTime / 60)}:
+                                {("0" + Math.floor(currentTime % 60)).slice(-2)}
+                            </Text>
+                        </View>
+                    </>
+                ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 <HorizontalPageView>
@@ -147,59 +216,25 @@ const GamePreview = ({ navigation, route, gameSession, team, teamMember }) => {
                             isAdvancedMode={gameSession.isAdvanced}
                             isFacilitator={teamMember?.isFacilitator}
                             onAnswered={(answer) => {
-                                showAllHints()
-                                submitAnswer(answer)
+                                handleAnswerSelection(answer)
                             }}
                             answers={answerChoices.map((choice) => {
-                                return {
-                                    id: uuid.v4(),
-                                    text: choice,
-                                    isSelected: false,
-                                }
+                                return choice
                             })}
                         />
                     </Card>
-                    {gameSession.isAdvanced && (
-                        <Card headerTitle="Hints">
-                            {showTrickAnswersHint ? (
-                                <HintsView
-                                    hints={hints}
-                                    onTappedShowNextHint={() => showNewHint()}
-                                    isMoreHintsAvailable={
-                                        hints.length < availableHints.length
-                                    }
-                                />
-                            ) : (
-                                <Spinner text="Hints will be available after one minute." />
-                            )}
+                    {gameSession?.currentState === "PHASE_1_RESULTS" ? (
+                        <Card headerTitle={hintsViewTitle()}>
+                            <HintsView hints={hints} />
                         </Card>
-                    )}
+                    ) : null}
                 </HorizontalPageView>
             </View>
-            {gameSession.isAdvancedMode && (
-                <TeamsReadinessFooter
-                    style={styles.footer}
-                    onTappedFirst={() => {
-                        navigation.navigate("TeamInfo", {
-                            availableHints,
-                            answeringOwnQuestion: true,
-                            team: 1,
-                        })
-                    }}
-                    onTappedLast={() => {
-                        navigation.navigate("TeamInfo", {
-                            availableHints,
-                            answeringOwnQuestion: false,
-                            team: 5,
-                        })
-                    }}
-                />
-            )}
         </SafeAreaView>
     )
 }
 
-export default GamePreview
+export default BasicGamePlay
 
 const styles = StyleSheet.create({
     mainContainer: {

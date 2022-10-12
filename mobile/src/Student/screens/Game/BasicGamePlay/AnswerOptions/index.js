@@ -31,7 +31,7 @@ const AnswerOptions = ({
         return {
             id: uuid.v4(),
             text: text,
-            isSelected: false,
+            isSelected: true,
         }
     }
 
@@ -86,6 +86,7 @@ const AnswerOptions = ({
 
         setTrickAnswers(modifiedTrickAnswers)
         onAnswered(answer)
+        console.log(trickAnswers)
     }
 
     const onTrickyAnswerChanged = (answerId, newText) => {

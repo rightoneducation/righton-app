@@ -86,20 +86,20 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
-                        <Stack.Screen
+                        {/* <Stack.Screen
                             name="GamePreview"
                             component={GamePreview}
-                        />
-                        <Stack.Screen
+                        /> */}
+                        {/* <Stack.Screen
                             name="PregameCountDown"
                             component={PregameCountDown}
-                        />
+                        /> */}
                         <Stack.Screen
                             name="Leadership"
                             component={Leadership}
                         />
 
-                        <Stack.Screen
+                        {/* <Stack.Screen
                             name="PersonalDetails"
                             component={PersonalDetails}
                         />
@@ -110,8 +110,8 @@ const AppContainer = () => {
                         <Stack.Screen
                             name="GameDetails"
                             component={GameDetailsScreen}
-                        />
-                        <Stack.Screen name="GamePlay" component={GamePlay} />
+                        /> */}
+                        {/* <Stack.Screen name="GamePlay" component={GamePlay} />
                         <Stack.Screen name="TeamInfo" component={TeamInfo} />
                         <Stack.Screen
                             name="GameAnswerPopular"
@@ -127,7 +127,7 @@ const AppContainer = () => {
                         <Stack.Screen
                             name="TeacherApp"
                             component={TeacherApp}
-                        />
+                        /> */}
                     </Stack.Navigator>
                 </NavigationContainer>
             )}
