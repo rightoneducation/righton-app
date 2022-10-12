@@ -24,13 +24,15 @@ export default function GameModal({handleModalButtonOnClick, handleModalClose, m
               alignItems: "center",
               background: 'linear-gradient(90deg, #043272 0%, #0D68B1 100%)',
               borderRadius: '20px',
-              border: 'none'
+              border: 'none',
+              overflow: "hidden"
              },
              overlay: {
                 height: '100%',
                 width: '100%',
                 minHeight: '100vh',
-                backgroundColor: 'rgba(0, 0, 0, 0.65)'
+                backgroundColor: 'rgba(0, 0, 0, 0.65)',
+                overflow: "hidden"
             }}}
             onRequestClose={() => handleModalClose(false)}
             shouldCloseOnOverlayClick={true}

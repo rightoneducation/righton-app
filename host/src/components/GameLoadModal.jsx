@@ -12,7 +12,7 @@ export default function GameLoadModal({ handleModalClose, modalOpen, countdown})
            contentLabel="Game Load Modal"
            style={{
             content: {
-              position: 'absolute',
+              position: 'sticky',
               top:'0px',
               left:'0px',
               display: 'flex',
@@ -22,20 +22,12 @@ export default function GameLoadModal({ handleModalClose, modalOpen, countdown})
               height: '100%',
               minHeight: "100vh",
               padding: '-20px',
+              gap: '5%',
               justifyContent: "center",
               alignItems: "center",
               border: '0',
-              background: 'linear-gradient(#483a82 0%, #7962c4 30%,  #483a82 100%)'
-             },
-             overlay: { 
-              position: 'absolute',
-              top:'0px',
-              left:'0px',
-              width: '100%',
-              height: '100%',
-              minHeight: "100vh",
-              background: 'linear-gradient(#483a82 0%, #7962c4 30%,  #483a82 100%)'
-            }
+              background: 'linear-gradient(#483a82 0%, #7962c4 30%,  #483a82 100%)',
+             }
             }}
             appElement={document.getElementById('root') || undefined}
            >
@@ -65,8 +57,7 @@ const useStyles = makeStyles(theme => ({
     height: '242px',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    margin: 'auto'
+    alignItems: 'center'
   },
   counterText:{
     fontSize: "108px",

@@ -147,7 +147,7 @@ export default function GameInProgress({
           gameInProgress={true}
           statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
-        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].image} />
+        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
         <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 

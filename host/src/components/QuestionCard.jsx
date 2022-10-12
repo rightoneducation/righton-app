@@ -69,8 +69,7 @@ export default function QuestionCard({
   question,
   image
 }) {
-
-  console.log(question, image);
+  
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [stat, setStat] = useState(0);

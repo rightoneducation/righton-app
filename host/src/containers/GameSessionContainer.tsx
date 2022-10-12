@@ -21,38 +21,39 @@ const GameSessionContainer = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
+  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
     setGameSession(response);
-
-      if (!response.currentState === "TEAMS_JOINING" || !response.currentState === "NOT_STARTED" )
-      {
+   
+      // if (!response.currentState === "TEAMS_JOINING" || !response.currentState === "NOT_STARTED" )
+      // {
         
 
-        let teamDataRequests = gameSession.teams.map(team => {
-          return apiClient.getTeam(team.id);
-         });
+      //   let teamDataRequests = gameSession.teams.map(team => {
+      //     return apiClient.getTeam(team.id);
+      //    });
   
-        Promise.all(teamDataRequests)
-          .then(responses => {
-              responses.forEach(response => {
-              let teamMemberSubscription: any | null = null;
-                teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
-                  responses.forEach(team => {
-                    response.teamMembers.items.forEach(teamMemberOriginal => { 
-                      if (teamMemberOriginal.id === teamMemberResponse.id){
-                        teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
-                      }
-                    })
-                  }); 
-                });
-              });
-              setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
-          })
-      }
+      //   Promise.all(teamDataRequests)
+      //     .then(responses => {
+      //         responses.forEach(response => {
+      //         let teamMemberSubscription: any | null = null;
+      //           teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
+      //             responses.forEach(team => {
+      //               response.teamMembers.items.forEach(teamMemberOriginal => { 
+      //                 if (teamMemberOriginal.id === teamMemberResponse.id){
+      //                   teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
+      //                 }
+      //               })
+      //             }); 
+      //           });
+      //         });
+      //         setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
+      //     })
+      // }
     });
     
 
@@ -66,6 +67,23 @@ const GameSessionContainer = () => {
     return () => gameSessionSubscription?.unsubscribe();
   }, []);
 
+  useEffect(()=>{
+    if (isModalOpen){
+      document.body.style.overflow = 'hidden';
+    }
+    else{
+      document.body.style.overflow = 'unset';
+    }
+  }, [isModalOpen]);
+
+  const handleBeginGameSession = (newUpdates: Partial<IGameSession>) => {
+    apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+      .then(response => {
+        setGameSession(response);
+        setIsModalOpen(false);
+      });
+  };
+
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
@@ -74,16 +92,15 @@ const GameSessionContainer = () => {
   };
 
   const handleTimerFinished = () =>{
-    handleUpdateGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
+   handleBeginGameSession({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
   }
       
   const handleStartGame = () =>{
     console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
-    setIsTimerActive(true);
-    document.body.style.overflow = "hidden";
-    setIsModalOpen(true);
-    if (gameSession.currentState === "TEAMS_JOINING" || gameSession.currentState === "NOT_STARTED" )
+    if (gameSession.currentState === stateArray[1])
     {
+      setIsTimerActive(true);
+      setIsModalOpen(true);
     
       const teamDataRequests = gameSession.teams.map(team => {
         return apiClient.getTeam(team.id);
