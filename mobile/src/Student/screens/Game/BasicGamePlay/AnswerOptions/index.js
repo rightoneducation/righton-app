@@ -224,6 +224,7 @@ const AnswerOptions = ({
                                     item.isSelected ? "#8DCD53" : "#D9DFE5"
                                 }
                                 onPress={chooseAnswer}
+                                disabled={item.isChosen}
                                 showIcon={item.isSelected}
                                 readonly={true}
                                 data={item}

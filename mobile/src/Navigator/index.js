@@ -10,7 +10,7 @@ import StudentGameIntro from "../Student/screens/StudentGameIntro"
 import PregameCountDown from "../Student/screens/PregameCountDown"
 import BasicGamePlay from "../Student/screens/Game/BasicGamePlay"
 import GamePreview from "../Student/screens/Game/GamePreview"
-import TeamInfo from "../Student/screens/Game/GamePlay/TeamInfo"
+//import TeamInfo from "../Student/screens/Game/GamePlay/TeamInfo"
 import GamePlay from "../Student/screens/Game/GamePlay"
 import GameAnswerPopular from "../Student/screens/Game/GameAnswer/Popular"
 import Leadership from "../Student/screens/Game/Leadership"
@@ -31,6 +31,7 @@ const AppContainer = () => {
                 gameSession,
                 setGameCode,
                 teamId,
+                team,
                 teamMember,
                 setTeamInfo,
             }) => (
@@ -94,10 +95,16 @@ const AppContainer = () => {
                             name="PregameCountDown"
                             component={PregameCountDown}
                         /> */}
-                        <Stack.Screen
-                            name="Leadership"
-                            component={Leadership}
-                        />
+                        <Stack.Screen name="Leadership">
+                            {(props) => (
+                                <Leadership
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
 
                         {/* <Stack.Screen
                             name="PersonalDetails"

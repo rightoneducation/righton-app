@@ -42,13 +42,13 @@ const HintsView = ({ hints, onTappedShowNextHint, isMoreHintsAvailable }) => {
                 )}
             />
             <View style={styles.showNextHintContainer}>
-                <Button
+                {/* <Button
                     title="Show Next Step"
                     buttonStyle={showNextStepButton}
                     onPress={onTappedNextHint}
                     titleStyle={styles.showNextStepTitle}
                     disabled={isShowHintsDisabled}
-                />
+                /> */}
                 {!showNextHintEnabled && isMoreHintsAvailable && (
                     <LoadingIndicator
                         theme={[

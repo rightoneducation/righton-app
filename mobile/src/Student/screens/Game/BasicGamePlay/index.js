@@ -25,9 +25,11 @@ const BasicGamePlay = ({
     navigation,
     route,
     gameSession,
-    team,
+    teamId,
     teamMember,
 }) => {
+    const team = gameSession?.teams.find((team) => team.id === teamId)
+    console.log("team in BasicGamePlay", team)
     // const question = gameSession?.isAdvanced
     //     ? team.question
     //     : gameSession?.questions[
@@ -139,16 +141,17 @@ const BasicGamePlay = ({
         }
     })
 
-    //if isCorrect answer is true, add 10 points to the team's score
-    // const addPoints = (answer) => {
-    //     if (answer.isCorrectAnswer) {
-    //         team.score += 10
-    //     }
-    // }
+    //if isCorrectAnswer is true, add 10 points to the team's score
+    const addPoints = (answer) => {
+        if (answer.isCorrectAnswer) {
+            team.score += 10
+        }
+    }
 
     const handleAnswerResult = (answer) => {
         setSelectedAnswer(answer)
         submitAnswer(answer)
+        addPoints(answer)
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
