@@ -28,8 +28,6 @@ const BasicGamePlay = ({
     team,
     teamMember,
 }) => {
-    console.log(gameSession)
-
     // const question = gameSession?.isAdvanced
     //     ? team.question
     //     : gameSession?.questions[
@@ -39,7 +37,6 @@ const BasicGamePlay = ({
     //       ]
     const question = gameSession?.questions[1]
     const availableHints = JSON.parse(question.instructions)
-    console.log("availableHints", availableHints)
 
     const phaseTime = gameSession?.phaseOneTime ?? 300
 
@@ -104,7 +101,6 @@ const BasicGamePlay = ({
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                //TODO: update these fields to isChosen
                                 answer.isSelected,
                                 answer.isChosen
                             )
@@ -150,11 +146,13 @@ const BasicGamePlay = ({
     //     }
     // }
 
-    const handleAnswerSelection = (answer) => {
+    const handleAnswerResult = (answer) => {
         setSelectedAnswer(answer)
         submitAnswer(answer)
     }
+
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+
     const hintsViewTitle = () => {
         if (selectedAnswer.isCorrectAnswer) {
             return `Correct! 
@@ -168,12 +166,6 @@ const BasicGamePlay = ({
     is the correct answer.`
         }
     }
-
-    console.log("correctAnswer", correctAnswer.text)
-
-    console.log("selectedAnswer", selectedAnswer)
-
-    console.log("this is answer choices", answerChoices)
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -216,7 +208,7 @@ const BasicGamePlay = ({
                             isAdvancedMode={gameSession.isAdvanced}
                             isFacilitator={teamMember?.isFacilitator}
                             onAnswered={(answer) => {
-                                handleAnswerSelection(answer)
+                                handleAnswerResult(answer)
                             }}
                             answers={answerChoices.map((choice) => {
                                 return choice
