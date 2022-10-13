@@ -37,17 +37,19 @@ const GameSessionContainer = () => {
         .then(responses => {  
           responses.forEach(response => {
             let teamMemberSubscription: any | null = null;
-              teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
-                responses.forEach(team => {
-                  response.teamMembers.items.forEach(teamMemberOriginal => { 
-                    if (teamMemberOriginal.id === teamMemberResponse.id){
-                      teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
+             teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
+              console.log(teamMemberResponse);
+              responses.forEach(team => {
+                team.teamMembers.items.forEach(teamMemberOriginal => { 
+                  if (teamMemberOriginal.id === teamMemberResponse.id){
+                    teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
                     }
-                  })
-                }); 
-              });
+                });
+              console.log(responses);
+              }); 
             });
-            setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
+          });
+          setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
         })
         .catch(reason => console.log(reason));
     });
@@ -110,7 +112,6 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      console.log(teamsArray);
       return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession}/>;
 
 

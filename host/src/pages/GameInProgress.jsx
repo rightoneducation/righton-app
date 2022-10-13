@@ -76,7 +76,6 @@ export default function GameInProgress({
 
   const getTotalAnswers = (answerArray) => { //finds all answers for current question using isChosen, for use in footer progress bar
     let count = 0;
-    console.log(answerArray);
     if (answerArray){
       answerArray.forEach(answerCount => {
         count = count + answerCount;
@@ -86,7 +85,7 @@ export default function GameInProgress({
   };
 
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { //returns an array ordered to match the order of answer choices, containing the total number of each answer
-    if (Object.keys(teamsArray[0]).length !==0 ){
+    if (!teamsArray.length === 0 || Object.keys(teamsArray[0]).length !==0 ){
       let choicesTextArray = [choices.length];
       let answersArray = new Array(choices.length).fill(0);
       let currentQuestionId = questions[currentQuestionIndex].id;
