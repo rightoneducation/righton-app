@@ -25,49 +25,44 @@ const GameSessionContainer = () => {
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
-  useEffect(() => {
+  useEffect(() => { //initial query and subscriptions for gameSessions and teams
     apiClient.getGameSession(gameSessionId).then(response => {
-    setGameSession(response);
-   
-      // if (!response.currentState === "TEAMS_JOINING" || !response.currentState === "NOT_STARTED" )
-      // {
-        
-
-      //   let teamDataRequests = gameSession.teams.map(team => {
-      //     return apiClient.getTeam(team.id);
-      //    });
-  
-      //   Promise.all(teamDataRequests)
-      //     .then(responses => {
-      //         responses.forEach(response => {
-      //         let teamMemberSubscription: any | null = null;
-      //           teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
-      //             responses.forEach(team => {
-      //               response.teamMembers.items.forEach(teamMemberOriginal => { 
-      //                 if (teamMemberOriginal.id === teamMemberResponse.id){
-      //                   teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
-      //                 }
-      //               })
-      //             }); 
-      //           });
-      //         });
-      //         setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
-      //     })
-      // }
-    });
+      setGameSession(response);
     
+      const teamDataRequests = response.teams.map(team => {
+        return apiClient.getTeam(team.id);
+      });
+  
+      Promise.all(teamDataRequests)
+        .then(responses => {  
+          responses.forEach(response => {
+            let teamMemberSubscription: any | null = null;
+              teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
+                responses.forEach(team => {
+                  response.teamMembers.items.forEach(teamMemberOriginal => { 
+                    if (teamMemberOriginal.id === teamMemberResponse.id){
+                      teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
+                    }
+                  })
+                }); 
+              });
+            });
+            setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
+        })
+        .catch(reason => console.log(reason));
+    });
 
-     
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-      setGameSession(({ ...gameSession, ...response }));
+       setGameSession(({ ...gameSession, ...response }));
     });
 
     // @ts-ignore
     return () => gameSessionSubscription?.unsubscribe();
-  }, []);
 
-  useEffect(()=>{
+  },[]);
+
+  useEffect(()=>{ //stops scrolling on the startgame modal
     if (isModalOpen){
       document.body.style.overflow = 'hidden';
     }
@@ -90,35 +85,13 @@ const GameSessionContainer = () => {
         setIsModalOpen(false);
       });
   };
-      
+  
   const handleStartGame = () =>{
     console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
     if (gameSession.currentState === stateArray[1])
     {
       setIsTimerActive(true);
-      setIsModalOpen(true);
-    
-      const teamDataRequests = gameSession.teams.map(team => {
-        return apiClient.getTeam(team.id);
-      });
-
-      Promise.all(teamDataRequests)
-        .then(responses => {
-            responses.forEach(response => {
-            let teamMemberSubscription: any | null = null;
-              teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
-                responses.forEach(team => {
-                  response.teamMembers.items.forEach(teamMemberOriginal => { 
-                    if (teamMemberOriginal.id === teamMemberResponse.id){
-                      teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
-                    }
-                  })
-                }); 
-              });
-            });
-            setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
-        })
-        .catch(reason => console.log(reason));
+      setIsModalOpen(true);   
     }
     else
       handleUpdateGameSession({currentState: GameSessionState.TEAMS_JOINING, currentQuestionIndex: 0});
@@ -137,6 +110,7 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
+      console.log(teamsArray);
       return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession}/>;
 
 

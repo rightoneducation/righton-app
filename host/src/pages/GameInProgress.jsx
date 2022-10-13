@@ -76,33 +76,38 @@ export default function GameInProgress({
 
   const getTotalAnswers = (answerArray) => { //finds all answers for current question using isChosen, for use in footer progress bar
     let count = 0;
-    answerArray.forEach(answerCount => {
-      count = count + answerCount;
-    });
-    return count;
+    console.log(answerArray);
+    if (answerArray){
+      answerArray.forEach(answerCount => {
+        count = count + answerCount;
+      });
+      return count;
+    }
   };
 
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { //returns an array ordered to match the order of answer choices, containing the total number of each answer
-    let choicesTextArray = [choices.length];
-    let answersArray = new Array(choices.length).fill(0);
-    let currentQuestionId = questions[currentQuestionIndex].id;
-    choices.forEach((choice,index) =>{
-      choicesTextArray[index] = choice.text;
-    });
-    teamsArray.forEach(team => {
-      team.teamMembers.items.forEach(teamMember => {
-        teamMember.answers.items.forEach(answer =>{
-         if (answer.questionId === currentQuestionId && answer.isChosen){
-            choices.forEach(choice =>{
-              if (answer.text === choice.text){
-                answersArray[choicesTextArray.indexOf(choice.text)]+=1;
-              }
-            })
-          }
+    if (Object.keys(teamsArray[0]).length !==0 ){
+      let choicesTextArray = [choices.length];
+      let answersArray = new Array(choices.length).fill(0);
+      let currentQuestionId = questions[currentQuestionIndex].id;
+      choices.forEach((choice,index) =>{
+        choicesTextArray[index] = choice.text;
+      });
+      teamsArray.forEach(team => {
+        team.teamMembers.items.forEach(teamMember => {
+          teamMember.answers.items.forEach(answer =>{
+          if (answer.questionId === currentQuestionId && answer.isChosen){
+              choices.forEach(choice =>{
+                if (answer.text === choice.text){
+                  answersArray[choicesTextArray.indexOf(choice.text)]+=1;
+                }
+              })
+            }
+          })
         })
-      })
-    });             
-    return answersArray;
+      });             
+      return answersArray;
+    }
   };
 
   const handleFooterOnClick = (numPlayers, totalAnswers) => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
