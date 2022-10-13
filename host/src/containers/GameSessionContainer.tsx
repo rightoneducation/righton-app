@@ -38,14 +38,12 @@ const GameSessionContainer = () => {
           responses.forEach(response => {
             let teamMemberSubscription: any | null = null;
              teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
-              console.log(teamMemberResponse);
               responses.forEach(team => {
                 team.teamMembers.items.forEach(teamMemberOriginal => { 
                   if (teamMemberOriginal.id === teamMemberResponse.id){
                     teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
                     }
                 });
-              console.log(responses);
               }); 
             });
           });
