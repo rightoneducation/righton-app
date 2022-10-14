@@ -16,12 +16,14 @@ import {
     UpdateGameSessionInput,
     UpdateGameSessionMutation,
     UpdateGameSessionMutationVariables,
-    OnUpdateTeamMemberSubscription
+    OnUpdateTeamMemberSubscription,
+    OnCreateTeamSubscription,
+    OnDeleteTeamSubscription
 } from './AWSMobileApi'
 import { createTeam, createTeamAnswer, createTeamMember, updateGameSession } from './graphql/mutations'
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { getGameSession, getTeam, gameSessionByCode, onGameSessionUpdatedById, onUpdateTeamMember} from './graphql'
+import { getGameSession, getTeam, gameSessionByCode, onGameSessionUpdatedById, onUpdateTeamMember, onCreateTeam, onDeleteTeam} from './graphql'
 import awsconfig from "./aws-exports"
 import { ITeam } from './Models/ITeam'
 import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
@@ -132,6 +134,32 @@ export class ApiClient implements IApiClient {
       })
     }
 
+    
+    subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
+      return this.subscribeGraphQL<OnCreateTeamSubscription>({
+          query: onCreateTeam,
+          variables: {
+              id: id
+          }
+      }, (value: OnCreateTeamSubscription) => {
+          let team = this.mapOnCreateTeamSubscription(value)
+          callback(team)
+      })
+    }
+
+    subscribeDeleteTeam(id: string, callback: (result: ITeam) => void) {
+      return this.subscribeGraphQL<OnDeleteTeamSubscription>({
+          query: onDeleteTeam,
+          variables: {
+              id: id
+          }
+      }, (value: OnDeleteTeamSubscription) => {
+          let team = this.mapOnDeleteTeamSubscription(value)
+          callback(team)
+      })
+    }
+
+
     async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
         let result = await API.graphql(graphqlOperation(gameSessionByCode, { gameCode })) as { data: any }
         if (isNullOrUndefined(result.data) ||
@@ -217,6 +245,14 @@ export class ApiClient implements IApiClient {
 
     private mapOnGameSessionUpdatedByIdSubscription(subscription: OnGameSessionUpdatedByIdSubscription): IGameSession {
         return GameSessionParser.gameSessionFromSubscriptionById(subscription)
+    }
+
+    private mapOnCreateTeamSubscription(subscription: OnCreateTeamSubscription): ITeam {
+      return TeamParser.teamFromCreateTeamSubscription(subscription)
+    }
+
+    private mapOnDeleteTeamSubscription(subscription: OnDeleteTeamSubscription): ITeam {
+      return TeamParser.teamFromDeleteTeamSubscription(subscription)
     }
 
     private mapOnUpdateTeamMemberSubscription(subscription: OnUpdateTeamMemberSubscription): ITeamMember {
@@ -412,6 +448,25 @@ class GameSessionParser {
 
 class TeamParser {
   
+
+  static teamFromCreateTeamSubscription(subscription: OnCreateTeamSubscription): ITeam {
+    const createTeam = subscription.onCreateTeam
+    if (isNullOrUndefined(createTeam)) {
+        throw new Error("subscription.onUpdateGameSession can't be null.")
+    }
+    //@ts-ignore
+    return this.teamFromAWSTeam(createTeam)
+  }
+
+  static teamFromDeleteTeamSubscription(subscription: OnDeleteTeamSubscription): ITeam {
+    const deleteTeam = subscription.onDeleteTeam
+    if (isNullOrUndefined(deleteTeam)) {
+        throw new Error("subscription.onUpdateGameSession can't be null.")
+    }
+    //@ts-ignore
+    return this.teamFromAWSTeam(deleteTeam)
+  }
+
   static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
     const {
       id,
@@ -428,8 +483,7 @@ class TeamParser {
     } = awsTeam || {}
 
     if (
-      isNullOrUndefined(id) ||
-      isNullOrUndefined(teamMembers) 
+      isNullOrUndefined(id) 
      ) {
       throw new Error("Team has null field for the attributes that are not nullable")
     }

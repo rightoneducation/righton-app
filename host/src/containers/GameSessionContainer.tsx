@@ -29,20 +29,24 @@ const GameSessionContainer = () => {
     apiClient.getGameSession(gameSessionId).then(response => {
       setGameSession(response); //set initial gameSession state
 
-
-      if (response.currentState === stateArray[0] || response.currentState === stateArray[1]) //only receive added and deleted teams in the NOT_STATRTED and TEAMS_JOINING phases
+      //below handles teams joining and leaving - therefore only receive these updates in the NOT_STATRTED and TEAMS_JOINING phases
+      if (response.currentState === stateArray[0] || response.currentState === stateArray[1]) 
       {
         let createTeamSubscription: any | null = null; //set up subscription for new team members joining
         createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
-          response.teams.push(teamResponse);
-          setGameSession(response);    
+          if (teamResponse.gameSessionTeamsId === gameSessionId){
+            response.teams.push(teamResponse);
+          }
+          setGameSession(response);  
         });
         
         let deleteTeamSubscription: any | null = null; //set up subscription for new team members joining
         deleteTeamSubscription = apiClient.subscribeDeleteTeam(gameSessionId, teamResponse => {
-          const teamsFiltered = response.teams.filter(value => (value.id !== teamResponse.id));
-          response.teams = teamsFiltered;
-          setGameSession(response);    
+          if (teamResponse.gameSessionTeamsId === gameSessionId){
+             const teamsFiltered = response.teams.filter(value => (value.id !== teamResponse.id));
+             response.teams = teamsFiltered;
+          }  
+          setGameSession(response);  
         });
       }
       
