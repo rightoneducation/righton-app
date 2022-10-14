@@ -27,13 +27,33 @@ const GameSessionContainer = () => {
 
   useEffect(() => { //initial query and subscriptions for gameSessions and teams
     apiClient.getGameSession(gameSessionId).then(response => {
-      setGameSession(response);
-    
+      setGameSession(response); //set initial gameSession state
+
+
+      if (response.currentState === stateArray[0] || response.currentState === stateArray[1]) //only receive added and deleted teams in the NOT_STATRTED and TEAMS_JOINING phases
+      {
+        let createTeamSubscription: any | null = null; //set up subscription for new team members joining
+        createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
+          response.teams.push(teamResponse);
+          setGameSession(response);    
+        });
+        
+        let deleteTeamSubscription: any | null = null; //set up subscription for new team members joining
+        deleteTeamSubscription = apiClient.subscribeDeleteTeam(gameSessionId, teamResponse => {
+          const teamsFiltered = response.teams.filter(value => (value.id !== teamResponse.id));
+          response.teams = teamsFiltered;
+          setGameSession(response);    
+        });
+      }
+      
+     
+      
+      //the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map(team => {
-        return apiClient.getTeam(team.id);
+        return apiClient.getTeam(team.id); //got to call the get the teams from the APi so we can see the answers
       });
   
-      Promise.all(teamDataRequests)
+      Promise.all(teamDataRequests) 
         .then(responses => {  
           responses.forEach(response => {
             let teamMemberSubscription: any | null = null;
