@@ -29,24 +29,39 @@ const GameSessionContainer = () => {
     apiClient.getGameSession(gameSessionId).then(response => {
       setGameSession(response); //set initial gameSession state
 
-      //below handles teams joining and leaving - therefore only receive these updates in the NOT_STATRTED and TEAMS_JOINING phases
+      //below subscribes to teams joining and leaving - therefore only receive these updates in the NOT_STARTED and TEAMS_JOINING phases
       if (response.currentState === stateArray[0] || response.currentState === stateArray[1]) 
       {
-        let createTeamSubscription: any | null = null; //set up subscription for new team members joining
+        let createTeamSubscription: any | null = null; //set up subscription for new teams joining
         createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
           if (teamResponse.gameSessionTeamsId === gameSessionId){
             response.teams.push(teamResponse);
+            console.log(response);
+            setGameSession(response);  
           }
-          setGameSession(response);  
+      
         });
         
-        let deleteTeamSubscription: any | null = null; //set up subscription for new team members joining
+        let deleteTeamSubscription: any | null = null; //set up subscription for teams leaving
         deleteTeamSubscription = apiClient.subscribeDeleteTeam(gameSessionId, teamResponse => {
           if (teamResponse.gameSessionTeamsId === gameSessionId){
              const teamsFiltered = response.teams.filter(value => (value.id !== teamResponse.id));
              response.teams = teamsFiltered;
-          }  
-          setGameSession(response);  
+            setGameSession(response);  
+          
+            }  
+          
+        });
+
+
+        let createTeamAnswerSubscription: any | null = null; //set up subscription for teams answering
+        createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(gameSessionId, teamAnswerResponse => {
+          //if (teamAnswerResponse.gameSessionTeamsId === gameSessionId){
+
+             console.log(teamAnswerResponse); 
+             //setGameSession(response);  
+          //}  
+          
         });
       }
       
@@ -58,7 +73,10 @@ const GameSessionContainer = () => {
       });
   
       Promise.all(teamDataRequests) 
-        .then(responses => {  
+        .then(responses => {
+          
+          //add subscription to createteamanswer here
+
           responses.forEach(response => {
             let teamMemberSubscription: any | null = null;
              teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
