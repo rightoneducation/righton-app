@@ -1,11 +1,10 @@
 import React from "react";
 import { makeStyles} from "@material-ui/core";
 import Modal from 'react-modal';
-import RadialLoaderImage from '../images/RadialLoaderImage.svg';
+import LoadingIndicator from './LoadingIndicator';
 
-export default function GameLoadModal({ handleModalClose, modalOpen, countdown}) {
+export default function GameLoadModal({ handleStartGameModalTimerFinished, modalOpen}) {
   const classes = useStyles();
-
    return (
       <Modal 
            isOpen={modalOpen}
@@ -32,7 +31,21 @@ export default function GameLoadModal({ handleModalClose, modalOpen, countdown})
             appElement={document.getElementById('root') || undefined}
            >
            <div className={classes.counterContainer}> {/*loader + text*/} 
-              <div className={classes.counterText}> {countdown} </div>
+              <LoadingIndicator
+                      theme={[
+                        'rgb(126, 90, 175)',
+                        'rgb(148, 98, 179)',
+                        'rgb(169, 104, 180)',
+                        'rgb(186, 107, 177)',
+                        'rgb(202, 109, 172)',
+                        'rgb(218, 112, 168)',
+                        'rgb(237, 115, 166)',
+                        'rgb(255, 120, 165)',
+                      ]}
+                      radius={110}
+                      timerStartInSecond={3}
+                      handleStartGameModalTimerFinished={handleStartGameModalTimerFinished}
+                  />
           </div>
           <div className={classes.modalHead}> {/*bottom text*/}
              The game will begin soon.
@@ -52,7 +65,6 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   counterContainer:{
-    backgroundImage: `url(${RadialLoaderImage})`,
     width: '242px',
     height: '242px',
     display: 'flex',

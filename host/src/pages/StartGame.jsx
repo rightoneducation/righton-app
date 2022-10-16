@@ -4,7 +4,6 @@ import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
-import { GameSessionState } from "@righton/networking";
 import GameLoadModal from "../components/GameLoadModal";
 
 export default function StartGame({
@@ -15,33 +14,14 @@ export default function StartGame({
   gameCode,
   currentState,
   handleStartGame,
-  isTimerActive,
   isModalOpen,
   handleStartGameModalTimerFinished
 }) {
   const classes = useStyles();
-  const [countdown, setCountdown] = useState(3);
-  
-
-  useEffect(() => {
-    let timer= null;
-    if (isTimerActive){
-        if (countdown > 0){
-          timer = setInterval(() => {
-               setCountdown(countdown - 1);
-           }, 1000);
-        }
-        else
-          handleStartGameModalTimerFinished({currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
-    }
-    return () => {
-      clearInterval(timer);
-    };
-  });
 
   return (
     <div className={classes.background}>
-      <GameLoadModal modalOpen={isModalOpen} countdown={countdown}/>
+      <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={isModalOpen}/>
       <div>
         <HostHeader gameCode={gameCode} currentState={currentState} />
         <GameCard questions={questions} title={title} />

@@ -111,14 +111,15 @@ const GameSessionContainer = () => {
       });
   };
 
-  const handleStartGameModalTimerFinished = (newUpdates: Partial<IGameSession>) =>{
+  const handleStartGameModalTimerFinished = () => {
+    let newUpdates = {currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0};
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
         setGameSession(response);
-        setIsModalOpen(false);
+        setIsModalOpen(false); 
       });
   };
-  
+
   const handleStartGame = () =>{
     console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
     if (gameSession.currentState === stateArray[1])
