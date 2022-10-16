@@ -340,6 +340,7 @@ type AWSTeamMember= {
 
 type AWSTeamAnswer= {
   id: string,
+  questionId?: number | null,
   isChosen?: boolean | null,
   text?: string | null,
   createdAt?: string,
@@ -604,6 +605,7 @@ class TeamAnswerParser{
     const {
 
       id,
+      questionId,
       isChosen,
       text,
       createdAt,
@@ -622,6 +624,7 @@ class TeamAnswerParser{
     
     const teamAnswer: ITeamAnswer = {
       id,
+      questionId,
       isChosen,
       text,
       createdAt,

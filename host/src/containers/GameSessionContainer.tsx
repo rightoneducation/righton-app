@@ -25,48 +25,10 @@ const GameSessionContainer = () => {
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
-  useEffect(() => { //initial query and subscriptions for gameSessions and teams
+  useEffect(() => { //initial query for gameSessions and teams
     apiClient.getGameSession(gameSessionId).then(response => {
       setGameSession(response); //set initial gameSession state
 
-      //below subscribes to teams joining and leaving - therefore only receive these updates in the NOT_STARTED and TEAMS_JOINING phases
-      if (response.currentState === stateArray[0] || response.currentState === stateArray[1]) 
-      {
-        let createTeamSubscription: any | null = null; //set up subscription for new teams joining
-        createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
-          if (teamResponse.gameSessionTeamsId === gameSessionId){
-            response.teams.push(teamResponse);
-            console.log(response);
-            setGameSession(response);  
-          }
-      
-        });
-        
-        let deleteTeamSubscription: any | null = null; //set up subscription for teams leaving
-        deleteTeamSubscription = apiClient.subscribeDeleteTeam(gameSessionId, teamResponse => {
-          if (teamResponse.gameSessionTeamsId === gameSessionId){
-             const teamsFiltered = response.teams.filter(value => (value.id !== teamResponse.id));
-             response.teams = teamsFiltered;
-            setGameSession(response);  
-          
-            }  
-          
-        });
-
-
-        let createTeamAnswerSubscription: any | null = null; //set up subscription for teams answering
-        createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(gameSessionId, teamAnswerResponse => {
-          //if (teamAnswerResponse.gameSessionTeamsId === gameSessionId){
-
-             console.log(teamAnswerResponse); 
-             //setGameSession(response);  
-          //}  
-          
-        });
-      }
-      
-     
-      
       //the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map(team => {
         return apiClient.getTeam(team.id); //got to call the get the teams from the APi so we can see the answers
@@ -74,22 +36,7 @@ const GameSessionContainer = () => {
   
       Promise.all(teamDataRequests) 
         .then(responses => {
-          
-          //add subscription to createteamanswer here
-
-          responses.forEach(response => {
-            let teamMemberSubscription: any | null = null;
-             teamMemberSubscription = apiClient.subscribeUpdateTeamMember(response.teamMembers.id, teamMemberResponse => {
-              responses.forEach(team => {
-                team.teamMembers.items.forEach(teamMemberOriginal => { 
-                  if (teamMemberOriginal.id === teamMemberResponse.id){
-                    teamMemberOriginal = Object.assign(teamMemberOriginal, teamMemberResponse); 
-                    }
-                });
-              }); 
-            });
-          });
-          setTeamsArray(responses); //last thing we do is update state so we don't have to wait for it to be updated
+          setTeamsArray(responses); 
         })
         .catch(reason => console.log(reason));
     });
@@ -99,8 +46,52 @@ const GameSessionContainer = () => {
        setGameSession(({ ...gameSession, ...response }));
     });
 
+
+    let createTeamSubscription: any | null = null; //set up subscription for new teams joining
+    createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
+      if (teamResponse.gameSessionTeamsId === gameSessionId){
+          setGameSession((prevState) => {
+            let newState = JSON.parse(JSON.stringify(prevState));
+            newState.teams.push(teamResponse);
+            return newState;
+          });
+      }
+    });
+
+    let deleteTeamSubscription: any | null = null; //set up subscription for teams leaving
+    deleteTeamSubscription = apiClient.subscribeDeleteTeam(gameSessionId, teamResponse => {
+      if (teamResponse.gameSessionTeamsId === gameSessionId){
+        setGameSession((prevState) => {
+          let newState = JSON.parse(JSON.stringify(prevState));
+          let teamsFiltered = newState.teams.filter(value => (value.id !== teamResponse.id));
+          newState.teams = teamsFiltered;
+          return newState;
+        });
+      }  
+    });
+
+  
+    let createTeamAnswerSubscription: any | null = null; //set up subscription for teams answering
+    createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(gameSessionId, teamAnswerResponse => {
+      setTeamsArray((prevState) => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        newState.forEach(team => {
+          team.teamMembers.items.forEach(teamMember => {
+            if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
+              teamMember.answers.items.push(teamAnswerResponse);     
+          });
+        });
+        return newState;
+      }); 
+    });
+    
     // @ts-ignore
-    return () => gameSessionSubscription?.unsubscribe();
+    return () => {
+      gameSessionSubscription?.unsubscribe();
+      createTeamSubscription.unsubscribe();
+      deleteTeamSubscription.unsubscribe();
+      createTeamAnswerSubscription.unsubscribe();
+    }
 
   },[]);
 

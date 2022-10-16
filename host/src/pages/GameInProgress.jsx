@@ -131,6 +131,7 @@ export default function GameInProgress({
     return  footerButtonTextDictionary[statePosition];
   };
 
+ 
 
   return (
     <div className={classes.background}>
