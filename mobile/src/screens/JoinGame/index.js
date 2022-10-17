@@ -15,6 +15,7 @@ export default function JoinGame({
     const [user, setUser] = React.useState(null)
 
     useEffect(() => {
+        // TODO: Change this to switch case, fix states to use GameSessionState vs. strings
         if (gameSession?.currentState === "TEAMS_JOINING") {
             navigation.navigate("EnterGameCode", {
                 gameSession,
@@ -22,7 +23,7 @@ export default function JoinGame({
                 teamMember,
             })
         } else if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
-            navigation.navigate("PregameCountDown", {
+            navigation.navigate("BasicGamePlay", {
                 gameSession,
                 team: gameSession.teams.find((team) => team.id === teamId),
                 teamMember,

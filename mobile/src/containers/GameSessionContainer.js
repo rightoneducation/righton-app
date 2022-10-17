@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import EncryptedStorage from "react-native-encrypted-storage"
+import { GameSessionState } from "@righton/networking"
 
 const GameSessionContainer = ({ children }) => {
     const [gameCode, setGameCode] = useState(null)
@@ -8,6 +9,9 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
+        if (gameSession) {
+            storeGameSessionLocal()
+        }
         loadLocalGameSession().then((localGameSession) => {
             if (localGameSession) {
                 setGameSession(localGameSession.gameSession)
@@ -47,14 +51,11 @@ const GameSessionContainer = ({ children }) => {
     }, [gameCode])
 
     useEffect(() => {
-        if (gameSession) {
-            storeGameSessionLocal()
-        }
         //clear local storage when the game is finished
-        if (gameSession?.currentState === "FINISHED") {
+        if (GameSessionState.FINISHED) {
             removeGameSessionLocal()
         }
-    }, [gameSession])
+    }, [gameSession?.currentState])
 
     async function storeGameSessionLocal() {
         try {
@@ -65,13 +66,12 @@ const GameSessionContainer = ({ children }) => {
                     teamId: teamId,
                     teamMember: teamMember,
                     gameCode: gameCode,
-                    currentState: gameSession?.currentState,
                 })
             )
-            console.log("stored new game session locally:", localGameSession)
+            console.debug("stored new game session locally:", localGameSession)
         } catch (error) {
             // There was an error on the native side
-            console.log("error storing game session", error)
+            console.debug("error storing game session", error)
         }
     }
 
@@ -80,7 +80,7 @@ const GameSessionContainer = ({ children }) => {
             const value = await EncryptedStorage.getItem("localGameSession")
             if (value !== null) {
                 // We have data!!
-                console.log(
+                console.debug(
                     "loaded existing game session from local storage:",
                     value
                 )
@@ -88,7 +88,7 @@ const GameSessionContainer = ({ children }) => {
             }
         } catch (error) {
             // Error retrieving data
-            console.log("error loading game session", error)
+            console.debug("error loading game session", error)
         }
     }
 
@@ -98,7 +98,7 @@ const GameSessionContainer = ({ children }) => {
         } catch (error) {
             // There was an error on the native side
             // You can find out more about this error by using the `error.code` property
-            console.log(error.code) // ex: -25300 (errSecItemNotFound)
+            console.debug(error.code) // ex: -25300 (errSecItemNotFound)
         }
     }
 

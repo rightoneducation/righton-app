@@ -31,7 +31,7 @@ const AnswerOptions = ({
         return {
             id: uuid.v4(),
             text: text,
-            isSelected: false,
+            isSelected: true,
         }
     }
 
@@ -86,6 +86,7 @@ const AnswerOptions = ({
 
         setTrickAnswers(modifiedTrickAnswers)
         onAnswered(answer)
+        console.debug(trickAnswers)
     }
 
     const onTrickyAnswerChanged = (answerId, newText) => {
@@ -223,6 +224,7 @@ const AnswerOptions = ({
                                     item.isSelected ? "#8DCD53" : "#D9DFE5"
                                 }
                                 onPress={chooseAnswer}
+                                disabled={item.isChosen}
                                 showIcon={item.isSelected}
                                 readonly={true}
                                 data={item}
