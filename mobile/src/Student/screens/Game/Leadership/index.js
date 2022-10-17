@@ -16,36 +16,34 @@ import ExpandableQuestion from "../../../components/ExpandableQuestion"
 import TeamItem from "./Components/TeamItem"
 import Answers from "../../../components/Answers"
 
-const Leadership = ({ teams, gameSession, teamMember }) => {
-    // const teams = [
-    //     {
-    //         teamNo: 1,
-    //         score: 0,
-    //         showPoints: false
-    //     },
-    //     {
-    //         teamNo: 2,
-    //         score: 25,
-    //         showPoints: false
-    //     },
-    //     {
-    //         teamNo: 3,
-    //         score: 0,
-    //         showPoints: true
-    //     },
-    //     {
-    //         teamNo: 4,
-    //         score: 25,
-    //         showPoints: false
-    //     },
-    //     {
-    //         teamNo: 5,
-    //         score: 0,
-    //         showPoints: true
-    //     },
-    // ]
-
-    console.log("team in leaderboard", team)
+const Leadership = ({ gameSession, teamMember }) => {
+    const teams = [
+        {
+            teamNo: 1,
+            score: 0,
+            showPoints: false,
+        },
+        {
+            teamNo: 2,
+            score: 25,
+            showPoints: false,
+        },
+        {
+            teamNo: 3,
+            score: 0,
+            showPoints: true,
+        },
+        {
+            teamNo: 4,
+            score: 25,
+            showPoints: false,
+        },
+        {
+            teamNo: 5,
+            score: 0,
+            showPoints: true,
+        },
+    ]
 
     const [questionVisible, setQuestionVisible] = useState(false)
 

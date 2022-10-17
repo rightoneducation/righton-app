@@ -86,7 +86,7 @@ const AnswerOptions = ({
 
         setTrickAnswers(modifiedTrickAnswers)
         onAnswered(answer)
-        console.log(trickAnswers)
+        console.debug(trickAnswers)
     }
 
     const onTrickyAnswerChanged = (answerId, newText) => {

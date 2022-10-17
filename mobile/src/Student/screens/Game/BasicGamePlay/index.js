@@ -30,21 +30,24 @@ const BasicGamePlay = ({
 }) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
     console.log("team in BasicGamePlay", team)
-    // const question = gameSession?.isAdvanced
-    //     ? team.question
-    //     : gameSession?.questions[
-    //           gameSession?.currentQuestionIndex == null
-    //               ? 0
-    //               : gameSession?.currentQuestionIndex
-    //       ]
-    const question = gameSession?.questions[1]
-    const availableHints = JSON.parse(question.instructions)
+    const question = gameSession?.isAdvanced
+        ? team.question
+        : gameSession?.questions[
+              gameSession?.currentQuestionIndex == null
+                  ? 0
+                  : gameSession?.currentQuestionIndex
+          ]
+
+    // This is a placeholder variable for the current question to test instructions/ hints
+    // const question = gameSession?.questions[1]
+
+    const availableHints = question.instructions
 
     const phaseTime = gameSession?.phaseOneTime ?? 300
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    const [selectedAnswer, setSelectedAnswer] = useState(null)
+    const [selectedAnswer, setSelectedAnswer] = useState(false)
     const [hints, setHints] = useState([availableHints])
 
     let countdown = useRef()
@@ -65,7 +68,10 @@ const BasicGamePlay = ({
         const subscription = apiClient.subscribeUpdateGameSession(
             gameSession.id,
             (gameSession) => {
-                if (gameSession?.currentState === "CHOOSE_TRICKIEST_ANSWER") {
+                if (
+                    gameSession?.currentstate ===
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER
+                ) {
                     navigateToNextScreen()
                 }
             }
@@ -114,13 +120,8 @@ const BasicGamePlay = ({
                                     return
                                 }
                                 teamAnswer.isChosen = true
-                                console.log("this is team answer", teamAnswer)
+                                console.debug("this is team answer", teamAnswer)
                             })
-                            // .then(() => {
-                            //     if (!gameSession?.isAdvanced) {
-                            //         navigateToNextScreen()
-                            //     }
-                            // })
                             .catch((error) => {
                                 console.error(error.message)
                             })
@@ -141,7 +142,7 @@ const BasicGamePlay = ({
         }
     })
 
-    //if isCorrectAnswer is true, add 10 points to the team's score
+    // if isCorrectAnswer is true, add 10 points to the team's score
     const addPoints = (answer) => {
         if (answer.isCorrectAnswer) {
             team.score += 10
@@ -160,13 +161,13 @@ const BasicGamePlay = ({
         if (selectedAnswer.isCorrectAnswer) {
             return `Correct! 
             
-    ${correctAnswer.text} 
-    is the correct answer.`
+            ${correctAnswer.text} 
+            is the correct answer.`
         } else {
             return `Nice Try! 
             
-    ${correctAnswer.text}
-    is the correct answer.`
+            ${correctAnswer.text}
+            is the correct answer.`
         }
     }
 
@@ -178,7 +179,7 @@ const BasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-                {gameSession?.currentState === "CHOOSE_CORRECT_ANSWER" ? (
+                {GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Answer The Question
@@ -218,7 +219,8 @@ const BasicGamePlay = ({
                             })}
                         />
                     </Card>
-                    {gameSession?.currentState === "PHASE_1_RESULTS" ? (
+                    {gameSession?.currentState ===
+                    GameSessionState.PHASE_1_RESULTS ? (
                         <Card headerTitle={hintsViewTitle()}>
                             <HintsView hints={hints} />
                         </Card>
