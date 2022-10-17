@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     bottom: '0',
     fontWeight: "700",
     lineHeight: "30px",
+    textTransform: "none",
     boxShadow: "0px 5px 22px 0px #47D9FF4D", 
     "&:disabled": {
       background: 'transparent',

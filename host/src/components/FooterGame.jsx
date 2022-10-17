@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => ({
     position: 'sticky',
     bottom: '0',
     padding: '10.5%',
+    paddingTop:'15%',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
@@ -66,6 +67,7 @@ const useStyles = makeStyles(theme => ({
     bottom: '0',
     fontWeight: "700",
     lineHeight: "30px",
+    textTransform: "none",
     boxShadow: "0px 5px 22px 0px #47D9FF4D", 
     "&:disabled": {
       background: 'transparent',
@@ -89,6 +91,7 @@ const useStyles = makeStyles(theme => ({
     color: "#159EFA",
     fontSize: "20px",
     bottom: '0',
+    textTransform: "none",
     fontWeight: "700",
     lineHeight: "30px",
     boxShadow: "0px 5px 22px 0px #47D9FF4D", 

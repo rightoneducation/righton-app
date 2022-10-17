@@ -14,33 +14,14 @@ export default function StartGame({
   gameCode,
   currentState,
   handleStartGame,
-  isTimerActive,
   isModalOpen,
-  handleTimerFinished
+  handleStartGameModalTimerFinished
 }) {
   const classes = useStyles();
-  const [countdown, setCountdown] = useState(3);
-  
-
-  useEffect(() => {
-    let timer= null;
-    if (isTimerActive){
-        if (countdown > 0){
-          timer = setInterval(() => {
-               setCountdown(countdown - 1);
-           }, 1000);
-        }
-        else
-          handleTimerFinished();
-    }
-    return () => {
-      clearInterval(timer);
-    };
-  });
 
   return (
     <div className={classes.background}>
-      <GameLoadModal modalOpen={isModalOpen} countdown={countdown}/>
+      <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={isModalOpen}/>
       <div>
         <HostHeader gameCode={gameCode} currentState={currentState} />
         <GameCard questions={questions} title={title} />

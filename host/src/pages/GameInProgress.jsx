@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCardDetails from "../components/QuestionCardDetails";
+import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import { GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
+
 
 export default function GameInProgress({
   teams,
@@ -75,33 +76,37 @@ export default function GameInProgress({
 
   const getTotalAnswers = (answerArray) => { //finds all answers for current question using isChosen, for use in footer progress bar
     let count = 0;
-    answerArray.forEach(answerCount => {
-      count = count + answerCount;
-    });
-    return count;
+    if (answerArray){
+      answerArray.forEach(answerCount => {
+        count = count + answerCount;
+      });
+      return count;
+    }
   };
 
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { //returns an array ordered to match the order of answer choices, containing the total number of each answer
-    let choicesTextArray = [choices.length];
-    let answersArray = new Array(choices.length).fill(0);
-    let currentQuestionId = questions[currentQuestionIndex].id;
-    choices.forEach((choice,index) =>{
-      choicesTextArray[index] = choice.text;
-    });
-    teamsArray.forEach(team => {
-      team.teamMembers.items.forEach(teamMember => {
-        teamMember.answers.items.forEach(answer =>{
-         if (answer.questionId === currentQuestionId && answer.isChosen){
-            choices.forEach(choice =>{
-              if (answer.text === choice.text){
-                answersArray[choicesTextArray.indexOf(choice.text)]+=1;
-              }
-            })
-          }
+    if (!teamsArray.length === 0 || Object.keys(teamsArray[0]).length !==0 ){
+      let choicesTextArray = [choices.length];
+      let answersArray = new Array(choices.length).fill(0);
+      let currentQuestionId = questions[currentQuestionIndex].id;
+      choices.forEach((choice,index) =>{
+        choicesTextArray[index] = choice.text;
+      });
+      teamsArray.forEach(team => {
+        team.teamMembers.items.forEach(teamMember => {
+          teamMember.answers.items.forEach(answer =>{
+          if (answer.questionId === currentQuestionId && answer.isChosen){
+              choices.forEach(choice =>{
+                if (answer.text === choice.text){
+                  answersArray[choicesTextArray.indexOf(choice.text)]+=1;
+                }
+              })
+            }
+          })
         })
-      })
-    });             
-    return answersArray;
+      });             
+      return answersArray;
+    }
   };
 
   const handleFooterOnClick = (numPlayers, totalAnswers) => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
@@ -126,6 +131,7 @@ export default function GameInProgress({
     return  footerButtonTextDictionary[statePosition];
   };
 
+ 
 
   return (
     <div className={classes.background}>
@@ -146,7 +152,7 @@ export default function GameInProgress({
           gameInProgress={true}
           statePosition ={statePosition = stateArray.indexOf(currentState)}
         />
-        <QuestionCardDetails questions={questions} />
+        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
         <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 

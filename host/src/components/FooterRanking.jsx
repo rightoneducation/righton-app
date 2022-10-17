@@ -47,7 +47,8 @@ const useStyles = makeStyles(() => ({
     textAlign: "center",
     width: "100%",
     marginButton: "3%",
-    marginBottom: "10px"
+    marginBottom: "10px",
+    textTransform: "none"
   },
   backButtonText: {
     fontFamily: "Poppins",
@@ -57,6 +58,7 @@ const useStyles = makeStyles(() => ({
     lineHeight: "30px",
     color: "#FFFFFF",
     padding: "8px",
+    textTransform: "none"
   }
 }));
 
