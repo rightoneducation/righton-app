@@ -85,7 +85,7 @@ export default function GameInProgress({
   };
 
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { //returns an array ordered to match the order of answer choices, containing the total number of each answer
-    if (!teamsArray.length === 0 || Object.keys(teamsArray[0]).length !==0 ){
+    if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !==0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype){
       let choicesTextArray = [choices.length];
       let answersArray = new Array(choices.length).fill(0);
       let currentQuestionId = questions[currentQuestionIndex].id;
