@@ -8,7 +8,7 @@ export default function GameAnswers({ questionChoices, answersByQuestion, totalA
   const classes = useStyles();
   return (
     <Grid className={classes.background}>
-     {(questionChoices && answersByQuestion) ? 
+     {(questionChoices) ? 
       questionChoices.map((choice,index) => {
         return (<GameAnswersDropdown key={index}  answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} />)
       })
