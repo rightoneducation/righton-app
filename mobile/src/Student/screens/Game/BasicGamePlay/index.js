@@ -8,18 +8,17 @@ import {
     Alert,
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
-import { scale, moderateScale, verticalScale } from "react-native-size-matters"
-import { fontFamilies, fonts } from "../../../../utils/theme"
 import * as Progress from "react-native-progress"
-import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
-import HorizontalPageView from "../../../components/HorizontalPageView"
+import { moderateScale, scale, verticalScale } from "react-native-size-matters"
+import uuid from "react-native-uuid"
+import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
-import Spinner from "./Spinner"
+import HorizontalPageView from "../../../components/HorizontalPageView"
+import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
+import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptions from "./AnswerOptions"
-import HintsView from "../Components/HintsView"
-import { GameSessionState } from "@righton/networking"
-import uuid from "react-native-uuid"
+import Spinner from "./Spinner"
 
 const BasicGamePlay = ({
     navigation,
