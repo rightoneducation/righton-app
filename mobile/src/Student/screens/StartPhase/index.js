@@ -29,13 +29,13 @@ export default StartPhase
 const styles = StyleSheet.create({
     mainContainer: {
         alignItems: 'center',
-        paddingHorizontal: 34,
+        paddingHorizontal: verticalScale(34),
     },
     headerText: {
         marginTop: verticalScale(160),
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.large,
-        fontWeight: fontWeights.heavy,
+        fontWeight: fontWeights.extraBold,
         color: colors.white,
     },
     subtitleText: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         color: colors.white,
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.medium,
-        fontWeight: fontWeights.heavy,
+        fontWeight: fontWeights.extraBold,
         textAlign: 'center',
         position: 'absolute',
         bottom: verticalScale(163),
