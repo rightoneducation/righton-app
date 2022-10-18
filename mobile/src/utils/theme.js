@@ -35,6 +35,12 @@ const fontFamilies = {
   latoBold: 'Lato-Bold',
 }
 
+const fontWeights = {
+  heavy: '800',
+  bold: '700',
+  medium: '500'
+}
+
 const colors = {
   primary: '#384466',
   secondary: '#8cd5df',
@@ -69,5 +75,6 @@ export {
   deviceWidth,
   elevation,
   fonts,
-  fontFamilies
+  fontFamilies,
+  fontWeights
 }
