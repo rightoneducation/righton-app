@@ -1,25 +1,16 @@
-import React, { Fragment, useEffect, useState } from "react"
+import { Fragment, useState } from "react"
 import {
-    Text,
-    TextInput,
-    SafeAreaView,
-    Image,
-    View,
-    StatusBar,
+    Image, SafeAreaView, Text,
+    TextInput, View
 } from "react-native"
-import { verticalScale } from "react-native-size-matters"
-import NetInfo from "@react-native-community/netinfo"
+import { getUniqueId } from "react-native-device-info"
+import PurpleBackground from "../../../components/PurpleBackground"
+import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
-import debug from "../../../utils/debug"
-import RoundButton from "../../../components/RoundButton"
-import PurpleBackground from "../../../components/PurpleBackground"
-import { getUniqueId } from "react-native-device-info"
-import { GameSessionState } from "@righton/networking"
 
 export default function StudentName({
     navigation,
-    route,
     gameSession,
     setTeamInfo,
 }) {

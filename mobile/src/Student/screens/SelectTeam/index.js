@@ -62,8 +62,8 @@ const SelectTeam = ({ navigation, route }) => {
     }
   ]
 
-  const [largeIcon, setLargeIcon] = useState(null)
-  const [smallIcon, setSmallIcon] = useState(null)
+  const [largeAvatar, setLargeAvatar] = useState(null)
+  const [smallAvatar, setSmallAvatar] = useState(null)
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(false)
 
   const goBack = () => {
@@ -71,9 +71,9 @@ const SelectTeam = ({ navigation, route }) => {
   }
 
   const selectTeam = (icon) => {
-    setSmallIcon(icon)
+    setSmallAvatar(icon)
     const largeIcon = teamLargeIcon.find(val => val.id === icon.id)
-    setLargeIcon(largeIcon)
+    setLargeAvatar(largeIcon)
     setEnabledSubmitButton(true)
   }
 
