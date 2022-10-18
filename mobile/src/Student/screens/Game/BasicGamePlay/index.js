@@ -20,15 +20,9 @@ import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptions from "./AnswerOptions"
 import Spinner from "./Spinner"
 
-const BasicGamePlay = ({
-    navigation,
-    route,
-    gameSession,
-    teamId,
-    teamMember,
-}) => {
+const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
-    console.log("team in BasicGamePlay", team)
+    console.debug("team in BasicGamePlay", team)
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -80,7 +74,7 @@ const BasicGamePlay = ({
             clearInterval(countdown.current)
             subscription.unsubscribe()
         }
-    }, [gameSession])
+    }, [gameSession, currentTime])
 
     const navigateToNextScreen = () => {
         navigation.navigate("Leadership", {
@@ -178,7 +172,8 @@ const BasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-                {GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+                {gameSession?.currentState ===
+                GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Answer The Question
@@ -219,7 +214,7 @@ const BasicGamePlay = ({
                         />
                     </Card>
                     {gameSession?.currentState ===
-                    GameSessionState.PHASE_1_RESULTS ? (
+                    GameSessionState.PHASE_1_DISCUSS ? (
                         <Card headerTitle={hintsViewTitle()}>
                             <HintsView hints={hints} />
                         </Card>
