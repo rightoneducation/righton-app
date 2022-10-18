@@ -75,10 +75,10 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
-                        {/* <Stack.Screen
+                        <Stack.Screen
                             name="PregameCountDown"
                             component={PregameCountDown}
-                        /> */}
+                        />
                         <Stack.Screen name="Leadership">
                             {(props) => (
                                 <Leadership
