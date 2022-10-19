@@ -16,8 +16,6 @@ export default function JoinGame({
     const [user, setUser] = React.useState(null)
 
     useEffect(() => {
-        // TODO: Change this to switch case
-
         switch (gameSession?.currentState) {
             case GameSessionState.TEAMS_JOINING:
                 return navigation.navigate("EnterGameCode", {
@@ -26,7 +24,8 @@ export default function JoinGame({
                     teamMember,
                 })
 
-            // temporarily commented out to test the game play
+            // temporarily commented out to test the game play more efficiently
+
             // case GameSessionState.CHOOSE_CORRECT_ANSWER:
             //     return navigation.navigate("PregameCountDown", {
             //         gameSession,
