@@ -1,32 +1,52 @@
-import React from 'react'
-import { StyleSheet, View, TextInput, Image, Pressable } from 'react-native'
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-import { fontFamilies, fonts } from '../../../utils/theme'
+import React from "react"
+import { StyleSheet, View, TextInput, Image, Pressable } from "react-native"
+import { moderateScale, scale, verticalScale } from "react-native-size-matters"
+import { fontFamilies, fonts } from "../../../utils/theme"
+import { GameSessionState } from "@righton/networking"
 
-const RoundTextIcon = ({ icon, text, height, borderColor, onPress, data, showIcon, readonly, onTextChanged }) => {
+const RoundTextIcon = ({
+    icon,
+    text,
+    height,
+    borderColor,
+    onPress,
+    data,
+    showIcon,
+    readonly,
+    onTextChanged,
+    gameSession,
+}) => {
     return (
         <>
             <Pressable
-                onPress={() => onPress(data)}>
+                disabled={
+                    gameSession?.currentState ===
+                        GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
+                    gameSession?.currentState ===
+                        GameSessionState.PHASE_2_DISCUSS ||
+                    gameSession?.currentState ===
+                        GameSessionState.PHASE_2_RESULTS
+                        ? data.isCorrectAnswer === true
+                        : false
+                }
+                onPress={() => onPress(data)}
+            >
                 <View
                     style={[styles.container, { height, borderColor }]}
-                    pointerEvents={readonly ? 'none' : 'auto'}
+                    pointerEvents={readonly ? "none" : "auto"}
                 >
                     <TextInput
                         editable={!readonly}
                         style={styles.input}
-                        onSubmitEditing={(event) => onTextChanged(data, event.nativeEvent.text)}
+                        onSubmitEditing={(event) =>
+                            onTextChanged(data, event.nativeEvent.text)
+                        }
                     >
                         {text}
                     </TextInput>
-                    {
-                        (showIcon === undefined ? false : showIcon) ? (
-                            <Image
-                                source={icon}
-                                style={styles.icon}
-                            />
-                        ) : null
-                    }
+                    {(showIcon === undefined ? false : showIcon) ? (
+                        <Image source={icon} style={styles.icon} />
+                    ) : null}
                 </View>
             </Pressable>
         </>
@@ -37,17 +57,17 @@ export default RoundTextIcon
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "space-between",
         borderWidth: 1,
         borderRadius: 22,
         paddingLeft: scale(5),
         paddingRight: scale(5),
-        backgroundColor: 'white',
-        alignItems: 'center',
+        backgroundColor: "white",
+        alignItems: "center",
         marginTop: verticalScale(8),
         marginBottom: verticalScale(8),
-        alignSelf: 'stretch',
+        alignSelf: "stretch",
     },
     icon: {
         padding: scale(10),
@@ -55,7 +75,7 @@ const styles = StyleSheet.create({
         height: 16,
     },
     input: {
-        color: '#384466',
+        color: "#384466",
         fontFamily: fontFamilies.karlaRegular,
         fontSize: fonts.xMedium,
         marginRight: scale(5),

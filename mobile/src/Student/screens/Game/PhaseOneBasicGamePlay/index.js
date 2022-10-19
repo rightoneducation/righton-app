@@ -28,6 +28,7 @@ const PhaseOneBasicGamePlay = ({
     teamMember,
 }) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
+
     console.debug("team in PhaseOneBasicGamePlay", team)
 
     const question = gameSession?.isAdvanced
@@ -53,6 +54,7 @@ const PhaseOneBasicGamePlay = ({
     let countdown = useRef()
 
     useEffect(() => {
+        // TODO: Disable answer selection when the timer is up
         // if (currentTime == 0) {
         //     navigateToNextScreen()
         //     return
@@ -66,15 +68,7 @@ const PhaseOneBasicGamePlay = ({
         }, 1000)
 
         const subscription = apiClient.subscribeUpdateGameSession(
-            gameSession.id,
-            (gameSession) => {
-                if (
-                    gameSession?.currentstate ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER
-                ) {
-                    navigateToNextScreen()
-                }
-            }
+            gameSession.id
         )
 
         return () => {
@@ -109,7 +103,6 @@ const PhaseOneBasicGamePlay = ({
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isSelected,
                                 answer.isChosen
                             )
                             .then((teamAnswer) => {

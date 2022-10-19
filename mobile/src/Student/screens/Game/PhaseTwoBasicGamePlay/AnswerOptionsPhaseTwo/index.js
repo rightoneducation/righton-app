@@ -1,24 +1,37 @@
 import React, { useState } from "react"
-import { StyleSheet, Text, View, TextInput, Platform } from "react-native"
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    Platform,
+    Pressable,
+} from "react-native"
 import sharedStyles from "../../Components/sharedStyles"
 import { moderateScale, scale, verticalScale } from "react-native-size-matters"
 import { fontFamilies, fonts, colors } from "../../../../../utils/theme"
 import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
 import uuid from "react-native-uuid"
+import { TouchableOpacity } from "react-native-gesture-handler"
+//import Pressable from "react-native/Libraries/Components/Pressable/Pressable"
 
 const AnswerOptionsPhaseTwo = ({
     onAnswered,
     isFacilitator,
     isAdvancedMode,
     answers,
+    isCorrectAnswer,
+    gameSession,
 }) => {
+    console.log("AnswerOptionsPhaseTwo", gameSession)
     const Status = {
         none: "none",
         hasAnsweredCorrectly: "answered",
         hasAnsweredIncorrectly: "incorrectAnswer",
         basicMode: "basicMode",
     }
+    console.debug("correct answer", isCorrectAnswer)
     const [estimatedAnswer, setEstimatedAnswer] = useState("")
     const [showTrickAnswers, setShowTrickAnswers] = useState(false)
     const [trickAnswers, setTrickAnswers] = useState(answers)
@@ -31,9 +44,10 @@ const AnswerOptionsPhaseTwo = ({
         return {
             id: uuid.v4(),
             text: text,
-            isSelected: true,
         }
     }
+
+    // if answer is correct, disable the text input
 
     const isItemReadOnly = (item) => {
         if (status == Status.hasAnsweredCorrectly) {
@@ -130,12 +144,12 @@ const AnswerOptionsPhaseTwo = ({
             <Text
                 style={[
                     sharedStyles.text,
-                    { opacity: status == Status.none ? 1 : 0.3 },
+                    // { opacity: status == Status.none ? 1 : 0.3 },
                 ]}
             >
                 {isFacilitator && status !== Status.basicMode
                     ? "Help guide your team to guess the correct answer!"
-                    : "Choose the correct answer"}
+                    : "What do you think is the most popular incorrect answer among your class?"}
             </Text>
             {status !== Status.basicMode && (
                 <TextInput
@@ -212,6 +226,8 @@ const AnswerOptionsPhaseTwo = ({
                         extraData={trickAnswers}
                         keyExtractor={(item) => `${item.id}`}
                         renderItem={({ item }) => (
+                            // disable the button if the answer is correct
+
                             <RoundTextIcon
                                 icon={
                                     item.isSelected
@@ -224,10 +240,12 @@ const AnswerOptionsPhaseTwo = ({
                                     item.isSelected ? "#8DCD53" : "#D9DFE5"
                                 }
                                 onPress={chooseAnswer}
-                                disabled={item.isChosen}
+                                // disable button if answer is correct
+                                disabled={item.isCorrectAnswer == true}
                                 showIcon={item.isSelected}
                                 readonly={true}
                                 data={item}
+                                gameSession={gameSession}
                             />
                         )}
                     />

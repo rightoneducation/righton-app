@@ -157,7 +157,6 @@ const PhaseTwoBasicGamePlay = ({
     const handleAnswerResult = (answer) => {
         setSelectedAnswer(answer)
         submitAnswer(answer)
-        addPoints(answer)
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
@@ -223,6 +222,8 @@ const PhaseTwoBasicGamePlay = ({
                             answers={answerChoices.map((choice) => {
                                 return choice
                             })}
+                            isCorrectAnswer={correctAnswer.isCorrectAnswer}
+                            gameSession={gameSession}
                         />
                     </Card>
                     {gameSession?.currentState ===

@@ -26,6 +26,7 @@ export default function JoinGame({
                     teamMember,
                 })
 
+            // temporarily commented out to test the game play
             // case GameSessionState.CHOOSE_CORRECT_ANSWER:
             //     return navigation.navigate("PregameCountDown", {
             //         gameSession,
@@ -64,9 +65,7 @@ export default function JoinGame({
                     team: gameSession.teams.find((team) => team.id === teamId),
                     teamMember,
                 })
-            // struggling with default here. Using other game session states to display certain features on some screens
-            // but dont want to navigate away from the current screen.
-            // How to handle this without always being redirected to pregame countdown?
+
             default:
                 return navigation.navigate("JoinGame")
         }
