@@ -21,12 +21,7 @@ import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
 import Spinner from "./Spinner"
 import { GameSessionState } from "@righton/networking"
 
-const PhaseOneBasicGamePlay = ({
-    navigation,
-    gameSession,
-    teamId,
-    teamMember,
-}) => {
+const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
 
     console.debug("team in PhaseOneBasicGamePlay", team)
@@ -38,9 +33,6 @@ const PhaseOneBasicGamePlay = ({
                   ? 0
                   : gameSession?.currentQuestionIndex
           ]
-
-    // This is a placeholder variable for the current question to test instructions/ hints
-    // const question = gameSession?.questions[1]
 
     const availableHints = question.instructions
 
@@ -76,15 +68,6 @@ const PhaseOneBasicGamePlay = ({
             subscription.unsubscribe()
         }
     }, [gameSession, currentTime])
-
-    const navigateToNextScreen = () => {
-        navigation.navigate("Leadership", {
-            gameSession,
-            team,
-            teamMember,
-            question,
-        })
-    }
 
     const submitAnswer = (answer) => {
         Alert.alert(
@@ -131,7 +114,6 @@ const PhaseOneBasicGamePlay = ({
             id: uuid.v4(),
             text: choice.text,
             isCorrectAnswer: choice.isAnswer,
-            isSelected: false,
         }
     })
 

@@ -21,14 +21,10 @@ import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import Spinner from "./Spinner"
 import { GameSessionState } from "@righton/networking"
 
-const PhaseTwoBasicGamePlay = ({
-    navigation,
-    gameSession,
-    teamId,
-    teamMember,
-}) => {
+const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
-    console.debug("team in PhaseTwoBasicGamePlay", team)
+    console.debug("team in Phase Two Basic GamePlay", team)
+
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -37,18 +33,13 @@ const PhaseTwoBasicGamePlay = ({
                   : gameSession?.currentQuestionIndex
           ]
 
-    // This is a placeholder variable for the current question to test instructions/ hints
-    // const question = gameSession?.questions[1]
-
     const phaseTime = gameSession?.phaseTwoTime ?? 300
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswer, setSelectedAnswer] = useState(false)
-    //const [wrongAnswerReason, setWrongAnswerReason] = useState([availableHints])
 
     const answersParsed = JSON.parse(question.choices)
-    console.debug("answersParsed", answersParsed)
 
     const answerChoices = answersParsed.map((choice) => {
         return {
@@ -63,11 +54,8 @@ const PhaseTwoBasicGamePlay = ({
         (answer) => !answer.isCorrectAnswer
     )
 
-    console.debug("wrong answers", wrongAnswers)
-
     // set available hints to the reason in question choices object for all choices that are not the correct answer
     const wrongAnswerReasons = wrongAnswers.map((choice) => {
-        // only return the reason if the choice is not the correct answer
         if (!choice.isAnswer) {
             return choice.reason
         }
@@ -76,11 +64,6 @@ const PhaseTwoBasicGamePlay = ({
     let countdown = useRef()
 
     useEffect(() => {
-        // if (currentTime == 0) {
-        //     navigateToNextScreen()
-        //     return
-        // }
-
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
@@ -90,14 +73,6 @@ const PhaseTwoBasicGamePlay = ({
 
         const subscription = apiClient.subscribeUpdateGameSession(
             gameSession.id
-            // (gameSession) => {
-            //     if (
-            //         gameSession?.currentstate ===
-            //         GameSessionState.CHOOSE_TRICKIEST_ANSWER
-            //     ) {
-            //         navigateToNextScreen()
-            //     }
-            // }
         )
 
         return () => {
@@ -105,15 +80,6 @@ const PhaseTwoBasicGamePlay = ({
             subscription.unsubscribe()
         }
     }, [gameSession, currentTime])
-
-    const navigateToNextScreen = () => {
-        navigation.navigate("Leadership", {
-            gameSession,
-            team,
-            teamMember,
-            question,
-        })
-    }
 
     const submitAnswer = (answer) => {
         Alert.alert(
@@ -132,7 +98,6 @@ const PhaseTwoBasicGamePlay = ({
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isSelected,
                                 answer.isChosen
                             )
                             .then((teamAnswer) => {
@@ -161,6 +126,7 @@ const PhaseTwoBasicGamePlay = ({
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
+    // TODO: change this to support phase 2 header needs
     const hintsViewTitle = () => {
         if (selectedAnswer.isCorrectAnswer) {
             return `Correct! 
