@@ -4,6 +4,7 @@ import { ScaledSheet } from "react-native-size-matters"
 import { colors, fonts, fontFamilies } from "../../utils/theme"
 import RoundButton from "../../components/RoundButton"
 import PurpleBackground from "../../components/PurpleBackground"
+import { GameSessionState } from "@righton/networking"
 // import { Auth } from 'aws-amplify'
 
 export default function JoinGame({
@@ -15,25 +16,57 @@ export default function JoinGame({
     const [user, setUser] = React.useState(null)
 
     useEffect(() => {
-        // TODO: Change this to switch case, fix states to use GameSessionState vs. strings
-        if (gameSession?.currentState === "TEAMS_JOINING") {
-            navigation.navigate("EnterGameCode", {
-                gameSession,
-                team: gameSession.teams.find((team) => team.id === teamId),
-                teamMember,
-            })
-        } else if (gameSession?.currentState === "CHOOSE_CORRECT_ANSWER") {
-            navigation.navigate("PregameCountDown", {
-                gameSession,
-                team: gameSession.teams.find((team) => team.id === teamId),
-                teamMember,
-            })
-        } else if (gameSession?.currentState === "FINAL_RESULTS") {
-            navigation.navigate("Leadership", {
-                gameSession,
-                team: gameSession.teams.find((team) => team.id === teamId),
-                teamMember,
-            })
+        switch (gameSession?.currentState) {
+            case GameSessionState.TEAMS_JOINING:
+                return navigation.navigate("EnterGameCode", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
+            // temporarily commented out to test the game play more efficiently
+
+            // case GameSessionState.CHOOSE_CORRECT_ANSWER:
+            //     return navigation.navigate("PregameCountDown", {
+            //         gameSession,
+            //         team: gameSession.teams.find((team) => team.id === teamId),
+            //         teamMember,
+            //     })
+
+            case GameSessionState.CHOOSE_CORRECT_ANSWER:
+            case GameSessionState.PHASE_1_DISCUSS:
+            case GameSessionState.PHASE_1_RESULTS:
+                return navigation.navigate("PhaseOneBasicGamePlay", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
+            case GameSessionState.PHASE_2_START:
+                return navigation.navigate("StartPhase", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
+            case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+            case GameSessionState.PHASE_2_DISCUSS:
+            case GameSessionState.PHASE_2_RESULTS:
+                return navigation.navigate("PhaseTwoBasicGamePlay", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
+            case GameSessionState.FINAL_RESULTS:
+                return navigation.navigate("Leadership", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
+            default:
+                return navigation.navigate("JoinGame")
         }
     }, [gameSession?.currentState])
 

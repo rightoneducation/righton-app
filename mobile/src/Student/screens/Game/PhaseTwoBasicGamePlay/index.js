@@ -17,12 +17,14 @@ import HorizontalPageView from "../../../components/HorizontalPageView"
 import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import AnswerOptions from "./AnswerOptions"
+import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import Spinner from "./Spinner"
+import { GameSessionState } from "@righton/networking"
 
-const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
+const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
-    console.debug("team in BasicGamePlay", team)
+    console.debug("team in Phase Two Basic GamePlay", team)
+
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -31,26 +33,37 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
                   : gameSession?.currentQuestionIndex
           ]
 
-    // This is a placeholder variable for the current question to test instructions/ hints
-    // const question = gameSession?.questions[1]
-
-    const availableHints = question.instructions
-
-    const phaseTime = gameSession?.phaseOneTime ?? 300
+    const phaseTime = gameSession?.phaseTwoTime ?? 300
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswer, setSelectedAnswer] = useState(false)
-    const [hints, setHints] = useState([availableHints])
+
+    const answersParsed = JSON.parse(question.choices)
+
+    const answerChoices = answersParsed.map((choice) => {
+        return {
+            id: uuid.v4(),
+            text: choice.text,
+            isCorrectAnswer: choice.isAnswer,
+            reason: choice.reason,
+        }
+    })
+
+    const wrongAnswers = answerChoices.filter(
+        (answer) => !answer.isCorrectAnswer
+    )
+
+    // set available hints to the reason in question choices object for all choices that are not the correct answer
+    const wrongAnswerReasons = wrongAnswers.map((choice) => {
+        if (!choice.isAnswer) {
+            return choice.reason
+        }
+    })
 
     let countdown = useRef()
 
     useEffect(() => {
-        if (currentTime == 0) {
-            navigateToNextScreen()
-            return
-        }
-
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
@@ -59,15 +72,7 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
         }, 1000)
 
         const subscription = apiClient.subscribeUpdateGameSession(
-            gameSession.id,
-            (gameSession) => {
-                if (
-                    gameSession?.currentstate ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER
-                ) {
-                    navigateToNextScreen()
-                }
-            }
+            gameSession.id
         )
 
         return () => {
@@ -75,15 +80,6 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
             subscription.unsubscribe()
         }
     }, [gameSession, currentTime])
-
-    const navigateToNextScreen = () => {
-        navigation.navigate("Leadership", {
-            gameSession,
-            team,
-            teamMember,
-            question,
-        })
-    }
 
     const submitAnswer = (answer) => {
         Alert.alert(
@@ -102,7 +98,6 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isSelected,
                                 answer.isChosen
                             )
                             .then((teamAnswer) => {
@@ -124,32 +119,14 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
         )
     }
 
-    const answersParsed = JSON.parse(question.choices)
-
-    const answerChoices = answersParsed.map((choice) => {
-        return {
-            id: uuid.v4(),
-            text: choice.text,
-            isCorrectAnswer: choice.isAnswer,
-            isSelected: false,
-        }
-    })
-
-    // if isCorrectAnswer is true, add 10 points to the team's score
-    const addPoints = (answer) => {
-        if (answer.isCorrectAnswer) {
-            team.score += 10
-        }
-    }
-
     const handleAnswerResult = (answer) => {
         setSelectedAnswer(answer)
         submitAnswer(answer)
-        addPoints(answer)
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
+    // TODO: change this to support phase 2 header needs
     const hintsViewTitle = () => {
         if (selectedAnswer.isCorrectAnswer) {
             return `Correct! 
@@ -173,10 +150,10 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
-                            Answer The Question
+                            Pick the Trickiest!
                         </Text>
                         <View style={styles.timerContainer}>
                             <Progress.Bar
@@ -202,7 +179,7 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
                         <ScrollableQuestion question={question} />
                     </Card>
                     <Card headerTitle="Answers">
-                        <AnswerOptions
+                        <AnswerOptionsPhaseTwo
                             isAdvancedMode={gameSession.isAdvanced}
                             isFacilitator={teamMember?.isFacilitator}
                             onAnswered={(answer) => {
@@ -211,12 +188,14 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
                             answers={answerChoices.map((choice) => {
                                 return choice
                             })}
+                            isCorrectAnswer={correctAnswer.isCorrectAnswer}
+                            gameSession={gameSession}
                         />
                     </Card>
                     {gameSession?.currentState ===
-                    GameSessionState.PHASE_1_DISCUSS ? (
+                    GameSessionState.PHASE_2_RESULTS ? (
                         <Card headerTitle={hintsViewTitle()}>
-                            <HintsView hints={hints} />
+                            <HintsView hints={wrongAnswerReasons} />
                         </Card>
                     ) : null}
                 </HorizontalPageView>
@@ -225,7 +204,7 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
     )
 }
 
-export default BasicGamePlay
+export default PhaseTwoBasicGamePlay
 
 const styles = StyleSheet.create({
     mainContainer: {

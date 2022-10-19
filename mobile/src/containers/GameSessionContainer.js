@@ -9,9 +9,6 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
-        if (gameSession) {
-            storeGameSessionLocal()
-        }
         loadLocalGameSession().then((localGameSession) => {
             if (localGameSession) {
                 setGameSession(localGameSession.gameSession)
@@ -49,6 +46,12 @@ const GameSessionContainer = ({ children }) => {
 
         return () => subscription?.unsubscribe()
     }, [gameCode])
+
+    useEffect(() => {
+        if (gameSession) {
+            storeGameSessionLocal()
+        }
+    }, [gameSession])
 
     useEffect(() => {
         // clear local storage when the game is finished
