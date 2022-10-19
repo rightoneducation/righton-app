@@ -9,9 +9,7 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
-        if (gameSession) {
-            storeGameSessionLocal()
-        }
+        //removeGameSessionLocal()
         loadLocalGameSession().then((localGameSession) => {
             if (localGameSession) {
                 setGameSession(localGameSession.gameSession)

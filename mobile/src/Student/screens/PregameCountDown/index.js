@@ -6,8 +6,14 @@ import { scale } from "react-native-size-matters"
 import { fontFamilies, fonts } from "../../../utils/theme"
 import { GameSessionState } from "@righton/networking"
 
-const PregameCountDown = ({ navigation, route }) => {
-    const { gameSession } = route.params
+const PregameCountDown = ({
+    navigation,
+    route,
+    gameSession,
+    teamId,
+    teamMember,
+}) => {
+    // const { gameSession } = route.params
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator
@@ -27,10 +33,16 @@ const PregameCountDown = ({ navigation, route }) => {
                 timerStartInSecond={3}
                 onTimerFinished={() => {
                     if (
-                        gameSession.currentState ===
+                        gameSession?.currentState ===
                         GameSessionState.CHOOSE_CORRECT_ANSWER
                     ) {
-                        navigation.navigate("BasicGamePlay", route.params)
+                        navigation.navigate("PhaseOneBasicGamePlay", {
+                            gameSession,
+                            team: gameSession?.teams.find(
+                                (team) => team.id === teamId
+                            ),
+                            teamMember,
+                        })
                     } else {
                         navigation.navigate("GamePlay", route.params)
                     }

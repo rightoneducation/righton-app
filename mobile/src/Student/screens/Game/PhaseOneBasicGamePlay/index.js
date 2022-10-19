@@ -17,12 +17,19 @@ import HorizontalPageView from "../../../components/HorizontalPageView"
 import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import AnswerOptions from "./AnswerOptions"
+import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
 import Spinner from "./Spinner"
+import { GameSessionState } from "@righton/networking"
 
-const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
+const PhaseOneBasicGamePlay = ({
+    navigation,
+    gameSession,
+    teamId,
+    teamMember,
+}) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
-    console.debug("team in BasicGamePlay", team)
+    console.debug("team in PhaseOneBasicGamePlay", team)
+
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -46,10 +53,10 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
     let countdown = useRef()
 
     useEffect(() => {
-        if (currentTime == 0) {
-            navigateToNextScreen()
-            return
-        }
+        // if (currentTime == 0) {
+        //     navigateToNextScreen()
+        //     return
+        // }
 
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
@@ -202,19 +209,22 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
                         <ScrollableQuestion question={question} />
                     </Card>
                     <Card headerTitle="Answers">
-                        <AnswerOptions
-                            isAdvancedMode={gameSession.isAdvanced}
-                            isFacilitator={teamMember?.isFacilitator}
-                            onAnswered={(answer) => {
-                                handleAnswerResult(answer)
-                            }}
-                            answers={answerChoices.map((choice) => {
-                                return choice
-                            })}
-                        />
+                        {gameSession?.currentState ===
+                        GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+                            <AnswerOptionsPhaseOne
+                                isAdvancedMode={gameSession.isAdvanced}
+                                isFacilitator={teamMember?.isFacilitator}
+                                onAnswered={(answer) => {
+                                    handleAnswerResult(answer)
+                                }}
+                                answers={answerChoices.map((choice) => {
+                                    return choice
+                                })}
+                            />
+                        ) : null}
                     </Card>
                     {gameSession?.currentState ===
-                    GameSessionState.PHASE_1_DISCUSS ? (
+                    GameSessionState.PHASE_1_RESULTS ? (
                         <Card headerTitle={hintsViewTitle()}>
                             <HintsView hints={hints} />
                         </Card>
@@ -225,7 +235,7 @@ const BasicGamePlay = ({ navigation, gameSession, teamId, teamMember }) => {
     )
 }
 
-export default BasicGamePlay
+export default PhaseOneBasicGamePlay
 
 const styles = StyleSheet.create({
     mainContainer: {

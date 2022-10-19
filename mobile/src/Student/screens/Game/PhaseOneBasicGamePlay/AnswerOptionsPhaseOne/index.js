@@ -7,7 +7,7 @@ import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
 import uuid from "react-native-uuid"
 
-const AnswerOptions = ({
+const AnswerOptionsPhaseOne = ({
     onAnswered,
     isFacilitator,
     isAdvancedMode,
@@ -31,7 +31,6 @@ const AnswerOptions = ({
         return {
             id: uuid.v4(),
             text: text,
-            isSelected: true,
         }
     }
 
@@ -221,10 +220,10 @@ const AnswerOptions = ({
                                 text={item.text}
                                 height={43}
                                 borderColor={
-                                    item.isSelected ? "#8DCD53" : "#D9DFE5"
+                                    item.isSelected ? "#236AF7" : "#D9DFE5"
                                 }
                                 onPress={chooseAnswer}
-                                disabled={item.isChosen}
+                                disabled={item.isSelected}
                                 showIcon={item.isSelected}
                                 readonly={true}
                                 data={item}
@@ -268,7 +267,7 @@ const AnswerOptions = ({
     )
 }
 
-export default AnswerOptions
+export default AnswerOptionsPhaseOne
 
 const styles = StyleSheet.create({
     container: {
