@@ -24,16 +24,13 @@ export default function JoinGame({
                     teamMember,
                 })
 
-            // temporarily commented out to test the game play more efficiently
-
-            // case GameSessionState.CHOOSE_CORRECT_ANSWER:
-            //     return navigation.navigate("PregameCountDown", {
-            //         gameSession,
-            //         team: gameSession.teams.find((team) => team.id === teamId),
-            //         teamMember,
-            //     })
-
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
+                return navigation.navigate("PregameCountDown", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
             case GameSessionState.PHASE_1_DISCUSS:
             case GameSessionState.PHASE_1_RESULTS:
                 return navigation.navigate("PhaseOneBasicGamePlay", {
