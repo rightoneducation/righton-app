@@ -1,5 +1,6 @@
-import { IGameSession } from './Models/IGameSession'
-import { IApiClient } from './IApiClient'
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
+import { Amplify, API, graphqlOperation } from "aws-amplify"
+import awsconfig from "./aws-exports"
 import {
     CreateTeamAnswerInput,
     CreateTeamAnswerMutation,
@@ -10,24 +11,18 @@ import {
     CreateTeamMemberMutationVariables,
     CreateTeamMutation,
     CreateTeamMutationVariables,
-    GameSessionState,
-    OnGameSessionUpdatedByIdSubscription,
-    OnUpdateGameSessionSubscription,
-    UpdateGameSessionInput,
+    GameSessionState, OnCreateTeamAnswerSubscription, OnCreateTeamSubscription,
+    OnDeleteTeamSubscription, OnGameSessionUpdatedByIdSubscription,
+    OnUpdateGameSessionSubscription, OnUpdateTeamMemberSubscription, UpdateGameSessionInput,
     UpdateGameSessionMutation,
-    UpdateGameSessionMutationVariables,
-    OnUpdateTeamMemberSubscription,
-    OnCreateTeamSubscription,
-    OnDeleteTeamSubscription,
-    OnCreateTeamAnswerSubscription
+    UpdateGameSessionMutationVariables
 } from './AWSMobileApi'
+import { gameSessionByCode, getGameSession, getTeam, onCreateTeam, onCreateTeamAnswer, onDeleteTeam, onGameSessionUpdatedById, onUpdateTeamMember } from './graphql'
 import { createTeam, createTeamAnswer, createTeamMember, updateGameSession } from './graphql/mutations'
-import { Amplify, API, graphqlOperation } from "aws-amplify"
-import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { getGameSession, getTeam, gameSessionByCode, onGameSessionUpdatedById, onUpdateTeamMember, onCreateTeam, onDeleteTeam, onCreateTeamAnswer} from './graphql'
-import awsconfig from "./aws-exports"
-import { ITeam } from './Models/ITeam'
+import { IApiClient } from './IApiClient'
 import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
+import { IGameSession } from './Models/IGameSession'
+import { ITeam } from './Models/ITeam'
 // import { IQuestion } from './Models/IQuestion'
 
 Amplify.configure(awsconfig)
@@ -92,8 +87,8 @@ export class ApiClient implements IApiClient {
     }
 
     async getTeam(id: string): Promise<ITeam> {
-      let result = await API.graphql(graphqlOperation(getTeam, { id })) as { data: any }
-      return TeamParser.teamFromAWSTeam(result.data.getTeam)
+        let result = await API.graphql(graphqlOperation(getTeam, { id })) as { data: any }
+        return TeamParser.teamFromAWSTeam(result.data.getTeam)
     }
 
     async updateGameSession(awsGameSessionInput: UpdateGameSessionInput): Promise<IGameSession> {
@@ -124,52 +119,52 @@ export class ApiClient implements IApiClient {
     }
 
     subscribeUpdateTeamMember(id: string, callback: (result: ITeamMember) => void) {
-      return this.subscribeGraphQL<OnUpdateTeamMemberSubscription>({
-          query: onUpdateTeamMember,
-          variables: {
-              id: id
-          }
-      }, (value: OnUpdateTeamMemberSubscription) => {
-          let teamMember = this.mapOnUpdateTeamMemberSubscription(value)
-          callback(teamMember)
-      })
+        return this.subscribeGraphQL<OnUpdateTeamMemberSubscription>({
+            query: onUpdateTeamMember,
+            variables: {
+                id: id
+            }
+        }, (value: OnUpdateTeamMemberSubscription) => {
+            let teamMember = this.mapOnUpdateTeamMemberSubscription(value)
+            callback(teamMember)
+        })
     }
 
-    
+
     subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
-      return this.subscribeGraphQL<OnCreateTeamSubscription>({
-          query: onCreateTeam,
-          variables: {
-              id: id
-          }
-      }, (value: OnCreateTeamSubscription) => {
-          let team = this.mapOnCreateTeamSubscription(value)
-          callback(team)
-      })
+        return this.subscribeGraphQL<OnCreateTeamSubscription>({
+            query: onCreateTeam,
+            variables: {
+                id: id
+            }
+        }, (value: OnCreateTeamSubscription) => {
+            let team = this.mapOnCreateTeamSubscription(value)
+            callback(team)
+        })
     }
 
     subscribeDeleteTeam(id: string, callback: (result: ITeam) => void) {
-      return this.subscribeGraphQL<OnDeleteTeamSubscription>({
-          query: onDeleteTeam,
-          variables: {
-              id: id
-          }
-      }, (value: OnDeleteTeamSubscription) => {
-          let team = this.mapOnDeleteTeamSubscription(value)
-          callback(team)
-      })
+        return this.subscribeGraphQL<OnDeleteTeamSubscription>({
+            query: onDeleteTeam,
+            variables: {
+                id: id
+            }
+        }, (value: OnDeleteTeamSubscription) => {
+            let team = this.mapOnDeleteTeamSubscription(value)
+            callback(team)
+        })
     }
 
     subscribeCreateTeamAnswer(id: string, callback: (result: ITeamAnswer) => void) {
-      return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>({
-          query: onCreateTeamAnswer,
-          variables: {
-              id: id
-          }
-      }, (value: OnCreateTeamAnswerSubscription) => {
-          let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value)
-          callback(teamAnswer)
-      })
+        return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>({
+            query: onCreateTeamAnswer,
+            variables: {
+                id: id
+            }
+        }, (value: OnCreateTeamAnswerSubscription) => {
+            let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value)
+            callback(teamAnswer)
+        })
     }
 
 
@@ -261,19 +256,19 @@ export class ApiClient implements IApiClient {
     }
 
     private mapOnCreateTeamSubscription(subscription: OnCreateTeamSubscription): ITeam {
-      return TeamParser.teamFromCreateTeamSubscription(subscription)
+        return TeamParser.teamFromCreateTeamSubscription(subscription)
     }
 
     private mapOnDeleteTeamSubscription(subscription: OnDeleteTeamSubscription): ITeam {
-      return TeamParser.teamFromDeleteTeamSubscription(subscription)
+        return TeamParser.teamFromDeleteTeamSubscription(subscription)
     }
 
     private mapOnUpdateTeamMemberSubscription(subscription: OnUpdateTeamMemberSubscription): ITeamMember {
-      return TeamMemberParser.teamMemberFromTeamMemberSubscription(subscription)
+        return TeamMemberParser.teamMemberFromTeamMemberSubscription(subscription)
     }
 
     private mapOnCreateTeamAnswerSubscription(subscription: OnCreateTeamAnswerSubscription): ITeamAnswer {
-      return TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(subscription)
+        return TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(subscription)
     }
 }
 
@@ -328,24 +323,24 @@ type AWSQuestion = {
     order: number,
 }
 
-type AWSTeamMember= {
-  id: string,
-  isFacilitator?: boolean | null,
-  answers?: Array<ITeamAnswer> | null,
-  deviceId?: string | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-  teamTeamMembersId?: string | null,
+type AWSTeamMember = {
+    id: string,
+    isFacilitator?: boolean | null,
+    answers?: Array<ITeamAnswer> | null,
+    deviceId?: string | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+    teamTeamMembersId?: string | null,
 }
 
-type AWSTeamAnswer= {
-  id: string,
-  questionId?: number | null,
-  isChosen?: boolean | null,
-  text?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
-  teamMemberAnswersId?: string | null,
+type AWSTeamAnswer = {
+    id: string,
+    questionId?: number | null,
+    isChosen?: boolean | null,
+    text?: string | null,
+    createdAt?: string,
+    updatedAt?: string,
+    teamMemberAnswersId?: string | null,
 }
 
 class GameSessionParser {
@@ -474,165 +469,164 @@ class GameSessionParser {
 }
 
 class TeamParser {
-  
 
-  static teamFromCreateTeamSubscription(subscription: OnCreateTeamSubscription): ITeam {
-    const createTeam = subscription.onCreateTeam
-    if (isNullOrUndefined(createTeam)) {
-        throw new Error("subscription.teamFromCreateTeamSubscription can't be null.")
-    }
-    //@ts-ignore
-    return this.teamFromAWSTeam(createTeam)
-  }
-
-  static teamFromDeleteTeamSubscription(subscription: OnDeleteTeamSubscription): ITeam {
-    const deleteTeam = subscription.onDeleteTeam
-    if (isNullOrUndefined(deleteTeam)) {
-        throw new Error("subscription.teamFromDeleteTeamSubscription can't be null.")
-    }
-    //@ts-ignore
-    return this.teamFromAWSTeam(deleteTeam)
-  }
-
-  static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
-    const {
-      id,
-      name,
-      trickiestAnswerIDs,
-      teamMembers,
-      score,
-      createdAt,
-      updatedAt,
-      gameSessionTeamsId,
-      teamQuestionId,
-      teamQuestionGameSessionId
-
-    } = awsTeam || {}
-
-    if (
-      isNullOrUndefined(id) 
-     ) {
-      throw new Error("Team has null field for the attributes that are not nullable")
-    }
-    
-    const team: ITeam = {
-      id,
-      name,
-      trickiestAnswerIDs,
-      teamMembers,
-      score,
-      createdAt,
-      updatedAt,
-      gameSessionTeamsId,
-      teamQuestionId,
-      teamQuestionGameSessionId
-    }
-    return team
-  }
-
-
-  static mapTeamMembers(awsTeamMembers: Array<AWSTeamMember | null>): Array<ITeamMember> {
-    if (isNullOrUndefined(awsTeamMembers)) {
-        return []
-    }
-
-    return awsTeamMembers.map(awsTeamMember => {
-        if (isNullOrUndefined(awsTeamMember)) {
-            throw new Error("Team can't be null in the backend.")
+    static teamFromCreateTeamSubscription(subscription: OnCreateTeamSubscription): ITeam {
+        const createTeam = subscription.onCreateTeam
+        if (isNullOrUndefined(createTeam)) {
+            throw new Error("subscription.teamFromCreateTeamSubscription can't be null.")
         }
-        return awsTeamMember as ITeamMember
-    })
-  }
+        //@ts-ignore
+        return this.teamFromAWSTeam(createTeam)
+    }
+
+    static teamFromDeleteTeamSubscription(subscription: OnDeleteTeamSubscription): ITeam {
+        const deleteTeam = subscription.onDeleteTeam
+        if (isNullOrUndefined(deleteTeam)) {
+            throw new Error("subscription.teamFromDeleteTeamSubscription can't be null.")
+        }
+        //@ts-ignore
+        return this.teamFromAWSTeam(deleteTeam)
+    }
+
+    static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
+        const {
+            id,
+            name,
+            trickiestAnswerIDs,
+            teamMembers,
+            score,
+            createdAt,
+            updatedAt,
+            gameSessionTeamsId,
+            teamQuestionId,
+            teamQuestionGameSessionId
+
+        } = awsTeam || {}
+
+        if (
+            isNullOrUndefined(id)
+        ) {
+            throw new Error("Team has null field for the attributes that are not nullable")
+        }
+
+        const team: ITeam = {
+            id,
+            name,
+            trickiestAnswerIDs,
+            teamMembers,
+            score,
+            createdAt,
+            updatedAt,
+            gameSessionTeamsId,
+            teamQuestionId,
+            teamQuestionGameSessionId
+        }
+        return team
+    }
+
+
+    static mapTeamMembers(awsTeamMembers: Array<AWSTeamMember | null>): Array<ITeamMember> {
+        if (isNullOrUndefined(awsTeamMembers)) {
+            return []
+        }
+
+        return awsTeamMembers.map(awsTeamMember => {
+            if (isNullOrUndefined(awsTeamMember)) {
+                throw new Error("Team can't be null in the backend.")
+            }
+            return awsTeamMember as ITeamMember
+        })
+    }
 }
 
 
-class TeamMemberParser{
+class TeamMemberParser {
 
-  static teamMemberFromTeamMemberSubscription(subscription: OnUpdateTeamMemberSubscription): ITeamMember {
-    const updateTeamMember = subscription.onUpdateTeamMember
-    if (isNullOrUndefined(updateTeamMember)) {
-        throw new Error("subscription.onUpdateGameSession can't be null.")
+    static teamMemberFromTeamMemberSubscription(subscription: OnUpdateTeamMemberSubscription): ITeamMember {
+        const updateTeamMember = subscription.onUpdateTeamMember
+        if (isNullOrUndefined(updateTeamMember)) {
+            throw new Error("subscription.onUpdateGameSession can't be null.")
+        }
+        //@ts-ignore
+        return this.teamMemberFromAWSTeamMember(updateTeamMember)
     }
-    //@ts-ignore
-    return this.teamMemberFromAWSTeamMember(updateTeamMember)
-  }
 
-  static teamMemberFromAWSTeamMember(awsTeamMember: AWSTeamMember): ITeamMember {
-    const {
-      id,
-      isFacilitator,
-      answers,
-      deviceId,
-      createdAt,
-      updatedAt,
-      teamTeamMembersId
+    static teamMemberFromAWSTeamMember(awsTeamMember: AWSTeamMember): ITeamMember {
+        const {
+            id,
+            isFacilitator,
+            answers,
+            deviceId,
+            createdAt,
+            updatedAt,
+            teamTeamMembersId
 
-    } = awsTeamMember || {}
+        } = awsTeamMember || {}
 
-    if (
-      isNullOrUndefined(id) ||
-      isNullOrUndefined(teamTeamMembersId)
+        if (
+            isNullOrUndefined(id) ||
+            isNullOrUndefined(teamTeamMembersId)
 
-     ) {
-      throw new Error("Team member has null field for the attributes that are not nullable")
+        ) {
+            throw new Error("Team member has null field for the attributes that are not nullable")
+        }
+
+        const teamMember: ITeamMember = {
+            id,
+            isFacilitator,
+            answers,
+            deviceId,
+            createdAt,
+            updatedAt,
+            teamTeamMembersId
+        }
+        return teamMember
     }
-    
-    const teamMember: ITeamMember = {
-      id,
-      isFacilitator,
-      answers,
-      deviceId,
-      createdAt,
-      updatedAt,
-      teamTeamMembersId
-    }
-    return teamMember
-  }
 }
 
 
-class TeamAnswerParser{
-  static teamAnswerFromTeamAnswerSubscription(subscription: OnCreateTeamAnswerSubscription): ITeamAnswer {
-    const createTeamAnswer = subscription.onCreateTeamAnswer
-    if (isNullOrUndefined(onCreateTeamAnswer)) {
-        throw new Error("subscription.onCreateTeamAnswer can't be null.")
+class TeamAnswerParser {
+    static teamAnswerFromTeamAnswerSubscription(subscription: OnCreateTeamAnswerSubscription): ITeamAnswer {
+        const createTeamAnswer = subscription.onCreateTeamAnswer
+        if (isNullOrUndefined(onCreateTeamAnswer)) {
+            throw new Error("subscription.onCreateTeamAnswer can't be null.")
+        }
+        //@ts-ignore
+        return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
     }
-    //@ts-ignore
-    return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
-  }
 
-  static teamAnswerFromAWSTeamAnswer(awsTeamAnswer: AWSTeamAnswer): ITeamAnswer {
-    const {
+    static teamAnswerFromAWSTeamAnswer(awsTeamAnswer: AWSTeamAnswer): ITeamAnswer {
+        const {
 
-      id,
-      questionId,
-      isChosen,
-      text,
-      createdAt,
-      updatedAt,
-      teamMemberAnswersId,
+            id,
+            questionId,
+            isChosen,
+            text,
+            createdAt,
+            updatedAt,
+            teamMemberAnswersId,
 
-    } = awsTeamAnswer || {}
+        } = awsTeamAnswer || {}
 
-    if (
-      isNullOrUndefined(id) ||
-      isNullOrUndefined(teamMemberAnswersId)
+        if (
+            isNullOrUndefined(id) ||
+            isNullOrUndefined(teamMemberAnswersId)
 
-     ) {
-      throw new Error("Team answer has null field for the attributes that are not nullable")
+        ) {
+            throw new Error("Team answer has null field for the attributes that are not nullable")
+        }
+
+        const teamAnswer: ITeamAnswer = {
+            id,
+            questionId,
+            isChosen,
+            text,
+            createdAt,
+            updatedAt,
+            teamMemberAnswersId
+        }
+        return teamAnswer
     }
-    
-    const teamAnswer: ITeamAnswer = {
-      id,
-      questionId,
-      isChosen,
-      text,
-      createdAt,
-      updatedAt,
-      teamMemberAnswersId
-    }
-    return teamAnswer
-  }
 
 }
 
