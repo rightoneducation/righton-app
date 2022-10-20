@@ -6,7 +6,6 @@ import { ChatBubbleOutlineSharp } from "@material-ui/icons";
 
 export default function GameAnswers({ questionChoices, answersByQuestion, totalAnswers}) {
   const classes = useStyles();
- 
   return (
     <Grid className={classes.background}>
      {(questionChoices) ? 
