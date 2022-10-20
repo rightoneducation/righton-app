@@ -1,9 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import ConfirmAccount from "../Auth/screens/ConfirmAccount"
-import PersonalDetails from "../Auth/screens/PersonalDetails"
-import SignIn from "../Auth/screens/SignIn"
-import SignUp from "../Auth/screens/SignUp"
 import GameSessionContainer from "../containers/GameSessionContainer"
 import JoinGame from "../screens/JoinGame"
 import EnterGameCode from "../Student/screens/EnterGameCode"
@@ -11,6 +7,7 @@ import StudentName from "../Student/screens/StudentName"
 import StudentGameIntro from "../Student/screens/StudentGameIntro"
 import PregameCountDown from "../Student/screens/PregameCountDown"
 import PhaseOneBasicGamePlay from "../Student/screens/Game/PhaseOneBasicGamePlay"
+import StartPhase from "../Student/screens/StartPhase"
 import PhaseTwoBasicGamePlay from "../Student/screens/Game/PhaseTwoBasicGamePlay"
 import Leadership from "../Student/screens/Game/Leadership"
 
@@ -72,6 +69,16 @@ const AppContainer = () => {
                         <Stack.Screen name="PhaseOneBasicGamePlay">
                             {(props) => (
                                 <PhaseOneBasicGamePlay
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="StartPhase">
+                            {(props) => (
+                                <StartPhase
                                     {...props}
                                     gameSession={gameSession}
                                     teamId={teamId}
