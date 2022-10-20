@@ -1,14 +1,18 @@
-import React from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
+import ConfirmAccount from "../Auth/screens/ConfirmAccount"
+import PersonalDetails from "../Auth/screens/PersonalDetails"
+import SignIn from "../Auth/screens/SignIn"
+import SignUp from "../Auth/screens/SignUp"
+import GameSessionContainer from "../containers/GameSessionContainer"
 import JoinGame from "../screens/JoinGame"
 import EnterGameCode from "../Student/screens/EnterGameCode"
 import StudentName from "../Student/screens/StudentName"
 import StudentGameIntro from "../Student/screens/StudentGameIntro"
 import PregameCountDown from "../Student/screens/PregameCountDown"
-import BasicGamePlay from "../Student/screens/Game/BasicGamePlay"
+import PhaseOneBasicGamePlay from "../Student/screens/Game/PhaseOneBasicGamePlay"
+import PhaseTwoBasicGamePlay from "../Student/screens/Game/PhaseTwoBasicGamePlay"
 import Leadership from "../Student/screens/Game/Leadership"
-import GameSessionContainer from "../containers/GameSessionContainer"
 
 const Stack = createStackNavigator()
 
@@ -19,7 +23,7 @@ const AppContainer = () => {
                 gameSession,
                 setGameCode,
                 teamId,
-                team,
+
                 teamMember,
                 setTeamInfo,
             }) => (
@@ -65,9 +69,9 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
-                        <Stack.Screen name="BasicGamePlay">
+                        <Stack.Screen name="PhaseOneBasicGamePlay">
                             {(props) => (
-                                <BasicGamePlay
+                                <PhaseOneBasicGamePlay
                                     {...props}
                                     gameSession={gameSession}
                                     teamId={teamId}
@@ -75,10 +79,26 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
-                        {/* <Stack.Screen
-                            name="PregameCountDown"
-                            component={PregameCountDown}
-                        /> */}
+                        <Stack.Screen name="PhaseTwoBasicGamePlay">
+                            {(props) => (
+                                <PhaseTwoBasicGamePlay
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PregameCountDown">
+                            {(props) => (
+                                <PregameCountDown
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
                         <Stack.Screen name="Leadership">
                             {(props) => (
                                 <Leadership

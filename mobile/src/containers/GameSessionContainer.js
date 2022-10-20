@@ -9,9 +9,6 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
-        if (gameSession) {
-            storeGameSessionLocal()
-        }
         loadLocalGameSession().then((localGameSession) => {
             if (localGameSession) {
                 setGameSession(localGameSession.gameSession)
@@ -38,9 +35,9 @@ const GameSessionContainer = ({ children }) => {
                                     setGameSession(
                                         gameSessionSubscriptionResponse
                                     )
-                                    //TODO: update the team object everytime the game session is updated
-                                    //only update the team member if the team member is found
-                                    //if(teamMember){setTeamMember(teamMember)}
+                                    // TODO: update the team object everytime the game session is updated
+                                    // only update the team member if the team member is found
+                                    // if(teamMember){setTeamMember(teamMember)}
                                 }
                             )
                     }
@@ -51,8 +48,14 @@ const GameSessionContainer = ({ children }) => {
     }, [gameCode])
 
     useEffect(() => {
-        //clear local storage when the game is finished
-        if (GameSessionState.FINISHED) {
+        if (gameSession) {
+            storeGameSessionLocal()
+        }
+    }, [gameSession])
+
+    useEffect(() => {
+        // clear local storage when the game is finished
+        if (gameSession?.currentState === GameSessionState.FINISHED) {
             removeGameSessionLocal()
         }
     }, [gameSession?.currentState])
