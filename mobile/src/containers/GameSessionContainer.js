@@ -37,7 +37,6 @@ const GameSessionContainer = ({ children }) => {
                                     )
                                     // TODO: update the team object everytime the game session is updated
                                     // only update the team member if the team member is found
-                                    // if(teamMember){setTeamMember(teamMember)}
                                 }
                             )
                     }
