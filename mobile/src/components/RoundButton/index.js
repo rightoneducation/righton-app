@@ -1,8 +1,7 @@
-import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { colors, fonts, fontFamilies } from '../../utils/theme'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
+import { colors, fontFamilies, fonts } from '../../utils/theme'
 
 RoundButton.propTypes = {
     title: PropTypes.string.isRequired,
@@ -14,6 +13,7 @@ export default function RoundButton(props) {
     return (
         <TouchableOpacity
             disabled={props.disabled || false}
+            style={props.containerStyle}
             onPress={() => { props.onPress() }}
         >
             <View style={style}>

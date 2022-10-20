@@ -1,26 +1,31 @@
-import { useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { scale, verticalScale } from 'react-native-size-matters'
-import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
-import BaseView from '../../components/BaseView'
+import { useState } from "react"
+import { Image, StyleSheet, Text, View } from "react-native"
+import { scale, verticalScale } from "react-native-size-matters"
+import RoundButton from "../../../components/RoundButton"
+import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
+import BaseView from "../../components/BaseView"
 
-const ScorePage = ({ team, teamMember, monsterNumber }) => {
+const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
     const winnerTeamImages = [
-        require('./img/Team1_winner.png'),
-        require('./img/Team2_winner.png'),
-        require('./img/Team3_winner.png'),
-        require('./img/Team4_winner.png'),
-        require('./img/Team5_winner.png'),
-        require('./img/Team6_winner.png'),
+        require("./img/Team1_winner.png"),
+        require("./img/Team2_winner.png"),
+        require("./img/Team3_winner.png"),
+        require("./img/Team4_winner.png"),
+        require("./img/Team5_winner.png"),
+        require("./img/Team6_winner.png"),
     ]
 
     const winnerText = "Great Job!"
-    const top5Text = "Congratulations! You’re in the top 5"
+    const top5Text = "Congratulations! You're in the top 5"
 
     const [isInTop5, setIsInTop5] = useState(false)
     const [imageHeight, setImageHeight] = useState(0)
     const [imageWidth, setImageWidth] = useState(0)
     const [textHeight, setTextHeight] = useState(0)
+
+    const navigateToLeaderboard = () => {
+        navigation.navigate("Leadership")
+    }
 
     return (
         <BaseView style={styles.mainContainer}>
@@ -55,6 +60,13 @@ const ScorePage = ({ team, teamMember, monsterNumber }) => {
                 >
                     {isInTop5 ? top5Text : winnerText}
                 </Text>
+                <RoundButton
+                    title="View Leaderboard"
+                    style={styles.leadershipButton}
+                    titleStyle={styles.leadershipButtonTitle}
+                    containerStyle={styles.leadershipContainer}
+                    onPress={() => { navigateToLeaderboard() }}
+                />
             </View>
         </BaseView>
     )
@@ -68,11 +80,11 @@ const headerTextShared = {
     fontWeight: fontWeights.semiBold,
     fontSize: fonts.xxLarge,
     marginHorizontal: scale(34),
-    textAlign: 'center',
+    textAlign: "center",
 }
 const styles = StyleSheet.create({
     mainContainer: {
-        alignItems: 'center',
+        alignItems: "center",
         paddingTop: verticalScale(51),
     },
     headerText: {
@@ -82,20 +94,37 @@ const styles = StyleSheet.create({
         ...headerTextShared,
     },
     winnerImage: {
-        resizeMode: 'contain',
-        position: 'absolute',
+        resizeMode: "contain",
+        position: "absolute",
         bottom: 0,
-        alignSelf: 'center',
+        alignSelf: "center",
     },
     winnerText: {
         ...headerTextShared,
         marginHorizontal: scale(35),
-        position: 'absolute',
-        alignSelf: 'center',
+        position: "absolute",
+        alignSelf: "center",
         paddingTop: verticalScale(20),
     },
     imageContainer: {
         flex: 1,
         paddingHorizontal: scale(54),
+        width: "100%",
+    },
+    leadershipButton: {
+        backgroundColor: colors.buttonSecondary,
+        height: 35,
+        alignSelf: "center",
+        paddingHorizontal: 23,
+    },
+    leadershipButtonTitle: {
+        fontFamily: fontFamilies.karlaRegular,
+        fontSize: fonts.xxMedium,
+        fontWeight: fontWeights.bold,
+    },
+    leadershipContainer: {
+        position: "absolute",
+        bottom: verticalScale(20),
+        alignSelf: "center",
     }
 })
