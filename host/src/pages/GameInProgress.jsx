@@ -82,6 +82,7 @@ export default function GameInProgress({
       });
       return count;
     }
+    return count;
   };
 
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { //returns an array ordered to match the order of answer choices, containing the total number of each answer
@@ -107,6 +108,7 @@ export default function GameInProgress({
       });             
       return answersArray;
     }
+    return [];
   };
 
   const handleFooterOnClick = (numPlayers, totalAnswers) => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
