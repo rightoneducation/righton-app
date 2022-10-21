@@ -23,7 +23,6 @@ import { IApiClient } from './IApiClient'
 import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
 import { IGameSession } from './Models/IGameSession'
 import { ITeam } from './Models/ITeam'
-// import { IQuestion } from './Models/IQuestion'
 
 Amplify.configure(awsconfig)
 
@@ -167,7 +166,6 @@ export class ApiClient implements IApiClient {
         })
     }
 
-
     async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
         let result = await API.graphql(graphqlOperation(gameSessionByCode, { gameCode })) as { data: any }
         if (isNullOrUndefined(result.data) ||
@@ -230,6 +228,45 @@ export class ApiClient implements IApiClient {
         return answer.data.createTeamAnswer as ITeamAnswer
     }
 
+    calculateBasicModeWrongAnswerScore(gameSession: IGameSession, team: ITeam, questionId: number): number {
+        if (isNullOrUndefined(gameSession.teams)) {
+            throw new Error("'teams' can't be null")
+        }
+
+        if (isNullOrUndefined(team.teamMembers)) {
+            throw new Error("No members available for the team")
+        }
+
+        const teamAnswers = team.teamMembers[0]?.answers?.filter((answer) => {
+            answer?.questionId === questionId
+        })
+
+        if (isNullOrUndefined(teamAnswers) ||
+            teamAnswers.length != 1) {
+            return 0
+        }
+
+        // Calculate how many teams have chosen the same answer as the passed team.
+        const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, otherTeam: ITeam) => {
+            if (isNullOrUndefined(otherTeam.teamMembers) ||
+                otherTeam.teamMembers.length < 1) {
+                return previousVal
+            }
+
+            const answersToQuestion = otherTeam.teamMembers[0]?.answers?.filter((answer) => {
+                !isNullOrUndefined(answer) &&
+                    !isNullOrUndefined(answer?.questionId) &&
+                    answer.questionId === questionId &&
+                    answer.text === teamAnswers[0]!.questionId
+            })
+
+            return previousVal + (answersToQuestion?.length ?? 0)
+        }, 1)
+
+        return Math.ceil(totalNoChosenAnswer / gameSession.teams.length) * 100
+    }
+
+    // Private methods
     private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
         //@ts-ignore
         return API.graphql(subscription).subscribe({
