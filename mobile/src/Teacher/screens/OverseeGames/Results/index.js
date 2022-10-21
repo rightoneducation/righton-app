@@ -1,8 +1,7 @@
-import React from "react"
-import { View, Text, SafeAreaView, StyleSheet } from "react-native"
+import { SafeAreaView, StyleSheet, Text, View } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { scale } from "react-native-size-matters"
-import { fonts, fontFamilies, colors } from "../../../../utils/theme"
+import { colors, fontFamilies, fonts } from "../../../../utils/theme"
 import Footer from "../components/Footer"
 
 const Results = ({ route, navigation }) => {
@@ -89,7 +88,7 @@ const Results = ({ route, navigation }) => {
             buttonLabel={
               questionNum == teamPoints.length ? "End Game" : "Next Question"
             }
-            backgroundColor={colors.lightblue}
+            backgroundColor={colors.lightBlue}
             textColor={colors.white}
           />
         </View>
