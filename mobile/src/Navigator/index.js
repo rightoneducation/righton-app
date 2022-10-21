@@ -3,13 +3,14 @@ import { createStackNavigator } from "@react-navigation/stack"
 import GameSessionContainer from "../containers/GameSessionContainer"
 import JoinGame from "../screens/JoinGame"
 import EnterGameCode from "../Student/screens/EnterGameCode"
-import StudentName from "../Student/screens/StudentName"
-import StudentGameIntro from "../Student/screens/StudentGameIntro"
-import PregameCountDown from "../Student/screens/PregameCountDown"
+import Leadership from "../Student/screens/Game/Leadership"
 import PhaseOneBasicGamePlay from "../Student/screens/Game/PhaseOneBasicGamePlay"
 import StartPhase from "../Student/screens/StartPhase"
 import PhaseTwoBasicGamePlay from "../Student/screens/Game/PhaseTwoBasicGamePlay"
-import Leadership from "../Student/screens/Game/Leadership"
+import PregameCountDown from "../Student/screens/PregameCountDown"
+import ScorePage from "../Student/screens/ScorePage"
+import StudentGameIntro from "../Student/screens/StudentGameIntro"
+import StudentName from "../Student/screens/StudentName"
 
 const Stack = createStackNavigator()
 
@@ -99,6 +100,26 @@ const AppContainer = () => {
                         <Stack.Screen name="PregameCountDown">
                             {(props) => (
                                 <PregameCountDown
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="ScorePage">
+                            {(props) => (
+                                <ScorePage
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PhaseResult">
+                            {(props) => (
+                                <PhaseResult
                                     {...props}
                                     gameSession={gameSession}
                                     teamId={teamId}
