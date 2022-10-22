@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { LinearProgress } from "@material-ui/core";
 
@@ -36,31 +36,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Timer({
-  currentTime,
+  headerGameCurrentTime,
   totalRoundTime,
-  setTime,
-  timeIsPaused,
 }) {
   const classes = useStyles();
-  let countdown = useRef();
-
-  useEffect(() => {
-    countdown.current = setInterval(() => {
-      if (currentTime > 0) {
-        setTime(currentTime - 1);
-      }
-    }, 1000);
-    return () => clearInterval(countdown.current);
-  }, [currentTime, setTime]);
-
-  useEffect(() => {
-    if (timeIsPaused) clearInterval(countdown.current);
-  }, [timeIsPaused]);
-
-  let percentage = () => {
-    if (!timeIsPaused) return currentTime / totalRoundTime;
-    return 100;
-  };
 
   return (
     <div>
@@ -70,13 +49,13 @@ export default function Timer({
           colorPrimary: classes.colorPrimary,
           barColorPrimary: classes.barColorPrimary,
         }}
-        value={percentage() * 100}
+        value={(headerGameCurrentTime/totalRoundTime) * 100}
         variant={"determinate"}
       />
 
       <p style={{ display: "inline-block", color: "white" }}>
-        {Math.floor(currentTime / 60)}:
-        {currentTime % 60 < 10 ? `0${currentTime % 60}` : `${currentTime % 60}`}
+        {Math.floor(headerGameCurrentTime / 60)}:
+        {headerGameCurrentTime % 60 < 10 ? `0${headerGameCurrentTime % 60}` : `${headerGameCurrentTime % 60}`}
       </p>
 
       {/* <IconButton

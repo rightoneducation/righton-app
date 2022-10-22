@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
@@ -7,7 +7,6 @@ import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import { GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
-
 
 export default function GameInProgress({
   teams,
@@ -28,7 +27,9 @@ export default function GameInProgress({
   let choices;
   let answerArray;
   let totalAnswers;
-  
+  let headerGameCountdown = useRef();
+  const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState((currentState === stateArray[2] ? phaseOneTime : phaseTwoTime));
+  const [updateCurrentTimer, setUpdateCurrentTimer] = React.useState(3);
   
 
   let [modalOpen, setModalOpen] = useState(false);
@@ -56,6 +57,29 @@ export default function GameInProgress({
     8 : "Go to Next Question",
     9 : "Proceed to RightOn Central"
   };
+
+  useEffect(() => { //headerGame timer
+    console.log("hi");
+    if (currentState === stateArray[2] || currentState === stateArray[6]){
+      headerGameCountdown.current = setInterval(() => {
+        if (headerGameCurrentTime > 0) {
+          setHeaderGameCurrentTime(headerGameCurrentTime - 1);
+        }
+        if (updateCurrentTimer > 1)
+        {
+          setUpdateCurrentTimer(updateCurrentTimer - 1);
+        }
+        else if (updateCurrentTimer === 1){
+          setUpdateCurrentTimer(3);
+          handleUpdateGameSession({currentTimer: headerGameCurrentTime})
+        }
+      }, 1000);
+      return () => clearInterval(headerGameCountdown.current);
+    }
+  }, [headerGameCurrentTime]);
+
+
+
   const handleModalClose = modalOpen =>{ //handles closing the modal by clicking outside of it or with the "Im done" text
     setModalOpen(modalOpen);
   };
@@ -149,10 +173,10 @@ export default function GameInProgress({
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
-          phaseOneTime={phaseOneTime}
-          phaseTwoTime={phaseTwoTime}
           gameInProgress={true}
           statePosition ={statePosition = stateArray.indexOf(currentState)}
+          headerGameCurrentTime = {headerGameCurrentTime}
+          totalRoundTime ={(currentState === stateArray[2] ? phaseOneTime : phaseTwoTime)}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
         <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />

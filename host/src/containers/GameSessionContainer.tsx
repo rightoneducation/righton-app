@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import StartGame from "../pages/StartGame";
 import StudentViews from "../pages/StudentViews";
@@ -108,6 +108,7 @@ const GameSessionContainer = () => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
         setGameSession(response);
+        console.log(response);
       });
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
@@ -8,7 +8,6 @@ const useStyles = makeStyles(() => ({
   div: {
     paddingLeft: "10px",
     paddingTop: "10px",
-    //background: 'linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)',
   },
   title: {
     fontWeight: 700,
@@ -56,53 +55,15 @@ const label = {
     9 : "Proceed to RightOn Central"
 };
 
-const chooseTotalRoundTime = (
-  currentState,
-  phaseOneRoundTime,
-  phaseTwoRoundTime
-) => {
-  if (currentState === "CHOOSE_CORRECT_ANSWER") {
-    return phaseOneRoundTime;
-  } else if (currentState === "CHOOSE_TRICKIEST_ANSWER") {
-    return phaseTwoRoundTime;
-  }
-  return 60;
-};
-
 export default function HeaderGame({
   totalQuestions,
-  currentState,
   currentQuestion,
-  phaseOneTime,
-  phaseTwoTime,
   gameInProgress,
   statePosition,
+  headerGameCurrentTime,
+  totalRoundTime
 }) {
   const classes = useStyles();
-  const totalRoundTime = chooseTotalRoundTime(
-    currentState,
-    phaseOneTime,
-    phaseTwoTime
-  );
-  const [currentTime, setCurrentTime] = React.useState(totalRoundTime);
-  const [timeIsPaused, setTimeIsPaused] = React.useState(false);
-    
-
-
-  useEffect(() => {
-    // when switching to the timed states,
-    if (
-      currentState === "CHOOSE_CORRECT_ANSWER" ||
-      currentState === "CHOOSE_TRICKIEST_ANSWER"
-    ) {
-      setCurrentTime(totalRoundTime);
-      setTimeIsPaused(false);
-    } else {
-      // any ther state change pauses time
-      setTimeIsPaused(true);
-    }
-  }, [currentState, totalRoundTime]);
-
 
   return (
     <div className={classes.div}>
@@ -123,7 +84,7 @@ export default function HeaderGame({
       <Typography className={classes.phases}>
         {label[statePosition]} 
       </Typography>
-      {gameInProgress && <Timer currentTime={currentTime} totalRoundTime={totalRoundTime} setTime={setCurrentTime} timeIsPaused={timeIsPaused} />} 
+      {gameInProgress && <Timer headerGameCurrentTime={headerGameCurrentTime} totalRoundTime={totalRoundTime} />} 
      
     </div>
   );
