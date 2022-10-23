@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
@@ -15,8 +15,11 @@ export default function GameInProgress({
   currentQuestionIndex,
   phaseOneTime,
   phaseTwoTime,
+  teamsArray,
   handleUpdateGameSession,
-  teamsArray
+  headerGameCurrentTime,
+  gameTimer,
+  gameTimerZero
 }) {
   
   const classes = useStyles();
@@ -27,11 +30,6 @@ export default function GameInProgress({
   let choices;
   let answerArray;
   let totalAnswers;
-  let headerGameCountdown = useRef();
-  const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState((currentState === stateArray[2] ? phaseOneTime : phaseTwoTime));
-  const [updateCurrentTimer, setUpdateCurrentTimer] = React.useState(3);
-  
-
   let [modalOpen, setModalOpen] = useState(false);
   const footerButtonTextDictionary =  { //dictionary used to assign button text based on the next state 
     
@@ -57,28 +55,6 @@ export default function GameInProgress({
     8 : "Go to Next Question",
     9 : "Proceed to RightOn Central"
   };
-
-  useEffect(() => { //headerGame timer
-    console.log("hi");
-    if (currentState === stateArray[2] || currentState === stateArray[6]){
-      headerGameCountdown.current = setInterval(() => {
-        if (headerGameCurrentTime > 0) {
-          setHeaderGameCurrentTime(headerGameCurrentTime - 1);
-        }
-        if (updateCurrentTimer > 1)
-        {
-          setUpdateCurrentTimer(updateCurrentTimer - 1);
-        }
-        else if (updateCurrentTimer === 1){
-          setUpdateCurrentTimer(3);
-          handleUpdateGameSession({currentTimer: headerGameCurrentTime})
-        }
-      }, 1000);
-      return () => clearInterval(headerGameCountdown.current);
-    }
-  }, [headerGameCurrentTime]);
-
-
 
   const handleModalClose = modalOpen =>{ //handles closing the modal by clicking outside of it or with the "Im done" text
     setModalOpen(modalOpen);
@@ -137,7 +113,7 @@ export default function GameInProgress({
 
   const handleFooterOnClick = (numPlayers, totalAnswers) => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
     if ( nextState === stateArray[3] || nextState === stateArray[7]){ //if teacher is ending early, pop modal, need to add about answers here
-      if (totalAnswers < numPlayers)
+      if (totalAnswers < numPlayers && gameTimerZero === false)
         setModalOpen(true);
       else
         handleUpdateGameSession({currentState: GameSessionState[nextState]});
@@ -149,7 +125,7 @@ export default function GameInProgress({
 
   const getFooterText = (numPlayers, totalAnswers, statePosition) => { //used to determine which button text to show based on the dictionary above and whether all players have answered
     if (statePosition === 2 || statePosition === 6){
-      if(totalAnswers < numPlayers)
+      if (totalAnswers < numPlayers && gameTimerZero === false)
         return "End Answering";
       else 
         return footerButtonTextDictionary[statePosition];
@@ -177,6 +153,7 @@ export default function GameInProgress({
           statePosition ={statePosition = stateArray.indexOf(currentState)}
           headerGameCurrentTime = {headerGameCurrentTime}
           totalRoundTime ={(currentState === stateArray[2] ? phaseOneTime : phaseTwoTime)}
+          gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
         <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />

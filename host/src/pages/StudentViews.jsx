@@ -97,7 +97,7 @@ export default function StudentViews({
             <FooterGame
               phaseOneTime={phaseOneTime}
               phaseTwoTime={phaseTwoTime}
-              isGameInProgress={false} //flag studentview vs GameInProgress      
+              isGameInProgress={false} //flag studentview vs GameInProgress   
               footerButtonText={isLastGameScreen ? "View Final Results" : footerButtonTextDictionary[statePosition]} 
               handleUpdateGameSession={handleUpdateGameSession}
               handleFooterOnClick =  {handleFooterOnClick} //handler for button

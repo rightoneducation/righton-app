@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import StartGame from "../pages/StartGame";
 import StudentViews from "../pages/StudentViews";
@@ -22,12 +22,16 @@ const GameSessionContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
+  const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStor'));   //(currentState === stateArray[2] ? phaseOneTime : phaseTwoTime));
+  const [gameTimer, setGameTimer] = useState(false); 
+  const [gameTimerZero, setGameTimerZero] = useState(false);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
   useEffect(() => { //initial query for gameSessions and teams
     apiClient.getGameSession(gameSessionId).then(response => {
       setGameSession(response); //set initial gameSession state
+      checkGameTimer(response); //checks if the timer needs to start
 
       //the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map(team => {
@@ -44,6 +48,7 @@ const GameSessionContainer = () => {
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
        setGameSession(({ ...gameSession, ...response }));
+       checkGameTimer(response);
     });
 
 
@@ -104,21 +109,66 @@ const GameSessionContainer = () => {
     }
   }, [isModalOpen]);
 
+  useEffect(() => { //headerGame timer, 1 second interval, update localstorage in case page resets
+    if (gameTimer && !gameTimerZero){
+      let refreshIntervalId = setInterval(() => {
+        if (headerGameCurrentTime > 0) {
+          setHeaderGameCurrentTime(headerGameCurrentTime - 1);
+          localStorage.setItem('currentGameTimeStor', headerGameCurrentTime-1);
+        }
+        else
+          setGameTimerZero(true);
+      }, 1000);
+      return () => clearInterval(refreshIntervalId);
+    }
+  }, [gameTimer, gameTimerZero, headerGameCurrentTime]);
+
+  useEffect(()=>{ //update gameSession currentTimer every 3 seconds with time from headerGame Timer
+    if (gameTimer && !gameTimerZero){
+      let refreshIntervalId = setInterval(() => {
+          let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStor') - 1)};
+          apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
+      }, 3000);
+      return () => clearInterval(refreshIntervalId);
+    }
+  }, [gameTimer, gameTimerZero]);
+
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
+        if (response.currentState === stateArray[2])
+          setHeaderGameCurrentTime(response.phaseOneTime);
+        else if (response.currentState === stateArray[6])
+          setHeaderGameCurrentTime(response.phaseTwoTime);
+
         setGameSession(response);
-        console.log(response);
+        checkGameTimer(response);
       });
+  };
+
+  const checkGameTimer = (response) =>{
+      if (response.currentState !== stateArray[2] && response.currentState !== stateArray[6]){
+          setGameTimer(false);
+          setGameTimerZero(false);
+      }
+      else {
+          setGameTimer(true);
+          setGameTimerZero(false);
+      }
   };
 
   const handleStartGameModalTimerFinished = () => {
     let newUpdates = {currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0};
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
+        localStorage.setItem('currentGameTimeStor', gameSession.phaseOneTime);
+        setHeaderGameCurrentTime(gameSession.phaseOneTime);
+        setGameTimer(true);
+        setGameTimerZero(false);
         setGameSession(response);
         setIsModalOpen(false); 
       });
+    
   };
 
   const handleStartGame = () =>{
@@ -136,6 +186,7 @@ const GameSessionContainer = () => {
     return null;
   };
 
+
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
@@ -145,7 +196,7 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession}/>;
+      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} />;
 
 
     case GameSessionState.PHASE_1_RESULTS:

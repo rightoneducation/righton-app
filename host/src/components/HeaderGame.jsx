@@ -8,6 +8,7 @@ const useStyles = makeStyles(() => ({
   div: {
     paddingLeft: "10px",
     paddingTop: "10px",
+    minHeight: "16vh"
   },
   title: {
     fontWeight: 700,
@@ -61,7 +62,8 @@ export default function HeaderGame({
   gameInProgress,
   statePosition,
   headerGameCurrentTime,
-  totalRoundTime
+  totalRoundTime,
+  gameTimer
 }) {
   const classes = useStyles();
 
@@ -84,7 +86,7 @@ export default function HeaderGame({
       <Typography className={classes.phases}>
         {label[statePosition]} 
       </Typography>
-      {gameInProgress && <Timer headerGameCurrentTime={headerGameCurrentTime} totalRoundTime={totalRoundTime} />} 
+      {gameTimer && <Timer headerGameCurrentTime={headerGameCurrentTime} totalRoundTime={totalRoundTime} />} 
      
     </div>
   );
