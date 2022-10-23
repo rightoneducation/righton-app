@@ -1,6 +1,5 @@
-import React, { useState } from "react"
-import { View, Text, StyleSheet, Image } from "react-native"
-import { scale, verticalScale } from "react-native-size-matters"
+import { Image, StyleSheet, Text, View } from "react-native"
+import { scale } from "react-native-size-matters"
 import { colors, fontFamilies, fonts } from "../../../../../utils/theme"
 
 const CollapsableContent = () => {
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
   },
   chosenAnswer: {
     borderWidth: 2,
-    borderColor: colors.lightgreen,
+    borderColor: colors.lightGreen,
     borderRadius: 20,
     width: scale(80),
     paddingHorizontal: scale(10),

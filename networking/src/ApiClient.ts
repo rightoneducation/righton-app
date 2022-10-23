@@ -19,8 +19,8 @@ import {
 } from './AWSMobileApi'
 import { gameSessionByCode, getGameSession, getTeam, onCreateTeam, onCreateTeamAnswer, onDeleteTeam, onGameSessionUpdatedById, onUpdateTeamMember } from './graphql'
 import { createTeam, createTeamAnswer, createTeamMember, updateGameSession } from './graphql/mutations'
-import { IApiClient } from './IApiClient'
-import { Choice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
+import { IApiClient, isNullOrUndefined } from './IApiClient'
+import { IQuestion, ITeamAnswer, ITeamMember } from './Models'
 import { IGameSession } from './Models/IGameSession'
 import { ITeam } from './Models/ITeam'
 
@@ -228,44 +228,6 @@ export class ApiClient implements IApiClient {
         return answer.data.createTeamAnswer as ITeamAnswer
     }
 
-    calculateBasicModeWrongAnswerScore(gameSession: IGameSession, team: ITeam, questionId: number): number {
-        if (isNullOrUndefined(gameSession.teams)) {
-            throw new Error("'teams' can't be null")
-        }
-
-        if (isNullOrUndefined(team.teamMembers)) {
-            throw new Error("No members available for the team")
-        }
-
-        const teamAnswers = team.teamMembers[0]?.answers?.filter((answer) => {
-            answer?.questionId === questionId
-        })
-
-        if (isNullOrUndefined(teamAnswers) ||
-            teamAnswers.length != 1) {
-            return 0
-        }
-
-        // Calculate how many teams have chosen the same answer as the passed team.
-        const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, otherTeam: ITeam) => {
-            if (isNullOrUndefined(otherTeam.teamMembers) ||
-                otherTeam.teamMembers.length < 1) {
-                return previousVal
-            }
-
-            const answersToQuestion = otherTeam.teamMembers[0]?.answers?.filter((answer) => {
-                !isNullOrUndefined(answer) &&
-                    !isNullOrUndefined(answer?.questionId) &&
-                    answer.questionId === questionId &&
-                    answer.text === teamAnswers[0]!.questionId
-            })
-
-            return previousVal + (answersToQuestion?.length ?? 0)
-        }, 1)
-
-        return Math.ceil(totalNoChosenAnswer / gameSession.teams.length) * 100
-    }
-
     // Private methods
     private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
         //@ts-ignore
@@ -337,7 +299,9 @@ type AWSTeam = {
     id: string,
     name: string,
     trickiestAnswerIDs?: Array<string | null> | null,
-    teamMembers?: Array<ITeamMember | null> | null,
+    teamMembers?: {
+        items: Array<AWSTeamMember | null>
+    } | null,
     score: number,
     createdAt: string,
     updatedAt?: string,
@@ -349,9 +313,9 @@ type AWSTeam = {
 type AWSQuestion = {
     id: number,
     text: string,
-    choices?: Array<Choice> | null,
+    choices?: string | null,
     imageUrl?: string | null,
-    instructions?: Array<string> | null,
+    instructions?: string | null,
     standard?: string | null,
     cluster?: string | null,
     domain?: string | null,
@@ -363,7 +327,9 @@ type AWSQuestion = {
 type AWSTeamMember = {
     id: string,
     isFacilitator?: boolean | null,
-    answers?: Array<ITeamAnswer> | null,
+    answers?: {
+        items: Array<ITeamAnswer> | null
+    } | null,
     deviceId?: string | null,
     createdAt?: string | null,
     updatedAt?: string | null,
@@ -476,7 +442,19 @@ class GameSessionParser {
                 throw new Error("Team can't be null in the backend.")
             }
 
-            return awsTeam as ITeam
+            const team: ITeam = {
+                id: awsTeam.id,
+                name: awsTeam.name,
+                teamQuestionId: awsTeam.teamQuestionId,
+                trickiestAnswerIDs: awsTeam.trickiestAnswerIDs,
+                score: awsTeam.score,
+                createdAt: awsTeam.createdAt,
+                updatedAt: awsTeam.updatedAt,
+                gameSessionTeamsId: awsTeam.gameSessionTeamsId,
+                teamQuestionGameSessionId: awsTeam.teamQuestionGameSessionId,
+                teamMembers: TeamMemberParser.mapTeamMembers(awsTeam.teamMembers?.items),
+            }
+            return team
         })
     }
 
@@ -488,9 +466,9 @@ class GameSessionParser {
             const question: IQuestion = {
                 id: awsQuestion.id,
                 text: awsQuestion.text,
-                choices: isNullOrUndefined(awsQuestion.choices) ? [] : awsQuestion.choices,
+                choices: isNullOrUndefined(awsQuestion.choices) ? [] : JSON.parse(awsQuestion.choices),
                 imageUrl: awsQuestion.imageUrl,
-                instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : awsQuestion.instructions,
+                instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : JSON.parse(awsQuestion.instructions),
                 standard: awsQuestion.standard,
                 cluster: awsQuestion.cluster,
                 domain: awsQuestion.domain,
@@ -550,7 +528,7 @@ class TeamParser {
             id,
             name,
             trickiestAnswerIDs,
-            teamMembers,
+            teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
             score,
             createdAt,
             updatedAt,
@@ -559,20 +537,6 @@ class TeamParser {
             teamQuestionGameSessionId
         }
         return team
-    }
-
-
-    static mapTeamMembers(awsTeamMembers: Array<AWSTeamMember | null>): Array<ITeamMember> {
-        if (isNullOrUndefined(awsTeamMembers)) {
-            return []
-        }
-
-        return awsTeamMembers.map(awsTeamMember => {
-            if (isNullOrUndefined(awsTeamMember)) {
-                throw new Error("Team can't be null in the backend.")
-            }
-            return awsTeamMember as ITeamMember
-        })
     }
 }
 
@@ -586,6 +550,19 @@ class TeamMemberParser {
         }
         //@ts-ignore
         return this.teamMemberFromAWSTeamMember(updateTeamMember)
+    }
+
+    static mapTeamMembers(awsTeamMembers: Array<AWSTeamMember | null> | null | undefined): Array<ITeamMember> {
+        if (isNullOrUndefined(awsTeamMembers)) {
+            return []
+        }
+
+        return awsTeamMembers.map(awsTeamMember => {
+            if (isNullOrUndefined(awsTeamMember)) {
+                throw new Error("Team can't be null in the backend.")
+            }
+            return this.teamMemberFromAWSTeamMember(awsTeamMember)
+        })
     }
 
     static teamMemberFromAWSTeamMember(awsTeamMember: AWSTeamMember): ITeamMember {
@@ -611,7 +588,7 @@ class TeamMemberParser {
         const teamMember: ITeamMember = {
             id,
             isFacilitator,
-            answers,
+            answers: TeamAnswerParser.mapTeamAnswers(answers?.items),
             deviceId,
             createdAt,
             updatedAt,
@@ -621,7 +598,6 @@ class TeamMemberParser {
     }
 }
 
-
 class TeamAnswerParser {
     static teamAnswerFromTeamAnswerSubscription(subscription: OnCreateTeamAnswerSubscription): ITeamAnswer {
         const createTeamAnswer = subscription.onCreateTeamAnswer
@@ -630,6 +606,19 @@ class TeamAnswerParser {
         }
         //@ts-ignore
         return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
+    }
+
+    static mapTeamAnswers(awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined): Array<ITeamAnswer> {
+        if (isNullOrUndefined(awsTeamAnswers)) {
+            return []
+        }
+
+        return awsTeamAnswers.map(awsTeamAnswer => {
+            if (isNullOrUndefined(awsTeamAnswer)) {
+                throw new Error("Team can't be null in the backend.")
+            }
+            return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
+        })
     }
 
     static teamAnswerFromAWSTeamAnswer(awsTeamAnswer: AWSTeamAnswer): ITeamAnswer {
@@ -665,8 +654,4 @@ class TeamAnswerParser {
         return teamAnswer
     }
 
-}
-
-function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
-    return value === null || value === undefined
 }

@@ -9,6 +9,7 @@ import PhaseTwoBasicGamePlay from "../Student/screens/Game/PhaseTwoBasicGamePlay
 import PhaseResult from "../Student/screens/PhaseResult"
 import PregameCountDown from "../Student/screens/PregameCountDown"
 import ScorePage from "../Student/screens/ScorePage"
+import SelectTeam from "../Student/screens/SelectTeam"
 import StartPhase from "../Student/screens/StartPhase"
 import StudentGameIntro from "../Student/screens/StudentGameIntro"
 import StudentName from "../Student/screens/StudentName"
@@ -91,6 +92,16 @@ const AppContainer = () => {
                         <Stack.Screen name="PhaseTwoBasicGamePlay">
                             {(props) => (
                                 <PhaseTwoBasicGamePlay
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="SelectTeam">
+                            {(props) => (
+                                <SelectTeam
                                     {...props}
                                     gameSession={gameSession}
                                     teamId={teamId}
