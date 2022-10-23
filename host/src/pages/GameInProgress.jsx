@@ -149,7 +149,6 @@ export default function GameInProgress({
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
-          gameInProgress={true}
           statePosition ={statePosition = stateArray.indexOf(currentState)}
           headerGameCurrentTime = {headerGameCurrentTime}
           totalRoundTime ={(currentState === stateArray[2] ? phaseOneTime : phaseTwoTime)}
@@ -164,7 +163,7 @@ export default function GameInProgress({
         totalAnswers={totalAnswers} //number of answers 
         phaseOneTime={phaseOneTime} 
         phaseTwoTime={phaseTwoTime}
-        isGameInProgress={true} //flag GameInProgress vs StudentView
+        gameTimer={gameTimer} //flag GameInProgress vs StudentView
         footerButtonText={getFooterText(teams ? teams.length : 0, totalAnswers, statePosition)} //provides index of current state for use in footer dictionary
         handleFooterOnClick = {handleFooterOnClick} //handler for button
       />

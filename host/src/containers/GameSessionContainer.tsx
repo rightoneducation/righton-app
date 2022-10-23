@@ -14,6 +14,7 @@ import Ranking from "../pages/Ranking";
 import { isCompositeComponent } from "react-dom/test-utils";
 import { responsiveFontSizes } from "@material-ui/core";
 import { AMPLIFY_SYMBOL } from "@aws-amplify/pubsub/lib-esm/Providers/constants";
+import { ContactsOutlined } from "@material-ui/icons";
 
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
@@ -47,8 +48,10 @@ const GameSessionContainer = () => {
 
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-       setGameSession(({ ...gameSession, ...response }));
-       checkGameTimer(response);
+      if (gameSession.currentState !== response.currentState) //only run the gametimer check on instances where the currentState changes (new screens)
+        checkGameTimer(response); 
+
+      setGameSession(({ ...gameSession, ...response }));
     });
 
 
@@ -123,10 +126,10 @@ const GameSessionContainer = () => {
     }
   }, [gameTimer, gameTimerZero, headerGameCurrentTime]);
 
-  useEffect(()=>{ //update gameSession currentTimer every 3 seconds with time from headerGame Timer
+  useEffect(()=>{ //update gameSession currentTimer every 3 seconds with time from headerGame Timer 
     if (gameTimer && !gameTimerZero){
       let refreshIntervalId = setInterval(() => {
-          let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStor') - 1)};
+          let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStor')>= 0 ? localStorage.getItem('currentGameTimeStor') : 0)};
           apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
       }, 3000);
       return () => clearInterval(refreshIntervalId);
@@ -136,6 +139,7 @@ const GameSessionContainer = () => {
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
+
         if (response.currentState === stateArray[2])
           setHeaderGameCurrentTime(response.phaseOneTime);
         else if (response.currentState === stateArray[6])
@@ -146,8 +150,8 @@ const GameSessionContainer = () => {
       });
   };
 
-  const checkGameTimer = (response) =>{
-      if (response.currentState !== stateArray[2] && response.currentState !== stateArray[6]){
+  const checkGameTimer = (gameSession) =>{
+      if (gameSession.currentState !== stateArray[2] && gameSession.currentState !== stateArray[6]){
           setGameTimer(false);
           setGameTimerZero(false);
       }
@@ -163,8 +167,7 @@ const GameSessionContainer = () => {
       .then(response => {
         localStorage.setItem('currentGameTimeStor', gameSession.phaseOneTime);
         setHeaderGameCurrentTime(gameSession.phaseOneTime);
-        setGameTimer(true);
-        setGameTimerZero(false);
+        checkGameTimer(response);
         setGameSession(response);
         setIsModalOpen(false); 
       });
@@ -202,7 +205,7 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
     case GameSessionState.PHASE_2_RESULTS:
-      return <StudentViews {...gameSession} handleUpdateGameSession={handleUpdateGameSession}/>;
+      return <StudentViews {...gameSession} gameTimer={gameTimer} handleUpdateGameSession={handleUpdateGameSession}/>;
 
 
     case GameSessionState.FINAL_RESULTS:

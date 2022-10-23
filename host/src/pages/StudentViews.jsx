@@ -14,6 +14,7 @@ export default function StudentViews({
   currentQuestionIndex,
   phaseOneTime,
   phaseTwoTime,
+  gameTimer,
   handleUpdateGameSession
 }) {
   
@@ -87,7 +88,6 @@ export default function StudentViews({
             currentQuestion={currentQuestionIndex}
             phaseOneTime={phaseOneTime}
             phaseTwoTime={phaseTwoTime}
-            gameInProgress={false}
             statePosition = {statePosition = stateArray.indexOf(currentState)}
             />
             <div className={classes.studentViewsCont}>
@@ -97,7 +97,7 @@ export default function StudentViews({
             <FooterGame
               phaseOneTime={phaseOneTime}
               phaseTwoTime={phaseTwoTime}
-              isGameInProgress={false} //flag studentview vs GameInProgress   
+              gameTimer={gameTimer} //flag studentview vs GameInProgress   
               footerButtonText={isLastGameScreen ? "View Final Results" : footerButtonTextDictionary[statePosition]} 
               handleUpdateGameSession={handleUpdateGameSession}
               handleFooterOnClick =  {handleFooterOnClick} //handler for button

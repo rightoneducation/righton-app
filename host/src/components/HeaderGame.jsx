@@ -59,7 +59,6 @@ const label = {
 export default function HeaderGame({
   totalQuestions,
   currentQuestion,
-  gameInProgress,
   statePosition,
   headerGameCurrentTime,
   totalRoundTime,
