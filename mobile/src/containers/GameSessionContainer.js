@@ -1,6 +1,6 @@
-import { GameSessionState } from "@righton/networking"
-import { useEffect, useState } from "react"
+import React, { useState, useEffect } from "react"
 import EncryptedStorage from "react-native-encrypted-storage"
+import { GameSessionState } from "@righton/networking"
 
 const GameSessionContainer = ({ children }) => {
     const [gameCode, setGameCode] = useState(null)
@@ -37,6 +37,7 @@ const GameSessionContainer = ({ children }) => {
                                     )
                                     // TODO: update the team object everytime the game session is updated
                                     // only update the team member if the team member is found
+                                    // if(teamMember){setTeamMember(teamMember)}
                                 }
                             )
                     }

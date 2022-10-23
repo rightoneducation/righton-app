@@ -1,12 +1,21 @@
-import { useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import {
-    Image, SafeAreaView, Text,
-    TextInput, View
+    Text,
+    TextInput,
+    SafeAreaView,
+    Image,
+    View,
+    StatusBar,
 } from "react-native"
-import PurpleBackground from "../../../components/PurpleBackground"
-import RoundButton from "../../../components/RoundButton"
+import { verticalScale } from "react-native-size-matters"
+import NetInfo from "@react-native-community/netinfo"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
+import debug from "../../../utils/debug"
+import RoundButton from "../../../components/RoundButton"
+import PurpleBackground from "../../../components/PurpleBackground"
+import { getUniqueId } from "react-native-device-info"
+import { GameSessionState } from "@righton/networking"
 
 export default function EnterGameCode({
     navigation,
@@ -30,6 +39,29 @@ export default function EnterGameCode({
         setPortal(`Joining ${gameCode}`)
         setGlobalGameCode(gameCode)
         navigation.navigate("StudentName")
+
+        // global.apiClient
+        //   .getGameSessionByCode(gameCode)
+        //   .then((gameSession) => {
+        //     if (!gameSession) {
+        //       console.debug("Invalid game code.")
+        //       return
+        //     }
+
+        //     if (gameSession.currentState != GameSessionState.TEAMS_JOINING) {
+        //       return
+        //     }
+
+        //     if (gameSession.isAdvanced) {
+        //       return
+        //     }
+
+        //     setGameSession(gameSession)
+        //     navigation.navigate("StudentName", { gameSession })
+        //   })
+        //   .catch((error) => {
+        //     setPortal(`error joining ${gameCode}: ${error}`)
+        //   })
     }
 
     handleNavigateToJoinGame = () => {
@@ -37,7 +69,7 @@ export default function EnterGameCode({
     }
 
     return (
-        <>
+        <Fragment>
             <SafeAreaView style={{ flex: 0, backgroundColor: "#483a82" }} />
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>
@@ -77,6 +109,6 @@ export default function EnterGameCode({
                     </View>
                 </PurpleBackground>
             </SafeAreaView>
-        </>
+        </Fragment>
     )
 }

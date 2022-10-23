@@ -1,4 +1,3 @@
-/* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
@@ -14,69 +13,19 @@ export const createGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          question {
-            id
-            text
-            choices
-            imageUrl
-            instructions
-            standard
-            cluster
-            domain
-            grade
-            order
-            gameSessionId
-          }
-          trickiestAnswerIDs
-          teamMembers {
-            items {
-              id
-              isFacilitator
-              deviceId
-              createdAt
-              updatedAt
-              teamTeamMembersId
-            }
-            nextToken
-          }
-          score
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-        }
         nextToken
       }
-      currentQuestionIndex
+      currentQuestionId
       currentState
       gameCode
-      isAdvancedMode
+      isAdvanced
       imageUrl
       description
       title
-      currentTimer
+      createdAt
       questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -93,69 +42,19 @@ export const updateGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          question {
-            id
-            text
-            choices
-            imageUrl
-            instructions
-            standard
-            cluster
-            domain
-            grade
-            order
-            gameSessionId
-          }
-          trickiestAnswerIDs
-          teamMembers {
-            items {
-              id
-              isFacilitator
-              deviceId
-              createdAt
-              updatedAt
-              teamTeamMembersId
-            }
-            nextToken
-          }
-          score
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-        }
         nextToken
       }
-      currentQuestionIndex
+      currentQuestionId
       currentState
       gameCode
-      isAdvancedMode
+      isAdvanced
       imageUrl
       description
       title
-      currentTimer
+      createdAt
       questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -172,69 +71,19 @@ export const deleteGameSession = /* GraphQL */ `
       phaseOneTime
       phaseTwoTime
       teams {
-        items {
-          id
-          name
-          question {
-            id
-            text
-            choices
-            imageUrl
-            instructions
-            standard
-            cluster
-            domain
-            grade
-            order
-            gameSessionId
-          }
-          trickiestAnswerIDs
-          teamMembers {
-            items {
-              id
-              isFacilitator
-              deviceId
-              createdAt
-              updatedAt
-              teamTeamMembersId
-            }
-            nextToken
-          }
-          score
-          createdAt
-          updatedAt
-          gameSessionTeamsId
-          teamQuestionId
-          teamQuestionOrder
-          teamQuestionGameSessionId
-        }
         nextToken
       }
-      currentQuestionIndex
+      currentQuestionId
       currentState
       gameCode
-      isAdvancedMode
+      isAdvanced
       imageUrl
       description
       title
-      currentTimer
+      createdAt
       questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          gameSessionId
-        }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -247,15 +96,31 @@ export const createQuestion = /* GraphQL */ `
     createQuestion(input: $input, condition: $condition) {
       id
       text
-      choices
+      answer
+      wrongAnswers
       imageUrl
       instructions
       standard
       cluster
       domain
       grade
-      order
       gameSessionId
+      gameSession {
+        id
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        currentQuestionId
+        currentState
+        gameCode
+        isAdvanced
+        imageUrl
+        description
+        title
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -267,15 +132,31 @@ export const updateQuestion = /* GraphQL */ `
     updateQuestion(input: $input, condition: $condition) {
       id
       text
-      choices
+      answer
+      wrongAnswers
       imageUrl
       instructions
       standard
       cluster
       domain
       grade
-      order
       gameSessionId
+      gameSession {
+        id
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        currentQuestionId
+        currentState
+        gameCode
+        isAdvanced
+        imageUrl
+        description
+        title
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -287,15 +168,31 @@ export const deleteQuestion = /* GraphQL */ `
     deleteQuestion(input: $input, condition: $condition) {
       id
       text
-      choices
+      answer
+      wrongAnswers
       imageUrl
       instructions
       standard
       cluster
       domain
       grade
-      order
       gameSessionId
+      gameSession {
+        id
+        gameId
+        startTime
+        phaseOneTime
+        phaseTwoTime
+        currentQuestionId
+        currentState
+        gameCode
+        isAdvanced
+        imageUrl
+        description
+        title
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -310,38 +207,18 @@ export const createTeam = /* GraphQL */ `
       question {
         id
         text
-        choices
+        answer
+        wrongAnswers
         imageUrl
         instructions
         standard
         cluster
         domain
         grade
-        order
         gameSessionId
       }
       trickiestAnswerIDs
       teamMembers {
-        items {
-          id
-          isFacilitator
-          answers {
-            items {
-              id
-              questionId
-              isChosen
-              text
-              createdAt
-              updatedAt
-              teamMemberAnswersId
-            }
-            nextToken
-          }
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-        }
         nextToken
       }
       score
@@ -349,8 +226,6 @@ export const createTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
     }
   }
 `;
@@ -365,38 +240,18 @@ export const updateTeam = /* GraphQL */ `
       question {
         id
         text
-        choices
+        answer
+        wrongAnswers
         imageUrl
         instructions
         standard
         cluster
         domain
         grade
-        order
         gameSessionId
       }
       trickiestAnswerIDs
       teamMembers {
-        items {
-          id
-          isFacilitator
-          answers {
-            items {
-              id
-              questionId
-              isChosen
-              text
-              createdAt
-              updatedAt
-              teamMemberAnswersId
-            }
-            nextToken
-          }
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-        }
         nextToken
       }
       score
@@ -404,8 +259,6 @@ export const updateTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
     }
   }
 `;
@@ -420,38 +273,18 @@ export const deleteTeam = /* GraphQL */ `
       question {
         id
         text
-        choices
+        answer
+        wrongAnswers
         imageUrl
         instructions
         standard
         cluster
         domain
         grade
-        order
         gameSessionId
       }
       trickiestAnswerIDs
       teamMembers {
-        items {
-          id
-          isFacilitator
-          answers {
-            items {
-              id
-              questionId
-              isChosen
-              text
-              createdAt
-              updatedAt
-              teamMemberAnswersId
-            }
-            nextToken
-          }
-          deviceId
-          createdAt
-          updatedAt
-          teamTeamMembersId
-        }
         nextToken
       }
       score
@@ -459,8 +292,6 @@ export const deleteTeam = /* GraphQL */ `
       updatedAt
       gameSessionTeamsId
       teamQuestionId
-      teamQuestionOrder
-      teamQuestionGameSessionId
     }
   }
 `;
@@ -471,17 +302,18 @@ export const createTeamMember = /* GraphQL */ `
   ) {
     createTeamMember(input: $input, condition: $condition) {
       id
+      team {
+        id
+        name
+        trickiestAnswerIDs
+        score
+        createdAt
+        updatedAt
+        gameSessionTeamsId
+        teamQuestionId
+      }
       isFacilitator
-      answers {
-        items {
-          id
-          questionId
-          isChosen
-          text
-          createdAt
-          updatedAt
-          teamMemberAnswersId
-        }
+      memberAnswers {
         nextToken
       }
       deviceId
@@ -498,17 +330,18 @@ export const updateTeamMember = /* GraphQL */ `
   ) {
     updateTeamMember(input: $input, condition: $condition) {
       id
+      team {
+        id
+        name
+        trickiestAnswerIDs
+        score
+        createdAt
+        updatedAt
+        gameSessionTeamsId
+        teamQuestionId
+      }
       isFacilitator
-      answers {
-        items {
-          id
-          questionId
-          isChosen
-          text
-          createdAt
-          updatedAt
-          teamMemberAnswersId
-        }
+      memberAnswers {
         nextToken
       }
       deviceId
@@ -525,17 +358,18 @@ export const deleteTeamMember = /* GraphQL */ `
   ) {
     deleteTeamMember(input: $input, condition: $condition) {
       id
+      team {
+        id
+        name
+        trickiestAnswerIDs
+        score
+        createdAt
+        updatedAt
+        gameSessionTeamsId
+        teamQuestionId
+      }
       isFacilitator
-      answers {
-        items {
-          id
-          questionId
-          isChosen
-          text
-          createdAt
-          updatedAt
-          teamMemberAnswersId
-        }
+      memberAnswers {
         nextToken
       }
       deviceId
@@ -552,12 +386,11 @@ export const createTeamAnswer = /* GraphQL */ `
   ) {
     createTeamAnswer(input: $input, condition: $condition) {
       id
-      questionId
       isChosen
       text
       createdAt
       updatedAt
-      teamMemberAnswersId
+      teamMemberMemberAnswersId
     }
   }
 `;
@@ -568,12 +401,11 @@ export const updateTeamAnswer = /* GraphQL */ `
   ) {
     updateTeamAnswer(input: $input, condition: $condition) {
       id
-      questionId
       isChosen
       text
       createdAt
       updatedAt
-      teamMemberAnswersId
+      teamMemberMemberAnswersId
     }
   }
 `;
@@ -584,12 +416,11 @@ export const deleteTeamAnswer = /* GraphQL */ `
   ) {
     deleteTeamAnswer(input: $input, condition: $condition) {
       id
-      questionId
       isChosen
       text
       createdAt
       updatedAt
-      teamMemberAnswersId
+      teamMemberMemberAnswersId
     }
   }
 `;

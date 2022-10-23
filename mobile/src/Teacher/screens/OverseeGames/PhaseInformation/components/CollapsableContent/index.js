@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native"
-import { scale } from "react-native-size-matters"
+import React, { useState } from "react"
+import { View, Text, StyleSheet } from "react-native"
+import { scale, verticalScale } from "react-native-size-matters"
 import { colors, fontFamilies, fonts } from "../../../../../../utils/theme"
 
 const CollapsableContent = () => {
@@ -38,7 +39,7 @@ const CollapsableContent = () => {
             style={[
               styles.correctAnswerContainer,
               selectedId == 1
-                ? { backgroundColor: colors.lightGreen }
+                ? { backgroundColor: colors.lightgreen }
                 : { backgroundColor: "#FC1047" },
             ]}
           >

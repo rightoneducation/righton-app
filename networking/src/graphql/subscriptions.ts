@@ -32,18 +32,6 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
             items {
               id
               isFacilitator
-              answers {
-                items {
-                  id
-                  questionId
-                  isChosen
-                  text
-                  createdAt
-                  updatedAt
-                  teamMemberAnswersId
-                }
-                nextToken
-              }
               deviceId
               createdAt
               updatedAt
@@ -144,18 +132,6 @@ export const onCreateGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
-              answers {
-                items {
-                  id
-                  questionId
-                  isChosen
-                  text
-                  createdAt
-                  updatedAt
-                  teamMemberAnswersId
-                }
-                nextToken
-              }
               deviceId
               createdAt
               updatedAt
@@ -232,18 +208,6 @@ export const onUpdateGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
-              answers {
-                items {
-                  id
-                  questionId
-                  isChosen
-                  text
-                  createdAt
-                  updatedAt
-                  teamMemberAnswersId
-                }
-                nextToken
-              }
               deviceId
               createdAt
               updatedAt
@@ -320,18 +284,6 @@ export const onDeleteGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
-              answers {
-                items {
-                  id
-                  questionId
-                  isChosen
-                  text
-                  createdAt
-                  updatedAt
-                  teamMemberAnswersId
-                }
-                nextToken
-              }
               deviceId
               createdAt
               updatedAt

@@ -1,6 +1,7 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { colors, fontFamilies, fonts } from '../../../../../../utils/theme'
+import { fontFamilies, fonts, colors } from '../../../../../../utils/theme'
 import Points from '../../../../../components/Points'
 
 const TeamItem = ({ teamNo, score, showPoints }) => {
@@ -9,7 +10,7 @@ const TeamItem = ({ teamNo, score, showPoints }) => {
     let imageUrl
     switch (teamNo) {
         case 1:
-            backgroundColorStart = colors.lightGreen
+            backgroundColorStart = colors.lightgreen
             backgroundColorEnd = '#5ACD3D'
             imageUrl = require('../../img/team_1_icon.png')
             break

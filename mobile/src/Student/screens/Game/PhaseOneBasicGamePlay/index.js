@@ -199,7 +199,7 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                         ) : null}
                     </Card>
                     {gameSession?.currentState ===
-                    GameSessionState.PHASE_1_DISCUSS ? (
+                    GameSessionState.PHASE_1_RESULTS ? (
                         <Card headerTitle={hintsViewTitle()}>
                             <HintsView hints={hints} />
                         </Card>

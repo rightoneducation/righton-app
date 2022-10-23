@@ -18,7 +18,6 @@ const fonts = {
   xMedium: moderateScale(18, 0.2),
   medium: moderateScale(20, 0.2),
   large: moderateScale(24, 0.2),
-  semiLarge: moderateScale(26, 0.2),
   xLarge: moderateScale(30, 0.2),
   xxLarge: moderateScale(36, 0.2),
   xxxLarge: moderateScale(72, 0.2),
@@ -64,9 +63,8 @@ const colors = {
   buttonPrimary: '#FC1047',
   buttonSecondary: '#159EFA',
   backgroundPurple: '#483a82',
-  lightGreen: '#4DED66',
-  lightBlue: '#159EFA',
-  blackTransparent38: 'rgba(0, 0, 0, 0.38)'
+  lightgreen: '#4DED66',
+  lightblue: '#159EFA'
 }
 
 const elevation = {

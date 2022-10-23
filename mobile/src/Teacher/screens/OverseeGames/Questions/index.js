@@ -1,14 +1,17 @@
-import { useCallback, useState } from "react"
+import React, { useState, useRef, useCallback } from "react"
 import {
+  View,
+  Text,
+  StyleSheet,
   Image,
-  ScrollView, StyleSheet, Text, View
+  ScrollView,
 } from "react-native"
 import { scale } from "react-native-size-matters"
-import { colors, fontFamilies, fonts } from "../../../../utils/theme"
+import { fontFamilies, fonts, colors } from "../../../../utils/theme"
 import Footer from "../components/Footer"
 // import AnimatedAccordion from "@dev-event/react-native-accordion"
-import RootComponent from "../components/RootComponent"
 import CollapsableContent from "./CollapsableContent"
+import RootComponent from "../components/RootComponent"
 
 // add a prop for second question
 const Questions = ({ route, navigation }) => {
@@ -133,8 +136,8 @@ const Questions = ({ route, navigation }) => {
           questionNum={questionNum}
           nextPage={"Results"}
           buttonLabel={"Skip to Results"}
-          backgroundColor={allTeamAnswers ? colors.lightBlue : "transparent"}
-          textColor={allTeamAnswers ? colors.white : colors.lightBlue}
+          backgroundColor={allTeamAnswers ? colors.lightblue : "transparent"}
+          textColor={allTeamAnswers ? colors.white : colors.lightblue}
         />
       </View>
     </RootComponent>
