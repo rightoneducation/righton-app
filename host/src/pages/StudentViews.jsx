@@ -49,7 +49,8 @@ export default function StudentViews({
     9 : "Proceed to RightOn Central"
   };
 
-  const studentViewImage = currentState => { //determines which student view image to show
+  // determines which student view image to show
+  const studentViewImage = currentState => { 
     if (currentState === stateArray[4]){
       return SVP1Results;
     } else if (currentState === stateArray[8]){
@@ -59,7 +60,8 @@ export default function StudentViews({
       return SVP2Start;
   };
 
-  const nextStateFunc = currentState => { //determines next state for use by footer
+  // determines next state for use by footer
+  const nextStateFunc = currentState => {
     if (currentState === stateArray[8] && !isLastQuestion) {
       return stateArray[2];
     } else {
@@ -67,11 +69,12 @@ export default function StudentViews({
     }
   };
 
-  let isLastGameScreen = ((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]); //if last screen of last question, head to view final results
+  let isLastGameScreen = ((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]); // if last screen of last question, head to view final results
   let nextState = nextStateFunc(currentState);
 
-  const handleFooterOnClick = () => { //button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
-    if (!isLastQuestion && statePosition === 8){ //if they are on the last page a\nd need to advance to the next question
+  // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
+  const handleFooterOnClick = () => { 
+    if (!isLastQuestion && statePosition === 8){ // if they are on the last page a\nd need to advance to the next question
       handleUpdateGameSession({currentState: GameSessionState[nextState], currentQuestionIndex: currentQuestionIndex+1}) 
     }
     else { 
@@ -97,10 +100,10 @@ export default function StudentViews({
             <FooterGame
               phaseOneTime={phaseOneTime}
               phaseTwoTime={phaseTwoTime}
-              gameTimer={gameTimer} //flag studentview vs GameInProgress   
+              gameTimer={gameTimer} // flag studentview vs GameInProgress   
               footerButtonText={isLastGameScreen ? "View Final Results" : footerButtonTextDictionary[statePosition]} 
               handleUpdateGameSession={handleUpdateGameSession}
-              handleFooterOnClick =  {handleFooterOnClick} //handler for button
+              handleFooterOnClick =  {handleFooterOnClick} 
             />
           </div>
        

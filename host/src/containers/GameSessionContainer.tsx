@@ -22,21 +22,22 @@ const GameSessionContainer = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
-  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
-  const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStor'));   //(currentState === stateArray[2] ? phaseOneTime : phaseTwoTime));
+  const stateArray = Object.values(GameSessionState); // adds all states from enum into array 
+  const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStore'));
   const [gameTimer, setGameTimer] = useState(false); 
   const [gameTimerZero, setGameTimerZero] = useState(false);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
-  useEffect(() => { //initial query for gameSessions and teams
+  // initial query for gameSessions and teams
+  useEffect(() => { 
     apiClient.getGameSession(gameSessionId).then(response => {
-      setGameSession(response); //set initial gameSession state
-      checkGameTimer(response); //checks if the timer needs to start
+      setGameSession(response); // set initial gameSession state
+      checkGameTimer(response); // checks if the timer needs to start
 
-      //the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
+      // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map(team => {
-        return apiClient.getTeam(team.id); //got to call the get the teams from the APi so we can see the answers
+        return apiClient.getTeam(team.id); // got to call the get the teams from the APi so we can see the answers
       });
   
       Promise.all(teamDataRequests) 
@@ -48,14 +49,15 @@ const GameSessionContainer = () => {
 
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-      if (gameSession && gameSession.currentState !== response.currentState) //only run the gametimer check on instances where the currentState changes (new screens)
+      // only run the gametimer check on instances where the currentState changes (new screens)
+      if (gameSession && gameSession.currentState !== response.currentState) 
         checkGameTimer(response); 
 
-      setGameSession(({ ...gameSession, ...response }));
+      setGameSession({ ...gameSession, ...response });
     });
 
-
-    let createTeamSubscription: any | null = null; //set up subscription for new teams joining
+    // set up subscription for new teams joining
+    let createTeamSubscription: any | null = null; 
     createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
       if (teamResponse.gameSessionTeamsId === gameSessionId){
           setGameSession((prevState) => {
@@ -66,7 +68,8 @@ const GameSessionContainer = () => {
       }
     });
 
-    let deleteTeamSubscription: any | null = null; //set up subscription for teams leaving
+    // set up subscription for teams leaving
+    let deleteTeamSubscription: any | null = null; 
     deleteTeamSubscription = apiClient.subscribeDeleteTeam(gameSessionId, teamResponse => {
       if (teamResponse.gameSessionTeamsId === gameSessionId){
         setGameSession((prevState) => {
@@ -78,8 +81,8 @@ const GameSessionContainer = () => {
       }  
     });
 
-  
-    let createTeamAnswerSubscription: any | null = null; //set up subscription for teams answering
+    // set up subscription for teams answering
+    let createTeamAnswerSubscription: any | null = null; 
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(gameSessionId, teamAnswerResponse => {
       setTeamsArray((prevState) => {
         let newState = JSON.parse(JSON.stringify(prevState));
@@ -103,7 +106,8 @@ const GameSessionContainer = () => {
 
   },[]);
 
-  useEffect(()=>{ //stops scrolling on the startgame modal
+  // stops scrolling on the startgame modal
+  useEffect(()=>{ 
     if (isModalOpen){
       document.body.style.overflow = 'hidden';
     }
@@ -112,12 +116,14 @@ const GameSessionContainer = () => {
     }
   }, [isModalOpen]);
 
-  useEffect(() => { //headerGame timer, 1 second interval, update localstorage in case page resets
+
+  // headerGame timer, 1 second interval, update localstorage in case page resets
+  useEffect(() => { 
     if (gameTimer && !gameTimerZero){
       let refreshIntervalId = setInterval(() => {
         if (headerGameCurrentTime > 0) {
           setHeaderGameCurrentTime(headerGameCurrentTime - 1);
-          localStorage.setItem('currentGameTimeStor', headerGameCurrentTime-1);
+          localStorage.setItem('currentGameTimeStore', headerGameCurrentTime-1);
         }
         else
           setGameTimerZero(true);
@@ -126,10 +132,11 @@ const GameSessionContainer = () => {
     }
   }, [gameTimer, gameTimerZero, headerGameCurrentTime]);
 
-  useEffect(()=>{ //update gameSession currentTimer every 3 seconds with time from headerGame Timer 
+  // update gameSession currentTimer every 3 seconds with time from headerGame Timer 
+  useEffect(() => { 
     if (gameTimer && !gameTimerZero){
       let refreshIntervalId = setInterval(() => {
-          let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStor')>= 0 ? localStorage.getItem('currentGameTimeStor') : 0)};
+          let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStore')>= 0 ? localStorage.getItem('currentGameTimeStore') : 0)};
           apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
       }, 3000);
       return () => clearInterval(refreshIntervalId);
@@ -150,7 +157,7 @@ const GameSessionContainer = () => {
       });
   };
 
-  const checkGameTimer = (gameSession) =>{
+  const checkGameTimer = (gameSession) => {
       if (gameSession.currentState !== stateArray[2] && gameSession.currentState !== stateArray[6]){
           setGameTimer(false);
           setGameTimerZero(false);
@@ -165,7 +172,7 @@ const GameSessionContainer = () => {
     let newUpdates = {currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0};
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
-        localStorage.setItem('currentGameTimeStor', gameSession.phaseOneTime);
+        localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
         setHeaderGameCurrentTime(gameSession.phaseOneTime);
         checkGameTimer(response);
         setGameSession(response);
@@ -174,8 +181,9 @@ const GameSessionContainer = () => {
     
   };
 
-  const handleStartGame = () =>{
-    console.log(gameSession.currentState);  //I'm keeping this in until we figure out NOT_STARTED so we can tell there's been a change in state 
+  const handleStartGame = () => {
+    // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
+    console.log(gameSession.currentState);  
     if (gameSession.currentState === stateArray[1])
     {
       setIsTimerActive(true);
