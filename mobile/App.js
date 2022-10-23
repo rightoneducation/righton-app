@@ -2,12 +2,9 @@
 
 // global.Buffer = global.Buffer || Buffer.Buffer // Required for aws sigv4 signing
 
-import React from 'react'
-import type { Node } from 'react'
-
 import codePush from 'react-native-code-push'
 
-import RootNavigator from './src/Navigator'
+import AppContainer from './src/Navigator'
 // import debug from './src/utils/debug'
 
 // Import after Amplify to provide polyfill and avoid clashing with React.
@@ -16,9 +13,9 @@ import 'babel-polyfill'
 // LogBox.ignoreAllLogs([])
 
 
-let App: () => Node = () => {
+let App = () => {
   return (
-    <RootNavigator />
+    <AppContainer />
   )
 }
 
@@ -28,8 +25,8 @@ const codePushOptions = {
   updateDialog: true
 }
 
-// Pass router to RootNavigator for hooking it into the navigation paradigm.
-App.router = RootNavigator.router
+// Pass router to AppContainer for hooking it into the navigation paradigm.
+App.router = AppContainer.router
 
 /* eslint no-class-assign: 0 */
 App = codePush(codePushOptions)(App)

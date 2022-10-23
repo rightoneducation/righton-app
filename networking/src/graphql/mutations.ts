@@ -35,6 +35,18 @@ export const createGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
+              answers {
+                items {
+                  id
+                  questionId
+                  isChosen
+                  text
+                  createdAt
+                  updatedAt
+                  teamMemberAnswersId
+                }
+                nextToken
+              }
               deviceId
               createdAt
               updatedAt
@@ -114,6 +126,18 @@ export const updateGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
+              answers {
+                items {
+                  id
+                  questionId
+                  isChosen
+                  text
+                  createdAt
+                  updatedAt
+                  teamMemberAnswersId
+                }
+                nextToken
+              }
               deviceId
               createdAt
               updatedAt
@@ -193,6 +217,18 @@ export const deleteGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
+              answers {
+                items {
+                  id
+                  questionId
+                  isChosen
+                  text
+                  createdAt
+                  updatedAt
+                  teamMemberAnswersId
+                }
+                nextToken
+              }
               deviceId
               createdAt
               updatedAt
