@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react"
-import { StyleSheet, Text, View, Image, Animated } from "react-native"
-import { scale } from "react-native-size-matters"
+import { useRef, useState } from "react"
+import { Animated, Image, StyleSheet, Text, View } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
+import { scale } from "react-native-size-matters"
 import { fontFamilies, fonts } from '../../../../utils/theme'
 
 const Answer = ({

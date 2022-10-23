@@ -12,5 +12,8 @@ export interface IApiClient {
     addTeamToGameSessionId(gameSessionId: string, name: string, questionId: string | null): Promise<ITeam>
     addTeamMemberToTeam(teamId: string, isFacilitator: boolean, deviceId: string): Promise<ITeamMember>
     addTeamAnswer(teamMemberId: string, questionId: number, text: string, isChosen: boolean | null): Promise<ITeamAnswer>
-    calculateWrongAnswerScore(gameSession: IGameSession, team: ITeam): number
+}
+
+export function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
+    return value === null || value === undefined
 }
