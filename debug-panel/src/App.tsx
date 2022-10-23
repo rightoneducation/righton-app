@@ -114,6 +114,15 @@ function App() {
         variant="contained"
         color='secondary'
         onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.PHASE_1_DISCUSS)
+        }}
+      >
+        Phase 1 Discuss
+      </Button>
+      <Button
+        variant="contained"
+        color='secondary'
+        onClick={() => {
           handleUpdateGameSessionState(GameSessionState.PHASE_1_RESULTS)
         }}
       >
@@ -123,10 +132,28 @@ function App() {
         variant="contained"
         color='secondary'
         onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.PHASE_2_START)
+        }}
+      >
+        Phase 2 Start
+      </Button>
+      <Button
+        variant="contained"
+        color='secondary'
+        onClick={() => {
           handleUpdateGameSessionState(GameSessionState.CHOOSE_TRICKIEST_ANSWER)
         }}
       >
         Choose Trickiest Answer
+      </Button>
+      <Button
+        variant="contained"
+        color='secondary'
+        onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.PHASE_2_DISCUSS)
+        }}
+      >
+        Phase 2 Discuss
       </Button>
       <Button
         variant="contained"

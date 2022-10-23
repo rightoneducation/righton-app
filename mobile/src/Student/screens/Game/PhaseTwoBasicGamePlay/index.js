@@ -193,7 +193,7 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                         />
                     </Card>
                     {gameSession?.currentState ===
-                    GameSessionState.PHASE_2_RESULTS ? (
+                    GameSessionState.PHASE_2_DISCUSS ? (
                         <Card headerTitle={hintsViewTitle()}>
                             <HintsView hints={wrongAnswerReasons} />
                         </Card>

@@ -32,6 +32,18 @@ export const getGameSession = /* GraphQL */ `
             items {
               id
               isFacilitator
+              answers {
+                items {
+                  id
+                  questionId
+                  isChosen
+                  text
+                  createdAt
+                  updatedAt
+                  teamMemberAnswersId
+                }
+                nextToken
+              }
               deviceId
               createdAt
               updatedAt
@@ -110,6 +122,26 @@ export const listGameSessions = /* GraphQL */ `
             }
             trickiestAnswerIDs
             teamMembers {
+              items {
+                id
+                isFacilitator
+                answers {
+                  items {
+                    id
+                    questionId
+                    isChosen
+                    text
+                    createdAt
+                    updatedAt
+                    teamMemberAnswersId
+                  }
+                  nextToken
+                }
+                deviceId
+                createdAt
+                updatedAt
+                teamTeamMembersId
+              }
               nextToken
             }
             score
@@ -285,6 +317,15 @@ export const listTeams = /* GraphQL */ `
             id
             isFacilitator
             answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+              }
               nextToken
             }
             deviceId
@@ -434,6 +475,26 @@ export const gameSessionByState = /* GraphQL */ `
             }
             trickiestAnswerIDs
             teamMembers {
+              items {
+                id
+                isFacilitator
+                answers {
+                  items {
+                    id
+                    questionId
+                    isChosen
+                    text
+                    createdAt
+                    updatedAt
+                    teamMemberAnswersId
+                  }
+                  nextToken
+                }
+                deviceId
+                createdAt
+                updatedAt
+                teamTeamMembersId
+              }
               nextToken
             }
             score
@@ -517,6 +578,26 @@ export const gameSessionByCode = /* GraphQL */ `
             }
             trickiestAnswerIDs
             teamMembers {
+              items {
+                id
+                isFacilitator
+                answers {
+                  items {
+                    id
+                    questionId
+                    isChosen
+                    text
+                    createdAt
+                    updatedAt
+                    teamMemberAnswersId
+                  }
+                  nextToken
+                }
+                deviceId
+                createdAt
+                updatedAt
+                teamTeamMembersId
+              }
               nextToken
             }
             score
