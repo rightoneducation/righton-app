@@ -48,9 +48,9 @@ const GameSessionContainer = () => {
 
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-      if (gameSession.currentState !== response.currentState) //only run the gametimer check on instances where the currentState changes (new screens)
+      if (gameSession && gameSession.currentState !== response.currentState) //only run the gametimer check on instances where the currentState changes (new screens)
         checkGameTimer(response); 
-
+      console.log("AWS Current Time: " + response.currentTimer);
       setGameSession(({ ...gameSession, ...response }));
     });
 
@@ -116,6 +116,7 @@ const GameSessionContainer = () => {
     if (gameTimer && !gameTimerZero){
       let refreshIntervalId = setInterval(() => {
         if (headerGameCurrentTime > 0) {
+          console.log("Game Timer: " + headerGameCurrentTime);
           setHeaderGameCurrentTime(headerGameCurrentTime - 1);
           localStorage.setItem('currentGameTimeStor', headerGameCurrentTime-1);
         }
@@ -130,6 +131,7 @@ const GameSessionContainer = () => {
     if (gameTimer && !gameTimerZero){
       let refreshIntervalId = setInterval(() => {
           let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStor')>= 0 ? localStorage.getItem('currentGameTimeStor') : 0)};
+          console.log("Update Timer: "+newUpdates.currentTimer);
           apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
       }, 3000);
       return () => clearInterval(refreshIntervalId);
