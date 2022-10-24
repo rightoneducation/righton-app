@@ -22,7 +22,6 @@ const GameSessionContainer = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
-  const stateArray = Object.values(GameSessionState); // adds all states from enum into array 
   const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStore'));
   const [gameTimer, setGameTimer] = useState(false); 
   const [gameTimerZero, setGameTimerZero] = useState(false);
@@ -147,9 +146,9 @@ const GameSessionContainer = () => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
 
-        if (response.currentState === stateArray[2])
+        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
           setHeaderGameCurrentTime(response.phaseOneTime);
-        else if (response.currentState === stateArray[6])
+        else if (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
           setHeaderGameCurrentTime(response.phaseTwoTime);
 
         setGameSession(response);
@@ -158,7 +157,7 @@ const GameSessionContainer = () => {
   };
 
   const checkGameTimer = (gameSession) => {
-      if (gameSession.currentState !== stateArray[2] && gameSession.currentState !== stateArray[6]){
+      if (gameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && gameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER){
           setGameTimer(false);
           setGameTimerZero(false);
       }
@@ -184,7 +183,7 @@ const GameSessionContainer = () => {
   const handleStartGame = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);  
-    if (gameSession.currentState === stateArray[1])
+    if (gameSession.currentState === GameSessionState.TEAMS_JOINING)
     {
       setIsTimerActive(true);
       setIsModalOpen(true);   
@@ -208,7 +207,6 @@ const GameSessionContainer = () => {
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
       return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} />;
-
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:

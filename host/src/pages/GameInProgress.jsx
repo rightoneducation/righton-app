@@ -25,7 +25,6 @@ export default function GameInProgress({
   const classes = useStyles();
 
   const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
-  let nextState = stateArray[stateArray.indexOf(currentState) + 1];
   let statePosition;
   let choices;
   let answerArray;
@@ -56,6 +55,11 @@ export default function GameInProgress({
     9 : "Proceed to RightOn Central"
   };
 
+  const nextStateFunc = (currentState) => {
+    let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
+    return GameSessionState[Object.keys(GameSessionState)[currentIndex+1]];
+  }
+
   // handles closing the modal by clicking outside of it or with the "Im done" text
   const handleModalClose = modalOpen =>{ 
     setModalOpen(modalOpen);
@@ -63,7 +67,7 @@ export default function GameInProgress({
 
   // handles modal button
   const handleModalButtonOnClick = () =>{ 
-    handleUpdateGameSession({currentState: GameSessionState[nextState]});
+    handleUpdateGameSession({currentState: nextStateFunc(currentState)});
     setModalOpen(false);
   };
 
@@ -118,14 +122,15 @@ export default function GameInProgress({
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => { 
-    if ( nextState === stateArray[3] || nextState === stateArray[7]){ // if teacher is ending early, pop modal
+    let nextState = nextStateFunc(currentState);
+    if ( nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS ){ // if teacher is ending early, pop modal
       if (totalAnswers < numPlayers && gameTimerZero === false)
         setModalOpen(true);
       else
-        handleUpdateGameSession({currentState: GameSessionState[nextState]});
+        handleUpdateGameSession({currentState: nextState});
     }
     else { 
-      handleUpdateGameSession({currentState: GameSessionState[nextState]});
+      handleUpdateGameSession({currentState: nextState});
     }
   };
 
@@ -139,7 +144,6 @@ export default function GameInProgress({
     }
     return  footerButtonTextDictionary[statePosition];
   };
-
  
 
   return (

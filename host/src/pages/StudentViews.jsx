@@ -22,7 +22,6 @@ export default function StudentViews({
   let isLastQuestion = ((currentQuestionIndex+1) === (questions ? questions.length : 0));
 
   const classes = useStyles();  
-  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   const footerButtonTextDictionary=  { //dictionary used to assign button text based on the next state 
     
     //0-not started
@@ -51,9 +50,9 @@ export default function StudentViews({
 
   // determines which student view image to show
   const studentViewImage = currentState => { 
-    if (currentState === stateArray[4]){
+    if (currentState === GameSessionState.PHASE_1_RESULTS){
       return SVP1Results;
-    } else if (currentState === stateArray[8]){
+    } else if (currentState === GameSessionState.PHASE_2_RESULTS){
       return SVP2Results;
     }
     else 
@@ -62,23 +61,23 @@ export default function StudentViews({
 
   // determines next state for use by footer
   const nextStateFunc = currentState => {
-    if (currentState === stateArray[8] && !isLastQuestion) {
-      return stateArray[2];
+    if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
+      return GameSessionState.CHOOSE_CORRECT_ANSWER;
     } else {
-      return stateArray[stateArray.indexOf(currentState) + 1]; 
+      let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
+      return GameSessionState[Object.keys(GameSessionState)[currentIndex+1]];
     }
   };
 
-  let isLastGameScreen = ((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === stateArray[8]); // if last screen of last question, head to view final results
-  let nextState = nextStateFunc(currentState);
-
+  let isLastGameScreen = ((currentQuestionIndex+1) === (questions ? questions.length : 0) && currentState === GameSessionState.PHASE_2_RESULTS); // if last screen of last question, head to view final results
+  
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = () => { 
-    if (!isLastQuestion && statePosition === 8){ // if they are on the last page a\nd need to advance to the next question
-      handleUpdateGameSession({currentState: GameSessionState[nextState], currentQuestionIndex: currentQuestionIndex+1}) 
+    if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS){ // if they are on the last page a\nd need to advance to the next question
+      handleUpdateGameSession({currentState: nextStateFunc(currentState), currentQuestionIndex: currentQuestionIndex+1}) 
     }
     else { 
-      handleUpdateGameSession({currentState: GameSessionState[nextState]}) 
+      handleUpdateGameSession({currentState: nextStateFunc(currentState)}) 
     }
   }
 
@@ -91,7 +90,7 @@ export default function StudentViews({
             currentQuestion={currentQuestionIndex}
             phaseOneTime={phaseOneTime}
             phaseTwoTime={phaseTwoTime}
-            statePosition = {statePosition = stateArray.indexOf(currentState)}
+            statePosition = {statePosition = Object.keys(GameSessionState).indexOf(currentState)}
             />
             <div className={classes.studentViewsCont}>
               <div className = {classes.headText}> Current Student View: </div>
