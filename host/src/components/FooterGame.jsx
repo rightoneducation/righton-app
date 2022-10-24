@@ -3,20 +3,20 @@ import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
 
-export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  isGameInProgress, footerButtonText, handleFooterOnClick}) {
+export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  gameTimer, footerButtonText, handleFooterOnClick}) {
  const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
       <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
-          className={totalAnswers < numPlayers ? classes.EndAnsweringButton : classes.nextPhaseButton}
+          className={footerButtonText === "End Answering" ? classes.EndAnsweringButton : classes.nextPhaseButton}
           onClick={() =>  handleFooterOnClick(numPlayers, totalAnswers)}
         >
            {footerButtonText}
         </Button>
-        {isGameInProgress && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
-        {isGameInProgress && <div className={classes.playerNum}>Players who have answered</div>}
+        {gameTimer && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
+        {gameTimer && <div className={classes.playerNum}>Players who have answered</div>}
         </div>
     </BottomNavigation>
   );
