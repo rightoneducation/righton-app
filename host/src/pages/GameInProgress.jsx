@@ -5,7 +5,7 @@ import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
-import { GameSessionState } from "@righton/networking";
+import { isNullOrUndefined, GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
 
 export default function GameInProgress({
@@ -23,8 +23,6 @@ export default function GameInProgress({
 }) {
   
   const classes = useStyles();
-
-  const stateArray = Object.values(GameSessionState); //adds all states from enum into array 
   let statePosition;
   let choices;
   let answerArray;
@@ -71,14 +69,12 @@ export default function GameInProgress({
     setModalOpen(false);
   };
 
-  // returns the choices object for an individual quesiton
+  // returns the choices object for an individual question
   const getQuestionChoices = (questions, currentQuestionIndex) => {
-    let choices;
-    questions && questions.map((question, index) => {
-      if (index === currentQuestionIndex)
-        choices = JSON.parse(question.choices);
-    })
-    return choices;
+    if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
+        return null;
+    }
+    return questions[currentQuestionIndex].choices;
   };
 
   // finds all answers for current question using isChosen, for use in footer progress bar
@@ -102,17 +98,18 @@ export default function GameInProgress({
       choices.forEach((choice,index) =>{
         choicesTextArray[index] = choice.text;
       });
+      console.log(teamsArray);
       teamsArray.forEach(team => {
-        team.teamMembers.items.forEach(teamMember => {
-          teamMember.answers.items.forEach(answer =>{
-          if (answer.questionId === currentQuestionId && answer.isChosen){
-              choices.forEach(choice =>{
-                if (answer.text === choice.text){
-                  answersArray[choicesTextArray.indexOf(choice.text)]+=1;
-                }
-              })
-            }
-          })
+          team.teamMembers.items && team.teamMembers.items.forEach(teamMember => {
+            teamMember.answers.items.forEach(answer =>{
+            if (answer.questionId === currentQuestionId && answer.isChosen){
+                choices.forEach(choice =>{
+                  if (answer.text === choice.text){
+                    answersArray[choicesTextArray.indexOf(choice.text)]+=1;
+                  }
+                })
+              }
+            })
         })
       });             
       return answersArray;
@@ -160,9 +157,9 @@ export default function GameInProgress({
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
-          statePosition ={statePosition = stateArray.indexOf(currentState)}
+          statePosition ={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
           headerGameCurrentTime = {headerGameCurrentTime}
-          totalRoundTime ={(currentState === stateArray[2] ? phaseOneTime : phaseTwoTime)}
+          totalRoundTime ={(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime)}
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
