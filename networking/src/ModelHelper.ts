@@ -1,6 +1,6 @@
 import { isNullOrUndefined } from "./IApiClient"
 import { IGameSession, ITeam, ITeamAnswer } from "./Models"
-import { Choice, IQuestion } from './Models/IQuestion'
+import { IChoice, IQuestion } from './Models/IQuestion'
 
 export abstract class ModelHelper {
     static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: number): Array<ITeamAnswer | null> | undefined {
@@ -23,10 +23,28 @@ export abstract class ModelHelper {
         })
     }
 
-    static getCorrectAnswer(question: IQuestion): Choice {
+    static getCorrectAnswer(question: IQuestion): IChoice {
         return question.choices!.filter((choice) => {
             return !isNullOrUndefined(choice.isAnswer) && choice.isAnswer
         })[0]
+    }
+
+    static getSelectedTrickAnswer(team: ITeam, questionId: number): ITeamAnswer | null {
+        if (isNullOrUndefined(team.teamMembers) ||
+            team.teamMembers.length !== 1) {
+            throw new Error("Given team has no members or more than one members")
+        }
+
+        const teamMember = team.teamMembers[0]
+        const trickAnswers = teamMember!.answers?.filter((answer) => {
+            if (isNullOrUndefined(answer)) {
+                return false
+            }
+
+            return answer.questionId === questionId && team.trickiestAnswerIDs?.includes(answer.id)
+        })
+
+        return trickAnswers?.length === 1 ? trickAnswers[0] : null
     }
 
     static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, team: ITeam, questionId: number): number {

@@ -20,7 +20,7 @@ import {
 import { gameSessionByCode, getGameSession, getTeam, onCreateTeam, onCreateTeamAnswer, onDeleteTeam, onGameSessionUpdatedById, onUpdateTeamMember } from './graphql'
 import { createTeam, createTeamAnswer, createTeamMember, updateGameSession } from './graphql/mutations'
 import { IApiClient, isNullOrUndefined } from './IApiClient'
-import { IQuestion, ITeamAnswer, ITeamMember } from './Models'
+import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from './Models'
 import { IGameSession } from './Models/IGameSession'
 import { ITeam } from './Models/ITeam'
 
@@ -458,6 +458,15 @@ class GameSessionParser {
         })
     }
 
+    private static parseServerArray<T>(input: any | T[]): Array<T> {
+        if (input instanceof Array) {
+            return input as T[]
+        } else if (input instanceof String) {
+            return JSON.parse(input as string)
+        }
+        return []
+    }
+
     private static mapQuestions(awsQuestions: Array<AWSQuestion | null>): Array<IQuestion> {
         return awsQuestions.map(awsQuestion => {
             if (isNullOrUndefined(awsQuestion)) {
@@ -466,9 +475,9 @@ class GameSessionParser {
             const question: IQuestion = {
                 id: awsQuestion.id,
                 text: awsQuestion.text,
-                choices: isNullOrUndefined(awsQuestion.choices) ? [] : JSON.parse(awsQuestion.choices),
+                choices: isNullOrUndefined(awsQuestion.choices) ? [] : this.parseServerArray<IChoice>(awsQuestion.choices),
                 imageUrl: awsQuestion.imageUrl,
-                instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : JSON.parse(awsQuestion.instructions),
+                instructions: isNullOrUndefined(awsQuestion.instructions) ? [] : this.parseServerArray<string>(awsQuestion.instructions),
                 standard: awsQuestion.standard,
                 cluster: awsQuestion.cluster,
                 domain: awsQuestion.domain,
