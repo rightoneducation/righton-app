@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
 import { Button, TextField } from '@mui/material'
-import { ApiClient, Environment, GameSessionState, ITeamAnswer } from '@righton/networking'
-import { IApiClient } from '@righton/networking'
-import { IGameSession, ITeam, ITeamMember } from '@righton/networking'
+import { ApiClient, Environment, GameSessionState, IApiClient, IGameSession, ITeam, ITeamAnswer, ITeamMember } from '@righton/networking'
+import { useEffect, useRef, useState } from 'react'
 
 function App() {
   const [gameSession, setGameSession] = useState<IGameSession | null>()
