@@ -1,5 +1,5 @@
 lib
-networking/src/index.ts
+src/index.ts
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
