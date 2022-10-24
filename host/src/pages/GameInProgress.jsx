@@ -95,15 +95,15 @@ export default function GameInProgress({
       let choicesTextArray = [choices.length];
       let answersArray = new Array(choices.length).fill(0);
       let currentQuestionId = questions[currentQuestionIndex].id;
-      choices.forEach((choice,index) =>{
+      choices && choices.forEach((choice,index) =>{
         choicesTextArray[index] = choice.text;
       });
-      console.log(teamsArray);
+      
       teamsArray.forEach(team => {
-          team.teamMembers.items && team.teamMembers.items.forEach(teamMember => {
-            teamMember.answers.items.forEach(answer =>{
+          team.teamMembers && team.teamMembers.forEach(teamMember => {
+            teamMember.answers && teamMember.answers.forEach(answer =>{
             if (answer.questionId === currentQuestionId && answer.isChosen){
-                choices.forEach(choice =>{
+                choices && choices.forEach(choice =>{
                   if (answer.text === choice.text){
                     answersArray[choicesTextArray.indexOf(choice.text)]+=1;
                   }
@@ -111,7 +111,7 @@ export default function GameInProgress({
               }
             })
         })
-      });             
+      });          
       return answersArray;
     }
     return [];

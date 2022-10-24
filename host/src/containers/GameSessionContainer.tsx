@@ -86,9 +86,9 @@ const GameSessionContainer = () => {
       setTeamsArray((prevState) => {
         let newState = JSON.parse(JSON.stringify(prevState));
         newState.forEach(team => {
-          team.teamMembers.items.forEach(teamMember => {
+          team.teamMembers && team.teamMembers.forEach(teamMember => {
             if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
-              teamMember.answers.items.push(teamAnswerResponse);     
+              teamMember.answers.push(teamAnswerResponse);     
           });
         });
         return newState;
