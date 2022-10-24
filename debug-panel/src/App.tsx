@@ -311,7 +311,7 @@ function App() {
           if (isNullOrUndefined(question.choices) || question.choices.length == 0) {
             return null
           }
-          const choice = question.choices[0]
+          const choice = question.choices[Math.floor(Math.random() * question.choices.length)]
           if (isNullOrUndefined(choice)) {
             return
           }
