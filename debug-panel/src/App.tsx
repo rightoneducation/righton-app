@@ -182,8 +182,7 @@ function App() {
       </Button>
       <TextField
         value={gameCode}
-        label="Outlined"
-        variant="outlined"
+        variant="standard"
         placeholder='Game code'
         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
         onChange={(e) => setGameCode(Number(e.target.value))}
