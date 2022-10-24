@@ -76,6 +76,10 @@ type TeamAnswer @model {
 type Subscription {
   onGameSessionUpdatedById(id: ID!): GameSession
     @aws_subscribe(mutations: ["updateGameSession"])
-  onTeamMemberUpdateByTeamId(teamId: ID!): TeamMember
+  onTeamMemberUpdateByTeamId(teamTeamMembersId: ID!): TeamMember
     @aws_subscribe(mutations: ["updateTeamMember"])
+  onTeamCreateByGameSessionId(gameSessionTeamsId: ID!): Team
+    @aws_subscribe(mutations: ["createTeam"])
+  onTeamDeleteByGameSessionId(gameSessionTeamsId: ID!): Team
+    @aws_subscribe(mutations: ["deleteTeam"])
 }
