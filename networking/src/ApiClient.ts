@@ -461,7 +461,7 @@ class GameSessionParser {
     private static parseServerArray<T>(input: any | T[]): Array<T> {
         if (input instanceof Array) {
             return input as T[]
-        } else if (input instanceof String) {
+        } else if (typeof input === 'string') {
             return JSON.parse(input as string)
         }
         return []
