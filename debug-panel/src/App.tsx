@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
 import { Button, TextField } from '@mui/material'
-import { ApiClient, Environment, GameSessionState, ITeamAnswer } from '@righton/networking'
-import { IApiClient } from '@righton/networking'
-import { IGameSession, ITeam, ITeamMember } from '@righton/networking'
+import { ApiClient, Environment, GameSessionState, IApiClient, IGameSession, ITeam, ITeamAnswer, ITeamMember } from '@righton/networking'
+import { useEffect, useRef, useState } from 'react'
 
 function App() {
   const [gameSession, setGameSession] = useState<IGameSession | null>()
@@ -80,7 +78,7 @@ function App() {
       <Button
         variant="contained"
         onClick={() => {
-          apiClient.createGameSession(1156, false)
+          apiClient.createGameSession(1262, false)
             .then(gameSession => {
               updateGameSession(gameSession)
               setError(null)
@@ -311,7 +309,7 @@ function App() {
           if (isNullOrUndefined(question.choices) || question.choices.length == 0) {
             return null
           }
-          const choice = question.choices[0]
+          const choice = question.choices[Math.floor(Math.random() * question.choices.length)]
           if (isNullOrUndefined(choice)) {
             return
           }

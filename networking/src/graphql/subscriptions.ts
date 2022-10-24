@@ -91,8 +91,8 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
   }
 `;
 export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
-  subscription OnTeamMemberUpdateByTeamId($teamId: ID!) {
-    onTeamMemberUpdateByTeamId(teamId: $teamId) {
+  subscription OnTeamMemberUpdateByTeamId($teamTeamMembersId: ID!) {
+    onTeamMemberUpdateByTeamId(teamTeamMembersId: $teamTeamMembersId) {
       id
       isFacilitator
       answers {
@@ -114,9 +114,115 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
     }
   }
 `;
+export const onTeamCreateByGameSessionId = /* GraphQL */ `
+  subscription OnTeamCreateByGameSessionId($gameSessionTeamsId: ID!) {
+    onTeamCreateByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
+      id
+      name
+      question {
+        id
+        text
+        choices
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        gameSessionId
+      }
+      trickiestAnswerIDs
+      teamMembers {
+        items {
+          id
+          isFacilitator
+          answers {
+            items {
+              id
+              questionId
+              isChosen
+              text
+              createdAt
+              updatedAt
+              teamMemberAnswersId
+            }
+            nextToken
+          }
+          deviceId
+          createdAt
+          updatedAt
+          teamTeamMembersId
+        }
+        nextToken
+      }
+      score
+      createdAt
+      updatedAt
+      gameSessionTeamsId
+      teamQuestionId
+      teamQuestionOrder
+      teamQuestionGameSessionId
+    }
+  }
+`;
+export const onTeamDeleteByGameSessionId = /* GraphQL */ `
+  subscription OnTeamDeleteByGameSessionId($gameSessionTeamsId: ID!) {
+    onTeamDeleteByGameSessionId(gameSessionTeamsId: $gameSessionTeamsId) {
+      id
+      name
+      question {
+        id
+        text
+        choices
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        gameSessionId
+      }
+      trickiestAnswerIDs
+      teamMembers {
+        items {
+          id
+          isFacilitator
+          answers {
+            items {
+              id
+              questionId
+              isChosen
+              text
+              createdAt
+              updatedAt
+              teamMemberAnswersId
+            }
+            nextToken
+          }
+          deviceId
+          createdAt
+          updatedAt
+          teamTeamMembersId
+        }
+        nextToken
+      }
+      score
+      createdAt
+      updatedAt
+      gameSessionTeamsId
+      teamQuestionId
+      teamQuestionOrder
+      teamQuestionGameSessionId
+    }
+  }
+`;
 export const onCreateGameSession = /* GraphQL */ `
-  subscription OnCreateGameSession {
-    onCreateGameSession {
+  subscription OnCreateGameSession(
+    $filter: ModelSubscriptionGameSessionFilterInput
+  ) {
+    onCreateGameSession(filter: $filter) {
       id
       gameId
       startTime
@@ -203,8 +309,10 @@ export const onCreateGameSession = /* GraphQL */ `
   }
 `;
 export const onUpdateGameSession = /* GraphQL */ `
-  subscription OnUpdateGameSession {
-    onUpdateGameSession {
+  subscription OnUpdateGameSession(
+    $filter: ModelSubscriptionGameSessionFilterInput
+  ) {
+    onUpdateGameSession(filter: $filter) {
       id
       gameId
       startTime
@@ -291,8 +399,10 @@ export const onUpdateGameSession = /* GraphQL */ `
   }
 `;
 export const onDeleteGameSession = /* GraphQL */ `
-  subscription OnDeleteGameSession {
-    onDeleteGameSession {
+  subscription OnDeleteGameSession(
+    $filter: ModelSubscriptionGameSessionFilterInput
+  ) {
+    onDeleteGameSession(filter: $filter) {
       id
       gameId
       startTime
@@ -379,8 +489,8 @@ export const onDeleteGameSession = /* GraphQL */ `
   }
 `;
 export const onCreateTeam = /* GraphQL */ `
-  subscription OnCreateTeam {
-    onCreateTeam {
+  subscription OnCreateTeam($filter: ModelSubscriptionTeamFilterInput) {
+    onCreateTeam(filter: $filter) {
       id
       name
       question {
@@ -431,8 +541,8 @@ export const onCreateTeam = /* GraphQL */ `
   }
 `;
 export const onUpdateTeam = /* GraphQL */ `
-  subscription OnUpdateTeam {
-    onUpdateTeam {
+  subscription OnUpdateTeam($filter: ModelSubscriptionTeamFilterInput) {
+    onUpdateTeam(filter: $filter) {
       id
       name
       question {
@@ -483,8 +593,8 @@ export const onUpdateTeam = /* GraphQL */ `
   }
 `;
 export const onDeleteTeam = /* GraphQL */ `
-  subscription OnDeleteTeam {
-    onDeleteTeam {
+  subscription OnDeleteTeam($filter: ModelSubscriptionTeamFilterInput) {
+    onDeleteTeam(filter: $filter) {
       id
       name
       question {
@@ -535,8 +645,10 @@ export const onDeleteTeam = /* GraphQL */ `
   }
 `;
 export const onCreateTeamMember = /* GraphQL */ `
-  subscription OnCreateTeamMember {
-    onCreateTeamMember {
+  subscription OnCreateTeamMember(
+    $filter: ModelSubscriptionTeamMemberFilterInput
+  ) {
+    onCreateTeamMember(filter: $filter) {
       id
       isFacilitator
       answers {
@@ -559,8 +671,10 @@ export const onCreateTeamMember = /* GraphQL */ `
   }
 `;
 export const onUpdateTeamMember = /* GraphQL */ `
-  subscription OnUpdateTeamMember {
-    onUpdateTeamMember {
+  subscription OnUpdateTeamMember(
+    $filter: ModelSubscriptionTeamMemberFilterInput
+  ) {
+    onUpdateTeamMember(filter: $filter) {
       id
       isFacilitator
       answers {
@@ -583,8 +697,10 @@ export const onUpdateTeamMember = /* GraphQL */ `
   }
 `;
 export const onDeleteTeamMember = /* GraphQL */ `
-  subscription OnDeleteTeamMember {
-    onDeleteTeamMember {
+  subscription OnDeleteTeamMember(
+    $filter: ModelSubscriptionTeamMemberFilterInput
+  ) {
+    onDeleteTeamMember(filter: $filter) {
       id
       isFacilitator
       answers {
@@ -607,8 +723,10 @@ export const onDeleteTeamMember = /* GraphQL */ `
   }
 `;
 export const onCreateTeamAnswer = /* GraphQL */ `
-  subscription OnCreateTeamAnswer {
-    onCreateTeamAnswer {
+  subscription OnCreateTeamAnswer(
+    $filter: ModelSubscriptionTeamAnswerFilterInput
+  ) {
+    onCreateTeamAnswer(filter: $filter) {
       id
       questionId
       isChosen
@@ -620,8 +738,10 @@ export const onCreateTeamAnswer = /* GraphQL */ `
   }
 `;
 export const onUpdateTeamAnswer = /* GraphQL */ `
-  subscription OnUpdateTeamAnswer {
-    onUpdateTeamAnswer {
+  subscription OnUpdateTeamAnswer(
+    $filter: ModelSubscriptionTeamAnswerFilterInput
+  ) {
+    onUpdateTeamAnswer(filter: $filter) {
       id
       questionId
       isChosen
@@ -633,8 +753,10 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
   }
 `;
 export const onDeleteTeamAnswer = /* GraphQL */ `
-  subscription OnDeleteTeamAnswer {
-    onDeleteTeamAnswer {
+  subscription OnDeleteTeamAnswer(
+    $filter: ModelSubscriptionTeamAnswerFilterInput
+  ) {
+    onDeleteTeamAnswer(filter: $filter) {
       id
       questionId
       isChosen
