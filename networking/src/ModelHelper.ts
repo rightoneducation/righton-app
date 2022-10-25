@@ -35,47 +35,49 @@ export abstract class ModelHelper {
             throw new Error("Given team has no members or more than one members")
         }
 
+        if (isNullOrUndefined(team.trickiestAnswerIDs) ||
+            team.trickiestAnswerIDs.length == 0) {
+            console.debug("No trick answer has been chosen")
+            return null
+        }
+
         const teamMember = team.teamMembers[0]
         const trickAnswers = teamMember!.answers?.filter((answer) => {
             if (isNullOrUndefined(answer)) {
                 return false
             }
 
-            return answer.questionId === questionId && team.trickiestAnswerIDs?.includes(answer.id)
+            return answer.questionId === questionId &&
+                team.trickiestAnswerIDs!.some((trickAnswerId) => trickAnswerId === answer.id)
         })
 
         return trickAnswers?.length === 1 ? trickAnswers[0] : null
     }
 
-    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, team: ITeam, questionId: number): number {
+    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, choice: IChoice, questionId: number): number {
         if (isNullOrUndefined(gameSession.teams)) {
             throw new Error("'teams' can't be null")
         }
 
-        const teamAnswers = this.getBasicTeamMemberAnswersToQuestionId(team, questionId)
-
-        if (isNullOrUndefined(teamAnswers) ||
-            teamAnswers.length != 1) {
-            return 0
-        }
-
         // Calculate how many teams have chosen the same answer as the passed team.
-        const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, otherTeam: ITeam) => {
-            if (isNullOrUndefined(otherTeam.teamMembers) ||
-                otherTeam.teamMembers.length < 1) {
+        const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, team: ITeam) => {
+            if (isNullOrUndefined(team.teamMembers) ||
+                team.teamMembers.length < 1) {
+                console.error(`No team member available for ${team.name}`)
                 return previousVal
             }
 
-            const answersToQuestion = otherTeam.teamMembers[0]?.answers?.filter((answer) => {
-                !isNullOrUndefined(answer) &&
-                    !isNullOrUndefined(answer?.questionId) &&
+            const answersToQuestion = team.teamMembers[0]?.answers?.filter((answer) => {
+                return !isNullOrUndefined(answer) &&
+                    !isNullOrUndefined(answer!.questionId) &&
+                    team.trickiestAnswerIDs?.some((a) => a === answer.id) &&
                     answer.questionId === questionId &&
-                    answer.text === teamAnswers[0]!.questionId
+                    answer!.text === choice.text
             })
 
             return previousVal + (answersToQuestion?.length ?? 0)
-        }, 1)
+        }, 0)
 
-        return Math.ceil(totalNoChosenAnswer / gameSession.teams.length) * 100
+        return Math.ceil(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
 }

@@ -1,9 +1,16 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../../utils/theme'
 
-const Answer = ({ text, icon, mode, isUserChoice }) => {
+const Answer = ({ text, icon, mode, isUserChoice, percentage }) => {
     const getMainBackgroundColor = () => {
-        return mode === AnswerMode.RightAnswer ? colors.lightGreen : colors.white
+        switch (mode) {
+            case AnswerMode.RightAnswer:
+                return colors.lightGreen
+            case AnswerMode.PopularTrickAnswer:
+                return "rgba(101, 21, 201, 1)"
+            default:
+                return colors.white
+        }
     }
 
     const getPercentageBackgroundColor = () => {
@@ -12,6 +19,21 @@ const Answer = ({ text, icon, mode, isUserChoice }) => {
                 return colors.lightGreen
             case AnswerMode.ShowEmptyRightIcon:
                 return "#F7F6F6"
+            case AnswerMode.PopularTrickAnswer:
+                return "rgba(101, 21, 201, 1)"
+            default:
+                return colors.white
+        }
+    }
+
+    const getAnswerColor = () => {
+        switch (mode) {
+            case AnswerMode.Disabled:
+                return "#AFB4C2"
+            case AnswerMode.PopularTrickAnswer:
+                return colors.white
+            default:
+                return colors.black
         }
     }
 
@@ -21,7 +43,10 @@ const Answer = ({ text, icon, mode, isUserChoice }) => {
                 ...styles.mainContainer,
                 backgroundColor: getMainBackgroundColor()
             }}>
-            <Text style={styles.text}>
+            <Text style={{
+                ...styles.text,
+                color: getAnswerColor()
+            }}>
                 {text}
             </Text>
             <View style={{
@@ -34,6 +59,12 @@ const Answer = ({ text, icon, mode, isUserChoice }) => {
                         source={icon}
                     />
                 }
+                <Text style={{
+                    ...styles.percentageText,
+                    color: getAnswerColor()
+                }}>
+                    {percentage}
+                </Text>
             </View>
         </View>
     )
@@ -49,6 +80,12 @@ export const AnswerMode = {
 
 export default Answer
 
+const sharedTextStyle = {
+    fontFamily: fontFamilies.karlaRegular,
+    fontWeight: fontWeights.bold,
+    fontSize: fonts.xMedium,
+    color: "rgba(56, 68, 102, 1)",
+}
 const styles = StyleSheet.create({
     mainContainer: {
         borderRadius: 12,
@@ -59,26 +96,25 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingLeft: 9,
         overflow: "hidden",
-    },
-    text: {
-        fontFamily: fontFamilies.karlaRegular,
-        fontWeight: fontWeights.bold,
-        fontSize: fonts.xMedium,
-        alignSelf: "center",
-        color: "rgba(56, 68, 102, 1)",
-        flex: 1,
-    },
-    percentageContainer: {
-        backgroundColor: "#F7F6F6",
-        width: 45,
-        alignContent: "center",
         alignItems: "center",
         justifyContent: "center",
     },
+    text: {
+        ...sharedTextStyle,
+        flexGrow: 2,
+    },
+    percentageContainer: {
+        paddingRight: 9,
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    percentageText: {
+        ...sharedTextStyle,
+    },
     icon: {
         height: "90%",
-        width: undefined,
         aspectRatio: 1,
-        alignSelf: "center",
+        resizeMode: 'contain',
     },
 })
