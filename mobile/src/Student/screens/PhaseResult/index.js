@@ -1,21 +1,56 @@
-import { isNullOrUndefined, ModelHelper } from '@righton/networking'
+import { GameSessionState, isNullOrUndefined, ModelHelper } from '@righton/networking'
+import { useEffect, useState } from 'react'
 import { FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { verticalScale } from 'react-native-size-matters'
 import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvatar }) => {
+const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
     smallAvatar = smallAvatar ? smallAvatar : require("../SelectTeam/img/MonsterIcon1.png")
 
-    teamName = team?.name ? team?.name : "Team Name"
-    score = score ? score : 10
-    totalScore = team?.score ? team?.score : 0
-    const currentQuestion = gameSession.questions[gameSession.currentQuestion]
-    const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, curQuestion.id)
-    const teamAnswer = (!isNullOrUndefined(teamAnswers) && teamAnswers.length == 0) ? teamAnswers[0] : Number.MIN_VALUE
-    const correctAnswer = ModelHelper.correctAnswer(curQuestion)
-    const selectedTrickAnswer = ModelHelper.getSelectedTrickAnswer(team, curQuestion.id)
+    const [phaseNo, setPhaseNo] = useState(1)
+    const [phase2Score, setPhase2Score] = useState(0)
+    const [curTeam, setCurTeam] = useState(team)
+    const [selectedAnswer, setSelectedAnswer] = useState(null)
+    const [selectedTrickAnswer, setSelectedTrickAnswer] = useState(null)
+    const [correctAnswer, setCorrectAnswer] = useState(null)
+    const [currentQuestion, setCurrentQuestion] = useState(null)
+
+    useEffect(() => {
+        global.apiClient
+            .getGameSessionByCode(gameSession.gameCode)
+            .then((gameSessionResponse) => {
+                switch (gameSessionResponse.currentState) {
+                    case GameSessionState.PHASE_1_RESULTS:
+                        setPhaseNo(1)
+                    case GameSessionState.PHASE_2_RESULTS:
+                        setPhaseNo(2)
+                }
+                const updatedCurTeam = gameSessionResponse.teams.filter((t) => t.id === team.id)
+                if (isNullOrUndefined(updatedCurTeam) || updatedCurTeam.length !== 1) {
+                    console.error(`Couldn't find team, ${team.name}`)
+                }
+                setCurTeam(updatedCurTeam[0])
+                const curQuestion = gameSessionResponse.questions[gameSessionResponse.currentQuestionIndex]
+                const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, curQuestion.id)
+                setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
+                if (!isNullOrUndefined(teamAnswers) && teamAnswers.length == 1) {
+                    setSelectedAnswer(teamAnswers[0])
+                } else {
+                    setSelectedAnswer({
+                        id: Number.MIN_VALUE,
+                        text: Number.MIN_VALUE,
+                    })
+                }
+                setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(team, curQuestion.id))
+                setCorrectAnswer(ModelHelper.correctAnswer(curQuestion))
+                setCurrentQuestion(curQuestion)
+                setGameSession(gameSession)
+            }).catch((error) => {
+                console.error(error)
+            })
+    })
 
     const alphabets = ["A", "B", "C", "D"]
     const getAnswerMode = (choiceText) => {
@@ -35,10 +70,18 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
     }
 
     const calculatePercentage = (answer) => {
+        let percentage
         if (isNullOrUndefined(answer)) {
+            setPhase2Score(0)
             return 0
         }
-        return ModelHelper.calculateBasicModeWrongAnswerScore(gs, answer, currentQuestion.id)
+
+        percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer, currentQuestion.id)
+        if (selectedTrickAnswer.text === answer.text) {
+            setPhase2Score(percentage)
+        } else {
+            setPhase2Score(0)
+        }
     }
 
     const getIsUserChoice = (answer) => {
@@ -52,7 +95,7 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
 
     return (
         <SafeAreaView style={styles.container}>
-            {gs !== null && <>
+            {gameSession !== null && <>
                 <ImageBackground
                     source={require("./img/background.png")}
                     style={styles.headerContainer}
@@ -74,10 +117,10 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
                         renderItem={({ item, index }) => (
                             <Answer
                                 icon={smallAvatar}
-                                text={`${alphabets[index]}. ${item.text}`}
+                                text={`${alphabets[index]}.${item.text}`}
                                 mode={getAnswerMode(item.text)}
                                 isUserChoice={getIsUserChoice(item)}
-                                percentage={`%${calculatePercentage(item)}`}
+                                percentage={`% ${calculatePercentage(item)}`}
                             />
                         )}
                     >
@@ -86,9 +129,9 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
                 <View style={styles.footerView}>
                     <TeamFooter
                         icon={smallAvatar}
-                        name={teamName}
-                        score={score}
-                        totalScore={totalScore ? totalScore : 0}
+                        name={curTeam.name ? curTeam.name : "N/A"}
+                        score={phase2Score}
+                        totalScore={curTeam.score}
                     />
                 </View>
             </>}

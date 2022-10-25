@@ -70,7 +70,7 @@ export abstract class ModelHelper {
             const answersToQuestion = team.teamMembers[0]?.answers?.filter((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
-                    team.trickiestAnswerIDs?.some((a) => a === answer.id) &&
+                    !team.trickiestAnswerIDs?.some((a) => a === answer.id) &&
                     answer.questionId === questionId &&
                     answer!.text === choice.text
             })
@@ -78,6 +78,6 @@ export abstract class ModelHelper {
             return previousVal + (answersToQuestion?.length ?? 0)
         }, 0)
 
-        return Math.ceil(totalNoChosenAnswer / gameSession.teams.length * 100)
+        return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
 }
