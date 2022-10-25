@@ -8,38 +8,6 @@ import Answer, { AnswerMode } from './Answer'
 const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvatar }) => {
     smallAvatar = smallAvatar ? smallAvatar : require("../SelectTeam/img/MonsterIcon1.png")
 
-    // TODO: Delete these. Leaving these lines here as needed to implement phase 2 results.
-    // const [gs, setGS] = useState(null)
-    // const [currentQuestion, setCurrentQuestion] = useState(null)
-    // const [teamAnswer, setTeamAnswer] = useState(null)
-    // const [correctAnswer, setCorrectAnswer] = useState(null)
-    // useEffect(() => {
-    //     global.apiClient
-    //         .getGameSessionByCode(1111)
-    //         .then((gameSessionResponse) => {
-    //             team = gameSessionResponse.teams[0]
-    //             const curQuestion = gameSessionResponse.questions[gameSessionResponse.currentQuestionIndex]
-    //             teamName = team?.name ? team?.name : "Team Name"
-    //             score = score ? score : 10
-    //             totalScore = team?.score ? team?.score : 0
-    //             const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, curQuestion.id)
-    //             setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
-    //             if (!isNullOrUndefined(teamAnswers) && teamAnswers.length == 1) {
-    //                 setTeamAnswer(teamAnswers[0])
-    //             } else {
-    //                 setTeamAnswer({
-    //                     text: Number.MIN_VALUE
-    //                 })
-    //             }
-    //             setCurrentQuestion(gameSessionResponse.questions[gameSessionResponse.currentQuestionIndex])
-    //             setGS(gameSessionResponse)
-    //         }).catch((error) => {
-    //             console.error(error)
-    //         })
-    // })
-
-    // TODO: Uncomment these before merge. Leaving this for phase 2 work
-    // TODO: Following code is not tested with e2e scenario so there might need to be some adjustments
     teamName = team?.name ? team?.name : "Team Name"
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
@@ -47,18 +15,39 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
     const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, curQuestion.id)
     const teamAnswer = (!isNullOrUndefined(teamAnswers) && teamAnswers.length == 0) ? teamAnswers[0] : Number.MIN_VALUE
     const correctAnswer = ModelHelper.correctAnswer(curQuestion)
-    // const currentPhase = 1 // phaseNo
+    const selectedTrickAnswer = ModelHelper.getSelectedTrickAnswer(team, curQuestion.id)
 
     const alphabets = ["A", "B", "C", "D"]
     const getAnswerMode = (choiceText) => {
-        switch (currentPhase) {
+        switch (phaseNo) {
             case 1:
                 if (correctAnswer.text === choiceText) {
                     return AnswerMode.RightAnswer
                 }
                 return AnswerMode.ShowEmptyRightIcon
             case 2:
+                if (correctAnswer.text === choiceText) {
+                    return AnswerMode.Disabled
+                } else if (selectedTrickAnswer.text === choiceText) {
+                    return AnswerMode.PopularTrickAnswer
+                }
         }
+    }
+
+    const calculatePercentage = (answer) => {
+        if (isNullOrUndefined(answer)) {
+            return 0
+        }
+        return ModelHelper.calculateBasicModeWrongAnswerScore(gs, answer, currentQuestion.id)
+    }
+
+    const getIsUserChoice = (answer) => {
+        if (phaseNo === 1) {
+            return teamAnswer.text === answer.text
+        } else if (!isNullOrUndefined(selectedTrickAnswer)) {
+            return selectedTrickAnswer.text === answer.text
+        }
+        return false
     }
 
     return (
@@ -78,6 +67,7 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
                         keyExtractor={(item) => `${item.text}`}
                         style={styles.answersContainer}
                         showsVerticalScrollIndicator={false}
+                        scrollEnabled={false}
                         ItemSeparatorComponent={() => {
                             return <View style={{ height: 10 }} />
                         }}
@@ -86,7 +76,8 @@ const PhaseResult = ({ phaseNo, gameSession, score, team, totalScore, smallAvata
                                 icon={smallAvatar}
                                 text={`${alphabets[index]}. ${item.text}`}
                                 mode={getAnswerMode(item.text)}
-                                isUserChoice={teamAnswer.text === item.text}
+                                isUserChoice={getIsUserChoice(item)}
+                                percentage={`%${calculatePercentage(item)}`}
                             />
                         )}
                     >
