@@ -14,11 +14,8 @@ import uuid from "react-native-uuid"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
-import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
-import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
-import Spinner from "./Spinner"
 import { GameSessionState } from "@righton/networking"
 
 const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
@@ -33,13 +30,13 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                   : gameSession?.currentQuestionIndex
           ]
 
-    const phaseTime = gameSession?.phaseTwoTime ?? 300
+    const phaseTime = gameSession?.phaseTwoTime
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswer, setSelectedAnswer] = useState(false)
 
-    const answersParsed = JSON.parse(question.choices)
+    const answersParsed = question.choices
 
     const answerChoices = answersParsed.map((choice) => {
         return {
@@ -54,7 +51,6 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
         (answer) => !answer.isCorrectAnswer
     )
 
-    // set available hints to the reason in question choices object for all choices that are not the correct answer
     const wrongAnswerReasons = wrongAnswers.map((choice) => {
         if (!choice.isAnswer) {
             return choice.reason
@@ -71,13 +67,8 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
             setProgress(currentTime / phaseTime)
         }, 1000)
 
-        const subscription = apiClient.subscribeUpdateGameSession(
-            gameSession.id
-        )
-
         return () => {
             clearInterval(countdown.current)
-            subscription.unsubscribe()
         }
     }, [gameSession, currentTime])
 
@@ -126,19 +117,21 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
-    // TODO: change this to support phase 2 header needs
-    const hintsViewTitle = () => {
-        if (selectedAnswer.isCorrectAnswer) {
-            return `Correct! 
-            
-            ${correctAnswer.text} 
-            is the correct answer.`
-        } else {
-            return `Nice Try! 
-            
-            ${correctAnswer.text}
-            is the correct answer.`
-        }
+    //wip. need to render each card to a seperate carousel page
+    const RenderWrongAnswers = () => {
+        return wrongAnswers.map((answer) => {
+            return (
+                <Card
+                    key={answer.id}
+                    style={styles.headerText}
+                    headerTitle={`Wrong Answer Info ${answer.text}`}
+                >
+                    <Card reasons={answer.reason}>
+                        <Text>{answer.reason}</Text>
+                    </Card>
+                </Card>
+            )
+        })
     }
 
     return (
@@ -194,9 +187,7 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                     </Card>
                     {gameSession?.currentState ===
                     GameSessionState.PHASE_2_DISCUSS ? (
-                        <Card headerTitle={hintsViewTitle()}>
-                            <HintsView hints={wrongAnswerReasons} />
-                        </Card>
+                        <RenderWrongAnswers />
                     ) : null}
                 </HorizontalPageView>
             </View>

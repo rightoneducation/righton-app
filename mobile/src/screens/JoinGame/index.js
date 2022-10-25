@@ -32,7 +32,6 @@ export default function JoinGame({
                 })
 
             case GameSessionState.PHASE_1_DISCUSS:
-            case GameSessionState.PHASE_1_RESULTS:
                 return navigation.navigate("PhaseOneBasicGamePlay", {
                     gameSession,
                     team: gameSession.teams.find((team) => team.id === teamId),
@@ -48,8 +47,15 @@ export default function JoinGame({
 
             case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
             case GameSessionState.PHASE_2_DISCUSS:
-            case GameSessionState.PHASE_2_RESULTS:
                 return navigation.navigate("PhaseTwoBasicGamePlay", {
+                    gameSession,
+                    team: gameSession.teams.find((team) => team.id === teamId),
+                    teamMember,
+                })
+
+            case GameSessionState.PHASE_1_RESULTS:
+            case GameSessionState.PHASE_2_RESULTS:
+                return navigation.navigate("PhaseResult", {
                     gameSession,
                     team: gameSession.teams.find((team) => team.id === teamId),
                     teamMember,

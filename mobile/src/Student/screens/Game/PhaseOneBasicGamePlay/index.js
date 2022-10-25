@@ -14,11 +14,9 @@ import uuid from "react-native-uuid"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
-import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
-import Spinner from "./Spinner"
 import { GameSessionState } from "@righton/networking"
 
 const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
@@ -59,13 +57,8 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
             setProgress(currentTime / phaseTime)
         }, 1000)
 
-        const subscription = apiClient.subscribeUpdateGameSession(
-            gameSession.id
-        )
-
         return () => {
             clearInterval(countdown.current)
-            subscription.unsubscribe()
         }
     }, [gameSession, currentTime])
 
@@ -107,7 +100,7 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
         )
     }
 
-    const answersParsed = JSON.parse(question.choices)
+    const answersParsed = question.choices
 
     const answerChoices = answersParsed.map((choice) => {
         return {
