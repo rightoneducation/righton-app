@@ -94,24 +94,30 @@ export default function GameInProgress({
     if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !==0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype){
       let choicesTextArray = [choices.length];
       let answersArray = new Array(choices.length).fill(0);
+      console.log(answersArray);
       let currentQuestionId = questions[currentQuestionIndex].id;
       choices && choices.forEach((choice,index) =>{
         choicesTextArray[index] = choice.text;
       });
       
+
       teamsArray.forEach(team => {
           team.teamMembers && team.teamMembers.forEach(teamMember => {
             teamMember.answers && teamMember.answers.forEach(answer =>{
-            if (answer.questionId === currentQuestionId && answer.isChosen){
+            if (answer.questionId === currentQuestionId){
+               if ((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) || (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !answer.isChosen)){
                 choices && choices.forEach(choice =>{
                   if (answer.text === choice.text){
                     answersArray[choicesTextArray.indexOf(choice.text)]+=1;
                   }
+                  console.log(answer.questionId+ " " + answersArray);
                 })
               }
-            })
+            }
+          })
         })
-      });          
+  
+      });  
       return answersArray;
     }
     return [];
