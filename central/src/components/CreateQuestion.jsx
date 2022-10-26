@@ -63,9 +63,28 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     setQuestion({ ...question, choices: newChoices });
   }, [question, setQuestion]);
 
+  // Handles addition of new step in the correct answer instructions set
+  const addInstruction = useCallback(() => {
+    const instructions = question.instructions == null ? [''] : [...question.instructions, ''];
+    setQuestion({ ...question, instructions });
+  }, [question, setQuestion]);
+
+  // Handles the edit/updating of a step in correct answers instructions set
+  const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
+    const newInstructions = [...question.instructions];
+    newInstructions[index] = currentTarget.value;
+    setQuestion({ ...question, instructions: newInstructions });
+  }, [question, setQuestion]);
+
+  // Handles removal of a step in the correct answer instructionsset
+  const handleRemoveInstruction = useCallback((index) => {
+    const newInstructions = [...question.instructions];
+    newInstructions.splice(index, 1);
+    setQuestion({ ...question, instructions: newInstructions });
+  }, [question, setQuestion]);
+
   // Handles grade, domain, cluster, or standard change/update
   const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
-
 
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
   const handleSaveQuestion = async (question) => {
@@ -89,7 +108,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
 
     const questionToSend = { ...question }
+
     questionToSend.choices = JSON.stringify(questionToSend.choices)
+    questionToSend.instructions = JSON.stringify(questionToSend.instructions);
 
     let newQuestion;
     if (questionToSend.id) {
@@ -98,7 +119,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       newQuestion = await cloneQuestion(questionToSend);
       gameQuestion(newQuestion);
     }
-    history.push(`/gamemaker/:gameId`);
+    history.push(`/gamemaker/${gameId}`);
   }
 
 
@@ -138,6 +159,10 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
                 choice={choice}
                 onChoiceTextChangeMaker={onChoiceTextChangeMaker}
                 onChoiceReasonChangeMaker={onChoiceReasonChangeMaker}
+                onStepChangeMaker={onStepChangeMaker}
+                handleRemoveInstruction={handleRemoveInstruction}
+                addInstruction={addInstruction}
+                instructions={question?.instructions}
               />
             ))}
           </Grid>

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Typography, Card, CardContent, Collapse, IconButton, TextField, List, ListItem } from "@material-ui/core";
-import { ExpandMore } from '@material-ui/icons';
+import { Grid, Typography, Card, CardContent, Collapse, Button, IconButton, TextField, List, ListItem } from "@material-ui/core";
+import { ExpandMore, Add } from '@material-ui/icons';
 
 export default function QuestionFormAnswerDropdown({
   choice,
   index,
   onChoiceTextChangeMaker,
-  onChoiceReasonChangeMaker
+  onChoiceReasonChangeMaker,
+  addInstruction,
+  handleRemoveInstruction,
+  onStepChangeMaker,
+  instructions,
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
@@ -35,21 +39,38 @@ export default function QuestionFormAnswerDropdown({
         <Collapse in={expanded}>
           <CardContent>
             <Typography className={classes.explanationTitle}>Explanation</Typography>
-            <List>
-              <ListItem className={classes.instruction}>
-                <TextField
-                  className={classes.input}
-                  value={choice.reason}
-                  onChange={onChoiceReasonChangeMaker(index)}
-                  label="Write text here: Remember to be concise!"
-                  size="small"
-                  multiline
-                  rows={5}
-                  variant="outlined"
-                  required
-                />
-              </ListItem>
-            </List>
+            {choice.isAnswer ? (
+              <List>
+                {instructions?.map((step, index) => (
+                  <React.Fragment key={index}>
+                    <ListItem className={classes.instruction}>
+                      <h1>{index + 1}.</h1>
+                      <TextField className={classes.input} id={`step-${index + 1}`} value={step} onChange={onStepChangeMaker(index)} label="Write text here: Remember to be concise!" size="small" multiline rows={5} variant="outlined" required />
+                      <Button className={classes.deleteButton} onClick={() => handleRemoveInstruction(index)}>X</Button>
+                    </ListItem>
+                  </React.Fragment>
+                ))}
+                <ListItem style={{ padding: 0 }}>
+                  <Button className={classes.greenButton} startIcon={<Add style={{ width: 28, height: 28 }} />} variant="contained" onClick={addInstruction}>Add Step</Button>
+                </ListItem>
+              </List>
+            ) : (
+              <List>
+                <ListItem className={classes.instruction}>
+                  <TextField
+                    className={classes.input}
+                    value={choice.reason}
+                    onChange={onChoiceReasonChangeMaker(index)}
+                    label="Write text here: Remember to be concise!"
+                    size="small"
+                    multiline
+                    rows={5}
+                    variant="outlined"
+                    required
+                  />
+                </ListItem>
+              </List>
+            )}
           </CardContent>
         </Collapse>
       </Card>

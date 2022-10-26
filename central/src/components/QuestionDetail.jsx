@@ -6,7 +6,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
 import AnswerDropdown from './AnswerDropdown';
 
-export default function QuestionDetails({ backUrl, gameTitle, questionIndex, question }) {
+export default function QuestionDetails({ gameTitle, questionIndex, question }) {
   const classes = useStyles();
   const history = useHistory();
 
