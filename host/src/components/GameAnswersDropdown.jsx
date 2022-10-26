@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
-export default function GameAnswersDropdown({ key, answer, explanation, correct, numQuestionAnswers, totalAnswers, pos }) {
+export default function GameAnswersDropdown({ answer, explanation, correct, numQuestionAnswers, totalAnswers, pos }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const letterDictionary = {
