@@ -1,19 +1,12 @@
-import { Fragment, useState } from "react"
-import {
-    Image, SafeAreaView, Text,
-    TextInput, View
-} from "react-native"
+import React, { Fragment, useState } from "react"
+import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import PurpleBackground from "../../../components/PurpleBackground"
 import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-export default function StudentName({
-    navigation,
-    gameSession,
-    setTeamInfo,
-}) {
+export default function StudentName({ navigation, gameSession, setTeamInfo }) {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
 

@@ -118,21 +118,19 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
     //wip. need to render each card to a seperate carousel page
-    const RenderWrongAnswers = () => {
-        return wrongAnswers.map((answer) => {
-            return (
-                <Card
-                    key={answer.id}
-                    style={styles.headerText}
-                    headerTitle={`Wrong Answer Info ${answer.text}`}
-                >
-                    <Card reasons={answer.reason}>
-                        <Text>{answer.reason}</Text>
-                    </Card>
+    const wrongAnswerCards = wrongAnswers.map((answer) => {
+        return (
+            <Card
+                key={answer.id}
+                style={styles.headerText}
+                headerTitle={`Wrong Answer Info ${answer.text}`}
+            >
+                <Card reasons={answer.reason}>
+                    <Text>{answer.reason}</Text>
                 </Card>
-            )
-        })
-    }
+            </Card>
+        )
+    })
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -186,9 +184,9 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                         />
                     </Card>
                     {gameSession?.currentState ===
-                    GameSessionState.PHASE_2_DISCUSS ? (
-                        <RenderWrongAnswers />
-                    ) : null}
+                    GameSessionState.PHASE_2_DISCUSS
+                        ? wrongAnswerCards
+                        : null}
                 </HorizontalPageView>
             </View>
         </SafeAreaView>

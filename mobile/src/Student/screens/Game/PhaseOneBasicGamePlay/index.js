@@ -88,6 +88,7 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                                     )
                                     return
                                 }
+                                //TODO: make this work - needs to update team answer isChosen to true in db
                                 teamAnswer.isChosen = true
                                 console.debug("this is team answer", teamAnswer)
                             })
@@ -177,19 +178,16 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                         <ScrollableQuestion question={question} />
                     </Card>
                     <Card headerTitle="Answers">
-                        {gameSession?.currentState ===
-                        GameSessionState.CHOOSE_CORRECT_ANSWER ? (
-                            <AnswerOptionsPhaseOne
-                                isAdvancedMode={gameSession.isAdvanced}
-                                isFacilitator={teamMember?.isFacilitator}
-                                onAnswered={(answer) => {
-                                    handleAnswerResult(answer)
-                                }}
-                                answers={answerChoices.map((choice) => {
-                                    return choice
-                                })}
-                            />
-                        ) : null}
+                        <AnswerOptionsPhaseOne
+                            isAdvancedMode={gameSession.isAdvanced}
+                            isFacilitator={teamMember?.isFacilitator}
+                            onAnswered={(answer) => {
+                                handleAnswerResult(answer)
+                            }}
+                            answers={answerChoices.map((choice) => {
+                                return choice
+                            })}
+                        />
                     </Card>
                     {gameSession?.currentState ===
                     GameSessionState.PHASE_1_DISCUSS ? (
