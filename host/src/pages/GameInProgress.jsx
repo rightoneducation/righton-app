@@ -94,7 +94,6 @@ export default function GameInProgress({
     if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !==0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype){
       let choicesTextArray = [choices.length];
       let answersArray = new Array(choices.length).fill(0);
-      console.log(answersArray);
       let currentQuestionId = questions[currentQuestionIndex].id;
       choices && choices.forEach((choice,index) =>{
         choicesTextArray[index] = choice.text;
@@ -110,7 +109,6 @@ export default function GameInProgress({
                   if (answer.text === choice.text){
                     answersArray[choicesTextArray.indexOf(choice.text)]+=1;
                   }
-                  console.log(answer.questionId+ " " + answersArray);
                 })
               }
             }

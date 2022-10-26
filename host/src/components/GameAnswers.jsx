@@ -11,7 +11,7 @@ export default function GameAnswers({ questionChoices, answersByQuestion, totalA
     <Grid className={classes.background}>
      {(questionChoices) ? 
       questionChoices.map((choice,index) => {
-        return (<GameAnswersDropdown key={index}  answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} />)
+        return (<GameAnswersDropdown key={index}  answer={choice.text} explanation={choice.reason ? choice.reason:""} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} pos ={index}/>)
       })
       : null} 
     </Grid>
