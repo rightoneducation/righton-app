@@ -99,19 +99,23 @@ export default function GameInProgress({
         choicesTextArray[index] = choice.text;
       });
       
+
       teamsArray.forEach(team => {
           team.teamMembers && team.teamMembers.forEach(teamMember => {
             teamMember.answers && teamMember.answers.forEach(answer =>{
-            if (answer.questionId === currentQuestionId && answer.isChosen){
+            if (answer.questionId === currentQuestionId){
+               if ((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) || (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !answer.isChosen)){
                 choices && choices.forEach(choice =>{
                   if (answer.text === choice.text){
                     answersArray[choicesTextArray.indexOf(choice.text)]+=1;
                   }
                 })
               }
-            })
+            }
+          })
         })
-      });          
+  
+      });  
       return answersArray;
     }
     return [];
