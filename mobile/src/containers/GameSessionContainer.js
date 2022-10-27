@@ -5,6 +5,7 @@ import EncryptedStorage from "react-native-encrypted-storage"
 const GameSessionContainer = ({ children }) => {
     const [gameCode, setGameCode] = useState(null)
     const [teamId, setTeamId] = useState(null)
+    const [team, setTeam] = useState(null)
     const [gameSession, setGameSession] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
 
@@ -35,8 +36,23 @@ const GameSessionContainer = ({ children }) => {
                                     setGameSession(
                                         gameSessionSubscriptionResponse
                                     )
-                                    // TODO: update the team object everytime the game session is updated
-                                    // only update the team member if the team member is found
+                                    //TODO: update the team object everytime the game session is updated
+                                    // if (team) {
+                                    //     const team =
+                                    //         gameSessionSubscriptionResponse.teams.find(
+                                    //             (team) => team.id === teamId
+                                    //         )
+                                    //     //only update the team member if the team member is found
+                                    //     if (teamMember) {
+                                    //         setTeamMember(
+                                    //             team.teamMembers.find(
+                                    //                 (teamMember) =>
+                                    //                     teamMember.id ===
+                                    //                     teamMember.id
+                                    //             )
+                                    //         )
+                                    //     }
+                                    // }
                                 }
                             )
                     }
@@ -106,17 +122,20 @@ const GameSessionContainer = ({ children }) => {
 
     const setTeamInfo = (team, teamMember) => {
         setTeamId(team.id)
+        setTeam(team)
         setTeamMember(teamMember)
     }
 
     console.debug("game session in container:", gameSession)
     console.debug("team member in container:", teamMember)
-    console.debug("team in container:", teamId)
+    console.debug("team id in container:", teamId)
+    console.debug("team in container:", team)
 
     return children({
         gameSession,
         setGameCode,
         setTeamInfo,
+        team,
         teamId,
         teamMember,
     })

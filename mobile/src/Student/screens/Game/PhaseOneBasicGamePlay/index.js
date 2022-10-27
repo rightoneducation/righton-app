@@ -23,13 +23,11 @@ import { GameSessionState } from "@righton/networking"
 const PhaseOneBasicGamePlay = ({
     gameSession,
     team,
-    teamId,
     teamMember,
     score,
     totalScore,
     smallAvatar,
 }) => {
-    team = gameSession.teams.find((team) => team.id === teamId)
     console.debug("team in Phase One:", team)
 
     smallAvatar = smallAvatar

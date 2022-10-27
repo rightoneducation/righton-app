@@ -23,7 +23,7 @@ const AppContainer = () => {
                 gameSession,
                 setGameCode,
                 teamId,
-
+                team,
                 teamMember,
                 setTeamInfo,
             }) => (
@@ -66,6 +66,9 @@ const AppContainer = () => {
                                 <StudentGameIntro
                                     {...props}
                                     gameSession={gameSession}
+                                    teamId={teamId}
+                                    teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -76,6 +79,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -86,6 +90,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -96,6 +101,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -116,6 +122,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>

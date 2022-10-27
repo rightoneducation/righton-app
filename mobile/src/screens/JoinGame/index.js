@@ -10,7 +10,7 @@ import { GameSessionState } from "@righton/networking"
 export default function JoinGame({
     navigation,
     gameSession,
-    teamId,
+    team,
     teamMember,
 }) {
     const [user, setUser] = React.useState(null)
@@ -20,28 +20,28 @@ export default function JoinGame({
             case GameSessionState.TEAMS_JOINING:
                 return navigation.navigate("EnterGameCode", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
                 return navigation.navigate("PregameCountDown", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 
             case GameSessionState.PHASE_1_DISCUSS:
                 return navigation.navigate("PhaseOneBasicGamePlay", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 
             case GameSessionState.PHASE_2_START:
                 return navigation.navigate("StartPhase", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 
@@ -49,7 +49,7 @@ export default function JoinGame({
             case GameSessionState.PHASE_2_DISCUSS:
                 return navigation.navigate("PhaseTwoBasicGamePlay", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 
@@ -57,14 +57,14 @@ export default function JoinGame({
             case GameSessionState.PHASE_2_RESULTS:
                 return navigation.navigate("PhaseResult", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 
             case GameSessionState.FINAL_RESULTS:
                 return navigation.navigate("ScorePage", {
                     gameSession,
-                    team: gameSession.teams.find((team) => team.id === teamId),
+                    team,
                     teamMember,
                 })
 

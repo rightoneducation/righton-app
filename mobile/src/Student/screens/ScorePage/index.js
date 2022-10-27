@@ -5,7 +5,13 @@ import RoundButton from "../../../components/RoundButton"
 import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
 import BaseView from "../../components/BaseView"
 
-const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
+const ScorePage = ({
+    gameSession,
+    team,
+    teamMember,
+    monsterNumber,
+    navigation,
+}) => {
     const winnerTeamImages = [
         require("./img/Team1_winner.png"),
         require("./img/Team2_winner.png"),
@@ -25,8 +31,10 @@ const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
 
     const navigateToLeaderboard = () => {
         navigation.navigate("Leadership", {
+            gameSession,
             team,
             teamMember,
+            monsterNumber,
         })
     }
 
