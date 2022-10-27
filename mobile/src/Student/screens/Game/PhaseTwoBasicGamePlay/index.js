@@ -83,7 +83,7 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isChosen ? null : true
+                                answer.isChosen ? null : false
                             )
                             .then((teamAnswer) => {
                                 if (teamAnswer == null) {

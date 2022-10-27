@@ -24,7 +24,10 @@ const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
     const [textHeight, setTextHeight] = useState(0)
 
     const navigateToLeaderboard = () => {
-        navigation.navigate("Leadership")
+        navigation.navigate("Leadership", {
+            team,
+            teamMember,
+        })
     }
 
     return (
@@ -36,9 +39,7 @@ const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
             >
                 You've earned a total of
             </Text>
-            <Text style={styles.headerScoreText}>
-                {10} points
-            </Text>
+            <Text style={styles.headerScoreText}>{10} points</Text>
             <View style={styles.imageContainer}>
                 <Image
                     source={winnerTeamImages[monsterNumber ? monsterNumber : 0]}
@@ -50,7 +51,10 @@ const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
                     }}
                 />
                 <Text
-                    style={{ ...styles.winnerText, bottom: imageHeight - textHeight }}
+                    style={{
+                        ...styles.winnerText,
+                        bottom: imageHeight - textHeight,
+                    }}
                     adjustsFontSizeToFit
                     numberOfLines={isInTop5 ? 2 : 1}
                     onLayout={(event) => {
@@ -65,7 +69,9 @@ const ScorePage = ({ team, teamMember, monsterNumber, navigation }) => {
                     style={styles.leadershipButton}
                     titleStyle={styles.leadershipButtonTitle}
                     containerStyle={styles.leadershipContainer}
-                    onPress={() => { navigateToLeaderboard() }}
+                    onPress={() => {
+                        navigateToLeaderboard()
+                    }}
                 />
             </View>
         </BaseView>
@@ -126,5 +132,5 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: verticalScale(20),
         alignSelf: "center",
-    }
+    },
 })

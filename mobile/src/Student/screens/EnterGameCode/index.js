@@ -1,8 +1,5 @@
 import { useState } from "react"
-import {
-    Image, SafeAreaView, Text,
-    TextInput, View
-} from "react-native"
+import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import PurpleBackground from "../../../components/PurpleBackground"
 import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
@@ -30,10 +27,6 @@ export default function EnterGameCode({
         setPortal(`Joining ${gameCode}`)
         setGlobalGameCode(gameCode)
         navigation.navigate("StudentName")
-    }
-
-    handleNavigateToJoinGame = () => {
-        navigation.navigate("JoinGame")
     }
 
     return (

@@ -62,7 +62,7 @@ export default function JoinGame({
                 })
 
             case GameSessionState.FINAL_RESULTS:
-                return navigation.navigate("Leadership", {
+                return navigation.navigate("ScorePage", {
                     gameSession,
                     team: gameSession.teams.find((team) => team.id === teamId),
                     teamMember,

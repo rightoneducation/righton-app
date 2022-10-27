@@ -94,6 +94,15 @@ function App() {
         variant="contained"
         color='secondary'
         onClick={() => {
+          handleUpdateGameSessionState(GameSessionState.NOT_STARTED)
+        }}
+      >
+        Not Started
+      </Button>
+      <Button
+        variant="contained"
+        color='secondary'
+        onClick={() => {
           handleUpdateGameSessionState(GameSessionState.TEAMS_JOINING)
         }}
       >
