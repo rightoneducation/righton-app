@@ -79,7 +79,7 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isChosen
+                                answer.isChosen ? null : true
                             )
                             .then((teamAnswer) => {
                                 if (teamAnswer == null) {
@@ -88,8 +88,7 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                                     )
                                     return
                                 }
-                                //TODO: make this work - needs to update team answer isChosen to true in db
-                                teamAnswer.isChosen = true
+                                setSelectedAnswer(answer)
                                 console.debug("this is team answer", teamAnswer)
                             })
                             .catch((error) => {
@@ -112,6 +111,7 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     })
 
     // if isCorrectAnswer is true, add 10 points to the team's score
+    // this does not uppdate team score in the database yet
     const addPoints = (answer) => {
         if (answer.isCorrectAnswer) {
             team.score += 10
@@ -119,7 +119,6 @@ const PhaseOneBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     }
 
     const handleAnswerResult = (answer) => {
-        setSelectedAnswer(answer)
         submitAnswer(answer)
         addPoints(answer)
     }
