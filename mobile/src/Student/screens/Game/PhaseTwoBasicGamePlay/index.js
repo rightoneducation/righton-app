@@ -51,12 +51,6 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
         (answer) => !answer.isCorrectAnswer
     )
 
-    const wrongAnswerReasons = wrongAnswers.map((choice) => {
-        if (!choice.isAnswer) {
-            return choice.reason
-        }
-    })
-
     let countdown = useRef()
 
     useEffect(() => {
