@@ -89,7 +89,7 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isChosen
+                                answer.isChosen ? null : true
                             )
                             .then((teamAnswer) => {
                                 if (teamAnswer == null) {
@@ -98,7 +98,7 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                                     )
                                     return
                                 }
-                                teamAnswer.isChosen = true
+                                setSelectedAnswer(answer)
                                 console.debug("this is team answer", teamAnswer)
                             })
                             .catch((error) => {
@@ -111,7 +111,6 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
     }
 
     const handleAnswerResult = (answer) => {
-        setSelectedAnswer(answer)
         submitAnswer(answer)
     }
 
