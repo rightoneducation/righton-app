@@ -28,7 +28,7 @@ const PhaseTwoBasicGamePlay = ({
     totalScore,
     smallAvatar,
 }) => {
-    team = gameSession?.teams.find((team) => team.id === teamId)
+    team = gameSession.teams.find((team) => team.id === teamId)
     console.debug("team in Phase Two:", team)
 
     smallAvatar = smallAvatar
@@ -110,7 +110,10 @@ const PhaseTwoBasicGamePlay = ({
                                     return
                                 }
 
-                                console.debug("this is team answer", teamAnswer)
+                                console.debug(
+                                    "phase 2 team answer:",
+                                    teamAnswer
+                                )
                             })
                             .catch((error) => {
                                 console.error(error.message)

@@ -27,7 +27,7 @@ export default function JoinGame({
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
                 return navigation.navigate("PregameCountDown", {
                     gameSession,
-                    team: gameSession?.teams.find((team) => team.id === teamId),
+                    team: gameSession.teams.find((team) => team.id === teamId),
                     teamMember,
                 })
 

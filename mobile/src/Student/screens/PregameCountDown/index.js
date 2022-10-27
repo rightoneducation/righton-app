@@ -9,10 +9,13 @@ import { GameSessionState } from "@righton/networking"
 const PregameCountDown = ({
     navigation,
     route,
+
     gameSession,
     teamId,
     teamMember,
 }) => {
+    const team = gameSession.teams.find((team) => team.id === teamId)
+
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator
@@ -31,17 +34,11 @@ const PregameCountDown = ({
                 fontSize={scale(100)}
                 timerStartInSecond={3}
                 onTimerFinished={() => {
-                    if (gameSession) {
-                        navigation.navigate("PhaseOneBasicGamePlay", {
-                            gameSession,
-                            team: gameSession?.teams.find(
-                                (team) => team.id === teamId
-                            ),
-                            teamMember,
-                        })
-                    } else {
-                        navigation.navigate("GamePlay", route.params)
-                    }
+                    navigation.navigate("PhaseOneBasicGamePlay", {
+                        gameSession,
+                        team,
+                        teamMember,
+                    })
                 }}
             />
             <Text style={styles.text}>

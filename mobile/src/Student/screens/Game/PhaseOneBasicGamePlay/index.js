@@ -29,7 +29,7 @@ const PhaseOneBasicGamePlay = ({
     totalScore,
     smallAvatar,
 }) => {
-    team = gameSession?.teams.find((team) => team.id === teamId)
+    team = gameSession.teams.find((team) => team.id === teamId)
     console.debug("team in Phase One:", team)
 
     smallAvatar = smallAvatar
@@ -105,8 +105,11 @@ const PhaseOneBasicGamePlay = ({
                                     )
                                     return
                                 }
-                                setSelectedAnswer(answer)
-                                console.debug("this is team answer", teamAnswer)
+                                setSelectedAnswer(teamAnswer)
+                                console.debug(
+                                    "phase 1 team answer:",
+                                    teamAnswer
+                                )
                             })
                             .catch((error) => {
                                 console.error(error.message)

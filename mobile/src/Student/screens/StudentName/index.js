@@ -38,7 +38,7 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
                                 }
 
                                 setTeamInfo(team, teamMember)
-
+                                //TODO: update this to navigate to select team screen
                                 navigation.navigate("StudentGameIntro", {
                                     gameSession,
                                     team,

@@ -8,28 +8,6 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters"
 import { GameSessionState } from "@righton/networking"
 
 const StudentGameIntro = ({ navigation, route, gameSession }) => {
-    //const { team, teamMember } = route.params
-
-    useEffect(() => {
-        const subscription = apiClient.subscribeUpdateGameSession(
-            gameSession.id,
-            (gameSession) => {
-                // TODO: remove this and add it to your GameSessionContainer
-                // there will be many current state -> navigation changes
-                // you can remove the route params, pass the gameSession in from the screen props
-                // if (
-                //     gameSession?.currentState ===
-                //     GameSessionState.CHOOSE_CORRECT_ANSWER
-                // ) {
-                //     navigation.navigate("PregameCountDown", {
-                //         gameSession,
-                //     })
-                // }
-            }
-        )
-        return () => subscription.unsubscribe()
-    }, [])
-
     const [currentPage, setCurrentPage] = useState(0)
 
     const onPageSelected = (event) => {
