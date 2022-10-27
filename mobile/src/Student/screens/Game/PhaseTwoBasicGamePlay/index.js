@@ -21,13 +21,14 @@ import { GameSessionState } from "@righton/networking"
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
+    team,
     teamId,
     teamMember,
     score,
     totalScore,
     smallAvatar,
 }) => {
-    const team = gameSession?.teams.find((team) => team.id === teamId)
+    team = gameSession?.teams.find((team) => team.id === teamId)
     console.debug("team in Phase Two:", team)
 
     smallAvatar = smallAvatar
@@ -51,7 +52,6 @@ const PhaseTwoBasicGamePlay = ({
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    const [selectedAnswer, setSelectedAnswer] = useState(false)
 
     const answersParsed = question.choices
 
@@ -109,7 +109,7 @@ const PhaseTwoBasicGamePlay = ({
                                     )
                                     return
                                 }
-                                setSelectedAnswer(answer)
+
                                 console.debug("this is team answer", teamAnswer)
                             })
                             .catch((error) => {
