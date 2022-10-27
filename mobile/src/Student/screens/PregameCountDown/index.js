@@ -13,7 +13,6 @@ const PregameCountDown = ({
     teamId,
     teamMember,
 }) => {
-    // const { gameSession } = route.params
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator
@@ -32,10 +31,7 @@ const PregameCountDown = ({
                 fontSize={scale(100)}
                 timerStartInSecond={3}
                 onTimerFinished={() => {
-                    if (
-                        gameSession?.currentState ===
-                        GameSessionState.CHOOSE_CORRECT_ANSWER
-                    ) {
+                    if (gameSession) {
                         navigation.navigate("PhaseOneBasicGamePlay", {
                             gameSession,
                             team: gameSession?.teams.find(

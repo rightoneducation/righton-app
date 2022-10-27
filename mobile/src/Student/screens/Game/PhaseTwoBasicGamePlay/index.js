@@ -16,11 +16,28 @@ import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
+import TeamFooter from "../../../../components/TeamFooter"
 import { GameSessionState } from "@righton/networking"
 
-const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
+const PhaseTwoBasicGamePlay = ({
+    gameSession,
+    teamId,
+    teamMember,
+    score,
+    totalScore,
+    smallAvatar,
+}) => {
     const team = gameSession?.teams.find((team) => team.id === teamId)
-    console.debug("team in Phase Two Basic GamePlay", team)
+    console.debug("team in Phase Two:", team)
+
+    smallAvatar = smallAvatar
+        ? smallAvatar
+        : require("../../SelectTeam/img/MonsterIcon1.png")
+
+    const teamName = team?.name ? team?.name : "Team Name"
+
+    score = score ? score : 10
+    totalScore = team?.score ? team?.score : 0
 
     const question = gameSession?.isAdvanced
         ? team.question
@@ -182,6 +199,14 @@ const PhaseTwoBasicGamePlay = ({ gameSession, teamId, teamMember }) => {
                         : null}
                 </HorizontalPageView>
             </View>
+            <View style={styles.footerView}>
+                <TeamFooter
+                    icon={smallAvatar}
+                    name={teamName}
+                    score={score}
+                    totalScore={totalScore ? totalScore : 0}
+                />
+            </View>
         </SafeAreaView>
     )
 }
@@ -229,10 +254,13 @@ const styles = StyleSheet.create({
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: 10,
+        marginBottom: 100,
         marginTop: -scale(150),
     },
-    footer: {
-        marginBottom: moderateScale(30),
+    footerView: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        marginBottom: verticalScale(18),
     },
 })
