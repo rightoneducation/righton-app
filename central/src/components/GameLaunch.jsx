@@ -54,13 +54,19 @@ const useStyles = makeStyles(theme => ({
   questionIndex: {
     fontWeight: 'bold',
   },
+  questionText: {
+    fontSize:'80%',
+  },
   questionAnswer: {
     display: 'flex',
     width: '148px',
   },
   image: {
+    width: '150px',
     height: '150px',
-    maxWidth: '105%'
+    objectFit: 'cover',
+    borderWidth:'0',
+    borderRadius: '15px'
   },
   square: {
     height: '100px',
@@ -190,17 +196,17 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
       </Box>
 
       <Grid container>
-        <Grid item xs={4} className={classes.leftComponent}>
+        <Grid item xs={12} sm={4} className={classes.leftComponent}>
           <h3 style={{ color: '#0075FF' }}>{game.title}</h3>
 
           <p>{game.description}</p>
 
-          {game.imageUrl ? <img className={classes.gameImage} src={game.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'} />}
+          {game.imageUrl ? <img className={classes.gameImage} src={game.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'60%'}/>}
 
           <Button onClick={() => { window.location.href = LAUNCH_GAME_URL }} className={classes.launchButton} >Launch Game {'>'}</Button>
         </Grid>
 
-        <Grid container item xs={8} className={classes.rightComponent} >
+        <Grid container item xs={12} sm ={8} className={classes.rightComponent} >
           <Grid item xs={12}>
             <h3 style={{ color: '#0075FF', textAlign: 'center' }}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
           </Grid>
@@ -215,28 +221,28 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
             if (question === null) return null;
             const { text, imageUrl } = question;
             return (
-              <Grid key={index} item xs={6}>
+              <Grid key={index} item xs={12} sm={6}>
                 <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
-                  <Grid container item xs={8}>
-                    <Grid item xs={12}>
+                  <Grid container item xs={6} sm={8}>
+                    <Grid item xs={12} >
                       <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
                       <Typography className={classes.questionIndex} >
                         Question {index + 1}
                       </Typography>
 
-                      <Typography>
+                      <Typography className={classes.questionText}>
                         {text}
                       </Typography>
                     </Grid>
                   </Grid>
 
-                  <Grid container item xs={4}>
-                    <Grid item xs={9}>
+                  <Grid container item xs={6} sm={4}>
+                    <Grid item xs={10} sm={9}>
                       {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={2} sm={3}>
                       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
                         <MoreVert />
                       </Button>
