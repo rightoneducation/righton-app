@@ -26,8 +26,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     marginRight: theme.spacing(2),
     width: '90%',
+    gridGap: '3%',
+    overflow: 'visible',
     borderRadius: '10px',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2.5),
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.03)',
       boxShadow: '1px 4px 12px grey',
@@ -54,8 +56,14 @@ const useStyles = makeStyles(theme => ({
   questionIndex: {
     fontWeight: 'bold',
   },
-  questionText: {
-    fontSize:'80%',
+  textContainer:{
+    height: '90%',
+    maxWidth: '100%',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 6,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   questionAnswer: {
     display: 'flex',
@@ -223,8 +231,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
             return (
               <Grid key={index} item xs={12} sm={6}>
                 <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
-                  <Grid container item xs={6} sm={8}>
-                    <Grid item xs={12} >
+                  <Grid container item xs={6} sm={8} className={classes.textContainer}>
                       <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
                       <Typography className={classes.questionIndex} >
@@ -234,7 +241,6 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                       <Typography className={classes.questionText}>
                         {text}
                       </Typography>
-                    </Grid>
                   </Grid>
 
                   <Grid container item xs={6} sm={4}>
