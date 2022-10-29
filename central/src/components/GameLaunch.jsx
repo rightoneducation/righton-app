@@ -22,10 +22,12 @@ const useStyles = makeStyles(theme => ({
     width: '60%'
   },
   question: {
+    psoition: 'absolute',
     padding: theme.spacing(1.5),
     display: 'flex',
     marginRight: theme.spacing(2),
     width: '90%',
+    marginLeft: '3%',
     gridGap: '3%',
     overflow: 'visible',
     borderRadius: '10px',
@@ -214,9 +216,9 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
           <Button onClick={() => { window.location.href = LAUNCH_GAME_URL }} className={classes.launchButton} >Launch Game {'>'}</Button>
         </Grid>
 
-        <Grid container item xs={12} sm ={8} className={classes.rightComponent} >
+        <Grid container item xs={12} sm ={8} >
           <Grid item xs={12}>
-            <h3 style={{ color: '#0075FF', textAlign: 'center' }}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
+            <h3 style={{ color: '#0075FF', textAlign: 'center', marginLeft: '3%' }}>Questions ({questionCount}) {questionCount > 1 || questionCount === 0}</h3>
           </Grid>
 
           {questions.length === 0 && (
@@ -224,57 +226,56 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
               No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
             </Typography>
           )}
+            {questions.map((question, index) => {
+              if (question === null) return null;
+              const { text, imageUrl } = question;
+              return (
+                <Grid key={index} item xs={12} sm={6} >
+                  <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
+                    <Grid container item xs={6} sm={8} className={classes.textContainer}>
+                        <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
-          {questions.map((question, index) => {
-            if (question === null) return null;
-            const { text, imageUrl } = question;
-            return (
-              <Grid key={index} item xs={12} sm={6}>
-                <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
-                  <Grid container item xs={6} sm={8} className={classes.textContainer}>
-                      <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                        <Typography className={classes.questionIndex} >
+                          Question {index + 1}
+                        </Typography>
 
-                      <Typography className={classes.questionIndex} >
-                        Question {index + 1}
-                      </Typography>
-
-                      <Typography className={classes.questionText}>
-                        {text}
-                      </Typography>
-                  </Grid>
-
-                  <Grid container item xs={6} sm={4}>
-                    <Grid item xs={10} sm={9}>
-                      {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
+                        <Typography className={classes.questionText}>
+                          {text}
+                        </Typography>
                     </Grid>
 
-                    <Grid item xs={2} sm={3}>
-                      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
-                        <MoreVert />
-                      </Button>
+                    <Grid container item xs={6} sm={4}>
+                      <Grid item xs={10} sm={9}>
+                        {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
+                      </Grid>
 
-                      <Menu
-                        id={`question-${index}-actions`}
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={activeIndex === String(index)}
-                        onClose={handleClose}
-                        onClick={(event) => { if (!match) event.stopPropagation(); }}
-                      >
-                        <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                      <Grid item xs={2} sm={3}>
+                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
+                          <MoreVert />
+                        </Button>
 
-                        {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
+                        <Menu
+                          id={`question-${index}-actions`}
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={activeIndex === String(index)}
+                          onClose={handleClose}
+                          onClick={(event) => { if (!match) event.stopPropagation(); }}
+                        >
+                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
 
-                        {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
+                          {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
 
-                        <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
-                      </Menu>
+                          {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
+
+                          <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                        </Menu>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Card>
-              </Grid>
-            );
-          })}
+                  </Card>
+                </Grid>
+              );
+            })}
         </Grid>
       </Grid>
     </>
