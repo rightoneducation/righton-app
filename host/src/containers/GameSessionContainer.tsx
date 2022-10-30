@@ -49,7 +49,7 @@ const GameSessionContainer = () => {
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
       // only run the gametimer check on instances where the currentState changes (new screens)
-      if (gameSession && gameSession.currentState !== response.currentState){
+      if (gameSession && gameSession.currentState !== response.currentState) {
         checkGameTimer(response); 
       }
 
@@ -181,7 +181,7 @@ const GameSessionContainer = () => {
         setGameSession(response);
 
         const teamDataRequests = response.teams.map(team => {
-          return apiClient.getTeam(team.id); // got to call the get the teams from the APi so we can see the answers
+          return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
         });
     
         Promise.all(teamDataRequests) 
