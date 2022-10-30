@@ -147,7 +147,7 @@ const GameSessionContainer = () => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
 
-        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
+        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
           setHeaderGameCurrentTime(response.phaseOneTime);
         }
         else if (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
