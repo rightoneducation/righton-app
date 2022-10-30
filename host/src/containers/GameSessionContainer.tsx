@@ -48,7 +48,7 @@ const GameSessionContainer = () => {
 
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
-      // only run the gametimer check and teamsArray repopulate on instances where the currentState changes (new screens)
+      // only run the gametimer check on instances where the currentState changes (new screens)
       if (gameSession && gameSession.currentState !== response.currentState){
         checkGameTimer(response); 
       }
