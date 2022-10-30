@@ -49,12 +49,13 @@ const GameSessionContainer = () => {
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(gameSessionId, response => {
       // only run the gametimer check on instances where the currentState changes (new screens)
-      if (gameSession && gameSession.currentState !== response.currentState) 
+      if (gameSession && gameSession.currentState !== response.currentState) {
         checkGameTimer(response); 
+      }
 
       setGameSession({ ...gameSession, ...response });
     });
-
+   
     // set up subscription for new teams joining
     let createTeamSubscription: any | null = null; 
     createTeamSubscription = apiClient.subscribeCreateTeam(gameSessionId, teamResponse => {
@@ -146,13 +147,16 @@ const GameSessionContainer = () => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
 
-        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
+        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
           setHeaderGameCurrentTime(response.phaseOneTime);
+        }
         else if (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
           setHeaderGameCurrentTime(response.phaseTwoTime);
 
         setGameSession(response);
         checkGameTimer(response);
+
+  
       });
   };
 
@@ -175,7 +179,17 @@ const GameSessionContainer = () => {
         setHeaderGameCurrentTime(gameSession.phaseOneTime);
         checkGameTimer(response);
         setGameSession(response);
-        setIsModalOpen(false); 
+
+        const teamDataRequests = response.teams.map(team => {
+          return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+        });
+    
+        Promise.all(teamDataRequests) 
+          .then(responses => {
+            setTeamsArray(responses); 
+            setIsModalOpen(false); 
+          })
+          .catch(reason => console.log(reason));
       });
     
   };
