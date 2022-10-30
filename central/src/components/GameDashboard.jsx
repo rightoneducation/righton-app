@@ -59,35 +59,31 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
         .map((game, index) => {
           const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
           const questionCount = game?.questions?.length || 0;
-          
+
           return (
             <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
               <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(game.id, gameId)}>
                 <CardContent>
                   <Grid container>
-                    <Grid container item xs={9}>
-                      <Grid item xs={7}>
-                        <CCSS grade={grade} domain={domain} cluster={cluster} standard={standard} />
-                      </Grid>
-
-                      <Grid item xs={5}>
-                        <Typography className={classes.question}>
-                          {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
+                    <Grid container item xs={8} md={9} >
+                      <div className={classes.cardText}>
+                        <Grid container>
+                          <Grid item xs={5}> 
+                            <CCSS grade={grade} domain={domain} cluster={cluster} standard={standard} />
+                          </Grid>
+                          <Grid item md={7}>
+                            <Typography className={classes.question}>
+                              {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Typography className={classes.title} >
+                          {title}
                         </Typography>
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <Typography className={classes.title} gutterBottom>
-                        {title}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <Typography color="textSecondary" gutterBottom>
+                        <Typography className={classes.textSecondary} color="textSecondary" >
                           {description}
                         </Typography>
-                      </Grid>
-
+                      </div>
                       {/* Post MVP Feature - Author of Games
                       <Grid item xs={12}>
                         <Typography color="textSecondary" gutterBottom>
@@ -96,12 +92,14 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                       </Grid> */}
                     </Grid>
 
-                    <Grid container item xs={3}>
-                      <Grid item xs={10}>
-                        {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'125px'}/>}
+                    <Grid container item xs={4} md={3}>
+                      <Grid item xs={11} md={10}>
+                        <div className={classes.imageContainer}>
+                          {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
+                        </div>
                       </Grid>
 
-                      <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
+                      <Grid item xs={1} md={2} className={addquestion ? classes.hide : classes.show}>
                         <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
                           <MoreVertIcon />
                         </Button>
@@ -125,7 +123,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
             </Grid>
           );
         }
-      );
+        );
     }
     return (
       <Typography gutterBottom>
@@ -140,6 +138,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
 }
 
 const useStyles = makeStyles(theme => ({
+  
   game: {
     width: '100%',
     borderRadius: '10px',
@@ -164,10 +163,32 @@ const useStyles = makeStyles(theme => ({
       cursor: 'default',
     }
   },
+  cardText: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    width: '100%',
+    overflow: 'hidden'
+  },
   title: {
     fontWeight: 700,
-    fontSize: '110%',
+    height: '80%',
     color: '#384466',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  textSecondary: {
+    height: '90%',
+    maxWidth: '100%',
+    paddingRight: '5px',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   question: {
     fontWeight: 700,
@@ -176,22 +197,33 @@ const useStyles = makeStyles(theme => ({
     paddingRight: '15px',
   },
   image: {
-    height: '125px',
-    width: '100%',
-    borderRadius: '10px',
+    width: '110px',
+    height: '110px',
+    objectFit: 'cover',
+    borderWidth: '0',
+    borderRadius: '15px',
     // marginRight: theme.spacing(2),
+  },
+  imageContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems:'center',
+    paddingTop:'5px',
+    maxWidth: '100%',
+    height: 'auto',
   },
   square: {
     height: '120px',
     width: '120px',
     borderRadius: '10px',
     marginRight: theme.spacing(2),
+
   },
   show: {
     display: 'block'
   },
   hide: {
-      display: 'none'
+    display: 'none'
   },
   moreButton: {
     minWidth: '28px',
