@@ -48,7 +48,6 @@ const PhaseOneBasicGamePlay = ({
         ]
 
     const availableHints = question.instructions
-    console.log("instructions", availableHints)
 
     const phaseTime = gameSession?.phaseOneTime ?? 300
 
@@ -103,7 +102,6 @@ const PhaseOneBasicGamePlay = ({
                                     )
                                     return
                                 }
-                                setSelectedAnswer(teamAnswer)
                                 console.debug(
                                     "phase 1 team answer:",
                                     teamAnswer
@@ -128,6 +126,14 @@ const PhaseOneBasicGamePlay = ({
         }
     })
 
+    // if isCorrectAnswer is true, add 10 points to the team's score
+    // this does not uppdate team score in the database yet
+    const addPoints = (answer) => {
+        if (answer.isCorrectAnswer) {
+            team.score += 10
+        }
+    }
+
     const handleAnswerResult = (answer) => {
         setSelectedAnswer(answer)
         submitAnswer(answer)
@@ -138,15 +144,9 @@ const PhaseOneBasicGamePlay = ({
 
     const hintsViewTitle = () => {
         if (selectedAnswer.isCorrectAnswer) {
-            return `Correct! 
-                        
-                        ${correctAnswer.text} 
-                        is the correct answer.`
+            return `Correct!\n${correctAnswer.text}\nis the correct answer.`
         } else {
-            return `Nice Try! 
-                        
-                        ${correctAnswer.text}
-                        is the correct answer.`
+            return `Nice Try!\n${correctAnswer.text}\nis the correct answer.`
         }
     }
 
