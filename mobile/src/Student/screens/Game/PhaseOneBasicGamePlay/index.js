@@ -48,13 +48,13 @@ const PhaseOneBasicGamePlay = ({
     ]
 
   const availableHints = question.instructions
+  console.log("instructions", availableHints)
 
   const phaseTime = gameSession?.phaseOneTime ?? 300
 
   const [currentTime, setCurrentTime] = useState(phaseTime)
   const [progress, setProgress] = useState(1)
   const [selectedAnswer, setSelectedAnswer] = useState(false)
-  const [hints, setHints] = useState([availableHints])
 
   let countdown = useRef()
 
@@ -178,7 +178,7 @@ const PhaseOneBasicGamePlay = ({
   if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
     const hintCard = (
       <Card headerTitle={hintsViewTitle()}>
-        <HintsView hints={hints} />
+        <HintsView hints={availableHints} />
       </Card>
     )
     cards = [hintCard]
