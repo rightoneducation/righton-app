@@ -5,81 +5,82 @@ import { fontFamilies, fonts } from "../../../utils/theme"
 import { GameSessionState } from "@righton/networking"
 
 const RoundTextIcon = ({
-    icon,
-    text,
-    height,
-    borderColor,
-    onPress,
-    data,
-    showIcon,
-    readonly,
-    onTextChanged,
-    gameSession,
+  icon,
+  text,
+  height,
+  borderColor,
+  onPress,
+  data,
+  showIcon,
+  readonly,
+  onTextChanged,
+  gameSession,
+  style,
 }) => {
-    return (
-        <>
-            <Pressable
-                disabled={
-                    gameSession?.currentState ===
-                        GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
-                    gameSession?.currentState ===
-                        GameSessionState.PHASE_2_DISCUSS ||
-                    gameSession?.currentState ===
-                        GameSessionState.PHASE_2_RESULTS
-                        ? data.isCorrectAnswer === true
-                        : false
-                }
-                onPress={() => onPress(data)}
-            >
-                <View
-                    style={[styles.container, { height, borderColor }]}
-                    pointerEvents={readonly ? "none" : "auto"}
-                >
-                    <TextInput
-                        editable={!readonly}
-                        style={styles.input}
-                        onSubmitEditing={(event) =>
-                            onTextChanged(data, event.nativeEvent.text)
-                        }
-                    >
-                        {text}
-                    </TextInput>
-                    {(showIcon === undefined ? false : showIcon) ? (
-                        <Image source={icon} style={styles.icon} />
-                    ) : null}
-                </View>
-            </Pressable>
-        </>
-    )
+  return (
+    <Pressable
+      disabled={
+        gameSession?.currentState ===
+          GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
+          gameSession?.currentState ===
+          GameSessionState.PHASE_2_DISCUSS ||
+          gameSession?.currentState ===
+          GameSessionState.PHASE_2_RESULTS
+          ? data.isCorrectAnswer === true
+          : false
+      }
+      onPress={() => onPress(data)}
+    >
+      <View
+        style={[styles.container, { height, borderColor }, ...style]}
+        pointerEvents={readonly ? "none" : "auto"}
+      >
+        <TextInput
+          editable={!readonly}
+          style={styles.input}
+          onSubmitEditing={(event) =>
+            onTextChanged(data, event.nativeEvent.text)
+          }
+        >
+          {text}
+        </TextInput>
+        {(showIcon === undefined ? false : showIcon) ? (
+          <Image source={icon} style={styles.icon} />
+        ) : null}
+      </View>
+    </Pressable>
+  )
 }
 
 export default RoundTextIcon
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        borderWidth: 1,
-        borderRadius: 22,
-        paddingLeft: scale(5),
-        paddingRight: scale(5),
-        backgroundColor: "white",
-        alignItems: "center",
-        marginTop: verticalScale(8),
-        marginBottom: verticalScale(8),
-        alignSelf: "stretch",
-    },
-    icon: {
-        padding: scale(10),
-        width: 16,
-        height: 16,
-    },
-    input: {
-        color: "#384466",
-        fontFamily: fontFamilies.karlaRegular,
-        fontSize: fonts.xMedium,
-        marginRight: scale(5),
-        marginLeft: scale(5),
-        flex: 1,
-    },
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderWidth: 2,
+    borderRadius: 22,
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
+    paddingTop: scale(15),
+    paddingBottom: scale(15),
+    backgroundColor: "white",
+    alignItems: "center",
+    marginTop: verticalScale(5),
+    marginBottom: verticalScale(5),
+    alignSelf: "stretch",
+  },
+  icon: {
+    padding: scale(10),
+    width: 16,
+    height: 16,
+  },
+  input: {
+    color: "#384466",
+    fontFamily: fontFamilies.karlaRegular,
+    fontSize: fonts.xMedium,
+    marginRight: scale(5),
+    marginLeft: scale(5),
+    flex: 1,
+  },
 })
