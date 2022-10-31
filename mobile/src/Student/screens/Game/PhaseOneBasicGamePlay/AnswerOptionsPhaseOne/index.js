@@ -29,7 +29,7 @@ const AnswerOptionsPhaseOne = ({ onAnswered, answers }) => {
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
             <Text style={[sharedStyles.text, { opacity: 1 }]}>
-                Choose the correct answer
+                Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
             </Text>
 
             <View
@@ -42,19 +42,19 @@ const AnswerOptionsPhaseOne = ({ onAnswered, answers }) => {
                 <KeyboardAwareFlatList
                     style={[styles.answers]}
                     data={currentAnswers}
-                    extraData={currentAnswers}
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item }) => (
                         <RoundTextIcon
+                            style={[styles.answerItem]}
                             icon={
                                 item.isSelected
                                     ? require("../../img/checkmark_checked.png")
                                     : require("../../img/gray_circle.png")
                             }
                             text={item.text}
-                            height={43}
+                            height={45}
                             borderColor={
-                                item.isSelected ? "#236AF7" : "#D9DFE5"
+                                item.isSelected ? "#159EFA" : "#D9DFE5"
                             }
                             onPress={chooseAnswer}
                             showIcon={item.isSelected}
@@ -75,31 +75,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
     },
-    answerTextInput: {
-        borderRadius: 8,
-        marginTop: verticalScale(8),
-        textAlign: "center",
-        fontFamily: fontFamilies.karlaRegular,
-        fontSize: fonts.xMedium,
-        marginBottom: verticalScale(8),
-        borderColor: "#B1BACB",
-        borderWidth: 1,
-        alignSelf: "stretch",
-        ...Platform.select({
-            ios: {
-                height: 43,
-            },
-        }),
-    },
-    trickAnswerInput: {
-        borderWidth: 2,
-        borderRadius: 22,
-        marginBottom: 10,
-        paddingLeft: 20,
-        height: 43,
-    },
     answers: {
         marginTop: verticalScale(15),
         alignSelf: "stretch",
     },
+    answerItem: {
+    },
+    correctAnswerText: {
+        color: '#349E15'
+    }
 })

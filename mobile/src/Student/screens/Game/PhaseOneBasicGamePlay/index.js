@@ -9,7 +9,7 @@ import {
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
-import { moderateScale, scale, verticalScale } from "react-native-size-matters"
+import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
@@ -42,10 +42,10 @@ const PhaseOneBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-              gameSession?.currentQuestionIndex == null
-                  ? 0
-                  : gameSession?.currentQuestionIndex
-          ]
+        gameSession?.currentQuestionIndex == null
+            ? 0
+            : gameSession?.currentQuestionIndex
+        ]
 
     const availableHints = question.instructions
 
@@ -54,7 +54,6 @@ const PhaseOneBasicGamePlay = ({
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswer, setSelectedAnswer] = useState(false)
-    const [hints, setHints] = useState([availableHints])
 
     let countdown = useRef()
 
@@ -103,7 +102,6 @@ const PhaseOneBasicGamePlay = ({
                                     )
                                     return
                                 }
-
                                 console.debug(
                                     "phase 1 team answer:",
                                     teamAnswer
@@ -146,16 +144,37 @@ const PhaseOneBasicGamePlay = ({
 
     const hintsViewTitle = () => {
         if (selectedAnswer.isCorrectAnswer) {
-            return `Correct! 
-            
-            ${correctAnswer.text} 
-            is the correct answer.`
+            return `Correct!\n${correctAnswer.text}\nis the correct answer.`
         } else {
-            return `Nice Try! 
-            
-            ${correctAnswer.text}
-            is the correct answer.`
+            return `Nice Try!\n${correctAnswer.text}\nis the correct answer.`
         }
+    }
+
+    let cards = [
+        <Card headerTitle="Question">
+            <ScrollableQuestion question={question} />
+        </Card>,
+        <Card headerTitle="Answers">
+            <AnswerOptionsPhaseOne
+                isAdvancedMode={gameSession.isAdvanced}
+                isFacilitator={teamMember?.isFacilitator}
+                onAnswered={(answer) => {
+                    handleAnswerResult(answer)
+                }}
+                answers={answerChoices.map((choice) => {
+                    return choice
+                })}
+            />
+        </Card>
+    ];
+
+    if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
+        const hintCard = (
+            <Card headerTitle={hintsViewTitle()}>
+                <HintsView hints={availableHints} />
+            </Card>
+        )
+        cards = [hintCard]
     }
 
     return (
@@ -167,7 +186,7 @@ const PhaseOneBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+                    GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Answer The Question
@@ -191,29 +210,11 @@ const PhaseOneBasicGamePlay = ({
                 ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                <HorizontalPageView>
-                    <Card headerTitle="Question">
-                        <ScrollableQuestion question={question} />
-                    </Card>
-                    <Card headerTitle="Answers">
-                        <AnswerOptionsPhaseOne
-                            isAdvancedMode={gameSession.isAdvanced}
-                            isFacilitator={teamMember?.isFacilitator}
-                            onAnswered={(answer) => {
-                                handleAnswerResult(answer)
-                            }}
-                            answers={answerChoices.map((choice) => {
-                                return choice
-                            })}
-                        />
-                    </Card>
-                    {gameSession?.currentState ===
-                    GameSessionState.PHASE_1_DISCUSS ? (
-                        <Card headerTitle={hintsViewTitle()}>
-                            <HintsView hints={hints} />
-                        </Card>
-                    ) : null}
-                </HorizontalPageView>
+                {cards.length > 1 ? (
+                    <HorizontalPageView>
+                        {cards}
+                    </HorizontalPageView>
+                ) : cards[0]}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter

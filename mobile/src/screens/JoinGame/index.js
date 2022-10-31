@@ -5,7 +5,6 @@ import { colors, fonts, fontFamilies } from "../../utils/theme"
 import RoundButton from "../../components/RoundButton"
 import PurpleBackground from "../../components/PurpleBackground"
 import { GameSessionState } from "@righton/networking"
-// import { Auth } from 'aws-amplify'
 
 export default function JoinGame({
     navigation,
@@ -13,16 +12,13 @@ export default function JoinGame({
     team,
     teamMember,
 }) {
-    const [user, setUser] = React.useState(null)
 
     useEffect(() => {
         switch (gameSession?.currentState) {
+            case GameSessionState.NOT_STARTED:
             case GameSessionState.TEAMS_JOINING:
-                return navigation.navigate("EnterGameCode", {
-                    gameSession,
-                    team,
-                    teamMember,
-                })
+                // Game hasn't started yet, just let the kids join
+                break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
                 return navigation.navigate("PregameCountDown", {
@@ -74,42 +70,8 @@ export default function JoinGame({
     }, [gameSession?.currentState])
 
     function handleJoinGame() {
-        // screenProps.handleSetAppState('deviceSettings', { role: 'teacher' });
-        // if (user == null) {
-        //   setTimeout(() => navigation.navigate('EnterGameCode', { user: false }), 250)
-        // } else {
-        //   setTimeout(() => navigation.navigate('EnterGameCode', { user: true }), 250)
-        // }
         navigation.navigate("EnterGameCode")
     }
-
-    function handleSignIn() {
-        // screenProps.handleSetAppState('deviceSettings', { username: `${Math.random()}`, role: 'student' });
-        setTimeout(() => navigation.navigate("SignIn"), 250)
-    }
-
-    function handleSignUp() {
-        setTimeout(() => navigation.navigate("SignUp"), 250)
-    }
-
-    async function handleSignOut() {
-        await Auth.signOut()
-        setUser(null)
-    }
-
-    async function getUser() {
-        try {
-            const user = await Auth.currentUserInfo()
-            debugger
-            if (user) setUser(user)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    React.useEffect(() => {
-        getUser()
-    }, [])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -126,27 +88,7 @@ export default function JoinGame({
                         style={{ backgroundColor: colors.buttonPrimary }}
                         onPress={() => handleJoinGame()}
                     />
-                    {/* {!user ?
-            <RoundButton
-              title="Sign In"
-              style={{ backgroundColor: colors.buttonSecondary }}
-              onPress={() => handleSignIn()}
-            /> :
-            <RoundButton
-              title="Sign Out"
-              style={{ backgroundColor: colors.buttonSecondary }}
-              onPress={() => handleSignOut()}
-            />
-          } */}
                 </View>
-                {/* <Text style={styles.footerText}>
-          Making an account lets you join a game quicker! Don’t have an account?
-          <Text onPress={() => handleSignUp()} style={{ color: colors.lightblue }}>Tap Here to make one!</Text>
-        </Text> */}
-                {/* <View style={styles.userContainer}>
-          {user !== null ? (<Text style={styles.bottomUser}>{user.username}</Text>)
-            : (<Text style={styles.bottomUser}>Not signed in</Text>)}
-        </View> */}
             </PurpleBackground>
         </SafeAreaView>
     )

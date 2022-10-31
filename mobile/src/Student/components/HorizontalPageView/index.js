@@ -6,10 +6,10 @@ import Card from '../Card'
 
 const HorizontalPageView = ({ children, initialPage }) => {
     const [currentPage, setCurrentPage] = useState(initialPage || 0)
-    const _renderItem = ({ item, index }) => {
-        return (
-            item
-        )
+    const renderItem = ({ item, index }) => {
+        return <React.Fragment key={index}>
+            {item}
+        </React.Fragment>
     }
 
     const pageIndicators = children.map((child, index) => {
@@ -23,7 +23,7 @@ const HorizontalPageView = ({ children, initialPage }) => {
                 data={children}
                 sliderWidth={Dimensions.get('window').width}
                 itemWidth={Math.max(scale(275), Dimensions.get('window').width - moderateScale(50))}
-                renderItem={_renderItem}
+                renderItem={renderItem}
                 onSnapToItem={index => setCurrentPage(index)}
                 firstItem={initialPage || 0}
             />

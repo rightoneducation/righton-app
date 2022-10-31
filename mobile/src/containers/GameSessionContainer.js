@@ -2,6 +2,51 @@ import { GameSessionState } from "@righton/networking"
 import { useEffect, useState } from "react"
 import EncryptedStorage from "react-native-encrypted-storage"
 
+async function storeGameSessionLocal(gameSession, teamId, teamMember, gameCode) {
+    try {
+        const localGameSession = await EncryptedStorage.setItem(
+            "localGameSession",
+            JSON.stringify({
+                gameSession: gameSession,
+                teamId: teamId,
+                teamMember: teamMember,
+                gameCode: gameCode,
+            })
+        )
+        console.debug("stored new game session locally:", localGameSession)
+    } catch (error) {
+        // There was an error on the native side
+        console.debug("error storing game session", error)
+    }
+}
+
+async function loadLocalGameSession() {
+    try {
+        const value = await EncryptedStorage.getItem("localGameSession")
+        if (value !== null) {
+            // We have data!!
+            console.debug(
+                "loaded existing game session from local storage:",
+                value
+            )
+            return JSON.parse(value)
+        }
+    } catch (error) {
+        // Error retrieving data
+        console.debug("error loading game session", error)
+    }
+}
+
+async function removeGameSessionLocal() {
+    try {
+        await EncryptedStorage.removeItem("localGameSession")
+    } catch (error) {
+        // There was an error on the native side
+        // You can find out more about this error by using the `error.code` property
+        console.debug(error.code) // ex: -25300 (errSecItemNotFound)
+    }
+}
+
 const GameSessionContainer = ({ children }) => {
     const [gameCode, setGameCode] = useState(null)
     const [teamId, setTeamId] = useState(null)
@@ -36,23 +81,18 @@ const GameSessionContainer = ({ children }) => {
                                     setGameSession(
                                         gameSessionSubscriptionResponse
                                     )
-                                    //TODO: update the team object everytime the game session is updated
-                                    // if (team) {
-                                    //     const team =
-                                    //         gameSessionSubscriptionResponse.teams.find(
-                                    //             (team) => team.id === teamId
-                                    //         )
-                                    //     //only update the team member if the team member is found
-                                    //     if (teamMember) {
-                                    //         setTeamMember(
-                                    //             team.teamMembers.find(
-                                    //                 (teamMember) =>
-                                    //                     teamMember.id ===
-                                    //                     teamMember.id
-                                    //             )
-                                    //         )
-                                    //     }
-                                    // }
+                                    if (team) {
+                                        const newTeamObj =
+                                            gameSessionSubscriptionResponse.teams.find(
+                                                (team) => team.id === teamId
+                                            )
+                                        // only update the team member if the team member is found
+
+                                        const newTeamMemberObj = newTeamObj.teamMembers.find(
+                                            (item) => item.id === teamMember.id
+                                        )
+                                        if (newTeamMemberObj) setTeamMember(newTeamMemberObj)
+                                    }
                                 }
                             )
                     }
@@ -63,73 +103,23 @@ const GameSessionContainer = ({ children }) => {
     }, [gameCode])
 
     useEffect(() => {
-        if (gameSession) {
-            storeGameSessionLocal()
+        if (gameSession?.gameCode) {
+            storeGameSessionLocal(gameSession, teamId, teamMember, gameCode)
+        } else {
+            removeGameSessionLocal()
         }
-    }, [gameSession])
 
-    useEffect(() => {
         // clear local storage when the game is finished
         if (gameSession?.currentState === GameSessionState.FINISHED) {
             removeGameSessionLocal()
         }
-    }, [gameSession?.currentState])
-
-    async function storeGameSessionLocal() {
-        try {
-            const localGameSession = await EncryptedStorage.setItem(
-                "localGameSession",
-                JSON.stringify({
-                    gameSession: gameSession,
-                    teamId: teamId,
-                    teamMember: teamMember,
-                    gameCode: gameCode,
-                })
-            )
-            console.debug("stored new game session locally:", localGameSession)
-        } catch (error) {
-            // There was an error on the native side
-            console.debug("error storing game session", error)
-        }
-    }
-
-    async function loadLocalGameSession() {
-        try {
-            const value = await EncryptedStorage.getItem("localGameSession")
-            if (value !== null) {
-                // We have data!!
-                console.debug(
-                    "loaded existing game session from local storage:",
-                    value
-                )
-                return JSON.parse(value)
-            }
-        } catch (error) {
-            // Error retrieving data
-            console.debug("error loading game session", error)
-        }
-    }
-
-    async function removeGameSessionLocal() {
-        try {
-            await EncryptedStorage.removeItem("localGameSession")
-        } catch (error) {
-            // There was an error on the native side
-            // You can find out more about this error by using the `error.code` property
-            console.debug(error.code) // ex: -25300 (errSecItemNotFound)
-        }
-    }
+    }, [gameSession])
 
     const setTeamInfo = (team, teamMember) => {
         setTeamId(team.id)
         setTeam(team)
         setTeamMember(teamMember)
     }
-
-    console.debug("game session in container:", gameSession)
-    console.debug("team member in container:", teamMember)
-    console.debug("team id in container:", teamId)
-    console.debug("team in container:", team)
 
     return children({
         gameSession,

@@ -15,41 +15,40 @@ const RoundTextIcon = ({
     readonly,
     onTextChanged,
     gameSession,
+    style,
 }) => {
     return (
-        <>
-            <Pressable
-                disabled={
+        <Pressable
+            disabled={
+                gameSession?.currentState ===
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
                     gameSession?.currentState ===
-                        GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
+                    GameSessionState.PHASE_2_DISCUSS ||
                     gameSession?.currentState ===
-                        GameSessionState.PHASE_2_DISCUSS ||
-                    gameSession?.currentState ===
-                        GameSessionState.PHASE_2_RESULTS
-                        ? data.isCorrectAnswer === true
-                        : false
-                }
-                onPress={() => onPress(data)}
+                    GameSessionState.PHASE_2_RESULTS
+                    ? data.isCorrectAnswer === true
+                    : false
+            }
+            onPress={() => onPress(data)}
+        >
+            <View
+                style={[styles.container, { height, borderColor }, ...style]}
+                pointerEvents={readonly ? "none" : "auto"}
             >
-                <View
-                    style={[styles.container, { height, borderColor }]}
-                    pointerEvents={readonly ? "none" : "auto"}
+                <TextInput
+                    editable={!readonly}
+                    style={styles.input}
+                    onSubmitEditing={(event) =>
+                        onTextChanged(data, event.nativeEvent.text)
+                    }
                 >
-                    <TextInput
-                        editable={!readonly}
-                        style={styles.input}
-                        onSubmitEditing={(event) =>
-                            onTextChanged(data, event.nativeEvent.text)
-                        }
-                    >
-                        {text}
-                    </TextInput>
-                    {(showIcon === undefined ? false : showIcon) ? (
-                        <Image source={icon} style={styles.icon} />
-                    ) : null}
-                </View>
-            </Pressable>
-        </>
+                    {text}
+                </TextInput>
+                {(showIcon === undefined ? false : showIcon) ? (
+                    <Image source={icon} style={styles.icon} />
+                ) : null}
+            </View>
+        </Pressable>
     )
 }
 
@@ -59,14 +58,16 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         justifyContent: "space-between",
-        borderWidth: 1,
+        borderWidth: 2,
         borderRadius: 22,
-        paddingLeft: scale(5),
-        paddingRight: scale(5),
+        paddingLeft: scale(10),
+        paddingRight: scale(10),
+        paddingTop: scale(15),
+        paddingBottom: scale(15),
         backgroundColor: "white",
         alignItems: "center",
-        marginTop: verticalScale(8),
-        marginBottom: verticalScale(8),
+        marginTop: verticalScale(5),
+        marginBottom: verticalScale(5),
         alignSelf: "stretch",
     },
     icon: {
