@@ -29,7 +29,7 @@ const AnswerOptionsPhaseOne = ({ onAnswered, answers }) => {
   return (
     <View style={[sharedStyles.cardContainer, styles.container]}>
       <Text style={[sharedStyles.text, { opacity: 1 }]}>
-        Choose the <Text style={[styles.correctAnswerText]}>correct answer</Text>
+        Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
       </Text>
 
       <View
