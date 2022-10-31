@@ -104,7 +104,7 @@ export default function GameInProgress({
           team.teamMembers && team.teamMembers.forEach(teamMember => {
             teamMember.answers && teamMember.answers.forEach(answer =>{
             if (answer.questionId === currentQuestionId){
-               if ((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) || (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !answer.isChosen)){
+               if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && !answer.isChosen)){
                 choices && choices.forEach(choice =>{
                   if (answer.text === choice.text){
                     answersArray[choicesTextArray.indexOf(choice.text)]+=1;
@@ -146,6 +146,7 @@ export default function GameInProgress({
     return  footerButtonTextDictionary[statePosition];
   };
  
+
 
   return (
     <div className={classes.background}>
