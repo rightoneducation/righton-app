@@ -103,7 +103,7 @@ const PhaseOneBasicGamePlay = ({
                                     )
                                     return
                                 }
-                                setSelectedAnswer(teamAnswer)
+
                                 console.debug(
                                     "phase 1 team answer:",
                                     teamAnswer
@@ -137,6 +137,7 @@ const PhaseOneBasicGamePlay = ({
     }
 
     const handleAnswerResult = (answer) => {
+        setSelectedAnswer(answer)
         submitAnswer(answer)
         addPoints(answer)
     }
