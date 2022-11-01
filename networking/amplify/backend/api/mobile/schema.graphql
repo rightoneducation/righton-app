@@ -54,7 +54,6 @@ type Team @model {
   id: ID!
   name: String!
   question: Question @hasOne
-  trickiestAnswerIDs: [ID]
   teamMembers: [TeamMember] @hasMany
   score: Int! @default(value: "0")
 }
@@ -69,8 +68,9 @@ type TeamMember @model {
 type TeamAnswer @model {
   id: ID!
   questionId: Int!
-  isChosen: Boolean
+  isChosen: Boolean!
   text: String!
+  isTrickAnswer: Boolean!
 }
 
 type Subscription {
