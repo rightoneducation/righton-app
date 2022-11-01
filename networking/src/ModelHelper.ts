@@ -10,16 +10,11 @@ export abstract class ModelHelper {
             throw new Error("No members available for the team")
         }
 
-        if (isNullOrUndefined(team.teamMembers[0]?.answers) ||
-            team.teamMembers[0]?.answers.length == 0) {
-            console.error("No answer is available")
-            throw new Error("No answer is available")
-        }
-
         return team.teamMembers[0]?.answers?.filter((answer) => {
             return !isNullOrUndefined(answer) &&
                 !isNullOrUndefined(answer.questionId) &&
-                answer.questionId === questionId
+                answer.questionId === questionId &&
+                answer.isTrickAnswer
         })
     }
 
@@ -35,12 +30,6 @@ export abstract class ModelHelper {
             throw new Error("Given team has no members or more than one members")
         }
 
-        if (isNullOrUndefined(team.trickiestAnswerIDs) ||
-            team.trickiestAnswerIDs.length == 0) {
-            console.debug("No trick answer has been chosen")
-            return null
-        }
-
         const teamMember = team.teamMembers[0]
         const trickAnswers = teamMember!.answers?.filter((answer) => {
             if (isNullOrUndefined(answer)) {
@@ -48,7 +37,7 @@ export abstract class ModelHelper {
             }
 
             return answer.questionId === questionId &&
-                team.trickiestAnswerIDs!.some((trickAnswerId) => trickAnswerId === answer.id)
+                !answer.isTrickAnswer
         })
 
         return trickAnswers?.length === 1 ? trickAnswers[0] : null
@@ -70,8 +59,8 @@ export abstract class ModelHelper {
             const answersToQuestion = team.teamMembers[0]?.answers?.filter((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
-                    !team.trickiestAnswerIDs?.some((a) => a === answer.id) &&
                     answer.questionId === questionId &&
+                    !answer.isTrickAnswer &&
                     answer!.text === choice.text
             })
 

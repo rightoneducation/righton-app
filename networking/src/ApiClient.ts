@@ -2,13 +2,8 @@ import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import awsconfig from "./aws-exports"
 import {
-    CreateTeamAnswerInput,
-    UpdateTeamAnswerInput,
-    UpdateTeamAnswerMutationVariables,
-    CreateTeamAnswerMutation,
-    CreateTeamAnswerMutationVariables,
-    UpdateTeamAnswerMutation,
-    CreateTeamInput,
+    CreateTeamAnswerInput, CreateTeamAnswerMutation,
+    CreateTeamAnswerMutationVariables, CreateTeamInput,
     CreateTeamMemberInput,
     CreateTeamMemberMutation,
     CreateTeamMemberMutationVariables,
@@ -23,7 +18,7 @@ import {
     OnUpdateTeamMemberSubscription,
     UpdateGameSessionInput,
     UpdateGameSessionMutation,
-    UpdateGameSessionMutationVariables,
+    UpdateGameSessionMutationVariables, UpdateTeamAnswerInput, UpdateTeamAnswerMutation, UpdateTeamAnswerMutationVariables
 } from "./AWSMobileApi"
 import {
     gameSessionByCode,
@@ -33,14 +28,14 @@ import {
     onCreateTeamAnswer,
     onDeleteTeam,
     onGameSessionUpdatedById,
-    onUpdateTeamMember,
+    onUpdateTeamMember
 } from "./graphql"
 import {
     createTeam,
     createTeamAnswer,
     createTeamMember,
     updateGameSession,
-    updateTeamAnswer,
+    updateTeamAnswer
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
@@ -301,11 +296,13 @@ export class ApiClient implements IApiClient {
         teamMemberId: string,
         questionId: number,
         text: string,
-        isChosen: boolean | null = null
+        isChosen: boolean = false,
+        isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
+            isTrickAnswer,
             text,
             teamMemberAnswersId: teamMemberId,
         }
@@ -439,7 +436,6 @@ type AWSGameSession = {
 type AWSTeam = {
     id: string
     name: string
-    trickiestAnswerIDs?: Array<string | null> | null
     teamMembers?: {
         items: Array<AWSTeamMember | null>
     } | null
@@ -480,7 +476,8 @@ type AWSTeamMember = {
 type AWSTeamAnswer = {
     id: string
     questionId?: number | null
-    isChosen?: boolean | null
+    isChosen: boolean
+    isTrickAnswer: boolean
     text?: string | null
     createdAt?: string
     updatedAt?: string
@@ -594,7 +591,6 @@ class GameSessionParser {
                 id: awsTeam.id,
                 name: awsTeam.name,
                 teamQuestionId: awsTeam.teamQuestionId,
-                trickiestAnswerIDs: awsTeam.trickiestAnswerIDs,
                 score: awsTeam.score,
                 createdAt: awsTeam.createdAt,
                 updatedAt: awsTeam.updatedAt,
@@ -635,8 +631,8 @@ class GameSessionParser {
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []
                         : this.parseServerArray<string>(
-                              awsQuestion.instructions
-                          ),
+                            awsQuestion.instructions
+                        ),
                     standard: awsQuestion.standard,
                     cluster: awsQuestion.cluster,
                     domain: awsQuestion.domain,
@@ -683,7 +679,6 @@ class TeamParser {
         const {
             id,
             name,
-            trickiestAnswerIDs,
             teamMembers,
             score,
             createdAt,
@@ -702,7 +697,6 @@ class TeamParser {
         const team: ITeam = {
             id,
             name,
-            trickiestAnswerIDs,
             teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
             score,
             createdAt,
@@ -808,6 +802,7 @@ class TeamAnswerParser {
             id,
             questionId,
             isChosen,
+            isTrickAnswer,
             text,
             createdAt,
             updatedAt,
@@ -824,6 +819,7 @@ class TeamAnswerParser {
             id,
             questionId,
             isChosen,
+            isTrickAnswer,
             text,
             createdAt,
             updatedAt,

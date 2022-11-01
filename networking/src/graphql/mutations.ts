@@ -30,7 +30,6 @@ export const createGameSession = /* GraphQL */ `
             order
             gameSessionId
           }
-          trickiestAnswerIDs
           teamMembers {
             items {
               id
@@ -41,6 +40,7 @@ export const createGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  isTrickAnswer
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -121,7 +121,6 @@ export const updateGameSession = /* GraphQL */ `
             order
             gameSessionId
           }
-          trickiestAnswerIDs
           teamMembers {
             items {
               id
@@ -132,6 +131,7 @@ export const updateGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  isTrickAnswer
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -212,7 +212,6 @@ export const deleteGameSession = /* GraphQL */ `
             order
             gameSessionId
           }
-          trickiestAnswerIDs
           teamMembers {
             items {
               id
@@ -223,6 +222,7 @@ export const deleteGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  isTrickAnswer
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -356,7 +356,6 @@ export const createTeam = /* GraphQL */ `
         order
         gameSessionId
       }
-      trickiestAnswerIDs
       teamMembers {
         items {
           id
@@ -367,6 +366,7 @@ export const createTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              isTrickAnswer
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -411,7 +411,6 @@ export const updateTeam = /* GraphQL */ `
         order
         gameSessionId
       }
-      trickiestAnswerIDs
       teamMembers {
         items {
           id
@@ -422,6 +421,7 @@ export const updateTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              isTrickAnswer
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -466,7 +466,6 @@ export const deleteTeam = /* GraphQL */ `
         order
         gameSessionId
       }
-      trickiestAnswerIDs
       teamMembers {
         items {
           id
@@ -477,6 +476,7 @@ export const deleteTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              isTrickAnswer
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -514,6 +514,7 @@ export const createTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          isTrickAnswer
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -541,6 +542,7 @@ export const updateTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          isTrickAnswer
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -568,6 +570,7 @@ export const deleteTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          isTrickAnswer
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -591,6 +594,7 @@ export const createTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      isTrickAnswer
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -607,6 +611,7 @@ export const updateTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      isTrickAnswer
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -623,6 +628,7 @@ export const deleteTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      isTrickAnswer
       createdAt
       updatedAt
       teamMemberAnswersId

@@ -5,7 +5,6 @@ export interface ITeam {
     id: string
     name: string
     question?: IQuestion | null
-    trickiestAnswerIDs?: Array<string | null> | null
     teamMembers?: Array<ITeamMember | null> | null
     score: number
     createdAt: string
