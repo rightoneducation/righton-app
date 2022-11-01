@@ -1,10 +1,11 @@
 import React, { useEffect } from "react"
-import { Text, View, Image, SafeAreaView } from "react-native"
+import { Text, View, Image, ImageBackground } from "react-native"
 import { ScaledSheet } from "react-native-size-matters"
-import { colors, fonts, fontFamilies } from "../../utils/theme"
+import { GameSessionState } from "@righton/networking"
 import RoundButton from "../../components/RoundButton"
 import PurpleBackground from "../../components/PurpleBackground"
-import { GameSessionState } from "@righton/networking"
+import sharedStyles from "../../Student/screens/Game/Components/sharedStyles"
+import { fonts } from '../../utils/theme'
 
 export default function JoinGame({
     navigation,
@@ -74,77 +75,67 @@ export default function JoinGame({
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <PurpleBackground style={styles.background}>
-                <Image
-                    style={styles.rightOnHeroImage}
-                    resizeMode="contain"
-                    resizeMethod="resize"
-                    source={require("../../assets/images/rightOnLogo.png")}
-                />
+        <View style={styles.container}>
+            <PurpleBackground>
+                <View style={styles.heroContainer}>
+                    <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
+                        <View style={styles.heroText}>
+                            <Image
+                                style={styles.logo}
+                                resizeMode="contain"
+                                resizeMethod="resize"
+                                source={require("../../assets/images/rightOnLogo.png")}
+                            />
+                            <Text style={[sharedStyles.text, styles.caption]}>
+                                Unlocking every student's potential in math!
+                            </Text>
+                        </View>
+                    </ImageBackground>
+                </View>
                 <View style={styles.buttonsContainer}>
                     <RoundButton
                         title="Join Game"
-                        style={{ backgroundColor: colors.buttonPrimary }}
+                        style={{ backgroundColor: '#159EFA' }}
                         onPress={() => handleJoinGame()}
                     />
                 </View>
             </PurpleBackground>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = ScaledSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundPurple,
+        backgroundColor: '#312759',
+    },
+    heroContainer: {
+        flex: 4,
+    },
+    heroImage: {
+        flex: 1,
+    },
+    heroText: {
+        flex: 1,
+        paddingHorizontal: 50,
+        color: 'white',
+        justifyContent: 'flex-start',
+    },
+    logo: {
+        width: '100%',
+        height: 120,
+        marginTop: 50,
+        marginBottom: 20,
+    },
+    caption: {
+        color: 'white',
+        fontSize: fonts.medium,
+        textAlign: 'center',
     },
     buttonsContainer: {
-        height: 180,
-        marginLeft: 33,
-        marginRight: 33,
-        justifyContent: "space-between",
-    },
-    footerText: {
-        fontSize: fonts.medium,
-        fontWeight: "bold",
-        alignItems: "center",
-        textAlign: "center",
-        marginHorizontal: 50,
-        marginTop: -90,
-        fontFamily: fontFamilies.montserratRegular,
-        color: "rgba(255, 255, 255, 0.9)",
-    },
-    background: {
         flex: 1,
-        justifyContent: "space-around",
-    },
-    rightOnHeroImage: {
-        marginTop: 22,
-        width: 230,
-        height: 118,
-        alignSelf: "center",
-    },
-    headerText: {
-        fontSize: fonts.small,
-        fontWeight: "bold",
-        fontFamily: fontFamilies.montserratBold,
-        color: colors.white,
-        marginTop: 9,
-        width: 230,
-        textAlign: "center",
-    },
-    bottomUser: {
-        fontSize: fonts.medium,
-        fontWeight: "bold",
-        fontFamily: fontFamilies.montserratBold,
-        color: colors.white,
-        alignSelf: "center",
-    },
-    userContainer: {
-        alignSelf: "center",
-        padding: 10,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        borderRadius: 10,
+        justifyContent: 'flex-start',
+        paddingTop: 30,
+        paddingHorizontal: 40,
     },
 })
