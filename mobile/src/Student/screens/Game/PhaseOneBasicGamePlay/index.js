@@ -210,7 +210,6 @@ const PhaseOneBasicGamePlay = ({
                 <TeamFooter
                     icon={smallAvatar}
                     name={teamName}
-                    score={score}
                     totalScore={totalScore ? totalScore : 0}
                 />
             </View>
@@ -242,8 +241,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#159EFA',
         borderRadius: 22,
         height: 44,
-        marginHorizontal: scale(20),
-        marginBottom: scale(20),
+        marginHorizontal: scale(40),
+        marginBottom: scale(40),
     },
     submitAnswerText: {
         fontSize: 18,
