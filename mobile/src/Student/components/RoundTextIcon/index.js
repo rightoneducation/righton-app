@@ -2,7 +2,6 @@ import React from "react"
 import { StyleSheet, View, TextInput, Image, Pressable } from "react-native"
 import { scale, verticalScale } from "react-native-size-matters"
 import { fontFamilies, fonts } from "../../../utils/theme"
-import { GameSessionState } from "@righton/networking"
 
 const RoundTextIcon = ({
     icon,
@@ -14,7 +13,7 @@ const RoundTextIcon = ({
     showIcon,
     readonly,
     onTextChanged,
-    style,
+    style = {},
     disabled,
 }) => {
     return (
@@ -23,7 +22,7 @@ const RoundTextIcon = ({
             onPress={() => onPress(data)}
         >
             <View
-                style={[styles.container, { height, borderColor }, ...style]}
+                style={[styles.container, { height, borderColor }, { ...style }]}
                 pointerEvents={readonly ? "none" : "auto"}
             >
                 <TextInput

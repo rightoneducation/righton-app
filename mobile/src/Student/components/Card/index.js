@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignContent: 'center',
+        paddingVertical: verticalScale(20),
     },
     cardContent: {
         marginLeft: moderateScale(25),

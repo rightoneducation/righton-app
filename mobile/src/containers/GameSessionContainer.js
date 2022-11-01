@@ -6,6 +6,8 @@ async function storeGameSessionLocal(gameSession, teamId, teamMember, gameCode) 
     try {
         const localGameSession = await EncryptedStorage.setItem(
             "localGameSession",
+            // TODO: maybe we should spread the existing value here and only add 
+            // values with updates
             JSON.stringify({
                 gameSession: gameSession,
                 teamId: teamId,
@@ -55,12 +57,12 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
 
     useEffect(() => {
-        loadLocalGameSession().then((localGameSession) => {
-            if (localGameSession) {
-                setGameSession(localGameSession.gameSession)
-                setTeamId(localGameSession.teamId)
-                setTeamMember(localGameSession.teamMember)
-                setGameCode(localGameSession.gameCode)
+        loadLocalGameSession().then((localStorage) => {
+            if (localStorage) {
+                setGameSession(localStorage.gameSession)
+                setTeamId(localStorage.teamId)
+                setTeamMember(localStorage.teamMember)
+                setGameCode(localStorage.gameSession.gameCode)
             }
         })
     }, [])
@@ -81,17 +83,19 @@ const GameSessionContainer = ({ children }) => {
                                     setGameSession(
                                         gameSessionSubscriptionResponse
                                     )
+                                    console.debug(gameSessionSubscriptionResponse)
                                     if (team || teamId) {
                                         const newTeamObj =
                                             gameSessionSubscriptionResponse.teams.find(
                                                 (team) => team.id === teamId
                                             )
                                         // only update the team member if the team member is found
-
-                                        const newTeamMemberObj = newTeamObj.teamMembers.find(
-                                            (item) => item.id === teamMember.id
-                                        )
-                                        if (newTeamMemberObj) setTeamMember(newTeamMemberObj)
+                                        if (newTeamObj) {
+                                            const newTeamMemberObj = newTeamObj.teamMembers.find(
+                                                (item) => item.id === teamMember.id
+                                            )
+                                            if (newTeamMemberObj) setTeamMember(newTeamMemberObj)
+                                        }
                                     }
                                 }
                             )
@@ -103,6 +107,7 @@ const GameSessionContainer = ({ children }) => {
     }, [gameCode])
 
     useEffect(() => {
+        // TODO: team id and team member should only be updated if they are non-null
         if (gameSession?.gameCode) {
             storeGameSessionLocal(gameSession, teamId, teamMember, gameCode)
         } else {
