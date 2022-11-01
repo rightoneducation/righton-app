@@ -14,7 +14,6 @@ const RoundTextIcon = ({
     showIcon,
     readonly,
     onTextChanged,
-    gameSession,
     style,
     disabled,
 }) => {

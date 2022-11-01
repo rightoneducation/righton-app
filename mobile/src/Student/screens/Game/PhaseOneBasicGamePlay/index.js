@@ -51,11 +51,11 @@ const PhaseOneBasicGamePlay = ({
     const availableHints = question.instructions
 
     useEffect(() => {
-        // TODO: Disable answer selection when the timer is up
-        // if (currentTime == 0) {
-        //     navigateToNextScreen()
-        //     return
-        // }
+        if (currentTime == 0 || // Out of time!
+            // Game has moved on, so disable answering
+            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER) {
+            setSubmitted(true)
+        }
 
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
@@ -126,13 +126,13 @@ const PhaseOneBasicGamePlay = ({
         }
     })
 
-    const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+    const correctAnswerText = answerChoices.find((answer) => answer.isCorrectAnswer)?.text
 
     const hintsViewTitle = () => {
-        if (selectedAnswer.isCorrectAnswer) {
-            return `Correct!\n${correctAnswer.text}\nis the correct answer.`
+        if (answerChoices[selectedAnswerIndex]?.isCorrectAnswer) {
+            return `Correct!\n${correctAnswerText}\nis the correct answer.`
         } else {
-            return `Nice Try!\n${correctAnswer.text}\nis the correct answer.`
+            return `Nice Try!\n${correctAnswerText}\nis the correct answer.`
         }
     }
 
