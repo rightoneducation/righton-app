@@ -1,6 +1,6 @@
 import React from "react"
 import { StyleSheet, View, TextInput, Image, Pressable } from "react-native"
-import { moderateScale, scale, verticalScale } from "react-native-size-matters"
+import { scale, verticalScale } from "react-native-size-matters"
 import { fontFamilies, fonts } from "../../../utils/theme"
 import { GameSessionState } from "@righton/networking"
 
@@ -14,21 +14,12 @@ const RoundTextIcon = ({
     showIcon,
     readonly,
     onTextChanged,
-    gameSession,
     style,
+    disabled,
 }) => {
     return (
         <Pressable
-            disabled={
-                gameSession?.currentState ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
-                    gameSession?.currentState ===
-                    GameSessionState.PHASE_2_DISCUSS ||
-                    gameSession?.currentState ===
-                    GameSessionState.PHASE_2_RESULTS
-                    ? data.isCorrectAnswer === true
-                    : false
-            }
+            disabled={disabled}
             onPress={() => onPress(data)}
         >
             <View

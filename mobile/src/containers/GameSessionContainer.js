@@ -81,7 +81,7 @@ const GameSessionContainer = ({ children }) => {
                                     setGameSession(
                                         gameSessionSubscriptionResponse
                                     )
-                                    if (team) {
+                                    if (team || teamId) {
                                         const newTeamObj =
                                             gameSessionSubscriptionResponse.teams.find(
                                                 (team) => team.id === teamId

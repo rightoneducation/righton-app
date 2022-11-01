@@ -7,12 +7,9 @@ import styles from "./styles"
 
 export default function EnterGameCode({
     navigation,
-    route,
     setGlobalGameCode,
 }) {
-    const [portal, setPortal] = useState(null)
     const [gameCode, setGameCode] = useState("")
-    const [gameSession, setGameSession] = useState(null)
 
     onGameCodeSubmit = () => {
         this.handleGameEntry()
@@ -23,8 +20,6 @@ export default function EnterGameCode({
             this.gameInput.focus()
             return
         }
-
-        setPortal(`Joining ${gameCode}`)
         setGlobalGameCode(gameCode)
         navigation.navigate("StudentName")
     }
@@ -59,11 +54,11 @@ export default function EnterGameCode({
                             textAlign={"center"}
                             value={gameCode}
                             autoFocus={true}
-                            editable={gameSession == null}
+                            editable
                         />
                         <RoundButton
                             title="Enter"
-                            disabled={gameSession != null}
+                            disabled={gameCode.length < 4}
                             style={styles.enterButton}
                             onPress={this.onGameCodeSubmit}
                         />

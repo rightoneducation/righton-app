@@ -1,31 +1,24 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { colors, fontFamilies, fonts, fontWeights } from '../../utils/theme'
 
-const TeamFooter = ({ icon, name, score, totalScore }) => {
+const TeamFooter = ({ icon, name, totalScore }) => {
     return (
         <View style={styles.container}>
-            <Image
-                source={icon}
-                style={styles.icon}
-            />
-            <Text
-                style={styles.name}
-            >
-                {name}
-            </Text>
-            <View style={styles.scoreContainer}>
-                {score !== undefined && score !== null &&
-                    <View style={styles.scoreView}>
-                        <Text style={styles.scoreText}>
-                            +{score}
-                        </Text>
-                    </View>
-                }
-                <View style={styles.totalScoreView}>
-                    <Text style={styles.scoreText}>
-                        {totalScore}
-                    </Text>
-                </View>
+            <View style={styles.itemContainer}>
+                <Image
+                    source={icon}
+                    style={styles.icon}
+                />
+            </View>
+            <View style={[styles.itemContainer, styles.nameView]}>
+                <Text style={styles.name}>
+                    {name}
+                </Text>
+            </View>
+            <View style={[styles.itemContainer, styles.scoreView]}>
+                <Text style={styles.scoreText}>
+                    {totalScore}
+                </Text>
             </View>
         </View>
     )
@@ -33,50 +26,43 @@ const TeamFooter = ({ icon, name, score, totalScore }) => {
 
 export default TeamFooter
 
-const sharedScoreContainer = {
-    height: 22,
-    width: 58,
-    alignItems: "center",
-    borderRadius: 10,
-}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
+        alignItems: "center",
         marginHorizontal: 25,
     },
+    itemContainer: {
+        minWidth: 50,
+    },
     icon: {
-        width: 34,
-        height: 42,
-        marginTop: 11,
+        width: 44,
+        height: 44,
+    },
+    nameView: {
+        flex: 1,
+        justifyContent: "center",
+        alignContent: "flex-start",
     },
     name: {
         fontFamily: fontFamilies.karlaRegular,
         fontWeight: fontWeights.extraBold,
         fontSize: fonts.medium,
         color: colors.blackTransparent38,
-        flex: 1,
-        textAlignVertical: "center",
-        alignSelf: "center",
     },
     scoreView: {
-        ...sharedScoreContainer,
-        backgroundColor: colors.lightGreen,
-    },
-    totalScoreView: {
-        ...sharedScoreContainer,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 18,
+        height: 36,
+        maxWidth: 55,
         backgroundColor: colors.lightBlue,
-        marginTop: 4,
-    },
-    scoreContainer: {
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        height: "100%",
     },
     scoreText: {
         color: colors.white,
         fontFamily: fontFamilies.karlaRegular,
-        fontWeight: fontWeights.extraBold,
-        fontSize: fonts.xMedium,
+        fontWeight: fontWeights.bold,
+        fontSize: fonts.medium,
     },
 })

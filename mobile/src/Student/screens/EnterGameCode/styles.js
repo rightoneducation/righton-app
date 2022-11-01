@@ -12,13 +12,13 @@ export default ScaledSheet.create({
   },
   input: {
     color: colors.primary,
-    fontSize: fonts.xMedium,
+    fontSize: fonts.large,
     fontFamily: fontFamilies.latoBold,
     height: 68,
     backgroundColor: colors.white,
-    borderRadius: 14,
-    paddingHorizontal: '14@vs',
-    marginBottom: 13,
+    borderRadius: 22,
+    paddingHorizontal: 14,
+    marginBottom: 60,
   },
   title: {
     color: colors.white,
@@ -29,17 +29,19 @@ export default ScaledSheet.create({
   },
   entryContainer: {
     alignSelf: 'center',
-    width: scale(265),
+    width: '100%',
+    paddingHorizontal: 40,
   },
   enterButton: {
     backgroundColor: colors.buttonPrimary,
     fontFamily: fontFamilies.karlaBold,
-    fontSize: fonts.xLarge,
-    fontWeight: 'bold'
+    fontSize: fonts.xxLarge,
+    fontWeight: 'bold',
+    marginHorizontal: 50,
   },
   rightOnHeroImage: {
     width: 230,
-    height: 118,
+    height: 120,
     alignSelf: 'center'
   },
   logoContainer: {
