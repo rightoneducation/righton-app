@@ -11,6 +11,7 @@ import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import { GameSessionState } from "@righton/networking"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
@@ -18,26 +19,26 @@ import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
 import TeamFooter from "../../../../components/TeamFooter"
-import { GameSessionState } from "@righton/networking"
+import RoundButton from "../../../../components/RoundButton"
+
+const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png");
 
 const PhaseOneBasicGamePlay = ({
     gameSession,
     team,
     teamMember,
-    score,
-    totalScore,
-    smallAvatar,
+    score = 10,
+    smallAvatar = DEFAULT_AVATAR,
 }) => {
-    console.debug("team in Phase One:", team)
+    const phaseTime = gameSession?.phaseOneTime ?? 300
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
-    smallAvatar = smallAvatar
-        ? smallAvatar
-        : require("../../SelectTeam/img/MonsterIcon1.png")
+    let countdown = useRef()
 
     const teamName = team?.name ? team?.name : "Team Name"
-
-    score = score ? score : 10
-    totalScore = team?.score ? team?.score : 0
+    const totalScore = team?.score ? team?.score : 0
 
     const question = gameSession?.isAdvanced
         ? team.question
@@ -48,14 +49,6 @@ const PhaseOneBasicGamePlay = ({
         ]
 
     const availableHints = question.instructions
-
-    const phaseTime = gameSession?.phaseOneTime ?? 300
-
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
-    const [selectedAnswer, setSelectedAnswer] = useState(false)
-
-    let countdown = useRef()
 
     useEffect(() => {
         // TODO: Disable answer selection when the timer is up
@@ -68,7 +61,7 @@ const PhaseOneBasicGamePlay = ({
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
             }
-            setProgress(currentTime / phaseTime)
+            setProgress((currentTime - 1) / phaseTime)
         }, 1000)
 
         return () => {
@@ -76,7 +69,7 @@ const PhaseOneBasicGamePlay = ({
         }
     }, [gameSession, currentTime])
 
-    const submitAnswer = (answer) => {
+    const handleSubmitAnswer = () => {
         Alert.alert(
             "Are you sure?",
             "You will not be able to change your answer",
@@ -88,6 +81,12 @@ const PhaseOneBasicGamePlay = ({
                 {
                     text: "OK",
                     onPress: () => {
+                        const answer = answerChoices[selectedAnswerIndex]
+                        // if isCorrectAnswer is true, add 10 points to the team's score
+                        // this does not uppdate team score in the database yet
+                        if (answer.isCorrectAnswer && team) {
+                            team.score += 10
+                        }
                         global.apiClient
                             .addTeamAnswer(
                                 teamMember.id,
@@ -126,20 +125,6 @@ const PhaseOneBasicGamePlay = ({
         }
     })
 
-    // if isCorrectAnswer is true, add 10 points to the team's score
-    // this does not uppdate team score in the database yet
-    const addPoints = (answer) => {
-        if (answer.isCorrectAnswer) {
-            team.score += 10
-        }
-    }
-
-    const handleAnswerResult = (answer) => {
-        setSelectedAnswer(answer)
-        submitAnswer(answer)
-        addPoints(answer)
-    }
-
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
     const hintsViewTitle = () => {
@@ -154,18 +139,23 @@ const PhaseOneBasicGamePlay = ({
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
-        <Card headerTitle="Answers">
-            <AnswerOptionsPhaseOne
-                isAdvancedMode={gameSession.isAdvanced}
-                isFacilitator={teamMember?.isFacilitator}
-                onAnswered={(answer) => {
-                    handleAnswerResult(answer)
-                }}
-                answers={answerChoices.map((choice) => {
-                    return choice
-                })}
-            />
-        </Card>
+        <View>
+            <Card headerTitle="Answers">
+                <AnswerOptionsPhaseOne
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                />
+                <RoundButton
+                    style={styles.submitAnswer}
+                    titleStyle={styles.submitAnswerText}
+                    title="Submit Answer"
+                    onPress={handleSubmitAnswer}
+                />
+            </Card>
+        </View>
     ];
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
@@ -247,6 +237,16 @@ const styles = StyleSheet.create({
         fontSize: fonts.large,
         fontWeight: "bold",
         color: "white",
+    },
+    submitAnswer: {
+        backgroundColor: '#159EFA',
+        borderRadius: 22,
+        height: 44,
+        marginHorizontal: scale(20),
+        marginBottom: scale(20),
+    },
+    submitAnswerText: {
+        fontSize: 18,
     },
     timerContainer: {
         flex: 1,
