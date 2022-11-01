@@ -323,7 +323,10 @@ function App() {
           }
           apiClient.addTeamAnswer(teamMember.id,
             gameSession.questions[0].id,
-            choice.text)
+            choice.text,
+            choice.isAnswer,
+            teamAnswer?.isChosen ?? true
+            )
             .then(teamAnswer => {
               if (teamAnswer == null) {
                 setError(`Failed to create answer`)
