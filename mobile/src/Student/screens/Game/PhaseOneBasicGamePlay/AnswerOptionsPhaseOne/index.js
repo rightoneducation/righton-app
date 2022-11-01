@@ -5,7 +5,12 @@ import { verticalScale } from "react-native-size-matters"
 import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
 
-const AnswerOptionsPhaseOne = ({ answers, selectedAnswerIndex, setSelectedAnswerIndex }) => {
+const AnswerOptionsPhaseOne = ({
+    answers,
+    disabled = false,
+    selectedAnswerIndex,
+    setSelectedAnswerIndex
+}) => {
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
             <Text style={[sharedStyles.text, { opacity: 1 }]}>
@@ -14,7 +19,7 @@ const AnswerOptionsPhaseOne = ({ answers, selectedAnswerIndex, setSelectedAnswer
 
             <View
                 style={{
-                    opacity: 1,
+                    opacity: disabled ? 0.3 : 1,
                     flex: 1,
                     alignSelf: "stretch",
                 }}
@@ -40,6 +45,7 @@ const AnswerOptionsPhaseOne = ({ answers, selectedAnswerIndex, setSelectedAnswer
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon
                             readonly
+                            disabled={disabled}
                         />
                     )}
                 />

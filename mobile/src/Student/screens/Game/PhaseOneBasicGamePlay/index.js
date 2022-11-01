@@ -12,7 +12,7 @@ import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import { GameSessionState } from "@righton/networking"
-import { fontFamilies, fonts } from "../../../../utils/theme"
+import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import HintsView from "../Components/HintsView"
@@ -27,13 +27,13 @@ const PhaseOneBasicGamePlay = ({
     gameSession,
     team,
     teamMember,
-    score = 10,
     smallAvatar = DEFAULT_AVATAR,
 }) => {
     const phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+    const [submitted, setSubmitted] = useState(false)
 
     let countdown = useRef()
 
@@ -87,6 +87,7 @@ const PhaseOneBasicGamePlay = ({
                         if (answer.isCorrectAnswer && team) {
                             team.score += 10
                         }
+                        setSubmitted(true)
                         global.apiClient
                             .addTeamAnswer(
                                 teamMember.id,
@@ -135,27 +136,35 @@ const PhaseOneBasicGamePlay = ({
         }
     }
 
+    const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
+
     let cards = [
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
-        <View>
-            <Card headerTitle="Answers">
-                <AnswerOptionsPhaseOne
-                    isAdvancedMode={gameSession.isAdvanced}
-                    isFacilitator={teamMember?.isFacilitator}
-                    selectedAnswerIndex={selectedAnswerIndex}
-                    setSelectedAnswerIndex={setSelectedAnswerIndex}
-                    answers={answerChoices}
-                />
-                <RoundButton
-                    style={styles.submitAnswer}
-                    titleStyle={styles.submitAnswerText}
-                    title="Submit Answer"
-                    onPress={handleSubmitAnswer}
-                />
-            </Card>
-        </View>
+        (
+            <View>
+                <Card headerTitle="Answers">
+                    <AnswerOptionsPhaseOne
+                        isAdvancedMode={gameSession.isAdvanced}
+                        isFacilitator={teamMember?.isFacilitator}
+                        selectedAnswerIndex={selectedAnswerIndex}
+                        setSelectedAnswerIndex={setSelectedAnswerIndex}
+                        answers={answerChoices}
+                        disabled={submitted}
+                    />
+                    {!submitted && (
+                        <RoundButton
+                            style={styles.submitAnswer}
+                            titleStyle={styles.submitAnswerText}
+                            title="Submit Answer"
+                            onPress={handleSubmitAnswer}
+                        />
+                    )}
+                </Card>
+                {submitted && <Text style={styles.answerSubmittedText}>{submittedAnswerText}</Text>}
+            </View>
+        )
     ];
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
@@ -266,6 +275,14 @@ const styles = StyleSheet.create({
         fontSize: fonts.xSmall,
         fontFamily: fontFamilies.latoBold,
         fontWeight: "bold",
+    },
+    answerSubmittedText: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.small,
+        fontWeight: fontWeights.extraBold,
+        textAlign: "center",
+        marginHorizontal: scale(20),
+        marginVertical: scale(20),
     },
     carouselContainer: {
         flex: 1,
