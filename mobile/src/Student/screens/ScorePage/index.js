@@ -47,7 +47,9 @@ const ScorePage = ({
             >
                 You've earned a total of
             </Text>
-            <Text style={styles.headerScoreText}>{10} points</Text>
+            <Text style={styles.headerScoreText}>
+                {(team && team.score) || 0} points
+            </Text>
             <View style={styles.imageContainer}>
                 <Image
                     source={winnerTeamImages[monsterNumber ? monsterNumber : 0]}
