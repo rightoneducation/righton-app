@@ -133,6 +133,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -143,6 +144,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -153,6 +155,7 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     teamId={teamId}
                                     teamMember={teamMember}
+                                    team={team}
                                 />
                             )}
                         </Stack.Screen>

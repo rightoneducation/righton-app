@@ -39,10 +39,10 @@ const PhaseTwoBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-        gameSession?.currentQuestionIndex == null
-            ? 0
-            : gameSession?.currentQuestionIndex
-        ]
+              gameSession?.currentQuestionIndex == null
+                  ? 0
+                  : gameSession?.currentQuestionIndex
+          ]
 
     const phaseTime = gameSession?.phaseTwoTime
 
@@ -96,7 +96,8 @@ const PhaseTwoBasicGamePlay = ({
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isChosen ? null : false
+                                answer.isChosen ? null : false,
+                                answer.isTrickAnswer ? false : true
                             )
                             .then((teamAnswer) => {
                                 if (teamAnswer == null) {
@@ -141,11 +142,10 @@ const PhaseTwoBasicGamePlay = ({
                 isCorrectAnswer={correctAnswer.isCorrectAnswer}
                 gameSession={gameSession}
             />
-        </Card>
+        </Card>,
     ]
 
-    if (gameSession?.currentState ===
-        GameSessionState.PHASE_2_DISCUSS) {
+    if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
         carouselCards = wrongAnswers.map((answer) => (
             <Card
                 key={answer.id}
@@ -168,7 +168,7 @@ const PhaseTwoBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Pick the Trickiest!
@@ -192,9 +192,7 @@ const PhaseTwoBasicGamePlay = ({
                 ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                <HorizontalPageView>
-                    {carouselCards}
-                </HorizontalPageView>
+                <HorizontalPageView>{carouselCards}</HorizontalPageView>
             </View>
             <View style={styles.footerView}>
                 <TeamFooter

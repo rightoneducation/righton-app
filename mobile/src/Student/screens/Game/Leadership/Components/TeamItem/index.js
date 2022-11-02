@@ -34,6 +34,8 @@ const TeamItem = ({ teamNo, score, showPoints, teamNames }) => {
             backgroundColorEnd = "#C64E0F"
             imageUrl = require("../../img/team_5_icon.png")
             break
+        default:
+            return null
     }
 
     return (
