@@ -9,7 +9,7 @@ import {
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
-import { moderateScale, scale, verticalScale } from "react-native-size-matters"
+import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
@@ -27,8 +27,6 @@ const PhaseTwoBasicGamePlay = ({
     totalScore,
     smallAvatar,
 }) => {
-    console.debug("team in Phase Two:", team)
-
     smallAvatar = smallAvatar
         ? smallAvatar
         : require("../../SelectTeam/img/MonsterIcon1.png")
@@ -41,10 +39,10 @@ const PhaseTwoBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-              gameSession?.currentQuestionIndex == null
-                  ? 0
-                  : gameSession?.currentQuestionIndex
-          ]
+        gameSession?.currentQuestionIndex == null
+            ? 0
+            : gameSession?.currentQuestionIndex
+        ]
 
     const phaseTime = gameSession?.phaseTwoTime
 
@@ -128,9 +126,27 @@ const PhaseTwoBasicGamePlay = ({
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
-    //wip. need to render each card to a seperate carousel page
-    const wrongAnswerCards = wrongAnswers.map((answer) => {
-        return (
+    let carouselCards = [
+        <Card headerTitle="Question">
+            <ScrollableQuestion question={question} />
+        </Card>,
+        <Card headerTitle="Answers">
+            <AnswerOptionsPhaseTwo
+                isAdvancedMode={gameSession.isAdvanced}
+                isFacilitator={teamMember?.isFacilitator}
+                onAnswered={(answer) => {
+                    handleAnswerResult(answer)
+                }}
+                answers={answerChoices}
+                isCorrectAnswer={correctAnswer.isCorrectAnswer}
+                gameSession={gameSession}
+            />
+        </Card>
+    ]
+
+    if (gameSession?.currentState ===
+        GameSessionState.PHASE_2_DISCUSS) {
+        carouselCards = wrongAnswers.map((answer) => (
             <Card
                 key={answer.id}
                 style={styles.headerText}
@@ -140,8 +156,8 @@ const PhaseTwoBasicGamePlay = ({
                     <Text>{answer.reason}</Text>
                 </Card>
             </Card>
-        )
-    })
+        ))
+    }
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -152,7 +168,7 @@ const PhaseTwoBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Pick the Trickiest!
@@ -177,27 +193,7 @@ const PhaseTwoBasicGamePlay = ({
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 <HorizontalPageView>
-                    <Card headerTitle="Question">
-                        <ScrollableQuestion question={question} />
-                    </Card>
-                    <Card headerTitle="Answers">
-                        <AnswerOptionsPhaseTwo
-                            isAdvancedMode={gameSession.isAdvanced}
-                            isFacilitator={teamMember?.isFacilitator}
-                            onAnswered={(answer) => {
-                                handleAnswerResult(answer)
-                            }}
-                            answers={answerChoices.map((choice) => {
-                                return choice
-                            })}
-                            isCorrectAnswer={correctAnswer.isCorrectAnswer}
-                            gameSession={gameSession}
-                        />
-                    </Card>
-                    {gameSession?.currentState ===
-                    GameSessionState.PHASE_2_DISCUSS
-                        ? wrongAnswerCards
-                        : null}
+                    {carouselCards}
                 </HorizontalPageView>
             </View>
             <View style={styles.footerView}>

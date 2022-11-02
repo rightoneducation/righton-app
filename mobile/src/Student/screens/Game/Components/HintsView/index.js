@@ -1,30 +1,11 @@
 import React, { useState } from "react"
-import { StyleSheet, Text, View } from "react-native"
-import { ScrollView, FlatList } from "react-native-gesture-handler"
-import { scale, verticalScale } from "react-native-size-matters"
+import { StyleSheet, View } from "react-native"
+import { FlatList } from "react-native-gesture-handler"
+import { scale } from "react-native-size-matters"
 import { fontFamilies, fonts, colors } from "../../../../../utils/theme"
 import Hint from "./Hint"
-import Button from "../../../../components/Button"
 
-const HintsView = ({ hints, onTappedShowNextHint, isMoreHintsAvailable }) => {
-    const [showNextHintEnabled, setShowNextHintEnabled] = useState(false)
-
-    const onTappedNextHint = () => {
-        setShowNextHintEnabled(false)
-        onTappedShowNextHint()
-    }
-
-    const isShowHintsDisabled = !showNextHintEnabled || !isMoreHintsAvailable
-
-    const showNextStepButton = {
-        ...styles.buttonStyle,
-        ...{
-            backgroundColor: isShowHintsDisabled
-                ? "#9BA5B4"
-                : colors.buttonSecondary,
-        },
-    }
-
+const HintsView = ({ hints }) => {
     const mappedHints = hints.map((hint, idx) => {
         return {
             hintNo: idx + 1,
@@ -32,48 +13,9 @@ const HintsView = ({ hints, onTappedShowNextHint, isMoreHintsAvailable }) => {
         }
     })
 
-    return (
-        <View>
-            <FlatList
-                data={mappedHints}
-                keyExtractor={(item) => `${item.hintNo}`}
-                renderItem={({ item }) => (
-                    <Hint hintNo={item.hintNo} hint={item.hint} />
-                )}
-            />
-            <View style={styles.showNextHintContainer}>
-                {/* <Button
-                    title="Show Next Step"
-                    buttonStyle={showNextStepButton}
-                    onPress={onTappedNextHint}
-                    titleStyle={styles.showNextStepTitle}
-                    disabled={isShowHintsDisabled}
-                /> */}
-                {!showNextHintEnabled && isMoreHintsAvailable && (
-                    <LoadingIndicator
-                        theme={[
-                            "#FF78A520",
-                            "#FF78A540",
-                            "#FF78A560",
-                            "#FF78A580",
-                            "#FF78A5A0",
-                            "#FF78A5C0",
-                            "#FF78A5E0",
-                            "#FF78A5FF",
-                        ]}
-                        radius={scale(29)}
-                        shouldShowCountdown={true}
-                        fontSize={24}
-                        textColor={"#384466"}
-                        timerStartInSecond={5}
-                        onTimerFinished={() =>
-                            setShowNextHintEnabled(!showNextHintEnabled)
-                        }
-                    />
-                )}
-            </View>
-        </View>
-    )
+    return mappedHints.map((item) => (
+        <Hint key={item.hintNo} hintNo={item.hintNo} hint={item.hint} />
+    ))
 }
 
 export default HintsView
