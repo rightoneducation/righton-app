@@ -76,7 +76,7 @@ const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
             return 0
         }
 
-        percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer, currentQuestion.id)
+        percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer.text, currentQuestion.id)
         if (selectedTrickAnswer.text === answer.text) {
             setPhase2Score(percentage)
         } else {
