@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { ApiClient, Environment } from "@righton/networking";
+import { ApiClient, Environment, GameSessionState } from "@righton/networking";
 
 const CreateNewGameSession = () => {
   const apiClient = new ApiClient(Environment.Staging);
@@ -9,7 +9,9 @@ const CreateNewGameSession = () => {
 
   useEffect(() => {
     apiClient.createGameSession(Number(gameId), false).then(response => {
-      window.location.replace(`/host/${response.id}`);
+      apiClient.updateGameSession({ id: response.id, currentState: GameSessionState.TEAMS_JOINING}).then(response => {
+        window.location.replace(`/host/${response.id}`);
+      });
     });
   });
 
@@ -22,5 +24,6 @@ const CreateNewGameSession = () => {
 };
 
 export default CreateNewGameSession;
+
 
 
