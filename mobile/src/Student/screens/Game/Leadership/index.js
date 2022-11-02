@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import {
     StyleSheet,
     Text,
@@ -10,42 +10,32 @@ import {
 import LinearGradient from "react-native-linear-gradient"
 import { scale, verticalScale } from "react-native-size-matters"
 import { fontFamilies, fonts } from "../../../../utils/theme"
-import Button from "../../../components/Button"
-import Points from "../../../components/Points"
-import ExpandableQuestion from "../../../components/ExpandableQuestion"
 import TeamItem from "./Components/TeamItem"
-import Answers from "../../../components/Answers"
+import TeamFooter from "../../../../components/TeamFooter"
 
-const Leadership = ({ gameSession, teamMember }) => {
-    const teams = [
-        {
-            teamNo: 1,
-            score: 0,
-            showPoints: false,
-        },
-        {
-            teamNo: 2,
-            score: 25,
-            showPoints: false,
-        },
-        {
-            teamNo: 3,
-            score: 0,
-            showPoints: true,
-        },
-        {
-            teamNo: 4,
-            score: 25,
-            showPoints: false,
-        },
-        {
-            teamNo: 5,
-            score: 0,
-            showPoints: true,
-        },
-    ]
+const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
-    const [questionVisible, setQuestionVisible] = useState(false)
+const Leadership = ({
+    gameSession,
+    team,
+    teamMember,
+    monsterNumber,
+    smallAvatar = DEFAULT_AVATAR,
+}) => {
+    const teams = gameSession.teams
+
+    const highToLow = teams.sort((a, b) => b.score - a.score)
+
+    const teamNumber = highToLow.map((team, index) => {
+        team.teamNo = index + 1
+        return team
+    })
+    const teamNames = teamNumber.map((team) => {
+        return team.name
+    })
+
+    const teamName = team?.name ? team?.name : "Team Name"
+    const totalScore = team?.score ? team?.score : 0
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -59,67 +49,11 @@ const Leadership = ({ gameSession, teamMember }) => {
                     end={{ x: 1, y: 1 }}
                 >
                     <Text style={styles.headerText}>Leaderboard</Text>
-                    <Button
-                        titleStyle={{
-                            fontFamily: fontFamilies.karlaRegular,
-                            fontWeight: "bold",
-                            fontSize: fonts.xxMedium,
-                        }}
-                        buttonStyle={{
-                            backgroundColor: "rgba(255, 255, 255, 0.4)",
-                            marginTop: verticalScale(13),
-                            height: 40,
-                            marginBottom: verticalScale(22),
-                        }}
-                        title={
-                            questionVisible
-                                ? "Hide Question"
-                                : "Review Question"
-                        }
-                        onPress={() =>
-                            setQuestionVisible((prevState) => !prevState)
-                        }
-                    />
-                    {questionVisible && (
-                        <View style={styles.questionContainer}>
-                            <ExpandableQuestion />
-                            <View style={styles.answersContainer}>
-                                <Answers
-                                    teamSelectedTrickAnswer={360}
-                                    numColumns={1}
-                                />
-                            </View>
-                        </View>
-                    )}
                 </LinearGradient>
             </ScrollView>
             <>
-                <View style={styles.textContainer}>
-                    <View style={styles.rowLine}>
-                        <Text
-                            style={[
-                                styles.textSharedStyle,
-                                {
-                                    fontWeight: "bold",
-                                },
-                            ]}
-                        >
-                            {"2 teams"}
-                        </Text>
-                        <Text style={styles.textSharedStyle}>
-                            {" got the right answer!"}
-                        </Text>
-                    </View>
-                    <View style={styles.rowLine}>
-                        <Text style={styles.textSharedStyle}>
-                            They both get
-                        </Text>
-                        <Points point={25} />
-                    </View>
-                </View>
-
                 <FlatList
-                    data={teams}
+                    data={teamNumber}
                     keyExtractor={(item) => `${item.teamNo}`}
                     style={styles.teamContainer}
                     showsVerticalScrollIndicator={false}
@@ -128,6 +62,7 @@ const Leadership = ({ gameSession, teamMember }) => {
                     }}
                     renderItem={({ item }) => (
                         <TeamItem
+                            teamNames={teamNames}
                             teamNo={item.teamNo}
                             score={item.score}
                             showPoints={item.showPoints}
@@ -135,6 +70,13 @@ const Leadership = ({ gameSession, teamMember }) => {
                     )}
                 />
             </>
+            <View style={styles.footerView}>
+                <TeamFooter
+                    icon={smallAvatar}
+                    name={teamName}
+                    totalScore={totalScore ? totalScore : 0}
+                />
+            </View>
         </SafeAreaView>
     )
 }
@@ -151,7 +93,8 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 141, 239, 0.3)",
         paddingLeft: scale(30),
         paddingRight: scale(30),
-        paddingTop: scale(24),
+        paddingTop: scale(50),
+        paddingBottom: scale(50),
     },
     headerText: {
         fontFamily: fontFamilies.montserratBold,
@@ -183,6 +126,7 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         marginRight: 25,
         marginBottom: 25,
+        marginTop: verticalScale(-75),
     },
     questionContainer: {
         marginBottom: 10,
@@ -191,5 +135,11 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 24,
         marginTop: 24,
+    },
+    footerView: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        marginBottom: verticalScale(18),
     },
 })
