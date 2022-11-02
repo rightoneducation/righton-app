@@ -809,7 +809,10 @@ class TeamAnswerParser {
             teamMemberAnswersId,
         } = awsTeamAnswer || {}
 
-        if (isNullOrUndefined(id) || isNullOrUndefined(teamMemberAnswersId)) {
+        if (isNullOrUndefined(id) ||
+            isNullOrUndefined(teamMemberAnswersId) ||
+            isNullOrUndefined(questionId) ||
+            isNullOrUndefined(text)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
