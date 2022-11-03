@@ -1,22 +1,22 @@
 import React from "react"
-import { StyleSheet, Text, View } from "react-native"
-import sharedStyles from "../../Components/sharedStyles"
+import { StyleSheet, View } from "react-native"
 import { verticalScale } from "react-native-size-matters"
-import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
+import sharedStyles from "./sharedStyles"
+import RoundTextIcon from "../../../components/RoundTextIcon"
 
-const AnswerOptionsPhaseOne = ({
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
+
+const AnswerOptions = ({
     answers,
     disabled = false,
     selectedAnswerIndex,
-    setSelectedAnswerIndex
+    setSelectedAnswerIndex,
 }) => {
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
-            <Text style={[sharedStyles.text, { opacity: 1 }]}>
-                Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
-            </Text>
-
             <View
                 style={{
                     opacity: disabled ? 0.3 : 1,
@@ -34,13 +34,15 @@ const AnswerOptionsPhaseOne = ({
                             data={item}
                             icon={
                                 index === selectedAnswerIndex
-                                    ? require("../../img/Picked.png")
-                                    : require("../../img/gray_circle.png")
+                                    ? require("../img/Picked.png")
+                                    : require("../img/gray_circle.png")
                             }
-                            text={item.text}
+                            text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
                             borderColor={
-                                index === selectedAnswerIndex ? "#159EFA" : "#D9DFE5"
+                                index === selectedAnswerIndex
+                                    ? "#159EFA"
+                                    : "#D9DFE5"
                             }
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon
@@ -54,20 +56,17 @@ const AnswerOptionsPhaseOne = ({
     )
 }
 
-export default AnswerOptionsPhaseOne
+export default AnswerOptions
 
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
         justifyContent: "space-between",
+        paddingTop: 0,
     },
     answers: {
         marginTop: verticalScale(15),
         alignSelf: "stretch",
     },
-    answerItem: {
-    },
-    correctAnswerText: {
-        color: '#349E15'
-    }
+    answerItem: {},
 })

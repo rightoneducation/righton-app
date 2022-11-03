@@ -12,12 +12,13 @@ import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
-import RoundButton from "../../../../components/RoundButton"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
+import sharedStyles from "../Components/sharedStyles"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 
 const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
@@ -147,11 +148,11 @@ const PhaseTwoBasicGamePlay = ({
                 <AnswerOptionsPhaseTwo
                     isAdvancedMode={gameSession.isAdvanced}
                     isFacilitator={teamMember?.isFacilitator}
-                    answers={answerChoices}
-                    correctAnswer={correctAnswer}
                     selectedAnswerIndex={selectedAnswerIndex}
                     setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
                     disabled={submitted}
+                    correctAnswer={correctAnswer}
                 />
                 {!submitted && (
                     <RoundButton
@@ -254,6 +255,9 @@ const styles = StyleSheet.create({
         fontSize: fonts.large,
         fontWeight: "bold",
         color: "white",
+    },
+    answerTitle: {
+        marginTop: scale(20),
     },
     submitAnswer: {
         backgroundColor: "#159EFA",

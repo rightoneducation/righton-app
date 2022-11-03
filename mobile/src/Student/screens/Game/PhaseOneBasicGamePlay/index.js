@@ -19,7 +19,9 @@ import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
+import AnswerOptions from "../Components/AnswerOptions"
+import sharedStyles from "../Components/sharedStyles"
+import Question from "../Components/Question"
 
 const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
@@ -43,10 +45,10 @@ const PhaseOneBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-              gameSession?.currentQuestionIndex == null
-                  ? 0
-                  : gameSession?.currentQuestionIndex
-          ]
+        gameSession?.currentQuestionIndex == null
+            ? 0
+            : gameSession?.currentQuestionIndex
+        ]
 
     const availableHints = question.instructions
 
@@ -133,14 +135,6 @@ const PhaseOneBasicGamePlay = ({
         (answer) => answer.isCorrectAnswer
     )?.text
 
-    const hintsViewTitle = () => {
-        if (answerChoices[selectedAnswerIndex]?.isCorrectAnswer) {
-            return `Correct!\n${correctAnswerText}\nis the correct answer.`
-        } else {
-            return `Nice Try!\n${correctAnswerText}\nis the correct answer.`
-        }
-    }
-
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
     let cards = [
@@ -149,7 +143,10 @@ const PhaseOneBasicGamePlay = ({
         </Card>,
         <View>
             <Card headerTitle="Answers">
-                <AnswerOptionsPhaseOne
+                <Text style={[sharedStyles.text, styles.answerTitle]}>
+                    Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
+                </Text>
+                <AnswerOptions
                     isAdvancedMode={gameSession.isAdvanced}
                     isFacilitator={teamMember?.isFacilitator}
                     selectedAnswerIndex={selectedAnswerIndex}
@@ -176,9 +173,17 @@ const PhaseOneBasicGamePlay = ({
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
         const hintCard = (
-            <Card headerTitle={hintsViewTitle()}>
-                <HintsView hints={availableHints} />
-            </Card>
+            <View style={styles.hintsView}>
+                <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
+                <Text style={styles.hintsViewCorrectAnswer}>The correct answer is:</Text>
+                <Text style={styles.hintsViewCorrectAnswer}>{correctAnswerText}</Text>
+                {availableHints && availableHints.length > 0 && (
+                    <Card extraStyle={styles.hintsViewCard}>
+                        <Question question={question} style={styles.hintsViewQuestion} />
+                        <HintsView hints={availableHints} />
+                    </Card>
+                )}
+            </View>
         )
         cards = [hintCard]
     }
@@ -192,7 +197,7 @@ const PhaseOneBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+                    GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Answer The Question
@@ -253,6 +258,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "white",
     },
+    answerTitle: {
+        marginTop: scale(20),
+    },
+    correctAnswerText: {
+        color: '#349E15'
+    },
     submitAnswer: {
         backgroundColor: "#159EFA",
         borderRadius: 22,
@@ -290,6 +301,30 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: scale(20),
+    },
+    hintsView: {
+        marginTop: -60,
+    },
+    hintsViewTitle: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.semiLarge,
+        color: 'white',
+        marginBottom: scale(20),
+        textAlign: 'center',
+    },
+    hintsViewCorrectAnswer: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.xxMedium,
+        color: 'white',
+        textAlign: 'center',
+    },
+    hintsViewCard: {
+        marginTop: -40,
+        paddingBottom: scale(20),
+        maxHeight: verticalScale(400),
+    },
+    hintsViewQuestion: {
+        paddingVertical: 0,
     },
     carouselContainer: {
         flex: 1,
