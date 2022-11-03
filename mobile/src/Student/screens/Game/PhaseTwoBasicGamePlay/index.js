@@ -10,12 +10,14 @@ import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
+import sharedStyles from "../Components/sharedStyles"
+import AnswerOptions from "../Components/AnswerOptions"
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -46,6 +48,8 @@ const PhaseTwoBasicGamePlay = ({
 
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+    const [submitted, setSubmitted] = useState(false)
 
     const answersParsed = question.choices
 
@@ -77,7 +81,7 @@ const PhaseTwoBasicGamePlay = ({
         }
     }, [gameSession, currentTime])
 
-    const submitAnswer = (answer) => {
+    const handleSubmitAnswer = () => {
         Alert.alert(
             "Are you sure?",
             "You will not be able to change your answer",
@@ -89,6 +93,13 @@ const PhaseTwoBasicGamePlay = ({
                 {
                     text: "OK",
                     onPress: () => {
+                        const answer = answerChoices[selectedAnswerIndex]
+                        // if isCorrectAnswer is true, add 10 points to the team's score
+                        // this does not uppdate team score in the database yet
+                        if (answer.isCorrectAnswer && team) {
+                            team.score += 10
+                        }
+                        setSubmitted(true)
                         global.apiClient
                             .addTeamAnswer(
                                 teamMember.id,
@@ -119,27 +130,31 @@ const PhaseTwoBasicGamePlay = ({
         )
     }
 
-    const handleAnswerResult = (answer) => {
-        submitAnswer(answer)
-    }
-
-    const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
-
     let carouselCards = [
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
         <Card headerTitle="Answers">
-            <AnswerOptionsPhaseTwo
+            <Text style={[sharedStyles.text, styles.answerTitle]}>
+                What do you think is the most popular incorrect answer among
+                your class?
+            </Text>
+            <AnswerOptions
                 isAdvancedMode={gameSession.isAdvanced}
                 isFacilitator={teamMember?.isFacilitator}
-                onAnswered={(answer) => {
-                    handleAnswerResult(answer)
-                }}
+                selectedAnswerIndex={selectedAnswerIndex}
+                setSelectedAnswerIndex={setSelectedAnswerIndex}
                 answers={answerChoices}
-                isCorrectAnswer={correctAnswer.isCorrectAnswer}
-                gameSession={gameSession}
+                disabled={submitted}
             />
+            {!submitted && (
+                <RoundButton
+                    style={styles.submitAnswer}
+                    titleStyle={styles.submitAnswerText}
+                    title="Submit Answer"
+                    onPress={handleSubmitAnswer}
+                />
+            )}
         </Card>,
     ]
 
@@ -223,6 +238,19 @@ const styles = StyleSheet.create({
         fontSize: fonts.large,
         fontWeight: "bold",
         color: "white",
+    },
+    answerTitle: {
+        marginTop: scale(20),
+    },
+    submitAnswer: {
+        backgroundColor: '#159EFA',
+        borderRadius: 22,
+        height: 44,
+        marginHorizontal: scale(40),
+        marginBottom: scale(40),
+    },
+    submitAnswerText: {
+        fontSize: 18,
     },
     timerContainer: {
         flex: 1,

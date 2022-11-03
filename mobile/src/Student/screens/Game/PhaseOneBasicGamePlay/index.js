@@ -17,7 +17,8 @@ import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
+import AnswerOptions from "../Components/AnswerOptions"
+import sharedStyles from "../Components/sharedStyles"
 
 const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
@@ -144,7 +145,10 @@ const PhaseOneBasicGamePlay = ({
         (
             <View>
                 <Card headerTitle="Answers">
-                    <AnswerOptionsPhaseOne
+                    <Text style={[sharedStyles.text, styles.answerTitle]}>
+                        Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
+                    </Text>
+                    <AnswerOptions
                         isAdvancedMode={gameSession.isAdvanced}
                         isFacilitator={teamMember?.isFacilitator}
                         selectedAnswerIndex={selectedAnswerIndex}
@@ -244,6 +248,12 @@ const styles = StyleSheet.create({
         fontSize: fonts.large,
         fontWeight: "bold",
         color: "white",
+    },
+    answerTitle: {
+        marginTop: scale(20),
+    },
+    correctAnswerText: {
+        color: '#349E15'
     },
     submitAnswer: {
         backgroundColor: '#159EFA',
