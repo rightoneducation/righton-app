@@ -5,24 +5,31 @@ import { IChoice, IQuestion } from './Models/IQuestion'
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
 
-    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: number): Array<ITeamAnswer | null> | undefined {
+    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: number): Array<ITeamAnswer | null> | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length == 0) {
             console.error("Team members is null")
             throw new Error("No members available for the team")
         }
 
-        return team.teamMembers[0]?.answers?.filter((answer) => {
+        const teamMember = team.teamMembers[0]!
+
+        if (isNullOrUndefined(teamMember.answers) ||
+            teamMember.answers.length === 0) {
+            return null
+        }
+
+        return teamMember.answers.filter((answer) => {
             return !isNullOrUndefined(answer) &&
                 !isNullOrUndefined(answer.questionId) &&
                 answer.questionId === questionId
         })
     }
 
-    static getCorrectAnswer(question: IQuestion): IChoice {
-        return question.choices!.filter((choice) => {
+    static getCorrectAnswer(question: IQuestion): IChoice | null {
+        return question.choices!.find((choice) => {
             return !isNullOrUndefined(choice.isAnswer) && choice.isAnswer
-        })[0]
+        }) ?? null
     }
 
     static getSelectedTrickAnswer(team: ITeam, questionId: number): ITeamAnswer | null {
@@ -32,7 +39,7 @@ export abstract class ModelHelper {
         }
 
         const teamMember = team.teamMembers[0]
-        const trickAnswers = teamMember!.answers?.filter((answer) => {
+        const trickAnswer = teamMember!.answers?.find((answer) => {
             if (isNullOrUndefined(answer)) {
                 return false
             }
@@ -41,7 +48,7 @@ export abstract class ModelHelper {
                 !answer.isTrickAnswer
         })
 
-        return trickAnswers?.length === 1 ? trickAnswers[0] : null
+        return trickAnswer ?? null
     }
 
     static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, answerText: string, questionId: number): number {
@@ -52,12 +59,19 @@ export abstract class ModelHelper {
         // Calculate how many teams have chosen the same answer as the passed team.
         const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, team: ITeam) => {
             if (isNullOrUndefined(team.teamMembers) ||
-                team.teamMembers.length != 1) {
+                team.teamMembers.length !== 1) {
                 console.error(`No team member available for ${team.name}`)
                 return previousVal
             }
 
-            const answersToQuestion = team.teamMembers[0]!.answers?.filter((answer) => {
+            const teamMember = team.teamMembers[0]!
+
+            if (isNullOrUndefined(teamMember.answers) ||
+                teamMember.answers.length === 0) {
+                return previousVal
+            }
+
+            const answersToQuestion = teamMember.answers.filter((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
                     answer.questionId === questionId &&
@@ -85,6 +99,10 @@ export abstract class ModelHelper {
         }
 
         const correctAnswer = this.getCorrectAnswer(question)
+
+        if (isNullOrUndefined(correctAnswer)) {
+            return 0
+        }
 
         return answers!.reduce((score: number, answer: ITeamAnswer | null) => {
             if (isNullOrUndefined(answer)) {
