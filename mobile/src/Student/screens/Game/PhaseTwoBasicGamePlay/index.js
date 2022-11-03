@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useRef } from "react"
+import { GameSessionState } from "@righton/networking"
+import { useEffect, useRef, useState } from "react"
 import {
-    StyleSheet,
+    Alert, Dimensions,
+    SafeAreaView, StyleSheet,
     Text,
-    View,
-    Dimensions,
-    SafeAreaView,
-    Alert,
+    View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
-import TeamFooter from "../../../../components/TeamFooter"
-import { GameSessionState } from "@righton/networking"
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -39,10 +37,10 @@ const PhaseTwoBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-              gameSession?.currentQuestionIndex == null
-                  ? 0
-                  : gameSession?.currentQuestionIndex
-          ]
+        gameSession?.currentQuestionIndex == null
+            ? 0
+            : gameSession?.currentQuestionIndex
+        ]
 
     const phaseTime = gameSession?.phaseTwoTime
 
@@ -97,7 +95,7 @@ const PhaseTwoBasicGamePlay = ({
                                 question.id,
                                 answer.text,
                                 answer.isChosen ? null : false,
-                                answer.isTrickAnswer ? false : true
+                                true
                             )
                             .then((teamAnswer) => {
                                 if (teamAnswer == null) {
@@ -168,7 +166,7 @@ const PhaseTwoBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Pick the Trickiest!
