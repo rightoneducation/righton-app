@@ -265,7 +265,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team`)
         }
-        return team.data.createTeam as ITeam
+        return TeamParser.teamFromAWSTeam(team.data.createTeam as AWSTeam)
     }
 
     async addTeamMemberToTeam(
@@ -289,7 +289,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team member`)
         }
-        return member.data.createTeamMember as ITeamMember
+        return TeamMemberParser.teamMemberFromAWSTeamMember(member.data.createTeamMember as AWSTeamMember)
     }
 
     async addTeamAnswer(
