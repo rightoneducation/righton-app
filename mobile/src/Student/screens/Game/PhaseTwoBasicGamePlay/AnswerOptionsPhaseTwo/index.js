@@ -5,6 +5,10 @@ import { verticalScale } from "react-native-size-matters"
 import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
 
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
+
 const AnswerOptionsPhaseTwo = ({
     answers,
     disabled = false,
@@ -35,13 +39,21 @@ const AnswerOptionsPhaseTwo = ({
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item, index }) => (
                         <RoundTextIcon
-                            style={[styles.answerItem]}
+                            style={
+                                ([styles.answerItem],
+                                {
+                                    opacity:
+                                        item.text === correctAnswer.text
+                                            ? 0.3
+                                            : 1,
+                                })
+                            }
                             icon={
                                 index === selectedAnswerIndex
                                     ? require("../../img/Picked.png")
                                     : require("../../img/gray_circle.png")
                             }
-                            text={item.text}
+                            text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
                             borderColor={
                                 index === selectedAnswerIndex
@@ -51,7 +63,6 @@ const AnswerOptionsPhaseTwo = ({
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon
                             readonly
-                            //diasble correct answer
                             disabled={
                                 disabled || item.text === correctAnswer.text
                             }

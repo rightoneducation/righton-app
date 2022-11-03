@@ -19,7 +19,7 @@ import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import sharedStyles from "../Components/sharedStyles"
-import AnswerOptions from "../Components/AnswerOptions"
+import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 
 const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
@@ -45,10 +45,10 @@ const PhaseTwoBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-        gameSession?.currentQuestionIndex == null
-            ? 0
-            : gameSession?.currentQuestionIndex
-        ]
+              gameSession?.currentQuestionIndex == null
+                  ? 0
+                  : gameSession?.currentQuestionIndex
+          ]
 
     const answersParsed = question.choices
 
@@ -72,7 +72,7 @@ const PhaseTwoBasicGamePlay = ({
             currentTime == 0 || // Out of time!
             // Game has moved on, so disable answering
             gameSession?.currentState !==
-            GameSessionState.CHOOSE_TRICKIEST_ANSWER
+                GameSessionState.CHOOSE_TRICKIEST_ANSWER
         ) {
             setSubmitted(true)
         }
@@ -145,17 +145,14 @@ const PhaseTwoBasicGamePlay = ({
         </Card>,
         <View>
             <Card headerTitle="Answers">
-                <Text style={[sharedStyles.text, styles.answerTitle]}>
-                    What do you think is the most popular incorrect answer among
-                    your class?
-                </Text>
-                <AnswerOptions
+                <AnswerOptionsPhaseTwo
                     isAdvancedMode={gameSession.isAdvanced}
                     isFacilitator={teamMember?.isFacilitator}
                     selectedAnswerIndex={selectedAnswerIndex}
                     setSelectedAnswerIndex={setSelectedAnswerIndex}
                     answers={answerChoices}
                     disabled={submitted}
+                    correctAnswer={correctAnswer}
                 />
                 {!submitted && (
                     <RoundButton
@@ -197,7 +194,7 @@ const PhaseTwoBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Pick the Trickiest!
@@ -263,7 +260,7 @@ const styles = StyleSheet.create({
         marginTop: scale(20),
     },
     submitAnswer: {
-        backgroundColor: '#159EFA',
+        backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),

@@ -13,7 +13,7 @@ const AnswerOptions = ({
     answers,
     disabled = false,
     selectedAnswerIndex,
-    setSelectedAnswerIndex
+    setSelectedAnswerIndex,
 }) => {
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
@@ -40,7 +40,9 @@ const AnswerOptions = ({
                             text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
                             borderColor={
-                                index === selectedAnswerIndex ? "#159EFA" : "#D9DFE5"
+                                index === selectedAnswerIndex
+                                    ? "#159EFA"
+                                    : "#D9DFE5"
                             }
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon
@@ -66,6 +68,5 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(15),
         alignSelf: "stretch",
     },
-    answerItem: {
-    }
+    answerItem: {},
 })
