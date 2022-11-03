@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react"
+import { Fragment, useRef, useState } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import PurpleBackground from "../../../components/PurpleBackground"
@@ -9,12 +9,19 @@ import styles from "./styles"
 export default function StudentName({ navigation, gameSession, setTeamInfo }) {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
+    const firstNameTextRef = useRef(null)
+    const lastNameTextRef = useRef(null)
 
     const teamName = `${firstName} ${lastName}`
 
     onNameSubmit = () => {
-        if (!firstName && !lastName && nameInput) {
-            this.nameInput.focus()
+        if (!firstName && firstNameTextRef) {
+            firstNameTextRef.focus()
+            return
+        }
+
+        if (!lastName && lastNameTextRef) {
+            lastNameTextRef.focus()
             return
         }
 
@@ -81,7 +88,7 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
                                         placeholder={"First Name"}
                                         placeholderTextColor={colors.primary}
                                         ref={(ref) => {
-                                            this.nameInput = ref
+                                            this.firstNameTextRef = ref
                                         }}
                                         returnKeyType={"done"}
                                         style={styles.input}
@@ -96,13 +103,12 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
                                         placeholder={"Last Name"}
                                         placeholderTextColor={colors.primary}
                                         ref={(ref) => {
-                                            this.nameInput = ref
+                                            this.lastNameTextRef = ref
                                         }}
                                         returnKeyType={"done"}
                                         style={styles.input}
                                         textAlign={"center"}
                                         value={lastName}
-                                        autoFocus={true}
                                     />
                                 </View>
                                 <RoundButton

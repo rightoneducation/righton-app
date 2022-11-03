@@ -1,27 +1,25 @@
-import React, { useState, useEffect, useRef } from "react"
+import { GameSessionState } from "@righton/networking"
+import { useEffect, useRef, useState } from "react"
 import {
-    StyleSheet,
+    Alert, Dimensions,
+    SafeAreaView, StyleSheet,
     Text,
-    View,
-    Dimensions,
-    SafeAreaView,
-    Alert,
+    View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
-import { GameSessionState } from "@righton/networking"
+import RoundButton from "../../../../components/RoundButton"
+import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
-import TeamFooter from "../../../../components/TeamFooter"
-import RoundButton from "../../../../components/RoundButton"
 
-const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png");
+const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
 const PhaseOneBasicGamePlay = ({
     gameSession,
@@ -93,7 +91,8 @@ const PhaseOneBasicGamePlay = ({
                                 teamMember.id,
                                 question.id,
                                 answer.text,
-                                answer.isChosen ? null : true
+                                answer.isChosen ? null : true,
+                                false
                             )
                             .then((teamAnswer) => {
                                 if (teamAnswer == null) {
@@ -165,7 +164,7 @@ const PhaseOneBasicGamePlay = ({
                 {submitted && <Text style={styles.answerSubmittedText}>{submittedAnswerText}</Text>}
             </View>
         )
-    ];
+    ]
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
         const hintCard = (

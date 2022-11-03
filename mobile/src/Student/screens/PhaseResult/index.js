@@ -6,7 +6,7 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
+const PhaseResult = ({ gameSession, team, smallAvatar }) => {
     smallAvatar = smallAvatar ? smallAvatar : require("../SelectTeam/img/MonsterIcon1.png")
 
     const [phaseNo, setPhaseNo] = useState(1)
@@ -16,6 +16,7 @@ const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
     const [selectedTrickAnswer, setSelectedTrickAnswer] = useState(null)
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [currentQuestion, setCurrentQuestion] = useState(null)
+    const [loadedData, setLoadedData] = useState(false)
 
     useEffect(() => {
         global.apiClient
@@ -30,9 +31,11 @@ const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
                 const updatedCurTeam = gameSessionResponse.teams.filter((t) => t.id === team.id)
                 if (isNullOrUndefined(updatedCurTeam) || updatedCurTeam.length !== 1) {
                     console.error(`Couldn't find team, ${team.name}`)
+                    return
                 }
                 setCurTeam(updatedCurTeam[0])
                 const curQuestion = gameSessionResponse.questions[gameSessionResponse.currentQuestionIndex]
+                console.log(`curQuestion: ${curQuestion}`)
                 const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, curQuestion.id)
                 setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
                 if (!isNullOrUndefined(teamAnswers) && teamAnswers.length == 1) {
@@ -47,6 +50,7 @@ const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
                 setCorrectAnswer(ModelHelper.correctAnswer(curQuestion))
                 setCurrentQuestion(curQuestion)
                 setGameSession(gameSession)
+                setLoadedData(true)
             }).catch((error) => {
                 console.error(error)
             })
@@ -95,7 +99,7 @@ const PhaseResult = ({ gameSession, team, totalScore, smallAvatar }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {gameSession !== null && <>
+            {loadedData && <>
                 <ImageBackground
                     source={require("./img/background.png")}
                     style={styles.headerContainer}
