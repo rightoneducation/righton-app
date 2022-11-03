@@ -40,7 +40,9 @@ const Leadership = ({
     return (
         <SafeAreaView style={styles.mainContainer}>
             <ScrollView
-                contentContainerStyle={{ marginBottom: verticalScale(22) }}
+                contentContainerStyle={{
+                    justifyContent: "space-between",
+                }}
             >
                 <LinearGradient
                     colors={["rgba(62, 0, 172, 1)", "rgba(98, 0, 204, 1)"]}
@@ -126,7 +128,6 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         marginRight: 25,
         marginBottom: 25,
-        marginTop: verticalScale(-75),
     },
     questionContainer: {
         marginBottom: 10,

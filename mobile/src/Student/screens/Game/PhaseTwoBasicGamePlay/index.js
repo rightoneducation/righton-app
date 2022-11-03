@@ -1,10 +1,12 @@
 import { GameSessionState } from "@righton/networking"
 import { useEffect, useRef, useState } from "react"
 import {
-    Alert, Dimensions,
-    SafeAreaView, StyleSheet,
+    Alert,
+    Dimensions,
+    SafeAreaView,
+    StyleSheet,
     Text,
-    View
+    View,
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -12,29 +14,33 @@ import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
-import { fontFamilies, fonts } from "../../../../utils/theme"
+import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import sharedStyles from "../Components/sharedStyles"
 import AnswerOptions from "../Components/AnswerOptions"
 
+const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
+
 const PhaseTwoBasicGamePlay = ({
     gameSession,
     team,
     teamMember,
-    score,
-    totalScore,
-    smallAvatar,
+    //score,
+    //totalScore,
+    smallAvatar = DEFAULT_AVATAR,
 }) => {
-    smallAvatar = smallAvatar
-        ? smallAvatar
-        : require("../../SelectTeam/img/MonsterIcon1.png")
+    const phaseTime = gameSession?.phaseTwoTime ?? 300
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    const [submitted, setSubmitted] = useState(false)
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
     const teamName = team?.name ? team?.name : "Team Name"
 
-    score = score ? score : 10
-    totalScore = team?.score ? team?.score : 0
+    const score = score ? score : 10
+    const totalScore = team?.score ? team?.score : 0
 
     const question = gameSession?.isAdvanced
         ? team.question
@@ -43,13 +49,6 @@ const PhaseTwoBasicGamePlay = ({
             ? 0
             : gameSession?.currentQuestionIndex
         ]
-
-    const phaseTime = gameSession?.phaseTwoTime
-
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
-    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-    const [submitted, setSubmitted] = useState(false)
 
     const answersParsed = question.choices
 
@@ -69,6 +68,15 @@ const PhaseTwoBasicGamePlay = ({
     let countdown = useRef()
 
     useEffect(() => {
+        if (
+            currentTime == 0 || // Out of time!
+            // Game has moved on, so disable answering
+            gameSession?.currentState !==
+            GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        ) {
+            setSubmitted(true)
+        }
+
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
@@ -94,11 +102,6 @@ const PhaseTwoBasicGamePlay = ({
                     text: "OK",
                     onPress: () => {
                         const answer = answerChoices[selectedAnswerIndex]
-                        // if isCorrectAnswer is true, add 10 points to the team's score
-                        // this does not uppdate team score in the database yet
-                        if (answer.isCorrectAnswer && team) {
-                            team.score += 10
-                        }
                         setSubmitted(true)
                         global.apiClient
                             .addTeamAnswer(
@@ -106,6 +109,8 @@ const PhaseTwoBasicGamePlay = ({
                                 question.id,
                                 answer.text,
                                 answer.isChosen ? null : false,
+                                true,
+                                answer.isTrickAnswer ? null : false,
                                 true
                             )
                             .then((teamAnswer) => {
@@ -130,36 +135,47 @@ const PhaseTwoBasicGamePlay = ({
         )
     }
 
-    let carouselCards = [
+    const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+
+    const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
+
+    let cards = [
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
-        <Card headerTitle="Answers">
-            <Text style={[sharedStyles.text, styles.answerTitle]}>
-                What do you think is the most popular incorrect answer among
-                your class?
-            </Text>
-            <AnswerOptions
-                isAdvancedMode={gameSession.isAdvanced}
-                isFacilitator={teamMember?.isFacilitator}
-                selectedAnswerIndex={selectedAnswerIndex}
-                setSelectedAnswerIndex={setSelectedAnswerIndex}
-                answers={answerChoices}
-                disabled={submitted}
-            />
-            {!submitted && (
-                <RoundButton
-                    style={styles.submitAnswer}
-                    titleStyle={styles.submitAnswerText}
-                    title="Submit Answer"
-                    onPress={handleSubmitAnswer}
+        <View>
+            <Card headerTitle="Answers">
+                <Text style={[sharedStyles.text, styles.answerTitle]}>
+                    What do you think is the most popular incorrect answer among
+                    your class?
+                </Text>
+                <AnswerOptions
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                    disabled={submitted}
                 />
+                {!submitted && (
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Submit Answer"
+                        onPress={handleSubmitAnswer}
+                    />
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
             )}
-        </Card>,
+        </View>,
     ]
 
     if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
-        carouselCards = wrongAnswers.map((answer) => (
+        cards = wrongAnswers.map((answer) => (
             <Card
                 key={answer.id}
                 style={styles.headerText}
@@ -205,7 +221,11 @@ const PhaseTwoBasicGamePlay = ({
                 ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                <HorizontalPageView>{carouselCards}</HorizontalPageView>
+                {cards.length > 1 ? (
+                    <HorizontalPageView>{cards}</HorizontalPageView>
+                ) : (
+                    cards[0]
+                )}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -228,12 +248,12 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(247,249,250,1)",
     },
     headerContainer: {
-        height: verticalScale(225),
+        height: verticalScale(200),
         shadowColor: "rgba(0, 141, 239, 0.3)",
     },
     headerText: {
         marginTop: scale(24),
-        marginLeft: scale(50),
+        textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
         fontWeight: "bold",
@@ -272,11 +292,20 @@ const styles = StyleSheet.create({
         fontFamily: fontFamilies.latoBold,
         fontWeight: "bold",
     },
+    answerSubmittedText: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.small,
+        fontWeight: fontWeights.extraBold,
+        textAlign: "center",
+        marginHorizontal: scale(20),
+        marginVertical: scale(20),
+    },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
         marginBottom: 100,
         marginTop: -scale(150),
+        marginBottom: scale(50),
     },
     footerView: {
         position: "absolute",

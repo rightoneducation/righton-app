@@ -1,10 +1,12 @@
 import { GameSessionState } from "@righton/networking"
 import { useEffect, useRef, useState } from "react"
 import {
-    Alert, Dimensions,
-    SafeAreaView, StyleSheet,
+    Alert,
+    Dimensions,
+    SafeAreaView,
+    StyleSheet,
     Text,
-    View
+    View,
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -50,9 +52,11 @@ const PhaseOneBasicGamePlay = ({
     const availableHints = question.instructions
 
     useEffect(() => {
-        if (currentTime == 0 || // Out of time!
+        if (
+            currentTime == 0 || // Out of time!
             // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER) {
+            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+        ) {
             setSubmitted(true)
         }
 
@@ -126,7 +130,9 @@ const PhaseOneBasicGamePlay = ({
         }
     })
 
-    const correctAnswerText = answerChoices.find((answer) => answer.isCorrectAnswer)?.text
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
 
     const hintsViewTitle = () => {
         if (answerChoices[selectedAnswerIndex]?.isCorrectAnswer) {
@@ -142,32 +148,34 @@ const PhaseOneBasicGamePlay = ({
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
-        (
-            <View>
-                <Card headerTitle="Answers">
-                    <Text style={[sharedStyles.text, styles.answerTitle]}>
-                        Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
-                    </Text>
-                    <AnswerOptions
-                        isAdvancedMode={gameSession.isAdvanced}
-                        isFacilitator={teamMember?.isFacilitator}
-                        selectedAnswerIndex={selectedAnswerIndex}
-                        setSelectedAnswerIndex={setSelectedAnswerIndex}
-                        answers={answerChoices}
-                        disabled={submitted}
+        <View>
+            <Card headerTitle="Answers">
+                <Text style={[sharedStyles.text, styles.answerTitle]}>
+                    Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
+                </Text>
+                <AnswerOptions
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                    disabled={submitted}
+                />
+                {!submitted && (
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Submit Answer"
+                        onPress={handleSubmitAnswer}
                     />
-                    {!submitted && (
-                        <RoundButton
-                            style={styles.submitAnswer}
-                            titleStyle={styles.submitAnswerText}
-                            title="Submit Answer"
-                            onPress={handleSubmitAnswer}
-                        />
-                    )}
-                </Card>
-                {submitted && <Text style={styles.answerSubmittedText}>{submittedAnswerText}</Text>}
-            </View>
-        )
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
+            )}
+        </View>,
     ]
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
@@ -213,10 +221,10 @@ const PhaseOneBasicGamePlay = ({
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 {cards.length > 1 ? (
-                    <HorizontalPageView>
-                        {cards}
-                    </HorizontalPageView>
-                ) : cards[0]}
+                    <HorizontalPageView>{cards}</HorizontalPageView>
+                ) : (
+                    cards[0]
+                )}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -243,7 +251,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         marginTop: scale(24),
-        marginLeft: scale(50),
+        textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
         fontWeight: "bold",
@@ -256,7 +264,7 @@ const styles = StyleSheet.create({
         color: '#349E15'
     },
     submitAnswer: {
-        backgroundColor: '#159EFA',
+        backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
@@ -298,6 +306,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginBottom: 100,
         marginTop: -scale(150),
+        marginBottom: scale(50),
     },
     footerView: {
         position: "absolute",
