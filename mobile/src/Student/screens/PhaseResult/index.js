@@ -6,17 +6,18 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, smallAvatar }) => {
+const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
     smallAvatar = smallAvatar ? smallAvatar : require("../SelectTeam/img/MonsterIcon1.png")
 
     const [phaseNo, setPhaseNo] = useState(1)
     const [phase2Score, setPhase2Score] = useState(0)
-    const [curTeam, setCurTeam] = useState(team)
+    const [curTeam, setCurTeam] = useState(null)
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [selectedTrickAnswer, setSelectedTrickAnswer] = useState(null)
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [currentQuestion, setCurrentQuestion] = useState(null)
     const [loadedData, setLoadedData] = useState(false)
+    const [updatedGameSession, setUpdatedGameSession] = useState(gameSession)
 
     useEffect(() => {
         global.apiClient
@@ -25,36 +26,50 @@ const PhaseResult = ({ gameSession, team, smallAvatar }) => {
                 switch (gameSessionResponse.currentState) {
                     case GameSessionState.PHASE_1_RESULTS:
                         setPhaseNo(1)
+                        break
                     case GameSessionState.PHASE_2_RESULTS:
                         setPhaseNo(2)
+                        break
                 }
-                const updatedCurTeam = gameSessionResponse.teams.filter((t) => t.id === team.id)
-                if (isNullOrUndefined(updatedCurTeam) || updatedCurTeam.length !== 1) {
-                    console.error(`Couldn't find team, ${team.name}`)
+
+                const updatedCurTeam = gameSessionResponse.teams.find((t) => t.id === (teamId ?? "b5958293-647d-43eb-9874-959e996a37c8"))
+                if (isNullOrUndefined(updatedCurTeam)) {
+                    console.error(`Couldn't find the team.}`)
                     return
                 }
-                setCurTeam(updatedCurTeam[0])
+                setCurTeam(updatedCurTeam)
                 const curQuestion = gameSessionResponse.questions[gameSessionResponse.currentQuestionIndex]
-                console.log(`curQuestion: ${curQuestion}`)
-                const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, curQuestion.id)
-                setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
-                if (!isNullOrUndefined(teamAnswers) && teamAnswers.length == 1) {
-                    setSelectedAnswer(teamAnswers[0])
+                const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, curQuestion.id)
+                if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
+                    // User has answered both phases
+                    if (teamAnswers.length > 1) {
+                        const answer = teamAnswers[1]
+                        setAnswer(answer)
+                    }
+                    setAnswer(teamAnswers[0])
                 } else {
                     setSelectedAnswer({
                         id: Number.MIN_VALUE,
                         text: Number.MIN_VALUE,
                     })
                 }
-                setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(team, curQuestion.id))
-                setCorrectAnswer(ModelHelper.correctAnswer(curQuestion))
+                setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, curQuestion.id))
+                setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
                 setCurrentQuestion(curQuestion)
-                setGameSession(gameSession)
+                setUpdatedGameSession(gameSession)
                 setLoadedData(true)
             }).catch((error) => {
                 console.error(error)
             })
     })
+
+    const setAnswer = (answer) => {
+        if (answer.isTrickAnswer) {
+            setSelectedTrickAnswer(answer)
+        } else {
+            setSelectedAnswer(answer)
+        }
+    }
 
     const alphabets = ["A", "B", "C", "D"]
     const getAnswerMode = (choiceText) => {
@@ -70,6 +85,7 @@ const PhaseResult = ({ gameSession, team, smallAvatar }) => {
                 } else if (selectedTrickAnswer.text === choiceText) {
                     return AnswerMode.PopularTrickAnswer
                 }
+                break
         }
     }
 
@@ -90,11 +106,18 @@ const PhaseResult = ({ gameSession, team, smallAvatar }) => {
 
     const getIsUserChoice = (answer) => {
         if (phaseNo === 1) {
-            return teamAnswer.text === answer.text
+            return selectedAnswer.text === answer.text
         } else if (!isNullOrUndefined(selectedTrickAnswer)) {
             return selectedTrickAnswer.text === answer.text
         }
         return false
+    }
+
+    const getPercentageForAnswer = (answer) => {
+        if (phaseNo === 1) {
+            return ""
+        }
+        return `% ${calculatePercentage(item)}`
     }
 
     return (
@@ -105,7 +128,7 @@ const PhaseResult = ({ gameSession, team, smallAvatar }) => {
                     style={styles.headerContainer}
                 >
                     <Text style={styles.headerText}>
-                        {`Phase ${phaseNo ? phaseNo : "1"}\nResults`}
+                        {`Phase ${phaseNo}\nResults`}
                     </Text>
                 </ImageBackground>
                 <View style={styles.resultContainer}>
@@ -124,7 +147,7 @@ const PhaseResult = ({ gameSession, team, smallAvatar }) => {
                                 text={`${alphabets[index]}.${item.text}`}
                                 mode={getAnswerMode(item.text)}
                                 isUserChoice={getIsUserChoice(item)}
-                                percentage={`% ${calculatePercentage(item)}`}
+                                percentage={getPercentageForAnswer(item)}
                             />
                         )}
                     >

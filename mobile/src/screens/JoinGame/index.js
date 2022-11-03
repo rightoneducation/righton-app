@@ -1,9 +1,9 @@
-import React, { useEffect } from "react"
-import { Text, View, Image, ImageBackground } from "react-native"
-import { ScaledSheet } from "react-native-size-matters"
 import { GameSessionState } from "@righton/networking"
-import RoundButton from "../../components/RoundButton"
+import { useEffect } from "react"
+import { Image, ImageBackground, Text, View } from "react-native"
+import { ScaledSheet } from "react-native-size-matters"
 import PurpleBackground from "../../components/PurpleBackground"
+import RoundButton from "../../components/RoundButton"
 import sharedStyles from "../../Student/screens/Game/Components/sharedStyles"
 import { fonts } from '../../utils/theme'
 
@@ -11,6 +11,7 @@ export default function JoinGame({
     navigation,
     gameSession,
     team,
+    teamId,
     teamMember,
 }) {
 
@@ -52,9 +53,10 @@ export default function JoinGame({
 
             case GameSessionState.PHASE_1_RESULTS:
             case GameSessionState.PHASE_2_RESULTS:
+                console.log(`Team: ${team}`)
                 return navigation.navigate("PhaseResult", {
                     gameSession,
-                    team,
+                    teamId,
                     teamMember,
                 })
 

@@ -5,7 +5,7 @@ const Answer = ({ text, icon, mode, isUserChoice, percentage }) => {
     const getMainBackgroundColor = () => {
         switch (mode) {
             case AnswerMode.RightAnswer:
-                return colors.lightGreen
+                return '#D7EFC3'
             case AnswerMode.PopularTrickAnswer:
                 return "rgba(101, 21, 201, 1)"
             default:
@@ -16,7 +16,7 @@ const Answer = ({ text, icon, mode, isUserChoice, percentage }) => {
     const getPercentageBackgroundColor = () => {
         switch (mode) {
             case AnswerMode.RightAnswer:
-                return colors.lightGreen
+                return '#D7EFC3'
             case AnswerMode.ShowEmptyRightIcon:
                 return "#F7F6F6"
             case AnswerMode.PopularTrickAnswer:
@@ -51,7 +51,8 @@ const Answer = ({ text, icon, mode, isUserChoice, percentage }) => {
             </Text>
             <View style={{
                 ...styles.percentageContainer,
-                backgroundColor: getPercentageBackgroundColor()
+                backgroundColor: getPercentageBackgroundColor(),
+                minWidth: isUserChoice ? undefined : 45
             }}>
                 {isUserChoice &&
                     <Image
@@ -61,7 +62,7 @@ const Answer = ({ text, icon, mode, isUserChoice, percentage }) => {
                 }
                 <Text style={{
                     ...styles.percentageText,
-                    color: getAnswerColor()
+                    color: getAnswerColor(),
                 }}>
                     {percentage}
                 </Text>
@@ -108,6 +109,7 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         alignItems: "center",
         justifyContent: "center",
+        height: "100%",
     },
     percentageText: {
         ...sharedTextStyle,
