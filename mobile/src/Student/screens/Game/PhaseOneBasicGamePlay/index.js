@@ -21,6 +21,7 @@ import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptions from "../Components/AnswerOptions"
 import sharedStyles from "../Components/sharedStyles"
+import Question from "../Components/Question"
 
 const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
@@ -176,9 +177,12 @@ const PhaseOneBasicGamePlay = ({
                 <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
                 <Text style={styles.hintsViewCorrectAnswer}>The correct answer is:</Text>
                 <Text style={styles.hintsViewCorrectAnswer}>{correctAnswerText}</Text>
-                <Card extraStyle={styles.hintsViewCard}>
-                    <HintsView hints={availableHints} />
-                </Card>
+                {availableHints && availableHints.length > 0 && (
+                    <Card extraStyle={styles.hintsViewCard}>
+                        <Question question={question} style={styles.hintsViewQuestion} />
+                        <HintsView hints={availableHints} />
+                    </Card>
+                )}
             </View>
         )
         cards = [hintCard]
@@ -317,6 +321,10 @@ const styles = StyleSheet.create({
     hintsViewCard: {
         marginTop: -40,
         paddingBottom: scale(20),
+        maxHeight: verticalScale(400),
+    },
+    hintsViewQuestion: {
+        paddingVertical: 0,
     },
     carouselContainer: {
         flex: 1,
