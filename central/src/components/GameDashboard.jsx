@@ -200,7 +200,7 @@ const useStyles = makeStyles(theme => ({
     width: '90%',
   },
   image: {
-    width: '110px',
+    minWidth: '110px',
     height: '110px',
     objectFit: 'cover',
     borderWidth: '0',
@@ -212,7 +212,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems:'center',
     paddingTop:'5px',
-    maxWidth: '100%'
+
+
 
   },
   show: {
