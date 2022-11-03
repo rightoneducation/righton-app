@@ -73,7 +73,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                           </Grid>
                           <Grid item md={7}>
                             <Typography className={classes.question}>
-                              {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : ''}
+                              {questionCount} question{questionCount > 1 || questionCount === 0 ? 's' : null}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -92,14 +92,14 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                       </Grid> */}
                     </Grid>
 
-                    <Grid container item xs={4} md={3}>
-                      <Grid item xs={11} md={10}>
+                    <Grid container className={classes.imageButton} item xs={4} md={3}>
+                      <Grid item xs={10} >
                         <div className={classes.imageContainer}>
                           {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
                         </div>
                       </Grid>
 
-                      <Grid item xs={1} md={2} className={addquestion ? classes.hide : classes.show}>
+                      <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
                         <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
                           <MoreVertIcon />
                         </Button>
@@ -143,6 +143,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     borderRadius: '10px',
     marginBottom: theme.spacing(2),
+    marginRight: '5px',
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.03)',
       boxShadow: '1px 4px 12px grey',
@@ -153,7 +154,7 @@ const useStyles = makeStyles(theme => ({
   },
   gameGrid: {
     display: 'inline-block',
-    marginRight: theme.spacing(4),
+    marginRight: theme.spacing(2),
     verticalAlign: 'top',
   },
   gameSelected: {
@@ -179,10 +180,11 @@ const useStyles = makeStyles(theme => ({
     WebkitLineClamp: 2,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    maxWidth: '95%',
   },
   textSecondary: {
     height: '90%',
-    maxWidth: '100%',
+    maxWidth: '90%',
     paddingRight: '5px',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
@@ -194,7 +196,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700,
     color: '#159EFA',
     textAlign: 'right',
-    paddingRight: '15px',
+    marginRight: '15px',
+    width: '90%',
   },
   image: {
     width: '110px',
@@ -209,14 +212,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems:'center',
     paddingTop:'5px',
-    maxWidth: '100%',
-    height: 'auto',
-  },
-  square: {
-    height: '120px',
-    width: '120px',
-    borderRadius: '10px',
-    marginRight: theme.spacing(2),
+    maxWidth: '100%'
 
   },
   show: {
