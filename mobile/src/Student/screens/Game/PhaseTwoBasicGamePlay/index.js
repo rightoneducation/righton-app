@@ -26,11 +26,11 @@ const PhaseTwoBasicGamePlay = ({
     gameSession,
     team,
     teamMember,
-    //score,
-    //totalScore,
+    score,
+    totalScore,
     smallAvatar = DEFAULT_AVATAR,
 }) => {
-    const phaseTime = gameSession?.phaseTwoTime ?? 300
+    const phaseTime = gameSession?.phaseTwoTime
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
@@ -38,8 +38,8 @@ const PhaseTwoBasicGamePlay = ({
 
     const teamName = team?.name ? team?.name : "Team Name"
 
-    const score = score ? score : 10
-    const totalScore = team?.score ? team?.score : 0
+    score = score ? score : 10
+    totalScore = team?.score ? team?.score : 0
 
     const question = gameSession?.isAdvanced
         ? team.question
