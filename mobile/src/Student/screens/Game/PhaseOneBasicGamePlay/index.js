@@ -1,10 +1,12 @@
 import { GameSessionState } from "@righton/networking"
 import { useEffect, useRef, useState } from "react"
 import {
-    Alert, Dimensions,
-    SafeAreaView, StyleSheet,
+    Alert,
+    Dimensions,
+    SafeAreaView,
+    StyleSheet,
     Text,
-    View
+    View,
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -17,7 +19,9 @@ import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import HintsView from "../Components/HintsView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import AnswerOptionsPhaseOne from "./AnswerOptionsPhaseOne"
+import AnswerOptions from "../Components/AnswerOptions"
+import sharedStyles from "../Components/sharedStyles"
+import Question from "../Components/Question"
 
 const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
@@ -49,9 +53,11 @@ const PhaseOneBasicGamePlay = ({
     const availableHints = question.instructions
 
     useEffect(() => {
-        if (currentTime == 0 || // Out of time!
+        if (
+            currentTime == 0 || // Out of time!
             // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER) {
+            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+        ) {
             setSubmitted(true)
         }
 
@@ -125,15 +131,9 @@ const PhaseOneBasicGamePlay = ({
         }
     })
 
-    const correctAnswerText = answerChoices.find((answer) => answer.isCorrectAnswer)?.text
-
-    const hintsViewTitle = () => {
-        if (answerChoices[selectedAnswerIndex]?.isCorrectAnswer) {
-            return `Correct!\n${correctAnswerText}\nis the correct answer.`
-        } else {
-            return `Nice Try!\n${correctAnswerText}\nis the correct answer.`
-        }
-    }
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
 
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
@@ -141,36 +141,49 @@ const PhaseOneBasicGamePlay = ({
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
-        (
-            <View>
-                <Card headerTitle="Answers">
-                    <AnswerOptionsPhaseOne
-                        isAdvancedMode={gameSession.isAdvanced}
-                        isFacilitator={teamMember?.isFacilitator}
-                        selectedAnswerIndex={selectedAnswerIndex}
-                        setSelectedAnswerIndex={setSelectedAnswerIndex}
-                        answers={answerChoices}
-                        disabled={submitted}
+        <View>
+            <Card headerTitle="Answers">
+                <Text style={[sharedStyles.text, styles.answerTitle]}>
+                    Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
+                </Text>
+                <AnswerOptions
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                    disabled={submitted}
+                />
+                {!submitted && (
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Submit Answer"
+                        onPress={handleSubmitAnswer}
                     />
-                    {!submitted && (
-                        <RoundButton
-                            style={styles.submitAnswer}
-                            titleStyle={styles.submitAnswerText}
-                            title="Submit Answer"
-                            onPress={handleSubmitAnswer}
-                        />
-                    )}
-                </Card>
-                {submitted && <Text style={styles.answerSubmittedText}>{submittedAnswerText}</Text>}
-            </View>
-        )
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
+            )}
+        </View>,
     ]
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
         const hintCard = (
-            <Card headerTitle={hintsViewTitle()}>
-                <HintsView hints={availableHints} />
-            </Card>
+            <View style={styles.hintsView}>
+                <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
+                <Text style={styles.hintsViewCorrectAnswer}>The correct answer is:</Text>
+                <Text style={styles.hintsViewCorrectAnswer}>{correctAnswerText}</Text>
+                {availableHints && availableHints.length > 0 && (
+                    <Card extraStyle={styles.hintsViewCard}>
+                        <Question question={question} style={styles.hintsViewQuestion} />
+                        <HintsView hints={availableHints} />
+                    </Card>
+                )}
+            </View>
         )
         cards = [hintCard]
     }
@@ -209,10 +222,10 @@ const PhaseOneBasicGamePlay = ({
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 {cards.length > 1 ? (
-                    <HorizontalPageView>
-                        {cards}
-                    </HorizontalPageView>
-                ) : cards[0]}
+                    <HorizontalPageView>{cards}</HorizontalPageView>
+                ) : (
+                    cards[0]
+                )}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -239,14 +252,20 @@ const styles = StyleSheet.create({
     },
     headerText: {
         marginTop: scale(24),
-        marginLeft: scale(50),
+        textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
         fontWeight: "bold",
         color: "white",
     },
+    answerTitle: {
+        marginTop: scale(20),
+    },
+    correctAnswerText: {
+        color: '#349E15'
+    },
     submitAnswer: {
-        backgroundColor: '#159EFA',
+        backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
@@ -283,11 +302,36 @@ const styles = StyleSheet.create({
         marginHorizontal: scale(20),
         marginVertical: scale(20),
     },
+    hintsView: {
+        marginTop: -60,
+    },
+    hintsViewTitle: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.semiLarge,
+        color: 'white',
+        marginBottom: scale(20),
+        textAlign: 'center',
+    },
+    hintsViewCorrectAnswer: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.xxMedium,
+        color: 'white',
+        textAlign: 'center',
+    },
+    hintsViewCard: {
+        marginTop: -40,
+        paddingBottom: scale(20),
+        maxHeight: verticalScale(400),
+    },
+    hintsViewQuestion: {
+        paddingVertical: 0,
+    },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
         marginBottom: 100,
         marginTop: -scale(150),
+        marginBottom: scale(50),
     },
     footerView: {
         position: "absolute",

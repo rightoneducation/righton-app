@@ -1,66 +1,71 @@
-import React, { useState } from "react"
-import { StyleSheet, Text, View, Platform } from "react-native"
+import React from "react"
+import { StyleSheet, Text, View } from "react-native"
 import sharedStyles from "../../Components/sharedStyles"
 import { verticalScale } from "react-native-size-matters"
-import { fontFamilies, fonts, colors } from "../../../../../utils/theme"
 import RoundTextIcon from "../../../../components/RoundTextIcon"
 import { KeyboardAwareFlatList } from "@codler/react-native-keyboard-aware-scroll-view"
 
-const AnswerOptionsPhaseTwo = ({ onAnswered, answers, gameSession }) => {
-    const [currentAnswers, setCurrentAnswers] = useState(answers)
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
 
-    const chooseAnswer = (selectedAnswer) => {
-        const answerOptions = currentAnswers.map((answer) => {
-            if (answer.id === selectedAnswer.id) {
-                return {
-                    ...answer,
-                    isSelected: true,
-                }
-            } else {
-                answer.isSelected = false
-            }
-            return answer
-        })
-
-        setCurrentAnswers(answerOptions)
-        onAnswered(selectedAnswer)
-    }
-
+const AnswerOptionsPhaseTwo = ({
+    answers,
+    disabled = false,
+    selectedAnswerIndex,
+    setSelectedAnswerIndex,
+    correctAnswer,
+}) => {
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
-            <Text style={[sharedStyles.text]}>
-                What do you think is the most popular incorrect answer among
-                your class?
+            <Text style={[sharedStyles.text, { opacity: disabled ? 0.3 : 1 }]}>
+                What do you think is the most popular
+                <Text style={styles.incorrectAnswerText}>
+                    {" "}
+                    incorrect answer{" "}
+                </Text>
+                among your class?
             </Text>
             <View
                 style={{
-                    opacity: 1,
+                    opacity: disabled ? 0.3 : 1,
                     flex: 1,
                     alignSelf: "stretch",
                 }}
             >
                 <KeyboardAwareFlatList
                     style={[styles.answers]}
-                    data={currentAnswers}
-                    extraData={currentAnswers}
+                    data={answers}
                     keyExtractor={(item) => `${item.id}`}
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
                         <RoundTextIcon
+                            style={
+                                ([styles.answerItem],
+                                {
+                                    opacity:
+                                        item.text === correctAnswer.text
+                                            ? 0.3
+                                            : 1,
+                                })
+                            }
                             icon={
-                                item.isSelected
-                                    ? require("../../img/checkmark_checked.png")
+                                index === selectedAnswerIndex
+                                    ? require("../../img/Picked.png")
                                     : require("../../img/gray_circle.png")
                             }
-                            text={item.text}
-                            height={43}
+                            text={`${indexToLetter(index)}. ${item.text}`}
+                            height={45}
                             borderColor={
-                                item.isSelected ? "#236AF7" : "#D9DFE5"
+                                index === selectedAnswerIndex
+                                    ? "#159EFA"
+                                    : "#D9DFE5"
                             }
-                            onPress={chooseAnswer}
-                            showIcon={item.isSelected}
-                            readonly={true}
-                            data={item}
-                            gameSession={gameSession}
+                            onPress={() => setSelectedAnswerIndex(index)}
+                            showIcon
+                            readonly
+                            disabled={
+                                disabled || item.text === correctAnswer.text
+                            }
                         />
                     )}
                 />
@@ -76,31 +81,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
     },
-    answerTextInput: {
-        borderRadius: 8,
-        marginTop: verticalScale(8),
-        textAlign: "center",
-        fontFamily: fontFamilies.karlaRegular,
-        fontSize: fonts.xMedium,
-        marginBottom: verticalScale(8),
-        borderColor: "#B1BACB",
-        borderWidth: 1,
-        alignSelf: "stretch",
-        ...Platform.select({
-            ios: {
-                height: 43,
-            },
-        }),
-    },
-    trickAnswerInput: {
-        borderWidth: 2,
-        borderRadius: 22,
-        marginBottom: 10,
-        paddingLeft: 20,
-        height: 43,
-    },
     answers: {
         marginTop: verticalScale(15),
         alignSelf: "stretch",
+    },
+    incorrectAnswerText: {
+        color: "#FC0505",
     },
 })

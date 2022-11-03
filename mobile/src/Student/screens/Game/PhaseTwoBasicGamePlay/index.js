@@ -1,21 +1,27 @@
 import { GameSessionState } from "@righton/networking"
 import { useEffect, useRef, useState } from "react"
 import {
-    Alert, Dimensions,
-    SafeAreaView, StyleSheet,
+    Alert,
+    Dimensions,
+    SafeAreaView,
+    StyleSheet,
     Text,
-    View
+    View,
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
-import { fontFamilies, fonts } from "../../../../utils/theme"
+import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
+import sharedStyles from "../Components/sharedStyles"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
+
+const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -23,11 +29,13 @@ const PhaseTwoBasicGamePlay = ({
     teamMember,
     score,
     totalScore,
-    smallAvatar,
+    smallAvatar = DEFAULT_AVATAR,
 }) => {
-    smallAvatar = smallAvatar
-        ? smallAvatar
-        : require("../../SelectTeam/img/MonsterIcon1.png")
+    const phaseTime = gameSession?.phaseTwoTime
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    const [submitted, setSubmitted] = useState(false)
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
     const teamName = team?.name ? team?.name : "Team Name"
 
@@ -37,15 +45,10 @@ const PhaseTwoBasicGamePlay = ({
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
-        gameSession?.currentQuestionIndex == null
-            ? 0
-            : gameSession?.currentQuestionIndex
-        ]
-
-    const phaseTime = gameSession?.phaseTwoTime
-
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
+              gameSession?.currentQuestionIndex == null
+                  ? 0
+                  : gameSession?.currentQuestionIndex
+          ]
 
     const answersParsed = question.choices
 
@@ -65,6 +68,15 @@ const PhaseTwoBasicGamePlay = ({
     let countdown = useRef()
 
     useEffect(() => {
+        if (
+            currentTime == 0 || // Out of time!
+            // Game has moved on, so disable answering
+            gameSession?.currentState !==
+                GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        ) {
+            setSubmitted(true)
+        }
+
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
@@ -77,7 +89,7 @@ const PhaseTwoBasicGamePlay = ({
         }
     }, [gameSession, currentTime])
 
-    const submitAnswer = (answer) => {
+    const handleSubmitAnswer = () => {
         Alert.alert(
             "Are you sure?",
             "You will not be able to change your answer",
@@ -89,12 +101,16 @@ const PhaseTwoBasicGamePlay = ({
                 {
                     text: "OK",
                     onPress: () => {
+                        const answer = answerChoices[selectedAnswerIndex]
+                        setSubmitted(true)
                         global.apiClient
                             .addTeamAnswer(
                                 teamMember.id,
                                 question.id,
                                 answer.text,
                                 answer.isChosen ? null : false,
+                                true,
+                                answer.isTrickAnswer ? null : false,
                                 true
                             )
                             .then((teamAnswer) => {
@@ -119,32 +135,44 @@ const PhaseTwoBasicGamePlay = ({
         )
     }
 
-    const handleAnswerResult = (answer) => {
-        submitAnswer(answer)
-    }
-
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
-    let carouselCards = [
+    const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
+
+    let cards = [
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
-        <Card headerTitle="Answers">
-            <AnswerOptionsPhaseTwo
-                isAdvancedMode={gameSession.isAdvanced}
-                isFacilitator={teamMember?.isFacilitator}
-                onAnswered={(answer) => {
-                    handleAnswerResult(answer)
-                }}
-                answers={answerChoices}
-                isCorrectAnswer={correctAnswer.isCorrectAnswer}
-                gameSession={gameSession}
-            />
-        </Card>,
+        <View>
+            <Card headerTitle="Answers">
+                <AnswerOptionsPhaseTwo
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                    disabled={submitted}
+                    correctAnswer={correctAnswer}
+                />
+                {!submitted && (
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Submit Answer"
+                        onPress={handleSubmitAnswer}
+                    />
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
+            )}
+        </View>,
     ]
 
     if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
-        carouselCards = wrongAnswers.map((answer) => (
+        cards = wrongAnswers.map((answer) => (
             <Card
                 key={answer.id}
                 style={styles.headerText}
@@ -166,7 +194,7 @@ const PhaseTwoBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Pick the Trickiest!
@@ -190,7 +218,11 @@ const PhaseTwoBasicGamePlay = ({
                 ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                <HorizontalPageView>{carouselCards}</HorizontalPageView>
+                {cards.length > 1 ? (
+                    <HorizontalPageView>{cards}</HorizontalPageView>
+                ) : (
+                    cards[0]
+                )}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -213,16 +245,29 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(247,249,250,1)",
     },
     headerContainer: {
-        height: verticalScale(225),
+        height: verticalScale(200),
         shadowColor: "rgba(0, 141, 239, 0.3)",
     },
     headerText: {
         marginTop: scale(24),
-        marginLeft: scale(50),
+        textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
         fontWeight: "bold",
         color: "white",
+    },
+    answerTitle: {
+        marginTop: scale(20),
+    },
+    submitAnswer: {
+        backgroundColor: "#159EFA",
+        borderRadius: 22,
+        height: 44,
+        marginHorizontal: scale(40),
+        marginBottom: scale(40),
+    },
+    submitAnswerText: {
+        fontSize: 18,
     },
     timerContainer: {
         flex: 1,
@@ -244,11 +289,20 @@ const styles = StyleSheet.create({
         fontFamily: fontFamilies.latoBold,
         fontWeight: "bold",
     },
+    answerSubmittedText: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.small,
+        fontWeight: fontWeights.extraBold,
+        textAlign: "center",
+        marginHorizontal: scale(20),
+        marginVertical: scale(20),
+    },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
         marginBottom: 100,
         marginTop: -scale(150),
+        marginBottom: scale(50),
     },
     footerView: {
         position: "absolute",

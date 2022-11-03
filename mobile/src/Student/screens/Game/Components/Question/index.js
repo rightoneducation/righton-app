@@ -3,10 +3,10 @@ import { StyleSheet, Text, View, Image } from "react-native"
 import sharedStyles from "../sharedStyles"
 import { verticalScale } from "react-native-size-matters"
 
-const Question = ({ question }) => {
+const Question = ({ question, style = {} }) => {
     const questionImage = question?.imageUrl
     return (
-        <View style={[sharedStyles.cardContainer, { alignItems: "center" }]}>
+        <View style={[sharedStyles.cardContainer, { alignItems: "center", ...style }, ]}>
             {questionImage && (
                 <Image
                     source={{ uri: questionImage }}
@@ -29,8 +29,5 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(15),
         width: "100%",
         height: verticalScale(200),
-    },
-    text: {
-        marginBottom: verticalScale(15),
     },
 })
