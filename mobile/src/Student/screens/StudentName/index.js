@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "@righton/networking"
 import { Fragment, useRef, useState } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
@@ -45,6 +46,11 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
                                 }
 
                                 setTeamInfo(team, teamMember)
+                                if (isNullOrUndefined(team.teamMembers)) {
+                                    team.teamMembers = []
+                                }
+                                team.teamMembers.push(teamMember)
+
                                 //TODO: update this to navigate to select team screen
                                 navigation.navigate("StudentGameIntro", {
                                     gameSession,
