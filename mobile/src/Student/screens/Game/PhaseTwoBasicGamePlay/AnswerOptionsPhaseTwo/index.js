@@ -35,7 +35,15 @@ const AnswerOptionsPhaseTwo = ({
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item, index }) => (
                         <RoundTextIcon
-                            style={[styles.answerItem]}
+                            style={
+                                ([styles.answerItem],
+                                {
+                                    opacity:
+                                        item.text === correctAnswer.text
+                                            ? 0.3
+                                            : 1,
+                                })
+                            }
                             icon={
                                 index === selectedAnswerIndex
                                     ? require("../../img/Picked.png")
@@ -51,7 +59,6 @@ const AnswerOptionsPhaseTwo = ({
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon
                             readonly
-                            //diasble correct answer
                             disabled={
                                 disabled || item.text === correctAnswer.text
                             }
@@ -74,7 +81,6 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(15),
         alignSelf: "stretch",
     },
-    answerItem: {},
     incorrectAnswerText: {
         color: "#FC0505",
     },
