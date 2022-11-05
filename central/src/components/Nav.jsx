@@ -9,7 +9,7 @@ import exploreIcon from '../images/Explore.svg';
 import quizMakerIcon from '../images/QuizMaker.svg';
 import SearchBar from './SearchBar.jsx';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth }) {
+export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile }) {
   const classes = useStyles();
   const matchSearchBar = useRouteMatch('/');
   
@@ -21,18 +21,18 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
           <Grid style={{display: "flex", margin: 'auto'}}>
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
-              <Typography className={classes.title} variant="h6" noWrap>
+              { !isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
                 Explore
-              </Typography>
+              </Typography> : null }
             </NavLink>
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
-              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
-              <Typography className={classes.title} variant="h6" noWrap>
+              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.iconQuiz} />
+              {!isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
                 Game Maker
-              </Typography>
+              </Typography> : null}
             </NavLink>
             {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
-            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} /> : setSearchInput('')} 
+            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} /> : setSearchInput('')} 
           </Grid>
           )}
         </Toolbar>
@@ -56,12 +56,16 @@ const useStyles = makeStyles(theme => ({
   link: {
     color: 'inherit',
     textDecoration: 'none',
-    width: '190px',
+    maxWidth: '195px',
     display: 'flex',
     opacity: '0.5',
   },
   icon: {
     height: '80%',
+    marginRight: 10,
+  },
+  iconQuiz: {
+    height: '85%',
     marginRight: 10,
   },
   active: {

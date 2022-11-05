@@ -21,6 +21,7 @@ import Games from './components/Games';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
+import {useMediaQuery} from './hooks/useMediaQuery';
 
 const theme = createTheme({
   palette: {
@@ -155,6 +156,9 @@ function App() {
     setLoading(false);
   };
 
+  const isResolutionMobile = useMediaQuery("(max-width: 600px)");
+
+
   useEffect(() => {
     getWhatToDo();
     getGames();
@@ -170,28 +174,30 @@ function App() {
     setAlert,
   };
 
+
+
   return (
     <ThemeProvider theme={theme}>
       <AlertContext.Provider value={alertContext}>
         <Router>
           <Switch>
             <Route path="/login">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile}/>
               <LogIn />
             </Route>
 
             <Route path="/signup">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile}/>
               <SignUp />
             </Route>
 
             <Route path="/confirmation">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile}/>
               <Confirmation />
             </Route>
 
             <Route>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput}
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile}
                 isUserAuth={true} />
               <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
               <AlertBar />

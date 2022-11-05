@@ -69,6 +69,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
+    overflowX: 'hidden',
   },
   sidebar: {
     padding: `0px 0px ${theme.spacing(4)}px ${theme.spacing(4)}px !important`,

@@ -3,7 +3,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 
-export default function SearchBar({ setSearchInput, searchInput }) {
+export default function SearchBar({ setSearchInput, searchInput, isResolutionMobile }) {
     const classes = useStyles();
 
     return (
@@ -11,26 +11,28 @@ export default function SearchBar({ setSearchInput, searchInput }) {
         <div className={classes.searchIcon}>
          <SearchIcon />
        </div>
-      <InputBase
-        placeholder="Search games…"
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-         }}
-         value={searchInput}
-         onChange={({ target }) => setSearchInput(target.value)}
-       inputProps={{ 'aria-label': 'search' }}
-       />
+      { !isResolutionMobile ? 
+        <InputBase
+          placeholder="Search games…"
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+          value={searchInput}
+          onChange={({ target }) => setSearchInput(target.value)}
+          inputProps={{ 'aria-label': 'search' }} /> 
+        : null }
      </div>
     );
 }
 
 
-const useStyles = makeStyles(theme => ({
-    
+const useStyles = makeStyles(theme => ({ 
     search: {
         position: 'absolute',
         right: 0,
+        minHeight: '30px',
+        minWidth: '30px',
         borderRadius: '20px',
         border: '3px solid #87B8DB',
         backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -39,7 +41,7 @@ const useStyles = makeStyles(theme => ({
         },
         marginLeft: 0,
         marginRight: 20,
-        width: '100%',
+        maxWidth: '100%',
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing(1),
             width: 'auto',
@@ -48,14 +50,15 @@ const useStyles = makeStyles(theme => ({
     },
     searchIcon: {
         padding: theme.spacing(0, 2),
-        paddingLeft: '6px',
-        height: '100%',
+        paddingLeft: '2px',
+        height: '30px',
+        width: '30px',
         position: 'absolute',
         pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#87B8DB'
+        color: '#87B8DB',
     },
     inputRoot: {
         color: 'inherit',
