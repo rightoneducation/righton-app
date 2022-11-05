@@ -9,16 +9,17 @@ import exploreIcon from '../images/Explore.svg';
 import quizMakerIcon from '../images/QuizMaker.svg';
 import SearchBar from './SearchBar.jsx';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile }) {
-  const classes = useStyles();
+export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick }) {
+  const classes = useStyles(isResolutionMobile)();
   const matchSearchBar = useRouteMatch('/');
-  
+ 
+
   return (
     <div className={classes.grow}>
       <AppBar className={classes.bar} style={{paddingTop: '25px'}} position="static">
         <Toolbar>
         {isUserAuth && (
-          <Grid style={{display: "flex", margin: 'auto'}}>
+          <Grid className={classes.container}>
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
               { !isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
@@ -32,7 +33,10 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
               </Typography> : null}
             </NavLink>
             {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
-            {matchSearchBar.isExact ? <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} /> : setSearchInput('')} 
+            {matchSearchBar.isExact ? 
+  
+               <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/> 
+              : setSearchInput('')} 
           </Grid>
           )}
         </Toolbar>
@@ -41,12 +45,16 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = (isResolutionMobile) => makeStyles(theme => ({
   bar: {
     background: 'linear-gradient(right,#0F78BD,#043373)',
   },
   grow: {
     flexGrow: 1,
+  },
+  container: {
+    display: "flex",
+    margin: !isResolutionMobile ? 'auto' : '',
   },
   title: {
     [theme.breakpoints.up('sm')]: {

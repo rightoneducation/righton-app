@@ -10,7 +10,7 @@ import GameMaker from './GameMaker';
 import { getGameById } from '../lib/games';
 
 
-export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion }) {
+export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, handleSearchClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -40,13 +40,15 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
               ({ match }) => {
                 const { questionIndex, gameId } = match.params;
                 const game = getGameById(games, gameId);
+                handleSearchClick(false);
                 return <QuestionDetails backUrl={`/games/${gameId}`} gameTitle={game.title} questionIndex={questionIndex} question={game.questions[questionIndex]} />
               }
             } />
             <Route exact path="/games/:gameId" render={
               ({ match }) => {
                 const { gameId } = match.params;
-                const game = getGameById(games, gameId)
+                const game = getGameById(games, gameId);
+                handleSearchClick(false);
                 return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} />;
               }
             } />
@@ -57,6 +59,7 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
         ({ match }) => {
           const { gameId } = match.params;
           const newGame = Number(gameId) === 0;
+          handleSearchClick(false);
           return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion}/>
         }
       } />;
