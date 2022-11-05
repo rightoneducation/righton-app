@@ -21,6 +21,7 @@ import Games from './components/Games';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
+import {useMediaQuery} from './hooks/useMediaQuery';
 
 const theme = createTheme({
   palette: {
@@ -65,6 +66,7 @@ function App() {
   const [alert, setAlert] = useState<Alert | null>(null);
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
+  const [isSearchClick, setIsSearchClick] = useState(false);
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -132,6 +134,8 @@ function App() {
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
 
+
+
   const getWhatToDo = (async () => {
     let user = null;
     try {
@@ -155,6 +159,12 @@ function App() {
     setLoading(false);
   };
 
+  const isResolutionMobile = useMediaQuery("(max-width: 600px)");
+
+  const handleSearchClick = (isClick: boolean) => {
+    setIsSearchClick(isClick);
+  }
+
   useEffect(() => {
     getWhatToDo();
     getGames();
@@ -170,30 +180,31 @@ function App() {
     setAlert,
   };
 
+
+
   return (
     <ThemeProvider theme={theme}>
       <AlertContext.Provider value={alertContext}>
         <Router>
           <Switch>
             <Route path="/login">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
               <LogIn />
             </Route>
 
             <Route path="/signup">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/>
               <SignUp />
             </Route>
 
             <Route path="/confirmation">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/>
               <Confirmation />
             </Route>
 
             <Route>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput}
-                isUserAuth={true} />
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={true}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
+              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} handleSearchClick={handleSearchClick}/>
               <AlertBar />
             </Route>
           </Switch>
