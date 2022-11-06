@@ -253,7 +253,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                     <Grid container item xs={4}>
                       <Grid item xs={9} >
                         <div className={classes.imageContainer}>
-                          {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
+                          {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
                         </div>
                       </Grid>
 
