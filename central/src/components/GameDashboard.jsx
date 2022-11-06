@@ -12,6 +12,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
+import { Hidden } from '@material-ui/core';
 
 export default function GameDashboard({ loading, games, deleteGame, cloneGame, gameId, onClickGame }) {
   const classes = useStyles();
@@ -61,7 +62,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
           const questionCount = game?.questions?.length || 0;
 
           return (
-            <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
+            <Grid key={index} className={classes.container} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>
               <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(game.id, gameId)}>
                 <CardContent>
                   <Grid container>
@@ -138,7 +139,9 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
 }
 
 const useStyles = makeStyles(theme => ({
-  
+  container:{
+    overflowX: 'hidden',
+  },
   game: {
     width: '100%',
     borderRadius: '10px',
