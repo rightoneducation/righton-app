@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
   },
   textContainer:{
-    height: '90%',
+    height: '95%',
     maxWidth: '100%',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
@@ -72,11 +72,17 @@ const useStyles = makeStyles(theme => ({
     width: '148px',
   },
   image: {
-    width: '150px',
-    height: '150px',
+    width: '110px',
+    height: '110px',
     objectFit: 'cover',
     borderWidth:'0',
     borderRadius: '15px'
+  },
+  imageContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems:'center',
+    paddingTop:'5px',
   },
   square: {
     height: '100px',
@@ -232,7 +238,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
               return (
                 <Grid key={index} item xs={12} md={6} >
                   <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
-                    <Grid container item xs={6} md={8} className={classes.textContainer}>
+                    <Grid container item xs={8}  className={classes.textContainer}>
                         <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
 
                         <Typography className={classes.questionIndex} >
@@ -244,12 +250,14 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                         </Typography>
                     </Grid>
 
-                    <Grid container item xs={6} md={4}>
-                      <Grid item xs={10} md={9}>
-                        {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
+                    <Grid container item xs={4}>
+                      <Grid item xs={9} >
+                        <div className={classes.imageContainer}>
+                          {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" width={'100%'} />}
+                        </div>
                       </Grid>
 
-                      <Grid item xs={2} md={3}>
+                      <Grid item xs={3}>
                         <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
                           <MoreVert />
                         </Button>
