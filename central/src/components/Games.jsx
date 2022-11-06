@@ -72,13 +72,13 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
-    overflowX: 'hidden',
   },
   sidebar: {
     padding: `0px 0px ${theme.spacing(4)}px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
     height: 'calc(100vh - 64px)',
     overflowY: 'scroll',
+    overflowX: 'hidden',
   },
   content: {
     minHeight: 'calc(100vh - 64px)',
