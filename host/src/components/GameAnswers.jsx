@@ -4,34 +4,28 @@ import { Grid } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
 import { isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswers({ questions, currentQuestionIndex, answersByQuestion, totalAnswers}) {
+export default function GameAnswers({ questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers}) {
   const classes = useStyles();
-  
-   // returns the choices object for an individual question
-   const getQuestionChoices = (questions, currentQuestionIndex) => {
-    if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
-        return null;
-    }
-    return questions[currentQuestionIndex].choices;
-  };
-
+  let instructions = "";
   // returns the correct answer explanation for an individual question
   const getAnswerExplanation = (questions, currentQuestionIndex) => {
     if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].instructions)) {
         return null;
     }
-    return questions[currentQuestionIndex].instructions;
+    questions[currentQuestionIndex].instructions.map((step, index) => {
+    instructions += " Step " + (index+1) + ": " + step;
+    });
+    console.log(instructions);
+    return instructions;
   };
 
-
-  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const answerExplanation = getAnswerExplanation(questions, currentQuestionIndex);
 
   return (
     <Grid className={classes.background}>
      {(questionChoices) ? 
       questionChoices.map((choice,index) => {
-        return (<GameAnswersDropdown key={index}  answer={choice.text} explanation={choice.isAnswer ? choice.reason : answerExplanation} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} pos ={index}/>)
+        return (<GameAnswersDropdown key={index}  answer={choice.text} explanation={!choice.isAnswer ? choice.reason : answerExplanation} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} pos ={index}/>)
       })
       : null} 
     </Grid>

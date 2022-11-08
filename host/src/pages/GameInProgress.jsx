@@ -6,7 +6,7 @@ import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
-import { GameSessionState} from "@righton/networking";
+import { isNullOrUndefined, GameSessionState} from "@righton/networking";
 
 
 export default function GameInProgress({
@@ -84,6 +84,14 @@ export default function GameInProgress({
     return count;
   };
 
+  // returns the choices object for an individual question
+  const getQuestionChoices = (questions, currentQuestionIndex) => {
+  if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
+      return null;
+  }
+  return questions[currentQuestionIndex].choices;
+  };
+  
   // returns an array ordered to match the order of answer choices, containing the total number of each answer
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => { 
     if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !==0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype){
@@ -163,7 +171,7 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <GameAnswers questions={questions} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
+        <GameAnswers questions={questions} questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 
       <FooterGame
