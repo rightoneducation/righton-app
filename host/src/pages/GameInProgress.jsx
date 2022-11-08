@@ -5,8 +5,9 @@ import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
-import { isNullOrUndefined, GameSessionState } from "@righton/networking";
 import GameModal from "../components/GameModal";
+import { GameSessionState} from "@righton/networking";
+
 
 export default function GameInProgress({
   teams,
@@ -69,13 +70,7 @@ export default function GameInProgress({
     setModalOpen(false);
   };
 
-  // returns the choices object for an individual question
-  const getQuestionChoices = (questions, currentQuestionIndex) => {
-    if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
-        return null;
-    }
-    return questions[currentQuestionIndex].choices;
-  };
+ 
 
   // finds all answers for current question using isChosen, for use in footer progress bar
   const getTotalAnswers = (answerArray) => { 
@@ -168,7 +163,7 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <GameAnswers questionChoices={choices=getQuestionChoices(questions, currentQuestionIndex)} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
+        <GameAnswers questions={questions} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} /> 
       <FooterGame
