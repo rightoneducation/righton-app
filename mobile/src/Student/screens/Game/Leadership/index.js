@@ -1,41 +1,26 @@
-import React from "react"
 import {
+    FlatList,
+    SafeAreaView,
+    ScrollView,
     StyleSheet,
     Text,
-    SafeAreaView,
-    View,
-    FlatList,
-    ScrollView,
+    View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { scale, verticalScale } from "react-native-size-matters"
+import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import TeamItem from "./Components/TeamItem"
-import TeamFooter from "../../../../components/TeamFooter"
-
-const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
 const Leadership = ({
     gameSession,
     team,
-    teamMember,
-    monsterNumber,
-    smallAvatar = DEFAULT_AVATAR,
+    teamAvatar,
 }) => {
-    const teams = gameSession.teams
+    const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
-    const highToLow = teams.sort((a, b) => b.score - a.score)
-
-    const teamNumber = highToLow.map((team, index) => {
-        team.teamNo = index + 1
-        return team
-    })
-    const teamNames = teamNumber.map((team) => {
-        return team.name
-    })
-
-    const teamName = team?.name ? team?.name : "Team Name"
-    const totalScore = team?.score ? team?.score : 0
+    const teamName = team.name ? team.name : "Team Name"
+    const totalScore = team.score ? team.score : 0
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -55,26 +40,25 @@ const Leadership = ({
             </ScrollView>
             <>
                 <FlatList
-                    data={teamNumber}
-                    keyExtractor={(item) => `${item.teamNo}`}
+                    data={sortedTeamsByScore}
+                    keyExtractor={(item) => `${item.id}`}
                     style={styles.teamContainer}
                     showsVerticalScrollIndicator={false}
                     ItemSeparatorComponent={() => {
                         return <View style={{ height: 10 }} />
                     }}
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
                         <TeamItem
-                            teamNames={teamNames}
-                            teamNo={item.teamNo}
+                            teamName={item.name}
+                            teamNo={index + 1}
                             score={item.score}
-                            showPoints={item.showPoints}
                         />
                     )}
                 />
             </>
             <View style={styles.footerView}>
                 <TeamFooter
-                    icon={smallAvatar}
+                    icon={teamAvatar.smallSrc}
                     name={teamName}
                     totalScore={totalScore ? totalScore : 0}
                 />

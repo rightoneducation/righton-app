@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import GameSessionContainer from "../containers/GameSessionContainer"
 import JoinGame from "../screens/JoinGame"
+import GameSessionContainer from "../Student/containers/GameSessionContainer"
 import EnterGameCode from "../Student/screens/EnterGameCode"
 import Leadership from "../Student/screens/Game/Leadership"
 import PhaseOneBasicGamePlay from "../Student/screens/Game/PhaseOneBasicGamePlay"
@@ -21,11 +21,13 @@ const AppContainer = () => {
         <GameSessionContainer>
             {({
                 gameSession,
-                setGameCode,
-                teamId,
+                fetchGameSessionByCode,
                 team,
                 teamMember,
                 setTeamInfo,
+                teamAvatar,
+                saveTeamAvatar,
+                clearStorage,
             }) => (
                 <NavigationContainer>
                     <Stack.Navigator
@@ -39,8 +41,9 @@ const AppContainer = () => {
                                 <JoinGame
                                     {...props}
                                     gameSession={gameSession}
-                                    teamId={teamId}
+                                    team={team}
                                     teamMember={teamMember}
+                                    clearStorage={clearStorage}
                                 />
                             )}
                         </Stack.Screen>
@@ -48,7 +51,7 @@ const AppContainer = () => {
                             {(props) => (
                                 <EnterGameCode
                                     {...props}
-                                    setGlobalGameCode={setGameCode}
+                                    fetchGameSessionByCode={fetchGameSessionByCode}
                                 />
                             )}
                         </Stack.Screen>
@@ -61,14 +64,32 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
+                        <Stack.Screen name="SelectTeam">
+                            {(props) => (
+                                <SelectTeam
+                                    {...props}
+                                    gameSession={gameSession}
+                                    team={team}
+                                    teamMember={teamMember}
+                                    saveTeamAvatar={saveTeamAvatar}
+                                />
+                            )}
+                        </Stack.Screen>
                         <Stack.Screen name="StudentGameIntro">
                             {(props) => (
                                 <StudentGameIntro
                                     {...props}
                                     gameSession={gameSession}
-                                    teamId={teamId}
                                     teamMember={teamMember}
                                     team={team}
+                                    teamAvatar={teamAvatar}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PregameCountDown">
+                            {(props) => (
+                                <PregameCountDown
+                                    {...props}
                                 />
                             )}
                         </Stack.Screen>
@@ -77,9 +98,9 @@ const AppContainer = () => {
                                 <PhaseOneBasicGamePlay
                                     {...props}
                                     gameSession={gameSession}
-                                    teamId={teamId}
                                     teamMember={teamMember}
                                     team={team}
+                                    teamAvatar={teamAvatar}
                                 />
                             )}
                         </Stack.Screen>
@@ -87,10 +108,6 @@ const AppContainer = () => {
                             {(props) => (
                                 <StartPhase
                                     {...props}
-                                    gameSession={gameSession}
-                                    teamId={teamId}
-                                    teamMember={teamMember}
-                                    team={team}
                                 />
                             )}
                         </Stack.Screen>
@@ -99,41 +116,9 @@ const AppContainer = () => {
                                 <PhaseTwoBasicGamePlay
                                     {...props}
                                     gameSession={gameSession}
-                                    teamId={teamId}
                                     teamMember={teamMember}
                                     team={team}
-                                />
-                            )}
-                        </Stack.Screen>
-                        <Stack.Screen name="SelectTeam">
-                            {(props) => (
-                                <SelectTeam
-                                    {...props}
-                                    gameSession={gameSession}
-                                    teamId={teamId}
-                                    teamMember={teamMember}
-                                />
-                            )}
-                        </Stack.Screen>
-                        <Stack.Screen name="PregameCountDown">
-                            {(props) => (
-                                <PregameCountDown
-                                    {...props}
-                                    gameSession={gameSession}
-                                    teamId={teamId}
-                                    teamMember={teamMember}
-                                    team={team}
-                                />
-                            )}
-                        </Stack.Screen>
-                        <Stack.Screen name="ScorePage">
-                            {(props) => (
-                                <ScorePage
-                                    {...props}
-                                    gameSession={gameSession}
-                                    teamId={teamId}
-                                    teamMember={teamMember}
-                                    team={team}
+                                    teamAvatar={teamAvatar}
                                 />
                             )}
                         </Stack.Screen>
@@ -142,9 +127,21 @@ const AppContainer = () => {
                                 <PhaseResult
                                     {...props}
                                     gameSession={gameSession}
-                                    teamId={teamId}
                                     teamMember={teamMember}
                                     team={team}
+                                    teamAvatar={teamAvatar}
+                                    fetchGameSessionByCode={fetchGameSessionByCode}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="ScorePage">
+                            {(props) => (
+                                <ScorePage
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
                                 />
                             )}
                         </Stack.Screen>
@@ -153,9 +150,9 @@ const AppContainer = () => {
                                 <Leadership
                                     {...props}
                                     gameSession={gameSession}
-                                    teamId={teamId}
                                     teamMember={teamMember}
                                     team={team}
+                                    teamAvatar={teamAvatar}
                                 />
                             )}
                         </Stack.Screen>

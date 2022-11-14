@@ -1,17 +1,11 @@
-import React from "react"
-import { StyleSheet, Text, View, Dimensions } from "react-native"
-import PurpleBackground from "../../../components/PurpleBackground"
-import LoadingIndicator from "../../components/LoadingIndicator"
+import { Dimensions, StyleSheet, Text } from "react-native"
 import { scale } from "react-native-size-matters"
+import PurpleBackground from "../../../components/PurpleBackground"
 import { fontFamilies, fonts } from "../../../utils/theme"
-import { GameSessionState } from "@righton/networking"
+import LoadingIndicator from "../../components/LoadingIndicator"
 
 const PregameCountDown = ({
     navigation,
-    team,
-    gameSession,
-    teamId,
-    teamMember,
 }) => {
     return (
         <PurpleBackground style={styles.mainContainer}>
@@ -31,12 +25,7 @@ const PregameCountDown = ({
                 fontSize={scale(100)}
                 timerStartInSecond={3}
                 onTimerFinished={() => {
-                    navigation.navigate("PhaseOneBasicGamePlay", {
-                        gameSession,
-                        team,
-                        teamId,
-                        teamMember,
-                    })
+                    navigation.navigate("PhaseOneBasicGamePlay")
                 }}
             />
             <Text style={styles.text}>

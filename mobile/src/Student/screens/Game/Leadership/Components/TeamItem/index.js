@@ -1,9 +1,8 @@
 import { Image, StyleSheet, Text, View } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { colors, fontFamilies, fonts } from "../../../../../../utils/theme"
-import Points from "../../../../../components/Points"
 
-const TeamItem = ({ teamNo, score, showPoints, teamNames }) => {
+const TeamItem = ({ teamNo, score, teamName }) => {
     let backgroundColorStart
     let backgroundColorEnd
     let imageUrl
@@ -51,7 +50,7 @@ const TeamItem = ({ teamNo, score, showPoints, teamNames }) => {
                 </>
                 <View style={styles.textContainer}>
                     <Text style={styles.teamTitle}>
-                        {teamNames[teamNo - 1]}
+                        {teamName}
                     </Text>
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreText}>{score || 0}</Text>

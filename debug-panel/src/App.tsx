@@ -7,7 +7,7 @@ function App() {
   const [prevGameSessionId, setPrevGameSessionId] = useState<string>("")
   const [error, setError] = useState<string | null>(null)
   const [gameCode, setGameCode] = useState<number>(0)
-  const [gameSessionId, setgameSessionId] = useState<string>("")
+  const [gameSessionId, setGameSessionId] = useState<string>("")
   const [teamName, setTeamName] = useState<string>("")
   const [team, setTeam] = useState<ITeam | null>()
   const [teamMember, setTeamMember] = useState<ITeamMember | null>()
@@ -81,6 +81,7 @@ function App() {
           apiClient.createGameSession(1262, false)
             .then(gameSession => {
               updateGameSession(gameSession)
+              apiClient.updateGameSession({ id: gameSession.id, currentQuestionIndex: 0 })
               setError(null)
             }).catch(error => {
               console.error(error.message)
@@ -222,7 +223,7 @@ function App() {
         value={gameSessionId}
         variant="standard"
         placeholder='gameSessionId'
-        onChange={(e) => setgameSessionId(e.target.value)}
+        onChange={(e) => setGameSessionId(e.target.value)}
       />
       <Button
         variant="outlined"
@@ -326,7 +327,7 @@ function App() {
             choice.text,
             choice.isAnswer,
             teamAnswer?.isChosen ?? true
-            )
+          )
             .then(teamAnswer => {
               if (teamAnswer == null) {
                 setError(`Failed to create answer`)

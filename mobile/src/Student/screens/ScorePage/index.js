@@ -6,10 +6,8 @@ import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
 import BaseView from "../../components/BaseView"
 
 const ScorePage = ({
-    gameSession,
     team,
-    teamMember,
-    monsterNumber,
+    teamAvatar,
     navigation,
 }) => {
     const winnerTeamImages = [
@@ -30,12 +28,7 @@ const ScorePage = ({
     const [textHeight, setTextHeight] = useState(0)
 
     const navigateToLeaderboard = () => {
-        navigation.navigate("Leadership", {
-            gameSession,
-            team,
-            teamMember,
-            monsterNumber,
-        })
+        navigation.navigate("Leadership")
     }
 
     return (
@@ -52,7 +45,7 @@ const ScorePage = ({
             </Text>
             <View style={styles.imageContainer}>
                 <Image
-                    source={winnerTeamImages[monsterNumber ? monsterNumber : 0]}
+                    source={winnerTeamImages[teamAvatar.id]}
                     style={styles.winnerImage}
                     onLayout={(event) => {
                         const { width, height } = event.nativeEvent.layout

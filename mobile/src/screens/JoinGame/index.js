@@ -1,4 +1,4 @@
-import { GameSessionState } from "@righton/networking"
+import { GameSessionState, isNullOrUndefined } from "@righton/networking"
 import { useEffect } from "react"
 import { Image, ImageBackground, Text, View } from "react-native"
 import { ScaledSheet } from "react-native-size-matters"
@@ -10,70 +10,63 @@ import { fonts } from '../../utils/theme'
 export default function JoinGame({
     navigation,
     gameSession,
-    team,
-    teamId,
-    teamMember,
+    clearStorage
 }) {
-
+    // TODO: Handle edge cases like user hasn't selected a team but state is on 
+    // phase results or more advance
     useEffect(() => {
-        switch (gameSession?.currentState) {
+        if (isNullOrUndefined(gameSession)) {
+            return
+        }
+        switch (gameSession.currentState) {
             case GameSessionState.NOT_STARTED:
+                resetState()
+
             case GameSessionState.TEAMS_JOINING:
                 // Game hasn't started yet, just let the kids join
+                navigation.navigate("StudentName")
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                return navigation.navigate("PregameCountDown", {
-                    gameSession,
-                    team,
-                    teamMember,
-                })
+                navigation.navigate("PregameCountDown")
+                break
 
             case GameSessionState.PHASE_1_DISCUSS:
-                return navigation.navigate("PhaseOneBasicGamePlay", {
-                    gameSession,
-                    team,
-                    teamMember,
-                })
+                navigation.navigate("PhaseOneBasicGamePlay")
+                break
 
             case GameSessionState.PHASE_2_START:
-                return navigation.navigate("StartPhase", {
-                    gameSession,
-                    team,
-                    teamMember,
-                })
+                navigation.navigate("StartPhase")
+                break
 
             case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
             case GameSessionState.PHASE_2_DISCUSS:
-                return navigation.navigate("PhaseTwoBasicGamePlay", {
-                    gameSession,
-                    team,
-                    teamMember,
-                })
+                navigation.push("PhaseTwoBasicGamePlay")
+                break
 
             case GameSessionState.PHASE_1_RESULTS:
             case GameSessionState.PHASE_2_RESULTS:
-                console.log(`Team: ${team}`)
-                return navigation.navigate("PhaseResult", {
-                    gameSession,
-                    teamId,
-                    teamMember,
-                })
+                navigation.push("PhaseResult")
+                break
 
             case GameSessionState.FINAL_RESULTS:
-                return navigation.navigate("ScorePage", {
-                    gameSession,
-                    team,
-                    teamMember,
-                })
+                navigation.navigate("ScorePage")
+                break
 
             default:
-                return navigation.navigate("JoinGame")
+                resetState()
+                console.error(`Unhandled state: ${gameSession.currentState}`)
+                break
         }
     }, [gameSession?.currentState])
 
-    function handleJoinGame() {
+    const handleJoinGame = () => {
         navigation.navigate("EnterGameCode")
+    }
+
+    const resetState = () => {
+        clearStorage()
+        navigation.navigate("JoinGame")
     }
 
     return (
