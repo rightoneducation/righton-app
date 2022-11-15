@@ -3,7 +3,7 @@ import { verticalScale } from 'react-native-size-matters'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import BaseView from '../../components/BaseView'
 
-const StartPhase = ({ phaseNo, gameSession, team, teamMember, smallAvatar, largeAvatar }) => {
+const StartPhase = ({ phaseNo }) => {
     return (
         <BaseView style={styles.mainContainer}>
             <Text style={styles.headerText}>Starting Phase {phaseNo ? phaseNo : "2"}...</Text>

@@ -56,16 +56,17 @@ const GameSessionContainer = ({ children }) => {
     const [gameSession, setGameSession] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
 
-    useEffect(() => {
-        loadLocalGameSession().then((localStorage) => {
-            if (localStorage) {
-                setGameSession(localStorage.gameSession)
-                setTeamId(localStorage.teamId)
-                setTeamMember(localStorage.teamMember)
-                setGameCode(localStorage.gameSession.gameCode)
-            }
-        })
-    }, [])
+    // NOTE: Enable this during development to load a local game session
+    // useEffect(() => {
+    //     loadLocalGameSession().then((localStorageData) => {
+    //         if (localStorageData) {
+    //             setGameSession(localStorageData.gameSession)
+    //             setTeamId(localStorageData.teamId)
+    //             setTeamMember(localStorageData.teamMember)
+    //             setGameCode(localStorageData.gameSession.gameCode)
+    //         }
+    //     })
+    // }, [])
 
     useEffect(() => {
         let subscription
