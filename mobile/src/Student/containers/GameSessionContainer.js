@@ -77,6 +77,9 @@ const GameSessionContainer = ({ children }) => {
     const [teamAvatar, setTeamAvatar] = useState(null)
 
     useEffect(() => {
+        // TODO: Disabling local storage for now and fixing previous builds with it
+        clearStorage()
+        return
         const loadGameCode = async () => {
             return loadLocalStorageForKey(localStorageKeys.gameCode)
                 .then((localGameCode) => {
