@@ -6,9 +6,7 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
-    smallAvatar = smallAvatar ? smallAvatar : require("../SelectTeam/img/MonsterIcon1.png")
-
+const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode }) => {
     const [phaseNo, setPhaseNo] = useState(1)
     const [phase2Score, setPhase2Score] = useState(0)
     const [curTeam, setCurTeam] = useState(null)
@@ -17,51 +15,46 @@ const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [currentQuestion, setCurrentQuestion] = useState(null)
     const [loadedData, setLoadedData] = useState(false)
-    const [updatedGameSession, setUpdatedGameSession] = useState(gameSession)
 
     useEffect(() => {
-        global.apiClient
-            .getGameSessionByCode(gameSession.gameCode)
-            .then((gameSessionResponse) => {
-                switch (gameSessionResponse.currentState) {
-                    case GameSessionState.PHASE_1_RESULTS:
-                        setPhaseNo(1)
-                        break
-                    case GameSessionState.PHASE_2_RESULTS:
-                        setPhaseNo(2)
-                        break
-                }
+        fetchGameSessionByCode(gameSession.gameCode)
+    }, [])
 
-                const updatedCurTeam = gameSessionResponse.teams.find((t) => t.id === (teamId ?? "b5958293-647d-43eb-9874-959e996a37c8"))
-                if (isNullOrUndefined(updatedCurTeam)) {
-                    console.error(`Couldn't find the team.}`)
-                    return
-                }
-                setCurTeam(updatedCurTeam)
-                const curQuestion = gameSessionResponse.questions[gameSessionResponse.currentQuestionIndex]
-                const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, curQuestion.id)
-                if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
-                    // User has answered both phases
-                    if (teamAnswers.length > 1) {
-                        const answer = teamAnswers[1]
-                        setAnswer(answer)
-                    }
-                    setAnswer(teamAnswers[0])
-                } else {
-                    setSelectedAnswer({
-                        id: Number.MIN_VALUE,
-                        text: Number.MIN_VALUE,
-                    })
-                }
-                setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, curQuestion.id))
-                setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
-                setCurrentQuestion(curQuestion)
-                setUpdatedGameSession(gameSession)
-                setLoadedData(true)
-            }).catch((error) => {
-                console.error(error)
+    useEffect(() => {
+        switch (gameSession.currentState) {
+            case GameSessionState.PHASE_1_RESULTS:
+                setPhaseNo(1)
+                break
+            case GameSessionState.PHASE_2_RESULTS:
+                setPhaseNo(2)
+                break
+        }
+        const updatedCurTeam = gameSession.teams.find((t) => t.id === team.id)
+        if (isNullOrUndefined(updatedCurTeam)) {
+            console.error(`Couldn't find the team.}`)
+            return
+        }
+        setCurTeam(updatedCurTeam)
+        const curQuestion = gameSession.questions[gameSession.currentQuestionIndex]
+        const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, curQuestion.id)
+        if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
+            // User has answered both phases
+            if (teamAnswers.length > 1) {
+                const answer = teamAnswers[1]
+                setAnswer(answer)
+            }
+            setAnswer(teamAnswers[0])
+        } else {
+            setSelectedAnswer({
+                id: Number.MIN_VALUE,
+                text: Number.MIN_VALUE,
             })
-    })
+        }
+        setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, curQuestion.id))
+        setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
+        setCurrentQuestion(curQuestion)
+        setLoadedData(true)
+    }, [gameSession])
 
     const setAnswer = (answer) => {
         if (answer.isTrickAnswer) {
@@ -77,6 +70,8 @@ const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
             case 1:
                 if (correctAnswer.text === choiceText) {
                     return AnswerMode.RightAnswer
+                } else if (choiceText === selectedAnswer.text) {
+                    return AnswerMode.UserAnswer
                 }
                 return AnswerMode.ShowEmptyRightIcon
             case 2:
@@ -90,13 +85,12 @@ const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
     }
 
     const calculatePercentage = (answer) => {
-        let percentage
         if (isNullOrUndefined(answer)) {
             setPhase2Score(0)
             return 0
         }
 
-        percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer.text, currentQuestion.id)
+        let percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer.text, currentQuestion.id)
         if (selectedTrickAnswer.text === answer.text) {
             setPhase2Score(percentage)
         } else {
@@ -117,7 +111,7 @@ const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
         if (phaseNo === 1) {
             return ""
         }
-        return `% ${calculatePercentage(item)}`
+        return `% ${calculatePercentage(answer)}`
     }
 
     return (
@@ -143,7 +137,7 @@ const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
                         }}
                         renderItem={({ item, index }) => (
                             <Answer
-                                icon={smallAvatar}
+                                icon={teamAvatar.smallSrc}
                                 text={`${alphabets[index]}.${item.text}`}
                                 mode={getAnswerMode(item.text)}
                                 isUserChoice={getIsUserChoice(item)}
@@ -155,10 +149,12 @@ const PhaseResult = ({ gameSession, teamId, smallAvatar }) => {
                 </View>
                 <View style={styles.footerView}>
                     <TeamFooter
-                        icon={smallAvatar}
+                        icon={teamAvatar.smallSrc}
                         name={curTeam.name ? curTeam.name : "N/A"}
                         score={phase2Score}
-                        totalScore={curTeam.score}
+                        totalScore={
+                            ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam)
+                        }
                     />
                 </View>
             </>}

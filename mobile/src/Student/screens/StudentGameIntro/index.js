@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react"
-import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native"
-import PurpleBackground from "../../../components/PurpleBackground"
-import { colors, fonts, fontFamilies } from "../../../utils/theme"
 import ViewPager from "@react-native-community/viewpager"
+import { useState } from "react"
+import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native"
+import { moderateScale } from "react-native-size-matters"
+import PurpleBackground from "../../../components/PurpleBackground"
+import { colors, fontFamilies, fonts } from "../../../utils/theme"
 import IntroInfo from "./IntroInfo"
-import { scale, verticalScale, moderateScale } from "react-native-size-matters"
-import { GameSessionState } from "@righton/networking"
 
-const StudentGameIntro = ({ navigation, route, gameSession }) => {
+const StudentGameIntro = () => {
     const [currentPage, setCurrentPage] = useState(0)
 
     const onPageSelected = (event) => {
@@ -18,8 +17,6 @@ const StudentGameIntro = ({ navigation, route, gameSession }) => {
         <SafeAreaView style={styles.container}>
             <PurpleBackground style={styles.mainContainer}>
                 <View style={styles.header}>
-                    {/* <Text style={styles.headerTeam}>Team</Text>
-                    <Text style={styles.headerTeamNo}>{team.name}</Text> */}
                     <Text style={styles.headerTeam}>How to Play!</Text>
                 </View>
                 <View style={styles.carouselContainer}>

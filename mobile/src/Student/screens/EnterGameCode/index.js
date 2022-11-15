@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from "@righton/networking"
 import { useState } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import PurpleBackground from "../../../components/PurpleBackground"
@@ -5,23 +6,27 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-export default function EnterGameCode({
-    navigation,
-    setGlobalGameCode,
-}) {
+const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
     const [gameCode, setGameCode] = useState("")
+    const [showErrorText, setShowErrorText] = useState(false)
 
     onGameCodeSubmit = () => {
-        this.handleGameEntry()
-    }
-
-    handleGameEntry = () => {
         if (!gameCode && this.gameInput) {
             this.gameInput.focus()
             return
         }
-        setGlobalGameCode(gameCode)
-        navigation.navigate("StudentName")
+        fetchGameSessionByCode(parseInt(gameCode))
+            .then(gameSession => {
+                if (isNullOrUndefined(gameSession)) {
+                    console.debug("No game session found!")
+                    setShowErrorText(true)
+                    return
+                }
+                setGameCode(gameCode)
+            }).catch(error => {
+                console.debug(`Failed to fetch the game session ${error}`)
+                setShowErrorText(true)
+            })
     }
 
     return (
@@ -37,6 +42,11 @@ export default function EnterGameCode({
                         />
                     </View>
                     <View style={styles.entryContainer}>
+                        {showErrorText && <Text
+                            style={{ ...styles.title, color: colors.red }}>
+                            Given game code was not found!
+                        </Text>
+                        }
                         <Text style={styles.title}>Enter Game Code</Text>
                         <TextInput
                             keyboardType={"number-pad"}
@@ -68,3 +78,5 @@ export default function EnterGameCode({
         </>
     )
 }
+
+export default EnterGameCode

@@ -1,4 +1,4 @@
-import { GameSessionState } from "@righton/networking"
+import { GameSessionState, isNullOrUndefined } from "@righton/networking"
 import { useEffect, useRef, useState } from "react"
 import {
     Alert,
@@ -6,7 +6,7 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    View,
+    View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -18,10 +18,7 @@ import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
-import sharedStyles from "../Components/sharedStyles"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
-
-const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -29,9 +26,9 @@ const PhaseTwoBasicGamePlay = ({
     teamMember,
     score,
     totalScore,
-    smallAvatar = DEFAULT_AVATAR,
+    teamAvatar,
 }) => {
-    const phaseTime = gameSession?.phaseTwoTime
+    const phaseTime = gameSession.phaseTwoTime
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
@@ -42,17 +39,13 @@ const PhaseTwoBasicGamePlay = ({
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
 
-    const question = gameSession?.isAdvanced
-        ? team.question
-        : gameSession?.questions[
-              gameSession?.currentQuestionIndex == null
-                  ? 0
-                  : gameSession?.currentQuestionIndex
-          ]
+    const question = gameSession.questions[
+        isNullOrUndefined(gameSession.currentQuestionIndex)
+            ? 0
+            : gameSession?.currentQuestionIndex
+    ]
 
-    const answersParsed = question.choices
-
-    const answerChoices = answersParsed.map((choice) => {
+    const answerChoices = question.choices.map((choice) => {
         return {
             id: uuid.v4(),
             text: choice.text,
@@ -71,8 +64,8 @@ const PhaseTwoBasicGamePlay = ({
         if (
             currentTime == 0 || // Out of time!
             // Game has moved on, so disable answering
-            gameSession?.currentState !==
-                GameSessionState.CHOOSE_TRICKIEST_ANSWER
+            gameSession.currentState !==
+            GameSessionState.CHOOSE_TRICKIEST_ANSWER
         ) {
             setSubmitted(true)
         }
@@ -109,12 +102,10 @@ const PhaseTwoBasicGamePlay = ({
                                 question.id,
                                 answer.text,
                                 answer.isChosen ? null : false,
-                                true,
-                                answer.isTrickAnswer ? null : false,
                                 true
                             )
                             .then((teamAnswer) => {
-                                if (teamAnswer == null) {
+                                if (isNullOrUndefined(teamAnswer)) {
                                     console.error(
                                         "Failed to create team Answer."
                                     )
@@ -122,7 +113,7 @@ const PhaseTwoBasicGamePlay = ({
                                 }
 
                                 console.debug(
-                                    "phase 2 team answer:",
+                                    "phase 2 team answer: ",
                                     teamAnswer
                                 )
                             })
@@ -194,7 +185,7 @@ const PhaseTwoBasicGamePlay = ({
                 end={{ x: 1, y: 1 }}
             >
                 {gameSession?.currentState ===
-                GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
                             Pick the Trickiest!
@@ -226,7 +217,7 @@ const PhaseTwoBasicGamePlay = ({
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
-                    icon={smallAvatar}
+                    icon={teamAvatar.smallSrc}
                     name={teamName}
                     score={score}
                     totalScore={totalScore ? totalScore : 0}

@@ -1,6 +1,7 @@
 import { isNullOrUndefined } from "./IApiClient"
 import { IGameSession, ITeam, ITeamAnswer } from "./Models"
 import { IChoice, IQuestion } from './Models/IQuestion'
+import { ITeamMember } from './Models/ITeamMember'
 
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
@@ -117,5 +118,21 @@ export abstract class ModelHelper {
                     answer.text === correctAnswer.text ? this.correctAnswerScore : 0)
             }
         }, 0)
+    }
+
+    static findTeamInGameSession(gameSession: IGameSession, teamId: string): ITeam | null {
+        if (isNullOrUndefined(teamId)) {
+            return null
+        }
+        return gameSession.teams?.find(team => team.id === teamId) ?? null
+    }
+
+    static findTeamMemberInTeam(team: ITeam, teamMemberId: string): ITeamMember | null {
+        if (isNullOrUndefined(team.teamMembers) ||
+            team.teamMembers.length === 0) {
+            return null
+        }
+        return team.teamMembers.find(member =>
+            !isNullOrUndefined(member) && member.id === teamMemberId) ?? null
     }
 }

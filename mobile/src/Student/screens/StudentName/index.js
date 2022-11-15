@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "@righton/networking"
-import { Fragment, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import PurpleBackground from "../../../components/PurpleBackground"
@@ -7,13 +7,11 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-export default function StudentName({ navigation, gameSession, setTeamInfo }) {
+const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
     const lastNameTextRef = useRef(null)
-
-    const teamName = `${firstName} ${lastName}`
 
     onNameSubmit = () => {
         if (!firstName && firstNameTextRef) {
@@ -25,6 +23,8 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
             lastNameTextRef.focus()
             return
         }
+
+        const teamName = `${firstName} ${lastName}`
 
         global.apiClient
             .addTeamToGameSessionId(gameSession.id, teamName, null)
@@ -45,20 +45,14 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
                                     return
                                 }
 
-                                setTeamInfo(team, teamMember)
                                 if (isNullOrUndefined(team.teamMembers)) {
-                                    team.teamMembers = []
+                                    team.teamMembers = [teamMember]
                                 }
-                                team.teamMembers.push(teamMember)
 
-                                //TODO: update this to navigate to select team screen
-                                navigation.navigate("StudentGameIntro", {
-                                    gameSession,
-                                    team,
-                                    teamMember,
-                                })
-                            })
-                            .catch((error) => {
+                                return setTeamInfo(team, teamMember)
+                            }).then(() => {
+                                navigation.navigate("SelectTeam")
+                            }).catch((error) => {
                                 console.error(error)
                             })
                     })
@@ -69,7 +63,7 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
     }
 
     return (
-        <Fragment>
+        <>
             <SafeAreaView style={{ flex: 0, backgroundColor: "#483a82" }} />
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>
@@ -127,6 +121,8 @@ export default function StudentName({ navigation, gameSession, setTeamInfo }) {
                     </View>
                 </PurpleBackground>
             </SafeAreaView>
-        </Fragment>
+        </>
     )
 }
+
+export default StudentName

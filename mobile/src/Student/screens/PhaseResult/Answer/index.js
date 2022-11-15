@@ -77,6 +77,7 @@ export const AnswerMode = {
     RightAnswer: "RightAnswer",
     PopularTrickAnswer: "PopularTrickAnswer",
     ShowEmptyRightIcon: "ShowEmptyRightIcon",
+    UserAnswer: "UserAnswer",
 }
 
 export default Answer

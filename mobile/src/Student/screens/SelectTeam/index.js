@@ -5,65 +5,11 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
 import PurpleBackground from '../../../components/PurpleBackground'
 import RoundButton from '../../../components/RoundButton'
 import { colors, fontFamilies, fonts } from '../../../utils/theme'
+import TeamIcons from '../../containers/TeamIcons'
 
-const SelectTeam = ({ navigation, route }) => {
-  const { gameSession, team, teamMember } = route.params
-  const icons = [
-    {
-      id: 1,
-      src: require('./img/MonsterIcon1.png')
-    },
-    {
-      id: 2,
-      src: require('./img/MonsterIcon2.png')
-    },
-    {
-      id: 3,
-      src: require('./img/MonsterIcon3.png')
-    },
-    {
-      id: 4,
-      src: require('./img/MonsterIcon4.png')
-    },
-    {
-      id: 5,
-      src: require('./img/MonsterIcon5.png')
-    },
-    {
-      id: 6,
-      src: require('./img/MonsterIcon6.png')
-    }
-  ]
+const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
 
-  const teamLargeIcon = [
-    {
-      id: 1,
-      src: require('./img/Monster1.png')
-    },
-    {
-      id: 2,
-      src: require('./img/Monster2.png')
-    },
-    {
-      id: 3,
-      src: require('./img/Monster3.png')
-    },
-    {
-      id: 4,
-      src: require('./img/Monster4.png')
-    },
-    {
-      id: 5,
-      src: require('./img/Monster5.png')
-    },
-    {
-      id: 6,
-      src: require('./img/Monster6.png')
-    }
-  ]
-
-  const [largeAvatar, setLargeAvatar] = useState(null)
-  const [smallAvatar, setSmallAvatar] = useState(null)
+  const [avatar, setAvatar] = useState(null)
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(false)
 
   const goBack = () => {
@@ -71,20 +17,14 @@ const SelectTeam = ({ navigation, route }) => {
   }
 
   const selectTeam = (icon) => {
-    setSmallAvatar(icon)
-    const largeIcon = teamLargeIcon.find(val => val.id === icon.id)
-    setLargeAvatar(largeIcon)
+    const avatar = TeamIcons.find(val => val.id === icon.id)
+    setAvatar(avatar)
     setEnabledSubmitButton(true)
+    saveTeamAvatar(avatar)
   }
 
   const submit = () => {
-    navigation.navigate("StudentGameIntro", {
-      gameSession,
-      team,
-      teamMember,
-      smallAvatar,
-      largeAvatar,
-    })
+    navigation.navigate("StudentGameIntro")
   }
 
   return (
@@ -103,7 +43,7 @@ const SelectTeam = ({ navigation, route }) => {
         </View>
         <View style={styles.teamIcons}>
           <FlatList
-            data={icons}
+            data={TeamIcons}
             numColumns={3}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
@@ -117,13 +57,13 @@ const SelectTeam = ({ navigation, route }) => {
                 onResponderRelease={() => selectTeam(item)}
                 style={styles.teamIconContainer}
               >
-                <Image source={item.src} style={styles.teamIcon} />
+                <Image source={item.smallSrc} style={styles.teamIcon} />
               </View>
             }
           />
         </View>
         <View style={styles.teamIconNameContainer}>
-          <Image style={styles.largeIcon} source={largeIcon && largeIcon.src} />
+          <Image style={styles.largeIcon} source={avatar && avatar.largeSrc} />
           <Text style={styles.fullNameText}>
             {team.name}
           </Text>

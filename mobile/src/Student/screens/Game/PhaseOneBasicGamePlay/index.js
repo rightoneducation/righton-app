@@ -6,7 +6,7 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    View,
+    View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -17,19 +17,17 @@ import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
-import HintsView from "../Components/HintsView"
-import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptions from "../Components/AnswerOptions"
-import sharedStyles from "../Components/sharedStyles"
+import HintsView from "../Components/HintsView"
 import Question from "../Components/Question"
-
-const DEFAULT_AVATAR = require("../../SelectTeam/img/MonsterIcon1.png")
+import ScrollableQuestion from "../Components/ScrollableQuestion"
+import sharedStyles from "../Components/sharedStyles"
 
 const PhaseOneBasicGamePlay = ({
     gameSession,
     team,
     teamMember,
-    smallAvatar = DEFAULT_AVATAR,
+    teamAvatar,
 }) => {
     const phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
@@ -87,7 +85,7 @@ const PhaseOneBasicGamePlay = ({
                     onPress: () => {
                         const answer = answerChoices[selectedAnswerIndex]
                         // if isCorrectAnswer is true, add 10 points to the team's score
-                        // this does not uppdate team score in the database yet
+                        // this does not update team score in the database yet
                         if (answer.isCorrectAnswer && team) {
                             team.score += 10
                         }
@@ -229,7 +227,7 @@ const PhaseOneBasicGamePlay = ({
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
-                    icon={smallAvatar}
+                    icon={teamAvatar.smallSrc}
                     name={teamName}
                     totalScore={totalScore ? totalScore : 0}
                 />
