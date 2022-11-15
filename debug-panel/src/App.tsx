@@ -24,7 +24,8 @@ function App() {
 
   const updateGameSession = (gameSession: IGameSession | null) => {
     setGameSession(gameSession)
-    if (gameSession == null) {
+    if (isNullOrUndefined(gameSession)) {
+      console.debug("No game session")
       gameSessionSubscription.current?.unsubscribe()
       return
     }
@@ -64,14 +65,8 @@ function App() {
     <div>
       <span>
         {
-          (gameSession == null ? "" : gameSession.id.toLocaleLowerCase()) +
-          (error == null ? "" : error)
-        }
-      </span>
-      <span>
-        {
-          (gameSession != null) ?
-            `Updated game session state to ${gameSession?.currentState} for ${gameSession?.id}` :
+          (!isNullOrUndefined(gameSession)) ?
+            `Updated game session state to ${gameSession.currentState} for ${gameSession.id} and ${gameSession.gameCode}` :
             ""
         }
       </span>

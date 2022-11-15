@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 import JoinGame from "../screens/JoinGame"
 import GameSessionContainer from "../Student/containers/GameSessionContainer"
 import EnterGameCode from "../Student/screens/EnterGameCode"
-import Leadership from "../Student/screens/Game/Leadership"
+import Leaderboard from "../Student/screens/Game/Leaderboard"
 import PhaseOneBasicGamePlay from "../Student/screens/Game/PhaseOneBasicGamePlay"
 import PhaseTwoBasicGamePlay from "../Student/screens/Game/PhaseTwoBasicGamePlay"
 import PhaseResult from "../Student/screens/PhaseResult"
@@ -131,6 +131,7 @@ const AppContainer = () => {
                                     team={team}
                                     teamAvatar={teamAvatar}
                                     fetchGameSessionByCode={fetchGameSessionByCode}
+                                    setTeamInfo={setTeamInfo}
                                 />
                             )}
                         </Stack.Screen>
@@ -145,9 +146,9 @@ const AppContainer = () => {
                                 />
                             )}
                         </Stack.Screen>
-                        <Stack.Screen name="Leadership">
+                        <Stack.Screen name="Leaderboard">
                             {(props) => (
-                                <Leadership
+                                <Leaderboard
                                     {...props}
                                     gameSession={gameSession}
                                     teamMember={teamMember}

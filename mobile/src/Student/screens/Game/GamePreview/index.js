@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react"
-import { StyleSheet, Text, View, Dimensions, SafeAreaView } from "react-native"
-import LinearGradient from "react-native-linear-gradient"
-import { scale, moderateScale, verticalScale } from "react-native-size-matters"
-import { fontFamilies, fonts } from "../../../../utils/theme"
-import * as Progress from "react-native-progress"
-import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
-import HorizontalPageView from "../../../components/HorizontalPageView"
-import Card from "../../../components/Card"
-import Spinner from "./Spinner"
-import ScrollableQuestion from "../Components/ScrollableQuestion"
-import TrickAnswers from "./TrickAnswers"
-import HintsView from "../Components/HintsView"
 import { GameSessionState } from "@righton/networking"
+import { useEffect, useState } from "react"
+import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native"
+import LinearGradient from "react-native-linear-gradient"
+import * as Progress from "react-native-progress"
+import { moderateScale, scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import { fontFamilies, fonts } from "../../../../utils/theme"
+import Card from "../../../components/Card"
+import HorizontalPageView from "../../../components/HorizontalPageView"
+import TeamsReadinessFooter from "../../../components/TeamsReadinessFooter"
+import HintsView from "../Components/HintsView"
+import ScrollableQuestion from "../Components/ScrollableQuestion"
+import Spinner from "./Spinner"
+import TrickAnswers from "./TrickAnswers"
 
 const GamePreview = ({ navigation, route }) => {
     const { gameSession, team, teamMember } = route.params
@@ -20,10 +20,10 @@ const GamePreview = ({ navigation, route }) => {
     const question = gameSession.isAdvanced
         ? team.question
         : gameSession.questions[
-              gameSession.currentQuestionIndex == null
-                  ? 0
-                  : gameSession.currentQuestionIndex
-          ]
+        gameSession.currentQuestionIndex == null
+            ? 0
+            : gameSession.currentQuestionIndex
+        ]
     const availableHints = question.instructions
 
     const [countdown, setCountdown] = useState(300)
@@ -64,12 +64,7 @@ const GamePreview = ({ navigation, route }) => {
     })
 
     const navigateToNextScreen = () => {
-        navigation.navigate("Leadership", {
-            gameSession,
-            team,
-            teamMember,
-            question,
-        })
+        navigation.navigate("Leaderboard")
     }
 
     const showNewHint = () => {
@@ -147,19 +142,19 @@ const GamePreview = ({ navigation, route }) => {
                                 gameSession.isAdvanced
                                     ? []
                                     : [
-                                          ...question.wrongAnswers.map(
-                                              (a) => a.wrongAnswer
-                                          ),
-                                          question.answer,
-                                      ].map((a) => {
-                                          return {
-                                              id: uuid.v4(),
-                                              text: a,
-                                              isSelected: false,
-                                              isCorrectAnswer:
-                                                  a == question.answer,
-                                          }
-                                      })
+                                        ...question.wrongAnswers.map(
+                                            (a) => a.wrongAnswer
+                                        ),
+                                        question.answer,
+                                    ].map((a) => {
+                                        return {
+                                            id: uuid.v4(),
+                                            text: a,
+                                            isSelected: false,
+                                            isCorrectAnswer:
+                                                a == question.answer,
+                                        }
+                                    })
                             }
                         />
                     </Card>

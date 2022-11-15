@@ -46,7 +46,7 @@ export abstract class ModelHelper {
             }
 
             return answer.questionId === questionId &&
-                !answer.isTrickAnswer
+                answer.isTrickAnswer
         })
 
         return trickAnswer ?? null
@@ -72,7 +72,7 @@ export abstract class ModelHelper {
                 return previousVal
             }
 
-            const answersToQuestion = teamMember.answers.filter((answer) => {
+            const answersToQuestion = teamMember.answers.find((answer) => {
                 return !isNullOrUndefined(answer) &&
                     !isNullOrUndefined(answer!.questionId) &&
                     answer.questionId === questionId &&
@@ -80,7 +80,7 @@ export abstract class ModelHelper {
                     answer!.text === answerText
             })
 
-            return previousVal + (answersToQuestion?.length ?? 0)
+            return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
 
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
@@ -101,10 +101,6 @@ export abstract class ModelHelper {
 
         const correctAnswer = this.getCorrectAnswer(question)
 
-        if (isNullOrUndefined(correctAnswer)) {
-            return 0
-        }
-
         return answers!.reduce((score: number, answer: ITeamAnswer | null) => {
             if (isNullOrUndefined(answer)) {
                 return score
@@ -113,9 +109,9 @@ export abstract class ModelHelper {
             if (answer.isTrickAnswer) {
                 return score + this.calculateBasicModeWrongAnswerScore(gameSession, answer.text, question.id)
             } else {
-                console.log(`${answer.text} === ${correctAnswer.text} = ${answer.text === correctAnswer.text}`)
+                console.log(`${answer.text} === ${correctAnswer?.text} = ${answer.text === correctAnswer?.text}`)
                 return score + (
-                    answer.text === correctAnswer.text ? this.correctAnswerScore : 0)
+                    answer.text === correctAnswer?.text ? this.correctAnswerScore : 0)
             }
         }, 0)
     }

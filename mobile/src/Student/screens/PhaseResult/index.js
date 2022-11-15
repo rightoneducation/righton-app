@@ -6,7 +6,7 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode }) => {
+const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, setTeamInfo }) => {
     const [phaseNo, setPhaseNo] = useState(1)
     const [phase2Score, setPhase2Score] = useState(0)
     const [curTeam, setCurTeam] = useState(null)
@@ -54,6 +54,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode }) 
         setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
         setCurrentQuestion(curQuestion)
         setLoadedData(true)
+        setTeamInfo(updatedCurTeam, updatedCurTeam.teamMembers[0])
     }, [gameSession])
 
     const setAnswer = (answer) => {
@@ -86,16 +87,22 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode }) 
 
     const calculatePercentage = (answer) => {
         if (isNullOrUndefined(answer)) {
+            console.debug("Answer is null!")
             setPhase2Score(0)
             return 0
         }
 
+        console.debug(`Calculating percentage for ${answer.text}`)
         let percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer.text, currentQuestion.id)
+
         if (selectedTrickAnswer.text === answer.text) {
             setPhase2Score(percentage)
         } else {
             setPhase2Score(0)
         }
+
+        console.log(percentage)
+        return percentage
     }
 
     const getIsUserChoice = (answer) => {

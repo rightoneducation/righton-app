@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
-import { StyleSheet, Text, View, Dimensions, SafeAreaView, ScrollView } from 'react-native'
+import { useEffect } from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { fontFamilies, fonts } from '../../../../../utils/theme'
-import ExpandableQuestion from '../../../../components/ExpandableQuestion'
 import Answers from '../../../../components/Answers'
+import ExpandableQuestion from '../../../../components/ExpandableQuestion'
 import FooterView from '../Components/FooterView'
 
 const GameAnswerPopular = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Leadership')
+      navigation.navigate('Leaderboard')
     }, 20000)
   }, [])
   return (
@@ -40,7 +40,7 @@ const GameAnswerPopular = ({ navigation }) => {
               <ExpandableQuestion />
             </View>
             <View style={[styles.cardsContainer, styles.answersCard]}>
-              <Answers teamSelectedTrickAnswer={360}  />
+              <Answers teamSelectedTrickAnswer={360} />
             </View>
           </View>
         </ScrollView>

@@ -1,3 +1,4 @@
+import { ModelHelper } from '@righton/networking'
 import { useState } from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
 import { scale, verticalScale } from "react-native-size-matters"
@@ -6,6 +7,7 @@ import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
 import BaseView from "../../components/BaseView"
 
 const ScorePage = ({
+    gameSession,
     team,
     teamAvatar,
     navigation,
@@ -28,7 +30,7 @@ const ScorePage = ({
     const [textHeight, setTextHeight] = useState(0)
 
     const navigateToLeaderboard = () => {
-        navigation.navigate("Leadership")
+        navigation.navigate("Leaderboard")
     }
 
     return (
@@ -41,7 +43,7 @@ const ScorePage = ({
                 You've earned a total of
             </Text>
             <Text style={styles.headerScoreText}>
-                {(team && team.score) || 0} points
+                {ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, gameSession.questions[gameSession.currentQuestionIndex], team)} points
             </Text>
             <View style={styles.imageContainer}>
                 <Image
@@ -69,9 +71,9 @@ const ScorePage = ({
                 </Text>
                 <RoundButton
                     title="View Leaderboard"
-                    style={styles.leadershipButton}
-                    titleStyle={styles.leadershipButtonTitle}
-                    containerStyle={styles.leadershipContainer}
+                    style={styles.LeaderboardButton}
+                    titleStyle={styles.LeaderboardButtonTitle}
+                    containerStyle={styles.LeaderboardContainer}
                     onPress={() => {
                         navigateToLeaderboard()
                     }}
@@ -120,18 +122,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(54),
         width: "100%",
     },
-    leadershipButton: {
+    LeaderboardButton: {
         backgroundColor: colors.buttonSecondary,
         height: 35,
         alignSelf: "center",
         paddingHorizontal: 23,
     },
-    leadershipButtonTitle: {
+    LeaderboardButtonTitle: {
         fontFamily: fontFamilies.karlaRegular,
         fontSize: fonts.xxMedium,
         fontWeight: fontWeights.bold,
     },
-    leadershipContainer: {
+    LeaderboardContainer: {
         position: "absolute",
         bottom: verticalScale(20),
         alignSelf: "center",

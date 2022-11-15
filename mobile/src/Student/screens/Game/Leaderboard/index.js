@@ -1,3 +1,4 @@
+import { ModelHelper } from '@righton/networking'
 import {
     FlatList,
     SafeAreaView,
@@ -12,7 +13,7 @@ import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts } from "../../../../utils/theme"
 import TeamItem from "./Components/TeamItem"
 
-const Leadership = ({
+const Leaderboard = ({
     gameSession,
     team,
     teamAvatar,
@@ -20,7 +21,11 @@ const Leadership = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
-    const totalScore = team.score ? team.score : 0
+    const totalScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(
+        gameSession,
+        gameSession.questions[gameSession.currentQuestionIndex],
+        team
+    )
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -51,7 +56,11 @@ const Leadership = ({
                         <TeamItem
                             teamName={item.name}
                             teamNo={index + 1}
-                            score={item.score}
+                            score={ModelHelper.calculateBasicModeTotalScoreForQuestion(
+                                gameSession,
+                                gameSession.questions[gameSession.currentQuestionIndex],
+                                item
+                            )}
                         />
                     )}
                 />
@@ -67,7 +76,7 @@ const Leadership = ({
     )
 }
 
-export default Leadership
+export default Leaderboard
 
 const styles = StyleSheet.create({
     mainContainer: {

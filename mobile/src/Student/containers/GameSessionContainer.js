@@ -12,6 +12,9 @@ const localStorageKeys = {
 
 async function storeDataToLocalStorage(key, value) {
     try {
+        // TODO: Fix reloading data from storage
+        return true
+        // END disabling loading from storage
         await EncryptedStorage.setItem(key, value)
         console.log(`stored new value locally ${key}: ${value}`)
         return true
