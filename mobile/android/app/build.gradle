@@ -122,9 +122,9 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 
-def keystorePropsFile = rootProject.file('keystore.properties')
-def keystoreProps = new Properties()
-keystoreProps.load(new FileInputStream(keystorePropsFile))
+// def keystorePropsFile = rootProject.file('keystore.properties')
+// def keystoreProps = new Properties()
+// keystoreProps.load(new FileInputStream(keystorePropsFile))
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -176,7 +176,7 @@ android {
         }
         releaseStaging {
             signingConfig signingConfigs.debug
-            resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
+            //resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
             // Note: It is a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
             // Add the following line if not already there
             matchingFallbacks = ['release']
@@ -189,7 +189,7 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 
-            resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
+           // resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
         }
     }
 
