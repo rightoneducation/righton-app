@@ -45,6 +45,7 @@ export default function GameLoadModal({ handleStartGameModalTimerFinished, modal
                       radius={110}
                       timerStartInSecond={3}
                       handleStartGameModalTimerFinished={handleStartGameModalTimerFinished}
+                      gameCreate={false}
                   />
           </div>
           <div className={classes.modalHead}> {/*bottom text*/}
