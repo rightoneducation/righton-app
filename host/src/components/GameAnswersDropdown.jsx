@@ -203,7 +203,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: "400",
     fontSize: "12px",
     lineHeight: "18px",
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+    whiteSpace: 'pre-line'
   },
   expandedBox: {
     display: "none"

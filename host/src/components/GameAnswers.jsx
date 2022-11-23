@@ -13,9 +13,8 @@ export default function GameAnswers({ questions, questionChoices, currentQuestio
         return null;
     }
     questions[currentQuestionIndex].instructions.map((step, index) => {
-    instructions += " Step " + (index+1) + ": " + step;
+    instructions += "Step " + (index+1) + ": " + step + "\n\n";
     });
-    console.log(instructions);
     return instructions;
   };
 
