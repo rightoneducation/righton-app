@@ -20,7 +20,7 @@ const CreateNewGameSession = () => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.text}> Creating Game...</div>
+      <div className={classes.text}> Launching Game...</div>
       <div className={classes.loader}>
         <LoadingIndicator
             theme={[
