@@ -44,7 +44,7 @@
     "react-native-code-push": "^7.0.5",
     "react-native-device-info": "^10.0.2",
     "react-native-dropdown-picker": "^5.4.2",
-    "react-native-encrypted-storage": "^4.0.2",
+    "react-native-encrypted-storage": "^4.0.3",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-hyperlink-text": "^0.2.1",
     "react-native-image-picker": "^4.9.0",
