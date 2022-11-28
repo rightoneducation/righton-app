@@ -52,8 +52,6 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         paddingLeft: scale(10),
         paddingRight: scale(10),
-        paddingTop: scale(15),
-        paddingBottom: scale(15),
         backgroundColor: "white",
         alignItems: "center",
         marginTop: verticalScale(5),
@@ -68,7 +66,7 @@ const styles = StyleSheet.create({
     input: {
         color: "#384466",
         fontFamily: fontFamilies.karlaRegular,
-        fontSize: fonts.xMedium,
+        fontSize: fonts.xxMedium,
         marginRight: scale(5),
         marginLeft: scale(5),
         flex: 1,

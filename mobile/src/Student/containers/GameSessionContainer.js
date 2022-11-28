@@ -74,7 +74,7 @@ const GameSessionContainer = ({ children }) => {
     const [gameSession, setGameSession] = useState(null)
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
-    const [teamAvatar, setTeamAvatar] = useState(null)
+    const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
 
     useEffect(() => {
         // TODO: Disabling local storage for now and fixing previous builds with it

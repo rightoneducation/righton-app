@@ -6,6 +6,7 @@
     "devtools": "react-devtools",
     "flow": "flow",
     "android": "npm run build --prefix ../networking && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native run-android",
+    "android-win": "npm run build --prefix ..\\networking & robocopy ..\\networking\\lib .\\node_modules\\@righton\\networking\\lib /e /njh /njs & robocopy ..\\networking\\src .\\node_modules\\@righton\\networking\\src /e /njh /njs & robocopy ..\\networking\\ .\\node_modules\\@righton\\networking package.json /njh /njs & react-native run-android",
     "ios": "npm run build --prefix ../networking && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native run-ios --simulator='iPhone 14'",
     "apk": "npm run build --prefix ../networking && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && cd android && ./gradlew assembleRelease",
     "fastlane": "npm run build --prefix ../networking && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && cd ios && fastlane ios beta",
