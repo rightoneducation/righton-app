@@ -121,6 +121,12 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
         return `% ${calculatePercentage(answer)}`
     }
 
+    const calculateTotalScore =(gameSession, currentquestion, curTeam) => {
+      const newScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam)
+      global.apiClient.updateTeam({id: curTeam.id, score: newScore})
+      return newScore
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             {loadedData && <>
@@ -159,8 +165,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
                         icon={teamAvatar.smallSrc}
                         name={curTeam.name ? curTeam.name : "N/A"}
                         score={phase2Score}
-                        totalScore={
-                            ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam)
+                        totalScore={calculateTotalScore(gameSession,currentQuestion,curTeam)
                         }
                     />
                 </View>
