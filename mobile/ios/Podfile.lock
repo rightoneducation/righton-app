@@ -297,9 +297,9 @@ PODS:
     - React-jsi (= 0.65.1)
     - React-perflogger (= 0.65.1)
   - React-jsinspector (0.65.1)
-  - react-native-encrypted-storage (4.0.3):
+  - react-native-encrypted-storage (4.0.2):
     - React-Core
-  - react-native-image-picker (4.10.0):
+  - react-native-image-picker (4.9.0):
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
@@ -389,7 +389,7 @@ PODS:
     - React
   - RNDeviceInfo (10.0.2):
     - React-Core
-  - RNGestureHandler (2.6.0):
+  - RNGestureHandler (2.5.0):
     - React-Core
   - RNReanimated (2.10.0):
     - DoubleConversion
@@ -669,8 +669,8 @@ SPEC CHECKSUMS:
   React-jsi: 12913c841713a15f64eabf5c9ad98592c0ec5940
   React-jsiexecutor: 43f2542aed3c26e42175b339f8d37fe3dd683765
   React-jsinspector: 41e58e5b8e3e0bf061fdf725b03f2144014a8fb0
-  react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
-  react-native-image-picker: 4bc9ed38c8be255b515d8c88babbaf74973f91a8
+  react-native-encrypted-storage: e78d848ce0fb663c2ce306e37921d026809322e6
+  react-native-image-picker: ebb7ad7f6ac50248989d6560e8aa07c412a32241
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
@@ -693,7 +693,7 @@ SPEC CHECKSUMS:
   RNCCheckbox: ed1b4ca295475b41e7251ebae046360a703b6eb5
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
-  RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
+  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNReanimated: 297665fc9f18101ff029e80d789d65ddd34bf44a
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
