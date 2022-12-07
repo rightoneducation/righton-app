@@ -1,8 +1,6 @@
-import React, { useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { FlatList } from "react-native-gesture-handler"
+import { StyleSheet } from "react-native"
 import { scale } from "react-native-size-matters"
-import { fontFamilies, fonts, colors } from "../../../../../utils/theme"
+import { fontFamilies, fonts } from "../../../../../utils/theme"
 import Hint from "./Hint"
 
 const HintsView = ({ hints }) => {
@@ -14,7 +12,7 @@ const HintsView = ({ hints }) => {
     })
 
     return mappedHints.map((item) => (
-        <Hint key={item.hintNo} hintNo={item.hintNo} hint={item.hint} />
+        <Hint hintNo={item.hintNo} hint={item.hint} />
     ))
 }
 
