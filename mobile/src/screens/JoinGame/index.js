@@ -16,11 +16,13 @@ export default function JoinGame({
     // phase results or more advance
     useEffect(() => {
         if (isNullOrUndefined(gameSession)) {
+            resetState()
             return
         }
         switch (gameSession.currentState) {
             case GameSessionState.NOT_STARTED:
                 resetState()
+                break
 
             case GameSessionState.TEAMS_JOINING:
                 // Game hasn't started yet, just let the kids join
