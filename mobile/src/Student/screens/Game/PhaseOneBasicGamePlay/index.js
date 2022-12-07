@@ -136,10 +136,10 @@ const PhaseOneBasicGamePlay = ({
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
     let cards = [
-        <Card headerTitle="Question">
+        <Card headerTitle="Question" key={"question"}>
             <ScrollableQuestion question={question} />
         </Card>,
-        <View>
+        <View key={"answers"}>
             <Card headerTitle="Answers">
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
                     Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
@@ -220,7 +220,9 @@ const PhaseOneBasicGamePlay = ({
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 {cards.length > 1 ? (
-                    <HorizontalPageView>{cards}</HorizontalPageView>
+                    <HorizontalPageView>
+                        {cards}
+                    </HorizontalPageView>
                 ) : (
                     cards[0]
                 )}

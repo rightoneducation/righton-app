@@ -1,11 +1,10 @@
-import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { scale, verticalScale } from 'react-native-size-matters'
-import { fonts, fontFamilies } from '../../../../../../utils/theme'
+import { fontFamilies, fonts } from '../../../../../../utils/theme'
 
 const Hint = ({ hintNo, hint }) => {
     return (
-        <View style={styles.container}>
+        <View key={hintNo} style={styles.container}>
             <Text style={styles.hintNoText}>{hintNo}</Text>
             <Text style={styles.hintText}>{hint}</Text>
         </View>

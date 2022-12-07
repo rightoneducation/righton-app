@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Image, Dimensions } from 'react-native'
-import { scale, moderateScale, verticalScale } from 'react-native-size-matters'
+import { Dimensions, Image, StyleSheet, View } from 'react-native'
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
 import Carousel from 'react-native-snap-carousel'
 
 const HorizontalPageView = ({ children, initialPage }) => {
@@ -11,8 +11,15 @@ const HorizontalPageView = ({ children, initialPage }) => {
         </React.Fragment>
     }
 
-    const pageIndicators = children.map((child, index) => {
-        return <Image key={index} source={currentPage == index ? require('../../../assets/images/PageIndicatorActive.png') : require('../../../assets/images/PageIndicatorInactive.png')} style={styles.pageIndicator} />
+    const pageIndicators = children.map((_child, index) => {
+        return <Image
+            key={index}
+            source={
+                currentPage == index ?
+                    require('../../../assets/images/PageIndicatorActive.png') :
+                    require('../../../assets/images/PageIndicatorInactive.png')}
+            style={styles.pageIndicator}
+        />
     })
 
     return (
