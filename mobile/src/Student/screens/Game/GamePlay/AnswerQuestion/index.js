@@ -13,7 +13,6 @@ const AnswerQuestion = ({ correctAnswer, answers }) => {
 
     const onToggleAnswer = (answer) => {
         setSelectedAnswer(answer)
-        console.log("sup")
         setShowExplainAnswer(true)
     }
 

@@ -53,6 +53,10 @@ export default function JoinGame({
                 navigation.navigate("ScorePage")
                 break
 
+            case GameSessionState.FINISHED:
+                resetState()
+                break
+
             default:
                 resetState()
                 console.error(`Unhandled state: ${gameSession.currentState}`)

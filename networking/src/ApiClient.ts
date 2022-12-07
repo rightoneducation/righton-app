@@ -347,8 +347,6 @@ export class ApiClient implements IApiClient {
       teamInput: UpdateTeamInput
     ): Promise<ITeam> {
         const input: UpdateTeamInput = teamInput
-        console.log("hi")
-        console.log(input)
         const variables: UpdateTeamMutationVariables = { input }
         const team = await this.callGraphQL<UpdateTeamMutation>(
             updateTeam,
