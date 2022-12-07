@@ -177,6 +177,7 @@ android {
         releaseStaging {
             signingConfig signingConfigs.debug
             resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
+            resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
             // Note: It is a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
             // Add the following line if not already there
             matchingFallbacks = ['release']
@@ -190,6 +191,7 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 
             resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
+            resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
         }
     }
 
