@@ -352,7 +352,6 @@ export class ApiClient implements IApiClient {
             updateTeam,
             variables
         )
-        console.log("hi")
         if (
             isNullOrUndefined(team.data) ||
             isNullOrUndefined(team.data.updateTeam)
