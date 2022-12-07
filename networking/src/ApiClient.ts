@@ -347,13 +347,12 @@ export class ApiClient implements IApiClient {
       teamInput: UpdateTeamInput
     ): Promise<ITeam> {
         const input: UpdateTeamInput = teamInput
-        console.log("hi")
-        console.log(input)
         const variables: UpdateTeamMutationVariables = { input }
         const team = await this.callGraphQL<UpdateTeamMutation>(
             updateTeam,
             variables
         )
+        console.log("hi")
         if (
             isNullOrUndefined(team.data) ||
             isNullOrUndefined(team.data.updateTeam)

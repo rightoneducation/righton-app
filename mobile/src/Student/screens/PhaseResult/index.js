@@ -15,6 +15,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [currentQuestion, setCurrentQuestion] = useState(null)
     const [loadedData, setLoadedData] = useState(false)
+    let totalScore = 0
 
     useEffect(() => {
         fetchGameSessionByCode(gameSession.gameCode)
@@ -37,7 +38,12 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
         setCurTeam(updatedCurTeam)
         const curQuestion = gameSession.questions[gameSession.currentQuestionIndex]
         const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, curQuestion.id)
-        if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
+
+        // seeing this useEffect run in screens further up the navigation stack so I'm putting this if statement in temporarily so we don't keep doing api calls
+        if (gameSession.currentState === GameSessionState.PHASE_1_RESULTS || gameSession.currentState === GameSessionState.PHASE_2_RESULTS)
+          totalScore = calculateTotalScore(gameSession, curQuestion, updatedCurTeam)
+        
+          if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
             // User has answered both phases
             if (teamAnswers.length > 1) {
                 const answer = teamAnswers[1]
@@ -121,7 +127,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
         return `% ${calculatePercentage(answer)}`
     }
 
-    const calculateTotalScore =(gameSession, currentquestion, curTeam) => {
+    const calculateTotalScore =(gameSession, currentQuestion, curTeam) => {
       const newScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam)
       global.apiClient.updateTeam({id: curTeam.id, score: newScore})
       return newScore
@@ -165,8 +171,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
                         icon={teamAvatar.smallSrc}
                         name={curTeam.name ? curTeam.name : "N/A"}
                         score={phase2Score}
-                        totalScore={calculateTotalScore(gameSession,currentQuestion,curTeam)
-                        }
+                        totalScore={totalScore}
                     />
                 </View>
             </>}
