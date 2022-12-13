@@ -286,6 +286,7 @@ const styles = StyleSheet.create({
     timerProgressBar: {
         marginRight: 9,
         marginTop: 5,
+        marginBottom: 5
     },
     timerText: {
         color: "white",
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: 100,
-        marginTop: -scale(150),
+        marginTop: -scale(160),
         marginBottom: scale(50),
     },
     footerView: {
