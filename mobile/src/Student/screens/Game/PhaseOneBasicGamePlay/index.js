@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
         maxHeight: verticalScale(400),
     },
     hintsViewQuestion: {
-        paddingVertical: 0,
+        paddingTop: 40,
     },
     carouselContainer: {
         flex: 1,
