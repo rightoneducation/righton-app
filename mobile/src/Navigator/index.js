@@ -29,11 +29,12 @@ const AppContainer = () => {
                 saveTeamAvatar,
                 clearStorage,
             }) => (
-                <NavigationContainer>
+                <NavigationContainer >
                     <Stack.Navigator
                         initialRouteName="JoinGame"
                         screenOptions={{
                             headerShown: false,
+                            gestureEnabled: false
                         }}
                     >
                         <Stack.Screen name="JoinGame">
