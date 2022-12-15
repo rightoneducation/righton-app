@@ -136,9 +136,9 @@ const PhaseOneBasicGamePlay = ({
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
     let cards = [
-        <Card headerTitle="Question" key={"question"}>
+        <Card headerTitle="Question" key={"question"} >
             <ScrollableQuestion question={question} />
-        </Card>,
+        </Card >,
         <View key={"answers"}>
             <Card headerTitle="Answers">
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
@@ -197,6 +197,7 @@ const PhaseOneBasicGamePlay = ({
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
+
                         <Text style={styles.headerText}>
                             Answer The Question
                         </Text>
@@ -215,8 +216,15 @@ const PhaseOneBasicGamePlay = ({
                                 {("0" + Math.floor(currentTime % 60)).slice(-2)}
                             </Text>
                         </View>
+
                     </>
                 ) : null}
+            </LinearGradient>
+            <LinearGradient colors={["rgba(62, 0, 172, 1)", "rgba(98, 0, 204, 1)"]}
+                style={styles.headerContainer}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 1 }}>
+
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 {cards.length > 1 ? (
@@ -247,11 +255,13 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(247,249,250,1)",
     },
     headerContainer: {
-        height: verticalScale(225),
+        height: "20%",
         shadowColor: "rgba(0, 141, 239, 0.3)",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        padding: "10%"
     },
     headerText: {
-        marginTop: scale(24),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -259,7 +269,7 @@ const styles = StyleSheet.create({
         color: "white",
     },
     answerTitle: {
-        marginTop: scale(20),
+        marginTop: "10%",
     },
     correctAnswerText: {
         color: '#349E15'
@@ -268,8 +278,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
-        marginHorizontal: scale(40),
-        marginBottom: scale(40),
+        margin: "9%"
     },
     submitAnswerText: {
         fontSize: 18,
@@ -277,16 +286,13 @@ const styles = StyleSheet.create({
     timerContainer: {
         flex: 1,
         flexDirection: "row",
-        marginTop: scale(15),
-        alignContent: "flex-start",
-        alignItems: "flex-start",
-        marginLeft: scale(30),
-        marginRight: scale(21),
+        justifyContent: "center",
+        alignItems: "center"
     },
     timerProgressBar: {
-        marginRight: 9,
-        marginTop: 5,
-        marginBottom: 5
+        height: "20%",
+        width: "90%",
+        margin: "3%"
     },
     timerText: {
         color: "white",
@@ -300,17 +306,15 @@ const styles = StyleSheet.create({
         fontSize: fonts.small,
         fontWeight: fontWeights.extraBold,
         textAlign: "center",
-        marginHorizontal: scale(20),
-        marginVertical: scale(20),
     },
     hintsView: {
-        marginTop: -60,
+        marginTop: "-15%",
+        height: "110%"
     },
     hintsViewTitle: {
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.semiLarge,
         color: 'white',
-        marginBottom: scale(20),
         textAlign: 'center',
     },
     hintsViewCorrectAnswer: {
@@ -320,24 +324,24 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     hintsViewCard: {
-        marginTop: -40,
-        paddingBottom: scale(20),
-        maxHeight: verticalScale(400),
+        marginTop: "-55%",
+        padding: "1%",
+        alignContent: "space-around",
+        maxHeight: "100%"
     },
     hintsViewQuestion: {
-        paddingTop: 39,
+        padding: "5%",
     },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: 100,
-        marginTop: -scale(160),
-        marginBottom: scale(50),
+        marginBottom: 8,
+        marginTop: "-50%"
     },
     footerView: {
         position: "absolute",
         bottom: 0,
         width: "100%",
-        marginBottom: verticalScale(18),
+        marginVertical: "8%",
     },
 })
