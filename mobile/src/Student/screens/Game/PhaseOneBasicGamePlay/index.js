@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
         marginVertical: scale(20),
     },
     hintsView: {
-        marginTop: -60,
+        marginTop: -scale(60),
     },
     hintsViewTitle: {
         fontFamily: fontFamilies.karlaBold,
@@ -319,17 +319,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     hintsViewCard: {
-        marginTop: -40,
-        paddingBottom: scale(20),
+        marginTop: -scale(40),
+        paddingVertical: 0,
         maxHeight: verticalScale(400),
     },
     hintsViewQuestion: {
-        paddingVertical: 0,
+        paddingVertical: scale(30)
     },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: 100,
+        marginBottom: scale(10),
         marginTop: -scale(150),
         marginBottom: scale(50),
     },
