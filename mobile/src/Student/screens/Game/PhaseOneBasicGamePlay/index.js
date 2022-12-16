@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 141, 239, 0.3)",
     },
     headerText: {
-        marginTop: scale(24),
+        marginTop: verticalScale(24),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
         color: "white",
     },
     answerTitle: {
-        marginTop: scale(20),
+        marginTop: verticalScale(20),
     },
     correctAnswerText: {
         color: '#349E15'
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
-        marginBottom: scale(40),
+        marginBottom: verticalScale(40),
     },
     submitAnswerText: {
         fontSize: 18,
@@ -300,16 +300,16 @@ const styles = StyleSheet.create({
         fontWeight: fontWeights.extraBold,
         textAlign: "center",
         marginHorizontal: scale(20),
-        marginVertical: scale(20),
+        marginVertical: verticalScale(20),
     },
     hintsView: {
-        marginTop: -scale(60),
+        marginTop: -verticalScale(60),
     },
     hintsViewTitle: {
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.semiLarge,
         color: 'white',
-        marginBottom: scale(20),
+        marginBottom: verticalScale(20),
         textAlign: 'center',
     },
     hintsViewCorrectAnswer: {
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     hintsViewCard: {
-        marginTop: -scale(40),
+        marginTop: -verticalScale(40),
         paddingVertical: 0,
         maxHeight: verticalScale(400)
     },
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: verticalScale(10),
-        marginTop: -scale(150),
+        marginTop: -verticalScale(150),
         marginBottom: scale(50),
     },
     footerView: {
