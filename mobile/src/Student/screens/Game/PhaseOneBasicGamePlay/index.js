@@ -321,15 +321,15 @@ const styles = StyleSheet.create({
     hintsViewCard: {
         marginTop: -scale(40),
         paddingVertical: 0,
-        maxHeight: verticalScale(400),
+        maxHeight: verticalScale(400)
     },
     hintsViewQuestion: {
-        paddingVertical: scale(30)
+        paddingVertical: verticalScale(30)
     },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: scale(10),
+        marginBottom: verticalScale(10),
         marginTop: -scale(150),
         marginBottom: scale(50),
     },
