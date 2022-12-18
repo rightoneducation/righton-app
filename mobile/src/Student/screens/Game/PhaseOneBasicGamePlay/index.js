@@ -286,6 +286,7 @@ const styles = StyleSheet.create({
     timerProgressBar: {
         marginRight: 9,
         marginTop: 5,
+        marginBottom: 5
     },
     timerText: {
         color: "white",

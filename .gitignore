@@ -23,10 +23,6 @@ buck-out/
 # google-services.json
 # GoogleService-Info.plist
 
-# Lock files
-yarn.lock
-package-lock.json
-
 # AWS Amplify
 amplify/\#current-cloud-backend
 aws-info.json
