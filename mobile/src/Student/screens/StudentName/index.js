@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from "@righton/networking"
 import { useRef, useState } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
-import { getUniqueId } from "react-native-device-info"
+import uuid from "react-native-uuid"
 import PurpleBackground from "../../../components/PurpleBackground"
 import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
@@ -35,30 +35,28 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                     return
                 }
 
-                getUniqueId()
-                    .then((uniqueId) => {
-                        global.apiClient
-                            .addTeamMemberToTeam(team.id, true, uniqueId)
-                            .then((teamMember) => {
-                                if (!teamMember) {
-                                    console.error("Failed to add team member")
-                                    return
-                                }
 
-                                if (isNullOrUndefined(team.teamMembers)) {
-                                    team.teamMembers = [teamMember]
-                                }
+                global.apiClient
+                    .addTeamMemberToTeam(team.id, true, uuid.v4())
+                    .then((teamMember) => {
+                        if (!teamMember) {
+                            console.error("Failed to add team member")
+                            return
+                        }
 
-                                return setTeamInfo(team, teamMember)
-                            }).then(() => {
-                                navigation.navigate("SelectTeam")
-                            }).catch((error) => {
-                                console.error(error)
-                            })
-                    })
-                    .catch((error) => {
+                        if (isNullOrUndefined(team.teamMembers)) {
+                            team.teamMembers = [teamMember]
+                        }
+
+                        return setTeamInfo(team, teamMember)
+                    }).then(() => {
+                        navigation.navigate("SelectTeam")
+                    }).catch((error) => {
                         console.error(error)
                     })
+            })
+            .catch((error) => {
+                console.error(error)
             })
     }
 
