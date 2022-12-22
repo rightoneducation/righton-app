@@ -35,6 +35,6 @@ const styles = StyleSheet.create({
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.xxMedium,
         color: colors.white,
-        marginTop: 30,
+       // marginTop: 30
     }
 })
