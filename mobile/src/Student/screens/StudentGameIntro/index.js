@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     headerTeam: {
         color: colors.white,
         fontFamily: fontFamilies.montserratBold,
-        fontSize: fonts.xxLarge,
+        fontSize: 42,
         textAlign: "center",
     },
     headerTeamNo: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     },
     footerNote: {
         fontFamily: fontFamilies.karlaBold,
-        fontSize: fonts.small,
+        fontSize: fonts.xxsmall,
         color: "white",
         textAlign: "center",
     },

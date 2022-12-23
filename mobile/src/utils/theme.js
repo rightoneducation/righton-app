@@ -63,7 +63,7 @@ const colors = {
   red: '#c0001d',
   buttonPrimary: '#FC1047',
   buttonSecondary: '#159EFA',
-  backgroundPurple: '#483a82',
+  backgroundPurple: '#312759',
   lightGreen: '#4DED66',
   lightBlue: '#159EFA',
   blackTransparent38: 'rgba(0, 0, 0, 0.38)'
