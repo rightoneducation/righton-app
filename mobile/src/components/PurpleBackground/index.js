@@ -6,9 +6,9 @@ const PurpleBackground = (props) => {
     const style = { ...styles.background, ...props.style }
     return (
         <LinearGradient
-            colors={['#483a82', '#7962c4', '#483a82']}
-            start={{ x: 0.4, y: 0.2 }} end={{ x: 0.6, y: 0.8 }}
-            locations={[0, 0.7, 1]}
+            colors={['#312759', '#6e5eaf', '#312759']}
+            start={{ x: 0, y: 0.2 }} end={{ x: 0, y: 0.8 }}
+            locations={[0, 0.4, 1]}
             style={style}>
             {props.children}
         </LinearGradient>
