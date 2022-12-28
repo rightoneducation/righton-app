@@ -29,7 +29,7 @@ const PregameCountDown = ({
                 }}
             />
             <Text style={styles.text}>
-                Your team's question will appear soon.
+                Your team's question will appear soon. {"\n"}{"\n"} Pick the correct answer!
             </Text>
         </PurpleBackground>
     )
