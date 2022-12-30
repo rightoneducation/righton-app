@@ -1,5 +1,5 @@
-import { scale, ScaledSheet } from 'react-native-size-matters'
-import { colors, fontFamilies, fonts } from '../../../utils/theme'
+import { scale, verticalScale, ScaledSheet } from 'react-native-size-matters'
+import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 
 export default ScaledSheet.create({
   container: {
@@ -52,5 +52,22 @@ export default ScaledSheet.create({
   logoContainer: {
     marginTop: 22,
     height: scale(166)
+  },
+  noNameErrorTextBold: {
+    fontFamily: fontFamilies.karlaBold,
+    fontSize: 22,
+    fontWeight: fontWeights.extraBold,
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginTop: verticalScale(50),
+    color: colors.white
+  },
+  noNameErrorText: {
+    fontFamily: fontFamilies.karlaRegular,
+    fontSize: 22,
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginTop: verticalScale(10),
+    color: colors.white
   }
 })
