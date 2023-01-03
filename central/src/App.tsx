@@ -159,14 +159,14 @@ function App() {
     setLoading(false);
   };
 
-  const isResolutionMobile = useMediaQuery("(max-width: 600px)");
+  const isResolutionMobile = useMediaQuery("(max-width: 780px)");
 
   const handleSearchClick = (isClick: boolean) => {
     setIsSearchClick(isClick);
   }
 
   useEffect(() => {
-    getWhatToDo();
+    // getWhatToDo();
     getGames();
     setStartup(false);
   }, [sortType]);

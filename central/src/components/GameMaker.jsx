@@ -131,7 +131,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
   }
 
-  console.log(disabled);
+  //console.log(disabled);
 
   // Save New or Exisiting Game (preliminary submit)
   const handleSubmit = (event) => {
