@@ -34,7 +34,7 @@ const Signup: React.FC = () => {
           name,
         },
       });
-      history.push("/confirmation");
+      history.push("/login");
     } catch (error) {
       console.error(error);
     }

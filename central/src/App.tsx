@@ -67,6 +67,7 @@ function App() {
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
+  const [isUserAuth, setIsUserAuth] = useState(false);
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -134,7 +135,9 @@ function App() {
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
 
-
+  const handleUserAuth = (isAuth: boolean) => {
+    setIsUserAuth(isAuth);
+  }
 
   const getWhatToDo = (async () => {
     let user = null;
@@ -180,7 +183,7 @@ function App() {
     setAlert,
   };
 
-
+  console.log(isUserAuth);
 
   return (
     <ThemeProvider theme={theme}>
@@ -189,7 +192,7 @@ function App() {
           <Switch>
             <Route path="/login">
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
-              <LogIn />
+              <LogIn handleUserAuth={handleUserAuth} />
             </Route>
 
             <Route path="/signup">

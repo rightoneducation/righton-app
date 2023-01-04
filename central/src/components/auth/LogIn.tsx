@@ -3,13 +3,14 @@ import TextField from "@material-ui/core/TextField";
 import { styled } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
 
-const LogIn: React.FC = () => {
+const LogIn: React.FC = ({handleUserAuth}) => {
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [adminError, setAdminError] = React.useState(false);
 
   const handleSubmit = async (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
@@ -17,10 +18,16 @@ const LogIn: React.FC = () => {
 
     try {
       await Auth.signIn(email, password);
-      //history.push("/");
+      handleUserAuth(true);
       window.location.href = "/";
-    } catch (error) {
-      console.log(error);
+
+    } catch (e) {
+      console.log(e);
+      if (e instanceof Error){
+        if (e.name ==='UserNotConfirmedException'){
+          setAdminError(true);
+        }
+      }
     }
     setLoading(false);
   };
@@ -31,6 +38,7 @@ const LogIn: React.FC = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
+      spacing={4}
     >
       <img
         src={RightOnLogo}
@@ -73,7 +81,7 @@ const LogIn: React.FC = () => {
             item
             direction="row"
             justifyContent="space-between"
-            spacing={4}
+            spacing={2}
           >
             <SignUpLink to="/signup">Sign Up</SignUpLink>
             <LogInLink
@@ -87,6 +95,7 @@ const LogIn: React.FC = () => {
           </ButtonGrid>
         </form>
       </Grid>
+      {adminError ? <ErrorType> User account has not been confirmed. Please contact the administrator. </ErrorType> : null}
     </Grid>
   );
 };
@@ -121,4 +130,8 @@ const ButtonGrid = styled(Grid)({
   display: "flex",
   flexDirection: "row",
   justifyContent: "space-around",
+});
+
+const ErrorType = styled(Typography)({
+  fontStyle: 'italic'
 });
