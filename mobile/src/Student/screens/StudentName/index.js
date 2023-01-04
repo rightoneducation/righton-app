@@ -12,13 +12,18 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
     const lastNameTextRef = useRef(null)
+    const [showErrorText, setShowErrorText] = useState(false)
 
     onNameSubmit = () => {
+        if (!firstName || !lastName) {
+            setShowErrorText(true)
+            return
+        }
+        setShowErrorText(false)
         if (!firstName && firstNameTextRef) {
             firstNameTextRef.focus()
             return
         }
-
         if (!lastName && lastNameTextRef) {
             lastNameTextRef.focus()
             return
@@ -114,6 +119,21 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                     style={styles.enterButton}
                                     onPress={this.onNameSubmit}
                                 />
+                                {showErrorText &&
+                                    <View>
+                                        <Text
+                                            style={styles.noNameErrorTextBold}>
+                                            Type in both your first and{"\n"}
+                                            last name to enter the game.{"\n"}
+                                        </Text>
+                                        <Text
+                                            style={styles.noNameErrorText}>
+                                            This will be used to identify you{"\n"}
+                                            only during the game, and{"\n"}
+                                            will not be stored.
+                                        </Text>
+                                    </View>
+                                }
                             </>
                         )}
                     </View>
