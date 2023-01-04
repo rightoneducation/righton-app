@@ -6,7 +6,8 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    View
+    View,
+    ScrollView
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -167,7 +168,7 @@ const PhaseTwoBasicGamePlay = ({
             <Card
                 key={answer.id}
                 style={styles.headerText}
-                headerTitle={`Wrong Answer Info ${answer.text}`}
+            //headerTitle={`Wrong Answer Info ${answer.text}`}
             >
                 <Card reasons={answer.reason}>
                     <Text>{answer.reason}</Text>
@@ -210,7 +211,15 @@ const PhaseTwoBasicGamePlay = ({
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 {cards.length > 1 ? (
-                    <HorizontalPageView>{cards}</HorizontalPageView>
+                    <HorizontalPageView>
+                        <ScrollView>
+                            <Text style={styles.headerText}>
+                                Wrong Answers
+                            </Text>
+                            {cards}
+                        </ScrollView>
+                        <Text style={styles.headerText}>Correct Answer</Text>
+                    </HorizontalPageView>
                 ) : (
                     cards[0]
                 )}
@@ -240,7 +249,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 141, 239, 0.3)",
     },
     headerText: {
-        marginTop: scale(24),
+        marginVertical: verticalScale(10),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
