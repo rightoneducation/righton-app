@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Grid, Typography } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
 
-const LogIn: React.FC = ({handleUserAuth}) => {
+const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUserAuth}) => {
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -18,6 +18,8 @@ const LogIn: React.FC = ({handleUserAuth}) => {
 
     try {
       await Auth.signIn(email, password);
+      //todo: receive a token/fetch token and store it in localstorage
+      //todo: set isloggedin to true
       handleUserAuth(true);
       window.location.href = "/";
 
