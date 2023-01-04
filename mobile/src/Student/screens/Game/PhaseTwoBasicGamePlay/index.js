@@ -131,7 +131,40 @@ const PhaseTwoBasicGamePlay = ({
 
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
-    let cards = [
+    let firstSlide = [
+        <Card headerTitle="Question">
+            <ScrollableQuestion question={question} />
+        </Card>
+    ]
+    let secondSlide = [
+        <View>
+            <Card headerTitle="Answers">
+                <AnswerOptionsPhaseTwo
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                    disabled={submitted}
+                    correctAnswer={correctAnswer}
+                />
+                {!submitted && (
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Submit Answer"
+                        onPress={handleSubmitAnswer}
+                    />
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
+            )}
+        </View>
+    ]
+    /*let cards = [
         <Card headerTitle="Question">
             <ScrollableQuestion question={question} />
         </Card>,
@@ -161,10 +194,10 @@ const PhaseTwoBasicGamePlay = ({
                 </Text>
             )}
         </View>,
-    ]
+    ]*/
 
     if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
-        cards = wrongAnswers.map((answer) => (
+        firstSlide = wrongAnswers.map((answer) => (
             <Card
                 key={answer.id}
                 style={styles.headerText}
@@ -175,6 +208,16 @@ const PhaseTwoBasicGamePlay = ({
                 </Card>
             </Card>
         ))
+        secondSlide =
+            <Card
+                key={correctAnswer.id}
+                style={styles.headerText}
+            >
+
+                <Card reasons={correctAnswer.reason}>
+                    <Text>{correctAnswer.reason}</Text>
+                </Card>
+            </Card>
     }
 
     return (
@@ -210,19 +253,52 @@ const PhaseTwoBasicGamePlay = ({
                 ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                {cards.length > 1 ? (
-                    <HorizontalPageView>
-                        <ScrollView>
-                            <Text style={styles.headerText}>
-                                Wrong Answers
-                            </Text>
-                            {cards}
-                        </ScrollView>
-                        <Text style={styles.headerText}>Correct Answer</Text>
-                    </HorizontalPageView>
+                <HorizontalPageView>
+                    <ScrollView>
+                        {firstSlide}
+                    </ScrollView>
+                    <ScrollView>
+                        {secondSlide}
+                    </ScrollView>
+                    {/*{cards.length > 1 ? (
+                    
+                        {gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS ?
+                            <ScrollView>
+
+                                <Text style={styles.headerText}>
+                                    Wrong Answers
+                                </Text>
+                                {cards}
+                                <Card headerTitle="Question">
+                                    <ScrollableQuestion question={question} />
+                                </Card>
+
+                            </ScrollView> :
+                            <ScrollView>
+                                <Card headerTitle="Question">
+                                    <ScrollableQuestion question={question} />
+                                </Card></ScrollView>}
+                        {gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS ?
+                            <ScrollView>
+                                <Text style={styles.headerText}>Correct Answer</Text>
+                                <Card
+                                    key={correctAnswer.id}
+                                    style={styles.headerText}
+                                >
+
+                                    <Card reasons={correctAnswer.reason}>
+                                        <Text>{correctAnswer.reason}</Text>
+                                    </Card>
+                                </Card>
+                            </ScrollView> : <ScrollView>
+
+                                {cards}
+                        </ScrollView>}*/}
+                </HorizontalPageView>
+                {/*
                 ) : (
                     cards[0]
-                )}
+                )*/}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
