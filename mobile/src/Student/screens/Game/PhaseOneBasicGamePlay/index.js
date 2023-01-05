@@ -72,38 +72,38 @@ const PhaseOneBasicGamePlay = ({
     }, [gameSession, currentTime])
 
     const handleSubmitAnswer = () => {
-           
-                        const answer = answerChoices[selectedAnswerIndex]
-                        // if isCorrectAnswer is true, add 10 points to the team's score
-                        // this does not update team score in the database yet
-                        if (answer.isCorrectAnswer && team) {
-                            team.score += 10
-                        }
-                        setSubmitted(true)
-                        global.apiClient
-                            .addTeamAnswer(
-                                teamMember.id,
-                                question.id,
-                                answer.text,
-                                answer.isChosen ? null : true,
-                                false
-                            )
-                            .then((teamAnswer) => {
-                                if (teamAnswer == null) {
-                                    console.error(
-                                        "Failed to create team Answer."
-                                    )
-                                    return
-                                }
-                                console.debug(
-                                    "phase 1 team answer:",
-                                    teamAnswer
-                                )
-                            })
-                            .catch((error) => {
-                                console.error(error.message)
-                            })
-                  
+
+        const answer = answerChoices[selectedAnswerIndex]
+        // if isCorrectAnswer is true, add 10 points to the team's score
+        // this does not update team score in the database yet
+        if (answer.isCorrectAnswer && team) {
+            team.score += 10
+        }
+        setSubmitted(true)
+        global.apiClient
+            .addTeamAnswer(
+                teamMember.id,
+                question.id,
+                answer.text,
+                answer.isChosen ? null : true,
+                false
+            )
+            .then((teamAnswer) => {
+                if (teamAnswer == null) {
+                    console.error(
+                        "Failed to create team Answer."
+                    )
+                    return
+                }
+                console.debug(
+                    "phase 1 team answer:",
+                    teamAnswer
+                )
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
+
     }
 
     const answersParsed = question.choices
@@ -143,8 +143,8 @@ const PhaseOneBasicGamePlay = ({
                     <RoundButton
                         style={
                             (selectedAnswerIndex || selectedAnswerIndex === 0)
-                            ? styles.answerChosen
-                            : styles.submitAnswer
+                                ? styles.answerChosen
+                                : styles.submitAnswer
                         }
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
@@ -153,13 +153,16 @@ const PhaseOneBasicGamePlay = ({
                 )}
             </Card>
             {submitted && (
-                <><RoundButton
-                    style={styles.submitAnswer}
-                    titleStyle={styles.submitAnswerText}
-                    title="Answer Submitted" />
+                <>
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Answer Submitted"
+                    />
                     <Text style={styles.answerSubmittedText}>
                         {submittedAnswerText}
-                    </Text></>
+                    </Text>
+                </>
             )}
         </View>,
     ]
@@ -304,7 +307,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: verticalScale(20),
-        marginTop:  -verticalScale(25)
+        marginTop: -verticalScale(25)
     },
     hintsView: {
         marginTop: -verticalScale(60),
