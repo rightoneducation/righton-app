@@ -55,6 +55,8 @@ const PhaseTwoBasicGamePlay = ({
         }
     })
 
+    const rightAnswer = answerChoices.filter((answer) => answer.isCorrectAnswer)
+
     const wrongAnswers = answerChoices.filter(
         (answer) => !answer.isCorrectAnswer
     )
@@ -133,14 +135,16 @@ const PhaseTwoBasicGamePlay = ({
 
     let firstSlide = [
         <>
-            <Card headerTitle="Question">
+            <Text style={styles.cardHeadingText}>Question</Text>
+            <Card>
                 <ScrollableQuestion question={question} />
             </Card>
         </>
     ]
     let secondSlide = [
         <View>
-            <Card headerTitle="Answers">
+            <Text style={styles.cardHeadingText}>Answers</Text>
+            <Card>
                 <AnswerOptionsPhaseTwo
                     isAdvancedMode={gameSession.isAdvanced}
                     isFacilitator={teamMember?.isFacilitator}
@@ -166,60 +170,34 @@ const PhaseTwoBasicGamePlay = ({
             )}
         </View>
     ]
-    /*let cards = [
-        <Card headerTitle="Question">
-            <ScrollableQuestion question={question} />
-        </Card>,
-        <View>
-            <Card headerTitle="Answers">
-                <AnswerOptionsPhaseTwo
-                    isAdvancedMode={gameSession.isAdvanced}
-                    isFacilitator={teamMember?.isFacilitator}
-                    selectedAnswerIndex={selectedAnswerIndex}
-                    setSelectedAnswerIndex={setSelectedAnswerIndex}
-                    answers={answerChoices}
-                    disabled={submitted}
-                    correctAnswer={correctAnswer}
-                />
-                {!submitted && (
-                    <RoundButton
-                        style={styles.submitAnswer}
-                        titleStyle={styles.submitAnswerText}
-                        title="Submit Answer"
-                        onPress={handleSubmitAnswer}
-                    />
-                )}
-            </Card>
-            {submitted && (
-                <Text style={styles.answerSubmittedText}>
-                    {submittedAnswerText}
-                </Text>
-            )}
-        </View>,
-    ]*/
 
     if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
-        firstSlide = wrongAnswers.map((answer) => (
-            <Card
-                key={answer.id}
-                style={styles.headerText}
-            //headerTitle={`Wrong Answer Info ${answer.text}`}
-            >
-                <Card reasons={answer.reason}>
-                    <Text>{answer.reason}</Text>
-                </Card>
-            </Card>
-        ))
+        firstSlide =
+            <>
+                <Text style={styles.cardHeadingText}>Wrong Answers</Text>
+                {wrongAnswers.map((answer) => (
+                    <Card
+                        key={answer.id}
+                        style={styles.headerText}
+                    >
+                        <Card reasons={answer.reason}>
+                            <Text>{answer.reason}</Text>
+                        </Card>
+                    </Card>
+                ))}
+            </>
         secondSlide =
-            <Card
-                key={correctAnswer.id}
-                style={styles.headerText}
-            >
+            <>
+                <Text style={styles.cardHeadingText}>Correct Answer</Text>
+                <Card
+                    key={rightAnswer.id}
+                    style={styles.headerText}
+                >
 
-                <Card reasons={correctAnswer.reason}>
-                    <Text>{correctAnswer.reason}</Text>
-                </Card>
-            </Card>
+                    <Card reasons={rightAnswer.reason}>
+                        <Text>{rightAnswer.reason}</Text>
+                    </Card>
+                </Card></>
     }
 
     return (
@@ -245,7 +223,7 @@ const PhaseTwoBasicGamePlay = ({
                                 width={
                                     Dimensions.get("window").width - scale(90)
                                 }
-
+                                height={"100%"}
                             />
                             <Text style={styles.timerText}>
                                 {Math.floor(currentTime / 60)}:
@@ -253,7 +231,9 @@ const PhaseTwoBasicGamePlay = ({
                             </Text>
                         </View>
                     </>
-                ) : null}
+                ) : <Text style={styles.headerText}>
+                    Answer Explanations
+                </Text>}
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 <HorizontalPageView>
@@ -263,45 +243,7 @@ const PhaseTwoBasicGamePlay = ({
                     <ScrollView>
                         {secondSlide}
                     </ScrollView>
-                    {/*{cards.length > 1 ? (
-                    
-                        {gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS ?
-                            <ScrollView>
-
-                                <Text style={styles.headerText}>
-                                    Wrong Answers
-                                </Text>
-                                {cards}
-                                <Card headerTitle="Question">
-                                    <ScrollableQuestion question={question} />
-                                </Card>
-
-                            </ScrollView> :
-                            <ScrollView>
-                                <Card headerTitle="Question">
-                                    <ScrollableQuestion question={question} />
-                                </Card></ScrollView>}
-                        {gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS ?
-                            <ScrollView>
-                                <Text style={styles.headerText}>Correct Answer</Text>
-                                <Card
-                                    key={correctAnswer.id}
-                                    style={styles.headerText}
-                                >
-
-                                    <Card reasons={correctAnswer.reason}>
-                                        <Text>{correctAnswer.reason}</Text>
-                                    </Card>
-                                </Card>
-                            </ScrollView> : <ScrollView>
-
-                                {cards}
-                        </ScrollView>}*/}
                 </HorizontalPageView>
-                {/*
-                ) : (
-                    cards[0]
-                )*/}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -333,6 +275,14 @@ const styles = StyleSheet.create({
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
         fontWeight: "bold",
+        color: "white"
+    },
+    cardHeadingText: {
+        marginVertical: verticalScale(8),
+        textAlign: "center",
+        fontFamily: fontFamilies.montserratBold,
+        fontSize: fonts.medium,
+        fontWeight: "bold",
         color: "white",
     },
     answerTitle: {
@@ -348,26 +298,6 @@ const styles = StyleSheet.create({
     submitAnswerText: {
         fontSize: 18,
     },
-    timerContainer: {
-        flex: 1,
-        flexDirection: "row",
-        marginTop: scale(10),
-        justifyContent: "center"
-    },
-    timerProgressBar: {
-        height: verticalScale(14),
-        borderRadius: 9,
-        alignItems: "flex-end",
-        justifyContent: "center"
-    },
-    timerText: {
-        color: "white",
-        opacity: 0.8,
-        fontSize: fonts.xSmall,
-        fontFamily: fontFamilies.latoBold,
-        fontWeight: "bold",
-        marginLeft: scale(4)
-    },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.small,
@@ -375,6 +305,28 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: scale(20),
+    },
+    timerContainer: {
+        flex: 1,
+        flexDirection: "row",
+        marginTop: scale(5),
+        alignContent: "flex-start",
+        alignItems: "flex-start",
+        justifyContent: "center"
+    },
+    timerProgressBar: {
+        marginTop: verticalScale(5),
+        height: verticalScale(13),
+        borderRadius: 9,
+    },
+    timerText: {
+        color: "white",
+        opacity: 0.8,
+        fontSize: fonts.xSmall,
+        fontFamily: fontFamilies.latoBold,
+        fontWeight: "bold",
+        marginLeft: scale(5),
+        marginTop: scale(5)
     },
     carouselContainer: {
         flex: 1,
