@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'center',
     marginTop: 15,
-    //borderWidth: 7,
     borderColor: 'rgba(111,111,111,0)',
     borderRadius: 20
   },
