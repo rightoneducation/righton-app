@@ -132,9 +132,11 @@ const PhaseTwoBasicGamePlay = ({
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
     let firstSlide = [
-        <Card headerTitle="Question">
-            <ScrollableQuestion question={question} />
-        </Card>
+        <>
+            <Card headerTitle="Question">
+                <ScrollableQuestion question={question} />
+            </Card>
+        </>
     ]
     let secondSlide = [
         <View>
@@ -243,6 +245,7 @@ const PhaseTwoBasicGamePlay = ({
                                 width={
                                     Dimensions.get("window").width - scale(90)
                                 }
+
                             />
                             <Text style={styles.timerText}>
                                 {Math.floor(currentTime / 60)}:
@@ -325,7 +328,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 141, 239, 0.3)",
     },
     headerText: {
-        marginVertical: verticalScale(10),
+        marginTop: verticalScale(14),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -348,15 +351,14 @@ const styles = StyleSheet.create({
     timerContainer: {
         flex: 1,
         flexDirection: "row",
-        marginTop: scale(15),
-        alignContent: "flex-start",
-        alignItems: "flex-start",
-        marginLeft: scale(30),
-        marginRight: scale(21),
+        marginTop: scale(10),
+        justifyContent: "center"
     },
     timerProgressBar: {
-        marginRight: 9,
-        marginTop: 5,
+        height: verticalScale(14),
+        borderRadius: 9,
+        alignItems: "flex-end",
+        justifyContent: "center"
     },
     timerText: {
         color: "white",
@@ -364,6 +366,7 @@ const styles = StyleSheet.create({
         fontSize: fonts.xSmall,
         fontFamily: fontFamilies.latoBold,
         fontWeight: "bold",
+        marginLeft: scale(4)
     },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
