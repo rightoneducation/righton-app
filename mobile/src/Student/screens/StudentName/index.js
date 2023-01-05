@@ -62,7 +62,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
 
     return (
         <>
-            <SafeAreaView style={{ flex: 0, backgroundColor: "#483a82" }} />
+            <SafeAreaView style={{ flex: 0, backgroundColor: "#312759" }} />
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>
                     <View style={styles.logoContainer}>
