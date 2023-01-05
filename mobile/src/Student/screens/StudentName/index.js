@@ -12,15 +12,23 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
     const lastNameTextRef = useRef(null)
+    const [showErrorText, setShowErrorText] = useState(false)
 
-    onNameSubmit = () => {
-        if (!firstName && firstNameTextRef) {
-            firstNameTextRef.focus()
-            return
+    const validateIsNotEmpty = (text, textInputRef) => {
+        if (text) {
+            setShowErrorText(false)
+            return true
         }
 
-        if (!lastName && lastNameTextRef) {
-            lastNameTextRef.focus()
+        textInputRef.current.focus()
+
+        setShowErrorText(true)
+        return false
+    }
+
+    onNameSubmit = () => {
+        if (!validateIsNotEmpty(firstName, firstNameTextRef) ||
+            !validateIsNotEmpty(lastName, lastNameTextRef)) {
             return
         }
 
@@ -85,9 +93,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                         onSubmitEditing={this.onNameSubmit}
                                         placeholder={"First Name"}
                                         placeholderTextColor={colors.primary}
-                                        ref={(ref) => {
-                                            this.firstNameTextRef = ref
-                                        }}
+                                        ref={firstNameTextRef}
                                         returnKeyType={"done"}
                                         style={styles.input}
                                         textAlign={"center"}
@@ -100,9 +106,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                         onSubmitEditing={this.onNameSubmit}
                                         placeholder={"Last Name"}
                                         placeholderTextColor={colors.primary}
-                                        ref={(ref) => {
-                                            this.lastNameTextRef = ref
-                                        }}
+                                        ref={lastNameTextRef}
                                         returnKeyType={"done"}
                                         style={styles.input}
                                         textAlign={"center"}
@@ -114,6 +118,21 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                     style={styles.enterButton}
                                     onPress={this.onNameSubmit}
                                 />
+                                {showErrorText &&
+                                    <View>
+                                        <Text
+                                            style={styles.noNameErrorTextBold}>
+                                            Type in both your first and{"\n"}
+                                            last name to enter the game.{"\n"}
+                                        </Text>
+                                        <Text
+                                            style={styles.noNameErrorText}>
+                                            This will be used to identify you{"\n"}
+                                            only during the game, and{"\n"}
+                                            will not be stored.
+                                        </Text>
+                                    </View>
+                                }
                             </>
                         )}
                     </View>
