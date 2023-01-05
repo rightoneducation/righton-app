@@ -19,9 +19,9 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
             setShowErrorText(false)
             return true
         }
-        if (textInputRef) {
-            textInputRef.focus()
-        }
+
+        textInputRef.current.focus()
+
         setShowErrorText(true)
         return false
     }
@@ -93,9 +93,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                         onSubmitEditing={this.onNameSubmit}
                                         placeholder={"First Name"}
                                         placeholderTextColor={colors.primary}
-                                        ref={(ref) => {
-                                            this.firstNameTextRef = ref
-                                        }}
+                                        ref={firstNameTextRef}
                                         returnKeyType={"done"}
                                         style={styles.input}
                                         textAlign={"center"}
@@ -108,9 +106,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                         onSubmitEditing={this.onNameSubmit}
                                         placeholder={"Last Name"}
                                         placeholderTextColor={colors.primary}
-                                        ref={(ref) => {
-                                            this.lastNameTextRef = ref
-                                        }}
+                                        ref={lastNameTextRef}
                                         returnKeyType={"done"}
                                         style={styles.input}
                                         textAlign={"center"}
