@@ -14,18 +14,21 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
     const lastNameTextRef = useRef(null)
     const [showErrorText, setShowErrorText] = useState(false)
 
+    const validateIsNotEmpty = (text, textInputRef) => {
+        if (text) {
+            setShowErrorText(false)
+            return true
+        }
+        if (textInputRef) {
+            textInputRef.focus()
+        }
+        setShowErrorText(true)
+        return false
+    }
+
     onNameSubmit = () => {
-        if (!firstName || !lastName) {
-            setShowErrorText(true)
-            return
-        }
-        setShowErrorText(false)
-        if (!firstName && firstNameTextRef) {
-            firstNameTextRef.focus()
-            return
-        }
-        if (!lastName && lastNameTextRef) {
-            lastNameTextRef.focus()
+        if (!validateIsNotEmpty(firstName, firstNameTextRef) ||
+            !validateIsNotEmpty(lastName, lastNameTextRef)) {
             return
         }
 
