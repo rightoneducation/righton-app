@@ -169,6 +169,7 @@ function App() {
   }
 
   useEffect(() => {
+    console.log(localStorage.getItem('token'));
     getWhatToDo();
     getGames();
     setStartup(false);

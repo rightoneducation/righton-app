@@ -20,8 +20,12 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
       await Auth.signIn(email, password);
       //todo: receive a token/fetch token and store it in localstorage
       //todo: set isloggedin to true
+      let user = await Auth.userAttributes('admin@rightoneducation.com');
+      //let idToken = user.signInUserSession.idToken;
+      //localStorage.setItem('token', idToken);
+      console.log(user);
       handleUserAuth(true);
-      window.location.href = "/";
+      //window.location.href = "/";
 
     } catch (e) {
       console.log(e);
