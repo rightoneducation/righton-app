@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     cardContent: {
         marginLeft: moderateScale(25),
         marginRight: moderateScale(25),
-        borderRadius: 5,
+        borderRadius: 24,
         backgroundColor: 'white',
         ...Platform.select({
             ios: {
