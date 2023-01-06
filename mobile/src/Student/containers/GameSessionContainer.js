@@ -172,8 +172,6 @@ const GameSessionContainer = ({ children }) => {
             global.apiClient.subscribeUpdateGameSession(
                 gameSession.id,
                 (gameSessionResponse) => {
-                    console.log('from subscription: ');
-                    console.log(gameSessionResponse.currentState);
                     setGameSession(gameSessionResponse)
                 })
 
