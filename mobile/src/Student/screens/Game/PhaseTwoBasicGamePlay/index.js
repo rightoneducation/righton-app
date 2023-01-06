@@ -10,7 +10,7 @@ import {
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
-import { scale, verticalScale } from "react-native-size-matters"
+import { scale, moderateScale,verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
@@ -83,47 +83,32 @@ const PhaseTwoBasicGamePlay = ({
     }, [gameSession, currentTime])
 
     const handleSubmitAnswer = () => {
-        Alert.alert(
-            "Are you sure?",
-            "You will not be able to change your answer",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
-                    text: "OK",
-                    onPress: () => {
-                        const answer = answerChoices[selectedAnswerIndex]
-                        setSubmitted(true)
-                        global.apiClient
-                            .addTeamAnswer(
-                                teamMember.id,
-                                question.id,
-                                answer.text,
-                                answer.isChosen ? null : false,
-                                true
-                            )
-                            .then((teamAnswer) => {
-                                if (isNullOrUndefined(teamAnswer)) {
-                                    console.error(
-                                        "Failed to create team Answer."
-                                    )
-                                    return
-                                }
+        const answer = answerChoices[selectedAnswerIndex]
+        setSubmitted(true)
+        global.apiClient
+            .addTeamAnswer(
+                teamMember.id,
+                question.id,
+                answer.text,
+                answer.isChosen ? null : false,
+                true
+            )
+            .then((teamAnswer) => {
+                if (isNullOrUndefined(teamAnswer)) {
+                    console.error(
+                        "Failed to create team Answer."
+                    )
+                    return
+                }
 
-                                console.debug(
-                                    "phase 2 team answer: ",
-                                    teamAnswer
-                                )
-                            })
-                            .catch((error) => {
-                                console.error(error.message)
-                            })
-                    },
-                },
-            ]
-        )
+                console.debug(
+                    "phase 2 team answer: ",
+                    teamAnswer
+                )
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
@@ -147,7 +132,11 @@ const PhaseTwoBasicGamePlay = ({
                 />
                 {!submitted && (
                     <RoundButton
-                        style={styles.submitAnswer}
+                        style={
+                            (selectedAnswerIndex || selectedAnswerIndex === 0)
+                                ? styles.answerChosen
+                                : styles.submitAnswer
+                        }
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
@@ -155,9 +144,16 @@ const PhaseTwoBasicGamePlay = ({
                 )}
             </Card>
             {submitted && (
-                <Text style={styles.answerSubmittedText}>
-                    {submittedAnswerText}
-                </Text>
+              <>
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Answer Submitted"
+                    />
+                    <Text style={styles.answerSubmittedText}>
+                        {submittedAnswerText}
+                    </Text>
+                </>
             )}
         </View>,
     ]
@@ -169,9 +165,7 @@ const PhaseTwoBasicGamePlay = ({
                 style={styles.headerText}
                 headerTitle={`Wrong Answer Info ${answer.text}`}
             >
-                <Card reasons={answer.reason}>
-                    <Text>{answer.reason}</Text>
-                </Card>
+                   <Text   style={styles.answerText}>{answer.reason} </Text>
             </Card>
         ))
     }
@@ -250,12 +244,19 @@ const styles = StyleSheet.create({
     answerTitle: {
         marginTop: scale(20),
     },
-    submitAnswer: {
+    answerChosen: {
         backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
-        marginBottom: scale(40),
+        marginBottom: verticalScale(40),
+    },
+    submitAnswer: {
+      backgroundColor: "#808080",
+      borderRadius: 22,
+      height: 44,
+      marginHorizontal: scale(40),
+      marginBottom: verticalScale(40),
     },
     submitAnswerText: {
         fontSize: 18,
@@ -286,7 +287,8 @@ const styles = StyleSheet.create({
         fontWeight: fontWeights.extraBold,
         textAlign: "center",
         marginHorizontal: scale(20),
-        marginVertical: scale(20),
+        marginVertical: verticalScale(20),
+        marginTop: -verticalScale(25)
     },
     carouselContainer: {
         flex: 1,
@@ -301,4 +303,11 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: verticalScale(18),
     },
+    answerText: {
+      marginLeft: moderateScale(25),
+      marginRight: moderateScale(25),
+      marginHorizontal: scale(20),
+      marginVertical: scale(20),
+      minHeight: moderateScale(75),
+  },
 })

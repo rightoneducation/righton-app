@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
         flexGrow: 2,
     },
     percentageContainer: {
-        paddingRight: 9,
         flexDirection: "row",
         justifyContent: "flex-end",
         alignItems: "center",
@@ -114,10 +113,13 @@ const styles = StyleSheet.create({
     },
     percentageText: {
         ...sharedTextStyle,
+        paddingRight: 9,
        
     },
     icon: {
         maxHeight: 40,
         maxWidth: 40,
+        borderRadius: 7,
+        paddingRight: 9,
     },
 })
