@@ -124,7 +124,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
         if (phaseNo === 1) {
             return ""
         }
-        return `% ${calculatePercentage(answer)}`
+        return `${calculatePercentage(answer)}%`
     }
 
     const calculateTotalScore =(gameSession, currentQuestion, curTeam) => {

@@ -1,3 +1,4 @@
+import { container } from 'aws-amplify'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../../utils/theme'
 
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
         paddingLeft: 9,
         overflow: "hidden",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
     },
     text: {
         ...sharedTextStyle,
@@ -107,17 +108,17 @@ const styles = StyleSheet.create({
     },
     percentageContainer: {
         paddingRight: 9,
-        flexWrap: "wrap",
+        flexDirection: "row",
+        justifyContent: "flex-end",
         alignItems: "center",
-        justifyContent: "center",
         height: "100%",
     },
     percentageText: {
         ...sharedTextStyle,
+       
     },
     icon: {
-        height: "90%",
-        aspectRatio: 1,
-        resizeMode: 'contain',
+        maxHeight: 40,
+        maxWidth: 40,
     },
 })
