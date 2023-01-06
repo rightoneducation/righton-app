@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
       marginLeft: moderateScale(25),
       marginRight: moderateScale(25),
       marginHorizontal: scale(20),
-      marginVertical: scale(20),
+      marginVertical: verticalScale(20),
       minHeight: moderateScale(75),
   },
 })
