@@ -19,6 +19,7 @@ import TeamFooter from "../../../../components/TeamFooter"
 import { colors, fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
+import RoundTextIcon from "../../../components/RoundTextIcon"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 
@@ -37,6 +38,9 @@ const PhaseTwoBasicGamePlay = ({
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
     const teamName = team?.name ? team?.name : "Team Name"
+
+    //DELETE LATER
+    const [testState, setTestState] = useState("choose_trickiest")
 
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
@@ -97,6 +101,8 @@ const PhaseTwoBasicGamePlay = ({
                     text: "OK",
                     onPress: () => {
                         const answer = answerChoices[selectedAnswerIndex]
+                        //DELETE LATER
+                        setTestState("phase_2_discuss")
                         setSubmitted(true)
                         global.apiClient
                             .addTeamAnswer(
@@ -170,18 +176,23 @@ const PhaseTwoBasicGamePlay = ({
         </View>
     ]
 
-    if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
+
+    // for testing purposes (gamestate stays in choose trickiest answer as of rn)
+    // DELETE LATER and replace with line below
+    // if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS)
+    if (testState === "phase_2_discuss") {
         firstSlide =
             <>
                 <Text style={styles.cardHeadingText}>Wrong Answers</Text>
                 {wrongAnswers.map((answer) => (
                     <Card
                         key={answer.id}
-                        style={styles.headerText}
                     >
-                        <Card reasons={answer.reason}>
-                            <Text>{answer.reason}</Text>
-                        </Card>
+                        <RoundTextIcon
+                            style={styles.answersText}
+                            text={`${indexToLetter(index)}. ${item.text}`}>
+                        </RoundTextIcon>
+                        <Text style={styles.reasonsText}>{answer.reason}</Text>
                     </Card>
                 ))}
             </>
@@ -190,16 +201,17 @@ const PhaseTwoBasicGamePlay = ({
                 <Text style={styles.cardHeadingText}>Correct Answer</Text>
                 <Card
                     key={correctAnswer.id}
-                    style={styles.headerText}
                 >
-
-                    <Card>
-                        <Text>{correctAnswer.text}</Text>
-                        <Text>{correctAnswer.reason}</Text>
-                    </Card>
+                    <RoundTextIcon
+                        style={styles.answersText}
+                        text={correctAnswer.text}>
+                    </RoundTextIcon>
+                    <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
                 </Card></>
     }
+    //DELETE
     console.log(correctAnswer)
+    console.log(gameSession?.currentState)
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -219,7 +231,8 @@ const PhaseTwoBasicGamePlay = ({
                                 style={styles.timerProgressBar}
                                 progress={progress}
                                 color={"#349E15"}
-                                unfilledColor={"rgba(255,255,255,0.8)"}
+                                borderColor={"transparent"}
+                                unfilledColor={"#7819F8"}
                                 width={
                                     Dimensions.get("window").width - scale(90)
                                 }
@@ -341,7 +354,17 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: verticalScale(18),
     },
-    wrongAnswerChoiceContainer: {
-        backgroundColor: colors.black
+    reasonsText: {
+        marginVertical: verticalScale(10),
+        marginHorizontal: scale(15),
+        fontFamily: fontFamilies.karla
+    },
+    answersText: {
+        fontFamily: fontFamilies.karla,
+        marginTop: verticalScale(10),
+        marginHorizontal: scale(15),
+        padding: scale(6),
+        backgroundColor: "#F4F4F4",
+        borderColor: "#F4F4F4"
     }
 })
