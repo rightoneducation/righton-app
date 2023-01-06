@@ -157,7 +157,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
                         renderItem={({ item, index }) => (
                             <Answer
                                 icon={teamAvatar.smallSrc}
-                                text={`${alphabets[index]}.${item.text}`}
+                                text={`${alphabets[index]}. ${item.text}`}
                                 mode={getAnswerMode(item.text)}
                                 isUserChoice={getIsUserChoice(item)}
                                 percentage={getPercentageForAnswer(item)}
