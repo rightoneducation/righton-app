@@ -39,9 +39,6 @@ const PhaseTwoBasicGamePlay = ({
 
     const teamName = team?.name ? team?.name : "Team Name"
 
-    //DELETE LATER
-    const [testState, setTestState] = useState("choose_trickiest")
-
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
 
@@ -101,8 +98,6 @@ const PhaseTwoBasicGamePlay = ({
                     text: "OK",
                     onPress: () => {
                         const answer = answerChoices[selectedAnswerIndex]
-                        //DELETE LATER
-                        setTestState("phase_2_discuss")
                         setSubmitted(true)
                         global.apiClient
                             .addTeamAnswer(
@@ -138,6 +133,29 @@ const PhaseTwoBasicGamePlay = ({
 
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
+    let phaseHeader = [<>
+        <Text style={styles.headerText}>
+            Pick the Trickiest!
+        </Text>
+        <View style={styles.timerContainer}>
+            <Progress.Bar
+                style={styles.timerProgressBar}
+                progress={progress}
+                color={"#349E15"}
+                borderColor={"transparent"}
+                unfilledColor={"#7819F8"}
+                width={
+                    Dimensions.get("window").width - scale(90)
+                }
+                height={"100%"}
+            />
+            <Text style={styles.timerText}>
+                {Math.floor(currentTime / 60)}:
+                {("0" + Math.floor(currentTime % 60)).slice(-2)}
+            </Text>
+        </View>
+    </>
+    ]
     let firstSlide = [
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
@@ -176,21 +194,21 @@ const PhaseTwoBasicGamePlay = ({
         </View>
     ]
 
-
-    // for testing purposes (gamestate stays in choose trickiest answer as of rn)
-    // DELETE LATER and replace with line below
-    // if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS)
-    if (testState === "phase_2_discuss") {
+    if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
+        phaseHeader =
+            <Text style={styles.headerText}>
+                Answer Explanations
+            </Text>
         firstSlide =
             <>
                 <Text style={styles.cardHeadingText}>Wrong Answers</Text>
-                {wrongAnswers.map((answer) => (
+                {wrongAnswers.map((answer, index) => (
                     <Card
                         key={answer.id}
                     >
                         <RoundTextIcon
                             style={styles.answersText}
-                            text={`${indexToLetter(index)}. ${item.text}`}>
+                            text={answer.text}>
                         </RoundTextIcon>
                         <Text style={styles.reasonsText}>{answer.reason}</Text>
                     </Card>
@@ -209,9 +227,7 @@ const PhaseTwoBasicGamePlay = ({
                     <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
                 </Card></>
     }
-    //DELETE
-    console.log(correctAnswer)
-    console.log(gameSession?.currentState)
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -220,37 +236,11 @@ const PhaseTwoBasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-                {gameSession?.currentState ===
-                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
-                    <>
-                        <Text style={styles.headerText}>
-                            Pick the Trickiest!
-                        </Text>
-                        <View style={styles.timerContainer}>
-                            <Progress.Bar
-                                style={styles.timerProgressBar}
-                                progress={progress}
-                                color={"#349E15"}
-                                borderColor={"transparent"}
-                                unfilledColor={"#7819F8"}
-                                width={
-                                    Dimensions.get("window").width - scale(90)
-                                }
-                                height={"100%"}
-                            />
-                            <Text style={styles.timerText}>
-                                {Math.floor(currentTime / 60)}:
-                                {("0" + Math.floor(currentTime % 60)).slice(-2)}
-                            </Text>
-                        </View>
-                    </>
-                ) : <Text style={styles.headerText}>
-                    Answer Explanations
-                </Text>}
+                {phaseHeader}
             </LinearGradient>
             <View style={styles.carouselContainer}>
                 <HorizontalPageView>
-                    <ScrollView>
+                    <ScrollView showsVerticalScrollIndicator={false}>
                         {firstSlide}
                     </ScrollView>
                     <ScrollView>
@@ -281,6 +271,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         height: verticalScale(200),
         shadowColor: "rgba(0, 141, 239, 0.3)",
+        marginBottom: verticalScale(20)
     },
     headerText: {
         marginTop: verticalScale(14),
@@ -291,7 +282,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginVertical: verticalScale(8),
+        marginBottom: verticalScale(8),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -345,7 +336,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: 100,
-        marginTop: -scale(150),
+        marginTop: -scale(170),
         marginBottom: scale(50),
     },
     footerView: {

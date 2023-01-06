@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignContent: 'center',
-        paddingVertical: verticalScale(8),
+        paddingVertical: verticalScale(6),
         shadowColor: '#000',
         shadowOffset: { width: 12, height: 14 },
         shadowOpacity: 0.03,
