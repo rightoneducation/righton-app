@@ -1,4 +1,3 @@
-import { container } from 'aws-amplify'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../../utils/theme'
 
