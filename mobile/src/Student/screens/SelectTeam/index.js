@@ -132,17 +132,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 15,
     borderColor: 'rgba(111,111,111,0)',
-    borderRadius: 20
+     borderRadius: 20
   },
   selectedTeamIcon: {
-    resizeMode: 'contain',
     flex: 1,
     alignSelf: 'center',
     borderColor: 'white',
     borderWidth: 5,
     borderRadius: 20,
     marginTop: 15
-    
   },
   largeIcon: {
     alignSelf: 'center',
