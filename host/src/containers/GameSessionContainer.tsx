@@ -137,7 +137,8 @@ const GameSessionContainer = () => {
     if (gameTimer && !gameTimerZero){
       let refreshIntervalId = setInterval(() => {
           let newUpdates = {currentTimer: (localStorage.getItem('currentGameTimeStore')>= 0 ? localStorage.getItem('currentGameTimeStore') : 0)};
-          apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
+          //removing this until we smooth out mobile, want to avoid clogging mobile with more gameSessionUpdates than necessary.
+          //apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
       }, 3000);
       return () => clearInterval(refreshIntervalId);
     }
