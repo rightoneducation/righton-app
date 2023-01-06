@@ -131,68 +131,72 @@ const PhaseTwoBasicGamePlay = ({
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
 
+    let phaseHeader = []
+    let firstSlide = []
+    let secondSlide = []
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
-
-    let phaseHeader = [<>
-        <Text style={styles.headerText}>
-            Pick the Trickiest!
-        </Text>
-        <View style={styles.timerContainer}>
-            <Progress.Bar
-                style={styles.timerProgressBar}
-                progress={progress}
-                color={"#349E15"}
-                borderColor={"transparent"}
-                unfilledColor={"#7819F8"}
-                width={
-                    Dimensions.get("window").width - scale(90)
-                }
-                height={"100%"}
-            />
-            <Text style={styles.timerText}>
-                {Math.floor(currentTime / 60)}:
-                {("0" + Math.floor(currentTime % 60)).slice(-2)}
+    if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+        phaseHeader = [<>
+            <Text style={styles.headerText}>
+                Pick the Trickiest!
             </Text>
-        </View>
-    </>
-    ]
-    let firstSlide = [
-        <>
-            <Text style={styles.cardHeadingText}>Question</Text>
-            <Card>
-                <ScrollableQuestion question={question} />
-            </Card>
-        </>
-    ]
-    let secondSlide = [
-        <View>
-            <Text style={styles.cardHeadingText}>Answers</Text>
-            <Card>
-                <AnswerOptionsPhaseTwo
-                    isAdvancedMode={gameSession.isAdvanced}
-                    isFacilitator={teamMember?.isFacilitator}
-                    selectedAnswerIndex={selectedAnswerIndex}
-                    setSelectedAnswerIndex={setSelectedAnswerIndex}
-                    answers={answerChoices}
-                    disabled={submitted}
-                    correctAnswer={correctAnswer}
+            <View style={styles.timerContainer}>
+                <Progress.Bar
+                    style={styles.timerProgressBar}
+                    progress={progress}
+                    color={"#349E15"}
+                    borderColor={"transparent"}
+                    unfilledColor={"#7819F8"}
+                    width={
+                        Dimensions.get("window").width - scale(90)
+                    }
+                    height={"100%"}
                 />
-                {!submitted && (
-                    <RoundButton
-                        style={styles.submitAnswer}
-                        titleStyle={styles.submitAnswerText}
-                        title="Submit Answer"
-                        onPress={handleSubmitAnswer}
-                    />
-                )}
-            </Card>
-            {submitted && (
-                <Text style={styles.answerSubmittedText}>
-                    {submittedAnswerText}
+                <Text style={styles.timerText}>
+                    {Math.floor(currentTime / 60)}:
+                    {("0" + Math.floor(currentTime % 60)).slice(-2)}
                 </Text>
-            )}
-        </View>
-    ]
+            </View>
+        </>
+        ]
+        firstSlide = [
+            <>
+                <Text style={styles.cardHeadingText}>Question</Text>
+                <Card>
+                    <ScrollableQuestion question={question} />
+                </Card>
+            </>
+        ]
+        secondSlide = [
+            <View>
+                <Text style={styles.cardHeadingText}>Answers</Text>
+                <Card>
+                    <AnswerOptionsPhaseTwo
+                        isAdvancedMode={gameSession.isAdvanced}
+                        isFacilitator={teamMember?.isFacilitator}
+                        selectedAnswerIndex={selectedAnswerIndex}
+                        setSelectedAnswerIndex={setSelectedAnswerIndex}
+                        answers={answerChoices}
+                        disabled={submitted}
+                        correctAnswer={correctAnswer}
+                    />
+                    {!submitted && (
+                        <RoundButton
+                            style={styles.submitAnswer}
+                            titleStyle={styles.submitAnswerText}
+                            title="Submit Answer"
+                            onPress={handleSubmitAnswer}
+                        />
+                    )}
+                </Card>
+                {submitted && (
+                    <Text style={styles.answerSubmittedText}>
+                        {submittedAnswerText}
+                    </Text>
+                )}
+            </View>
+        ]
+    }
 
     if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
         phaseHeader =
