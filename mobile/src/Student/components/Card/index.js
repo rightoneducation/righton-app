@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignContent: 'center',
         paddingVertical: verticalScale(8),
+        shadowColor: '#000',
+        shadowOffset: { width: 12, height: 14 },
+        shadowOpacity: 0.03,
     },
     cardContent: {
         marginLeft: moderateScale(25),

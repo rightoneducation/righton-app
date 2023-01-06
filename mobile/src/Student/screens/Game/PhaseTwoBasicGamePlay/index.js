@@ -11,11 +11,12 @@ import {
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
+import { color } from "react-native-reanimated"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
-import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
+import { colors, fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
@@ -54,8 +55,6 @@ const PhaseTwoBasicGamePlay = ({
             reason: choice.reason,
         }
     })
-
-    const rightAnswer = answerChoices.filter((answer) => answer.isCorrectAnswer)
 
     const wrongAnswers = answerChoices.filter(
         (answer) => !answer.isCorrectAnswer
@@ -190,16 +189,17 @@ const PhaseTwoBasicGamePlay = ({
             <>
                 <Text style={styles.cardHeadingText}>Correct Answer</Text>
                 <Card
-                    key={rightAnswer.id}
+                    key={correctAnswer.id}
                     style={styles.headerText}
                 >
 
-                    <Card reasons={rightAnswer.reason}>
-                        <Text>{rightAnswer.reason}</Text>
+                    <Card>
+                        <Text>{correctAnswer.text}</Text>
+                        <Text>{correctAnswer.reason}</Text>
                     </Card>
                 </Card></>
     }
-
+    console.log(correctAnswer)
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -341,4 +341,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: verticalScale(18),
     },
+    wrongAnswerChoiceContainer: {
+        backgroundColor: colors.black
+    }
 })
