@@ -1,17 +1,6 @@
-// import Buffer from 'buffer'
-
-// global.Buffer = global.Buffer || Buffer.Buffer // Required for aws sigv4 signing
-
 import codePush from 'react-native-code-push'
 
 import AppContainer from './src/Navigator'
-// import debug from './src/utils/debug'
-
-// Import after Amplify to provide polyfill and avoid clashing with React.
-import 'babel-polyfill'
-
-// LogBox.ignoreAllLogs([])
-
 
 let App = () => {
   return (

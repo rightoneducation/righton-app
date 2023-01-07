@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Dimensions, Image, StyleSheet, View } from 'react-native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-import Carousel from 'react-native-snap-carousel'
+import Carousel from 'react-native-snap-carousel-deprecated-prop-types'
 
 const HorizontalPageView = ({ children, initialPage }) => {
     const [currentPage, setCurrentPage] = useState(initialPage || 0)

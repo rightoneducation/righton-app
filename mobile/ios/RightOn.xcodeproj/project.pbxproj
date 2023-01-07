@@ -3,176 +3,175 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07A9CCA8A6DF480AA497D3CF /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 314A311FC1594B179F6C0C5F /* Montserrat-ExtraBoldItalic.ttf */; };
-		0A5CA5E5C2754690BBA07A32 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D1B880BBF4B471888DA6571 /* Poppins-Thin.ttf */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		00E356F31AD99517003FC87E /* RightOnTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* RightOnTests.m */; };
+		0C80B921A6F3F58F76C31292 /* libPods-RightOn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-RightOn.a */; };
+		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		18F1A659911A4A818EE13D69 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F1306FC42D048F39175CD4C /* Poppins-SemiBold.ttf */; };
-		2385DB6C24496D8800209E00 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2385DB6B24496D8800209E00 /* AppCenter-Config.plist */; };
-		25BD7BE96E694C9793DE962B /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C94CC28A7EE1417C89812873 /* Poppins-LightItalic.ttf */; };
-		29A330715026471A982A63BF /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F6E1C87DC1C455F9A206862 /* Montserrat-ExtraBold.ttf */; };
-		32AF07A562684A20922B9D39 /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20CF904947084F3B8B62E58F /* Poppins-Italic.ttf */; };
-		334777BAD14C47428A05FC0A /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A0373CA3A01849348CF80487 /* Lato-Black.ttf */; };
-		352C6DCABA31431CB4EDF986 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445970F7186C48DABEEB08B2 /* Poppins-Light.ttf */; };
-		353A1E104921432791126AED /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EE578A1EAF842C1B62D023C /* Lato-Thin.ttf */; };
-		38E779162FF34963838C2B65 /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C868B3D2A80944B49045C06A /* Poppins-ExtraLightItalic.ttf */; };
-		410DECB147634BDCB5CED733 /* Montserrat-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 505AF0C1AAC24B349C2FF67C /* Montserrat-Italic.ttf */; };
-		49636BD55C4E49019EE15417 /* Montserrat-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D46F57480507478BB1B82255 /* Montserrat-MediumItalic.ttf */; };
-		4BFE5915230F4E23972FB3C7 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8F7C341BD1442E783AA3B4A /* Lato-Light.ttf */; };
-		4E6A149F1503469484C1FB6B /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 811E22D84A034D88B8B055CB /* Poppins-Medium.ttf */; };
-		5D00B35E69A245E29780A48B /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B629945E3CA4F2A8A7004F9 /* Montserrat-BlackItalic.ttf */; };
-		603A87119EEB419CB350E305 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE790B52C2054F71A5403856 /* Montserrat-Light.ttf */; };
-		60C8CCA9880F4BEBB67A04B7 /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9EBEF7D7324D4FE3B6531641 /* Lato-BoldItalic.ttf */; };
-		64D52D5E1B6A409DAC9B602E /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 552A9E4E1ED84B6A940195A3 /* Lato-Regular.ttf */; };
-		67E18CD8739F4F0EB1DB672F /* Montserrat-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7012C26867048548792DB01 /* Montserrat-BoldItalic.ttf */; };
-		6A52352919054587A7B7128C /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318A9004ED984FB0BFFEF1FD /* Poppins-ExtraLight.ttf */; };
-		71B9CEFE3C3148C2B0F70764 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6F11DB79680430C988D4E38 /* Poppins-BoldItalic.ttf */; };
-		7519722BF3F84CF5AC23A63F /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7CB8E64C9A4AB98DDC8F3F /* Montserrat-Regular.ttf */; };
-		7E30C61520B041E68A21B01E /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E26017EF1F249839D81C72F /* Poppins-ThinItalic.ttf */; };
-		7F26AED8AE644B76974F7BEC /* Karla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F856A4C6BD6F40DCA977DB3D /* Karla-Bold.ttf */; };
-		80A2C0E3415C4FDC9D454B5D /* Karla-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DE5958D1E7E45EB99CF84CC /* Karla-Italic.ttf */; };
-		8F4513B4197F4E37A7722757 /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FD1201B555B4E90A85FFDAF /* Montserrat-SemiBoldItalic.ttf */; };
-		9148E057345C4428BCFB9677 /* Lato-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D1EF3F2AF2DC456D95E9A028 /* Lato-LightItalic.ttf */; };
-		977B436ECA9C41948C8BEEE0 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 534A867C7B364E0AA3813039 /* Poppins-ExtraBoldItalic.ttf */; };
-		9D0E5EC4AAAC48738934E7BC /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 79B2A042A914466287CBBB49 /* Poppins-BlackItalic.ttf */; };
-		AA2239ECA9BB4ADFBB804D7A /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 403E954E99604D0ABF8205EA /* Poppins-MediumItalic.ttf */; };
-		B4FFFAA7FA96484ABCB02B2C /* Montserrat-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B036B8853BED4BB894C1BB44 /* Montserrat-ThinItalic.ttf */; };
-		B83A6668B18345BFBB2C8A77 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9A19A7789364745A93FEDB2 /* Montserrat-Bold.ttf */; };
-		B95C36E72C0441E6A5DC94BC /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABEE0FBF61CC48CBBFB84BC3 /* Poppins-Regular.ttf */; };
-		BAB4CE1D5754D1BFF879ED8C /* libPods-righton.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9439F14661FADAEB7119840 /* libPods-righton.a */; };
-		BAD91FE2D16043E6831181C4 /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D59FE76131A4466A928F3CE /* Lato-ThinItalic.ttf */; };
-		BDEAA41EE4C44635B1D7D98A /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C335BC751594AE48819FE73 /* Poppins-ExtraBold.ttf */; };
-		C20B46D420844BA98EDCF20A /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 261D8B2BD50A48568F2991B6 /* Montserrat-Medium.ttf */; };
-		C30DE20937BF417F935CB098 /* Karla-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 688FD7F17E224F34A7515FC5 /* Karla-BoldItalic.ttf */; };
-		C74BD7C2BAEB436C9357DDF5 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 390313A6D2D141F7A96F3538 /* Lato-Italic.ttf */; };
-		C89AE47FE9C54079BDE49DE1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E59AEC09871242D28345C23D /* Poppins-Bold.ttf */; };
-		C9A5C1D28D394D5596280F7D /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB52F89E102A4D6EB0746A0F /* Montserrat-Thin.ttf */; };
-		CC9996D3512D4084AE18B733 /* Montserrat-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B535CE82F6834A5ABCBB038D /* Montserrat-ExtraLightItalic.ttf */; };
-		CE2E0E70A7C544D3AA45C00C /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8121580DA49F4E18A06F2E91 /* Montserrat-SemiBold.ttf */; };
-		D7E16AEC02074DC5B6725A5D /* Karla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94085E3AE79E43DCA4689F1C /* Karla-Regular.ttf */; };
-		DC0E966A65C944989ED0E0DB /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8242DE67E4594AEABE4573E0 /* Montserrat-ExtraLight.ttf */; };
-		E5E7F80DCBDA432EB5EB594A /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 424242285E3547168690B047 /* Lato-BlackItalic.ttf */; };
-		E8ABE23527F241709BFA085D /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3539CCA6B2804BCEA0FDBE68 /* Poppins-Black.ttf */; };
-		EA7DD3EC0ACE43068E684513 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E28C78844D5F4ACCA9BC7DE7 /* Lato-Bold.ttf */; };
-		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
-		F430E8FB13484AD8A6FBE106 /* Montserrat-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B17C20C51D744903AE848A9A /* Montserrat-LightItalic.ttf */; };
-		F753F99C37EF410F9F220057 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CCDC39CB79F84D36828D99BA /* Poppins-SemiBoldItalic.ttf */; };
-		FEF6E2F1D6974D9CBFE08C60 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A4A526CEF204D59AA1698B6 /* Montserrat-Black.ttf */; };
+		23B9903D29677A2B004C107E /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9900B29677A2A004C107E /* Montserrat-ExtraBold.ttf */; };
+		23B9903E29677A2B004C107E /* Karla-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9900C29677A2A004C107E /* Karla-Italic.ttf */; };
+		23B9903F29677A2B004C107E /* Montserrat-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9900D29677A2A004C107E /* Montserrat-BoldItalic.ttf */; };
+		23B9904029677A2B004C107E /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9900E29677A2A004C107E /* Lato-ThinItalic.ttf */; };
+		23B9904129677A2B004C107E /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9900F29677A2A004C107E /* Lato-BoldItalic.ttf */; };
+		23B9904229677A2B004C107E /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901029677A2A004C107E /* Poppins-Thin.ttf */; };
+		23B9904329677A2B004C107E /* Karla-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901129677A2A004C107E /* Karla-Bold.ttf */; };
+		23B9904429677A2B004C107E /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901229677A2A004C107E /* Montserrat-BlackItalic.ttf */; };
+		23B9904529677A2B004C107E /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901329677A2A004C107E /* Montserrat-ExtraLight.ttf */; };
+		23B9904629677A2B004C107E /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901429677A2A004C107E /* Montserrat-Thin.ttf */; };
+		23B9904729677A2B004C107E /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901529677A2A004C107E /* Montserrat-Regular.ttf */; };
+		23B9904829677A2B004C107E /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901629677A2A004C107E /* Poppins-Italic.ttf */; };
+		23B9904929677A2B004C107E /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901729677A2A004C107E /* Poppins-MediumItalic.ttf */; };
+		23B9904A29677A2B004C107E /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901829677A2A004C107E /* Poppins-LightItalic.ttf */; };
+		23B9904B29677A2B004C107E /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901929677A2A004C107E /* Poppins-ExtraBoldItalic.ttf */; };
+		23B9904C29677A2B004C107E /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901A29677A2A004C107E /* Montserrat-Bold.ttf */; };
+		23B9904D29677A2B004C107E /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901B29677A2A004C107E /* Poppins-SemiBoldItalic.ttf */; };
+		23B9904E29677A2B004C107E /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901C29677A2A004C107E /* Montserrat-Medium.ttf */; };
+		23B9904F29677A2B004C107E /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901D29677A2A004C107E /* Poppins-Black.ttf */; };
+		23B9905029677A2B004C107E /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901E29677A2A004C107E /* Lato-Thin.ttf */; };
+		23B9905129677A2B004C107E /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9901F29677A2A004C107E /* Lato-Italic.ttf */; };
+		23B9905229677A2B004C107E /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902029677A2A004C107E /* Poppins-ExtraLight.ttf */; };
+		23B9905329677A2B004C107E /* Karla-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902129677A2A004C107E /* Karla-BoldItalic.ttf */; };
+		23B9905429677A2B004C107E /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902229677A2A004C107E /* Poppins-Light.ttf */; };
+		23B9905529677A2B004C107E /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902329677A2A004C107E /* Montserrat-ExtraBoldItalic.ttf */; };
+		23B9905629677A2B004C107E /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902429677A2A004C107E /* Montserrat-SemiBold.ttf */; };
+		23B9905729677A2B004C107E /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902529677A2A004C107E /* Montserrat-Black.ttf */; };
+		23B9905829677A2B004C107E /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902629677A2A004C107E /* Lato-Light.ttf */; };
+		23B9905929677A2B004C107E /* Montserrat-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902729677A2A004C107E /* Montserrat-ThinItalic.ttf */; };
+		23B9905A29677A2B004C107E /* Montserrat-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902829677A2A004C107E /* Montserrat-MediumItalic.ttf */; };
+		23B9905B29677A2B004C107E /* Lato-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902929677A2A004C107E /* Lato-LightItalic.ttf */; };
+		23B9905C29677A2B004C107E /* Montserrat-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902A29677A2B004C107E /* Montserrat-LightItalic.ttf */; };
+		23B9905D29677A2B004C107E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902B29677A2B004C107E /* Poppins-Regular.ttf */; };
+		23B9905E29677A2B004C107E /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902C29677A2B004C107E /* Poppins-ExtraLightItalic.ttf */; };
+		23B9905F29677A2B004C107E /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902D29677A2B004C107E /* Lato-Black.ttf */; };
+		23B9906029677A2B004C107E /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902E29677A2B004C107E /* Lato-BlackItalic.ttf */; };
+		23B9906129677A2B004C107E /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9902F29677A2B004C107E /* Poppins-SemiBold.ttf */; };
+		23B9906229677A2B004C107E /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903029677A2B004C107E /* Lato-Bold.ttf */; };
+		23B9906329677A2B004C107E /* Montserrat-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903129677A2B004C107E /* Montserrat-ExtraLightItalic.ttf */; };
+		23B9906429677A2B004C107E /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903229677A2B004C107E /* Montserrat-SemiBoldItalic.ttf */; };
+		23B9906529677A2B004C107E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903329677A2B004C107E /* Poppins-Medium.ttf */; };
+		23B9906629677A2B004C107E /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903429677A2B004C107E /* Poppins-BoldItalic.ttf */; };
+		23B9906729677A2B004C107E /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903529677A2B004C107E /* Poppins-ExtraBold.ttf */; };
+		23B9906829677A2B004C107E /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903629677A2B004C107E /* Montserrat-Light.ttf */; };
+		23B9906929677A2B004C107E /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903729677A2B004C107E /* Poppins-Bold.ttf */; };
+		23B9906A29677A2B004C107E /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903829677A2B004C107E /* Poppins-BlackItalic.ttf */; };
+		23B9906B29677A2B004C107E /* Karla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903929677A2B004C107E /* Karla-Regular.ttf */; };
+		23B9906C29677A2B004C107E /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903A29677A2B004C107E /* Lato-Regular.ttf */; };
+		23B9906D29677A2B004C107E /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903B29677A2B004C107E /* Poppins-ThinItalic.ttf */; };
+		23B9906E29677A2B004C107E /* Montserrat-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23B9903C29677A2B004C107E /* Montserrat-Italic.ttf */; };
+		7699B88040F8A987B510C191 /* libPods-RightOn-RightOnTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-RightOn-RightOnTests.a */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = RightOn;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		00E356EE1AD99517003FC87E /* RightOnTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RightOnTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* rightonTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rightonTests.m; sourceTree = "<group>"; };
-		03DAE5328E824D38BCCE1369 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
-		0E4F2BA1961B4DFF93AABF4F /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		0EE578A1EAF842C1B62D023C /* Lato-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Thin.ttf"; path = "../src/assets/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
-		0F6E1C87DC1C455F9A206862 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBold.ttf"; path = "../src/assets/fonts/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* RightOnTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RightOnTests.m; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* righton.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = righton.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = righton/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = righton/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = righton/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = righton/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = righton/main.m; sourceTree = "<group>"; };
-		1C7B0FEA4BB4401EA1F133A0 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		1CA0DB711CF34C9797D1DE92 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
-		1E26017EF1F249839D81C72F /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
-		20862408E50042C991946D38 /* libRNAWSCognito.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAWSCognito.a; sourceTree = "<group>"; };
-		20CF904947084F3B8B62E58F /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../src/assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
-		2385DB6B24496D8800209E00 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AppCenter-Config.plist"; sourceTree = "<group>"; };
-		261D8B2BD50A48568F2991B6 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../src/assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
-		286438EF8C9C4A1A97893B2F /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
-		2C58895625A54A5EB54DE772 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		314A311FC1594B179F6C0C5F /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
-		318A9004ED984FB0BFFEF1FD /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLight.ttf"; path = "../src/assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
-		3539CCA6B2804BCEA0FDBE68 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
-		390313A6D2D141F7A96F3538 /* Lato-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Italic.ttf"; path = "../src/assets/fonts/Lato-Italic.ttf"; sourceTree = "<group>"; };
-		403E954E99604D0ABF8205EA /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../src/assets/fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
-		424242285E3547168690B047 /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-BlackItalic.ttf"; path = "../src/assets/fonts/Lato-BlackItalic.ttf"; sourceTree = "<group>"; };
-		445970F7186C48DABEEB08B2 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
-		505AF0C1AAC24B349C2FF67C /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Italic.ttf"; path = "../src/assets/fonts/Montserrat-Italic.ttf"; sourceTree = "<group>"; };
-		534A867C7B364E0AA3813039 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
-		552A9E4E1ED84B6A940195A3 /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../src/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
-		5E7CB8E64C9A4AB98DDC8F3F /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../src/assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
-		5F1306FC42D048F39175CD4C /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
-		688FD7F17E224F34A7515FC5 /* Karla-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-BoldItalic.ttf"; path = "../src/assets/fonts/Karla-BoldItalic.ttf"; sourceTree = "<group>"; };
-		6B629945E3CA4F2A8A7004F9 /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BlackItalic.ttf"; path = "../src/assets/fonts/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; };
-		6C78DB3F9DF34C4795A458C7 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		6DE5958D1E7E45EB99CF84CC /* Karla-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Italic.ttf"; path = "../src/assets/fonts/Karla-Italic.ttf"; sourceTree = "<group>"; };
-		7284876B677F536592897A27 /* Pods-righton.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-righton.release.xcconfig"; path = "Target Support Files/Pods-righton/Pods-righton.release.xcconfig"; sourceTree = "<group>"; };
-		77E33FD6FEC640DB80A1F18D /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		79B2A042A914466287CBBB49 /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../src/assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
-		7A4A526CEF204D59AA1698B6 /* Montserrat-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Black.ttf"; path = "../src/assets/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
-		7D59FE76131A4466A928F3CE /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-ThinItalic.ttf"; path = "../src/assets/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
-		811E22D84A034D88B8B055CB /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
-		8121580DA49F4E18A06F2E91 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBold.ttf"; path = "../src/assets/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
-		81555B3CD8D559748FBB926E /* Pods-righton.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-righton.debug.xcconfig"; path = "Target Support Files/Pods-righton/Pods-righton.debug.xcconfig"; sourceTree = "<group>"; };
-		8242DE67E4594AEABE4573E0 /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLight.ttf"; path = "../src/assets/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; };
-		879D6DC105F8412FBA07DFB4 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		8BC72A00D2D143D38D3EA48A /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
-		8D1B880BBF4B471888DA6571 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
-		8FD1201B555B4E90A85FFDAF /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		8FEAD03B10B5426183FD757E /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		94085E3AE79E43DCA4689F1C /* Karla-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Regular.ttf"; path = "../src/assets/fonts/Karla-Regular.ttf"; sourceTree = "<group>"; };
-		9C335BC751594AE48819FE73 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
-		9EBEF7D7324D4FE3B6531641 /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-BoldItalic.ttf"; path = "../src/assets/fonts/Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
-		A0373CA3A01849348CF80487 /* Lato-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Black.ttf"; path = "../src/assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
-		ABEE0FBF61CC48CBBFB84BC3 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		B036B8853BED4BB894C1BB44 /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ThinItalic.ttf"; path = "../src/assets/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; };
-		B17C20C51D744903AE848A9A /* Montserrat-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-LightItalic.ttf"; path = "../src/assets/fonts/Montserrat-LightItalic.ttf"; sourceTree = "<group>"; };
-		B535CE82F6834A5ABCBB038D /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
-		B6080761B2614C3B95E2578F /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		B7012C26867048548792DB01 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
-		B8F7C341BD1442E783AA3B4A /* Lato-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Light.ttf"; path = "../src/assets/fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
-		B9A19A7789364745A93FEDB2 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
-		C3C262558E3D49C99DA143D8 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
-		C6F11DB79680430C988D4E38 /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../src/assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
-		C868B3D2A80944B49045C06A /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
-		C8F7864CA7134C84915D1480 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		C9439F14661FADAEB7119840 /* libPods-righton.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-righton.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C94CC28A7EE1417C89812873 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
-		CCC5E2F6EDF44DA28D8269FF /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		CCDC39CB79F84D36828D99BA /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		D1EF3F2AF2DC456D95E9A028 /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-LightItalic.ttf"; path = "../src/assets/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; };
-		D3935E5FD62C45F0905EE415 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		D46F57480507478BB1B82255 /* Montserrat-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-MediumItalic.ttf"; path = "../src/assets/fonts/Montserrat-MediumItalic.ttf"; sourceTree = "<group>"; };
-		DB52F89E102A4D6EB0746A0F /* Montserrat-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Thin.ttf"; path = "../src/assets/fonts/Montserrat-Thin.ttf"; sourceTree = "<group>"; };
-		E28C78844D5F4ACCA9BC7DE7 /* Lato-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Bold.ttf"; path = "../src/assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
-		E59AEC09871242D28345C23D /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = RightOn/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = RightOn/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RightOn/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RightOn/main.m; sourceTree = "<group>"; };
+		19F6CBCC0A4E27FBF8BF4A61 /* libPods-RightOn-RightOnTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RightOn-RightOnTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		23B9900B29677A2A004C107E /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraBold.ttf"; path = "../src/assets/fonts/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
+		23B9900C29677A2A004C107E /* Karla-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Karla-Italic.ttf"; path = "../src/assets/fonts/Karla-Italic.ttf"; sourceTree = "<group>"; };
+		23B9900D29677A2A004C107E /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-BoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9900E29677A2A004C107E /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-ThinItalic.ttf"; path = "../src/assets/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
+		23B9900F29677A2A004C107E /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-BoldItalic.ttf"; path = "../src/assets/fonts/Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9901029677A2A004C107E /* Poppins-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
+		23B9901129677A2A004C107E /* Karla-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Karla-Bold.ttf"; path = "../src/assets/fonts/Karla-Bold.ttf"; sourceTree = "<group>"; };
+		23B9901229677A2A004C107E /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-BlackItalic.ttf"; path = "../src/assets/fonts/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; };
+		23B9901329677A2A004C107E /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraLight.ttf"; path = "../src/assets/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; };
+		23B9901429677A2A004C107E /* Montserrat-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Thin.ttf"; path = "../src/assets/fonts/Montserrat-Thin.ttf"; sourceTree = "<group>"; };
+		23B9901529677A2A004C107E /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Regular.ttf"; path = "../src/assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		23B9901629677A2A004C107E /* Poppins-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Italic.ttf"; path = "../src/assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
+		23B9901729677A2A004C107E /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-MediumItalic.ttf"; path = "../src/assets/fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
+		23B9901829677A2A004C107E /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-LightItalic.ttf"; path = "../src/assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
+		23B9901929677A2A004C107E /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9901A29677A2A004C107E /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		23B9901B29677A2A004C107E /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9901C29677A2A004C107E /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Medium.ttf"; path = "../src/assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
+		23B9901D29677A2A004C107E /* Poppins-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Black.ttf"; path = "../src/assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
+		23B9901E29677A2A004C107E /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Thin.ttf"; path = "../src/assets/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
+		23B9901F29677A2A004C107E /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Italic.ttf"; path = "../src/assets/fonts/Lato-Italic.ttf"; sourceTree = "<group>"; };
+		23B9902029677A2A004C107E /* Poppins-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraLight.ttf"; path = "../src/assets/fonts/Poppins-ExtraLight.ttf"; sourceTree = "<group>"; };
+		23B9902129677A2A004C107E /* Karla-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Karla-BoldItalic.ttf"; path = "../src/assets/fonts/Karla-BoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9902229677A2A004C107E /* Poppins-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
+		23B9902329677A2A004C107E /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9902429677A2A004C107E /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-SemiBold.ttf"; path = "../src/assets/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
+		23B9902529677A2A004C107E /* Montserrat-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Black.ttf"; path = "../src/assets/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
+		23B9902629677A2A004C107E /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "../src/assets/fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
+		23B9902729677A2A004C107E /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ThinItalic.ttf"; path = "../src/assets/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; };
+		23B9902829677A2A004C107E /* Montserrat-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-MediumItalic.ttf"; path = "../src/assets/fonts/Montserrat-MediumItalic.ttf"; sourceTree = "<group>"; };
+		23B9902929677A2A004C107E /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-LightItalic.ttf"; path = "../src/assets/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; };
+		23B9902A29677A2B004C107E /* Montserrat-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-LightItalic.ttf"; path = "../src/assets/fonts/Montserrat-LightItalic.ttf"; sourceTree = "<group>"; };
+		23B9902B29677A2B004C107E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		23B9902C29677A2B004C107E /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		23B9902D29677A2B004C107E /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Black.ttf"; path = "../src/assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
+		23B9902E29677A2B004C107E /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-BlackItalic.ttf"; path = "../src/assets/fonts/Lato-BlackItalic.ttf"; sourceTree = "<group>"; };
+		23B9902F29677A2B004C107E /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
+		23B9903029677A2B004C107E /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "../src/assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		23B9903129677A2B004C107E /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
+		23B9903229677A2B004C107E /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9903329677A2B004C107E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		23B9903429677A2B004C107E /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-BoldItalic.ttf"; path = "../src/assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
+		23B9903529677A2B004C107E /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraBold.ttf"; path = "../src/assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		23B9903629677A2B004C107E /* Montserrat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Light.ttf"; path = "../src/assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
+		23B9903729677A2B004C107E /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		23B9903829677A2B004C107E /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-BlackItalic.ttf"; path = "../src/assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
+		23B9903929677A2B004C107E /* Karla-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Karla-Regular.ttf"; path = "../src/assets/fonts/Karla-Regular.ttf"; sourceTree = "<group>"; };
+		23B9903A29677A2B004C107E /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "../src/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
+		23B9903B29677A2B004C107E /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
+		23B9903C29677A2B004C107E /* Montserrat-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Italic.ttf"; path = "../src/assets/fonts/Montserrat-Italic.ttf"; sourceTree = "<group>"; };
+		3B4392A12AC88292D35C810B /* Pods-RightOn.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RightOn.debug.xcconfig"; path = "Target Support Files/Pods-RightOn/Pods-RightOn.debug.xcconfig"; sourceTree = "<group>"; };
+		5709B34CF0A7D63546082F79 /* Pods-RightOn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RightOn.release.xcconfig"; path = "Target Support Files/Pods-RightOn/Pods-RightOn.release.xcconfig"; sourceTree = "<group>"; };
+		5B7EB9410499542E8C5724F5 /* Pods-RightOn-RightOnTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RightOn-RightOnTests.debug.xcconfig"; path = "Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5DCACB8F33CDC322A6C60F78 /* libPods-RightOn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RightOn.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RightOn/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		89C6BE57DB24E9ADA2F236DE /* Pods-RightOn-RightOnTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RightOn-RightOnTests.release.xcconfig"; path = "Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		EE790B52C2054F71A5403856 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../src/assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
-		F856A4C6BD6F40DCA977DB3D /* Karla-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Bold.ttf"; path = "../src/assets/fonts/Karla-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		00E356EB1AD99517003FC87E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7699B88040F8A987B510C191 /* libPods-RightOn-RightOnTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
-				BAB4CE1D5754D1BFF879ED8C /* libPods-righton.a in Frameworks */,
+				0C80B921A6F3F58F76C31292 /* libPods-RightOn.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* rightonTests */ = {
+		00E356EF1AD99517003FC87E /* RightOnTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* rightonTests.m */,
+				00E356F21AD99517003FC87E /* RightOnTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = rightonTests;
+			path = RightOnTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -183,132 +182,102 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* righton */ = {
+		13B07FAE1A68108700A75B9A /* RightOn */ = {
 			isa = PBXGroup;
 			children = (
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
+				23B9900A296779F0004C107E /* Resources */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = righton;
+			name = RightOn;
 			sourceTree = "<group>";
 		};
-		2385DB6A24496CF700209E00 /* AppCenterConfigs */ = {
+		23B9900A296779F0004C107E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				2385DB6B24496D8800209E00 /* AppCenter-Config.plist */,
+				23B9901129677A2A004C107E /* Karla-Bold.ttf */,
+				23B9902129677A2A004C107E /* Karla-BoldItalic.ttf */,
+				23B9900C29677A2A004C107E /* Karla-Italic.ttf */,
+				23B9903929677A2B004C107E /* Karla-Regular.ttf */,
+				23B9902D29677A2B004C107E /* Lato-Black.ttf */,
+				23B9902E29677A2B004C107E /* Lato-BlackItalic.ttf */,
+				23B9903029677A2B004C107E /* Lato-Bold.ttf */,
+				23B9900F29677A2A004C107E /* Lato-BoldItalic.ttf */,
+				23B9901F29677A2A004C107E /* Lato-Italic.ttf */,
+				23B9902629677A2A004C107E /* Lato-Light.ttf */,
+				23B9902929677A2A004C107E /* Lato-LightItalic.ttf */,
+				23B9903A29677A2B004C107E /* Lato-Regular.ttf */,
+				23B9901E29677A2A004C107E /* Lato-Thin.ttf */,
+				23B9900E29677A2A004C107E /* Lato-ThinItalic.ttf */,
+				23B9902529677A2A004C107E /* Montserrat-Black.ttf */,
+				23B9901229677A2A004C107E /* Montserrat-BlackItalic.ttf */,
+				23B9901A29677A2A004C107E /* Montserrat-Bold.ttf */,
+				23B9900D29677A2A004C107E /* Montserrat-BoldItalic.ttf */,
+				23B9900B29677A2A004C107E /* Montserrat-ExtraBold.ttf */,
+				23B9902329677A2A004C107E /* Montserrat-ExtraBoldItalic.ttf */,
+				23B9901329677A2A004C107E /* Montserrat-ExtraLight.ttf */,
+				23B9903129677A2B004C107E /* Montserrat-ExtraLightItalic.ttf */,
+				23B9903C29677A2B004C107E /* Montserrat-Italic.ttf */,
+				23B9903629677A2B004C107E /* Montserrat-Light.ttf */,
+				23B9902A29677A2B004C107E /* Montserrat-LightItalic.ttf */,
+				23B9901C29677A2A004C107E /* Montserrat-Medium.ttf */,
+				23B9902829677A2A004C107E /* Montserrat-MediumItalic.ttf */,
+				23B9901529677A2A004C107E /* Montserrat-Regular.ttf */,
+				23B9902429677A2A004C107E /* Montserrat-SemiBold.ttf */,
+				23B9903229677A2B004C107E /* Montserrat-SemiBoldItalic.ttf */,
+				23B9901429677A2A004C107E /* Montserrat-Thin.ttf */,
+				23B9902729677A2A004C107E /* Montserrat-ThinItalic.ttf */,
+				23B9901D29677A2A004C107E /* Poppins-Black.ttf */,
+				23B9903829677A2B004C107E /* Poppins-BlackItalic.ttf */,
+				23B9903729677A2B004C107E /* Poppins-Bold.ttf */,
+				23B9903429677A2B004C107E /* Poppins-BoldItalic.ttf */,
+				23B9903529677A2B004C107E /* Poppins-ExtraBold.ttf */,
+				23B9901929677A2A004C107E /* Poppins-ExtraBoldItalic.ttf */,
+				23B9902029677A2A004C107E /* Poppins-ExtraLight.ttf */,
+				23B9902C29677A2B004C107E /* Poppins-ExtraLightItalic.ttf */,
+				23B9901629677A2A004C107E /* Poppins-Italic.ttf */,
+				23B9902229677A2A004C107E /* Poppins-Light.ttf */,
+				23B9901829677A2A004C107E /* Poppins-LightItalic.ttf */,
+				23B9903329677A2B004C107E /* Poppins-Medium.ttf */,
+				23B9901729677A2A004C107E /* Poppins-MediumItalic.ttf */,
+				23B9902B29677A2B004C107E /* Poppins-Regular.ttf */,
+				23B9902F29677A2B004C107E /* Poppins-SemiBold.ttf */,
+				23B9901B29677A2A004C107E /* Poppins-SemiBoldItalic.ttf */,
+				23B9901029677A2A004C107E /* Poppins-Thin.ttf */,
+				23B9903B29677A2B004C107E /* Poppins-ThinItalic.ttf */,
 			);
-			path = AppCenterConfigs;
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				C9439F14661FADAEB7119840 /* libPods-righton.a */,
+				5DCACB8F33CDC322A6C60F78 /* libPods-RightOn.a */,
+				19F6CBCC0A4E27FBF8BF4A61 /* libPods-RightOn-RightOnTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		664B7BD028E5412D8A09D77F /* Resources */ = {
+		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				CCC5E2F6EDF44DA28D8269FF /* AntDesign.ttf */,
-				B6080761B2614C3B95E2578F /* Entypo.ttf */,
-				0E4F2BA1961B4DFF93AABF4F /* EvilIcons.ttf */,
-				C3C262558E3D49C99DA143D8 /* Feather.ttf */,
-				8FEAD03B10B5426183FD757E /* FontAwesome.ttf */,
-				286438EF8C9C4A1A97893B2F /* FontAwesome5_Brands.ttf */,
-				1CA0DB711CF34C9797D1DE92 /* FontAwesome5_Regular.ttf */,
-				03DAE5328E824D38BCCE1369 /* FontAwesome5_Solid.ttf */,
-				1C7B0FEA4BB4401EA1F133A0 /* Fontisto.ttf */,
-				C8F7864CA7134C84915D1480 /* Foundation.ttf */,
-				2C58895625A54A5EB54DE772 /* Ionicons.ttf */,
-				8BC72A00D2D143D38D3EA48A /* MaterialCommunityIcons.ttf */,
-				6C78DB3F9DF34C4795A458C7 /* MaterialIcons.ttf */,
-				879D6DC105F8412FBA07DFB4 /* Octicons.ttf */,
-				D3935E5FD62C45F0905EE415 /* SimpleLineIcons.ttf */,
-				77E33FD6FEC640DB80A1F18D /* Zocial.ttf */,
-				F856A4C6BD6F40DCA977DB3D /* Karla-Bold.ttf */,
-				688FD7F17E224F34A7515FC5 /* Karla-BoldItalic.ttf */,
-				6DE5958D1E7E45EB99CF84CC /* Karla-Italic.ttf */,
-				94085E3AE79E43DCA4689F1C /* Karla-Regular.ttf */,
-				A0373CA3A01849348CF80487 /* Lato-Black.ttf */,
-				424242285E3547168690B047 /* Lato-BlackItalic.ttf */,
-				E28C78844D5F4ACCA9BC7DE7 /* Lato-Bold.ttf */,
-				9EBEF7D7324D4FE3B6531641 /* Lato-BoldItalic.ttf */,
-				390313A6D2D141F7A96F3538 /* Lato-Italic.ttf */,
-				B8F7C341BD1442E783AA3B4A /* Lato-Light.ttf */,
-				D1EF3F2AF2DC456D95E9A028 /* Lato-LightItalic.ttf */,
-				552A9E4E1ED84B6A940195A3 /* Lato-Regular.ttf */,
-				0EE578A1EAF842C1B62D023C /* Lato-Thin.ttf */,
-				7D59FE76131A4466A928F3CE /* Lato-ThinItalic.ttf */,
-				7A4A526CEF204D59AA1698B6 /* Montserrat-Black.ttf */,
-				6B629945E3CA4F2A8A7004F9 /* Montserrat-BlackItalic.ttf */,
-				B9A19A7789364745A93FEDB2 /* Montserrat-Bold.ttf */,
-				B7012C26867048548792DB01 /* Montserrat-BoldItalic.ttf */,
-				0F6E1C87DC1C455F9A206862 /* Montserrat-ExtraBold.ttf */,
-				314A311FC1594B179F6C0C5F /* Montserrat-ExtraBoldItalic.ttf */,
-				8242DE67E4594AEABE4573E0 /* Montserrat-ExtraLight.ttf */,
-				B535CE82F6834A5ABCBB038D /* Montserrat-ExtraLightItalic.ttf */,
-				505AF0C1AAC24B349C2FF67C /* Montserrat-Italic.ttf */,
-				EE790B52C2054F71A5403856 /* Montserrat-Light.ttf */,
-				B17C20C51D744903AE848A9A /* Montserrat-LightItalic.ttf */,
-				261D8B2BD50A48568F2991B6 /* Montserrat-Medium.ttf */,
-				D46F57480507478BB1B82255 /* Montserrat-MediumItalic.ttf */,
-				5E7CB8E64C9A4AB98DDC8F3F /* Montserrat-Regular.ttf */,
-				8121580DA49F4E18A06F2E91 /* Montserrat-SemiBold.ttf */,
-				8FD1201B555B4E90A85FFDAF /* Montserrat-SemiBoldItalic.ttf */,
-				DB52F89E102A4D6EB0746A0F /* Montserrat-Thin.ttf */,
-				B036B8853BED4BB894C1BB44 /* Montserrat-ThinItalic.ttf */,
-				3539CCA6B2804BCEA0FDBE68 /* Poppins-Black.ttf */,
-				79B2A042A914466287CBBB49 /* Poppins-BlackItalic.ttf */,
-				E59AEC09871242D28345C23D /* Poppins-Bold.ttf */,
-				C6F11DB79680430C988D4E38 /* Poppins-BoldItalic.ttf */,
-				9C335BC751594AE48819FE73 /* Poppins-ExtraBold.ttf */,
-				534A867C7B364E0AA3813039 /* Poppins-ExtraBoldItalic.ttf */,
-				318A9004ED984FB0BFFEF1FD /* Poppins-ExtraLight.ttf */,
-				C868B3D2A80944B49045C06A /* Poppins-ExtraLightItalic.ttf */,
-				20CF904947084F3B8B62E58F /* Poppins-Italic.ttf */,
-				445970F7186C48DABEEB08B2 /* Poppins-Light.ttf */,
-				C94CC28A7EE1417C89812873 /* Poppins-LightItalic.ttf */,
-				811E22D84A034D88B8B055CB /* Poppins-Medium.ttf */,
-				403E954E99604D0ABF8205EA /* Poppins-MediumItalic.ttf */,
-				ABEE0FBF61CC48CBBFB84BC3 /* Poppins-Regular.ttf */,
-				5F1306FC42D048F39175CD4C /* Poppins-SemiBold.ttf */,
-				CCDC39CB79F84D36828D99BA /* Poppins-SemiBoldItalic.ttf */,
-				8D1B880BBF4B471888DA6571 /* Poppins-Thin.ttf */,
-				1E26017EF1F249839D81C72F /* Poppins-ThinItalic.ttf */,
 			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		6720EB5AD0D724EBB552346C /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				81555B3CD8D559748FBB926E /* Pods-righton.debug.xcconfig */,
-				7284876B677F536592897A27 /* Pods-righton.release.xcconfig */,
-			);
-			path = Pods;
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* righton */,
-				00E356EF1AD99517003FC87E /* rightonTests */,
-				2385DB6A24496CF700209E00 /* AppCenterConfigs */,
+				13B07FAE1A68108700A75B9A /* RightOn */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				00E356EF1AD99517003FC87E /* RightOnTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				664B7BD028E5412D8A09D77F /* Resources */,
-				A12BFD992284013C009325A9 /* Recovered References */,
-				6720EB5AD0D724EBB552346C /* Pods */,
+				BBD78D7AC51CEA395F1C20DB /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -319,40 +288,65 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* righton.app */,
+				00E356EE1AD99517003FC87E /* RightOnTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A12BFD992284013C009325A9 /* Recovered References */ = {
+		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				20862408E50042C991946D38 /* libRNAWSCognito.a */,
+				3B4392A12AC88292D35C810B /* Pods-RightOn.debug.xcconfig */,
+				5709B34CF0A7D63546082F79 /* Pods-RightOn.release.xcconfig */,
+				5B7EB9410499542E8C5724F5 /* Pods-RightOn-RightOnTests.debug.xcconfig */,
+				89C6BE57DB24E9ADA2F236DE /* Pods-RightOn-RightOnTests.release.xcconfig */,
 			);
-			name = "Recovered References";
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13B07F861A680F5B00A75B9A /* righton */ = {
+		00E356ED1AD99517003FC87E /* RightOnTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "righton" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "RightOnTests" */;
 			buildPhases = (
-				11164C81AE05E879026DA77E /* [CP] Check Pods Manifest.lock */,
-				23DE1E90242FE4420082650A /* Start Packager */,
+				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				00E356EA1AD99517003FC87E /* Sources */,
+				00E356EB1AD99517003FC87E /* Frameworks */,
+				00E356EC1AD99517003FC87E /* Resources */,
+				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
+				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				00E356F51AD99517003FC87E /* PBXTargetDependency */,
+			);
+			name = RightOnTests;
+			productName = RightOnTests;
+			productReference = 00E356EE1AD99517003FC87E /* RightOnTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		13B07F861A680F5B00A75B9A /* RightOn */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "RightOn" */;
+			buildPhases = (
+				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				B6E3F9A814D9625DB0B362EA /* [CP] Embed Pods Frameworks */,
-				B88172200C9C091E2C9A45EA /* [CP] Copy Pods Resources */,
+				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
+				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = righton;
-			productName = "Hello World";
+			name = RightOn;
+			productName = RightOn;
 			productReference = 13B07F961A680F5B00A75B9A /* righton.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -362,16 +356,19 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1220;
-				ORGANIZATIONNAME = Facebook;
+				LastUpgradeCheck = 1210;
 				TargetAttributes = {
+					00E356ED1AD99517003FC87E = {
+						CreatedOnToolsVersion = 6.2;
+						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
 					13B07F861A680F5B00A75B9A = {
-						ProvisioningStyle = Automatic;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "RightOn" */;
-			compatibilityVersion = "Xcode 10.0";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -383,69 +380,76 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* righton */,
+				13B07F861A680F5B00A75B9A /* RightOn */,
+				00E356ED1AD99517003FC87E /* RightOnTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		00E356EC1AD99517003FC87E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23B9906429677A2B004C107E /* Montserrat-SemiBoldItalic.ttf in Resources */,
+				23B9906729677A2B004C107E /* Poppins-ExtraBold.ttf in Resources */,
+				23B9906029677A2B004C107E /* Lato-BlackItalic.ttf in Resources */,
+				23B9906329677A2B004C107E /* Montserrat-ExtraLightItalic.ttf in Resources */,
+				23B9906B29677A2B004C107E /* Karla-Regular.ttf in Resources */,
+				23B9905529677A2B004C107E /* Montserrat-ExtraBoldItalic.ttf in Resources */,
+				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				23B9905429677A2B004C107E /* Poppins-Light.ttf in Resources */,
+				23B9906529677A2B004C107E /* Poppins-Medium.ttf in Resources */,
+				23B9904D29677A2B004C107E /* Poppins-SemiBoldItalic.ttf in Resources */,
+				23B9904029677A2B004C107E /* Lato-ThinItalic.ttf in Resources */,
+				23B9906E29677A2B004C107E /* Montserrat-Italic.ttf in Resources */,
+				23B9906829677A2B004C107E /* Montserrat-Light.ttf in Resources */,
+				23B9904F29677A2B004C107E /* Poppins-Black.ttf in Resources */,
+				23B9904829677A2B004C107E /* Poppins-Italic.ttf in Resources */,
+				23B9903D29677A2B004C107E /* Montserrat-ExtraBold.ttf in Resources */,
+				23B9905129677A2B004C107E /* Lato-Italic.ttf in Resources */,
+				23B9905D29677A2B004C107E /* Poppins-Regular.ttf in Resources */,
+				23B9906C29677A2B004C107E /* Lato-Regular.ttf in Resources */,
+				23B9904929677A2B004C107E /* Poppins-MediumItalic.ttf in Resources */,
+				23B9905A29677A2B004C107E /* Montserrat-MediumItalic.ttf in Resources */,
+				23B9905E29677A2B004C107E /* Poppins-ExtraLightItalic.ttf in Resources */,
+				23B9905629677A2B004C107E /* Montserrat-SemiBold.ttf in Resources */,
+				23B9906929677A2B004C107E /* Poppins-Bold.ttf in Resources */,
+				23B9904E29677A2B004C107E /* Montserrat-Medium.ttf in Resources */,
+				23B9906629677A2B004C107E /* Poppins-BoldItalic.ttf in Resources */,
+				23B9905729677A2B004C107E /* Montserrat-Black.ttf in Resources */,
+				23B9904429677A2B004C107E /* Montserrat-BlackItalic.ttf in Resources */,
+				23B9903E29677A2B004C107E /* Karla-Italic.ttf in Resources */,
+				23B9905829677A2B004C107E /* Lato-Light.ttf in Resources */,
+				23B9904A29677A2B004C107E /* Poppins-LightItalic.ttf in Resources */,
+				23B9906A29677A2B004C107E /* Poppins-BlackItalic.ttf in Resources */,
+				23B9905329677A2B004C107E /* Karla-BoldItalic.ttf in Resources */,
+				23B9905229677A2B004C107E /* Poppins-ExtraLight.ttf in Resources */,
+				23B9905929677A2B004C107E /* Montserrat-ThinItalic.ttf in Resources */,
+				23B9903F29677A2B004C107E /* Montserrat-BoldItalic.ttf in Resources */,
+				23B9905B29677A2B004C107E /* Lato-LightItalic.ttf in Resources */,
+				23B9904729677A2B004C107E /* Montserrat-Regular.ttf in Resources */,
+				23B9905F29677A2B004C107E /* Lato-Black.ttf in Resources */,
+				23B9904529677A2B004C107E /* Montserrat-ExtraLight.ttf in Resources */,
+				23B9906D29677A2B004C107E /* Poppins-ThinItalic.ttf in Resources */,
+				23B9904229677A2B004C107E /* Poppins-Thin.ttf in Resources */,
+				23B9906129677A2B004C107E /* Poppins-SemiBold.ttf in Resources */,
+				23B9906229677A2B004C107E /* Lato-Bold.ttf in Resources */,
+				23B9905029677A2B004C107E /* Lato-Thin.ttf in Resources */,
+				23B9904329677A2B004C107E /* Karla-Bold.ttf in Resources */,
+				23B9904129677A2B004C107E /* Lato-BoldItalic.ttf in Resources */,
+				23B9904C29677A2B004C107E /* Montserrat-Bold.ttf in Resources */,
+				23B9905C29677A2B004C107E /* Montserrat-LightItalic.ttf in Resources */,
+				23B9904629677A2B004C107E /* Montserrat-Thin.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				2385DB6C24496D8800209E00 /* AppCenter-Config.plist in Resources */,
-				7F26AED8AE644B76974F7BEC /* Karla-Bold.ttf in Resources */,
-				C30DE20937BF417F935CB098 /* Karla-BoldItalic.ttf in Resources */,
-				80A2C0E3415C4FDC9D454B5D /* Karla-Italic.ttf in Resources */,
-				D7E16AEC02074DC5B6725A5D /* Karla-Regular.ttf in Resources */,
-				334777BAD14C47428A05FC0A /* Lato-Black.ttf in Resources */,
-				E5E7F80DCBDA432EB5EB594A /* Lato-BlackItalic.ttf in Resources */,
-				EA7DD3EC0ACE43068E684513 /* Lato-Bold.ttf in Resources */,
-				60C8CCA9880F4BEBB67A04B7 /* Lato-BoldItalic.ttf in Resources */,
-				C74BD7C2BAEB436C9357DDF5 /* Lato-Italic.ttf in Resources */,
-				4BFE5915230F4E23972FB3C7 /* Lato-Light.ttf in Resources */,
-				9148E057345C4428BCFB9677 /* Lato-LightItalic.ttf in Resources */,
-				64D52D5E1B6A409DAC9B602E /* Lato-Regular.ttf in Resources */,
-				353A1E104921432791126AED /* Lato-Thin.ttf in Resources */,
-				BAD91FE2D16043E6831181C4 /* Lato-ThinItalic.ttf in Resources */,
-				FEF6E2F1D6974D9CBFE08C60 /* Montserrat-Black.ttf in Resources */,
-				5D00B35E69A245E29780A48B /* Montserrat-BlackItalic.ttf in Resources */,
-				B83A6668B18345BFBB2C8A77 /* Montserrat-Bold.ttf in Resources */,
-				67E18CD8739F4F0EB1DB672F /* Montserrat-BoldItalic.ttf in Resources */,
-				29A330715026471A982A63BF /* Montserrat-ExtraBold.ttf in Resources */,
-				07A9CCA8A6DF480AA497D3CF /* Montserrat-ExtraBoldItalic.ttf in Resources */,
-				DC0E966A65C944989ED0E0DB /* Montserrat-ExtraLight.ttf in Resources */,
-				CC9996D3512D4084AE18B733 /* Montserrat-ExtraLightItalic.ttf in Resources */,
-				410DECB147634BDCB5CED733 /* Montserrat-Italic.ttf in Resources */,
-				603A87119EEB419CB350E305 /* Montserrat-Light.ttf in Resources */,
-				F430E8FB13484AD8A6FBE106 /* Montserrat-LightItalic.ttf in Resources */,
-				C20B46D420844BA98EDCF20A /* Montserrat-Medium.ttf in Resources */,
-				49636BD55C4E49019EE15417 /* Montserrat-MediumItalic.ttf in Resources */,
-				7519722BF3F84CF5AC23A63F /* Montserrat-Regular.ttf in Resources */,
-				CE2E0E70A7C544D3AA45C00C /* Montserrat-SemiBold.ttf in Resources */,
-				8F4513B4197F4E37A7722757 /* Montserrat-SemiBoldItalic.ttf in Resources */,
-				C9A5C1D28D394D5596280F7D /* Montserrat-Thin.ttf in Resources */,
-				B4FFFAA7FA96484ABCB02B2C /* Montserrat-ThinItalic.ttf in Resources */,
-				E8ABE23527F241709BFA085D /* Poppins-Black.ttf in Resources */,
-				9D0E5EC4AAAC48738934E7BC /* Poppins-BlackItalic.ttf in Resources */,
-				C89AE47FE9C54079BDE49DE1 /* Poppins-Bold.ttf in Resources */,
-				71B9CEFE3C3148C2B0F70764 /* Poppins-BoldItalic.ttf in Resources */,
-				BDEAA41EE4C44635B1D7D98A /* Poppins-ExtraBold.ttf in Resources */,
-				977B436ECA9C41948C8BEEE0 /* Poppins-ExtraBoldItalic.ttf in Resources */,
-				6A52352919054587A7B7128C /* Poppins-ExtraLight.ttf in Resources */,
-				38E779162FF34963838C2B65 /* Poppins-ExtraLightItalic.ttf in Resources */,
-				32AF07A562684A20922B9D39 /* Poppins-Italic.ttf in Resources */,
-				352C6DCABA31431CB4EDF986 /* Poppins-Light.ttf in Resources */,
-				25BD7BE96E694C9793DE962B /* Poppins-LightItalic.ttf in Resources */,
-				4E6A149F1503469484C1FB6B /* Poppins-Medium.ttf in Resources */,
-				AA2239ECA9BB4ADFBB804D7A /* Poppins-MediumItalic.ttf in Resources */,
-				B95C36E72C0441E6A5DC94BC /* Poppins-Regular.ttf in Resources */,
-				18F1A659911A4A818EE13D69 /* Poppins-SemiBold.ttf in Resources */,
-				F753F99C37EF410F9F220057 /* Poppins-SemiBoldItalic.ttf in Resources */,
-				0A5CA5E5C2754690BBA07A32 /* Poppins-Thin.ttf in Resources */,
-				7E30C61520B041E68A21B01E /* Poppins-ThinItalic.ttf in Resources */,
+				23B9904B29677A2B004C107E /* Poppins-ExtraBoldItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,15 +462,34 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
 			);
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		11164C81AE05E879026DA77E /* [CP] Check Pods Manifest.lock */ = {
+		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn/Pods-RightOn-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn/Pods-RightOn-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RightOn/Pods-RightOn-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -481,14 +504,87 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-righton-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-RightOn-RightOnTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		23DE1E90242FE4420082650A /* Start Packager */ = {
+		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RightOn-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn/Pods-RightOn-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn/Pods-RightOn-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RightOn/Pods-RightOn-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RightOn-RightOnTests/Pods-RightOn-RightOnTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -507,96 +603,101 @@
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		B6E3F9A814D9625DB0B362EA /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-righton/Pods-righton-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-righton/Pods-righton-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-righton/Pods-righton-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B88172200C9C091E2C9A45EA /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-righton/Pods-righton-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-righton/Pods-righton-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-righton/Pods-righton-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		00E356EA1AD99517003FC87E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00E356F31AD99517003FC87E /* RightOnTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = righton;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 13B07F861A680F5B00A75B9A /* RightOn */;
+			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
-/* End PBXVariantGroup section */
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		13B07F941A680F5B00A75B9A /* Debug */ = {
+		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 81555B3CD8D559748FBB926E /* Pods-righton.debug.xcconfig */;
+			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-RightOn-RightOnTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 7N8V325STY;
-				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = (
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
 				);
-				INFOPLIST_FILE = righton/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				INFOPLIST_FILE = RightOnTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
-					/usr/lib/swift,
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
 					"$(inherited)",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RightOn.app/RightOn";
+			};
+			name = Debug;
+		};
+		00E356F71AD99517003FC87E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-RightOn-RightOnTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				INFOPLIST_FILE = RightOnTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RightOn.app/RightOn";
+			};
+			name = Release;
+		};
+		13B07F941A680F5B00A75B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-RightOn.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 7N8V325STY;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = RightOn/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -605,40 +706,24 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rightoneducation.app;
 				PRODUCT_NAME = righton;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7284876B677F536592897A27 /* Pods-righton.release.xcconfig */;
+			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-RightOn.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7N8V325STY;
-				ENABLE_BITCODE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
-				);
-				INFOPLIST_FILE = righton/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				INFOPLIST_FILE = RightOn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
-					/usr/lib/swift,
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
-					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -647,8 +732,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rightoneducation.app;
 				PRODUCT_NAME = righton;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -657,7 +741,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -681,13 +766,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = FH9WVF26MX;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -703,9 +786,25 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -714,7 +813,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -738,13 +838,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = FH9WVF26MX;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -753,8 +851,24 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -763,7 +877,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "righton" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "RightOnTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00E356F61AD99517003FC87E /* Debug */,
+				00E356F71AD99517003FC87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "RightOn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
