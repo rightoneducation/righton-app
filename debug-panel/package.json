@@ -24,8 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run build --prefix ../networking && react-scripts start",
-    "build": "npm run build --prefix ../networking && react-scripts build",
+    "start": "yarn  --cwd ../networking build && react-scripts start",
+    "build": "yarn  --cwd ../networking build && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
