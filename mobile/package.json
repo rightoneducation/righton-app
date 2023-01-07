@@ -5,15 +5,15 @@
   "scripts": {
     "devtools": "react-devtools",
     "flow": "flow",
-    "android": "yarn  --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native run-android",
+    "android": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native run-android",
     "android-win": "yarn run build --prefix ..\\networking & robocopy ..\\networking\\lib .\\node_modules\\@righton\\networking\\lib /e /njh /njs & robocopy ..\\networking\\src .\\node_modules\\@righton\\networking\\src /e /njh /njs & robocopy ..\\networking\\ .\\node_modules\\@righton\\networking package.json /njh /njs & react-native run-android",
-    "ios": "yarn  --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native run-ios --simulator='iPhone 14'",
-    "apk": "yarn  --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && cd android && ./gradlew assembleRelease",
-    "fastlane": "yarn  --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && cd ios && fastlane ios beta",
+    "ios": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native run-ios --simulator='iPhone 14'",
+    "apk": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && cd android && ./gradlew assembleRelease",
+    "fastlane": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && cd ios && fastlane ios beta",
     "reload": "adb shell input keyevent 82 && adb shell input keyevent 66 && adb shell input keyevent 66",
     "devmenu": "adb shell input keyevent 82",
     "debug": "adb shell input keyevent 82 && adb shell input keyevent 61 && adb shell input keyevent 66 && adb shell input keyevent 66",
-    "start": "yarn  --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native start",
+    "start": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-native start",
     "test": "node node_modules/jest/bin/jest.js --watchAll --verbose --coverage"
   },
   "dependencies": {
