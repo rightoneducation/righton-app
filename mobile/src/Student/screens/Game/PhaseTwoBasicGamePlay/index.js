@@ -7,7 +7,8 @@ import {
     StyleSheet,
     Text,
     View,
-    ScrollView
+    ScrollView,
+    Image
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
@@ -19,9 +20,9 @@ import TeamFooter from "../../../../components/TeamFooter"
 import { colors, fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
-import RoundTextIcon from "../../../components/RoundTextIcon"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
+import HintsView from "../Components/HintsView"
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -130,13 +131,11 @@ const PhaseTwoBasicGamePlay = ({
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
-
-    let phaseHeader = []
-    let firstSlide = []
-    let secondSlide = []
+    const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
-    if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-        phaseHeader = [<>
+
+    const timerHeading =
+        [<>
             <Text style={styles.headerText}>
                 Pick the Trickiest!
             </Text>
@@ -145,92 +144,89 @@ const PhaseTwoBasicGamePlay = ({
                     style={styles.timerProgressBar}
                     progress={progress}
                     color={"#349E15"}
-                    borderColor={"transparent"}
-                    unfilledColor={"#7819F8"}
+                    height={"100%"}
+                    unfilledColor={"rgba(255,255,255,0.8)"}
                     width={
                         Dimensions.get("window").width - scale(90)
                     }
-                    height={"100%"}
                 />
                 <Text style={styles.timerText}>
                     {Math.floor(currentTime / 60)}:
                     {("0" + Math.floor(currentTime % 60)).slice(-2)}
                 </Text>
             </View>
-        </>
-        ]
-        firstSlide = [
-            <>
-                <Text style={styles.cardHeadingText}>Question</Text>
-                <Card>
-                    <ScrollableQuestion question={question} />
-                </Card>
-            </>
-        ]
-        secondSlide = [
-            <View>
-                <Text style={styles.cardHeadingText}>Answers</Text>
-                <Card>
-                    <AnswerOptionsPhaseTwo
-                        isAdvancedMode={gameSession.isAdvanced}
-                        isFacilitator={teamMember?.isFacilitator}
-                        selectedAnswerIndex={selectedAnswerIndex}
-                        setSelectedAnswerIndex={setSelectedAnswerIndex}
-                        answers={answerChoices}
-                        disabled={submitted}
-                        correctAnswer={correctAnswer}
-                    />
-                    {!submitted && (
-                        <RoundButton
-                            style={styles.submitAnswer}
-                            titleStyle={styles.submitAnswerText}
-                            title="Submit Answer"
-                            onPress={handleSubmitAnswer}
-                        />
-                    )}
-                </Card>
-                {submitted && (
-                    <Text style={styles.answerSubmittedText}>
-                        {submittedAnswerText}
-                    </Text>
-                )}
-            </View>
-        ]
-    }
+        </>]
 
-    if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
-        phaseHeader =
+    const discussHeading =
+        [<>
             <Text style={styles.headerText}>
                 Answer Explanations
             </Text>
-        firstSlide =
-            <>
-                <Text style={styles.cardHeadingText}>Wrong Answers</Text>
-                {wrongAnswers.map((answer, index) => (
-                    <Card
-                        key={answer.id}
-                    >
-                        <RoundTextIcon
-                            style={styles.answersText}
-                            text={answer.text}>
-                        </RoundTextIcon>
-                        <Text style={styles.reasonsText}>{answer.reason}</Text>
-                    </Card>
-                ))}
-            </>
-        secondSlide =
-            <>
-                <Text style={styles.cardHeadingText}>Correct Answer</Text>
+        </>]
+
+    const questionScreen =
+        [<>
+            <Text style={styles.cardHeadingText}>Question</Text>
+            <Card>
+                <ScrollableQuestion question={question} />
+            </Card>
+        </>]
+
+    const submitAnswerScreen =
+        [<View>
+            <Text style={styles.cardHeadingText}>Answers</Text>
+            <Card>
+                <AnswerOptionsPhaseTwo
+                    isAdvancedMode={gameSession.isAdvanced}
+                    isFacilitator={teamMember?.isFacilitator}
+                    selectedAnswerIndex={selectedAnswerIndex}
+                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                    answers={answerChoices}
+                    disabled={submitted}
+                    correctAnswer={correctAnswer}
+                />
+                {!submitted && (
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Submit Answer"
+                        onPress={handleSubmitAnswer}
+                    />
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
+            )}
+        </View>]
+
+    const correctAnswerScreen =
+        [<>
+            <Card
+                key={correctAnswer.id}
+            >
+                <ScrollableQuestion question={question} />
+                <View style={styles.roundContainerCorrect}>
+                    <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
+                </View>
+                <HintsView hints={availableHints} />
+                <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
+            </Card></>]
+
+    const wrongAnswersScreen =
+        [<>
+            {wrongAnswers.map((answer, index) => (
                 <Card
-                    key={correctAnswer.id}
+                    key={answer.id}
                 >
-                    <RoundTextIcon
-                        style={styles.answersText}
-                        text={correctAnswer.text}>
-                    </RoundTextIcon>
-                    <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
-                </Card></>
-    }
+                    <View style={styles.roundContainerIncorrect}>
+                        <Text style={styles.answerText}>{answer.text}</Text>
+                    </View>
+                    <Text style={styles.reasonsText}>{answer.reason}</Text>
+                </Card>
+            ))}
+        </>]
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -240,17 +236,45 @@ const PhaseTwoBasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-                {phaseHeader}
+                {gameSession?.currentState ===
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                    <>
+                        {timerHeading}
+                    </>
+                ) : null}
+                {gameSession?.currentState ===
+                    GameSessionState.PHASE_2_DISCUSS ? (
+                    <>
+                        {discussHeading}
+                    </>
+                ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                <HorizontalPageView>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        {firstSlide}
-                    </ScrollView>
-                    <ScrollView>
-                        {secondSlide}
-                    </ScrollView>
-                </HorizontalPageView>
+                {gameSession?.currentState ===
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                    <HorizontalPageView initialPage={0}>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {questionScreen}
+                        </ScrollView>
+                        <ScrollView>
+                            {submitAnswerScreen}
+                        </ScrollView>
+                    </HorizontalPageView>) : null}
+                {gameSession?.currentState ===
+                    GameSessionState.PHASE_2_DISCUSS ? (
+                    <HorizontalPageView initialPage={1}>
+                        <>
+                            <Text style={styles.cardHeadingText}>Correct Answer</Text>
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                {correctAnswerScreen}
+                            </ScrollView>
+                        </>
+                        <>
+                            <Text style={styles.cardHeadingText}>Wrong Answers</Text>
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                {wrongAnswersScreen}
+                            </ScrollView></>
+                    </HorizontalPageView>) : null}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -286,7 +310,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginBottom: verticalScale(8),
+        marginVertical: verticalScale(9),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -356,10 +380,29 @@ const styles = StyleSheet.create({
     },
     answersText: {
         fontFamily: fontFamilies.karla,
-        marginTop: verticalScale(10),
-        marginHorizontal: scale(15),
+        padding: scale(6)
+    },
+    correctAnswerText: {
+        fontFamily: fontFamilies.karla,
         padding: scale(6),
+    },
+    roundContainerCorrect: {
+        borderRadius: 22,
+        backgroundColor: "#EBFFDA",
+        borderColor: "#EBFFDA",
+        borderWidth: 4,
+        marginHorizontal: scale(15),
+        paddingVertical: verticalScale(2),
+        paddingHorizontal: scale(8)
+    },
+    roundContainerIncorrect: {
+        borderRadius: 22,
         backgroundColor: "#F4F4F4",
-        borderColor: "#F4F4F4"
+        borderColor: "#F4F4F4",
+        borderWidth: 4,
+        marginHorizontal: scale(12),
+        marginVertical: verticalScale(8),
+        paddingVertical: verticalScale(8),
+        paddingHorizontal: scale(8)
     }
 })

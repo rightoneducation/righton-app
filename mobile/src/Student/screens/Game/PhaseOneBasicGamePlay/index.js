@@ -186,6 +186,7 @@ const PhaseOneBasicGamePlay = ({
         cards = [hintCard]
     }
 
+    console.log(availableHints)
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
