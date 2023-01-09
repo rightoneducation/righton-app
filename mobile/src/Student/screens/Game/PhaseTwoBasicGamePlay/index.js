@@ -120,7 +120,7 @@ const PhaseTwoBasicGamePlay = ({
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
     const timerHeading =
-        [<>
+        <>
             <Text style={styles.headerText}>
                 Pick the Trickiest!
             </Text>
@@ -140,25 +140,25 @@ const PhaseTwoBasicGamePlay = ({
                     {("0" + Math.floor(currentTime % 60)).slice(-2)}
                 </Text>
             </View>
-        </>]
+        </>
 
     const discussHeading =
-        [<>
+        <>
             <Text style={styles.headerText}>
                 Answer Explanations
             </Text>
-        </>]
+        </>
 
     const questionScreen =
-        [<>
+        <>
             <Text style={styles.cardHeadingText}>Question</Text>
             <Card>
                 <ScrollableQuestion question={question} />
             </Card>
-        </>]
+        </>
 
     const submitAnswerScreen =
-        [<View>
+        <View>
             <Text style={styles.cardHeadingText}>Answers</Text>
             <Card>
                 <AnswerOptionsPhaseTwo
@@ -195,10 +195,10 @@ const PhaseTwoBasicGamePlay = ({
                     </Text>
                 </>
             )}
-        </View>]
+        </View>
 
     const correctAnswerScreen =
-        [<>
+        <>
             <Card
                 key={correctAnswer.id}
             >
@@ -208,10 +208,11 @@ const PhaseTwoBasicGamePlay = ({
                 </View>
                 <HintsView hints={availableHints} />
                 <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
-            </Card></>]
+            </Card>
+        </>
 
     const wrongAnswersScreen =
-        [<>
+        <>
             {wrongAnswers.map((answer, index) => (
                 <Card
                     key={answer.id}
@@ -222,7 +223,7 @@ const PhaseTwoBasicGamePlay = ({
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
             ))}
-        </>]
+        </>
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -269,7 +270,8 @@ const PhaseTwoBasicGamePlay = ({
                             <Text style={styles.cardHeadingText}>Wrong Answers</Text>
                             <ScrollView showsVerticalScrollIndicator={false}>
                                 {wrongAnswersScreen}
-                            </ScrollView></>
+                            </ScrollView>
+                        </>
                     </HorizontalPageView>) : null}
             </View>
             <View style={styles.footerView}>
