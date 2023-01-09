@@ -42,11 +42,6 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
                         />
                     </View>
                     <View style={styles.entryContainer}>
-                        {showErrorText && <Text
-                            style={{ ...styles.title, color: colors.red }}>
-                            Given game code was not found!
-                        </Text>
-                        }
                         <Text style={styles.title}>Enter Game Code</Text>
                         <TextInput
                             keyboardType={"number-pad"}
@@ -72,6 +67,12 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
                             style={styles.enterButton}
                             onPress={this.onGameCodeSubmit}
                         />
+                        {showErrorText && <Text
+                            style={{ ...styles.errorText }}>
+                            We were unable to{"\n"}join this game.{"\n"}
+                            {"\n"}Check the Game Code{"\n"}and try again.
+                        </Text>
+                        }
                     </View>
                 </PurpleBackground>
             </SafeAreaView>
@@ -80,3 +81,4 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
 }
 
 export default EnterGameCode
+
