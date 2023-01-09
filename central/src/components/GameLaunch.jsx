@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame, cloneGame }) {
+function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame, cloneGame, isUserAuth }) {
   useEffect(() => {
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -191,25 +191,27 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
         <Button type="button" onClick={() => history.push(`/`)}>
           <ArrowBack className={classes.back} />Back to Explore Page
         </Button>
-
-        <Grid>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleGameClick} className={classes.moreButton} data-game-id={gameId}>
-            <img src={MoreCircle} alt='More Circular Icon' width={'30px'} />
-          </Button>
-          <Menu
-            id={`game-${gameId}-actions`}
-            anchorEl={anchorElGame}
-            keepMounted
-            open={activeGameId === String(gameId)}
-            onClose={handleGameClose}
-            onClick={(event) => { if (!match) event.stopPropagation(); }}
-          >
-            <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleGameClose(); }}>Edit</MenuItem>
-            <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-            <MenuItem onClick={deleteHandler(gameId)}>Delete</MenuItem>
-          </Menu>
-        </Grid>
+        {isUserAuth && 
+          <Grid>
+            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleGameClick} className={classes.moreButton} data-game-id={gameId}>
+              <img src={MoreCircle} alt='More Circular Icon' width={'30px'} />
+            </Button>
+            <Menu
+              id={`game-${gameId}-actions`}
+              anchorEl={anchorElGame}
+              keepMounted
+              open={activeGameId === String(gameId)}
+              onClose={handleGameClose}
+              onClick={(event) => { if (!match) event.stopPropagation(); }}
+            >
+              <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleGameClose(); }}>Edit</MenuItem>
+              <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
+              <MenuItem onClick={deleteHandler(gameId)}>Delete</MenuItem>
+            </Menu>
+          </Grid>
+        }
       </Box>
+     
 
       <Grid container>
         <Grid item xs={12} md={4} className={classes.leftComponent}>
@@ -256,29 +258,30 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                           {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
                         </div>
                       </Grid>
+                      {isUserAuth && 
+                        <Grid item xs={3}>
+                          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
+                            <MoreVert />
+                          </Button>
 
-                      <Grid item xs={3}>
-                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>
-                          <MoreVert />
-                        </Button>
+                          <Menu
+                            id={`question-${index}-actions`}
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={activeIndex === String(index)}
+                            onClose={handleClose}
+                            onClick={(event) => { if (!match) event.stopPropagation(); }}
+                          >
+                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
 
-                        <Menu
-                          id={`question-${index}-actions`}
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={activeIndex === String(index)}
-                          onClose={handleClose}
-                          onClick={(event) => { if (!match) event.stopPropagation(); }}
-                        >
-                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                            {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
 
-                          {index > 1 && <MenuItem onClick={() => changeQuestionIndex(index, index - 1)}>Move Up</MenuItem>}
+                            {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
 
-                          {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
-
-                          <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
-                        </Menu>
-                      </Grid>
+                            <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                          </Menu>
+                        </Grid>
+                      }
                     </Grid>
                   </Card>
                 </Grid>

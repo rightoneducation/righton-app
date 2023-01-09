@@ -18,21 +18,13 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
 
     try {
       await Auth.signIn(email, password);
-      //todo: receive a token/fetch token and store it in localstorage
-      //todo: set isloggedin to true
-      let user = await Auth.userAttributes('admin@rightoneducation.com');
-      //let idToken = user.signInUserSession.idToken;
-      //localStorage.setItem('token', idToken);
-      console.log(user);
       handleUserAuth(true);
-      //window.location.href = "/";
+      window.location.href = "/";
 
     } catch (e) {
       console.log(e);
       if (e instanceof Error){
-        if (e.name ==='UserNotConfirmedException'){
           setAdminError(true);
-        }
       }
     }
     setLoading(false);
@@ -44,19 +36,18 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
       direction="column"
       alignItems="center"
       justifyContent="center"
-      spacing={4}
     >
       <img
         src={RightOnLogo}
         style={{
           marginTop: "3%",
-          width: "20%",
+          width: "15%",
           marginBottom: "3%",
           maxHeight: "2%",
         }}
         alt="Right On"
       />
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <form
           style={{
             display: "flex",
@@ -83,13 +74,7 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <ButtonGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            spacing={2}
-          >
-            <SignUpLink to="/signup">Sign Up</SignUpLink>
+          <ButtonGrid>
             <LogInLink
               to="#"
               onClick={(e) => {
@@ -98,10 +83,11 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
             >
               Log In
             </LogInLink>
+            <SignUpLink to="/signup">Sign Up</SignUpLink>
           </ButtonGrid>
         </form>
       </Grid>
-      {adminError ? <ErrorType> User account has not been confirmed. Please contact the administrator. </ErrorType> : null}
+      {adminError ? <ErrorType> There has been an error. Please verify your username/password and contact the administrator for account verification. </ErrorType> : null}
     </Grid>
   );
 };
@@ -111,6 +97,7 @@ export default LogIn;
 const Field = styled(TextField)({
   margin: "10px 0",
   borderRadius: "20px",
+  width: '100%',
 });
 
 const SignUpLink = styled(Link)({
@@ -135,7 +122,8 @@ const ButtonGrid = styled(Grid)({
   marginTop: "10%",
   display: "flex",
   flexDirection: "row",
-  justifyContent: "space-around",
+  gap: '10%',
+  justifyContent:"center",
 });
 
 const ErrorType = styled(Typography)({

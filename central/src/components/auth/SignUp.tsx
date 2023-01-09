@@ -5,7 +5,7 @@ import { Auth } from "aws-amplify";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
 
 const Signup: React.FC = () => {
@@ -52,20 +52,18 @@ const Signup: React.FC = () => {
         src={RightOnLogo}
         style={{
           marginTop: "3%",
-          width: "20%",
+          width: "15%",
           marginBottom: "3%",
           maxHeight: "2%",
         }}
         alt="Right On"
       />
-      <Grid item xs={12} md={12}>
+      <Grid item xs={12}>
         <form
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            width: "120%",
-            marginLeft: "-10%",
           }}
           onSubmit={handleSignUp}
         >
@@ -73,12 +71,7 @@ const Signup: React.FC = () => {
             {" "}
             New Account Registration
           </h1>
-          <FieldGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            xs={12}
-          >
+          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%"}}>
             <Field
               variant="outlined"
               label="Name"
@@ -92,13 +85,8 @@ const Signup: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
             />
-          </FieldGrid>
-          <FieldGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            xs={12}
-          >
+          </Grid>
+          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%"}}>
             <Field
               variant="outlined"
               label="Password"
@@ -113,14 +101,8 @@ const Signup: React.FC = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-          </FieldGrid>
-          <ButtonGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            spacing={4}
-          >
-            <LoginLink to="/login">Log In</LoginLink>
+          </Grid>
+          <ButtonGrid>
             <SignUpLink
               to="#"
               onClick={(e) => {
@@ -129,9 +111,11 @@ const Signup: React.FC = () => {
             >
               Sign Up
             </SignUpLink>
+            <LoginLink to="/login">Log In</LoginLink>
           </ButtonGrid>
         </form>
       </Grid>
+      <PassType> Passwords must be at least 8 characters in length and include at least one letter and one number. </PassType>
     </Grid>
   );
 };
@@ -166,12 +150,11 @@ const ButtonGrid = styled(Grid)({
   marginTop: "10%",
   display: "flex",
   flexDirection: "row",
-  justifyContent: "space-around",
-  marginBottom: "50px",
+  justifyContent:"center",
+  gap: '10%',
+  marginBottom: '25px',
 });
 
-const FieldGrid = styled(Grid)({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-around",
+const PassType = styled(Typography)({
+  fontStyle: 'italic'
 });
