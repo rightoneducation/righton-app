@@ -52,13 +52,16 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingLeft: '5vw',
+            paddingRight: '5vw'
           }}
           onSubmit={handleSubmit}
         >
-          <h1 style={{ fontSize: "22px", color: "grey" }}>
+          <h1 style={{ fontSize: "22px", color: "grey", textAlign: "center"}}>
             {" "}
-            Log to an existing account
+            Sign In to an Existing Acccount
           </h1>
           <Field
             variant="outlined"
@@ -97,7 +100,7 @@ export default LogIn;
 const Field = styled(TextField)({
   margin: "10px 0",
   borderRadius: "20px",
-  width: '100%',
+  width: "100%",
 });
 
 const SignUpLink = styled(Link)({
@@ -105,7 +108,10 @@ const SignUpLink = styled(Link)({
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
@@ -114,18 +120,28 @@ const LogInLink = styled(Link)({
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
 const ButtonGrid = styled(Grid)({
-  marginTop: "10%",
   display: "flex",
   flexDirection: "row",
-  gap: '10%',
   justifyContent:"center",
+  alignItems: "flex-start",
+  width: '10vw',
+  marginBottom: '2vw',
+  marginTop: "2vw",
+  gap: '10%',
 });
 
 const ErrorType = styled(Typography)({
-  fontStyle: 'italic'
+  fontStyle: 'italic',
+  textAlign: 'center',
+  color: 'grey',
+  paddingLeft: '5vw',
+  paddingRight: '5vw'
 });

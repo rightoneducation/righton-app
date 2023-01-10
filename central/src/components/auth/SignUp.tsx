@@ -63,15 +63,17 @@ const Signup: React.FC = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            alignItems: "center",
+            paddingLeft: '5vw',
+            paddingRight: '5vw'
           }}
           onSubmit={handleSignUp}
         >
-          <h1 style={{ fontSize: "22px", color: "gray" }}>
+          <h1 style={{ fontSize: "22px", color: "gray", textAlign: "center" }}>
             {" "}
             New Account Registration
           </h1>
-          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%"}}>
+          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
               variant="outlined"
               label="Name"
@@ -86,7 +88,7 @@ const Signup: React.FC = () => {
               type="email"
             />
           </Grid>
-          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%"}}>
+          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
               variant="outlined"
               label="Password"
@@ -125,7 +127,6 @@ export default Signup;
 const Field = styled(TextField)({
   margin: "10px 0",
   borderRadius: "20px",
-  width: "45%",
 });
 
 const SignUpLink = styled(Link)({
@@ -133,7 +134,10 @@ const SignUpLink = styled(Link)({
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
@@ -142,19 +146,28 @@ const LoginLink = styled(Link)({
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
 const ButtonGrid = styled(Grid)({
-  marginTop: "10%",
   display: "flex",
   flexDirection: "row",
   justifyContent:"center",
+  alignItems: "flex-start",
+  width: '10vw',
+  marginBottom: '2vw',
+  marginTop: "2vw",
   gap: '10%',
-  marginBottom: '25px',
 });
 
 const PassType = styled(Typography)({
-  fontStyle: 'italic'
+  fontStyle: 'italic',
+  textAlign: 'center',
+  color: 'grey',
+  paddingLeft: '5vw',
+  paddingRight: '5vw'
 });
