@@ -70,7 +70,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                 'rgb(255, 120, 165)',
               ]}
               radius={110}
-              timerStartInSecond={100}
+              timerStartInSecond={1000}
               gameCreate={false}
             />
             <Typography className={classes.loadingTitle}>
