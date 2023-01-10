@@ -52,7 +52,8 @@ const Signup: React.FC = () => {
         src={RightOnLogo}
         style={{
           marginTop: "3%",
-          width: "15%",
+          width: '15%',
+          minWidth: '200px',
           marginBottom: "3%",
           maxHeight: "2%",
         }}

@@ -41,9 +41,9 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
         src={RightOnLogo}
         style={{
           marginTop: "3%",
-          width: "15%",
+          width: '15%',
+          minWidth: '200px',
           marginBottom: "3%",
-          maxHeight: "2%",
         }}
         alt="Right On"
       />

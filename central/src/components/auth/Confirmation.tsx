@@ -19,7 +19,7 @@ const Confirmation: React.FC = () => {
     setLoading(true);
 
     try {
-      await Auth.confirmSignUp(email, String(code));
+      await Auth.verifyUserAttributeSubmit(email, 'email', String(code));
       history.push("/signin");
     } catch (error) {
       console.log(error);

@@ -13,7 +13,6 @@ import SearchBar from './SearchBar.jsx';
 export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick }) {
   const classes = useStyles(isResolutionMobile)();
   const matchSearchBar = useRouteMatch('/');
-  console.log(isUserAuth);
 
   return (
     <div className={classes.grow}>
