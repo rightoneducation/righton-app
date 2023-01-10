@@ -6,19 +6,23 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
-    View
+    View,
+    ScrollView,
+    Image
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
-import { scale, verticalScale } from "react-native-size-matters"
+import { color } from "react-native-reanimated"
+import { scale, moderateScale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
-import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
+import { colors, fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
+import HintsView from "../Components/HintsView"
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -83,59 +87,80 @@ const PhaseTwoBasicGamePlay = ({
     }, [gameSession, currentTime])
 
     const handleSubmitAnswer = () => {
-        Alert.alert(
-            "Are you sure?",
-            "You will not be able to change your answer",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
-                    text: "OK",
-                    onPress: () => {
-                        const answer = answerChoices[selectedAnswerIndex]
-                        setSubmitted(true)
-                        global.apiClient
-                            .addTeamAnswer(
-                                teamMember.id,
-                                question.id,
-                                answer.text,
-                                answer.isChosen ? null : false,
-                                true
-                            )
-                            .then((teamAnswer) => {
-                                if (isNullOrUndefined(teamAnswer)) {
-                                    console.error(
-                                        "Failed to create team Answer."
-                                    )
-                                    return
-                                }
+        const answer = answerChoices[selectedAnswerIndex]
+        setSubmitted(true)
+        global.apiClient
+            .addTeamAnswer(
+                teamMember.id,
+                question.id,
+                answer.text,
+                answer.isChosen ? null : false,
+                true
+            )
+            .then((teamAnswer) => {
+                if (isNullOrUndefined(teamAnswer)) {
+                    console.error(
+                        "Failed to create team Answer."
+                    )
+                    return
+                }
 
-                                console.debug(
-                                    "phase 2 team answer: ",
-                                    teamAnswer
-                                )
-                            })
-                            .catch((error) => {
-                                console.error(error.message)
-                            })
-                    },
-                },
-            ]
-        )
+                console.debug(
+                    "phase 2 team answer: ",
+                    teamAnswer
+                )
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
-
+    const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
-    let cards = [
-        <Card headerTitle="Question">
-            <ScrollableQuestion question={question} />
-        </Card>,
+    const timerHeading =
+        <>
+            <Text style={styles.headerText}>
+                Pick the Trickiest!
+            </Text>
+            <View style={styles.timerContainer}>
+                <Progress.Bar
+                    style={styles.timerProgressBar}
+                    progress={progress}
+                    color={"#349E15"}
+                    height={"100%"}
+                    unfilledColor={"rgba(255,255,255,0.8)"}
+                    width={
+                        Dimensions.get("window").width - scale(90)
+                    }
+                />
+                <Text style={styles.timerText}>
+                    {Math.floor(currentTime / 60)}:
+                    {("0" + Math.floor(currentTime % 60)).slice(-2)}
+                </Text>
+            </View>
+        </>
+
+    const discussHeading =
+        <>
+            <Text style={styles.headerText}>
+                Answer Explanations
+            </Text>
+        </>
+
+    const questionScreen =
+        <>
+            <Text style={styles.cardHeadingText}>Question</Text>
+            <Card>
+                <ScrollableQuestion question={question} />
+            </Card>
+        </>
+
+    const submitAnswerScreen =
         <View>
-            <Card headerTitle="Answers">
+            <Text style={styles.cardHeadingText}>Answers</Text>
+            <Card>
                 <AnswerOptionsPhaseTwo
                     isAdvancedMode={gameSession.isAdvanced}
                     isFacilitator={teamMember?.isFacilitator}
@@ -147,7 +172,11 @@ const PhaseTwoBasicGamePlay = ({
                 />
                 {!submitted && (
                     <RoundButton
-                        style={styles.submitAnswer}
+                        style={
+                            (selectedAnswerIndex || selectedAnswerIndex === 0)
+                                ? styles.answerChosen
+                                : styles.submitAnswer
+                        }
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
@@ -155,26 +184,46 @@ const PhaseTwoBasicGamePlay = ({
                 )}
             </Card>
             {submitted && (
-                <Text style={styles.answerSubmittedText}>
-                    {submittedAnswerText}
-                </Text>
+                <>
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Answer Submitted"
+                    />
+                    <Text style={styles.answerSubmittedText}>
+                        {submittedAnswerText}
+                    </Text>
+                </>
             )}
-        </View>,
-    ]
+        </View>
 
-    if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
-        cards = wrongAnswers.map((answer) => (
+    const correctAnswerScreen =
+        <>
             <Card
-                key={answer.id}
-                style={styles.headerText}
-                headerTitle={`Wrong Answer Info ${answer.text}`}
+                key={correctAnswer.id}
             >
-                <Card reasons={answer.reason}>
-                    <Text>{answer.reason}</Text>
-                </Card>
+                <ScrollableQuestion question={question} />
+                <View style={styles.roundContainerCorrect}>
+                    <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
+                </View>
+                <HintsView hints={availableHints} />
+                <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
             </Card>
-        ))
-    }
+        </>
+
+    const wrongAnswersScreen =
+        <>
+            {wrongAnswers.map((answer, index) => (
+                <Card
+                    key={answer.id}
+                >
+                    <View style={styles.roundContainerIncorrect}>
+                        <Text style={styles.answerText}>{answer.text}</Text>
+                    </View>
+                    <Text style={styles.reasonsText}>{answer.reason}</Text>
+                </Card>
+            ))}
+        </>
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -187,33 +236,43 @@ const PhaseTwoBasicGamePlay = ({
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
-                        <Text style={styles.headerText}>
-                            Pick the Trickiest!
-                        </Text>
-                        <View style={styles.timerContainer}>
-                            <Progress.Bar
-                                style={styles.timerProgressBar}
-                                progress={progress}
-                                color={"#349E15"}
-                                unfilledColor={"rgba(255,255,255,0.8)"}
-                                width={
-                                    Dimensions.get("window").width - scale(90)
-                                }
-                            />
-                            <Text style={styles.timerText}>
-                                {Math.floor(currentTime / 60)}:
-                                {("0" + Math.floor(currentTime % 60)).slice(-2)}
-                            </Text>
-                        </View>
+                        {timerHeading}
+                    </>
+                ) : null}
+                {gameSession?.currentState ===
+                    GameSessionState.PHASE_2_DISCUSS ? (
+                    <>
+                        {discussHeading}
                     </>
                 ) : null}
             </LinearGradient>
             <View style={styles.carouselContainer}>
-                {cards.length > 1 ? (
-                    <HorizontalPageView>{cards}</HorizontalPageView>
-                ) : (
-                    cards[0]
-                )}
+                {gameSession?.currentState ===
+                    GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+                    <HorizontalPageView initialPage={0}>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {questionScreen}
+                        </ScrollView>
+                        <ScrollView>
+                            {submitAnswerScreen}
+                        </ScrollView>
+                    </HorizontalPageView>) : null}
+                {gameSession?.currentState ===
+                    GameSessionState.PHASE_2_DISCUSS ? (
+                    <HorizontalPageView initialPage={1}>
+                        <>
+                            <Text style={styles.cardHeadingText}>Correct Answer</Text>
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                {correctAnswerScreen}
+                            </ScrollView>
+                        </>
+                        <>
+                            <Text style={styles.cardHeadingText}>Wrong Answers</Text>
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                {wrongAnswersScreen}
+                            </ScrollView>
+                        </>
+                    </HorizontalPageView>) : null}
             </View>
             <View style={styles.footerView}>
                 <TeamFooter
@@ -238,47 +297,43 @@ const styles = StyleSheet.create({
     headerContainer: {
         height: verticalScale(200),
         shadowColor: "rgba(0, 141, 239, 0.3)",
+        marginBottom: verticalScale(20)
     },
     headerText: {
-        marginTop: scale(24),
+        marginTop: verticalScale(14),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
+        fontWeight: "bold",
+        color: "white"
+    },
+    cardHeadingText: {
+        marginVertical: verticalScale(9),
+        textAlign: "center",
+        fontFamily: fontFamilies.montserratBold,
+        fontSize: fonts.medium,
         fontWeight: "bold",
         color: "white",
     },
     answerTitle: {
         marginTop: scale(20),
     },
-    submitAnswer: {
+    answerChosen: {
         backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
-        marginBottom: scale(40),
+        marginBottom: verticalScale(40),
+    },
+    submitAnswer: {
+        backgroundColor: "#808080",
+        borderRadius: 22,
+        height: 44,
+        marginHorizontal: scale(40),
+        marginBottom: verticalScale(40),
     },
     submitAnswerText: {
         fontSize: 18,
-    },
-    timerContainer: {
-        flex: 1,
-        flexDirection: "row",
-        marginTop: scale(15),
-        alignContent: "flex-start",
-        alignItems: "flex-start",
-        marginLeft: scale(30),
-        marginRight: scale(21),
-    },
-    timerProgressBar: {
-        marginRight: 9,
-        marginTop: 5,
-    },
-    timerText: {
-        color: "white",
-        opacity: 0.8,
-        fontSize: fonts.xSmall,
-        fontFamily: fontFamilies.latoBold,
-        fontWeight: "bold",
     },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
@@ -286,13 +341,36 @@ const styles = StyleSheet.create({
         fontWeight: fontWeights.extraBold,
         textAlign: "center",
         marginHorizontal: scale(20),
-        marginVertical: scale(20),
+        marginVertical: verticalScale(20),
+        marginTop: -verticalScale(25)
+    },
+    timerContainer: {
+        flex: 1,
+        flexDirection: "row",
+        marginTop: scale(5),
+        alignContent: "flex-start",
+        alignItems: "flex-start",
+        justifyContent: "center"
+    },
+    timerProgressBar: {
+        marginTop: verticalScale(5),
+        height: verticalScale(13),
+        borderRadius: 9,
+    },
+    timerText: {
+        color: "white",
+        opacity: 0.8,
+        fontSize: fonts.xSmall,
+        fontFamily: fontFamilies.latoBold,
+        fontWeight: "bold",
+        marginLeft: scale(5),
+        marginTop: scale(5)
     },
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
         marginBottom: 100,
-        marginTop: -scale(150),
+        marginTop: -scale(170),
         marginBottom: scale(50),
     },
     footerView: {
@@ -301,4 +379,36 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: verticalScale(18),
     },
+    reasonsText: {
+        marginVertical: verticalScale(10),
+        marginHorizontal: scale(15),
+        fontFamily: fontFamilies.karla
+    },
+    answersText: {
+        fontFamily: fontFamilies.karla,
+        padding: scale(6)
+    },
+    correctAnswerText: {
+        fontFamily: fontFamilies.karla,
+        padding: scale(6),
+    },
+    roundContainerCorrect: {
+        borderRadius: 22,
+        backgroundColor: "#EBFFDA",
+        borderColor: "#EBFFDA",
+        borderWidth: 4,
+        marginHorizontal: scale(15),
+        paddingVertical: verticalScale(2),
+        paddingHorizontal: scale(8)
+    },
+    roundContainerIncorrect: {
+        borderRadius: 22,
+        backgroundColor: "#F4F4F4",
+        borderColor: "#F4F4F4",
+        borderWidth: 4,
+        marginHorizontal: scale(12),
+        marginVertical: verticalScale(8),
+        paddingVertical: verticalScale(8),
+        paddingHorizontal: scale(8)
+    }
 })

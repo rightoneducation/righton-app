@@ -72,51 +72,38 @@ const PhaseOneBasicGamePlay = ({
     }, [gameSession, currentTime])
 
     const handleSubmitAnswer = () => {
-        Alert.alert(
-            "Are you sure?",
-            "You will not be able to change your answer",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
-                    text: "OK",
-                    onPress: () => {
-                        const answer = answerChoices[selectedAnswerIndex]
-                        // if isCorrectAnswer is true, add 10 points to the team's score
-                        // this does not update team score in the database yet
-                        if (answer.isCorrectAnswer && team) {
-                            team.score += 10
-                        }
-                        setSubmitted(true)
-                        global.apiClient
-                            .addTeamAnswer(
-                                teamMember.id,
-                                question.id,
-                                answer.text,
-                                answer.isChosen ? null : true,
-                                false
-                            )
-                            .then((teamAnswer) => {
-                                if (teamAnswer == null) {
-                                    console.error(
-                                        "Failed to create team Answer."
-                                    )
-                                    return
-                                }
-                                console.debug(
-                                    "phase 1 team answer:",
-                                    teamAnswer
-                                )
-                            })
-                            .catch((error) => {
-                                console.error(error.message)
-                            })
-                    },
-                },
-            ]
-        )
+
+        const answer = answerChoices[selectedAnswerIndex]
+        // if isCorrectAnswer is true, add 10 points to the team's score
+        // this does not update team score in the database yet
+        if (answer.isCorrectAnswer && team) {
+            team.score += 10
+        }
+        setSubmitted(true)
+        global.apiClient
+            .addTeamAnswer(
+                teamMember.id,
+                question.id,
+                answer.text,
+                answer.isChosen ? null : true,
+                false
+            )
+            .then((teamAnswer) => {
+                if (teamAnswer == null) {
+                    console.error(
+                        "Failed to create team Answer."
+                    )
+                    return
+                }
+                console.debug(
+                    "phase 1 team answer:",
+                    teamAnswer
+                )
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
+
     }
 
     const answersParsed = question.choices
@@ -154,7 +141,11 @@ const PhaseOneBasicGamePlay = ({
                 />
                 {!submitted && (
                     <RoundButton
-                        style={styles.submitAnswer}
+                        style={
+                            (selectedAnswerIndex || selectedAnswerIndex === 0)
+                                ? styles.answerChosen
+                                : styles.submitAnswer
+                        }
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
@@ -162,9 +153,16 @@ const PhaseOneBasicGamePlay = ({
                 )}
             </Card>
             {submitted && (
-                <Text style={styles.answerSubmittedText}>
-                    {submittedAnswerText}
-                </Text>
+                <>
+                    <RoundButton
+                        style={styles.submitAnswer}
+                        titleStyle={styles.submitAnswerText}
+                        title="Answer Submitted"
+                    />
+                    <Text style={styles.answerSubmittedText}>
+                        {submittedAnswerText}
+                    </Text>
+                </>
             )}
         </View>,
     ]
@@ -186,6 +184,7 @@ const PhaseOneBasicGamePlay = ({
         cards = [hintCard]
     }
 
+    console.log(availableHints)
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -264,8 +263,15 @@ const styles = StyleSheet.create({
     correctAnswerText: {
         color: '#349E15'
     },
-    submitAnswer: {
+    answerChosen: {
         backgroundColor: "#159EFA",
+        borderRadius: 22,
+        height: 44,
+        marginHorizontal: scale(40),
+        marginBottom: verticalScale(40),
+    },
+    submitAnswer: {
+        backgroundColor: "#808080",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
@@ -302,6 +308,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: verticalScale(20),
+        marginTop: -verticalScale(25)
     },
     hintsView: {
         marginTop: -verticalScale(60),
