@@ -34,7 +34,7 @@ const Signup: React.FC = () => {
           name,
         },
       });
-      history.push("/login");
+      history.push("/confirmation");
     } catch (error) {
       console.error(error);
     }
@@ -72,7 +72,7 @@ const Signup: React.FC = () => {
         >
           <h1 style={{ fontSize: "22px", color: "gray", textAlign: "center" }}>
             {" "}
-            New Account Registration
+            Step 1: New Account Registration
           </h1>
           <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
