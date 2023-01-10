@@ -129,10 +129,6 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-def keystorePropsFile = rootProject.file('keystore.properties')
-def keystoreProps = new Properties()
-keystoreProps.load(new FileInputStream(keystorePropsFile))
-
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -222,14 +218,15 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            if (project.hasProperty('rightOnReleaseStoreFile')) {
+                storeFile file(rightOnReleaseStoreFile)
+                storePassword rightOnReleaseStorePassword
+                keyAlias rightOnReleaseKeyAlias
+                keyPassword rightOnReleaseKeyPassword
             }
         }
     }
+    namespace 'com.righton.android'
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -237,7 +234,7 @@ android {
         }
         releaseStaging {
             signingConfig signingConfigs.debug
-            resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
+            resValue "string", "CodePushDeploymentKey", codePushStagingDeploymentKey
             resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
             // Note: It is a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
             // Add the following line if not already there
@@ -251,7 +248,7 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
 
-            resValue "string", "CodePushDeploymentKey", keystoreProps['codePushStagingDeploymentKey']
+            resValue "string", "CodePushDeploymentKey", codePushStagingDeploymentKey
             resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
         }
     }
