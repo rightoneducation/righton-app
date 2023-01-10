@@ -39,6 +39,7 @@ const AnswerOptions = ({
                             }
                             text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
+                            backgroundColor={"white"}
                             borderColor={
                                 index === selectedAnswerIndex
                                     ? "#159EFA"

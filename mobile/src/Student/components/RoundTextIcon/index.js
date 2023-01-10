@@ -8,6 +8,7 @@ const RoundTextIcon = ({
     text,
     height,
     borderColor,
+    backgroundColor,
     onPress,
     data,
     showIcon,
@@ -22,7 +23,7 @@ const RoundTextIcon = ({
             onPress={() => onPress(data)}
         >
             <View
-                style={[styles.container, { height, borderColor }, { ...style }]}
+                style={[styles.container, { height, borderColor, backgroundColor }, { ...style }]}
                 pointerEvents={readonly ? "none" : "auto"}
             >
                 <TextInput
@@ -52,7 +53,6 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         paddingLeft: scale(10),
         paddingRight: scale(10),
-        backgroundColor: "white",
         alignItems: "center",
         marginTop: verticalScale(5),
         marginBottom: verticalScale(5),

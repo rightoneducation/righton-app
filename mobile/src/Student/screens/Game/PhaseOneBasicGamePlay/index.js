@@ -17,11 +17,16 @@ import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
+import RoundTextIcon from "../../../components/RoundTextIcon"
 import AnswerOptions from "../Components/AnswerOptions"
 import HintsView from "../Components/HintsView"
 import Question from "../Components/Question"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import sharedStyles from "../Components/sharedStyles"
+
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
 
 const PhaseOneBasicGamePlay = ({
     gameSession,
@@ -176,6 +181,15 @@ const PhaseOneBasicGamePlay = ({
                 {availableHints && availableHints.length > 0 && (
                     <Card extraStyle={styles.hintsViewCard}>
                         <Question question={question} style={styles.hintsViewQuestion} />
+                        <RoundTextIcon
+                            style={[styles.answerItem]}
+                            icon={require("../img/checkmark_checked.png")}
+                            text={correctAnswerText}
+                            height={45}
+                            borderColor={"#EBFFDA"}
+                            backgroundColor={"#EBFFDA"}
+                            showIcon
+                            readonly />
                         <HintsView hints={availableHints} />
                     </Card>
                 )}
@@ -345,5 +359,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: "100%",
         marginBottom: verticalScale(18),
+    },
+    answerItem: {
     },
 })
