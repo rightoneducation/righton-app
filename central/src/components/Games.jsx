@@ -7,7 +7,6 @@ import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import GameMaker from './GameMaker';
-import ErrorPage from './ErrorPage';
 import { getGameById } from '../lib/games';
 
 
