@@ -8,9 +8,6 @@ const Card = ({ extraStyle, headerTitle, children }) => {
     const cardStyle = { ...(extraStyle || {}), ...styles.cardContent }
     return (
         <View style={styles.cardContainer}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>{headerTitle}</Text>
-            </View>
             <KeyboardAwareScrollView
                 style={cardStyle}
                 showsVerticalScrollIndicator={false}
@@ -28,11 +25,16 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignContent: 'center',
-        paddingVertical: verticalScale(20),
+        paddingVertical: verticalScale(6),
+        shadowColor: '#000',
+        shadowOffset: { width: 12, height: 14 },
+        shadowOpacity: 0.03,
     },
     cardContent: {
         marginLeft: moderateScale(25),
         marginRight: moderateScale(25),
+        paddingVertical: verticalScale(5),
+        padding: scale(3),
         borderRadius: 24,
         backgroundColor: 'white',
         ...Platform.select({
