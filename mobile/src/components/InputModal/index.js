@@ -1,17 +1,14 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import {
   Keyboard,
   Modal,
   Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+  TextInput, View
 } from 'react-native'
-import PropTypes from 'prop-types'
-// import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
-import { scale, ScaledSheet, verticalScale, moderateScale } from 'react-native-size-matters'
-import { colors, deviceHeight, deviceWidth, elevation, fonts } from '../../utils/theme'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
+import { moderateScale, scale, ScaledSheet, verticalScale } from 'react-native-size-matters'
+import { colors, deviceHeight, deviceWidth, fonts } from '../../utils/theme'
 
 export default class InputModal extends React.PureComponent {
   static propTypes = {
