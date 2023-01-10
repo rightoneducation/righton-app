@@ -147,13 +147,6 @@ function App() {
       if (userSession) {
         setIsUserAuth(true);
       }
-      //Auth.signOut();
-      // if (user) {
-      //   setLoggedIn(true);
-      // } else {
-      //   setLoggedIn(false);
-      // }
-      // setUserLoading(false);
     } catch (e) {
       setIsUserAuth(false);
     }
