@@ -18,8 +18,14 @@ const LogIn: React.FC<{handleUserAuth:(isLoggedIn:boolean)=>void }> = ({handleUs
 
     try {
       await Auth.signIn(email, password);
-      handleUserAuth(true);
-      window.location.href = "/";
+      const user = await Auth.currentAuthenticatedUser();
+      if (user.signInUserSession.accessToken.payload["cognito:groups"].includes('admin')){
+        handleUserAuth(true);
+        window.location.href = "/";
+      }
+      else {
+        setAdminError(true);
+      }
 
     } catch (e) {
       console.log(e);
