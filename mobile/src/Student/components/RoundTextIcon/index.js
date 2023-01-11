@@ -9,6 +9,7 @@ const RoundTextIcon = ({
     height,
     borderColor,
     backgroundColor,
+    marginHorizontal,
     onPress,
     data,
     showIcon,
@@ -23,7 +24,7 @@ const RoundTextIcon = ({
             onPress={() => onPress(data)}
         >
             <View
-                style={[styles.container, { height, borderColor, backgroundColor }, { ...style }]}
+                style={[styles.container, { height, borderColor, backgroundColor, marginHorizontal }, { ...style }]}
                 pointerEvents={readonly ? "none" : "auto"}
             >
                 <TextInput

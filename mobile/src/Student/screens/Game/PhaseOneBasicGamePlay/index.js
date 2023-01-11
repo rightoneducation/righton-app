@@ -182,10 +182,10 @@ const PhaseOneBasicGamePlay = ({
                     <Card extraStyle={styles.hintsViewCard}>
                         <Question question={question} style={styles.hintsViewQuestion} />
                         <RoundTextIcon
-                            style={[styles.answerItem]}
                             icon={require("../img/checkmark_checked.png")}
-                            text={correctAnswerText}
+                            text={`${indexToLetter(selectedAnswerIndex)}   ${correctAnswerText}`}
                             height={45}
+                            marginHorizontal={scale(15)}
                             borderColor={"#EBFFDA"}
                             backgroundColor={"#EBFFDA"}
                             showIcon
@@ -362,5 +362,6 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(18),
     },
     answerItem: {
+
     },
 })

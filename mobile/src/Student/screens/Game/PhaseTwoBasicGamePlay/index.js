@@ -23,6 +23,7 @@ import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
+import RoundTextIcon from "../../../components/RoundTextIcon"
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -203,9 +204,15 @@ const PhaseTwoBasicGamePlay = ({
                 key={correctAnswer.id}
             >
                 <ScrollableQuestion question={question} />
-                <View style={styles.roundContainerCorrect}>
-                    <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
-                </View>
+                <RoundTextIcon
+                    icon={require("../img/checkmark_checked.png")}
+                    text={`${indexToLetter(selectedAnswerIndex)}    ${correctAnswerText}`}
+                    height={45}
+                    marginHorizontal={scale(15)}
+                    borderColor={"#EBFFDA"}
+                    backgroundColor={"#EBFFDA"}
+                    showIcon
+                    readonly />
                 <HintsView hints={availableHints} />
                 <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
             </Card>

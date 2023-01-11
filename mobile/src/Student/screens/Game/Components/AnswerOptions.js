@@ -37,7 +37,7 @@ const AnswerOptions = ({
                                     ? require("../img/Picked.png")
                                     : require("../img/gray_circle.png")
                             }
-                            text={`${indexToLetter(index)}. ${item.text}`}
+                            text={`${indexToLetter(index)} ${item.text}`}
                             height={45}
                             backgroundColor={"white"}
                             borderColor={
