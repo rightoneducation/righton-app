@@ -43,12 +43,12 @@ export default function JoinGame({
 
             case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
             case GameSessionState.PHASE_2_DISCUSS:
-                navigation.push("PhaseTwoBasicGamePlay")
+                navigation.navigate("PhaseTwoBasicGamePlay")
                 break
 
             case GameSessionState.PHASE_1_RESULTS:
             case GameSessionState.PHASE_2_RESULTS:
-                navigation.push("PhaseResult")
+                navigation.navigate("PhaseResult")
                 break
 
             case GameSessionState.FINAL_RESULTS:
