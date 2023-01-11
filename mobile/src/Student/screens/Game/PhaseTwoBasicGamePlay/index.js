@@ -230,7 +230,6 @@ const PhaseTwoBasicGamePlay = ({
             ))}
         </>
 
-    wrongAnswers.map((answer) => (console.log(answer.isChosen)))
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
