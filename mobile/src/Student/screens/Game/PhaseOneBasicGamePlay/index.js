@@ -72,38 +72,51 @@ const PhaseOneBasicGamePlay = ({
     }, [gameSession, currentTime])
 
     const handleSubmitAnswer = () => {
-
-        const answer = answerChoices[selectedAnswerIndex]
-        // if isCorrectAnswer is true, add 10 points to the team's score
-        // this does not update team score in the database yet
-        if (answer.isCorrectAnswer && team) {
-            team.score += 10
-        }
-        setSubmitted(true)
-        global.apiClient
-            .addTeamAnswer(
-                teamMember.id,
-                question.id,
-                answer.text,
-                answer.isChosen ? null : true,
-                false
-            )
-            .then((teamAnswer) => {
-                if (teamAnswer == null) {
-                    console.error(
-                        "Failed to create team Answer."
-                    )
-                    return
-                }
-                console.debug(
-                    "phase 1 team answer:",
-                    teamAnswer
-                )
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
-
+        Alert.alert(
+            "Are you sure?",
+            "You will not be able to change your answer",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        const answer = answerChoices[selectedAnswerIndex]
+                        // if isCorrectAnswer is true, add 10 points to the team's score
+                        // this does not update team score in the database yet
+                        if (answer.isCorrectAnswer && team) {
+                            team.score += 10
+                        }
+                        setSubmitted(true)
+                        global.apiClient
+                            .addTeamAnswer(
+                                teamMember.id,
+                                question.id,
+                                answer.text,
+                                answer.isChosen ? null : true,
+                                false
+                            )
+                            .then((teamAnswer) => {
+                                if (teamAnswer == null) {
+                                    console.error(
+                                        "Failed to create team Answer."
+                                    )
+                                    return
+                                }
+                                console.debug(
+                                    "phase 1 team answer:",
+                                    teamAnswer
+                                )
+                            })
+                            .catch((error) => {
+                                console.error(error.message)
+                            })
+                    },
+                },
+            ]
+        )
     }
 
     const answersParsed = question.choices
@@ -123,10 +136,14 @@ const PhaseOneBasicGamePlay = ({
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
     let cards = [
-        <Card headerTitle="Question" key={"question"}>
-            <ScrollableQuestion question={question} />
-        </Card>,
+        <>
+            <Text style={styles.cardHeadingText}>Question</Text>
+            <Card headerTitle="Question" key={"question"}>
+                <ScrollableQuestion question={question} />
+            </Card>
+        </>,
         <View key={"answers"}>
+            <Text style={styles.cardHeadingText}>Answers</Text>
             <Card headerTitle="Answers">
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
                     Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
@@ -141,11 +158,7 @@ const PhaseOneBasicGamePlay = ({
                 />
                 {!submitted && (
                     <RoundButton
-                        style={
-                            (selectedAnswerIndex || selectedAnswerIndex === 0)
-                                ? styles.answerChosen
-                                : styles.submitAnswer
-                        }
+                        style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
@@ -153,16 +166,9 @@ const PhaseOneBasicGamePlay = ({
                 )}
             </Card>
             {submitted && (
-                <>
-                    <RoundButton
-                        style={styles.submitAnswer}
-                        titleStyle={styles.submitAnswerText}
-                        title="Answer Submitted"
-                    />
-                    <Text style={styles.answerSubmittedText}>
-                        {submittedAnswerText}
-                    </Text>
-                </>
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
             )}
         </View>,
     ]
@@ -184,7 +190,6 @@ const PhaseOneBasicGamePlay = ({
         cards = [hintCard]
     }
 
-    console.log(availableHints)
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -197,17 +202,19 @@ const PhaseOneBasicGamePlay = ({
                     GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
                         <Text style={styles.headerText}>
-                            Answer The Question
+                            Answer the Question
                         </Text>
                         <View style={styles.timerContainer}>
                             <Progress.Bar
                                 style={styles.timerProgressBar}
                                 progress={progress}
                                 color={"#349E15"}
-                                unfilledColor={"rgba(255,255,255,0.8)"}
+                                height={"100%"}
+                                unfilledColor={"#7819F8"}
                                 width={
                                     Dimensions.get("window").width - scale(90)
                                 }
+                                borderWidth={0}
                             />
                             <Text style={styles.timerText}>
                                 {Math.floor(currentTime / 60)}:
@@ -250,7 +257,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 141, 239, 0.3)",
     },
     headerText: {
-        marginTop: verticalScale(24),
+        marginTop: verticalScale(14),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -263,15 +270,8 @@ const styles = StyleSheet.create({
     correctAnswerText: {
         color: '#349E15'
     },
-    answerChosen: {
-        backgroundColor: "#159EFA",
-        borderRadius: 22,
-        height: 44,
-        marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
-    },
     submitAnswer: {
-        backgroundColor: "#808080",
+        backgroundColor: "#159EFA",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
@@ -283,16 +283,15 @@ const styles = StyleSheet.create({
     timerContainer: {
         flex: 1,
         flexDirection: "row",
-        marginTop: scale(15),
+        marginTop: scale(5),
         alignContent: "flex-start",
         alignItems: "flex-start",
-        marginLeft: scale(30),
-        marginRight: scale(21),
+        justifyContent: "center"
     },
     timerProgressBar: {
-        marginRight: 9,
-        marginTop: 5,
-        marginBottom: 5
+        marginTop: verticalScale(5),
+        height: verticalScale(13),
+        borderRadius: 9,
     },
     timerText: {
         color: "white",
@@ -300,6 +299,8 @@ const styles = StyleSheet.create({
         fontSize: fonts.xSmall,
         fontFamily: fontFamilies.latoBold,
         fontWeight: "bold",
+        marginLeft: scale(5),
+        marginTop: scale(5)
     },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
@@ -308,7 +309,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: verticalScale(20),
-        marginTop: -verticalScale(25)
     },
     hintsView: {
         marginTop: -verticalScale(60),
@@ -346,5 +346,13 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: "100%",
         marginBottom: verticalScale(18),
+    },
+    cardHeadingText: {
+        marginVertical: verticalScale(9),
+        textAlign: "center",
+        fontFamily: fontFamilies.montserratBold,
+        fontSize: fonts.medium,
+        fontWeight: "bold",
+        color: "white",
     },
 })

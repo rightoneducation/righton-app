@@ -130,10 +130,11 @@ const PhaseTwoBasicGamePlay = ({
                     progress={progress}
                     color={"#349E15"}
                     height={"100%"}
-                    unfilledColor={"rgba(255,255,255,0.8)"}
+                    unfilledColor={"#7819F8"}
                     width={
                         Dimensions.get("window").width - scale(90)
                     }
+                    borderWidth={0}
                 />
                 <Text style={styles.timerText}>
                     {Math.floor(currentTime / 60)}:
@@ -204,7 +205,9 @@ const PhaseTwoBasicGamePlay = ({
             >
                 <ScrollableQuestion question={question} />
                 <View style={styles.roundContainerCorrect}>
-                    <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
+                    <>
+                        <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
+                    </>
                 </View>
                 <HintsView hints={availableHints} />
                 <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
@@ -219,12 +222,15 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
+                        {index === selectedAnswerIndex &&
+                            <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
             ))}
         </>
 
+    wrongAnswers.map((answer) => (console.log(answer.isChosen)))
     return (
         <SafeAreaView style={styles.mainContainer}>
             <LinearGradient
@@ -390,7 +396,7 @@ const styles = StyleSheet.create({
     },
     correctAnswerText: {
         fontFamily: fontFamilies.karla,
-        padding: scale(6),
+        padding: scale(6)
     },
     roundContainerCorrect: {
         borderRadius: 22,
@@ -409,6 +415,9 @@ const styles = StyleSheet.create({
         marginHorizontal: scale(12),
         marginVertical: verticalScale(8),
         paddingVertical: verticalScale(8),
-        paddingHorizontal: scale(8)
-    }
+        paddingHorizontal: scale(8),
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
 })
