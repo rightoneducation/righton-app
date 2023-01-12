@@ -25,6 +25,10 @@ import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
 import RoundTextIcon from "../../../components/RoundTextIcon"
 
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
+
 const PhaseTwoBasicGamePlay = ({
     gameSession,
     team,
@@ -117,6 +121,9 @@ const PhaseTwoBasicGamePlay = ({
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
