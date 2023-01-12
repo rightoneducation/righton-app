@@ -184,19 +184,19 @@ const PhaseTwoBasicGamePlay = ({
                         disabled={!selectedAnswerIndex}
                     />
                 )}
-            </Card>
-            {submitted && (
-                <>
+                {submitted && (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
                         disabled={true}
                     />
-                    <Text style={styles.answerSubmittedText}>
-                        {submittedAnswerText}
-                    </Text>
-                </>
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
             )}
         </View>
 
@@ -328,19 +328,19 @@ const styles = StyleSheet.create({
     answerChosen: {
         backgroundColor: "#159EFA",
         borderRadius: 22,
-        height: 44,
+        height: 30,
         marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
+        marginBottom: verticalScale(20),
     },
     submitAnswer: {
         backgroundColor: "#808080",
         borderRadius: 22,
-        height: 44,
+        height: 30,
         marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
+        marginBottom: verticalScale(20),
     },
     submitAnswerText: {
-        fontSize: 18,
+        fontSize: fonts.xxMedium,
     },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: verticalScale(20),
-        marginTop: -verticalScale(25)
+        marginTop: verticalScale(10)
     },
     timerContainer: {
         flex: 1,
