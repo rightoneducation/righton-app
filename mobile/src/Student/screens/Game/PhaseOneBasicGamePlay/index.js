@@ -154,6 +154,7 @@ const PhaseOneBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
+                        disabled = {!selectedAnswerIndex}
                     />
                 )}
             </Card>
@@ -163,6 +164,7 @@ const PhaseOneBasicGamePlay = ({
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
+                        disabled ={true}
                     />
                     <Text style={styles.answerSubmittedText}>
                         {submittedAnswerText}
