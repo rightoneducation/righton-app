@@ -51,6 +51,8 @@ project.xcworkspace
 
 **/fastlane/readme.md
 
+playstore_service_api.json
+
 # Built application files
 *.apk
 *.aar
