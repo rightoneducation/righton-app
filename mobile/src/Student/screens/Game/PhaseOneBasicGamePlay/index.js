@@ -17,12 +17,17 @@ import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
+import RoundTextIcon from "../../../components/RoundTextIcon"
 import AnswerOptions from "../Components/AnswerOptions"
 import HintsView from "../Components/HintsView"
 import Question from "../Components/Question"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import sharedStyles from "../Components/sharedStyles"
 
+//finds the letter matching the index
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
 const PhaseOneBasicGamePlay = ({
     gameSession,
     team,
@@ -34,12 +39,9 @@ const PhaseOneBasicGamePlay = ({
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
     const [submitted, setSubmitted] = useState(false)
-
     let countdown = useRef()
-
     const teamName = team?.name ? team?.name : "Team Name"
     const totalScore = team?.score ? team?.score : 0
-
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -47,9 +49,7 @@ const PhaseOneBasicGamePlay = ({
             ? 0
             : gameSession?.currentQuestionIndex
         ]
-
     const availableHints = question.instructions
-
     useEffect(() => {
         if (
             currentTime == 0 || // Out of time!
@@ -58,69 +58,49 @@ const PhaseOneBasicGamePlay = ({
         ) {
             setSubmitted(true)
         }
-
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
             }
             setProgress((currentTime - 1) / phaseTime)
         }, 1000)
-
         return () => {
             clearInterval(countdown.current)
         }
     }, [gameSession, currentTime])
-
     const handleSubmitAnswer = () => {
-        Alert.alert(
-            "Are you sure?",
-            "You will not be able to change your answer",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
-                    text: "OK",
-                    onPress: () => {
-                        const answer = answerChoices[selectedAnswerIndex]
-                        // if isCorrectAnswer is true, add 10 points to the team's score
-                        // this does not update team score in the database yet
-                        if (answer.isCorrectAnswer && team) {
-                            team.score += 10
-                        }
-                        setSubmitted(true)
-                        global.apiClient
-                            .addTeamAnswer(
-                                teamMember.id,
-                                question.id,
-                                answer.text,
-                                answer.isChosen ? null : true,
-                                false
-                            )
-                            .then((teamAnswer) => {
-                                if (teamAnswer == null) {
-                                    console.error(
-                                        "Failed to create team Answer."
-                                    )
-                                    return
-                                }
-                                console.debug(
-                                    "phase 1 team answer:",
-                                    teamAnswer
-                                )
-                            })
-                            .catch((error) => {
-                                console.error(error.message)
-                            })
-                    },
-                },
-            ]
-        )
+        const answer = answerChoices[selectedAnswerIndex]
+        // if isCorrectAnswer is true, add 10 points to the team's score
+        // this does not update team score in the database yet
+        if (answer.isCorrectAnswer && team) {
+            team.score += 10
+        }
+        setSubmitted(true)
+        global.apiClient
+            .addTeamAnswer(
+                teamMember.id,
+                question.id,
+                answer.text,
+                answer.isChosen ? null : true,
+                false
+            )
+            .then((teamAnswer) => {
+                if (teamAnswer == null) {
+                    console.error(
+                        "Failed to create team Answer."
+                    )
+                    return
+                }
+                console.debug(
+                    "phase 1 team answer:",
+                    teamAnswer
+                )
+            })
+            .catch((error) => {
+                console.error(error.message)
+            })
     }
-
     const answersParsed = question.choices
-
     const answerChoices = answersParsed.map((choice) => {
         return {
             id: uuid.v4(),
@@ -128,11 +108,9 @@ const PhaseOneBasicGamePlay = ({
             isCorrectAnswer: choice.isAnswer,
         }
     })
-
     const correctAnswerText = answerChoices.find(
         (answer) => answer.isCorrectAnswer
     )?.text
-
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
     let cards = [
@@ -158,7 +136,11 @@ const PhaseOneBasicGamePlay = ({
                 />
                 {!submitted && (
                     <RoundButton
-                        style={styles.submitAnswer}
+                        style={
+                            (selectedAnswerIndex || selectedAnswerIndex === 0)
+                                ? styles.answerChosen
+                                : styles.submitAnswer
+                        }
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
@@ -279,8 +261,15 @@ const styles = StyleSheet.create({
     correctAnswerText: {
         color: '#349E15'
     },
-    submitAnswer: {
+    answerChosen: {
         backgroundColor: "#159EFA",
+        borderRadius: 22,
+        height: 44,
+        marginHorizontal: scale(40),
+        marginBottom: verticalScale(40),
+    },
+    submitAnswer: {
+        backgroundColor: "#808080",
         borderRadius: 22,
         height: 44,
         marginHorizontal: scale(40),
@@ -288,6 +277,15 @@ const styles = StyleSheet.create({
     },
     submitAnswerText: {
         fontSize: 18,
+    },
+    answerSubmittedText: {
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.small,
+        fontWeight: fontWeights.extraBold,
+        textAlign: "center",
+        marginHorizontal: scale(20),
+        marginVertical: verticalScale(20),
+        marginTop: -verticalScale(25)
     },
     timerContainer: {
         flex: 1,
