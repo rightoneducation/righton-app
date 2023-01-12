@@ -24,6 +24,7 @@ import Question from "../Components/Question"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import sharedStyles from "../Components/sharedStyles"
 
+//finds the letter matching the index
 const indexToLetter = (index) => {
     return String.fromCharCode(65 + index)
 }
@@ -178,8 +179,8 @@ const PhaseOneBasicGamePlay = ({
         const hintCard = (
             <View style={styles.hintsView}>
                 <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
-                <Text style={styles.hintsViewCorrectAnswer}>The correct answer is:</Text>
-                <Text style={styles.hintsViewCorrectAnswer}>{correctAnswerText}</Text>
+                <Text style={styles.hintsViewCorrectAnswerSubtitle}>The correct answer is:</Text>
+                <Text style={styles.hintsViewCorrectAnswer}>{indexToLetter(selectedAnswerIndex)}. {correctAnswerText}</Text>
                 {availableHints && availableHints.length > 0 && (
                     <Card extraStyle={styles.hintsViewCard}>
                         <Question question={question} style={styles.hintsViewQuestion} />
@@ -336,11 +337,18 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(20),
         textAlign: 'center',
     },
+    hintsViewCorrectAnswerSubtitle:{
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.xxMedium,
+        color: 'white',
+        textAlign: 'center'
+    },
     hintsViewCorrectAnswer: {
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.xxMedium,
         color: 'white',
         textAlign: 'center',
+        marginBottom: verticalScale(50)
     },
     hintsViewCard: {
         marginTop: -verticalScale(40),

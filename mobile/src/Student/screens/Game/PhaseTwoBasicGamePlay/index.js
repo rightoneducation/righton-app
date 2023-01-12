@@ -25,6 +25,7 @@ import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
 import RoundTextIcon from "../../../components/RoundTextIcon"
 
+//finds the letter matching the index
 const indexToLetter = (index) => {
     return String.fromCharCode(65 + index)
 }

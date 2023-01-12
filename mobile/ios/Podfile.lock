@@ -387,8 +387,6 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNDeviceInfo (10.0.2):
-    - React-Core
   - RNGestureHandler (2.5.0):
     - React-Core
   - RNReanimated (2.13.0):
