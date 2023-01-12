@@ -135,7 +135,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.righton.android"
+        applicationId "com.rightonnew"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 5
@@ -226,7 +226,7 @@ android {
             }
         }
     }
-    namespace 'com.righton.android'
+    namespace 'com.rightonnew'
     buildTypes {
         debug {
             signingConfig signingConfigs.debug

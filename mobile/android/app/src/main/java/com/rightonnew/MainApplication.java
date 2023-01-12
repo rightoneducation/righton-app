@@ -1,4 +1,4 @@
-package com.righton.android;
+package com.rightonnew;
 
 import android.app.Application;
 import android.content.Context;
@@ -45,7 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
             };
 
     private final ReactNativeHost mNewArchitectureNativeHost =
-            new MainApplicationReactNativeHost(this);
+            new com.rightonnew.MainApplicationReactNativeHost(this);
 
     /**
      * Loads Flipper in React Native templates. Call this in the onCreate method with something like
@@ -62,7 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-                Class<?> aClass = Class.forName("com.righton.android.ReactNativeFlipper");
+                Class<?> aClass = Class.forName("com.rightonnew.ReactNativeFlipper");
                 aClass
                         .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
                         .invoke(null, context, reactInstanceManager);

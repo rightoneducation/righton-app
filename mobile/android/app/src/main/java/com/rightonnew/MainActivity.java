@@ -1,4 +1,4 @@
-package com.righton.android;
+package com.rightonnew;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
