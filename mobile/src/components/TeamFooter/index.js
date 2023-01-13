@@ -1,4 +1,5 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
+import { scale, verticalScale } from 'react-native-size-matters'
 import { colors, fontFamilies, fonts, fontWeights } from '../../utils/theme'
 
 const TeamFooter = ({ icon, name, totalScore }) => {
@@ -31,14 +32,15 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
-        marginHorizontal: 25,
+        marginHorizontal: 25
     },
     itemContainer: {
         minWidth: 50,
     },
     icon: {
-        width: 44,
-        height: 44,
+        width: 34,
+        height: 42,
+        borderRadius: 12
     },
     nameView: {
         flex: 1,
@@ -55,14 +57,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 18,
-        height: 36,
-        maxWidth: 55,
+        height: verticalScale(19),
+        width: scale(58),
+        maxWidth: scale(58),
         backgroundColor: colors.lightBlue,
     },
     scoreText: {
         color: colors.white,
         fontFamily: fontFamilies.karlaRegular,
         fontWeight: fontWeights.bold,
-        fontSize: fonts.medium,
+        fontSize: fonts.xMedium,
     },
 })
