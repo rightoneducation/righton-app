@@ -5,7 +5,7 @@ import { Auth } from "aws-amplify";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import RightOnLogo from "./RightOnLogo.png";
 
 const Signup: React.FC = () => {
@@ -52,33 +52,29 @@ const Signup: React.FC = () => {
         src={RightOnLogo}
         style={{
           marginTop: "3%",
-          width: "20%",
+          width: '15%',
+          minWidth: '200px',
           marginBottom: "3%",
           maxHeight: "2%",
         }}
         alt="Right On"
       />
-      <Grid item xs={12} md={12}>
+      <Grid item xs={12}>
         <form
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
-            width: "120%",
-            marginLeft: "-10%",
+            alignItems: "center",
+            paddingLeft: '5vw',
+            paddingRight: '5vw'
           }}
           onSubmit={handleSignUp}
         >
-          <h1 style={{ fontSize: "22px", color: "gray" }}>
+          <h1 style={{ fontSize: "22px", color: "gray", textAlign: "center" }}>
             {" "}
-            New Account Registration
+            Step 1: New Account Registration
           </h1>
-          <FieldGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            xs={12}
-          >
+          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
               variant="outlined"
               label="Name"
@@ -92,13 +88,8 @@ const Signup: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
             />
-          </FieldGrid>
-          <FieldGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            xs={12}
-          >
+          </Grid>
+          <Grid style={{display: "flex", flexDirection:"row", justifyContent: "center", gap:"2%", marginBottom: '0'}}>
             <Field
               variant="outlined"
               label="Password"
@@ -113,14 +104,8 @@ const Signup: React.FC = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-          </FieldGrid>
-          <ButtonGrid
-            item
-            direction="row"
-            justifyContent="space-between"
-            spacing={4}
-          >
-            <LoginLink to="/login">Log In</LoginLink>
+          </Grid>
+          <ButtonGrid>
             <SignUpLink
               to="#"
               onClick={(e) => {
@@ -129,9 +114,11 @@ const Signup: React.FC = () => {
             >
               Sign Up
             </SignUpLink>
+            <LoginLink to="/login">Log In</LoginLink>
           </ButtonGrid>
         </form>
       </Grid>
+      <PassType> Passwords must be at least 8 characters in length and include at least one letter and one number. </PassType>
     </Grid>
   );
 };
@@ -141,7 +128,6 @@ export default Signup;
 const Field = styled(TextField)({
   margin: "10px 0",
   borderRadius: "20px",
-  width: "45%",
 });
 
 const SignUpLink = styled(Link)({
@@ -149,7 +135,10 @@ const SignUpLink = styled(Link)({
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
@@ -158,20 +147,28 @@ const LoginLink = styled(Link)({
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
 const ButtonGrid = styled(Grid)({
-  marginTop: "10%",
   display: "flex",
   flexDirection: "row",
-  justifyContent: "space-around",
-  marginBottom: "50px",
+  justifyContent:"center",
+  alignItems: "flex-start",
+  width: '10vw',
+  marginBottom: '2vw',
+  marginTop: "2vw",
+  gap: '10%',
 });
 
-const FieldGrid = styled(Grid)({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-around",
+const PassType = styled(Typography)({
+  fontStyle: 'italic',
+  textAlign: 'center',
+  color: 'grey',
+  paddingLeft: '5vw',
+  paddingRight: '5vw'
 });

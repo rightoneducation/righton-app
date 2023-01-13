@@ -67,6 +67,7 @@ function App() {
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
+  const [isUserAuth, setIsUserAuth] = useState(false);
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -134,22 +135,20 @@ function App() {
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
 
+  const handleUserAuth = (isAuth: boolean) => {
+    setIsUserAuth(isAuth);
+  }
 
-
-  const getWhatToDo = (async () => {
+  const persistUserAuth = (async () => {
     let user = null;
     try {
       user = await Auth.currentAuthenticatedUser();
-      //Auth.signOut();
-      if (user) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
+      let userSession = await Auth.userSession(user);
+      if (userSession) {
+        setIsUserAuth(true);
       }
-      setUserLoading(false);
     } catch (e) {
-      setLoggedIn(false);
-      setUserLoading(false);
+      setIsUserAuth(false);
     }
   });
 
@@ -166,7 +165,7 @@ function App() {
   }
 
   useEffect(() => {
-    getWhatToDo();
+    persistUserAuth();
     getGames();
     setStartup(false);
   }, [sortType]);
@@ -180,16 +179,14 @@ function App() {
     setAlert,
   };
 
-
-
   return (
     <ThemeProvider theme={theme}>
       <AlertContext.Provider value={alertContext}>
         <Router>
           <Switch>
             <Route path="/login">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
-              <LogIn />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={isUserAuth} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
+              <LogIn handleUserAuth={handleUserAuth} />
             </Route>
 
             <Route path="/signup">
@@ -203,8 +200,8 @@ function App() {
             </Route>
 
             <Route>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={true}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} handleSearchClick={handleSearchClick}/>
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
+              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth} handleSearchClick={handleSearchClick}/>
               <AlertBar />
             </Route>
           </Switch>
