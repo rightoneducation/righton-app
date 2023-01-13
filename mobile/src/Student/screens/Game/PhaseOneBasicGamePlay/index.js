@@ -18,7 +18,6 @@ import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
 import Card from "../../../components/Card"
 import HorizontalPageView from "../../../components/HorizontalPageView"
 import RoundTextIcon from "../../../components/RoundTextIcon"
-import RoundTextIcon from "../../../components/RoundTextIcon"
 import AnswerOptions from "../Components/AnswerOptions"
 import HintsView from "../Components/HintsView"
 import Question from "../Components/Question"
@@ -52,6 +51,8 @@ const PhaseOneBasicGamePlay = ({
             : gameSession?.currentQuestionIndex
         ]
     const availableHints = question.instructions
+    console.log(selectedAnswerIndex)
+    console.log(!selectedAnswerIndex || selectedAnswerIndex===0)
     useEffect(() => {
         if (
             currentTime == 0 || // Out of time!
@@ -114,7 +115,6 @@ const PhaseOneBasicGamePlay = ({
         (answer) => answer.isCorrectAnswer
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
-
     let cards = [
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
@@ -146,7 +146,7 @@ const PhaseOneBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
-                        disabled={!selectedAnswerIndex}
+                        disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
                 )}
                 {submitted && (

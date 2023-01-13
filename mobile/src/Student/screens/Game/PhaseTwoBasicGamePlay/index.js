@@ -190,7 +190,7 @@ const PhaseTwoBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
-                        disabled={!selectedAnswerIndex}
+                        disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
                 )}
                 {submitted && (
