@@ -139,10 +139,11 @@ const PhaseTwoBasicGamePlay = ({
                     progress={progress}
                     color={"#349E15"}
                     height={"100%"}
-                    unfilledColor={"rgba(255,255,255,0.8)"}
+                    unfilledColor={"#7819F8"}
                     width={
                         Dimensions.get("window").width - scale(90)
                     }
+                    borderWidth={0}
                 />
                 <Text style={styles.timerText}>
                     {Math.floor(currentTime / 60)}:
@@ -189,22 +190,22 @@ const PhaseTwoBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
-                        disabled = {!selectedAnswerIndex}
+                        disabled={!selectedAnswerIndex}
                     />
                 )}
-            </Card>
-            {submitted && (
-                <>
+                {submitted && (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
-                        disabled ={true}
+                        disabled={true}
                     />
-                    <Text style={styles.answerSubmittedText}>
-                        {submittedAnswerText}
-                    </Text>
-                </>
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
             )}
         </View>
 
@@ -236,6 +237,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
+                        {index === selectedAnswerIndex &&
+                            <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
@@ -338,19 +341,19 @@ const styles = StyleSheet.create({
     answerChosen: {
         backgroundColor: "#159EFA",
         borderRadius: 22,
-        height: 44,
+        height: 30,
         marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
+        marginBottom: verticalScale(20),
     },
     submitAnswer: {
         backgroundColor: "#808080",
         borderRadius: 22,
-        height: 44,
+        height: 30,
         marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
+        marginBottom: verticalScale(20),
     },
     submitAnswerText: {
-        fontSize: 18,
+        fontSize: fonts.xxMedium,
     },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
@@ -359,7 +362,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: verticalScale(20),
-        marginTop: -verticalScale(25)
+        marginTop: verticalScale(10)
     },
     timerContainer: {
         flex: 1,
@@ -407,7 +410,7 @@ const styles = StyleSheet.create({
     },
     correctAnswerText: {
         fontFamily: fontFamilies.karla,
-        padding: scale(6),
+        padding: scale(6)
     },
     roundContainerCorrect: {
         borderRadius: 22,
@@ -426,6 +429,9 @@ const styles = StyleSheet.create({
         marginHorizontal: scale(12),
         marginVertical: verticalScale(8),
         paddingVertical: verticalScale(8),
-        paddingHorizontal: scale(8)
-    }
+        paddingHorizontal: scale(8),
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
 })
