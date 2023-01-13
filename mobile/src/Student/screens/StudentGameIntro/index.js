@@ -28,27 +28,42 @@ const StudentGameIntro = () => {
                     >
                         <IntroInfo
                             key="1"
-                            image={require("./img/TeamIntroStep1.png")}
+                            screen={1}
+                            Monsters={[require("./img/MonsterStep1.png"), null]}
+                            sticker={require("./img/Phase1Sticker.png")}
+                            phone={require("./img/IntroStep1Phone.png")}
                             text="Read the multiple-choice question"
                         />
                         <IntroInfo
                             key="2"
-                            image={require("./img/TeamIntroStep2.png")}
+                            screen={2}
+                            Monsters={[null, require("./img/MonsterStep2.png")]}
+                            sticker={require("./img/Phase1Sticker.png")}
+                            phone={require("./img/IntroStep2Phone.png")}
                             text="Gain points by choosing the correct answer..."
                         />
                         <IntroInfo
                             key="3"
-                            image={require("./img/TeamIntroStep3.png")}
+                            screen={3}
+                            Monsters={[require("./img/MonsterStep3Left.png"), require("./img/MonsterStep3Right.png")]}
+                            sticker={require("./img/Phase1Sticker.png")}
+                            phone={require("./img/IntroStep3Phone.png")}
                             text="Read step-by-step solutions"
                         />
                         <IntroInfo
                             key="4"
-                            image={require("./img/TeamIntroStep4.png")}
+                            screen={4}
+                            Monsters={[null, require("./img/MonsterStep4.png")]}
+                            sticker={require("./img/Phase1Sticker.png")}
+                            phone={require("./img/IntroStep4Phone.png")}
                             text="Gain more points by guessing the most popular incorrect answer!"
                         />
                         <IntroInfo
                             key="5"
-                            image={require("./img/TeamIntroStep5.png")}
+                            screen={5}
+                            Monsters={[null, require("./img/MonsterStep5.png")]}
+                            sticker={require("./img/Phase1Sticker.png")}
+                            phone={require("./img/IntroStep5Phone.png")}
                             text="The most total points wins!"
                         />
                     </ViewPager>
@@ -136,7 +151,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginBottom: 37,
         marginTop: 40,
-        justifyContent: "space-between",
+        justifyContent: "space-between"
     },
     carousel: {
         flex: 1,
