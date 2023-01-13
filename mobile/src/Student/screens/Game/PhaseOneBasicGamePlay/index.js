@@ -51,8 +51,7 @@ const PhaseOneBasicGamePlay = ({
             : gameSession?.currentQuestionIndex
         ]
     const availableHints = question.instructions
-    console.log(selectedAnswerIndex)
-    console.log(!selectedAnswerIndex || selectedAnswerIndex===0)
+
     useEffect(() => {
         if (
             currentTime == 0 || // Out of time!
@@ -362,9 +361,8 @@ const styles = StyleSheet.create({
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: verticalScale(10),
+        marginBottom: verticalScale(50),
         marginTop: -verticalScale(150),
-        marginBottom: scale(50),
     },
     footerView: {
         position: "absolute",
