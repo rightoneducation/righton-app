@@ -31,6 +31,7 @@ const AnswerOptionsPhaseTwo = ({
                     opacity: disabled ? 0.3 : 1,
                     flex: 1,
                     alignSelf: "stretch",
+                    
                 }}
             >
                 <KeyboardAwareFlatList
@@ -40,25 +41,24 @@ const AnswerOptionsPhaseTwo = ({
                     renderItem={({ item, index }) => (
                         <RoundTextIcon
                             style={
-                                ([styles.answerItem],
-                                {
-                                    opacity:
-                                        item.text === correctAnswer.text
-                                            ? 0.3
-                                            : 1,
-                                })
+                                ([styles.answerItem])
                             }
                             icon={
                                 index === selectedAnswerIndex
                                     ? require("../../img/Picked.png")
-                                    : require("../../img/gray_circle.png")
+                                    : (item.text === correctAnswer.text ? null : require("../../img/gray_circle.png"))
                             }
                             text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
+                            backgroundColor={
+                              item.text === correctAnswer.text
+                                    ? "#EBFFDA"
+                                    : "white"
+                            }
                             borderColor={
                                 index === selectedAnswerIndex
                                     ? "#159EFA"
-                                    : "#D9DFE5"
+                                    : ( item.text === correctAnswer.text ? "#EBFFDA" : "#D9DFE5")
                             }
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon

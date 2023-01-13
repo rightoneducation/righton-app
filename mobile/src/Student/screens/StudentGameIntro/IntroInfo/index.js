@@ -37,6 +37,5 @@ const styles = StyleSheet.create({
         lineHeight: 23,
         fontWeight: "800",
         color: colors.white,
-        marginTop: 30,
     }
 })
