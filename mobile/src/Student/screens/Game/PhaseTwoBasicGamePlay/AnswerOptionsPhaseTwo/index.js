@@ -31,6 +31,7 @@ const AnswerOptionsPhaseTwo = ({
                     opacity: disabled ? 0.3 : 1,
                     flex: 1,
                     alignSelf: "stretch",
+                    
                 }}
             >
                 <KeyboardAwareFlatList
@@ -55,10 +56,15 @@ const AnswerOptionsPhaseTwo = ({
                             }
                             text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
+                            backgroundColor={
+                              item.text === correctAnswer.text
+                                    ? "#EBFFDA"
+                                    : "white"
+                            }
                             borderColor={
                                 index === selectedAnswerIndex
                                     ? "#159EFA"
-                                    : "#D9DFE5"
+                                    : ( item.text === correctAnswer.text ? "#EBFFDA" : "#D9DFE5")
                             }
                             onPress={() => setSelectedAnswerIndex(index)}
                             showIcon

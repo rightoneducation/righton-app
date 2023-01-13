@@ -28,6 +28,7 @@ import sharedStyles from "../Components/sharedStyles"
 const indexToLetter = (index) => {
     return String.fromCharCode(65 + index)
 }
+
 const PhaseOneBasicGamePlay = ({
     gameSession,
     team,
@@ -50,6 +51,8 @@ const PhaseOneBasicGamePlay = ({
             : gameSession?.currentQuestionIndex
         ]
     const availableHints = question.instructions
+    console.log(selectedAnswerIndex)
+    console.log(!selectedAnswerIndex || selectedAnswerIndex===0)
     useEffect(() => {
         if (
             currentTime == 0 || // Out of time!
@@ -112,7 +115,6 @@ const PhaseOneBasicGamePlay = ({
         (answer) => answer.isCorrectAnswer
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
-
     let cards = [
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
@@ -144,7 +146,7 @@ const PhaseOneBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
-                        disabled={!selectedAnswerIndex}
+                        disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
                 )}
                 {submitted && (
@@ -168,11 +170,20 @@ const PhaseOneBasicGamePlay = ({
         const hintCard = (
             <View style={styles.hintsView}>
                 <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
-                <Text style={styles.hintsViewCorrectAnswer}>The correct answer is:</Text>
-                <Text style={styles.hintsViewCorrectAnswer}>{correctAnswerText}</Text>
+                <Text style={styles.hintsViewCorrectAnswerSubtitle}>The correct answer is:</Text>
+                <Text style={styles.hintsViewCorrectAnswer}>{indexToLetter(selectedAnswerIndex)}. {correctAnswerText}</Text>
                 {availableHints && availableHints.length > 0 && (
                     <Card extraStyle={styles.hintsViewCard}>
                         <Question question={question} style={styles.hintsViewQuestion} />
+                        <RoundTextIcon
+                            icon={require("../img/checkmark_checked.png")}
+                            text={`${indexToLetter(selectedAnswerIndex)}   ${correctAnswerText}`}
+                            height={45}
+                            marginHorizontal={scale(15)}
+                            borderColor={"#EBFFDA"}
+                            backgroundColor={"#EBFFDA"}
+                            showIcon
+                            readonly />
                         <HintsView hints={availableHints} />
                     </Card>
                 )}
@@ -327,11 +338,18 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(20),
         textAlign: 'center',
     },
+    hintsViewCorrectAnswerSubtitle:{
+        fontFamily: fontFamilies.karlaBold,
+        fontSize: fonts.xxMedium,
+        color: 'white',
+        textAlign: 'center'
+    },
     hintsViewCorrectAnswer: {
         fontFamily: fontFamilies.karlaBold,
         fontSize: fonts.xxMedium,
         color: 'white',
         textAlign: 'center',
+        marginBottom: verticalScale(50)
     },
     hintsViewCard: {
         marginTop: -verticalScale(40),

@@ -23,6 +23,12 @@ import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
+import RoundTextIcon from "../../../components/RoundTextIcon"
+
+//finds the letter matching the index
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -116,6 +122,9 @@ const PhaseTwoBasicGamePlay = ({
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
@@ -181,7 +190,7 @@ const PhaseTwoBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
-                        disabled={!selectedAnswerIndex}
+                        disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
                 )}
                 {submitted && (
@@ -206,11 +215,15 @@ const PhaseTwoBasicGamePlay = ({
                 key={correctAnswer.id}
             >
                 <ScrollableQuestion question={question} />
-                <View style={styles.roundContainerCorrect}>
-                    <>
-                        <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
-                    </>
-                </View>
+                <RoundTextIcon
+                    icon={require("../img/checkmark_checked.png")}
+                    text={`${indexToLetter(selectedAnswerIndex)}    ${correctAnswerText}`}
+                    height={45}
+                    marginHorizontal={scale(15)}
+                    borderColor={"#EBFFDA"}
+                    backgroundColor={"#EBFFDA"}
+                    showIcon
+                    readonly />
                 <HintsView hints={availableHints} />
                 <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
             </Card>
