@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginVertical: verticalScale(9),
+        marginVertical: verticalScale(19),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -389,9 +389,8 @@ const styles = StyleSheet.create({
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: 100,
-        marginTop: -scale(170),
-        marginBottom: scale(50),
+        marginBottom: verticalScale(50),
+        marginTop: -verticalScale(150),
     },
     footerView: {
         position: "absolute",

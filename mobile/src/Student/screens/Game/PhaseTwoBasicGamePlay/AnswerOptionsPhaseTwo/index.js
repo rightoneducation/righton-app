@@ -41,18 +41,12 @@ const AnswerOptionsPhaseTwo = ({
                     renderItem={({ item, index }) => (
                         <RoundTextIcon
                             style={
-                                ([styles.answerItem],
-                                {
-                                    opacity:
-                                        item.text === correctAnswer.text
-                                            ? 0.3
-                                            : 1,
-                                })
+                                ([styles.answerItem])
                             }
                             icon={
                                 index === selectedAnswerIndex
                                     ? require("../../img/Picked.png")
-                                    : require("../../img/gray_circle.png")
+                                    : (item.text === correctAnswer.text ? null : require("../../img/gray_circle.png"))
                             }
                             text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
