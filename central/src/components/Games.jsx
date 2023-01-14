@@ -10,7 +10,7 @@ import GameMaker from './GameMaker';
 import { getGameById } from '../lib/games';
 
 
-export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, handleSearchClick }) {
+export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, handleSearchClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -21,48 +21,51 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
 
   return (
     <Grid container className={classes.root} spacing={4}>
-      <Route path="/" exact>
-        <Grid item xs={12} className={classes.sidebar}>
-          <Box className={classes.actions}>
-            <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} />
-            <div style={{ width: '100vw', height: 45 }} onClick={() => setSortByCheck(false)}></div>
-          </Box>
-          <Grid container onClick={() => setSortByCheck(false)}>
-            <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)}/>
+      <Switch>
+        <Route path="/" exact>
+          <Grid item xs={12} className={classes.sidebar}>
+            <Box className={classes.actions}>
+              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} />
+              <div style={{ width: '100vw', height: 45 }} onClick={() => setSortByCheck(false)}></div>
+            </Box>
+            <Grid container onClick={() => setSortByCheck(false)}>
+              <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth}/>
+            </Grid>          
           </Grid>
-          
-        </Grid>
-      </Route>
-      {match && getGameById(games, match.params.gameId) && (
-        <Grid item xs={12} className={classes.content}>
-          <Switch>
-            <Route exact path="/games/:gameId/questions/:questionIndex" render={
-              ({ match }) => {
-                const { questionIndex, gameId } = match.params;
-                const game = getGameById(games, gameId);
-                handleSearchClick(false);
-                return <QuestionDetails backUrl={`/games/${gameId}`} gameTitle={game.title} questionIndex={questionIndex} question={game.questions[questionIndex]} />
-              }
-            } />
-            <Route exact path="/games/:gameId" render={
-              ({ match }) => {
-                const { gameId } = match.params;
-                const game = getGameById(games, gameId);
-                handleSearchClick(false);
-                return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} />;
-              }
-            } />
-          </Switch>
-        </Grid>
-      )}
-      <Route path='/gamemaker/:gameId' render={
-        ({ match }) => {
-          const { gameId } = match.params;
-          const newGame = Number(gameId) === 0;
-          handleSearchClick(false);
-          return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion}/>
-        }
-      } />;
+        </Route>
+        {match && getGameById(games, match.params.gameId) && (
+          <Grid item xs={12} className={classes.content}>
+            <Switch>
+              <Route exact path="/games/:gameId/questions/:questionIndex" render={
+                ({ match }) => {
+                  const { questionIndex, gameId } = match.params;
+                  const game = getGameById(games, gameId);
+                  handleSearchClick(false);
+                  return <QuestionDetails backUrl={`/games/${gameId}`} gameTitle={game.title} questionIndex={questionIndex} question={game.questions[questionIndex]} />
+                }
+              } />
+              <Route exact path="/games/:gameId" render={
+                ({ match }) => {
+                  const { gameId } = match.params;
+                  const game = getGameById(games, gameId);
+                  handleSearchClick(false);
+                  return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth}/>;
+                }
+              } />
+            </Switch>
+          </Grid>
+        )}
+        <Route path='/gamemaker/:gameId' render={
+          isUserAuth && ( 
+            ({ match }) => {
+              const { gameId } = match.params;
+              const newGame = Number(gameId) === 0;
+              handleSearchClick(false);
+              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion}/>
+            }
+          )           
+        } />
+      </Switch>
     </Grid>
   );
 }
