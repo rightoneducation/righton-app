@@ -6,7 +6,7 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const EnterGameCode = ({ navigation, fetchGameSessionByCode, subscribeToGame }) => {
+const EnterGameCode = ({ navigation, fetchGameSessionByCode, handleSubscribeToGame }) => {
     const [gameCode, setGameCode] = useState("")
     const [showErrorText, setShowErrorText] = useState(false)
 
@@ -23,7 +23,7 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode, subscribeToGame }) 
                     return
                 }
                 setGameCode(gameCode)
-                subscribeToGame(gameSession)
+                handleSubscribeToGame(gameSession)
                 navigation.navigate("StudentName")
             }).catch(error => {
                 console.debug(`Failed to fetch the game session ${error}`)

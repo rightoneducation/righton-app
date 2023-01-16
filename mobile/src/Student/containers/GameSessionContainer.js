@@ -162,7 +162,7 @@ const GameSessionContainer = ({ children }) => {
             })
     }
 
-    const subscribeToGame = (gameSession) => {
+    const handleSubscribeToGame = (gameSession) => {
       if (isNullOrUndefined(gameSession)) {
         resetState()
         return
@@ -226,6 +226,40 @@ const GameSessionContainer = ({ children }) => {
       )
     }
 
+    const handleAddTeam = async (teamName) => 
+    {
+      return global.apiClient
+            .addTeamToGameSessionId(gameSession.id, teamName, null)
+            .then((team) => {
+                console.debug(team)
+                if (!team) {
+                    console.error("Failed to add team")
+                    return
+                }
+
+
+                global.apiClient
+                    .addTeamMemberToTeam(team.id, true, uuid.v4())
+                    .then((teamMember) => {
+                        if (!teamMember) {
+                            console.error("Failed to add team member")
+                            return
+                        }
+
+                        if (isNullOrUndefined(team.teamMembers)) {
+                            team.teamMembers = [teamMember]
+                        }
+
+                        return setTeamInfo(team, teamMember)
+                    }).catch((error) => {
+                        console.error(error)
+                    })
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
+
     const resetState = () => {
       clearStorage()
       navigation.navigate("JoinGame")
@@ -252,7 +286,8 @@ const GameSessionContainer = ({ children }) => {
         teamAvatar,
         saveTeamAvatar,
         clearStorage,
-        subscribeToGame
+        handleSubscribeToGame,
+        handleAddTeam
     })
 }
 

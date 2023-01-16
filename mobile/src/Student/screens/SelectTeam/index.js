@@ -8,7 +8,7 @@ import { colors, fontFamilies, fonts } from '../../../utils/theme'
 import TeamIcons from '../../containers/TeamIcons'
 
 const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
-
+  console.log(team)
   const [avatar, setAvatar] = useState(TeamIcons[0])
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(true)
 
@@ -66,7 +66,7 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
         <View style={styles.teamIconNameContainer}>
           <Image style={styles.largeIcon} source={avatar && avatar.largeSrc} />
           <Text style={styles.fullNameText}>
-            {team.name}
+            {team ? team.name: null}  {/*propertyuuid doesn't exist*/}
           </Text>
         </View>
         <View>

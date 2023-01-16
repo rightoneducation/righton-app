@@ -4,10 +4,11 @@ import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import uuid from "react-native-uuid"
 import PurpleBackground from "../../../components/PurpleBackground"
 import RoundButton from "../../../components/RoundButton"
+import { handleAndroidBackButton } from "../../../utils/Backer"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
+const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
@@ -33,39 +34,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
         }
 
         const teamName = `${firstName} ${lastName}`
-
-        global.apiClient
-            .addTeamToGameSessionId(gameSession.id, teamName, null)
-            .then((team) => {
-                console.debug(team)
-                if (!team) {
-                    console.error("Failed to add team")
-                    return
-                }
-
-
-                global.apiClient
-                    .addTeamMemberToTeam(team.id, true, uuid.v4())
-                    .then((teamMember) => {
-                        if (!teamMember) {
-                            console.error("Failed to add team member")
-                            return
-                        }
-
-                        if (isNullOrUndefined(team.teamMembers)) {
-                            team.teamMembers = [teamMember]
-                        }
-
-                        return setTeamInfo(team, teamMember)
-                    }).then(() => {
-                        navigation.navigate("SelectTeam")
-                    }).catch((error) => {
-                        console.error(error)
-                    })
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+        handleAddTeam(teamName).then(() =>  navigation.navigate("SelectTeam"))
     }
 
     return (

@@ -29,7 +29,8 @@ const AppContainer = () => {
               teamAvatar,
               saveTeamAvatar,
               clearStorage,
-              subscribeToGame
+              handleSubscribeToGame,
+              handleAddTeam
           }) => (
                   <Stack.Navigator
                       initialRouteName="JoinGame"
@@ -54,7 +55,7 @@ const AppContainer = () => {
                               <EnterGameCode
                                   {...props}
                                   fetchGameSessionByCode={fetchGameSessionByCode}
-                                  subscribeToGame={subscribeToGame}
+                                  handleSubscribeToGame={handleSubscribeToGame}
                               />
                           )}
                       </Stack.Screen>
@@ -64,6 +65,7 @@ const AppContainer = () => {
                                   {...props}
                                   gameSession={gameSession}
                                   setTeamInfo={setTeamInfo}
+                                  handleAddTeam={handleAddTeam}
                               />
                           )}
                       </Stack.Screen>
