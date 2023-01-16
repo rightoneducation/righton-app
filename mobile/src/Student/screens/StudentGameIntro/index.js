@@ -54,7 +54,7 @@ const StudentGameIntro = () => {
                             key="4"
                             screen={4}
                             Monsters={[null, require("./img/MonsterStep4.png")]}
-                            sticker={require("./img/Phase1Sticker.png")}
+                            sticker={require("./img/Phase2Sticker.png")}
                             phone={require("./img/IntroStep4Phone.png")}
                             text="Gain more points by guessing the most popular incorrect answer!"
                         />
@@ -62,7 +62,7 @@ const StudentGameIntro = () => {
                             key="5"
                             screen={5}
                             Monsters={[null, require("./img/MonsterStep5.png")]}
-                            sticker={require("./img/Phase1Sticker.png")}
+
                             phone={require("./img/IntroStep5Phone.png")}
                             text="The most total points wins!"
                         />

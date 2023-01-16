@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0)',
     },
     phone: {
-        // width: win.width,
-        // height: win.width,
+        //width: win.width,
+        //height: win.width,
         resizeMode: 'cover',
     },
     phaseSticker: {
@@ -41,9 +41,7 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     imgContainer: {
-        flexDirection: 'row',
-        //alignItems: 'center',
-        //alignContent: 'center',
+        flexDirection: 'row'
     },
     text: {
         textAlign: 'center',
