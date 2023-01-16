@@ -9,10 +9,8 @@ import { fonts } from '../../utils/theme'
 
 export default function JoinGame({
     navigation,
-    gameSession,
     clearStorage
 }) {
-   
 
     const handleJoinGame = () => {
         navigation.navigate("EnterGameCode")

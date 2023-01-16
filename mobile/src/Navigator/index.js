@@ -164,8 +164,8 @@ const AppContainer = () => {
          
           )}
       </GameSessionContainer>
-      </NavigationContainer>
-    )
+    </NavigationContainer>
+  )
 }
 
 export default AppContainer
