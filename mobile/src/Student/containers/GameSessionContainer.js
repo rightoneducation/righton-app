@@ -1,5 +1,6 @@
 import { GameSessionState, isNullOrUndefined, ModelHelper } from "@righton/networking"
 import { useEffect, useState } from "react"
+import { useNavigation } from '@react-navigation/native';
 import EncryptedStorage from "react-native-encrypted-storage"
 import TeamIcons from "./TeamIcons"
 
@@ -75,6 +76,7 @@ const GameSessionContainer = ({ children }) => {
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
+    const navigation = useNavigation()
 
     useEffect(() => {
         // TODO: Disabling local storage for now and fixing previous builds with it
@@ -160,23 +162,74 @@ const GameSessionContainer = ({ children }) => {
             })
     }
 
-    useEffect(() => {
-        if (isNullOrUndefined(gameSession)) {
-            clearStorage()
-            return
-        }
+    const subscribeToGame = (gameSession) => {
+      if (isNullOrUndefined(gameSession)) {
+        resetState()
+        return
+      }
+ 
+      storeDataToLocalStorage(localStorageKeys.gameCode, `${gameSession.gameCode}`)
+      
+      let subscription =
+      global.apiClient.subscribeUpdateGameSession(
+          gameSession.id,
+          (gameSessionResponse) => {
+              setGameSession(gameSessionResponse)
+              // TODO: Handle edge cases like user hasn't selected a team but state is on 
+              // phase results or more advance
+              switch (gameSessionResponse.currentState) {
+                case GameSessionState.NOT_STARTED:
+                    resetState()
+                    break
 
-        storeDataToLocalStorage(localStorageKeys.gameCode, `${gameSession.gameCode}`)
+                case GameSessionState.TEAMS_JOINING:
+                    // Game hasn't started yet, just let the kids join
+                    navigation.navigate("StudentName")
+                    break
 
-        let subscription =
-            global.apiClient.subscribeUpdateGameSession(
-                gameSession.id,
-                (gameSessionResponse) => {
-                    setGameSession(gameSessionResponse)
-                })
+                case GameSessionState.CHOOSE_CORRECT_ANSWER:
+                    navigation.navigate("PregameCountDown")
+                    break
 
-        return () => subscription?.unsubscribe()
-    }, [gameSession])
+                case GameSessionState.PHASE_1_DISCUSS:
+                    navigation.navigate("PhaseOneBasicGamePlay")
+                    break
+
+                case GameSessionState.PHASE_2_START:
+                    navigation.navigate("StartPhase")
+                    break
+
+                case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+                case GameSessionState.PHASE_2_DISCUSS:
+                    navigation.push("PhaseTwoBasicGamePlay")
+                    break
+
+                case GameSessionState.PHASE_1_RESULTS:
+                case GameSessionState.PHASE_2_RESULTS:
+                    navigation.push("PhaseResult")
+                    break
+
+                case GameSessionState.FINAL_RESULTS:
+                    navigation.navigate("ScorePage")
+                    break
+
+                case GameSessionState.FINISHED:
+                    resetState()
+                    break
+
+                default:
+                    resetState()
+                    console.error(`Unhandled state: ${gameSession.currentState}`)
+                    break
+            }  
+          }
+      )
+    }
+
+    const resetState = () => {
+      clearStorage()
+      navigation.navigate("JoinGame")
+    }
 
     const setTeamInfo = async (team, teamMember) => {
         await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
@@ -199,6 +252,7 @@ const GameSessionContainer = ({ children }) => {
         teamAvatar,
         saveTeamAvatar,
         clearStorage,
+        subscribeToGame
     })
 }
 

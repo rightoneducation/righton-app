@@ -12,69 +12,12 @@ export default function JoinGame({
     gameSession,
     clearStorage
 }) {
-    // TODO: Handle edge cases like user hasn't selected a team but state is on 
-    // phase results or more advance
-    useEffect(() => {
-        if (isNullOrUndefined(gameSession)) {
-            resetState()
-            return
-        }
-        switch (gameSession.currentState) {
-            case GameSessionState.NOT_STARTED:
-                resetState()
-                break
-
-            case GameSessionState.TEAMS_JOINING:
-                // Game hasn't started yet, just let the kids join
-                navigation.navigate("StudentName")
-                break
-
-            case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                navigation.navigate("PregameCountDown")
-                break
-
-            case GameSessionState.PHASE_1_DISCUSS:
-                navigation.navigate("PhaseOneBasicGamePlay")
-                break
-
-            case GameSessionState.PHASE_2_START:
-                navigation.navigate("StartPhase")
-                break
-
-            case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-            case GameSessionState.PHASE_2_DISCUSS:
-                navigation.push("PhaseTwoBasicGamePlay")
-                break
-
-            case GameSessionState.PHASE_1_RESULTS:
-            case GameSessionState.PHASE_2_RESULTS:
-                navigation.push("PhaseResult")
-                break
-
-            case GameSessionState.FINAL_RESULTS:
-                navigation.navigate("ScorePage")
-                break
-
-            case GameSessionState.FINISHED:
-                resetState()
-                break
-
-            default:
-                resetState()
-                console.error(`Unhandled state: ${gameSession.currentState}`)
-                break
-        }
-    }, [gameSession?.currentState])
+   
 
     const handleJoinGame = () => {
         navigation.navigate("EnterGameCode")
     }
-
-    const resetState = () => {
-        clearStorage()
-        navigation.navigate("JoinGame")
-    }
-
+   
     return (
         <View style={styles.container}>
             <PurpleBackground>
