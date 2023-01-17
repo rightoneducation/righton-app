@@ -29,7 +29,7 @@ const StudentGameIntro = () => {
                         <IntroInfo
                             key="1"
                             monsterStyles={[styles.monster1, styles.monster1]}
-                            Monsters={[require("./img/MonsterStep1.png"), null]}
+                            monsters={[require("./img/MonsterStep1.png"), null]}
                             sticker={require("./img/Phase1Sticker.png")}
                             showSticker={true}
                             phone={require("./img/IntroStep1Phone.png")}
@@ -38,7 +38,7 @@ const StudentGameIntro = () => {
                         <IntroInfo
                             key="2"
                             monsterStyles={[styles.monster2, styles.monster2]}
-                            Monsters={[null, require("./img/MonsterStep2.png")]}
+                            monsters={[null, require("./img/MonsterStep2.png")]}
                             sticker={require("./img/Phase1Sticker.png")}
                             showSticker={true}
                             phone={require("./img/IntroStep2Phone.png")}
@@ -47,7 +47,7 @@ const StudentGameIntro = () => {
                         <IntroInfo
                             key="3"
                             monsterStyles={[styles.monster3, styles.monster4]}
-                            Monsters={[require("./img/MonsterStep3Left.png"), require("./img/MonsterStep3Right.png")]}
+                            monsters={[require("./img/MonsterStep3Left.png"), require("./img/MonsterStep3Right.png")]}
                             sticker={require("./img/Phase1Sticker.png")}
                             showSticker={true}
                             phone={require("./img/IntroStep3Phone.png")}
@@ -56,7 +56,7 @@ const StudentGameIntro = () => {
                         <IntroInfo
                             key="4"
                             monsterStyles={[styles.monster5, styles.monster5]}
-                            Monsters={[null, require("./img/MonsterStep4.png")]}
+                            monsters={[null, require("./img/MonsterStep4.png")]}
                             sticker={require("./img/Phase2Sticker.png")}
                             showSticker={true}
                             phone={require("./img/IntroStep4Phone.png")}
@@ -65,7 +65,7 @@ const StudentGameIntro = () => {
                         <IntroInfo
                             key="5"
                             monsterStyles={[styles.monster6, styles.monster6]}
-                            Monsters={[null, require("./img/MonsterStep5.png")]}
+                            monsters={[null, require("./img/MonsterStep5.png")]}
                             showSticker={false}
                             phone={require("./img/IntroStep5Phone.png")}
                             text="The most total points wins!"
