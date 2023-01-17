@@ -14,7 +14,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 import { Hidden } from '@material-ui/core';
 
-export default function GameDashboard({ loading, games, deleteGame, cloneGame, gameId, onClickGame }) {
+export default function GameDashboard({ loading, games, deleteGame, cloneGame, gameId, onClickGame, isUserAuth }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -99,24 +99,25 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                           {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
                         </div>
                       </Grid>
-
-                      <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
-                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
-                          <MoreVertIcon />
-                        </Button>
-                        <Menu
-                          id={`question-${index}-actions`}
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={activeIndex === String(index)}
-                          onClose={handleClose}
-                          onClick={(event) => { if (!match) event.stopPropagation(); }}
-                        >
-                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                          <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-                          <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
-                        </Menu>
-                      </Grid>
+                      { isUserAuth && 
+                        <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
+                          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
+                            <MoreVertIcon />
+                          </Button>
+                          <Menu
+                            id={`question-${index}-actions`}
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={activeIndex === String(index)}
+                            onClose={handleClose}
+                            onClick={(event) => { if (!match) event.stopPropagation(); }}
+                          >
+                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                            <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
+                            <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
+                          </Menu>             
+                        </Grid>
+                      }
                     </Grid>
                   </Grid>
                 </CardContent>

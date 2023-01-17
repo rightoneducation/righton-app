@@ -23,6 +23,12 @@ import HorizontalPageView from "../../../components/HorizontalPageView"
 import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
+import RoundTextIcon from "../../../components/RoundTextIcon"
+
+//finds the letter matching the index
+const indexToLetter = (index) => {
+    return String.fromCharCode(65 + index)
+}
 
 const PhaseTwoBasicGamePlay = ({
     gameSession,
@@ -116,6 +122,9 @@ const PhaseTwoBasicGamePlay = ({
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
@@ -130,10 +139,11 @@ const PhaseTwoBasicGamePlay = ({
                     progress={progress}
                     color={"#349E15"}
                     height={"100%"}
-                    unfilledColor={"rgba(255,255,255,0.8)"}
+                    unfilledColor={"#7819F8"}
                     width={
                         Dimensions.get("window").width - scale(90)
                     }
+                    borderWidth={0}
                 />
                 <Text style={styles.timerText}>
                     {Math.floor(currentTime / 60)}:
@@ -180,22 +190,22 @@ const PhaseTwoBasicGamePlay = ({
                         titleStyle={styles.submitAnswerText}
                         title="Submit Answer"
                         onPress={handleSubmitAnswer}
-                        disabled = {!selectedAnswerIndex}
+                        disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
                 )}
-            </Card>
-            {submitted && (
-                <>
+                {submitted && (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
-                        disabled ={true}
+                        disabled={true}
                     />
-                    <Text style={styles.answerSubmittedText}>
-                        {submittedAnswerText}
-                    </Text>
-                </>
+                )}
+            </Card>
+            {submitted && (
+                <Text style={styles.answerSubmittedText}>
+                    {submittedAnswerText}
+                </Text>
             )}
         </View>
 
@@ -205,9 +215,15 @@ const PhaseTwoBasicGamePlay = ({
                 key={correctAnswer.id}
             >
                 <ScrollableQuestion question={question} />
-                <View style={styles.roundContainerCorrect}>
-                    <Text style={styles.correctAnswerText}>{correctAnswer.text}</Text>
-                </View>
+                <RoundTextIcon
+                    icon={require("../img/checkmark_checked.png")}
+                    text={`${indexToLetter(selectedAnswerIndex)}    ${correctAnswerText}`}
+                    height={45}
+                    marginHorizontal={scale(15)}
+                    borderColor={"#EBFFDA"}
+                    backgroundColor={"#EBFFDA"}
+                    showIcon
+                    readonly />
                 <HintsView hints={availableHints} />
                 <Text style={styles.reasonsText}>{correctAnswer.reason}</Text>
             </Card>
@@ -221,6 +237,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
+                        {index === selectedAnswerIndex &&
+                            <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
@@ -310,7 +328,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginVertical: verticalScale(9),
+        marginVertical: verticalScale(19),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -323,19 +341,19 @@ const styles = StyleSheet.create({
     answerChosen: {
         backgroundColor: "#159EFA",
         borderRadius: 22,
-        height: 44,
+        height: 30,
         marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
+        marginBottom: verticalScale(20),
     },
     submitAnswer: {
         backgroundColor: "#808080",
         borderRadius: 22,
-        height: 44,
+        height: 30,
         marginHorizontal: scale(40),
-        marginBottom: verticalScale(40),
+        marginBottom: verticalScale(20),
     },
     submitAnswerText: {
-        fontSize: 18,
+        fontSize: fonts.xxMedium,
     },
     answerSubmittedText: {
         fontFamily: fontFamilies.karlaBold,
@@ -344,7 +362,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginHorizontal: scale(20),
         marginVertical: verticalScale(20),
-        marginTop: -verticalScale(25)
+        marginTop: verticalScale(10)
     },
     timerContainer: {
         flex: 1,
@@ -371,9 +389,8 @@ const styles = StyleSheet.create({
     carouselContainer: {
         flex: 1,
         flexDirection: "column",
-        marginBottom: 100,
-        marginTop: -scale(170),
-        marginBottom: scale(50),
+        marginBottom: verticalScale(50),
+        marginTop: -verticalScale(150),
     },
     footerView: {
         position: "absolute",
@@ -392,7 +409,7 @@ const styles = StyleSheet.create({
     },
     correctAnswerText: {
         fontFamily: fontFamilies.karla,
-        padding: scale(6),
+        padding: scale(6)
     },
     roundContainerCorrect: {
         borderRadius: 22,
@@ -411,6 +428,9 @@ const styles = StyleSheet.create({
         marginHorizontal: scale(12),
         marginVertical: verticalScale(8),
         paddingVertical: verticalScale(8),
-        paddingHorizontal: scale(8)
-    }
+        paddingHorizontal: scale(8),
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
 })
