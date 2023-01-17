@@ -139,6 +139,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
     else {
      let newTitle = handleStringInput(gameDetails.title);
+     console.log(newTitle);
      //console.log(newTitle);
       // let questionIDs = questions.map(question => question.id)
       // delete gameDetails.questions
@@ -150,16 +151,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
   };
 
   const handleStringInput = (value)=>{
-    let valueArr = [...value];
-    console.log(valueArr);
-    valueArr.reduce((element) => {
-      console.log(element);
-      if (element === "\'"){
-        console.log("found");
-      }
-    })
-    console.log(valueArr);
-    return valueArr.toString();
+    return value.replace(/\'/g, "\'\'");
   }
 
   let content = (
