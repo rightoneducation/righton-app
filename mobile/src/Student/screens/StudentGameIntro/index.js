@@ -1,7 +1,7 @@
 import ViewPager from "@react-native-community/viewpager"
 import { useState } from "react"
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native"
-import { moderateScale } from "react-native-size-matters"
+import { moderateScale, scale, verticalScale } from "react-native-size-matters"
 import PurpleBackground from "../../../components/PurpleBackground"
 import { colors, fontFamilies, fonts } from "../../../utils/theme"
 import IntroInfo from "./IntroInfo"
@@ -28,41 +28,45 @@ const StudentGameIntro = () => {
                     >
                         <IntroInfo
                             key="1"
-                            screen={1}
+                            monsterStyles={[styles.monster1, styles.monster1]}
                             Monsters={[require("./img/MonsterStep1.png"), null]}
                             sticker={require("./img/Phase1Sticker.png")}
+                            showSticker={true}
                             phone={require("./img/IntroStep1Phone.png")}
                             text="Read the multiple-choice question"
                         />
                         <IntroInfo
                             key="2"
-                            screen={2}
+                            monsterStyles={[styles.monster2, styles.monster2]}
                             Monsters={[null, require("./img/MonsterStep2.png")]}
                             sticker={require("./img/Phase1Sticker.png")}
+                            showSticker={true}
                             phone={require("./img/IntroStep2Phone.png")}
                             text="Gain points by choosing the correct answer..."
                         />
                         <IntroInfo
                             key="3"
-                            screen={3}
+                            monsterStyles={[styles.monster3, styles.monster4]}
                             Monsters={[require("./img/MonsterStep3Left.png"), require("./img/MonsterStep3Right.png")]}
                             sticker={require("./img/Phase1Sticker.png")}
+                            showSticker={true}
                             phone={require("./img/IntroStep3Phone.png")}
                             text="Read step-by-step solutions"
                         />
                         <IntroInfo
                             key="4"
-                            screen={4}
+                            monsterStyles={[styles.monster5, styles.monster5]}
                             Monsters={[null, require("./img/MonsterStep4.png")]}
                             sticker={require("./img/Phase2Sticker.png")}
+                            showSticker={true}
                             phone={require("./img/IntroStep4Phone.png")}
                             text="Gain more points by guessing the most popular incorrect answer!"
                         />
                         <IntroInfo
                             key="5"
-                            screen={5}
+                            monsterStyles={[styles.monster6, styles.monster6]}
                             Monsters={[null, require("./img/MonsterStep5.png")]}
-
+                            showSticker={false}
                             phone={require("./img/IntroStep5Phone.png")}
                             text="The most total points wins!"
                         />
@@ -137,7 +141,7 @@ const styles = StyleSheet.create({
     headerTeam: {
         color: colors.white,
         fontFamily: fontFamilies.montserratBold,
-        fontSize: 42,
+        fontSize: fonts.xxLarge,
         textAlign: "center",
     },
     headerTeamNo: {
@@ -179,4 +183,37 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
     },
+    monster1: {
+        position: 'absolute',
+        left: 0,
+        marginTop: verticalScale(100)
+    },
+    monster2: {
+        position: 'absolute',
+        right: 0,
+        marginTop: verticalScale(190)
+    },
+    monster3: {
+        position: 'absolute',
+        left: 0,
+        marginTop: verticalScale(200),
+        marginLeft: scale(20)
+    },
+    monster4: {
+        position: 'absolute',
+        right: 0,
+        marginTop: verticalScale(200)
+    },
+    monster5: {
+        position: 'absolute',
+        right: 0,
+        marginTop: verticalScale(140),
+        zIndex: -1
+    },
+    monster6: {
+        position: 'absolute',
+        right: 0,
+        marginTop: verticalScale(20),
+        zIndex: -1
+    }
 })
