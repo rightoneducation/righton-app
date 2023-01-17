@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     hintsViewCard: {
         marginTop: -verticalScale(40),
         paddingVertical: 0,
-        maxHeight: verticalScale(400)
+        maxHeight: verticalScale(500)
     },
     hintsViewQuestion: {
         paddingVertical: verticalScale(30)
