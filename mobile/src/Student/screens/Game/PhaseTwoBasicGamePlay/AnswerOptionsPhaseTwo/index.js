@@ -46,7 +46,7 @@ const AnswerOptionsPhaseTwo = ({
                             icon={
                                 index === selectedAnswerIndex
                                     ? require("../../img/Picked.png")
-                                    : (item.text === correctAnswer.text ? null : require("../../img/gray_circle.png"))
+                                    : (item.text === correctAnswer.text ? require("../../img/checkmark_checked.png") : require("../../img/gray_circle.png"))
                             }
                             text={`${indexToLetter(index)}. ${item.text}`}
                             height={45}
