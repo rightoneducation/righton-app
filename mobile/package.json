@@ -40,7 +40,7 @@
     "react": "17.0.2",
     "react-devtools": "^4.25.0",
     "react-dom": "17.0.2",
-    "react-native": "0.65.1",
+    "react-native": "0.71.0",
     "react-native-autogrow-textinput": "^5.4.0",
     "react-native-code-push": "^7.0.5",
     "react-native-dropdown-picker": "^5.4.2",
