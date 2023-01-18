@@ -5,8 +5,11 @@ import { fontFamilies, fonts, colors, fontWeights } from '../../../../utils/them
 const win = Dimensions.get('window');
 
 const IntroInfo = ({ monsterStyles, monsters, phone, sticker, text, showSticker }) => {
-    if ({ monsterStyles }.length != 2) {
-        console.debug("'monsterStyles' must be an array of 2 entries")
+    if (monsterStyles.length != 2 || monsters.length != 2) {
+        console.error("'monsterStyles' must be an array of 2 entries")
+        return (
+            <View></View>
+        )
     }
     return (
         <View style={styles.container}>
