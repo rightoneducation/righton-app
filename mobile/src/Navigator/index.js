@@ -28,6 +28,8 @@ const AppContainer = () => {
                 teamAvatar,
                 saveTeamAvatar,
                 clearStorage,
+                selectedAnswerIndex,
+                setSelectedAnswerIndex
             }) => (
                 <NavigationContainer >
                     <Stack.Navigator
@@ -120,6 +122,8 @@ const AppContainer = () => {
                                     teamMember={teamMember}
                                     team={team}
                                     teamAvatar={teamAvatar}
+                                    selectedAnswerIndex={selectedAnswerIndex}
+                                    setSelectedAnswerIndex={setSelectedAnswerIndex}
                                 />
                             )}
                         </Stack.Screen>

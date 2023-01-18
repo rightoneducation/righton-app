@@ -37,12 +37,14 @@ const PhaseTwoBasicGamePlay = ({
     score,
     totalScore,
     teamAvatar,
+    selectedAnswerIndex,
+    setSelectedAnswerIndex
 }) => {
     const phaseTime = gameSession.phaseTwoTime
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
-    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+   
 
     const teamName = team?.name ? team?.name : "Team Name"
 
@@ -128,13 +130,6 @@ const PhaseTwoBasicGamePlay = ({
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
-    const findSubmittedTrickAnswer = () => {
-      const trickAnswer = teamMember.answers.find(answer => answer.isTrickAnswer).text
-      return answerChoices.map(element => element.text).indexOf(trickAnswer)
-    }
-
-    findSubmittedTrickAnswer()
-    
     const timerHeading =
         <>
             <Text style={styles.headerText}>
@@ -245,7 +240,7 @@ const PhaseTwoBasicGamePlay = ({
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
                         {index === selectedAnswerIndex &&
-                            <Image source={require("../img/Picked.png")} />}
+                           <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>

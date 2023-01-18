@@ -75,6 +75,7 @@ const GameSessionContainer = ({ children }) => {
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
     useEffect(() => {
         // TODO: Disabling local storage for now and fixing previous builds with it
@@ -199,6 +200,8 @@ const GameSessionContainer = ({ children }) => {
         teamAvatar,
         saveTeamAvatar,
         clearStorage,
+        selectedAnswerIndex,
+        setSelectedAnswerIndex
     })
 }
 
