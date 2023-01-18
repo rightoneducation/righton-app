@@ -128,6 +128,13 @@ const PhaseTwoBasicGamePlay = ({
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
+    const findSubmittedTrickAnswer = () => {
+      const trickAnswer = teamMember.answers.find(answer => answer.isTrickAnswer).text
+      return answerChoices.map(element => element.text).indexOf(trickAnswer)
+    }
+
+    findSubmittedTrickAnswer()
+    
     const timerHeading =
         <>
             <Text style={styles.headerText}>
