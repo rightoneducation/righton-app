@@ -37,12 +37,14 @@ const PhaseTwoBasicGamePlay = ({
     score,
     totalScore,
     teamAvatar,
+    selectedAnswerIndex,
+    setSelectedAnswerIndex,
+    currentTime,
+    progress,
+    submitted,
+    setSubmitted,
+    handleAddTeamAnswer
 }) => {
-    const phaseTime = gameSession.phaseTwoTime
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
-    const [submitted, setSubmitted] = useState(false)
-    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
     const teamName = team?.name ? team?.name : "Team Name"
 
@@ -68,57 +70,10 @@ const PhaseTwoBasicGamePlay = ({
         (answer) => !answer.isCorrectAnswer
     )
 
-    let countdown = useRef()
-
-    useEffect(() => {
-        if (
-            currentTime == 0 || // Out of time!
-            // Game has moved on, so disable answering
-            gameSession.currentState !==
-            GameSessionState.CHOOSE_TRICKIEST_ANSWER
-        ) {
-            setSubmitted(true)
-        }
-
-        countdown.current = setInterval(() => {
-            if (currentTime > 0) {
-                setCurrentTime(currentTime - 1)
-            }
-            setProgress(currentTime / phaseTime)
-        }, 1000)
-
-        return () => {
-            clearInterval(countdown.current)
-        }
-    }, [gameSession, currentTime])
-
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
+        handleAddTeamAnswer(question, answer)
         setSubmitted(true)
-        global.apiClient
-            .addTeamAnswer(
-                teamMember.id,
-                question.id,
-                answer.text,
-                answer.isChosen ? null : false,
-                true
-            )
-            .then((teamAnswer) => {
-                if (isNullOrUndefined(teamAnswer)) {
-                    console.error(
-                        "Failed to create team Answer."
-                    )
-                    return
-                }
-
-                console.debug(
-                    "phase 2 team answer: ",
-                    teamAnswer
-                )
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)

@@ -1,6 +1,7 @@
 import { GameSessionState, isNullOrUndefined, ModelHelper } from "@righton/networking"
-import { useEffect, useState } from "react"
-import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef, useState } from "react"
+import uuid from "react-native-uuid"
+import { useNavigation } from '@react-navigation/native'
 import EncryptedStorage from "react-native-encrypted-storage"
 import TeamIcons from "./TeamIcons"
 
@@ -76,72 +77,15 @@ const GameSessionContainer = ({ children }) => {
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
+ 
     const navigation = useNavigation()
 
-    useEffect(() => {
-        // TODO: Disabling local storage for now and fixing previous builds with it
-        clearStorage()
-        return
-        const loadGameCode = async () => {
-            return loadLocalStorageForKey(localStorageKeys.gameCode)
-                .then((localGameCode) => {
-                    if (isNullOrUndefined(localGameCode) ||
-                        parseInt(localGameCode) === 0) {
-                        throw new Error("No game code exists in local storage!")
-                    }
+    let countdown = useRef()
+    let phaseTime = gameSession?.phaseOneTime ?? 300
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    const [submitted, setSubmitted] = useState(false)
 
-                    return parseInt(localGameCode)
-                })
-        }
-
-        loadGameCode()
-            .then(localGameCode => {
-                return fetchGameSessionByCode(localGameCode)
-            })
-            .then(() => {
-                return loadLocalStorageForKey(localStorageKeys.teamId)
-            })
-            .then(teamId => {
-                if (isNullOrUndefined(teamId)) {
-                    throw new Error("No teamId exists!")
-                }
-
-                return ModelHelper.findTeamInGameSession(gameSession, teamId)
-            })
-            .then(team => {
-                if (isNullOrUndefined(team)) {
-                    removeDataFromLocalStorage(localStorageKeys.teamId)
-                    throw new Error("No team found!")
-                }
-                setTeam(team)
-                return loadLocalStorageForKey(localStorageKeys.teamMemberId)
-            })
-            .then(teamMemberId => {
-                if (isNullOrUndefined(teamMemberId)) {
-                    throw new Error("No teamMemberId found in local storage!")
-                }
-                return ModelHelper(team, teamMemberId)
-            })
-            .then(teamMember => {
-                if (isNullOrUndefined(teamMember)) {
-                    removeDataFromLocalStorage(localStorageKeys.teamMemberId)
-                    throw new Error("No team member found!")
-                }
-                setTeamMember(teamMember)
-                return loadLocalStorageForKey(localStorageKeys.teamAvatarId)
-            })
-            .then(teamAvatarId => {
-                if (isNullOrUndefined(teamAvatarId) ||
-                    parseInt(teamAvatarId) === 0) {
-                    return
-                }
-                let avatar = TeamIcons.find(avatar => avatar.id === parseInt(teamAvatarId))
-                setTeamAvatar(avatar)
-            })
-            .catch(error => {
-                console.debug(`GameSessionContainer::useEffect: ${error}`)
-            })
-    }, [])
 
     const fetchGameSessionByCode = async (gameCode) => {
         return global.apiClient
@@ -188,7 +132,10 @@ const GameSessionContainer = ({ children }) => {
                     break
 
                 case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                    navigation.navigate("PregameCountDown")
+                    navigation.navigate("PhaseOneBasicGamePlay")
+                    // phaseTime = gameSession?.phaseOneTime ?? 300
+                    // setCurrentTime(phaseTime)
+                    // navigation.navigate("PregameCountDown")
                     break
 
                 case GameSessionState.PHASE_1_DISCUSS:
@@ -196,18 +143,21 @@ const GameSessionContainer = ({ children }) => {
                     break
 
                 case GameSessionState.PHASE_2_START:
+                    setSelectedAnswerIndex(null)
                     navigation.navigate("StartPhase")
                     break
 
                 case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
                 case GameSessionState.PHASE_2_DISCUSS:
+                    phaseTime = gameSession?.phaseTwoTime ?? 300
+                    setCurrentTime(phaseTime)
                     navigation.push("PhaseTwoBasicGamePlay")
                     break
 
-                case GameSessionState.PHASE_1_RESULTS:
-                case GameSessionState.PHASE_2_RESULTS:
-                    navigation.push("PhaseResult")
-                    break
+                // case GameSessionState.PHASE_1_RESULTS:
+                // case GameSessionState.PHASE_2_RESULTS:
+                //     navigation.push("PhaseResult")
+                //     break
 
                 case GameSessionState.FINAL_RESULTS:
                     navigation.navigate("ScorePage")
@@ -259,6 +209,32 @@ const GameSessionContainer = ({ children }) => {
                 console.error(error)
             })
     }
+    const handleAddTeamAnswer = async (question, answer) =>
+    {
+      return  global.apiClient
+                  .addTeamAnswer(
+                      teamMember.id,
+                      question.id,
+                      answer.text,
+                      answer.isChosen ? null : true,
+                      false
+                  )
+                  .then((teamAnswer) => {
+                      if (teamAnswer == null) {
+                          console.error(
+                              "Failed to create team Answer."
+                          )
+                          return
+                      }
+                      console.debug(
+                          "Team answer:",
+                          teamAnswer
+                      )
+                  })
+                  .catch((error) => {
+                      console.error(error.message)
+                  })
+    }
 
     const resetState = () => {
       clearStorage()
@@ -277,6 +253,28 @@ const GameSessionContainer = ({ children }) => {
         setTeamAvatar(avatar)
     }
 
+    //progress bar timer used in CHOOSE_CORRECT_ANSWER and CHOOSE_TRICKIEST_ANSWER
+    useEffect(() => {
+      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
+        if (
+            currentTime <= 0 || // Out of time!
+            // Game has moved on, so disable answering
+            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        ) {
+            setSubmitted(true)
+        }
+        countdown.current = setInterval(() => {
+            if (currentTime > 0) {
+                setCurrentTime(currentTime - 1)
+            }
+            setProgress((currentTime - 1) / phaseTime)
+        }, 1000)
+        return () => {
+            clearInterval(countdown.current)
+        }
+      }
+    }, [currentTime])
+
     return children({
         gameSession,
         fetchGameSessionByCode,
@@ -285,9 +283,16 @@ const GameSessionContainer = ({ children }) => {
         teamMember,
         teamAvatar,
         saveTeamAvatar,
+        //selectedAnswerIndex,
+        //setSelectedAnswerIndex,
+        currentTime,
+        progress,
+        submitted,
+        setSubmitted,
         clearStorage,
         handleSubscribeToGame,
-        handleAddTeam
+        handleAddTeam,
+        handleAddTeamAnswer
     })
 }
 

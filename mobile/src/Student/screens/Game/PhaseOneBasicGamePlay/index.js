@@ -1,7 +1,6 @@
 import { GameSessionState } from "@righton/networking"
 import { useEffect, useRef, useState } from "react"
 import {
-    Alert,
     Dimensions,
     SafeAreaView,
     StyleSheet,
@@ -34,13 +33,15 @@ const PhaseOneBasicGamePlay = ({
     team,
     teamMember,
     teamAvatar,
+    //selectedAnswerIndex,
+    //setSelectedAnswerIndex,
+    currentTime,
+    progress,
+    submitted,
+    setSubmitted,
+    handleAddTeamAnswer
 }) => {
-    const phaseTime = gameSession?.phaseOneTime ?? 300
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-    const [submitted, setSubmitted] = useState(false)
-    let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
     const totalScore = team?.score ? team?.score : 0
     const question = gameSession?.isAdvanced
@@ -52,24 +53,6 @@ const PhaseOneBasicGamePlay = ({
         ]
     const availableHints = question.instructions
 
-    useEffect(() => {
-        if (
-            currentTime == 0 || // Out of time!
-            // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-        ) {
-            setSubmitted(true)
-        }
-        countdown.current = setInterval(() => {
-            if (currentTime > 0) {
-                setCurrentTime(currentTime - 1)
-            }
-            setProgress((currentTime - 1) / phaseTime)
-        }, 1000)
-        return () => {
-            clearInterval(countdown.current)
-        }
-    }, [gameSession, currentTime])
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
         // if isCorrectAnswer is true, add 10 points to the team's score
@@ -77,30 +60,8 @@ const PhaseOneBasicGamePlay = ({
         if (answer.isCorrectAnswer && team) {
             team.score += 10
         }
+        handleAddTeamAnswer(question, answer)
         setSubmitted(true)
-        global.apiClient
-            .addTeamAnswer(
-                teamMember.id,
-                question.id,
-                answer.text,
-                answer.isChosen ? null : true,
-                false
-            )
-            .then((teamAnswer) => {
-                if (teamAnswer == null) {
-                    console.error(
-                        "Failed to create team Answer."
-                    )
-                    return
-                }
-                console.debug(
-                    "phase 1 team answer:",
-                    teamAnswer
-                )
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
     }
     const answersParsed = question.choices
     const answerChoices = answersParsed.map((choice) => {
@@ -114,6 +75,7 @@ const PhaseOneBasicGamePlay = ({
         (answer) => answer.isCorrectAnswer
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
+
     let cards = [
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
@@ -123,7 +85,7 @@ const PhaseOneBasicGamePlay = ({
         </>,
         <View key={"answers"}>
             <Text style={styles.cardHeadingText}>Answers</Text>
-            <Card headerTitle="Answers">
+            <Card headerTitle="Answers" key={"answerscard"}>
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
                     Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
                 </Text>

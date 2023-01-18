@@ -28,9 +28,16 @@ const AppContainer = () => {
               setTeamInfo,
               teamAvatar,
               saveTeamAvatar,
+             // selectedAnswerIndex,
+              //setSelectedAnswerIndex,
+              currentTime,
+              progress,
+              submitted,
+              setSubmitted,
               clearStorage,
               handleSubscribeToGame,
-              handleAddTeam
+              handleAddTeam,
+              handleAddTeamAnswer
           }) => (
                   <Stack.Navigator
                       initialRouteName="JoinGame"
@@ -106,6 +113,13 @@ const AppContainer = () => {
                                   teamMember={teamMember}
                                   team={team}
                                   teamAvatar={teamAvatar}
+                                  //selectedAnswerIndex={selectedAnswerIndex}
+                                  //setSelectedAnswerIndex={setSelectedAnswerIndex}
+                                  currentTime={currentTime}
+                                  progress={progress}
+                                  submitted={submitted}
+                                  setSubmitted={setSubmitted}
+                                  handleAddTeamAnswer={handleAddTeamAnswer}
                               />
                           )}
                       </Stack.Screen>
@@ -124,6 +138,8 @@ const AppContainer = () => {
                                   teamMember={teamMember}
                                   team={team}
                                   teamAvatar={teamAvatar}
+                                  selectedAnswerIndex={selectedAnswerIndex}
+                                  setSelectedAnswerIndex={setSelectedAnswerIndex}
                               />
                           )}
                       </Stack.Screen>
