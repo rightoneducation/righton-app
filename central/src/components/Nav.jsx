@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import exploreIcon from '../images/Explore.svg';
 import betaLogo from '../images/BetaLogo.svg';
+import quizMakerIcon from '../images/QuizMaker.svg';
 import SearchBar from './SearchBar.jsx';
 
 export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick }) {
@@ -27,6 +28,13 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
                 Explore
               </Typography> : null }
             </NavLink>
+            { isUserAuth ? 
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
+              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.iconQuiz} />
+              {!isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
+                Game Maker
+              </Typography> : null}
+            </NavLink> : null }
             {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
             {matchSearchBar.isExact ? 
                <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/> 
