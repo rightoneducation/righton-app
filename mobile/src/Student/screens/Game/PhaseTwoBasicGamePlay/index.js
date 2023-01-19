@@ -44,7 +44,7 @@ const PhaseTwoBasicGamePlay = ({
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
-   
+
 
     const teamName = team?.name ? team?.name : "Team Name"
 
@@ -240,7 +240,7 @@ const PhaseTwoBasicGamePlay = ({
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
                         {index === selectedAnswerIndex &&
-                           <Image source={require("../img/Picked.png")} />}
+                            <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(20)
     },
     headerText: {
-        marginTop: verticalScale(14),
+        marginTop: verticalScale(24),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginVertical: verticalScale(19),
+        marginBottom: verticalScale(19),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: verticalScale(50),
-        marginTop: -verticalScale(150),
+        marginTop: -verticalScale(140),
     },
     footerView: {
         position: "absolute",
