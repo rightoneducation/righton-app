@@ -37,7 +37,6 @@ const TeamItem = ({ teamNo, score, teamName }) => {
             return null
     }
     const formatTeamName = (teamName) =>{
-      console.log(teamName)
       let spacePos = teamName.indexOf(' ')
       return teamName.slice(0, spacePos).concat(teamName.slice(spacePos, spacePos+2), '.')
     }
