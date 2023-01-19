@@ -80,10 +80,10 @@ const GameSessionContainer = ({ children }) => {
  
     const navigation = useNavigation()
 
-    let countdown = useRef()
-    let phaseTime = gameSession?.phaseOneTime ?? 300
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
+    // let countdown = useRef()
+    // let phaseTime = gameSession?.phaseOneTime ?? 300
+    // const [currentTime, setCurrentTime] = useState(phaseTime)
+    // const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
 
 
@@ -132,10 +132,10 @@ const GameSessionContainer = ({ children }) => {
                     break
 
                 case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                    navigation.navigate("PhaseOneBasicGamePlay")
-                    // phaseTime = gameSession?.phaseOneTime ?? 300
-                    // setCurrentTime(phaseTime)
-                    // navigation.navigate("PregameCountDown")
+                    //navigation.navigate("PhaseOneBasicGamePlay")
+                    //phaseTime = gameSession?.phaseOneTime ?? 300
+                    //setCurrentTime(phaseTime)
+                    navigation.navigate("PregameCountDown")
                     break
 
                 case GameSessionState.PHASE_1_DISCUSS:
@@ -253,27 +253,27 @@ const GameSessionContainer = ({ children }) => {
         setTeamAvatar(avatar)
     }
 
-    //progress bar timer used in CHOOSE_CORRECT_ANSWER and CHOOSE_TRICKIEST_ANSWER
-    useEffect(() => {
-      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
-        if (
-            currentTime <= 0 || // Out of time!
-            // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-        ) {
-            setSubmitted(true)
-        }
-        countdown.current = setInterval(() => {
-            if (currentTime > 0) {
-                setCurrentTime(currentTime - 1)
-            }
-            setProgress((currentTime - 1) / phaseTime)
-        }, 1000)
-        return () => {
-            clearInterval(countdown.current)
-        }
-      }
-    }, [currentTime])
+    // //progress bar timer used in CHOOSE_CORRECT_ANSWER and CHOOSE_TRICKIEST_ANSWER
+    // useEffect(() => {
+    //   if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
+    //     if (
+    //         currentTime <= 0 || // Out of time!
+    //         // Game has moved on, so disable answering
+    //         gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    //     ) {
+    //         setSubmitted(true)
+    //     }
+    //     countdown.current = setInterval(() => {
+    //         if (currentTime > 0) {
+    //             setCurrentTime(currentTime - 1)
+    //         }
+    //         setProgress((currentTime - 1) / phaseTime)
+    //     }, 1000)
+    //     return () => {
+    //         clearInterval(countdown.current)
+    //     }
+    //   }
+    // }, [currentTime])
 
     return children({
         gameSession,
@@ -285,8 +285,8 @@ const GameSessionContainer = ({ children }) => {
         saveTeamAvatar,
         //selectedAnswerIndex,
         //setSelectedAnswerIndex,
-        currentTime,
-        progress,
+        //currentTime,
+        //progress,
         submitted,
         setSubmitted,
         clearStorage,

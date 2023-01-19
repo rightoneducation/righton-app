@@ -69,7 +69,6 @@ export default LoadingIndicator = (
         radius,
         fontSize,
         textColor,
-        shouldShowCountdown,
         timerStartInSecond,
         onTimerFinished
     }
@@ -77,39 +76,39 @@ export default LoadingIndicator = (
     fontSize = fontSize || 24
     textColor = textColor || 'white'
     const [colors, setColors] = useState(theme)
-
     const [remainingSecondsInMilliSeconds, setRemainingSecondsInMilliSeconds] = useState(timerStartInSecond * 1000)
     const [remainingTimeInSecond, setRemainingTimeInSecond] = useState(timerStartInSecond)
     const [timerFinished, setTimerFinished] = useState(false)
 
     let timeInterval = 100
     useEffect(() => {
-        if (shouldShowCountdown) {
-            if (timerFinished) {
-                return
-            }
-            else if (remainingTimeInSecond == 1) {
-                onTimerFinished()
-                clearInterval(refreshIntervalId)
-                setTimerFinished(true)
-                return
-            }
+        if (timerFinished || remainingTimeInSecond <= 0) {
+            clearInterval(refreshIntervalId)
+            setTimerFinished(true)
+            onTimerFinished()
+            return
         }
         var refreshIntervalId = setInterval(() => {
             const c = colors.slice(colors.length - 1).concat(colors.slice(0, colors.length - 1))
             setColors(c)
-            if (!shouldShowCountdown) {
+            if (timerFinished) {
                 return
             }
             setRemainingSecondsInMilliSeconds(remainingSecondsInMilliSeconds - timeInterval)
-            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))
+            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))     
         }, timeInterval)
         return () => {
             clearInterval(refreshIntervalId)
         }
-    })
+    },[remainingSecondsInMilliSeconds])
+
     return (
         <View style={styles.container}>
+        {console.count('counter')}
+        {console.log(remainingSecondsInMilliSeconds)}
+        {console.log(remainingTimeInSecond)}
+        {console.log(colors)}
+        {console.log(timerFinished)}
             <Svg
                 width={radius * 2}
                 height={radius * 2}
@@ -128,7 +127,6 @@ export default LoadingIndicator = (
                 style={[styles.text, {
                     fontSize: fontSize,
                     color: textColor,
-                    opacity: shouldShowCountdown ? 1 : 0
                 }]}
             >
                 {remainingTimeInSecond}

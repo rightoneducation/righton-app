@@ -115,9 +115,9 @@ const AppContainer = () => {
                                   teamAvatar={teamAvatar}
                                   //selectedAnswerIndex={selectedAnswerIndex}
                                   //setSelectedAnswerIndex={setSelectedAnswerIndex}
-                                  currentTime={currentTime}
-                                  progress={progress}
-                                  submitted={submitted}
+                                  //currentTime={currentTime}
+                                  // progress={progress}
+                                  // submitted={submitted}
                                   setSubmitted={setSubmitted}
                                   handleAddTeamAnswer={handleAddTeamAnswer}
                               />

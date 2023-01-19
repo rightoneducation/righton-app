@@ -35,13 +35,20 @@ const PhaseOneBasicGamePlay = ({
     teamAvatar,
     //selectedAnswerIndex,
     //setSelectedAnswerIndex,
-    currentTime,
-    progress,
+    //currentTime,
+    // progress,
     submitted,
     setSubmitted,
     handleAddTeamAnswer
 }) => {
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+    
+    let countdown = useRef()
+    let phaseTime = gameSession?.phaseOneTime ?? 300
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    //const [submitted, setSubmitted] = useState(false)
+
     const teamName = team?.name ? team?.name : "Team Name"
     const totalScore = team?.score ? team?.score : 0
     const question = gameSession?.isAdvanced
@@ -75,6 +82,30 @@ const PhaseOneBasicGamePlay = ({
         (answer) => answer.isCorrectAnswer
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
+
+
+    useEffect(() => {
+      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
+        if (
+            currentTime <= 0 || // Out of time!
+            // Game has moved on, so disable answering
+            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        ) {
+            setSubmitted(true)
+        }
+        countdown.current = setInterval(() => {
+            if (currentTime > 0) {
+                setCurrentTime(currentTime - 1)
+            }
+            setProgress((currentTime - 1) / phaseTime)
+        }, 1000)
+        return () => {
+            clearInterval(countdown.current)
+        }
+      }
+    }, [currentTime])
+
+
 
     let cards = [
         <>

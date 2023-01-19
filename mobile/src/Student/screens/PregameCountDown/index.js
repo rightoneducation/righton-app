@@ -5,7 +5,7 @@ import { fontFamilies, fonts } from "../../../utils/theme"
 import LoadingIndicator from "../../components/LoadingIndicator"
 
 const PregameCountDown = ({
-    navigation,
+    navigation
 }) => {
     return (
         <PurpleBackground style={styles.mainContainer}>
@@ -21,9 +21,8 @@ const PregameCountDown = ({
                     "#F5246AFF",
                 ]}
                 radius={Dimensions.get("window").width / 2 - scale(30) * 2}
-                shouldShowCountdown={true}
                 fontSize={scale(100)}
-                timerStartInSecond={3}
+                timerStartInSecond={2}
                 onTimerFinished={() => {
                     navigation.navigate("PhaseOneBasicGamePlay")
                 }}
