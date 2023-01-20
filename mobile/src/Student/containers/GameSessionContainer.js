@@ -1,7 +1,6 @@
 import { GameSessionState, isNullOrUndefined, ModelHelper } from "@righton/networking"
 import { useState } from "react"
 import uuid from "react-native-uuid"
-import { useNavigation } from '@react-navigation/native'
 import EncryptedStorage from "react-native-encrypted-storage"
 import TeamIcons from "./TeamIcons"
 
@@ -73,14 +72,10 @@ async function clearStorage() {
 }
 
 const GameSessionContainer = ({ children }) => {
-    const navigation = useNavigation()
     const [gameSession, setGameSession] = useState(null)
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
-    const [submitted, setSubmitted] = useState(false)
-
-
 
     const fetchGameSessionByCode = async (gameCode) => {
         return global.apiClient
@@ -114,56 +109,6 @@ const GameSessionContainer = ({ children }) => {
           gameSession.id,
           (gameSessionResponse) => {
               setGameSession(gameSessionResponse)
-              // TODO: Handle edge cases like user hasn't selected a team but state is on 
-              // phase results or more advance
-              switch (gameSessionResponse.currentState) {
-                case GameSessionState.NOT_STARTED:
-                    resetState()
-                    break
-
-                case GameSessionState.TEAMS_JOINING:
-                    // Game hasn't started yet, just let the kids join
-                    navigation.push("StudentName") //navigate
-                    break
-
-                case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                    navigation.navigate("PhaseOneBasicGamePlay")
-                    break
-
-                case GameSessionState.PHASE_1_DISCUSS:
-                    navigation.push("PhaseOneBasicGamePlay") //navigate
-                    break
-
-                case GameSessionState.PHASE_2_START:
-                    setSelectedAnswerIndex(null)
-                    navigation.navigate("StartPhase") 
-                    break
-
-                case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-                case GameSessionState.PHASE_2_DISCUSS:
-                    phaseTime = gameSession?.phaseTwoTime ?? 300
-                    setCurrentTime(phaseTime)
-                    navigation.push("PhaseTwoBasicGamePlay")
-                    break
-
-                // case GameSessionState.PHASE_1_RESULTS:
-                // case GameSessionState.PHASE_2_RESULTS:
-                //     navigation.navigate("PhaseResult") //push
-                //     break
-
-                case GameSessionState.FINAL_RESULTS:
-                    navigation.navigate("ScorePage")
-                    break
-
-                case GameSessionState.FINISHED:
-                    resetState()
-                    break
-
-                default:
-                    resetState()
-                    console.error(`Unhandled state: ${gameSession.currentState}`)
-                    break
-            }  
           }
       )
     }
@@ -228,10 +173,6 @@ const GameSessionContainer = ({ children }) => {
                   })
     }
 
-    const resetState = () => {
-      clearStorage()
-      navigation.navigate("JoinGame")
-    }
 
     const setTeamInfo = async (team, teamMember) => {
         await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
@@ -246,7 +187,6 @@ const GameSessionContainer = ({ children }) => {
     }
 
     return children({
-        navigation,
         gameSession,
         fetchGameSessionByCode,
         setTeamInfo,
@@ -254,12 +194,8 @@ const GameSessionContainer = ({ children }) => {
         teamMember,
         teamAvatar,
         saveTeamAvatar,
-        //selectedAnswerIndex,
-        //setSelectedAnswerIndex,
-        //currentTime,
-        //progress,
-        submitted,
-        setSubmitted,
+        selectedAnswerIndex,
+        setSelectedAnswerIndex,
         clearStorage,
         handleSubscribeToGame,
         handleAddTeam,

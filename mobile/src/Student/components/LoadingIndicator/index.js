@@ -84,7 +84,7 @@ export default LoadingIndicator = (
     let timeInterval = 100
     useFocusEffect(
       React.useCallback(() => {
-        if (timerFinished || remainingTimeInSecond <= 0) {
+        if (timerFinished || remainingTimeInSecond < 1) {
             clearInterval(refreshIntervalId)
             setTimerFinished(true)
             onTimerFinished()

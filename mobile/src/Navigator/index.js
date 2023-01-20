@@ -18,7 +18,6 @@ const Stack = createStackNavigator()
 
 const AppContainer = () => {
   return (
-    <NavigationContainer >
       <GameSessionContainer>
           {({
               gameSession,
@@ -28,17 +27,14 @@ const AppContainer = () => {
               setTeamInfo,
               teamAvatar,
               saveTeamAvatar,
-             // selectedAnswerIndex,
-              //setSelectedAnswerIndex,
-              currentTime,
-              progress,
-              submitted,
-              setSubmitted,
+              selectedAnswerIndex,
+              setSelectedAnswerIndex,
               clearStorage,
               handleSubscribeToGame,
               handleAddTeam,
               handleAddTeamAnswer
           }) => (
+               <NavigationContainer >
                   <Stack.Navigator
                       initialRouteName="JoinGame"
                       screenOptions={{
@@ -46,7 +42,17 @@ const AppContainer = () => {
                           gestureEnabled: false
                       }}
                   >
-                      <Stack.Screen name="JoinGame" component={JoinGame} />
+                      <Stack.Screen name="JoinGame">
+                            {(props) => (
+                                <JoinGame
+                                    {...props}
+                                    gameSession={gameSession}
+                                    team={team}
+                                    teamMember={teamMember}
+                                    clearStorage={clearStorage}
+                                />
+                            )}
+                        </Stack.Screen>
                       <Stack.Screen name="EnterGameCode">
                           {(props) => (
                               <EnterGameCode
@@ -103,9 +109,9 @@ const AppContainer = () => {
                                   teamMember={teamMember}
                                   team={team}
                                   teamAvatar={teamAvatar}
-                                  submitted={submitted}
-                                  setSubmitted={setSubmitted}
                                   handleAddTeamAnswer={handleAddTeamAnswer}
+                                  selectedAnswerIndex={selectedAnswerIndex}
+                                  setSelectedAnswerIndex={setSelectedAnswerIndex}
                               />
                           )}
                       </Stack.Screen>
@@ -165,10 +171,10 @@ const AppContainer = () => {
                           )}
                       </Stack.Screen>
                   </Stack.Navigator>
-         
+                  </NavigationContainer>
           )}
       </GameSessionContainer>
-    </NavigationContainer>
+
   )
 }
 

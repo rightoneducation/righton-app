@@ -40,8 +40,6 @@ const PhaseTwoBasicGamePlay = ({
     teamAvatar,
     selectedAnswerIndex,
     setSelectedAnswerIndex,
-    submitted,
-    setSubmitted,
     handleAddTeamAnswer
 }) => {
 
@@ -54,7 +52,7 @@ const PhaseTwoBasicGamePlay = ({
     let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    //const [submitted, setSubmitted] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
 
     const question = gameSession.questions[
         isNullOrUndefined(gameSession.currentQuestionIndex)

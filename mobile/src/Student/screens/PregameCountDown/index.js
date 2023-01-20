@@ -22,7 +22,7 @@ const PregameCountDown = ({
                 ]}
                 radius={Dimensions.get("window").width / 2 - scale(30) * 2}
                 fontSize={scale(100)}
-                timerStartInSecond={2}
+                timerStartInSecond={3}
                 onTimerFinished={() => {
                     navigation.navigate("PhaseOneBasicGamePlay")
                 }}

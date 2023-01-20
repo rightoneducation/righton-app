@@ -35,21 +35,17 @@ const PhaseOneBasicGamePlay = ({
     teamMember,
     teamAvatar,
     navigation,
-    //selectedAnswerIndex,
-    //setSelectedAnswerIndex,
-    //currentTime,
-    // progress,
+    selectedAnswerIndex,
+    setSelectedAnswerIndex,
     submitted,
     setSubmitted,
     handleAddTeamAnswer
 }) => {
-    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-    
     let countdown = useRef()
     let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    //const [submitted, setSubmitted] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
 
     const teamName = team?.name ? team?.name : "Team Name"
     const totalScore = team?.score ? team?.score : 0
