@@ -1,5 +1,5 @@
 import { GameSessionState, isNullOrUndefined, ModelHelper } from "@righton/networking"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import uuid from "react-native-uuid"
 import { useNavigation } from '@react-navigation/native'
 import EncryptedStorage from "react-native-encrypted-storage"
@@ -73,18 +73,13 @@ async function clearStorage() {
 }
 
 const GameSessionContainer = ({ children }) => {
+    const navigation = useNavigation()
     const [gameSession, setGameSession] = useState(null)
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
- 
-    const navigation = useNavigation()
-
-    // let countdown = useRef()
-    // let phaseTime = gameSession?.phaseOneTime ?? 300
-    // const [currentTime, setCurrentTime] = useState(phaseTime)
-    // const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
+
 
 
     const fetchGameSessionByCode = async (gameCode) => {
@@ -128,20 +123,20 @@ const GameSessionContainer = ({ children }) => {
 
                 case GameSessionState.TEAMS_JOINING:
                     // Game hasn't started yet, just let the kids join
-                    navigation.navigate("StudentName")
+                    navigation.push("StudentName") //navigate
                     break
 
                 case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                    navigation.navigate("PregameCountDown")
+                    navigation.navigate("PhaseOneBasicGamePlay")
                     break
 
                 case GameSessionState.PHASE_1_DISCUSS:
-                    navigation.navigate("PhaseOneBasicGamePlay")
+                    navigation.push("PhaseOneBasicGamePlay") //navigate
                     break
 
                 case GameSessionState.PHASE_2_START:
                     setSelectedAnswerIndex(null)
-                    navigation.navigate("StartPhase")
+                    navigation.navigate("StartPhase") 
                     break
 
                 case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -153,7 +148,7 @@ const GameSessionContainer = ({ children }) => {
 
                 // case GameSessionState.PHASE_1_RESULTS:
                 // case GameSessionState.PHASE_2_RESULTS:
-                //     navigation.push("PhaseResult")
+                //     navigation.navigate("PhaseResult") //push
                 //     break
 
                 case GameSessionState.FINAL_RESULTS:
@@ -251,6 +246,7 @@ const GameSessionContainer = ({ children }) => {
     }
 
     return children({
+        navigation,
         gameSession,
         fetchGameSessionByCode,
         setTeamInfo,

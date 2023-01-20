@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { View, StyleSheet, Text } from 'react-native'
 import Svg, { Path, G } from 'react-native-svg'
 import { fontFamilies } from '../../../utils/theme'
@@ -81,7 +82,8 @@ export default LoadingIndicator = (
     const [timerFinished, setTimerFinished] = useState(false)
 
     let timeInterval = 100
-    useEffect(() => {
+    useFocusEffect(
+      React.useCallback(() => {
         if (timerFinished || remainingTimeInSecond <= 0) {
             clearInterval(refreshIntervalId)
             setTimerFinished(true)
@@ -100,7 +102,8 @@ export default LoadingIndicator = (
         return () => {
             clearInterval(refreshIntervalId)
         }
-    },[remainingSecondsInMilliSeconds])
+      },[remainingSecondsInMilliSeconds])
+    )
 
     return (
         <View style={styles.container}>
@@ -153,7 +156,6 @@ const styles = StyleSheet.create({
 LoadingIndicator.propTypes = {
     theme: PropTypes.array.isRequired,
     radius: PropTypes.number.isRequired,
-    shouldShowCountdown: PropTypes.bool.isRequired,
     fontSize: PropTypes.number,
     timerStartInSecond: PropTypes.number,
     onTimerFinished: PropTypes.func,

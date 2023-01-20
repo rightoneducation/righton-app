@@ -61,7 +61,6 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode, handleSubscribeToGa
                             style={styles.input}
                             textAlign={"center"}
                             value={gameCode}
-                            autoFocus={true}
                             editable
                         />
                         <RoundButton

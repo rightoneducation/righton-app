@@ -1,5 +1,5 @@
 import { GameSessionState } from "@righton/networking"
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
     Dimensions,
     SafeAreaView,
@@ -11,6 +11,7 @@ import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import {useFocusEffect } from '@react-navigation/native'
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
@@ -33,6 +34,7 @@ const PhaseOneBasicGamePlay = ({
     team,
     teamMember,
     teamAvatar,
+    navigation,
     //selectedAnswerIndex,
     //setSelectedAnswerIndex,
     //currentTime,
@@ -84,7 +86,8 @@ const PhaseOneBasicGamePlay = ({
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
 
 
-    useEffect(() => {
+    useFocusEffect(
+      React.useCallback(() => {
       if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
         if (
             currentTime <= 0 || // Out of time!
@@ -103,7 +106,8 @@ const PhaseOneBasicGamePlay = ({
             clearInterval(countdown.current)
         }
       }
-    }, [currentTime])
+      },[currentTime])
+    )
 
 
 

@@ -1,5 +1,5 @@
 import { GameSessionState, isNullOrUndefined } from "@righton/networking"
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
     Alert,
     Dimensions,
@@ -13,6 +13,7 @@ import {
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { color } from "react-native-reanimated"
+import { useFocusEffect } from '@react-navigation/native'
 import { scale, moderateScale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import RoundButton from "../../../../components/RoundButton"
@@ -87,7 +88,8 @@ const PhaseTwoBasicGamePlay = ({
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
-    useEffect(() => {
+    useFocusEffect(
+      React.useCallback(() => {
       if ( gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
         if (
             currentTime <= 0 || // Out of time!
@@ -106,7 +108,8 @@ const PhaseTwoBasicGamePlay = ({
             clearInterval(countdown.current)
         }
       }
-    }, [currentTime])
+     },[currentTime])
+    )
 
 
     const timerHeading =

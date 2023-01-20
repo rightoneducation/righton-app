@@ -68,7 +68,6 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
                                         style={styles.input}
                                         textAlign={"center"}
                                         value={firstName}
-                                        autoFocus={true}
                                     />
                                     <TextInput
                                         multiline={false}
