@@ -39,8 +39,6 @@ const PhaseTwoBasicGamePlay = ({
     teamAvatar,
     selectedAnswerIndex,
     setSelectedAnswerIndex,
-    currentTime,
-    progress,
     submitted,
     setSubmitted,
     handleAddTeamAnswer
@@ -50,6 +48,12 @@ const PhaseTwoBasicGamePlay = ({
 
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
+
+    let countdown = useRef()
+    let phaseTime = gameSession?.phaseOneTime ?? 300
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    //const [submitted, setSubmitted] = useState(false)
 
     const question = gameSession.questions[
         isNullOrUndefined(gameSession.currentQuestionIndex)
@@ -82,6 +86,28 @@ const PhaseTwoBasicGamePlay = ({
     )?.text
     const availableHints = question.instructions
     const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
+
+    useEffect(() => {
+      if ( gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
+        if (
+            currentTime <= 0 || // Out of time!
+            // Game has moved on, so disable answering
+            gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        ) {
+            setSubmitted(true)
+        }
+        countdown.current = setInterval(() => {
+            if (currentTime > 0) {
+                setCurrentTime(currentTime - 1)
+            }
+            setProgress((currentTime - 1) / phaseTime)
+        }, 1000)
+        return () => {
+            clearInterval(countdown.current)
+        }
+      }
+    }, [currentTime])
+
 
     const timerHeading =
         <>

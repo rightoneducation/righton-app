@@ -8,8 +8,7 @@ import sharedStyles from "../../Student/screens/Game/Components/sharedStyles"
 import { fonts } from '../../utils/theme'
 
 export default function JoinGame({
-    navigation,
-    clearStorage
+    navigation
 }) {
 
     const handleJoinGame = () => {
@@ -18,6 +17,7 @@ export default function JoinGame({
    
     return (
         <View style={styles.container}>
+            {console.log("JoinGame")}
             <PurpleBackground>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">

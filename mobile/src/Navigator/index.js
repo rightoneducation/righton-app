@@ -46,17 +46,7 @@ const AppContainer = () => {
                           gestureEnabled: false
                       }}
                   >
-                      <Stack.Screen name="JoinGame">
-                          {(props) => (
-                              <JoinGame
-                                  {...props}
-                                  gameSession={gameSession}
-                                  team={team}
-                                  teamMember={teamMember}
-                                  clearStorage={clearStorage}
-                              />
-                          )}
-                      </Stack.Screen>
+                      <Stack.Screen name="JoinGame" component={JoinGame} />
                       <Stack.Screen name="EnterGameCode">
                           {(props) => (
                               <EnterGameCode
@@ -113,11 +103,7 @@ const AppContainer = () => {
                                   teamMember={teamMember}
                                   team={team}
                                   teamAvatar={teamAvatar}
-                                  //selectedAnswerIndex={selectedAnswerIndex}
-                                  //setSelectedAnswerIndex={setSelectedAnswerIndex}
-                                  //currentTime={currentTime}
-                                  // progress={progress}
-                                  // submitted={submitted}
+                                  submitted={submitted}
                                   setSubmitted={setSubmitted}
                                   handleAddTeamAnswer={handleAddTeamAnswer}
                               />

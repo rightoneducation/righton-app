@@ -85,11 +85,11 @@ const PhaseOneBasicGamePlay = ({
 
 
     useEffect(() => {
-      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
+      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
         if (
             currentTime <= 0 || // Out of time!
             // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER || gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
         ) {
             setSubmitted(true)
         }
