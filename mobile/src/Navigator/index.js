@@ -43,16 +43,16 @@ const AppContainer = () => {
                         }}
                     >
                         <Stack.Screen name="JoinGame">
-                              {(props) => (
-                                  <JoinGame
-                                      {...props}
-                                      gameSession={gameSession}
-                                      team={team}
-                                      teamMember={teamMember}
-                                      clearStorage={clearStorage}
-                                  />
-                              )}
-                          </Stack.Screen>
+                            {(props) => (
+                                <JoinGame
+                                    {...props}
+                                    gameSession={gameSession}
+                                    team={team}
+                                    teamMember={teamMember}
+                                    clearStorage={clearStorage}
+                                />
+                            )}
+                        </Stack.Screen>
                         <Stack.Screen name="EnterGameCode">
                             {(props) => (
                                 <EnterGameCode
@@ -171,7 +171,7 @@ const AppContainer = () => {
                             )}
                         </Stack.Screen>
                     </Stack.Navigator>
-                    </NavigationContainer>
+              </NavigationContainer>
             )}
         </GameSessionContainer>
 
