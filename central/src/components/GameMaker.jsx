@@ -86,12 +86,10 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
-    setDisabled(false || handleDisable());
     setPhaseOne(event.target.value);
     setGameDetails({ ...gameDetails, phaseOneTime: event.target.value });
   };
   const handlePhaseTwo = (event) => {
-    setDisabled(false || handleDisable());
     setPhaseTwo(event.target.value);
     setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
   };
@@ -103,7 +101,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
   const handleDelete = (index) => {
-    setDisabled(false || handleDisable());
     const newQuestions = [...questions];
     newQuestions.splice(index, 1);
     setQuestions(newQuestions);
@@ -111,7 +108,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Handles any new questions added to the game, either through Add Question or Create Question
   const handleGameQuestion = (newQuestion) => {
-    setDisabled(false || handleDisable());
+    setDisabled(isButtonDisabled());
     for (let i = 0; i < questions.length; i++) {
       if (newQuestion.id === questions[i].id) {
         questions[i] = newQuestion
@@ -122,8 +119,8 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
   };
 
   // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
-  const handleDisable = () => {
-    if (gameDetails.title && questions.length >= 1) {
+  const isButtonDisabled = () => {
+    if (gameDetails.title.length > 0 && gameDetails.description.length > 0 && gameDetails.imageUrl.length > 0) {
       return false;
     }
     else {
@@ -131,7 +128,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
   }
 
-  console.log(disabled);
 
   // Save New or Exisiting Game (preliminary submit)
   const handleSubmit = (event) => {
@@ -141,15 +137,21 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
       editSave(gameDetails, questionIDs);
     }
     else {
-      let questionIDs = questions.map(question => question.id)
-      delete gameDetails.questions
-      delete gameDetails.id
+      // let questionIDs = questions.map(question => question.id)
+      // delete gameDetails.questions
+      // delete gameDetails.id
       newSave(gameDetails, questionIDs);
     }
     event.preventDefault();
-    history.push('/');
+    //history.push('/');
   };
 
+  const handleStringInput = (value)=>{
+    console.log(value);
+    let newString = value.replace(/\'/g, '\u2019');
+    console.log(newString);
+    return newString; //value.replace(/\'/g, \u006F);
+  }
 
   let content = (
     <div>
@@ -178,7 +180,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: currentTarget.value }); setDisabled(false || handleDisable()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled())}}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -190,7 +192,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: currentTarget.value }); setDisabled(false || handleDisable()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled()) }}
                       fullWidth
                       multiline
                       rows={3}
