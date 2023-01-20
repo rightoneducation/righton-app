@@ -58,30 +58,6 @@ const PhaseOneBasicGamePlay = ({
         ]
     const availableHints = question.instructions
 
-    const handleSubmitAnswer = () => {
-        const answer = answerChoices[selectedAnswerIndex]
-        // if isCorrectAnswer is true, add 10 points to the team's score
-        // this does not update team score in the database yet
-        if (answer.isCorrectAnswer && team) {
-            team.score += 10
-        }
-        handleAddTeamAnswer(question, answer)
-        setSubmitted(true)
-    }
-    const answersParsed = question.choices
-    const answerChoices = answersParsed.map((choice) => {
-        return {
-            id: uuid.v4(),
-            text: choice.text,
-            isCorrectAnswer: choice.isAnswer,
-        }
-    })
-    const correctAnswerText = answerChoices.find(
-        (answer) => answer.isCorrectAnswer
-    )?.text
-    const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
-
-
     useFocusEffect(
       React.useCallback(() => {
       if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
@@ -105,8 +81,28 @@ const PhaseOneBasicGamePlay = ({
       },[currentTime])
     )
 
-
-
+    const handleSubmitAnswer = () => {
+        const answer = answerChoices[selectedAnswerIndex]
+        // if isCorrectAnswer is true, add 10 points to the team's score
+        // this does not update team score in the database yet
+        if (answer.isCorrectAnswer && team) {
+            team.score += 10
+        }
+        handleAddTeamAnswer(question, answer)
+        setSubmitted(true)
+    }
+    const answersParsed = question.choices
+    const answerChoices = answersParsed.map((choice) => {
+        return {
+            id: uuid.v4(),
+            text: choice.text,
+            isCorrectAnswer: choice.isAnswer,
+        }
+    })
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
+    const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`      
     let cards = [
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
@@ -116,7 +112,7 @@ const PhaseOneBasicGamePlay = ({
         </>,
         <View key={"answers"}>
             <Text style={styles.cardHeadingText}>Answers</Text>
-            <Card headerTitle="Answers" key={"answerscard"}>
+            <Card headerTitle="Answers">
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
                     Choose the <Text style={styles.correctAnswerText}>correct answer</Text>
                 </Text>

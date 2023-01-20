@@ -101,16 +101,13 @@ const GameSessionContainer = ({ children }) => {
         resetState()
         return
       }
- 
-      storeDataToLocalStorage(localStorageKeys.gameCode, `${gameSession.gameCode}`)
       
       let subscription =
-      global.apiClient.subscribeUpdateGameSession(
-          gameSession.id,
-          (gameSessionResponse) => {
-              setGameSession(gameSessionResponse)
-          }
-      )
+        global.apiClient.subscribeUpdateGameSession(
+            gameSession.id,
+            (gameSessionResponse) => {
+                setGameSession(gameSessionResponse)
+            })
     }
 
     const handleAddTeam = async (teamName) => 

@@ -97,7 +97,7 @@ export default LoadingIndicator = (
                 return
             }
             setRemainingSecondsInMilliSeconds(remainingSecondsInMilliSeconds - timeInterval)
-            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))     
+            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))  
         }, timeInterval)
         return () => {
             clearInterval(refreshIntervalId)
@@ -107,11 +107,6 @@ export default LoadingIndicator = (
 
     return (
         <View style={styles.container}>
-        {console.count('counter')}
-        {console.log(remainingSecondsInMilliSeconds)}
-        {console.log(remainingTimeInSecond)}
-        {console.log(colors)}
-        {console.log(timerFinished)}
             <Svg
                 width={radius * 2}
                 height={radius * 2}

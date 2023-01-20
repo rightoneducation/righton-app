@@ -171,7 +171,7 @@ const AppContainer = () => {
                             )}
                         </Stack.Screen>
                     </Stack.Navigator>
-              </NavigationContainer>
+                </NavigationContainer>
             )}
         </GameSessionContainer>
 
