@@ -1,12 +1,24 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
-import { fontFamilies, fonts, colors } from '../../../../utils/theme'
+import { scale, verticalScale } from "react-native-size-matters"
+import { fontFamilies, fonts, colors, fontWeights } from '../../../../utils/theme'
 const win = Dimensions.get('window');
 
-const IntroInfo = ({ image, text }) => {
+const IntroInfo = ({ monsterStyles, monsters, phone, sticker, text, showSticker }) => {
+    if (monsterStyles.length != 2 || monsters.length != 2) {
+        console.error("'monsterStyles' must be an array of 2 entries")
+        return (
+            <View></View>
+        )
+    }
     return (
         <View style={styles.container}>
-            <Image source={image} style={styles.image} />
+            <Image source={monsters[0]} style={monsterStyles[0]} />
+            <View style={styles.imgContainer}>
+                {showSticker && <Image source={sticker} style={styles.phaseSticker} />}
+                <Image source={phone} style={styles.phone} />
+            </View>
+            <Image source={monsters[1]} style={monsterStyles[1]} />
             <Text style={styles.text}>{text}</Text>
         </View>
     )
@@ -24,16 +36,25 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         backgroundColor: 'rgba(0,0,0,0)',
     },
-    image: {
-        // width: win.width,
-        // height: win.width,
-        resizeMode: 'cover',
+    phone: {
+        resizeMode: 'cover'
+    },
+    phaseSticker: {
+        marginRight: scale(-55),
+        marginTop: verticalScale(80),
+        zIndex: 1
+    },
+    imgContainer: {
+        flexDirection: 'row'
     },
     text: {
         textAlign: 'center',
         textAlignVertical: 'bottom',
         fontFamily: fontFamilies.montserratBold,
-        fontSize: fonts.xxMedium,
+        fontSize: fonts.medium,
+        lineHeight: 23,
+        fontWeight: fontWeights.extraBold,
         color: colors.white,
+        marginTop: verticalScale(20)
     }
 })
