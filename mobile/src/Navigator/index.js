@@ -17,165 +17,165 @@ import StudentName from "../Student/screens/StudentName"
 const Stack = createStackNavigator()
 
 const AppContainer = () => {
-  return (
-      <GameSessionContainer>
-          {({
-              gameSession,
-              fetchGameSessionByCode,
-              team,
-              teamMember,
-              setTeamInfo,
-              teamAvatar,
-              saveTeamAvatar,
-              selectedAnswerIndex,
-              setSelectedAnswerIndex,
-              clearStorage,
-              handleSubscribeToGame,
-              handleAddTeam,
-              handleAddTeamAnswer
-          }) => (
-               <NavigationContainer >
-                  <Stack.Navigator
-                      initialRouteName="JoinGame"
-                      screenOptions={{
-                          headerShown: false,
-                          gestureEnabled: false
-                      }}
-                  >
-                      <Stack.Screen name="JoinGame">
+    return (
+        <GameSessionContainer>
+            {({
+                gameSession,
+                fetchGameSessionByCode,
+                team,
+                teamMember,
+                setTeamInfo,
+                teamAvatar,
+                saveTeamAvatar,
+                selectedAnswerIndex,
+                setSelectedAnswerIndex,
+                clearStorage,
+                handleSubscribeToGame,
+                handleAddTeam,
+                handleAddTeamAnswer
+            }) => (
+                <NavigationContainer >
+                    <Stack.Navigator
+                        initialRouteName="JoinGame"
+                        screenOptions={{
+                            headerShown: false,
+                            gestureEnabled: false
+                        }}
+                    >
+                        <Stack.Screen name="JoinGame">
+                              {(props) => (
+                                  <JoinGame
+                                      {...props}
+                                      gameSession={gameSession}
+                                      team={team}
+                                      teamMember={teamMember}
+                                      clearStorage={clearStorage}
+                                  />
+                              )}
+                          </Stack.Screen>
+                        <Stack.Screen name="EnterGameCode">
                             {(props) => (
-                                <JoinGame
+                                <EnterGameCode
+                                    {...props}
+                                    fetchGameSessionByCode={fetchGameSessionByCode}
+                                    handleSubscribeToGame={handleSubscribeToGame}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="StudentName">
+                            {(props) => (
+                                <StudentName
+                                    {...props}
+                                    gameSession={gameSession}
+                                    setTeamInfo={setTeamInfo}
+                                    handleAddTeam={handleAddTeam}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="SelectTeam">
+                            {(props) => (
+                                <SelectTeam
                                     {...props}
                                     gameSession={gameSession}
                                     team={team}
                                     teamMember={teamMember}
-                                    clearStorage={clearStorage}
+                                    saveTeamAvatar={saveTeamAvatar}
                                 />
                             )}
                         </Stack.Screen>
-                      <Stack.Screen name="EnterGameCode">
-                          {(props) => (
-                              <EnterGameCode
-                                  {...props}
-                                  fetchGameSessionByCode={fetchGameSessionByCode}
-                                  handleSubscribeToGame={handleSubscribeToGame}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="StudentName">
-                          {(props) => (
-                              <StudentName
-                                  {...props}
-                                  gameSession={gameSession}
-                                  setTeamInfo={setTeamInfo}
-                                  handleAddTeam={handleAddTeam}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="SelectTeam">
-                          {(props) => (
-                              <SelectTeam
-                                  {...props}
-                                  gameSession={gameSession}
-                                  team={team}
-                                  teamMember={teamMember}
-                                  saveTeamAvatar={saveTeamAvatar}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="StudentGameIntro">
-                          {(props) => (
-                              <StudentGameIntro
-                                  {...props}
-                                  gameSession={gameSession}
-                                  teamMember={teamMember}
-                                  team={team}
-                                  teamAvatar={teamAvatar}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="PregameCountDown">
-                          {(props) => (
-                              <PregameCountDown
-                                  {...props}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="PhaseOneBasicGamePlay">
-                          {(props) => (
-                              <PhaseOneBasicGamePlay
-                                  {...props}
-                                  gameSession={gameSession}
-                                  teamMember={teamMember}
-                                  team={team}
-                                  teamAvatar={teamAvatar}
-                                  handleAddTeamAnswer={handleAddTeamAnswer}
-                                  selectedAnswerIndex={selectedAnswerIndex}
-                                  setSelectedAnswerIndex={setSelectedAnswerIndex}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="StartPhase">
-                          {(props) => (
-                              <StartPhase
-                                  {...props}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="PhaseTwoBasicGamePlay">
-                          {(props) => (
-                              <PhaseTwoBasicGamePlay
-                                  {...props}
-                                  gameSession={gameSession}
-                                  teamMember={teamMember}
-                                  team={team}
-                                  teamAvatar={teamAvatar}
-                                  selectedAnswerIndex={selectedAnswerIndex}
-                                  setSelectedAnswerIndex={setSelectedAnswerIndex}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="PhaseResult">
-                          {(props) => (
-                              <PhaseResult
-                                  {...props}
-                                  gameSession={gameSession}
-                                  teamMember={teamMember}
-                                  team={team}
-                                  teamAvatar={teamAvatar}
-                                  fetchGameSessionByCode={fetchGameSessionByCode}
-                                  setTeamInfo={setTeamInfo}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="ScorePage">
-                          {(props) => (
-                              <ScorePage
-                                  {...props}
-                                  gameSession={gameSession}
-                                  teamMember={teamMember}
-                                  team={team}
-                                  teamAvatar={teamAvatar}
-                              />
-                          )}
-                      </Stack.Screen>
-                      <Stack.Screen name="Leaderboard">
-                          {(props) => (
-                              <Leaderboard
-                                  {...props}
-                                  gameSession={gameSession}
-                                  teamMember={teamMember}
-                                  team={team}
-                                  teamAvatar={teamAvatar}
-                              />
-                          )}
-                      </Stack.Screen>
-                  </Stack.Navigator>
-                  </NavigationContainer>
-          )}
-      </GameSessionContainer>
+                        <Stack.Screen name="StudentGameIntro">
+                            {(props) => (
+                                <StudentGameIntro
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PregameCountDown">
+                            {(props) => (
+                                <PregameCountDown
+                                    {...props}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PhaseOneBasicGamePlay">
+                            {(props) => (
+                                <PhaseOneBasicGamePlay
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                    handleAddTeamAnswer={handleAddTeamAnswer}
+                                    selectedAnswerIndex={selectedAnswerIndex}
+                                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="StartPhase">
+                            {(props) => (
+                                <StartPhase
+                                    {...props}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PhaseTwoBasicGamePlay">
+                            {(props) => (
+                                <PhaseTwoBasicGamePlay
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                    selectedAnswerIndex={selectedAnswerIndex}
+                                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="PhaseResult">
+                            {(props) => (
+                                <PhaseResult
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                    fetchGameSessionByCode={fetchGameSessionByCode}
+                                    setTeamInfo={setTeamInfo}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="ScorePage">
+                            {(props) => (
+                                <ScorePage
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen name="Leaderboard">
+                            {(props) => (
+                                <Leaderboard
+                                    {...props}
+                                    gameSession={gameSession}
+                                    teamMember={teamMember}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                />
+                            )}
+                        </Stack.Screen>
+                    </Stack.Navigator>
+                    </NavigationContainer>
+            )}
+        </GameSessionContainer>
 
-  )
+    )
 }
 
 export default AppContainer
