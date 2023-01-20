@@ -21,10 +21,20 @@ const Leaderboard = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
+
+    const separatedName = teamName.split(" ")
+
+    const firstName = separatedName[0]
+
+    const lastName = separatedName[1]
+
+
     const totalScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(
         gameSession,
         gameSession.questions[gameSession.currentQuestionIndex],
-        team
+        team,
+        console.log(firstName),
+        console.log(lastName)
     )
 
     return (
@@ -44,6 +54,7 @@ const Leaderboard = ({
                 </LinearGradient>
             </ScrollView>
             <>
+            
                 <FlatList
                     data={sortedTeamsByScore}
                     keyExtractor={(item) => `${item.id}`}
