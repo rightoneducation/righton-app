@@ -65,12 +65,12 @@ export default function JoinGame({
     }, [gameSession?.currentState])
 
     const handleJoinGame = () => {
-      navigation.navigate("EnterGameCode")
+        navigation.navigate("EnterGameCode")
     }
-  
+
     const resetState = () => {
-      clearStorage()
-      navigation.navigate("JoinGame")
+        clearStorage()
+        navigation.navigate("JoinGame")
     }
 
     return (
