@@ -10,74 +10,71 @@ import { fonts } from '../../utils/theme'
 export default function JoinGame({
     navigation,
     gameSession,
-    clearStorage,
+    clearStorage
 }) {
-
     useEffect(() => {
-      if (isNullOrUndefined(gameSession)) {
-          resetState()
-          return
-      }
-      switch (gameSession.currentState) {
-          case GameSessionState.NOT_STARTED:
-              resetState()
-              break
+        if (isNullOrUndefined(gameSession)) {
+            resetState()
+            return
+        }
+        switch (gameSession.currentState) {
+            case GameSessionState.NOT_STARTED:
+                resetState()
+                break
 
-          case GameSessionState.TEAMS_JOINING:
-              // Game hasn't started yet, just let the kids join
-              navigation.navigate("StudentName")
-              break
+            case GameSessionState.TEAMS_JOINING:
+                // Game hasn't started yet, just let the kids join
+                navigation.navigate("StudentName")
+                break
 
-          case GameSessionState.CHOOSE_CORRECT_ANSWER:
-              navigation.navigate("PregameCountDown")
-              break
+            case GameSessionState.CHOOSE_CORRECT_ANSWER:
+                navigation.navigate("PregameCountDown")
+                break
 
-          case GameSessionState.PHASE_1_DISCUSS:
-              navigation.navigate("PhaseOneBasicGamePlay")
-              break
+            case GameSessionState.PHASE_1_DISCUSS:
+                navigation.navigate("PhaseOneBasicGamePlay")
+                break
 
-          case GameSessionState.PHASE_2_START:
-              navigation.navigate("StartPhase")
-              break
+            case GameSessionState.PHASE_2_START:
+                navigation.navigate("StartPhase")
+                break
 
-          case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-          case GameSessionState.PHASE_2_DISCUSS:
-              navigation.push("PhaseTwoBasicGamePlay")
-              break
+            case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+            case GameSessionState.PHASE_2_DISCUSS:
+                navigation.push("PhaseTwoBasicGamePlay")
+                break
 
-          case GameSessionState.PHASE_1_RESULTS:
-          case GameSessionState.PHASE_2_RESULTS:
-              navigation.push("PhaseResult")
-              break
+            case GameSessionState.PHASE_1_RESULTS:
+            case GameSessionState.PHASE_2_RESULTS:
+                navigation.push("PhaseResult")
+                break
 
-          case GameSessionState.FINAL_RESULTS:
-              navigation.navigate("ScorePage")
-              break
+            case GameSessionState.FINAL_RESULTS:
+                navigation.navigate("ScorePage")
+                break
 
-          case GameSessionState.FINISHED:
-              resetState()
-              break
+            case GameSessionState.FINISHED:
+                resetState()
+                break
 
-          default:
-              resetState()
-              console.error(`Unhandled state: ${gameSession.currentState}`)
-              break
+            default:
+                resetState()
+                console.error(`Unhandled state: ${gameSession.currentState}`)
+                break
         }
     }, [gameSession?.currentState])
 
+    const handleJoinGame = () => {
+      navigation.navigate("EnterGameCode")
+    }
   
     const resetState = () => {
-     clearStorage()
-     navigation.navigate("JoinGame")
+      clearStorage()
+      navigation.navigate("JoinGame")
     }
 
-    const handleJoinGame = () => {
-        navigation.navigate("EnterGameCode")
-    }
-   
     return (
         <View style={styles.container}>
-            {console.log("JoinGame")}
             <PurpleBackground>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
