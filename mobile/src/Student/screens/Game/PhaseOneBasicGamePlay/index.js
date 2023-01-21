@@ -60,24 +60,24 @@ const PhaseOneBasicGamePlay = ({
 
     useFocusEffect(
       React.useCallback(() => {
-      if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
-        if (
-            currentTime <= 0 || // Out of time!
-            // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
-        ) {
-            setSubmitted(true)
+        if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
+          if (
+              currentTime <= 0 || // Out of time!
+              // Game has moved on, so disable answering
+              gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
+          ) {
+              setSubmitted(true)
+          }
+          countdown.current = setInterval(() => {
+              if (currentTime > 0) {
+                  setCurrentTime(currentTime - 1)
+              }
+              setProgress((currentTime - 1) / phaseTime)
+          }, 1000)
+          return () => {
+              clearInterval(countdown.current)
+          }
         }
-        countdown.current = setInterval(() => {
-            if (currentTime > 0) {
-                setCurrentTime(currentTime - 1)
-            }
-            setProgress((currentTime - 1) / phaseTime)
-        }, 1000)
-        return () => {
-            clearInterval(countdown.current)
-        }
-      }
       },[currentTime])
     )
 

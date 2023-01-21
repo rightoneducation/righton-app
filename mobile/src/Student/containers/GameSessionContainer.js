@@ -97,17 +97,17 @@ const GameSessionContainer = ({ children }) => {
     }
 
     const handleSubscribeToGame = (gameSession) => {
-      if (isNullOrUndefined(gameSession)) {
-        resetState()
-        return
-      }
-      
-      let subscription =
-        global.apiClient.subscribeUpdateGameSession(
-            gameSession.id,
-            (gameSessionResponse) => {
-                setGameSession(gameSessionResponse)
-            })
+          if (isNullOrUndefined(gameSession)) {
+            resetState()
+            return
+          }
+          
+          let subscription =
+            global.apiClient.subscribeUpdateGameSession(
+                gameSession.id,
+                (gameSessionResponse) => {
+                    setGameSession(gameSessionResponse)
+                })
     }
 
     const handleAddTeam = async (teamName) => 

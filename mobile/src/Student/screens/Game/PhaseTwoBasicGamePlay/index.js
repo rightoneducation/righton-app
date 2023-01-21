@@ -42,17 +42,17 @@ const PhaseTwoBasicGamePlay = ({
     setSelectedAnswerIndex,
     handleAddTeamAnswer
 }) => {
+  
+    let phaseTime = gameSession?.phaseOneTime ?? 300
+    const [currentTime, setCurrentTime] = useState(phaseTime)
+    const [progress, setProgress] = useState(1)
+    const [submitted, setSubmitted] = useState(false)
 
     const teamName = team?.name ? team?.name : "Team Name"
 
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
 
-    let countdown = useRef()
-    let phaseTime = gameSession?.phaseOneTime ?? 300
-    const [currentTime, setCurrentTime] = useState(phaseTime)
-    const [progress, setProgress] = useState(1)
-    const [submitted, setSubmitted] = useState(false)
 
     const question = gameSession.questions[
         isNullOrUndefined(gameSession.currentQuestionIndex)
@@ -73,19 +73,7 @@ const PhaseTwoBasicGamePlay = ({
         (answer) => !answer.isCorrectAnswer
     )
 
-    const handleSubmitAnswer = () => {
-        const answer = answerChoices[selectedAnswerIndex]
-        handleAddTeamAnswer(question, answer)
-        setSubmitted(true)
-    }
-
-    const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
-    const correctAnswerText = answerChoices.find(
-        (answer) => answer.isCorrectAnswer
-    )?.text
-    const availableHints = question.instructions
-    const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
-
+    let countdown = useRef()
     useFocusEffect(
       React.useCallback(() => {
       if ( gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
@@ -109,6 +97,18 @@ const PhaseTwoBasicGamePlay = ({
      },[currentTime])
     )
 
+    const handleSubmitAnswer = () => {
+        const answer = answerChoices[selectedAnswerIndex]
+        handleAddTeamAnswer(question, answer)
+        setSubmitted(true)
+    }
+
+    const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
+    const correctAnswerText = answerChoices.find(
+        (answer) => answer.isCorrectAnswer
+    )?.text
+    const availableHints = question.instructions
+    const submittedAnswerText = `Thank you for submitting!\n\nWaiting for your teacher to advance to the next section`
 
     const timerHeading =
         <>
