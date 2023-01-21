@@ -35,10 +35,6 @@ const PhaseOneBasicGamePlay = ({
     teamMember,
     teamAvatar,
     navigation,
-    selectedAnswerIndex,
-    setSelectedAnswerIndex,
-    submitted,
-    setSubmitted,
     handleAddTeamAnswer
 }) => {
     let countdown = useRef()
@@ -46,6 +42,7 @@ const PhaseOneBasicGamePlay = ({
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
 
     const teamName = team?.name ? team?.name : "Team Name"
     const totalScore = team?.score ? team?.score : 0
@@ -60,7 +57,6 @@ const PhaseOneBasicGamePlay = ({
 
     useFocusEffect(
       React.useCallback(() => {
-        if (gameSession?.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER){
           if (
               currentTime <= 0 || // Out of time!
               // Game has moved on, so disable answering
@@ -77,7 +73,6 @@ const PhaseOneBasicGamePlay = ({
           return () => {
               clearInterval(countdown.current)
           }
-        }
       },[currentTime])
     )
 

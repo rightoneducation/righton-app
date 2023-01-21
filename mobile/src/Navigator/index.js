@@ -27,8 +27,6 @@ const AppContainer = () => {
                 setTeamInfo,
                 teamAvatar,
                 saveTeamAvatar,
-                selectedAnswerIndex,
-                setSelectedAnswerIndex,
                 clearStorage,
                 handleSubscribeToGame,
                 handleAddTeam,
@@ -110,8 +108,6 @@ const AppContainer = () => {
                                     team={team}
                                     teamAvatar={teamAvatar}
                                     handleAddTeamAnswer={handleAddTeamAnswer}
-                                    selectedAnswerIndex={selectedAnswerIndex}
-                                    setSelectedAnswerIndex={setSelectedAnswerIndex}
                                 />
                             )}
                         </Stack.Screen>
@@ -130,8 +126,7 @@ const AppContainer = () => {
                                     teamMember={teamMember}
                                     team={team}
                                     teamAvatar={teamAvatar}
-                                    selectedAnswerIndex={selectedAnswerIndex}
-                                    setSelectedAnswerIndex={setSelectedAnswerIndex}
+                                    handleAddTeamAnswer={handleAddTeamAnswer}
                                 />
                             )}
                         </Stack.Screen>

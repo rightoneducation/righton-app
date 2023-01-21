@@ -145,13 +145,14 @@ const GameSessionContainer = ({ children }) => {
     }
     const handleAddTeamAnswer = async (question, answer) =>
     {
+      console.log("hi")
       return  global.apiClient
                   .addTeamAnswer(
                       teamMember.id,
                       question.id,
                       answer.text,
                       answer.isChosen ? null : true,
-                      false
+                      false,
                   )
                   .then((teamAnswer) => {
                       if (teamAnswer == null) {
@@ -191,8 +192,6 @@ const GameSessionContainer = ({ children }) => {
         teamMember,
         teamAvatar,
         saveTeamAvatar,
-        selectedAnswerIndex,
-        setSelectedAnswerIndex,
         clearStorage,
         handleSubscribeToGame,
         handleAddTeam,

@@ -10,6 +10,7 @@ import {
     ScrollView,
     Image
 } from "react-native"
+import { ModelHelper } from '@righton/networking'
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { color } from "react-native-reanimated"
@@ -38,8 +39,6 @@ const PhaseTwoBasicGamePlay = ({
     score,
     totalScore,
     teamAvatar,
-    selectedAnswerIndex,
-    setSelectedAnswerIndex,
     handleAddTeamAnswer
 }) => {
   
@@ -47,7 +46,7 @@ const PhaseTwoBasicGamePlay = ({
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
-
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
     const teamName = team?.name ? team?.name : "Team Name"
 
     score = score ? score : 10
@@ -76,11 +75,10 @@ const PhaseTwoBasicGamePlay = ({
     let countdown = useRef()
     useFocusEffect(
       React.useCallback(() => {
-      if ( gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER){
         if (
             currentTime <= 0 || // Out of time!
             // Game has moved on, so disable answering
-            gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+            gameSession?.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
         ) {
             setSubmitted(true)
         }
@@ -93,15 +91,23 @@ const PhaseTwoBasicGamePlay = ({
         return () => {
             clearInterval(countdown.current)
         }
-      }
      },[currentTime])
     )
 
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
+        console.log(answer)
         handleAddTeamAnswer(question, answer)
         setSubmitted(true)
     }
+
+    // const checkTrickAnswerSelection = (answer, question) =>{
+    //   console.log("checkTrick")
+    //   console.log(question)
+    //   const trickAnswer = team.teamMembers[0].answers.find((answer) => {
+    //     return answer.questionId === question.id
+    //   })
+    // }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
     const correctAnswerText = answerChoices.find(
@@ -219,8 +225,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {index === selectedAnswerIndex &&
-                            <Image source={require("../img/Picked.png")} />}
+                        {/* {checkTrickAnswerSelection(answer) &&
+                            <Image source={require("../img/Picked.png")} />} */}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
