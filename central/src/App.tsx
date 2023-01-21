@@ -166,7 +166,7 @@ function App() {
   }
 
   useEffect(() => {
-    // getWhatToDo();
+    getWhatToDo();
     getGames();
     setStartup(false);
   }, [sortType]);

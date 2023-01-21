@@ -95,7 +95,6 @@ export default function LoadingIndicator({
         <svg width={radius*2} height={radius*2} strokeWidth={7}  viewBox={'0 0 42 42'}>
          {Segments(21, 21 , 15.91549430918954, colors)}    
         </svg>
-       {/* <div className={classes.text}> {!gameCreate ? remainingTimeInSecond : null} </div> */}
       </div>
     )
 }

@@ -125,12 +125,12 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
-      <Button type="button" className={classes.back} onClick={handleBack}>
-        <ArrowBack style={{ marginRight: 8 }} />Back to Game Maker
-      </Button>
-
-      <Grid container>
-        <Grid container item xs={1} sm={2}></Grid>
+      <Grid container className={classes.root}>
+        <Grid container item xs={1} sm={2}>
+          <Button type="button" className={classes.back} onClick={handleBack}>
+            <ArrowBack style={{ marginRight: 8 }} />Back to Game Maker
+          </Button>
+        </Grid>
 
         <Grid item container xs={7} sm={8}>
           <Grid item container xs={12}>
@@ -277,6 +277,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '1%',
     paddingTop: '32px',
     paddingBottom: '10px',
+    //maxWidth: '100vw',
   },
   input: {
     margin: `${theme.spacing(2)}px 0`,
