@@ -131,26 +131,27 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Save New or Exisiting Game (preliminary submit)
   const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(gameDetails.id);
     if (gameDetails.id !== 0) {
       let questionIDs = questions.map(question => ({ id: question.id }))
       delete gameDetails.questions
       editSave(gameDetails, questionIDs);
     }
     else {
-      // let questionIDs = questions.map(question => question.id)
-      // delete gameDetails.questions
-      // delete gameDetails.id
+      let questionIDs = questions.map(question => ({ id: question.id }))
+      delete gameDetails.questions;
+      delete gameDetails.id;
       newSave(gameDetails, questionIDs);
+      
     }
     event.preventDefault();
-    //history.push('/');
+    history.push('/');
   };
 
   const handleStringInput = (value)=>{
-    console.log(value);
     let newString = value.replace(/\'/g, '\u2019');
-    console.log(newString);
-    return newString; //value.replace(/\'/g, \u006F);
+    return newString;
   }
 
   let content = (

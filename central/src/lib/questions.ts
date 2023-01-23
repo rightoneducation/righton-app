@@ -4,6 +4,7 @@ import { listQuestions, getQuestion as GQ } from '../graphql/queries';
 
 export const cloneQuestion = async (question: any) => {
   const result = await API.graphql(graphqlOperation(CQ, { question })) as { data: any };
+  console.log(result);
   return result.data.createQuestion;
 }
 
