@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <CodePush/CodePush.h>
 
 @implementation AppDelegate
 
