@@ -77,8 +77,6 @@ function App() {
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveNewGame = async (newGame: { title: string, description?: string, phaseOneTime?: string, phaseTwoTime?: string, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
     setLoading(true);
-    console.log(newGame);
-    console.log(questionIDSet);
     const game = await createGame(newGame, questionIDSet);
     if (game) {
       const games = sortGames(await fetchGames(), sortType);

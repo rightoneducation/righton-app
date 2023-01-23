@@ -15,24 +15,14 @@ export const sortGames = (games: Array<Game | null>, sortType: SORT_TYPES = SORT
 };
 
 export const createGame = async (game: any, questionIDSet: any) => {
-  try {
-    console.log(questionIDSet);
-    console.log(game);
   const newGame = await API.graphql(graphqlOperation(CG, { game })) as { data: any };
-  
-  console.log(newGame);
   const newGameId = newGame?.data?.createGame?.id;
-  console.log(newGameId);
   let result = { data: { createGameQuestion: null } };
   for (let i = 0; i < questionIDSet.length; i++) {
     result = await API.graphql(graphqlOperation(CGQ, { gameQuestion: { gameId: newGameId, questionId: questionIDSet[i] } })) as { data: any };
-    console.log(result);
   }
+
   return newGame?.data?.createGame;
-  }
-  catch (e){
-    console.log(e);
-  }
 };
 
 export const updateGame = async (game: any) => {
