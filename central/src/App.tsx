@@ -128,8 +128,7 @@ function App() {
   }
 
   const handleDeleteQuestion = async (id: number, game: Game) => {
-    let newQuestionIDs = game.questions?.filter(question => (question?.id === id)).map(question => ({id: question?.id}))
-    const result = await deleteQuestions(id, game, newQuestionIDs)
+    const result = await deleteQuestions(id)
     if (result) {
       getSortedGames()
     }
