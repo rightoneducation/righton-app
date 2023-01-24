@@ -125,14 +125,14 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
-      <Button type="button" className={classes.back} onClick={handleBack}>
-        <ArrowBack style={{ marginRight: 8 }} />Back to Game Maker
-      </Button>
+      <Grid container className={classes.root}>
+        <Grid container item xs={1} sm={2}>
+          <Button type="button" className={classes.back} onClick={handleBack}>
+            <ArrowBack style={{ marginRight: 8 }} />Back to Game Maker
+          </Button>
+        </Grid>
 
-      <Grid container>
-        <Grid container item xs={2}></Grid>
-
-        <Grid item container xs={8}>
+        <Grid item container xs={7} sm={8}>
           <Grid item container xs={12}>
             <Typography gutterBottom variant="h4" component="h1">
               {initialState ? 'Edit' : 'Create'}{' '}Question
@@ -145,13 +145,15 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
             <TextField id="image-url" onChange={onChangeMaker('imageUrl')} fullWidth value={question.imageUrl} label="URL for Photo" variant="outlined" />
           </Grid>
 
-          <Grid item container justifyContent='center' xs={4}>
+          <Grid item container justifyContent='center' xs={8} sm={4}>
             {question.imageUrl ? <img src={question.imageUrl} alt="" width={'60%'} /> : <img className={classes.image} src={Placeholder} alt="Invalid URL" />}
           </Grid>
 
-          <Divider className={classes.divider} />
+          <Grid item xs={12}>
+            <Divider className={classes.divider} />
+          </Grid>
 
-          <Grid item container xs={12}>
+          <Grid item container xs={9} sm={12}>
             {question.choices.sort((a, b) => Number(b.isAnswer) - Number(a.isAnswer)).map((choice, index) => (
               <QuestionFormAnswerDropdown
                 key={`choice${index}`}
@@ -173,7 +175,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
             <QuestionHelper />
           </Grid>
 
-          <Grid item container xs={12} justifyContent='space-between'>
+          <Grid item container xs={8} sm={12} justifyContent='space-between'>
             <div className={classes.dropdownWrapper}>
               <p>Grade Level*</p>
               <Select
@@ -258,13 +260,13 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
             </div>
           </Grid>
 
-          <Grid style={{ marginTop: 50 }} item container xs={12} justifyContent='center'>
+          <Grid style={{ marginTop: 50 }} item container xs={8} sm={12} justifyContent='center'>
             <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Game</Button>
           </Grid>
 
         </Grid>
 
-        <Grid container item xs={2}></Grid>
+        <Grid container item xs={0} sm={2}></Grid>
       </Grid>
     </form>
   );
@@ -275,6 +277,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '1%',
     paddingTop: '32px',
     paddingBottom: '10px',
+    //maxWidth: '100vw',
   },
   input: {
     margin: `${theme.spacing(2)}px 0`,
