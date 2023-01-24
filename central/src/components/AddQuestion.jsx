@@ -12,14 +12,10 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
   const match = useRouteMatch('/gamemaker/:gameId/addquestion/gameSelected/:selectedIndex/questionSelected/:questionSelectedIndex');
 
   const handleAddQuestion = async (question) => {
-    console.log(question);
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
-    //question.choices = JSON.parse(question.choices);
-    console.log(question.choices);
     const newQuestion = await cloneQuestion(question);
-    console.log(newQuestion);
     submit(newQuestion);
     history.push(`/gamemaker/${gameId}`);
   }
