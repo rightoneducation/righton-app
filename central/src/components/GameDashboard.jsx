@@ -13,6 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 import { Hidden } from '@material-ui/core';
+import LoadingIndicator from './LoadingIndicator';
 
 export default function GameDashboard({ loading, games, deleteGame, cloneGame, gameId, onClickGame, isUserAuth }) {
   const classes = useStyles();
@@ -54,7 +55,34 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
   };
 
   const renderGames = (loading) => {
-    if (loading) return <Typography gutterBottom>Loading...</Typography>;
+    if (loading) return (
+        <div className={classes.loadingContainer}>
+          <div>
+            <LoadingIndicator
+              theme={[
+                'rgb(126, 90, 175)',
+                'rgb(148, 98, 179)',
+                'rgb(169, 104, 180)',
+                'rgb(186, 107, 177)',
+                'rgb(202, 109, 172)',
+                'rgb(218, 112, 168)',
+                'rgb(237, 115, 166)',
+                'rgb(255, 120, 165)',
+              ]}
+              radius={110}
+              timerStartInSecond={1000}
+              gameCreate={false}
+            />
+            <Typography className={classes.loadingTitle}>
+              Loading Game List...
+            </Typography>
+            <Typography className={classes.loadingText}>
+              If there are issues with loading, try reloading this page.
+            </Typography>
+          </div>
+        </div>
+    );
+
     if (games.length >= 1) {
       return games
         .map((game, index) => {
@@ -227,4 +255,23 @@ const useStyles = makeStyles(theme => ({
     minWidth: '28px',
     margin: '0',
   },
+
+  loadingContainer: {
+    margin: 'auto',
+    width: '60%',
+  },
+  loadingTitle: {
+    fontSize: '24px',
+    fontWeight: '700',
+    lineHeight: '36px',
+    letterSpacing: '0em',
+    textAlign: 'center',
+  },
+  loadingText: {
+    fontSize: '16px',
+    fontWeight: '500',
+    lineHeight: '24px',
+    letterSpacing: '0em',
+    textAlign: 'center',
+  }
 }));

@@ -156,9 +156,9 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     <div>
       <form onSubmit={handleSubmit}>
         <Grid container>
-          <Grid container item xs={2}></Grid>
+          <Grid container item xs={1} sm={2}></Grid>
 
-          <Grid item container xs={8} className={classes.page}>
+          <Grid item container xs={10} sm={8} className={classes.page}>
             <Grid container item xs={12} className={classes.game}>
               <Grid container item xs={12}>
                 <Typography style={{ fontWeight: 500, fontSize: '20px' }}>
@@ -173,7 +173,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
               </Grid>
 
               <Grid container item xs={12}>
-                <Grid container item xs={8}>
+                <Grid container item xs={12} sm={8}>
                   <Grid container item xs={12}>
                     <TextField
                       variant='outlined'
@@ -200,7 +200,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                   </Grid>
 
                   <Grid container item xs={12} className={classes.thirdRow}>
-                    <Grid container item xs={2}>
+                    <Grid container item xs={3} sm={2}>
                       <TextField
                         variant='outlined'
                         select
@@ -216,7 +216,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       </TextField>
                     </Grid>
 
-                    <Grid container item xs={2}>
+                    <Grid container item xs={3} sm={2}>
                       <TextField
                         variant='outlined'
                         select
@@ -232,7 +232,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       </TextField>
                     </Grid>
 
-                    <Grid container item xs={8}>
+                    <Grid container item xs={6} sm={8}>
                       <TextField
                         variant='outlined'
                         label='Image URL'
@@ -244,7 +244,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                   </Grid>
                 </Grid>
 
-                <Grid container item xs={4} justifyContent='center'>
+                <Grid container item xs={12} sm={4} justifyContent='center'>
                   {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'} />}
                 </Grid>
               </Grid>
@@ -313,13 +313,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                 })}
 
                 <Grid container item xs={12} className={classes.questionAddition}>
-                  <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
+                  <Grid container item xs={6} justifyContent='center'>
                     <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/addquestion`)}>
                       Add Question
                     </Button>
                   </Grid>
 
-                  <Grid container item xs={6} justifyContent='center' className={classes.createQuestion}>
+                  <Grid container item xs={6} justifyContent='center'>
                     <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/createquestion/0`)}>
                       Create Question
                     </Button>
@@ -337,7 +337,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
             </Grid>
           </Grid>
 
-          <Grid container item xs={2}></Grid>
+          <Grid container item xs={1} sm={2}></Grid>
         </Grid>
       </form>
     </div>
