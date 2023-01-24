@@ -113,15 +113,17 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
 
     const questionToSend = { ...question }
-
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions);
+
 
     let newQuestion;
     if (questionToSend.id) {
       newQuestion = await updateQuestion(questionToSend);
     } else {
       newQuestion = await cloneQuestion(questionToSend);
+      delete newQuestion.updatedAt;
+      delete newQuestion.createdAt;
       gameQuestion(newQuestion);
     }
     history.push(`/gamemaker/${gameId}`);

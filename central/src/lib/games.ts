@@ -47,8 +47,13 @@ export const deleteGames = async (id: number) => {
   return result?.data?.deleteGame || [];
 };
 
-export const deleteQuestions = async (id: number) => {
+export const deleteQuestions = async (id: number, game: any, questionIDSet: any) => {
+  
+  for (let i = 0; i < questionIDSet.count; i++) {
+    await API.graphql(graphqlOperation(CGQ, { gameQuestion: { gameId: game.id, questionId: questionIDSet[i] } })) as { data: any };
+  }
   const result = await API.graphql(graphqlOperation(deleteQuestion, { id })) as { data: DeleteQuestionMutation | null | undefined }
+
   return result?.data?.deleteQuestion || [];
 };
 

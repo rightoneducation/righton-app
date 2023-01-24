@@ -14,7 +14,7 @@ import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, 
 import { updateQuestion, cloneQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
-import { Game } from './API';
+import { Game, Questions } from './API';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
@@ -77,7 +77,6 @@ function App() {
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveNewGame = async (newGame: { title: string, description?: string, phaseOneTime?: string, phaseTwoTime?: string, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
     setLoading(true);
-    console.log(questionIDSet)
     const game = await createGame(newGame, questionIDSet);
     if (game) {
       const games = sortGames(await fetchGames(), sortType);
@@ -88,7 +87,7 @@ function App() {
   }
 
   // Update saveGame let statement to include other attributes of game that have now been created and possibly add the createGameQuestion here (if functionaloity is not in updateGame) with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const saveGame = async (game: Game, questionIDSet: { id: number }[]) => {
+  const saveGame = async (game: Game, questions: Questions) => {
     let updatedGame = {
       id: game.id,
       title: game.title,
@@ -100,9 +99,8 @@ function App() {
       domain: game.domain,
       cluster: game.cluster,
       standard: game.standard,
-      questions: questionIDSet,
+      questions: questions,
     }
-    console.log(updatedGame)
     const result = await updateGame(updatedGame);
     if (result) {
       getSortedGames();
@@ -130,12 +128,10 @@ function App() {
   }
 
   const handleDeleteQuestion = async (id: number, game: Game) => {
-    let newQuestionIDs = game.questions?.map(question => (question?.id))
-    saveGame(game, newQuestionIDs)
-    const result = await deleteQuestions(id)
+    let newQuestionIDs = game.questions?.filter(question => (question?.id === id)).map(question => ({id: question?.id}))
+    const result = await deleteQuestions(id, game, newQuestionIDs)
     if (result) {
       getSortedGames()
-      console.log(game)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
