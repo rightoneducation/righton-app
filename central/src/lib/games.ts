@@ -21,7 +21,6 @@ export const createGame = async (game: any, questionIDSet: any) => {
   for (let i = 0; i < questionIDSet.length; i++) {
     result = await API.graphql(graphqlOperation(CGQ, { gameQuestion: { gameId: newGameId, questionId: questionIDSet[i] } })) as { data: any };
   }
-
   return newGame?.data?.createGame;
 };
 
