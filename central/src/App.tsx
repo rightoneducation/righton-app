@@ -77,6 +77,7 @@ function App() {
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
   const saveNewGame = async (newGame: { title: string, description?: string, phaseOneTime?: string, phaseTwoTime?: string, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
     setLoading(true);
+    console.log(questionIDSet)
     const game = await createGame(newGame, questionIDSet);
     if (game) {
       const games = sortGames(await fetchGames(), sortType);
@@ -101,6 +102,7 @@ function App() {
       standard: game.standard,
       questions: questionIDSet,
     }
+    console.log(updatedGame)
     const result = await updateGame(updatedGame);
     if (result) {
       getSortedGames();
@@ -127,10 +129,13 @@ function App() {
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeleteQuestion = async (id: number) => {
+  const handleDeleteQuestion = async (id: number, game: Game) => {
+    let newQuestionIDs = game.questions?.map(question => (question?.id))
+    saveGame(game, newQuestionIDs)
     const result = await deleteQuestions(id)
     if (result) {
       getSortedGames()
+      console.log(game)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }

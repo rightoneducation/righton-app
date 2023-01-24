@@ -40,6 +40,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
       questions: game.questions,
       standard: game.standard,
       title: `Clone of ${game.title}`,
+      imageUrl: game.imageUrl,
     };
     cloneGame(newGame).then((index) => {
       if (index > -1) history.push(`/games/${index + 1}`);
