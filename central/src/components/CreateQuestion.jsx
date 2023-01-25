@@ -28,7 +28,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     return {
       text: '',
       imageUrl: '',
-      choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '' }, { text: '', reason: '' }, { text: '', reason: '' }],
+      choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }],
       grade: null,
       domain: null,
       cluster: null,
@@ -46,20 +46,25 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
   }, [gameId, history]);
 
+  const handleStringInput = (value)=>{
+    let newString = value.replace(/\'/g, '\u2019');
+    return newString;
+  }
+
   // When the correct answer is changed/update this function handles that change
-  const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: currentTarget.value }); }, [question, setQuestion]);
+  const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
   const onChoiceTextChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];
-    newChoices[choiceIndex].text = currentTarget.value;
+    newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
   }, [question, setQuestion]);
 
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];
-    newChoices[choiceIndex].reason = currentTarget.value;
+    newChoices[choiceIndex].reason = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
   }, [question, setQuestion]);
 
@@ -72,7 +77,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   // Handles the edit/updating of a step in correct answers instructions set
   const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
     const newInstructions = [...question.instructions];
-    newInstructions[index] = currentTarget.value;
+    newInstructions[index] = handleStringInput(currentTarget.value);
     setQuestion({ ...question, instructions: newInstructions });
   }, [question, setQuestion]);
 
@@ -108,15 +113,17 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
 
     const questionToSend = { ...question }
-
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions);
+
 
     let newQuestion;
     if (questionToSend.id) {
       newQuestion = await updateQuestion(questionToSend);
     } else {
       newQuestion = await cloneQuestion(questionToSend);
+      delete newQuestion.updatedAt;
+      delete newQuestion.createdAt;
       gameQuestion(newQuestion);
     }
     history.push(`/gamemaker/${gameId}`);

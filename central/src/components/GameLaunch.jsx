@@ -153,6 +153,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
       questions: game.questions,
       standard: game.standard,
       title: `Clone of ${game.title}`,
+      imageUrl: game.imageUrl,
     };
     const gameClone = cloneGame(newGame)
     console.log(gameClone)
@@ -278,7 +279,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
 
                             {index < questions.length && <MenuItem onClick={() => changeQuestionIndex(index, index + 1)}>Move Down</MenuItem>}
 
-                            <MenuItem onClick={() => { deleteQuestion(question.id).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
+                            <MenuItem onClick={() => { deleteQuestion(question.id, game).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                           </Menu>
                         </Grid>
                       }

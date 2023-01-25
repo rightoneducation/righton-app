@@ -14,7 +14,7 @@ import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, 
 import { updateQuestion, cloneQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
-import { Game } from './API';
+import { Game, Questions } from './API';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
@@ -87,7 +87,7 @@ function App() {
   }
 
   // Update saveGame let statement to include other attributes of game that have now been created and possibly add the createGameQuestion here (if functionaloity is not in updateGame) with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const saveGame = async (game: Game, questionIDSet: { id: number }[]) => {
+  const saveGame = async (game: Game, questions: Questions) => {
     let updatedGame = {
       id: game.id,
       title: game.title,
@@ -99,7 +99,7 @@ function App() {
       domain: game.domain,
       cluster: game.cluster,
       standard: game.standard,
-      questions: questionIDSet,
+      questions: questions,
     }
     const result = await updateGame(updatedGame);
     if (result) {
@@ -127,7 +127,7 @@ function App() {
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeleteQuestion = async (id: number) => {
+  const handleDeleteQuestion = async (id: number, game: Game) => {
     const result = await deleteQuestions(id)
     if (result) {
       getSortedGames()
