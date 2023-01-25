@@ -57,7 +57,8 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
                 onResponderRelease={() => selectTeam(item)}
                 style={styles.teamIconContainer}
               >
-                <Image source={item.smallSrc} style={styles.teamIcon} />
+                <Image source={item.smallSrc} style={ (item == avatar) ? styles.selectedTeamIcon :
+                  styles.teamIcon} />
               </View>
             }
           />
@@ -128,7 +129,18 @@ const styles = StyleSheet.create({
   teamIcon: {
     resizeMode: 'contain',
     flex: 1,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop: 15,
+    borderColor: 'rgba(111,111,111,0)',
+     borderRadius: 20
+  },
+  selectedTeamIcon: {
+    flex: 1,
+    alignSelf: 'center',
+    borderColor: 'white',
+    borderWidth: 5,
+    borderRadius: 20,
+    marginTop: 15
   },
   largeIcon: {
     alignSelf: 'center',

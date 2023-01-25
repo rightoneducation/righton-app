@@ -41,7 +41,7 @@ export default function QuestionFormAnswerDropdown({
             <Typography className={classes.explanationTitle}>Explanation</Typography>
             {choice.isAnswer ? (
               <List>
-                {instructions?.map((step, index) => (
+                {instructions && instructions.map((step, index) => (
                   <React.Fragment key={index}>
                     <ListItem className={classes.instruction}>
                       <h1>{index + 1}.</h1>
