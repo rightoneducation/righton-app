@@ -15,6 +15,7 @@ export default function QuestionFormAnswerDropdown({
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const instructionsArray = instructions ? JSON.parse(instructions): instructions; 
 
   return (
     <Grid item xs={12}>
@@ -41,7 +42,7 @@ export default function QuestionFormAnswerDropdown({
             <Typography className={classes.explanationTitle}>Explanation</Typography>
             {choice.isAnswer ? (
               <List>
-                {instructions && instructions.map((step, index) => (
+                {instructionsArray && instructionsArray.map((step, index) => (
                   <React.Fragment key={index}>
                     <ListItem className={classes.instruction}>
                       <h1>{index + 1}.</h1>

@@ -132,6 +132,10 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
     if (gameDetails.id !== 0) {
+      questions && questions.map(question => {
+        delete question.updatedAt;
+        delete question.createdAt;
+      })
       editSave(gameDetails, questions);
     }
     else {
