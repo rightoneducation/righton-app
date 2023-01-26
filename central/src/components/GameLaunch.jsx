@@ -156,7 +156,6 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
       imageUrl: game.imageUrl,
     };
     const gameClone = cloneGame(newGame)
-    console.log(gameClone)
     history.push(`/`)
   };
   const deleteHandler = (id) => () => {

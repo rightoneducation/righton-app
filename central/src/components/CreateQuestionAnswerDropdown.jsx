@@ -16,6 +16,20 @@ export default function QuestionFormAnswerDropdown({
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
+  // instructions can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
+  // TODO: clean up how we are handling instructions for more consistency
+  const instructionsHandler = (instructions) =>{ 
+    if (!instructions)
+      return null;
+    else if (Array.isArray(instructions))
+      return instructions;
+    else 
+      return JSON.parse(instructions);
+  }
+  const instructionsArray = instructionsHandler(instructions); 
+
+  
+
   return (
     <Grid item xs={12}>
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>
@@ -41,7 +55,7 @@ export default function QuestionFormAnswerDropdown({
             <Typography className={classes.explanationTitle}>Explanation</Typography>
             {choice.isAnswer ? (
               <List>
-                {instructions && instructions.map((step, index) => (
+                {instructionsArray && instructionsArray.map((step, index) => (
                   <React.Fragment key={index}>
                     <ListItem className={classes.instruction}>
                       <h1>{index + 1}.</h1>
