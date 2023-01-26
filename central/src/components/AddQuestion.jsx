@@ -25,8 +25,8 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
     delete question.updatedAt;
     delete question.createdAt;
     history.push(
-      `/gamemaker/${game.id}/createquestion/0`,
-      { question }
+      `/gamemaker/${gameId}/createquestion/0`,
+      { ...question }
     )
   }
 

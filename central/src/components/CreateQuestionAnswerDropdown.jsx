@@ -15,7 +15,20 @@ export default function QuestionFormAnswerDropdown({
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const instructionsArray = instructions ? JSON.parse(instructions): instructions; 
+
+  // instructions can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
+  // TODO: clean up how we are handling instructions for more consistency
+  const instructionsHandler = (instructions) =>{ 
+    if (!instructions)
+      return null;
+    else if (Array.isArray(instructions))
+      return instructions;
+    else 
+      return JSON.parse(instructions);
+  }
+  const instructionsArray = instructionsHandler(instructions); 
+
+  
 
   return (
     <Grid item xs={12}>
