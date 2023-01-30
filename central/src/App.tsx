@@ -14,7 +14,7 @@ import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, 
 import { updateQuestion, cloneQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
 import AlertContext, { Alert } from './context/AlertContext';
-import { Game } from './API';
+import { Game, Questions } from './API';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
@@ -67,6 +67,7 @@ function App() {
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
+  const [isUserAuth, setIsUserAuth] = useState(false);
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -86,7 +87,7 @@ function App() {
   }
 
   // Update saveGame let statement to include other attributes of game that have now been created and possibly add the createGameQuestion here (if functionaloity is not in updateGame) with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const saveGame = async (game: Game, questionIDSet: { id: number }[]) => {
+  const saveGame = async (game: Game, questions: Questions) => {
     let updatedGame = {
       id: game.id,
       title: game.title,
@@ -98,7 +99,7 @@ function App() {
       domain: game.domain,
       cluster: game.cluster,
       standard: game.standard,
-      questions: questionIDSet,
+      questions: questions,
     }
     const result = await updateGame(updatedGame);
     if (result) {
@@ -126,7 +127,7 @@ function App() {
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeleteQuestion = async (id: number) => {
+  const handleDeleteQuestion = async (id: number, game: Game) => {
     const result = await deleteQuestions(id)
     if (result) {
       getSortedGames()
@@ -134,22 +135,20 @@ function App() {
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
 
+  const handleUserAuth = (isAuth: boolean) => {
+    setIsUserAuth(isAuth);
+  }
 
-
-  const getWhatToDo = (async () => {
+  const persistUserAuth = (async () => {
     let user = null;
     try {
       user = await Auth.currentAuthenticatedUser();
-      //Auth.signOut();
-      if (user) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
+      let userSession = await Auth.userSession(user);
+      if (userSession) {
+        setIsUserAuth(true);
       }
-      setUserLoading(false);
     } catch (e) {
-      setLoggedIn(false);
-      setUserLoading(false);
+      setIsUserAuth(false);
     }
   });
 
@@ -159,14 +158,14 @@ function App() {
     setLoading(false);
   };
 
-  const isResolutionMobile = useMediaQuery("(max-width: 600px)");
+  const isResolutionMobile = useMediaQuery("(max-width: 780px)");
 
   const handleSearchClick = (isClick: boolean) => {
     setIsSearchClick(isClick);
   }
 
   useEffect(() => {
-    getWhatToDo();
+    persistUserAuth();
     getGames();
     setStartup(false);
   }, [sortType]);
@@ -180,16 +179,14 @@ function App() {
     setAlert,
   };
 
-
-
   return (
     <ThemeProvider theme={theme}>
       <AlertContext.Provider value={alertContext}>
         <Router>
           <Switch>
             <Route path="/login">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
-              <LogIn />
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={isUserAuth} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
+              <LogIn handleUserAuth={handleUserAuth} />
             </Route>
 
             <Route path="/signup">
@@ -203,8 +200,8 @@ function App() {
             </Route>
 
             <Route>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={true}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} handleSearchClick={handleSearchClick}/>
+              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
+              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth} handleSearchClick={handleSearchClick}/>
               <AlertBar />
             </Route>
           </Switch>

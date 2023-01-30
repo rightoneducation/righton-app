@@ -15,7 +15,6 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
-    question.choices = JSON.parse(question.choices)
     const newQuestion = await cloneQuestion(question);
     submit(newQuestion);
     history.push(`/gamemaker/${gameId}`);
@@ -26,8 +25,8 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
     delete question.updatedAt;
     delete question.createdAt;
     history.push(
-      `/gamemaker/${game.id}/createquestion/0`,
-      { question }
+      `/gamemaker/${gameId}/createquestion/0`,
+      { ...question }
     )
   }
 

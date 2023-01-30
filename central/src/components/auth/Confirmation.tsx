@@ -5,7 +5,7 @@ import { Auth } from "aws-amplify";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link, useHistory } from "react-router-dom";
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import RightOnLogo from "./RightOnLogo.png";
 
 const Confirmation: React.FC = () => {
@@ -13,6 +13,7 @@ const Confirmation: React.FC = () => {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const history = useHistory();
+  const [displayText, setDisplayText] = useState(false);
 
   const handleSubmit = async (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
@@ -20,7 +21,7 @@ const Confirmation: React.FC = () => {
 
     try {
       await Auth.confirmSignUp(email, String(code));
-      history.push("/signin");
+      setDisplayText(true);
     } catch (error) {
       console.log(error);
     }
@@ -32,33 +33,36 @@ const Confirmation: React.FC = () => {
       alignItems="center"
       justifyContent="center">
       <img src={RightOnLogo} style={{
-        marginTop: "3%",
-        width: "20%",
-        marginBottom: "3%",
-        maxHeight: "2%",
+          marginTop: "3%",
+          width: '15%',
+          minWidth: '200px',
+          marginBottom: "3%",
       }} alt="Right On" />
       <Grid item xs={6}>
         <form
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
-            width: "120%"
+            justifyContent: "center",
+            alignItems: "center",
+            paddingLeft: '5vw',
+            paddingRight: '5vw'
           }}
           onSubmit={handleSubmit}
         >
-          <h1 style={{ fontSize: "22px", color: "grey" }}>
+          <h1 style={{ fontSize: "22px", color: "grey", textAlign: "center"}}>
             {" "}
-            Verify Your Account
+            Step 2: Verify Your Email
           </h1>
           <Field variant="outlined" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
           <Field variant="outlined" label="Verification Code" value={code} onChange={(e) => setCode(e.target.value)} />
           <ButtonGrid item direction="row" justifyContent="space-between" spacing={4}>
-            <SignUpLink to="/signup">Sign Up</SignUpLink>
-            <LogInLink to="#" onClick={(e) => { handleSubmit(e) }}>Verify Account</LogInLink>
+            <LogInLink to="#" onClick={(e) => { handleSubmit(e) }}>Verify</LogInLink>
+            <SignUpLink to="/login">Log In</SignUpLink>
           </ButtonGrid>
         </form>
       </Grid>
+      <ErrorType> {displayText ? 'Email verified! You will receive a message from RightOn when your account is granted administrative privelges. You will then be able to log in.' : 'You will receive a code shortly. Enter it above to confirm the email address associated with this account.' } </ErrorType> 
     </Grid>
   );
 };
@@ -67,31 +71,49 @@ export default Confirmation;
 
 const Field = styled(TextField)({
   margin: "10px 0",
-  borderRadius: "20px"
+  borderRadius: "20px",
+  width: "100%",
 });
 
 const SignUpLink = styled(Link)({
-  backgroundColor: "#FC1047",
-  textDecoration: "none",
-  color: "white",
-  borderRadius: "34px",
-  padding: "5%",
-  fontWeight: "bold"
-});
-
-const LogInLink = styled(Link)({
   backgroundColor: "#159EFA",
   textDecoration: "none",
   color: "white",
   borderRadius: "34px",
-  padding: "5%",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
+  fontWeight: "bold",
+});
+
+const LogInLink = styled(Link)({
+  backgroundColor: "#FC1047",
+  textDecoration: "none",
+  color: "white",
+  borderRadius: "34px",
+  minWidth: "70px",
+  textAlign: "center",
+  padding: "1vw",
+  whiteSpace: "nowrap",
   fontWeight: "bold",
 });
 
 const ButtonGrid = styled(Grid)({
-  marginTop: "10%",
   display: "flex",
   flexDirection: "row",
-  justifyContent: "space-around",
-})
+  justifyContent:"center",
+  alignItems: "flex-start",
+  width: '10vw',
+  marginBottom: '2vw',
+  marginTop: "2vw",
+  gap: '10%',
+});
 
+const ErrorType = styled(Typography)({
+  fontStyle: 'italic',
+  textAlign: 'center',
+  color: 'grey',
+  paddingLeft: '5vw',
+  paddingRight: '5vw'
+});

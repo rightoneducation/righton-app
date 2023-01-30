@@ -13,8 +13,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 import { Hidden } from '@material-ui/core';
+import LoadingIndicator from './LoadingIndicator';
 
-export default function GameDashboard({ loading, games, deleteGame, cloneGame, gameId, onClickGame }) {
+export default function GameDashboard({ loading, games, deleteGame, cloneGame, gameId, onClickGame, isUserAuth }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -39,6 +40,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
       questions: game.questions,
       standard: game.standard,
       title: `Clone of ${game.title}`,
+      imageUrl: game.imageUrl,
     };
     cloneGame(newGame).then((index) => {
       if (index > -1) history.push(`/games/${index + 1}`);
@@ -54,7 +56,34 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
   };
 
   const renderGames = (loading) => {
-    if (loading) return <Typography gutterBottom>Loading...</Typography>;
+    if (loading) return (
+        <div className={classes.loadingContainer}>
+          <div>
+            <LoadingIndicator
+              theme={[
+                'rgb(126, 90, 175)',
+                'rgb(148, 98, 179)',
+                'rgb(169, 104, 180)',
+                'rgb(186, 107, 177)',
+                'rgb(202, 109, 172)',
+                'rgb(218, 112, 168)',
+                'rgb(237, 115, 166)',
+                'rgb(255, 120, 165)',
+              ]}
+              radius={110}
+              timerStartInSecond={1000}
+              gameCreate={false}
+            />
+            <Typography className={classes.loadingTitle}>
+              Loading Game List...
+            </Typography>
+            <Typography className={classes.loadingText}>
+              If there are issues with loading, try reloading this page.
+            </Typography>
+          </div>
+        </div>
+    );
+
     if (games.length >= 1) {
       return games
         .map((game, index) => {
@@ -99,24 +128,25 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
                           {imageUrl ? <img className={classes.image} src={imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
                         </div>
                       </Grid>
-
-                      <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
-                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
-                          <MoreVertIcon />
-                        </Button>
-                        <Menu
-                          id={`question-${index}-actions`}
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={activeIndex === String(index)}
-                          onClose={handleClose}
-                          onClick={(event) => { if (!match) event.stopPropagation(); }}
-                        >
-                          <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
-                          <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
-                          <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
-                        </Menu>
-                      </Grid>
+                      { isUserAuth && 
+                        <Grid item xs={2} className={addquestion ? classes.hide : classes.show}>
+                          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-game-index={index}>
+                            <MoreVertIcon />
+                          </Button>
+                          <Menu
+                            id={`question-${index}-actions`}
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={activeIndex === String(index)}
+                            onClose={handleClose}
+                            onClick={(event) => { if (!match) event.stopPropagation(); }}
+                          >
+                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${game.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                            <MenuItem onClick={cloneHandler(game)}>Clone</MenuItem>
+                            <MenuItem onClick={deleteHandler(id)}>Delete</MenuItem>
+                          </Menu>             
+                        </Grid>
+                      }
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -226,4 +256,23 @@ const useStyles = makeStyles(theme => ({
     minWidth: '28px',
     margin: '0',
   },
+
+  loadingContainer: {
+    margin: 'auto',
+    width: '60%',
+  },
+  loadingTitle: {
+    fontSize: '24px',
+    fontWeight: '700',
+    lineHeight: '36px',
+    letterSpacing: '0em',
+    textAlign: 'center',
+  },
+  loadingText: {
+    fontSize: '16px',
+    fontWeight: '500',
+    lineHeight: '24px',
+    letterSpacing: '0em',
+    textAlign: 'center',
+  }
 }));

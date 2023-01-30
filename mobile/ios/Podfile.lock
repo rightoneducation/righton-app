@@ -389,9 +389,13 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
+<<<<<<< HEAD
   - RNDeviceInfo (10.3.0):
     - React-Core
   - RNGestureHandler (2.8.0):
+=======
+  - RNGestureHandler (2.5.0):
+>>>>>>> 546c1296b0187e443efdca645dc03010860555ca
     - React-Core
   - RNReanimated (2.13.0):
     - DoubleConversion
@@ -499,7 +503,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -618,8 +621,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/checkbox"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
-  RNDeviceInfo:
-    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -696,8 +697,12 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCCheckbox: 38989bbd3d7d536adf24ba26c6b3e6cefe0bea6f
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
+<<<<<<< HEAD
   RNDeviceInfo: 4701f0bf2a06b34654745053db0ce4cb0c53ada7
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+=======
+  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
+>>>>>>> 546c1296b0187e443efdca645dc03010860555ca
   RNReanimated: 7c664a74689972eff8e726535824233596f5f158
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17

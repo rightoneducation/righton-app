@@ -86,12 +86,10 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
-    setDisabled(false || handleDisable());
     setPhaseOne(event.target.value);
     setGameDetails({ ...gameDetails, phaseOneTime: event.target.value });
   };
   const handlePhaseTwo = (event) => {
-    setDisabled(false || handleDisable());
     setPhaseTwo(event.target.value);
     setGameDetails({ ...gameDetails, phaseTwoTime: event.target.value });
   };
@@ -103,7 +101,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
   const handleDelete = (index) => {
-    setDisabled(false || handleDisable());
     const newQuestions = [...questions];
     newQuestions.splice(index, 1);
     setQuestions(newQuestions);
@@ -111,7 +108,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
   // Handles any new questions added to the game, either through Add Question or Create Question
   const handleGameQuestion = (newQuestion) => {
-    setDisabled(false || handleDisable());
+    setDisabled(isButtonDisabled());
     for (let i = 0; i < questions.length; i++) {
       if (newQuestion.id === questions[i].id) {
         questions[i] = newQuestion
@@ -122,8 +119,8 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
   };
 
   // Handles if the Save Game button is disabled. The button become enabled when all required fields have values in it. The required fields/values are the game's title, description, and 4+ questions.
-  const handleDisable = () => {
-    if (gameDetails.title && questions.length >= 1) {
+  const isButtonDisabled = () => {
+    if (gameDetails.title.length > 0 && gameDetails.description.length > 0 && gameDetails.imageUrl.length > 0) {
       return false;
     }
     else {
@@ -131,33 +128,39 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
   }
 
-  console.log(disabled);
 
-  // Save New or Exisiting Game (preliminary submit)
+  // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
     if (gameDetails.id !== 0) {
-      let questionIDs = questions.map(question => ({ id: question.id }))
-      delete gameDetails.questions
-      editSave(gameDetails, questionIDs);
+      questions && questions.map(question => {
+        delete question.updatedAt;
+        delete question.createdAt;
+      })
+      editSave(gameDetails, questions);
     }
     else {
-      let questionIDs = questions.map(question => question.id)
-      delete gameDetails.questions
-      delete gameDetails.id
+      let questionIDs = questions.map(question => (question.id))
+      delete gameDetails.questions;
+      delete gameDetails.id;
       newSave(gameDetails, questionIDs);
+      
     }
     event.preventDefault();
     history.push('/');
   };
 
+  const handleStringInput = (value)=>{
+    let newString = value.replace(/\'/g, '\u2019');
+    return newString;
+  }
 
   let content = (
     <div>
       <form onSubmit={handleSubmit}>
         <Grid container>
-          <Grid container item xs={2}></Grid>
+          <Grid container item xs={1} sm={2}></Grid>
 
-          <Grid item container xs={8} className={classes.page}>
+          <Grid item container xs={10} sm={8} className={classes.page}>
             <Grid container item xs={12} className={classes.game}>
               <Grid container item xs={12}>
                 <Typography style={{ fontWeight: 500, fontSize: '20px' }}>
@@ -172,13 +175,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
               </Grid>
 
               <Grid container item xs={12}>
-                <Grid container item xs={8}>
+                <Grid container item xs={12} sm={8}>
                   <Grid container item xs={12}>
                     <TextField
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: currentTarget.value }); setDisabled(false || handleDisable()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled())}}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -190,7 +193,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: currentTarget.value }); setDisabled(false || handleDisable()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled()) }}
                       fullWidth
                       multiline
                       rows={3}
@@ -199,7 +202,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                   </Grid>
 
                   <Grid container item xs={12} className={classes.thirdRow}>
-                    <Grid container item xs={2}>
+                    <Grid container item xs={3} sm={2}>
                       <TextField
                         variant='outlined'
                         select
@@ -215,7 +218,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       </TextField>
                     </Grid>
 
-                    <Grid container item xs={2}>
+                    <Grid container item xs={3} sm={2}>
                       <TextField
                         variant='outlined'
                         select
@@ -231,7 +234,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       </TextField>
                     </Grid>
 
-                    <Grid container item xs={8}>
+                    <Grid container item xs={6} sm={8}>
                       <TextField
                         variant='outlined'
                         label='Image URL'
@@ -243,7 +246,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                   </Grid>
                 </Grid>
 
-                <Grid container item xs={4} justifyContent='center'>
+                <Grid container item xs={12} sm={4} justifyContent='center'>
                   {gameDetails.imageUrl ? <img src={gameDetails.imageUrl} alt="" width={'60%'} /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'275px'} />}
                 </Grid>
               </Grid>
@@ -312,13 +315,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                 })}
 
                 <Grid container item xs={12} className={classes.questionAddition}>
-                  <Grid container item xs={6} justifyContent='center' className={classes.addQuestion}>
+                  <Grid container item xs={6} justifyContent='center'>
                     <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/addquestion`)}>
                       Add Question
                     </Button>
                   </Grid>
 
-                  <Grid container item xs={6} justifyContent='center' className={classes.createQuestion}>
+                  <Grid container item xs={6} justifyContent='center'>
                     <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/createquestion/0`)}>
                       Create Question
                     </Button>
@@ -336,7 +339,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
             </Grid>
           </Grid>
 
-          <Grid container item xs={2}></Grid>
+          <Grid container item xs={1} sm={2}></Grid>
         </Grid>
       </form>
     </div>

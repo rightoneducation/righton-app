@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
         marginTop: verticalScale(24),
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
     },
     hintNoText: {
         color: '#4700B2',
@@ -28,7 +27,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: fonts.medium,
         marginRight: scale(10),
-        alignSelf: 'flex-start'
     },
     hintText: {
         color: '#384466',
