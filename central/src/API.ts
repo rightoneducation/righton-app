@@ -34,6 +34,23 @@ export type Question = {
   standard?: string | null,
 };
 
+export type Questions = {
+  questions?:  Array< {
+    __typename: "Question",
+    id: number,
+    text: string,
+    choices: string,
+    imageUrl?: string | null,
+    instructions?: string | null,
+    updatedAt: string,
+    createdAt: string,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+  } | null > | null,
+}
+
 export type CreateGameInput = {
   title: string,
   description?: string | null,
