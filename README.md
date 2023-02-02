@@ -73,27 +73,27 @@ Coming soon!
 
 #### Meet our team
 <strong>Andy Li</strong> - Mobile App Lead<br>
-<strong>Angela Dosalmas</strong> - Math Educator / Equity & Community Engagement<br>
 <strong>Anna Roberds</strong> - Math Educator / Community Engagement<br>
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
 <strong>Edward Tan</strong> - Architect Lead<br>
-<strong>Iman Howard</strong> - STEM Educator<br>
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
 <strong>Mani Ramezan</strong> - Mobile App Lead<br>
 <strong>Marizza Bailey</strong> - Math Educator / Content & Pedagogy<br>
+<strong>Mozzie Dosalmas</strong> - Math Educator / Equity & Community Engagement<br>
 <strong>Ryan Booth</strong> - Web App Lead<br>
 <strong>Sinclair Wu </strong> - Product Lead<br>
+<strong>Yong Lin </strong> - UX Lead<br>
 #### Advisors
 <strong>Ay-Nur Najm</strong> - Independent math consultant and computer science teacher<br>
 <strong>Ben Woodford</strong> - Doctoral scholar at Stanford specializing in math education<br>
 <strong>Bunmi Esho</strong> - STEM Advocacy Executive Director<br>
 <strong>Esmeralda Ortiz</strong> - Senior Director, Boys & Girls Clubs of the Peninsula<br>
 <strong>Eric Boucher</strong> - Cofounder & CEO of Ovio<br>
+<strong>Iman Howard</strong> - STEM Educator<br>
 <strong>Lybroan James</strong> - Chief Education Officer, STEMulate<br>
 <strong>Paul Chin</strong> - Assistant Professor of Practice, Relay Graduate School of Education<br>
 <strong>Payton Richardson</strong> - Data Officer, Eastside Pathways<br>
 <strong>Ronald Towns</strong> - STEM Administrator<br>
-<strong>Yong Lin</strong> - UX
 <br>
 <br>
 <em>Learn more about RightOn! & our team at https://rightoneducation.com.</em>
