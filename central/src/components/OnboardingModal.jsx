@@ -25,6 +25,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
            isOpen={modalOpen}
            contentLabel="Game Modal"
            style={{
+            zIndex:1,
             content: {
               display: 'flex',
               flexDirection: 'column',
@@ -36,17 +37,19 @@ export default function GameModal({ modalOpen, handleModalClose}) {
               border: 'none',
              },
              overlay: {
+                minHeight: '100vh',
                 height: '100%',
                 width: '100%',
-                minHeight: '100vh',
+                overflow: 'hidden',
+                margin: 0,
+                padding: 0,
                 backgroundColor: 'rgba(0, 0, 0, 0.80)',
-                overflow: "hidden"
             }}}
             onRequestClose={() => handleModalClose(false)}
             shouldCloseOnOverlayClick={true}
             appElement={document.getElementById('root') || undefined}
            >
-          <div style={{minWidth: 0, minHeight: 0}}>
+          <div style={{minWidth: 0, minHeight: 0, overflow: 'hidden',}} >
             <Swiper pagination={true} modules={[Pagination]} spaceBetween={8} className={classes.swiper} > 
                 <SwiperSlide className={classes.slide}>
                   <div className={classes.modalHead}> Welcome to RightOn! </div>
@@ -145,7 +148,7 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Karla',
     color: '#FFF',
     lineHeight: '30px',
-    paddingBottom: '10px',
+    paddingBottom: '5px',
   },
   modalBody: {
     fontSize: "14px",
