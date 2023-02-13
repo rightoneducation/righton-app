@@ -5,15 +5,16 @@ import Modal from 'react-modal';
 import OnboardingLogo from '../images/OnboardingLogo.svg';
 import iosQRCode from '../images/iosQRCode.svg';
 import androidQRCode from '../images/androidQRCode.svg';
-import OnboardingPickAGame from '../images/OnboardingPickAGame.svg';
-import OnboardingLaunchGame1 from '../images/OnboardingLaunchGame1.svg';
-import OnboardingLaunchGame2 from '../images/OnboardingLaunchGame2.svg';
-import OnboardingShareGameCode1 from '../images/OnboardingShareGameCode1.svg';
-import OnboardingShareGameCode2 from '../images/OnboardingShareGameCode2.svg';
+import OnboardingPickAGame from '../images/OnboardingPickAGame.png';
+import OnboardingLaunchGame1 from '../images/OnboardingLaunchGame1.png';
+import OnboardingLaunchGame2 from '../images/OnboardingLaunchGame2.png';
+import OnboardingShareGameCode1 from '../images/OnboardingShareGameCode1.png';
+import OnboardingShareGameCode2 from '../images/OnboardingShareGameCode2.png';
 import { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { autoShowTooltip } from "aws-amplify";
 
 
 export default function GameModal({ modalOpen, handleModalClose}) {
@@ -29,6 +30,9 @@ export default function GameModal({ modalOpen, handleModalClose}) {
               flexDirection: 'column',
               justifyContent: 'center',
               backgroundColor: 'rgba(0, 0, 0, 0)',
+              margin: 'auto',
+              maxWidth: '700px',
+              maxHeight: '600px',
               border: 'none',
              },
              overlay: {
@@ -43,7 +47,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
             appElement={document.getElementById('root') || undefined}
            >
           <div style={{minWidth: 0, minHeight: 0}}>
-            <Swiper pagination={true} modules={[Pagination]} spaceBetween={8} style={{ paddingBottom: '7%', '--swiper-pagination-bottom':'0', '--swiper-pagination-color': 'linear-gradient(90deg, #22ADFF 100%, #FFFFFF 0%)', '--swiper-pagination-bullet-inactive-color': '#CFCFCF', '--swiper-pagination-bullet-size': '12px'}} > 
+            <Swiper pagination={true} modules={[Pagination]} spaceBetween={8} className={classes.swiper} > 
                 <SwiperSlide className={classes.slide}>
                   <div className={classes.modalHead}> Welcome to RightOn! </div>
                   <img src={OnboardingLogo} alt="Logo" className={classes.logo} />
@@ -68,7 +72,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
                 </SwiperSlide>
                 <SwiperSlide className={classes.slide}>
                   <div className={classes.modalHead}> Pick a Game </div>
-                  <img src={OnboardingPickAGame} alt="Pick A Game" className={classes.logo} />
+                  <img src={OnboardingPickAGame} alt="Pick A Game" className={classes.screenshots} />
                   <div className={classes.modalBody}> After the game list has loaded,  select a game. </div>
                   <div className={classes.modalBody}> During this initial beta, <span className={classes.modalBodyBold}> only the first question </span> from a game will be played </div> 
                 </SwiperSlide>
@@ -76,10 +80,10 @@ export default function GameModal({ modalOpen, handleModalClose}) {
                   <div className={classes.modalHead}> Launch Your Game </div>
                   <div className={classes.imageContainer}>
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                      <img src={OnboardingLaunchGame1} alt="Launch Game 1" className={classes.qrCode} />
+                      <img src={OnboardingLaunchGame1} alt="Launch Game 1" className={classes.screenshots} />
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                      <img src={OnboardingLaunchGame2} alt="Launch Game 2" className={classes.qrCode} />
+                      <img src={OnboardingLaunchGame2} alt="Launch Game 2" className={classes.screenshots} />
                     </div>
                   </div>
                   <div className={classes.modalBody}> When you've selected a game, press the <span className={classes.modalBodyBold}> Launch Game </span> button to launch a game session. </div> 
@@ -88,10 +92,10 @@ export default function GameModal({ modalOpen, handleModalClose}) {
                   <div className={classes.modalHead}> Share Game Code </div>
                   <div className={classes.imageContainer}>
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                      <img src={OnboardingShareGameCode1} alt="Share Game Code 1" className={classes.qrCode} />
+                      <img src={OnboardingShareGameCode1} alt="Share Game Code 1" className={classes.screenshots} />
                     </div>
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                      <img src={OnboardingShareGameCode2} alt="Share Game Code 2" className={classes.qrCode} />
+                      <img src={OnboardingShareGameCode2} alt="Share Game Code 2" className={classes.screenshots} />
                     </div>
                   </div>
                   <div className={classes.modalBody}> After the game is launched, the Game Code will be displayed at the top of the screen. </div>
@@ -104,23 +108,28 @@ export default function GameModal({ modalOpen, handleModalClose}) {
   );
 }
 
-
-// style={{ paddingBottom: '7%', '--swiper-pagination-bottom':'0', '--swiper-pagination-color': 'linear-gradient(90deg, #22ADFF 100%, #FFFFFF 0%)', '--swiper-pagination-bullet-inactive-color': '#CFCFCF', '--swiper-pagination-bullet-size': '12px'}} >> 
-
 const useStyles = makeStyles(theme => ({
   logo: {
     height: '35vh',
   },
+  screenshots: {
+    height: '23vh',
+  },
   qrCode: {
     height: '20vh',
   },
+  swiper: {
+    paddingBottom: '10px',
+    maxWidth: '700px',
+    '--swiper-pagination-bottom':'0', 
+    '--swiper-pagination-color': 'linear-gradient(90deg, #22ADFF 100%, #FFFFFF 0%)', 
+    '--swiper-pagination-bullet-inactive-color': '#CFCFCF', 
+    '--swiper-pagination-bullet-size': '12px'
+  },
   slide: {
     textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    margin: 'auto',
     minHeight: '100%',
-    gap: '20px',
   },
   imageContainer: {
     display: 'flex',
@@ -135,13 +144,18 @@ const useStyles = makeStyles(theme => ({
     fontWeight: "700",
     fontFamily: 'Karla',
     color: '#FFF',
-    lineHeight: '23.38px',
+    lineHeight: '30px',
+    paddingBottom: '10px',
   },
   modalBody: {
     fontSize: "14px",
     fontFamily: 'Poppins',
     color: '#FFF',
     lineHeight: '25px',
+    maxWidth: '400px',
+    margin: 'auto',
+    marginTop: '10px',
+    marginBottom: '10px',
   },
   modalBodyLink: {
     fontSize: "14px",
@@ -166,8 +180,8 @@ const useStyles = makeStyles(theme => ({
     color: '#FFF',
     lineHeight: '22.5px',
     textDecoration: 'underline',
-    minWidth: '0',
     textAlign: 'center',
+    marginBottom: '-20px',
   },
   qrText: {
     fontSize: "10px",
