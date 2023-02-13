@@ -73,7 +73,7 @@ function App() {
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
   const [isUserAuth, setIsUserAuth] = useState(false);
-  const [modalOpen, setModalOpen] = useState(true); //checkUserPlayed);
+  const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -159,9 +159,9 @@ function App() {
   });
 
   const getGames = async () => {
-    //setLoading(true);
-    //await getSortedGames();
-    //setLoading(false);
+    setLoading(true);
+    await getSortedGames();
+    setLoading(false);
   };
 
   const isResolutionMobile = useMediaQuery("(max-width: 780px)");
