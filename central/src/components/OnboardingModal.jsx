@@ -5,13 +5,18 @@ import Modal from 'react-modal';
 import OnboardingLogo from '../images/OnboardingLogo.svg';
 import iosQRCode from '../images/iosQRCode.svg';
 import androidQRCode from '../images/androidQRCode.svg';
+import OnboardingPickAGame from '../images/OnboardingPickAGame.svg';
+import OnboardingLaunchGame1 from '../images/OnboardingLaunchGame1.svg';
+import OnboardingLaunchGame2 from '../images/OnboardingLaunchGame2.svg';
+import OnboardingShareGameCode1 from '../images/OnboardingShareGameCode1.svg';
+import OnboardingShareGameCode2 from '../images/OnboardingShareGameCode2.svg';
 import { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 
-export default function GameModal({ modalOpen}) {
+export default function GameModal({ modalOpen, handleModalClose}) {
   const classes = useStyles();
 
    return (
@@ -20,16 +25,14 @@ export default function GameModal({ modalOpen}) {
            contentLabel="Game Modal"
            style={{
             content: {
-              position: 'fixed',
-              top: '10vh',
-              left: '0',
-              margin: '0',
-              padding: '0',
+              position: 'absolute',
+              margin: 'auto',
+              width: '70%',
+              height: 'auto',
               backgroundColor: 'rgba(0, 0, 0, 0)',
               border: 'none',
-              width: '100%',
-              height: '100%',
-              //overflow: "break-word",
+              overflow: "hidden",
+              gap: '5%',
               zIndex: 1,
              },
              overlay: {
@@ -43,66 +46,98 @@ export default function GameModal({ modalOpen}) {
             shouldCloseOnOverlayClick={true}
             appElement={document.getElementById('root') || undefined}
            >
-           <Grid container spacing={0} >
-            <Grid item xs={0} md={3}></Grid>
-            <Grid item xs={12} md={6} className={classes.gridItem}> 
-                <Swiper pagination={true} modules={[Pagination]} style={{ '--swiper-pagination-color': 'linear-gradient(90deg, #22ADFF 100%, #FFFFFF 0%)', '--swiper-pagination-bullet-inactive-color': '#CFCFCF', '--swiper-pagination-bullet-size': '12px'}} >
-                    <SwiperSlide>
-                      <div className={classes.carouselItem}>
-                        <div className={classes.modalHead}> Welcome to RightOn! </div>
-                        <img src={OnboardingLogo} alt="Logo" className={classes.logo} />
-                        <div className={classes.modalBody}> Inspire learning by embracing mistakes! 
-                        <div className={classes.modalBodyBold}> To learn how to start a game, {'\n'} swipe to the left.</div> </div> 
-                        <div className={classes.modalBody}> For more information about us visit {'\n'}
-                        <a href="https://www.rightoneducation.com" className={classes.modalBodyLink}> https://www.rightoneducation.com. </a> </div>
-                      </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <div className={classes.carouselItem}>
-                        <div className={classes.modalHead}> Get the RightOn! App </div>
-                        <Grid container spacing={1}>
-                          <Grid item xs={12} md={6}>
-                            <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                              <img src={iosQRCode} alt="iOS QR Code" className={classes.qrCode} />
-                              <div className={classes.qrText}> https://testflight.apple.com/join/0FwryrId </div>
-                            </div>
-                          </Grid>
-                          <Grid item xs={12} md={6}>
-                            <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                              <img src={androidQRCode} alt="Android QR Code" className={classes.qrCode} />
-                              <div className={classes.qrText}> https://play.google.com/store/apps/details?id=com.rightonnew </div>
-                            </div>
-                          </Grid>
-                        </Grid>
-                        <div className={classes.modalBody}> To join a game, students need to download the RightOn! {'\n'} app on their phones or Chromebooks. </div>
-                      </div>
-                    </SwiperSlide>
-                </Swiper>
-                <div> <a href="https://www.rightoneducation.com" className={classes.modalClose}> Skip </a> </div>
-             </Grid>
-          </Grid> 
+          <Swiper pagination={true} modules={[Pagination]}  spaceBetween={30} style={{alignItems: 'center', paddingBottom: '7%', '--swiper-pagination-bottom':'0', '--swiper-pagination-color': 'linear-gradient(90deg, #22ADFF 100%, #FFFFFF 0%)', '--swiper-pagination-bullet-inactive-color': '#CFCFCF', '--swiper-pagination-bullet-size': '12px'}} >
+              <SwiperSlide>
+                <div className={classes.carouselItem}>
+                  <div className={classes.modalHead}> Welcome to RightOn! </div>
+                  <img src={OnboardingLogo} alt="Logo" className={classes.logo} />
+                  <div className={classes.modalBody}> Inspire learning by embracing mistakes! 
+                  <div className={classes.modalBodyBold}> To learn how to start a game, swipe to the left.</div> </div> 
+                  <div className={classes.modalBody}> For more information about us visit {'\n'}
+                  <a href="https://www.rightoneducation.com" className={classes.modalBodyLink}> https://www.rightoneducation.com. </a> </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className={classes.carouselItem}>
+                  <div className={classes.modalHead}> Get the RightOn! App </div>
+                  <div className={classes.imageContainer}>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
+                      <img src={iosQRCode} alt="iOS QR Code" className={classes.qrCode} />
+                      <div className={classes.qrText}> https://testflight.apple.com/join/0FwryrId </div>
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
+                      <img src={androidQRCode} alt="Android QR Code" className={classes.qrCode} />
+                      <div className={classes.qrText}> https://play.google.com/store/apps/details?id=com.rightonnew </div>
+                    </div>
+                  </div>
+                  <div className={classes.modalBody}> To join a game, students need to download the RightOn! app on their phones or Chromebooks. </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className={classes.carouselItem}>
+                  <div className={classes.modalHead}> Pick a Game </div>
+                  <img src={OnboardingPickAGame} alt="Pick A Game" className={classes.logo} />
+                  <div className={classes.modalBody}> After the game list has loaded,  select a game. </div>
+                  <div className={classes.modalBody}> During this initial beta, <span className={classes.modalBodyBold}> only the first question </span> from a game will be played </div> 
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className={classes.carouselItem}>
+                  <div className={classes.modalHead}> Launch Your Game </div>
+                  <div className={classes.imageContainer}>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
+                      <img src={OnboardingLaunchGame1} alt="Launch Game 1" className={classes.qrCode} />
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
+                      <img src={OnboardingLaunchGame2} alt="Launch Game 2" className={classes.qrCode} />
+                    </div>
+                  </div>
+                  <div className={classes.modalBody}> When you've selected a game, press the <span className={classes.modalBodyBold}> Launch Game </span> button to launch a game session. </div> 
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className={classes.carouselItem}>
+                  <div className={classes.modalHead}> Share Game Code </div>
+                  <div className={classes.imageContainer}>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
+                      <img src={OnboardingShareGameCode1} alt="Share Game Code 1" className={classes.qrCode} />
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
+                      <img src={OnboardingShareGameCode2} alt="Share Game Code 2" className={classes.qrCode} />
+                    </div>
+                  </div>
+                  <div className={classes.modalBody}> After the game is launched, the Game Code will be displayed at the top of the screen. </div>
+                  <div className={classes.modalBody}> Once students enter this code on the app, you're all ready to go! </div>
+                </div>
+              </SwiperSlide>
+          </Swiper>
+          <div className={classes.modalClose} onClick={() => handleModalClose(false)} >  Skip  </div>
         </Modal> 
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  gridItem: {
-    height: '90vh',
-  },
   carouselItem: {
-    height: '80vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: "center",
     justifyContent: "center",
+    overflow: 'hidden',
     gap: '20px',
   },
   logo: {
     height: '35vh',
   },
   qrCode: {
-    height: 'auto',
-    maxWidth: '70%',
+    height: '20vh',
+  },
+  imageContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexWrap: 'wrap',
+    gap: '20px',
   },
   modalHead: {
     fontSize: "30px",
@@ -118,7 +153,6 @@ const useStyles = makeStyles(theme => ({
     color: '#FFFFFF',
     lineHeight: '25px',
     textAlign: 'center',
-    whiteSpace: 'pre-line',
   },
   modalBodyLink: {
     fontSize: "14px",
