@@ -25,7 +25,6 @@ export default function GameModal({ modalOpen, handleModalClose}) {
            isOpen={modalOpen}
            contentLabel="Game Modal"
            style={{
-            zIndex:1,
             content: {
               display: 'flex',
               flexDirection: 'column',
@@ -44,6 +43,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
                 margin: 0,
                 padding: 0,
                 backgroundColor: 'rgba(0, 0, 0, 0.80)',
+                zIndex:2,
             }}}
             onRequestClose={() => handleModalClose(false)}
             shouldCloseOnOverlayClick={true}

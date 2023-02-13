@@ -130,7 +130,7 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: 'white',
       borderRadius: '18px',
       boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      zIndex: 0,
+      zIndex: 1,
         '&:hover': {
           cursor: 'pointer' 
         },
@@ -167,7 +167,7 @@ const useStyles = makeStyles(theme => ({
       background: 'white',
       borderRadius: '18px',
       boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      zIndex: 1,
+      zIndex: 0,
     },
     sortByName: {
       fontSize: '16px',
