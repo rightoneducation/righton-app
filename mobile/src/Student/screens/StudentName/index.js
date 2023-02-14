@@ -4,7 +4,6 @@ import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import uuid from "react-native-uuid"
 import PurpleBackground from "../../../components/PurpleBackground"
 import RoundButton from "../../../components/RoundButton"
-import { handleAndroidBackButton } from "../../../utils/Backer"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 

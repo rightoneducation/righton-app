@@ -77,6 +77,7 @@ export default LoadingIndicator = (
     fontSize = fontSize || 24
     textColor = textColor || 'white'
     const [colors, setColors] = useState(theme)
+
     const [remainingSecondsInMilliSeconds, setRemainingSecondsInMilliSeconds] = useState(timerStartInSecond * 1000)
     const [remainingTimeInSecond, setRemainingTimeInSecond] = useState(timerStartInSecond)
     const [timerFinished, setTimerFinished] = useState(false)
@@ -97,7 +98,7 @@ export default LoadingIndicator = (
                 return
             }
             setRemainingSecondsInMilliSeconds(remainingSecondsInMilliSeconds - timeInterval)
-            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))  
+            setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000))
         }, timeInterval)
         return () => {
             clearInterval(refreshIntervalId)

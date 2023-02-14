@@ -1,5 +1,5 @@
 import { GameSessionState, isNullOrUndefined } from "@righton/networking"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import {
     Alert,
     Dimensions,
@@ -41,17 +41,16 @@ const PhaseTwoBasicGamePlay = ({
     teamAvatar,
     handleAddTeamAnswer
 }) => {
-  
     let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+
     const teamName = team?.name ? team?.name : "Team Name"
 
     score = score ? score : 10
     totalScore = team?.score ? team?.score : 0
-
 
     const question = gameSession.questions[
         isNullOrUndefined(gameSession.currentQuestionIndex)
@@ -82,12 +81,14 @@ const PhaseTwoBasicGamePlay = ({
         ) {
             setSubmitted(true)
         }
+
         countdown.current = setInterval(() => {
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
             }
             setProgress((currentTime - 1) / phaseTime)
         }, 1000)
+
         return () => {
             clearInterval(countdown.current)
         }
@@ -96,7 +97,6 @@ const PhaseTwoBasicGamePlay = ({
 
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
-        console.log(answer)
         handleAddTeamAnswer(question, answer)
         setSubmitted(true)
     }

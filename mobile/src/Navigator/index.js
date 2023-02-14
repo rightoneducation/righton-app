@@ -169,7 +169,6 @@ const AppContainer = () => {
                 </NavigationContainer>
             )}
         </GameSessionContainer>
-
     )
 }
 

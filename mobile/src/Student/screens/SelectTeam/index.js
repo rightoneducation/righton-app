@@ -28,7 +28,6 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-    {console.log("SelectTeam")}
       <PurpleBackground>
         <View style={styles.headerContainer}>
           <Pressable

@@ -1,5 +1,5 @@
 import { GameSessionState } from "@righton/networking"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import {
     Dimensions,
     SafeAreaView,
@@ -37,13 +37,12 @@ const PhaseOneBasicGamePlay = ({
     navigation,
     handleAddTeamAnswer
 }) => {
-    let countdown = useRef()
     let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
-    const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-
+    const [submitted, setSubmitted] = useState(false)
+    let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
     const totalScore = team?.score ? team?.score : 0
     const question = gameSession?.isAdvanced
@@ -97,7 +96,7 @@ const PhaseOneBasicGamePlay = ({
     const correctAnswerText = answerChoices.find(
         (answer) => answer.isCorrectAnswer
     )?.text
-    const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`      
+    const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
     let cards = [
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
