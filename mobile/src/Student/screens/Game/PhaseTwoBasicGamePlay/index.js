@@ -97,17 +97,16 @@ const PhaseTwoBasicGamePlay = ({
 
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
+        console.log(answer)
         handleAddTeamAnswer(question, answer)
         setSubmitted(true)
     }
 
-    // const checkTrickAnswerSelection = (answer, question) =>{
-    //   console.log("checkTrick")
-    //   console.log(question)
-    //   const trickAnswer = team.teamMembers[0].answers.find((answer) => {
-    //     return answer.questionId === question.id
-    //   })
-    // }
+    const checkTrickAnswerSelection = (answer, question) =>{
+      const trickAnswer = team.teamMembers[0].answers.find((answer) => {
+        return answer.questionId === question.id
+      })
+    }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
     const correctAnswerText = answerChoices.find(
@@ -225,8 +224,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {/* {checkTrickAnswerSelection(answer) &&
-                            <Image source={require("../img/Picked.png")} />} */}
+                        {checkTrickAnswerSelection(answer, question) && 
+                            <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
