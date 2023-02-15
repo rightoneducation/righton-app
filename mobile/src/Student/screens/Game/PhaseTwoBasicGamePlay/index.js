@@ -131,7 +131,7 @@ const PhaseTwoBasicGamePlay = ({
                     style={styles.timerProgressBar}
                     progress={progress}
                     color={"#349E15"}
-                    height={"100%"}
+                    height={100}
                     unfilledColor={"#7819F8"}
                     width={
                         Dimensions.get("window").width - scale(90)
@@ -241,6 +241,7 @@ const PhaseTwoBasicGamePlay = ({
 
     return (
         <SafeAreaView style={styles.mainContainer}>
+         {console.log('PhaseTwoBasicGamePlay')}
             <LinearGradient
                 colors={["rgba(62, 0, 172, 1)", "rgba(98, 0, 204, 1)"]}
                 style={styles.headerContainer}

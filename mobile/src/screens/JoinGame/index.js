@@ -75,6 +75,7 @@ export default function JoinGame({
 
     return (
         <View style={styles.container}>
+         {console.log("JoinGame")}
             <PurpleBackground>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">

@@ -28,6 +28,7 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+    {console.log("EnterGameCode")}
       <PurpleBackground>
         <View style={styles.headerContainer}>
           <Pressable

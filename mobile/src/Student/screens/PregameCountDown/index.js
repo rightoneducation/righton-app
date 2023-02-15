@@ -9,6 +9,7 @@ const PregameCountDown = ({
 }) => {
     return (
         <PurpleBackground style={styles.mainContainer}>
+          {console.log("PregameCountdown")}
             <LoadingIndicator
                 theme={[
                     "#F5246A20",

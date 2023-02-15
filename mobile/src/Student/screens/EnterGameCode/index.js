@@ -33,6 +33,7 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode, handleSubscribeToGa
 
     return (
         <>
+            {console.log("EnterGameCode")}
             <SafeAreaView style={{ flex: 0, backgroundColor: "#312759" }} />
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>

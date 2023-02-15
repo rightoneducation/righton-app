@@ -109,7 +109,6 @@ export abstract class ModelHelper {
             if (answer.isTrickAnswer) {
                 return score + this.calculateBasicModeWrongAnswerScore(gameSession, answer.text, question.id)
             } else {
-                console.log(`${answer.text} === ${correctAnswer?.text} = ${answer.text === correctAnswer?.text}`)
                 return score + (
                     answer.text === correctAnswer?.text ? this.correctAnswerScore : 0)
             }
