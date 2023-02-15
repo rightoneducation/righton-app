@@ -46,7 +46,6 @@ const PhaseTwoBasicGamePlay = ({
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-
     const teamName = team?.name ? team?.name : "Team Name"
 
     score = score ? score : 10
@@ -57,6 +56,16 @@ const PhaseTwoBasicGamePlay = ({
             ? 0
             : gameSession?.currentQuestionIndex
     ]
+    let trickAnswerId
+    const checkTrickAnswerSelection = () =>{
+      console.log("sup")
+      team.teamMembers[0].answers.map((answer) => {
+        console.log(answer)
+        if (answer.isChosen === false && answer.questionId === question.id)
+          return answer.id
+      })
+      return null
+    }
 
     const answerChoices = question.choices.map((choice) => {
         return {
@@ -97,15 +106,12 @@ const PhaseTwoBasicGamePlay = ({
 
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
+        handleAddTeamAnswer(question, answer, gameSession?.currentState)
+        trickAnswerId = answer.id
+        console.log("submitted")
         console.log(answer)
-        handleAddTeamAnswer(question, answer)
+        console.log(trickAnswerId)
         setSubmitted(true)
-    }
-
-    const checkTrickAnswerSelection = (answer, question) =>{
-      const trickAnswer = team.teamMembers[0].answers.find((answer) => {
-        return answer.questionId === question.id
-      })
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
@@ -224,7 +230,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {checkTrickAnswerSelection(answer, question) && 
+                        {console.log(trickAnswerId)}
+                        {trickAnswerId === answer.id && 
                             <Image source={require("../img/Picked.png")} />}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>

@@ -82,7 +82,7 @@ const PhaseOneBasicGamePlay = ({
         if (answer.isCorrectAnswer && team) {
             team.score += 10
         }
-        handleAddTeamAnswer(question, answer)
+        handleAddTeamAnswer(question, answer, gameSession?.currentState)
         setSubmitted(true)
     }
     const answersParsed = question.choices

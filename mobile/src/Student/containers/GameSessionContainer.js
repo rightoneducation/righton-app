@@ -143,16 +143,14 @@ const GameSessionContainer = ({ children }) => {
                 console.error(error)
             })
     }
-    const handleAddTeamAnswer = async (question, answer) =>
+    const handleAddTeamAnswer = async (question, answer, gameSessionState) =>
     {
-      console.log("hi")
       return  global.apiClient
                   .addTeamAnswer(
                       teamMember.id,
                       question.id,
                       answer.text,
-                      answer.isChosen ? null : true,
-                      false,
+                      (gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER && true || gameSessionState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && false)
                   )
                   .then((teamAnswer) => {
                       if (teamAnswer == null) {
