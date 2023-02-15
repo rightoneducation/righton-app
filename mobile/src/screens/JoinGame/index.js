@@ -12,7 +12,8 @@ export default function JoinGame({
     gameSession,
     clearStorage
 }) {
-    useEffect(() => {
+    useEffect(() => { 
+      //console.log('current state:' +  gameSession.currentState)
         if (isNullOrUndefined(gameSession)) {
             resetState()
             return

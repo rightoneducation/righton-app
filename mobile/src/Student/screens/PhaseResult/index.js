@@ -36,12 +36,10 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
         setCurTeam(updatedCurTeam)
         const curQuestion = gameSession.questions[gameSession.currentQuestionIndex]
         const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, curQuestion.id)
-
-        // seeing this useEffect run in screens further up the navigation stack so I'm putting this if statement in temporarily so we don't keep doing api calls
-        if (gameSession.currentState === GameSessionState.PHASE_1_RESULTS || gameSession.currentState === GameSessionState.PHASE_2_RESULTS)
-          totalScore = calculateTotalScore(gameSession, curQuestion, updatedCurTeam)
-        
-          if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
+        console.log(teamAnswers) 
+        totalScore = calculateTotalScore(gameSession, curQuestion, updatedCurTeam)
+        console.log(totalScore)
+        if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
             // User has answered both phases
             if (teamAnswers.length > 1) {
                 const answer = teamAnswers[1]
