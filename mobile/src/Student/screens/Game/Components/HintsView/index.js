@@ -12,7 +12,7 @@ const HintsView = ({ hints }) => {
     })
 
     return mappedHints.map((item) => (
-        <Hint hintNo={item.hintNo} hint={item.hint} />
+        <Hint hintNo={item.hintNo} hint={item.hint} key={item.hintNo} />
     ))
 }
 

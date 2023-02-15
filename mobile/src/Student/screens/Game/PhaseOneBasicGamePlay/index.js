@@ -70,7 +70,7 @@ const PhaseOneBasicGamePlay = ({
             clearInterval(countdown.current)
         }
     }, [gameSession, currentTime])
-    const handleSubmitAnswer = () => {
+    function handleSubmitAnswer() {
         const answer = answerChoices[selectedAnswerIndex]
         // if isCorrectAnswer is true, add 10 points to the team's score
         // this does not update team score in the database yet
@@ -115,12 +115,12 @@ const PhaseOneBasicGamePlay = ({
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
     let cards = [
-        <>
+        <View key={"questions"}>
             <Text style={styles.cardHeadingText}>Question</Text>
             <Card headerTitle="Question" key={"question"}>
                 <ScrollableQuestion question={question} />
             </Card>
-        </>,
+        </View>,
         <View key={"answers"}>
             <Text style={styles.cardHeadingText}>Answers</Text>
             <Card headerTitle="Answers">
@@ -211,7 +211,7 @@ const PhaseOneBasicGamePlay = ({
                                 style={styles.timerProgressBar}
                                 progress={progress}
                                 color={"#349E15"}
-                                height={"100%"}
+                                height={100}
                                 unfilledColor={"#7819F8"}
                                 width={
                                     Dimensions.get("window").width - scale(90)
