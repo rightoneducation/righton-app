@@ -71,6 +71,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
     return (
         <>
             <SafeAreaView style={{ flex: 0, backgroundColor: "#312759" }} />
+            {console.log('StudentName')}
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>
                     <View style={styles.logoContainer}>

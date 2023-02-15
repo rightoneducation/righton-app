@@ -15,6 +15,7 @@ const StudentGameIntro = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+        {console.log('StudentGameIntro')}
             <PurpleBackground style={styles.mainContainer}>
                 <View style={styles.header}>
                     <Text style={styles.headerTeam}>How to Play!</Text>

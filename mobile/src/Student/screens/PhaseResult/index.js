@@ -135,6 +135,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, fetchGameSessionByCode, se
 
     return (
         <SafeAreaView style={styles.container}>
+          {console.log('PhaseResult')}
             {loadedData && <>
                 <ImageBackground
                     source={require("./img/background.png")}

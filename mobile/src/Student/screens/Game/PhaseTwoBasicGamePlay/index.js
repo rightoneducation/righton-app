@@ -247,6 +247,7 @@ const PhaseTwoBasicGamePlay = ({
 
     return (
         <SafeAreaView style={styles.mainContainer}>
+          {console.log('PhaseTwoBasicGamePlay')}
             <LinearGradient
                 colors={["rgba(62, 0, 172, 1)", "rgba(98, 0, 204, 1)"]}
                 style={styles.headerContainer}

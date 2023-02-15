@@ -35,6 +35,7 @@ const ScorePage = ({
 
     return (
         <BaseView style={styles.mainContainer}>
+            {console.log('ScorePage')}
             <Text
                 style={styles.headerText}
                 numberOfLines={1}
