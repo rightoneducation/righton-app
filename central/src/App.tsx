@@ -21,7 +21,12 @@ import Games from './components/Games';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
+import OnboardingModal from './components/OnboardingModal';
 import {useMediaQuery} from './hooks/useMediaQuery';
+import { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const theme = createTheme({
   palette: {
@@ -68,6 +73,7 @@ function App() {
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
   const [isUserAuth, setIsUserAuth] = useState(false);
+  const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -164,6 +170,19 @@ function App() {
     setIsSearchClick(isClick);
   }
 
+  const handleModalClose =(modalOpen: boolean) =>{ 
+    localStorage.setItem('userPlayedBefore', 'true');
+    setModalOpen(modalOpen);
+  };
+
+  function checkUserPlayed(): boolean {
+    if (localStorage.getItem('userPlayedBefore') === 'true')
+      return false;
+    else 
+      return true;
+  };
+
+
   useEffect(() => {
     persistUserAuth();
     getGames();
@@ -200,6 +219,7 @@ function App() {
             </Route>
 
             <Route>
+              {modalOpen ? <OnboardingModal modalOpen={true} handleModalClose={handleModalClose} /> : null } 
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
               <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth} handleSearchClick={handleSearchClick}/>
               <AlertBar />

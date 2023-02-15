@@ -79,12 +79,12 @@ const useStyles = makeStyles(theme => ({
   sidebar: {
     padding: `0px 0px ${theme.spacing(4)}px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
-    height: 'calc(100vh - 64px)',
+    height: 'calc(100vh - 87px)',
     overflowY: 'scroll',
     overflowX: 'hidden',
   },
   content: {
-    minHeight: 'calc(100vh - 64px)',
+    minHeight: 'calc(100vh - 87px)',
     backgroundColor: '#F2F2F2',
   },
   actions: {
