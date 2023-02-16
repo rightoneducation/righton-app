@@ -10,14 +10,17 @@ import OnboardingLaunchGame1 from '../images/OnboardingLaunchGame1.png';
 import OnboardingLaunchGame2 from '../images/OnboardingLaunchGame2.png';
 import OnboardingShareGameCode1 from '../images/OnboardingShareGameCode1.png';
 import OnboardingShareGameCode2 from '../images/OnboardingShareGameCode2.png';
-import { Pagination } from 'swiper';
+import {useMediaQuery} from 'react-responsive'; 
+import { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 
 export default function GameModal({ modalOpen, handleModalClose}) {
   const classes = useStyles();
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
    return (
     <div>
@@ -29,7 +32,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0)',
+              backgroundColor: 'rgba(0, 0, 0,  0)',
               margin: 'auto',
               maxWidth: '800px',
               maxHeight: '670px',
@@ -49,8 +52,8 @@ export default function GameModal({ modalOpen, handleModalClose}) {
             shouldCloseOnOverlayClick={true}
             appElement={document.getElementById('root') || undefined}
            >
-          <div style={{minWidth: 0, minHeight: 0, overflow: 'hidden',}} >
-            <Swiper pagination={{clickable: true}} modules={[Pagination]}  spaceBetween={8} className={classes.swiper} > 
+          <div style={{minWidth: 0, minHeight: 0, overflow: 'hidden'}} >
+            <Swiper navigation={(isMobile ? false: true)} pagination={{clickable:true}} modules={[Navigation, Pagination]} spaceBetween={8} className={classes.swiper} > 
                 <SwiperSlide className={classes.slide}>
                   <div className={classes.modalHead}> Welcome to RightOn! </div>
                   <img src={OnboardingLogo} alt='Logo' className={classes.logo} />
@@ -123,11 +126,11 @@ const useStyles = makeStyles(theme => ({
   },
   swiper: {
     paddingBottom: '20px',
-    maxWidth: '700px',
     '--swiper-pagination-bottom':'0', 
     '--swiper-pagination-color': 'linear-gradient(90deg, #22ADFF 100%, #FFFFFF 0%)', 
     '--swiper-pagination-bullet-inactive-color': '#CFCFCF', 
-    '--swiper-pagination-bullet-size': '12px'
+    '--swiper-pagination-bullet-size': '12px',
+    '--swiper-navigation-color': 'white',
   },
   slide: {
     textAlign: 'center',
