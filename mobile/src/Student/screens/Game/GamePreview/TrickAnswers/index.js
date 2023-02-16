@@ -230,7 +230,6 @@ const TrickAnswers = ({
                         )}
                     />
                 )}
-                {/* //TODO: Handle advance mode */}
                 {status !== Status.basicMode && (
                     <KeyboardAwareFlatList
                         style={[

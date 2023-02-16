@@ -129,7 +129,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     return (
         <SafeAreaView style={styles.container}>
          {console.log("PhaseResult")}
-            {loadedData && <>
+            {loadedData ? <>
                 <ImageBackground
                     source={require("./img/background.png")}
                     style={styles.headerContainer}
@@ -168,7 +168,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
                         totalScore={totalScore}
                     />
                 </View>
-            </>}
+            </>: null}
         </SafeAreaView>
     )
 }

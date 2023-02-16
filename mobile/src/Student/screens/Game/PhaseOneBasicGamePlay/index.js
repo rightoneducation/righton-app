@@ -118,7 +118,7 @@ const PhaseOneBasicGamePlay = ({
                     answers={answerChoices}
                     disabled={submitted}
                 />
-                {!submitted && (
+                {!submitted ? (
                     <RoundButton
                         style={
                             (selectedAnswerIndex || selectedAnswerIndex === 0)
@@ -130,21 +130,21 @@ const PhaseOneBasicGamePlay = ({
                         onPress={handleSubmitAnswer}
                         disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
-                )}
-                {submitted && (
+                ) : null}
+                {submitted ? (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
                         disabled={true}
                     />
-                )}
+                ) : null}
             </Card>
-            {submitted && (
+            {submitted ? (
                 <Text style={styles.answerSubmittedText}>
                     {submittedAnswerText}
                 </Text>
-            )}
+            ) : null}
         </View>,
     ]
 
@@ -154,7 +154,7 @@ const PhaseOneBasicGamePlay = ({
                 <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
                 <Text style={styles.hintsViewCorrectAnswerSubtitle}>The correct answer is:</Text>
                 <Text style={styles.hintsViewCorrectAnswer}>{indexToLetter(selectedAnswerIndex)}. {correctAnswerText}</Text>
-                {availableHints && availableHints.length > 0 && (
+                {(availableHints && availableHints.length > 0) ? (
                     <Card extraStyle={styles.hintsViewCard}>
                         <Question question={question} style={styles.hintsViewQuestion} />
                         <RoundTextIcon
@@ -168,7 +168,7 @@ const PhaseOneBasicGamePlay = ({
                             readonly />
                         <HintsView hints={availableHints} />
                     </Card>
-                )}
+                ) : null}
             </View>
         )
         cards = [hintCard]

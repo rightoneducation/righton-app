@@ -23,12 +23,12 @@ const QuestionCard = (props) => {
             <View style={styles.breakLine}></View>
 
             {
-                hintsShown && props.instructions.map((hint, index) => (
+                hintsShown ? props.instructions.map((hint, index) => (
                     <View style={styles.hintDirection}>
                         <Text style={styles.hintNumber}>{index + 1}</Text>
                         <Text style={styles.questionHint}>{hint}</Text>
                     </View>
-                ))
+                )) : null
             }
 
             <View style={styles.hintButtonBackground}>

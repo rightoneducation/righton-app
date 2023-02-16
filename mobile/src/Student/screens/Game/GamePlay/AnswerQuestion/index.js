@@ -23,10 +23,10 @@ const AnswerQuestion = ({ correctAnswer, answers }) => {
     return (
         <View style={[sharedStyles.cardContainer, styles.container]}>
             {
-                correctAnswer !== undefined && <View style={styles.answerContainer}>
+                correctAnswer !== undefined ? <View style={styles.answerContainer}> 
                     <Text style={sharedStyles.text}>The correct answer is</Text>
                     <Text style={styles.answerTextInput}>{correctAnswer}</Text>
-                </View>
+                </View> : null
             }
             <View style={styles.explainAnswerContainer}>
                 <Text

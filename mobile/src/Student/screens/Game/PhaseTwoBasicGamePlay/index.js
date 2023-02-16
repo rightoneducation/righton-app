@@ -173,7 +173,7 @@ const PhaseTwoBasicGamePlay = ({
                     disabled={submitted}
                     correctAnswer={correctAnswer}
                 />
-                {!submitted && (
+                {!submitted ? (
                     <RoundButton
                         style={
                             (selectedAnswerIndex || selectedAnswerIndex === 0)
@@ -185,21 +185,21 @@ const PhaseTwoBasicGamePlay = ({
                         onPress={handleSubmitAnswer}
                         disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
-                )}
-                {submitted && (
+                ) : null}
+                {submitted ? (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
                         disabled={true}
                     />
-                )}
+                ) : null}
             </Card>
-            {submitted && (
+            {submitted ? (
                 <Text style={styles.answerSubmittedText}>
                     {submittedAnswerText}
                 </Text>
-            )}
+            ) : null}
         </View>
 
     const correctAnswerScreen =
@@ -230,9 +230,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {console.log(trickAnswerId)}
-                        {trickAnswerId === answer.id && 
-                            <Image source={require("../img/Picked.png")} />}
+                        {trickAnswerId === answer.id ? 
+                            <Image source={require("../img/Picked.png")} /> : null}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>

@@ -69,11 +69,11 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode, handleSubscribeToGa
                             style={styles.enterButton}
                             onPress={this.onGameCodeSubmit}
                         />
-                        {showErrorText && <Text
+                        {showErrorText ? <Text
                             style={{ ...styles.errorText }}>
                             We were unable to{"\n"}join this game.{"\n"}
                             {"\n"}Check the Game Code{"\n"}and try again.
-                        </Text>
+                        </Text> : null
                         }
                     </View>
                 </PurpleBackground>

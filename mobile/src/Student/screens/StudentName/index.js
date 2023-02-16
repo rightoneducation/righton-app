@@ -50,7 +50,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
                         />
                     </View>
                     <View style={styles.entryContainer}>
-                        {gameSession != null && !gameSession.isAdvanced && (
+                        {(gameSession != null && !gameSession.isAdvanced) ? (
                             <>
                                 <Text style={styles.title}>
                                     Enter Your Name
@@ -86,7 +86,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
                                     style={styles.enterButton}
                                     onPress={this.onNameSubmit}
                                 />
-                                {showErrorText &&
+                                {showErrorText ?
                                     <View>
                                         <Text
                                             style={styles.noNameErrorTextBold}>
@@ -100,9 +100,9 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
                                             will not be stored.
                                         </Text>
                                     </View>
-                                }
+                                : null}
                             </>
-                        )}
+                        ) : null}
                     </View>
                 </PurpleBackground>
             </SafeAreaView>

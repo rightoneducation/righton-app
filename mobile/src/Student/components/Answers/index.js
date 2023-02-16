@@ -54,7 +54,7 @@ const Answers = ({ teamSelectedTrickAnswer }) => {
     <View
       style={[styles.mainContainer, { height: scale(65 * answers.length) }]}
     >
-      {answers &&
+      {answers ?
         answers.map((ans, index) => {
           const animationValue = useRef(
             new Animated.ValueXY({
@@ -105,7 +105,7 @@ const Answers = ({ teamSelectedTrickAnswer }) => {
               />
             </Animated.View>
           )
-        })}
+        }) : null}
     </View>
   )
 }

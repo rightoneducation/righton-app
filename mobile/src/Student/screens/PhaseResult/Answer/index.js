@@ -54,12 +54,12 @@ const Answer = ({ text, icon, mode, isUserChoice, percentage }) => {
                 backgroundColor: getPercentageBackgroundColor(),
                 minWidth: isUserChoice ? undefined : 45
             }}>
-                {isUserChoice &&
+                {isUserChoice ?
                     <Image
                         style={styles.icon}
                         source={icon}
                     />
-                }
+                : null}
                 <Text style={{
                     ...styles.percentageText,
                     color: getAnswerColor(),

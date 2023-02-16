@@ -15,16 +15,6 @@ const rotate = x => [cos(x), -sin(x), sin(x), cos(x)]
 const add = ([a1, a2], b1, b2) => [a1 + b1, a2 + b2]
 
 const ellipse = (cx, cy, rx, ry, t1, delta, theta) => {
-    /* [
-    returns a SVG path element that represent a ellipse.
-    cx,cy → center of ellipse
-    rx,ry → major minor radius
-    t1 → start angle, in radian.
-    delta → angle to sweep, in radian. positive.
-    theta → rotation on the whole, in radian
-    url: SVG Circle Arc http://xahlee.info/js/svg_circle_arc.html
-    Version 2019-06-19
-     ] */
     delta = delta % tau
     const rotMatrix = rotate(theta)
     const [sX, sY] = add(multiply(rotMatrix, rx * cos(t1), ry * sin(t1)), cx, cy)
