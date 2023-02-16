@@ -13,7 +13,7 @@ export default function JoinGame({
     clearStorage
 }) {
     useEffect(() => { 
-      //console.log('current state:' +  gameSession.currentState)
+      console.log('current state:' +  gameSession?.currentState)
         if (isNullOrUndefined(gameSession)) {
             resetState()
             return
@@ -29,6 +29,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
+                console.log("sup")
                 navigation.navigate("PregameCountDown")
                 break
 

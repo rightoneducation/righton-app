@@ -1,5 +1,5 @@
 import { GameSessionState, isNullOrUndefined, ModelHelper } from '@righton/networking'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { verticalScale } from 'react-native-size-matters'
@@ -18,7 +18,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     const [loadedData, setLoadedData] = useState(false)
     let totalScore = 0
 
-    useEffect(
+    useFocusEffect(
       React.useCallback(() => {
         switch (gameSession.currentState) {
             case GameSessionState.PHASE_1_RESULTS:

@@ -150,7 +150,8 @@ const GameSessionContainer = ({ children }) => {
                       teamMember.id,
                       question.id,
                       answer.text,
-                      (gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER && true || gameSessionState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && false)
+                      (gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER && true || gameSessionState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && false),
+                      (gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER && false || gameSessionState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && true)
                   )
                   .then((teamAnswer) => {
                       if (teamAnswer == null) {
