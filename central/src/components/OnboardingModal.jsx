@@ -50,7 +50,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
             appElement={document.getElementById('root') || undefined}
            >
           <div style={{minWidth: 0, minHeight: 0, overflow: 'hidden',}} >
-            <Swiper pagination={true} modules={[Pagination]} spaceBetween={8} className={classes.swiper} > 
+            <Swiper pagination={{clickable: true}} modules={[Pagination]}  spaceBetween={8} className={classes.swiper} > 
                 <SwiperSlide className={classes.slide}>
                   <div className={classes.modalHead}> Welcome to RightOn! </div>
                   <img src={OnboardingLogo} alt='Logo' className={classes.logo} />
