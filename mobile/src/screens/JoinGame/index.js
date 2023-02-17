@@ -29,8 +29,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                console.log("sup")
-                navigation.navigate("PregameCountDown")
+                navigation.navigate("PhaseOneBasicGamePlay")
                 break
 
             case GameSessionState.PHASE_1_DISCUSS:

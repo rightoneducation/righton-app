@@ -13,54 +13,47 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     const [curTeam, setCurTeam] = useState(null)
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [selectedTrickAnswer, setSelectedTrickAnswer] = useState(null)
+    const [currentQuestion, setCurrentQuestion] = useState(gameSession?.questions[gameSession.currentQuestionIndex])
     const [correctAnswer, setCorrectAnswer] = useState(null)
-    const [currentQuestion, setCurrentQuestion] = useState(null)
     const [loadedData, setLoadedData] = useState(false)
-    let totalScore = 0
-
+    const [totalScore, setTotalScore] = useState(null)
+    const [isAnswerCorrect, setIsAnswerCorrect] = useState(null)
+    let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
+    
     useFocusEffect(
       React.useCallback(() => {
-        switch (gameSession.currentState) {
-            case GameSessionState.PHASE_1_RESULTS:
-                setPhaseNo(1)
-                break
-            case GameSessionState.PHASE_2_RESULTS:
-                setPhaseNo(2)
-                break
-        }
+        gameSession?.currentState === GameSessionState.PHASE_1_RESULTS ? setPhaseNo(1) : setPhaseNo(2)  
+
         const updatedCurTeam = gameSession.teams.find((t) => t.id === team.id)
         if (isNullOrUndefined(updatedCurTeam)) {
             console.error(`Couldn't find the team.}`)
             return
         }
         setCurTeam(updatedCurTeam)
-        const curQuestion = gameSession.questions[gameSession.currentQuestionIndex]
-        const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, curQuestion.id)
-        console.log(teamAnswers) 
-        totalScore = calculateTotalScore(gameSession, curQuestion, updatedCurTeam)
-        console.log(totalScore)
+        setCorrectAnswer(ModelHelper.getCorrectAnswer(currentQuestion))
+        const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, currentQuestion.id)
+        setTotalScore(calculateTotalScore(gameSession, currentQuestion, updatedCurTeam))
+        
         if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
-            // User has answered both phases
-            if (teamAnswers.length > 1) {
-                const answer = teamAnswers[1]
-                setAnswer(answer)
-            }
-            setAnswer(teamAnswers[0])
+            if (phaseNo === 1)
+              setAnswer(teamAnswers.reduce(teamAnswer => teamAnswer.isChosen === true))
+            else 
+              setAnswer(teamAnswers.reduce(teamAnswer => teamAnswer.isTrickAnswer === true))
         } else {
             setSelectedAnswer({
                 id: Number.MIN_VALUE,
                 text: Number.MIN_VALUE,
             })
         }
-        setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, curQuestion.id))
-        setCorrectAnswer(ModelHelper.getCorrectAnswer(curQuestion))
-        setCurrentQuestion(curQuestion)
+
+        setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, currentQuestion.id))
         setLoadedData(true)
         setTeamInfo(updatedCurTeam, updatedCurTeam.teamMembers[0])
-      },[gameSession])
+      },[])
     )
 
     const setAnswer = (answer) => {
+        setIsAnswerCorrect(answer.text === ModelHelper.getCorrectAnswer(currentQuestion).text)
         if (answer.isTrickAnswer) {
             setSelectedTrickAnswer(answer)
         } else {
@@ -121,14 +114,13 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     }
 
     const calculateTotalScore =(gameSession, currentQuestion, curTeam) => {
-      const newScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam)
+      const newScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam) 
       global.apiClient.updateTeam({id: curTeam.id, score: newScore})
       return newScore
     }
 
     return (
         <SafeAreaView style={styles.container}>
-         {console.log("PhaseResult")}
             {loadedData ? <>
                 <ImageBackground
                     source={require("./img/background.png")}
@@ -161,11 +153,13 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
                     </FlatList>
                 </View>
                 <View style={styles.footerView}>
+                          {console.log(`totalScore ${totalScore}`)}
                     <TeamFooter
                         icon={teamAvatar.smallSrc}
                         name={curTeam.name ? curTeam.name : "N/A"}
                         score={phase2Score}
                         totalScore={totalScore}
+                        isAnswerCorrect={isAnswerCorrect}
                     />
                 </View>
             </>: null}

@@ -37,7 +37,6 @@ const PhaseTwoBasicGamePlay = ({
     team,
     teamMember,
     score,
-    totalScore,
     teamAvatar,
     handleAddTeamAnswer
 }) => {
@@ -49,7 +48,7 @@ const PhaseTwoBasicGamePlay = ({
     const teamName = team?.name ? team?.name : "Team Name"
 
     score = score ? score : 10
-    totalScore = team?.score ? team?.score : 0
+    let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
 
     const question = gameSession.questions[
         isNullOrUndefined(gameSession.currentQuestionIndex)

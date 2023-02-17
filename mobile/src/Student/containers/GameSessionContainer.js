@@ -107,6 +107,7 @@ const GameSessionContainer = ({ children }) => {
                 gameSession.id,
                 (gameSessionResponse) => {
                     setGameSession(gameSessionResponse)
+                    console.log("subscription triggered")
                 })
     }
 
@@ -145,7 +146,7 @@ const GameSessionContainer = ({ children }) => {
     }
     const handleAddTeamAnswer = async (question, answer, gameSessionState) =>
     {
-      return  global.apiClient
+      return  (global.apiClient
                   .addTeamAnswer(
                       teamMember.id,
                       question.id,
@@ -158,7 +159,7 @@ const GameSessionContainer = ({ children }) => {
                           console.error(
                               "Failed to create team Answer."
                           )
-                          return
+                          return    
                       }
                       console.debug(
                           "Team answer:",
@@ -168,6 +169,7 @@ const GameSessionContainer = ({ children }) => {
                   .catch((error) => {
                       console.error(error.message)
                   })
+                  )
     }
 
 

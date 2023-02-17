@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "@righton/networking"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import uuid from "react-native-uuid"
 import PurpleBackground from "../../../components/PurpleBackground"
@@ -7,14 +7,19 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) => {
+const StudentName = ({ navigation, handleAddTeam }) => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
     const lastNameTextRef = useRef(null)
     const [showErrorText, setShowErrorText] = useState(false)
 
+    useEffect(() => {
+      console.log("StudentName")
+    })
+
     const validateIsNotEmpty = (text, textInputRef) => {
+      console.log("StudentName Function1")
         if (text) {
             setShowErrorText(false)
             return true
@@ -27,6 +32,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
     }
 
     onNameSubmit = () => {
+      console.log("StudentName Function1")
         if (!validateIsNotEmpty(firstName, firstNameTextRef) ||
             !validateIsNotEmpty(lastName, lastNameTextRef)) {
             return
@@ -39,7 +45,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
     return (
         <>
             <SafeAreaView style={{ flex: 0, backgroundColor: "#312759" }} />
-            {console.log("StudentName")}
+   
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>
                     <View style={styles.logoContainer}>
@@ -50,7 +56,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
                         />
                     </View>
                     <View style={styles.entryContainer}>
-                        {(gameSession != null && !gameSession.isAdvanced) ? (
+                        {/* {(gameSession != null && !gameSession.isAdvanced) ? ( */}
                             <>
                                 <Text style={styles.title}>
                                     Enter Your Name
@@ -102,12 +108,18 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
                                     </View>
                                 : null}
                             </>
-                        ) : null}
+                        {/* ) : null} */}
                     </View>
                 </PurpleBackground>
             </SafeAreaView>
         </>
     )
+}
+StudentName.whyDidYouRender = {
+  logOnDifferentValues: true,
+  trackHookes: true,
+  logOwnerReasons: true,
+  customName: 'StudentName'
 }
 
 export default StudentName

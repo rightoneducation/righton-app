@@ -44,7 +44,8 @@ const PhaseOneBasicGamePlay = ({
     const [submitted, setSubmitted] = useState(false)
     let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
-    const totalScore = team?.score ? team?.score : 0
+    let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
+
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -53,7 +54,7 @@ const PhaseOneBasicGamePlay = ({
             : gameSession?.currentQuestionIndex
         ]
     const availableHints = question.instructions
-
+        
     useFocusEffect(
       React.useCallback(() => {
           if (
@@ -77,11 +78,6 @@ const PhaseOneBasicGamePlay = ({
 
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
-        // if isCorrectAnswer is true, add 10 points to the team's score
-        // this does not update team score in the database yet
-        if (answer.isCorrectAnswer && team) {
-            team.score += 10
-        }
         handleAddTeamAnswer(question, answer, gameSession?.currentState)
         setSubmitted(true)
     }

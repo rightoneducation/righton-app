@@ -1,8 +1,10 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Animated,  Image, StyleSheet, Text, View } from 'react-native'
+import {useRef, useEffect} from 'react'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { colors, fontFamilies, fonts, fontWeights } from '../../utils/theme'
 
-const TeamFooter = ({ icon, name, totalScore }) => {
+const TeamFooter = ({ icon, name, totalScore, isAnswerCorrect }) => {
+
     return (
         <View style={styles.container}>
             <View style={styles.itemContainer}>
@@ -16,6 +18,11 @@ const TeamFooter = ({ icon, name, totalScore }) => {
                     {name}
                 </Text>
             </View>
+            {/* <View style={[styles.itemContainer, styles.newScoreView]}>
+                <Text style={styles.scoreText}>
+                    {totalScore}
+                </Text>
+            </View> */}
             <View style={[styles.itemContainer, styles.scoreView]}>
                 <Text style={styles.scoreText}>
                     {totalScore}
@@ -62,6 +69,15 @@ const styles = StyleSheet.create({
         maxWidth: scale(58),
         backgroundColor: colors.lightBlue,
     },
+    newScoreView: {
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 18,
+      height: verticalScale(19),
+      width: scale(58),
+      maxWidth: scale(58),
+      backgroundColor: colors.lightGreen,
+  },
     scoreText: {
         color: colors.white,
         fontFamily: fontFamilies.karlaRegular,

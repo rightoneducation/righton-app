@@ -64,8 +64,8 @@ const AppContainer = () => {
                             {(props) => (
                                 <StudentName
                                     {...props}
-                                    gameSession={gameSession}
-                                    setTeamInfo={setTeamInfo}
+                                    // gameSession={gameSession}
+                                    // setTeamInfo={setTeamInfo}
                                     handleAddTeam={handleAddTeam}
                                 />
                             )}
@@ -171,5 +171,10 @@ const AppContainer = () => {
         </GameSessionContainer>
     )
 }
-
+AppContainer.whyDidYouRender = {
+  logOnDifferentValues: true,
+  trackHookes: true,
+  logOwnerReasons: true,
+  customName: 'AppContainer'
+}
 export default AppContainer
