@@ -46,7 +46,7 @@ const PhaseTwoBasicGamePlay = ({
     const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
     const teamName = team?.name ? team?.name : "Team Name"
-
+    console.log(`Phase 2 current state: ${gameSession.currentState}`)
     score = score ? score : 10
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
 
@@ -57,9 +57,7 @@ const PhaseTwoBasicGamePlay = ({
     ]
     let trickAnswerId
     const checkTrickAnswerSelection = () =>{
-      console.log("sup")
       team.teamMembers[0].answers.map((answer) => {
-        console.log(answer)
         if (answer.isChosen === false && answer.questionId === question.id)
           return answer.id
       })
@@ -107,9 +105,6 @@ const PhaseTwoBasicGamePlay = ({
         const answer = answerChoices[selectedAnswerIndex]
         handleAddTeamAnswer(question, answer, gameSession?.currentState)
         trickAnswerId = answer.id
-        console.log("submitted")
-        console.log(answer)
-        console.log(trickAnswerId)
         setSubmitted(true)
     }
 
@@ -239,7 +234,6 @@ const PhaseTwoBasicGamePlay = ({
 
     return (
         <SafeAreaView style={styles.mainContainer}>
-         {console.log('PhaseTwoBasicGamePlay')}
             <LinearGradient
                 colors={["rgba(62, 0, 172, 1)", "rgba(98, 0, 204, 1)"]}
                 style={styles.headerContainer}

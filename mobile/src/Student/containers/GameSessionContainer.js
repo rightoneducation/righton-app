@@ -108,6 +108,7 @@ const GameSessionContainer = ({ children }) => {
                 (gameSessionResponse) => {
                     setGameSession(gameSessionResponse)
                     console.log("subscription triggered")
+                    console.log(gameSessionResponse.currentState)
                 })
     }
 

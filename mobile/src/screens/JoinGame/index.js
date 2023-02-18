@@ -33,7 +33,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.PHASE_1_DISCUSS:
-                navigation.navigate("PhaseOneBasicGamePlay")
+                navigation.navigate("StudentName")
                 break
 
             case GameSessionState.PHASE_2_START:
@@ -76,7 +76,6 @@ export default function JoinGame({
 
     return (
         <View style={styles.container}>
-         {console.log("JoinGame")}
             <PurpleBackground>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">

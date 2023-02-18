@@ -14,12 +14,7 @@ const StudentName = ({ navigation, handleAddTeam }) => {
     const lastNameTextRef = useRef(null)
     const [showErrorText, setShowErrorText] = useState(false)
 
-    useEffect(() => {
-      console.log("StudentName")
-    })
-
     const validateIsNotEmpty = (text, textInputRef) => {
-      console.log("StudentName Function1")
         if (text) {
             setShowErrorText(false)
             return true
@@ -32,7 +27,6 @@ const StudentName = ({ navigation, handleAddTeam }) => {
     }
 
     onNameSubmit = () => {
-      console.log("StudentName Function1")
         if (!validateIsNotEmpty(firstName, firstNameTextRef) ||
             !validateIsNotEmpty(lastName, lastNameTextRef)) {
             return

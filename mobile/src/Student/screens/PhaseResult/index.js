@@ -153,7 +153,6 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
                     </FlatList>
                 </View>
                 <View style={styles.footerView}>
-                          {console.log(`totalScore ${totalScore}`)}
                     <TeamFooter
                         icon={teamAvatar.smallSrc}
                         name={curTeam.name ? curTeam.name : "N/A"}

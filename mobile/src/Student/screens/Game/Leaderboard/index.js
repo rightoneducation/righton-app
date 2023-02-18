@@ -29,7 +29,6 @@ const Leaderboard = ({
 
     return (
         <SafeAreaView style={styles.mainContainer}>
-         {console.log("Leaderboard")}
             <ScrollView
                 contentContainerStyle={{
                     justifyContent: "space-between",

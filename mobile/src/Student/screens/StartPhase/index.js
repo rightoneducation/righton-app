@@ -6,7 +6,6 @@ import BaseView from '../../components/BaseView'
 const StartPhase = () => {
     return (
         <BaseView style={styles.mainContainer}>
-        {console.log("StartPhase")}
             <Text style={styles.headerText}>Starting Phase 2...</Text>
             <Text style={styles.subtitleText}>
                 where the most popular wrong answer wins the most points!
