@@ -38,6 +38,7 @@ const PhaseTwoBasicGamePlay = ({
     teamMember,
     score,
     teamAvatar,
+    navigation,
     handleAddTeamAnswer
 }) => {
     let phaseTime = gameSession?.phaseOneTime ?? 300
@@ -45,8 +46,8 @@ const PhaseTwoBasicGamePlay = ({
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+    const [tempScreenTag, setTempScreenTag] = useState(Math.random)
     const teamName = team?.name ? team?.name : "Team Name"
-    console.log(`Phase 2 current state: ${gameSession.currentState}`)
     score = score ? score : 10
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
 
@@ -99,6 +100,17 @@ const PhaseTwoBasicGamePlay = ({
             clearInterval(countdown.current)
         }
      },[currentTime])
+    )
+
+    // below resets the state variables of Phase One gameplay when user leaves phase one screen (to set up for any following question)
+    useFocusEffect(
+      React.useCallback(() => {
+        const resetOnLeaveScreen = navigation.addListener('blur', () => {
+          setSelectedAnswerIndex(null)
+          setSubmitted(false)
+        });
+        return resetOnLeaveScreen
+      },[navigation])
     )
 
     const handleSubmitAnswer = () => {
@@ -240,6 +252,7 @@ const PhaseTwoBasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
+             <Text> {tempScreenTag} </Text>
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>

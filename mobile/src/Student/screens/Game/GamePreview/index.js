@@ -92,7 +92,6 @@ const GamePreview = ({ navigation, route }) => {
                     console.error("Failed to create team.")
                     return
                 }
-                console.log(teamAnswer)
             })
             .catch((error) => {
                 console.error(error.message)

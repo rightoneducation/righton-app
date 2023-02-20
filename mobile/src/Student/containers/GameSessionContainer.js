@@ -145,8 +145,10 @@ const GameSessionContainer = ({ children }) => {
                 console.error(error)
             })
     }
+
     const handleAddTeamAnswer = async (question, answer, gameSessionState) =>
     {
+      console.log(gameSessionState)
       return  (global.apiClient
                   .addTeamAnswer(
                       teamMember.id,

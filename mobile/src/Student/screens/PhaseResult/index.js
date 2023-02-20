@@ -19,8 +19,8 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     const [totalScore, setTotalScore] = useState(null)
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(null)
     let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
-    
-    useFocusEffect(
+
+     useFocusEffect(
       React.useCallback(() => {
         gameSession?.currentState === GameSessionState.PHASE_1_RESULTS ? setPhaseNo(1) : setPhaseNo(2)  
 
@@ -49,7 +49,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
         setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, currentQuestion.id))
         setLoadedData(true)
         setTeamInfo(updatedCurTeam, updatedCurTeam.teamMembers[0])
-      },[])
+      }, [gameSession?.currentState])
     )
 
     const setAnswer = (answer) => {

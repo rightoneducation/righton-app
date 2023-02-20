@@ -42,10 +42,10 @@ const PhaseOneBasicGamePlay = ({
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
     const [submitted, setSubmitted] = useState(false)
+    const [tempScreenTag, setTempScreenTag] = useState(Math.random)
     let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
-
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -57,12 +57,7 @@ const PhaseOneBasicGamePlay = ({
         
     useFocusEffect(
       React.useCallback(() => {
-        console.log(`currentState ${gameSession?.currentState}`)
-          if (
-              currentTime <= 0 || // Out of time!
-              // Game has moved on, so disable answering
-              gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER 
-          ) {
+          if (currentTime <= 0) {
               setSubmitted(true)
           }
           countdown.current = setInterval(() => {
@@ -75,6 +70,17 @@ const PhaseOneBasicGamePlay = ({
               clearInterval(countdown.current)
           }
       },[currentTime])
+    )
+
+    // below resets the state variables of Phase One gameplay when user leaves phase one screen (to set up for any following question)
+    useFocusEffect(
+      React.useCallback(() => {
+        const resetOnLeaveScreen = navigation.addListener('blur', () => {
+          setSelectedAnswerIndex(null)
+          setSubmitted(false)
+        });
+        return resetOnLeaveScreen
+      },[navigation])
     )
 
     const handleSubmitAnswer = () => {
@@ -179,6 +185,7 @@ const PhaseOneBasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
+              <Text> {tempScreenTag} </Text>
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>
