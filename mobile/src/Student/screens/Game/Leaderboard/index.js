@@ -22,19 +22,10 @@ const Leaderboard = ({
 
     const teamName = team.name ? team.name : "Team Name"
 
-    const separatedName = teamName.split(" ")
-
-    const firstName = separatedName[0]
-
-    const lastName = separatedName[1]
-
-
     const totalScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(
         gameSession,
         gameSession.questions[gameSession.currentQuestionIndex],
-        team,
-        console.log(firstName),
-        console.log(lastName)
+        team
     )
 
     return (
