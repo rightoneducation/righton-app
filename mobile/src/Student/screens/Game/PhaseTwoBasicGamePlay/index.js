@@ -55,14 +55,6 @@ const PhaseTwoBasicGamePlay = ({
             ? 0
             : gameSession?.currentQuestionIndex
     ]
-    let trickAnswerId
-    const checkTrickAnswerSelection = () =>{
-      team.teamMembers[0].answers.map((answer) => {
-        if (answer.isChosen === false && answer.questionId === question.id)
-          return answer.id
-      })
-      return null
-    }
 
     const answerChoices = question.choices.map((choice) => {
         return {
