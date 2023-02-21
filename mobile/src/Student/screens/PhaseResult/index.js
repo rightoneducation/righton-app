@@ -18,7 +18,6 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     const [loadedData, setLoadedData] = useState(false)
     const [totalScore, setTotalScore] = useState(null)
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(null)
-    let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
 
      useFocusEffect(
       React.useCallback(() => {
@@ -32,6 +31,10 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
         setCurTeam(updatedCurTeam)
         setCorrectAnswer(ModelHelper.getCorrectAnswer(currentQuestion))
         const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, currentQuestion.id)
+
+        const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
+        let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
+
         setTotalScore(calculateTotalScore(gameSession, currentQuestion, updatedCurTeam))
         
         if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {

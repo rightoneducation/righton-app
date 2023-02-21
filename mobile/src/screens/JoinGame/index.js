@@ -28,7 +28,10 @@ export default function JoinGame({
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                navigation.navigate("PhaseOneBasicGamePlay")
+                if (gameSession.currentQuestionIndex === 0)
+                  navigation.navigate("PregameCountDown")
+                else
+                  navigation.navigate("PhaseOneBasicGamePlay")
                 break
 
             case GameSessionState.PHASE_1_DISCUSS:

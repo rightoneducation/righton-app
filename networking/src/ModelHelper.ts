@@ -100,19 +100,18 @@ export abstract class ModelHelper {
         }
 
         const correctAnswer = this.getCorrectAnswer(question)
+        const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
+        let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id)?.score ?? 0 
 
-        return answers!.reduce((score: number, answer: ITeamAnswer | null) => {
-            if (isNullOrUndefined(answer)) {
-                return score
-            }
-
-            if (answer.isTrickAnswer) {
-                return score + this.calculateBasicModeWrongAnswerScore(gameSession, answer.text, question.id)
-            } else {
-                return score + (
-                    answer.text === correctAnswer?.text ? this.correctAnswerScore : 0)
-            }
-        }, 0)
+        if (answers.some(answer => answer?.isTrickAnswer===true)){
+          let newScore = originalScore += ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answers?.find(answer => answer?.isTrickAnswer==true)?.text ?? '', currentQuestion.id)
+          return newScore
+        }
+        else if (answers.some(answer => answer?.isChosen===true && answer?.text == correctAnswer?.text)){
+          let newScore = originalScore += this.correctAnswerScore
+          return newScore
+        }
+        return originalScore
     }
 
     static findTeamInGameSession(gameSession: IGameSession, teamId: string): ITeam | null {
