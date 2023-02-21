@@ -107,8 +107,6 @@ const GameSessionContainer = ({ children }) => {
                 gameSession.id,
                 (gameSessionResponse) => {
                     setGameSession(gameSessionResponse)
-                    console.log("subscription triggered")
-                    console.log(gameSessionResponse.currentState)
                 })
     }
 
@@ -148,7 +146,6 @@ const GameSessionContainer = ({ children }) => {
 
     const handleAddTeamAnswer = async (question, answer, gameSessionState) =>
     {
-      console.log(gameSessionState)
       return  (global.apiClient
                   .addTeamAnswer(
                       teamMember.id,
