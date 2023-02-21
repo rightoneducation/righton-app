@@ -50,7 +50,7 @@ const StudentName = ({ navigation, handleAddTeam }) => {
                         />
                     </View>
                     <View style={styles.entryContainer}>
-                        {/* {(gameSession != null && !gameSession.isAdvanced) ? ( */}
+                        {(gameSession != null && !gameSession.isAdvanced) ? (
                             <>
                                 <Text style={styles.title}>
                                     Enter Your Name
@@ -102,18 +102,11 @@ const StudentName = ({ navigation, handleAddTeam }) => {
                                     </View>
                                 : null}
                             </>
-                        {/* ) : null} */}
+                        ) : null}
                     </View>
                 </PurpleBackground>
             </SafeAreaView>
         </>
     )
 }
-StudentName.whyDidYouRender = {
-  logOnDifferentValues: true,
-  trackHookes: true,
-  logOwnerReasons: true,
-  customName: 'StudentName'
-}
-
 export default StudentName

@@ -18,11 +18,6 @@ const TeamFooter = ({ icon, name, totalScore, isAnswerCorrect }) => {
                     {name}
                 </Text>
             </View>
-            {/* <View style={[styles.itemContainer, styles.newScoreView]}>
-                <Text style={styles.scoreText}>
-                    {totalScore}
-                </Text>
-            </View> */}
             <View style={[styles.itemContainer, styles.scoreView]}>
                 <Text style={styles.scoreText}>
                     {totalScore}
@@ -69,15 +64,6 @@ const styles = StyleSheet.create({
         maxWidth: scale(58),
         backgroundColor: colors.lightBlue,
     },
-    newScoreView: {
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: 18,
-      height: verticalScale(19),
-      width: scale(58),
-      maxWidth: scale(58),
-      backgroundColor: colors.lightGreen,
-  },
     scoreText: {
         color: colors.white,
         fontFamily: fontFamilies.karlaRegular,
