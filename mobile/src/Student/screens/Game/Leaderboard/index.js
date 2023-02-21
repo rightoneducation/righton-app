@@ -21,7 +21,6 @@ const Leaderboard = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
-
     const totalScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(
         gameSession,
         gameSession.questions[gameSession.currentQuestionIndex],
@@ -44,8 +43,7 @@ const Leaderboard = ({
                     <Text style={styles.headerText}>Leaderboard</Text>
                 </LinearGradient>
             </ScrollView>
-            <>
-            
+            <>       
                 <FlatList
                     data={sortedTeamsByScore}
                     keyExtractor={(item) => `${item.id}`}
