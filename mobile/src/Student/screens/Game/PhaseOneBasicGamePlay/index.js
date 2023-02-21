@@ -42,7 +42,6 @@ const PhaseOneBasicGamePlay = ({
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
     const [submitted, setSubmitted] = useState(false)
-    const [tempScreenTag, setTempScreenTag] = useState(Math.random)
     let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
@@ -185,7 +184,6 @@ const PhaseOneBasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-              <Text> {tempScreenTag} </Text>
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_CORRECT_ANSWER ? (
                     <>

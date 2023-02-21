@@ -46,7 +46,6 @@ const PhaseTwoBasicGamePlay = ({
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-    const [tempScreenTag, setTempScreenTag] = useState(Math.random)
     const teamName = team?.name ? team?.name : "Team Name"
     score = score ? score : 10
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
@@ -236,7 +235,7 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {trickAnswerId === answer.id ? 
+                        {index === selectedAnswerIndex ? 
                             <Image source={require("../img/Picked.png")} /> : null}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
@@ -252,7 +251,6 @@ const PhaseTwoBasicGamePlay = ({
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
-             <Text> {tempScreenTag} </Text>
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <>
@@ -320,7 +318,7 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(20)
     },
     headerText: {
-        marginTop: verticalScale(14),
+        marginTop: verticalScale(24),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -328,7 +326,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginVertical: verticalScale(19),
+        marginBottom: verticalScale(19),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -390,7 +388,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: verticalScale(50),
-        marginTop: -verticalScale(150),
+        marginTop: -verticalScale(140),
     },
     footerView: {
         position: "absolute",
