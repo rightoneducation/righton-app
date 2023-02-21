@@ -36,6 +36,10 @@ const TeamItem = ({ teamNo, score, teamName }) => {
         default:
             return null
     }
+    const formatTeamName = (teamName) =>{
+      let spacePos = teamName.indexOf(' ')
+      return teamName.slice(0, spacePos).concat(teamName.slice(spacePos, spacePos+2), '.')
+    }
 
     return (
         <LinearGradient
@@ -50,7 +54,7 @@ const TeamItem = ({ teamNo, score, teamName }) => {
                 </>
                 <View style={styles.textContainer}>
                     <Text style={styles.teamTitle}>
-                        {teamName}
+                        {formatTeamName(teamName)}
                     </Text>
                     <View style={styles.scoreContainer}>
                         <Text style={styles.scoreText}>{score || 0}</Text>
