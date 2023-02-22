@@ -227,7 +227,7 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {index === selectedAnswerIndex ? 
+                        {answer.text === answerChoices[selectedAnswerIndex | 0].text ? 
                             <Image source={require("../img/Picked.png")} /> : null}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>

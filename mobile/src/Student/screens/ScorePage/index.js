@@ -43,7 +43,7 @@ const ScorePage = ({
                 You've earned a total of
             </Text>
             <Text style={styles.headerScoreText}>
-                {ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, gameSession.questions[gameSession.currentQuestionIndex], team)} points
+                {team.score ? team.score : 0} points
             </Text>
             <View style={styles.imageContainer}>
                 <Image

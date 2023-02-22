@@ -7,7 +7,7 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const StudentName = ({ navigation, handleAddTeam }) => {
+const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
