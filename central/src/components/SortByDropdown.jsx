@@ -3,9 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { SORT_TYPES } from '../lib/sorting';
 import { Collapse, MenuItem, Select } from '@material-ui/core';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
+import SortbyIcon from '../images/SortByIcon.svg';
 
-export default function SortByDropdown({ handleSortChange, sortByCheck, setSortByCheck }) {
-  const classes = useStyles();
+export default function SortByDropdown({ handleSortChange, sortByCheck, setSortByCheck, isResolutionMobile }) {
+  const classes = useStyles(sortByCheck, isResolutionMobile)();
   const arrowClass = sortByCheck ? "sortByArrowActive" : "sortByArrow";
 
   const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
@@ -34,8 +35,10 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
   return(
     <div className={classes.sortByWrapper}>
       <div className={classes.sortByHeader} onClick={() => {setSortByCheck((prev) => !prev)}}>
-        <p className={classes.sortByTitle}>Sort by</p>
-        <ArrowIcon className={classes[arrowClass]} />
+      {!isResolutionMobile ? 
+        <p className={classes.sortByTitle}>Sort by...</p> 
+        : null}
+        <img src={SortbyIcon} alt="Sort By Icon" />
       </div>
       <Collapse in={sortByCheck}>
         <div className={classes.sortByBody}>
@@ -113,34 +116,29 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
     sortByWrapper: {
-      display: 'inline',
-      position: 'relative',
-      // marginLeft: 15,
-      marginBottom: '30px',
-      color: '#9BA9D0',
+      color: 'white',
       fontFamily: 'Poppins',
+      width: isResolutionMobile ? '75px' : '165px',
+      cursor: 'pointer',
+      position: 'relative',
     },
     sortByHeader: {
-      display: 'inline-block',
-      position: 'absolute',
-      padding: '5px 14px',
-      width: 216,
-      backgroundColor: 'white',
-      borderRadius: '18px',
-      boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      zIndex: 1,
-        '&:hover': {
-          cursor: 'pointer' 
-        },
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: sortByCheck ? '#768092' : '#B1BACB',
+      borderRadius: '20px',
+      height: '38px',
+      border: sortByCheck ? '3px solid #768092' : '3px solid #B1BACB',
+      borderBottomLeftRadius: sortByCheck ? '0px' : '20px',
+      borderBottomRightRadius: sortByCheck ? '0px' : '20px',
     },
     sortByTitle: {
       fontWeight: 'bold',
       fontSize: '21px',
       lineHeight: '0px',
-      display: 'inline',
-      marginRight: 75,
     },
     sortByArrow: {
       transition: 'transform 0.4s',
@@ -157,17 +155,18 @@ const useStyles = makeStyles(theme => ({
       top: 4,
     },
     sortByBody: {
-      display: 'inline-block',
       position: 'absolute',
       width: 338,
-      left: 0,
-      top: 20,
+      right: 0,
+      top: '38px',
       paddingBottom: '10px',
       paddingTop: '15px',
       background: 'white',
       borderRadius: '18px',
-      boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      zIndex: 0,
+      borderTopRightRadius: 0,
+      border: '2px solid #768092',
+      boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.13)',
+      zIndex: 1,
     },
     sortByName: {
       fontSize: '16px',
@@ -187,7 +186,6 @@ const useStyles = makeStyles(theme => ({
     },
     sortByDropDowns: {
       width: 137,
-      padding: '0px 8px',
       fontFamily: 'Poppins',
       color: '#9BA9D0',
         '& .MuiSvgIcon-root': {

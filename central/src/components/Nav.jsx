@@ -9,10 +9,9 @@ import exploreIcon from '../images/ExploreIcon.svg';
 import betaLogo from '../images/BetaLogo.svg';
 import quizMakerIcon from '../images/GameMakerIcon.svg';
 import helpIcon from '../images/HelpIcon.svg';
-import SearchBar from './SearchBar.jsx';
 import { BoltRounded } from '@mui/icons-material';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick, handleModalOpen }) {
+export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
 
   return (
@@ -63,7 +62,7 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
   },
   container: {
     display: "flex",
-    margin: !isResolutionMobile ? 'auto' : '',
+    margin:  'auto',
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: '10px',
@@ -83,7 +82,7 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
     left: '20px'
   },
   logo: {
-    minHeight: '60px',
+    minHeight: !isResolutionMobile ? '60px' : '43px',
     paddingTop: '10%',
     paddingBottom: '10%'
   },
@@ -102,7 +101,8 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
     alignItems: 'center',
     textTransform: 'none',
     position: 'absolute',
-    right: '20px'
+    right: '20px',
+    cursor: 'pointer',
   },
   helpText: {
     color:'white',
