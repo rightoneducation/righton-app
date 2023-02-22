@@ -5,14 +5,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import exploreIcon from '../images/Explore.svg';
+import exploreIcon from '../images/ExploreIcon.svg';
 import betaLogo from '../images/BetaLogo.svg';
-import quizMakerIcon from '../images/QuizMaker.svg';
+import quizMakerIcon from '../images/GameMakerIcon.svg';
+import helpIcon from '../images/HelpIcon.svg';
 import SearchBar from './SearchBar.jsx';
+import { BoltRounded } from '@mui/icons-material';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick }) {
+export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
-  const matchSearchBar = useRouteMatch('/');
 
   return (
     <div className={classes.grow}>
@@ -35,10 +36,15 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
                 Game Maker
               </Typography> : null}
             </NavLink> : null }
-            {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
-            {matchSearchBar.isExact ? 
+            <div className={classes.help} type="button" onClick={() => handleModalOpen()}>
+              <img src={helpIcon} alt="Help Icon" className={classes.icon} />
+              { !isResolutionMobile ? <Typography className={classes.helpText} variant="h6" noWrap>
+                Help
+              </Typography>:null }
+            </div>
+            {/* {matchSearchBar.isExact ? 
                <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/> 
-              : setSearchInput('')} 
+              : setSearchInput('')}  */}
           </Grid>
 
         </Toolbar>
@@ -57,18 +63,22 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
   container: {
     display: "flex",
     margin: !isResolutionMobile ? 'auto' : '',
+    alignItems: 'center',
   },
   title: {
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    fontWeight: 'bold',
+    fontSize: '22px',
+    lineHeight: '30px'
   },
   link: {
     color: 'inherit',
     textDecoration: 'none',
-    maxWidth: '195px',
     display: 'flex',
     opacity: '0.5',
+    alignItems: 'center'
   },
   logoContainer: {
     display: 'flex',
@@ -80,44 +90,28 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
     paddingBottom: '10%'
   },
   icon: {
-    height: '80%',
+    width: '70%',
     marginRight: 10,
   },
   iconQuiz: {
-    height: '85%',
+    width: '70%',
     marginRight: 10,
+  },
+  help: {
+    display: 'flex',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 10,
+    textTransform: 'none'
+  },
+  helpText: {
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+    color:'white'
   },
   active: {
     opacity: '1',
-  },
-  search: {
-    position: 'absolute',
-    right: 0,
-    borderRadius: '20px',
-    border: '3px solid #87B8DB',
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    marginRight: 20,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-    display: 'inline-block',
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    paddingLeft: '6px',
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#87B8DB'
   },
   inputRoot: {
     color: 'inherit',
