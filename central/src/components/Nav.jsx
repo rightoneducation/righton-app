@@ -17,28 +17,28 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
 
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.bar} style={{paddingTop: '10px'}} position="static">
+      <AppBar className={classes.bar} position="static">
         <Toolbar>
-          <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Explore' to={'/'}>
+          <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'}>
               <img src={betaLogo} alt="Logo" className={classes.logo} />
           </NavLink>
           <Grid className={classes.container}> 
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
-              { !isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
+              { !isResolutionMobile ? <Typography className={classes.title} variant="h6">
                 Explore
               </Typography> : null }
             </NavLink>
             { isUserAuth ? 
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
-              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.iconQuiz} />
-              {!isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
+              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
+              {!isResolutionMobile ? <Typography className={classes.title} variant="h6" >
                 Game Maker
               </Typography> : null}
             </NavLink> : null }
-            <div className={classes.help} type="button" onClick={() => handleModalOpen()}>
+            <div className={classes.help} id='Help' onClick={() => handleModalOpen()}>
               <img src={helpIcon} alt="Help Icon" className={classes.icon} />
-              { !isResolutionMobile ? <Typography className={classes.helpText} variant="h6" noWrap>
+              { !isResolutionMobile ? <Typography className={classes.helpText} variant="h6" >
                 Help
               </Typography>:null }
             </div>
@@ -53,25 +53,21 @@ export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUse
   );
 }
 
-const useStyles = (isResolutionMobile) => makeStyles(theme => ({
-  bar: {
-    background: 'linear-gradient(right,#0F78BD,#043373)',
-  },
+const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
     flexGrow: 1,
+  },
+  bar: {
+    background: 'linear-gradient(right,#0F78BD,#043373)',
+    paddingTop: '10px'
   },
   container: {
     display: "flex",
     margin: !isResolutionMobile ? 'auto' : '',
     alignItems: 'center',
-  },
-  title: {
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-    fontWeight: 'bold',
-    fontSize: '22px',
-    lineHeight: '30px'
+    justifyContent: 'center',
+    paddingBottom: '10px',
+    gap: 20,
   },
   link: {
     color: 'inherit',
@@ -83,6 +79,8 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
   logoContainer: {
     display: 'flex',
     alignItems: 'center',
+    position: 'absolute',
+    left: '20px'
   },
   logo: {
     minHeight: '60px',
@@ -90,25 +88,25 @@ const useStyles = (isResolutionMobile) => makeStyles(theme => ({
     paddingBottom: '10%'
   },
   icon: {
-    width: '70%',
+    minWidth: '43px',
     marginRight: 10,
   },
-  iconQuiz: {
-    width: '70%',
-    marginRight: 10,
+  title: {
+    fontWeight: 'bold',
+    fontSize: '22px',
+    lineHeight: '30px',
+    minWidth: '100%',
   },
   help: {
     display: 'flex',
     alignItems: 'center',
+    textTransform: 'none',
     position: 'absolute',
-    right: 10,
-    textTransform: 'none'
+    right: '20px'
   },
   helpText: {
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-    color:'white'
+    color:'white',
+    minWidth: '100%',
   },
   active: {
     opacity: '1',

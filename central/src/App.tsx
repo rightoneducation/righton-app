@@ -226,8 +226,8 @@ function App() {
             <Route>
               {modalOpen ? <OnboardingModal modalOpen={true} handleModalClose={handleModalClose} /> : null } 
               <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick} handleModalOpen={handleModalOpen}/>
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth} handleSearchClick={handleSearchClick}/>
-              <AlertBar />
+              {/* <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth} handleSearchClick={handleSearchClick}/>
+              <AlertBar /> */}
             </Route>
           </Switch>
         </Router>
