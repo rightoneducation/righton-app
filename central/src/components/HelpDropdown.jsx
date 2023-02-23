@@ -1,8 +1,8 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { SORT_TYPES } from '../lib/sorting';
-import { Collapse, MenuItem, Select, Tooltip } from '@material-ui/core';
-import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
+import { Collapse, Tooltip } from '@material-ui/core';
 import HelpMenuIcon from '../images/HelpMenuIcon.svg';
 import HelpMenuIconClicked from '../images/HelpMenuIconClicked.svg';
 import HelpMenuExploreIcon from '../images/HelpMenuExploreIcon.svg';
@@ -11,56 +11,15 @@ import HelpMenuHelpIcon from '../images/HelpMenuHelpIcon.svg';
 import HelpMenuAppIcon from '../images/HelpMenuAppIcon.svg';
 import HelpMenuAppAndroidIcon from '../images/HelpMenuAppAndroidIcon.svg';
 import HelpMenuAboutIcon from '../images/HelpMenuAboutIcon.svg';
-import SortAscendingIcon from '../images/SortAscendingIcon.svg';
-import SortDescendingIcon from '../images/SortDescendingIcon.svg';
 
-export default function HelpDropdown() {
+export default function HelpDropdown({isUserAuth, handleModalOpen}) {
   const [isHelpMenuClicked, SetIsHelpMenuClicked] = React.useState(false);
   const [updatedValue, setUpdatedValue] = React.useState(SORT_TYPES.UPDATED);
   const [qcValue, setQCValue] = React.useState("");
   const [gradeValue, setGradeValue] = React.useState("");
 
   const classes = useStyles(isHelpMenuClicked)();
-
-  const handleUpdatedValue = () => {
-    switch (updatedValue){
-      case SORT_TYPES.UPDATED:
-        setUpdatedValue(SORT_TYPES.OLDEST);
-        break;
-      case SORT_TYPES.OLDEST:
-      case "":
-        setUpdatedValue(SORT_TYPES.UPDATED);
-        break;
-    }
-    setQCValue("");
-    setGradeValue("");
-  };
-  const handleQCValue = () => {
-    switch (qcValue){
-      case SORT_TYPES.QUESTIONDESCENDING:
-          setQCValue(SORT_TYPES.QUESTIONASCENDING);
-          break;
-      case SORT_TYPES.QUESTIONASCENDING:
-      case "":
-        setQCValue(SORT_TYPES.QUESTIONDESCENDING);
-        break;
-    }
-    setUpdatedValue("");
-    setGradeValue("");
-  };
-  const handleGradeValue = () => {
-    switch (gradeValue){
-      case SORT_TYPES.GRADEDESCENDING:
-        setGradeValue(SORT_TYPES.GRADEASCENDING);
-        break;
-      case SORT_TYPES.GRADEASCENDING:
-      case "":
-        setGradeValue(SORT_TYPES.GRADEDESCENDING);
-        break;
-    }
-    setUpdatedValue("");
-    setQCValue("");
-  };
+  const history = useHistory();
 
   return(
     <div className={classes.helpWrapper}>
@@ -77,58 +36,63 @@ export default function HelpDropdown() {
           <div className={classes.helpBody}>
             <table width='100%'>
             <tbody>
-              <tr className={classes.helpTableRow}>
-                <td>
-                  <img src={HelpMenuExploreIcon} className={classes.helpIcon}  alt="Explore Icon" />
-                </td>
-                <td >
-                  <div className={classes.helpName} onClick={()=>handleUpdatedValue()}>Explore</div>
-                </td>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); history.push(`/`)}}>
+                    <td>
+                      <img src={HelpMenuExploreIcon} className={classes.helpIcon}  alt="Explore Icon" />
+                    </td>
+                    <td >
+                      <div className={classes.helpName}>Explore</div>
+                    </td>
               </tr>
-              <tr className={classes.helpTableRow}>
+              {isUserAuth ?
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); history.push(`/gamemaker/0`)}}>
                 <td>
                   <img src={HelpMenuGameMakerIcon} className={classes.helpIcon}  alt="Game Maker Icon" />
                 </td>
                 <td >
-                  <div className={classes.helpName} onClick={()=>handleUpdatedValue()}>Game Maker</div>
+                  <div className={classes.helpName}>Game Maker</div>
+                </td>
+              </tr> : null}
+              <tr className={classes.helpTableRowLine}>
+                <td width='100%'>
+                  <hr style={{height: 1, color:'#768092', backgroundColor:'#768092', width: '100%', border: 0}} />
                 </td>
               </tr>
-              <tr className={classes.helpTableRowLine}>
-                  <hr style={{height: 1, color:'#768092', backgroundColor:'#768092', width: '100%', border: 0}} />
-              </tr>
-              <tr className={classes.helpTableRow}>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); handleModalOpen()}}>
                 <td>
                   <img src={HelpMenuHelpIcon} className={classes.helpIcon}  alt="Help Icon" />
                 </td>
                 <td >
-                  <div className={classes.helpName} onClick={()=>handleUpdatedValue()}>Help</div>
+                  <div className={classes.helpName}>Help</div>
                 </td>
               </tr>
-              <tr className={classes.helpTableRow}>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); window.location = `//testflight.apple.com/join/0FwryrId`}}>
                 <td>
                   <img src={HelpMenuAppIcon} className={classes.helpIcon}  alt="App iOS Icon" />
                 </td>
                 <td >
-                  <div className={classes.helpName} onClick={()=>handleUpdatedValue()}>Get the iOS App</div>
+                  <div className={classes.helpName}>Get the iOS App</div>
                 </td>
               </tr>
-              <tr className={classes.helpTableRow}>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); window.location = `//play.google.com/store/apps/details?id=com.rightonnew`}}>
                 <td>
                   <img src={HelpMenuAppAndroidIcon} className={classes.helpIcon}  alt="App Android Icon" />
                 </td>
                 <td >
-                  <div className={classes.helpName} onClick={()=>handleUpdatedValue()}>Get the Android App</div>
+                  <div className={classes.helpName}>Get the Android App</div>
                 </td>
               </tr>
               <tr className={classes.helpTableRowLine}>
+                <td width='100%'>
                   <hr style={{height: 1, color:'#768092', backgroundColor:'#768092', width: '100%', border: 0}} />
+                </td>
               </tr>
-              <tr className={classes.helpTableRow}>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); window.location = `//www.rightoneducation.com/`}}>
                 <td>
                   <img src={HelpMenuAboutIcon} className={classes.helpIcon}  alt="About Icon" />
                 </td>
                 <td >
-                  <div className={classes.helpName} onClick={()=>handleUpdatedValue()}>About RightOn!</div>
+                  <div className={classes.helpName}>About RightOn!</div>
                 </td>
               </tr>
               </tbody>

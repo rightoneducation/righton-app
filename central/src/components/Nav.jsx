@@ -47,7 +47,7 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
             </div> 
             :
             <div className={classes.help}>
-              <HelpDropdown />
+              <HelpDropdown isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
             </div>
             }
           </Grid>
