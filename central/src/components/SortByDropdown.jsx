@@ -4,6 +4,8 @@ import { SORT_TYPES } from '../lib/sorting';
 import { Collapse, MenuItem, Select } from '@material-ui/core';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 import SortbyIcon from '../images/SortByIcon.svg';
+import SortAscendingIcon from '../images/SortAscendingIcon.svg';
+import SortDescendingIcon from '../images/SortDescendingIcon.svg';
 
 export default function SortByDropdown({ handleSortChange, sortByCheck, setSortByCheck, isResolutionMobile }) {
   const classes = useStyles(sortByCheck, isResolutionMobile)();
@@ -13,23 +15,50 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
   const [qcValue, setQCValue] = React.useState("");
   const [gradeValue, setGradeValue] = React.useState("");
 
-  const handleUpdatedValue = (event) => {
-    setUpdatedValue(event.target.value);
+  const handleUpdatedValue = () => {
+    switch (updatedValue){
+      case SORT_TYPES.UPDATED:
+        setUpdatedValue(SORT_TYPES.OLDEST);
+        handleSortChange(SORT_TYPES.OLDEST);
+        break;
+      case SORT_TYPES.OLDEST:
+      case "":
+        setUpdatedValue(SORT_TYPES.UPDATED);
+        handleSortChange(SORT_TYPES.UPDATED);
+        break;
+    }
     setQCValue("");
     setGradeValue("");
-    handleSortChange(event);
   };
-  const handleQCValue = (event) => {
-    setQCValue(event.target.value);
+  const handleQCValue = () => {
+    switch (qcValue){
+      case SORT_TYPES.QUESTIONDESCENDING:
+          setQCValue(SORT_TYPES.QUESTIONASCENDING);
+          handleSortChange(SORT_TYPES.QUESTIONASCENDING);
+          break;
+      case SORT_TYPES.QUESTIONASCENDING:
+      case "":
+        setQCValue(SORT_TYPES.QUESTIONDESCENDING);
+        handleSortChange(SORT_TYPES.QUESTIONDESCENDING);
+        break;
+    }
     setUpdatedValue("");
     setGradeValue("");
-    handleSortChange(event);
   };
-  const handleGradeValue = (event) => {
-    setGradeValue(event.target.value);
+  const handleGradeValue = () => {
+    switch (gradeValue){
+      case SORT_TYPES.GRADEDESCENDING:
+        setGradeValue(SORT_TYPES.GRADEASCENDING);
+        handleSortChange(SORT_TYPES.GRADEASCENDING);
+        break;
+      case SORT_TYPES.GRADEASCENDING:
+      case "":
+        setGradeValue(SORT_TYPES.GRADEDESCENDING);
+        handleSortChange(SORT_TYPES.GRADEDESCENDING);
+        break;
+    }
     setUpdatedValue("");
     setQCValue("");
-    handleSortChange(event);
   };
 
   return(
@@ -42,71 +71,32 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
       </div>
       <Collapse in={sortByCheck}>
         <div className={classes.sortByBody}>
-          <table width="100%">
-            <tr>
+          <table width='100%'>
+            <tr className={classes.sortByTableRow}>
               <td>
-                <p className={classes.sortByName}>Last Updated</p>
+                <div className={classes.sortByName} onClick={()=>handleUpdatedValue()}>Last Updated</div>
               </td>
-              <td style={{textAlign: 'right'}}>
-                <div className={classes.sortByOptions}>
-                  <Select
-                    className={classes.sortByDropDowns}
-                    name="Last Updated"
-                    disableUnderline
-                    displayEmpty
-                    onChange={handleUpdatedValue}
-                    value={updatedValue}
-                    MenuProps={{classes: {paper: classes.MenuProps}}}
-                  >
-                    <MenuItem value="">---</MenuItem>
-                    <MenuItem value={SORT_TYPES.UPDATED}>Newest</MenuItem>
-                    <MenuItem value={SORT_TYPES.OLDEST}>Oldest</MenuItem>
-                  </Select>
-                </div>
+              <td >
+                {updatedValue === SORT_TYPES.UPDATED ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon} /> : null}
+                {updatedValue === SORT_TYPES.OLDEST ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
               </td>
             </tr>
-            <tr>
+            <tr className={classes.sortByTableRow}>
               <td>
-                <p className={classes.sortByName}>Question Count</p>
+                <div className={classes.sortByName} onClick={()=>handleQCValue()}>Question Count</div>
               </td>
-              <td style={{textAlign: 'right'}}>
-                <div className={classes.sortByOptions}>
-                  <Select
-                    className={classes.sortByDropDowns}
-                    name="Question Count"
-                    disableUnderline
-                    displayEmpty
-                    onChange={handleQCValue}
-                    value={qcValue}
-                    MenuProps={{classes: {paper: classes.MenuProps}}}
-                  >
-                    <MenuItem value="">---</MenuItem>
-                    <MenuItem value={SORT_TYPES.QUESTIONASCENDING}>Ascending</MenuItem>
-                    <MenuItem value={SORT_TYPES.QUESTIONDESCENDING}>Descending</MenuItem>
-                  </Select>
-                </div>
+              <td className={classes.sortByIcon}>
+                {qcValue === SORT_TYPES.QUESTIONDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
+                {qcValue === SORT_TYPES.QUESTIONASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
               </td>
             </tr>
-            <tr>
+            <tr className={classes.sortByTableRow}>
               <td>
-                <p className={classes.sortByName}>Grade Level</p>
+                <div className={classes.sortByName} onClick={()=>handleGradeValue()}>Grade Level</div>
               </td>
-              <td style={{textAlign: 'right'}}>
-                <div className={classes.sortByOptions}>
-                  <Select
-                    className={classes.sortByDropDowns}
-                    name="Grade Level"
-                    disableUnderline
-                    displayEmpty
-                    onChange={handleGradeValue}
-                    value={gradeValue}
-                    MenuProps={{classes: {paper: classes.MenuProps}}}
-                  >
-                    <MenuItem value="">---</MenuItem>
-                    <MenuItem value={SORT_TYPES.GRADEASCENDING}>Ascending</MenuItem>
-                    <MenuItem value={SORT_TYPES.GRADEDESCENDING}>Descending</MenuItem>
-                  </Select>
-                </div>
+              <td className={classes.sortByIcon}>
+                {gradeValue === SORT_TYPES.GRADEDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
+                {gradeValue === SORT_TYPES.GRADEASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
               </td>
             </tr>
           </table>
@@ -140,23 +130,9 @@ const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
       fontSize: '21px',
       lineHeight: '0px',
     },
-    sortByArrow: {
-      transition: 'transform 0.4s',
-      transform: 'rotate(0deg) scale(0.8)',
-      position: 'absolute',
-      right: 7,
-      top: 4,
-    },
-    sortByArrowActive: {
-      transition: 'transform 0.4s',
-      transform: 'rotate(90deg) scale(0.8)',
-      position: 'absolute',
-      right: 7,
-      top: 4,
-    },
     sortByBody: {
       position: 'absolute',
-      width: 338,
+      width: 250,
       right: 0,
       top: '38px',
       paddingBottom: '10px',
@@ -166,44 +142,18 @@ const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
       borderTopRightRadius: 0,
       border: '2px solid #768092',
       boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.13)',
+      display: 'flex',
+      direction: 'column',
       zIndex: 1,
     },
     sortByName: {
       fontSize: '16px',
-      lineHeight: '0px',
-      display: 'inline',
-      marginLeft: 10,
+      lineHeight: '39px',
+      color: '#768092',
+      paddingLeft: '16px',
+      cursor: 'pointer',
     },
-    sortByOptions: {
-      display: 'inline-block',
-      borderRadius: '18px',
-      boxShadow: '0px 4px 10px rgba(15, 27, 40, 0.3)',
-      backgroundColor: 'white',
-      width: 137,
-      marginRight: 10,
-      padding: '3px',
-      textAlign: 'left',
-    },
-    sortByDropDowns: {
-      width: 137,
-      fontFamily: 'Poppins',
-      color: '#9BA9D0',
-        '& .MuiSvgIcon-root': {
-          color: '#9BA9D0'
-        },
-    },
-    MenuProps: {
-        '& .MuiMenuItem-root': {
-            color: '#9BA9D0',
-            borderRadius: 18,
-            margin: 5,
-            padding: '0px 10px',
-            width: 107,
-            height: 30,
-        },
-        '& .MuiMenuItem-root.Mui-selected': {
-            color: 'white',
-            background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)',
-        },
-    },
+    sortByIcon: {
+      paddingRight:'8px',
+    }
   }));

@@ -15,8 +15,8 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
-  const handleSortChange = (event) => {
-    setSortType(event.target.value);
+  const handleSortChange = (value) => {
+    setSortType(value);
   };
   const [sortByCheck, setSortByCheck] = React.useState(false);
 
