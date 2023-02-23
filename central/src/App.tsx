@@ -164,7 +164,7 @@ function App() {
     setLoading(false);
   };
 
-  const isResolutionMobile = useMediaQuery("(max-width: 780px)");
+  const isResolutionMobile = useMediaQuery("(max-width: 760px)");
 
   const handleSearchClick = (isClick: boolean) => {
     setIsSearchClick(isClick);

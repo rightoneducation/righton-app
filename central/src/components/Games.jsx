@@ -26,7 +26,7 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
         <Route path="/" exact>
           <Grid item xs={12} className={classes.sidebar}>
             <Box className={classes.actions}>
-              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/> 
+              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile}/> 
               <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile}/> 
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>

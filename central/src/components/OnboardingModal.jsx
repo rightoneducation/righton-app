@@ -192,6 +192,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     width: '100vw',
     textAlign: 'center',
+    cursor: 'pointer'
   },
   qrText: {
     fontSize: '10px',

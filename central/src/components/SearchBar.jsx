@@ -23,13 +23,12 @@ export default function SearchBar({ setSearchInput, searchInput, isSearchClick, 
     );
 }
 
-
 const useStyles = (isResolutionMobile) => makeStyles(theme => ({ 
     search: {
         minHeight: '30px',
-        minWidth: isResolutionMobile ? 'calc(100% - 85px)' : 'calc(100% - 185px)',
+        width: 'calc(100vw - 65px)',
         borderRadius: '20px',
-        border: '3px solid #B1BACB', 
+        border: '2px solid #B1BACB', 
         display: 'flex',
         justifyContent: 'flexStart',
         alignItems:'center',

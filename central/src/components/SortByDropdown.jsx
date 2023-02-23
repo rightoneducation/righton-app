@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { SORT_TYPES } from '../lib/sorting';
-import { Collapse, MenuItem, Select } from '@material-ui/core';
+import { Collapse, MenuItem, Select, Tooltip } from '@material-ui/core';
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos';
 import SortbyIcon from '../images/SortByIcon.svg';
 import SortAscendingIcon from '../images/SortAscendingIcon.svg';
@@ -63,45 +63,52 @@ export default function SortByDropdown({ handleSortChange, sortByCheck, setSortB
 
   return(
     <div className={classes.sortByWrapper}>
-      <div className={classes.sortByHeader} onClick={() => {setSortByCheck((prev) => !prev)}}>
-      {!isResolutionMobile ? 
-        <p className={classes.sortByTitle}>Sort by...</p> 
-        : null}
-        <img src={SortbyIcon} alt="Sort By Icon" />
-      </div>
-      <Collapse in={sortByCheck}>
-        <div className={classes.sortByBody}>
-          <table width='100%'>
-            <tr className={classes.sortByTableRow}>
-              <td>
-                <div className={classes.sortByName} onClick={()=>handleUpdatedValue()}>Last Updated</div>
-              </td>
-              <td >
-                {updatedValue === SORT_TYPES.UPDATED ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon} /> : null}
-                {updatedValue === SORT_TYPES.OLDEST ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
-              </td>
-            </tr>
-            <tr className={classes.sortByTableRow}>
-              <td>
-                <div className={classes.sortByName} onClick={()=>handleQCValue()}>Question Count</div>
-              </td>
-              <td className={classes.sortByIcon}>
-                {qcValue === SORT_TYPES.QUESTIONDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
-                {qcValue === SORT_TYPES.QUESTIONASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
-              </td>
-            </tr>
-            <tr className={classes.sortByTableRow}>
-              <td>
-                <div className={classes.sortByName} onClick={()=>handleGradeValue()}>Grade Level</div>
-              </td>
-              <td className={classes.sortByIcon}>
-                {gradeValue === SORT_TYPES.GRADEDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
-                {gradeValue === SORT_TYPES.GRADEASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
-              </td>
-            </tr>
-          </table>
+        <div className={classes.sortByHeader} onClick={() => {setSortByCheck((prev) => !prev)}}>
+          <Tooltip title='Sort By' enterTouchDelay={700} enterDelay={1000} enterNextDelay={1000} placement="top">
+           <img src={SortbyIcon} className={classes.sortByTitleIcon}  alt="Sort By Icon" />
+          </Tooltip>
         </div>
-      </Collapse>
+        <Collapse in={sortByCheck} timeout={0}>
+          <div className={classes.sortByBody}>
+            <table width='100%'>
+            <tbody>
+              <tr>
+                <td>
+                    <div className={classes.sortByTitle}>Sort By</div>
+                </td>
+              </tr>
+              <tr className={classes.sortByTableRow}>
+                <td>
+                  <div className={classes.sortByName} onClick={()=>handleUpdatedValue()}>Last Updated</div>
+                </td>
+                <td >
+                  {updatedValue === SORT_TYPES.UPDATED ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon} /> : null}
+                  {updatedValue === SORT_TYPES.OLDEST ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
+                </td>
+              </tr>
+              <tr className={classes.sortByTableRow}>
+                <td>
+                  <div className={classes.sortByName} onClick={()=>handleQCValue()}>Question Count</div>
+                </td>
+                <td className={classes.sortByIcon}>
+                  {qcValue === SORT_TYPES.QUESTIONDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
+                  {qcValue === SORT_TYPES.QUESTIONASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
+                </td>
+              </tr>
+              <tr className={classes.sortByTableRow}>
+                <td>
+                  <div className={classes.sortByName} onClick={()=>handleGradeValue()}>Grade Level</div>
+                </td>
+                <td className={classes.sortByIcon}>
+                  {gradeValue === SORT_TYPES.GRADEDESCENDING ? <img src={SortDescendingIcon} alt="Sort Descending Icon" className={classes.sortByIcon}/> : null}
+                  {gradeValue === SORT_TYPES.GRADEASCENDING ? <img src={SortAscendingIcon} alt="Sort Ascending Icon" className={classes.sortByIcon}/> : null}
+                </td>
+                
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </Collapse>
     </div>
   );
 };
@@ -110,31 +117,30 @@ const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
     sortByWrapper: {
       color: 'white',
       fontFamily: 'Poppins',
-      width: isResolutionMobile ? '75px' : '165px',
+      width: '75px',
       cursor: 'pointer',
       position: 'relative',
     },
     sortByHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
       backgroundColor: sortByCheck ? '#768092' : '#B1BACB',
       borderRadius: '20px',
-      height: '38px',
+      height: sortByCheck ? '37px' : '35px',
       border: sortByCheck ? '3px solid #768092' : '3px solid #B1BACB',
       borderBottomLeftRadius: sortByCheck ? '0px' : '20px',
       borderBottomRightRadius: sortByCheck ? '0px' : '20px',
     },
     sortByTitle: {
       fontWeight: 'bold',
-      fontSize: '21px',
-      lineHeight: '0px',
+      fontSize: '16px',
+      lineHeight: '39px',
+      color: '#768092',
+      paddingLeft: '16px'
     },
     sortByBody: {
       position: 'absolute',
       width: 250,
       right: 0,
-      top: '38px',
+      top: '42px',
       paddingBottom: '10px',
       paddingTop: '15px',
       background: 'white',
@@ -152,6 +158,14 @@ const useStyles = (sortByCheck, isResolutionMobile) => makeStyles(theme => ({
       color: '#768092',
       paddingLeft: '16px',
       cursor: 'pointer',
+    },
+    sortByTitleIcon:{
+      position: 'absolute',
+      top:0,
+      left:0,
+      right:0,
+      bottom:0,
+      margin: 'auto',
     },
     sortByIcon: {
       paddingRight:'8px',
