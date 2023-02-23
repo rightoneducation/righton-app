@@ -9,10 +9,12 @@ import exploreIcon from '../images/ExploreIcon.svg';
 import betaLogo from '../images/BetaLogo.svg';
 import quizMakerIcon from '../images/GameMakerIcon.svg';
 import helpIcon from '../images/HelpIcon.svg';
+import HelpDropdown from './HelpDropdown';
 import { BoltRounded } from '@mui/icons-material';
 
 export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
+  const match = useRouteMatch('/gameMaker');
 
   return (
     <div className={classes.grow}>
@@ -22,30 +24,33 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
               <img src={betaLogo} alt="Logo" className={classes.logo} />
           </NavLink>
           <Grid className={classes.container}> 
+          {(isResolutionMobile && !match) || !isResolutionMobile ?
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
-              { !isResolutionMobile ? <Typography className={classes.title} variant="h6">
+              <Typography className={classes.title} variant="h6">
                 Explore
-              </Typography> : null }
-            </NavLink>
-            { isUserAuth ? 
+              </Typography>
+            </NavLink> : null }
+            {(isUserAuth && isResolutionMobile && match) || !isResolutionMobile ? 
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
-              {!isResolutionMobile ? <Typography className={classes.title} variant="h6" >
+               <Typography className={classes.title} variant="h6" >
                 Game Maker
-              </Typography> : null}
-            </NavLink> : null }
+              </Typography> 
+            </NavLink> : null}
+            {!isResolutionMobile ?
             <div className={classes.help} id='Help' onClick={() => handleModalOpen()}>
               <img src={helpIcon} alt="Help Icon" className={classes.icon} />
-              { !isResolutionMobile ? <Typography className={classes.helpText} variant="h6" >
+               <Typography className={classes.helpText} variant="h6" >
                 Help
-              </Typography>:null }
+              </Typography>
+            </div> 
+            :
+            <div className={classes.help}>
+              <HelpDropdown />
             </div>
-            {/* {matchSearchBar.isExact ? 
-               <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/> 
-              : setSearchInput('')}  */}
+            }
           </Grid>
-
         </Toolbar>
       </AppBar>
     </div>
