@@ -109,7 +109,7 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
             </Swiper>
           </div>
         </Modal>
-        <div className={classes.modalClose} onClick={() => handleModalClose(false)} >  Skip  </div> 
+        {modalOpen ? <div className={classes.modalClose} onClick={() => handleModalClose(false)} >  Skip  </div> : null}
         </div>
   );
 }
