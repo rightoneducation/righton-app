@@ -5,119 +5,116 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import exploreIcon from '../images/Explore.svg';
+import exploreIcon from '../images/ExploreIcon.svg';
 import betaLogo from '../images/BetaLogo.svg';
-import quizMakerIcon from '../images/QuizMaker.svg';
-import SearchBar from './SearchBar.jsx';
+import quizMakerIcon from '../images/GameMakerIcon.svg';
+import helpIcon from '../images/HelpIcon.svg';
+import HelpDropdown from './HelpDropdown';
+import { BoltRounded } from '@mui/icons-material';
 
-export default function PrimarySearchAppBar({ setSearchInput, searchInput, isUserAuth, isResolutionMobile, handleSearchClick, isSearchClick }) {
+export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, handleModalOpen }) {
   const classes = useStyles(isResolutionMobile)();
-  const matchSearchBar = useRouteMatch('/');
+  const match = useRouteMatch('/gameMaker');
 
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.bar} style={{paddingTop: '10px'}} position="static">
+      <AppBar className={classes.bar} position="static">
         <Toolbar>
-          <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Explore' to={'/'}>
+          <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'}>
               <img src={betaLogo} alt="Logo" className={classes.logo} />
           </NavLink>
           <Grid className={classes.container}> 
+          {(isResolutionMobile && !match) || !isResolutionMobile ?
             <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
               <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
-              { !isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
+              <Typography className={classes.title} variant="h6">
                 Explore
-              </Typography> : null }
-            </NavLink>
-            { isUserAuth ? 
-            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
-              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.iconQuiz} />
-              {!isResolutionMobile ? <Typography className={classes.title} variant="h6" noWrap>
-                Game Maker
-              </Typography> : null}
+              </Typography>
             </NavLink> : null }
-            {/* <img src={ComingSoon} alt="Coming Soon!!" style={{height: 50, marginLeft: 50, marginRight: 20}} /> */}
-            {matchSearchBar.isExact ? 
-               <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/> 
-              : setSearchInput('')} 
+            {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
+            <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
+              <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
+               <Typography className={classes.title} variant="h6" >
+                Game Maker
+              </Typography> 
+            </NavLink> : null}
+            {!isResolutionMobile ?
+            <div className={classes.help} id='Help' onClick={() => handleModalOpen(true, false)}>
+              <img src={helpIcon} alt="Help Icon" className={classes.icon} />
+               <Typography className={classes.helpText} variant="h6" >
+                Help
+              </Typography>
+            </div> 
+            :
+            <div className={classes.help}>
+              <HelpDropdown isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+            </div>
+            }
           </Grid>
-
         </Toolbar>
       </AppBar>
     </div>
   );
 }
 
-const useStyles = (isResolutionMobile) => makeStyles(theme => ({
-  bar: {
-    background: 'linear-gradient(right,#0F78BD,#043373)',
-  },
+const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
     flexGrow: 1,
   },
+  bar: {
+    background: 'linear-gradient(right,#0F78BD,#043373)',
+    paddingTop: '10px'
+  },
   container: {
     display: "flex",
-    margin: !isResolutionMobile ? 'auto' : '',
-  },
-  title: {
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+    margin:  'auto',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: '10px',
+    gap: 20,
   },
   link: {
     color: 'inherit',
     textDecoration: 'none',
-    maxWidth: '195px',
     display: 'flex',
     opacity: '0.5',
+    alignItems: 'center'
   },
   logoContainer: {
     display: 'flex',
     alignItems: 'center',
+    position: 'absolute',
+    left: '20px'
   },
   logo: {
-    minHeight: '60px',
+    minHeight: !isResolutionMobile ? '60px' : '43px',
     paddingTop: '10%',
     paddingBottom: '10%'
   },
   icon: {
-    height: '80%',
+    minWidth: '43px',
     marginRight: 10,
   },
-  iconQuiz: {
-    height: '85%',
-    marginRight: 10,
+  title: {
+    fontWeight: 'bold',
+    fontSize: '22px',
+    lineHeight: '30px',
+    minWidth: '100%',
+  },
+  help: {
+    display: 'flex',
+    alignItems: 'center',
+    textTransform: 'none',
+    position: 'absolute',
+    right: '20px',
+    cursor: 'pointer',
+  },
+  helpText: {
+    color:'white',
+    minWidth: '100%',
   },
   active: {
     opacity: '1',
-  },
-  search: {
-    position: 'absolute',
-    right: 0,
-    borderRadius: '20px',
-    border: '3px solid #87B8DB',
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    marginRight: 20,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-    display: 'inline-block',
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    paddingLeft: '6px',
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#87B8DB'
   },
   inputRoot: {
     color: 'inherit',

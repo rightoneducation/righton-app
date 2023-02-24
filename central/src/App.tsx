@@ -21,7 +21,12 @@ import Games from './components/Games';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
+import OnboardingModal from './components/OnboardingModal';
 import {useMediaQuery} from './hooks/useMediaQuery';
+import { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const theme = createTheme({
   palette: {
@@ -68,6 +73,8 @@ function App() {
   const [userLoading, setUserLoading] = useState(true);
   const [isSearchClick, setIsSearchClick] = useState(false);
   const [isUserAuth, setIsUserAuth] = useState(false);
+  const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
+  const [showModalGetApp, setShowModalGetApp] = useState(false);
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -158,11 +165,30 @@ function App() {
     setLoading(false);
   };
 
-  const isResolutionMobile = useMediaQuery("(max-width: 780px)");
+  const isResolutionMobile = useMediaQuery("(max-width: 760px)");
 
   const handleSearchClick = (isClick: boolean) => {
     setIsSearchClick(isClick);
   }
+
+  const handleModalClose =(modalOpen: boolean) =>{ 
+    localStorage.setItem('userPlayedBefore', 'true');
+    setModalOpen(modalOpen);
+  };
+
+  const handleModalOpen = (modalOpen:boolean, showModalGetApp:boolean) => {
+    localStorage.setItem('userPlayedBefore', 'false');
+    setShowModalGetApp(showModalGetApp);
+    setModalOpen(modalOpen);
+  }
+
+  function checkUserPlayed(): boolean {
+    if (localStorage.getItem('userPlayedBefore') === 'true')
+      return false;
+    else 
+      return true;
+  };
+
 
   useEffect(() => {
     persistUserAuth();
@@ -185,23 +211,24 @@ function App() {
         <Router>
           <Switch>
             <Route path="/login">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={isUserAuth} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} />
+              <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
               <LogIn handleUserAuth={handleUserAuth} />
             </Route>
 
             <Route path="/signup">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/>
+              <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
               <SignUp />
             </Route>
 
             <Route path="/confirmation">
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isUserAuth={false} isResolutionMobile={isResolutionMobile} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick}/>
+              <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
               <Confirmation />
             </Route>
 
             <Route>
-              <Nav setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth}  isSearchClick={isSearchClick ? isSearchClick : false} handleSearchClick={handleSearchClick}/>
-              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth} handleSearchClick={handleSearchClick}/>
+              <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
+              <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+              <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile}/>
               <AlertBar />
             </Route>
           </Switch>

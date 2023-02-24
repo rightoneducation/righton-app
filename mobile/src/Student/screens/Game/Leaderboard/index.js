@@ -43,7 +43,7 @@ const Leaderboard = ({
                     <Text style={styles.headerText}>Leaderboard</Text>
                 </LinearGradient>
             </ScrollView>
-            <>
+            <>       
                 <FlatList
                     data={sortedTeamsByScore}
                     keyExtractor={(item) => `${item.id}`}
