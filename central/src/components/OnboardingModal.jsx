@@ -18,7 +18,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 
-export default function GameModal({ modalOpen, handleModalClose}) {
+export default function GameModal({ modalOpen, showModalGetApp, handleModalClose}) {
   const classes = useStyles();
   const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
@@ -53,7 +53,7 @@ export default function GameModal({ modalOpen, handleModalClose}) {
             appElement={document.getElementById('root') || undefined}
            >
           <div style={{minWidth: 0, minHeight: 0, overflow: 'hidden'}} >
-            <Swiper navigation={(isMobile ? false: true)} pagination={{clickable:true}} modules={[Navigation, Pagination]} spaceBetween={8} className={classes.swiper} > 
+            <Swiper initialSlide={(showModalGetApp ? 1 : 0)} navigation={(isMobile ? false: true)} pagination={{clickable:true}} modules={[Navigation, Pagination]} spaceBetween={8} className={classes.swiper} > 
                 <SwiperSlide className={classes.slide}>
                   <div className={classes.modalHead}> Welcome to RightOn! </div>
                   <img src={OnboardingLogo} alt='Logo' className={classes.logo} />
@@ -192,6 +192,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     width: '100vw',
     textAlign: 'center',
+    cursor: 'pointer'
   },
   qrText: {
     fontSize: '10px',

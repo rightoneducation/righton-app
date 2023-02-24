@@ -8,14 +8,15 @@ import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import GameMaker from './GameMaker';
 import { getGameById } from '../lib/games';
+import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, handleSearchClick }) {
+export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
-  const handleSortChange = (event) => {
-    setSortType(event.target.value);
+  const handleSortChange = (value) => {
+    setSortType(value);
   };
   const [sortByCheck, setSortByCheck] = React.useState(false);
 
@@ -25,8 +26,8 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
         <Route path="/" exact>
           <Grid item xs={12} className={classes.sidebar}>
             <Box className={classes.actions}>
-              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} />
-              <div style={{ width: '100vw', height: 45 }} onClick={() => setSortByCheck(false)}></div>
+              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile}/> 
+              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile}/> 
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
               <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth}/>
@@ -88,7 +89,12 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#F2F2F2',
   },
   actions: {
+    paddingTop: '10px',
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0px 0px  !important`,
     marginBottom: '16px',
-    display: 'inline-flex',
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 10,
+    height: '40px',
   },
 }));
