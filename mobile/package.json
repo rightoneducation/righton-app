@@ -34,6 +34,7 @@
     "buffer": "^6.0.3",
     "classnames": "^2.3.2",
     "core-js": "^3.27.2",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "mime-type": "^4.0.0",
     "path": "^0.12.7",
