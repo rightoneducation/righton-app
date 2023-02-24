@@ -58,7 +58,7 @@ export default function HelpDropdown({isUserAuth, handleModalOpen}) {
                   <hr style={{height: 1, color:'#768092', backgroundColor:'#768092', width: '100%', border: 0}} />
                 </td>
               </tr>
-              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); handleModalOpen()}}>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); handleModalOpen(true, false)}}>
                 <td>
                   <img src={HelpMenuHelpIcon} className={classes.helpIcon}  alt="Help Icon" />
                 </td>
@@ -66,20 +66,12 @@ export default function HelpDropdown({isUserAuth, handleModalOpen}) {
                   <div className={classes.helpName}>Help</div>
                 </td>
               </tr>
-              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); window.location = `//testflight.apple.com/join/0FwryrId`}}>
+              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); handleModalOpen(true, true)}}>
                 <td>
-                  <img src={HelpMenuAppIcon} className={classes.helpIcon}  alt="App iOS Icon" />
+                  <img src={HelpMenuAppIcon} className={classes.helpIcon}  alt="App Icon" />
                 </td>
                 <td >
-                  <div className={classes.helpName}>Get the iOS App</div>
-                </td>
-              </tr>
-              <tr className={classes.helpTableRow} onClick={() => {SetIsHelpMenuClicked((prev) => !prev); window.location = `//play.google.com/store/apps/details?id=com.rightonnew`}}>
-                <td>
-                  <img src={HelpMenuAppAndroidIcon} className={classes.helpIcon}  alt="App Android Icon" />
-                </td>
-                <td >
-                  <div className={classes.helpName}>Get the Android App</div>
+                  <div className={classes.helpName}>Get the App</div>
                 </td>
               </tr>
               <tr className={classes.helpTableRowLine}>

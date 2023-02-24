@@ -74,6 +74,7 @@ function App() {
   const [isSearchClick, setIsSearchClick] = useState(false);
   const [isUserAuth, setIsUserAuth] = useState(false);
   const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
+  const [showModalGetApp, setShowModalGetApp] = useState(false);
 
   const getSortedGames = async () => {
     const games = sortGames(await fetchGames(), sortType);
@@ -175,9 +176,10 @@ function App() {
     setModalOpen(modalOpen);
   };
 
-  const handleModalOpen = (modelOpen:boolean) => {
+  const handleModalOpen = (modalOpen:boolean, showModalGetApp:boolean) => {
     localStorage.setItem('userPlayedBefore', 'false');
-    setModalOpen(true);
+    setShowModalGetApp(showModalGetApp);
+    setModalOpen(modalOpen);
   }
 
   function checkUserPlayed(): boolean {
@@ -224,7 +226,7 @@ function App() {
             </Route>
 
             <Route>
-              {modalOpen ? <OnboardingModal modalOpen={true} handleModalClose={handleModalClose} /> : null } 
+              <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
               <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
               <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile}/>
               <AlertBar />

@@ -31,7 +31,7 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
                 Explore
               </Typography>
             </NavLink> : null }
-            {(isUserAuth && isResolutionMobile && match) || !isResolutionMobile ? 
+            {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                <Typography className={classes.title} variant="h6" >
@@ -39,7 +39,7 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
               </Typography> 
             </NavLink> : null}
             {!isResolutionMobile ?
-            <div className={classes.help} id='Help' onClick={() => handleModalOpen()}>
+            <div className={classes.help} id='Help' onClick={() => handleModalOpen(true, false)}>
               <img src={helpIcon} alt="Help Icon" className={classes.icon} />
                <Typography className={classes.helpText} variant="h6" >
                 Help
