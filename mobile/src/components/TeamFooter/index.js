@@ -3,7 +3,7 @@ import {useRef, useEffect} from 'react'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { colors, fontFamilies, fonts, fontWeights } from '../../utils/theme'
 
-const TeamFooter = ({ icon, name, totalScore, isAnswerCorrect }) => {
+const TeamFooter = ({ icon, name, totalScore }) => {
 
     return (
         <View style={styles.container}>

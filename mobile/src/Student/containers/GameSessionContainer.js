@@ -97,7 +97,7 @@ const GameSessionContainer = ({ children }) => {
     }
 
     const handleSubscribeToGame = (gameSession) => {
-          if (isNullOrUndefined(gameSession)) {
+        if (isNullOrUndefined(gameSession)) {
             resetState()
             return
           }
@@ -120,24 +120,24 @@ const GameSessionContainer = ({ children }) => {
                     console.error("Failed to add team")
                     return
                 }
+                else {
+                  global.apiClient
+                      .addTeamMemberToTeam(team.id, true, uuid.v4())
+                      .then((teamMember) => {
+                          if (!teamMember) {
+                              console.error("Failed to add team member")
+                              return
+                          }
 
+                          if (isNullOrUndefined(team.teamMembers)) {
+                              team.teamMembers = [teamMember]
+                          }
 
-                global.apiClient
-                    .addTeamMemberToTeam(team.id, true, uuid.v4())
-                    .then((teamMember) => {
-                        if (!teamMember) {
-                            console.error("Failed to add team member")
-                            return
-                        }
-
-                        if (isNullOrUndefined(team.teamMembers)) {
-                            team.teamMembers = [teamMember]
-                        }
-
-                        return setTeamInfo(team, teamMember)
-                    }).catch((error) => {
-                        console.error(error)
-                    })
+                          return setTeamInfo(team, teamMember)
+                      }).catch((error) => {
+                          console.error(error)
+                      })
+                }
             })
             .catch((error) => {
                 console.error(error)
@@ -146,13 +146,13 @@ const GameSessionContainer = ({ children }) => {
 
     const handleAddTeamAnswer = async (question, answer, gameSessionState) =>
     {
-      return  (global.apiClient
+      return  global.apiClient
                   .addTeamAnswer(
                       teamMember.id,
                       question.id,
                       answer.text,
-                      (gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER && true || gameSessionState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && false),
-                      (gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER && false || gameSessionState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && true)
+                      gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER ? true : false,
+                      gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER ? false : true
                   )
                   .then((teamAnswer) => {
                       if (teamAnswer == null) {
@@ -169,7 +169,6 @@ const GameSessionContainer = ({ children }) => {
                   .catch((error) => {
                       console.error(error.message)
                   })
-                  )
     }
 
 

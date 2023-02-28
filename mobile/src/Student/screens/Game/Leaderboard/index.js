@@ -21,7 +21,6 @@ const Leaderboard = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
-    const totalScore = team.score ? team.score : 0
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -61,7 +60,7 @@ const Leaderboard = ({
                 <TeamFooter
                     icon={teamAvatar.smallSrc}
                     name={teamName}
-                    totalScore={totalScore ? totalScore : 0}
+                    totalScore={team.score}
                 />
             </View>
         </SafeAreaView>

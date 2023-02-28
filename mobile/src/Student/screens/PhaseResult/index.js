@@ -34,8 +34,10 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
 
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
         let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
-
-        setTotalScore(calculateTotalScore(gameSession, currentQuestion, updatedCurTeam))
+        let totalScore = calculateTotalScore(gameSession, currentQuestion, updatedCurTeam)
+        updatedCurTeam.score = totalScore
+        setTotalScore(totalScore)
+        
         
         if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
             if (phaseNo === 1)
@@ -92,7 +94,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
 
         let percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer.text, currentQuestion.id)
 
-        if (selectedTrickAnswer.text === answer.text) {
+        if (selectedTrickAnswer?.text === answer.text) {
             setPhase2Score(percentage)
         } else {
             setPhase2Score(0)
@@ -102,7 +104,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
 
     const getIsUserChoice = (answer) => {
         if (phaseNo === 1) {
-            return selectedAnswer.text === answer.text
+            return selectedAnswer?.text === answer.text
         } else if (!isNullOrUndefined(selectedTrickAnswer)) {
             return selectedTrickAnswer.text === answer.text
         }
@@ -117,9 +119,9 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
     }
 
     const calculateTotalScore =(gameSession, currentQuestion, curTeam) => {
-      const newScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(gameSession, currentQuestion, curTeam) 
-      global.apiClient.updateTeam({id: curTeam.id, score: newScore})
-      return newScore
+      team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, currentQuestion, curTeam) 
+      global.apiClient.updateTeam({id: curTeam.id, score: team.score})
+      return team.score
     }
 
     return (

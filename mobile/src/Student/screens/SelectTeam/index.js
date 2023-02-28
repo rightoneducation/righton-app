@@ -65,7 +65,7 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
         <View style={styles.teamIconNameContainer}>
           <Image style={styles.largeIcon} source={avatar && avatar.largeSrc} />
           <Text style={styles.fullNameText}>
-            {team ? team.name: null}  {/*propertyuuid doesn't exist*/}
+            {team ? team.name: null}  
           </Text>
         </View>
         <View>

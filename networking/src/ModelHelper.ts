@@ -86,7 +86,7 @@ export abstract class ModelHelper {
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
 
-    static calculateBasicModeTotalScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam) {
+    static calculateBasicModeScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam) {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length === 0) {
             console.error("No team member exists for the specified team")
@@ -101,17 +101,17 @@ export abstract class ModelHelper {
 
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
-        let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id)?.score ?? 0 
+        let submittedTrickAnswer = answers.find(answer => answer?.isTrickAnswer && answer.questionId === currentQuestion.id)
 
-        if (answers.some(answer => answer?.isTrickAnswer===true)){
-          let newScore = originalScore += ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answers?.find(answer => answer?.isTrickAnswer==true)?.text ?? '', currentQuestion.id)
-          return newScore
+        if (submittedTrickAnswer){
+          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         }
-        else if (answers.some(answer => answer?.isChosen===true && answer?.text == correctAnswer?.text)){
-          let newScore = originalScore += this.correctAnswerScore
-          return newScore
+        else if (answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id)){
+          return this.correctAnswerScore
         }
-        return originalScore
+        else{
+          return 0
+        }
     }
 
     static findTeamInGameSession(gameSession: IGameSession, teamId: string): ITeam | null {

@@ -11,7 +11,7 @@ import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
-import {useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
