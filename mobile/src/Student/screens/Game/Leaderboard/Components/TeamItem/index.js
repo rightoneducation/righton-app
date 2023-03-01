@@ -29,6 +29,11 @@ const TeamItem = ({ teamNo, score, teamName }) => {
             imageUrl = require("../../img/team_4_icon.png")
             break
         case 5:
+            backgroundColorStart = "#69000B"
+            backgroundColorEnd = "#8B000A"
+            imageUrl = require("../../img/team_5_icon.png")
+            break
+        case 5:
             backgroundColorStart = "#FED52B"
             backgroundColorEnd = "#C64E0F"
             imageUrl = require("../../img/team_5_icon.png")

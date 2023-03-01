@@ -47,7 +47,7 @@ const ScorePage = ({
             </Text>
             <View style={styles.imageContainer}>
                 <Image
-                    source={winnerTeamImages[teamAvatar.id]}
+                    source={winnerTeamImages[teamAvatar.id-1]}
                     style={styles.winnerImage}
                     onLayout={(event) => {
                         const { width, height } = event.nativeEvent.layout

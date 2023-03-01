@@ -21,6 +21,12 @@ const Leaderboard = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
+    const findTeamNum = (index) => {
+        if (index === 0)
+            return teamAvatar.id
+        else
+            return index+1
+    }
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -50,7 +56,7 @@ const Leaderboard = ({
                     renderItem={({ item, index }) => (
                         <TeamItem
                             teamName={item.name}
-                            teamNo={index + 1}
+                            teamNo={findTeamNum(index)}
                             score={item.score}
                         />
                     )}
