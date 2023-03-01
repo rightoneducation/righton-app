@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 import { scale, verticalScale } from 'react-native-size-matters'
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
 import PurpleBackground from '../../../components/PurpleBackground'
@@ -19,12 +20,21 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
     const avatar = TeamIcons.find(val => val.id === icon.id)
     setAvatar(avatar)
     setEnabledSubmitButton(true)
-    saveTeamAvatar(avatar)
   }
 
   const submit = () => {
     navigation.navigate("StudentGameIntro")
   }
+
+  //team is assigned in gamesessioncontainer state variable when user or host navigate away from select team page
+  useFocusEffect(
+    React.useCallback(() => {
+      const resetOnLeaveScreen = navigation.addListener('blur', () => {
+        saveTeamAvatar(avatar)
+      });
+      return resetOnLeaveScreen
+    },[avatar, navigation])
+  )
 
   return (
     <SafeAreaView style={styles.container}>
