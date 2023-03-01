@@ -94,15 +94,15 @@ const styles = StyleSheet.create({
     scoreContainer: {
         backgroundColor: "rgba(0, 0, 0, 0.302)",
         borderRadius: 17,
+        width: 58,
+        height: 58,
+        justifyContent: 'center'
     },
     scoreText: {
         color: "white",
         fontFamily: fontFamilies.montserratRegular,
         fontSize: fonts.medium,
         fontWeight: "bold",
-        width: 58,
-        height: 58,
         textAlign: "center",
-        textAlignVertical: "center",
     },
 })
