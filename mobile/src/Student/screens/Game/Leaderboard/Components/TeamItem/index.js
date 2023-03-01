@@ -19,8 +19,8 @@ const TeamItem = ({ teamNo, score, teamName }) => {
             imageUrl = require("../../img/team_2_icon.png")
             break
         case 3:
-            backgroundColorStart = "#69000B"
-            backgroundColorEnd = "#8B000A"
+            backgroundColorStart = "#2E2A49"
+            backgroundColorEnd = "#1496DB"
             imageUrl = require("../../img/team_3_icon.png")
             break
         case 4:
@@ -34,8 +34,8 @@ const TeamItem = ({ teamNo, score, teamName }) => {
             imageUrl = require("../../img/team_5_icon.png")
             break
         case 6:
-            backgroundColorStart = "#FED52B"
-            backgroundColorEnd = "#C64E0F"
+            backgroundColorStart = "#2E2A49"
+            backgroundColorEnd = "#1496DB"
             imageUrl = require("../../img/team_6_icon.png")
             break
         default:
