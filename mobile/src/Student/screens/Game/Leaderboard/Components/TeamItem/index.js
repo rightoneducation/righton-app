@@ -33,10 +33,10 @@ const TeamItem = ({ teamNo, score, teamName }) => {
             backgroundColorEnd = "#8B000A"
             imageUrl = require("../../img/team_5_icon.png")
             break
-        case 5:
+        case 6:
             backgroundColorStart = "#FED52B"
             backgroundColorEnd = "#C64E0F"
-            imageUrl = require("../../img/team_5_icon.png")
+            imageUrl = require("../../img/team_6_icon.png")
             break
         default:
             return null
