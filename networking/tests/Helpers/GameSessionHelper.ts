@@ -11,7 +11,7 @@ class GameSessionHelper {
         return randomInt(1000, 9999)
     }
 
-    static gameSession(question: IQuestion = QuestionHelper.simpleQuestion()) {
+    static gameSession(question: IQuestion = QuestionHelper.simpleQuestion(), question2: IQuestion = QuestionHelper.simpleQuestion()) {
         return {
             id: randomUUID(),
             gameId: Math.abs(randomInt(Math.pow(2, 31))),
@@ -24,7 +24,7 @@ class GameSessionHelper {
             gameCode: this.generateGameCode(),
             isAdvancedMode: false,
             currentTimer: null,
-            questions: [question],
+            questions: [question, question2],
             title: "Game Session Title",
             updatedAt: Date().toString(),
             createdAt: Date().toString()

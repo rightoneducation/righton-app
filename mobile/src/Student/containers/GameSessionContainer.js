@@ -1,5 +1,6 @@
 import { GameSessionState, isNullOrUndefined, ModelHelper } from "@righton/networking"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import uuid from "react-native-uuid"
 import EncryptedStorage from "react-native-encrypted-storage"
 import TeamIcons from "./TeamIcons"
 
@@ -76,71 +77,6 @@ const GameSessionContainer = ({ children }) => {
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
 
-    useEffect(() => {
-        // TODO: Disabling local storage for now and fixing previous builds with it
-        clearStorage()
-        return
-        const loadGameCode = async () => {
-            return loadLocalStorageForKey(localStorageKeys.gameCode)
-                .then((localGameCode) => {
-                    if (isNullOrUndefined(localGameCode) ||
-                        parseInt(localGameCode) === 0) {
-                        throw new Error("No game code exists in local storage!")
-                    }
-
-                    return parseInt(localGameCode)
-                })
-        }
-
-        loadGameCode()
-            .then(localGameCode => {
-                return fetchGameSessionByCode(localGameCode)
-            })
-            .then(() => {
-                return loadLocalStorageForKey(localStorageKeys.teamId)
-            })
-            .then(teamId => {
-                if (isNullOrUndefined(teamId)) {
-                    throw new Error("No teamId exists!")
-                }
-
-                return ModelHelper.findTeamInGameSession(gameSession, teamId)
-            })
-            .then(team => {
-                if (isNullOrUndefined(team)) {
-                    removeDataFromLocalStorage(localStorageKeys.teamId)
-                    throw new Error("No team found!")
-                }
-                setTeam(team)
-                return loadLocalStorageForKey(localStorageKeys.teamMemberId)
-            })
-            .then(teamMemberId => {
-                if (isNullOrUndefined(teamMemberId)) {
-                    throw new Error("No teamMemberId found in local storage!")
-                }
-                return ModelHelper(team, teamMemberId)
-            })
-            .then(teamMember => {
-                if (isNullOrUndefined(teamMember)) {
-                    removeDataFromLocalStorage(localStorageKeys.teamMemberId)
-                    throw new Error("No team member found!")
-                }
-                setTeamMember(teamMember)
-                return loadLocalStorageForKey(localStorageKeys.teamAvatarId)
-            })
-            .then(teamAvatarId => {
-                if (isNullOrUndefined(teamAvatarId) ||
-                    parseInt(teamAvatarId) === 0) {
-                    return
-                }
-                let avatar = TeamIcons.find(avatar => avatar.id === parseInt(teamAvatarId))
-                setTeamAvatar(avatar)
-            })
-            .catch(error => {
-                console.debug(`GameSessionContainer::useEffect: ${error}`)
-            })
-    }, [])
-
     const fetchGameSessionByCode = async (gameCode) => {
         return global.apiClient
             .getGameSessionByCode(gameCode)
@@ -160,23 +96,81 @@ const GameSessionContainer = ({ children }) => {
             })
     }
 
-    useEffect(() => {
+    const handleSubscribeToGame = (gameSession) => {
         if (isNullOrUndefined(gameSession)) {
-            clearStorage()
+            resetState()
             return
-        }
-
-        storeDataToLocalStorage(localStorageKeys.gameCode, `${gameSession.gameCode}`)
-
-        let subscription =
+          }
+          
+          let subscription =
             global.apiClient.subscribeUpdateGameSession(
                 gameSession.id,
                 (gameSessionResponse) => {
                     setGameSession(gameSessionResponse)
                 })
+    }
 
-        return () => subscription?.unsubscribe()
-    }, [gameSession])
+    const handleAddTeam = async (teamName) => 
+    {
+      return global.apiClient
+            .addTeamToGameSessionId(gameSession.id, teamName, null)
+            .then((team) => {
+                console.debug(team)
+                if (!team) {
+                    console.error("Failed to add team")
+                    return
+                }
+                else {
+                  global.apiClient
+                      .addTeamMemberToTeam(team.id, true, uuid.v4())
+                      .then((teamMember) => {
+                          if (!teamMember) {
+                              console.error("Failed to add team member")
+                              return
+                          }
+
+                          if (isNullOrUndefined(team.teamMembers)) {
+                              team.teamMembers = [teamMember]
+                          }
+
+                          return setTeamInfo(team, teamMember)
+                      }).catch((error) => {
+                          console.error(error)
+                      })
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
+
+    const handleAddTeamAnswer = async (question, answer, gameSessionState) =>
+    {
+      return  global.apiClient
+                  .addTeamAnswer(
+                      teamMember.id,
+                      question.id,
+                      answer.text,
+                      gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER ? true : false,
+                      gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER ? false : true
+                  )
+                  .then((teamAnswer) => {
+                      if (teamAnswer == null) {
+                          console.error(
+                              "Failed to create team Answer."
+                          )
+                          return    
+                      }
+                      console.debug(
+                          "Team answer:",
+                          teamAnswer
+                      )
+                  })
+                  .catch((error) => {
+                      console.error(error.message)
+                  })
+    }
+
 
     const setTeamInfo = async (team, teamMember) => {
         await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
@@ -199,6 +193,9 @@ const GameSessionContainer = ({ children }) => {
         teamAvatar,
         saveTeamAvatar,
         clearStorage,
+        handleSubscribeToGame,
+        handleAddTeam,
+        handleAddTeamAnswer
     })
 }
 

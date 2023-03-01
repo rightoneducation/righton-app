@@ -92,7 +92,6 @@ const GamePreview = ({ navigation, route }) => {
                     console.error("Failed to create team.")
                     return
                 }
-                console.log(teamAnswer)
             })
             .catch((error) => {
                 console.error(error.message)
@@ -158,7 +157,7 @@ const GamePreview = ({ navigation, route }) => {
                             }
                         />
                     </Card>
-                    {gameSession.isAdvanced && (
+                    {gameSession.isAdvanced ? (
                         <Card headerTitle="Hints">
                             {showTrickAnswersHint ? (
                                 <HintsView
@@ -172,10 +171,10 @@ const GamePreview = ({ navigation, route }) => {
                                 <Spinner text="Hints will be available after one minute." />
                             )}
                         </Card>
-                    )}
+                    ) : null}
                 </HorizontalPageView>
             </View>
-            {gameSession.isAdvancedMode && (
+            {gameSession.isAdvancedMode ? (
                 <TeamsReadinessFooter
                     style={styles.footer}
                     onTappedFirst={() => {
@@ -193,7 +192,7 @@ const GamePreview = ({ navigation, route }) => {
                         })
                     }}
                 />
-            )}
+            ) : null}
         </SafeAreaView>
     )
 }

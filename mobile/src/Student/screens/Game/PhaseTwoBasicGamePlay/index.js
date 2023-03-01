@@ -1,5 +1,5 @@
 import { GameSessionState, isNullOrUndefined } from "@righton/networking"
-import { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import {
     Alert,
     Dimensions,
@@ -10,9 +10,11 @@ import {
     ScrollView,
     Image
 } from "react-native"
+import { ModelHelper } from '@righton/networking'
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { color } from "react-native-reanimated"
+import { useFocusEffect } from '@react-navigation/native'
 import { scale, moderateScale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
 import RoundButton from "../../../../components/RoundButton"
@@ -35,19 +37,18 @@ const PhaseTwoBasicGamePlay = ({
     team,
     teamMember,
     score,
-    totalScore,
     teamAvatar,
+    navigation,
+    handleAddTeamAnswer
 }) => {
-    const phaseTime = gameSession.phaseTwoTime
+    let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [submitted, setSubmitted] = useState(false)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-
     const teamName = team?.name ? team?.name : "Team Name"
-
     score = score ? score : 10
-    totalScore = team?.score ? team?.score : 0
+    let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
 
     const question = gameSession.questions[
         isNullOrUndefined(gameSession.currentQuestionIndex)
@@ -69,13 +70,12 @@ const PhaseTwoBasicGamePlay = ({
     )
 
     let countdown = useRef()
-
-    useEffect(() => {
+    useFocusEffect(
+      React.useCallback(() => {
         if (
-            currentTime == 0 || // Out of time!
+            currentTime <= 0 || // Out of time!
             // Game has moved on, so disable answering
-            gameSession.currentState !==
-            GameSessionState.CHOOSE_TRICKIEST_ANSWER
+            gameSession?.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER
         ) {
             setSubmitted(true)
         }
@@ -84,41 +84,31 @@ const PhaseTwoBasicGamePlay = ({
             if (currentTime > 0) {
                 setCurrentTime(currentTime - 1)
             }
-            setProgress(currentTime / phaseTime)
+            setProgress((currentTime - 1) / phaseTime)
         }, 1000)
 
         return () => {
             clearInterval(countdown.current)
         }
-    }, [gameSession, currentTime])
+     },[currentTime])
+    )
+
+    // below resets the state variables of Phase One gameplay when user leaves phase one screen (to set up for any following question)
+    useFocusEffect(
+      React.useCallback(() => {
+        const resetOnLeaveScreen = navigation.addListener('blur', () => {
+          setSelectedAnswerIndex(null)
+          setSubmitted(false)
+        });
+        return resetOnLeaveScreen
+      },[navigation])
+    )
 
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
+        handleAddTeamAnswer(question, answer, gameSession?.currentState)
+        trickAnswerId = answer.id
         setSubmitted(true)
-        global.apiClient
-            .addTeamAnswer(
-                teamMember.id,
-                question.id,
-                answer.text,
-                answer.isChosen ? null : false,
-                true
-            )
-            .then((teamAnswer) => {
-                if (isNullOrUndefined(teamAnswer)) {
-                    console.error(
-                        "Failed to create team Answer."
-                    )
-                    return
-                }
-
-                console.debug(
-                    "phase 2 team answer: ",
-                    teamAnswer
-                )
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
     }
 
     const correctAnswer = answerChoices.find((answer) => answer.isCorrectAnswer)
@@ -138,7 +128,7 @@ const PhaseTwoBasicGamePlay = ({
                     style={styles.timerProgressBar}
                     progress={progress}
                     color={"#349E15"}
-                    height={"100%"}
+                    height={100}
                     unfilledColor={"#7819F8"}
                     width={
                         Dimensions.get("window").width - scale(90)
@@ -180,7 +170,7 @@ const PhaseTwoBasicGamePlay = ({
                     disabled={submitted}
                     correctAnswer={correctAnswer}
                 />
-                {!submitted && (
+                {!submitted ? (
                     <RoundButton
                         style={
                             (selectedAnswerIndex || selectedAnswerIndex === 0)
@@ -192,21 +182,21 @@ const PhaseTwoBasicGamePlay = ({
                         onPress={handleSubmitAnswer}
                         disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
-                )}
-                {submitted && (
+                ) : null}
+                {submitted ? (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
                         disabled={true}
                     />
-                )}
+                ) : null}
             </Card>
-            {submitted && (
+            {submitted ? (
                 <Text style={styles.answerSubmittedText}>
                     {submittedAnswerText}
                 </Text>
-            )}
+            ) : null}
         </View>
 
     const correctAnswerScreen =
@@ -237,8 +227,8 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {index === selectedAnswerIndex &&
-                            <Image source={require("../img/Picked.png")} />}
+                        {answer.text === answerChoices[selectedAnswerIndex | 0].text ? 
+                            <Image source={require("../img/Picked.png")} /> : null}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
                 </Card>
@@ -320,7 +310,7 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(20)
     },
     headerText: {
-        marginTop: verticalScale(14),
+        marginTop: verticalScale(24),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.large,
@@ -328,7 +318,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     cardHeadingText: {
-        marginVertical: verticalScale(19),
+        marginBottom: verticalScale(19),
         textAlign: "center",
         fontFamily: fontFamilies.montserratBold,
         fontSize: fonts.medium,
@@ -390,7 +380,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         marginBottom: verticalScale(50),
-        marginTop: -verticalScale(150),
+        marginTop: -verticalScale(140),
     },
     footerView: {
         position: "absolute",

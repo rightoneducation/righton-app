@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "@righton/networking"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { Image, SafeAreaView, Text, TextInput, View } from "react-native"
 import uuid from "react-native-uuid"
 import PurpleBackground from "../../../components/PurpleBackground"
@@ -7,7 +7,7 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
+const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
@@ -33,44 +33,13 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
         }
 
         const teamName = `${firstName} ${lastName}`
-
-        global.apiClient
-            .addTeamToGameSessionId(gameSession.id, teamName, null)
-            .then((team) => {
-                console.debug(team)
-                if (!team) {
-                    console.error("Failed to add team")
-                    return
-                }
-
-
-                global.apiClient
-                    .addTeamMemberToTeam(team.id, true, uuid.v4())
-                    .then((teamMember) => {
-                        if (!teamMember) {
-                            console.error("Failed to add team member")
-                            return
-                        }
-
-                        if (isNullOrUndefined(team.teamMembers)) {
-                            team.teamMembers = [teamMember]
-                        }
-
-                        return setTeamInfo(team, teamMember)
-                    }).then(() => {
-                        navigation.navigate("SelectTeam")
-                    }).catch((error) => {
-                        console.error(error)
-                    })
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+        handleAddTeam(teamName).then(() =>  navigation.navigate("SelectTeam"))
     }
 
     return (
         <>
             <SafeAreaView style={{ flex: 0, backgroundColor: "#312759" }} />
+   
             <SafeAreaView style={styles.container}>
                 <PurpleBackground style={styles.innerContainer}>
                     <View style={styles.logoContainer}>
@@ -81,7 +50,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                         />
                     </View>
                     <View style={styles.entryContainer}>
-                        {gameSession != null && !gameSession.isAdvanced && (
+                        {(gameSession != null && !gameSession.isAdvanced) ? (
                             <>
                                 <Text style={styles.title}>
                                     Enter Your Name
@@ -98,7 +67,6 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                         style={styles.input}
                                         textAlign={"center"}
                                         value={firstName}
-                                        autoFocus={true}
                                     />
                                     <TextInput
                                         multiline={false}
@@ -118,7 +86,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                     style={styles.enterButton}
                                     onPress={this.onNameSubmit}
                                 />
-                                {showErrorText &&
+                                {showErrorText ?
                                     <View>
                                         <Text
                                             style={styles.noNameErrorTextBold}>
@@ -132,14 +100,13 @@ const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
                                             will not be stored.
                                         </Text>
                                     </View>
-                                }
+                                : null}
                             </>
-                        )}
+                        ) : null}
                     </View>
                 </PurpleBackground>
             </SafeAreaView>
         </>
     )
 }
-
 export default StudentName

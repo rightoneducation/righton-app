@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { View, StyleSheet, Text } from 'react-native'
 import Svg, { Path, G } from 'react-native-svg'
 import { fontFamilies } from '../../../utils/theme'
@@ -14,16 +15,6 @@ const rotate = x => [cos(x), -sin(x), sin(x), cos(x)]
 const add = ([a1, a2], b1, b2) => [a1 + b1, a2 + b2]
 
 const ellipse = (cx, cy, rx, ry, t1, delta, theta) => {
-    /* [
-    returns a SVG path element that represent a ellipse.
-    cx,cy → center of ellipse
-    rx,ry → major minor radius
-    t1 → start angle, in radian.
-    delta → angle to sweep, in radian. positive.
-    theta → rotation on the whole, in radian
-    url: SVG Circle Arc http://xahlee.info/js/svg_circle_arc.html
-    Version 2019-06-19
-     ] */
     delta = delta % tau
     const rotMatrix = rotate(theta)
     const [sX, sY] = add(multiply(rotMatrix, rx * cos(t1), ry * sin(t1)), cx, cy)
@@ -69,7 +60,6 @@ export default LoadingIndicator = (
         radius,
         fontSize,
         textColor,
-        shouldShowCountdown,
         timerStartInSecond,
         onTimerFinished
     }
@@ -83,22 +73,18 @@ export default LoadingIndicator = (
     const [timerFinished, setTimerFinished] = useState(false)
 
     let timeInterval = 100
-    useEffect(() => {
-        if (shouldShowCountdown) {
-            if (timerFinished) {
-                return
-            }
-            else if (remainingTimeInSecond == 1) {
-                onTimerFinished()
-                clearInterval(refreshIntervalId)
-                setTimerFinished(true)
-                return
-            }
+    useFocusEffect(
+      React.useCallback(() => {
+        if (timerFinished || remainingTimeInSecond < 1) {
+            clearInterval(refreshIntervalId)
+            setTimerFinished(true)
+            onTimerFinished()
+            return
         }
         var refreshIntervalId = setInterval(() => {
             const c = colors.slice(colors.length - 1).concat(colors.slice(0, colors.length - 1))
             setColors(c)
-            if (!shouldShowCountdown) {
+            if (timerFinished) {
                 return
             }
             setRemainingSecondsInMilliSeconds(remainingSecondsInMilliSeconds - timeInterval)
@@ -107,7 +93,9 @@ export default LoadingIndicator = (
         return () => {
             clearInterval(refreshIntervalId)
         }
-    })
+      },[remainingSecondsInMilliSeconds])
+    )
+
     return (
         <View style={styles.container}>
             <Svg
@@ -128,7 +116,6 @@ export default LoadingIndicator = (
                 style={[styles.text, {
                     fontSize: fontSize,
                     color: textColor,
-                    opacity: shouldShowCountdown ? 1 : 0
                 }]}
             >
                 {remainingTimeInSecond}
@@ -155,7 +142,6 @@ const styles = StyleSheet.create({
 LoadingIndicator.propTypes = {
     theme: PropTypes.array.isRequired,
     radius: PropTypes.number.isRequired,
-    shouldShowCountdown: PropTypes.bool.isRequired,
     fontSize: PropTypes.number,
     timerStartInSecond: PropTypes.number,
     onTimerFinished: PropTypes.func,

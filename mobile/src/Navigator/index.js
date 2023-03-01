@@ -28,6 +28,9 @@ const AppContainer = () => {
                 teamAvatar,
                 saveTeamAvatar,
                 clearStorage,
+                handleSubscribeToGame,
+                handleAddTeam,
+                handleAddTeamAnswer
             }) => (
                 <NavigationContainer >
                     <Stack.Navigator
@@ -53,6 +56,7 @@ const AppContainer = () => {
                                 <EnterGameCode
                                     {...props}
                                     fetchGameSessionByCode={fetchGameSessionByCode}
+                                    handleSubscribeToGame={handleSubscribeToGame}
                                 />
                             )}
                         </Stack.Screen>
@@ -62,6 +66,7 @@ const AppContainer = () => {
                                     {...props}
                                     gameSession={gameSession}
                                     setTeamInfo={setTeamInfo}
+                                    handleAddTeam={handleAddTeam}
                                 />
                             )}
                         </Stack.Screen>
@@ -102,6 +107,7 @@ const AppContainer = () => {
                                     teamMember={teamMember}
                                     team={team}
                                     teamAvatar={teamAvatar}
+                                    handleAddTeamAnswer={handleAddTeamAnswer}
                                 />
                             )}
                         </Stack.Screen>
@@ -120,6 +126,7 @@ const AppContainer = () => {
                                     teamMember={teamMember}
                                     team={team}
                                     teamAvatar={teamAvatar}
+                                    handleAddTeamAnswer={handleAddTeamAnswer}
                                 />
                             )}
                         </Stack.Screen>
@@ -164,5 +171,4 @@ const AppContainer = () => {
         </GameSessionContainer>
     )
 }
-
 export default AppContainer

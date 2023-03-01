@@ -21,11 +21,6 @@ const Leaderboard = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
-    const totalScore = ModelHelper.calculateBasicModeTotalScoreForQuestion(
-        gameSession,
-        gameSession.questions[gameSession.currentQuestionIndex],
-        team
-    )
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -56,11 +51,7 @@ const Leaderboard = ({
                         <TeamItem
                             teamName={item.name}
                             teamNo={index + 1}
-                            score={ModelHelper.calculateBasicModeTotalScoreForQuestion(
-                                gameSession,
-                                gameSession.questions[gameSession.currentQuestionIndex],
-                                item
-                            )}
+                            score={item.score}
                         />
                     )}
                 />
@@ -69,7 +60,7 @@ const Leaderboard = ({
                 <TeamFooter
                     icon={teamAvatar.smallSrc}
                     name={teamName}
-                    totalScore={totalScore ? totalScore : 0}
+                    totalScore={team.score}
                 />
             </View>
         </SafeAreaView>

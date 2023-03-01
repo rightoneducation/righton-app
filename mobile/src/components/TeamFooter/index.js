@@ -1,8 +1,10 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Animated,  Image, StyleSheet, Text, View } from 'react-native'
+import {useRef, useEffect} from 'react'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { colors, fontFamilies, fonts, fontWeights } from '../../utils/theme'
 
 const TeamFooter = ({ icon, name, totalScore }) => {
+
     return (
         <View style={styles.container}>
             <View style={styles.itemContainer}>

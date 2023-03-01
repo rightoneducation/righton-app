@@ -12,9 +12,7 @@ export default function JoinGame({
     gameSession,
     clearStorage
 }) {
-    // TODO: Handle edge cases like user hasn't selected a team but state is on 
-    // phase results or more advance
-    useEffect(() => {
+    useEffect(() => { 
         if (isNullOrUndefined(gameSession)) {
             resetState()
             return
@@ -30,7 +28,10 @@ export default function JoinGame({
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                navigation.navigate("PregameCountDown")
+                if (gameSession.currentQuestionIndex === 0)
+                  navigation.navigate("PregameCountDown")
+                else
+                  navigation.navigate("PhaseOneBasicGamePlay")
                 break
 
             case GameSessionState.PHASE_1_DISCUSS:
@@ -43,12 +44,12 @@ export default function JoinGame({
 
             case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
             case GameSessionState.PHASE_2_DISCUSS:
-                navigation.push("PhaseTwoBasicGamePlay")
+                navigation.navigate("PhaseTwoBasicGamePlay")
                 break
 
             case GameSessionState.PHASE_1_RESULTS:
             case GameSessionState.PHASE_2_RESULTS:
-                navigation.push("PhaseResult")
+                navigation.navigate("PhaseResult")
                 break
 
             case GameSessionState.FINAL_RESULTS:

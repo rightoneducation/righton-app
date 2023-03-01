@@ -6,7 +6,7 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
+const EnterGameCode = ({ navigation, fetchGameSessionByCode, handleSubscribeToGame }) => {
     const [gameCode, setGameCode] = useState("")
     const [showErrorText, setShowErrorText] = useState(false)
 
@@ -23,6 +23,8 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
                     return
                 }
                 setGameCode(gameCode)
+                handleSubscribeToGame(gameSession)
+                navigation.navigate("StudentName")
             }).catch(error => {
                 console.debug(`Failed to fetch the game session ${error}`)
                 setShowErrorText(true)
@@ -58,7 +60,6 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
                             style={styles.input}
                             textAlign={"center"}
                             value={gameCode}
-                            autoFocus={true}
                             editable
                         />
                         <RoundButton
@@ -67,11 +68,11 @@ const EnterGameCode = ({ navigation, fetchGameSessionByCode }) => {
                             style={styles.enterButton}
                             onPress={this.onGameCodeSubmit}
                         />
-                        {showErrorText && <Text
+                        {showErrorText ? <Text
                             style={{ ...styles.errorText }}>
                             We were unable to{"\n"}join this game.{"\n"}
                             {"\n"}Check the Game Code{"\n"}and try again.
-                        </Text>
+                        </Text> : null
                         }
                     </View>
                 </PurpleBackground>

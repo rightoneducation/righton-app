@@ -5,7 +5,7 @@ import { colors, fontFamilies, fonts } from '../../utils/theme'
 
 RoundButton.propTypes = {
     title: PropTypes.string.isRequired,
-    onPress: PropTypes.func.isRequired,
+    onPress: PropTypes.func,
     disabled: PropTypes.bool
 }
 export default function RoundButton(props) {

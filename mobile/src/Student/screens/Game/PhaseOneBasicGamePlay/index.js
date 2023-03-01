@@ -1,7 +1,6 @@
 import { GameSessionState } from "@righton/networking"
-import { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import {
-    Alert,
     Dimensions,
     SafeAreaView,
     StyleSheet,
@@ -12,6 +11,7 @@ import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { scale, verticalScale } from "react-native-size-matters"
 import uuid from "react-native-uuid"
+import { useFocusEffect } from '@react-navigation/native'
 import RoundButton from "../../../../components/RoundButton"
 import TeamFooter from "../../../../components/TeamFooter"
 import { fontFamilies, fonts, fontWeights } from "../../../../utils/theme"
@@ -34,15 +34,17 @@ const PhaseOneBasicGamePlay = ({
     team,
     teamMember,
     teamAvatar,
+    navigation,
+    handleAddTeamAnswer
 }) => {
-    const phaseTime = gameSession?.phaseOneTime ?? 300
+    let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
     const [submitted, setSubmitted] = useState(false)
     let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
-    const totalScore = team?.score ? team?.score : 0
+    let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
     const question = gameSession?.isAdvanced
         ? team.question
         : gameSession?.questions[
@@ -51,56 +53,39 @@ const PhaseOneBasicGamePlay = ({
             : gameSession?.currentQuestionIndex
         ]
     const availableHints = question.instructions
+        
+    useFocusEffect(
+      React.useCallback(() => {
+          if (currentTime <= 0) {
+              setSubmitted(true)
+          }
+          countdown.current = setInterval(() => {
+              if (currentTime > 0) {
+                  setCurrentTime(currentTime - 1)
+              }
+              setProgress((currentTime - 1) / phaseTime)
+          }, 1000)
+          return () => {
+              clearInterval(countdown.current)
+          }
+      },[currentTime])
+    )
 
-    useEffect(() => {
-        if (
-            currentTime == 0 || // Out of time!
-            // Game has moved on, so disable answering
-            gameSession?.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-        ) {
-            setSubmitted(true)
-        }
-        countdown.current = setInterval(() => {
-            if (currentTime > 0) {
-                setCurrentTime(currentTime - 1)
-            }
-            setProgress((currentTime - 1) / phaseTime)
-        }, 1000)
-        return () => {
-            clearInterval(countdown.current)
-        }
-    }, [gameSession, currentTime])
+    // below resets the state variables of Phase One gameplay when user leaves phase one screen (to set up for any following question)
+    useFocusEffect(
+      React.useCallback(() => {
+        const resetOnLeaveScreen = navigation.addListener('blur', () => {
+          setSelectedAnswerIndex(null)
+          setSubmitted(false)
+        });
+        return resetOnLeaveScreen
+      },[navigation])
+    )
+
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
-        // if isCorrectAnswer is true, add 10 points to the team's score
-        // this does not update team score in the database yet
-        if (answer.isCorrectAnswer && team) {
-            team.score += 10
-        }
+        handleAddTeamAnswer(question, answer, gameSession?.currentState)
         setSubmitted(true)
-        global.apiClient
-            .addTeamAnswer(
-                teamMember.id,
-                question.id,
-                answer.text,
-                answer.isChosen ? null : true,
-                false
-            )
-            .then((teamAnswer) => {
-                if (teamAnswer == null) {
-                    console.error(
-                        "Failed to create team Answer."
-                    )
-                    return
-                }
-                console.debug(
-                    "phase 1 team answer:",
-                    teamAnswer
-                )
-            })
-            .catch((error) => {
-                console.error(error.message)
-            })
     }
     const answersParsed = question.choices
     const answerChoices = answersParsed.map((choice) => {
@@ -115,12 +100,12 @@ const PhaseOneBasicGamePlay = ({
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
     let cards = [
-        <>
+        <View key={"questions"}>
             <Text style={styles.cardHeadingText}>Question</Text>
             <Card headerTitle="Question" key={"question"}>
                 <ScrollableQuestion question={question} />
             </Card>
-        </>,
+        </View>,
         <View key={"answers"}>
             <Text style={styles.cardHeadingText}>Answers</Text>
             <Card headerTitle="Answers">
@@ -135,7 +120,7 @@ const PhaseOneBasicGamePlay = ({
                     answers={answerChoices}
                     disabled={submitted}
                 />
-                {!submitted && (
+                {!submitted ? (
                     <RoundButton
                         style={
                             (selectedAnswerIndex || selectedAnswerIndex === 0)
@@ -147,21 +132,21 @@ const PhaseOneBasicGamePlay = ({
                         onPress={handleSubmitAnswer}
                         disabled={!selectedAnswerIndex && selectedAnswerIndex != 0}
                     />
-                )}
-                {submitted && (
+                ) : null}
+                {submitted ? (
                     <RoundButton
                         style={styles.submitAnswer}
                         titleStyle={styles.submitAnswerText}
                         title="Answer Submitted"
                         disabled={true}
                     />
-                )}
+                ) : null}
             </Card>
-            {submitted && (
+            {submitted ? (
                 <Text style={styles.answerSubmittedText}>
                     {submittedAnswerText}
                 </Text>
-            )}
+            ) : null}
         </View>,
     ]
 
@@ -171,7 +156,7 @@ const PhaseOneBasicGamePlay = ({
                 <Text style={styles.hintsViewTitle}>{answerChoices[selectedAnswerIndex]?.isCorrectAnswer ? 'Correct!' : 'Nice Try!'}</Text>
                 <Text style={styles.hintsViewCorrectAnswerSubtitle}>The correct answer is:</Text>
                 <Text style={styles.hintsViewCorrectAnswer}>{indexToLetter(selectedAnswerIndex)}. {correctAnswerText}</Text>
-                {availableHints && availableHints.length > 0 && (
+                {(availableHints && availableHints.length > 0) ? (
                     <Card extraStyle={styles.hintsViewCard}>
                         <Question question={question} style={styles.hintsViewQuestion} />
                         <RoundTextIcon
@@ -185,7 +170,7 @@ const PhaseOneBasicGamePlay = ({
                             readonly />
                         <HintsView hints={availableHints} />
                     </Card>
-                )}
+                ) : null}
             </View>
         )
         cards = [hintCard]
@@ -210,7 +195,7 @@ const PhaseOneBasicGamePlay = ({
                                 style={styles.timerProgressBar}
                                 progress={progress}
                                 color={"#349E15"}
-                                height={"100%"}
+                                height={100}
                                 unfilledColor={"#7819F8"}
                                 width={
                                     Dimensions.get("window").width - scale(90)

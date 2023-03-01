@@ -7,13 +7,13 @@ const Question = ({ question, style = {} }) => {
     const questionImage = question?.imageUrl
     return (
         <View style={[sharedStyles.cardContainer, { alignItems: "center", ...style }, ]}>
-            {questionImage && (
+            {questionImage ? (
                 <Image
                     source={{ uri: questionImage }}
                     resizeMode="contain"
                     style={styles.image}
                 />
-            )}
+            ) : null}
 
             <Text style={[sharedStyles.text, styles.text]}>
                 {question.text}
