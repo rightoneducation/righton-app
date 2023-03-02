@@ -11,11 +11,15 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
   const index = window.location.pathname.split('/')[7];
   const match = useRouteMatch('/gamemaker/:gameId/addquestion/gameSelected/:selectedIndex/questionSelected/:questionSelectedIndex');
 
+  const parseQuestion = (question) => {
+    return JSON.parse(JSON.stringify(question).replace(/\'/g, '\u2019'))
+  }
+
   const handleAddQuestion = async (question) => {
     delete question.id;
     delete question.updatedAt;
     delete question.createdAt;
-    const newQuestion = await cloneQuestion(question);
+    const newQuestion = await cloneQuestion(parseQuestion(question));
     submit(newQuestion);
     history.push(`/gamemaker/${gameId}`);
   }
@@ -26,7 +30,7 @@ export default function AddQuestion({ game, cloneQuestion, submit, selectedId, g
     delete question.createdAt;
     history.push(
       `/gamemaker/${gameId}/createquestion/0`,
-      { ...question }
+      { ...parseQuestion(question) }
     )
   }
 
