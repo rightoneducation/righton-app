@@ -27,15 +27,9 @@ const RoundTextIcon = ({
                 style={[styles.container, { height, borderColor, backgroundColor, marginHorizontal }, { ...style }]}
                 pointerEvents={readonly ? "none" : "auto"}
             >
-                <TextInput
-                    editable={!readonly}
-                    style={styles.input}
-                    onSubmitEditing={(event) =>
-                        onTextChanged(data, event.nativeEvent.text)
-                    }
-                >
+                <Text style={styles.input}>
                     {text}
-                </TextInput>
+                </Text>
                 {(showIcon === undefined ? false : showIcon) ? (
                     <Image source={icon} style={styles.icon} />
                 ) : null}
