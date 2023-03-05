@@ -1,5 +1,5 @@
 import React from "react"
-import { StyleSheet, View, TextInput, Image, Pressable } from "react-native"
+import { StyleSheet, View, Text, Image, Pressable } from "react-native"
 import { scale, verticalScale } from "react-native-size-matters"
 import { fontFamilies, fonts } from "../../../utils/theme"
 
