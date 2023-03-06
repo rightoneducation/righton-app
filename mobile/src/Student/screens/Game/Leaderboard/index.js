@@ -56,7 +56,7 @@ const Leaderboard = ({
                     renderItem={({ item, index }) => (
                         <TeamItem
                             teamName={item.name}
-                            teamNo={findTeamNum(index)}
+                            teamNo={findTeamNum(item)}
                             score={item.score}
                         />
                     )}
