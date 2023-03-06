@@ -5,6 +5,7 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
+    ScrollView,
     View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
@@ -100,13 +101,13 @@ const PhaseOneBasicGamePlay = ({
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
     let cards = [
-        <View key={"questions"}>
+        <ScrollView key={"questions"} showsVerticalScrollIndicator={false}>
             <Text style={styles.cardHeadingText}>Question</Text>
             <Card headerTitle="Question" key={"question"}>
                 <ScrollableQuestion question={question} />
             </Card>
-        </View>,
-        <View key={"answers"}>
+        </ScrollView>,
+        <ScrollView key={"answers"} showsVerticalScrollIndicator={false}>
             <Text style={styles.cardHeadingText}>Answers</Text>
             <Card headerTitle="Answers">
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
@@ -147,7 +148,7 @@ const PhaseOneBasicGamePlay = ({
                     {submittedAnswerText}
                 </Text>
             ) : null}
-        </View>,
+        </ScrollView>,
     ]
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {
