@@ -23,8 +23,12 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     bottom: "0",
-    padding: "9.5%",
+    width: '100%',
+    height: '80px',
+    paddingTop: '80px',
+    paddingBottom: '50px',
     background: "linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)"
     
   },
