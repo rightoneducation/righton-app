@@ -28,6 +28,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
   }
   return (
     <Grid className={classes.choices}>
+    {console.log(totalAnswers)}
       <Card
         className={correct ? classes.rightAnswer : classes.wrongAnswer}
         onClick={() => setExpanded(!expanded)}
@@ -45,7 +46,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
             </Box>
             <LinearProgress
               variant="determinate"
-              value={((numQuestionAnswers/totalAnswers)*100)}
+              value={(totalAnswers === 0 ? 0 : (numQuestionAnswers/totalAnswers)*100)}
               classes={{
                 colorPrimary: classes.colorPrimary,
                 barColorPrimary: classes.barColorPrimary
@@ -81,7 +82,7 @@ const useStyles = makeStyles(theme => ({
   rightAnswer: {
     background: "rgba(255, 255, 255, 0.2)",
     borderRadius: "12px",
-    width: "75%",
+    width: "90%",
     boxShadow: "none",
     marginBottom: "8px",
     display: "flex",
@@ -90,7 +91,7 @@ const useStyles = makeStyles(theme => ({
   wrongAnswer: {
     background: "transparent",
     borderRadius: "12px",
-    width: "75%",
+    width: "90%",
     border: "2px solid rgba(255, 255, 255, 0.2)",
     boxShadow: "none",
     marginBottom: "8px",

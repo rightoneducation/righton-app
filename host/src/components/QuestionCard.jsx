@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     padding: "0px",
     backgroundColor: "white",
-    width: "80%",
     boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     border: "2px solid rgba(255, 255, 255, 0.2)",
   },
@@ -55,7 +54,9 @@ const useStyles = makeStyles(theme => ({
   centerContent: {
     display: "flex",
     justifyContent: "center",
-    padding: "20px 40px"
+    width: '95%',
+    margin: 'auto',
+    padding: "20px 40px",
   },
   expandButton: {
     display: "flex",

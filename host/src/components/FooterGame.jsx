@@ -26,8 +26,10 @@ const useStyles = makeStyles(theme => ({
   footer: {
     position: 'sticky',
     bottom: '0',
-    padding: '10.5%',
-    paddingTop:'15%',
+    width: '100%',
+    height: '80px',
+    paddingTop: '80px',
+    paddingBottom: '50px',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
@@ -35,6 +37,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start',
     alignItems:'center',
+    maring: 'auto',
   },
   playerNum: {
     fontSize: '16px',

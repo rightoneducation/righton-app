@@ -151,7 +151,7 @@ const useStyles = makeStyles(theme => ({
     display:"flex", 
     flexDirection:"column", 
     alignItems: "center",
-    padding: "10%"
+    //padding: "10%"
   },
   button: {
     color: "#00A1FF",
