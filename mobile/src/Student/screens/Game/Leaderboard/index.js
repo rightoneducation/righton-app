@@ -21,8 +21,8 @@ const Leaderboard = ({
     const sortedTeamsByScore = gameSession.teams.sort((a, b) => b.score - a.score)
 
     const teamName = team.name ? team.name : "Team Name"
-    const findTeamNum = (index) => {
-        if (index === 0)
+    const findTeamNum = (item) => {
+        if (item.name === team.name)
             return teamAvatar.id
         else
             return index+1
