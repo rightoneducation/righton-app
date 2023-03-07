@@ -153,14 +153,13 @@ const PhaseTwoBasicGamePlay = ({
     const questionScreen =
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
-            <Card>
+            <Card extraStyle={styles.hintsViewCard}>
               <ScrollView
-                  style={{alignContent: 'center'}}
+                  style={{alignContent: 'center', marginBottom: verticalScale(50)}}
                   showsVerticalScrollIndicator={false}
               >
                 
                     <Question question={question} />
-              
               </ScrollView>
             </Card>
         </>
@@ -212,7 +211,12 @@ const PhaseTwoBasicGamePlay = ({
             <Card
                 key={correctAnswer.id}
             >
-                <ScrollableQuestion question={question} />
+                <ScrollView
+                  style={{alignContent: 'center', marginBottom: verticalScale(50)}}
+                  showsVerticalScrollIndicator={false}
+                >
+                  <Question question={question} />
+                </ScrollView>
                 <RoundTextIcon
                     icon={require("../img/checkmark_checked.png")}
                     text={`${indexToLetter(selectedAnswerIndex)}    ${correctAnswerText}`}
@@ -268,12 +272,16 @@ const PhaseTwoBasicGamePlay = ({
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <HorizontalPageView initialPage={0}>
+                     <>
                         <View>
                             {questionScreen}
                         </View>
-                        <View>
+                      </>
+                      <>
+                        <ScrollView>
                             {submitAnswerScreen}
-                        </View>
+                        </ScrollView>
+                      </>  
                     </HorizontalPageView>) : null}
                 {gameSession?.currentState ===
                     GameSessionState.PHASE_2_DISCUSS ? (
@@ -395,6 +403,10 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: "100%",
         marginBottom: verticalScale(18),
+    },
+    hintsViewCard: {
+      paddingVertical: 0,
+      maxHeight: verticalScale(500)
     },
     reasonsText: {
         marginVertical: verticalScale(10),
