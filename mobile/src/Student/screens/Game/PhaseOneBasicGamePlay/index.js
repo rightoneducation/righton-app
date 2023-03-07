@@ -101,13 +101,18 @@ const PhaseOneBasicGamePlay = ({
     )?.text
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
     let cards = [
-        <ScrollView key={"questions"} showsVerticalScrollIndicator={false}>
+        <View key={"questions"}>
             <Text style={styles.cardHeadingText}>Question</Text>
             <Card headerTitle="Question" key={"question"}>
-                <ScrollableQuestion question={question} />
+              <ScrollView
+                style={{alignContent: 'center'}}
+                showsVerticalScrollIndicator={false}
+              >
+                <Question question={question} />
+              </ScrollView>
             </Card>
-        </ScrollView>,
-        <ScrollView key={"answers"} showsVerticalScrollIndicator={false}>
+        </View>,
+        <View key={"answers"}>
             <Text style={styles.cardHeadingText}>Answers</Text>
             <Card headerTitle="Answers">
                 <Text style={[sharedStyles.text, styles.answerTitle]}>
@@ -148,7 +153,7 @@ const PhaseOneBasicGamePlay = ({
                     {submittedAnswerText}
                 </Text>
             ) : null}
-        </ScrollView>,
+        </View>,
     ]
 
     if (gameSession.currentState === GameSessionState.PHASE_1_DISCUSS) {

@@ -26,6 +26,7 @@ import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
 import RoundTextIcon from "../../../components/RoundTextIcon"
+import Question from "../Components/Question"
 
 //finds the letter matching the index
 const indexToLetter = (index) => {
@@ -153,7 +154,14 @@ const PhaseTwoBasicGamePlay = ({
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
             <Card>
-                <ScrollableQuestion question={question} />
+              <ScrollView
+                  style={{alignContent: 'center'}}
+                  showsVerticalScrollIndicator={false}
+              >
+                
+                    <Question question={question} />
+              
+              </ScrollView>
             </Card>
         </>
 
@@ -260,12 +268,12 @@ const PhaseTwoBasicGamePlay = ({
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <HorizontalPageView initialPage={0}>
-                        <ScrollView showsVerticalScrollIndicator={false}>
+                        <View>
                             {questionScreen}
-                        </ScrollView>
-                        <ScrollView>
+                        </View>
+                        <View>
                             {submitAnswerScreen}
-                        </ScrollView>
+                        </View>
                     </HorizontalPageView>) : null}
                 {gameSession?.currentState ===
                     GameSessionState.PHASE_2_DISCUSS ? (
