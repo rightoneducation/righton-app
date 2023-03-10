@@ -5,6 +5,7 @@ import {
     SafeAreaView,
     StyleSheet,
     Text,
+    ScrollView,
     View
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
@@ -102,8 +103,13 @@ const PhaseOneBasicGamePlay = ({
     let cards = [
         <View key={"questions"}>
             <Text style={styles.cardHeadingText}>Question</Text>
-            <Card headerTitle="Question" key={"question"}>
-                <ScrollableQuestion question={question} />
+            <Card headerTitle="Question" key={"question"} extraStyle={styles.hintsViewCard}>
+              <ScrollView
+                style={{alignContent: 'center', marginBottom: verticalScale(50)}}
+                showsVerticalScrollIndicator={false}
+              >
+                <Question question={question} />
+              </ScrollView>
             </Card>
         </View>,
         <View key={"answers"}>
@@ -158,17 +164,19 @@ const PhaseOneBasicGamePlay = ({
                 <Text style={styles.hintsViewCorrectAnswer}>{indexToLetter(selectedAnswerIndex)}. {correctAnswerText}</Text>
                 {(availableHints && availableHints.length > 0) ? (
                     <Card extraStyle={styles.hintsViewCard}>
-                        <Question question={question} style={styles.hintsViewQuestion} />
-                        <RoundTextIcon
-                            icon={require("../img/checkmark_checked.png")}
-                            text={`${indexToLetter(selectedAnswerIndex)}   ${correctAnswerText}`}
-                            height={45}
-                            marginHorizontal={scale(15)}
-                            borderColor={"#EBFFDA"}
-                            backgroundColor={"#EBFFDA"}
-                            showIcon
-                            readonly />
-                        <HintsView hints={availableHints} />
+                        <View style={{ marginBottom: verticalScale(50)}}>
+                          <Question question={question} style={styles.hintsViewQuestion} />
+                          <RoundTextIcon
+                              icon={require("../img/checkmark_checked.png")}
+                              text={`${indexToLetter(selectedAnswerIndex)}   ${correctAnswerText}`}
+                              height={45}
+                              marginHorizontal={scale(15)}
+                              borderColor={"#EBFFDA"}
+                              backgroundColor={"#EBFFDA"}
+                              showIcon
+                              readonly />
+                          <HintsView hints={availableHints} />
+                        </View>
                     </Card>
                 ) : null}
             </View>
@@ -336,9 +344,8 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(50)
     },
     hintsViewCard: {
-        marginTop: -verticalScale(40),
         paddingVertical: 0,
-        maxHeight: verticalScale(500)
+        maxHeight: verticalScale(500),
     },
     hintsViewQuestion: {
         paddingVertical: verticalScale(30)

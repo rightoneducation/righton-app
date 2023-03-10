@@ -26,6 +26,7 @@ import ScrollableQuestion from "../Components/ScrollableQuestion"
 import AnswerOptionsPhaseTwo from "./AnswerOptionsPhaseTwo"
 import HintsView from "../Components/HintsView"
 import RoundTextIcon from "../../../components/RoundTextIcon"
+import Question from "../Components/Question"
 
 //finds the letter matching the index
 const indexToLetter = (index) => {
@@ -152,8 +153,13 @@ const PhaseTwoBasicGamePlay = ({
     const questionScreen =
         <>
             <Text style={styles.cardHeadingText}>Question</Text>
-            <Card>
-                <ScrollableQuestion question={question} />
+            <Card extraStyle={styles.hintsViewCard}>
+              <ScrollView
+                  style={{alignContent: 'center', marginBottom: verticalScale(50)}}
+                  showsVerticalScrollIndicator={false}
+              >
+                <Question question={question} />
+              </ScrollView>
             </Card>
         </>
 
@@ -204,7 +210,12 @@ const PhaseTwoBasicGamePlay = ({
             <Card
                 key={correctAnswer.id}
             >
-                <ScrollableQuestion question={question} />
+                <ScrollView
+                  style={{alignContent: 'center', marginBottom: verticalScale(50)}}
+                  showsVerticalScrollIndicator={false}
+                >
+                  <Question question={question} />
+                </ScrollView>
                 <RoundTextIcon
                     icon={require("../img/checkmark_checked.png")}
                     text={`${indexToLetter(selectedAnswerIndex)}    ${correctAnswerText}`}
@@ -260,12 +271,16 @@ const PhaseTwoBasicGamePlay = ({
                 {gameSession?.currentState ===
                     GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
                     <HorizontalPageView initialPage={0}>
-                        <ScrollView showsVerticalScrollIndicator={false}>
+                     <>
+                        <View>
                             {questionScreen}
-                        </ScrollView>
+                        </View>
+                      </>
+                      <>
                         <ScrollView>
                             {submitAnswerScreen}
                         </ScrollView>
+                      </>  
                     </HorizontalPageView>) : null}
                 {gameSession?.currentState ===
                     GameSessionState.PHASE_2_DISCUSS ? (
@@ -387,6 +402,10 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: "100%",
         marginBottom: verticalScale(18),
+    },
+    hintsViewCard: {
+      paddingVertical: 0,
+      maxHeight: verticalScale(500)
     },
     reasonsText: {
         marginVertical: verticalScale(10),
