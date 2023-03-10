@@ -124,15 +124,11 @@ const GameSessionContainer = ({ children }) => {
                   global.apiClient
                       .addTeamMemberToTeam(team.id, true, uuid.v4())
                       .then((teamMember) => {
-                          console.log(team)
-                          console.log(teamMember)
                           if (!teamMember) {
                               console.error("Failed to add team member")
                               return
                           }
                           team.teamMembers = [teamMember]
-                          console.log(team)
-
                           return setTeamInfo(team, teamMember)
                       }).catch((error) => {
                           console.error(error)
