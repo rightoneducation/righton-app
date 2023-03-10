@@ -158,8 +158,7 @@ const PhaseTwoBasicGamePlay = ({
                   style={{alignContent: 'center', marginBottom: verticalScale(50)}}
                   showsVerticalScrollIndicator={false}
               >
-                
-                    <Question question={question} />
+                <Question question={question} />
               </ScrollView>
             </Card>
         </>
