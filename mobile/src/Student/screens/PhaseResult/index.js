@@ -7,180 +7,104 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo }) => {
-    const [phase2Score, setPhase2Score] = useState(0)
+const PhaseResult = ({ gameSession, team, teamAvatar }) => {
+    const alphabets = ["A", "B", "C", "D"]
     const phaseNo = gameSession?.currentState === GameSessionState.PHASE_1_RESULTS ? 1 : 2
     const currentQuestion = gameSession?.questions[gameSession.currentQuestionIndex]
-    const selectedTrickAnswer = ModelHelper.getSelectedTrickAnswer(team, currentQuestion.id)
-    const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
-    console.log('PhaseResults')
-    console.log(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
+    const [originalScore, setOriginalScore] = useState(0)
+    const [answerList, setAnswerList] = useState([])
 
-    
-    const findSelectedAnswer = (teamAnswers) => {
-      console.log('teamAnswers:')
-      console.log(teamAnswers)
-        if (phaseNo === 1)
-            return teamAnswers.reduce(teamAnswer => teamAnswer.isChosen === true)
-        else 
-            return teamAnswers.reduce(teamAnswer => teamAnswer.isTrickAnswer === true)
-
-        // setIsAnswerCorrect(answer.text === ModelHelper.getCorrectAnswer(currentQuestion).text)
-        // if (answer.isTrickAnswer) {
-        //     setSelectedTrickAnswer(answer)
-        // } else {
-        //     setSelectedAnswer(answer)
-        // }
-    }
-
-
-    const selectedAnswer = findSelectedAnswer(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
-    const isAnswerCorrect = selectedAnswer.text === ModelHelper.getCorrectAnswer(currentQuestion).text
-    const [curTeam, setCurTeam] = useState(null)
-    const [loadedData, setLoadedData] = useState(false)
-    const [totalScore, setTotalScore] = useState(null)
-
-
-     useFocusEffect(
+    useFocusEffect(
       React.useCallback(() => {
+        const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
 
-        // const updatedCurTeam = gameSession.teams.find((t) => t.id === team.id)
-        // if (isNullOrUndefined(updatedCurTeam)) {
-        //     console.error(`Couldn't find the team.}`)
-        //     return
-        // }
-        // setCurTeam(updatedCurTeam)
-        // setCorrectAnswer(ModelHelper.getCorrectAnswer(currentQuestion))
-        // const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(updatedCurTeam, currentQuestion.id)
+        const findSelectedAnswer = (teamAnswers) => {
+          return teamAnswers.reduce(teamAnswer => (phaseNo == 1 ? teamAnswer.isChosen === true : teamAnswer.isTrickAnswer === true))
+        }
+        const selectedAnswer = findSelectedAnswer(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
+        setOriginalScore(gameSession?.teams?.find(teamElement => teamElement.id === team.id).score)
 
-        // const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
-        // let originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
-        // let totalScore = calculateTotalScore(gameSession, currentQuestion, updatedCurTeam)
-        // updatedCurTeam.score = totalScore
-        // setTotalScore(totalScore)
-        
-        
-        // if (!isNullOrUndefined(teamAnswers) && teamAnswers.length > 0) {
-        //     if (phaseNo === 1)
-        //       setAnswer(teamAnswers.reduce(teamAnswer => teamAnswer.isChosen === true))
-        //     else 
-        //       setAnswer(teamAnswers.reduce(teamAnswer => teamAnswer.isTrickAnswer === true))
-        // } else {
-        //     setSelectedAnswer({
-        //         id: Number.MIN_VALUE,
-        //         text: Number.MIN_VALUE,
-        //     })
-        // }
+        const getP1AnswerMode = (choiceText) =>{
+          if (choiceText === correctAnswer.text) 
+            return AnswerMode.RightAnswer
+          else if (choiceText === selectedAnswer.text) 
+            return AnswerMode.UserAnswer
+          else
+            return AnswerMode.ShowEmptyRightIcon
+        } 
+    
+        const getP2AnswerMode = (choiceText) => {
+          if (choiceText === correctAnswer.text) 
+            return AnswerMode.Disabled
+          else if (choiceText === selectedAnswer.text) 
+            return AnswerMode.PopularTrickAnswer
+        }
+    
+        const getAnswer = ({item, index}) => {
+              if (phaseNo === 1)
+                return <Answer
+                  icon={teamAvatar.smallSrc}
+                  text={`${alphabets[index]}. ${item.text}`}
+                  mode={getP1AnswerMode(item.text)}
+                  isUserChoice={item.text === selectedAnswer?.text}
+                  percentage={""}
+                />
+              else  
+                return <Answer
+                  icon={teamAvatar.smallSrc}
+                  text={`${alphabets[index]}. ${item.text}`}
+                  mode={getP2AnswerMode(item.text)}
+                  isUserChoice={item.text === selectedAnswer?.text}
+                  percentage={`${ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, item.text, currentQuestion.id)}%`}
+                />
+        }
 
-        // setSelectedTrickAnswer(ModelHelper.getSelectedTrickAnswer(updatedCurTeam, currentQuestion.id))
-        // setLoadedData(true)
-        // setTeamInfo(updatedCurTeam, updatedCurTeam.teamMembers[0])
+        setAnswerList([
+          <FlatList
+            data={currentQuestion.choices}
+            keyExtractor={(item) => `${item.text}`}
+            style={styles.answersContainer}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
+            ItemSeparatorComponent={itemSeparator}
+            renderItem={getAnswer}
+          />
+        ])
       }, [gameSession?.currentState])
     )
 
-
-    const alphabets = ["A", "B", "C", "D"]
-    const getAnswerMode = (choiceText) => {
-        switch (phaseNo) {
-            case 1:
-                if (correctAnswer.text === choiceText) {
-                    return AnswerMode.RightAnswer
-                } else if (choiceText === selectedAnswer.text) {
-                    return AnswerMode.UserAnswer
-                }
-                return AnswerMode.ShowEmptyRightIcon
-            case 2:
-                if (correctAnswer.text === choiceText) {
-                    return AnswerMode.Disabled
-                } else if (selectedTrickAnswer.text === choiceText) {
-                    return AnswerMode.PopularTrickAnswer
-                }
-                break
-        }
-    }
-
-    const calculatePercentage = (answer) => {
-        if (isNullOrUndefined(answer)) {
-            setPhase2Score(0)
-            return 0
-        }
-
-        let percentage = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, answer.text, currentQuestion.id)
-
-        if (selectedTrickAnswer?.text === answer.text) {
-            setPhase2Score(percentage)
-        } else {
-            setPhase2Score(0)
-        }
-        return percentage
-    }
-
-    const getIsUserChoice = (answer) => {
-        if (phaseNo === 1) {
-            return selectedAnswer?.text === answer.text
-        } else if (!isNullOrUndefined(selectedTrickAnswer)) {
-            return selectedTrickAnswer.text === answer.text
-        }
-        return false
-    }
-
-    const getPercentageForAnswer = (answer) => {
-        if (phaseNo === 1) {
-            return ""
-        }
-        return `${calculatePercentage(answer)}%`
-    }
-
-    const calculateTotalScore =(gameSession, currentQuestion, curTeam) => {
-      team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, currentQuestion, curTeam) 
-      global.apiClient.updateTeam({id: curTeam.id, score: team.score})
+    const calculateTotalScore = () => {
+      team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, currentQuestion, team) 
+      global.apiClient.updateTeam({id: team.id, score: team.score})
       return team.score
     }
 
+    const itemSeparator = () => {
+      return <View style={{ height: 10 }} />
+    }
+
     return (
-        <SafeAreaView style={styles.container}>
-                <ImageBackground
-                    source={require("./img/background.png")}
-                    style={styles.headerContainer}
-                >
-                    <Text style={styles.headerText}>
-                        {`Phase ${phaseNo}\nResults`}
-                    </Text>
-                </ImageBackground>
-                <View style={styles.resultContainer}>
-                    <FlatList
-                        data={currentQuestion.choices}
-                        keyExtractor={(item) => `${item.text}`}
-                        style={styles.answersContainer}
-                        showsVerticalScrollIndicator={false}
-                        scrollEnabled={false}
-                        ItemSeparatorComponent={() => {
-                            return <View style={{ height: 10 }} />
-                        }}
-                        renderItem={({ item, index }) => (
-                            <Answer
-                                icon={teamAvatar.smallSrc}
-                                text={`${alphabets[index]}. ${item.text}`}
-                                mode={getAnswerMode(item.text)}
-                                isUserChoice={getIsUserChoice(item)}
-                                percentage={phaseNo === 1 ? "" : `${calculatePercentage(item)}%`}
-                            />
-                        )}
-                    >
-                    </FlatList>
-                </View>
-                {/* {loadedData ? <>
-                <View style={styles.footerView}>
-                    <TeamFooter
-                        icon={teamAvatar.smallSrc}
-                        name={curTeam.name ? curTeam.name : "N/A"}
-                        score={phase2Score}
-                        totalScore={totalScore}
-                        isAnswerCorrect={isAnswerCorrect}
-                    />
-                </View>
-            </>: null} */}
-        </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <ImageBackground
+            source={require("./img/background.png")}
+            style={styles.headerContainer}
+        >
+            <Text style={styles.headerText}>
+                {`Phase ${phaseNo}\nResults`}
+            </Text>
+        </ImageBackground>
+        <View style={styles.resultContainer}>
+            {answerList}
+        </View>
+        <View style={styles.footerView}>
+            <TeamFooter
+                icon={teamAvatar.smallSrc}
+                name={team.name ? team.name : "N/A"}
+                originalScore={originalScore}
+                totalScore={calculateTotalScore(gameSession, currentQuestion, team)}
+            />
+        </View>
+      </SafeAreaView>
     )
 }
 
