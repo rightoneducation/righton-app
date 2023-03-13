@@ -128,8 +128,9 @@ const GameSessionContainer = ({ children }) => {
                               console.error("Failed to add team member")
                               return
                           }
-                          team.teamMembers = [teamMember]
-                          return setTeamInfo(team, teamMember)
+                          setTeam({...team, teamMembers: [teamMember]})
+                          setTeamMemberInfo(teamMember)
+                          return 
                       }).catch((error) => {
                           console.error(error)
                       })
@@ -157,7 +158,8 @@ const GameSessionContainer = ({ children }) => {
                           )
                           return    
                       }
-                      teamMember.answers.push(teamAnswer)
+                      const newAnswers = team.teamMembers[0].answers.concat(teamAnswer)
+                      setTeam({...team, teamMembers: [{...teamMember, answers: newAnswers}]})
                       console.debug(
                           "Team answer:",
                           teamAnswer
@@ -169,11 +171,14 @@ const GameSessionContainer = ({ children }) => {
     }
 
 
-    const setTeamInfo = async (team, teamMember) => {
-        await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
-        await storeDataToLocalStorage(localStorageKeys.teamMemberId, teamMember.id)
-        setTeam(team)
-        setTeamMember(teamMember)
+    const setTeamInfo = async (team) => {
+      await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
+      setTeam(team)
+    }
+
+    const setTeamMemberInfo = async (teamMember) => {
+      await storeDataToLocalStorage(localStorageKeys.teamMemberId, teamMember.id)
+      setTeamMember(teamMember)
     }
 
     const saveTeamAvatar = (avatar) => {

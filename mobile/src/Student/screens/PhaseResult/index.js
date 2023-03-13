@@ -53,7 +53,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
         const calculateTotalScore = (gameSession, currentQuestion, team) => {
           let totalScore = originalScore + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, currentQuestion, team) 
           global.apiClient.updateTeam({id: team.id, score: totalScore})
-          team.score = totalScore
+          setTeamInfo({...team, score: totalScore})
           return totalScore
         }
 
