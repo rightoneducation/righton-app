@@ -7,22 +7,22 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, teamAvatar }) => {
+const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
     const alphabets = ["A", "B", "C", "D"]
-    const phaseNo = gameSession?.currentState === GameSessionState.PHASE_1_RESULTS ? 1 : 2
     const currentQuestion = gameSession?.questions[gameSession.currentQuestionIndex]
-    const [originalScore, setOriginalScore] = useState(0)
+    const originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score
+    const phaseNo = (gameSession?.currentState === GameSessionState.PHASE_1_RESULTS) ? 1 : 2
     const [answerList, setAnswerList] = useState([])
+    const [scoreFooter, setScoreFooter] = useState([])
+    const [phaseTitle, setPhaseTitle] = useState([])
 
     useFocusEffect(
       React.useCallback(() => {
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
-
         const findSelectedAnswer = (teamAnswers) => {
-          return teamAnswers.reduce(teamAnswer => (phaseNo == 1 ? teamAnswer.isChosen === true : teamAnswer.isTrickAnswer === true))
+          return teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
         }
         const selectedAnswer = findSelectedAnswer(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
-        setOriginalScore(gameSession?.teams?.find(teamElement => teamElement.id === team.id).score)
 
         const getP1AnswerMode = (choiceText) =>{
           if (choiceText === correctAnswer.text) 
@@ -41,22 +41,20 @@ const PhaseResult = ({ gameSession, team, teamAvatar }) => {
         }
     
         const getAnswer = ({item, index}) => {
-              if (phaseNo === 1)
-                return <Answer
-                  icon={teamAvatar.smallSrc}
-                  text={`${alphabets[index]}. ${item.text}`}
-                  mode={getP1AnswerMode(item.text)}
-                  isUserChoice={item.text === selectedAnswer?.text}
-                  percentage={""}
-                />
-              else  
-                return <Answer
-                  icon={teamAvatar.smallSrc}
-                  text={`${alphabets[index]}. ${item.text}`}
-                  mode={getP2AnswerMode(item.text)}
-                  isUserChoice={item.text === selectedAnswer?.text}
-                  percentage={`${ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, item.text, currentQuestion.id)}%`}
-                />
+          return <Answer
+            icon={teamAvatar.smallSrc}
+            text={`${alphabets[index]}. ${item.text}`}
+            mode={(phaseNo === 1) ? getP1AnswerMode(item.text) : getP2AnswerMode(item.text)}
+            isUserChoice={item.text === selectedAnswer?.text}
+            percentage={(phaseNo === 1) ? "" : `${ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, item.text, currentQuestion.id)}%`}
+          />
+        }
+
+        const calculateTotalScore = (gameSession, currentQuestion, team) => {
+          let totalScore = originalScore + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, currentQuestion, team) 
+          global.apiClient.updateTeam({id: team.id, score: totalScore})
+          team.score = totalScore
+          return totalScore
         }
 
         setAnswerList([
@@ -70,14 +68,23 @@ const PhaseResult = ({ gameSession, team, teamAvatar }) => {
             renderItem={getAnswer}
           />
         ])
+
+        setScoreFooter([
+          <TeamFooter
+                icon={teamAvatar.smallSrc}
+                name={team.name ? team.name : "N/A"}
+                originalScore={originalScore}
+                totalScore={calculateTotalScore(gameSession, currentQuestion, team)}
+            />
+        ])
+
+        setPhaseTitle([
+            <Text style={styles.headerText}>
+                {`Phase ${phaseNo}\nResults`}
+            </Text>
+        ])
       }, [gameSession?.currentState])
     )
-
-    const calculateTotalScore = () => {
-      team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, currentQuestion, team) 
-      global.apiClient.updateTeam({id: team.id, score: team.score})
-      return team.score
-    }
 
     const itemSeparator = () => {
       return <View style={{ height: 10 }} />
@@ -89,20 +96,13 @@ const PhaseResult = ({ gameSession, team, teamAvatar }) => {
             source={require("./img/background.png")}
             style={styles.headerContainer}
         >
-            <Text style={styles.headerText}>
-                {`Phase ${phaseNo}\nResults`}
-            </Text>
+            {phaseTitle}
         </ImageBackground>
         <View style={styles.resultContainer}>
             {answerList}
         </View>
         <View style={styles.footerView}>
-            <TeamFooter
-                icon={teamAvatar.smallSrc}
-                name={team.name ? team.name : "N/A"}
-                originalScore={originalScore}
-                totalScore={calculateTotalScore(gameSession, currentQuestion, team)}
-            />
+            {scoreFooter}
         </View>
       </SafeAreaView>
     )
