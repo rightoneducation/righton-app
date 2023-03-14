@@ -1,17 +1,35 @@
 import { GameSessionState, isNullOrUndefined } from "@righton/networking"
-import { useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { useFocusEffect } from '@react-navigation/native'
 import { Image, ImageBackground, Text, View } from "react-native"
 import { ScaledSheet } from "react-native-size-matters"
 import PurpleBackground from "../../components/PurpleBackground"
 import RoundButton from "../../components/RoundButton"
 import sharedStyles from "../../Student/screens/Game/Components/sharedStyles"
 import { fonts } from '../../utils/theme'
+import RejoinModal from './RejoinModal'
 
 export default function JoinGame({
     navigation,
     gameSession,
-    clearStorage
+    loadLocalSession,
+    handleRejoinGame
 }) {
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [prevGameData, setPrevGameData] = useState(null)
+
+    useFocusEffect(
+      React.useCallback(() => {
+        const gameData = loadLocalSession()
+        console.log("joingame")
+        console.log(gameData)
+        if (gameData){
+          setPrevGameData(gameData)
+          setIsModalVisible(true)
+        }
+      }, [])
+    )
+
     useEffect(() => { 
         if (isNullOrUndefined(gameSession)) {
             resetState()
@@ -72,13 +90,14 @@ export default function JoinGame({
     }
 
     const resetState = () => {
-        clearStorage()
+        //clearStorage()
         navigation.navigate("JoinGame")
     }
 
     return (
         <View style={styles.container}>
             <PurpleBackground>
+              <RejoinModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} prevGameData={prevGameData} handleRejoinGame={handleRejoinGame}/>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
                         <View style={styles.heroText}>

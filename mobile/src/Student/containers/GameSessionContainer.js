@@ -8,36 +8,23 @@ const localStorageKeys = {
     gameCode: "game_session_code",
     teamId: "team_id",
     teamMemberId: "team_member_id",
-    teamAvatarId: "team_avatar_id",
+    teamAvatarId: "team_avatar_id"
 }
 
-async function storeDataToLocalStorage(key, value) {
+async function storeDataToLocalStorage(value) {
     try {
-        // TODO: Fix reloading data from storage
-        return true
-        // END disabling loading from storage
-        await EncryptedStorage.setItem(key, value)
-        console.log(`stored new value locally ${key}: ${value}`)
+        await EncryptedStorage.setItem("righton_session", value)
         return true
     } catch (error) {
         // There was an error on the native side
-        console.error(`error storing ${key}: ${value} error: ${error}`)
+        console.error(`error storing: ${value} error: ${error}`)
         return false
     }
 }
 
-async function loadLocalStorageForKey(key) {
+async function loadLocalStorage() {
     try {
-        const value = await EncryptedStorage.getItem(key)
-        if (isNullOrUndefined(value)) {
-            console.debug(`No data found in local storage for ${key}`)
-            return null
-        }
-        // We have data!!
-        console.log(
-            "loaded existing game session from local storage:",
-            value
-        )
+        const value = await EncryptedStorage.getItem("righton_session")
         return value
     } catch (error) {
         // Error retrieving data
@@ -46,9 +33,9 @@ async function loadLocalStorageForKey(key) {
     }
 }
 
-async function removeDataFromLocalStorage(key) {
+async function removeDataFromLocalStorage() {
     try {
-        await EncryptedStorage.removeItem(key)
+        await EncryptedStorage.removeItem("righton_session")
         return true
     } catch (error) {
         // There was an error on the native side
@@ -116,6 +103,7 @@ const GameSessionContainer = ({ children }) => {
             .addTeamToGameSessionId(gameSession.id, teamName, null)
             .then((team) => {
                 console.debug(team)
+                setTeam(team)
                 if (!team) {
                     console.error("Failed to add team")
                     return
@@ -172,18 +160,31 @@ const GameSessionContainer = ({ children }) => {
 
 
     const setTeamInfo = async (team) => {
-      await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
+      //await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
       setTeam(team)
     }
 
     const setTeamMemberInfo = async (teamMember) => {
-      await storeDataToLocalStorage(localStorageKeys.teamMemberId, teamMember.id)
+      //await storeDataToLocalStorage(localStorageKeys.teamMemberId, teamMember.id)
       setTeamMember(teamMember)
     }
 
-    const saveTeamAvatar = (avatar) => {
-        storeDataToLocalStorage(localStorageKeys.teamAvatarId, `${avatar.id}`)
-        setTeamAvatar(avatar)
+    const loadLocalSession = async () =>{
+      console.log(await loadLocalStorage("righton_session"))
+    }
+
+    const saveLocalSession = async (avatar, team, gameSession) => {
+      const session = JSON.stringify({
+        gameCode: gameSession?.gameCode,
+        teamName: team.id,
+        teamAvatar: avatar.id
+      })
+      await storeDataToLocalStorage(session)
+      setTeamAvatar(avatar)
+    }
+
+    const handleRejoinGame = async (prevGameData) =>{
+      console.log(JSON.parse(prevGameData))
     }
 
     return children({
@@ -193,11 +194,13 @@ const GameSessionContainer = ({ children }) => {
         team,
         teamMember,
         teamAvatar,
-        saveTeamAvatar,
+        saveLocalSession,
+        loadLocalSession,
         clearStorage,
         handleSubscribeToGame,
         handleAddTeam,
-        handleAddTeamAnswer
+        handleAddTeamAnswer,
+        handleRejoinGame
     })
 }
 

@@ -26,11 +26,13 @@ const AppContainer = () => {
                 teamMember,
                 setTeamInfo,
                 teamAvatar,
-                saveTeamAvatar,
+                saveLocalSession,
+                loadLocalSession,
                 clearStorage,
                 handleSubscribeToGame,
                 handleAddTeam,
-                handleAddTeamAnswer
+                handleAddTeamAnswer,
+                handleRejoinGame
             }) => (
                 <NavigationContainer >
                     <Stack.Navigator
@@ -47,6 +49,8 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     team={team}
                                     teamMember={teamMember}
+                                    loadLocalSession={loadLocalSession}
+                                    handleRejoinGame={handleRejoinGame}
                                     clearStorage={clearStorage}
                                 />
                             )}
@@ -76,8 +80,7 @@ const AppContainer = () => {
                                     {...props}
                                     gameSession={gameSession}
                                     team={team}
-                                    teamMember={teamMember}
-                                    saveTeamAvatar={saveTeamAvatar}
+                                    saveLocalSession={saveLocalSession}
                                 />
                             )}
                         </Stack.Screen>

@@ -8,10 +8,10 @@ import RoundButton from '../../../components/RoundButton'
 import { colors, fontFamilies, fonts } from '../../../utils/theme'
 import TeamIcons from '../../containers/TeamIcons'
 
-const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
+const SelectTeam = ({ navigation, gameSession, team, saveLocalSession }) => {
   const [avatar, setAvatar] = useState(TeamIcons[0])
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(true)
-
+  
   const goBack = () => {
     navigation.navigate("StudentName")
   }
@@ -30,7 +30,7 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
   useFocusEffect(
     React.useCallback(() => {
       const resetOnLeaveScreen = navigation.addListener('blur', () => {
-        saveTeamAvatar(avatar)
+        saveLocalSession(avatar, team, gameSession)
       });
       return resetOnLeaveScreen
     },[avatar, navigation])
