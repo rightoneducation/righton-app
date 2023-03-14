@@ -19,7 +19,6 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
 
     useFocusEffect(
       React.useCallback(() => {
-        console.log("sup")
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
         const findSelectedAnswer = (teamAnswers) => {
           return teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
