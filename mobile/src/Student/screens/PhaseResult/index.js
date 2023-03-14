@@ -8,6 +8,7 @@ import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
 const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
+
     const alphabets = ["A", "B", "C", "D"]
     const currentQuestion = gameSession?.questions[gameSession.currentQuestionIndex]
     const originalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score
@@ -18,13 +19,14 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
 
     useFocusEffect(
       React.useCallback(() => {
+        console.log("sup")
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
         const findSelectedAnswer = (teamAnswers) => {
           return teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
         }
         const selectedAnswer = findSelectedAnswer(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
 
-        const getP1AnswerMode = (choiceText) =>{
+        const getPhase1AnswerMode = (choiceText) =>{
           if (choiceText === correctAnswer.text) 
             return AnswerMode.RightAnswer
           else if (choiceText === selectedAnswer.text) 
@@ -33,7 +35,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
             return AnswerMode.ShowEmptyRightIcon
         } 
     
-        const getP2AnswerMode = (choiceText) => {
+        const getPhase2AnswerMode = (choiceText) => {
           if (choiceText === correctAnswer.text) 
             return AnswerMode.Disabled
           else if (choiceText === selectedAnswer.text) 
@@ -44,7 +46,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
           return <Answer
             icon={teamAvatar.smallSrc}
             text={`${alphabets[index]}. ${item.text}`}
-            mode={(phaseNo === 1) ? getP1AnswerMode(item.text) : getP2AnswerMode(item.text)}
+            mode={(phaseNo === 1) ? getPhase1AnswerMode(item.text) : getPhase2AnswerMode(item.text)}
             isUserChoice={item.text === selectedAnswer?.text}
             percentage={(phaseNo === 1) ? "" : `${ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, item.text, currentQuestion.id)}%`}
           />
@@ -99,7 +101,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
             {phaseTitle}
         </ImageBackground>
         <View style={styles.resultContainer}>
-            {answerList}
+            {currentQuestion.choices ? answerList : null}
         </View>
         <View style={styles.footerView}>
             {scoreFooter}

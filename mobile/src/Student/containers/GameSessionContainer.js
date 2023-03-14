@@ -158,7 +158,7 @@ const GameSessionContainer = ({ children }) => {
                           )
                           return    
                       }
-                      const newAnswers = team.teamMembers[0].answers.concat(teamAnswer)
+                      const newAnswers = (team.teamMembers[0].answers && team.teamMembers[0].answers.length) ? team.teamMembers[0].answers.concat(teamAnswer) : [teamAnswer]
                       setTeam({...team, teamMembers: [{...teamMember, answers: newAnswers}]})
                       console.debug(
                           "Team answer:",
