@@ -1,15 +1,30 @@
 import { Dimensions, StyleSheet, Text } from "react-native"
 import { scale } from "react-native-size-matters"
+import React from 'react';
+import { useFocusEffect } from '@react-navigation/native'
 import PurpleBackground from "../../../components/PurpleBackground"
 import { fontFamilies, fonts } from "../../../utils/theme"
 import LoadingIndicator from "../../components/LoadingIndicator"
 
 const PregameCountDown = ({
-    navigation
+    navigation,
+    teamAvatar,
+    team,
+    gameSession,
+    saveLocalSession
 }) => {
+
+    //team data stored in local session in case player drops
+    useFocusEffect(
+        React.useCallback(() => {
+            const resetOnLeaveScreen = navigation.addListener('focus', () => {
+                saveLocalSession(teamAvatar, team, gameSession)
+            });
+            return resetOnLeaveScreen
+        },[navigation])
+    )
     return (
         <PurpleBackground style={styles.mainContainer}>
-
             <LoadingIndicator
                 theme={[
                     "#F5246A20",

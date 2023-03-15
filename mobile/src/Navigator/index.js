@@ -28,11 +28,13 @@ const AppContainer = () => {
                 teamAvatar,
                 saveLocalSession,
                 loadLocalSession,
-                clearStorage,
+                clearLocalSession,
                 handleSubscribeToGame,
                 handleAddTeam,
                 handleAddTeamAnswer,
-                handleRejoinGame
+                handleRejoinSession,
+                saveTeamAvatar,
+                isFirstPlay
             }) => (
                 <NavigationContainer >
                     <Stack.Navigator
@@ -50,8 +52,9 @@ const AppContainer = () => {
                                     team={team}
                                     teamMember={teamMember}
                                     loadLocalSession={loadLocalSession}
-                                    handleRejoinGame={handleRejoinGame}
-                                    clearStorage={clearStorage}
+                                    clearLocalSession={clearLocalSession}
+                                    handleRejoinSession={handleRejoinSession}
+                                    isFirstPlay={isFirstPlay}
                                 />
                             )}
                         </Stack.Screen>
@@ -80,7 +83,7 @@ const AppContainer = () => {
                                     {...props}
                                     gameSession={gameSession}
                                     team={team}
-                                    saveLocalSession={saveLocalSession}
+                                    saveTeamAvatar={saveTeamAvatar}
                                 />
                             )}
                         </Stack.Screen>
@@ -99,6 +102,10 @@ const AppContainer = () => {
                             {(props) => (
                                 <PregameCountDown
                                     {...props}
+                                    gameSession={gameSession}
+                                    team={team}
+                                    teamAvatar={teamAvatar}
+                                    saveLocalSession={saveLocalSession}
                                 />
                             )}
                         </Stack.Screen>

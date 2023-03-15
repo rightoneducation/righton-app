@@ -8,7 +8,7 @@ import RoundButton from '../../../components/RoundButton'
 import { colors, fontFamilies, fonts } from '../../../utils/theme'
 import TeamIcons from '../../containers/TeamIcons'
 
-const SelectTeam = ({ navigation, gameSession, team, saveLocalSession }) => {
+const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
   const [avatar, setAvatar] = useState(TeamIcons[0])
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(true)
   
@@ -30,7 +30,7 @@ const SelectTeam = ({ navigation, gameSession, team, saveLocalSession }) => {
   useFocusEffect(
     React.useCallback(() => {
       const resetOnLeaveScreen = navigation.addListener('blur', () => {
-        saveLocalSession(avatar, team, gameSession)
+        saveTeamAvatar(avatar)
       });
       return resetOnLeaveScreen
     },[avatar, navigation])

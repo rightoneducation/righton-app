@@ -1,4 +1,4 @@
-import { GameSessionState } from "@righton/networking"
+import { GameSessionState, ModelHelper, isNullOrUndefined } from "@righton/networking"
 import React, { useRef, useState } from "react"
 import {
     Dimensions,
@@ -42,7 +42,6 @@ const PhaseOneBasicGamePlay = ({
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-    const [submitted, setSubmitted] = useState(false)
     let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
@@ -53,6 +52,7 @@ const PhaseOneBasicGamePlay = ({
             ? 0
             : gameSession?.currentQuestionIndex
         ]
+    const [submitted, setSubmitted] = useState(false)
     const availableHints = question.instructions
         
     useFocusEffect(
@@ -72,7 +72,7 @@ const PhaseOneBasicGamePlay = ({
       },[currentTime])
     )
 
-    // below resets the state variables of Phase One gameplay when user leaves phase one screen (to set up for any following question)
+    // below resets the state variables of  One gameplay when user leaves phase one screen (to set up for any following question)
     useFocusEffect(
       React.useCallback(() => {
         const resetOnLeaveScreen = navigation.addListener('blur', () => {
@@ -81,6 +81,14 @@ const PhaseOneBasicGamePlay = ({
         });
         return resetOnLeaveScreen
       },[navigation])
+    )
+    
+    useFocusEffect(
+        React.useCallback(() => {
+            const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, question.id)
+            if (!isNullOrUndefined(teamAnswers) && teamAnswers.find(teamAnswer => (teamAnswer.isChosen === true)))
+                setSubmitted(true)
+        },[navigation])
     )
 
     const handleSubmitAnswer = () => {

@@ -13,20 +13,21 @@ export default function JoinGame({
     navigation,
     gameSession,
     loadLocalSession,
-    handleRejoinGame
+    clearLocalSession,
+    handleRejoinSession,
+    isFirstPlay
 }) {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [prevGameData, setPrevGameData] = useState(null)
 
     useFocusEffect(
       React.useCallback(() => {
-        const gameData = loadLocalSession()
-        console.log("joingame")
-        console.log(gameData)
-        if (gameData){
-          setPrevGameData(gameData)
-          setIsModalVisible(true)
-        }
+        loadLocalSession().then(data => {
+            if (data){
+              setPrevGameData(data)
+              setIsModalVisible(true)
+            }
+        })  
       }, [])
     )
 
@@ -46,7 +47,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                if (gameSession.currentQuestionIndex === 0)
+                if (isFirstPlay === true)
                   navigation.navigate("PregameCountDown")
                 else
                   navigation.navigate("PhaseOneBasicGamePlay")
@@ -71,6 +72,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.FINAL_RESULTS:
+                clearLocalSession()
                 navigation.navigate("ScorePage")
                 break
 
@@ -90,14 +92,13 @@ export default function JoinGame({
     }
 
     const resetState = () => {
-        //clearStorage()
         navigation.navigate("JoinGame")
     }
 
     return (
         <View style={styles.container}>
             <PurpleBackground>
-              <RejoinModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} prevGameData={prevGameData} handleRejoinGame={handleRejoinGame}/>
+              <RejoinModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} prevGameData={prevGameData} handleRejoinSession={handleRejoinSession} clearLocalSession={clearLocalSession}/>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
                         <View style={styles.heroText}>

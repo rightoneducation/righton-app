@@ -1,4 +1,4 @@
-import { GameSessionState, isNullOrUndefined } from "@righton/networking"
+import { GameSessionState, isNullOrUndefined, ModelHelper } from "@righton/networking"
 import React, { useRef, useState } from "react"
 import {
     Alert,
@@ -10,7 +10,6 @@ import {
     ScrollView,
     Image
 } from "react-native"
-import { ModelHelper } from '@righton/networking'
 import LinearGradient from "react-native-linear-gradient"
 import * as Progress from "react-native-progress"
 import { color } from "react-native-reanimated"
@@ -103,6 +102,14 @@ const PhaseTwoBasicGamePlay = ({
         });
         return resetOnLeaveScreen
       },[navigation])
+    )
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, question.id)
+            if (!isNullOrUndefined(teamAnswers) && teamAnswers.find(teamAnswer => (teamAnswer.isTrickAnswer === true)))
+                setSubmitted(true)
+        },[navigation])
     )
 
     const handleSubmitAnswer = () => {

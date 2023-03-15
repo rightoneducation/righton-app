@@ -3,10 +3,11 @@ import { Modal, Text, View } from "react-native"
 import RoundButton from "../../../components/RoundButton"
 import { ScaledSheet } from "react-native-size-matters"
 
-export default function ReJoinModal({isModalVisible, setIsModalVisible, prevGameData, handleRejoinGame}){
+export default function ReJoinModal({isModalVisible, setIsModalVisible, prevGameData, handleRejoinSession, clearLocalSession}){
 
   return(
      <Modal
+        animationType='fade'
         transparent={true}
         visible={isModalVisible}
         onRequestClose={() => {
@@ -19,14 +20,20 @@ export default function ReJoinModal({isModalVisible, setIsModalVisible, prevGame
             <RoundButton
               title="Rejoin Game"
               style={styles.button}
-              onPress={() => handleRejoinGame(prevGameData)}>
-              <Text style={styles.buttonText}>Rejoin Game</Text>
+              onPress={() => {
+                handleRejoinSession(prevGameData).then(
+                  setIsModalVisible(!isModalVisible)
+                )
+              }}>
             </RoundButton>
             <RoundButton
-              title="Close Modal"
+              title="Close"
               style={styles.button}
-              onPress={() => setIsModalVisible(!isModalVisible)}>
-              <Text style={styles.buttonText}>Close</Text>
+              onPress={() => {
+                clearLocalSession().then(
+                  setIsModalVisible(!isModalVisible)
+                )
+              }}>
             </RoundButton>
           </View>
         </View>
@@ -47,15 +54,15 @@ const styles = ScaledSheet.create({
     padding: 15,
     shadowColor: '#000',
     shadowOffset: {
-      width: 20,
-      height: 20,
+      width: 10,
+      height: 10,
     },
-    shadowOpacity: 1,
+    shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
   },
   button: {
-    borderRadius: 10,
+    borderRadius: 20,
     backgroundColor: '#7D42D1',
     marginTop: 20,
   },
