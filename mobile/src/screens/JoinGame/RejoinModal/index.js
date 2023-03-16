@@ -3,13 +3,13 @@ import { Modal, Text, View } from "react-native"
 import RoundButton from "../../../components/RoundButton"
 import { ScaledSheet } from "react-native-size-matters"
 
-export default function ReJoinModal({isModalVisible,  prevGameData, handleRejoinSession, clearLocalSession}){
+export default function ReJoinModal({ isModalVisible, setIsModalVisible, prevGameData, handleRejoinSession, clearLocalSession }){
 
   return(
     <View>
-     <Modal
+      <Modal
         animationType='fade'
-        visible={true}
+        visible={isModalVisible}
         transparent={true}
         onRequestClose={() => {
           setIsModalVisible(false)
@@ -38,8 +38,8 @@ export default function ReJoinModal({isModalVisible,  prevGameData, handleRejoin
             </RoundButton>
           </View>
         </View>
-      </Modal>
-    </View>
+    </Modal>
+  </View>
   )  
 }
 
@@ -48,6 +48,9 @@ const styles = ScaledSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex:5,
+    elevation: 2,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   modalView: {
     backgroundColor: 'white',
@@ -61,7 +64,8 @@ const styles = ScaledSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
+    zIndex: 6,
+    elevation: 3,
   },
   button: {
     borderRadius: 20,

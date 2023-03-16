@@ -1,7 +1,7 @@
 import { GameSessionState, isNullOrUndefined } from "@righton/networking"
 import React, { useEffect, useState } from "react"
 import { useFocusEffect } from '@react-navigation/native'
-import { Image, ImageBackground, Text, View } from "react-native"
+import { Image, ImageBackground, Text, View, InteractionManager } from "react-native"
 import { ScaledSheet } from "react-native-size-matters"
 import PurpleBackground from "../../components/PurpleBackground"
 import RoundButton from "../../components/RoundButton"
@@ -17,7 +17,7 @@ export default function JoinGame({
     handleRejoinSession,
     isFirstPlay
 }) {
-    const [isModalVisible, setIsModalVisible] = useState(true)
+    const [isModalVisible, setIsModalVisible] = useState(false)
     const [prevGameData, setPrevGameData] = useState(null)
 
     useFocusEffect(
@@ -25,7 +25,7 @@ export default function JoinGame({
         loadLocalSession().then(data => {
             if (data){
               setPrevGameData(data)
-              setIsModalVisible(true)
+              InteractionManager.runAfterInteractions(() => setIsModalVisible(true))
             }
         })  
       }, [navigation])
@@ -72,7 +72,6 @@ export default function JoinGame({
                 break
 
             case GameSessionState.FINAL_RESULTS:
-                clearLocalSession()
                 navigation.navigate("ScorePage")
                 break
 
@@ -88,17 +87,17 @@ export default function JoinGame({
     }, [gameSession?.currentState])
 
     const handleJoinGame = () => {
-        navigation.navigate("EnterGameCode")
+      navigation.navigate("EnterGameCode")
     }
 
     const resetState = () => {
-        navigation.navigate("JoinGame")
+      navigation.navigate("JoinGame")
     }
 
     return (
         <View style={styles.container}>
+          <RejoinModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} prevGameData={prevGameData} handleRejoinSession={handleRejoinSession} clearLocalSession={clearLocalSession} />
             <PurpleBackground>
-              <RejoinModal isModalVisible={true} prevGameData={prevGameData} handleRejoinSession={handleRejoinSession} clearLocalSession={clearLocalSession}/>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
                         <View style={styles.heroText}>
