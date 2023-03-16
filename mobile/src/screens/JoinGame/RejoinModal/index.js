@@ -50,7 +50,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     zIndex:5,
     elevation: 2,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0)'
   },
   modalView: {
     backgroundColor: 'white',
