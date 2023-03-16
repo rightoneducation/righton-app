@@ -25,7 +25,6 @@ const GameSessionContainer = ({ children }) => {
                     clearStorage()
                     throw new Error(`GameSession is either finished or not started`)
                 }
-                console.log(isFirstPlay)
                 if (isFirstPlay)
                     setGameSession(gameSessionResponse)
                 return gameSessionResponse
@@ -117,19 +116,17 @@ const GameSessionContainer = ({ children }) => {
     }
 
     const saveTeamAvatar = async (teamAvatar) => {
-        setTeamAvatar(teamAvatar)
+      setTeamAvatar(teamAvatar)
     }
 
     const loadLocalSession = async () => {
-        try {
-            console.log("loading")
-            const value = await EncryptedStorage.getItem("righton_session")
-            console.log ("a" + value)
-            return value
-        } catch (error) {
-            console.debug(`error loading ${key} with error: error`)
-            return null
-        }
+      try {
+        const value = await EncryptedStorage.getItem("righton_session")
+        return value
+      } catch (error) {
+        console.debug(`error loading ${key} with error: error`)
+        return null
+      }
     }
 
     const saveLocalSession = async (avatar, team, gameSession) => {
@@ -148,24 +145,24 @@ const GameSessionContainer = ({ children }) => {
     }
 
     const clearLocalSession = async () => {
-        try {
-            await EncryptedStorage.removeItem("righton_session")
-            return true
-        } catch (error) {
-            return false
-        }
+      try {
+        await EncryptedStorage.removeItem("righton_session")
+        return true
+      } catch (error) {
+        return false
+      }
     }
 
     const handleRejoinSession = async (prevGameData) =>{
-        setIsFirstPlay(false)
-        const gameObj = JSON.parse(prevGameData)
-        fetchGameSessionByCode(gameObj.gameCode).then(game => {
-            const team = game.teams?.find(teamElement => teamElement.id === gameObj.teamName)
-            setTeam(team)
-            setTeamMember(team.teamMembers[0])
-            setTeamAvatar(gameObj.teamAvatar)
-            handleSubscribeToGame(game)
-        })
+      setIsFirstPlay(false)
+      const gameObj = JSON.parse(prevGameData)
+      fetchGameSessionByCode(gameObj.gameCode).then(game => {
+        const team = game.teams?.find(teamElement => teamElement.id === gameObj.teamName)
+        setTeam(team)
+        setTeamMember(team.teamMembers[0])
+        setTeamAvatar(gameObj.teamAvatar)
+        handleSubscribeToGame(game)
+      })
     }
 
     return children({

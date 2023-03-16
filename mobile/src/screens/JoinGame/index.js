@@ -17,7 +17,7 @@ export default function JoinGame({
     handleRejoinSession,
     isFirstPlay
 }) {
-    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(true)
     const [prevGameData, setPrevGameData] = useState(null)
 
     useFocusEffect(
@@ -28,7 +28,7 @@ export default function JoinGame({
               setIsModalVisible(true)
             }
         })  
-      }, [])
+      }, [navigation])
     )
 
     useEffect(() => { 
@@ -98,7 +98,7 @@ export default function JoinGame({
     return (
         <View style={styles.container}>
             <PurpleBackground>
-              <RejoinModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} prevGameData={prevGameData} handleRejoinSession={handleRejoinSession} clearLocalSession={clearLocalSession}/>
+              <RejoinModal isModalVisible={true} prevGameData={prevGameData} handleRejoinSession={handleRejoinSession} clearLocalSession={clearLocalSession}/>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
                         <View style={styles.heroText}>
