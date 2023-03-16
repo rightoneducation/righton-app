@@ -87,8 +87,7 @@ export default function JoinGame({
     }, [gameSession?.currentState])
 
     const handleJoinGame = () => {
-      setIsModalVisible(true)
-      //InteractionManager.runAfterInteractions(() => setIsModalVisible(true))
+      navigation.navigate("EnterGameCode")
     }
 
     const resetState = () => {
