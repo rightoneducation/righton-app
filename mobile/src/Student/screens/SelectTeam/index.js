@@ -29,11 +29,11 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar, handleAddTeam }) => {
   //team is assigned in gamesessioncontainer state variable when user or host navigate away from select team page
   useFocusEffect(
     React.useCallback(() => {
-      const resetOnLeaveScreen = navigation.addListener('blur', () => {
+      const saveTeamData = navigation.addListener('blur', () => {
         saveTeamAvatar(avatar)
         handleAddTeam(team, avatar)
       });
-      return resetOnLeaveScreen
+      return saveTeamData
     },[avatar, navigation])
   )
 

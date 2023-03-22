@@ -26,7 +26,6 @@ const AppContainer = () => {
                 teamMember,
                 setTeamInfo,
                 teamAvatar,
-                saveLocalSession,
                 loadLocalSession,
                 clearLocalSession,
                 handleSubscribeToGame,
@@ -156,6 +155,7 @@ const AppContainer = () => {
                                     teamMember={teamMember}
                                     team={team}
                                     teamAvatar={teamAvatar}
+                                    clearLocalSession={clearLocalSession}
                                 />
                             )}
                         </Stack.Screen>

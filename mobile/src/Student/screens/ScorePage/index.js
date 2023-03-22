@@ -7,10 +7,10 @@ import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
 import BaseView from "../../components/BaseView"
 
 const ScorePage = ({
-    gameSession,
     team,
     teamAvatar,
     navigation,
+    clearLocalSession
 }) => {
     const winnerTeamImages = [
         require("./img/Team1_winner.png"),
@@ -32,6 +32,16 @@ const ScorePage = ({
     const navigateToLeaderboard = () => {
         navigation.navigate("Leaderboard")
     }
+
+    // clear local data off device at this screen (this marks the end of the game from a rejoin perspective)
+    useFocusEffect(
+        React.useCallback(() => {
+          const clearLocalData = navigation.addListener('focus', () => {
+            clearLocalSession()
+          });
+          return clearLocalData
+        },[navigation])
+      )
 
     return (
         <BaseView style={styles.mainContainer}>

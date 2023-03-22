@@ -131,8 +131,6 @@ const GameSessionContainer = ({ children }) => {
         teamName: team.id,
         teamAvatar: avatar
       })
-      console.log("session")
-      console.log(session)
       try {
         await EncryptedStorage.setItem("righton_session", session)
         return true
@@ -142,9 +140,11 @@ const GameSessionContainer = ({ children }) => {
       }
     }
 
-    const clearLocalSession = async () => {
+    const clearLocalSession = async (fromModal) => {
       try {
         await EncryptedStorage.removeItem("righton_session")
+        setIsFirstPlay(true)
+        // TODO clear the team off the gamesession if the clear message came from the modal (so the player doesn't join the game twice)
         return true
       } catch (error) {
         return false
@@ -170,7 +170,6 @@ const GameSessionContainer = ({ children }) => {
         team,
         teamMember,
         teamAvatar,
-        saveLocalSession,
         loadLocalSession,
         clearLocalSession,
         handleSubscribeToGame,
