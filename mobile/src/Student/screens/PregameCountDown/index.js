@@ -9,7 +9,6 @@ import LoadingIndicator from "../../components/LoadingIndicator"
 const PregameCountDown = ({
     navigation,
 }) => {
-
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator

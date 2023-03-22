@@ -85,7 +85,7 @@ const PhaseOneBasicGamePlay = ({
         return resetOnLeaveScreen
       },[navigation])
     )
-    
+
     const handleSubmitAnswer = () => {
         const answer = answerChoices[selectedAnswerIndex]
         handleAddTeamAnswer(question, answer, gameSession?.currentState)
@@ -126,7 +126,6 @@ const PhaseOneBasicGamePlay = ({
     const correctAnswerText = answerChoices.find(
         (answer) => answer.isCorrectAnswer
     )?.text
-    
     const submittedAnswerText = `Thank you for submitting!\n\nThink about which answers you might have been unsure about.`
     let cards = [
         <View key={"questions"}>

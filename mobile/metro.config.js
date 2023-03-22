@@ -4,7 +4,6 @@
  *
  * @format
  */
-const path = require('path')
 
 const blacklist = require('metro-config/src/defaults/exclusionList')
 
@@ -18,8 +17,6 @@ module.exports = {
     }),
   },
   resolver: {
-    blacklistRE: blacklist([/awsmobilejs\/.*/]),
-    nodeModulesPaths: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, '..', 'networking')],
-  },
-  watchFolders: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, '..', 'networking')]
+    blacklistRE: blacklist([/awsmobilejs\/.*/])
+  }
 }

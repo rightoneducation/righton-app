@@ -16,7 +16,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) =
     const [answerList, setAnswerList] = useState([])
     const [scoreFooter, setScoreFooter] = useState([])
     const [phaseTitle, setPhaseTitle] = useState([])
-  
+
     useFocusEffect(
       React.useCallback(() => {
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
