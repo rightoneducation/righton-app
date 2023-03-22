@@ -11,7 +11,7 @@ import TeamIcons from '../../containers/TeamIcons'
 const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
   const [avatar, setAvatar] = useState(TeamIcons[0])
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(true)
-  
+
   const goBack = () => {
     navigation.navigate("StudentName")
   }

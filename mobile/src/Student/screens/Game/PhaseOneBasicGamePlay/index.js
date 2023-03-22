@@ -72,7 +72,7 @@ const PhaseOneBasicGamePlay = ({
       },[currentTime])
     )
 
-    // below resets the state variables of  One gameplay when user leaves phase one screen (to set up for any following question)
+    // below resets the state variables of Phase One gameplay when user leaves phase one screen (to set up for any following question)
     useFocusEffect(
       React.useCallback(() => {
         const resetOnLeaveScreen = navigation.addListener('blur', () => {

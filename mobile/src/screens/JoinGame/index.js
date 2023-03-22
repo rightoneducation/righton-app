@@ -87,16 +87,22 @@ export default function JoinGame({
     }, [gameSession?.currentState])
 
     const handleJoinGame = () => {
-      navigation.navigate("EnterGameCode")
+        navigation.navigate("EnterGameCode")
     }
 
     const resetState = () => {
-      navigation.navigate("JoinGame")
+        navigation.navigate("JoinGame")
     }
 
     return (
         <View style={styles.container}>
-          <RejoinModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} prevGameData={prevGameData} handleRejoinSession={handleRejoinSession} clearLocalSession={clearLocalSession} />
+          <RejoinModal 
+            isModalVisible={isModalVisible} 
+            setIsModalVisible={setIsModalVisible} 
+            prevGameData={prevGameData} 
+            handleRejoinSession={handleRejoinSession} 
+            clearLocalSession={clearLocalSession} 
+          />
             <PurpleBackground>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">
