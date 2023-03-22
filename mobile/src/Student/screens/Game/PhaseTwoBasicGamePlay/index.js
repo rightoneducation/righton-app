@@ -39,7 +39,9 @@ const PhaseTwoBasicGamePlay = ({
     score,
     teamAvatar,
     navigation,
-    handleAddTeamAnswer
+    handleAddTeamAnswer,
+    isRejoin,
+    setIsRejoin
 }) => {
     let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
@@ -99,16 +101,33 @@ const PhaseTwoBasicGamePlay = ({
         const resetOnLeaveScreen = navigation.addListener('blur', () => {
           setSelectedAnswerIndex(null)
           setSubmitted(false)
+          setIsRejoin(false) // need to reset the rejoin variable here so that previous rejoins doesn't affect score calc in phase results
         });
         return resetOnLeaveScreen
       },[navigation])
     )
-
+    
+    // if player has rejoined from a quit/crash, check to see if they have already answered the question
     useFocusEffect(
         React.useCallback(() => {
-            const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, question.id)
-            if (!isNullOrUndefined(teamAnswers) && teamAnswers.find(teamAnswer => (teamAnswer.isTrickAnswer === true)))
-                setSubmitted(true)
+            const reloadScreen = navigation.addListener('focus', () => {
+                if (isRejoin){
+                    const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, question.id)
+                    if (!isNullOrUndefined(teamAnswers)){
+                        teamAnswers.find((teamAnswer, index) => {
+                            if (teamAnswer.isTrickAnswer){  
+                                setSubmitted(true)
+                                answerChoices.find((answer, index) => { 
+                                    if (answer.text === teamAnswer.text){
+                                        setSelectedAnswerIndex(index)
+                                    }
+                                })
+                            }
+                        })
+                    }  
+                }
+            });
+            return reloadScreen
         },[navigation])
     )
 

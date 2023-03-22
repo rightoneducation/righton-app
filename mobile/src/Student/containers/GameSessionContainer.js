@@ -9,7 +9,7 @@ const GameSessionContainer = ({ children }) => {
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
-    const [isFirstPlay, setIsFirstPlay] = useState(true)
+    const [isRejoin, setIsRejoin] = useState(false)
 
     const fetchGameSessionByCode = async (gameCode) => {
         return global.apiClient
@@ -25,7 +25,7 @@ const GameSessionContainer = ({ children }) => {
                     clearStorage()
                     throw new Error(`GameSession is either finished or not started`)
                 }
-                if (isFirstPlay)
+                if (isRejoin === false)
                     setGameSession(gameSessionResponse)
                 return gameSessionResponse
             })
@@ -143,7 +143,7 @@ const GameSessionContainer = ({ children }) => {
     const clearLocalSession = async (fromModal) => {
       try {
         await EncryptedStorage.removeItem("righton_session")
-        setIsFirstPlay(true)
+        setIsRejoin(false)
         // TODO clear the team off the gamesession if the clear message came from the modal (so the player doesn't join the game twice)
         return true
       } catch (error) {
@@ -152,7 +152,7 @@ const GameSessionContainer = ({ children }) => {
     }
 
     const handleRejoinSession = async (prevGameData) =>{
-      setIsFirstPlay(false)
+      setIsRejoin(true)
       const gameObj = JSON.parse(prevGameData)
       fetchGameSessionByCode(gameObj.gameCode).then(game => {
         const team = game.teams?.find(teamElement => teamElement.id === gameObj.teamName)
@@ -177,7 +177,8 @@ const GameSessionContainer = ({ children }) => {
         handleAddTeamAnswer,
         handleRejoinSession,
         saveTeamAvatar,
-        isFirstPlay
+        isRejoin,
+        setIsRejoin
     })
 }
 

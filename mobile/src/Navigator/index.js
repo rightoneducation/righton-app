@@ -33,7 +33,8 @@ const AppContainer = () => {
                 handleAddTeamAnswer,
                 handleRejoinSession,
                 saveTeamAvatar,
-                isFirstPlay
+                isRejoin,
+                setIsRejoin
             }) => (
                 <NavigationContainer >
                     <Stack.Navigator
@@ -53,7 +54,7 @@ const AppContainer = () => {
                                     loadLocalSession={loadLocalSession}
                                     clearLocalSession={clearLocalSession}
                                     handleRejoinSession={handleRejoinSession}
-                                    isFirstPlay={isFirstPlay}
+                                    isRejoin={isRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -112,6 +113,8 @@ const AppContainer = () => {
                                     team={team}
                                     teamAvatar={teamAvatar}
                                     handleAddTeamAnswer={handleAddTeamAnswer}
+                                    isRejoin={isRejoin}
+                                    setIsRejoin={setIsRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -131,6 +134,8 @@ const AppContainer = () => {
                                     team={team}
                                     teamAvatar={teamAvatar}
                                     handleAddTeamAnswer={handleAddTeamAnswer}
+                                    isRejoin={isRejoin}
+                                    setIsRejoin={setIsRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -144,6 +149,7 @@ const AppContainer = () => {
                                     teamAvatar={teamAvatar}
                                     fetchGameSessionByCode={fetchGameSessionByCode}
                                     setTeamInfo={setTeamInfo}
+                                    isRejoin={isRejoin}
                                 />
                             )}
                         </Stack.Screen>

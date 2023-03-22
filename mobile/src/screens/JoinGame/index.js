@@ -15,7 +15,7 @@ export default function JoinGame({
     loadLocalSession,
     clearLocalSession,
     handleRejoinSession,
-    isFirstPlay
+    isRejoin
 }) {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [prevGameData, setPrevGameData] = useState(null)
@@ -43,7 +43,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.TEAMS_JOINING:
-                if (isFirstPlay === true)
+                if (isRejoin === false)
                     // Game hasn't started yet, just let the kids join
                     navigation.navigate("StudentName")
                 else
@@ -51,7 +51,7 @@ export default function JoinGame({
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                if (isFirstPlay === true)
+                if (isRejoin === false && gameSession.currentQuestionIndex === 0)
                   navigation.navigate("PregameCountDown")
                 else
                   navigation.navigate("PhaseOneBasicGamePlay")

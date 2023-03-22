@@ -1,10 +1,11 @@
 import { ModelHelper } from '@righton/networking'
-import { useState } from "react"
+import React, { useState } from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
 import { scale, verticalScale } from "react-native-size-matters"
 import RoundButton from "../../../components/RoundButton"
 import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
 import BaseView from "../../components/BaseView"
+import { useFocusEffect } from '@react-navigation/native'
 
 const ScorePage = ({
     team,

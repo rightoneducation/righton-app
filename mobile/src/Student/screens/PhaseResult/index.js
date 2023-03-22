@@ -7,7 +7,7 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
+const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) => {
 
     const alphabets = ["A", "B", "C", "D"]
     const currentQuestion = gameSession?.questions[gameSession.currentQuestionIndex]
@@ -16,7 +16,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
     const [answerList, setAnswerList] = useState([])
     const [scoreFooter, setScoreFooter] = useState([])
     const [phaseTitle, setPhaseTitle] = useState([])
-
+  
     useFocusEffect(
       React.useCallback(() => {
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
@@ -75,7 +75,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
                 icon={teamAvatar.smallSrc}
                 name={team.name ? team.name : "N/A"}
                 originalScore={originalScore}
-                totalScore={calculateTotalScore(gameSession, currentQuestion, team)}
+                totalScore={isRejoin ? originalScore : calculateTotalScore(gameSession, currentQuestion, team)}
             />
         ])
 
@@ -84,7 +84,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
                 {`Phase ${phaseNo}\nResults`}
             </Text>
         ])
-      }, [gameSession?.currentState])
+      }, [gameSession?.currentState, teamAvatar, isRejoin])
     )
 
     const itemSeparator = () => {
