@@ -73,7 +73,6 @@ const AppContainer = () => {
                                     {...props}
                                     gameSession={gameSession}
                                     setTeamInfo={setTeamInfo}
-                                    handleAddTeam={handleAddTeam}
                                 />
                             )}
                         </Stack.Screen>
@@ -81,9 +80,9 @@ const AppContainer = () => {
                             {(props) => (
                                 <SelectTeam
                                     {...props}
-                                    gameSession={gameSession}
                                     team={team}
                                     saveTeamAvatar={saveTeamAvatar}
+                                    handleAddTeam={handleAddTeam}
                                 />
                             )}
                         </Stack.Screen>
@@ -102,10 +101,6 @@ const AppContainer = () => {
                             {(props) => (
                                 <PregameCountDown
                                     {...props}
-                                    gameSession={gameSession}
-                                    team={team}
-                                    teamAvatar={teamAvatar}
-                                    saveLocalSession={saveLocalSession}
                                 />
                             )}
                         </Stack.Screen>

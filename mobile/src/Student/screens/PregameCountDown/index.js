@@ -8,21 +8,8 @@ import LoadingIndicator from "../../components/LoadingIndicator"
 
 const PregameCountDown = ({
     navigation,
-    teamAvatar,
-    team,
-    gameSession,
-    saveLocalSession
 }) => {
 
-    //team data stored in local session in case player drops
-    useFocusEffect(
-        React.useCallback(() => {
-            const resetOnLeaveScreen = navigation.addListener('focus', () => {
-                saveLocalSession(teamAvatar, team, gameSession)
-            });
-            return resetOnLeaveScreen
-        },[navigation])
-    )
     return (
         <PurpleBackground style={styles.mainContainer}>
             <LoadingIndicator

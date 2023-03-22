@@ -8,7 +8,7 @@ import RoundButton from '../../../components/RoundButton'
 import { colors, fontFamilies, fonts } from '../../../utils/theme'
 import TeamIcons from '../../containers/TeamIcons'
 
-const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
+const SelectTeam = ({ navigation, team, saveTeamAvatar, handleAddTeam }) => {
   const [avatar, setAvatar] = useState(TeamIcons[0])
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(true)
 
@@ -31,6 +31,7 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
     React.useCallback(() => {
       const resetOnLeaveScreen = navigation.addListener('blur', () => {
         saveTeamAvatar(avatar)
+        handleAddTeam(team, avatar)
       });
       return resetOnLeaveScreen
     },[avatar, navigation])

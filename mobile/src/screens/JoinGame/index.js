@@ -20,6 +20,7 @@ export default function JoinGame({
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [prevGameData, setPrevGameData] = useState(null)
 
+    // check if there is a game session stored on the user's device and pop the rejoin modal if so
     useFocusEffect(
       React.useCallback(() => {
         loadLocalSession().then(data => {
@@ -42,8 +43,11 @@ export default function JoinGame({
                 break
 
             case GameSessionState.TEAMS_JOINING:
-                // Game hasn't started yet, just let the kids join
-                navigation.navigate("StudentName")
+                if (isFirstPlay === true)
+                    // Game hasn't started yet, just let the kids join
+                    navigation.navigate("StudentName")
+                else
+                    navigation.navigate("StudentGameIntro")
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:

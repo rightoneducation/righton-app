@@ -45,13 +45,12 @@ const GameSessionContainer = ({ children }) => {
                 })
     }
 
-    const handleAddTeam = async (teamName) => 
+    const handleAddTeam = async (teamName, avatar) => 
     {
       return global.apiClient
             .addTeamToGameSessionId(gameSession.id, teamName, null)
             .then((team) => {
                 console.debug(team)
-                setTeam(team)
                 if (!team) {
                     console.error("Failed to add team")
                     return
@@ -65,7 +64,8 @@ const GameSessionContainer = ({ children }) => {
                               return
                           }
                           setTeam({...team, teamMembers: [teamMember]})
-                          setTeamMemberInfo(teamMember)
+                          setTeamMember(teamMember)
+                          saveLocalSession(avatar, team, gameSession) // team data saved to local storage when team is added
                           return 
                       }).catch((error) => {
                           console.error(error)
@@ -111,10 +111,6 @@ const GameSessionContainer = ({ children }) => {
       setTeam(team)
     }
 
-    const setTeamMemberInfo = async (teamMember) => {
-      setTeamMember(teamMember)
-    }
-
     const saveTeamAvatar = async (teamAvatar) => {
       setTeamAvatar(teamAvatar)
     }
@@ -135,6 +131,8 @@ const GameSessionContainer = ({ children }) => {
         teamName: team.id,
         teamAvatar: avatar
       })
+      console.log("session")
+      console.log(session)
       try {
         await EncryptedStorage.setItem("righton_session", session)
         return true
