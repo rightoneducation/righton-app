@@ -1,4 +1,4 @@
-import { ModelHelper } from "../src"
+import { GameSessionState, ModelHelper } from "../src"
 import GameSessionHelper from "./Helpers/GameSessionHelper"
 import QuestionHelper from "./Helpers/QuestionHelper"
 import TeamAnswerHelper from "./Helpers/TeamAnswerHelper"
@@ -63,10 +63,12 @@ describe("Testing ModelHelper", () => {
 
         gameSession.teams!.forEach((team, idx) => {
             //CHOOSE_CORRECT_ANSWER
+            gameSession.currentState = GameSessionState.PHASE_1_RESULTS
             team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, question, team)
             //user is entering trick answer
             team.teamMembers![0]?.answers!.push(addTrickAnswer(team, idx, question))
             //CHOOSE_TRICKIEST_ANSWER
+            gameSession.currentState = GameSessionState.PHASE_2_RESULTS
             team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, question, team)
             expect(team.score).toEqual((idx === 2 || idx === 6) ? 35 : 25)
         })
@@ -78,10 +80,12 @@ describe("Testing ModelHelper", () => {
       gameSession.teams!.forEach((team, idx) => {
         gameSession.questions!.forEach((question) => {
           //CHOOSE_CORRECT_ANSWER
+          gameSession.currentState = GameSessionState.PHASE_1_RESULTS
           team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, question, team)
           //user is entering trick answer
           team.teamMembers![0]?.answers!.push(addTrickAnswer(team, idx, question))
           //CHOOSE_TRICKIEST_ANSWER
+          gameSession.currentState = GameSessionState.PHASE_2_RESULTS
           team.score = team.score + ModelHelper.calculateBasicModeScoreForQuestion(gameSession, question, team)
 
           if (gameSession.currentQuestionIndex! === 0)
