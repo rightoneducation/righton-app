@@ -2,6 +2,7 @@ import { isNullOrUndefined } from "./IApiClient"
 import { IGameSession, ITeam, ITeamAnswer } from "./Models"
 import { IChoice, IQuestion } from './Models/IQuestion'
 import { ITeamMember } from './Models/ITeamMember'
+import { GameSessionState } from './AWSMobileApi'
 
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
@@ -106,7 +107,7 @@ export abstract class ModelHelper {
         if (submittedTrickAnswer){
           return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         }
-        else if (answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id)){
+        else if (answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
           return this.correctAnswerScore
         }
         else{
