@@ -21,7 +21,11 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) =
       React.useCallback(() => {
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
         const findSelectedAnswer = (teamAnswers) => {
-          return teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
+          if (isNullOrUndefined(teamAnswers))
+            return "" 
+          const selectedAnswer = teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
+          return isNullOrUndefined(selectedAnswer) ? "" : selectedAnswer
+
         }
         const selectedAnswer = findSelectedAnswer(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
 
@@ -38,7 +42,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) =
           if (choiceText === correctAnswer.text) 
             return AnswerMode.Disabled
           else if (choiceText === selectedAnswer.text) 
-            return AnswerMode.PopularTrickAnswer
+            return AnswerMode.PopularTrickAnswerx
         }
     
         const getAnswer = ({item, index}) => {

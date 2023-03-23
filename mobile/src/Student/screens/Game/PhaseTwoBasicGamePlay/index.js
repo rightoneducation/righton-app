@@ -114,7 +114,7 @@ const PhaseTwoBasicGamePlay = ({
                 if (isRejoin){
                     const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, question.id)
                     if (!isNullOrUndefined(teamAnswers)){
-                        teamAnswers.find((teamAnswer, index) => {
+                        teamAnswers.find((teamAnswer) => {
                             if (teamAnswer.isTrickAnswer){  
                                 setSubmitted(true)
                                 answerChoices.find((answer, index) => { 
@@ -264,7 +264,7 @@ const PhaseTwoBasicGamePlay = ({
                 >
                     <View style={styles.roundContainerIncorrect}>
                         <Text style={styles.answerText}>{answer.text}</Text>
-                        {answer.text === answerChoices[selectedAnswerIndex | 0].text ? 
+                        {!isNullOrUndefined(answerChoices[selectedAnswerIndex]) && answer.text === answerChoices[selectedAnswerIndex].text ? 
                             <Image source={require("../img/Picked.png")} /> : null}
                     </View>
                     <Text style={styles.reasonsText}>{answer.reason}</Text>
