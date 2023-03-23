@@ -1,19 +1,28 @@
 import React from 'react';
 import { makeStyles, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import RoundTextIcon from '../components/RoundTextIcon';
 
 export default function GameInProgress() {
   const classes = useStyles();
+
+  const onPress = (data: any):void => {
+    console.log(data);
+  }
+
 
   return(
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <h1>Answer the Question</h1>
-        <Button 
+        {/* <Button 
              className={classes.answerButton}
              >
             Yes
-            </Button>
+            </Button> */}
+            <div style={{width: '300px', backgroundColor: 'white'}}>
+              <RoundTextIcon answerStatus={"true"} icon={"icon"} data={11} onPress={onPress}></RoundTextIcon>
+            </div>
       </div>
     </div>
   )
@@ -21,7 +30,6 @@ export default function GameInProgress() {
 
 const useStyles = makeStyles((theme: Theme) => ({
   mainContainer: {
-    display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'rgba(247, 249, 250, 1)',
     height: '100%',
@@ -32,10 +40,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '225px',
     boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
     position: 'relative',
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
   answerButton:{
-    height: 68,
-    width: 200,
+    height: '68px',
+    width: '200px',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "#159EFA",
