@@ -7,7 +7,7 @@ import { fontFamilies, fonts } from "../../../utils/theme"
 import LoadingIndicator from "../../components/LoadingIndicator"
 
 const PregameCountDown = ({
-    navigation,
+    navigation
 }) => {
     return (
         <PurpleBackground style={styles.mainContainer}>

@@ -42,7 +42,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) =
           if (choiceText === correctAnswer.text) 
             return AnswerMode.Disabled
           else if (choiceText === selectedAnswer.text) 
-            return AnswerMode.PopularTrickAnswerx
+            return AnswerMode.PopularTrickAnswer
         }
     
         const getAnswer = ({item, index}) => {
