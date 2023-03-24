@@ -1,37 +1,48 @@
 import React from 'react';
-import { makeStyles, Button, Theme } from '@material-ui/core';
-import SelectedAnswerImage from '../img/selectedAnswerImage.png';
-import UnselectedAnswerImage from '../img/unselectedAnswerImage.png';
-import CorrectAnswerImage from '../img/correctAnswerImage.png';
+import { makeStyles, Button, Typography } from '@material-ui/core';
+import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
+import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
+import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 
 const RoundTextIcon = ({
   answerStatus,
-  data,
+  index,
+  answerText,
+  submitted,
   onPress,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles(submitted)();
+  const letterCode = parseInt('A'.charCodeAt(0)) + 0;
 
   const imageMap = {
+    'default': UnselectedAnswerImage,
     'correct': CorrectAnswerImage,
     'selected': SelectedAnswerImage,
-    'unselected': UnselectedAnswerImage,
   }
 
+  const styleMap = {
+    'default': classes.buttonDefault,
+    'correct': classes.buttonCorrect,
+    'selected': classes.buttonSelected,
+  }
+ 
   return (
     <div className={classes.container}>
       <Button
-        className={classes.button}
+        className={`${classes.buttonBase} ${styleMap[answerStatus]}`}
         onClick={() => onPress(data)}
-        disabled={false}
+        disabled={submitted || answerStatus === 'correct'}
+        variant="text"
       >
-          <div className={classes.text}> 
-          {'Sample'}
-          </div>
-            <img
-              src={imageMap[answerStatus]}
-              className={classes.icon}
-              alt={'SelectedAnswerImage'}
-            />
+        <div className={`${classes.letterText} ${submitted || answerStatus === 'correct' ? classes.letterTextSubmitted : ''}`}>  
+          {`${String.fromCharCode(letterCode)}.`} 
+        </div>
+        <div className={classes.answerText}>  {answerText} </div>
+        <img
+          src={imageMap[answerStatus]}
+          className={`${classes.icon} ${submitted && answerStatus === 'selected' ? classes.iconSubmitted : ''}`}
+          alt={'SelectedAnswerImage'}
+        />
       </Button>
     </div>
   );
@@ -39,30 +50,61 @@ const RoundTextIcon = ({
 
 export default RoundTextIcon;
 
-const useStyles = makeStyles(() => ({
-  container: {
-    height: '45px',
+const useStyles = (submitted) => makeStyles(theme => ({
+container: {
+    height: '42px',
     margin: '10%',
-  
 },
-button: {
+constianerSubmitted: {
+  opacity: 0.5,
+},
+buttonBase: {
     width: '100%', 
     height: '100%',
-    border: '2px solid #159EFA',
     borderRadius: '22px',
-    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    textTransform: 'none',
+    paddingLeft: '16px',
+},
+buttonDefault: {
+  border: '2px solid #D9DFE5',
+  backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
+},
+buttonCorrect: {
+  border: '2px solid #EBFFDA',
+  backgroundColor: '#EBFFDA',
+},
+buttonSelected: {
+  border: submitted ? '2px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
+  backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
 },
 icon: {
-    padding: '10%',
-    width: '16px',
-    height: '16px',
+  position: 'absolute',
+  right: '16px',
+  width: '16px',
+  height: '16px',
 },
-text: {
-    color: '#384466',
-    fontFamily: 'Karla',
-    fontSize: '16px',
+iconSubmitted: {
+  opacity: 0.5,
+},
+answerText: {
+  color: '#384466',
+  fontFamily: 'Karla',
+  fontSize: '18px',
+  fontWeight: 400,
+  lineHeight: '22px',
+  paddingLeft: '8px',
+},
+letterText: {
+  color: '#384466',
+  fontFamily: 'Karla',
+  fontSize: '18px',
+  fontWeight: 800,
+  lineHeight: '22px'
+},
+letterTextSubmitted: {
+  opacity: 0.5,
 },
 }));

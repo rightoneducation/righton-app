@@ -4,6 +4,7 @@ import RoundTextIcon from '../components/RoundTextIcon';
 
 export default function GameInProgress() {
   const classes = useStyles();
+  const submitted = true;
 
   const onPress = () => {
     console.log(data);
@@ -20,7 +21,7 @@ export default function GameInProgress() {
             Yes
             </Button> */}
             <div style={{width: '300px', backgroundColor: 'white'}}>
-              <RoundTextIcon answerStatus={"correct"} icon={"icon"} data={11} onPress={onPress}></RoundTextIcon>
+              <RoundTextIcon answerStatus={"default"} submitted={true} index={0} answerText={"Sample"} onPress={onPress}></RoundTextIcon>
             </div>
       </div>
     </div>
