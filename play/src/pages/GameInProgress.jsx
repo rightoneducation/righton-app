@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles, Theme } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import RoundTextIcon from '../components/RoundTextIcon';
 
 export default function GameInProgress() {
