@@ -1,22 +1,22 @@
 import React from 'react';
 import { makeStyles, Button, Theme } from '@material-ui/core';
-import Picked from '../images/Picked.png';
-
-type AnswerProps = {
-    answerStatus: string,
-    icon: string,
-    data: any,
-    onPress: (data: any) => void,
-}
+import SelectedAnswerImage from '../img/selectedAnswerImage.png';
+import UnselectedAnswerImage from '../img/unselectedAnswerImage.png';
+import CorrectAnswerImage from '../img/correctAnswerImage.png';
 
 const RoundTextIcon = ({
   answerStatus,
-  icon,
   data,
   onPress,
-} : AnswerProps ) => {
+}) => {
   const classes = useStyles();
-  
+
+  const imageMap = {
+    'correct': CorrectAnswerImage,
+    'selected': SelectedAnswerImage,
+    'unselected': UnselectedAnswerImage,
+  }
+
   return (
     <div className={classes.container}>
       <Button
@@ -24,15 +24,14 @@ const RoundTextIcon = ({
         onClick={() => onPress(data)}
         disabled={false}
       >
-          <div className={classes.text}>
+          <div className={classes.text}> 
           {'Sample'}
           </div>
-          {answerStatus === undefined || !answerStatus ? null : (
             <img
-              src={Picked}
+              src={imageMap[answerStatus]}
               className={classes.icon}
+              alt={'SelectedAnswerImage'}
             />
-          )}
       </Button>
     </div>
   );
@@ -40,7 +39,7 @@ const RoundTextIcon = ({
 
 export default RoundTextIcon;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     height: '45px',
     margin: '10%',
