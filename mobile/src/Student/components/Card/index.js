@@ -22,7 +22,6 @@ export default Card
 
 const styles = StyleSheet.create({
     cardContainer: {
-        height: '100%',
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignContent: 'center',
