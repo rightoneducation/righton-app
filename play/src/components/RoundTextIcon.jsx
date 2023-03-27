@@ -12,7 +12,7 @@ const RoundTextIcon = ({
   onPress,
 }) => {
   const classes = useStyles(submitted)();
-  const letterCode = parseInt('A'.charCodeAt(0)) + 0;
+  const letterCode = parseInt('A'.charCodeAt(0)) + index;
 
   const imageMap = {
     'default': UnselectedAnswerImage,
@@ -51,62 +51,57 @@ const RoundTextIcon = ({
 export default RoundTextIcon;
 
 const useStyles = (submitted) => makeStyles(theme => ({
-container: {
-  height: '42px',
-  width: '100%',
-  marginTop: '5px',
-  marginBottom: '5px',
-},
-constianerSubmitted: {
-  opacity: 0.5,
-},
-buttonBase: {
-    width: '100%', 
-    height: '100%',
-    borderRadius: '22px',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    textTransform: 'none',
-    paddingLeft: '16px',
-},
-buttonDefault: {
-  border: '2px solid #D9DFE5',
-  backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
-},
-buttonCorrect: {
-  border: '2px solid #EBFFDA',
-  backgroundColor: '#EBFFDA',
-},
-buttonSelected: {
-  border: submitted ? '2px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
-  backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
-},
-icon: {
-  position: 'absolute',
-  right: '16px',
-  width: '16px',
-  height: '16px',
-},
-iconSubmitted: {
-  opacity: 0.5,
-},
-answerText: {
-  color: '#384466',
-  fontFamily: 'Karla',
-  fontSize: '18px',
-  fontWeight: 400,
-  lineHeight: '22px',
-  paddingLeft: '8px',
-},
-letterText: {
-  color: '#384466',
-  fontFamily: 'Karla',
-  fontSize: '18px',
-  fontWeight: 800,
-  lineHeight: '22px'
-},
-letterTextSubmitted: {
-  opacity: 0.5,
-},
+  container: {
+    height: '42px',
+    marginTop: '7px',
+    marginBottom: '7px',
+  },
+  buttonBase: {
+      width: '100%', 
+      height: '100%',
+      borderRadius: '22px',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      textTransform: 'none',
+  },
+  buttonDefault: {
+    border: '2px solid #D9DFE5',
+    backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
+  },
+  buttonCorrect: {
+    border: '2px solid #EBFFDA',
+    backgroundColor: '#EBFFDA',
+  },
+  buttonSelected: {
+    border: submitted ? '2px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
+    backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
+  },
+  icon: {
+    position: 'absolute',
+    right: '16px',
+    width: '16px',
+    height: '16px',
+  },
+  iconSubmitted: {
+    opacity: 0.5,
+  },
+  answerText: {
+    color: '#384466',
+    fontFamily: 'Karla',
+    fontSize: '18px',
+    fontWeight: 400,
+    lineHeight: '22px',
+    paddingLeft: '8px',
+  },
+  letterText: {
+    color: '#384466',
+    fontFamily: 'Karla',
+    fontSize: '18px',
+    fontWeight: 800,
+    lineHeight: '22px'
+  },
+  letterTextSubmitted: {
+    opacity: 0.5,
+  },
 }));
