@@ -75,6 +75,7 @@ Coming soon!
 <strong>Andy Li</strong> - Mobile App Lead<br>
 <strong>Anna Roberds</strong> - Math Educator / Community Engagement<br>
 <strong>Daz Yang</strong> - Full-Stack Web Developer<br>
+<strong>Drew Hart</strong> - Dev Lead<br>
 <strong>Edward Tan</strong> - Architect Lead<br>
 <strong>Katerina Schenke</strong> - Research & Learning Scientist<br>
 <strong>Mani Ramezan</strong> - Mobile App Lead<br>
