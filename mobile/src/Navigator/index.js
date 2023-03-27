@@ -26,11 +26,15 @@ const AppContainer = () => {
                 teamMember,
                 setTeamInfo,
                 teamAvatar,
-                saveTeamAvatar,
-                clearStorage,
+                loadLocalSession,
+                clearLocalSession,
                 handleSubscribeToGame,
                 handleAddTeam,
-                handleAddTeamAnswer
+                handleAddTeamAnswer,
+                handleRejoinSession,
+                saveTeamAvatar,
+                isRejoin,
+                setIsRejoin
             }) => (
                 <NavigationContainer >
                     <Stack.Navigator
@@ -47,7 +51,10 @@ const AppContainer = () => {
                                     gameSession={gameSession}
                                     team={team}
                                     teamMember={teamMember}
-                                    clearStorage={clearStorage}
+                                    loadLocalSession={loadLocalSession}
+                                    clearLocalSession={clearLocalSession}
+                                    handleRejoinSession={handleRejoinSession}
+                                    isRejoin={isRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -66,7 +73,6 @@ const AppContainer = () => {
                                     {...props}
                                     gameSession={gameSession}
                                     setTeamInfo={setTeamInfo}
-                                    handleAddTeam={handleAddTeam}
                                 />
                             )}
                         </Stack.Screen>
@@ -74,10 +80,9 @@ const AppContainer = () => {
                             {(props) => (
                                 <SelectTeam
                                     {...props}
-                                    gameSession={gameSession}
                                     team={team}
-                                    teamMember={teamMember}
                                     saveTeamAvatar={saveTeamAvatar}
+                                    handleAddTeam={handleAddTeam}
                                 />
                             )}
                         </Stack.Screen>
@@ -108,6 +113,8 @@ const AppContainer = () => {
                                     team={team}
                                     teamAvatar={teamAvatar}
                                     handleAddTeamAnswer={handleAddTeamAnswer}
+                                    isRejoin={isRejoin}
+                                    setIsRejoin={setIsRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -127,6 +134,8 @@ const AppContainer = () => {
                                     team={team}
                                     teamAvatar={teamAvatar}
                                     handleAddTeamAnswer={handleAddTeamAnswer}
+                                    isRejoin={isRejoin}
+                                    setIsRejoin={setIsRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -140,6 +149,7 @@ const AppContainer = () => {
                                     teamAvatar={teamAvatar}
                                     fetchGameSessionByCode={fetchGameSessionByCode}
                                     setTeamInfo={setTeamInfo}
+                                    isRejoin={isRejoin}
                                 />
                             )}
                         </Stack.Screen>
@@ -151,6 +161,7 @@ const AppContainer = () => {
                                     teamMember={teamMember}
                                     team={team}
                                     teamAvatar={teamAvatar}
+                                    clearLocalSession={clearLocalSession}
                                 />
                             )}
                         </Stack.Screen>

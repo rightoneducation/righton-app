@@ -1,17 +1,37 @@
 import { GameSessionState, isNullOrUndefined } from "@righton/networking"
-import { useEffect } from "react"
-import { Image, ImageBackground, Text, View } from "react-native"
+import React, { useEffect, useState } from "react"
+import { useFocusEffect } from '@react-navigation/native'
+import { Image, ImageBackground, Text, View, InteractionManager } from "react-native"
 import { ScaledSheet } from "react-native-size-matters"
 import PurpleBackground from "../../components/PurpleBackground"
 import RoundButton from "../../components/RoundButton"
 import sharedStyles from "../../Student/screens/Game/Components/sharedStyles"
 import { fonts } from '../../utils/theme'
+import RejoinModal from './RejoinModal'
 
 export default function JoinGame({
     navigation,
     gameSession,
-    clearStorage
+    loadLocalSession,
+    clearLocalSession,
+    handleRejoinSession,
+    isRejoin
 }) {
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [prevGameData, setPrevGameData] = useState(null)
+
+    // check if there is a game session stored on the user's device and pop the rejoin modal if so
+    useFocusEffect(
+      React.useCallback(() => {
+        loadLocalSession().then(data => {
+            if (data){
+              setPrevGameData(data)
+              InteractionManager.runAfterInteractions(() => setIsModalVisible(true))
+            }
+        })  
+      }, [navigation])
+    )
+
     useEffect(() => { 
         if (isNullOrUndefined(gameSession)) {
             resetState()
@@ -23,12 +43,15 @@ export default function JoinGame({
                 break
 
             case GameSessionState.TEAMS_JOINING:
-                // Game hasn't started yet, just let the kids join
-                navigation.navigate("StudentName")
+                if (isRejoin === false)
+                    // Game hasn't started yet, just let the kids join
+                    navigation.navigate("StudentName")
+                else
+                    navigation.navigate("StudentGameIntro")
                 break
 
             case GameSessionState.CHOOSE_CORRECT_ANSWER:
-                if (gameSession.currentQuestionIndex === 0)
+                if (isRejoin === false && gameSession.currentQuestionIndex === 0)
                   navigation.navigate("PregameCountDown")
                 else
                   navigation.navigate("PhaseOneBasicGamePlay")
@@ -72,12 +95,18 @@ export default function JoinGame({
     }
 
     const resetState = () => {
-        clearStorage()
         navigation.navigate("JoinGame")
     }
 
     return (
         <View style={styles.container}>
+          <RejoinModal 
+            isModalVisible={isModalVisible} 
+            setIsModalVisible={setIsModalVisible} 
+            prevGameData={prevGameData} 
+            handleRejoinSession={handleRejoinSession} 
+            clearLocalSession={clearLocalSession} 
+          />
             <PurpleBackground>
                 <View style={styles.heroContainer}>
                     <ImageBackground style={styles.heroImage} source={require("../../assets/images/Hero.png")} resizeMode="cover">

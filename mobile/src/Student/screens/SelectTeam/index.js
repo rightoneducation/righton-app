@@ -8,7 +8,7 @@ import RoundButton from '../../../components/RoundButton'
 import { colors, fontFamilies, fonts } from '../../../utils/theme'
 import TeamIcons from '../../containers/TeamIcons'
 
-const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
+const SelectTeam = ({ navigation, team, saveTeamAvatar, handleAddTeam }) => {
   const [avatar, setAvatar] = useState(TeamIcons[0])
   const [enabledSubmitButton, setEnabledSubmitButton] = useState(true)
 
@@ -29,10 +29,11 @@ const SelectTeam = ({ navigation, team, saveTeamAvatar }) => {
   //team is assigned in gamesessioncontainer state variable when user or host navigate away from select team page
   useFocusEffect(
     React.useCallback(() => {
-      const resetOnLeaveScreen = navigation.addListener('blur', () => {
+      const saveTeamData = navigation.addListener('blur', () => {
         saveTeamAvatar(avatar)
+        handleAddTeam(team, avatar)
       });
-      return resetOnLeaveScreen
+      return saveTeamData
     },[avatar, navigation])
   )
 

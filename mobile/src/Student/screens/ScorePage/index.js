@@ -1,16 +1,17 @@
 import { ModelHelper } from '@righton/networking'
-import { useState } from "react"
+import React, { useState } from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
 import { scale, verticalScale } from "react-native-size-matters"
 import RoundButton from "../../../components/RoundButton"
 import { colors, fontFamilies, fonts, fontWeights } from "../../../utils/theme"
 import BaseView from "../../components/BaseView"
+import { useFocusEffect } from '@react-navigation/native'
 
 const ScorePage = ({
-    gameSession,
     team,
     teamAvatar,
     navigation,
+    clearLocalSession
 }) => {
     const winnerTeamImages = [
         require("./img/Team1_winner.png"),
@@ -32,6 +33,16 @@ const ScorePage = ({
     const navigateToLeaderboard = () => {
         navigation.navigate("Leaderboard")
     }
+
+    // clear local data off device at this screen (this marks the end of the game from a rejoin perspective)
+    useFocusEffect(
+        React.useCallback(() => {
+          const clearLocalData = navigation.addListener('focus', () => {
+            clearLocalSession()
+          });
+          return clearLocalData
+        },[navigation])
+      )
 
     return (
         <BaseView style={styles.mainContainer}>

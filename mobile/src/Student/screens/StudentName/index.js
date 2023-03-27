@@ -7,7 +7,7 @@ import RoundButton from "../../../components/RoundButton"
 import { colors } from "../../../utils/theme"
 import styles from "./styles"
 
-const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) => {
+const StudentName = ({ navigation, gameSession, setTeamInfo }) => {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const firstNameTextRef = useRef(null)
@@ -33,7 +33,7 @@ const StudentName = ({ navigation, gameSession, setTeamInfo, handleAddTeam }) =>
         }
 
         const teamName = `${firstName} ${lastName}`
-        handleAddTeam(teamName).then(() =>  navigation.navigate("SelectTeam"))
+        setTeamInfo(teamName).then(() =>  navigation.navigate("SelectTeam"))
     }
 
     return (
