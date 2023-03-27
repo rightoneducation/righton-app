@@ -4,78 +4,12 @@ import uuid from "react-native-uuid"
 import EncryptedStorage from "react-native-encrypted-storage"
 import TeamIcons from "./TeamIcons"
 
-const localStorageKeys = {
-    gameCode: "game_session_code",
-    teamId: "team_id",
-    teamMemberId: "team_member_id",
-    teamAvatarId: "team_avatar_id",
-}
-
-async function storeDataToLocalStorage(key, value) {
-    try {
-        // TODO: Fix reloading data from storage
-        return true
-        // END disabling loading from storage
-        await EncryptedStorage.setItem(key, value)
-        console.log(`stored new value locally ${key}: ${value}`)
-        return true
-    } catch (error) {
-        // There was an error on the native side
-        console.error(`error storing ${key}: ${value} error: ${error}`)
-        return false
-    }
-}
-
-async function loadLocalStorageForKey(key) {
-    try {
-        const value = await EncryptedStorage.getItem(key)
-        if (isNullOrUndefined(value)) {
-            console.debug(`No data found in local storage for ${key}`)
-            return null
-        }
-        // We have data!!
-        console.log(
-            "loaded existing game session from local storage:",
-            value
-        )
-        return value
-    } catch (error) {
-        // Error retrieving data
-        console.debug(`error loading ${key} with error: error`)
-        return null
-    }
-}
-
-async function removeDataFromLocalStorage(key) {
-    try {
-        await EncryptedStorage.removeItem(key)
-        return true
-    } catch (error) {
-        // There was an error on the native side
-        // You can find out more about this error by using the `error.code` property
-        console.error(error.code) // ex: -25300 (errSecItemNotFound)
-        return false
-    }
-}
-
-async function clearStorage() {
-    try {
-        await EncryptedStorage.clear()
-        // Congrats! You've just cleared the device storage!
-        console.log("Successfully cleared storage!")
-        return true
-    } catch (error) {
-        console.debug(`Failed to clear local storage ${error}`)
-        // There was an error on the native side
-        return false
-    }
-}
-
 const GameSessionContainer = ({ children }) => {
     const [gameSession, setGameSession] = useState(null)
     const [team, setTeam] = useState(null)
     const [teamMember, setTeamMember] = useState(null)
     const [teamAvatar, setTeamAvatar] = useState(TeamIcons[0])
+    const [isRejoin, setIsRejoin] = useState(false)
 
     const fetchGameSessionByCode = async (gameCode) => {
         return global.apiClient
@@ -91,7 +25,8 @@ const GameSessionContainer = ({ children }) => {
                     clearStorage()
                     throw new Error(`GameSession is either finished or not started`)
                 }
-                setGameSession(gameSessionResponse)
+                if (isRejoin === false)
+                    setGameSession(gameSessionResponse)
                 return gameSessionResponse
             })
     }
@@ -110,7 +45,7 @@ const GameSessionContainer = ({ children }) => {
                 })
     }
 
-    const handleAddTeam = async (teamName) => 
+    const handleAddTeam = async (teamName, avatar) => 
     {
       return global.apiClient
             .addTeamToGameSessionId(gameSession.id, teamName, null)
@@ -129,7 +64,8 @@ const GameSessionContainer = ({ children }) => {
                               return
                           }
                           setTeam({...team, teamMembers: [teamMember]})
-                          setTeamMemberInfo(teamMember)
+                          setTeamMember(teamMember)
+                          saveLocalSession(avatar, team, gameSession) // team data saved to local storage when team is added
                           return 
                       }).catch((error) => {
                           console.error(error)
@@ -172,18 +108,59 @@ const GameSessionContainer = ({ children }) => {
 
 
     const setTeamInfo = async (team) => {
-      await storeDataToLocalStorage(localStorageKeys.teamId, team.id)
       setTeam(team)
     }
 
-    const setTeamMemberInfo = async (teamMember) => {
-      await storeDataToLocalStorage(localStorageKeys.teamMemberId, teamMember.id)
-      setTeamMember(teamMember)
+    const saveTeamAvatar = async (teamAvatar) => {
+      setTeamAvatar(teamAvatar)
     }
 
-    const saveTeamAvatar = (avatar) => {
-        storeDataToLocalStorage(localStorageKeys.teamAvatarId, `${avatar.id}`)
-        setTeamAvatar(avatar)
+    const loadLocalSession = async () => {
+      try {
+        const value = await EncryptedStorage.getItem("righton_session")
+        return value
+      } catch (error) {
+        console.debug(`error loading ${key} with error: error`)
+        return null
+      }
+    }
+
+    const saveLocalSession = async (avatar, team, gameSession) => {
+      const session = JSON.stringify({
+        gameCode: gameSession?.gameCode,
+        teamName: team.id,
+        teamAvatar: avatar
+      })
+      try {
+        await EncryptedStorage.setItem("righton_session", session)
+        return true
+      } catch (error) {
+        console.error(`error storing: ${value} error: ${error}`)
+        return false
+      }
+    }
+
+    const clearLocalSession = async (fromModal) => {
+      try {
+        await EncryptedStorage.removeItem("righton_session")
+        setIsRejoin(false)
+        // TODO clear the team off the gamesession if the clear message came from the modal (so the player doesn't join the game twice)
+        return true
+      } catch (error) {
+        return false
+      }
+    }
+
+    const handleRejoinSession = async (prevGameData) =>{
+      setIsRejoin(true)
+      const gameObj = JSON.parse(prevGameData)
+      fetchGameSessionByCode(gameObj.gameCode).then(game => {
+        const team = game.teams?.find(teamElement => teamElement.id === gameObj.teamName)
+        setTeam(team)
+        setTeamMember(team.teamMembers[0])
+        setTeamAvatar(gameObj.teamAvatar)
+        handleSubscribeToGame(game)
+      })
     }
 
     return children({
@@ -193,11 +170,15 @@ const GameSessionContainer = ({ children }) => {
         team,
         teamMember,
         teamAvatar,
-        saveTeamAvatar,
-        clearStorage,
+        loadLocalSession,
+        clearLocalSession,
         handleSubscribeToGame,
         handleAddTeam,
-        handleAddTeamAnswer
+        handleAddTeamAnswer,
+        handleRejoinSession,
+        saveTeamAvatar,
+        isRejoin,
+        setIsRejoin
     })
 }
 

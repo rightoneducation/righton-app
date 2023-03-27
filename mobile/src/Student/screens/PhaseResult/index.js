@@ -7,7 +7,7 @@ import TeamFooter from '../../../components/TeamFooter'
 import { colors, fontFamilies, fonts, fontWeights } from '../../../utils/theme'
 import Answer, { AnswerMode } from './Answer'
 
-const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
+const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) => {
 
     const alphabets = ["A", "B", "C", "D"]
     const currentQuestion = gameSession?.questions[gameSession.currentQuestionIndex]
@@ -21,7 +21,11 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
       React.useCallback(() => {
         const correctAnswer = ModelHelper.getCorrectAnswer(currentQuestion)
         const findSelectedAnswer = (teamAnswers) => {
-          return teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
+          if (isNullOrUndefined(teamAnswers))
+            return "" 
+          const selectedAnswer = teamAnswers.find(teamAnswer => ((phaseNo == 1) ? (teamAnswer.isChosen === true) : (teamAnswer.isTrickAnswer === true)))
+          return isNullOrUndefined(selectedAnswer) ? "" : selectedAnswer
+
         }
         const selectedAnswer = findSelectedAnswer(ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id))
 
@@ -75,7 +79,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
                 icon={teamAvatar.smallSrc}
                 name={team.name ? team.name : "N/A"}
                 originalScore={originalScore}
-                totalScore={calculateTotalScore(gameSession, currentQuestion, team)}
+                totalScore={isRejoin ? originalScore : calculateTotalScore(gameSession, currentQuestion, team)}
             />
         ])
 
@@ -84,7 +88,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo}) => {
                 {`Phase ${phaseNo}\nResults`}
             </Text>
         ])
-      }, [gameSession?.currentState])
+      }, [gameSession?.currentState, teamAvatar, isRejoin])
     )
 
     const itemSeparator = () => {

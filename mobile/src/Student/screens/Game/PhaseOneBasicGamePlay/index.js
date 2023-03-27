@@ -1,4 +1,4 @@
-import { GameSessionState } from "@righton/networking"
+import { GameSessionState, ModelHelper, isNullOrUndefined } from "@righton/networking"
 import React, { useRef, useState } from "react"
 import {
     Dimensions,
@@ -36,13 +36,14 @@ const PhaseOneBasicGamePlay = ({
     teamMember,
     teamAvatar,
     navigation,
-    handleAddTeamAnswer
+    handleAddTeamAnswer,
+    isRejoin,
+    setIsRejoin,
 }) => {
     let phaseTime = gameSession?.phaseOneTime ?? 300
     const [currentTime, setCurrentTime] = useState(phaseTime)
     const [progress, setProgress] = useState(1)
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
-    const [submitted, setSubmitted] = useState(false)
     let countdown = useRef()
     const teamName = team?.name ? team?.name : "Team Name"
     let totalScore = gameSession?.teams?.find(teamElement => teamElement.id === team.id).score 
@@ -53,8 +54,9 @@ const PhaseOneBasicGamePlay = ({
             ? 0
             : gameSession?.currentQuestionIndex
         ]
+    const [submitted, setSubmitted] = useState(false)
     const availableHints = question.instructions
-        
+
     useFocusEffect(
       React.useCallback(() => {
           if (currentTime <= 0) {
@@ -78,6 +80,7 @@ const PhaseOneBasicGamePlay = ({
         const resetOnLeaveScreen = navigation.addListener('blur', () => {
           setSelectedAnswerIndex(null)
           setSubmitted(false)
+          setIsRejoin(false) // need to reset the rejoin variable here so that previous rejoins doesn't affect score calc in phase results
         });
         return resetOnLeaveScreen
       },[navigation])
@@ -96,6 +99,30 @@ const PhaseOneBasicGamePlay = ({
             isCorrectAnswer: choice.isAnswer,
         }
     })
+
+    // if player has rejoined from a quit/crash, check to see if they have already answered the question
+    useFocusEffect(
+        React.useCallback(() => {
+            const reloadScreen = navigation.addListener('focus', () => {
+                if (isRejoin){
+                    const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, question.id)
+                    if (!isNullOrUndefined(teamAnswers)){
+                        teamAnswers.find((teamAnswer) => {
+                            if (teamAnswer.isChosen){  
+                                setSubmitted(true)
+                                answerChoices.find((answer, index) => { 
+                                    if (answer.text === teamAnswer.text){
+                                        setSelectedAnswerIndex(index)
+                                    }
+                                })
+                            }
+                        })
+                    }  
+                }
+            });
+            return reloadScreen
+        },[navigation])
+    )
     const correctAnswerText = answerChoices.find(
         (answer) => answer.isCorrectAnswer
     )?.text
