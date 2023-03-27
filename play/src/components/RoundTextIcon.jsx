@@ -52,8 +52,10 @@ export default RoundTextIcon;
 
 const useStyles = (submitted) => makeStyles(theme => ({
 container: {
-    height: '42px',
-    margin: '10%',
+  height: '42px',
+  width: '100%',
+  marginTop: '5px',
+  marginBottom: '5px',
 },
 constianerSubmitted: {
   opacity: 0.5,
