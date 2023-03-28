@@ -59,6 +59,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     height: '225px',
+    width: '100vw',
     boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
     background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
   },
@@ -71,7 +72,7 @@ const useStyles = makeStyles(() => ({
   },
   footerContainer: {
     height: '40px',
-    width: '100%',
+    width: '100vw',
     backgroundColor: '#000000',
     bottom: 0,
   },
