@@ -12,7 +12,7 @@ const RoundTextIcon = ({
   onPress,
 }) => {
   const classes = useStyles(submitted)();
-  const letterCode = parseInt('A'.charCodeAt(0)) + index;
+  const letterCode = parseInt('A'.charCodeAt(0)) + parseInt(index); // storybook is getting confused about the type here
 
   const imageMap = {
     'default': UnselectedAnswerImage,
@@ -53,8 +53,8 @@ export default RoundTextIcon;
 const useStyles = (submitted) => makeStyles(theme => ({
   container: {
     height: '42px',
-    marginTop: '7px',
-    marginBottom: '7px',
+    marginTop: '8px',
+    marginBottom: '8px',
   },
   buttonBase: {
       width: '100%', 
@@ -74,12 +74,12 @@ const useStyles = (submitted) => makeStyles(theme => ({
     backgroundColor: '#EBFFDA',
   },
   buttonSelected: {
-    border: submitted ? '2px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
+    border: submitted ? '1px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
     backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
   },
   icon: {
     position: 'absolute',
-    right: '16px',
+    right: submitted ? '17px' :'16px',
     width: '16px',
     height: '16px',
   },
@@ -103,5 +103,6 @@ const useStyles = (submitted) => makeStyles(theme => ({
   },
   letterTextSubmitted: {
     opacity: 0.5,
+    paddingLeft: '1px',
   },
 }));

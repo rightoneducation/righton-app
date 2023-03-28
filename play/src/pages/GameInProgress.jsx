@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import { makeStyles, Theme, Typography } from "@material-ui/core";
-import CardAnswer from '../components/CardAnswer';
 import MockGameSession from '../mock/mockGameSession.json'
 import { v4 as uuidv4 } from 'uuid';
 import { isNullOrUndefined, ModelHelper } from '@righton/networking'
+import CardAnswer from '../components/CardAnswer';
+import Timer from '../components/Timer';
 
 export default function GameInProgress() {
   const classes = useStyles();
@@ -12,7 +13,7 @@ export default function GameInProgress() {
   const currentQuestion = MockGameSession.questions[MockGameSession.currentQuestionIndex ?? 0]
   const team = ModelHelper.findTeamInGameSession(MockGameSession, "b58261a7-3cab-4cab-8b78-1b96d44a15f1")
   const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id)
-
+  const [timerIsPaused, setTimerIsPaused] = useState(false)
   const answerChoices = JSON.parse(currentQuestion.choices).map((choice) => {
     return {
         id: uuidv4(),
@@ -25,10 +26,15 @@ export default function GameInProgress() {
     console.log(data);
   }
 
+  const handleTimerIsFinished = () => {
+    setTimerIsPaused(true);
+  }
+
   return(
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <Typography className={classes.titleText}>Answer the Question</Typography>
+        <Timer totalTime={5} isFinished={false} isPaused={timerIsPaused} handleTimerIsFinished={handleTimerIsFinished} />
       </div>
       <div className={classes.bodyContainer}>
         <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
@@ -49,7 +55,9 @@ const useStyles = makeStyles(() => ({
   },
   headerContainer: {
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     height: '225px',
     boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
     background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
