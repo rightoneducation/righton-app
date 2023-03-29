@@ -2,7 +2,7 @@ import React from "react";
 import RoundTextIcon from "./RoundTextIcon.jsx";
 
 export default {
-  title: "RoundTextIcon",
+  title: 'Design System/2_Molecules/RoundTextIcon',
   component: RoundTextIcon
 };
 

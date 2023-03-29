@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Header from "./Header";
+import { GameSessionState } from '@righton/networking'
 
 export default {
-  title: "Header",
+  title: 'Design System/3_Organisms/Header',
   component: Header
 };
 const handleTimerIsFinished = () => {
@@ -11,66 +12,69 @@ const handleTimerIsFinished = () => {
 
 const Template = args => <Header {...args} />;
 
-export const CorrectAnswer = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-CorrectAnswer.args = {
-  headerState: 'correctAnswer',
+export const ChooseCorrectAnswer = Template.bind({});
+ChooseCorrectAnswer.args = {
+  currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
 
 
-export const TrickAnswer = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-TrickAnswer.args = {
-  headerState: 'trickAnswer',
+export const ChooseTrickAnswer = Template.bind({});
+ChooseTrickAnswer.args = {
+  currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
 
-export const AnswerExplanation = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-AnswerExplanation.args = {
-  headerState: 'answerExplanations',
+export const Phase1Discuss = Template.bind({});
+Phase1Discuss.args = {
+  currentState: GameSessionState.PHASE_1_DISCUSS,
+  totalTime: 5,
+  isPaused: false,
+  handleTimerIsFinished: handleTimerIsFinished,
+};
+
+export const Phase2Discuss = Template.bind({});
+Phase2Discuss.args = {
+  currentState: GameSessionState.PHASE_2_DISCUSS,
+  totalTime: 5,
+  isPaused: false,
+  handleTimerIsFinished: handleTimerIsFinished,
+};
+
+export const Phase1Results = Template.bind({});
+Phase1Results.args = {
+  currentState: GameSessionState.PHASE_1_RESULTS,
+  totalTime: 5,
+  isPaused: false,
+  handleTimerIsFinished: handleTimerIsFinished,
+};
+
+export const Phase2Results = Template.bind({});
+Phase2Results.args = {
+  currentState: GameSessionState.PHASE_2_RESULTS,
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
 
 export const Correct = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Correct.args = {
-  headerState: 'correct',
+  //headerState: 'correct',
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
 
 export const Incorrect = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Incorrect.args = {
-  headerState: 'incorrect',
+  //headerState: 'incorrect',
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
 
-export const Phase1Result = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Phase1Result.args = {
-  headerState: 'phase1Results',
-  totalTime: 5,
-  isPaused: false,
-  handleTimerIsFinished: handleTimerIsFinished,
-};
 
-export const Phase2Result = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Phase2Result.args = {
-  headerState: 'phase2Results',
-  totalTime: 5,
-  isPaused: false,
-  handleTimerIsFinished: handleTimerIsFinished,
-};

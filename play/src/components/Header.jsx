@@ -1,8 +1,9 @@
 import { makeStyles, Typography } from "@material-ui/core";
+import { GameSessionState } from '@righton/networking'
 import Timer from '../components/Timer';
 
 export default function Header({
-  headerState,
+  currentState,
   totalTime,
   isPaused,
   isFinished,
@@ -10,19 +11,19 @@ export default function Header({
 }) {
   const classes = useStyles();
 
-  const stateMap ={
-    'correctAnswer': 'Answer The Question',
-    'trickAnswer': 'Pick the Trickiest!',
-    'answerExplanations': 'Answer Explanations',
-    'correct': 'Correct!',
-    'incorrect': 'Nice Try!',
-    'phase1Results': 'Phase 1 Results',
-    'phase2Results': 'Phase 2 Results',
+  const stateMap = {
+    [GameSessionState.CHOOSE_CORRECT_ANSWER]: 'Answer the Question',
+    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: 'Pick the Trickiest!',
+    [GameSessionState.PHASE_1_DISCUSS] : 'Answer Explanations',
+    [GameSessionState.PHASE_2_DISCUSS]: 'Answer Explanations',
+    [GameSessionState.PHASE_1_RESULTS]: 'Phase 1 Results',
+    [GameSessionState.PHASE_2_RESULTS]: 'Phase 2 Results',
   }
+
   return(
     <div className={classes.headerContainer}>
-      <Typography className={classes.titleText}>{stateMap[headerState]}</Typography>
-      {(headerState === 'correctAnswer' || headerState === 'trickAnswer') ? <Timer totalTime={totalTime} isFinished={isFinished} isPaused={isPaused} handleTimerIsFinished={handleTimerIsFinished} /> : null}
+      <Typography className={classes.titleText}>{stateMap[currentState]}</Typography>
+      {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) ? <Timer totalTime={totalTime} isFinished={isFinished} isPaused={isPaused} handleTimerIsFinished={handleTimerIsFinished} /> : null}
     </div>
   );
 };

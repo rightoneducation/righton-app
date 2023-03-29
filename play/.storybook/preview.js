@@ -8,5 +8,10 @@ export const parameters = {
   },
   backgrounds:{
     default: 'dark'
-  }
+  },
+  options: {
+    storySort: {
+      method: 'alphabetical',
+    },
+  },
 }

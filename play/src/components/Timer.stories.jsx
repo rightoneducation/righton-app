@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Timer from "./Timer";
 
 export default {
-  title: "Timer",
+  title: 'Design System/2_Molecules/Timer',
   component: Timer
 };
 const handleTimerIsFinished = () => {

@@ -2,7 +2,7 @@ import React from "react";
 import CardAnswer from "./CardAnswer.jsx";
 
 export default {
-  title: "CardAnswer",
+  title: 'Design System/3_Organisms/CardAnswer',
   component: CardAnswer
 };
 

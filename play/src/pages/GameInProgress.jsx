@@ -9,11 +9,12 @@ import Header from '../components/Header';
 export default function GameInProgress() {
   const classes = useStyles();
   const submitted = true;
-  const [gameSession, setGameSession] = useState(MockGameSession) 
-  const currentQuestion = MockGameSession.questions[MockGameSession.currentQuestionIndex ?? 0]
-  const team = ModelHelper.findTeamInGameSession(MockGameSession, "b58261a7-3cab-4cab-8b78-1b96d44a15f1")
-  const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id)
-  const [timerIsPaused, setTimerIsPaused] = useState(false)
+  const [gameSession, setGameSession] = useState(MockGameSession);
+  const currentQuestion = MockGameSession.questions[MockGameSession.currentQuestionIndex ?? 0];
+  const team = ModelHelper.findTeamInGameSession(MockGameSession, "b58261a7-3cab-4cab-8b78-1b96d44a15f1");
+  const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id);
+  const currentState = MockGameSession?.currentState;
+  const [timerIsPaused, setTimerIsPaused] = useState(false);
   const answerChoices = JSON.parse(currentQuestion.choices).map((choice) => {
     return {
         id: uuidv4(),
@@ -32,11 +33,10 @@ export default function GameInProgress() {
 
   return(
     <div className={classes.mainContainer} >
-      <Header isTimer={true} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+      <Header currentState={currentState} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       <div className={classes.bodyContainer}>
         <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
       </div>
-    
       <div className={classes.footerContainer} />
     </div>
   )

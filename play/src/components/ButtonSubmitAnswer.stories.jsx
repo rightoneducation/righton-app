@@ -2,7 +2,7 @@ import React from "react";
 import ButtonSubmitAnswer from "./ButtonSubmitAnswer.jsx";
 
 export default {
-  title: "ButtonSubmitAnswer",
+  title: 'Design System/1_Atoms/SmallButton',
   component: ButtonSubmitAnswer
 };
 
