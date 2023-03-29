@@ -1,22 +1,19 @@
 import React, {useState} from 'react';
 import { makeStyles, Theme, Typography } from "@material-ui/core";
-import MockGameSession from '../mock/mockGameSession.json'
 import { v4 as uuidv4 } from 'uuid';
 import { isNullOrUndefined, ModelHelper } from '@righton/networking'
 import CardAnswer from '../components/CardAnswer';
-import Header from '../components/Header';
+import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
-import ScoreIndicator from '../components/ScoreIndicator';
 
-export default function GameInProgress() {
+export default function GameInProgress(gameSession) {
   const classes = useStyles();
-  const submitted = true;
-  const [gameSession, setGameSession] = useState(MockGameSession);
-  const currentQuestion = MockGameSession.questions[MockGameSession.currentQuestionIndex ?? 0];
-  const team = ModelHelper.findTeamInGameSession(MockGameSession, "b58261a7-3cab-4cab-8b78-1b96d44a15f1");
+  const currentQuestion = gameSession?.questions[gameSession.currentQuestionIndex ?? 0];
+  const team = ModelHelper.findTeamInGameSession(gameSession, "b58261a7-3cab-4cab-8b78-1b96d44a15f1");
   const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id);
-  const currentState = MockGameSession?.currentState;
+  const currentState = gameSession?.currentState;
   const [timerIsPaused, setTimerIsPaused] = useState(false);
+  
   const answerChoices = JSON.parse(currentQuestion.choices).map((choice) => {
     return {
         id: uuidv4(),
@@ -24,6 +21,8 @@ export default function GameInProgress() {
         isCorrectAnswer: choice.isAnswer,
     }
   })
+
+  const bodyCardTitleText = "Answers";
 
   const onPress = () => {
     console.log(data);
@@ -35,12 +34,22 @@ export default function GameInProgress() {
 
   return(
     <div className={classes.mainContainer} >
-      <Header currentState={currentState} isCorrect={true} isIncorrect={false} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+      <div className={classes.headerContainer}>
+        <div className={classes.headerSafeArea} />
+        <HeaderContent currentState={currentState} isCorrect={true} isIncorrect={false} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+      </div>
       <div className={classes.bodyContainer}>
-        <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
+        <div className={classes.bodyUpperArea} /> 
+        <div className={classes.bodyLowerArea} />
+        <div className={classes.bodyCardArea}>
+          <div className={classes.bodyCardHeader}>
+            <Typography className={classes.bodyCardTitleText}>{bodyCardTitleText}</Typography>
+          </div>
+          <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
+        </div>
       </div>
       <div className={classes.footerContainer}>
-        <FooterContent avatar={0} teamName={"Cameron Jackson"} newPoints={10} score={120} />
+        <FooterContent avatar={0} teamName={team?.name} newPoints={10} score={120} />
         <div className={classes.footerSafeArea} />
       </div>
     </div>
@@ -56,12 +65,56 @@ const useStyles = makeStyles(() => ({
     minWidth: '100vw',
     backgroundColor: 'rgba(247, 249, 250, 1)',
   },
+  headerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems:'center',
+    boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
+    background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
+  },
+  headerSafeArea: {
+    height: '24px',
+    width: '100vw',
+  },
   bodyContainer: {
+    position: 'relative',
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    alignItems: 'center',
     width: '100vw',
-    background: 'linear-gradient(to right, rgba(12, 10, 172, 0.2), rgba(198, 10, 34, 0.2))',
+  },
+  bodyUpperArea:{
+    height: '120px',
+    width: '100vw',
+    background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
+    boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
+    zIndex: 1,
+  },
+  bodyLowerArea:{
+    flex: 1,
+    width: '100vw',
+    backgroundColor: '#FFFFFF',
+    zIndex:0,
+  },
+  bodyCardArea:{
+    position: 'absolute',
+    marginLeft: '40px',
+    marginRight: '40px',
+    zIndex: 2,
+  },
+  bodyCardHeader:{
+    marginTop: '16px',
+    marginBottom: '12px',
+  },
+  bodyCardTitleText:{
+    margin: 'auto',
+    color: '#FFFFFF',
+    fontFamily: 'Karla',
+    fontSize: '20px',
+    fontWeight: 800,
+    lineHeight: '24px',
+    textAlign: 'center',
   },
   footerContainer: {
     display: 'flex',

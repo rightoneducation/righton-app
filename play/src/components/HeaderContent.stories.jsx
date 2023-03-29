@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import Header from "./Header";
+import HeaderContent from "./HeaderContent";
 import { GameSessionState } from '@righton/networking'
 
 export default {
-  title: 'Design System/3_Organisms/Header',
-  component: Header
+  title: 'Design System/3_Organisms/HeaderContent',
+  component: HeaderContent
 };
 const handleTimerIsFinished = () => {
   console.log('finished');
 };
 
-const Template = args => <Header {...args} />;
+const Template = args => <HeaderContent {...args} />;
 
 export const ChooseCorrectAnswer = Template.bind({});
 ChooseCorrectAnswer.args = {

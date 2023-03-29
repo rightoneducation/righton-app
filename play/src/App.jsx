@@ -8,7 +8,7 @@ import {
   createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles';
-import GameInProgress from './pages/GameInProgress';
+import GameSessionContainer from './containers/GameSessionContainer';
 
 
 const theme = createTheme({
@@ -39,7 +39,7 @@ function App() {
       <Router>
         <Switch>
           <Route path="/" >
-            <GameInProgress />
+            <GameSessionContainer />
           </Route>
           <Route>
             <RedirectToCentralIfMissing />

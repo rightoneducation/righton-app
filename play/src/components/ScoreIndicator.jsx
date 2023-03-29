@@ -41,7 +41,7 @@ export default function Header({
 
 const useStyles = makeStyles((theme) => ({
   newPointsAnimation: {
-    animation: `$newScoreUp 500ms ${theme.transitions.easing.easeInOut}`,
+    animation: `$newScoreUp 750ms ${theme.transitions.easing.easeInOut}`,
     opacity: 0,
     position: 'absolute', // float new points pill above rest of content
   },

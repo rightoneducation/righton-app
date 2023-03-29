@@ -1,8 +1,8 @@
 import { makeStyles, Typography } from "@material-ui/core";
 import { GameSessionState } from '@righton/networking'
-import Timer from '../components/Timer';
+import Timer from './Timer';
 
-export default function Header({
+export default function HeaderContent({
   currentState,
   totalTime,
   isPaused,
@@ -44,8 +44,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100vw',
     height: '60px',
-    boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
-    background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
   },
   titleText: {
     fontFamily: 'Karla',
