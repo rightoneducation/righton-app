@@ -94,3 +94,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Hidden Files
+.*
+!/.gitignore
