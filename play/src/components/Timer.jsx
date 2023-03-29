@@ -102,8 +102,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    margin: '24px',
-    width: `calc(100% - 48px)`
+    marginLeft: '24px',
+    marginRight: '24px',
+    marginTop: '8px',
+    marginBottom: '8px',
+    width: `calc(100% - 48px)`,
+    maxWidth: '700px',
   },
   timerBar: {
     borderRadius: '40px',

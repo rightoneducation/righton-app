@@ -4,7 +4,7 @@ import MockGameSession from '../mock/mockGameSession.json'
 import { v4 as uuidv4 } from 'uuid';
 import { isNullOrUndefined, ModelHelper } from '@righton/networking'
 import CardAnswer from '../components/CardAnswer';
-import Timer from '../components/Timer';
+import Header from '../components/Header';
 
 export default function GameInProgress() {
   const classes = useStyles();
@@ -32,10 +32,7 @@ export default function GameInProgress() {
 
   return(
     <div className={classes.mainContainer} >
-      <div className={classes.headerContainer}>
-        <Typography className={classes.titleText}>Answer the Question</Typography>
-        <Timer totalTime={5} isFinished={false} isPaused={timerIsPaused} handleTimerIsFinished={handleTimerIsFinished} />
-      </div>
+      <Header isTimer={true} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       <div className={classes.bodyContainer}>
         <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
       </div>
@@ -52,16 +49,6 @@ const useStyles = makeStyles(() => ({
     minHeight: '100vh',
     minWidth: '100vw',
     backgroundColor: 'rgba(247, 249, 250, 1)',
-  },
-  headerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '225px',
-    width: '100vw',
-    boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
-    background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
   },
   bodyContainer: {
     display: 'flex',
@@ -87,7 +74,9 @@ const useStyles = makeStyles(() => ({
   },
   titleText: {
     fontFamily: 'Karla',
-    fontSize: '24px',
-    fontWeight: 700,
+    fontSize: '26px',
+    fontWeight: 800,
+    lineHeight: '30px',
+    color: '#FFFFFF',
   },
 }));
