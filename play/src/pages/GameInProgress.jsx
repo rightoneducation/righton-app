@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { isNullOrUndefined, ModelHelper } from '@righton/networking'
 import CardAnswer from '../components/CardAnswer';
 import Header from '../components/Header';
+import FooterContent from '../components/FooterContent';
 
 export default function GameInProgress() {
   const classes = useStyles();
@@ -33,11 +34,14 @@ export default function GameInProgress() {
 
   return(
     <div className={classes.mainContainer} >
-      <Header currentState={currentState} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+      <Header currentState={currentState} isCorrect={true} isIncorrect={false} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       <div className={classes.bodyContainer}>
         <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
       </div>
-      <div className={classes.footerContainer} />
+      <div className={classes.footerContainer}>
+        <FooterContent avatar={0} teamName={"Cameron Jackson"} score={20} originalScore={15}/>
+        <div className={classes.footerSafeArea} />
+      </div>
     </div>
   )
 }
@@ -46,6 +50,7 @@ const useStyles = makeStyles(() => ({
   mainContainer: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     minHeight: '100vh',
     minWidth: '100vw',
     backgroundColor: 'rgba(247, 249, 250, 1)',
@@ -58,10 +63,15 @@ const useStyles = makeStyles(() => ({
     background: 'linear-gradient(to right, rgba(12, 10, 172, 0.2), rgba(198, 10, 34, 0.2))',
   },
   footerContainer: {
-    height: '40px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems:'center',
+    backgroundColor: '#FFFFFF',
+  },
+  footerSafeArea: {
+    height: '16px',
     width: '100vw',
-    backgroundColor: '#000000',
-    bottom: 0,
+    backgroundColor: '#FFFFFF',
   },
   answerButton:{
     height: '68px',

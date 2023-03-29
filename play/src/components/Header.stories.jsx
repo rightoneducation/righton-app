@@ -63,7 +63,7 @@ Phase2Results.args = {
 
 export const Correct = Template.bind({});
 Correct.args = {
-  //headerState: 'correct',
+  isCorrect: true,
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
@@ -71,7 +71,7 @@ Correct.args = {
 
 export const Incorrect = Template.bind({});
 Incorrect.args = {
-  //headerState: 'incorrect',
+  isIncorrect: true,
   totalTime: 5,
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,

@@ -8,6 +8,8 @@ export default function Header({
   isPaused,
   isFinished,
   handleTimerIsFinished,
+  isCorrect,
+  isIncorrect
 }) {
   const classes = useStyles();
 
@@ -19,10 +21,17 @@ export default function Header({
     [GameSessionState.PHASE_1_RESULTS]: 'Phase 1 Results',
     [GameSessionState.PHASE_2_RESULTS]: 'Phase 2 Results',
   }
+  const stateCheck = (currentState, isCorrect, isIncorrect) =>{
+    if (isCorrect)
+      return "Correct!"
+    if (isIncorrect)
+      return "Nice Try!"
+    return stateMap[currentState]
+  }
 
   return(
     <div className={classes.headerContainer}>
-      <Typography className={classes.titleText}>{stateMap[currentState]}</Typography>
+      <Typography className={classes.titleText}> {stateCheck(currentState, isCorrect, isIncorrect)} </Typography>
       {(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) ? <Timer totalTime={totalTime} isFinished={isFinished} isPaused={isPaused} handleTimerIsFinished={handleTimerIsFinished} /> : null}
     </div>
   );
