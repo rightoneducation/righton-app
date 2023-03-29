@@ -6,6 +6,7 @@ import { isNullOrUndefined, ModelHelper } from '@righton/networking'
 import CardAnswer from '../components/CardAnswer';
 import Header from '../components/Header';
 import FooterContent from '../components/FooterContent';
+import ScoreIndicator from '../components/ScoreIndicator';
 
 export default function GameInProgress() {
   const classes = useStyles();
@@ -39,7 +40,7 @@ export default function GameInProgress() {
         <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
       </div>
       <div className={classes.footerContainer}>
-        <FooterContent avatar={0} teamName={"Cameron Jackson"} score={20} originalScore={15}/>
+        <FooterContent avatar={0} teamName={"Cameron Jackson"} newPoints={10} score={120} />
         <div className={classes.footerSafeArea} />
       </div>
     </div>

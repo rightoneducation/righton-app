@@ -11,8 +11,8 @@ import Icon6 from '../img/MonsterIcon6.png';
 export default function Header({
   avatar,
   teamName,
-  score,
-  originalScore
+  newPoints,
+  score
 }) {
   const classes = useStyles();
   const avatarMap = {
@@ -30,7 +30,7 @@ export default function Header({
         <Typography className={classes.text}> {teamName} </Typography>
       </div>
       <div>
-        <ScoreIndicator score={score} originalScore={originalScore} /> 
+        <ScoreIndicator newPoints={newPoints} score={score} /> 
       </div>
     </div>
   );

@@ -1,20 +1,69 @@
+import { useState, useEffect } from 'react';
 import { makeStyles, Typography } from "@material-ui/core";
-import { isNullOrUndefined } from '@righton/networking'
+import { isNullOrUndefined } from '@righton/networking';
 
 export default function Header({
+  newPoints,
   score,
-  originalScore,
 }) {
   const classes = useStyles();
+  const [currentScore, setCurrentScore] = useState(score);
+
+  // adds an eventLister to add the new points to the existing score when the animation completes
+  useEffect(() => {
+    const element = document.getElementById('newPointsAnimation');
+    const handleAnimationEnd = () => {
+      setCurrentScore(score+newPoints);
+    }
+    element.addEventListener('animationend', handleAnimationEnd);
+    return () => {
+      element.removeEventListener('animationend', handleAnimationEnd);
+    }
+  });
 
   return(
-    <div className={classes.scoreContainer}>
-      <Typography className={classes.text}> {isNullOrUndefined(score) ? 0 : score} </Typography>
-    </div>
+    <>
+      <div id='newPointsAnimation' className={classes.newPointsAnimation}>
+        { (newPoints && newPoints > 0) ? 
+          <div className={classes.newPointsContainer}>
+            <Typography className={classes.text}> {`+${newPoints}`} </Typography>
+          </div>
+        : 
+          null
+        }
+      </div>
+      <div className={classes.scoreContainer}> 
+        <Typography className={classes.text}> {isNullOrUndefined(currentScore) ? 0 : currentScore} </Typography>
+      </div> 
+    </>
   );
 };
 
 const useStyles = makeStyles((theme) => ({
+  newPointsAnimation: {
+    animation: `$newScoreUp 500ms ${theme.transitions.easing.easeInOut}`,
+    opacity: 0,
+    position: 'absolute', // float new points pill above rest of content
+  },
+  '@keyframes newScoreUp': {
+    '0%': {
+      opacity: 1,
+      transform: 'translateY(0)'
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(-110%)'
+    }
+  },
+  newPointsContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: `58px`,
+    height: '22px',
+    borderRadius: '23px',
+    background: 'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)',
+  },
   scoreContainer: {
     display: 'flex',
     alignItems: 'center',
