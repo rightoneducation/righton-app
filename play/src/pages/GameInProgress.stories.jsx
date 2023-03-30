@@ -15,6 +15,13 @@ const Template = args => <GameInProgress {...args} />;
 
 export const ChooseCorrectAnswer = Template.bind({});
 ChooseCorrectAnswer.args = {
-  ...MockGameSession
+  ...MockGameSession,
 };
+
+export const ChooseTrickiestAnswer = Template.bind({});
+ChooseTrickiestAnswer.args = {
+  ...MockGameSession,
+  currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+};
+
 

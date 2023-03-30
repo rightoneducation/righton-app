@@ -3,9 +3,9 @@ import Card from './Card';
 import { makeStyles } from "@material-ui/core/styles";
 import RoundTextIcon from './RoundTextIcon';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import { isNullOrUndefined } from '@righton/networking';
+import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 
-export default function CardAnswer({answers, isSubmitted,  handleSubmitAnswer, isCorrectAnswer, selectedAnswer, handleSelectAnswer}) {
+export default function CardAnswer({answers, isSubmitted,  handleSubmitAnswer, currentState, selectedAnswer, handleSelectAnswer}) {
   const classes = useStyles();
   const correctText = (
     <> 
@@ -18,12 +18,12 @@ export default function CardAnswer({answers, isSubmitted,  handleSubmitAnswer, i
     </>
   )
   const buttonText = "Submit Answer"
-
+    console.log(currentState)
   return(
     <Card headerTitle="Answer the Question">
       <div className={classes.answerCardContainer}>
         <div className={classes.titleText}> 
-          {isCorrectAnswer ? correctText : trickText}
+          {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? correctText : trickText}
         </div>
         <div className={classes.answerContainer}>
           {

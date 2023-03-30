@@ -47,7 +47,7 @@ export default function GameInProgress(gameSession) {
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <div className={classes.headerSafeArea} />
-        <HeaderContent currentState={currentState} isCorrect={true} isIncorrect={false} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+        <HeaderContent currentState={currentState} isCorrect={false} isIncorrect={false} totalTime={5} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       </div>
       <div className={classes.bodyContainer}>
         <div className={classes.bodyUpperArea} /> 
@@ -56,7 +56,7 @@ export default function GameInProgress(gameSession) {
           <div className={classes.bodyCardHeader}>
             <Typography className={classes.bodyCardTitleText}>{bodyCardTitleText}</Typography>
           </div>
-          <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} isCorrectAnswer={false} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer}></CardAnswer>
+          <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer}></CardAnswer>
         </div>
       </div>
       <div className={classes.footerContainer}>
@@ -112,6 +112,10 @@ const useStyles = makeStyles(() => ({
   },
   bodyCardArea:{
     position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     marginLeft: '40px',
     marginRight: '40px',
     zIndex: 2,

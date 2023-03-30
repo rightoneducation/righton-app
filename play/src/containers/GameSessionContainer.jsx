@@ -6,6 +6,6 @@ export default function GameSessionContainer() {
   const [gameSession, setGameSession] = useState(MockGameSession);
 
   return(
-    <GameInProgress {...gameSession} />
+    <GameInProgress {...MockGameSession} />
   )
 }
