@@ -1,0 +1,172 @@
+{
+  "createdAt": "2023-03-27T21:39:43.087Z",
+  "title": "A Day at the Mall",
+  "updatedAt": "2023-03-27T21:42:18.576Z",
+  "currentQuestionIndex": 1,
+  "currentState": "CHOOSE_CORRECT_ANSWER",
+  "currentTimer": null,
+  "description": "There's a sale at the mall! These questions will help you calculate how much you save on items.",
+  "gameCode": 5564,
+  "gameId": 3697,
+  "id": "89d09623-64f6-4d86-96d5-63561c874a95",
+  "imageUrl": "https://imageio.forbes.com/specials-images/dam/imageserve/1138257321/960x0.jpg",
+  "isAdvancedMode": false,
+  "phaseOneTime": 300,
+  "phaseTwoTime": 300,
+  "questions": [
+    {
+      "choices": "[{\"reason\":\"Students may have correctly calculated the amount paid (0.54P), but did not note that the question asks for the total percentage discount, which is P - 0.54P = 0.46P, or a 46% discount.\",\"text\":\"54%\",\"isAnswer\":false},{\"reason\":\"\",\"text\":\"46%\",\"isAnswer\":true},{\"reason\":\"Students may have added the discounts, 10% + 40% = 50%, rather than considering that the 40% discount is applied to last week's discounted price.\",\"text\":\"50%\",\"isAnswer\":false},{\"reason\":\"Students may have considered 40% off of the 10% discounted price to mean 40% of 10%, which would yield (0.40)(0.10) = 0.04 or 4%.\\nIf they interpreted 'additional' as adding the discounts, then 10% + 4% = 14%.\",\"text\":\"14%\",\"isAnswer\":false}]",
+      "cluster": "A",
+      "domain": "RP",
+      "gameSessionId": "89d09623-64f6-4d86-96d5-63561c874a95",
+      "id": 4789,
+      "grade": "7",
+      "imageUrl": "https://images.unsplash.com/photo-1609188944094-394637c26769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+      "instructions": "[\"Let's say the original price of the shoes was $P. With the 10% off last week, you would've paid 100% - 10% = 90% of the original price, or .90P.\",\"This week, with the additional 40% off, you would pay 60% of last week's sale price of .90P, or .60(.90P).\",\".60(.90P) = .54P\",\"Note that .54P is the amount you would pay if you bought the shoes this week.\",\"The question asks for the total percentage discount. This equals P - 0.54P = 0.46P, which is a 46% discount from the original price.\"]",
+      "order": 1,
+      "standard": "3",
+      "text": "A pair of shoes were 10% off last week. This week, there's an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that you'd get if you buy the shoes this week?"
+    },
+    {
+      "choices": "[{\"reason\":\"The students may have considered 50% off of the 20% discounted price to mean 50% of 20%, which would yield (0.2)(0.5) = 0.10 or 10%. If they interpreted 'additionally' as adding the discounts, then 10% + 20% = 30%\",\"text\":\"30%\",\"isAnswer\":false},{\"reason\":\"The students may have added the discounts, 20% + 50% = 70% rather than considering the 50% discount off of the discounted price.\",\"text\":\"70%\",\"isAnswer\":false},{\"reason\":\"The students may have thought that the highest of the two discounts was the total discount. For example, the maximum of 20% and 50% is 50%, so they may have thought the total discount would be 50%.\",\"text\":\"50%\",\"isAnswer\":false},{\"reason\":\"\",\"text\":\"60%\",\"isAnswer\":true}]",
+      "cluster": "A",
+      "domain": "RP",
+      "gameSessionId": "89d09623-64f6-4d86-96d5-63561c874a95",
+      "id": 4790,
+      "grade": "7",
+      "imageUrl": "https://images.unsplash.com/photo-1604176354204-9268737828e4",
+      "instructions": "[\"Suppose the original price of the shoe was $P. Then 20% off P, 0.20P, is the discount taken off the previous week, Therefore, last week's price is P - 0.20P = 0.8P.\",\"The additional sale of 50% off the already discounted price 0.8P yields an additional discount of 0.50(0.80P) = 0.40P. Subtracting the adiitional discount, 0.40P, from the already discounted price, 0.80P, gives us 0.8P - 0.40P = 0.40P as the final sale price paid by the customer.\",\"The question asked for the total percent discount, this is the 1.00P - 0.40P = 0.60P which is a 60% discount from the original price.\",\"An alternate way of computing this is to consider the percent paid for each discount. For example, 20% discount mean customers are paying 100% - 20% = 80% of the price, where as 50% discount means customers are paying `100% - 50% = 50% of the price. So, 50% off after a 20% discount would mean customers pay 50% of 80% of the original price, or 0.5(0.8P) = 0.40P or 40% of the original price. This means they are getting a 100%-40%=60% discount.\"]",
+      "order": 0,
+      "standard": "3",
+      "text": "A pair of jeans were 20% off last week. This week, there's an additional sale, and you can get an extra 50% off the already discounted price from last week. What is the total percentage discount that you'd get if you buy the jeans this week?"
+    }
+  ],
+  "teams": [
+    {
+      "id": "15bebdd0-ee61-486c-b473-06ba05c7e9d4",
+      "teamMembers": [
+        {
+          "id": "500f098a-8d7f-4b6e-bdbe-cbf80c7f76fa",
+          "answers": [
+            {
+              "createdAt": "2023-03-27T21:41:24.504Z",
+              "id": "3249ded7-9a93-4e0a-9d33-e92d12e2d60b",
+              "isChosen": false,
+              "isTrickAnswer": true,
+              "questionId": 4790,
+              "teamMemberAnswersId": "500f098a-8d7f-4b6e-bdbe-cbf80c7f76fa",
+              "text": "70%",
+              "updatedAt": "2023-03-27T21:41:24.504Z"
+            },
+            {
+              "createdAt": "2023-03-27T21:41:41.597Z",
+              "id": "ca023735-8e93-4ff7-a172-0305a642369d",
+              "isChosen": true,
+              "isTrickAnswer": false,
+              "questionId": 4789,
+              "teamMemberAnswersId": "500f098a-8d7f-4b6e-bdbe-cbf80c7f76fa",
+              "text": "50%",
+              "updatedAt": "2023-03-27T21:41:41.597Z"
+            },
+            {
+              "createdAt": "2023-03-27T21:41:07.508Z",
+              "id": "7ac68da9-4634-4b97-8bc2-226b56d47072",
+              "isChosen": true,
+              "isTrickAnswer": false,
+              "questionId": 4790,
+              "teamMemberAnswersId": "500f098a-8d7f-4b6e-bdbe-cbf80c7f76fa",
+              "text": "50%",
+              "updatedAt": "2023-03-27T21:41:07.508Z"
+            },
+            {
+              "createdAt": "2023-03-27T21:41:55.455Z",
+              "id": "463f4f70-8151-41b5-9bf5-593be64d9629",
+              "isChosen": false,
+              "isTrickAnswer": true,
+              "questionId": 4789,
+              "teamMemberAnswersId": "500f098a-8d7f-4b6e-bdbe-cbf80c7f76fa",
+              "text": "50%",
+              "updatedAt": "2023-03-27T21:41:55.455Z"
+            }
+          ],
+          "updatedAt": "2023-03-27T21:40:47.253Z",
+          "teamTeamMembersId": "15bebdd0-ee61-486c-b473-06ba05c7e9d4",
+          "isFacilitator": true,
+          "deviceId": "b2bd162a-f5bb-4ea5-8fdd-a7d9228087d2",
+          "createdAt": "2023-03-27T21:40:47.253Z"
+        }
+      ],
+      "score": 50,
+      "createdAt": "2023-03-27T21:40:46.725Z",
+      "gameSessionTeamsId": "89d09623-64f6-4d86-96d5-63561c874a95",
+      "name": "Team Two",
+      "teamQuestionGameSessionId": "89d09623-64f6-4d86-96d5-63561c874a95",
+      "teamQuestionId": null,
+      "teamQuestionOrder": null,
+      "updatedAt": "2023-03-27T21:42:02.819Z"
+    },
+    {
+      "id": "b58261a7-3cab-4cab-8b78-1b96d44a15f1",
+      "teamMembers":[
+        {
+          "id": "5dfc5a8e-d8a3-44ad-aef5-318a6f246f63",
+          "answers": [
+            {
+              "createdAt": "2023-03-27T21:41:03.811Z",
+              "id": "ed6be8a1-c56a-4161-9686-365c3386fd6c",
+              "isChosen": true,
+              "isTrickAnswer": false,
+              "questionId": 4790,
+              "teamMemberAnswersId": "5dfc5a8e-d8a3-44ad-aef5-318a6f246f63",
+              "text": "60%",
+              "updatedAt": "2023-03-27T21:41:03.811Z"
+            },
+            {
+              "createdAt": "2023-03-27T21:41:21.522Z",
+              "id": "61060ca7-f4c5-489d-9dfb-606e7fd86217",
+              "isChosen": false,
+              "isTrickAnswer": true,
+              "questionId": 4790,
+              "teamMemberAnswersId": "5dfc5a8e-d8a3-44ad-aef5-318a6f246f63",
+              "text": "50%",
+              "updatedAt": "2023-03-27T21:41:21.522Z"
+            },
+            {
+              "createdAt": "2023-03-27T21:41:52.664Z",
+              "id": "12f1607a-49ec-4772-b873-3bf466d4169e",
+              "isChosen": false,
+              "isTrickAnswer": true,
+              "questionId": 4789,
+              "teamMemberAnswersId": "5dfc5a8e-d8a3-44ad-aef5-318a6f246f63",
+              "text": "50%",
+              "updatedAt": "2023-03-27T21:41:52.664Z"
+            },
+            {
+              "createdAt": "2023-03-27T21:41:38.318Z",
+              "id": "1830b433-4ed2-4c0f-97c8-31a7083a51ed",
+              "isChosen": true,
+              "isTrickAnswer": false,
+              "questionId": 4789,
+              "teamMemberAnswersId": "5dfc5a8e-d8a3-44ad-aef5-318a6f246f63",
+              "text": "46%",
+              "updatedAt": "2023-03-27T21:41:38.318Z"
+            }
+          ],
+          "updatedAt": "2023-03-27T21:40:13.706Z",
+          "teamTeamMembersId": "b58261a7-3cab-4cab-8b78-1b96d44a15f1",
+          "isFacilitator": true,
+          "deviceId": "586d9713-b379-4956-ab5b-0c28b778f539",
+          "createdAt": "2023-03-27T21:40:13.706Z"
+        }
+      ],
+      "score": 120,
+      "createdAt": "2023-03-27T21:40:13.103Z",
+      "gameSessionTeamsId": "89d09623-64f6-4d86-96d5-63561c874a95",
+      "name": "Team One",
+      "teamQuestionGameSessionId": "89d09623-64f6-4d86-96d5-63561c874a95",
+      "teamQuestionId": null,
+      "teamQuestionOrder": null,
+      "updatedAt": "2023-03-27T21:42:02.100Z"
+    }
+  ]
+}
