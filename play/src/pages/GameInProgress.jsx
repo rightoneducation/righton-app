@@ -13,7 +13,10 @@ export default function GameInProgress(gameSession) {
   const teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(team, currentQuestion.id);
   const currentState = gameSession?.currentState;
   const [timerIsPaused, setTimerIsPaused] = useState(false);
-  
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
   const answerChoices = JSON.parse(currentQuestion.choices).map((choice) => {
     return {
         id: uuidv4(),
@@ -32,6 +35,14 @@ export default function GameInProgress(gameSession) {
     setTimerIsPaused(true);
   }
 
+  const handleSubmitAnswer = () => {
+    setIsSubmitted(true);
+  }
+
+  const handleSelectAnswer = (index) => {
+    setSelectedAnswer(index);
+  }
+
   return(
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
@@ -45,7 +56,7 @@ export default function GameInProgress(gameSession) {
           <div className={classes.bodyCardHeader}>
             <Typography className={classes.bodyCardTitleText}>{bodyCardTitleText}</Typography>
           </div>
-          <CardAnswer answers={answerChoices} isSubmitAnswer={true} handleSubmitAnswer={null} isCorrectAnswer={false} isSelectedAnswer={true}></CardAnswer>
+          <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} isCorrectAnswer={false} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer}></CardAnswer>
         </div>
       </div>
       <div className={classes.footerContainer}>
@@ -71,6 +82,7 @@ const useStyles = makeStyles(() => ({
     alignItems:'center',
     boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
     background: 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
+    border: 'none',
   },
   headerSafeArea: {
     height: '24px',
@@ -83,6 +95,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100vw',
+    border: 'none',
   },
   bodyUpperArea:{
     height: '120px',
@@ -121,6 +134,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     alignItems:'center',
     backgroundColor: '#FFFFFF',
+    border: 'none',
   },
   footerSafeArea: {
     height: '16px',

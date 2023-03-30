@@ -1,17 +1,19 @@
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-export default function ButtonSubmitAnswer({ isSelected, isSubmitted}) {
+export default function ButtonSubmitAnswer({ isSelected, isSubmitted, handleSubmitAnswer}) {
   const classes = useStyles();
   const buttonText = isSubmitted ? "Answer Submitted" : "Submit Answer";
 
   return (
     <Button 
-            className={`${classes.buttonStyleBase} ${(isSelected && !isSubmitted) ? classes.buttonStyleSelected : null}`}
-            onClick={() => { 
-              handleSubmitAnswer();
-            }}>
-              <div className={classes.buttonText}> {buttonText} </div>
+      className={`${classes.buttonStyleBase} ${(isSelected && !isSubmitted) ? classes.buttonStyleSelected : null}`}
+      onClick={() => { 
+        handleSubmitAnswer(true);
+      }}
+      disabled={!isSelected || isSubmitted}
+      >
+        <div className={classes.buttonText}> {buttonText} </div>
     </Button>
   )
 }

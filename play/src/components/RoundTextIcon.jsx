@@ -8,10 +8,10 @@ const RoundTextIcon = ({
   answerStatus,
   index,
   answerText,
-  submitted,
-  onPress,
+  isSubmitted,
+  handleSelectAnswer,
 }) => {
-  const classes = useStyles(submitted)();
+  const classes = useStyles(isSubmitted)();
   const letterCode = parseInt('A'.charCodeAt(0)) + parseInt(index); // storybook is getting confused about the type here
 
   const imageMap = {
@@ -30,17 +30,17 @@ const RoundTextIcon = ({
     <div className={classes.container}>
       <Button
         className={`${classes.buttonBase} ${styleMap[answerStatus]}`}
-        onClick={() => onPress(data)}
-        disabled={submitted || answerStatus === 'correct'}
+        onClick={() => handleSelectAnswer(index)}
+        disabled={isSubmitted || answerStatus === 'correct'}
         variant="text"
       >
-        <div className={`${classes.letterText} ${submitted || answerStatus === 'correct' ? classes.letterTextSubmitted : ''}`}>  
+        <div className={`${classes.letterText} ${isSubmitted || answerStatus === 'correct' ? classes.letterTextSubmitted : ''}`}>  
           {`${String.fromCharCode(letterCode)}.`} 
         </div>
         <div className={classes.answerText}>  {answerText} </div>
         <img
           src={imageMap[answerStatus]}
-          className={`${classes.icon} ${submitted && answerStatus === 'selected' ? classes.iconSubmitted : ''}`}
+          className={`${classes.icon} ${isSubmitted && answerStatus === 'selected' ? classes.iconSubmitted : ''}`}
           alt={'SelectedAnswerImage'}
         />
       </Button>
@@ -50,7 +50,7 @@ const RoundTextIcon = ({
 
 export default RoundTextIcon;
 
-const useStyles = (submitted) => makeStyles(theme => ({
+const useStyles = (isSubmitted) => makeStyles(theme => ({
   container: {
     height: '42px',
     marginTop: '8px',
@@ -67,19 +67,19 @@ const useStyles = (submitted) => makeStyles(theme => ({
   },
   buttonDefault: {
     border: '2px solid #D9DFE5',
-    backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
+    backgroundColor: isSubmitted ? '#F4F4F4' : '#FFFFFF',
   },
   buttonCorrect: {
     border: '2px solid #EBFFDA',
     backgroundColor: '#EBFFDA',
   },
   buttonSelected: {
-    border: submitted ? '1px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
-    backgroundColor: submitted ? '#F4F4F4' : '#FFFFFF',
+    border: isSubmitted ? '1px solid rgb(21, 158, 250, 0.5)' : '2px solid #159EFA',
+    backgroundColor: isSubmitted ? '#F4F4F4' : '#FFFFFF',
   },
   icon: {
     position: 'absolute',
-    right: submitted ? '17px' :'16px',
+    right: isSubmitted ? '17px' :'16px',
     width: '16px',
     height: '16px',
   },

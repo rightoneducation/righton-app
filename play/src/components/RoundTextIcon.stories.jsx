@@ -11,7 +11,7 @@ const Template = args => <RoundTextIcon {...args} />;
 export const DefaultAnswer = Template.bind({});
 DefaultAnswer.args = {
   answerStatus: "default",
-  submitted: false,
+  isSubmitted: false,
   answerText: 'Sample',
   index: '0'
 };
@@ -19,7 +19,7 @@ DefaultAnswer.args = {
 export const DefaultAnswerSubmitted = Template.bind({});
 DefaultAnswerSubmitted.args = {
   answerStatus: "default",
-  submitted: true,
+  isSubmitted: true,
   answerText: 'Sample',
   index: '0'
 };
@@ -27,7 +27,7 @@ DefaultAnswerSubmitted.args = {
 export const CorrectAnswer = Template.bind({});
 CorrectAnswer.args = {
   answerStatus: "correct",
-  submitted: false,
+  isSubmitted: false,
   answerText: 'Sample',
   index: '0'
 };
@@ -35,7 +35,7 @@ CorrectAnswer.args = {
 export const CorrectAnswerSubmitted = Template.bind({});
 CorrectAnswerSubmitted.args = {
   answerStatus: "correct",
-  submitted: true,
+  isSubmitted: true,
   answerText: 'Sample',
   index: '0'
 };
@@ -43,7 +43,7 @@ CorrectAnswerSubmitted.args = {
 export const SelectedAnswer = Template.bind({});
 SelectedAnswer.args = {
   answerStatus: "selected",
-  submitted: false,
+  isSubmitted: false,
   answerText: 'Sample',
   index: '0'
 };
@@ -51,7 +51,7 @@ SelectedAnswer.args = {
 export const SelectedAnswerSubmitted = Template.bind({});
 SelectedAnswerSubmitted.args = {
   answerStatus: "selected",
-  submitted: true,
+  isSubmitted: true,
   answerText: 'Sample',
   index: '0'
 };

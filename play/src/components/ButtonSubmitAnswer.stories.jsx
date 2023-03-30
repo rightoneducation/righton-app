@@ -8,6 +8,10 @@ export default {
 
 const Template = args => <ButtonSubmitAnswer {...args} />;
 
+const handleSubmitAnswer = () => { //todo
+  setIsSubmitted(true);
+}
+
 export const DefaultState = Template.bind({});
 DefaultState.args = {
   isSubmitted: false,
@@ -18,6 +22,7 @@ export const AnswerSelected = Template.bind({});
 AnswerSelected.args = {
   isSelected: true,
   isSubmitted: false,
+  handleSubmitAnswer: handleSubmitAnswer,
 };
 
 export const AnswerSubmitted = Template.bind({});

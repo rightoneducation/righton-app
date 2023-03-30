@@ -3,8 +3,9 @@ import Card from './Card';
 import { makeStyles } from "@material-ui/core/styles";
 import RoundTextIcon from './RoundTextIcon';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
+import { isNullOrUndefined } from '@righton/networking';
 
-export default function CardAnswer({answers, isAnswerSubmitted, isAnswerSelected, handleSubmitAnswer, isCorrectAnswer, isSelectedAnswer}) {
+export default function CardAnswer({answers, isSubmitted,  handleSubmitAnswer, isCorrectAnswer, selectedAnswer, handleSelectAnswer}) {
   const classes = useStyles();
   const correctText = (
     <> 
@@ -17,8 +18,6 @@ export default function CardAnswer({answers, isAnswerSubmitted, isAnswerSelected
     </>
   )
   const buttonText = "Submit Answer"
-  
-  console.log(answers)
 
   return(
     <Card headerTitle="Answer the Question">
@@ -29,11 +28,11 @@ export default function CardAnswer({answers, isAnswerSubmitted, isAnswerSelected
         <div className={classes.answerContainer}>
           {
             answers.map((answer,index) => {
-              return <RoundTextIcon answerStatus={"default"} submitted={true} index={index} answerText={answer.text} key={index}></RoundTextIcon>
+              return <RoundTextIcon answerStatus={(selectedAnswer === index) ? "selected" : "default"} isSubmitted={isSubmitted} index={index} answerText={answer.text} key={index} handleSelectAnswer={handleSelectAnswer}/>
             })
           }
         </div>
-        <ButtonSubmitAnswer/>
+        <ButtonSubmitAnswer isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} isSelected={isNullOrUndefined(selectedAnswer) ? false : true}/>
       </div>
     </Card>
   )
