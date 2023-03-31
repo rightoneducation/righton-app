@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GameSessionState } from '@righton/networking';
 import CardAnswer from "./CardAnswer.jsx";
 
 
@@ -26,13 +27,13 @@ export const CorrectAnswer = Template.bind({});
 console.log(CorrectAnswer)
 
 CorrectAnswer.args = {
-  isCorrectAnswer: true,
+  currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, 
   answers: [{text: "Answer 1"}, {text: "Answer 2"}, {text: "Answer 3"}, {text: "Answer 4"}],
   // handleSelectAnswer: (index) => setSelectedAnswer(index),
 };
 
 export const TrickAnswer = Template.bind({});
 TrickAnswer.args = {
-  isCorrectAnswer: false,
+  currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER, 
   answers: [{text: "Answer 1"}, {text: "Answer 2"}, {text: "Answer 3"}, {text: "Answer 4"}],
 };

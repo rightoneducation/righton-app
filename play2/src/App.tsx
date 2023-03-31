@@ -38,12 +38,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path="/" >
-            <GameSessionContainer />
-          </Route>
-          <Route>
-            <RedirectToCentralIfMissing />
-          </Route>
+          <Route path="/" element={<GameSessionContainer />} />
+          <Route element={<RedirectToCentralIfMissing />} />
         </Routes>
       </Router>
     </ThemeProvider>

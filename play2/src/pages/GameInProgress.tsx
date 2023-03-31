@@ -1,14 +1,20 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography } from "@mui/material";
-import { IGameSession, GameSessionState } from '@righton/networking';
+import { IGameSession} from '@righton/networking';
 
-export default function GameInProgress(gameSession: IGameSession | null) {
+interface GameInProgressProps {
+  gameSession: IGameSession;
+  placeholderStorybookProp: string;
+}
+
+export default function GameInProgress( {gameSession, placeholderStorybookProp}: GameInProgressProps) {
   const classes = useStyles();
 
   return(
     <div className={classes.mainContainer} >
-      <Typography variant="h1"> {gameSession?.currentState} </Typography>
+      <Typography> {placeholderStorybookProp}  </Typography>
+     <Typography> {JSON.stringify(gameSession)}  </Typography>
     </div>
   )
 }
