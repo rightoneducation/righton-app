@@ -17,12 +17,12 @@ const Template: ComponentStory<typeof GameInProgress> = (args) => <GameInProgres
 export const TestStoryOne = Template.bind({});
 TestStoryOne.args = {
   teamAvatar: 0,
-  gameSession: gameSession
+  id: "Team One"
 };
 
 export const TestStoryTwo = Template.bind({});
 TestStoryTwo.args = {
   teamAvatar: 1,
-  gameSession: gameSession
+  id: "Team Two"
 };
 

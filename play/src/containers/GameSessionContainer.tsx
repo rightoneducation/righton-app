@@ -9,6 +9,6 @@ export default function GameSessionContainer() {
   const [teamAvatar, setTeamAvatar] = useState(0);
 
   return(
-    <GameInProgress gameSession={gameSession} teamAvatar={teamAvatar}/>
+    <GameInProgress {...gameSession} teamAvatar={teamAvatar}/>
   )
 }

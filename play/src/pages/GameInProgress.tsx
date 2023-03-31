@@ -1,20 +1,19 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography } from "@mui/material";
-import { IGameSession} from '@righton/networking';
 
 interface GameInProgressProps {
-  gameSession: IGameSession;
+  id: string;
   teamAvatar: number;
 }
 
-export default function GameInProgress( {gameSession, teamAvatar}: GameInProgressProps) {
+export default function GameInProgress( {id, teamAvatar}: GameInProgressProps) {
   const classes = useStyles();
 
   return(
     <div className={classes.mainContainer} >
-      <Typography> {teamAvatar}  </Typography>
-     <Typography> {JSON.stringify(gameSession)}  </Typography>
+    <Typography> {teamAvatar}  </Typography>
+     <Typography> {id}  </Typography>
     </div>
   )
 }
@@ -23,7 +22,7 @@ const useStyles = makeStyles(() => ({
   mainContainer: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'column',
     minHeight: '100vh',
     minWidth: '100vw',
     backgroundColor: 'rgba(247, 249, 250, 1)',
