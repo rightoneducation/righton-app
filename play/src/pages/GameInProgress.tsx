@@ -90,6 +90,9 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     left: 0,
     right: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     marginLeft: '40px',
     marginRight: '40px',
     zIndex: 2,
@@ -107,8 +110,13 @@ const useStyles = makeStyles(() => ({
     lineHeight: '24px',
     textAlign: 'center',
   },
-  bodyCardSampleCard:{
-    
+  bodySampleCard:{
+    height: '400px',
+    width: '400px',
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0px 10px 5px rgba(0, 0, 0, 0.2)',
+    borderRadius: '24px',
+    textAlign: 'center',
   },
   footerContainer: {
     display: 'flex',
