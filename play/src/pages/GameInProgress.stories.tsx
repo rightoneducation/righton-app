@@ -16,13 +16,13 @@ const Template: ComponentStory<typeof GameInProgress> = (args) => <GameInProgres
 
 export const TestStoryOne = Template.bind({});
 TestStoryOne.args = {
-  placeholderStorybookProp: 'FirstStory',
+  teamAvatar: 0,
   gameSession: gameSession
 };
 
 export const TestStoryTwo = Template.bind({});
 TestStoryTwo.args = {
-  placeholderStorybookProp: 'SecondStory',
+  teamAvatar: 1,
   gameSession: gameSession
 };
 

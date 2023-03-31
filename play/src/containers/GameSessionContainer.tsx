@@ -6,9 +6,9 @@ import GameInProgress from '../pages/GameInProgress'
 export default function GameSessionContainer() {
 
   const [gameSession, setGameSession] = useState(GameSessionParser.gameSessionFromAWSGameSession(MockGameSession as IAWSGameSession) as IGameSession);
-  const placeholderStorybookProp = 'FirstStory';
+  const [teamAvatar, setTeamAvatar] = useState(0);
 
   return(
-    <GameInProgress gameSession={gameSession} placeholderStorybookProp={placeholderStorybookProp}/>
+    <GameInProgress gameSession={gameSession} teamAvatar={teamAvatar}/>
   )
 }

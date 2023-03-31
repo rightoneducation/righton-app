@@ -5,15 +5,15 @@ import { IGameSession} from '@righton/networking';
 
 interface GameInProgressProps {
   gameSession: IGameSession;
-  placeholderStorybookProp: string;
+  teamAvatar: number;
 }
 
-export default function GameInProgress( {gameSession, placeholderStorybookProp}: GameInProgressProps) {
+export default function GameInProgress( {gameSession, teamAvatar}: GameInProgressProps) {
   const classes = useStyles();
 
   return(
     <div className={classes.mainContainer} >
-      <Typography> {placeholderStorybookProp}  </Typography>
+      <Typography> {teamAvatar}  </Typography>
      <Typography> {JSON.stringify(gameSession)}  </Typography>
     </div>
   )
