@@ -14,20 +14,20 @@ export default function GameInProgress( {id, teamAvatar}: GameInProgressProps) {
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <div className={classes.headerSafeArea} />
-        <div className={classes.headerContent}> Header Title </div> 
+        <Typography className={classes.headerContent}> Header Title </Typography> 
       </div>
       <div className={classes.bodyContainer}>
         <div className={classes.bodyUpperArea} /> 
         <div className={classes.bodyLowerArea} />
         <div className={classes.bodyCardArea}>
           <div className={classes.bodyCardHeader}>
-            <Typography className={classes.bodyCardTitleText}>{bodyCardTitleText}</Typography>
+            <Typography className={classes.bodyCardTitleText}> Body Header</Typography>
           </div>
-          <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer}></CardAnswer>
+          <div className={classes.bodySampleCard}> Card Area </div>
         </div>
       </div>
       <div className={classes.footerContainer}>
-        <FooterContent avatar={0} teamName={team?.name} newPoints={10} score={120} />
+        <div className={classes.footerContent}> Footer Area </div>
         <div className={classes.footerSafeArea} />
       </div>
     </div>
@@ -54,6 +54,13 @@ const useStyles = makeStyles(() => ({
   headerSafeArea: {
     height: '24px',
     width: '100vw',
+  },
+  headerContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100vw',
+    height: '60px',
   },
   bodyContainer: {
     position: 'relative',
@@ -100,12 +107,28 @@ const useStyles = makeStyles(() => ({
     lineHeight: '24px',
     textAlign: 'center',
   },
+  bodyCardSampleCard:{
+    
+  },
   footerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems:'center',
+    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     border: 'none',
+  },
+  footerContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: '700px',
+    height: '60px',
+    background: '#FFFFFF',
+    marginLeft: '24px',
+    marginRight: '24px',
+    zIndex: 1,
   },
   footerSafeArea: {
     height: '16px',
