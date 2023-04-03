@@ -2,17 +2,21 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography } from "@mui/material";
 import { GameSessionState } from '@righton/networking'
+import { ITeam } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
+import FooterContent from '../components/FooterContent';
 
 interface GameInProgressProps {
+  teams?: ITeam[];
   id: string;
   currentState: GameSessionState;
   teamAvatar: number;
 }
 
-export default function GameInProgress( {id, teamAvatar, currentState}: GameInProgressProps) {
+export default function GameInProgress( {id, teams, teamAvatar, currentState}: GameInProgressProps) {
   const classes = useStyles();
   const [gameSessionState, setCurrentState] = React.useState(currentState);
+  const currentTeam = !teams ? {name: 'team'} : teams[0];
 
   const handleTimerIsFinished = () => {
     console.log('finished');
@@ -35,7 +39,7 @@ export default function GameInProgress( {id, teamAvatar, currentState}: GameInPr
         </div>
       </div>
       <div className={classes.footerContainer}>
-        <div className={classes.footerContent}> Footer Area </div>
+        <FooterContent avatar={0} teamName={currentTeam.name} newPoints={10} score={120} />
         <div className={classes.footerSafeArea} />
       </div>
     </div>
