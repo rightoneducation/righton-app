@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
+import { ComponentStory, ComponentMeta } from '@storybook/react';
 import HeaderContent from "./HeaderContent";
 import { GameSessionState } from '@righton/networking'
 
 export default {
   title: 'Design System/3_Organisms/HeaderContent',
   component: HeaderContent
-};
+} as ComponentMeta<typeof HeaderContent>;
 
-const Template = args => <HeaderContent {...args} />;
+const Template: ComponentStory<typeof HeaderContent> = (args) => <HeaderContent {...args} />;
 
 const handleTimerIsFinished = () => {
   console.log('finished');
@@ -20,7 +21,6 @@ ChooseCorrectAnswer.args = {
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
-
 
 export const ChooseTrickAnswer = Template.bind({});
 ChooseTrickAnswer.args = {
