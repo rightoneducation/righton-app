@@ -8,6 +8,7 @@ import {
   createTheme,
   ThemeProvider,
 } from '@mui/material/styles';
+import { StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
 import GameSessionContainer from './containers/GameSessionContainer';
 
 
@@ -35,14 +36,16 @@ const RedirectToCentralIfMissing = () => {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<GameSessionContainer />} />
-          <Route element={<RedirectToCentralIfMissing />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<GameSessionContainer />} />
+            <Route element={<RedirectToCentralIfMissing />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }
 

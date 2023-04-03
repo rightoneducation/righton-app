@@ -7,7 +7,7 @@ export default function GameSessionContainer() {
 
   const [gameSession, setGameSession] = useState(GameSessionParser.gameSessionFromAWSGameSession(MockGameSession as IAWSGameSession) as IGameSession);
   const [teamAvatar, setTeamAvatar] = useState(0);
-  console.log(gameSession.teams)
+
   return(
     <GameInProgress {...gameSession} teamAvatar={teamAvatar}/>
   )
