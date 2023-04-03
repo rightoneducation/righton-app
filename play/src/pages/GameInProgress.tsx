@@ -1,20 +1,28 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography } from "@mui/material";
+import { GameSessionState } from '@righton/networking'
+import HeaderContent from '../components/HeaderContent';
 
 interface GameInProgressProps {
   id: string;
+  currentState: GameSessionState;
   teamAvatar: number;
 }
 
-export default function GameInProgress( {id, teamAvatar}: GameInProgressProps) {
+export default function GameInProgress( {id, teamAvatar, currentState}: GameInProgressProps) {
   const classes = useStyles();
+  const [gameSessionState, setCurrentState] = React.useState(currentState);
+
+  const handleTimerIsFinished = () => {
+    console.log('finished');
+  }
 
   return(
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <div className={classes.headerSafeArea} />
-        <Typography className={classes.headerContent}> Header Title </Typography> 
+        <HeaderContent currentState={gameSessionState} isCorrect={false} isIncorrect={false} totalTime={15} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       </div>
       <div className={classes.bodyContainer}>
         <div className={classes.bodyUpperArea} /> 
