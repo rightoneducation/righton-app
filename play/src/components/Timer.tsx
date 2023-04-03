@@ -24,8 +24,8 @@ export default function Timer({
   const progress = (currentTimeMilli/(totalTime*1000)) * 100;
 
   const classes = useStyles({progress: progress});
+  
   const animationRef = useRef<number | null>(null);
-
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
 
