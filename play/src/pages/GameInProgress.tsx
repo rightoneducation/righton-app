@@ -22,7 +22,7 @@ export default function GameInProgress( {id, teamAvatar, currentState}: GameInPr
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <div className={classes.headerSafeArea} />
-        <HeaderContent currentState={gameSessionState} isCorrect={false} isIncorrect={false} totalTime={125} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+        <HeaderContent currentState={gameSessionState} isCorrect={false} isIncorrect={false} totalTime={15} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       </div>
       <div className={classes.bodyContainer}>
         <div className={classes.bodyUpperArea} /> 

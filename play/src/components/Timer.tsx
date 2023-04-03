@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'inline-block',
     marginRight: '10px',
     height: '8px',
-    width: '100%'
+    width: 'calc(100% - 25px)',
   },
   colorPrimary: {
     backgroundColor: 'rgba(255, 255, 255)',
@@ -114,13 +114,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: `linear-gradient(90deg, #349E15 ${100 - props.progress}%, #7DC642 100%)`,
   }),
   text: {
+    position: 'relative',
+    right: 0,
     display: 'inline-block',
     color: 'rgba(255, 255, 255, 0.8)',
     fontFamily: 'Karla',
     fontSize: '12px',
     fontWeight: 700,
     lineHeight: '14px',
-    minWidth: '22px',
+    width: '25px',
     textAlign: 'left',
   },
 }));

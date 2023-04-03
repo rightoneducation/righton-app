@@ -32,6 +32,6 @@ FifteenSecondTimer.args = {
 export const TwoMinuteFiveSecondTimer = Template.bind({});
 TwoMinuteFiveSecondTimer.args = {
   totalTime: 125,
-  isPaused: true,
+  isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
