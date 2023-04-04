@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { GameSessionState, ModelHelper, ITeam, IQuestion, IChoice, isNullOrUndefined } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
+import CardQuestion from '../components/CardQuestion'
 import CardAnswer from '../components/CardAnswer';
 import FooterContent from '../components/FooterContent';
 
@@ -33,7 +34,8 @@ export default function GameInProgress({
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(currentTeam, currentQuestion.id);
   }
-
+  const questionText = currentQuestion?.text;
+  const questionUrl = currentQuestion?.imageUrl;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -67,10 +69,20 @@ export default function GameInProgress({
         <div className={classes.bodyUpperArea} /> 
         <div className={classes.bodyLowerArea} />
         <div className={classes.bodyCardArea}>
-          <div className={classes.bodyCardHeader}>
-            <Typography className={classes.bodyCardTitleText}> Body Header</Typography>
-          </div>
-          <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer}></CardAnswer>
+          <Grid container spacing={3} className={classes.bodyCardGrid}> 
+            <Grid item xs={6}>
+              <div className={classes.bodyCardHeader}>
+                <Typography className={classes.bodyCardTitleText}> Question </Typography>
+              </div>
+              <CardQuestion questionText={questionText} imageUrl={questionUrl ? questionUrl : ""} />
+            </Grid>
+            <Grid item xs={6}>
+              <div className={classes.bodyCardHeader}>
+                <Typography className={classes.bodyCardTitleText}> Answer </Typography>
+              </div>
+              <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer} />
+            </Grid>
+          </Grid>
         </div>
       </div>
       <div className={classes.footerContainer}>
@@ -143,6 +155,9 @@ const useStyles = makeStyles(() => ({
     marginLeft: '40px',
     marginRight: '40px',
     zIndex: 2,
+  },
+  bodyCardGrid:{
+    maxWidth: '900px',
   },
   bodyCardHeader:{
     marginTop: '16px',
