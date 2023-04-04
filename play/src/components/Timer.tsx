@@ -17,8 +17,8 @@ export default function Timer({
   totalTime,
   isPaused,
   isFinished,
-  handleTimerIsFinished} : TimerProps
-) {
+  handleTimerIsFinished
+} : TimerProps ) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(totalTime * 1000); // millisecond updates to smooth out progress bar
   const currentTime = currentTimeMilli/1000;
   const progress = (currentTimeMilli/(totalTime*1000)) * 100;

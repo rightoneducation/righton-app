@@ -11,7 +11,7 @@ interface ScoreIndicatorProps {
 export default function ScoreIndicator({
   newPoints,
   score,
-}:ScoreIndicatorProps) {
+} : ScoreIndicatorProps) {
   const classes = useStyles();
   const [currentScore, setCurrentScore] = useState(isNullOrUndefined(score) ? 0 : score);
 

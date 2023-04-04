@@ -20,8 +20,8 @@ export default function HeaderContent({
   isFinished,
   handleTimerIsFinished,
   isCorrect,
-  isIncorrect } : HeaderContentProps
-) {
+  isIncorrect 
+} : HeaderContentProps ) {
   const classes = useStyles();
 
   const stateMap = {

@@ -25,7 +25,7 @@ export default function Header({
   teamName,
   newPoints,
   score
-}: HeaderProps) {
+} : HeaderProps) {
   const classes = useStyles();
   const avatarMap: AvatarMap = {
     0: Icon,
