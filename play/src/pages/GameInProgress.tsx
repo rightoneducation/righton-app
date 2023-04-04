@@ -97,7 +97,7 @@ export default function GameInProgress({
                 <CardQuestion questionText={questionText} imageUrl={questionUrl ? questionUrl : ""} />
               </div>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} className={classes.gridItem}>
               <div className={classes.bodyCardHeader}>
                 <Typography className={classes.bodyCardTitleText}> Answer </Typography>
               </div>
