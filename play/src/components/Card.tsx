@@ -21,10 +21,13 @@ export default Card;
 
 const styles = {
   cardContainer: {
+    marginLeft: '10px',
+    marginRight: '10px',
+    marginBottom: '10px',
     backgroundColor: '#FFFFFF',
     boxShadow: '0px 10px 5px rgba(0, 0, 0, 0.2)',
     borderRadius: '24px',
-    width: '100%',
+    width: 'calc(100%-20px)',
   },
   cardContent: {
     flex: 1,

@@ -34,7 +34,26 @@ export default function GameInProgress({
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(currentTeam, currentQuestion.id);
   }
-  const questionText = currentQuestion?.text;
+
+  // this breaks down the question text from the gameSession to isolate the sentence with the question mark for formatting purposes in the component
+  const divideQuestionString = (inputText: string) => { 
+    const question = inputText.split(" ");
+    const qmarkLocation = inputText.lastIndexOf("?");
+    let introText = "";
+    let questionText = "";
+
+    if (qmarkLocation != -1){
+      const periodLocation = inputText.lastIndexOf(".");
+      if (periodLocation != -1 && periodLocation < qmarkLocation){
+        introText = inputText.substring(0, periodLocation + 1);
+        questionText = inputText.substring(periodLocation + 1, qmarkLocation + 1);
+      }
+    }
+    return [introText, questionText];
+  }
+
+  const questionText = divideQuestionString(currentQuestion?.text);
+
   const questionUrl = currentQuestion?.imageUrl;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -69,18 +88,22 @@ export default function GameInProgress({
         <div className={classes.bodyUpperArea} /> 
         <div className={classes.bodyLowerArea} />
         <div className={classes.bodyCardArea}>
-          <Grid container spacing={3} className={classes.bodyCardGrid}> 
-            <Grid item xs={6}>
+          <Grid container spacing={3} className={classes.gridContainer}> 
+            <Grid item xs={6} className={classes.gridItem}>
               <div className={classes.bodyCardHeader}>
                 <Typography className={classes.bodyCardTitleText}> Question </Typography>
               </div>
-              <CardQuestion questionText={questionText} imageUrl={questionUrl ? questionUrl : ""} />
+              <div className={classes.bodyCardContainer} >
+                <CardQuestion questionText={questionText} imageUrl={questionUrl ? questionUrl : ""} />
+              </div>
             </Grid>
             <Grid item xs={6}>
               <div className={classes.bodyCardHeader}>
                 <Typography className={classes.bodyCardTitleText}> Answer </Typography>
               </div>
-              <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer} />
+              <div className={classes.bodyCardContainer} >
+                <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer} />
+              </div>
             </Grid>
           </Grid>
         </div>
@@ -129,6 +152,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     width: '100vw',
     border: 'none',
+    overflow: 'hidden',
   },
   bodyUpperArea:{
     height: '120px',
@@ -146,18 +170,16 @@ const useStyles = makeStyles(() => ({
   bodyCardArea:{
     position: 'absolute',
     top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginLeft: '40px',
-    marginRight: '40px',
+    marginLeft: '30px',
+    marginRight: '30px',
+    maxWidth: '700px',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
     zIndex: 2,
-  },
-  bodyCardGrid:{
-    maxWidth: '900px',
   },
   bodyCardHeader:{
     marginTop: '16px',
@@ -172,21 +194,32 @@ const useStyles = makeStyles(() => ({
     lineHeight: '24px',
     textAlign: 'center',
   },
-  bodySampleCard:{
-    height: '400px',
-    width: '400px',
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0px 10px 5px rgba(0, 0, 0, 0.2)',
-    borderRadius: '24px',
-    textAlign: 'center',
+  bodyCardContainer:{
+    height: 'calc(100% - 40px)',
+    width: '100%',
+    overflow: 'auto',
+    '&::-webkit-scrollbar': { /* Chrome and Safari */
+      display: 'none',
+    },
+    scrollbarWidth: 'none', /* Firefox */
+    '-ms-overflow-style': 'none',  /* IE and Edge */
+  },
+  gridContainer: {
+    height: '100%',
+  },
+  gridItem: {
+    height: '100%',
   },
   footerContainer: {
+    position: 'sticky',
+    bottom: '0',
     display: 'flex',
     flexDirection: 'column',
     alignItems:'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     border: 'none',
+    zIndex: 3,
   },
   footerContent: {
     display: 'flex',
@@ -198,7 +231,6 @@ const useStyles = makeStyles(() => ({
     background: '#FFFFFF',
     marginLeft: '24px',
     marginRight: '24px',
-    zIndex: 1,
   },
   footerSafeArea: {
     height: '16px',
