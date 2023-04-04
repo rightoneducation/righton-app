@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography } from "@mui/material";
-import { GameSessionState } from '@righton/networking'
-import { ITeam } from '@righton/networking';
+import { GameSessionState, ModelHelper, ITeam, IQuestion, IChoice, isNullOrUndefined } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
+import CardAnswer from '../components/CardAnswer';
 import FooterContent from '../components/FooterContent';
 
 interface GameInProgressProps {
@@ -11,22 +12,56 @@ interface GameInProgressProps {
   id: string;
   currentState: GameSessionState;
   teamAvatar: number;
+  questions: IQuestion[];
+  currentQuestionIndex?: number | null;
+  teamId: string;
 }
 
-export default function GameInProgress( {id, teams, teamAvatar, currentState}: GameInProgressProps) {
+export default function GameInProgress({
+  teams,
+  id,
+  currentState,
+  teamAvatar,
+  questions,
+  currentQuestionIndex,
+  teamId 
+}: GameInProgressProps) {
   const classes = useStyles();
-  const [gameSessionState, setCurrentState] = React.useState(currentState);
-  const currentTeam = !teams ? {name: 'team'} : teams[0];
-
-  const handleTimerIsFinished = () => {
-    console.log('finished');
+  const currentTeam = teams?.find(team => team.id === teamId);
+  const currentQuestion = questions[currentQuestionIndex ?? 0];
+  let teamAnswers;
+  if (currentTeam != null) {
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(currentTeam, currentQuestion.id);
   }
 
+  const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+
+  const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => {
+    return {
+        id: uuidv4(),
+        text: choice.text,
+        isCorrectAnswer: choice.isAnswer,
+    }
+  })
+
+  const handleTimerIsFinished = () => {
+    setTimerIsPaused(true);
+  }
+
+  const handleSubmitAnswer = () => {
+    setIsSubmitted(true);
+  }
+
+  const handleSelectAnswer = (index: number) => {
+    setSelectedAnswer(index);
+  }
   return(
     <div className={classes.mainContainer} >
       <div className={classes.headerContainer}>
         <div className={classes.headerSafeArea} />
-        <HeaderContent currentState={gameSessionState} isCorrect={false} isIncorrect={false} totalTime={15} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
+        <HeaderContent currentState={currentState} isCorrect={false} isIncorrect={false} totalTime={15} isPaused={false} isFinished={false} handleTimerIsFinished={handleTimerIsFinished} />
       </div>
       <div className={classes.bodyContainer}>
         <div className={classes.bodyUpperArea} /> 
@@ -35,11 +70,11 @@ export default function GameInProgress( {id, teams, teamAvatar, currentState}: G
           <div className={classes.bodyCardHeader}>
             <Typography className={classes.bodyCardTitleText}> Body Header</Typography>
           </div>
-          <div className={classes.bodySampleCard}> Card Area </div>
+          <CardAnswer answers={answerChoices} isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} currentState={currentState} selectedAnswer={selectedAnswer} handleSelectAnswer={handleSelectAnswer}></CardAnswer>
         </div>
       </div>
       <div className={classes.footerContainer}>
-        <FooterContent avatar={0} teamName={currentTeam.name} newPoints={10} score={120} />
+        <FooterContent avatar={0} teamName={currentTeam?.name ?? ""} newPoints={10} score={120} />
         <div className={classes.footerSafeArea} />
       </div>
     </div>
