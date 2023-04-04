@@ -1,5 +1,5 @@
 import React from 'react';
-import RoundTextIcon from './RoundTextIcon.js';
+import RoundTextIcon from './RoundTextIcon';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {

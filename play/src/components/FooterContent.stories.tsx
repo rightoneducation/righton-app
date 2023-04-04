@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import FooterContent from "./FooterContent";
+import FooterContent from './FooterContent';
 import { GameSessionState } from '@righton/networking'
 
 export default {

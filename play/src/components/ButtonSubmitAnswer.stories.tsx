@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonSubmitAnswer from "./ButtonSubmitAnswer.js";
+import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {

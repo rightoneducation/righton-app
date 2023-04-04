@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import HeaderContent from "./HeaderContent";
+import HeaderContent from './HeaderContent';
 import { GameSessionState } from '@righton/networking'
 
 export default {

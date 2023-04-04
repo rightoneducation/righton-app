@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Timer from "./Timer";
+import Timer from './Timer';
 
 export default {
   title: 'Design System/2_Molecules/Timer',

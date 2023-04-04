@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { GameSessionState } from '@righton/networking';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import CardAnswer from "./CardAnswer.js";
+import CardAnswer from './CardAnswer';
 
 
 export default {
