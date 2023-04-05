@@ -1,17 +1,19 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentStory, ComponentMeta } from "@storybook/react";
 import HeaderContent from "./HeaderContent";
-import { GameSessionState } from '@righton/networking'
+import { GameSessionState } from "@righton/networking";
 
 export default {
-  title: 'Design System/3_Organisms/HeaderContent',
-  component: HeaderContent
+  title: "Design System/3_Organisms/HeaderContent",
+  component: HeaderContent,
 } as ComponentMeta<typeof HeaderContent>;
 
-const Template: ComponentStory<typeof HeaderContent> = (args) => <HeaderContent {...args} />;
+const Template: ComponentStory<typeof HeaderContent> = (args) => (
+  <HeaderContent {...args} />
+);
 
 const handleTimerIsFinished = () => {
-  console.log('finished');
+  console.log("finished");
 };
 
 export const ChooseCorrectAnswer = Template.bind({});
@@ -77,5 +79,3 @@ Incorrect.args = {
   isPaused: false,
   handleTimerIsFinished: handleTimerIsFinished,
 };
-
-
