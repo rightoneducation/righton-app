@@ -79,16 +79,14 @@ export default function ScoreIndicator({
         {newPoints && newPoints > 0 ? (
           <div className={classes.newPointsContainer}>
             <Typography className={classes.text}>
-              {' '}
-              {`+${newPoints}`}{' '}
+              {`+${newPoints}`}
             </Typography>
           </div>
         ) : null}
       </div>
       <div className={classes.scoreContainer}>
         <Typography className={classes.text}>
-          {' '}
-          {isNullOrUndefined(currentScore) ? 0 : currentScore}{' '}
+          {isNullOrUndefined(currentScore) ? 0 : currentScore}
         </Typography>
       </div>
     </>
