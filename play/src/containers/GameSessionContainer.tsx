@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import MockGameSession from '../mock/MockGameSession.json';
+import React, { useState } from "react";
+import MockGameSession from "../mock/MockGameSession.json";
 import {
   IGameSession,
   IAWSGameSession,
   GameSessionParser,
-} from '@righton/networking';
-import GameInProgress from '../pages/GameInProgress';
+} from "@righton/networking";
+import GameInProgress from "../pages/GameInProgress";
 
 export default function GameSessionContainer() {
   const [gameSession, setGameSession] = useState(

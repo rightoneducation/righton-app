@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Timer from './Timer';
+import React, { useState } from "react";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
+import Timer from "./Timer";
 
 export default {
-  title: 'Design System/2_Molecules/Timer',
+  title: "Design System/2_Molecules/Timer",
   component: Timer,
 } as ComponentMeta<typeof Timer>;
 
 const handleTimerIsFinished = () => {
-  console.log('finished');
+  console.log("finished");
 };
 
 const Template: ComponentStory<typeof Timer> = (args) => {

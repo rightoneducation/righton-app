@@ -1,10 +1,10 @@
-import React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Typography } from '@mui/material';
-import { GameSessionState } from '@righton/networking';
-import { ITeam } from '@righton/networking';
-import HeaderContent from '../components/HeaderContent';
-import FooterContent from '../components/FooterContent';
+import React from "react";
+import { makeStyles } from "@mui/styles";
+import { Typography } from "@mui/material";
+import { GameSessionState } from "@righton/networking";
+import { ITeam } from "@righton/networking";
+import HeaderContent from "../components/HeaderContent";
+import FooterContent from "../components/FooterContent";
 
 interface GameInProgressProps {
   teams?: ITeam[];
@@ -21,10 +21,10 @@ export default function GameInProgress({
 }: GameInProgressProps) {
   const classes = useStyles();
   const [gameSessionState, setCurrentState] = React.useState(currentState);
-  const currentTeam = !teams ? { name: 'team' } : teams[0];
+  const currentTeam = !teams ? { name: "team" } : teams[0];
 
   const handleTimerIsFinished = () => {
-    console.log('finished');
+    console.log("finished");
   };
 
   return (
@@ -47,7 +47,7 @@ export default function GameInProgress({
         <div className={classes.bodyCardArea}>
           <div className={classes.bodyCardHeader}>
             <Typography className={classes.bodyCardTitleText}>
-              {' '}
+              {" "}
               Body Header
             </Typography>
           </div>
@@ -69,129 +69,129 @@ export default function GameInProgress({
 
 const useStyles = makeStyles(() => ({
   mainContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    minHeight: '100vh',
-    minWidth: '100vw',
-    backgroundColor: 'rgba(247, 249, 250, 1)',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    minHeight: "100vh",
+    minWidth: "100vw",
+    backgroundColor: "rgba(247, 249, 250, 1)",
   },
   headerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    boxShadow: "0px 2px 4px rgba(0, 141, 239, 0.3)",
     background:
-      'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
-    border: 'none',
+      "linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))",
+    border: "none",
   },
   headerSafeArea: {
-    height: '24px',
-    width: '100vw',
+    height: "24px",
+    width: "100vw",
   },
   headerContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100vw',
-    height: '60px',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100vw",
+    height: "60px",
   },
   bodyContainer: {
-    position: 'relative',
-    display: 'flex',
+    position: "relative",
+    display: "flex",
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100vw',
-    border: 'none',
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100vw",
+    border: "none",
   },
   bodyUpperArea: {
-    height: '120px',
-    width: '100vw',
+    height: "120px",
+    width: "100vw",
     background:
-      'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))',
-    boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
+      "linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))",
+    boxShadow: "0px 10px 10px rgba(0, 141, 239, 0.25)",
     zIndex: 1,
   },
   bodyLowerArea: {
     flex: 1,
-    width: '100vw',
-    backgroundColor: '#FFFFFF',
+    width: "100vw",
+    backgroundColor: "#FFFFFF",
     zIndex: 0,
   },
   bodyCardArea: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginLeft: '40px',
-    marginRight: '40px',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginLeft: "40px",
+    marginRight: "40px",
     zIndex: 2,
   },
   bodyCardHeader: {
-    marginTop: '16px',
-    marginBottom: '12px',
+    marginTop: "16px",
+    marginBottom: "12px",
   },
   bodyCardTitleText: {
-    margin: 'auto',
-    color: '#FFFFFF',
-    fontFamily: 'Karla',
-    fontSize: '20px',
+    margin: "auto",
+    color: "#FFFFFF",
+    fontFamily: "Karla",
+    fontSize: "20px",
     fontWeight: 800,
-    lineHeight: '24px',
-    textAlign: 'center',
+    lineHeight: "24px",
+    textAlign: "center",
   },
   bodySampleCard: {
-    height: '400px',
-    width: '400px',
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0px 10px 5px rgba(0, 0, 0, 0.2)',
-    borderRadius: '24px',
-    textAlign: 'center',
+    height: "400px",
+    width: "400px",
+    backgroundColor: "#FFFFFF",
+    boxShadow: "0px 10px 5px rgba(0, 0, 0, 0.2)",
+    borderRadius: "24px",
+    textAlign: "center",
   },
   footerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    border: 'none',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    border: "none",
   },
   footerContent: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    maxWidth: '700px',
-    height: '60px',
-    background: '#FFFFFF',
-    marginLeft: '24px',
-    marginRight: '24px',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    maxWidth: "700px",
+    height: "60px",
+    background: "#FFFFFF",
+    marginLeft: "24px",
+    marginRight: "24px",
     zIndex: 1,
   },
   footerSafeArea: {
-    height: '16px',
-    width: '100vw',
-    backgroundColor: '#FFFFFF',
+    height: "16px",
+    width: "100vw",
+    backgroundColor: "#FFFFFF",
   },
   answerButton: {
-    height: '68px',
-    width: '200px',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#159EFA',
+    height: "68px",
+    width: "200px",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#159EFA",
     borderRadius: 22,
   },
   titleText: {
-    fontFamily: 'Karla',
-    fontSize: '26px',
+    fontFamily: "Karla",
+    fontSize: "26px",
     fontWeight: 800,
-    lineHeight: '30px',
-    color: '#FFFFFF',
+    lineHeight: "30px",
+    color: "#FFFFFF",
   },
 }));

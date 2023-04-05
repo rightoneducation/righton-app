@@ -1,9 +1,9 @@
-import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import ScoreIndicator from './ScoreIndicator';
+import React from "react";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
+import ScoreIndicator from "./ScoreIndicator";
 
 export default {
-  title: 'Design System/1_Atoms/ScoreIndicator',
+  title: "Design System/1_Atoms/ScoreIndicator",
   component: ScoreIndicator,
 } as ComponentMeta<typeof ScoreIndicator>;
 
