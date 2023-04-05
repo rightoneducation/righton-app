@@ -1,7 +1,25 @@
-import { makeStyles } from "@mui/styles";
-import { Typography } from "@mui/material";
-import { GameSessionState } from "@righton/networking";
-import Timer from "./Timer";
+import React from 'react';
+import { makeStyles } from '@mui/styles';
+import { Typography } from '@mui/material';
+import { GameSessionState } from '@righton/networking';
+import Timer from './Timer';
+
+const useStyles = makeStyles(() => ({
+  headerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100vw',
+    height: '60px',
+  },
+  titleText: {
+    fontFamily: 'Karla',
+    fontSize: '26px',
+    fontWeight: 800,
+    lineHeight: '30px',
+    color: '#FFFFFF',
+  },
+}));
 
 interface HeaderContentProps {
   currentState: GameSessionState;
@@ -25,33 +43,33 @@ export default function HeaderContent({
   const classes = useStyles();
 
   const stateMap = {
-    [GameSessionState.NOT_STARTED]: "Answer the Question",
-    [GameSessionState.TEAMS_JOINING]: "Answer the Question",
-    [GameSessionState.CHOOSE_CORRECT_ANSWER]: "Answer the Question",
-    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: "Pick the Trickiest!",
-    [GameSessionState.PHASE_1_DISCUSS]: "Answer Explanations",
-    [GameSessionState.PHASE_2_DISCUSS]: "Answer Explanations",
-    [GameSessionState.PHASE_2_START]: "Answer Explanations",
-    [GameSessionState.PHASE_1_RESULTS]: "Phase 1 Results",
-    [GameSessionState.PHASE_2_RESULTS]: "Phase 2 Results",
-    [GameSessionState.FINAL_RESULTS]: "Answer the Question",
-    [GameSessionState.FINISHED]: "Answer the Question",
+    [GameSessionState.NOT_STARTED]: 'Answer the Question',
+    [GameSessionState.TEAMS_JOINING]: 'Answer the Question',
+    [GameSessionState.CHOOSE_CORRECT_ANSWER]: 'Answer the Question',
+    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: 'Pick the Trickiest!',
+    [GameSessionState.PHASE_1_DISCUSS]: 'Answer Explanations',
+    [GameSessionState.PHASE_2_DISCUSS]: 'Answer Explanations',
+    [GameSessionState.PHASE_2_START]: 'Answer Explanations',
+    [GameSessionState.PHASE_1_RESULTS]: 'Phase 1 Results',
+    [GameSessionState.PHASE_2_RESULTS]: 'Phase 2 Results',
+    [GameSessionState.FINAL_RESULTS]: 'Answer the Question',
+    [GameSessionState.FINISHED]: 'Answer the Question',
   };
   const stateCheck = (
-    currentState: GameSessionState,
-    isCorrect: boolean,
-    isIncorrect: boolean
+    currentStateForCheck: GameSessionState,
+    isCorrectForCheck: boolean,
+    isIncorrectForCheck: boolean
   ) => {
-    if (isCorrect) return "Correct!";
-    if (isIncorrect) return "Nice Try!";
-    return stateMap[currentState];
+    if (isCorrectForCheck) return 'Correct!';
+    if (isIncorrectForCheck) return 'Nice Try!';
+    return stateMap[currentStateForCheck];
   };
 
   return (
     <div className={classes.headerContainer}>
       <Typography className={classes.titleText}>
-        {" "}
-        {stateCheck(currentState, isCorrect, isIncorrect)}{" "}
+        {' '}
+        {stateCheck(currentState, isCorrect, isIncorrect)}{' '}
       </Typography>
       {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
@@ -65,20 +83,3 @@ export default function HeaderContent({
     </div>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  headerContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "100vw",
-    height: "60px",
-  },
-  titleText: {
-    fontFamily: "Karla",
-    fontSize: "26px",
-    fontWeight: 800,
-    lineHeight: "30px",
-    color: "#FFFFFF",
-  },
-}));

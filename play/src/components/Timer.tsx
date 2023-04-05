@@ -1,6 +1,47 @@
-import { useRef, useState, useEffect } from "react";
-import { makeStyles } from "@mui/styles";
-import { LinearProgress, Theme } from "@mui/material";
+import React, { useRef, useState, useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import { LinearProgress } from '@mui/material';
+
+const useStyles = makeStyles(() => ({
+  timerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '24px',
+    marginRight: '24px',
+    marginTop: '8px',
+    marginBottom: '8px',
+    width: `calc(100% - 48px)`,
+    maxWidth: '700px',
+  },
+  timerBar: {
+    borderRadius: '40px',
+    display: 'inline-block',
+    marginRight: '10px',
+    height: '8px',
+    width: 'calc(100% - 25px)',
+  },
+  colorPrimary: {
+    backgroundColor: 'rgba(255, 255, 255)',
+  },
+  barColorPrimary: (props: StyleProps) => ({
+    background: `linear-gradient(90deg, #349E15 ${
+      100 - props.progress
+    }%, #7DC642 100%)`,
+  }),
+  text: {
+    position: 'relative',
+    right: 0,
+    display: 'inline-block',
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'Karla',
+    fontSize: '12px',
+    fontWeight: 700,
+    lineHeight: '14px',
+    width: '25px',
+    textAlign: 'left',
+  },
+}));
 
 interface TimerProps {
   totalTime: number;
@@ -23,7 +64,7 @@ export default function Timer({
   const currentTime = currentTimeMilli / 1000;
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
 
-  const classes = useStyles({ progress: progress });
+  const classes = useStyles({ progress });
 
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
@@ -43,13 +84,13 @@ export default function Timer({
   }
 
   // generates timer string (needs to ensure that seconds are always 2 digits and don't show as 60)
-  function getTimerString(currentTime: number) {
+  function getTimerString(currentTimeInput: number) {
     let sec = 0;
-    let secStr = "00";
+    let secStr = '00';
     let min = 0;
-    if (currentTime >= 0) {
-      min = Math.floor(currentTime / 60);
-      sec = Math.ceil(currentTime % 60);
+    if (currentTimeInput >= 0) {
+      min = Math.floor(currentTimeInput / 60);
+      sec = Math.ceil(currentTimeInput % 60);
       if (sec === 60) sec = 0;
       secStr = sec < 10 ? `0${sec}` : `${sec}`;
     }
@@ -60,8 +101,8 @@ export default function Timer({
   useEffect(() => {
     if (!isPaused && !isFinished)
       animationRef.current = requestAnimationFrame(updateTimer);
-    return () => cancelAnimationFrame(animationRef.current!);
-  }, []);
+    return () => cancelAnimationFrame(animationRef.current ?? 0);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={classes.timerContainer}>
@@ -72,50 +113,9 @@ export default function Timer({
           barColorPrimary: classes.barColorPrimary,
         }}
         value={(currentTime / totalTime) * 100}
-        variant={"determinate"}
+        variant="determinate"
       />
       <div className={classes.text}>{getTimerString(currentTime)}</div>
     </div>
   );
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  timerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: "24px",
-    marginRight: "24px",
-    marginTop: "8px",
-    marginBottom: "8px",
-    width: `calc(100% - 48px)`,
-    maxWidth: "700px",
-  },
-  timerBar: {
-    borderRadius: "40px",
-    display: "inline-block",
-    marginRight: "10px",
-    height: "8px",
-    width: "calc(100% - 25px)",
-  },
-  colorPrimary: {
-    backgroundColor: "rgba(255, 255, 255)",
-  },
-  barColorPrimary: (props: StyleProps) => ({
-    background: `linear-gradient(90deg, #349E15 ${
-      100 - props.progress
-    }%, #7DC642 100%)`,
-  }),
-  text: {
-    position: "relative",
-    right: 0,
-    display: "inline-block",
-    color: "rgba(255, 255, 255, 0.8)",
-    fontFamily: "Karla",
-    fontSize: "12px",
-    fontWeight: 700,
-    lineHeight: "14px",
-    width: "25px",
-    textAlign: "left",
-  },
-}));
