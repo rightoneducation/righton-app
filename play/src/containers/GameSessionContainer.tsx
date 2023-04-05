@@ -4,7 +4,7 @@ import {
   IGameSession,
   IAWSGameSession,
   GameSessionParser,
-} from "@righton/networking";
+} from '@righton/networking';
 import GameInProgress from "../pages/GameInProgress";
 
 export default function GameSessionContainer() {
