@@ -5,7 +5,7 @@ import {
   IAWSGameSession,
   GameSessionParser,
 } from '@righton/networking';
-import GameInProgress from "../pages/GameInProgress";
+import GameInProgress from '../pages/GameInProgress';
 
 export default function GameSessionContainer() {
   const [gameSession, setGameSession] = useState(
