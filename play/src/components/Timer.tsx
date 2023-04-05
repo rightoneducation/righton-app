@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect } from "react";
-import { makeStyles } from "@mui/styles";
-import { LinearProgress, Theme } from "@mui/material";
+import { useRef, useState, useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import { LinearProgress, Theme } from '@mui/material';
 
 interface TimerProps {
   totalTime: number;
@@ -45,7 +45,7 @@ export default function Timer({
   // generates timer string (needs to ensure that seconds are always 2 digits and don't show as 60)
   function getTimerString(currentTime: number) {
     let sec = 0;
-    let secStr = "00";
+    let secStr = '00';
     let min = 0;
     if (currentTime >= 0) {
       min = Math.floor(currentTime / 60);
@@ -72,7 +72,7 @@ export default function Timer({
           barColorPrimary: classes.barColorPrimary,
         }}
         value={(currentTime / totalTime) * 100}
-        variant={"determinate"}
+        variant={'determinate'}
       />
       <div className={classes.text}>{getTimerString(currentTime)}</div>
     </div>
@@ -81,25 +81,25 @@ export default function Timer({
 
 const useStyles = makeStyles((theme: Theme) => ({
   timerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: "24px",
-    marginRight: "24px",
-    marginTop: "8px",
-    marginBottom: "8px",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '24px',
+    marginRight: '24px',
+    marginTop: '8px',
+    marginBottom: '8px',
     width: `calc(100% - 48px)`,
-    maxWidth: "700px",
+    maxWidth: '700px',
   },
   timerBar: {
-    borderRadius: "40px",
-    display: "inline-block",
-    marginRight: "10px",
-    height: "8px",
-    width: "calc(100% - 25px)",
+    borderRadius: '40px',
+    display: 'inline-block',
+    marginRight: '10px',
+    height: '8px',
+    width: 'calc(100% - 25px)',
   },
   colorPrimary: {
-    backgroundColor: "rgba(255, 255, 255)",
+    backgroundColor: 'rgba(255, 255, 255)',
   },
   barColorPrimary: (props: StyleProps) => ({
     background: `linear-gradient(90deg, #349E15 ${
@@ -107,15 +107,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     }%, #7DC642 100%)`,
   }),
   text: {
-    position: "relative",
+    position: 'relative',
     right: 0,
-    display: "inline-block",
-    color: "rgba(255, 255, 255, 0.8)",
-    fontFamily: "Karla",
-    fontSize: "12px",
+    display: 'inline-block',
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontFamily: 'Karla',
+    fontSize: '12px',
     fontWeight: 700,
-    lineHeight: "14px",
-    width: "25px",
-    textAlign: "left",
+    lineHeight: '14px',
+    width: '25px',
+    textAlign: 'left',
   },
 }));
