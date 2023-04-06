@@ -2,12 +2,12 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
 import ScoreIndicator from './ScoreIndicator';
-import Icon from '../img/MonsterIcon1.png';
-import Icon2 from '../img/MonsterIcon2.png';
-import Icon3 from '../img/MonsterIcon3.png';
-import Icon4 from '../img/MonsterIcon4.png';
-import Icon5 from '../img/MonsterIcon5.png';
-import Icon6 from '../img/MonsterIcon6.png';
+import Icon from '../img/MonsterIcon1.svg';
+import Icon2 from '../img/MonsterIcon2.svg';
+import Icon3 from '../img/MonsterIcon3.svg';
+import Icon4 from '../img/MonsterIcon4.svg';
+import Icon5 from '../img/MonsterIcon5.svg';
+import Icon6 from '../img/MonsterIcon6.svg';
 
 const useStyles = makeStyles(() => ({
   footerContainer: {
