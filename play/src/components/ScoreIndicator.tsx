@@ -78,9 +78,7 @@ export default function ScoreIndicator({
       <div id="newPointsAnimation" className={classes.newPointsAnimation}>
         {newPoints && newPoints > 0 ? (
           <div className={classes.newPointsContainer}>
-            <Typography className={classes.text}>
-              {`+${newPoints}`}
-            </Typography>
+            <Typography className={classes.text}>{`+${newPoints}`}</Typography>
           </div>
         ) : null}
       </div>

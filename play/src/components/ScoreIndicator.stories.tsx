@@ -7,9 +7,10 @@ export default {
   component: ScoreIndicator,
 } as ComponentMeta<typeof ScoreIndicator>;
 
-const Template: ComponentStory<typeof ScoreIndicator> = function ScoreIndicatorTemplate(args) {
-  return <ScoreIndicator {...args} />;
-};
+const Template: ComponentStory<typeof ScoreIndicator> =
+  function ScoreIndicatorTemplate(args) {
+    return <ScoreIndicator {...args} />;
+  };
 
 export const AddTenPoints = Template.bind({});
 AddTenPoints.args = {

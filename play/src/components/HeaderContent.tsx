@@ -1,25 +1,24 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import Timer from './Timer';
 
-const useStyles = makeStyles(() => ({
-  headerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100vw',
-    height: '60px',
-  },
-  titleText: {
-    fontFamily: 'Karla',
-    fontSize: '26px',
-    fontWeight: 800,
-    lineHeight: '30px',
-    color: '#FFFFFF',
-  },
-}));
+const HeaderContainer = styled('div')({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  height: '60px',
+});
+
+const TitleText = styled(Typography)({
+  fontFamily: 'Karla',
+  fontSize: '26px',
+  fontWeight: 800,
+  lineHeight: '30px',
+  color: '#FFFFFF',
+});
 
 interface HeaderContentProps {
   currentState: GameSessionState;
@@ -40,8 +39,6 @@ export default function HeaderContent({
   isCorrect,
   isIncorrect,
 }: HeaderContentProps) {
-  const classes = useStyles();
-
   const stateMap = {
     [GameSessionState.NOT_STARTED]: 'Answer the Question',
     [GameSessionState.TEAMS_JOINING]: 'Answer the Question',
@@ -66,11 +63,8 @@ export default function HeaderContent({
   };
 
   return (
-    <div className={classes.headerContainer}>
-      <Typography className={classes.titleText}>
-        {' '}
-        {stateCheck(currentState, isCorrect, isIncorrect)}{' '}
-      </Typography>
+    <HeaderContainer>
+      <TitleText>{stateCheck(currentState, isCorrect, isIncorrect)}</TitleText>
       {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
         <Timer
@@ -80,6 +74,6 @@ export default function HeaderContent({
           handleTimerIsFinished={handleTimerIsFinished}
         />
       ) : null}
-    </div>
+    </HeaderContainer>
   );
 }
