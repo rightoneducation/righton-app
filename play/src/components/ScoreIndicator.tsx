@@ -1,51 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@mui/styles';
-import { Typography } from '@mui/material';
+import { styled, keyframes } from '@mui/material/styles';
+import { Typography, Container } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
 
-const useStyles = makeStyles(() => ({
-  newPointsAnimation: {
-    animation: `$newScoreUp 750ms cubic-bezier(0.4, 0, 0.2, 1)`,
-    opacity: 0,
-    position: 'absolute', // float new points pill above rest of content
-  },
+const ScoreContainer = styled(Container)(
+  ({theme}) => ({
+   position: 'relative',
+  })
+);
+
+const NewPointsPill = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: `58px`,
+  height: '22px',
+  borderRadius: '23px',
+  background: 'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)',
+});
+
+const ScorePill = styled(NewPointsPill)({
+  position: 'absolute',
+  right: '0',
+  background: 'linear-gradient(190deg, #73B6F0 0%, #057BE3 80%)',
+  zIndex: 1,
+});
+
+const NewPointsAnimation = styled('div')({
+  animation: `newScoreUp 1000ms cubic-bezier(0.4, 0, 0.2, 1)`,
+  opacity: 0,
+  position: 'absolute',
+  right: '0',
+  zIndex: 2,
   '@keyframes newScoreUp': {
     '0%': {
-      opacity: 1,
-      transform: 'translateY(0)',
+      opacity: 0,
+      transform: 'translateY(-110%)',
     },
-    '100%': {
+    '50%': {
       opacity: 1,
       transform: 'translateY(-110%)',
     },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(0)',
+    },
   },
-  newPointsContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: `58px`,
-    height: '22px',
-    borderRadius: '23px',
-    background: 'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)',
-  },
-  scoreContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: `58px`,
-    height: '22px',
-    borderRadius: '23px',
-    background: 'linear-gradient(190deg, #73B6F0 0%, #057BE3 80%)',
-  },
-  text: {
-    fontFamily: 'Karla',
-    fontSize: '18px',
-    fontWeight: 800,
-    lineHeight: '21px',
-    color: '#FFFFFF',
-    textShadow: '0px 1px 1px rgba(0, 0, 0, 0.15)',
-  },
-}));
+});
 
 interface ScoreIndicatorProps {
   newPoints: number;
@@ -56,7 +57,6 @@ export default function ScoreIndicator({
   newPoints,
   score,
 }: ScoreIndicatorProps) {
-  const classes = useStyles();
   const [currentScore, setCurrentScore] = useState(
     isNullOrUndefined(score) ? 0 : score
   );
@@ -71,22 +71,22 @@ export default function ScoreIndicator({
     return () => {
       element?.removeEventListener('animationend', handleAnimationEnd);
     };
-  });
+  },[newPoints]);
 
   return (
-    <>
-      <div id="newPointsAnimation" className={classes.newPointsAnimation}>
+    <ScoreContainer>
+      <NewPointsAnimation id="newPointsAnimation" >
         {newPoints && newPoints > 0 ? (
-          <div className={classes.newPointsContainer}>
-            <Typography className={classes.text}>{`+${newPoints}`}</Typography>
-          </div>
+          <NewPointsPill>
+            <Typography variant='overline'>{`+${newPoints}`}</Typography>
+          </NewPointsPill>
         ) : null}
-      </div>
-      <div className={classes.scoreContainer}>
-        <Typography className={classes.text}>
+      </NewPointsAnimation>
+      <ScorePill >
+        <Typography variant='overline'>
           {isNullOrUndefined(currentScore) ? 0 : currentScore}
         </Typography>
-      </div>
-    </>
+      </ScorePill>
+    </ScoreContainer>
   );
 }

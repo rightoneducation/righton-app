@@ -9,15 +9,6 @@ const HeaderContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '60px',
-});
-
-const TitleText = styled(Typography)({
-  fontFamily: 'Karla',
-  fontSize: '26px',
-  fontWeight: 800,
-  lineHeight: '30px',
-  color: '#FFFFFF',
 });
 
 interface HeaderContentProps {
@@ -64,7 +55,7 @@ export default function HeaderContent({
 
   return (
     <HeaderContainer>
-      <TitleText>{stateCheck(currentState, isCorrect, isIncorrect)}</TitleText>
+      <Typography variant='h1'>{stateCheck(currentState, isCorrect, isIncorrect)}</Typography>
       {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
         <Timer
