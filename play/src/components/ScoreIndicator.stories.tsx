@@ -1,13 +1,16 @@
-import React from "react";
+import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import ScoreIndicator from './ScoreIndicator';
 
 export default {
   title: 'Design System/1_Atoms/ScoreIndicator',
-  component: ScoreIndicator
+  component: ScoreIndicator,
 } as ComponentMeta<typeof ScoreIndicator>;
 
-const Template: ComponentStory<typeof ScoreIndicator> = args => <ScoreIndicator {...args} />;
+const Template: ComponentStory<typeof ScoreIndicator> =
+  function ScoreIndicatorTemplate(args) {
+    return <ScoreIndicator {...args} />;
+  };
 
 export const AddTenPoints = Template.bind({});
 AddTenPoints.args = {

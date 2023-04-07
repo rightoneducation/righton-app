@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import FooterContent from './FooterContent';
-import { GameSessionState } from '@righton/networking'
 
 export default {
   title: 'Design System/3_Organisms/FooterContent',
-  component: FooterContent
+  component: FooterContent,
 } as ComponentMeta<typeof FooterContent>;
 
-const Template: ComponentStory<typeof FooterContent> = (args) => <FooterContent {...args} />;
+const Template: ComponentStory<typeof FooterContent> =
+  function FooterContentTemplate(args) {
+    return <FooterContent {...args} />;
+  };
 
 export const Team0 = Template.bind({});
 Team0.args = {
