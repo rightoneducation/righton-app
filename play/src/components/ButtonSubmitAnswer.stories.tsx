@@ -1,13 +1,18 @@
 import React from "react";
-import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import ButtonSubmitAnswer from './ButtonSubmitAnswer';
+
 
 export default {
   title: 'Design System/1_Atoms/SmallButton',
   component: ButtonSubmitAnswer
 } as ComponentMeta<typeof ButtonSubmitAnswer>;
 
-const Template: ComponentStory<typeof ButtonSubmitAnswer> = (args) => <ButtonSubmitAnswer {...args} />;
+const Template: ComponentStory<typeof ButtonSubmitAnswer> = 
+  function ButtonSubmitAnswerTemplate(args) {
+    return  <ButtonSubmitAnswer {...args} />
+};
+
 
 export const DefaultState = Template.bind({});
 DefaultState.args = {

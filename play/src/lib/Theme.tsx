@@ -7,6 +7,8 @@ const secondaryColor = '#8E2E9D';
 const primaryTextColor = '#FFFFFF';
 const secondaryTextColor = '#384466';
 const playerNameTextColor = '#AEAEAE';
+const greenTextColor = '#22AE48';
+const redTextColor = '#FF0000';
 
 // design tokens - breakpoints:
 const xs = 0;
@@ -19,10 +21,14 @@ const xl = 1536;
 declare module '@mui/material/styles' {
   interface PaletteColor {
     mainGradient: string;
+    redText: string;
+    greenText: string;
   }
 
   interface SimplePaletteColorOptions {
     mainGradient?: string;
+    redText?: string;
+    greenText?: string;
   }
 }
 
@@ -34,6 +40,8 @@ export default createTheme({
     primary: {
       main: primaryColor,
       mainGradient: primaryGradient,
+      redText: redTextColor,
+      greenText: greenTextColor,
     },
     secondary: {
       main: secondaryColor,
