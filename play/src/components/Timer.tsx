@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
-import LinearProgress, {LinearProgressProps} from '@mui/material/LinearProgress';
-import { isNullOrUndefined } from '@righton/networking';
+import LinearProgress, {
+  LinearProgressProps,
+} from '@mui/material/LinearProgress';
 
 const TimerContainer = styled(Container)({
   display: 'flex',
@@ -14,17 +15,16 @@ const TimerContainer = styled(Container)({
   marginBottom: '8px',
 });
 
-const TimerBar = styled(LinearProgress)<LinearProgressProps>(
-  ({theme}) => ({
+const TimerBar = styled(LinearProgress)<LinearProgressProps>(({ theme }) => ({
   borderRadius: '40px',
-    display: 'inline-block',
-    marginRight: '10px',
-    height: '8px',
-    width: 'calc(100% - 25px)',
-    backgroundColor: theme.palette.primary.main,
-    '& .MuiLinearProgress-bar': {
-      background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
-    }
+  display: 'inline-block',
+  marginRight: '10px',
+  height: '8px',
+  width: 'calc(100% - 25px)',
+  backgroundColor: theme.palette.primary.main,
+  '& .MuiLinearProgress-bar': {
+    background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
+  },
 }));
 
 interface TimerProps {
@@ -33,7 +33,6 @@ interface TimerProps {
   isFinished: boolean;
   handleTimerIsFinished: () => void;
 }
-
 
 export default function Timer({
   totalTime,
@@ -84,12 +83,9 @@ export default function Timer({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <TimerContainer maxWidth='sm'>
-      <TimerBar
-        value={progress}
-        variant="determinate"
-      />
-      <Typography variant='caption'>{getTimerString(currentTime)}</Typography>
+    <TimerContainer maxWidth="sm">
+      <TimerBar value={progress} variant="determinate" />
+      <Typography variant="caption">{getTimerString(currentTime)}</Typography>
     </TimerContainer>
   );
 }

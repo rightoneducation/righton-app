@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { styled, keyframes } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Typography, Container } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
 
-const ScoreContainer = styled(Container)(
-  ({theme}) => ({
-   position: 'relative',
-  })
-);
+const ScoreContainer = styled(Container)({
+  position: 'relative',
+});
 
 const NewPointsPill = styled('div')({
   display: 'flex',
@@ -71,19 +69,19 @@ export default function ScoreIndicator({
     return () => {
       element?.removeEventListener('animationend', handleAnimationEnd);
     };
-  },[newPoints]);
+  }, [newPoints]);
 
   return (
     <ScoreContainer>
-      <NewPointsAnimation id="newPointsAnimation" >
+      <NewPointsAnimation id="newPointsAnimation">
         {newPoints && newPoints > 0 ? (
           <NewPointsPill>
-            <Typography variant='overline'>{`+${newPoints}`}</Typography>
+            <Typography variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         ) : null}
       </NewPointsAnimation>
-      <ScorePill >
-        <Typography variant='overline'>
+      <ScorePill>
+        <Typography variant="overline">
           {isNullOrUndefined(currentScore) ? 0 : currentScore}
         </Typography>
       </ScorePill>

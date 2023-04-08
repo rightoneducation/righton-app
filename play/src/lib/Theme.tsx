@@ -1,8 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 
 // design tokens - colors::
-const primaryColor = '#FFFFFF'; 
-const primaryGradient = 'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))'
+const primaryColor = '#FFFFFF';
+const primaryGradient =
+  'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))';
 const secondaryColor = '#8E2E9D';
 const primaryTextColor = '#FFFFFF';
 const secondaryTextColor = '#384466';
@@ -41,57 +42,66 @@ export default createTheme({
   },
   typography: {
     fontFamily: 'Karla',
-    h1: { // screen titles
+    h1: {
+      // screen titles
       fontWeight: '800',
       fontSize: '26px',
       lineHeight: '30px',
       color: primaryTextColor,
     },
-    h2: { // column titles
+    h2: {
+      // column titles
       fontWeight: '800',
       fontSize: '20px',
       lineHeight: '30px',
       color: primaryTextColor,
     },
-    h3: { // player name
+    h3: {
+      // player name
       fontWeight: '800',
       fontSize: '20px',
       lineHeight: '30px',
       color: playerNameTextColor,
     },
-    h4: { // answer card title
+    h4: {
+      // answer card title
       fontWeight: '700',
       fontSize: '14px',
       lineHeight: '16px',
       color: secondaryTextColor,
     },
-    body1:{ // question text
+    body1: {
+      // question text
       fontWeight: '400',
       fontSize: '16px',
       lineHeight: '19px',
       color: secondaryTextColor,
     },
-    body2:{ // answer text 
+    body2: {
+      // answer text
       fontWeight: '700',
       fontSize: '14px',
       lineHeight: '16px',
       color: secondaryTextColor,
     },
-    button: { // button text
+    button: {
+      // button text
       fontWeight: '800',
       fontSize: '20px',
       lineHeight: '30px',
       color: primaryTextColor,
       opacity: '0.38',
     },
-    caption: { // timer text
+    caption: {
+      // timer text
       fontWeight: '700',
       fontSize: '12px',
       lineHeight: '14px',
       color: primaryTextColor,
       opacity: '0.8',
     },
-    overline: { // scoreIndicator text
+    overline: {
+      // scoreIndicator text
       fontSize: '18px',
       fontWeight: 800,
       lineHeight: '21px',
