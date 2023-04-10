@@ -4,7 +4,7 @@ import { Typography, Container } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
 
 const ScoreContainer = styled(Container)({
-   position: 'relative',
+  position: 'relative',
 });
 
 const NewPointsPill = styled('div')({
@@ -69,19 +69,19 @@ export default function ScoreIndicator({
     return () => {
       element?.removeEventListener('animationend', handleAnimationEnd);
     };
-  },[newPoints]);
+  }, [newPoints]);
 
   return (
     <ScoreContainer>
-      <NewPointsAnimation id="newPointsAnimation" >
+      <NewPointsAnimation id="newPointsAnimation">
         {newPoints && newPoints > 0 ? (
           <NewPointsPill>
-            <Typography variant='overline'>{`+${newPoints}`}</Typography>
+            <Typography variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         ) : null}
       </NewPointsAnimation>
-      <ScorePill >
-        <Typography variant='overline'>
+      <ScorePill>
+        <Typography variant="overline">
           {isNullOrUndefined(currentScore) ? 0 : currentScore}
         </Typography>
       </ScorePill>

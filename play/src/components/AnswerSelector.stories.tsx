@@ -1,17 +1,27 @@
 import React from 'react';
-import RoundTextIcon from './RoundTextIcon';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
+import AnswerSelector from './AnswerSelector';
+import AnswerState from '../lib/PlayModels';
+import Theme from '../lib/Theme';
 
 export default {
-  title: 'Design System/2_Molecules/RoundTextIcon',
-  component: RoundTextIcon
-} as ComponentMeta<typeof RoundTextIcon>;
+  title: 'Design System/2_Molecules/AnswerSelector',
+  component: AnswerSelector,
+} as ComponentMeta<typeof AnswerSelector>;
 
-const Template: ComponentStory<typeof RoundTextIcon> = (args) => <RoundTextIcon {...args} />;
+const Template: ComponentStory<typeof AnswerSelector> =
+  function AnswerSelectorTemplate(args) {
+    return (
+      <ThemeProvider theme={Theme}>
+        <AnswerSelector {...args} />
+      </ThemeProvider>
+    );
+  };
 
 export const DefaultAnswer = Template.bind({});
 DefaultAnswer.args = {
-  answerStatus: 'default',
+  answerStatus: AnswerState.DEFAULT,
   isSubmitted: false,
   answerText: 'Sample',
   index: 0,
@@ -19,7 +29,7 @@ DefaultAnswer.args = {
 
 export const DefaultAnswerSubmitted = Template.bind({});
 DefaultAnswerSubmitted.args = {
-  answerStatus: 'default',
+  answerStatus: AnswerState.DEFAULT,
   isSubmitted: true,
   answerText: 'Sample',
   index: 0,
@@ -27,7 +37,7 @@ DefaultAnswerSubmitted.args = {
 
 export const CorrectAnswer = Template.bind({});
 CorrectAnswer.args = {
-  answerStatus: 'correct',
+  answerStatus: AnswerState.CORRECT,
   isSubmitted: false,
   answerText: 'Sample',
   index: 0,
@@ -35,7 +45,7 @@ CorrectAnswer.args = {
 
 export const CorrectAnswerSubmitted = Template.bind({});
 CorrectAnswerSubmitted.args = {
-  answerStatus: 'correct',
+  answerStatus: AnswerState.CORRECT,
   isSubmitted: true,
   answerText: 'Sample',
   index: 0,
@@ -43,7 +53,7 @@ CorrectAnswerSubmitted.args = {
 
 export const SelectedAnswer = Template.bind({});
 SelectedAnswer.args = {
-  answerStatus: 'selected',
+  answerStatus: AnswerState.SELECTED,
   isSubmitted: false,
   answerText: 'Sample',
   index: 0,
@@ -51,7 +61,7 @@ SelectedAnswer.args = {
 
 export const SelectedAnswerSubmitted = Template.bind({});
 SelectedAnswerSubmitted.args = {
-  answerStatus: 'selected',
+  answerStatus: AnswerState.SELECTED,
   isSubmitted: true,
   answerText: 'Sample',
   index: 0,

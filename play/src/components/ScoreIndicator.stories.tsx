@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
 import ScoreIndicator from './ScoreIndicator';
+import Theme from '../lib/Theme';
 
 export default {
   title: 'Design System/1_Atoms/ScoreIndicator',
@@ -9,7 +11,11 @@ export default {
 
 const Template: ComponentStory<typeof ScoreIndicator> =
   function ScoreIndicatorTemplate(args) {
-    return <ScoreIndicator {...args} />;
+    return (
+      <ThemeProvider theme={Theme}>
+        <ScoreIndicator {...args} />
+      </ThemeProvider>
+    );
   };
 
 export const AddTenPoints = Template.bind({});

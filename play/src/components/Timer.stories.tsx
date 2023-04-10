@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
 import Timer from './Timer';
+import Theme from '../lib/Theme';
 
 export default {
   title: 'Design System/2_Molecules/Timer',
@@ -12,7 +14,11 @@ const handleTimerIsFinished = () => {
 };
 
 const Template: ComponentStory<typeof Timer> = function TimerTemplate(args) {
-  return <Timer {...args} />;
+  return (
+    <ThemeProvider theme={Theme}>
+      <Timer {...args} />
+    </ThemeProvider>
+  );
 };
 
 export const FiveSecondTimer = Template.bind({});

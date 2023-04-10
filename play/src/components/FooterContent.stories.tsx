@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
 import FooterContent from './FooterContent';
+import Theme from '../lib/Theme';
 
 export default {
   title: 'Design System/3_Organisms/FooterContent',
@@ -9,7 +11,11 @@ export default {
 
 const Template: ComponentStory<typeof FooterContent> =
   function FooterContentTemplate(args) {
-    return <FooterContent {...args} />;
+    return (
+      <ThemeProvider theme={Theme}>
+        <FooterContent {...args} />
+      </ThemeProvider>
+    );
   };
 
 export const Team0 = Template.bind({});

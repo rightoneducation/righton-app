@@ -9,15 +9,13 @@ import Icon4 from '../img/MonsterIcon4.svg';
 import Icon5 from '../img/MonsterIcon5.svg';
 import Icon6 from '../img/MonsterIcon6.svg';
 
-const FooterContainer = styled(Container)(
-  ({theme}) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    color: theme.palette.primary.main,
-  })
-);
+const FooterContainer = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  color: theme.palette.primary.main,
+}));
 
 const FooterLeftContainer = styled(Container)({
   display: 'flex',
@@ -59,10 +57,12 @@ export default function Header({
   };
 
   return (
-    <FooterContainer maxWidth='sm'>
+    <FooterContainer maxWidth="sm">
       <FooterLeftContainer>
         <Avatar src={avatarMap[avatar]} alt="avatar" />
-        <Typography variant='h3' sx={{marginLeft: '12px'}}> {teamName} </Typography>
+        <Typography variant="h3" sx={{ marginLeft: '12px' }}>
+          {teamName}
+        </Typography>
       </FooterLeftContainer>
       <ScoreIndicator newPoints={newPoints} score={score} />
     </FooterContainer>
