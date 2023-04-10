@@ -14,10 +14,10 @@ Play is the student facing RightOn! app built with ReactJS and Typescript.
 7. yarn start  
 
 ### Scripts:
-<strong> yarn start </strong> - runs react-scripts app
-<strong> yarn storybook </strong> - starts up preview of storybooks
-<strong> yarn lint </strong> - ESLints everything in \play
-<strong> yarn format </strong> - applies prettier formatting to everything in \play
+1. 'yarn start' - runs react-scripts app  
+2. 'yarn storybook'  - starts up preview of storybooks  
+3. 'yarn lint'  - ESLints everything in \play  
+4. 'yarn format' - applies prettier formatting to everything in \play  
 
 ### Linting/Formatting:
 ESLint and prettier are used to create a consistent codebase. We are extending airbnb for the linting rules and apply mostly default prettier rules. 
