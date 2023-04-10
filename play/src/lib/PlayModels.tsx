@@ -1,4 +1,3 @@
-
 enum AnswerState {
   DEFAULT = 'DEFAULT',
   CORRECT = 'CORRECT',

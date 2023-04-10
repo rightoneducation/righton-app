@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Paper, Typography, Stack } from '@mui/material';
+import { Paper, Typography, Stack, Box } from '@mui/material';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
@@ -45,21 +45,33 @@ export default function CardAnswer({
 }: CardAnswerProps) {
   const theme = useTheme();
   const correctText = (
-    <>
-       <Typography display="inline" variant="h4" > Choose the </Typography> 
-       <Typography display="inline" variant="h4" sx={{ color: `${theme.palette.primary.greenText}`}}> correct answer</Typography>
-    </>
+    <Box display="flex" alignContent="flex-start">
+      <Typography variant="h4"> Choose the&nbsp; </Typography>
+      <Typography
+        variant="h4"
+        sx={{ color: `${theme.palette.primary.greenText}` }}
+      >
+        {' '}
+        correct answer
+      </Typography>
+    </Box>
   );
   const trickText = (
-    <>
-    <Typography display="inline" variant="h4"> What do you think is the most popular </Typography>
-    <Typography display="inline" variant = "h4"
+    <Box display="flex" alignContent="flex-start">
+      <Typography variant="h4">
+        {' '}
+        What do you think is the most popular&nbsp;{' '}
+      </Typography>
+      <Typography
+        display="inline"
+        variant="h4"
         sx={{ color: `${theme.palette.primary.redText}`, display: 'inline' }}
-      > trick answer </Typography> 
-    <Typography display="inline" variant="h4">
-      among your class?
-    </Typography>
-    </>
+      >
+        {' '}
+        trick answer{' '}
+      </Typography>
+      <Typography variant="h4"> &nbsp;among your class? </Typography>
+    </Box>
   );
 
   return (
@@ -67,10 +79,16 @@ export default function CardAnswer({
       {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
         ? correctText
         : trickText}
-      <AnswerContainer> {/* spacing between elements handled in AnswerSelector component (so border thicknesses can be handled) */}
+      <AnswerContainer>
+        {' '}
+        {/* spacing between elements handled in AnswerSelector component (so border thicknesses can be handled) */}
         {answers?.map((answer, index) => (
           <AnswerSelector
-            answerStatus={selectedAnswer === index ? AnswerState.SELECTED : AnswerState.DEFAULT}
+            answerStatus={
+              selectedAnswer === index
+                ? AnswerState.SELECTED
+                : AnswerState.DEFAULT
+            }
             isSubmitted={isSubmitted}
             index={index}
             answerText={answer.text}

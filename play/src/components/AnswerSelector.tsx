@@ -11,7 +11,7 @@ type AnswerSelectorProps = {
 };
 
 const AnswerSelectorDefault = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'isSubmitted', 
+  shouldForwardProp: (prop) => prop !== 'isSubmitted',
 })<AnswerSelectorProps>(({ isSubmitted }) => ({
   width: '100%',
   minHeight: '42px',
@@ -68,13 +68,23 @@ export default function AnswerSelector({
 
   const buttonContents = (
     <>
-      <Typography variant="h5" sx={{
-        paddingLeft: (!isSubmitted && answerStatus === AnswerState.SELECTED) ? '1px' : '2px', // compensates for increased border thickness when selected
-        opacity: (isSubmitted || answerStatus === AnswerState.CORRECT) ? 0.5 : 1
-      }}>
+      <Typography
+        variant="h5"
+        sx={{
+          paddingLeft:
+            !isSubmitted && answerStatus === AnswerState.SELECTED
+              ? '1px'
+              : '2px', // compensates for increased border thickness when selected
+          opacity:
+            isSubmitted || answerStatus === AnswerState.CORRECT ? 0.5 : 1,
+        }}
+      >
         {`${String.fromCharCode(letterCode)}`}
       </Typography>
-      <Typography variant="body2" sx={{ paddingLeft: '8px', paddingRight: '38px' }}>
+      <Typography
+        variant="body2"
+        sx={{ paddingLeft: '8px', paddingRight: '38px' }}
+      >
         {answerText}
       </Typography>
       <img
@@ -86,7 +96,8 @@ export default function AnswerSelector({
           height: '16px',
           paddingTop: '3px', // 16px + 3 px + 3px = 22px -> same line height as text, all per Figma
           paddingBottom: '3px',
-          opacity: isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
+          opacity:
+            isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
         }}
         alt="SelectedAnswerImage"
       />

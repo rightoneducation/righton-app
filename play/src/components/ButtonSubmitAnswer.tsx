@@ -34,19 +34,19 @@ export default function ButtonSubmitAnswer({
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const buttonText = isSubmitted ? 'Submitted' : 'Submit Answer';
-  const buttonContents = <Typography variant="button"> {buttonText} </Typography>
+  const buttonContents = (
+    <Typography variant="button"> {buttonText} </Typography>
+  );
 
-  return (
-    (isSelected && !isSubmitted)? (
-      <AnswerButton
-        onClick={() => {
-          handleSubmitAnswer(true);
-        }}
-      >
-        {buttonContents}
-      </AnswerButton> 
-    ) : (
-      <AnswerButtonDisabled disabled> {buttonContents} </AnswerButtonDisabled>
-    )
+  return isSelected && !isSubmitted ? (
+    <AnswerButton
+      onClick={() => {
+        handleSubmitAnswer(true);
+      }}
+    >
+      {buttonContents}
+    </AnswerButton>
+  ) : (
+    <AnswerButtonDisabled disabled> {buttonContents} </AnswerButtonDisabled>
   );
 }
