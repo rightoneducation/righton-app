@@ -51,7 +51,6 @@ export default function CardAnswer({
         variant="h4"
         sx={{ color: `${theme.palette.primary.greenText}` }}
       >
-        {' '}
         correct answer
       </Typography>
     </Box>
@@ -59,16 +58,14 @@ export default function CardAnswer({
   const trickText = (
     <Box display="flex" alignContent="flex-start">
       <Typography variant="h4">
-        {' '}
-        What do you think is the most popular&nbsp;{' '}
+        What do you think is the most popular&nbsp;
       </Typography>
       <Typography
         display="inline"
         variant="h4"
         sx={{ color: `${theme.palette.primary.redText}`, display: 'inline' }}
       >
-        {' '}
-        trick answer{' '}
+        trick answer
       </Typography>
       <Typography variant="h4"> &nbsp;among your class? </Typography>
     </Box>
@@ -80,7 +77,6 @@ export default function CardAnswer({
         ? correctText
         : trickText}
       <AnswerContainer>
-        {' '}
         {/* spacing between elements handled in AnswerSelector component (so border thicknesses can be handled) */}
         {answers?.map((answer, index) => (
           <AnswerSelector
