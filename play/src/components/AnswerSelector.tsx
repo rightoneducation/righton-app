@@ -75,7 +75,7 @@ export default function AnswerSelector({
             !isSubmitted && answerStatus === AnswerState.SELECTED
               ? '1px'
               : '2px', // compensates for increased border thickness when selected
-          paddingTop: '2px',
+          paddingTop: '2px', // compensates for font size change between h5 and body2
           opacity:
             isSubmitted || answerStatus === AnswerState.CORRECT ? 0.5 : 1,
         }}
