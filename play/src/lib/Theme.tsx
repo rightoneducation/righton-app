@@ -18,8 +18,26 @@ const md = 900;
 const lg = 1200;
 const xl = 1536;
 
+// design tokes - header, footer sizes (coordinate this approach with U/X team): 
+const headerHeight = '68px';
+const footerHeight = '60px';
+
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
+  interface Theme{
+    sizing: {
+      headerHeight: string;
+      footerHeight: string;
+    }
+  }
+
+  interface ThemeOptions{
+    sizing?: {
+      headerHeight?: string;
+      footerHeight?: string;
+    }
+  }
+
   interface PaletteColor {
     mainGradient: string;
     redText: string;
@@ -36,6 +54,10 @@ declare module '@mui/material/styles' {
 export default createTheme({
   breakpoints: {
     values: { xs, sm, md, lg, xl },
+  },
+  sizing: {
+    headerHeight,
+    footerHeight,
   },
   palette: {
     primary: {
@@ -89,8 +111,8 @@ export default createTheme({
     body1: {
       // question text
       fontWeight: '400',
-      fontSize: '16px',
-      lineHeight: '19px',
+      fontSize: '14px',
+      lineHeight: '18px',
       color: secondaryTextColor,
     },
     body2: {

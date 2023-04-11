@@ -7,18 +7,20 @@ import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import AnswerState from '../lib/PlayModels';
 
 const BodyCard = styled(Paper)(({ theme }) => ({
-  width: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  marginLeft: '16px',
-  marginRight: '16px',
-  marginTop: '24px',
-  marginBottom: '24px',
   borderRadius: '24px',
-  padding: '16px',
   backgroundColor: theme.palette.primary.main,
 }));
+
+const CardContainer = styled(Stack)({
+  marginTop: '24px',
+  marginLeft: '16px',
+  marginRight: '16px',
+  marginBottom: '24px',
+  alignItems: 'center',
+});
 
 const AnswerContainer = styled(Stack)({
   width: '100%',
@@ -72,32 +74,34 @@ export default function CardAnswer({
   );
 
   return (
-    <BodyCard elevation={3}>
-      {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-        ? correctText
-        : trickText}
-      <AnswerContainer>
-        {/* spacing between elements handled in AnswerSelector component (so border thicknesses can be handled) */}
-        {answers?.map((answer, index) => (
-          <AnswerSelector
-            answerStatus={
-              selectedAnswer === index
-                ? AnswerState.SELECTED
-                : AnswerState.DEFAULT
-            }
-            isSubmitted={isSubmitted}
-            index={index}
-            answerText={answer.text}
-            key={answer.text}
-            handleSelectAnswer={handleSelectAnswer}
-          />
-        ))}
-      </AnswerContainer>
-      <ButtonSubmitAnswer
-        isSubmitted={isSubmitted}
-        handleSubmitAnswer={handleSubmitAnswer}
-        isSelected={!isNullOrUndefined(selectedAnswer)}
-      />
+    <BodyCard elevation={5}>
+      <CardContainer>
+        {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+          ? correctText
+          : trickText}
+        <AnswerContainer>
+          {/* spacing between elements handled in AnswerSelector component (so border thicknesses can be handled) */}
+          {answers?.map((answer, index) => (
+            <AnswerSelector
+              answerStatus={
+                selectedAnswer === index
+                  ? AnswerState.SELECTED
+                  : AnswerState.DEFAULT
+              }
+              isSubmitted={isSubmitted}
+              index={index}
+              answerText={answer.text}
+              key={answer.text}
+              handleSelectAnswer={handleSelectAnswer}
+            />
+          ))}
+        </AnswerContainer>
+        <ButtonSubmitAnswer
+          isSubmitted={isSubmitted}
+          handleSubmitAnswer={handleSubmitAnswer}
+          isSelected={!isNullOrUndefined(selectedAnswer)}
+        />
+      </CardContainer>
     </BodyCard>
   );
 }
