@@ -19,6 +19,10 @@ Play is the student facing RightOn! app built with ReactJS and Typescript.
 3. 'yarn lint'  - ESLints everything in \play  
 4. 'yarn format' - applies prettier formatting to everything in \play  
 
+### Styling:
+@mui v5 is used for most components, with styled-components as the underlying styling engine (instead of @emotion). Overrides are provided through styled(). Passing props to styles is achieved either through sx.
+
+
 ### Linting/Formatting:
 ESLint and prettier are used to create a consistent codebase. We are extending airbnb for the linting rules and apply mostly default prettier rules. 
 There are some exceptions though:
@@ -38,7 +42,7 @@ There are some exceptions though:
 
 <strong> .prettierrc: </strong>
 1.   "singleQuote": true  
-    I think single quotes are prettier :sunglasses:
+    I just think single quotes are prettier :sunglasses:
 
 ### Theming:
 lib\Theme.tsx has been added to centralize colors, fonts and breakpoints. 
