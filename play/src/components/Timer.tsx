@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 
+
 const TimerContainer = styled(Container)({
   display: 'flex',
   flexDirection: 'row',
@@ -12,6 +13,7 @@ const TimerContainer = styled(Container)({
   marginTop: '8px',
   marginBottom: '8px',
 });
+
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
