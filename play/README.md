@@ -51,3 +51,7 @@ lib\Theme.tsx has been added to centralize colors, fonts and breakpoints.
 lib\PlayModels.tsx contains all models used within play:
 1. enum AnswerState  
   Used to define states for the answerselector values
+  
+### TODO:
+1. Adjust how GameSessionObject handles null/undefined to prevent messy null/undefined/? checks further down the code
+2. Timer to pause on tab change etc.
