@@ -81,9 +81,9 @@ export default createTheme({
     h5: {
       // card answer list letters (A, B, C, D, etc)
       fontFamily: 'Karla',
-      fontSize: '18px',
+      fontSize: '16px',
       fontWeight: 800,
-      lineHeight: '22px',
+      lineHeight: '19px',
       color: secondaryTextColor,
     },
     body1: {
