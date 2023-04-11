@@ -54,4 +54,6 @@ lib\PlayModels.tsx contains all models used within play:
   
 ### TODO:
 1. Adjust how GameSessionObject handles null/undefined to prevent messy null/undefined/? checks further down the code
-2. Timer to pause on tab change etc.
+https://github.com/rightoneducation/righton-app/issues/583
+3. Timer to pause on tab change etc.
+https://github.com/rightoneducation/righton-app/issues/584
