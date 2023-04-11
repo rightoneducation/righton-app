@@ -20,7 +20,7 @@ Play is the student facing RightOn! app built with ReactJS and Typescript.
 4. 'yarn format' - applies prettier formatting to everything in \play  
 
 ### Styling:
-@mui v5 is used for most components, with styled-components as the underlying styling engine (instead of @emotion). Overrides are provided through styled(). Passing props to styles is achieved either through sx.
+@mui v5 is used for most components, with styled-components as the underlying styling engine (instead of @emotion). We have migrated from the deprecated `makeStyles` per https://mui.com/material-ui/migration/migration-v4/. Overrides are provided through styled(). Passing props to styles is achieved either through `styled()` or `sx`. https://mui.com/system/styled/#api describes the passing of props in both cases. For more complicated dynamic updates, `styled()` components are broken out (see `AnswerSelector.tsx` for an example) while simpler dynamic updates are done through `sx` (see `CardAnswer.tsx` for an example)
 
 
 ### Linting/Formatting:
@@ -51,3 +51,9 @@ lib\Theme.tsx has been added to centralize colors, fonts and breakpoints.
 lib\PlayModels.tsx contains all models used within play:
 1. enum AnswerState  
   Used to define states for the answerselector values
+  
+### TODO:
+1. Adjust how GameSessionObject handles null/undefined to prevent messy null/undefined/? checks further down the code
+https://github.com/rightoneducation/righton-app/issues/583
+3. Timer to pause on tab change etc.
+https://github.com/rightoneducation/righton-app/issues/584
