@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography, Stack, Box, Container, Grid } from '@mui/material';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css'
 import {
   GameSessionState,
   ITeam,
@@ -11,10 +10,14 @@ import {
   ModelHelper
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
 import CardQuestion from '../components/CardQuestion';
 import CardAnswer from '../components/CardAnswer';
 import FooterContent from '../components/FooterContent';
+import 'swiper/css'
+import "swiper/css/pagination";
 
 const StackContainer = styled(Stack)({
   height: '100vh',
@@ -65,8 +68,6 @@ const BodyGridArea = styled(Grid)({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  paddingLeft: '26px',
-  paddingRight: '26px',
   maxWidth: '824px',
   width: '100%',
   height: '100%',
@@ -77,14 +78,24 @@ const BodyGridArea = styled(Grid)({
 const ScrollBox= styled(Box)(({ theme }) => ({
   height: `calc(100% - ${theme.sizing.footerHeight} - 8px)`, // footer height & 8px grid spacing
   overflow: 'auto',
+  paddingBottom: '10px',
   paddingLeft: '10px',
   paddingRight: '10px',
-  paddingBottom: '10px',
   '&::-webkit-scrollbar': { /* Chrome and Safari */
     display: 'none',
   },
   scrollbarWidth: 'none', /* Firefox */
     '-ms-overflow-style': 'none',  /* IE and Edge */
+}));
+
+const StyledSwiper = styled(Swiper)(({ theme }) => ({
+  height: '100%',
+  paddingLeft: '52px',
+}));
+
+const StyledSlide = styled(SwiperSlide)(({ theme }) => ({
+  height: '100%',
+  width: 'calc(100% - 104px)',
 }));
 
 const FooterStackItem = styled(Stack)(({ theme }) => ({
@@ -99,6 +110,18 @@ const FooterStackItem = styled(Stack)(({ theme }) => ({
   border: 'none',
   position: 'sticky',
   zIndex: 3,
+}));
+
+const PaginationContainer = styled(Container)(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center', 
+  "--swiper-pagination-color": `${theme.palette.primary.blueHighlight}`,
+  "--swiper-pagination-bullet-inactive-color": `${theme.palette.primary.greyHighlight}`,
+  "--swiper-pagination-bullet-inactive-opacity": "1",
+  "--swiper-pagination-bullet-size": "10px",
+  "--swiper-pagination-bullet-horizontal-gap": "4px",
 }));
 
 interface GameInProgressProps {
@@ -120,6 +143,8 @@ export default function GameInProgress({
   currentQuestionIndex,
   teamId, // eslint-disable-line @typescript-eslint/no-unused-vars
 }: GameInProgressProps) {
+  const theme = useTheme();
+  const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [gameSessionState, setCurrentState] = React.useState(currentState); // eslint-disable-line @typescript-eslint/no-unused-vars
   const currentTeam = teams?.find(team => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -170,6 +195,42 @@ export default function GameInProgress({
     setSelectedAnswer(index);
   };
 
+
+  const questionContents = (
+    <>
+      <Typography
+        variant="h2"
+        sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
+      >
+        Question
+      </Typography>
+      <ScrollBox>
+        <CardQuestion questionText={questionText} imageUrl={questionUrl ?? ""} />
+      </ScrollBox>
+    </>
+  )
+
+  const answerContents = (
+    <>
+      <Typography
+        variant="h2"
+        sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
+      >
+        Answer
+      </Typography>
+      <ScrollBox>
+        <CardAnswer
+          answers={answerChoices}
+          isSubmitted={isSubmitted}
+          handleSubmitAnswer={handleSubmitAnswer}
+          currentState={currentState}
+          selectedAnswer={selectedAnswer}
+          handleSelectAnswer={handleSelectAnswer}
+        />
+      </ScrollBox>
+    </>
+  )
+    console.log(isMobileDevice)
   return (
     <StackContainer
       direction="column"
@@ -190,61 +251,29 @@ export default function GameInProgress({
       <BodyStackItem>
         <BodyBoxUpper />
         <BodyBoxLower />
-        <BodyGridArea container spacing={2}> 
-            <Grid item xs={12} sm={6} sx={{height: '100%'}}> {/* TODO: use a mediaQuery to expand this to 12 on mobile and show carousel */}
-            <Swiper className="mySwiper">
-            <SwiperSlide>
-              <Typography
-                variant="h2"
-                sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
-              >
-                Question
-              </Typography>
-              <ScrollBox>
-                <CardQuestion questionText={questionText} imageUrl={questionUrl ?? ""} />
-              </ScrollBox>
-            </SwiperSlide>
-            <SwiperSlide>
-                <Typography
-                  variant="h2"
-                  sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
-                >
-                  Answer
-                </Typography>
-                <ScrollBox>
-                  <CardAnswer
-                    answers={answerChoices}
-                    isSubmitted={isSubmitted}
-                    handleSubmitAnswer={handleSubmitAnswer}
-                    currentState={currentState}
-                    selectedAnswer={selectedAnswer}
-                    handleSelectAnswer={handleSelectAnswer}
-                  />
-                </ScrollBox>
-              </SwiperSlide>
-              </Swiper>
-              </Grid>
+        <BodyGridArea container spacing={isMobileDevice ? 0 : 2}> 
+            <Grid item xs={12} sm={6} sx={{height: '100%'}}> 
+            {isMobileDevice ? 
+              <StyledSwiper modules={[Pagination]} spaceBetween={24} centeredSlides slidesPerView='auto' pagination={{ el: '.swiper-pagination-container',
+              clickable: true,}} >
+                <StyledSlide style={{width: 'calc(100% - 104px'}} >
+                  {questionContents}
+                </StyledSlide>
+                <SwiperSlide style={{width: 'calc(100% - 104px'}} >
+                  {answerContents}
+                </SwiperSlide> 
+              </StyledSwiper>
+            :
+              questionContents
+            }
+            </Grid>
             <Grid item xs={0} sm={6} sx={{height: '100%'}}>
-              <Typography
-                variant="h2"
-                sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
-              >
-                Answer
-              </Typography>
-              <ScrollBox>
-                <CardAnswer
-                  answers={answerChoices}
-                  isSubmitted={isSubmitted}
-                  handleSubmitAnswer={handleSubmitAnswer}
-                  currentState={currentState}
-                  selectedAnswer={selectedAnswer}
-                  handleSelectAnswer={handleSelectAnswer}
-                />
-              </ScrollBox>
+              {answerContents}
             </Grid>
         </BodyGridArea>
       </BodyStackItem>
       <FooterStackItem>
+        {isMobileDevice ? <PaginationContainer className='swiper-pagination-container' /> : null} 
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
@@ -255,7 +284,3 @@ export default function GameInProgress({
     </StackContainer>
   );
 }
-
-GameInProgress.defaultProps = {
-  teams: null,
-};

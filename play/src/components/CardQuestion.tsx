@@ -32,7 +32,7 @@ export default function CardQuestion({
   return (
     <BodyCard elevation={5}>
       <CardContainer>
-        <img style={{ width: '50%', height: 'auto' }} src={imageUrl} alt="Question"/>
+        <img style={{ width: '75%', height: 'auto' }} src={imageUrl} alt="Question"/>
         <Typography variant="body1"> {questionText[0]} </Typography>
         <Typography variant="body1" sx={{fontWeight:700}}> {`\n ${questionText[1]}`} </Typography>
       </CardContainer>
