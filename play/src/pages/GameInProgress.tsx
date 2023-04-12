@@ -20,8 +20,9 @@ import 'swiper/css'
 import "swiper/css/pagination";
 
 const StackContainer = styled(Stack)({
-  height: '100vh',
-  width: '100vw',
+  height: '100%',
+  position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
+  width: '100%',
 });
 
 const HeaderStackItem = styled(Stack)(({ theme }) => ({
@@ -77,10 +78,11 @@ const BodyGridArea = styled(Grid)({
 
 const ScrollBox= styled(Box)(({ theme }) => ({
   height: `calc(100% - ${theme.sizing.footerHeight} - 8px)`, // footer height & 8px grid spacing
-  overflow: 'auto',
   paddingBottom: '10px',
   paddingLeft: '10px',
   paddingRight: '10px',
+  overflow: 'auto',
+  touchAction: 'pan-y',
   '&::-webkit-scrollbar': { /* Chrome and Safari */
     display: 'none',
   },
@@ -109,6 +111,7 @@ const FooterStackItem = styled(Stack)(({ theme }) => ({
   width: '100vw',
   border: 'none',
   position: 'sticky',
+  bottom: 0,
   zIndex: 3,
 }));
 
