@@ -83,11 +83,11 @@ const ScrollBox= styled(Box)(({ theme }) => ({
   paddingRight: '10px',
   overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
-  '&::-webkit-scrollbar': { /* Chrome and Safari */
+  '&::-webkit-scrollbar': { // Chrome and Safari 
     display: 'none',
   },
-  scrollbarWidth: 'none', /* Firefox */
-    '-ms-overflow-style': 'none',  /* IE and Edge */
+  scrollbarWidth: 'none', // Firefox 
+    '-ms-overflow-style': 'none',  // IE and Edge 
 }));
 
 const StyledSwiper = styled(Swiper)(({ theme }) => ({
