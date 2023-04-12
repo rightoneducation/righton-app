@@ -1,32 +1,12 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Paper, Typography, Stack, Box } from '@mui/material';
+import { Paper, Typography, Stack, Box, Container} from '@mui/material';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import AnswerState from '../lib/PlayModels';
+import { BodyCard, BodyCardContainer } from '../lib/styledcomponents/BodyCardComponents';
 
-const BodyCard = styled(Paper)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  borderRadius: '24px',
-  backgroundColor: theme.palette.primary.main,
-}));
-
-const CardContainer = styled(Stack)({
-  marginTop: '24px',
-  marginLeft: '16px',
-  marginRight: '16px',
-  marginBottom: '24px',
-  alignItems: 'center',
-});
-
-const AnswerContainer = styled(Stack)({
-  width: '100%',
-  marginTop: '20px',
-  marginBottom: '20px',
-});
 
 interface CardAnswerProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
@@ -59,7 +39,7 @@ export default function CardAnswer({
   );
   const trickText = (
     <Box display="flex" alignContent="flex-start">
-      <Typography variant="h4">
+      <Typography variant="h4" >
         What do you think is the most popular&nbsp;
       </Typography>
       <Typography
@@ -75,12 +55,11 @@ export default function CardAnswer({
 
   return (
     <BodyCard elevation={5}>
-      <CardContainer>
+      <BodyCardContainer spacing={2}>
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
           ? correctText
           : trickText}
-        <AnswerContainer>
-          {/* spacing between elements handled in AnswerSelector component (so border thicknesses can be handled) */}
+        <Stack spacing={2} sx={{width: '100%'}}>
           {answers?.map((answer, index) => (
             <AnswerSelector
               answerStatus={
@@ -94,14 +73,15 @@ export default function CardAnswer({
               key={answer.text}
               handleSelectAnswer={handleSelectAnswer}
             />
+
           ))}
-        </AnswerContainer>
+        </Stack>
         <ButtonSubmitAnswer
           isSubmitted={isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
         />
-      </CardContainer>
+      </BodyCardContainer>
     </BodyCard>
   );
 }

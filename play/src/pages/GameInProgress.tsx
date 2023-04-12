@@ -107,7 +107,6 @@ const FooterStackItem = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: theme.palette.primary.main,
-  height: theme.sizing.footerHeight,
   width: '100vw',
   border: 'none',
   position: 'sticky',
@@ -120,8 +119,10 @@ const PaginationContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center', 
+  backgroundColor: theme.palette.primary.main,
+  padding: '8px',
   "--swiper-pagination-color": `${theme.palette.primary.blueHighlight}`,
-  "--swiper-pagination-bullet-inactive-color": `${theme.palette.primary.greyHighlight}`,
+  "--swiper-pagination-bullet-inactive-color": `${theme.palette.primary.darkGreyHighlight}`,
   "--swiper-pagination-bullet-inactive-opacity": "1",
   "--swiper-pagination-bullet-size": "10px",
   "--swiper-pagination-bullet-horizontal-gap": "4px",
@@ -209,6 +210,7 @@ export default function GameInProgress({
       </Typography>
       <ScrollBox>
         <CardQuestion questionText={questionText} imageUrl={questionUrl ?? ""} />
+        {isMobileDevice ?  <Typography variant="body1" sx={{textAlign: 'center', marginTop: '32px', opacity: 0.5}}> Scroll to the left to answer the question. </Typography> : null}
       </ScrollBox>
     </>
   )
@@ -233,7 +235,7 @@ export default function GameInProgress({
       </ScrollBox>
     </>
   )
-    console.log(isMobileDevice)
+
   return (
     <StackContainer
       direction="column"
@@ -255,24 +257,24 @@ export default function GameInProgress({
         <BodyBoxUpper />
         <BodyBoxLower />
         <BodyGridArea container spacing={isMobileDevice ? 0 : 2}> 
-            <Grid item xs={12} sm={6} sx={{height: '100%'}}> 
-            {isMobileDevice ? 
-              <StyledSwiper modules={[Pagination]} spaceBetween={24} centeredSlides slidesPerView='auto' pagination={{ el: '.swiper-pagination-container',
-              clickable: true,}} >
-                <StyledSlide style={{width: 'calc(100% - 104px'}} >
-                  {questionContents}
-                </StyledSlide>
-                <SwiperSlide style={{width: 'calc(100% - 104px'}} >
-                  {answerContents}
-                </SwiperSlide> 
-              </StyledSwiper>
-            :
-              questionContents
-            }
-            </Grid>
-            <Grid item xs={0} sm={6} sx={{height: '100%'}}>
-              {answerContents}
-            </Grid>
+          <Grid item xs={12} sm={6} sx={{width: '100%', height: '100%'}}> 
+          {isMobileDevice ? 
+            <StyledSwiper modules={[Pagination]} spaceBetween={24} centeredSlides slidesPerView='auto' pagination={{ el: '.swiper-pagination-container',
+            clickable: true,}} >
+              <StyledSlide style={{width: 'calc(100% - 104px'}} >
+                {questionContents}
+              </StyledSlide>
+              <SwiperSlide style={{width: 'calc(100% - 104px'}} >
+                {answerContents}
+              </SwiperSlide> 
+            </StyledSwiper>
+          :
+            questionContents
+          }
+          </Grid>
+          <Grid item xs={0} sm={6} sx={{width: '100%'}}>
+            {answerContents}
+          </Grid>
         </BodyGridArea>
       </BodyStackItem>
       <FooterStackItem>

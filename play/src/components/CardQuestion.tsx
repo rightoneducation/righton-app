@@ -1,22 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Paper, Typography, Stack } from '@mui/material';
-
-const BodyCard = styled(Paper)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  borderRadius: '24px',
-  backgroundColor: theme.palette.primary.main,
-}));
-
-const CardContainer = styled(Stack)({
-  marginTop: '24px',
-  marginLeft: '16px',
-  marginRight: '16px',
-  marginBottom: '24px',
-  alignItems: 'center',
-});
+import { BodyCard, BodyCardContainer } from '../lib/styledcomponents/BodyCardComponents';
 
 interface CardQuestionProps {
   questionText: string[];
@@ -31,11 +16,11 @@ export default function CardQuestion({
   
   return (
     <BodyCard elevation={5}>
-      <CardContainer>
+      <BodyCardContainer>
         <img style={{ width: '75%', height: 'auto' }} src={imageUrl} alt="Question"/>
         <Typography variant="body1"> {questionText[0]} </Typography>
-        <Typography variant="body1" sx={{fontWeight:700}}> {`\n ${questionText[1]}`} </Typography>
-      </CardContainer>
+        <Typography variant="body1" sx={{fontWeight:700,  whiteSpace: 'pre-line'}}> {`\n ${questionText[1]}`} </Typography>
+      </BodyCardContainer>
     </BodyCard>
   );
 }

@@ -11,7 +11,9 @@ const playerNameTextColor = '#AEAEAE';
 const greenTextColor = '#22AE48';
 const redTextColor = '#FF0000';
 const blueHighlightColor = '#22ADFF';
-const greyHighlightColor = '#CFCFCF';
+const darkGreyHighlightColor = '#CFCFCF';
+const lightGreyHighlightColor = '#F4F4F4';
+const correctColor = "#EBFFDA";
 
 // design tokens - breakpoints:
 const xs = 0;
@@ -45,7 +47,9 @@ declare module '@mui/material/styles' {
     redText: string;
     greenText: string;
     blueHighlight: string;
-    greyHighlight: string;
+    darkGreyHighlight: string;
+    lightGreyHighlight: string;
+    correctColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -53,7 +57,9 @@ declare module '@mui/material/styles' {
     redText?: string;
     greenText?: string;
     blueHighlight?: string;
-    greyHighlight?: string;
+    darkGreyHighlight?: string;
+    lightGreyHighlight?: string;
+    correctColor?: string;
   }
 }
 
@@ -72,7 +78,9 @@ export default createTheme({
       redText: redTextColor,
       greenText: greenTextColor,
       blueHighlight: blueHighlightColor,
-      greyHighlight: greyHighlightColor,
+      darkGreyHighlight: darkGreyHighlightColor,
+      lightGreyHighlight: lightGreyHighlightColor,
+      correctColor,
     },
     secondary: {
       main: secondaryColor,
@@ -119,7 +127,7 @@ export default createTheme({
     body1: {
       // question text
       fontWeight: '400',
-      fontSize: '14px',
+      fontSize: '16px',
       lineHeight: '18px',
       color: secondaryTextColor,
     },
