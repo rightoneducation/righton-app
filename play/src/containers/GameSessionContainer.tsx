@@ -12,7 +12,7 @@ export default function GameSessionContainer() {
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
-  );
+  ); 
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   return (

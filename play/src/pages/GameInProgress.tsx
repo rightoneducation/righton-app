@@ -7,17 +7,17 @@ import {
   ITeam,
   IQuestion,
   IChoice,
-  ModelHelper
+  ModelHelper,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import { Pagination } from "swiper";
+import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
 import CardQuestion from '../components/CardQuestion';
 import CardAnswer from '../components/CardAnswer';
 import FooterContent from '../components/FooterContent';
-import 'swiper/css'
-import "swiper/css/pagination";
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const StackContainer = styled(Stack)({
   height: '100%',
@@ -31,7 +31,7 @@ const HeaderStackItem = styled(Stack)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
-  background: theme.palette.primary.mainGradient,
+  background: theme.palette.primary.backgroundGradient,
   border: 'none',
   width: '100vw',
   height: theme.sizing.headerHeight,
@@ -50,7 +50,7 @@ const BodyStackItem = styled(Stack)({
 const BodyBoxUpper = styled(Box)(({ theme }) => ({
   height: '120px',
   width: '100vw',
-  background: theme.palette.primary.mainGradient,
+  background: theme.palette.primary.backgroundGradient,
   boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
   zIndex: 1,
 }));
@@ -76,29 +76,30 @@ const BodyGridArea = styled(Grid)({
   zIndex: 2,
 });
 
-const ScrollBox= styled(Box)(({ theme }) => ({
+const ScrollBox = styled(Box)(({ theme }) => ({
   height: `calc(100% - ${theme.sizing.footerHeight} - 8px)`, // footer height & 8px grid spacing
   paddingBottom: '10px',
   paddingLeft: '10px',
   paddingRight: '10px',
   overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
-  '&::-webkit-scrollbar': { // Chrome and Safari 
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
     display: 'none',
   },
-  scrollbarWidth: 'none', // Firefox 
-    '-ms-overflow-style': 'none',  // IE and Edge 
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none', // IE and Edge
 }));
 
-const StyledSwiper = styled(Swiper)(({ theme }) => ({
+const StyledSwiper = styled(Swiper)({
   height: '100%',
   paddingLeft: '52px',
-}));
+});
 
-const StyledSlide = styled(SwiperSlide)(({ theme }) => ({
+const StyledSlide = styled(SwiperSlide)({
   height: '100%',
   width: 'calc(100% - 104px)',
-}));
+});
 
 const FooterStackItem = styled(Stack)(({ theme }) => ({
   paddingBottom: '16px',
@@ -118,14 +119,14 @@ const PaginationContainer = styled(Container)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center', 
+  alignItems: 'center',
   backgroundColor: theme.palette.primary.main,
   padding: '8px',
-  "--swiper-pagination-color": `${theme.palette.primary.blueHighlight}`,
-  "--swiper-pagination-bullet-inactive-color": `${theme.palette.primary.darkGreyHighlight}`,
-  "--swiper-pagination-bullet-inactive-opacity": "1",
-  "--swiper-pagination-bullet-size": "10px",
-  "--swiper-pagination-bullet-horizontal-gap": "4px",
+  '--swiper-pagination-color': `${theme.palette.primary.blue}`,
+  '--swiper-pagination-bullet-inactive-color': `${theme.palette.primary.darkGrey}`,
+  '--swiper-pagination-bullet-inactive-opacity': '1',
+  '--swiper-pagination-bullet-size': '10px',
+  '--swiper-pagination-bullet-horizontal-gap': '4px',
 }));
 
 interface GameInProgressProps {
@@ -140,7 +141,7 @@ interface GameInProgressProps {
 
 export default function GameInProgress({
   teams,
-  id,
+  id, // eslint-disable-line @typescript-eslint/no-unused-vars
   currentState,
   teamAvatar,
   questions,
@@ -150,29 +151,34 @@ export default function GameInProgress({
   const theme = useTheme();
   const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [gameSessionState, setCurrentState] = React.useState(currentState); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const currentTeam = teams?.find(team => team.id === teamId);
+  const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(currentTeam, currentQuestion.id);
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
+      currentTeam,
+      currentQuestion.id
+    ); 
   }
 
   // this breaks down the question text from the gameSession to isolate the sentence with the question mark for formatting purposes in the component
-  const divideQuestionString = (inputText: string) => { 
-    const question = inputText.split(" ");
-    const qmarkLocation = inputText.lastIndexOf("?");
-    let introText = "";
-    let questionText = "";
+  const divideQuestionString = (inputText: string) => {
+    const qmarkLocation = inputText.lastIndexOf('?');
+    let introText = '';
+    let questionText = '';
 
-    if (qmarkLocation !== -1){
-      const periodLocation = inputText.lastIndexOf(".");
-      if (periodLocation !== -1 && periodLocation < qmarkLocation){
+    if (qmarkLocation !== -1) {
+      const periodLocation = inputText.lastIndexOf('.');
+      if (periodLocation !== -1 && periodLocation < qmarkLocation) {
         introText = inputText.substring(0, periodLocation + 1);
-        questionText = inputText.substring(periodLocation + 1, qmarkLocation + 1);
+        questionText = inputText.substring(
+          periodLocation + 1,
+          qmarkLocation + 1
+        );
       }
     }
     return [introText, questionText];
-  }
+  };
 
   const questionText = divideQuestionString(currentQuestion?.text);
 
@@ -199,7 +205,6 @@ export default function GameInProgress({
     setSelectedAnswer(index);
   };
 
-
   const questionContents = (
     <>
       <Typography
@@ -209,11 +214,21 @@ export default function GameInProgress({
         Question
       </Typography>
       <ScrollBox>
-        <CardQuestion questionText={questionText} imageUrl={questionUrl ?? ""} />
-        {isMobileDevice ?  <Typography variant="body1" sx={{textAlign: 'center', marginTop: '32px', opacity: 0.5}}> Scroll to the left to answer the question. </Typography> : null}
+        <CardQuestion
+          questionText={questionText}
+          imageUrl={questionUrl ?? ''}
+        />
+        {isMobileDevice ? (
+          <Typography
+            variant="body1"
+            sx={{ textAlign: 'center', marginTop: '32px', opacity: 0.5 }}
+          >
+            Scroll to the left to answer the question.
+          </Typography>
+        ) : null}
       </ScrollBox>
     </>
-  )
+  );
 
   const answerContents = (
     <>
@@ -234,7 +249,7 @@ export default function GameInProgress({
         />
       </ScrollBox>
     </>
-  )
+  );
 
   return (
     <StackContainer
@@ -256,29 +271,39 @@ export default function GameInProgress({
       <BodyStackItem>
         <BodyBoxUpper />
         <BodyBoxLower />
-        <BodyGridArea container spacing={isMobileDevice ? 0 : 2}> 
-          <Grid item xs={12} sm={6} sx={{width: '100%', height: '100%'}}> 
-          {isMobileDevice ? 
-            <StyledSwiper modules={[Pagination]} spaceBetween={24} centeredSlides slidesPerView='auto' pagination={{ el: '.swiper-pagination-container',
-            clickable: true,}} >
-              <StyledSlide style={{width: 'calc(100% - 104px'}} >
-                {questionContents}
-              </StyledSlide>
-              <SwiperSlide style={{width: 'calc(100% - 104px'}} >
-                {answerContents}
-              </SwiperSlide> 
-            </StyledSwiper>
-          :
-            questionContents
-          }
+        <BodyGridArea container spacing={isMobileDevice ? 0 : 2}>
+          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+            {isMobileDevice ? (
+              <StyledSwiper
+                modules={[Pagination]}
+                spaceBetween={24}
+                centeredSlides
+                slidesPerView="auto"
+                pagination={{
+                  el: '.swiper-pagination-container',
+                  clickable: true,
+                }}
+              >
+                <StyledSlide style={{ width: 'calc(100% - 104px' }}>
+                  {questionContents}
+                </StyledSlide>
+                <SwiperSlide style={{ width: 'calc(100% - 104px' }}>
+                  {answerContents}
+                </SwiperSlide>
+              </StyledSwiper>
+            ) : (
+              questionContents
+            )}
           </Grid>
-          <Grid item xs={0} sm={6} sx={{width: '100%'}}>
+          <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
             {answerContents}
           </Grid>
         </BodyGridArea>
       </BodyStackItem>
       <FooterStackItem>
-        {isMobileDevice ? <PaginationContainer className='swiper-pagination-container' /> : null} 
+        {isMobileDevice ? (
+          <PaginationContainer className="swiper-pagination-container" />
+        ) : null}
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}

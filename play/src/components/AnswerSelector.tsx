@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
@@ -21,24 +21,26 @@ const AnswerSelectorDefault = styled(Button, {
   justifyContent: 'flex-start',
   alignItems: 'center',
   textTransform: 'none',
-  border: `1px solid ${theme.palette.primary.darkGreyHighlight}`,
-  backgroundColor: isSubmitted ? `${theme.palette.primary.lightGreyHighlight}` : `${theme.palette.primary.main}`,
+  border: `1px solid ${theme.palette.primary.darkGrey}`,
+  backgroundColor: isSubmitted
+    ? `${theme.palette.primary.lightGrey}`
+    : `${theme.palette.primary.main}`,
 }));
 
-const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(
-  ({ theme }) => ({
+const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
   border: `1px solid ${theme.palette.primary.correctColor}`,
   backgroundColor: `${theme.palette.primary.correctColor}`,
-})
-);
+}));
 
 const AnswerSelectorSelected = styled(AnswerSelectorDefault, {
   shouldForwardProp: (prop) => prop !== 'isSubmitted',
 })(({ isSubmitted, theme }) => ({
   border: isSubmitted
-    ? `1px solid ${theme.palette.primary.blueHighlight}`
-    : `2px solid ${theme.palette.primary.blueHighlight}`,
-  backgroundColor: isSubmitted ? `${theme.palette.primary.lightGreyHighlight}` : `${theme.palette.primary.main}`,
+    ? `1px solid ${theme.palette.primary.blue}`
+    : `2px solid ${theme.palette.primary.blue}`,
+  backgroundColor: isSubmitted
+    ? `${theme.palette.primary.lightGrey}`
+    : `${theme.palette.primary.main}`,
 }));
 
 interface AnswerSelectorComponentProps {

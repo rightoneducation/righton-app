@@ -7,22 +7,22 @@ const ScoreContainer = styled(Container)({
   position: 'relative',
 });
 
-const NewPointsPill = styled('div')({
+const NewPointsPill = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: `58px`,
   height: '22px',
   borderRadius: '23px',
-  background: 'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)',
-});
+  background: `${theme.palette.primary.altHighlightGradient}`,
+}));
 
-const ScorePill = styled(NewPointsPill)({
+const ScorePill = styled(NewPointsPill)(({ theme }) => ({
   position: 'absolute',
   right: '0',
-  background: 'linear-gradient(190deg, #73B6F0 0%, #057BE3 80%)',
+  background: `${theme.palette.primary.highlightGradient}`,
   zIndex: 1,
-});
+}));
 
 const NewPointsAnimation = styled('div')({
   animation: `newScoreUp 1000ms cubic-bezier(0.4, 0, 0.2, 1)`,

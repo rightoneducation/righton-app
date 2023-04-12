@@ -1,12 +1,14 @@
 import React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Paper, Typography, Stack, Box, Container} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Typography, Stack, Box } from '@mui/material';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import AnswerState from '../lib/PlayModels';
-import { BodyCard, BodyCardContainer } from '../lib/styledcomponents/BodyCardComponents';
-
+import {
+  BodyCard,
+  BodyCardContainer,
+} from '../lib/styledcomponents/BodyCardComponents';
 
 interface CardAnswerProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
@@ -29,23 +31,20 @@ export default function CardAnswer({
   const correctText = (
     <Box display="flex" alignContent="flex-start">
       <Typography variant="h4"> Choose the&nbsp; </Typography>
-      <Typography
-        variant="h4"
-        sx={{ color: `${theme.palette.primary.greenText}` }}
-      >
+      <Typography variant="h4" sx={{ color: `${theme.palette.primary.green}` }}>
         correct answer
       </Typography>
     </Box>
   );
   const trickText = (
     <Box display="flex" alignContent="flex-start">
-      <Typography variant="h4" >
+      <Typography variant="h4">
         What do you think is the most popular&nbsp;
       </Typography>
       <Typography
         display="inline"
         variant="h4"
-        sx={{ color: `${theme.palette.primary.redText}`, display: 'inline' }}
+        sx={{ color: `${theme.palette.primary.red}`, display: 'inline' }}
       >
         trick answer
       </Typography>
@@ -59,7 +58,7 @@ export default function CardAnswer({
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
           ? correctText
           : trickText}
-        <Stack spacing={2} sx={{width: '100%'}}>
+        <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
             <AnswerSelector
               answerStatus={
@@ -73,7 +72,6 @@ export default function CardAnswer({
               key={answer.text}
               handleSelectAnswer={handleSelectAnswer}
             />
-
           ))}
         </Stack>
         <ButtonSubmitAnswer

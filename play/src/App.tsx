@@ -11,16 +11,16 @@ function RedirectToCentralIfMissing() {
 
 function App() {
   return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={Theme}>
-          <Router>
-            <Routes>
-              <Route path="/" element={<GameSessionContainer />} />
-              <Route element={<RedirectToCentralIfMissing />} />
-            </Routes>
-          </Router>
-        </ThemeProvider>
-      </StyledEngineProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={Theme}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<GameSessionContainer />} />
+            <Route element={<RedirectToCentralIfMissing />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 }
 
