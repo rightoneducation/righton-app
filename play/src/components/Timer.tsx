@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 
-const TimerContainer = styled(Container)(({ theme }) => ({ 
+const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
@@ -11,8 +11,7 @@ const TimerContainer = styled(Container)(({ theme }) => ({
   marginRight: `${theme.sizing.mediumPadding}px`,
   marginTop: `${theme.sizing.extraSmallPadding}px`,
   marginBottom: `${theme.sizing.extraSmallPadding}px`,
-})
-);
+}));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
@@ -47,12 +46,11 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
 
-  const isPausedRef = useRef<boolean>(isPaused); 
+  const isPausedRef = useRef<boolean>(isPaused);
 
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
-    if (!isPausedRef.current)
-    {
+    if (!isPausedRef.current) {
       if (prevTimeRef.current != null) {
         const delta = timestamp - prevTimeRef.current;
         setCurrentTimeMilli((prevTime) => prevTime - delta);
@@ -61,7 +59,7 @@ export default function Timer({
       if (currentTimeMilli - (timestamp - originalTime) >= 0) {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } 
+      } else handleTimerIsFinished();
     }
   }
 
@@ -85,7 +83,6 @@ export default function Timer({
       animationRef.current = requestAnimationFrame(updateTimer);
     return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
 
   // Update the isPausedRef when the isPaused prop changes
   useEffect(() => {

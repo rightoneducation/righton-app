@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Stack, Box, Container, Grid } from '@mui/material';
+import { Typography, Stack, Box, Grid } from '@mui/material';
 import {
   GameSessionState,
   ITeam,
@@ -10,7 +10,7 @@ import {
   ModelHelper,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import { Pagination, SwiperOptions } from 'swiper';
+import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
 import CardQuestion from '../components/CardQuestion';
@@ -19,7 +19,6 @@ import FooterContent from '../components/FooterContent';
 import { PaginationContainer } from '../lib/styledcomponents/StyledComponents';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
 
 const StackContainer = styled(Stack)({
   height: '100%',
@@ -80,7 +79,7 @@ const BodyGridArea = styled(Grid)({
 
 const ScrollBox = styled(Box)(({ theme }) => ({
   height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px)`, // footer height & 8px grid spacing
-  paddingBottom:`${theme.sizing.extraSmallPadding}px`, // added so box shadow shows around edge of card
+  paddingBottom: `${theme.sizing.extraSmallPadding}px`, // added so box shadow shows around edge of card
   paddingLeft: `${theme.sizing.extraSmallPadding}px`,
   paddingRight: `${theme.sizing.extraSmallPadding}px`,
   overflow: 'auto',
@@ -133,10 +132,10 @@ export default function GameInProgress({
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(  // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
-    ); 
+    );
   }
 
   // this breaks down the question text from the gameSession to isolate the sentence with the question mark for formatting purposes in the component
@@ -187,7 +186,11 @@ export default function GameInProgress({
     <>
       <Typography
         variant="h2"
-        sx={{ marginTop: `${theme.sizing.smallPadding}px`, marginBottom: `${theme.sizing.smallPadding}px`, textAlign: 'center' }}
+        sx={{
+          marginTop: `${theme.sizing.smallPadding}px`,
+          marginBottom: `${theme.sizing.smallPadding}px`,
+          textAlign: 'center',
+        }}
       >
         Question
       </Typography>
@@ -199,7 +202,11 @@ export default function GameInProgress({
         {isMobileDevice ? (
           <Typography
             variant="body1"
-            sx={{ textAlign: 'center', marginTop: `${theme.sizing.largePadding}px`, opacity: 0.5 }}
+            sx={{
+              textAlign: 'center',
+              marginTop: `${theme.sizing.largePadding}px`,
+              opacity: 0.5,
+            }}
           >
             Scroll to the left to answer the question.
           </Typography>
@@ -212,7 +219,11 @@ export default function GameInProgress({
     <>
       <Typography
         variant="h2"
-        sx={{ marginTop: '16px', marginBottom: `${theme.sizing.smallPadding}px`, textAlign: 'center' }}
+        sx={{
+          marginTop: '16px',
+          marginBottom: `${theme.sizing.smallPadding}px`,
+          textAlign: 'center',
+        }}
       >
         Answer
       </Typography>
@@ -259,19 +270,33 @@ export default function GameInProgress({
                 slidesPerView="auto"
                 pagination={{
                   el: '.swiper-pagination-container',
-                  bulletClass: "swiper-pagination-bullet",
-                  bulletActiveClass: "swiper-pagination-bullet-active",
+                  bulletClass: 'swiper-pagination-bullet',
+                  bulletActiveClass: 'swiper-pagination-bullet-active',
                   clickable: true,
                   renderBullet(index, className) {
                     return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-                 }
+                  },
                 }}
-                style={{height: '100%'}}
+                style={{ height: '100%' }}
               >
-                <SwiperSlide style={{ width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`, height: '100%' }}>
+                <SwiperSlide
+                  style={{
+                    width: `calc(100% - ${
+                      theme.sizing.extraLargePadding * 2
+                    }px`,
+                    height: '100%',
+                  }}
+                >
                   {questionContents}
                 </SwiperSlide>
-                <SwiperSlide style={{ width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`, height: '100%' }}>
+                <SwiperSlide
+                  style={{
+                    width: `calc(100% - ${
+                      theme.sizing.extraLargePadding * 2
+                    }px`,
+                    height: '100%',
+                  }}
+                >
                   {answerContents}
                 </SwiperSlide>
               </Swiper>
@@ -286,7 +311,7 @@ export default function GameInProgress({
       </BodyStackItem>
       <FooterStackItem>
         {isMobileDevice ? (
-          <PaginationContainer className="swiper-pagination-container"/>
+          <PaginationContainer className="swiper-pagination-container" />
         ) : null}
         <FooterContent
           avatar={teamAvatar}

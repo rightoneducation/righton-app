@@ -85,7 +85,10 @@ export default function AnswerSelector({
       </Typography>
       <Typography
         variant="body2"
-        sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px`, paddingRight: `${theme.sizing.largePadding}px` }}
+        sx={{
+          paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+          paddingRight: `${theme.sizing.largePadding}px`,
+        }}
       >
         {answerText}
       </Typography>
@@ -93,7 +96,9 @@ export default function AnswerSelector({
         src={imageMap[answerStatus]}
         style={{
           position: 'absolute',
-          right: isSubmitted ? `${theme.sizing.smallPadding+1}px` : `${theme.sizing.smallPadding}px`,
+          right: isSubmitted
+            ? `${theme.sizing.smallPadding + 1}px`
+            : `${theme.sizing.smallPadding}px`,
           width: `${theme.sizing.smallPadding}px`,
           height: `${theme.sizing.smallPadding}px`,
           paddingTop: '2px',
@@ -114,7 +119,6 @@ export default function AnswerSelector({
           variant="text"
           isSubmitted={isSubmitted}
         >
-
           {buttonContents}
         </AnswerSelectorCorrect>
       );

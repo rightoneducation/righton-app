@@ -65,7 +65,10 @@ export default function Header({
     <FooterContainer>
       <FooterLeftContainer>
         <Avatar src={avatarMap[avatar]} alt="avatar" />
-        <Typography variant="h3" sx={{ marginLeft: `${theme.sizing.smallPadding}px` }}>
+        <Typography
+          variant="h3"
+          sx={{ marginLeft: `${theme.sizing.smallPadding}px` }}
+        >
           {teamName}
         </Typography>
       </FooterLeftContainer>

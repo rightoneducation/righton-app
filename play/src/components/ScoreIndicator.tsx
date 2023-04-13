@@ -12,7 +12,6 @@ const ScorePill = styled('div')(({ theme }) => ({
   borderRadius: '23px',
   background: `${theme.palette.primary.highlightGradient}`,
   zIndex: 1,
-
 }));
 
 const NewPointsPill = styled(ScorePill)(({ theme }) => ({

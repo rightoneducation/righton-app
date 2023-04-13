@@ -9,10 +9,6 @@ export default {
   component: Timer,
 } as ComponentMeta<typeof Timer>;
 
-const handleTimerIsFinished = () => {
-  console.debug('finished');
-};
-
 const Template: ComponentStory<typeof Timer> = function TimerTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>

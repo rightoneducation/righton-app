@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { Paper, Stack, Container} from '@mui/material';
+import { Paper, Stack, Container } from '@mui/material';
 
 // card for question and answer
-export const BodyCard = styled(Paper)(({ theme }) => ({ 
+export const BodyCard = styled(Paper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -12,7 +12,7 @@ export const BodyCard = styled(Paper)(({ theme }) => ({
 }));
 
 // content container inside of card
-export const BodyCardContainer = styled(Stack)({ 
+export const BodyCardContainer = styled(Stack)({
   width: '100%',
   alignItems: 'center',
 });
