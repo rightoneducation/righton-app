@@ -7,7 +7,7 @@ export const BodyCard = styled(Paper)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   borderRadius: '24px',
-  padding: '16px',
+  padding: `${theme.sizing.smallPadding}px`,
   backgroundColor: theme.palette.primary.main,
 }));
 

@@ -26,14 +26,14 @@ const md = 900;
 const lg = 1200;
 const xl = 1536;
 
-// design tokens - header, footer, padding sizes (coordinate this approach with U/X team):
+// design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
 const headerHeight = 68;
 const footerHeight = 60;
-const extraSmallPadding = 8;
-const smallPadding = 16;
-const mediumPadding = 24;
-const largePadding = 32;
-const extraLargePadding = 48;
+const extraSmallPadding = 8; // small icons, text positioning
+const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
+const mediumPadding = 24; // timer margin
+const largePadding = 32; // text spacing on answer selector, top margin on titles
+const extraLargePadding = 48; // spacing between card and edge of screen
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
