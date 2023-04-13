@@ -26,23 +26,38 @@ const md = 900;
 const lg = 1200;
 const xl = 1536;
 
-// design tokes - header, footer sizes (coordinate this approach with U/X team):
-const headerHeight = '68px';
-const footerHeight = '60px';
+// design tokens - header, footer, padding sizes (coordinate this approach with U/X team):
+const headerHeight = 68;
+const footerHeight = 60;
+const extraSmallPadding = 8;
+const smallPadding = 16;
+const mediumPadding = 24;
+const largePadding = 32;
+const extraLargePadding = 48;
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
     sizing: {
-      headerHeight: string;
-      footerHeight: string;
+      headerHeight: number;
+      footerHeight: number;
+      extraSmallPadding: number;
+      smallPadding: number;
+      mediumPadding: number;
+      largePadding: number;
+      extraLargePadding: number;
     };
   }
 
   interface ThemeOptions {
     sizing?: {
-      headerHeight?: string;
-      footerHeight?: string;
+      headerHeight?: number;
+      footerHeight?: number;
+      extraSmallPadding?: number;
+      smallPadding?: number;
+      mediumPadding?: number;
+      largePadding?: number;
+      extraLargePadding?: number;
     };
   }
 
@@ -69,7 +84,7 @@ declare module '@mui/material/styles' {
     extraDarkGrey?: string;
     darkGrey?: string;
     lightGrey?: string;
-    correctGreen?: string;
+    correctColor?: string;
   }
 }
 
@@ -80,6 +95,11 @@ export default createTheme({
   sizing: {
     headerHeight,
     footerHeight,
+    extraSmallPadding,
+    smallPadding,
+    mediumPadding,
+    largePadding,
+    extraLargePadding,
   },
   palette: {
     primary: {
@@ -93,7 +113,7 @@ export default createTheme({
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
-      correctGreen: greenCorrectColor,
+      correctColor: greenCorrectColor,
     },
     secondary: {
       main: secondaryColor,

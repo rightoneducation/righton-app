@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import {
   BodyCard,
   BodyCardContainer,
-} from '../lib/styledcomponents/BodyCardComponents';
+} from '../lib/styledcomponents/StyledComponents';
 
 interface CardQuestionProps {
   questionText: string[];

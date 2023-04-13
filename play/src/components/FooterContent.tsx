@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Typography, Container } from '@mui/material';
 import ScoreIndicator from './ScoreIndicator';
 import Icon from '../img/MonsterIcon1.svg';
@@ -10,11 +10,15 @@ import Icon5 from '../img/MonsterIcon5.svg';
 import Icon6 from '../img/MonsterIcon6.svg';
 
 const FooterContainer = styled(Container)(({ theme }) => ({
+  width: '100%',
+  maxWidth: `${theme.breakpoints.values.sm}px`,
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   color: theme.palette.primary.main,
+  paddingLeft: `${theme.sizing.smallPadding}px`,
+  paddingRight: `${theme.sizing.smallPadding}px`,
 }));
 
 const FooterLeftContainer = styled(Container)({
@@ -47,6 +51,7 @@ export default function Header({
   newPoints,
   score,
 }: HeaderProps) {
+  const theme = useTheme();
   const avatarMap: AvatarMap = {
     0: Icon,
     1: Icon2,
@@ -57,10 +62,10 @@ export default function Header({
   };
 
   return (
-    <FooterContainer maxWidth="sm">
+    <FooterContainer>
       <FooterLeftContainer>
         <Avatar src={avatarMap[avatar]} alt="avatar" />
-        <Typography variant="h3" sx={{ marginLeft: '12px' }}>
+        <Typography variant="h3" sx={{ marginLeft: `${theme.sizing.smallPadding}px` }}>
           {teamName}
         </Typography>
       </FooterLeftContainer>

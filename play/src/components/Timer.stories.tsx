@@ -21,23 +21,7 @@ const Template: ComponentStory<typeof Timer> = function TimerTemplate(args) {
   );
 };
 
-export const FiveSecondTimer = Template.bind({});
-FiveSecondTimer.args = {
-  totalTime: 5,
-  isPaused: false,
-  handleTimerIsFinished,
-};
-
-export const FifteenSecondTimer = Template.bind({});
-FifteenSecondTimer.args = {
-  totalTime: 15,
-  isPaused: false,
-  handleTimerIsFinished,
-};
-
-export const TwoMinuteFiveSecondTimer = Template.bind({});
-TwoMinuteFiveSecondTimer.args = {
-  totalTime: 125,
-  isPaused: false,
-  handleTimerIsFinished,
+export const Default = Template.bind({});
+Default.args = {
+  totalTime: 30,
 };

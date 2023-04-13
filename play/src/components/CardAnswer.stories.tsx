@@ -21,7 +21,6 @@ const Template: ComponentStory<typeof CardAnswer> = function CardAnswerTemplate(
 };
 
 export const CorrectAnswer = Template.bind({});
-console.debug(CorrectAnswer);
 
 CorrectAnswer.args = {
   currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,

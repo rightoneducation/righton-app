@@ -3,7 +3,7 @@ import { Button, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const AnswerButton = styled(Button)(({ theme }) => ({
-  width: '160px',
+  width: '160px', // per figma
   height: '26px',
   borderRadius: '22px',
   textTransform: 'none',

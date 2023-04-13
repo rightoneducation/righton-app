@@ -18,20 +18,8 @@ const Template: ComponentStory<typeof ButtonSubmitAnswer> =
     );
   };
 
-export const DefaultState = Template.bind({});
-DefaultState.args = {
+export const Default = Template.bind({});
+Default.args = {
   isSubmitted: false,
   isSelected: false,
-};
-
-export const AnswerSelected = Template.bind({});
-AnswerSelected.args = {
-  isSelected: true,
-  isSubmitted: false,
-};
-
-export const AnswerSubmitted = Template.bind({});
-AnswerSubmitted.args = {
-  isSelected: true,
-  isSubmitted: true,
 };

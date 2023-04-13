@@ -10,14 +10,16 @@ import {
   ModelHelper,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import { Pagination } from 'swiper';
+import { Pagination, SwiperOptions } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
 import CardQuestion from '../components/CardQuestion';
 import CardAnswer from '../components/CardAnswer';
 import FooterContent from '../components/FooterContent';
+import { PaginationContainer } from '../lib/styledcomponents/StyledComponents';
 import 'swiper/css';
 import 'swiper/css/pagination';
+
 
 const StackContainer = styled(Stack)({
   height: '100%',
@@ -26,7 +28,7 @@ const StackContainer = styled(Stack)({
 });
 
 const HeaderStackItem = styled(Stack)(({ theme }) => ({
-  paddingTop: '24px',
+  paddingTop: `${theme.sizing.mediumPadding}px`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -34,7 +36,7 @@ const HeaderStackItem = styled(Stack)(({ theme }) => ({
   background: theme.palette.primary.backgroundGradient,
   border: 'none',
   width: '100vw',
-  height: theme.sizing.headerHeight,
+  height: `${theme.sizing.headerHeight}px`,
 }));
 
 const BodyStackItem = styled(Stack)({
@@ -77,10 +79,10 @@ const BodyGridArea = styled(Grid)({
 });
 
 const ScrollBox = styled(Box)(({ theme }) => ({
-  height: `calc(100% - ${theme.sizing.footerHeight} - 8px)`, // footer height & 8px grid spacing
-  paddingBottom: '10px',
-  paddingLeft: '10px',
-  paddingRight: '10px',
+  height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px)`, // footer height & 8px grid spacing
+  paddingBottom:`${theme.sizing.extraSmallPadding}px`, // added so box shadow shows around edge of card
+  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+  paddingRight: `${theme.sizing.extraSmallPadding}px`,
   overflow: 'auto',
   touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
   '&::-webkit-scrollbar': {
@@ -91,18 +93,8 @@ const ScrollBox = styled(Box)(({ theme }) => ({
   '-ms-overflow-style': 'none', // IE and Edge
 }));
 
-const StyledSwiper = styled(Swiper)({
-  height: '100%',
-  paddingLeft: '52px',
-});
-
-const StyledSlide = styled(SwiperSlide)({
-  height: '100%',
-  width: 'calc(100% - 104px)',
-});
-
 const FooterStackItem = styled(Stack)(({ theme }) => ({
-  paddingBottom: '16px',
+  paddingBottom: `${theme.sizing.smallPadding}px`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -113,20 +105,6 @@ const FooterStackItem = styled(Stack)(({ theme }) => ({
   position: 'sticky',
   bottom: 0,
   zIndex: 3,
-}));
-
-const PaginationContainer = styled(Container)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: theme.palette.primary.main,
-  padding: '8px',
-  '--swiper-pagination-color': `${theme.palette.primary.blue}`,
-  '--swiper-pagination-bullet-inactive-color': `${theme.palette.primary.darkGrey}`,
-  '--swiper-pagination-bullet-inactive-opacity': '1',
-  '--swiper-pagination-bullet-size': '10px',
-  '--swiper-pagination-bullet-horizontal-gap': '4px',
 }));
 
 interface GameInProgressProps {
@@ -209,7 +187,7 @@ export default function GameInProgress({
     <>
       <Typography
         variant="h2"
-        sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
+        sx={{ marginTop: `${theme.sizing.smallPadding}px`, marginBottom: `${theme.sizing.smallPadding}px`, textAlign: 'center' }}
       >
         Question
       </Typography>
@@ -221,7 +199,7 @@ export default function GameInProgress({
         {isMobileDevice ? (
           <Typography
             variant="body1"
-            sx={{ textAlign: 'center', marginTop: '32px', opacity: 0.5 }}
+            sx={{ textAlign: 'center', marginTop: `${theme.sizing.largePadding}px`, opacity: 0.5 }}
           >
             Scroll to the left to answer the question.
           </Typography>
@@ -234,7 +212,7 @@ export default function GameInProgress({
     <>
       <Typography
         variant="h2"
-        sx={{ marginTop: '16px', marginBottom: '12px', textAlign: 'center' }}
+        sx={{ marginTop: '16px', marginBottom: `${theme.sizing.smallPadding}px`, textAlign: 'center' }}
       >
         Answer
       </Typography>
@@ -274,23 +252,29 @@ export default function GameInProgress({
         <BodyGridArea container spacing={isMobileDevice ? 0 : 2}>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             {isMobileDevice ? (
-              <StyledSwiper
+              <Swiper
                 modules={[Pagination]}
                 spaceBetween={24}
                 centeredSlides
                 slidesPerView="auto"
                 pagination={{
                   el: '.swiper-pagination-container',
+                  bulletClass: "swiper-pagination-bullet",
+                  bulletActiveClass: "swiper-pagination-bullet-active",
                   clickable: true,
+                  renderBullet(index, className) {
+                    return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                 }
                 }}
+                style={{height: '100%'}}
               >
-                <StyledSlide style={{ width: 'calc(100% - 104px' }}>
+                <SwiperSlide style={{ width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`, height: '100%' }}>
                   {questionContents}
-                </StyledSlide>
-                <SwiperSlide style={{ width: 'calc(100% - 104px' }}>
+                </SwiperSlide>
+                <SwiperSlide style={{ width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`, height: '100%' }}>
                   {answerContents}
                 </SwiperSlide>
-              </StyledSwiper>
+              </Swiper>
             ) : (
               questionContents
             )}
@@ -302,7 +286,7 @@ export default function GameInProgress({
       </BodyStackItem>
       <FooterStackItem>
         {isMobileDevice ? (
-          <PaginationContainer className="swiper-pagination-container" />
+          <PaginationContainer className="swiper-pagination-container"/>
         ) : null}
         <FooterContent
           avatar={teamAvatar}

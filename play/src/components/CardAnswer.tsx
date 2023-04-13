@@ -8,7 +8,7 @@ import AnswerState from '../lib/PlayModels';
 import {
   BodyCard,
   BodyCardContainer,
-} from '../lib/styledcomponents/BodyCardComponents';
+} from '../lib/styledcomponents/StyledComponents';
 
 interface CardAnswerProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;

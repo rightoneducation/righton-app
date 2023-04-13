@@ -18,32 +18,8 @@ const Template: ComponentStory<typeof ScoreIndicator> =
     );
   };
 
-export const AddTenPoints = Template.bind({});
-AddTenPoints.args = {
+export const Default = Template.bind({});
+Default.args = {
   score: 120,
   newPoints: 10,
-};
-
-export const HighScore = Template.bind({});
-HighScore.args = {
-  score: 120,
-  newPoints: 0,
-};
-
-export const MedScore = Template.bind({});
-MedScore.args = {
-  score: 12,
-  newPoints: 0,
-};
-
-export const LowScore = Template.bind({});
-LowScore.args = {
-  score: 1,
-  newPoints: 0,
-};
-
-export const NoScore = Template.bind({});
-NoScore.args = {
-  score: null,
-  newPoints: 0,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
@@ -58,6 +58,7 @@ export default function AnswerSelector({
   isSubmitted,
   handleSelectAnswer,
 }: AnswerSelectorComponentProps) {
+  const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
 
   const imageMap = {
@@ -84,7 +85,7 @@ export default function AnswerSelector({
       </Typography>
       <Typography
         variant="body2"
-        sx={{ paddingLeft: '8px', paddingRight: '38px' }}
+        sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px`, paddingRight: `${theme.sizing.largePadding}px` }}
       >
         {answerText}
       </Typography>
@@ -92,9 +93,9 @@ export default function AnswerSelector({
         src={imageMap[answerStatus]}
         style={{
           position: 'absolute',
-          right: isSubmitted ? '17px' : '16px',
-          width: '16px',
-          height: '16px',
+          right: isSubmitted ? `${theme.sizing.smallPadding+1}px` : `${theme.sizing.smallPadding}px`,
+          width: `${theme.sizing.smallPadding}px`,
+          height: `${theme.sizing.smallPadding}px`,
           paddingTop: '2px',
           opacity:
             isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
@@ -113,6 +114,7 @@ export default function AnswerSelector({
           variant="text"
           isSubmitted={isSubmitted}
         >
+
           {buttonContents}
         </AnswerSelectorCorrect>
       );
