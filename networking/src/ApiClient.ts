@@ -504,7 +504,7 @@ type AWSTeamAnswer = {
     teamMemberAnswersId?: string | null
 }
 
-class GameSessionParser {
+export class GameSessionParser {
     static gameSessionFromSubscription(
         subscription: OnUpdateGameSessionSubscription
     ): IGameSession {

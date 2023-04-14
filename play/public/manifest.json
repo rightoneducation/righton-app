@@ -1,9 +1,9 @@
 {
   "short_name": "Right On!",
-  "name": "Right On! Game Management App",
+  "name": "Right On! Student Play App",
   "icons": [
     {
-      "src": "icong.png",
+      "src": "icon.png",
       "type": "image/png",
       "sizes": "32x32"
     }
