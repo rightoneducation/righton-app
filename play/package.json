@@ -21,6 +21,7 @@
     "react-scripts": "5.0.1",
     "storybook": "^6.5.16",
     "styled-components": "^5.3.9",
+    "swiper": "^9.2.0",
     "typescript": "*",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.0"
@@ -33,7 +34,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "chromatic": "yarn chromatic --project-token 99c8d45b7b98"
   },
   "eslintConfig": {
     "extends": [
@@ -78,6 +80,7 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "chromatic": "^6.17.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -98,5 +101,7 @@
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
     "styled-components": "^5",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
-  }
+  },
+  "readme": "readme.md",
+  "_id": "play2@0.1.0"
 }

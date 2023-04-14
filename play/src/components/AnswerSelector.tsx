@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
@@ -12,35 +12,35 @@ type AnswerSelectorProps = {
 
 const AnswerSelectorDefault = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'isSubmitted',
-})<AnswerSelectorProps>(({ isSubmitted }) => ({
+})<AnswerSelectorProps>(({ isSubmitted, theme }) => ({
+  boxSizing: 'border-box',
   width: '100%',
   minHeight: '42px',
-  paddingTop: '10px',
-  paddingBottom: '10px',
-  marginTop: '24px',
   borderRadius: '22px',
-  flexDirection: 'row',
+  display: 'flex',
   justifyContent: 'flex-start',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   textTransform: 'none',
-  border: '1px solid #D9DFE5',
-  backgroundColor: isSubmitted ? '#F4F4F4' : '#FFFFFF',
+  border: `1px solid ${theme.palette.primary.darkGrey}`,
+  backgroundColor: isSubmitted
+    ? `${theme.palette.primary.lightGrey}`
+    : `${theme.palette.primary.main}`,
 }));
 
-const AnswerSelectorCorrect = styled(AnswerSelectorDefault)({
-  border: '1px solid #EBFFDA',
-  backgroundColor: '#EBFFDA',
-});
+const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
+  border: `1px solid ${theme.palette.primary.correctColor}`,
+  backgroundColor: `${theme.palette.primary.correctColor}`,
+}));
 
 const AnswerSelectorSelected = styled(AnswerSelectorDefault, {
   shouldForwardProp: (prop) => prop !== 'isSubmitted',
-})(({ isSubmitted }) => ({
-  marginTop: '23px', // spacing between elements adjusted for change in border thickness
-  marginBottom: '-1px',
+})(({ isSubmitted, theme }) => ({
   border: isSubmitted
-    ? '1px solid rgb(21, 158, 250, 0.5)'
-    : '2px solid #159EFA',
-  backgroundColor: isSubmitted ? '#F4F4F4' : '#FFFFFF',
+    ? `1px solid ${theme.palette.primary.blue}`
+    : `2px solid ${theme.palette.primary.blue}`,
+  backgroundColor: isSubmitted
+    ? `${theme.palette.primary.lightGrey}`
+    : `${theme.palette.primary.main}`,
 }));
 
 interface AnswerSelectorComponentProps {
@@ -58,6 +58,7 @@ export default function AnswerSelector({
   isSubmitted,
   handleSelectAnswer,
 }: AnswerSelectorComponentProps) {
+  const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
 
   const imageMap = {
@@ -75,7 +76,7 @@ export default function AnswerSelector({
             !isSubmitted && answerStatus === AnswerState.SELECTED
               ? '1px'
               : '2px', // compensates for increased border thickness when selected
-          paddingTop: '2px', // compensates for font size change between h5 and body2
+          paddingTop: '2px',
           opacity:
             isSubmitted || answerStatus === AnswerState.CORRECT ? 0.5 : 1,
         }}
@@ -84,7 +85,10 @@ export default function AnswerSelector({
       </Typography>
       <Typography
         variant="body2"
-        sx={{ paddingLeft: '8px', paddingRight: '38px' }}
+        sx={{
+          paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+          paddingRight: `${theme.sizing.largePadding}px`,
+        }}
       >
         {answerText}
       </Typography>
@@ -92,11 +96,12 @@ export default function AnswerSelector({
         src={imageMap[answerStatus]}
         style={{
           position: 'absolute',
-          right: isSubmitted ? '17px' : '16px',
-          width: '16px',
-          height: '16px',
-          paddingTop: '3px', // 16px + 3 px + 3px = 22px -> same line height as text, all per Figma
-          paddingBottom: '3px',
+          right: isSubmitted
+            ? `17px`
+            : `16px`,
+          width: `16px`,
+          height: `16px`,
+          paddingTop: '2px',
           opacity:
             isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
         }}

@@ -3,22 +3,22 @@ import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 
-const TimerContainer = styled(Container)({
+const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  marginLeft: '24px',
-  marginRight: '24px',
-  marginTop: '8px',
-  marginBottom: '8px',
-});
+  marginLeft: `${theme.sizing.mediumPadding}px`,
+  marginRight: `${theme.sizing.mediumPadding}px`,
+  marginTop: `${theme.sizing.extraSmallPadding}px`,
+  marginBottom: `${theme.sizing.extraSmallPadding}px`,
+}));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: '40px',
   display: 'inline-block',
-  marginRight: '10px',
-  height: '8px',
-  width: 'calc(100% - 25px)',
+  marginRight: `${theme.sizing.extraSmallPadding}px`,
+  height: `${theme.sizing.extraSmallPadding}px`,
+  width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
   backgroundColor: theme.palette.primary.main,
   '& .MuiLinearProgress-bar': {
     background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
@@ -46,17 +46,21 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
 
+  const isPausedRef = useRef<boolean>(isPaused);
+
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
-    if (prevTimeRef.current != null) {
-      const delta = timestamp - prevTimeRef.current;
-      setCurrentTimeMilli((prevTime) => prevTime - delta);
-    } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
+    if (!isPausedRef.current) {
+      if (prevTimeRef.current != null) {
+        const delta = timestamp - prevTimeRef.current;
+        setCurrentTimeMilli((prevTime) => prevTime - delta);
+      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
 
-    if (currentTimeMilli - (timestamp - originalTime) >= 0) {
-      prevTimeRef.current = timestamp;
-      animationRef.current = requestAnimationFrame(updateTimer);
-    } else handleTimerIsFinished();
+      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+        prevTimeRef.current = timestamp;
+        animationRef.current = requestAnimationFrame(updateTimer);
+      } else handleTimerIsFinished();
+    }
   }
 
   // generates timer string (needs to ensure that seconds are always 2 digits and don't show as 60)
@@ -79,6 +83,11 @@ export default function Timer({
       animationRef.current = requestAnimationFrame(updateTimer);
     return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Update the isPausedRef when the isPaused prop changes
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">
