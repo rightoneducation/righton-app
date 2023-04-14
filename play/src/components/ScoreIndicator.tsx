@@ -1,34 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Typography, Container } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
 
-const ScoreContainer = styled(Container)({
-  position: 'relative',
-});
-
-const NewPointsPill = styled('div')({
+const ScorePill = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: `58px`,
   height: '22px',
   borderRadius: '23px',
-  background: 'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)',
-});
-
-const ScorePill = styled(NewPointsPill)({
-  position: 'absolute',
-  right: '0',
-  background: 'linear-gradient(190deg, #73B6F0 0%, #057BE3 80%)',
+  background: `${theme.palette.primary.highlightGradient}`,
   zIndex: 1,
-});
+}));
+
+const NewPointsPill = styled(ScorePill)(({ theme }) => ({
+  background: `${theme.palette.primary.altHighlightGradient}`,
+  zIndex: 2,
+}));
 
 const NewPointsAnimation = styled('div')({
   animation: `newScoreUp 1000ms cubic-bezier(0.4, 0, 0.2, 1)`,
   opacity: 0,
   position: 'absolute',
-  right: '0',
   zIndex: 2,
   '@keyframes newScoreUp': {
     '0%': {
@@ -72,7 +66,7 @@ export default function ScoreIndicator({
   }, [newPoints]);
 
   return (
-    <ScoreContainer>
+    <Box>
       <NewPointsAnimation id="newPointsAnimation">
         {newPoints && newPoints > 0 ? (
           <NewPointsPill>
@@ -85,6 +79,6 @@ export default function ScoreIndicator({
           {isNullOrUndefined(currentScore) ? 0 : currentScore}
         </Typography>
       </ScorePill>
-    </ScoreContainer>
+    </Box>
   );
 }

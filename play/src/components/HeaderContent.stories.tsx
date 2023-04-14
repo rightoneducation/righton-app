@@ -1,7 +1,9 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import HeaderContent from './HeaderContent';
+import Theme from '../lib/Theme';
 
 export default {
   title: 'Design System/3_Organisms/HeaderContent',
@@ -10,7 +12,11 @@ export default {
 
 const Template: ComponentStory<typeof HeaderContent> =
   function HeaderContentTemplate(args) {
-    return <HeaderContent {...args} />;
+    return (
+      <ThemeProvider theme={Theme}>
+        <HeaderContent {...args} />
+      </ThemeProvider>
+    );
   };
 
 const handleTimerIsFinished = () => {
