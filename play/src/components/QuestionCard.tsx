@@ -5,15 +5,15 @@ import {
   BodyCardContainer,
 } from '../lib/styledcomponents/StyledComponents';
 
-interface CardQuestionProps {
+interface QuestionCardProps {
   questionText: string[];
   imageUrl: string;
 }
 
-export default function CardQuestion({
+export default function QuestionCard({
   questionText,
   imageUrl,
-}: CardQuestionProps) {
+}: QuestionCardProps) {
   return (
     <BodyCard elevation={5}>
       <BodyCardContainer>

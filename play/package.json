@@ -102,6 +102,6 @@
     "styled-components": "^5",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
-  "readme": "ERROR: No README data found!",
+  "readme": "readme.md",
   "_id": "play2@0.1.0"
 }
