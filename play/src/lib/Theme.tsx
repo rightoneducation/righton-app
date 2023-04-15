@@ -6,9 +6,9 @@ const accentColor = '#312759'; // accent (ex purple)
 const backgroundGradient =
   'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))'; // upper header background
   // const radialGradient = 
-  // 'radial-gradient(circle farthest-side, #7D63C8, #312759 100%)';
+  // 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
 const radialGradient = 
-  'radial-gradient(circle farthest-side at 50% 65%, #FFFFFF 25%, #CFCFCF 45%, #000000 80%)';
+'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
@@ -25,7 +25,7 @@ const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 
 // design tokens - breakpoints:
-const xs = 0;
+const xs = 300;
 const sm = 700;
 const md = 900;
 const lg = 1200;
