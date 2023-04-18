@@ -3,16 +3,29 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { PaginationContainer } from '../lib/styledcomponents/StyledComponents';
-import HowToPlay_Phase1Circle from '../img/HowToPlay_Phase1Circle.svg';
-import HowToPlay_Phase2Circle from '../img/HowToPlay_Phase2Circle.svg';
-import HowToPlay_OrangeMonster from '../img/HowToPlay_OrangeMonster.svg';
-import HowToPlay_RedMonster from '../img/HowToPlay_RedMonster.svg';
-import HowToPlay_GreenMonster from '../img/HowToPlay_GreenMonster.svg';
-import HowToPlay_PinkMonster from '../img/HowToPlay_PinkMonster.svg';
-import HowToPlay_PinkMonster2 from '../img/HowToPlay_PinkMonster2.svg';
-import HowToPlay_BlueMonster from '../img/HowToPlay_BlueMonster.svg';
-import HowToPlay1_Screenshot from '../img/HowToPlay1_Screenshot.svg';
+import { JoinGameBackgroundContainer, PaginationContainer } from '../../lib/styledcomponents/StyledComponents';
+import HowToPlay_Phase1Circle from '../../img/HowToPlay_Phase1Circle.svg';
+import HowToPlay_Phase2Circle from '../../img/HowToPlay_Phase2Circle.svg';
+import HowToPlay_OrangeMonster from '../../img/HowToPlay_OrangeMonster.svg';
+import HowToPlay_RedMonster from '../../img/HowToPlay_RedMonster.svg';
+import HowToPlay_GreenMonster from '../../img/HowToPlay_GreenMonster.svg';
+import HowToPlay_PinkMonster from '../../img/HowToPlay_PinkMonster.svg';
+import HowToPlay_PinkMonster2 from '../../img/HowToPlay_PinkMonster2.svg';
+import HowToPlay_BlueMonster from '../../img/HowToPlay_BlueMonster.svg';
+import HowToPlay1_Screenshot from '../../img/HowToPlay1_Screenshot.svg';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+
+const StackContainer = styled(Stack)(({theme}) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: '100%',
+  maxWidth: theme.breakpoints.values.sm,
+  paddingBottom: `${theme.sizing.largePadding}px`,
+})
+);
 
 const HowToPlaySwiper = styled(Swiper)({ // styles for swiper and swiper slides
   width: '100%',
@@ -43,7 +56,8 @@ export default function JoinGame() {
   const theme = useTheme();
 
   return (
-    <>
+    <JoinGameBackgroundContainer>
+    <StackContainer>
     <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px` }}> How to Play! </Typography>
       <Box style={{width: '100%'}}>
         <HowToPlaySwiper modules={[Pagination]} slidesPerView={1} pagination={{
@@ -99,6 +113,7 @@ export default function JoinGame() {
         <PaginationContainer className="swiper-pagination-container" style={{paddingTop: `${theme.sizing.largePadding}px`}} />
       </Box>
       <Typography variant="h4" sx={{color: `${theme.palette.primary.main}`, fontWeight:400, textAlign: 'center', paddingBottom: `${theme.sizing.mediumPadding}px` }}> Waiting for the game to start... </Typography> 
-    </>
+    </StackContainer>
+    </JoinGameBackgroundContainer>
   )
 }

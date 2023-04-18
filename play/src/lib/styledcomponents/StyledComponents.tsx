@@ -95,3 +95,15 @@ export const IntroTextField = styled(TextField)(({ theme}) => ({
     },
   },
 }));
+
+export const JoinGameBackgroundContainer = styled(Stack)(({ theme }) => ({
+  height: '100%',
+  position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
+  width: '100%',
+  background: `${theme.palette.primary.radialGradient} no-repeat`,
+  backgroundSize: `100%`,
+  backgroundPosition: 'center',
+  display: 'flex',
+  alignItems: 'center',
+})
+);

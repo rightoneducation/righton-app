@@ -2,19 +2,19 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { GamePlayButton } from '../lib/styledcomponents/StyledComponents';
-import Icon0 from '../img/MonsterIcon0.svg';
-import Icon1 from '../img/MonsterIcon1.svg';
-import Icon2 from '../img/MonsterIcon2.svg';
-import Icon3 from '../img/MonsterIcon3.svg';
-import Icon4 from '../img/MonsterIcon4.svg';
-import Icon5 from '../img/MonsterIcon5.svg';
-import Monster0 from '../img/Monster0.svg';
-import Monster1 from '../img/Monster1.svg';
-import Monster2 from '../img/Monster2.svg';
-import Monster3 from '../img/Monster3.svg';
-import Monster4 from '../img/Monster4.svg';
-import Monster5 from '../img/Monster5.svg';
+import { GamePlayButton, JoinGameBackgroundContainer } from '../../lib/styledcomponents/StyledComponents';
+import Icon0 from '../../img/MonsterIcon0.svg';
+import Icon1 from '../../img/MonsterIcon1.svg';
+import Icon2 from '../../img/MonsterIcon2.svg';
+import Icon3 from '../../img/MonsterIcon3.svg';
+import Icon4 from '../../img/MonsterIcon4.svg';
+import Icon5 from '../../img/MonsterIcon5.svg';
+import Monster0 from '../../img/Monster0.svg';
+import Monster1 from '../../img/Monster1.svg';
+import Monster2 from '../../img/Monster2.svg';
+import Monster3 from '../../img/Monster3.svg';
+import Monster4 from '../../img/Monster4.svg';
+import Monster5 from '../../img/Monster5.svg';
 
 const StackContainer = styled(Stack)(({theme}) => ({
   display: 'flex',
@@ -86,7 +86,7 @@ const monsterMap: AvatarMap = {
   5: { icon: Icon5, monster: Monster5 },
 };
 
-interface AvatarSelectProps {
+interface SelectAvatarProps {
   selectedAvatar: number | null;
   handleAvatarSelected: (value: number) => void;
   playerFirstName: string;
@@ -94,15 +94,16 @@ interface AvatarSelectProps {
   isMobileDevice: boolean;
 }
 
-export default function AvatarSelect(
+export default function SelectAvatar(
   { selectedAvatar,
   handleAvatarSelected,
   playerFirstName,
   playerLastName,
-  isMobileDevice } : AvatarSelectProps
+  isMobileDevice } : SelectAvatarProps
 ) {
   const theme = useTheme();
   return (
+    <JoinGameBackgroundContainer>
     <StackContainer >
       <Stack spacing={2}>
         <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px` }}> Choose Your Avatar! </Typography>
@@ -123,5 +124,6 @@ export default function AvatarSelect(
         <GamePlayButton> Choose </GamePlayButton>
       </BottomContainer>
     </StackContainer>
+    </JoinGameBackgroundContainer>
   );
 }

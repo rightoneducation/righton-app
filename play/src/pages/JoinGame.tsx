@@ -1,53 +1,18 @@
 import React, { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Grid, Typography } from '@mui/material';
-import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-import { IntroButton, IntroTextField, GamePlayButton, PaginationContainer } from '../lib/styledcomponents/StyledComponents';
 import { AvatarMap } from '../lib/PlayModels';
-import HowToPlay from '../components/HowToPlay';
-import AvatarSelect from '../components/AvatarSelect';
-import Logo from '../img/rightOnLogo.svg';
+import SplashScreen from '../components/joingame/SplashScreen';
+import EnterGameCode from '../components/joingame/EnterGameCode';
+import EnterPlayerName from '../components/joingame/EnterPlayerName';
+import HowToPlay from '../components/joingame/HowToPlay';
+import SelectAvatar from '../components/joingame/SelectAvatar';
 
-import 'swiper/css';
-import 'swiper/css/pagination';
+interface JoinGameProps {
+  joinGamePhase: number;
+}
 
-// interface JoinGameProps {
-
-// }
-
-
-const IntroContainer = styled(Stack)(({ theme }) => ({
-  height: '100%',
-  position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
-  width: '100%',
-  background: `${theme.palette.primary.radialGradient} no-repeat`,
-  backgroundSize: `100%`,
-  backgroundPosition: 'center',
-  display: 'flex',
-  alignItems: 'center',
-})
-);
-
-const StackContainer = styled(Stack)(({theme}) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  maxWidth: theme.breakpoints.values.xs,
-})
-);
-
-const HowToPlayContainer = styled(StackContainer)(({theme}) => ({
-  maxWidth: theme.breakpoints.values.sm,
-}));
-
-
-
-
-
-export default function JoinGame() {
+export default function JoinGame({ joinGamePhase }:JoinGameProps) {
   const theme = useTheme();
   const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [inputError, setInputError] = useState(true);
@@ -61,160 +26,29 @@ export default function JoinGame() {
     setSelectedAvatar(index);
   }
 
+  const handlePlayerFirstNameChange = (newValue: string) => {
+    setPlayerFirstName(newValue);
+  };
 
-  const avatarSelect = true;
+  const handlePlayerLastNameChange = (newValue: string) => {
+    setPlayerLastName(newValue);
+  };
 
-  const IntroScreen = (
-    <>
-      <Typography variant="h2" sx={{weight:700, textAlign: 'center'}}> Unlocking every student`s potential in math!</Typography>
-        <IntroTextField 
-          fullWidth 
-          variant="filled" 
-          InputProps={{ 
-            disableUnderline: true,
-            inputProps: {
-              style: {
-              paddingTop: '9px'
-              }
-            }
-          }} />
-        <IntroButton>
-          <Typography variant="h2" sx={{textAlign: 'center'}}>Join Game</Typography>
-        </IntroButton>
-      </>
-  );
-  
-  const GameCodeScreen = (
-    <>
-    <Box> {/* container here to trim the spacing set by parent stack between text and input, typ */}
-      <Typography variant="h2" sx={{weight:700, textAlign: 'center'}}> Enter Game Code </Typography>
-      <IntroTextField 
-          fullWidth 
-          variant="filled" 
-          autoComplete="off"
-          onChange={(newValue) => {
-            setGameCodeValue(newValue.target.value);
-          }}
-          onFocus = {(newValue) => {
-            if (newValue.target.value === "####") {
-              setGameCodeValue("");
-            }
-          }}
-          value= {gameCodeValue}
-          InputProps={{ 
-            disableUnderline: true,
-            inputProps: {
-              style: {
-              color: (gameCodeValue === "####" ? theme.palette.primary.darkGrey : theme.palette.primary.extraDarkGrey),
-              paddingTop: '9px',
-              textAlign: 'center',
-              fontSize: `${theme.typography.h2.fontSize}px`,
-              }
-            }
-          }} />
-          </Box>
-         <IntroButton>
-          <Typography variant="h2" sx={{textAlign: 'center'}}>Join</Typography>
-        </IntroButton>
-        {inputError ? 
-        <Box>
-          <Typography variant="h2" sx={{weight:700, textAlign: 'center', marginBottom: `${theme.sizing.smallPadding}px`}}> We are unable to join this game. </Typography>
-          <Typography variant="h2" sx={{weight:700, textAlign: 'center'}}> Check the Game Code and try again. </Typography>
-        </Box>
-        :
-        null}
-    </>
-  );
-
-  const PlayerNameScreen = (
-    <>
-    <Box>
-      <Typography variant="h2" sx={{textAlign: 'center'}}> Enter Your Name </Typography>
-      <Grid container spacing = {2} wrap='nowrap'> 
-        <Grid item xs={6}> 
-          <IntroTextField 
-              fullWidth 
-              variant="filled" 
-              autoComplete="off"
-              onChange={(newValue) => {
-                setPlayerFirstName(newValue.target.value);
-              }}
-              onFocus = {(newValue) => {
-                if (newValue.target.value === "First Name") {
-                  setPlayerFirstName("");
-                }
-              }}
-              value= {playerFirstName}
-              InputProps={{ 
-                disableUnderline: true,
-                inputProps: {
-                  style: {
-                  color: (playerFirstName === "First Name" ? theme.palette.primary.darkGrey : theme.palette.primary.extraDarkGrey),
-                  paddingTop: '9px',
-                  textAlign: 'center',
-                  fontSize: `${theme.typography.h2.fontSize}px`,
-                  }
-                }
-                }} />
-            </Grid>
-            <Grid item xs={6}>
-              <IntroTextField 
-              fullWidth 
-              variant="filled" 
-              autoComplete="off"
-              onChange={(newValue) => {
-                setPlayerLastName(newValue.target.value);
-              }}
-              onFocus = {(newValue) => {
-                if (newValue.target.value === "Last Name") {
-                  setPlayerLastName("");
-                }
-              }}
-              value= {playerLastName}
-              InputProps={{ 
-                disableUnderline: true,
-                inputProps: {
-                  style: {
-                  color: (playerLastName === "Last Name" ? theme.palette.primary.darkGrey : theme.palette.primary.extraDarkGrey),
-                  paddingTop: '9px',
-                  textAlign: 'center',
-                  fontSize: `${theme.typography.h2.fontSize}px`,
-                  }
-                }
-              }} />
-            </Grid>
-          </Grid>
-          </Box>
-         <IntroButton>
-          <Typography variant="h2" sx={{textAlign: 'center'}}>Enter</Typography>
-        </IntroButton>
-        {inputError ? 
-        <Box>
-          <Typography variant="h2" sx={{textAlign: 'center', marginBottom: `${theme.sizing.smallPadding}px`}}> Type in both your first and last name to enter the game.  </Typography>
-          <Typography variant="h2" sx={{fontWeight:400, textAlign: 'center'}}> This will be used to identify you only during the game, and will not be stored. </Typography>
-        </Box>
-        :
-        null}
-    </>
-  );
-
-  return (
-
-    <IntroContainer>
-        {!avatarSelect ? 
-          <StackContainer spacing = {5}>
-            <img
-              style = {{width: '214px', height: '118px', paddingTop: `${theme.sizing.extraLargePadding}px`}}
-              src={Logo}
-              alt="Question"
-            />
-            {PlayerNameScreen}
-          </StackContainer>
-        :
-          <StackContainer style={{justifyContent: 'space-between', height: '100%', paddingBottom: `${theme.sizing.largePadding}px`}}>
-            <AvatarSelect selectedAvatar={selectedAvatar} handleAvatarSelected={handleAvatarSelected} playerFirstName={playerFirstName} playerLastName={playerLastName} isMobileDevice={isMobileDevice} />
-          </StackContainer>
-        }
-    </IntroContainer>
-  )
+  const handleGameCodeChange = (newValue: string) => {
+    setGameCodeValue(newValue);
+  };
+ 
+  switch (joinGamePhase) {
+    case 1:
+      return <EnterGameCode gameCodeValue={gameCodeValue} handleGameCodeChange={setGameCodeValue} inputError={inputError} />
+    case 2:
+      return <EnterPlayerName playerFirstName={playerFirstName} playerLastName={playerLastName} handlePlayerFirstNameChange={handlePlayerFirstNameChange} handlePlayerLastNameChange={handlePlayerLastNameChange} inputError={inputError} />
+    case 3:
+      return <SelectAvatar selectedAvatar={selectedAvatar} handleAvatarSelected={handleAvatarSelected} playerFirstName={playerFirstName} playerLastName={playerLastName} isMobileDevice={isMobileDevice} />
+    case 4:
+      return <HowToPlay />
+    case 0:
+    default:
+      return <SplashScreen />
+  }
 }
