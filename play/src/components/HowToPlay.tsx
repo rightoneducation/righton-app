@@ -57,40 +57,40 @@ export default function JoinGame() {
         }}>
           <SwiperSlide>
             <OverlayContainer>
-              <OverLayImage src={HowToPlay_Phase1Circle} alt="monster"  sx={{position: 'absolute', top: '40px', left: '210px', height: '70px', width: '70px'}}/>
-              <OverLayImage src={HowToPlay_OrangeMonster} alt="monster" sx={{position: 'absolute', bottom: '45px', left: '110px', width: '200px', height: 'auto'}}/>
+              <OverLayImage src={HowToPlay_Phase1Circle} alt="monster"  sx={{ top: '40px', left: '210px', height: '70px', width: '70px'}}/>
+              <OverLayImage src={HowToPlay_OrangeMonster} alt="monster" sx={{ bottom: '45px', left: '110px', width: '200px', height: 'auto'}}/>
             </OverlayContainer>
             <ScreenshotImage  src={HowToPlay1_Screenshot} alt="monster" />
             <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px`, width: '250px' }}> Read the multiple-choice question </Typography>
           </SwiperSlide>
           <SwiperSlide>
             <OverlayContainer>
-              <OverLayImage src={HowToPlay_Phase1Circle} alt="monster"  sx={{position: 'absolute', top: '40px', left: '210px', height: '70px', width: '70px'}}/>
-              <OverLayImage src={HowToPlay_RedMonster} alt="monster" sx={{position: 'absolute', bottom: '60px', left: '420px', width: '115px', height: 'auto'}}/>
+              <OverLayImage src={HowToPlay_Phase1Circle} alt="monster"  sx={{ top: '40px', left: '210px', height: '70px', width: '70px'}}/>
+              <OverLayImage src={HowToPlay_RedMonster} alt="monster" sx={{ bottom: '60px', left: '420px', width: '115px', height: 'auto'}}/>
             </OverlayContainer>
             <ScreenshotImage  src={HowToPlay1_Screenshot} alt="monster" />
             <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px`, width: '250px' }}> Gain points by choosing the correct answer... </Typography>
           </SwiperSlide>
           <SwiperSlide>
             <OverlayContainer>
-              <OverLayImage src={HowToPlay_Phase1Circle} alt="monster"  sx={{position: 'absolute', top: '40px', left: '210px', height: '70px', width: '70px'}}/>
-              <OverLayImage src={HowToPlay_GreenMonster} alt="monster" sx={{position: 'absolute', bottom: '80px', left: '180px', width: '90px', height: 'auto', zIndex: -1}}/>
-              <OverLayImage src={HowToPlay_PinkMonster} alt="monster" sx={{position: 'absolute', bottom: '80px', left: '430px', width: '90px', height: 'auto'}}/>
+              <OverLayImage src={HowToPlay_Phase1Circle} alt="monster"  sx={{ top: '40px', left: '210px', height: '70px', width: '70px'}}/>
+              <OverLayImage src={HowToPlay_GreenMonster} alt="monster" sx={{ bottom: '80px', left: '180px', width: '90px', height: 'auto', zIndex: -1}}/>
+              <OverLayImage src={HowToPlay_PinkMonster} alt="monster" sx={{ bottom: '80px', left: '430px', width: '90px', height: 'auto'}}/>
             </OverlayContainer>
             <ScreenshotImage  src={HowToPlay1_Screenshot} alt="monster" />
             <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px`, width: '250px' }}> Read step-by-step solutions </Typography>
           </SwiperSlide>
           <SwiperSlide>
             <OverlayContainer>
-              <OverLayImage src={HowToPlay_Phase2Circle} alt="monster"  sx={{position: 'absolute', top: '40px', left: '210px', height: '70px', width: '70px'}}/>
-              <OverLayImage src={HowToPlay_PinkMonster2} alt="monster" sx={{position: 'absolute', bottom: '90px', left: '400px', width: '90px', height: 'auto'}}/>
+              <OverLayImage src={HowToPlay_Phase2Circle} alt="monster"  sx={{ top: '40px', left: '210px', height: '70px', width: '70px'}}/>
+              <OverLayImage src={HowToPlay_PinkMonster2} alt="monster" sx={{ bottom: '90px', left: '400px', width: '90px', height: 'auto'}}/>
             </OverlayContainer>
             <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
             <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px`, width: '350px' }}> Gain more points by guessing the most popular incorrect answer! </Typography>
           </SwiperSlide>
           <SwiperSlide>
             <OverlayContainer>
-              <OverLayImage src={HowToPlay_BlueMonster} alt="monster" sx={{position: 'absolute', top: '30px', left: '370px', width: '140px', height: 'auto', zIndex: -1}}/>
+              <OverLayImage src={HowToPlay_BlueMonster} alt="monster" sx={{ top: '30px', left: '370px', width: '140px', height: 'auto', zIndex: -1}}/>
             </OverlayContainer>
             <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
             <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px`, width: '350px' }}> Gain more points by guessing the most popular incorrect answer! </Typography>
