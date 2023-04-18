@@ -72,7 +72,7 @@ export const GamePlayDisabled = styled(GamePlayButton)(({ theme }) => ({
   },
 }));
 
-export const IntroTextField = styled(TextField)(({ theme }) => ({
+export const IntroTextField = styled(TextField)(({ theme}) => ({
   '& .MuiFilledInput-root': {
     borderRadius: 4,
     overflow: 'hidden',

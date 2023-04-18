@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import AnswerSelector from './AnswerSelector';
-import AnswerState from '../lib/PlayModels';
+import { AnswerState } from '../lib/PlayModels';
 import Theme from '../lib/Theme';
 
 export default {

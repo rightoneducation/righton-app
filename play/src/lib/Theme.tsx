@@ -25,7 +25,7 @@ const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 
 // design tokens - breakpoints:
-const xs = 300;
+const xs = 400;
 const sm = 700;
 const md = 900;
 const lg = 1200;

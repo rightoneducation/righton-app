@@ -4,7 +4,7 @@ import { Typography, Stack, Box } from '@mui/material';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import AnswerState from '../lib/PlayModels';
+import { AnswerState } from '../lib/PlayModels';
 import {
   BodyCard,
   BodyCardContainer,

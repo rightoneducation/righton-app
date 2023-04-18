@@ -1,7 +1,9 @@
-enum AnswerState {
+export enum AnswerState {
   DEFAULT = 'DEFAULT',
   CORRECT = 'CORRECT',
   SELECTED = 'SELECTED',
 }
 
-export default AnswerState;
+export interface AvatarMap {
+  [key: number]: string;
+}

@@ -4,7 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
-import AnswerState from '../lib/PlayModels';
+import { AnswerState } from '../lib/PlayModels';
 
 type AnswerSelectorProps = {
   isSubmitted: boolean;
