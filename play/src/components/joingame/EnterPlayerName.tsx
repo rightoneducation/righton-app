@@ -50,8 +50,7 @@ export default function EnterPlayerName({
         />
         <PaddedContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {' '}
-            Enter Your Name{' '}
+            Enter Your Name
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
@@ -130,16 +129,14 @@ export default function EnterPlayerName({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              {' '}
-              Type in both your first and last name to enter the game.{' '}
+              Type in both your first and last name to enter the game.
             </Typography>
             <Typography
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
-              {' '}
               This will be used to identify you only during the game, and will
-              not be stored.{' '}
+              not be stored.
             </Typography>
           </PaddedContainer>
         ) : null}

@@ -6,12 +6,13 @@ import EnterGameCode from '../components/joingame/EnterGameCode';
 import EnterPlayerName from '../components/joingame/EnterPlayerName';
 import HowToPlay from '../components/joingame/HowToPlay';
 import SelectAvatar from '../components/joingame/SelectAvatar';
+import { JoinGameState } from '../lib/PlayModels';
 
 interface JoinGameProps {
-  joinGamePhase: number;
+  joinGameState: JoinGameState;
 }
 
-export default function JoinGame({ joinGamePhase }: JoinGameProps) {
+export default function JoinGame({ joinGameState }: JoinGameProps) {
   const theme = useTheme();
   const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [inputError, setInputError] = useState(true); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -21,8 +22,8 @@ export default function JoinGame({ joinGamePhase }: JoinGameProps) {
   const [avatar, setAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
 
-  switch (joinGamePhase) {
-    case 1:
+  switch (joinGameState) {
+    case JoinGameState.ENTERGAMECODE:
       return (
         <EnterGameCode
           gameCodeValue={gameCodeValue}
@@ -30,7 +31,7 @@ export default function JoinGame({ joinGamePhase }: JoinGameProps) {
           inputError={inputError}
         />
       );
-    case 2:
+    case JoinGameState.ENTERNAME:
       return (
         <EnterPlayerName
           playerFirstName={playerFirstName}
@@ -40,7 +41,7 @@ export default function JoinGame({ joinGamePhase }: JoinGameProps) {
           inputError={inputError}
         />
       );
-    case 3:
+    case JoinGameState.SELECTAVATAR:
       return (
         <SelectAvatar
           selectedAvatar={selectedAvatar}
@@ -50,9 +51,9 @@ export default function JoinGame({ joinGamePhase }: JoinGameProps) {
           isMobileDevice={isMobileDevice}
         />
       );
-    case 4:
+    case JoinGameState.HOWTOPLAY:
       return <HowToPlay />;
-    case 0:
+    case JoinGameState.SPLASH:
     default:
       return <SplashScreen />;
   }

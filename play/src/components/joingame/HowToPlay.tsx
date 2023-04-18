@@ -68,8 +68,7 @@ export default function JoinGame() {
             paddingTop: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          {' '}
-          How to Play!{' '}
+          How to Play!
         </Typography>
         <Box style={{ width: '100%' }}>
           <HowToPlaySwiper
@@ -117,8 +116,7 @@ export default function JoinGame() {
                   width: '250px',
                 }}
               >
-                {' '}
-                Read the multiple-choice question{' '}
+                Read the multiple-choice question
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
@@ -153,8 +151,7 @@ export default function JoinGame() {
                   width: '250px',
                 }}
               >
-                {' '}
-                Gain points by choosing the correct answer...{' '}
+                Gain points by choosing the correct answer...
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
@@ -200,8 +197,7 @@ export default function JoinGame() {
                   width: '250px',
                 }}
               >
-                {' '}
-                Read step-by-step solutions{' '}
+                Read step-by-step solutions
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
@@ -236,8 +232,7 @@ export default function JoinGame() {
                   width: '350px',
                 }}
               >
-                {' '}
-                Gain more points by guessing the most popular incorrect answer!{' '}
+                Gain more points by guessing the most popular incorrect answer!
               </Typography>
             </SwiperSlide>
             <SwiperSlide>
@@ -263,8 +258,7 @@ export default function JoinGame() {
                   width: '350px',
                 }}
               >
-                {' '}
-                Gain more points by guessing the most popular incorrect answer!{' '}
+                Gain more points by guessing the most popular incorrect answer!
               </Typography>
             </SwiperSlide>
           </HowToPlaySwiper>
@@ -282,8 +276,7 @@ export default function JoinGame() {
             paddingBottom: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          {' '}
-          Waiting for the game to start...{' '}
+          Waiting for the game to start...
         </Typography>
       </StackContainer>
     </JoinGameBackgroundContainer>

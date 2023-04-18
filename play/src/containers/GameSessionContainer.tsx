@@ -7,6 +7,7 @@ import {
 import MockGameSession from '../mock/MockGameSession.json';
 import GameInProgress from '../pages/GameInProgress'; // eslint-disable-line @typescript-eslint/no-unused-vars
 import JoinGame from '../pages/JoinGame';
+import { JoinGameState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
   const [gameSession, setGameSession] = useState(  // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -15,10 +16,30 @@ export default function GameSessionContainer() {
     ) as IGameSession
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [joinGamePhase, setjoinGamePhase] = useState<number>(0);
+  const [joinGameState, setjoinGameState] = useState<JoinGameState>(JoinGameState.SPLASH);
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setjoinGamePhase(parseInt(event.target.value, 10));
+    const value = Number(event.target.value);
+    switch (value) {
+      case 0:
+        setjoinGameState(JoinGameState.SPLASH);
+        break;
+      case 1:
+        setjoinGameState(JoinGameState.ENTERGAMECODE);
+        break;
+      case 2:
+        setjoinGameState(JoinGameState.ENTERNAME);
+        break;
+      case 3:
+        setjoinGameState(JoinGameState.SELECTAVATAR);
+        break;
+      case 4:
+        setjoinGameState(JoinGameState.HOWTOPLAY);
+        break;
+      default:
+        // Handle invalid value here
+        break;
+    }
   };
 
   return (
@@ -34,41 +55,41 @@ export default function GameSessionContainer() {
             type="radio"
             name="option"
             value="0"
-            checked={joinGamePhase === 0}
+            checked={joinGameState === JoinGameState.SPLASH}
             onChange={handleOptionChange}
           />
           <input
             type="radio"
             name="option"
             value="1"
-            checked={joinGamePhase === 1}
+            checked={joinGameState === JoinGameState.ENTERGAMECODE}
             onChange={handleOptionChange}
           />
           <input
             type="radio"
             name="option"
             value="2"
-            checked={joinGamePhase === 2}
+            checked={joinGameState === JoinGameState.ENTERNAME}
             onChange={handleOptionChange}
           />
           <input
             type="radio"
             name="option"
             value="3"
-            checked={joinGamePhase === 3}
+            checked={joinGameState === JoinGameState.SELECTAVATAR}
             onChange={handleOptionChange}
           />
           <input
             type="radio"
             name="option"
             value="4"
-            checked={joinGamePhase === 4}
+            checked={joinGameState === JoinGameState.HOWTOPLAY}
             onChange={handleOptionChange}
           />
         </div>
       </div>
 
-      <JoinGame joinGamePhase={joinGamePhase} />
+      <JoinGame joinGameState={joinGameState} />
     </>
   );
 }

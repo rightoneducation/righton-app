@@ -29,7 +29,6 @@ export default function SplashScreen() {
           alt="Question"
         />
         <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-          {' '}
           Unlocking every student`s potential in math!
         </Typography>
         <IntroButton>

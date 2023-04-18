@@ -45,11 +45,9 @@ export default function EnterGameCode({
           alt="Question"
         />
         <Box>
-          {' '}
           {/* container here to trim the spacing set by parent stack between text and input, typ */}
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-            {' '}
-            Enter Game Code{' '}
+            Enter Game Code
           </Typography>
           <IntroTextField
             fullWidth
@@ -95,12 +93,10 @@ export default function EnterGameCode({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              {' '}
-              We are unable to join this game.{' '}
+              We are unable to join this game.
             </Typography>
             <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-              {' '}
-              Check the Game Code and try again.{' '}
+              Check the Game Code and try again.
             </Typography>
           </PaddedContainer>
         ) : null}
