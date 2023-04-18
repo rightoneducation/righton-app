@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Container, Box, Grid, Typography, Button  } from '@mui/material';
-import { IntroButton, IntroTextField, GamePlayButton } from '../lib/styledcomponents/StyledComponents';
+import { Pagination } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { v4 as uuidv4 } from 'uuid';
+import { IntroButton, IntroTextField, GamePlayButton, PaginationContainer } from '../lib/styledcomponents/StyledComponents';
 import { AvatarMap } from '../lib/PlayModels';
 import Logo from '../img/rightOnLogo.svg';
 import Icon0 from '../img/MonsterIcon0.svg';
@@ -60,13 +64,13 @@ const Avatar = styled('img')({
 });
 
 const Monster = styled('img')({
-  width: '300px',
+  width: '250px',
   height: 'auto',
-  objectFit: 'contain',
 });
 
 export default function JoinGame() {
   const theme = useTheme();
+  const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [inputError, setInputError] = useState(true);
   const [gameCodeValue, setGameCodeValue] = useState("####");
   const [playerFirstName, setPlayerFirstName] = useState("First Name");
@@ -229,21 +233,56 @@ export default function JoinGame() {
   
   const avatarSelectScreen = (
     <>
-      <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px` }}> Choose Your Avatar! </Typography>
-      <GridContainer> 
-        { Object.keys(monsterMap).map((value, index) => (
-          <Box sx={{height: '118px', width: '98px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
-            <Avatar src={monsterMap[index].icon} onClick={() => {setSelectedAvatar(index)}} alt="avatar" sx={{ borderWidth: (index === selectedAvatar) ? '6px' : '0px'}}/>
-          </Box>
-        ))
-       }
-      </GridContainer>
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'flex-end', height: '300px'}}>
-        <Monster src={monsterMap[selectedAvatar || 0].monster} alt="monster" />
-      </div>
-      <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px` }}> {`${playerFirstName} ${playerLastName}`} </Typography>
-      <GamePlayButton sx={{marginBottom: `${theme.sizing.largePadding}`}}> Choose </GamePlayButton>
+      <Stack spacing={2}>
+        <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px` }}> Choose Your Avatar! </Typography>
+        <GridContainer> 
+          { Object.keys(monsterMap).map((value, index) => (
+            <Box key={uuidv4()} sx={{height: '118px', width: '98px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
+              <Avatar src={monsterMap[index].icon} onClick={() => {setSelectedAvatar(index)}} alt="avatar" sx={{ borderWidth: (index === selectedAvatar) ? '6px' : '0px'}}/>
+            </Box>
+          ))
+        }
+        </GridContainer>
+      </Stack>
+      <Box style={{display: 'flex', justifyContent: 'center', alignItems: 'flex-end', padding: 0, minHeight: '270px'}}> 
+        <Monster src={monsterMap[selectedAvatar || 0].monster} alt="monster" sx={{width: isMobileDevice? '200px' : '250px'}}/>
+      </Box>
+      <Box marginBottom={`${theme.sizing.mediumPadding}px`} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}>
+        <Typography variant="h2" sx={{textAlign: 'center'}}> {`${playerFirstName} ${playerLastName}`} </Typography>
+        <GamePlayButton> Choose </GamePlayButton>
+      </Box>
     </>
+  );
+
+  const howToPlayScreen = (
+    <>
+      <Typography variant="h2" sx={{textAlign: 'center', paddingTop: `${theme.sizing.mediumPadding}px` }}> How to Play! </Typography>
+      <Swiper
+        modules={[Pagination]}
+        spaceBetween={24}
+        centeredSlides
+        slidesPerView="auto"
+        pagination={{
+          el: '.swiper-pagination-container',
+          bulletClass: 'swiper-pagination-bullet',
+          bulletActiveClass: 'swiper-pagination-bullet-active',
+          clickable: true,
+          renderBullet(index, className) {
+            return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+          },
+        }}
+        style={{ height: '100%' }}
+      >
+        <SwiperSlide style={{ height: '100%'}}>
+            sup
+        </SwiperSlide>
+        <SwiperSlide style={{ height: '100%'}}>
+          sup
+        </SwiperSlide>
+        <PaginationContainer className="swiper-pagination-container" />
+      </Swiper>
+      <Typography variant="h4" sx={{color: `${theme.palette.primary.main}`, fontWeight:400, textAlign: 'center', paddingBottom: `${theme.sizing.mediumPadding}px` }}> Waiting for the game to start... </Typography>
+    </> 
   );
 
   return (
@@ -259,11 +298,10 @@ export default function JoinGame() {
             {PlayerNameScreen}
           </StackContainer>
         :
-          <StackContainer sx={{justifyContent: 'space-between', height: '100%'}}>
+          <StackContainer sx={{justifyContent: 'space-between', height: '100%', paddingBottom: `${theme.sizing.largePadding}px`}}>
             {avatarSelectScreen}
           </StackContainer>
         }
-   
     </IntroContainer>
   )
 }
