@@ -23,7 +23,6 @@ export const PaginationContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: theme.palette.primary.main,
   padding: '8px',
   '--swiper-pagination-color': `${theme.palette.primary.highlightGradient}`,
   '--swiper-pagination-bullet-inactive-color': `${theme.palette.primary.darkGrey}`,
