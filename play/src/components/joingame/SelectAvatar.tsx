@@ -68,8 +68,8 @@ const Icon = styled('img', {
   borderRadius: '20px',
   borderColor: 'white',
   borderStyle: 'solid',
-  animation: isSelected ? `bounceAnimation 300ms` : 'none',
-  '@keyframes bounceAnimation': {
+  animation: isSelected ? `scaleAnimation 300ms` : 'none',
+  '@keyframes scaleAnimation': {
     '0%': {
       opacity: 0,
       transform: 'scale(1)',
