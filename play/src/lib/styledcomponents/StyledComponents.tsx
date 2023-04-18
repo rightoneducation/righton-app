@@ -1,4 +1,4 @@
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Paper, Stack, Container, Button, TextField } from '@mui/material';
 
 // card for question and answer
@@ -33,7 +33,7 @@ export const PaginationContainer = styled(Container)(({ theme }) => ({
 }));
 
 // intro button
-export const IntroButton = styled(Button)(({ theme }) => ({
+export const IntroButton = styled(Button)({
   width: '194.85px', // per figma
   height: '50px',
   borderRadius: '34px',
@@ -43,12 +43,12 @@ export const IntroButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     background: `linear-gradient(90deg, #FC1047 0%, #FC2468 100%)`,
   },
-}));
+});
 
-export const IntroDisabled = styled(IntroButton)(({ theme }) => ({
+export const IntroDisabled = styled(IntroButton)({
   opacity: '0.5',
   boxShadow: 'none',
-}));
+});
 
 // gameplay button
 export const GamePlayButton = styled(Button)(({ theme }) => ({
@@ -71,7 +71,7 @@ export const GamePlayDisabled = styled(GamePlayButton)(({ theme }) => ({
   },
 }));
 
-export const IntroTextField = styled(TextField)(({ theme}) => ({
+export const IntroTextField = styled(TextField)(({ theme }) => ({
   '& .MuiFilledInput-root': {
     borderRadius: 4,
     overflow: 'hidden',
@@ -105,5 +105,4 @@ export const JoinGameBackgroundContainer = styled(Stack)(({ theme }) => ({
   backgroundPosition: 'center',
   display: 'flex',
   alignItems: 'center',
-})
-);
+}));

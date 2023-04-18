@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { GamePlayButton, GamePlayDisabled } from '../lib/styledcomponents/StyledComponents';
-import { styled } from '@mui/material/styles';
-
-
+import { Typography } from '@mui/material';
+import {
+  GamePlayButton,
+  GamePlayDisabled,
+} from '../lib/styledcomponents/StyledComponents';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;

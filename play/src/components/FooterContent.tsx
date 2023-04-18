@@ -42,8 +42,6 @@ interface HeaderProps {
   score: number | null;
 }
 
-
-
 export default function Header({
   avatar,
   teamName,
