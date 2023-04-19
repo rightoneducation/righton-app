@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SplashScreen from '../components/joingame/SplashScreen';
+import EnterGameCode from '../components/joingame/EnterGameCode';
 import { JoinGameState } from '../lib/PlayModels';
 
 interface JoinGameProps {
@@ -19,6 +20,14 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
 
   switch (joinGameState) {
+    case JoinGameState.ENTERGAMECODE:
+      return (
+        <EnterGameCode
+          gameCodeValue={gameCodeValue}
+          handleGameCodeChange={setGameCodeValue}
+          inputError={inputError}
+        />
+      );
     case JoinGameState.SPLASH:
     default:
       return <SplashScreen />;

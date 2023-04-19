@@ -71,6 +71,31 @@ export const GamePlayDisabled = styled(GamePlayButton)(({ theme }) => ({
   },
 }));
 
+export const IntroTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiFilledInput-root': {
+    borderRadius: 4,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: 'white',
+    border: `2px solid ${theme.palette.primary.darkGrey}`,
+    width: 'auto',
+    transition: theme.transitions.create([
+      'border-color',
+      'background-color',
+      'box-shadow',
+    ]),
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+    '&.Mui-focused': {
+      border: `2px solid ${theme.palette.primary.darkGrey}`,
+      outline: `2px solid ${theme.palette.primary.extraDarkGrey}`,
+      outlineOffset: '1px',
+      backgroundColor: 'white',
+    },
+  },
+}));
+
 export const JoinGameBackgroundContainer = styled(Stack)(({ theme }) => ({
   height: '100%',
   position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
