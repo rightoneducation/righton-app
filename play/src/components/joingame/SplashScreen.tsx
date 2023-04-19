@@ -1,24 +1,46 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Box, Button, Typography } from '@mui/material';
 import {
   IntroButton,
   JoinGameBackgroundContainer,
 } from '../../lib/styledcomponents/StyledComponents';
+import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
+
+const HeroContainer = styled(Box)({
+  width: '100%',
+  height: '100%',
+  backgroundImage: `url(${MagicHatHero})`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'top center',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+});
 
 const StackContainer = styled(Stack)(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'center',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
   alignItems: 'center',
+  height: '100%',
   maxWidth: theme.breakpoints.values.xs,
 }));
+
+const BottomBox = styled(Box)(({ theme }) => ({
+  paddingBottom: `${theme.sizing.mediumPadding}px`,
+})
+);
 
 export default function SplashScreen() {
   const theme = useTheme();
   return (
+
     <JoinGameBackgroundContainer>
+        <HeroContainer>
       <StackContainer spacing={5}>
+        <Stack sx={{alignItems: 'center'}} spacing={2}>
         <img
           style={{
             width: '214px',
@@ -28,15 +50,23 @@ export default function SplashScreen() {
           src={Logo}
           alt="Question"
         />
-        <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
+        <Typography variant="h2" sx={{ weight: 700, textAlign: 'center', paddingLeft: `${theme.sizing.mediumPadding}px`, paddingRight: `${theme.sizing.mediumPadding}px`  }}>
           Unlocking every student`s potential in math!
         </Typography>
-        <IntroButton>
+        </Stack>
+        <BottomBox>
+        <IntroButton style={{ 
+          background: `${theme.palette.primary.highlightGradient}`,
+          boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
+          }}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Join Game
           </Typography>
         </IntroButton>
+        </BottomBox>
       </StackContainer>
+      </HeroContainer>
     </JoinGameBackgroundContainer>
+
   );
 }
