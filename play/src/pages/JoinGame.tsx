@@ -5,6 +5,7 @@ import SplashScreen from '../components/joingame/SplashScreen';
 import EnterGameCode from '../components/joingame/EnterGameCode';
 import EnterPlayerName from '../components/joingame/EnterPlayerName';
 import SelectAvatar from '../components/joingame/SelectAvatar';
+import HowToPlay from '../components/joingame/HowToPlay';
 import { JoinGameState } from '../lib/PlayModels';
 
 interface JoinGameProps {
@@ -22,6 +23,8 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
 
   switch (joinGameState) {
+    case JoinGameState.HOWTOPLAY:
+      return <HowToPlay />;
     case JoinGameState.SELECTAVATAR:
       return (
         <SelectAvatar
