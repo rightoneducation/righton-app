@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SplashScreen from '../components/joingame/SplashScreen';
 import EnterGameCode from '../components/joingame/EnterGameCode';
+import EnterPlayerName from '../components/joingame/EnterPlayerName';
 import { JoinGameState } from '../lib/PlayModels';
 
 interface JoinGameProps {
@@ -20,6 +21,16 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
 
   switch (joinGameState) {
+    case JoinGameState.ENTERNAME:
+      return (
+        <EnterPlayerName
+          playerFirstName={playerFirstName}
+          playerLastName={playerLastName}
+          handlePlayerFirstNameChange={setPlayerFirstName}
+          handlePlayerLastNameChange={setPlayerLastName}
+          inputError={inputError}
+        />
+      );
     case JoinGameState.ENTERGAMECODE:
       return (
         <EnterGameCode
