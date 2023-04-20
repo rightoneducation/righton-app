@@ -114,11 +114,11 @@ export default function SelectAvatar({
             ))}
           </GridContainer>
         </Stack>
-        <MonsterContainer sx={{ height: isMobileDevice ? '250px' : '300px' }}>
+        <MonsterContainer sx={{ minHeight: isMobileDevice ? `30vh` : '300px' }}>
           <Monster
             src={monsterMap[selectedAvatar || 0].monster}
             alt="monster"
-            sx={{ width: isMobileDevice ? '200px' : '250px' }}
+            sx={{ width: isMobileDevice ? '25vh' : '250px', height: 'auto' }}
           />
         </MonsterContainer>
         <BottomContainer>
