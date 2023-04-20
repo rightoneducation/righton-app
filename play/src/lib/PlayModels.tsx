@@ -18,7 +18,7 @@ export enum AnswerState {
 }
 
 export enum JoinGameState {
-  SPLASH = 'SPLASH',
+  SPLASHSCREEN = 'SPLASHSCREEN',
   ENTERGAMECODE = 'ENTERGAMECODE',
   ENTERNAME = 'ENTERNAME',
   SELECTAVATAR = 'SELECTAVATAR',

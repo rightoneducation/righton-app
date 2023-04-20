@@ -53,7 +53,7 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
           inputError={inputError}
         />
       );
-    case JoinGameState.SPLASH:
+    case JoinGameState.SPLASHSCREEN:
     default:
       return <SplashScreen />;
   }
