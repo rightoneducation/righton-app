@@ -9,13 +9,19 @@ import {
 } from '../../lib/styledcomponents/StyledComponents';
 import { monsterMap } from '../../lib/PlayModels';
 
-const StackContainer = styled(Stack)(({ theme }) => ({
+// stack container for select avatar screen, detect mobile device to bump up padding
+interface StackContainerProps {
+  isMobileDevice: boolean;
+}
+
+const StackContainer = styled(Stack, {
+  shouldForwardProp: (prop) => prop !== 'isMobileDevice',
+})<StackContainerProps>(({ isMobileDevice, theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  height: '100%',
-  maxWidth: theme.breakpoints.values.xs,
-  paddingBottom: `${theme.sizing.largePadding}px`,
+  minHeight: `100%`,
+  marginBottom: '40px',
 }));
 
 const GridContainer = styled('div')(({ theme }) => ({
@@ -35,16 +41,25 @@ const AvatarIconContainer = styled(Box)({
   borderRadius: '20px',
 });
 
-const MonsterContainer = styled(Box)({
+interface MonsterContainerProps {
+  isMobileDevice: boolean;
+}
+
+const MonsterContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isMobileDevice',
+})<MonsterContainerProps>(({ isMobileDevice, theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-end',
-  padding: 0,
-});
+  minHeight: '100px',
+  height: isMobileDevice ? '25%' : '40%',
+  paddingTop: `${theme.sizing.smallPadding}px`,
+})
+);
 
-const Monster = styled('img')({
-  width: '250px',
-  height: 'auto',
+const Monster = styled('img')({ 
+  height: '100%',
+  width: 'auto',
   animation: `none`,
   '@keyframes bounceAnimation': {
     '0%': {
@@ -62,12 +77,14 @@ const Monster = styled('img')({
   },
 });
 
-const BottomContainer = styled(Box)({
+const BottomContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  paddingBottom: `${theme.sizing.largePadding}px`,
   gap: 12,
-});
+})
+)
 
 interface SelectAvatarProps {
   selectedAvatar: number | null;
@@ -87,9 +104,9 @@ export default function SelectAvatar({
   const theme = useTheme();
 
   return (
-    <JoinGameBackgroundContainer>
-      <StackContainer>
-        <Stack spacing={2}>
+    <JoinGameBackgroundContainer >
+      <StackContainer isMobileDevice={isMobileDevice} >
+        <Stack spacing={2} >
           <Typography
             variant="h2"
             sx={{
@@ -114,14 +131,13 @@ export default function SelectAvatar({
             ))}
           </GridContainer>
         </Stack>
-        <MonsterContainer sx={{ minHeight: isMobileDevice ? `30vh` : '300px' }}>
+        <MonsterContainer isMobileDevice={isMobileDevice}>
           <Monster
             src={monsterMap[selectedAvatar || 0].monster}
             alt="monster"
-            sx={{ width: isMobileDevice ? '25vh' : '250px', height: 'auto' }}
           />
         </MonsterContainer>
-        <BottomContainer>
+        <BottomContainer >
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${playerFirstName} ${playerLastName}`}
           </Typography>

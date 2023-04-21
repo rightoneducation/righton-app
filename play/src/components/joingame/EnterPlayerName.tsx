@@ -9,8 +9,11 @@ import {
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
+  position: 'fixed',
+  height: '100%',
+  top: 0,
   display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   maxWidth: theme.breakpoints.values.xs,
 }));
@@ -25,6 +28,7 @@ interface EnterPlayerNameProps {
   playerLastName: string;
   handlePlayerFirstNameChange: (newValue: string) => void;
   handlePlayerLastNameChange: (newValue: string) => void;
+  isMobileDevice: boolean;
   inputError: boolean;
 }
 
@@ -33,12 +37,15 @@ export default function EnterPlayerName({
   playerLastName,
   handlePlayerFirstNameChange,
   handlePlayerLastNameChange,
+  isMobileDevice,
   inputError,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
+
   return (
     <JoinGameBackgroundContainer>
-      <StackContainer spacing={5}>
+      
+      <StackContainer spacing={isMobileDevice ? 2 : 5}>
         <img
           style={{
             width: '214px',

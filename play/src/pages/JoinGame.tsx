@@ -42,6 +42,7 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
           playerLastName={playerLastName}
           handlePlayerFirstNameChange={setPlayerFirstName}
           handlePlayerLastNameChange={setPlayerLastName}
+          isMobileDevice={isMobileDevice}
           inputError={inputError}
         />
       );
