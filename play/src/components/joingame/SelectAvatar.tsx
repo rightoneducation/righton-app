@@ -89,16 +89,16 @@ const BottomContainer = styled(Box)(({ theme }) => ({
 interface SelectAvatarProps {
   selectedAvatar: number | null;
   handleAvatarSelected: (value: number) => void;
-  playerFirstName: string;
-  playerLastName: string;
+  firstNameValue: string;
+  lastNameValue: string;
   isMobileDevice: boolean;
 }
 
 export default function SelectAvatar({
   selectedAvatar,
   handleAvatarSelected,
-  playerFirstName,
-  playerLastName,
+  firstNameValue,
+  lastNameValue,
   isMobileDevice,
 }: SelectAvatarProps) {
   const theme = useTheme();
@@ -139,7 +139,7 @@ export default function SelectAvatar({
         </MonsterContainer>
         <BottomContainer >
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {`${playerFirstName} ${playerLastName}`}
+            {`${firstNameValue} ${lastNameValue}`}
           </Typography>
           <GamePlayButton> Choose </GamePlayButton>
         </BottomContainer>

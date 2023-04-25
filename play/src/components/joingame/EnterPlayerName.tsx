@@ -24,19 +24,19 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterPlayerNameProps {
-  playerFirstName: string;
-  playerLastName: string;
-  handlePlayerFirstNameChange: (newValue: string) => void;
-  handlePlayerLastNameChange: (newValue: string) => void;
+  firstNameValue: string;
+  setFirstNameValue: (newValue: string) => void;
+  lastNameValue: string;
+  setLastNameValue: (newValue: string) => void;
   isMobileDevice: boolean;
   inputError: boolean;
 }
 
 export default function EnterPlayerName({
-  playerFirstName,
-  playerLastName,
-  handlePlayerFirstNameChange,
-  handlePlayerLastNameChange,
+  firstNameValue,
+  setFirstNameValue,
+  lastNameValue,
+  setLastNameValue,
   isMobileDevice,
   inputError,
 }: EnterPlayerNameProps) {
@@ -61,74 +61,48 @@ export default function EnterPlayerName({
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
-              <IntroTextField
-                fullWidth
-                variant="filled"
-                autoComplete="off"
-                onChange={(newValue) => {
-                  handlePlayerFirstNameChange(newValue.target.value);
-                }}
-                onFocus={(newValue) => {
-                  if (newValue.target.value === 'First Name') {
-                    handlePlayerFirstNameChange('');
-                  }
-                }}
-                onBlur={(newValue) => {
-                  if (newValue.target.value === '') {
-                    handlePlayerFirstNameChange('First Name');
-                  }
-                }}
-                value={playerFirstName}
-                InputProps={{
-                  disableUnderline: true,
-                  inputProps: {
-                    style: {
-                      color:
-                        playerFirstName === 'First Name'
-                          ? theme.palette.primary.darkGrey
-                          : theme.palette.primary.darkBlue,
-                      paddingTop: '9px',
-                      textAlign: 'center',
-                      fontSize: `${theme.typography.h2.fontSize}px`,
-                    },
-                  },
-                }}
-              />
+            <IntroTextField
+            fullWidth
+            variant="filled"
+            autoComplete="off"
+            placeholder="First Name"
+            onChange={(event) =>  setFirstNameValue(event.target.value)}
+            value={firstNameValue}
+            InputProps={{
+              disableUnderline: true,
+              style: {color: theme.palette.primary.extraDarkGrey},
+              inputProps: {
+                style: {
+                  color: theme.palette.primary.darkGrey,
+                  paddingTop: '9px',
+                  textAlign: 'center',
+                  fontSize: `${theme.typography.h2.fontSize}px`,
+                },
+              },
+            }}
+          />
             </Grid>
             <Grid item xs={6}>
-              <IntroTextField
-                fullWidth
-                variant="filled"
-                autoComplete="off"
-                onChange={(newValue) => {
-                  handlePlayerLastNameChange(newValue.target.value);
-                }}
-                onFocus={(newValue) => {
-                  if (newValue.target.value === 'Last Name') {
-                    handlePlayerLastNameChange('');
-                  }
-                }}
-                onBlur={(newValue) => {
-                  if (newValue.target.value === '') {
-                    handlePlayerLastNameChange('Last Name');
-                  }
-                }}
-                value={playerLastName}
-                InputProps={{
-                  disableUnderline: true,
-                  inputProps: {
-                    style: {
-                      color:
-                        playerLastName === 'Last Name'
-                          ? theme.palette.primary.darkGrey
-                          : theme.palette.primary.darkBlue,
-                      paddingTop: '9px',
-                      textAlign: 'center',
-                      fontSize: `${theme.typography.h2.fontSize}px`,
-                    },
-                  },
-                }}
-              />
+            <IntroTextField
+            fullWidth
+            variant="filled"
+            autoComplete="off"
+            placeholder="Last Name"
+            onChange={(event) =>  setLastNameValue(event.target.value)}
+            value={lastNameValue}
+            InputProps={{
+              disableUnderline: true,
+              style: {color: theme.palette.primary.extraDarkGrey},
+              inputProps: {
+                style: {
+                  color: theme.palette.primary.darkGrey,
+                  paddingTop: '9px',
+                  textAlign: 'center',
+                  fontSize: `${theme.typography.h2.fontSize}px`,
+                },
+              },
+            }}
+          />
             </Grid>
           </Grid>
         </PaddedContainer>

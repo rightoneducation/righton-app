@@ -17,8 +17,8 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
   const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [inputError, setInputError] = useState(true); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [gameCodeValue, setGameCodeValue] = useState('####');
-  const [playerFirstName, setPlayerFirstName] = useState('First Name');
-  const [playerLastName, setPlayerLastName] = useState('Last Name');
+  const [firstNameValue, setFirstNameValue] = useState('');
+  const [lastNameValue, setLastNameValue] = useState('');
   const [avatar, setAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
 
@@ -30,18 +30,18 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
         <SelectAvatar
           selectedAvatar={selectedAvatar}
           handleAvatarSelected={setSelectedAvatar}
-          playerFirstName={playerFirstName}
-          playerLastName={playerLastName}
+          firstNameValue={firstNameValue}
+          lastNameValue={lastNameValue}
           isMobileDevice={isMobileDevice}
         />
       );
     case JoinGameState.ENTERNAME:
       return (
         <EnterPlayerName
-          playerFirstName={playerFirstName}
-          playerLastName={playerLastName}
-          handlePlayerFirstNameChange={setPlayerFirstName}
-          handlePlayerLastNameChange={setPlayerLastName}
+          firstNameValue={firstNameValue}
+          lastNameValue={lastNameValue}
+          setFirstNameValue={setFirstNameValue}
+          setLastNameValue={setLastNameValue}
           isMobileDevice={isMobileDevice}
           inputError={inputError}
         />
