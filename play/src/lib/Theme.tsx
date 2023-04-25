@@ -75,6 +75,7 @@ declare module '@mui/material/styles' {
     red: string;
     green: string;
     blue: string;
+    darkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
     lightGrey: string;
@@ -90,6 +91,7 @@ declare module '@mui/material/styles' {
     red?: string;
     green?: string;
     blue?: string;
+    darkBlue?: string;
     purple?: string;
     extraDarkGrey?: string;
     darkGrey?: string;
@@ -122,6 +124,7 @@ export default createTheme({
       red: redColor,
       green: greenColor,
       blue: blueColor,
+      darkBlue: secondaryTextColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
