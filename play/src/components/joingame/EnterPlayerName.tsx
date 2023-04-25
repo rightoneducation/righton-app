@@ -73,6 +73,11 @@ export default function EnterPlayerName({
                     handlePlayerFirstNameChange('');
                   }
                 }}
+                onBlur={(newValue) => {
+                  if (newValue.target.value === '') {
+                    handlePlayerFirstNameChange('First Name');
+                  }
+                }}
                 value={playerFirstName}
                 InputProps={{
                   disableUnderline: true,
@@ -81,7 +86,7 @@ export default function EnterPlayerName({
                       color:
                         playerFirstName === 'First Name'
                           ? theme.palette.primary.darkGrey
-                          : theme.palette.primary.extraDarkGrey,
+                          : theme.palette.primary.darkBlue,
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
@@ -103,6 +108,11 @@ export default function EnterPlayerName({
                     handlePlayerLastNameChange('');
                   }
                 }}
+                onBlur={(newValue) => {
+                  if (newValue.target.value === '') {
+                    handlePlayerLastNameChange('Last Name');
+                  }
+                }}
                 value={playerLastName}
                 InputProps={{
                   disableUnderline: true,
@@ -111,7 +121,7 @@ export default function EnterPlayerName({
                       color:
                         playerLastName === 'Last Name'
                           ? theme.palette.primary.darkGrey
-                          : theme.palette.primary.extraDarkGrey,
+                          : theme.palette.primary.darkBlue,
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,

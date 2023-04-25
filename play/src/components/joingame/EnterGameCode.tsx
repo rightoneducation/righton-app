@@ -61,6 +61,11 @@ export default function EnterGameCode({
                 handleGameCodeChange('');
               }
             }}
+            onBlur={(newValue) => {
+              if (newValue.target.value === '') {
+                handleGameCodeChange('####');
+              }
+            }}
             value={gameCodeValue}
             InputProps={{
               disableUnderline: true,
@@ -69,7 +74,7 @@ export default function EnterGameCode({
                   color:
                     gameCodeValue === '####'
                       ? theme.palette.primary.darkGrey
-                      : theme.palette.primary.extraDarkGrey,
+                      : theme.palette.primary.darkBlue,
                   paddingTop: '9px',
                   textAlign: 'center',
                   fontSize: `${theme.typography.h2.fontSize}px`,
