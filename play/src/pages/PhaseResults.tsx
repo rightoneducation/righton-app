@@ -185,17 +185,18 @@ export default function GameInProgress({
           totalTime={15}
           isPaused={false}
           isFinished={false}
+          handleTimerIsFinished={()=> {}}
         />
       </HeaderStackItem>
       <BodyStackItem>
         <BodyBoxUpper />
         <BodyBoxLower />
-        <BodyGridArea container spacing={isMobileDevice ? 0 : 2}>
+        <BodyGridArea container spacing={isMobileDevice ? 0 : 2} >
          <CardResults 
           answers={answerChoices}
-          isSubmitted={isSubmitted}
-          currentState={currentState}
           selectedAnswer={selectedAnswer}
+          isMobileDevice={isMobileDevice}
+          currentState={currentState}
          />
         </BodyGridArea>
       </BodyStackItem>

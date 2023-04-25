@@ -1,7 +1,9 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
+import ResultSelector from './ResultSelector';
 import AnswerSelector from './AnswerSelector';
 import { AnswerState } from '../lib/PlayModels';
 import {
@@ -11,40 +13,38 @@ import {
 
 interface CardResultsProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  isSubmitted: boolean;
-  handleSubmitAnswer: () => void;
-  currentState: GameSessionState;
   selectedAnswer: number | null;
-  handleSelectAnswer: (index: number) => void;
+  isMobileDevice: boolean;
+  currentState: GameSessionState;
 }
 
 export default function CardResults({
   answers,
-  isSubmitted,
-  handleSubmitAnswer,
-  currentState,
   selectedAnswer,
-  handleSelectAnswer,
+  isMobileDevice,
+  currentState,
 }: CardResultsProps) {
   const theme = useTheme();
+  const percentageText = '66%';
+ 
 
   return (
-    <BodyCard elevation={5}>
+    <BodyCard elevation={5} style={{  boxSizing: 'border-box', width: isMobileDevice ? '100%' : '400px'}}>
       <BodyCardContainer spacing={2}>
         <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
-            <AnswerSelector
-              answerStatus={
+              <ResultSelector
+               answerStatus={
                 selectedAnswer === index
                   ? AnswerState.SELECTED
                   : AnswerState.DEFAULT
-              }
-              isSubmitted={isSubmitted}
-              index={index}
-              answerText={answer.text}
-              key={answer.text}
-              handleSelectAnswer={handleSelectAnswer}
-            />
+                }
+                index={index}
+                answerText={answer.text}
+                percentageText={percentageText}
+                currentState={currentState}
+                key={uuidv4()}
+              />
           ))}
         </Stack>
       </BodyCardContainer>

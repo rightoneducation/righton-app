@@ -16,6 +16,7 @@ const secondaryColor = '#8E2E9D'; // placeholder for dark mode
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const playerNameTextColor = '#AEAEAE'; // player name
+const darkPurpleColor = '#6515C9'; // phase results, selected answer
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
@@ -74,6 +75,7 @@ declare module '@mui/material/styles' {
     altHighlightGradient: string;
     red: string;
     green: string;
+    darkPurple: string;
     blue: string;
     extraDarkGrey: string;
     darkGrey: string;
@@ -89,6 +91,7 @@ declare module '@mui/material/styles' {
     altHighlightGradient?: string;
     red?: string;
     green?: string;
+    darkPurple?: string;
     blue?: string;
     purple?: string;
     extraDarkGrey?: string;
@@ -121,6 +124,7 @@ export default createTheme({
       altHighlightGradient,
       red: redColor,
       green: greenColor,
+      darkPurple: darkPurpleColor,
       blue: blueColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
