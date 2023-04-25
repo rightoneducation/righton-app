@@ -70,10 +70,9 @@ export default function EnterPlayerName({
             value={firstNameValue}
             InputProps={{
               disableUnderline: true,
-              style: {color: theme.palette.primary.extraDarkGrey},
               inputProps: {
                 style: {
-                  color: theme.palette.primary.darkGrey,
+                  color: theme.palette.primary.darkBlue,
                   paddingTop: '9px',
                   textAlign: 'center',
                   fontSize: `${theme.typography.h2.fontSize}px`,
@@ -92,10 +91,9 @@ export default function EnterPlayerName({
             value={lastNameValue}
             InputProps={{
               disableUnderline: true,
-              style: {color: theme.palette.primary.extraDarkGrey},
               inputProps: {
                 style: {
-                  color: theme.palette.primary.darkGrey,
+                  color: theme.palette.primary.darkBlue,
                   paddingTop: '9px',
                   textAlign: 'center',
                   fontSize: `${theme.typography.h2.fontSize}px`,
