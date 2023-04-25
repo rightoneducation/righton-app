@@ -15,7 +15,11 @@ import HowToPlay_GreenMonster from '../../img/HowToPlay_GreenMonster.svg';
 import HowToPlay_PinkMonster from '../../img/HowToPlay_PinkMonster.svg';
 import HowToPlay_PinkMonster2 from '../../img/HowToPlay_PinkMonster2.svg';
 import HowToPlay_BlueMonster from '../../img/HowToPlay_BlueMonster.svg';
-import HowToPlay1_Screenshot from '../../img/HowToPlay1_Screenshot.svg';
+import HowToPlay_Screenshot0 from '../../img/HowToPlay_Screenshot0.svg';
+import HowToPlay_Screenshot1 from '../../img/HowToPlay_Screenshot1.svg';
+import HowToPlay_Screenshot2 from '../../img/HowToPlay_Screenshot2.svg';
+import HowToPlay_Screenshot3 from '../../img/HowToPlay_Screenshot3.svg';
+import HowToPlay_Screenshot4 from '../../img/HowToPlay_Screenshot4.svg';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -107,7 +111,7 @@ export default function JoinGame() {
                   }}
                 />
               </OverlayContainer>
-              <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
+              <ScreenshotImage src={HowToPlay_Screenshot0} alt="monster" />
               <Typography
                 variant="h2"
                 sx={{
@@ -142,7 +146,7 @@ export default function JoinGame() {
                   }}
                 />
               </OverlayContainer>
-              <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
+              <ScreenshotImage src={HowToPlay_Screenshot1} alt="monster" />
               <Typography
                 variant="h2"
                 sx={{
@@ -188,7 +192,7 @@ export default function JoinGame() {
                   }}
                 />
               </OverlayContainer>
-              <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
+              <ScreenshotImage src={HowToPlay_Screenshot2} alt="monster" />
               <Typography
                 variant="h2"
                 sx={{
@@ -223,7 +227,7 @@ export default function JoinGame() {
                   }}
                 />
               </OverlayContainer>
-              <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
+              <ScreenshotImage src={HowToPlay_Screenshot3} alt="monster" />
               <Typography
                 variant="h2"
                 sx={{
@@ -249,7 +253,7 @@ export default function JoinGame() {
                   }}
                 />
               </OverlayContainer>
-              <ScreenshotImage src={HowToPlay1_Screenshot} alt="monster" />
+              <ScreenshotImage src={HowToPlay_Screenshot4} alt="monster" />
               <Typography
                 variant="h2"
                 sx={{
@@ -258,7 +262,7 @@ export default function JoinGame() {
                   width: '350px',
                 }}
               >
-                Gain more points by guessing the most popular incorrect answer!
+                The most total points wins!
               </Typography>
             </SwiperSlide>
           </HowToPlaySwiper>
