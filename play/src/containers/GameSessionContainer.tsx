@@ -20,6 +20,6 @@ export default function GameSessionContainer() {
   const [joinGameState, setjoinGameState] = useState<JoinGameState>(
     JoinGameState.HOWTOPLAY
   ); // eslint-disable-line @typescript-eslint/no-unused-vars
-
+  
   return <JoinGame joinGameState={joinGameState} />;
 }
