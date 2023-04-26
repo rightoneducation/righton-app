@@ -63,7 +63,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={InputPlaceholder.FIRSTNAME}
+                placeholder={InputPlaceholder.FIRST_NAME}
                 onChange={(event) => setFirstNameValue(event.target.value)}
                 value={firstNameValue}
                 InputProps={{
@@ -84,7 +84,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={InputPlaceholder.LASTNAME}
+                placeholder={InputPlaceholder.LAST_NAME}
                 onChange={(event) => setLastNameValue(event.target.value)}
                 value={lastNameValue}
                 InputProps={{

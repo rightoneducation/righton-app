@@ -18,7 +18,7 @@ export enum AnswerState {
 }
 
 export enum JoinGameState {
-  SPLASH = 'SPLASH',
+  SPLASH_SCREEN = 'SPLASH_SCREEN',
   ENTER_GAME_CODE = 'ENTER_GAME_CODE',
   ENTER_NAME = 'ENTER_NAME',
   SELECT_AVATAR = 'SELECT_AVATAR',
@@ -42,7 +42,7 @@ export const monsterMap: MonsterMap = {
 };
 
 export enum InputPlaceholder {
-  FIRSTNAME = 'First Name',
-  LASTNAME = 'Last Name',
-  GAMECODE = '####',
+  FIRST_NAME = 'First Name',
+  LAST_NAME = 'Last Name',
+  GAME_CODE = '####',
 }

@@ -18,7 +18,7 @@ export default function GameSessionContainer() {
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    JoinGameState.HOWTOPLAY
+    JoinGameState.ENTER_GAME_CODE
   ); 
 
 
