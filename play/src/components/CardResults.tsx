@@ -35,12 +35,11 @@ export default function CardResults({
         <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
               <ResultSelector
-               answerStatus={AnswerState.CORRECT} 
-              //  {
-              //   selectedAnswer === index
-              //     ? AnswerState.SELECTED
-              //     : AnswerState.DEFAULT
-              //   }
+               answerStatus={
+                selectedAnswer === index
+                  ? AnswerState.SELECTED
+                  : AnswerState.DEFAULT
+                }
                 index={index}
                 answerText={answer.text}
                 percentageText={percentageText}

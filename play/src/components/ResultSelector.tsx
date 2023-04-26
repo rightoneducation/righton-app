@@ -5,7 +5,6 @@ import { GameSessionState } from '@righton/networking';
 import CorrectStars from '../img/CorrectStars.svg';
 import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
 import PreviousAnswer from '../img/PreviousAnswer.svg'
-import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState } from '../lib/PlayModels';
 
@@ -60,7 +59,7 @@ export default function ResultSelector({
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
-    [AnswerState.SELECTED]: SelectedAnswerImage,
+    [AnswerState.SELECTED]: '',
     [AnswerState.PREVIOUS]: PreviousAnswer,
   };
 
@@ -90,11 +89,10 @@ export default function ResultSelector({
         </Typography>
       </Box>
       <Box style={{display: 'flex', alignItems: 'center'}}>
-        { currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
+        { currentState === GameSessionState.PHASE_2_RESULTS && (
         <Typography
           variant="body2"
           sx={{
-            paddingLeft: `${theme.sizing.extraSmallPadding}px`,
             paddingRight: `${theme.sizing.smallPadding}px`,
             color: (answerStatus === AnswerState.SELECTED ? theme.palette.primary.main : null),
           }}
@@ -102,12 +100,11 @@ export default function ResultSelector({
           {percentageText}
         </Typography>
         )}
-        { answerStatus === AnswerState.CORRECT && (
+          {(answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PREVIOUS) && (
           <img
             src={imageMap[answerStatus]}
             style={{
-              position: 'absolute',
-              right: `${theme.sizing.extraLargePadding}px`,
+              position: 'relative',
               width: `${theme.sizing.smallPadding}px`,
               height: `${theme.sizing.smallPadding}px`,
               paddingTop: '2px',
@@ -115,6 +112,7 @@ export default function ResultSelector({
             alt="SelectedAnswerImage"
           />
           )}
+          
       </Box>
     </>
   );
