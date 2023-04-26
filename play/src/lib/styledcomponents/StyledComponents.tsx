@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Paper, Stack, Container, Button, TextField } from '@mui/material';
+import { Paper, Stack, Container, Button, TextField, Box, Grid } from '@mui/material';
 
 // card for question and answer
 export const BodyCard = styled(Paper)(({ theme }) => ({
@@ -140,3 +140,91 @@ export const AvatarIcon = styled('img', {
   },
 })
 );
+
+// Gameplay layout components (header, footer, background layers)
+// top level  container
+export const StackContainer = styled(Stack)({
+  height: '100%',
+  position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
+  width: '100%',
+});
+
+// header container
+export const HeaderStackItem = styled(Stack)(({ theme }) => ({
+  paddingTop: `${theme.sizing.mediumPadding}px`,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
+  background: theme.palette.primary.backgroundGradient,
+  border: 'none',
+  width: '100vw',
+  height: `${theme.sizing.headerHeight}px`,
+}));
+
+// body container
+export const BodyStackItem = styled(Stack)({
+  position: 'relative',
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100vw',
+  border: 'none',
+});
+
+// upper background area in body
+export const BodyBoxUpper = styled(Box)(({ theme }) => ({
+  height: '120px',
+  width: '100vw',
+  background: theme.palette.primary.backgroundGradient,
+  boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
+  zIndex: 1,
+}));
+
+// lower background area in body
+export const BodyBoxLower = styled(Box)(({ theme }) => ({
+  flex: 1,
+  width: '100vw',
+  backgroundColor: theme.palette.primary.main,
+  zIndex: 0,
+}));
+
+// content area of body that floats above background layers above - Choosing Answer Page
+export const BodyContentArea = styled(Grid)({
+  position: 'absolute',
+  top: '0',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  maxWidth: '824px',
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  zIndex: 2,
+});
+
+// content area of body that floats above background layers above - Phase Results Page
+export const BodyContentAreaPhaseResults = styled(BodyContentArea)(({ theme }) => ({
+  position: 'fixed',
+  justifyContent: 'center',
+  maxWidth: '400px',
+  paddingLeft: `${theme.sizing.mediumPadding}px`,
+  paddingRight: `${theme.sizing.mediumPadding}px`,
+}));
+
+// footer container
+export const FooterStackItem = styled(Stack)(({ theme }) => ({
+  paddingBottom: `${theme.sizing.smallPadding}px`,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: theme.palette.primary.main,
+  width: '100vw',
+  border: 'none',
+  position: 'sticky',
+  bottom: 0,
+  zIndex: 3,
+}));
