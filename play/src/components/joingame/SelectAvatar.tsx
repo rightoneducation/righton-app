@@ -126,7 +126,7 @@ export default function SelectAvatar({
         </Stack>
         <MonsterContainer isSmallDevice={isSmallDevice}>
           <Monster
-            src={monsterMap[selectedAvatar || 0].monster}
+            src={monsterMap[selectedAvatar || 0].monster} // || 0 handles the case where a user has yet to select an answer so it shows the default
             alt="monster"
           />
         </MonsterContainer>
