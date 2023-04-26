@@ -18,11 +18,11 @@ export enum AnswerState {
 }
 
 export enum JoinGameState {
-  SPLASH = 'SPLASH',
-  ENTERGAMECODE = 'ENTERGAMECODE',
-  ENTERNAME = 'ENTERNAME',
-  SELECTAVATAR = 'SELECTAVATAR',
-  HOWTOPLAY = 'HOWTOPLAY',
+  SPLASH_SCREEN = 'SPLASH_SCREEN',
+  ENTER_GAME_CODE = 'ENTER_GAME_CODE',
+  ENTER_NAME = 'ENTER_NAME',
+  SELECT_AVATAR = 'SELECT_AVATAR',
+  HOW_TO_PLAY = 'HOW_TO_PLAY',
 }
 
 interface MonsterMap {
@@ -40,3 +40,9 @@ export const monsterMap: MonsterMap = {
   4: { icon: Icon4, monster: Monster4 },
   5: { icon: Icon5, monster: Monster5 },
 };
+
+export enum InputPlaceholder {
+  FIRST_NAME = 'First Name',
+  LAST_NAME = 'Last Name',
+  GAME_CODE = '####',
+}
