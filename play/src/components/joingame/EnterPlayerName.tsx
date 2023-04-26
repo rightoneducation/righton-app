@@ -1,16 +1,17 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
-import {
-  IntroButton,
-  IntroTextField,
-  JoinGameBackgroundContainer,
-} from '../../lib/styledcomponents/StyledComponents';
+import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
+  position: 'fixed',
+  height: '100%',
+  top: 0,
   display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   maxWidth: theme.breakpoints.values.xs,
 }));
@@ -21,24 +22,27 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterPlayerNameProps {
-  playerFirstName: string;
-  playerLastName: string;
-  handlePlayerFirstNameChange: (newValue: string) => void;
-  handlePlayerLastNameChange: (newValue: string) => void;
+  firstNameValue: string;
+  setFirstNameValue: (newValue: string) => void;
+  lastNameValue: string;
+  setLastNameValue: (newValue: string) => void;
+  isSmallDevice: boolean;
   inputError: boolean;
 }
 
 export default function EnterPlayerName({
-  playerFirstName,
-  playerLastName,
-  handlePlayerFirstNameChange,
-  handlePlayerLastNameChange,
+  firstNameValue,
+  setFirstNameValue,
+  lastNameValue,
+  setLastNameValue,
+  isSmallDevice,
   inputError,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
+
   return (
-    <JoinGameBackgroundContainer>
-      <StackContainer spacing={5}>
+    <BackgroundContainerStyled>
+      <StackContainer spacing={isSmallDevice ? 2 : 5}>
         <img
           style={{
             width: '214px',
@@ -54,27 +58,18 @@ export default function EnterPlayerName({
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
-              <IntroTextField
+              <InputTextFieldStyled
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                onChange={(newValue) => {
-                  handlePlayerFirstNameChange(newValue.target.value);
-                }}
-                onFocus={(newValue) => {
-                  if (newValue.target.value === 'First Name') {
-                    handlePlayerFirstNameChange('');
-                  }
-                }}
-                value={playerFirstName}
+                placeholder="First Name"
+                onChange={(event) => setFirstNameValue(event.target.value)}
+                value={firstNameValue}
                 InputProps={{
                   disableUnderline: true,
                   inputProps: {
                     style: {
-                      color:
-                        playerFirstName === 'First Name'
-                          ? theme.palette.primary.darkGrey
-                          : theme.palette.primary.extraDarkGrey,
+                      color: theme.palette.primary.darkBlue,
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
@@ -84,27 +79,18 @@ export default function EnterPlayerName({
               />
             </Grid>
             <Grid item xs={6}>
-              <IntroTextField
+              <InputTextFieldStyled
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                onChange={(newValue) => {
-                  handlePlayerLastNameChange(newValue.target.value);
-                }}
-                onFocus={(newValue) => {
-                  if (newValue.target.value === 'Last Name') {
-                    handlePlayerLastNameChange('');
-                  }
-                }}
-                value={playerLastName}
+                placeholder="Last Name"
+                onChange={(event) => setLastNameValue(event.target.value)}
+                value={lastNameValue}
                 InputProps={{
                   disableUnderline: true,
                   inputProps: {
                     style: {
-                      color:
-                        playerLastName === 'Last Name'
-                          ? theme.palette.primary.darkGrey
-                          : theme.palette.primary.extraDarkGrey,
+                      color: theme.palette.primary.darkBlue,
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
@@ -115,11 +101,11 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButton>
+        <IntroButtonStyled>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Enter
           </Typography>
-        </IntroButton>
+        </IntroButtonStyled>
         {inputError ? (
           <PaddedContainer>
             <Typography
@@ -141,6 +127,6 @@ export default function EnterPlayerName({
           </PaddedContainer>
         ) : null}
       </StackContainer>
-    </JoinGameBackgroundContainer>
+    </BackgroundContainerStyled>
   );
 }
