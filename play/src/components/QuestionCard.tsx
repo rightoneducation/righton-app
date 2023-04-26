@@ -1,9 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import {
-  BodyCard,
-  BodyCardContainer,
-} from '../lib/styledcomponents/StyledComponents';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface QuestionCardProps {
   questionText: string[];
@@ -15,8 +13,8 @@ export default function QuestionCard({
   imageUrl,
 }: QuestionCardProps) {
   return (
-    <BodyCard elevation={5}>
-      <BodyCardContainer>
+    <BodyCardStyled elevation={5}>
+      <BodyCardContainerStyled>
         <img
           style={{ width: '75%', height: 'auto' }}
           src={imageUrl}
@@ -29,7 +27,7 @@ export default function QuestionCard({
         >
           {`\n ${questionText[1]}`}
         </Typography>
-      </BodyCardContainer>
-    </BodyCard>
+      </BodyCardContainerStyled>
+    </BodyCardStyled>
   );
 }

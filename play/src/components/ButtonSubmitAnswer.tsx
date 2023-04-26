@@ -1,26 +1,9 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-
-const AnswerButton = styled(Button)(({ theme }) => ({
-  width: '160px', // per figma
-  height: '26px',
-  borderRadius: '22px',
-  textTransform: 'none',
-  background: `${theme.palette.primary.highlightGradient}`,
-  boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-  '&:hover': {
-    background: `${theme.palette.primary.highlightGradient}`,
-  },
-}));
-
-const AnswerButtonDisabled = styled(AnswerButton)(({ theme }) => ({
-  background: `${theme.palette.primary.extraDarkGrey}`,
-  boxShadow: 'none',
-  '&:hover': {
-    background: `${theme.palette.primary.extraDarkGrey}`,
-  },
-}));
+import { Typography } from '@mui/material';
+import {
+  GamePlayButtonStyled,
+  GamePlayButtonStyledDisabled,
+} from '../lib/styledcomponents/GamePlayButtonStyled';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
@@ -39,14 +22,14 @@ export default function ButtonSubmitAnswer({
   );
 
   return isSelected && !isSubmitted ? (
-    <AnswerButton
+    <GamePlayButtonStyled
       onClick={() => {
         handleSubmitAnswer(true);
       }}
     >
       {buttonContents}
-    </AnswerButton>
+    </GamePlayButtonStyled>
   ) : (
-    <AnswerButtonDisabled disabled> {buttonContents} </AnswerButtonDisabled>
+    <GamePlayButtonStyledDisabled disabled> {buttonContents} </GamePlayButtonStyledDisabled>
   );
 }

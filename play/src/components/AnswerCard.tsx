@@ -4,11 +4,9 @@ import { Typography, Stack, Box } from '@mui/material';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import AnswerState from '../lib/PlayModels';
-import {
-  BodyCard,
-  BodyCardContainer,
-} from '../lib/styledcomponents/StyledComponents';
+import { AnswerState } from '../lib/PlayModels';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
@@ -53,8 +51,8 @@ export default function AnswerCard({
   );
 
   return (
-    <BodyCard elevation={5}>
-      <BodyCardContainer spacing={2}>
+    <BodyCardStyled elevation={5}>
+      <BodyCardContainerStyled spacing={2}>
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
           ? correctText
           : trickText}
@@ -79,7 +77,7 @@ export default function AnswerCard({
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
         />
-      </BodyCardContainer>
-    </BodyCard>
+      </BodyCardContainerStyled>
+    </BodyCardStyled>
   );
 }

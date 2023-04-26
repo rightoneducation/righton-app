@@ -1,9 +1,14 @@
 import { createTheme } from '@mui/material/styles';
 
 // design tokens - colors: (comments = example usage)
-const primaryColor = '#FFFFFF'; // main background
+const mainColor = '#FFFFFF'; // main  (ex white)
+const accentColor = '#312759'; // accent (ex purple)
 const backgroundGradient =
   'linear-gradient(to right, rgba(62, 0, 172, 1), rgba(98, 0, 204, 1))'; // upper header background
+// const radialGradient =
+// 'radial-gradient(circle farthest-side, #7D63C8, #7D63C8 100%)';
+const radialGradient =
+  'radial-gradient(circle 500px at 50% 60%, #7D64C7 13.54%, #514187 51.56%, #3A2D66 77.6%, #352960 88.02%, #312759 100%)';
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
@@ -20,7 +25,7 @@ const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 
 // design tokens - breakpoints:
-const xs = 0;
+const xs = 400;
 const sm = 700;
 const md = 900;
 const lg = 1200;
@@ -62,12 +67,15 @@ declare module '@mui/material/styles' {
   }
 
   interface PaletteColor {
+    accent: string;
     backgroundGradient: string;
+    radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
     red: string;
     green: string;
     blue: string;
+    darkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
     lightGrey: string;
@@ -75,12 +83,16 @@ declare module '@mui/material/styles' {
   }
 
   interface SimplePaletteColorOptions {
+    accent?: string;
     backgroundGradient?: string;
+    radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
     red?: string;
     green?: string;
     blue?: string;
+    darkBlue?: string;
+    purple?: string;
     extraDarkGrey?: string;
     darkGrey?: string;
     lightGrey?: string;
@@ -103,13 +115,16 @@ export default createTheme({
   },
   palette: {
     primary: {
-      main: primaryColor,
+      main: mainColor,
+      accent: accentColor,
       backgroundGradient,
+      radialGradient,
       highlightGradient,
       altHighlightGradient,
       red: redColor,
       green: greenColor,
       blue: blueColor,
+      darkBlue: secondaryTextColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,

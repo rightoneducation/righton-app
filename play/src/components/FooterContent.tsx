@@ -1,13 +1,8 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Typography, Container } from '@mui/material';
+import { monsterMap } from '../lib/PlayModels';
 import ScoreIndicator from './ScoreIndicator';
-import Icon from '../img/MonsterIcon1.svg';
-import Icon2 from '../img/MonsterIcon2.svg';
-import Icon3 from '../img/MonsterIcon3.svg';
-import Icon4 from '../img/MonsterIcon4.svg';
-import Icon5 from '../img/MonsterIcon5.svg';
-import Icon6 from '../img/MonsterIcon6.svg';
 
 const FooterContainer = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -41,10 +36,6 @@ interface HeaderProps {
   score: number | null;
 }
 
-interface AvatarMap {
-  [key: number]: string;
-}
-
 export default function Header({
   avatar,
   teamName,
@@ -52,19 +43,11 @@ export default function Header({
   score,
 }: HeaderProps) {
   const theme = useTheme();
-  const avatarMap: AvatarMap = {
-    0: Icon,
-    1: Icon2,
-    2: Icon3,
-    3: Icon4,
-    4: Icon5,
-    5: Icon6,
-  };
 
   return (
     <FooterContainer>
       <FooterLeftContainer>
-        <Avatar src={avatarMap[avatar]} alt="avatar" />
+        <Avatar src={monsterMap[avatar].icon} alt="avatar" />
         <Typography
           variant="h3"
           sx={{ marginLeft: `${theme.sizing.smallPadding}px` }}
