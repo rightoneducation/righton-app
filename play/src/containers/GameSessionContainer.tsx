@@ -21,5 +21,6 @@ export default function GameSessionContainer() {
     JoinGameState.HOWTOPLAY
   ); 
 
+
   return <JoinGame joinGameState={joinGameState} />;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
@@ -20,16 +20,17 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 
 interface EnterGameCodeProps {
   gameCodeValue: string;
-  handleGameCodeChange: (newValue: string) => void;
+  setGameCodeValue: (newValue: string) => void;
   inputError: boolean;
 }
 
 export default function EnterGameCode({
   gameCodeValue,
-  handleGameCodeChange,
+  setGameCodeValue,
   inputError,
 }: EnterGameCodeProps) {
   const theme = useTheme();
+  const [value, setValue] = useState('');
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
@@ -42,8 +43,8 @@ export default function EnterGameCode({
           src={Logo}
           alt="Question"
         />
+        {/* container here to trim the spacing set by parent stack between text and input, typ */}
         <Box>
-          {/* container here to trim the spacing set by parent stack between text and input, typ */}
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
             Enter Game Code
           </Typography>
@@ -51,28 +52,14 @@ export default function EnterGameCode({
             fullWidth
             variant="filled"
             autoComplete="off"
-            onChange={(newValue) => {
-              handleGameCodeChange(newValue.target.value);
-            }}
-            onFocus={(newValue) => {
-              if (newValue.target.value === '####') {
-                handleGameCodeChange('');
-              }
-            }}
-            onBlur={(newValue) => {
-              if (newValue.target.value === '') {
-                handleGameCodeChange('####');
-              }
-            }}
+            placeholder="####"
+            onChange={(event) =>  setGameCodeValue(event.target.value)}
             value={gameCodeValue}
             InputProps={{
               disableUnderline: true,
               inputProps: {
                 style: {
-                  color:
-                    gameCodeValue === '####'
-                      ? theme.palette.primary.darkGrey
-                      : theme.palette.primary.darkBlue,
+                  color: theme.palette.primary.darkBlue,
                   paddingTop: '9px',
                   textAlign: 'center',
                   fontSize: `${theme.typography.h2.fontSize}px`,
@@ -85,8 +72,8 @@ export default function EnterGameCode({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Join
           </Typography>
-        </IntroButtonStyled>
-        {inputError ? (
+        </IntroButton>
+        {inputError && (
           <PaddedContainer>
             <Typography
               variant="h2"
@@ -102,7 +89,7 @@ export default function EnterGameCode({
               Check the Game Code and try again.
             </Typography>
           </PaddedContainer>
-        ) : null}
+        )}
       </StackContainer>
     </BackgroundContainerStyled>
   );
