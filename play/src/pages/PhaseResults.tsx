@@ -45,7 +45,6 @@ export default function PhaseResults({
 }: PhaseResultsProps) {
   const theme = useTheme();
   const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const [gameSessionState, setCurrentState] = React.useState(currentState); // eslint-disable-line @typescript-eslint/no-unused-vars
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
@@ -56,32 +55,7 @@ export default function PhaseResults({
     );
   }
 
-  // this breaks down the question text from the gameSession to isolate the sentence with the question mark for formatting purposes in the component
-  const divideQuestionString = (inputText: string) => {
-    const qmarkLocation = inputText.lastIndexOf('?');
-    let introText = '';
-    let questionText = '';
-
-    if (qmarkLocation !== -1) {
-      const periodLocation = inputText.lastIndexOf('.');
-      if (periodLocation !== -1 && periodLocation < qmarkLocation) {
-        introText = inputText.substring(0, periodLocation + 1);
-        questionText = inputText.substring(
-          periodLocation + 1,
-          qmarkLocation + 1
-        );
-      }
-    }
-    return [introText, questionText];
-  };
-
-  const questionText = divideQuestionString(currentQuestion?.text);
-
-  const questionUrl = currentQuestion?.imageUrl;
-  const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-
   const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,

@@ -15,6 +15,7 @@ export enum AnswerState {
   DEFAULT = 'DEFAULT',
   CORRECT = 'CORRECT',
   SELECTED = 'SELECTED',
+  PREVIOUS = 'PREVIOUS',
 }
 
 export enum JoinGameState {

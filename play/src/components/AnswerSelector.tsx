@@ -4,6 +4,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
+import PreviousAnswer from '../img/PreviousAnswer.svg';
 import { AnswerState } from '../lib/PlayModels';
 
 type AnswerSelectorProps = {
@@ -65,6 +66,7 @@ export default function AnswerSelector({
     [AnswerState.DEFAULT]: UnselectedAnswerImage,
     [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.SELECTED]: SelectedAnswerImage,
+    [AnswerState.PREVIOUS]: PreviousAnswer,
   };
 
   const buttonContents = (

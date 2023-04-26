@@ -23,6 +23,7 @@ export default function CardResults({
   selectedAnswer,
   isMobileDevice,
   currentState,
+
 }: CardResultsProps) {
   const theme = useTheme();
   const percentageText = '66%';
@@ -34,16 +35,18 @@ export default function CardResults({
         <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
               <ResultSelector
-               answerStatus={
-                selectedAnswer === index
-                  ? AnswerState.SELECTED
-                  : AnswerState.DEFAULT
-                }
+               answerStatus={AnswerState.CORRECT} 
+              //  {
+              //   selectedAnswer === index
+              //     ? AnswerState.SELECTED
+              //     : AnswerState.DEFAULT
+              //   }
                 index={index}
                 answerText={answer.text}
                 percentageText={percentageText}
                 currentState={currentState}
                 key={uuidv4()}
+                playerCorrect
               />
           ))}
         </Stack>

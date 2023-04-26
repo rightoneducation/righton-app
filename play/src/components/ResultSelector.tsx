@@ -3,14 +3,11 @@ import { Container, Typography, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import CorrectStars from '../img/CorrectStars.svg';
+import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
+import PreviousAnswer from '../img/PreviousAnswer.svg'
 import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState } from '../lib/PlayModels';
-
-
-type ResultSelectorProps = {
-  isSubmitted: boolean;
-};
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   width: '100%',
@@ -34,12 +31,19 @@ const ResultSelectorSelected = styled(ResultSelectorDefault)(({ theme }) => ({
   backgroundColor: theme.palette.primary.darkPurple,
 }));
 
-interface ResultSelectorComponentProps {
+const CorrectStarsStyled = styled('img')({
+  position: 'absolute',
+  width: '16px', 
+  height: '16px',
+});
+
+interface ResultSelectorProps {
   answerStatus: AnswerState;
   index: number;
   answerText: string;
   percentageText: string;
   currentState: GameSessionState;
+  playerCorrect: boolean;
 }
 
 export default function ResultSelector({
@@ -48,7 +52,8 @@ export default function ResultSelector({
   answerText,
   percentageText,
   currentState,
-} : ResultSelectorComponentProps) {
+  playerCorrect, 
+} : ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
  
@@ -56,6 +61,7 @@ export default function ResultSelector({
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.SELECTED]: SelectedAnswerImage,
+    [AnswerState.PREVIOUS]: PreviousAnswer,
   };
 
   const buttonContents = (
@@ -101,7 +107,7 @@ export default function ResultSelector({
             src={imageMap[answerStatus]}
             style={{
               position: 'absolute',
-              right: `${theme.sizing.smallPadding}px`,
+              right: `${theme.sizing.extraLargePadding}px`,
               width: `${theme.sizing.smallPadding}px`,
               height: `${theme.sizing.smallPadding}px`,
               paddingTop: '2px',
@@ -116,10 +122,18 @@ export default function ResultSelector({
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (
-        <ResultSelectorCorrect
-        >
-          {buttonContents}
-        </ResultSelectorCorrect>
+        <Box>
+          { playerCorrect && (
+            <Box sx={{position: 'relative', height: 0}}>
+              <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, left: 0 }}/>
+              <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, right: 10 }}/>
+              <CorrectStarsStyled src={CorrectStars_Mirrored} alt="" style={{ top: 30, right: 0 }}/>
+            </Box>
+          )}
+          <ResultSelectorCorrect>
+            {buttonContents}
+          </ResultSelectorCorrect>
+        </Box>
       );
     case AnswerState.SELECTED:
       return (
