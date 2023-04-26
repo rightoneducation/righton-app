@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
-import CardQuestion from '../components/CardQuestion';
-import CardAnswer from '../components/CardAnswer';
+import QuestionCard from '../components/QuestionCard';
+import AnswerCard from '../components/AnswerCard';
 import FooterContent from '../components/FooterContent';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import 'swiper/css';
@@ -195,7 +195,7 @@ export default function GameInProgress({
         Question
       </Typography>
       <ScrollBox>
-        <CardQuestion
+        <QuestionCard
           questionText={questionText}
           imageUrl={questionUrl ?? ''}
         />
@@ -228,7 +228,7 @@ export default function GameInProgress({
         Answer
       </Typography>
       <ScrollBox>
-        <CardAnswer
+        <AnswerCard
           answers={answerChoices}
           isSubmitted={isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}

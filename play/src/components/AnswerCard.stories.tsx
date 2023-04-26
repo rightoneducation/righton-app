@@ -2,20 +2,20 @@ import React from 'react';
 import { GameSessionState } from '@righton/networking';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
-import CardAnswer from './CardAnswer';
+import AnswerCard from './AnswerCard';
 import Theme from '../lib/Theme';
 
 export default {
-  title: 'Design System/3_Organisms/CardAnswer',
-  component: CardAnswer,
-} as ComponentMeta<typeof CardAnswer>;
+  title: 'Design System/3_Organisms/AnswerCard',
+  component: AnswerCard,
+} as ComponentMeta<typeof AnswerCard>;
 
-const Template: ComponentStory<typeof CardAnswer> = function CardAnswerTemplate(
+const Template: ComponentStory<typeof AnswerCard> = function AnswerCardTemplate(
   args
 ) {
   return (
     <ThemeProvider theme={Theme}>
-      <CardAnswer {...args} />
+      <AnswerCard {...args} />
     </ThemeProvider>
   );
 };

@@ -28,7 +28,8 @@ const StackContainer = styled(Stack)(({ theme }) => ({
 
 const BottomBox = styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.mediumPadding}px`,
-}));
+})
+);
 
 export default function SplashScreen() {
   const theme = useTheme();

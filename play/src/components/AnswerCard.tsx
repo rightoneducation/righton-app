@@ -8,7 +8,7 @@ import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
-interface CardAnswerProps {
+interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   handleSubmitAnswer: () => void;
@@ -17,14 +17,14 @@ interface CardAnswerProps {
   handleSelectAnswer: (index: number) => void;
 }
 
-export default function CardAnswer({
+export default function AnswerCard({
   answers,
   isSubmitted,
   handleSubmitAnswer,
   currentState,
   selectedAnswer,
   handleSelectAnswer,
-}: CardAnswerProps) {
+}: AnswerCardProps) {
   const theme = useTheme();
   const correctText = (
     <Box display="flex" alignContent="flex-start">

@@ -3,15 +3,15 @@ import { Typography } from '@mui/material';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
-interface CardQuestionProps {
+interface QuestionCardProps {
   questionText: string[];
   imageUrl: string;
 }
 
-export default function CardQuestion({
+export default function QuestionCard({
   questionText,
   imageUrl,
-}: CardQuestionProps) {
+}: QuestionCardProps) {
   return (
     <BodyCardStyled elevation={5}>
       <BodyCardContainerStyled>
