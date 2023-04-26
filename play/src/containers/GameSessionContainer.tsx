@@ -10,16 +10,16 @@ import JoinGame from '../pages/JoinGame';
 import { JoinGameState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState(
-    // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [gameSession, setGameSession] = useState(     // eslint-disable-line @typescript-eslint/no-unused-vars
+
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [joinGameState, setjoinGameState] = useState<JoinGameState>(
+  const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     JoinGameState.HOWTOPLAY
-  ); // eslint-disable-line @typescript-eslint/no-unused-vars
-  
+  ); 
+
   return <JoinGame joinGameState={joinGameState} />;
 }

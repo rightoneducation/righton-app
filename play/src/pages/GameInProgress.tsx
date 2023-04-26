@@ -132,8 +132,7 @@ export default function GameInProgress({
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(  // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );
