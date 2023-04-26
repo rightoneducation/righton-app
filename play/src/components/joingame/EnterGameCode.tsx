@@ -1,11 +1,9 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
-import {
-  IntroButton,
-  IntroTextField,
-  JoinGameBackgroundContainer,
-} from '../../lib/styledcomponents/StyledComponents';
+import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -33,7 +31,7 @@ export default function EnterGameCode({
 }: EnterGameCodeProps) {
   const theme = useTheme();
   return (
-    <JoinGameBackgroundContainer>
+    <BackgroundContainerStyled>
       <StackContainer spacing={5}>
         <img
           style={{
@@ -49,7 +47,7 @@ export default function EnterGameCode({
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
             Enter Game Code
           </Typography>
-          <IntroTextField
+          <InputTextFieldStyled
             fullWidth
             variant="filled"
             autoComplete="off"
@@ -83,11 +81,11 @@ export default function EnterGameCode({
             }}
           />
         </Box>
-        <IntroButton>
+        <IntroButtonStyled>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Join
           </Typography>
-        </IntroButton>
+        </IntroButtonStyled>
         {inputError ? (
           <PaddedContainer>
             <Typography
@@ -106,6 +104,6 @@ export default function EnterGameCode({
           </PaddedContainer>
         ) : null}
       </StackContainer>
-    </JoinGameBackgroundContainer>
+    </BackgroundContainerStyled>
   );
 }

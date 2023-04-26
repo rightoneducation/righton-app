@@ -14,7 +14,7 @@ interface JoinGameProps {
 
 export default function JoinGame({ joinGameState }: JoinGameProps) {
   const theme = useTheme();
-  const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [inputError, setInputError] = useState(true); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [gameCodeValue, setGameCodeValue] = useState('####');
   const [firstNameValue, setFirstNameValue] = useState('');
@@ -32,7 +32,7 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
           handleAvatarSelected={setSelectedAvatar}
           firstNameValue={firstNameValue}
           lastNameValue={lastNameValue}
-          isMobileDevice={isMobileDevice}
+          isSmallDevice={isSmallDevice}
         />
       );
     case JoinGameState.ENTERNAME:
@@ -42,7 +42,7 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
           lastNameValue={lastNameValue}
           setFirstNameValue={setFirstNameValue}
           setLastNameValue={setLastNameValue}
-          isMobileDevice={isMobileDevice}
+          isSmallDevice={isSmallDevice}
           inputError={inputError}
         />
       );

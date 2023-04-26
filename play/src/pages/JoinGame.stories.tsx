@@ -10,14 +10,15 @@ export default {
   component: JoinGame,
 } as ComponentMeta<typeof JoinGame>;
 
-const Template: ComponentStory<typeof JoinGame> =
-  function JoinGameTemplate(args) {
-    return (
-      <ThemeProvider theme={Theme}>
-        <JoinGame {...args} />
-      </ThemeProvider>
-    );
-  };
+const Template: ComponentStory<typeof JoinGame> = function JoinGameTemplate(
+  args
+) {
+  return (
+    <ThemeProvider theme={Theme}>
+      <JoinGame {...args} />
+    </ThemeProvider>
+  );
+};
 
 export const SplashScreen = Template.bind({});
 SplashScreen.args = {

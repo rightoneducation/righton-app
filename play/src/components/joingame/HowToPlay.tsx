@@ -3,23 +3,14 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import {
-  JoinGameBackgroundContainer,
-  PaginationContainer,
-} from '../../lib/styledcomponents/StyledComponents';
-import HowToPlay_Phase1Circle from '../../img/HowToPlay_Phase1Circle.svg';
-import HowToPlay_Phase2Circle from '../../img/HowToPlay_Phase2Circle.svg';
-import HowToPlay_OrangeMonster from '../../img/HowToPlay_OrangeMonster.svg';
-import HowToPlay_RedMonster from '../../img/HowToPlay_RedMonster.svg';
-import HowToPlay_GreenMonster from '../../img/HowToPlay_GreenMonster.svg';
-import HowToPlay_PinkMonster from '../../img/HowToPlay_PinkMonster.svg';
-import HowToPlay_PinkMonster2 from '../../img/HowToPlay_PinkMonster2.svg';
-import HowToPlay_BlueMonster from '../../img/HowToPlay_BlueMonster.svg';
-import HowToPlay_Screenshot0 from '../../img/HowToPlay_Screenshot0.svg';
-import HowToPlay_Screenshot1 from '../../img/HowToPlay_Screenshot1.svg';
-import HowToPlay_Screenshot2 from '../../img/HowToPlay_Screenshot2.svg';
-import HowToPlay_Screenshot3 from '../../img/HowToPlay_Screenshot3.svg';
-import HowToPlay_Screenshot4 from '../../img/HowToPlay_Screenshot4.svg';
+import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
+import HowToPlaySlide0Content from './howtoplayslides/HowToPlaySlide0Content';
+import HowToPlaySlide1Content from './howtoplayslides/HowToPlaySlide1Content';
+import HowToPlaySlide2Content from './howtoplayslides/HowToPlaySlide2Content';
+import HowToPlaySlide3Content from './howtoplayslides/HowToPlaySlide3Content';
+import HowToPlaySlide4Content from './howtoplayslides/HowToPlaySlide4Content';
+
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -43,27 +34,11 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-const OverlayContainer = styled('div')({
-  // container that floats over top of screenshot to position overlaid monsters and icons
-  position: 'absolute',
-  height: '100%',
-  width: '100%',
-});
-
-const OverLayImage = styled('img')({
-  position: 'absolute',
-});
-
-const ScreenshotImage = styled('img')({
-  width: '250px',
-  height: 'auto',
-});
-
 export default function JoinGame() {
   const theme = useTheme();
 
   return (
-    <JoinGameBackgroundContainer>
+    <BackgroundContainerStyled>
       <StackContainer>
         <Typography
           variant="h2"
@@ -89,184 +64,22 @@ export default function JoinGame() {
             }}
           >
             <SwiperSlide>
-              <OverlayContainer>
-                <OverLayImage
-                  src={HowToPlay_Phase1Circle}
-                  alt="monster"
-                  sx={{
-                    top: '40px',
-                    left: '210px',
-                    height: '70px',
-                    width: '70px',
-                  }}
-                />
-                <OverLayImage
-                  src={HowToPlay_OrangeMonster}
-                  alt="monster"
-                  sx={{
-                    bottom: '45px',
-                    left: '110px',
-                    width: '200px',
-                    height: 'auto',
-                  }}
-                />
-              </OverlayContainer>
-              <ScreenshotImage src={HowToPlay_Screenshot0} alt="monster" />
-              <Typography
-                variant="h2"
-                sx={{
-                  textAlign: 'center',
-                  paddingTop: `${theme.sizing.mediumPadding}px`,
-                  width: '250px',
-                }}
-              >
-                Read the multiple-choice question
-              </Typography>
+              <HowToPlaySlide0Content />
             </SwiperSlide>
             <SwiperSlide>
-              <OverlayContainer>
-                <OverLayImage
-                  src={HowToPlay_Phase1Circle}
-                  alt="monster"
-                  sx={{
-                    top: '40px',
-                    left: '210px',
-                    height: '70px',
-                    width: '70px',
-                  }}
-                />
-                <OverLayImage
-                  src={HowToPlay_RedMonster}
-                  alt="monster"
-                  sx={{
-                    bottom: '60px',
-                    left: '420px',
-                    width: '115px',
-                    height: 'auto',
-                  }}
-                />
-              </OverlayContainer>
-              <ScreenshotImage src={HowToPlay_Screenshot1} alt="monster" />
-              <Typography
-                variant="h2"
-                sx={{
-                  textAlign: 'center',
-                  paddingTop: `${theme.sizing.mediumPadding}px`,
-                  width: '250px',
-                }}
-              >
-                Gain points by choosing the correct answer...
-              </Typography>
+              <HowToPlaySlide1Content />
             </SwiperSlide>
             <SwiperSlide>
-              <OverlayContainer>
-                <OverLayImage
-                  src={HowToPlay_Phase1Circle}
-                  alt="monster"
-                  sx={{
-                    top: '40px',
-                    left: '210px',
-                    height: '70px',
-                    width: '70px',
-                  }}
-                />
-                <OverLayImage
-                  src={HowToPlay_GreenMonster}
-                  alt="monster"
-                  sx={{
-                    bottom: '80px',
-                    left: '180px',
-                    width: '90px',
-                    height: 'auto',
-                    zIndex: -1,
-                  }}
-                />
-                <OverLayImage
-                  src={HowToPlay_PinkMonster}
-                  alt="monster"
-                  sx={{
-                    bottom: '80px',
-                    left: '430px',
-                    width: '90px',
-                    height: 'auto',
-                  }}
-                />
-              </OverlayContainer>
-              <ScreenshotImage src={HowToPlay_Screenshot2} alt="monster" />
-              <Typography
-                variant="h2"
-                sx={{
-                  textAlign: 'center',
-                  paddingTop: `${theme.sizing.mediumPadding}px`,
-                  width: '250px',
-                }}
-              >
-                Read step-by-step solutions
-              </Typography>
+              <HowToPlaySlide2Content />
             </SwiperSlide>
             <SwiperSlide>
-              <OverlayContainer>
-                <OverLayImage
-                  src={HowToPlay_Phase2Circle}
-                  alt="monster"
-                  sx={{
-                    top: '40px',
-                    left: '210px',
-                    height: '70px',
-                    width: '70px',
-                  }}
-                />
-                <OverLayImage
-                  src={HowToPlay_PinkMonster2}
-                  alt="monster"
-                  sx={{
-                    bottom: '90px',
-                    left: '400px',
-                    width: '90px',
-                    height: 'auto',
-                  }}
-                />
-              </OverlayContainer>
-              <ScreenshotImage src={HowToPlay_Screenshot3} alt="monster" />
-              <Typography
-                variant="h2"
-                sx={{
-                  textAlign: 'center',
-                  paddingTop: `${theme.sizing.mediumPadding}px`,
-                  width: '350px',
-                }}
-              >
-                Gain more points by guessing the most popular incorrect answer!
-              </Typography>
+              <HowToPlaySlide3Content />
             </SwiperSlide>
             <SwiperSlide>
-              <OverlayContainer>
-                <OverLayImage
-                  src={HowToPlay_BlueMonster}
-                  alt="monster"
-                  sx={{
-                    top: '30px',
-                    left: '370px',
-                    width: '140px',
-                    height: 'auto',
-                    zIndex: -1,
-                  }}
-                />
-              </OverlayContainer>
-              <ScreenshotImage src={HowToPlay_Screenshot4} alt="monster" />
-              <Typography
-                variant="h2"
-                sx={{
-                  textAlign: 'center',
-                  paddingTop: `${theme.sizing.mediumPadding}px`,
-                  width: '350px',
-                }}
-              >
-                The most total points wins!
-              </Typography>
+              <HowToPlaySlide4Content />
             </SwiperSlide>
           </HowToPlaySwiper>
-          <PaginationContainer
+          <PaginationContainerStyled
             className="swiper-pagination-container"
             style={{ paddingTop: `${theme.sizing.largePadding}px` }}
           />
@@ -283,6 +96,6 @@ export default function JoinGame() {
           Waiting for the game to start...
         </Typography>
       </StackContainer>
-    </JoinGameBackgroundContainer>
+    </BackgroundContainerStyled>
   );
 }

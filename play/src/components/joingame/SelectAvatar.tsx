@@ -1,28 +1,23 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Button, Typography } from '@mui/material';
+import { Stack, Box, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  GamePlayButton,
-  JoinGameBackgroundContainer,
-  AvatarIcon
-} from '../../lib/styledcomponents/StyledComponents';
+  GamePlayButtonStyled,
+} from '../../lib/styledcomponents/GamePlayButtonStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import AvatarIconStyled from '../../lib/styledcomponents/AvatarIconStyled';
 import { monsterMap } from '../../lib/PlayModels';
 
-// stack container for select avatar screen, detect mobile device to bump up padding
-interface StackContainerProps {
-  isMobileDevice: boolean;
-}
+// stack container for select avatar screen
 
-const StackContainer = styled(Stack, {
-  shouldForwardProp: (prop) => prop !== 'isMobileDevice',
-})<StackContainerProps>(({ isMobileDevice, theme }) => ({
+const StackContainer = styled(Stack)({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
   minHeight: `100%`,
   marginBottom: '40px',
-}));
+});
 
 const GridContainer = styled('div')(({ theme }) => ({
   // using CSS Grid here because mui Grid responsiveness produces changes in spacing when crossing breakpoints
@@ -42,22 +37,21 @@ const AvatarIconContainer = styled(Box)({
 });
 
 interface MonsterContainerProps {
-  isMobileDevice: boolean;
+  isSmallDevice: boolean;
 }
 
 const MonsterContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isMobileDevice',
-})<MonsterContainerProps>(({ isMobileDevice, theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'isSmallDevice',
+})<MonsterContainerProps>(({ isSmallDevice, theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-end',
   minHeight: '100px',
-  height: isMobileDevice ? '25%' : '40%',
+  height: isSmallDevice ? '25%' : '40%',
   paddingTop: `${theme.sizing.smallPadding}px`,
-})
-);
+}));
 
-const Monster = styled('img')({ 
+const Monster = styled('img')({
   height: '100%',
   width: 'auto',
   animation: `none`,
@@ -83,15 +77,14 @@ const BottomContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   paddingBottom: `${theme.sizing.largePadding}px`,
   gap: 12,
-})
-)
+}));
 
 interface SelectAvatarProps {
   selectedAvatar: number | null;
   handleAvatarSelected: (value: number) => void;
   firstNameValue: string;
   lastNameValue: string;
-  isMobileDevice: boolean;
+  isSmallDevice: boolean;
 }
 
 export default function SelectAvatar({
@@ -99,14 +92,14 @@ export default function SelectAvatar({
   handleAvatarSelected,
   firstNameValue,
   lastNameValue,
-  isMobileDevice,
+  isSmallDevice,
 }: SelectAvatarProps) {
   const theme = useTheme();
 
   return (
-    <JoinGameBackgroundContainer >
-      <StackContainer isMobileDevice={isMobileDevice} >
-        <Stack spacing={2} >
+    <BackgroundContainerStyled>
+      <StackContainer>
+        <Stack spacing={2}>
           <Typography
             variant="h2"
             sx={{
@@ -119,31 +112,31 @@ export default function SelectAvatar({
           <GridContainer>
             {Object.keys(monsterMap).map((value, index) => (
               <AvatarIconContainer key={uuidv4()}>
-                <AvatarIcon
+                <AvatarIconStyled
                   src={monsterMap[index].icon}
                   onClick={() => {
                     handleAvatarSelected(index);
                   }}
-                  isSelected = {index === selectedAvatar}
+                  isSelected={index === selectedAvatar}
                   alt="avatar"
                 />
               </AvatarIconContainer>
             ))}
           </GridContainer>
         </Stack>
-        <MonsterContainer isMobileDevice={isMobileDevice}>
+        <MonsterContainer isSmallDevice={isSmallDevice}>
           <Monster
             src={monsterMap[selectedAvatar || 0].monster}
             alt="monster"
           />
         </MonsterContainer>
-        <BottomContainer >
+        <BottomContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstNameValue} ${lastNameValue}`}
           </Typography>
-          <GamePlayButton> Choose </GamePlayButton>
+          <GamePlayButtonStyled> Choose </GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
-    </JoinGameBackgroundContainer>
+    </BackgroundContainerStyled>
   );
 }

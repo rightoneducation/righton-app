@@ -1,11 +1,9 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
-import {
-  IntroButton,
-  IntroTextField,
-  JoinGameBackgroundContainer,
-} from '../../lib/styledcomponents/StyledComponents';
+import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -28,7 +26,7 @@ interface EnterPlayerNameProps {
   setFirstNameValue: (newValue: string) => void;
   lastNameValue: string;
   setLastNameValue: (newValue: string) => void;
-  isMobileDevice: boolean;
+  isSmallDevice: boolean;
   inputError: boolean;
 }
 
@@ -37,15 +35,14 @@ export default function EnterPlayerName({
   setFirstNameValue,
   lastNameValue,
   setLastNameValue,
-  isMobileDevice,
+  isSmallDevice,
   inputError,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
 
   return (
-    <JoinGameBackgroundContainer>
-      
-      <StackContainer spacing={isMobileDevice ? 2 : 5}>
+    <BackgroundContainerStyled>
+      <StackContainer spacing={isSmallDevice ? 2 : 5}>
         <img
           style={{
             width: '214px',
@@ -61,54 +58,54 @@ export default function EnterPlayerName({
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
-            <IntroTextField
-            fullWidth
-            variant="filled"
-            autoComplete="off"
-            placeholder="First Name"
-            onChange={(event) =>  setFirstNameValue(event.target.value)}
-            value={firstNameValue}
-            InputProps={{
-              disableUnderline: true,
-              inputProps: {
-                style: {
-                  color: theme.palette.primary.darkBlue,
-                  paddingTop: '9px',
-                  textAlign: 'center',
-                  fontSize: `${theme.typography.h2.fontSize}px`,
-                },
-              },
-            }}
-          />
+              <InputTextFieldStyled
+                fullWidth
+                variant="filled"
+                autoComplete="off"
+                placeholder="First Name"
+                onChange={(event) => setFirstNameValue(event.target.value)}
+                value={firstNameValue}
+                InputProps={{
+                  disableUnderline: true,
+                  inputProps: {
+                    style: {
+                      color: theme.palette.primary.darkBlue,
+                      paddingTop: '9px',
+                      textAlign: 'center',
+                      fontSize: `${theme.typography.h2.fontSize}px`,
+                    },
+                  },
+                }}
+              />
             </Grid>
             <Grid item xs={6}>
-            <IntroTextField
-            fullWidth
-            variant="filled"
-            autoComplete="off"
-            placeholder="Last Name"
-            onChange={(event) =>  setLastNameValue(event.target.value)}
-            value={lastNameValue}
-            InputProps={{
-              disableUnderline: true,
-              inputProps: {
-                style: {
-                  color: theme.palette.primary.darkBlue,
-                  paddingTop: '9px',
-                  textAlign: 'center',
-                  fontSize: `${theme.typography.h2.fontSize}px`,
-                },
-              },
-            }}
-          />
+              <InputTextFieldStyled
+                fullWidth
+                variant="filled"
+                autoComplete="off"
+                placeholder="Last Name"
+                onChange={(event) => setLastNameValue(event.target.value)}
+                value={lastNameValue}
+                InputProps={{
+                  disableUnderline: true,
+                  inputProps: {
+                    style: {
+                      color: theme.palette.primary.darkBlue,
+                      paddingTop: '9px',
+                      textAlign: 'center',
+                      fontSize: `${theme.typography.h2.fontSize}px`,
+                    },
+                  },
+                }}
+              />
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButton>
+        <IntroButtonStyled>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Enter
           </Typography>
-        </IntroButton>
+        </IntroButtonStyled>
         {inputError ? (
           <PaddedContainer>
             <Typography
@@ -130,6 +127,6 @@ export default function EnterPlayerName({
           </PaddedContainer>
         ) : null}
       </StackContainer>
-    </JoinGameBackgroundContainer>
+    </BackgroundContainerStyled>
   );
 }
