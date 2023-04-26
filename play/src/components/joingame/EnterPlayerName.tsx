@@ -4,6 +4,7 @@ import { Stack, Box, Grid, Typography } from '@mui/material';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import { InputPlaceholder } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -62,7 +63,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder="First Name"
+                placeholder={InputPlaceholder.FIRSTNAME}
                 onChange={(event) => setFirstNameValue(event.target.value)}
                 value={firstNameValue}
                 InputProps={{
@@ -83,7 +84,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder="Last Name"
+                placeholder={InputPlaceholder.LASTNAME}
                 onChange={(event) => setLastNameValue(event.target.value)}
                 value={lastNameValue}
                 InputProps={{

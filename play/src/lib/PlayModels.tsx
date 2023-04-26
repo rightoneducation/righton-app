@@ -40,3 +40,9 @@ export const monsterMap: MonsterMap = {
   4: { icon: Icon4, monster: Monster4 },
   5: { icon: Icon5, monster: Monster5 },
 };
+
+export enum InputPlaceholder {
+  FIRSTNAME = 'First Name',
+  LASTNAME = 'Last Name',
+  GAMECODE = '####',
+}
