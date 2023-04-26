@@ -64,33 +64,20 @@ const BodyBoxLower = styled(Box)(({ theme }) => ({
   zIndex: 0,
 }));
 
-const BodyGridArea = styled(Grid)({
-  position: 'absolute',
+const BodyGridArea = styled(Grid)(({ theme }) => ({
+  position: 'fixed',
   top: '0',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   alignItems: 'center',
-  maxWidth: '824px',
+  maxWidth: '400px',
   width: '100%',
   height: '100%',
   overflow: 'hidden',
+  paddingLeft: `${theme.sizing.mediumPadding}px`,
+  paddingRight: `${theme.sizing.mediumPadding}px`,
   zIndex: 2,
-});
-
-const ScrollBox = styled(Box)(({ theme }) => ({
-  height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px)`, // footer height & 8px grid spacing
-  paddingBottom: `${theme.sizing.extraSmallPadding}px`, // added so box shadow shows around edge of card
-  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-  paddingRight: `${theme.sizing.extraSmallPadding}px`,
-  overflow: 'auto',
-  touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none', // IE and Edge
 }));
 
 const FooterStackItem = styled(Stack)(({ theme }) => ({
@@ -191,7 +178,7 @@ export default function GameInProgress({
       <BodyStackItem>
         <BodyBoxUpper />
         <BodyBoxLower />
-        <BodyGridArea container spacing={isMobileDevice ? 0 : 2} >
+        <BodyGridArea container  >
          <CardResults 
           answers={answerChoices}
           selectedAnswer={selectedAnswer}

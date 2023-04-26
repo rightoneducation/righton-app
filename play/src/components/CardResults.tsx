@@ -29,7 +29,7 @@ export default function CardResults({
  
 
   return (
-    <BodyCard elevation={5} style={{  boxSizing: 'border-box', width: isMobileDevice ? '100%' : '400px'}}>
+    <BodyCard elevation={5} sx={{boxSizing: 'border-box', width: '100%'}}>
       <BodyCardContainer spacing={2}>
         <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (

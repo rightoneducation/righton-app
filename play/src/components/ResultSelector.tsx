@@ -22,6 +22,8 @@ const ResultSelectorDefault = styled(Container)(({ theme }) => ({
   textTransform: 'none',
   backgroundColor: theme.palette.primary.lightGrey,
   maxWidth: '100%', // overwrite MUI default maxWidth
+  paddingLeft: `${theme.sizing.smallPadding}px`, // overwrite MUI default padding
+  paddingRight: `${theme.sizing.smallPadding}px`,
 }));
 
 const ResultSelectorCorrect = styled(ResultSelectorDefault)(({ theme }) => ({
