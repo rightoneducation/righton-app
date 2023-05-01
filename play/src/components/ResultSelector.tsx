@@ -57,6 +57,7 @@ export default function ResultSelector({
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
+    [AnswerState.PLAYER_CORRECT]: CorrectAnswerImage,
     [AnswerState.SELECTED]: '',
     [AnswerState.PREVIOUS]: PreviousAnswer,
   };
@@ -98,7 +99,7 @@ export default function ResultSelector({
           {percentageText}
         </Typography>
         )}
-          {(answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PREVIOUS) && (
+          {(answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PLAYER_CORRECT || answerStatus === AnswerState.PREVIOUS) && (
           <img
             src={imageMap[answerStatus]}
             style={{
