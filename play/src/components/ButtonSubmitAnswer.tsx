@@ -1,9 +1,9 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import {
-  GamePlayButton,
-  GamePlayDisabled,
-} from '../lib/styledcomponents/StyledComponents';
+  GamePlayButtonStyled,
+  GamePlayButtonStyledDisabled,
+} from '../lib/styledcomponents/GamePlayButtonStyled';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
@@ -22,14 +22,14 @@ export default function ButtonSubmitAnswer({
   );
 
   return isSelected && !isSubmitted ? (
-    <GamePlayButton
+    <GamePlayButtonStyled
       onClick={() => {
         handleSubmitAnswer(true);
       }}
     >
       {buttonContents}
-    </GamePlayButton>
+    </GamePlayButtonStyled>
   ) : (
-    <GamePlayDisabled disabled> {buttonContents} </GamePlayDisabled>
+    <GamePlayButtonStyledDisabled disabled> {buttonContents} </GamePlayButtonStyledDisabled>
   );
 }

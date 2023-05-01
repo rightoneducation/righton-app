@@ -5,12 +5,10 @@ import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { AnswerState } from '../lib/PlayModels';
-import {
-  BodyCard,
-  BodyCardContainer,
-} from '../lib/styledcomponents/StyledComponents';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
-interface CardAnswerProps {
+interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   handleSubmitAnswer: () => void;
@@ -19,14 +17,14 @@ interface CardAnswerProps {
   handleSelectAnswer: (index: number) => void;
 }
 
-export default function CardAnswer({
+export default function AnswerCard({
   answers,
   isSubmitted,
   handleSubmitAnswer,
   currentState,
   selectedAnswer,
   handleSelectAnswer,
-}: CardAnswerProps) {
+}: AnswerCardProps) {
   const theme = useTheme();
   const correctText = (
     <Box display="flex" alignContent="flex-start">
@@ -53,8 +51,8 @@ export default function CardAnswer({
   );
 
   return (
-    <BodyCard elevation={5}>
-      <BodyCardContainer spacing={2}>
+    <BodyCardStyled elevation={5}>
+      <BodyCardContainerStyled spacing={2}>
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
           ? correctText
           : trickText}
@@ -79,7 +77,7 @@ export default function CardAnswer({
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
         />
-      </BodyCardContainer>
-    </BodyCard>
+      </BodyCardContainerStyled>
+    </BodyCardStyled>
   );
 }

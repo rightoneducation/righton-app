@@ -14,47 +14,48 @@ interface JoinGameProps {
 
 export default function JoinGame({ joinGameState }: JoinGameProps) {
   const theme = useTheme();
-  const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [inputError, setInputError] = useState(true); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [gameCodeValue, setGameCodeValue] = useState('####');
-  const [playerFirstName, setPlayerFirstName] = useState('First Name');
-  const [playerLastName, setPlayerLastName] = useState('Last Name');
+
+  const [gameCodeValue, setGameCodeValue] = useState('');
+  const [firstNameValue, setFirstNameValue] = useState('');
+  const [lastNameValue, setLastNameValue] = useState('');
   const [avatar, setAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
 
   switch (joinGameState) {
-    case JoinGameState.HOWTOPLAY:
+    case JoinGameState.HOW_TO_PLAY:
       return <HowToPlay />;
-    case JoinGameState.SELECTAVATAR:
+    case JoinGameState.SELECT_AVATAR:
       return (
         <SelectAvatar
           selectedAvatar={selectedAvatar}
           handleAvatarSelected={setSelectedAvatar}
-          playerFirstName={playerFirstName}
-          playerLastName={playerLastName}
-          isMobileDevice={isMobileDevice}
+          firstNameValue={firstNameValue}
+          lastNameValue={lastNameValue}
+          isSmallDevice={isSmallDevice}
         />
       );
-    case JoinGameState.ENTERNAME:
+    case JoinGameState.ENTER_NAME:
       return (
         <EnterPlayerName
-          playerFirstName={playerFirstName}
-          playerLastName={playerLastName}
-          handlePlayerFirstNameChange={setPlayerFirstName}
-          handlePlayerLastNameChange={setPlayerLastName}
-          isMobileDevice={isMobileDevice}
+          firstNameValue={firstNameValue}
+          lastNameValue={lastNameValue}
+          setFirstNameValue={setFirstNameValue}
+          setLastNameValue={setLastNameValue}
+          isSmallDevice={isSmallDevice}
           inputError={inputError}
         />
       );
-    case JoinGameState.ENTERGAMECODE:
+    case JoinGameState.ENTER_GAME_CODE:
       return (
         <EnterGameCode
           gameCodeValue={gameCodeValue}
-          handleGameCodeChange={setGameCodeValue}
+          setGameCodeValue={setGameCodeValue}
           inputError={inputError}
         />
       );
-    case JoinGameState.SPLASHSCREEN:
+    case JoinGameState.SPLASH_SCREEN:
     default:
       return <SplashScreen />;
   }

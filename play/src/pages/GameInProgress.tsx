@@ -13,17 +13,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
-import CardQuestion from '../components/CardQuestion';
-import CardAnswer from '../components/CardAnswer';
+import QuestionCard from '../components/QuestionCard';
+import AnswerCard from '../components/AnswerCard';
 import FooterContent from '../components/FooterContent';
-import { PaginationContainer,
-  StackContainer,
-  HeaderStackItem,
-  BodyStackItem,
-  BodyBoxUpper,
-  BodyBoxLower,
-  BodyContentArea,
-  FooterStackItem, } from '../lib/styledcomponents/StyledComponents';
+import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+import StackContainerStyled from '../lib/styledcomponents/StackContainerStyled';
+import HeaderStackContainerStyled from '../lib/styledcomponents/HeaderStackContainerStyled';
+import BodyStackContainerStyled from '../lib/styledcomponents/BodyStackContainerStyled';
+import BodyBoxUpperStyled from '../lib/styledcomponents/BodyBoxUpperStyled';
+import BodyBoxLowerStyled from '../lib/styledcomponents/BodyBoxLowerStyled';
+import { BodyContentAreaStyled } from '../lib/styledcomponents/BodyContentAreaStyled';
+import FooterStackContainerStyled from '../lib/styledcomponents/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -62,7 +62,7 @@ export default function GameInProgress({
   teamId, // eslint-disable-line @typescript-eslint/no-unused-vars
 }: GameInProgressProps) {
   const theme = useTheme();
-  const isMobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [gameSessionState, setCurrentState] = React.useState(currentState); // eslint-disable-line @typescript-eslint/no-unused-vars
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -131,11 +131,11 @@ export default function GameInProgress({
         Question
       </Typography>
       <ScrollBox>
-        <CardQuestion
+        <QuestionCard
           questionText={questionText}
           imageUrl={questionUrl ?? ''}
         />
-        {isMobileDevice ? (
+        {isSmallDevice ? (
           <Typography
             variant="body1"
             sx={{
@@ -164,7 +164,7 @@ export default function GameInProgress({
         Answer
       </Typography>
       <ScrollBox>
-        <CardAnswer
+        <AnswerCard
           answers={answerChoices}
           isSubmitted={isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
@@ -177,12 +177,12 @@ export default function GameInProgress({
   );
 
   return (
-    <StackContainer
+    <StackContainerStyled
       direction="column"
       alignItems="center"
       justifyContent="space-between"
     >
-      <HeaderStackItem>
+      <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -192,13 +192,13 @@ export default function GameInProgress({
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
         />
-      </HeaderStackItem>
-      <BodyStackItem>
-        <BodyBoxUpper />
-        <BodyBoxLower />
-        <BodyContentArea container spacing={isMobileDevice ? 0 : 2}>
+      </HeaderStackContainerStyled>
+      <BodyStackContainerStyled>
+        <BodyBoxUpperStyled />
+        <BodyBoxLowerStyled />
+        <BodyContentAreaStyled container spacing={isSmallDevice ? 0 : 2}>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-            {isMobileDevice ? (
+            {isSmallDevice ? (
               <Swiper
                 modules={[Pagination]}
                 spaceBetween={24}
@@ -243,11 +243,11 @@ export default function GameInProgress({
           <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
             {answerContents}
           </Grid>
-        </BodyContentArea>
-      </BodyStackItem>
-      <FooterStackItem>
-        {isMobileDevice ? (
-          <PaginationContainer className="swiper-pagination-container" />
+        </BodyContentAreaStyled>
+      </BodyStackContainerStyled>
+      <FooterStackContainerStyled>
+        {isSmallDevice ? (
+          <PaginationContainerStyled className="swiper-pagination-container" />
         ) : null}
         <FooterContent
           avatar={teamAvatar}
@@ -255,7 +255,7 @@ export default function GameInProgress({
           newPoints={10}
           score={120}
         />
-      </FooterStackItem>
-    </StackContainer>
+      </FooterStackContainerStyled>
+    </StackContainerStyled>
   );
 }

@@ -1,22 +1,20 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import {
-  BodyCard,
-  BodyCardContainer,
-} from '../lib/styledcomponents/StyledComponents';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
-interface CardQuestionProps {
+interface QuestionCardProps {
   questionText: string[];
   imageUrl: string;
 }
 
-export default function CardQuestion({
+export default function QuestionCard({
   questionText,
   imageUrl,
-}: CardQuestionProps) {
+}: QuestionCardProps) {
   return (
-    <BodyCard elevation={5}>
-      <BodyCardContainer>
+    <BodyCardStyled elevation={5}>
+      <BodyCardContainerStyled>
         <img
           style={{ width: '75%', height: 'auto' }}
           src={imageUrl}
@@ -29,7 +27,7 @@ export default function CardQuestion({
         >
           {`\n ${questionText[1]}`}
         </Typography>
-      </BodyCardContainer>
-    </BodyCard>
+      </BodyCardContainerStyled>
+    </BodyCardStyled>
   );
 }

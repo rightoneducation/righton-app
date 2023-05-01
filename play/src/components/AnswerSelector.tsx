@@ -99,10 +99,10 @@ export default function AnswerSelector({
         style={{
           position: 'absolute',
           right: isSubmitted
-            ? `${theme.sizing.smallPadding + 1}px`
-            : `${theme.sizing.smallPadding}px`,
-          width: `${theme.sizing.smallPadding}px`,
-          height: `${theme.sizing.smallPadding}px`,
+            ? `17px`
+            : `16px`,
+          width: `16px`,
+          height: `16px`,
           paddingTop: '2px',
           opacity:
             isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,

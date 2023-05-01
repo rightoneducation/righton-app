@@ -12,32 +12,33 @@ import JoinGame from '../pages/JoinGame';
 import { JoinGameState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState(  // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [gameSession, setGameSession] = useState(     // eslint-disable-line @typescript-eslint/no-unused-vars
+
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [joinGameState, setjoinGameState] = useState<JoinGameState>(JoinGameState.SPLASHSCREEN);
+  const [joinGameState, setjoinGameState] = useState<JoinGameState>(JoinGameState.SPLASH_SCREEN);
   const [tempPhase, setTempPhase] = useState<GameSessionState>(GameSessionState.PHASE_1_RESULTS);
  
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     switch (value) {
       case 0:
-        setjoinGameState(JoinGameState.SPLASHSCREEN);
+        setjoinGameState(JoinGameState.SPLASH_SCREEN);
         break;
       case 1:
-        setjoinGameState(JoinGameState.ENTERGAMECODE);
+        setjoinGameState(JoinGameState.ENTER_GAME_CODE);
         break;
       case 2:
-        setjoinGameState(JoinGameState.ENTERNAME);
+        setjoinGameState(JoinGameState.ENTER_NAME);
         break;
       case 3:
-        setjoinGameState(JoinGameState.SELECTAVATAR);
+        setjoinGameState(JoinGameState.SELECT_AVATAR);
         break;
       case 4:
-        setjoinGameState(JoinGameState.HOWTOPLAY);
+        setjoinGameState(JoinGameState.HOW_TO_PLAY);
         break;
       default:
         // Handle invalid value here
@@ -55,35 +56,35 @@ export default function GameSessionContainer() {
               type="radio"
               name="option"
               value="0"
-              checked={joinGameState === JoinGameState.SPLASHSCREEN}
+              checked={joinGameState === JoinGameState.SPLASH_SCREEN}
               onChange={handleOptionChange}
             />
             <input
               type="radio"
               name="option"
               value="1"
-              checked={joinGameState === JoinGameState.ENTERGAMECODE}
+              checked={joinGameState === JoinGameState.ENTER_GAME_CODE}
               onChange={handleOptionChange}
             />
             <input
               type="radio"
               name="option"
               value="2"
-              checked={joinGameState === JoinGameState.ENTERNAME}
+              checked={joinGameState === JoinGameState.ENTER_NAME}
               onChange={handleOptionChange}
             />
             <input
               type="radio"
               name="option"
               value="3"
-              checked={joinGameState === JoinGameState.SELECTAVATAR}
+              checked={joinGameState === JoinGameState.SELECT_AVATAR}
               onChange={handleOptionChange}
             />
             <input
               type="radio"
               name="option"
               value="4"
-              checked={joinGameState === JoinGameState.HOWTOPLAY}
+              checked={joinGameState === JoinGameState.HOW_TO_PLAY}
               onChange={handleOptionChange}
             />
           </div>

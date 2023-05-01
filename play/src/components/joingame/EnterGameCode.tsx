@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
-import {
-  IntroButton,
-  IntroTextField,
-  JoinGameBackgroundContainer,
-} from '../../lib/styledcomponents/StyledComponents';
+import { InputPlaceholder } from '../../lib/PlayModels';
+import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -22,18 +21,27 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 
 interface EnterGameCodeProps {
   gameCodeValue: string;
-  handleGameCodeChange: (newValue: string) => void;
+  setGameCodeValue: (newValue: string) => void;
   inputError: boolean;
 }
 
 export default function EnterGameCode({
   gameCodeValue,
-  handleGameCodeChange,
+  setGameCodeValue,
   inputError,
 }: EnterGameCodeProps) {
   const theme = useTheme();
+  const [value, setValue] = useState('');
+
+  // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    const numericValue = newValue.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    setGameCodeValue(numericValue);
+  };
+
   return (
-    <JoinGameBackgroundContainer>
+    <BackgroundContainerStyled>
       <StackContainer spacing={5}>
         <img
           style={{
@@ -44,32 +52,25 @@ export default function EnterGameCode({
           src={Logo}
           alt="Question"
         />
+        {/* container here to trim the spacing set by parent stack between text and input, typ */}
         <Box>
-          {/* container here to trim the spacing set by parent stack between text and input, typ */}
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
             Enter Game Code
           </Typography>
-          <IntroTextField
+          <InputTextFieldStyled
             fullWidth
             variant="filled"
             autoComplete="off"
-            onChange={(newValue) => {
-              handleGameCodeChange(newValue.target.value);
-            }}
-            onFocus={(newValue) => {
-              if (newValue.target.value === '####') {
-                handleGameCodeChange('');
-              }
-            }}
+            placeholder={InputPlaceholder.GAME_CODE}
+            onChange={handleChange}
             value={gameCodeValue}
             InputProps={{
-              disableUnderline: true,
+              disableUnderline: true,   
               inputProps: {
+                inputMode: 'numeric',
+                pattern: '[0-9]*',
                 style: {
-                  color:
-                    gameCodeValue === '####'
-                      ? theme.palette.primary.darkGrey
-                      : theme.palette.primary.extraDarkGrey,
+                  color: theme.palette.primary.darkBlue,
                   paddingTop: '9px',
                   textAlign: 'center',
                   fontSize: `${theme.typography.h2.fontSize}px`,
@@ -78,12 +79,12 @@ export default function EnterGameCode({
             }}
           />
         </Box>
-        <IntroButton>
+        <IntroButtonStyled>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Join
           </Typography>
-        </IntroButton>
-        {inputError ? (
+        </IntroButtonStyled>
+        {inputError && (
           <PaddedContainer>
             <Typography
               variant="h2"
@@ -99,8 +100,8 @@ export default function EnterGameCode({
               Check the Game Code and try again.
             </Typography>
           </PaddedContainer>
-        ) : null}
+        )}
       </StackContainer>
-    </JoinGameBackgroundContainer>
+    </BackgroundContainerStyled>
   );
 }
