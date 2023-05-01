@@ -67,6 +67,7 @@ export default function AnswerSelector({
     [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.SELECTED]: SelectedAnswerImage,
     [AnswerState.PREVIOUS]: PreviousAnswer,
+    [AnswerState.PLAYER_CORRECT]: CorrectAnswerImage,
   };
 
   const buttonContents = (

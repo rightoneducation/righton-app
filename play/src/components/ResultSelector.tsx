@@ -42,7 +42,6 @@ interface ResultSelectorProps {
   answerText: string;
   percentageText: string;
   currentState: GameSessionState;
-  playerCorrect: boolean;
 }
 
 export default function ResultSelector({
@@ -51,7 +50,6 @@ export default function ResultSelector({
   answerText,
   percentageText,
   currentState,
-  playerCorrect, 
 } : ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
@@ -93,7 +91,7 @@ export default function ResultSelector({
         <Typography
           variant="body2"
           sx={{
-            paddingRight: `${theme.sizing.smallPadding}px`,
+            paddingRight: (answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PREVIOUS) ? `${theme.sizing.extraSmallPadding}px` : `${theme.sizing.mediumPadding}px`,
             color: (answerStatus === AnswerState.SELECTED ? theme.palette.primary.main : null),
           }}
         >
@@ -121,18 +119,24 @@ export default function ResultSelector({
     case AnswerState.CORRECT:
       return (
         <Box>
-          { playerCorrect && (
-            <Box sx={{position: 'relative', height: 0}}>
-              <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, left: 0 }}/>
-              <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, right: 10 }}/>
-              <CorrectStarsStyled src={CorrectStars_Mirrored} alt="" style={{ top: 30, right: 0 }}/>
-            </Box>
-          )}
           <ResultSelectorCorrect>
             {buttonContents}
           </ResultSelectorCorrect>
         </Box>
       );
+      case AnswerState.PLAYER_CORRECT:
+        return (
+          <Box>
+              <Box sx={{position: 'relative', height: 0}}>
+                <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, left: 0 }}/>
+                <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, right: 10 }}/>
+                <CorrectStarsStyled src={CorrectStars_Mirrored} alt="" style={{ top: 30, right: 0 }}/>
+              </Box>
+            <ResultSelectorCorrect>
+              {buttonContents}
+            </ResultSelectorCorrect>
+          </Box>
+        );
     case AnswerState.SELECTED:
       return (
         <ResultSelectorSelected

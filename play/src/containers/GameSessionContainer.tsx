@@ -20,8 +20,9 @@ export default function GameSessionContainer() {
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [joinGameState, setjoinGameState] = useState<JoinGameState>(JoinGameState.SPLASH_SCREEN);
-  const [tempPhase, setTempPhase] = useState<GameSessionState>(GameSessionState.PHASE_1_RESULTS);
- 
+  const [tempPhase, setTempPhase] = useState<GameSessionState>(GameSessionState.PHASE_2_RESULTS);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0);
+  console.log(currentQuestionIndex);
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     switch (value) {
@@ -106,6 +107,9 @@ export default function GameSessionContainer() {
       return (
         <PhaseResults 
           {...gameSession}
+          gameSession={gameSession}
+          currentQuestionIndex={currentQuestionIndex}
+          currentState={tempPhase}
           teamAvatar={teamAvatar}
           teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
         />           

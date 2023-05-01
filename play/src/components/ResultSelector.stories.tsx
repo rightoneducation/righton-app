@@ -23,7 +23,6 @@ const Template: ComponentStory<typeof ResultSelector> =
 export const Default = Template.bind({});
 Default.args = {
   answerStatus: AnswerState.DEFAULT,
-  playerCorrect: false,
   percentageText: '66%',
   answerText: 'Sample',
   currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,

@@ -12,10 +12,11 @@ import Monster4 from '../img/Monster4.svg';
 import Monster5 from '../img/Monster5.svg';
 
 export enum AnswerState {
-  DEFAULT = 'DEFAULT',
-  CORRECT = 'CORRECT',
-  SELECTED = 'SELECTED',
-  PREVIOUS = 'PREVIOUS',
+  DEFAULT = 'DEFAULT', // any answer not correct or selected by player
+  CORRECT = 'CORRECT', // correct answer per gameSession object
+  PLAYER_CORRECT = 'PLAYER_CORRECT', // player has chosen correct answer
+  SELECTED = 'SELECTED', // answer player has selected
+  PREVIOUS = 'PREVIOUS', // answer player has selected in previous phase
 }
 
 export enum JoinGameState {
