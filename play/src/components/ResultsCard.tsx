@@ -6,10 +6,8 @@ import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import ResultSelector from './ResultSelector';
 import AnswerSelector from './AnswerSelector';
 import { AnswerState } from '../lib/PlayModels';
-import {
-  BodyCard,
-  BodyCardContainer,
-} from '../lib/styledcomponents/StyledComponents';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface CardResultsProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
@@ -30,8 +28,8 @@ export default function CardResults({
  
 
   return (
-    <BodyCard elevation={5} sx={{boxSizing: 'border-box', width: '100%'}}>
-      <BodyCardContainer spacing={2}>
+    <BodyCardStyled elevation={5} sx={{boxSizing: 'border-box', width: '100%'}}>
+      <BodyCardContainerStyled spacing={2}>
         <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
               <ResultSelector
@@ -49,7 +47,7 @@ export default function CardResults({
               />
           ))}
         </Stack>
-      </BodyCardContainer>
-    </BodyCard>
+      </BodyCardContainerStyled>
+    </BodyCardStyled>
   );
 }

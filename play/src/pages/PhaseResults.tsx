@@ -10,17 +10,15 @@ import {
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
-import CardResults from '../components/CardResults';
+import CardResults from '../components/ResultsCard';
 import FooterContent from '../components/FooterContent';
-import { 
-  StackContainer,
-  HeaderStackItem,
-  BodyStackItem,
-  BodyBoxUpper,
-  BodyBoxLower,
-  BodyContentAreaPhaseResults,
-  FooterStackItem,
- } from '../lib/styledcomponents/StyledComponents';
+import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
+import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
+import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
+import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
+import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
+import { BodyContentAreaPhaseResultsStyled } from '../lib/styledcomponents/layout/BodyContentAreaStyled';
+import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -63,12 +61,12 @@ export default function PhaseResults({
   }));
 
   return (
-    <StackContainer
+    <StackContainerStyled
       direction="column"
       alignItems="center"
       justifyContent="space-between"
     >
-      <HeaderStackItem>
+      <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -78,27 +76,27 @@ export default function PhaseResults({
           isFinished={false}
           handleTimerIsFinished={()=> {}}
         />
-      </HeaderStackItem>
-      <BodyStackItem>
-        <BodyBoxUpper />
-        <BodyBoxLower />
-        <BodyContentAreaPhaseResults container  >
+      </HeaderStackContainerStyled>
+      <BodyStackContainerStyled>
+        <BodyBoxUpperStyled />
+        <BodyBoxLowerStyled />
+        <BodyContentAreaPhaseResultsStyled container  >
          <CardResults 
           answers={answerChoices}
           selectedAnswer={selectedAnswer}
           isMobileDevice={isMobileDevice}
           currentState={currentState}
          />
-        </BodyContentAreaPhaseResults>
-      </BodyStackItem>
-      <FooterStackItem>
+        </BodyContentAreaPhaseResultsStyled>
+      </BodyStackContainerStyled>
+      <FooterStackContainerStyled>
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           newPoints={10}
           score={120}
         />
-      </FooterStackItem>
-    </StackContainer>
+      </FooterStackContainerStyled>
+    </StackContainerStyled>
   );
 }
