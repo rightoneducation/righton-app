@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Stack, Box, Grid } from '@mui/material';
+import { Typography, Box, Grid } from '@mui/material';
 import {
   GameSessionState,
   ITeam,
@@ -44,7 +44,6 @@ const ScrollBox = styled(Box)(({ theme }) => ({
 
 interface GameInProgressProps {
   teams?: ITeam[];
-  id: string;
   currentState: GameSessionState;
   teamAvatar: number;
   questions: IQuestion[];
@@ -54,7 +53,6 @@ interface GameInProgressProps {
 
 export default function GameInProgress({
   teams,
-  id, // eslint-disable-line @typescript-eslint/no-unused-vars
   currentState,
   teamAvatar,
   questions,
@@ -63,12 +61,11 @@ export default function GameInProgress({
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const [gameSessionState, setCurrentState] = React.useState(currentState); // eslint-disable-line @typescript-eslint/no-unused-vars
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(  // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import SelectedAnswerImage from '../img/selectedAnswerImage.svg';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import SelectedAnswer from '../img/SelectedAnswer.svg';
@@ -66,7 +65,7 @@ export default function AnswerSelector({
   const imageMap = {
     [AnswerState.DEFAULT]: UnselectedAnswerImage,
     [AnswerState.CORRECT]: CorrectAnswerImage,
-    [AnswerState.SELECTED]: SelectedAnswerImage,
+    [AnswerState.SELECTED]: SelectedAnswer,
     [AnswerState.PREVIOUS]: SelectedAnswer,
     [AnswerState.PLAYER_CORRECT]: PlayerCorrectImage,
   };
@@ -100,9 +99,7 @@ export default function AnswerSelector({
         src={imageMap[answerStatus]}
         style={{
           position: 'absolute',
-          right: isSubmitted
-            ? `17px`
-            : `16px`,
+          right: isSubmitted ? `17px` : `16px`,
           width: `16px`,
           height: `16px`,
           paddingTop: '2px',

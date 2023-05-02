@@ -29,7 +29,7 @@ const ResultSelectorCorrect = styled(ResultSelectorDefault)(({ theme }) => ({
 
 const CorrectStarsStyled = styled('img')({
   position: 'absolute',
-  width: '16px', 
+  width: '16px',
   height: '16px',
 });
 
@@ -47,10 +47,10 @@ export default function ResultSelector({
   answerText,
   percentageText,
   currentState,
-} : ResultSelectorProps) {
+}: ResultSelectorProps) {
   const theme = useTheme();
   const letterCode = 'A'.charCodeAt(0) + index;
- 
+
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
@@ -59,9 +59,9 @@ export default function ResultSelector({
     [AnswerState.PREVIOUS]: '',
   };
 
-  const buttonContents = (
+  const resultContents = (
     <>
-      <Box style={{display: 'flex', alignItems: 'center'}}>
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
         <Typography
           variant="h5"
           sx={{
@@ -82,30 +82,35 @@ export default function ResultSelector({
           {answerText}
         </Typography>
       </Box>
-      <Box style={{display: 'flex', alignItems: 'center'}}>
-        { currentState === GameSessionState.PHASE_2_RESULTS && (
-        <Typography
-          variant="body2"
-          sx={{
-            paddingRight: (answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PREVIOUS || answerStatus === AnswerState.SELECTED) ? `${theme.sizing.extraSmallPadding}px` : `${theme.sizing.mediumPadding}px`,
-          }}
-        >
-          {percentageText}
-        </Typography>
-        )}
-          {(answerStatus !== AnswerState.PREVIOUS && answerStatus !== AnswerState.DEFAULT) && (
-          <img
-            src={imageMap[answerStatus]}
-            style={{
-              position: 'relative',
-              width: `${theme.sizing.smallPadding}px`,
-              height: `${theme.sizing.smallPadding}px`,
-              paddingTop: '2px',
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
+        {currentState === GameSessionState.PHASE_2_RESULTS && ( // if in phase 2, display percentage text
+          <Typography
+            variant="body2"
+            sx={{
+              paddingRight:
+                answerStatus === AnswerState.CORRECT ||
+                answerStatus === AnswerState.PREVIOUS ||
+                answerStatus === AnswerState.SELECTED
+                  ? `${theme.sizing.extraSmallPadding}px`
+                  : `${theme.sizing.mediumPadding}px`,
             }}
-            alt="SelectedAnswerImage"
-          />
+          >
+            {percentageText}
+          </Typography>
+        )}
+        {answerStatus !== AnswerState.PREVIOUS &&
+          answerStatus !== AnswerState.DEFAULT && (
+            <img
+              src={imageMap[answerStatus]}
+              style={{
+                position: 'relative',
+                width: `${theme.sizing.smallPadding}px`,
+                height: `${theme.sizing.smallPadding}px`,
+                paddingTop: '2px',
+              }}
+              alt="SelectedAnswerImage"
+            />
           )}
-          
       </Box>
     </>
   );
@@ -114,32 +119,35 @@ export default function ResultSelector({
     case AnswerState.CORRECT:
       return (
         <Box>
-          <ResultSelectorCorrect>
-            {buttonContents}
-          </ResultSelectorCorrect>
+          <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );
-      case AnswerState.PLAYER_CORRECT:
-        return (
-          <Box>
-              <Box sx={{position: 'relative', height: 0}}>
-                <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, left: 0 }}/>
-                <CorrectStarsStyled src={CorrectStars} alt="" style={{ top: -5, right: 10 }}/>
-                <CorrectStarsStyled src={CorrectStars_Mirrored} alt="" style={{ top: 30, right: 0 }}/>
-              </Box>
-            <ResultSelectorCorrect>
-              {buttonContents}
-            </ResultSelectorCorrect>
+    case AnswerState.PLAYER_CORRECT:
+      return (
+        <Box>
+          <Box sx={{ position: 'relative', height: 0 }}>
+            <CorrectStarsStyled
+              src={CorrectStars}
+              alt=""
+              style={{ top: -5, left: 0 }}
+            />
+            <CorrectStarsStyled
+              src={CorrectStars}
+              alt=""
+              style={{ top: -5, right: 10 }}
+            />
+            <CorrectStarsStyled
+              src={CorrectStars_Mirrored}
+              alt=""
+              style={{ top: 30, right: 0 }}
+            />
           </Box>
-        );
+          <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
+        </Box>
+      );
     case AnswerState.SELECTED:
     case AnswerState.DEFAULT:
     default:
-      return (
-        <ResultSelectorDefault
-        >
-          {buttonContents}
-        </ResultSelectorDefault>
-      );
+      return <ResultSelectorDefault>{resultContents}</ResultSelectorDefault>;
   }
 }

@@ -30,6 +30,9 @@ export default function ButtonSubmitAnswer({
       {buttonContents}
     </GamePlayButtonStyled>
   ) : (
-    <GamePlayButtonStyledDisabled disabled> {buttonContents} </GamePlayButtonStyledDisabled>
+    <GamePlayButtonStyledDisabled disabled>
+      {' '}
+      {buttonContents}{' '}
+    </GamePlayButtonStyledDisabled>
   );
 }

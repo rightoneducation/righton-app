@@ -17,12 +17,13 @@ export const BodyContentAreaStyled = styled(Grid)({
   zIndex: 2,
 });
 
-
 // content area of body that floats above background layers above - Phase Results Page
-export const BodyContentAreaPhaseResultsStyled = styled(BodyContentAreaStyled)(({ theme }) => ({
-  position: 'fixed',
-  justifyContent: 'center',
-  maxWidth: '400px',
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
-}));
+export const BodyContentAreaPhaseResultsStyled = styled(BodyContentAreaStyled)(
+  ({ theme }) => ({
+    position: 'fixed',
+    justifyContent: 'center',
+    maxWidth: '400px',
+    paddingLeft: `${theme.sizing.mediumPadding}px`,
+    paddingRight: `${theme.sizing.mediumPadding}px`,
+  })
+);
