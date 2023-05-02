@@ -66,20 +66,14 @@ export default function PhaseResults({
     selectedAnswer = findSelectedAnswer(teamAnswers)
   }
 
-  // step 3: get all possible answers to the question 
+  // step 3: get all possible answers to the question (and send this info down to ResultsCard for use in determing answer type on map)
   const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,
     isCorrectAnswer: choice.isAnswer,
   }));
-
-  // step 4: if phase 2, get the answer the player selected in phase 1 (then: send all this info down to results card to determine answer types on map)
-  let prevAnswer = null;
-  if (phaseNo === 2) {
-    prevAnswer = teamAnswers?.find((teamAnswer: ITeamAnswer | null) => teamAnswer?.isChosen === true) ?? null;
-  }
  
-  // step 5: calculate new score for use in footer (todo: update gamesession object through api call) 
+  // step 4: calculate new score for use in footer (todo: update gamesession object through api call) 
   const calculateNewScore = (session: IGameSession, question: IQuestion, team: ITeam) => {
     const newScore = ModelHelper.calculateBasicModeScoreForQuestion(session, question, team);
     return newScore;
@@ -113,7 +107,6 @@ export default function PhaseResults({
           selectedAnswer={selectedAnswer ?? null}
           currentState={currentState}
           currentQuestionId={currentQuestion.id}
-          prevAnswer = {prevAnswer}
          />
         </BodyContentAreaPhaseResultsStyled>
       </BodyStackContainerStyled>

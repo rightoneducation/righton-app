@@ -14,7 +14,6 @@ interface CardResultsProps {
   currentState: GameSessionState;
   currentQuestionId: number;
   gameSession: IGameSession;
-  prevAnswer: ITeamAnswer | null;
 }
 
 export default function CardResults({
@@ -23,8 +22,7 @@ export default function CardResults({
   selectedAnswer,
   currentState,
   currentQuestionId,
-  gameSession,
-  prevAnswer
+  gameSession
 }: CardResultsProps) {
   
   // determines what type of answer result to display
@@ -35,8 +33,6 @@ export default function CardResults({
       return AnswerState.SELECTED;
     if (answer?.isCorrectAnswer)
       return AnswerState.CORRECT; 
-    if (answer?.text === prevAnswer?.text)
-      return AnswerState.PREVIOUS;
     return AnswerState.DEFAULT;
   };
 

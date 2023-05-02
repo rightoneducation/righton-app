@@ -4,7 +4,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import CorrectStars from '../img/CorrectStars.svg';
 import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
-import PreviousAnswer from '../img/PreviousAnswer.svg'
+import SelectedAnswer from '../img/SelectedAnswer.svg';
+import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import { AnswerState } from '../lib/PlayModels';
 
@@ -24,10 +25,6 @@ const ResultSelectorDefault = styled(Container)(({ theme }) => ({
 
 const ResultSelectorCorrect = styled(ResultSelectorDefault)(({ theme }) => ({
   backgroundColor: theme.palette.primary.correctColor,
-}));
-
-const ResultSelectorSelected = styled(ResultSelectorDefault)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.darkPurple,
 }));
 
 const CorrectStarsStyled = styled('img')({
@@ -57,9 +54,9 @@ export default function ResultSelector({
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
-    [AnswerState.PLAYER_CORRECT]: CorrectAnswerImage,
-    [AnswerState.SELECTED]: '',
-    [AnswerState.PREVIOUS]: PreviousAnswer,
+    [AnswerState.PLAYER_CORRECT]: PlayerCorrectImage,
+    [AnswerState.SELECTED]: SelectedAnswer,
+    [AnswerState.PREVIOUS]: '',
   };
 
   const buttonContents = (
@@ -71,7 +68,6 @@ export default function ResultSelector({
             paddingLeft: '1px',
             paddingTop: '2px',
             opacity: 0.5,
-            color: (answerStatus === AnswerState.SELECTED ? theme.palette.primary.main : null),
           }}
         >
           {`${String.fromCharCode(letterCode)}`}
@@ -81,7 +77,6 @@ export default function ResultSelector({
           sx={{
             paddingLeft: `${theme.sizing.extraSmallPadding}px`,
             paddingRight: `${theme.sizing.largePadding}px`,
-            color: (answerStatus === AnswerState.SELECTED ? theme.palette.primary.main : null),
           }}
         >
           {answerText}
@@ -92,14 +87,13 @@ export default function ResultSelector({
         <Typography
           variant="body2"
           sx={{
-            paddingRight: (answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PREVIOUS) ? `${theme.sizing.extraSmallPadding}px` : `${theme.sizing.mediumPadding}px`,
-            color: (answerStatus === AnswerState.SELECTED ? theme.palette.primary.main : null),
+            paddingRight: (answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PREVIOUS || answerStatus === AnswerState.SELECTED) ? `${theme.sizing.extraSmallPadding}px` : `${theme.sizing.mediumPadding}px`,
           }}
         >
           {percentageText}
         </Typography>
         )}
-          {(answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PLAYER_CORRECT || answerStatus === AnswerState.PREVIOUS) && (
+          {(answerStatus !== AnswerState.PREVIOUS && answerStatus !== AnswerState.DEFAULT) && (
           <img
             src={imageMap[answerStatus]}
             style={{
@@ -139,12 +133,6 @@ export default function ResultSelector({
           </Box>
         );
     case AnswerState.SELECTED:
-      return (
-        <ResultSelectorSelected
-        >
-          {buttonContents}
-        </ResultSelectorSelected>
-      );
     case AnswerState.DEFAULT:
     default:
       return (
