@@ -27,6 +27,11 @@ export enum JoinGameState {
   HOW_TO_PLAY = 'HOW_TO_PLAY',
 }
 
+export enum FinalResultsState {
+  CONGRATS = 'CONGRATS',
+  LEADERBOARD = 'LEADERBOARD',
+}
+
 interface MonsterMap {
   [key: number]: {
     icon: string;

@@ -9,6 +9,7 @@ import MockGameSession from '../mock/MockGameSession.json';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import JoinGame from '../pages/JoinGame';
+import FinalResults from '../pages/FinalResults';
 import { JoinGameState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
@@ -22,7 +23,7 @@ export default function GameSessionContainer() {
     JoinGameState.SPLASH_SCREEN
   ); 
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.PHASE_2_RESULTS
+    GameSessionState.FINAL_RESULTS
   ); 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
@@ -49,6 +50,10 @@ export default function GameSessionContainer() {
           teamAvatar={teamAvatar}
           teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
         />
+      );
+    case GameSessionState.FINAL_RESULTS:
+      return (
+        <FinalResults score={120} />
       );
     default:
       return (
