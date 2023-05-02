@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
-import InputTextFieldStyled from './InputTextFieldStyled';
+import  InputTextFieldStyled  from './InputTextFieldStyled';
 import Theme from '../Theme';
 
 export default {
