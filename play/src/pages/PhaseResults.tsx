@@ -57,7 +57,7 @@ export default function PhaseResults({
   teamAvatar,
   currentQuestionIndex,
   teamId,
-  gameSession, //todo: adjust networking helper method for score calc to req only teams instead of gamesession
+  gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const phaseNo = currentState === GameSessionState.PHASE_1_RESULTS ? 1 : 2;

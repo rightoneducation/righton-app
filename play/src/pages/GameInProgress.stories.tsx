@@ -32,7 +32,6 @@ export const TestStoryOne = Template.bind({});
 TestStoryOne.args = {
   teamAvatar: 0,
   teams: gameSession.teams,
-  id: 'Team One',
   currentState: gameSession.currentState,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
@@ -43,7 +42,6 @@ export const TestStoryTwo = Template.bind({});
 TestStoryTwo.args = {
   teamAvatar: 1,
   teams: gameSession.teams,
-  id: 'Team Two',
   currentState: gameSession.currentState,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
