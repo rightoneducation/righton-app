@@ -15,9 +15,9 @@ export const GamePlayButtonStyled = styled(Button)(({ theme }) => ({
 }));
 
 export const GamePlayButtonStyledDisabled = styled(GamePlayButtonStyled)(({ theme }) => ({
+  background: `${theme.palette.primary.extraDarkGrey}`,
+  boxShadow: 'none',
+  '&:hover': {
     background: `${theme.palette.primary.extraDarkGrey}`,
-    boxShadow: 'none',
-    '&:hover': {
-      background: `${theme.palette.primary.extraDarkGrey}`,
-    },
+  },
 }));
