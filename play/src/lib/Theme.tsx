@@ -176,6 +176,13 @@ export default createTheme({
       lineHeight: '19px',
       color: secondaryTextColor,
     },
+    h6: {
+      // screen titles
+      fontWeight: '800',
+      fontSize: '35px',
+      lineHeight: '48px',
+      color: primaryTextColor,
+    },
     body1: {
       // question text
       fontWeight: '400',

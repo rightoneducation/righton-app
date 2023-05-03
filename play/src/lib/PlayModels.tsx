@@ -10,6 +10,12 @@ import Monster2 from '../img/Monster2.svg';
 import Monster3 from '../img/Monster3.svg';
 import Monster4 from '../img/Monster4.svg';
 import Monster5 from '../img/Monster5.svg';
+import MonsterHandsUp0 from '../img/MonsterHandsUp0.svg';
+import MonsterHandsUp1 from '../img/MonsterHandsUp1.svg';
+import MonsterHandsUp2 from '../img/MonsterHandsUp2.svg';
+import MonsterHandsUp3 from '../img/MonsterHandsUp3.svg';
+import MonsterHandsUp4 from '../img/MonsterHandsUp4.svg';
+import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
 
 export enum AnswerState {
   DEFAULT = 'DEFAULT', // any answer not correct or selected by player
@@ -36,16 +42,17 @@ interface MonsterMap {
   [key: number]: {
     icon: string;
     monster?: string;
+    handsup?: string;
   };
 }
 
 export const monsterMap: MonsterMap = {
-  0: { icon: Icon0, monster: Monster0 },
-  1: { icon: Icon1, monster: Monster1 },
-  2: { icon: Icon2, monster: Monster2 },
-  3: { icon: Icon3, monster: Monster3 },
-  4: { icon: Icon4, monster: Monster4 },
-  5: { icon: Icon5, monster: Monster5 },
+  0: { icon: Icon0, monster: Monster0, handsup: MonsterHandsUp0 },
+  1: { icon: Icon1, monster: Monster1, handsup: MonsterHandsUp1 },
+  2: { icon: Icon2, monster: Monster2, handsup: MonsterHandsUp2 },
+  3: { icon: Icon3, monster: Monster3, handsup: MonsterHandsUp3 },
+  4: { icon: Icon4, monster: Monster4, handsup: MonsterHandsUp4 },
+  5: { icon: Icon5, monster: Monster5, handsup: MonsterHandsUp5 },
 };
 
 export enum InputPlaceholder {

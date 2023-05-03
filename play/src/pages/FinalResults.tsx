@@ -6,9 +6,10 @@ import { FinalResultsState } from '../lib/PlayModels';
 
 interface FinalResultsProps {
   score: number;
+  selectedAvatar: number;
 }
 
-export default function FinalResults({ score }: FinalResultsProps) {
+export default function FinalResults({ score, selectedAvatar }: FinalResultsProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.CONGRATS); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -16,6 +17,6 @@ export default function FinalResults({ score }: FinalResultsProps) {
   switch (finalResultsState) {
     case FinalResultsState.CONGRATS:
     default:
-      return <Congrats score={score} isSmallDevice={isSmallDevice} />;
+      return <Congrats score={score} isSmallDevice={isSmallDevice} selectedAvatar={selectedAvatar}/>;
   }
 }
