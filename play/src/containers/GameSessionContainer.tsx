@@ -25,7 +25,7 @@ export default function GameSessionContainer() {
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionState.FINAL_RESULTS
   ); 
-  const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.LEADERBOARD); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.CONGRATS); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAvatar = 0;
   const leader = true;

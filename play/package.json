@@ -35,7 +35,7 @@
     "format": "prettier --write .",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "chromatic": "yarn chromatic --project-token 99c8d45b7b98"
+    "chromatic": "chromatic --project-token 99c8d45b7b98"
   },
   "eslintConfig": {
     "extends": [
