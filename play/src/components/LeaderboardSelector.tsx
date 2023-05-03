@@ -5,7 +5,7 @@ import { monsterMap } from '../lib/PlayModels';
 
 const LeaderboardSelectorContainer = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '75px',
+  minHeight: '75px',
   borderRadius: '24px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -13,9 +13,7 @@ const LeaderboardSelectorContainer = styled(Box)(({ theme }) => ({
   textTransform: 'none',
   maxWidth: '100%', // overwrite MUI default maxWidth
   overflow: 'hidden',
-  position: 'relative'
-  // paddingLeft: `${theme.sizing.smallPadding}px`, // overwrite MUI default padding
-  // paddingRight: `${theme.sizing.smallPadding}px`,
+  position: 'relative',
 }));
 
 const MonsterAvatar = styled('img')({
@@ -26,7 +24,7 @@ const MonsterAvatar = styled('img')({
 
 const ScoreBox = styled(Box)(({ theme }) => ({
   height: '58px',
-  minWidth: '58px',
+  minWidth: '64px', 
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

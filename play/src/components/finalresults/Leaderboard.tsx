@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   GameSessionState,
   ITeam,
+  isNullOrUndefined,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import { Grid, Stack } from '@mui/material';
 import HeaderContent from '../HeaderContent';
-import ResultsCard from '../ResultsCard';
 import FooterContent from '../FooterContent';
 import StackContainerStyled from '../../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderStackContainerStyled from '../../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import BodyStackContainerStyled from '../../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaPhaseResultsStyled } from '../../lib/styledcomponents/layout/BodyContentAreaStyled';
+import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/layout/BodyContentAreaStyled';
 import FooterStackContainerStyled from '../../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -24,6 +25,7 @@ interface LeaderboardProps {
   teamAvatar: number;
   teamId: string;
   score: number;
+  isSmallDevice: boolean;
 }
 
 export default function Leaderboard({
@@ -32,8 +34,39 @@ export default function Leaderboard({
   teamAvatar,
   teamId,
   score,
+  isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
+  const teamSorter = (inputTeams: ITeam[]) => {
+    inputTeams.sort((a, b) => {
+      if (a.score < b.score) {
+        return 1;
+      }
+      if (a.score > b.score) {
+        return -1;
+      }
+      return 0;
+    });
+    return teams;
+  }
+
+  let sortedTeams;
+  if (!isNullOrUndefined(teams)) {
+     sortedTeams = teamSorter(teams);
+  }
+
+  // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
+  const containerRef = useRef<HTMLDivElement>(null); // ref req'd for height of container
+  const itemRef = useRef<HTMLDivElement>(null); // ref req'd for height of item
+  const [subContainerHeight, setSubContainerHeight] = useState<number>(0); // height of subcontainer
+
+  useEffect(() => { 
+    if (containerRef.current && itemRef.current) { // check if the container element has been loaded yet
+      const containerHeight = containerRef.current.clientHeight; // get height of container
+      const itemHeight = itemRef.current.clientHeight; // get height of item
+      setSubContainerHeight(containerHeight - (containerHeight % itemHeight)); // adjust height of subcontainer to be a multiple of the item height
+    }
+  }, [containerRef.current?.clientHeight, subContainerHeight]); // updates whenever the container is resized
 
   return (
     <StackContainerStyled
@@ -52,12 +85,21 @@ export default function Leaderboard({
           handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
-      <BodyStackContainerStyled>
+      <BodyStackContainerStyled ref={containerRef}>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaPhaseResultsStyled container>
-          <LeaderboardSelector teamName={currentTeam ? currentTeam.name : 'Team One'} teamAvatar={teamAvatar} teamScore={score} />
-        </BodyContentAreaPhaseResultsStyled>
+        <BodyContentAreaLeaderboardStyled container style={{height: `${subContainerHeight}px`}} isSmallDevice={isSmallDevice} spacing={2}>
+          { sortedTeams?.map((team: ITeam) => (
+              <Grid item key={uuidv4()} ref={itemRef} sx={{width: '100%'}}>
+                <LeaderboardSelector 
+                  teamName={team.name ? team.name : 'Team One'} 
+                  teamAvatar={team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)} 
+                  teamScore={team.score} 
+                />
+              </Grid>
+            ))
+          }
+        </BodyContentAreaLeaderboardStyled >
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>
         <FooterContent

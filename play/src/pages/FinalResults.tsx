@@ -19,10 +19,10 @@ export default function FinalResults({ teams, currentState, score, selectedAvata
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.LEADERBOARD); // eslint-disable-line @typescript-eslint/no-unused-vars
-
+  
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
-      return <Leaderboard teams={teams} currentState={currentState} teamAvatar={selectedAvatar} teamId={teamId} score={score} />;
+      return <Leaderboard teams={teams} currentState={currentState} teamAvatar={selectedAvatar} teamId={teamId} score={score} isSmallDevice={isSmallDevice}/>;
     case FinalResultsState.CONGRATS:
     default:
       return <Congrats score={score} isSmallDevice={isSmallDevice} selectedAvatar={selectedAvatar} leader={leader}/>;
