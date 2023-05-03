@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import {
   GameSessionState,
-  IGameSession,
   ITeam,
-  ITeamAnswer,
-  IQuestion,
-  IChoice,
-  ModelHelper,
-  isNullOrUndefined,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../HeaderContent';
@@ -22,6 +16,7 @@ import { BodyContentAreaPhaseResultsStyled } from '../../lib/styledcomponents/la
 import FooterStackContainerStyled from '../../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import LeaderboardSelector from '../LeaderboardSelector';
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -61,7 +56,7 @@ export default function Leaderboard({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <BodyContentAreaPhaseResultsStyled container>
-          Sup
+          <LeaderboardSelector teamName={currentTeam ? currentTeam.name : 'Team One'} teamAvatar={teamAvatar} teamScore={score} />
         </BodyContentAreaPhaseResultsStyled>
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>
