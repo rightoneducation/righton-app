@@ -50,18 +50,19 @@ interface CongratsProps {
   score: number;
   isSmallDevice: boolean;
   selectedAvatar: number;
+  leader: boolean;
 }
 
 export default function Congrats({
   score,
   isSmallDevice,
   selectedAvatar,
+  leader
 }: CongratsProps) {
   const theme = useTheme();
   const introString = `You've earned a total of`;
   const congratsString = 'Congratulations! \n You are in the top 5!';
   const greatJobString = 'Great job!';
-  const leader = true;
 
   return (
     <BackgroundContainerStyled>

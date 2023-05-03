@@ -27,6 +27,7 @@ export default function GameSessionContainer() {
   ); 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAvatar = 0;
+  const leader = true;
 
   switch (gameState) {
     case GameSessionState.TEAMS_JOINING:
@@ -57,6 +58,7 @@ export default function GameSessionContainer() {
         <FinalResults 
           score={120} 
           selectedAvatar={selectedAvatar}
+          leader={leader}
         />
       );
     default:
