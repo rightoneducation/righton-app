@@ -28,6 +28,7 @@ export default function GameSessionContainer() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAvatar = 0;
   const leader = true;
+  const teamId = "2d609343-de50-4830-b65e-71eb72bb9bef";
 
   switch (gameState) {
     case GameSessionState.TEAMS_JOINING:
@@ -50,14 +51,17 @@ export default function GameSessionContainer() {
           currentQuestionIndex={currentQuestionIndex}
           currentState={gameState}
           teamAvatar={teamAvatar}
-          teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
+          teamId={teamId}
         />
       );
     case GameSessionState.FINAL_RESULTS:
       return (
         <FinalResults 
+          {...gameSession}
+          currentState={gameState}
           score={120} 
           selectedAvatar={selectedAvatar}
+          teamId={teamId}
           leader={leader}
         />
       );
@@ -66,7 +70,7 @@ export default function GameSessionContainer() {
         <GameInProgress
           {...gameSession}
           teamAvatar={teamAvatar}
-          teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
+          teamId={teamId}
         />
       );
   }
