@@ -10,7 +10,7 @@ import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import JoinGame from '../pages/JoinGame';
 import FinalResults from '../pages/FinalResults';
-import { JoinGameState } from '../lib/PlayModels';
+import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
   const [gameSession, setGameSession] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -25,6 +25,7 @@ export default function GameSessionContainer() {
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionState.FINAL_RESULTS
   ); 
+  const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.LEADERBOARD); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAvatar = 0;
   const leader = true;
@@ -63,6 +64,7 @@ export default function GameSessionContainer() {
           selectedAvatar={selectedAvatar}
           teamId={teamId}
           leader={leader}
+          finalResultsState={finalResultsState}
         />
       );
     default:

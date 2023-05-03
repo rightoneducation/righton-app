@@ -4,7 +4,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { ITeam, GameSessionState } from '@righton/networking';
 import Leaderboard from '../components/finalresults/Leaderboard';
 import Congrats from '../components/finalresults/Congrats';
-import { FinalResultsState } from '../lib/PlayModels';
 
 interface FinalResultsProps {
   teams?: ITeam[];
@@ -13,12 +12,12 @@ interface FinalResultsProps {
   selectedAvatar: number;
   teamId: string;
   leader: boolean;
+  finalResultsState: FinalResultsState;
 }
 
-export default function FinalResults({ teams, currentState, score, selectedAvatar, teamId, leader }: FinalResultsProps) {
+export default function FinalResults({ teams, currentState, score, selectedAvatar, teamId, leader, finalResultsState }: FinalResultsProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.LEADERBOARD); // eslint-disable-line @typescript-eslint/no-unused-vars
   
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
