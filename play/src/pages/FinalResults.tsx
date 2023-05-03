@@ -4,6 +4,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { ITeam, GameSessionState } from '@righton/networking';
 import Leaderboard from '../components/finalresults/Leaderboard';
 import Congrats from '../components/finalresults/Congrats';
+import { FinalResultsState } from '../lib/PlayModels';
 
 interface FinalResultsProps {
   teams?: ITeam[];
