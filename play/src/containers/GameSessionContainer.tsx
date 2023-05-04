@@ -10,6 +10,7 @@ import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import JoinGame from '../pages/JoinGame';
 import FinalResults from '../pages/FinalResults';
+import StartPhase2 from '../pages/StartPhase2';
 import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
@@ -23,7 +24,7 @@ export default function GameSessionContainer() {
     JoinGameState.SPLASH_SCREEN
   );
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.FINAL_RESULTS
+    GameSessionState.PHASE_2_START
   );
   const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
     FinalResultsState.LEADERBOARD
@@ -59,6 +60,10 @@ export default function GameSessionContainer() {
           teamId={teamId}
         />
       );
+    case GameSessionState.PHASE_2_START:
+      return (
+        <StartPhase2 />
+      )
     case GameSessionState.FINAL_RESULTS:
       return (
         <FinalResults
