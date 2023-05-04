@@ -1,5 +1,6 @@
 lib
 src/index.ts
+package-lock.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
