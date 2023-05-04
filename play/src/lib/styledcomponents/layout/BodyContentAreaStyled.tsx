@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 
 /* lower-level container for background content in body. floats above body boxes
 (body stack container -> body box upper, body box lower, body content area) */

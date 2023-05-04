@@ -13,7 +13,7 @@ import FinalResults from '../pages/FinalResults';
 import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [gameSession, setGameSession] = useState(   // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
@@ -21,15 +21,19 @@ export default function GameSessionContainer() {
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     JoinGameState.SPLASH_SCREEN
-  ); 
+  );
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionState.FINAL_RESULTS
-  ); 
-  const [finalResultsState, setFinalResultsState] = useState(FinalResultsState.LEADERBOARD); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(0); // eslint-disable-line @typescript-eslint/no-unused-vars
+  );
+  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
+    FinalResultsState.LEADERBOARD
+  );
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState< // eslint-disable-line @typescript-eslint/no-unused-vars
+    number | null
+  >(0); 
   const selectedAvatar = 0;
   const leader = true;
-  const teamId = "2d609343-de50-4830-b65e-71eb72bb9bef";
+  const teamId = '2d609343-de50-4830-b65e-71eb72bb9bef';
 
   switch (gameState) {
     case GameSessionState.TEAMS_JOINING:
@@ -57,10 +61,10 @@ export default function GameSessionContainer() {
       );
     case GameSessionState.FINAL_RESULTS:
       return (
-        <FinalResults 
+        <FinalResults
           {...gameSession}
           currentState={gameState}
-          score={120} 
+          score={120}
           selectedAvatar={selectedAvatar}
           teamId={teamId}
           leader={leader}

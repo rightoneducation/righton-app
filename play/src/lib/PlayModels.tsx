@@ -48,12 +48,42 @@ interface MonsterMap {
 }
 
 export const monsterMap: MonsterMap = {
-  0: { icon: Icon0, monster: Monster0, handsup: MonsterHandsUp0, gradient: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)' },
-  1: { icon: Icon1, monster: Monster1, handsup: MonsterHandsUp1, gradient: 'linear-gradient(90deg, #7E00C4 0%, #9139F8 100%)' },
-  2: { icon: Icon2, monster: Monster2, handsup: MonsterHandsUp2, gradient: 'linear-gradient(90deg, #69000B 0%, #8B000A 100%)' },
-  3: { icon: Icon3, monster: Monster3, handsup: MonsterHandsUp3, gradient: 'linear-gradient(90deg, #0A4178 0%, #0F56A1 100%)' },
-  4: { icon: Icon4, monster: Monster4, handsup: MonsterHandsUp4, gradient: 'linear-gradient(90deg, #FED52B 0%, #C64E0F 100%)' },
-  5: { icon: Icon5, monster: Monster5, handsup: MonsterHandsUp5, gradient: 'linear-gradient(90deg, #036496 0%, #1F81B3 100%)' },
+  0: {
+    icon: Icon0,
+    monster: Monster0,
+    handsup: MonsterHandsUp0,
+    gradient: 'linear-gradient(90deg, #4DED66 0%, #5ACD3D 100%)',
+  },
+  1: {
+    icon: Icon1,
+    monster: Monster1,
+    handsup: MonsterHandsUp1,
+    gradient: 'linear-gradient(90deg, #7E00C4 0%, #9139F8 100%)',
+  },
+  2: {
+    icon: Icon2,
+    monster: Monster2,
+    handsup: MonsterHandsUp2,
+    gradient: 'linear-gradient(90deg, #69000B 0%, #8B000A 100%)',
+  },
+  3: {
+    icon: Icon3,
+    monster: Monster3,
+    handsup: MonsterHandsUp3,
+    gradient: 'linear-gradient(90deg, #0A4178 0%, #0F56A1 100%)',
+  },
+  4: {
+    icon: Icon4,
+    monster: Monster4,
+    handsup: MonsterHandsUp4,
+    gradient: 'linear-gradient(90deg, #FED52B 0%, #C64E0F 100%)',
+  },
+  5: {
+    icon: Icon5,
+    monster: Monster5,
+    handsup: MonsterHandsUp5,
+    gradient: 'linear-gradient(90deg, #036496 0%, #1F81B3 100%)',
+  },
 };
 
 export enum InputPlaceholder {

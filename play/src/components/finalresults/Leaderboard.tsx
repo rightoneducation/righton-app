@@ -5,7 +5,7 @@ import {
   isNullOrUndefined,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import HeaderContent from '../HeaderContent';
 import FooterContent from '../FooterContent';
 import StackContainerStyled from '../../lib/styledcomponents/layout/StackContainerStyled';
@@ -48,11 +48,11 @@ export default function Leaderboard({
       return 0;
     });
     return teams;
-  }
+  };
 
   let sortedTeams;
   if (!isNullOrUndefined(teams)) {
-     sortedTeams = teamSorter(teams);
+    sortedTeams = teamSorter(teams);
   }
 
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
@@ -60,8 +60,9 @@ export default function Leaderboard({
   const itemRef = useRef<HTMLDivElement>(null); // ref req'd for height of item
   const [subContainerHeight, setSubContainerHeight] = useState<number>(0); // height of subcontainer
 
-  useEffect(() => { 
-    if (containerRef.current && itemRef.current) { // check if the container element has been loaded yet
+  useEffect(() => {
+    if (containerRef.current && itemRef.current) {
+      // check if the container element has been loaded yet
       const containerHeight = containerRef.current.clientHeight; // get height of container
       const itemHeight = itemRef.current.clientHeight; // get height of item
       setSubContainerHeight(containerHeight - (containerHeight % itemHeight)); // adjust height of subcontainer to be a multiple of the item height
@@ -88,18 +89,26 @@ export default function Leaderboard({
       <BodyStackContainerStyled ref={containerRef}>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaLeaderboardStyled container style={{height: `${subContainerHeight}px`}} isSmallDevice={isSmallDevice} spacing={2}>
-          { sortedTeams?.map((team: ITeam) => (
-              <Grid item key={uuidv4()} ref={itemRef} sx={{width: '100%'}}>
-                <LeaderboardSelector 
-                  teamName={team.name ? team.name : 'Team One'} 
-                  teamAvatar={team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)} 
-                  teamScore={team.score} 
-                />
-              </Grid>
-            ))
-          }
-        </BodyContentAreaLeaderboardStyled >
+        <BodyContentAreaLeaderboardStyled
+          container
+          style={{ height: `${subContainerHeight}px` }}
+          isSmallDevice={isSmallDevice}
+          spacing={2}
+        >
+          {sortedTeams?.map((team: ITeam) => (
+            <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
+              <LeaderboardSelector
+                teamName={team.name ? team.name : 'Team One'}
+                teamAvatar={
+                  team === currentTeam
+                    ? teamAvatar
+                    : Math.floor(Math.random() * 6)
+                }
+                teamScore={team.score}
+              />
+            </Grid>
+          ))}
+        </BodyContentAreaLeaderboardStyled>
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>
         <FooterContent
