@@ -45,7 +45,7 @@ export default function StartPhase2({
             `${theme.palette.primary.countdownColor}, 1)`,
           ]}
           radius={110}
-          timerStartInSeconds={5}
+          timerStartInSeconds={3}
           handlePregameTimerFinished={handlePregameTimerFinished}
         />
         <TypographyStyled variant="h2">{subtitle1}</TypographyStyled>
