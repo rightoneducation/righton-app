@@ -24,6 +24,7 @@ const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
+const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 
 // design tokens - breakpoints:
 const xs = 400;
@@ -82,6 +83,7 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    countdownColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -100,6 +102,7 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
+    countdownColor?: string;
   }
 }
 
@@ -133,6 +136,7 @@ export default createTheme({
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
+      countdownColor,
     },
     secondary: {
       main: secondaryColor,

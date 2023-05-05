@@ -17,37 +17,39 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
   textAlign: `center`,
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
-  whiteSpace: 'pre-wrap'
+  whiteSpace: 'pre-wrap',
 }));
 
-const subtitle1 = 'Your question will appear soon.';
-const subtitle2 = 'Pick the correct answer!';
+interface StartPhase2Props {
+  handlePregameTimerFinished: () => void;
+}
 
-export default function StartPhase2() {
+export default function StartPhase2({
+  handlePregameTimerFinished,
+}: StartPhase2Props) {
   const theme = useTheme();
+  const subtitle1 = 'Your question \n will appear soon.';
+  const subtitle2 = 'Pick the correct answer!';
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
         <RadialTimer
           inputColors={[
-            'rgb(126, 90, 175)',
-            'rgb(148, 98, 179)',
-            'rgb(169, 104, 180)',
-            'rgb(186, 107, 177)',
-            'rgb(202, 109, 172)',
-            'rgb(218, 112, 168)',
-            'rgb(237, 115, 166)',
-            'rgb(255, 120, 165)',
+            `${theme.palette.primary.countdownColor}, 0.3)`,
+            `${theme.palette.primary.countdownColor}, 0.4)`,
+            `${theme.palette.primary.countdownColor}, 0.5)`,
+            `${theme.palette.primary.countdownColor}, 0.6)`,
+            `${theme.palette.primary.countdownColor}, 0.7)`,
+            `${theme.palette.primary.countdownColor}, 0.8)`,
+            `${theme.palette.primary.countdownColor}, 0.9)`,
+            `${theme.palette.primary.countdownColor}, 1)`,
           ]}
           radius={110}
-          timerStartInSeconds={5}     
+          timerStartInSeconds={5}
+          handlePregameTimerFinished={handlePregameTimerFinished}
         />
-        <TypographyStyled variant="h2">
-          {subtitle1}
-        </TypographyStyled>
-        <TypographyStyled variant="h2">
-          {subtitle2}
-        </TypographyStyled>
+        <TypographyStyled variant="h2">{subtitle1}</TypographyStyled>
+        <TypographyStyled variant="h2">{subtitle2}</TypographyStyled>
       </StackContainer>
     </BackgroundContainerStyled>
   );

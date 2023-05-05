@@ -15,7 +15,8 @@ import StartPhase2 from '../pages/StartPhase2';
 import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState(   // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [gameSession, setGameSession] = useState(
+    // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
@@ -27,31 +28,40 @@ export default function GameSessionContainer() {
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionState.CHOOSE_CORRECT_ANSWER
   );
-  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [finalResultsState, setFinalResultsState] = useState(
+    // eslint-disable-line @typescript-eslint/no-unused-vars
     FinalResultsState.LEADERBOARD
   );
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState< // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
+    // eslint-disable-line @typescript-eslint/no-unused-vars
     number | null
-  >(0); 
+  >(0);
+  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAvatar = 0;
   const leader = true;
   const teamId = '2d609343-de50-4830-b65e-71eb72bb9bef';
   const isGameStart = true;
+
+  const handlePregameTimerFinished = () => {
+    setIsPregameCountdown(false);
+  };
 
   switch (gameState) {
     case GameSessionState.TEAMS_JOINING:
       return <JoinGame joinGameState={joinGameState} />;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-      return (
-        isGameStart ? <PregameCountdown /> 
-        :
+      return isPregameCountdown ? (
+        <PregameCountdown
+          handlePregameTimerFinished={handlePregameTimerFinished}
+        />
+      ) : (
         <GameInProgress
           {...gameSession}
           teamAvatar={teamAvatar}
           teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
         />
-        );  
+      );
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
       return (
@@ -65,9 +75,7 @@ export default function GameSessionContainer() {
         />
       );
     case GameSessionState.PHASE_2_START:
-      return (
-        <StartPhase2 />
-      )
+      return <StartPhase2 />;
     case GameSessionState.FINAL_RESULTS:
       return (
         <FinalResults
