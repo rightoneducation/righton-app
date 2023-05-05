@@ -6,6 +6,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import MockGameSession from '../mock/MockGameSession.json';
+import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import JoinGame from '../pages/JoinGame';
@@ -24,7 +25,7 @@ export default function GameSessionContainer() {
     JoinGameState.SPLASH_SCREEN
   );
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.PHASE_2_START
+    GameSessionState.CHOOSE_CORRECT_ANSWER
   );
   const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
     FinalResultsState.LEADERBOARD
@@ -35,6 +36,7 @@ export default function GameSessionContainer() {
   const selectedAvatar = 0;
   const leader = true;
   const teamId = '2d609343-de50-4830-b65e-71eb72bb9bef';
+  const isGameStart = true;
 
   switch (gameState) {
     case GameSessionState.TEAMS_JOINING:
@@ -42,12 +44,14 @@ export default function GameSessionContainer() {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
       return (
+        isGameStart ? <PregameCountdown /> 
+        :
         <GameInProgress
           {...gameSession}
           teamAvatar={teamAvatar}
           teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
         />
-      );
+        );  
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
       return (
