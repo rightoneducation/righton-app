@@ -72,8 +72,7 @@ export default function LeaderboardSelector({
           paddingLeft: `${theme.sizing.extraLargePadding}px`,
         }}
       >
-        {' '}
-        {teamNameFormatted}{' '}
+        {teamNameFormatted}
       </Typography>
       <ScoreBox>
         <Typography
@@ -83,8 +82,7 @@ export default function LeaderboardSelector({
             paddingRight: `${theme.sizing.extraSmallPadding}px`,
           }}
         >
-          {' '}
-          {teamScore}{' '}
+          {teamScore}
         </Typography>
       </ScoreBox>
     </LeaderboardSelectorContainer>
