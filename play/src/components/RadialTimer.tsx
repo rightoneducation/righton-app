@@ -128,8 +128,7 @@ export default function RadialTimer({
         variant="h1"
         sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
       >
-        {' '}
-        {currentTime}{' '}
+        {currentTime}
       </Typography>
     </TimerContainer>
   );
