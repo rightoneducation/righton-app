@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
@@ -80,7 +80,7 @@ const BottomContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface SelectAvatarProps {
-  selectedAvatar: number | null;
+  selectedAvatar: number;
   handleAvatarSelected: (value: number) => void;
   firstNameValue: string;
   lastNameValue: string;
@@ -126,7 +126,7 @@ export default function SelectAvatar({
         </Stack>
         <MonsterContainer isSmallDevice={isSmallDevice}>
           <Monster
-            src={monsterMap[selectedAvatar || 0].monster} // || 0 handles the case where a user has yet to select an answer so it shows the default
+            src={monsterMap[selectedAvatar].monster} // || 0 handles the case where a user has yet to select an answer so it shows the default
             alt="monster"
           />
         </MonsterContainer>

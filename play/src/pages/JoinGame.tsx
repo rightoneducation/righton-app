@@ -21,7 +21,7 @@ export default function JoinGame({ joinGameState }: JoinGameProps) {
   const [firstNameValue, setFirstNameValue] = useState('');
   const [lastNameValue, setLastNameValue] = useState('');
   const [avatar, setAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<number>(Math.floor(Math.random() * 6)); // default selection is random number between 0 and 5
 
   switch (joinGameState) {
     case JoinGameState.HOW_TO_PLAY:
