@@ -22,7 +22,7 @@ import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
  * @enum AnswersState
  * @param {string} DEFAULT - any answer not correct or selected by player
  * @param {string} CORRECT - correct answer per gameSession object
- * @param {string} PLAYER_CORRECT - player has chosen correct answer
+ * @param {string} PLAYER_SELECTED_CORRECT - player has chosen correct answer
  * @param {string} SELECTED - answer player has selected
  * @param {string} PREVIOUS - answer player has selected in previous phase
  */
