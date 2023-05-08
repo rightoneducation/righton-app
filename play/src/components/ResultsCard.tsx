@@ -32,7 +32,7 @@ export default function CardResults({
   // determines what type of answer result to display
   const answerType = (answer: { text: string; isCorrectAnswer: boolean }) => {
     if (answer?.isCorrectAnswer && answer?.text === selectedAnswer?.text)
-      return AnswerState.PLAYER_CORRECT;
+      return AnswerState.PLAYER_SELECTED_CORRECT;
     if (answer?.text === selectedAnswer?.text) return AnswerState.SELECTED;
     if (answer?.isCorrectAnswer) return AnswerState.CORRECT;
     return AnswerState.DEFAULT;
