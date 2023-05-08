@@ -17,14 +17,32 @@ import MonsterHandsUp3 from '../img/MonsterHandsUp3.svg';
 import MonsterHandsUp4 from '../img/MonsterHandsUp4.svg';
 import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
 
+/**
+ * AnswerState defines each of the cases for an answer that is displayed on an answer select screen
+ * @enum AnswersState
+ * @param {string} DEFAULT - any answer not correct or selected by player
+ * @param {string} CORRECT - correct answer per gameSession object
+ * @param {string} PLAYER_CORRECT - player has chosen correct answer
+ * @param {string} SELECTED - answer player has selected
+ * @param {string} PREVIOUS - answer player has selected in previous phase
+ */
 export enum AnswerState {
-  DEFAULT = 'DEFAULT', // any answer not correct or selected by player
-  CORRECT = 'CORRECT', // correct answer per gameSession object
-  PLAYER_CORRECT = 'PLAYER_CORRECT', // player has chosen correct answer
-  SELECTED = 'SELECTED', // answer player has selected
-  PREVIOUS = 'PREVIOUS', // answer player has selected in previous phase
+  DEFAULT = 'DEFAULT', 
+  CORRECT = 'CORRECT', 
+  PLAYER_SELECTED_CORRECT = 'PLAYER_SELECTED_CORRECT', 
+  SELECTED = 'SELECTED', 
+  PREVIOUS = 'PREVIOUS', 
 }
 
+/**
+ * JoinGameState handles the substate changes for GameSessionState.JOIN_GAME
+ * @enum JoingGameState
+ * @param {string} SPLASH_SCREEN - initial screen for game 
+ * @param {string} ENTER_GAME_CODE - screen for entering game code
+ * @param {string} ENTER_NAME - screen for entering player name
+ * @param {string} SELECT_AVATAR - screen for selecting player avatar
+ * @param {string} HOW_TO_PLAY - screen for displaying how to play
+ */
 export enum JoinGameState {
   SPLASH_SCREEN = 'SPLASH_SCREEN',
   ENTER_GAME_CODE = 'ENTER_GAME_CODE',
@@ -33,6 +51,12 @@ export enum JoinGameState {
   HOW_TO_PLAY = 'HOW_TO_PLAY',
 }
 
+/**
+ * FinalResultsState handles the substate changes for GameSessionState.FINAL_RESULTS
+ * @enum JoingGameState
+ * @param {string} CONGRATS - screen for displaying congrats message
+ * @param {string} LEADERBOARD - screen for displaying leaderboard
+ */
 export enum FinalResultsState {
   CONGRATS = 'CONGRATS',
   LEADERBOARD = 'LEADERBOARD',

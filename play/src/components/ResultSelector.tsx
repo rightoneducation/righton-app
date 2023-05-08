@@ -54,7 +54,7 @@ export default function ResultSelector({
   const imageMap = {
     [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
-    [AnswerState.PLAYER_CORRECT]: PlayerCorrectImage,
+    [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: SelectedAnswer,
     [AnswerState.PREVIOUS]: '',
   };
@@ -122,23 +122,23 @@ export default function ResultSelector({
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );
-    case AnswerState.PLAYER_CORRECT:
+    case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
         <Box>
           <Box sx={{ position: 'relative', height: 0 }}>
             <CorrectStarsStyled
               src={CorrectStars}
-              alt=""
+              alt="Stars icon that denotes player is correct"
               style={{ top: -5, left: 0 }}
             />
             <CorrectStarsStyled
               src={CorrectStars}
-              alt=""
+              alt="Stars icon that denotes player is correct"
               style={{ top: -5, right: 10 }}
             />
             <CorrectStarsStyled
               src={CorrectStars_Mirrored}
-              alt=""
+              alt="Stars icon that denotes player is correct"
               style={{ top: 30, right: 0 }}
             />
           </Box>
