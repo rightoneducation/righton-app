@@ -1,10 +1,10 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, { ChangeEvent } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { InputPlaceholder } from '../../lib/PlayModels';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
-import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -31,7 +31,6 @@ export default function EnterGameCode({
   inputError,
 }: EnterGameCodeProps) {
   const theme = useTheme();
-  const [value, setValue] = useState('');
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +64,7 @@ export default function EnterGameCode({
             onChange={handleChange}
             value={gameCodeValue}
             InputProps={{
-              disableUnderline: true,   
+              disableUnderline: true,
               inputProps: {
                 inputMode: 'numeric',
                 pattern: '[0-9]*',

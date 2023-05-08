@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  GamePlayButtonStyled,
-} from '../../lib/styledcomponents/GamePlayButtonStyled';
-import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarIconStyled from '../../lib/styledcomponents/AvatarIconStyled';
 import { monsterMap } from '../../lib/PlayModels';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
-import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
@@ -28,8 +28,7 @@ const StackContainer = styled(Stack)(({ theme }) => ({
 
 const BottomBox = styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.mediumPadding}px`,
-})
-);
+}));
 
 export default function SplashScreen() {
   const theme = useTheme();

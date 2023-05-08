@@ -2,7 +2,7 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
-import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import { InputPlaceholder } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';

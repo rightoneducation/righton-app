@@ -16,6 +16,7 @@ const secondaryColor = '#8E2E9D'; // placeholder for dark mode
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const playerNameTextColor = '#AEAEAE'; // player name
+const darkPurpleColor = '#6515C9'; // phase results, selected answer
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet
@@ -23,6 +24,7 @@ const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
+const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 
 // design tokens - breakpoints:
 const xs = 400;
@@ -74,12 +76,14 @@ declare module '@mui/material/styles' {
     altHighlightGradient: string;
     red: string;
     green: string;
+    darkPurple: string;
     blue: string;
     darkBlue: string;
     extraDarkGrey: string;
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    countdownColor: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -90,6 +94,7 @@ declare module '@mui/material/styles' {
     altHighlightGradient?: string;
     red?: string;
     green?: string;
+    darkPurple?: string;
     blue?: string;
     darkBlue?: string;
     purple?: string;
@@ -97,6 +102,7 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
+    countdownColor: string;
   }
 }
 
@@ -123,15 +129,14 @@ export default createTheme({
       altHighlightGradient,
       red: redColor,
       green: greenColor,
+      darkPurple: darkPurpleColor,
       blue: blueColor,
       darkBlue: secondaryTextColor,
       extraDarkGrey: extraDarkGreyColor,
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
-    },
-    secondary: {
-      main: secondaryColor,
+      countdownColor,
     },
   },
   typography: {
@@ -171,6 +176,13 @@ export default createTheme({
       fontWeight: 800,
       lineHeight: '19px',
       color: secondaryTextColor,
+    },
+    h6: {
+      // screen titles
+      fontWeight: '800',
+      fontSize: '35px',
+      lineHeight: '48px',
+      color: primaryTextColor,
     },
     body1: {
       // question text

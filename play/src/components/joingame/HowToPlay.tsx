@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import BackgroundContainerStyled from '../../lib/styledcomponents/BackgroundContainerStyled';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
 import HowToPlaySlide0Content from './howtoplayslides/HowToPlaySlide0Content';
 import HowToPlaySlide1Content from './howtoplayslides/HowToPlaySlide1Content';

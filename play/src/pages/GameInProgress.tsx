@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Stack, Box, Grid } from '@mui/material';
+import { Typography, Box, Grid } from '@mui/material';
 import {
   GameSessionState,
   ITeam,
@@ -17,65 +17,15 @@ import QuestionCard from '../components/QuestionCard';
 import AnswerCard from '../components/AnswerCard';
 import FooterContent from '../components/FooterContent';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
+import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
+import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
+import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
+import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
+import { BodyContentAreaStyled } from '../lib/styledcomponents/layout/BodyContentAreaStyled';
+import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
-const StackContainer = styled(Stack)({
-  height: '100%',
-  position: 'fixed', // 100%, fixed to prevent sizing changes on mobile based on url bar etc
-  width: '100%',
-});
-
-const HeaderStackItem = styled(Stack)(({ theme }) => ({
-  paddingTop: `${theme.sizing.mediumPadding}px`,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  boxShadow: '0px 2px 4px rgba(0, 141, 239, 0.3)',
-  background: theme.palette.primary.backgroundGradient,
-  border: 'none',
-  width: '100vw',
-  height: `${theme.sizing.headerHeight}px`,
-}));
-
-const BodyStackItem = styled(Stack)({
-  position: 'relative',
-  display: 'flex',
-  flex: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: '100vw',
-  border: 'none',
-});
-
-const BodyBoxUpper = styled(Box)(({ theme }) => ({
-  height: '120px',
-  width: '100vw',
-  background: theme.palette.primary.backgroundGradient,
-  boxShadow: '0px 10px 10px rgba(0, 141, 239, 0.25)',
-  zIndex: 1,
-}));
-
-const BodyBoxLower = styled(Box)(({ theme }) => ({
-  flex: 1,
-  width: '100vw',
-  backgroundColor: theme.palette.primary.main,
-  zIndex: 0,
-}));
-
-const BodyGridArea = styled(Grid)({
-  position: 'absolute',
-  top: '0',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  maxWidth: '824px',
-  width: '100%',
-  height: '100%',
-  overflow: 'hidden',
-  zIndex: 2,
-});
 
 const ScrollBox = styled(Box)(({ theme }) => ({
   height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px)`, // footer height & 8px grid spacing
@@ -92,23 +42,8 @@ const ScrollBox = styled(Box)(({ theme }) => ({
   '-ms-overflow-style': 'none', // IE and Edge
 }));
 
-const FooterStackItem = styled(Stack)(({ theme }) => ({
-  paddingBottom: `${theme.sizing.smallPadding}px`,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: theme.palette.primary.main,
-  width: '100vw',
-  border: 'none',
-  position: 'sticky',
-  bottom: 0,
-  zIndex: 3,
-}));
-
 interface GameInProgressProps {
   teams?: ITeam[];
-  id: string;
   currentState: GameSessionState;
   teamAvatar: number;
   questions: IQuestion[];
@@ -118,7 +53,6 @@ interface GameInProgressProps {
 
 export default function GameInProgress({
   teams,
-  id, // eslint-disable-line @typescript-eslint/no-unused-vars
   currentState,
   teamAvatar,
   questions,
@@ -127,12 +61,11 @@ export default function GameInProgress({
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const [gameSessionState, setCurrentState] = React.useState(currentState); // eslint-disable-line @typescript-eslint/no-unused-vars
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(  // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );
@@ -241,12 +174,12 @@ export default function GameInProgress({
   );
 
   return (
-    <StackContainer
+    <StackContainerStyled
       direction="column"
       alignItems="center"
       justifyContent="space-between"
     >
-      <HeaderStackItem>
+      <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
@@ -256,11 +189,11 @@ export default function GameInProgress({
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
         />
-      </HeaderStackItem>
-      <BodyStackItem>
-        <BodyBoxUpper />
-        <BodyBoxLower />
-        <BodyGridArea container spacing={isSmallDevice ? 0 : 2}>
+      </HeaderStackContainerStyled>
+      <BodyStackContainerStyled>
+        <BodyBoxUpperStyled />
+        <BodyBoxLowerStyled />
+        <BodyContentAreaStyled container style={{alignItems: 'flex-start'}} spacing={isSmallDevice ? 0 : 2}>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             {isSmallDevice ? (
               <Swiper
@@ -307,9 +240,9 @@ export default function GameInProgress({
           <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
             {answerContents}
           </Grid>
-        </BodyGridArea>
-      </BodyStackItem>
-      <FooterStackItem>
+        </BodyContentAreaStyled>
+      </BodyStackContainerStyled>
+      <FooterStackContainerStyled>
         {isSmallDevice ? (
           <PaginationContainerStyled className="swiper-pagination-container" />
         ) : null}
@@ -319,7 +252,7 @@ export default function GameInProgress({
           newPoints={10}
           score={120}
         />
-      </FooterStackItem>
-    </StackContainer>
+      </FooterStackContainerStyled>
+    </StackContainerStyled>
   );
 }
