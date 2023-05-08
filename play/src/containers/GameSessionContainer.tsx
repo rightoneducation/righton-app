@@ -27,7 +27,7 @@ export default function GameSessionContainer() {
     JoinGameState.SPLASH_SCREEN
   );
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.FINAL_RESULTS
+    GameSessionState.CHOOSE_CORRECT_ANSWER
   );
   const [finalResultsState, setFinalResultsState] = useState(
     // eslint-disable-line @typescript-eslint/no-unused-vars
