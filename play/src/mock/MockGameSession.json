@@ -2,7 +2,7 @@
   "id": "4530fd4d-db23-4b07-8c79-118a3078b259",
   "createdAt": "2023-03-07T17:14:50.860Z",
   "currentQuestionIndex": 0,
-  "currentState": "PHASE_2_RESULTS",
+  "currentState": "FINAL_RESULTS",
   "currentTimer": null,
   "description": "There’s a sale at the mall! These questions will help you calculate how much you save on items.",
   "gameCode": 3221,
@@ -18,7 +18,7 @@
     "items": [
       {
         "id": "2d609343-de50-4830-b65e-71eb72bb9bef",
-        "name": "Team One",
+        "name": "Edward Hopper",
         "createdAt": "2023-03-07T17:14:50.860Z",
         "teamMembers": {
           "items": [
@@ -96,7 +96,7 @@
       },
       {
         "id": "2d609343-de50-4830-b65e-13432234sfasdfsadf",
-        "name": "Team Two",
+        "name": "Mark Rothko",
         "createdAt": "2023-03-07T17:14:50.860Z",
         "teamMembers": {
           "items": [
@@ -170,7 +170,319 @@
             }
           ]
         },
-        "score": 110
+        "score": 134
+      },
+      {
+        "id": "2d609343-de50-4830-b65e-13asdfasdf2234sfasdfsadf",
+        "name": "Gustave Caillebotte",
+        "createdAt": "2023-03-07T17:14:50.860Z",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+              "teamTeamMembersId": "2d609343-de50-4830-b65e-13asdfasdf2234sfasdfsadf",
+              "answers": {
+                "items": [
+                  {
+                    "createdAt": "2023-03-07T17:16:24.160Z",
+                    "id": "4527c04d-4843-4015-a096-c0e54asdfsadf6",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "90%",
+                    "updatedAt": "2023-03-07T17:16:24.160Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:39.668Z",
+                    "id": "c2f2701a-30d0-4fe2-8349-a2asdfasdfb34f46",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "70%",
+                    "updatedAt": "2023-03-07T17:15:39.668Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:14.624Z",
+                    "id": "dbd43aec-9eb1-4632-9c8f-78asdfsadbac3e",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "72%",
+                    "updatedAt": "2023-03-07T17:16:14.624Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:29.282Z",
+                    "id": "118e9d89-b3bd-466a-85c9-8asdfasdfeaa46",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "50%",
+                    "updatedAt": "2023-03-07T17:15:29.282Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:04.347Z",
+                    "id": "4c686c0d-6dd3-452f-bb70-12f6asdfasdf2edf",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:16:04.347Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:51.121Z",
+                    "id": "9de67917-85cb-4424-8532-84782asdfasdf8ed",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:15:51.121Z"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "score": 187
+      },
+      {
+        "id": "2d609343-de50-4830-b65e-13a12312321fasfasdfsadf",
+        "name": "Diane Arbus",
+        "createdAt": "2023-03-07T17:14:50.860Z",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+              "teamTeamMembersId": "2d609343-de50-4830-b65e-13a12312321fasfasdfsadf",
+              "answers": {
+                "items": [
+                  {
+                    "createdAt": "2023-03-07T17:16:24.160Z",
+                    "id": "4527c04d-4843-4015-a096-c0e54asdfsadf6",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "90%",
+                    "updatedAt": "2023-03-07T17:16:24.160Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:39.668Z",
+                    "id": "c2f2701a-30d0-4fe2-8349-a2asdfasdfb34f46",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "70%",
+                    "updatedAt": "2023-03-07T17:15:39.668Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:14.624Z",
+                    "id": "dbd43aec-9eb1-4632-9c8f-78asdfsadbac3e",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "72%",
+                    "updatedAt": "2023-03-07T17:16:14.624Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:29.282Z",
+                    "id": "118e9d89-b3bd-466a-85c9-8asdfasdfeaa46",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "50%",
+                    "updatedAt": "2023-03-07T17:15:29.282Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:04.347Z",
+                    "id": "4c686c0d-6dd3-452f-bb70-12f6asdfasdf2edf",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:16:04.347Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:51.121Z",
+                    "id": "9de67917-85cb-4424-8532-84782asdfasdf8ed",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:15:51.121Z"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "score": 259
+      },
+      {
+        "id": "2d609343-de50-4830-b65e-13aasdfsadf312321fasfasdfsadf",
+        "name": "Katsushika Hokusai",
+        "createdAt": "2023-03-07T17:14:50.860Z",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+              "teamTeamMembersId": "2d609343-de50-4830-b65e-13aasdfsadf312321fasfasdfsadf",
+              "answers": {
+                "items": [
+                  {
+                    "createdAt": "2023-03-07T17:16:24.160Z",
+                    "id": "4527c04d-4843-4015-a096-c0e54asdfsadf6",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "90%",
+                    "updatedAt": "2023-03-07T17:16:24.160Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:39.668Z",
+                    "id": "c2f2701a-30d0-4fe2-8349-a2asdfasdfb34f46",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "70%",
+                    "updatedAt": "2023-03-07T17:15:39.668Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:14.624Z",
+                    "id": "dbd43aec-9eb1-4632-9c8f-78asdfsadbac3e",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "72%",
+                    "updatedAt": "2023-03-07T17:16:14.624Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:29.282Z",
+                    "id": "118e9d89-b3bd-466a-85c9-8asdfasdfeaa46",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "50%",
+                    "updatedAt": "2023-03-07T17:15:29.282Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:04.347Z",
+                    "id": "4c686c0d-6dd3-452f-bb70-12f6asdfasdf2edf",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:16:04.347Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:51.121Z",
+                    "id": "9de67917-85cb-4424-8532-84782asdfasdf8ed",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:15:51.121Z"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "score": 386
+      },
+      {
+        "id": "2d609343-de50-4830-b65e-13aasdfsadf312321fasfasdfsadf",
+        "name": "Andrew Wyeth",
+        "createdAt": "2023-03-07T17:14:50.860Z",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+              "teamTeamMembersId": "2d609343-de50-4830-b65e-13aasdfsadf312321fasfasdfsadf",
+              "answers": {
+                "items": [
+                  {
+                    "createdAt": "2023-03-07T17:16:24.160Z",
+                    "id": "4527c04d-4843-4015-a096-c0e54asdfsadf6",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "90%",
+                    "updatedAt": "2023-03-07T17:16:24.160Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:39.668Z",
+                    "id": "c2f2701a-30d0-4fe2-8349-a2asdfasdfb34f46",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "70%",
+                    "updatedAt": "2023-03-07T17:15:39.668Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:14.624Z",
+                    "id": "dbd43aec-9eb1-4632-9c8f-78asdfsadbac3e",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4786,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "72%",
+                    "updatedAt": "2023-03-07T17:16:14.624Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:29.282Z",
+                    "id": "118e9d89-b3bd-466a-85c9-8asdfasdfeaa46",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4790,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "50%",
+                    "updatedAt": "2023-03-07T17:15:29.282Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:16:04.347Z",
+                    "id": "4c686c0d-6dd3-452f-bb70-12f6asdfasdf2edf",
+                    "isChosen": false,
+                    "isTrickAnswer": true,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:16:04.347Z"
+                  },
+                  {
+                    "createdAt": "2023-03-07T17:15:51.121Z",
+                    "id": "9de67917-85cb-4424-8532-84782asdfasdf8ed",
+                    "isChosen": true,
+                    "isTrickAnswer": false,
+                    "questionId": 4789,
+                    "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
+                    "text": "54%",
+                    "updatedAt": "2023-03-07T17:15:51.121Z"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "score": 408
       }
     ]
   },

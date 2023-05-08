@@ -193,7 +193,7 @@ export default function GameInProgress({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaStyled container spacing={isSmallDevice ? 0 : 2}>
+        <BodyContentAreaStyled container style={{alignItems: 'flex-start'}} spacing={isSmallDevice ? 0 : 2}>
           <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
             {isSmallDevice ? (
               <Swiper

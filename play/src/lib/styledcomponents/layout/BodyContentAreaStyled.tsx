@@ -7,7 +7,6 @@ export const BodyContentAreaStyled = styled(Grid)({
   position: 'absolute',
   top: '0',
   display: 'flex',
-  flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
   maxWidth: '824px',
@@ -25,5 +24,29 @@ export const BodyContentAreaPhaseResultsStyled = styled(BodyContentAreaStyled)(
     maxWidth: '400px',
     paddingLeft: `${theme.sizing.mediumPadding}px`,
     paddingRight: `${theme.sizing.mediumPadding}px`,
+  })
+);
+
+// content area of body that floats above background layers above - Phase Results Page
+interface BodyContentLeaderboardProps {
+  isSmallDevice: boolean;
+}
+
+export const BodyContentAreaLeaderboardStyled = styled(BodyContentAreaStyled, {
+  shouldForwardProp: (prop) => prop !== 'isSmallDevice',
+})<BodyContentLeaderboardProps>(({ isSmallDevice, theme }) => ({
+  position: 'absolute',
+  top: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: isSmallDevice ? 'flex-start' : 'center',
+    maxWidth: '500px',
+    paddingLeft: `${theme.sizing.mediumPadding}px`,
+    paddingRight: `${theme.sizing.mediumPadding}px`,
+    height: '546px',
+    overflow: 'hidden',
+    flexWrap: 'nowrap',
+    margin: 0,
   })
 );
