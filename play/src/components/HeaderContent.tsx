@@ -40,7 +40,7 @@ export default function HeaderContent({
     [GameSessionState.PHASE_2_START]: 'Answer Explanations',
     [GameSessionState.PHASE_1_RESULTS]: 'Phase 1 Results',
     [GameSessionState.PHASE_2_RESULTS]: 'Phase 2 Results',
-    [GameSessionState.FINAL_RESULTS]: 'Answer the Question',
+    [GameSessionState.FINAL_RESULTS]: 'Leaderboard',
     [GameSessionState.FINISHED]: 'Answer the Question',
   };
   const stateCheck = (
