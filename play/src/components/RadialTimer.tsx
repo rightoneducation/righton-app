@@ -42,6 +42,16 @@ export default function RadialTimer({
     deltaInput: number,
     theta: number
   ) => {
+    /* [
+    returns a SVG path element that represent a ellipse.
+    cx,cy → center of ellipse
+    rx,ry → major minor radius
+    t1 → start angle, in radian.
+    delta → angle to sweep, in radian. positive.
+    theta → rotation on the whole, in radian
+    url: SVG Circle Arc http://xahlee.info/js/svg_circle_arc.html
+    Version 2019-06-19
+    ] */
     const delta = deltaInput % tau;
     const rotMatrix = rotate(theta);
     const [sX, sY] = add(

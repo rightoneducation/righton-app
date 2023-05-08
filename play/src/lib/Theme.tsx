@@ -102,7 +102,7 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
-    countdownColor?: string;
+    countdownColor: string;
   }
 }
 
@@ -137,9 +137,6 @@ export default createTheme({
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       countdownColor,
-    },
-    secondary: {
-      main: secondaryColor,
     },
   },
   typography: {

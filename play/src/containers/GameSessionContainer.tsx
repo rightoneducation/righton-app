@@ -16,12 +16,13 @@ import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
   const [gameSession, setGameSession] = useState(
-    // eslint-disable-line @typescript-eslint/no-unused-vars
+    // TODO: update exchange mock gamesession with subscription via @righton/networking
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
+  // TODO: add gameSession subscription and update below states accordingly.  
   const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     JoinGameState.SPLASH_SCREEN
   );
