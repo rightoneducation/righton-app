@@ -49,7 +49,7 @@ export default function LeaderboardSelector({
   // this reformats the team name to first name and first initial of last name
   const reformatTeamName = (inputText: string) => {
     const spaceLocation = inputText.lastIndexOf(' ');
-    let reformattedTeamName = '';
+    let reformattedTeamName = inputText;
 
     if (spaceLocation !== -1) {
       reformattedTeamName = `${inputText.substring(0, spaceLocation + 2)}.`;
