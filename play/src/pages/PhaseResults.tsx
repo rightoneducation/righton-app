@@ -30,6 +30,11 @@ interface PhaseResultsProps {
   currentQuestionIndex?: number | null;
   teamId: string;
   gameSession: IGameSession;
+  answerChoices: {
+    id: string;
+    text: string;
+    isCorrectAnswer: boolean;
+  }[];
 }
 
 /**
@@ -38,8 +43,6 @@ interface PhaseResultsProps {
  * It's comprised of the following:
  *
  * PhaseResults.tsx (page-level container, including header/body/footer content)
- *
- * - Gets all answers from player, the selected answer and all possible answers to a question
  * - Calculates final scores using helper functions and sends to footer for updated display
  *
  * ResultsCard.tsx (card container that floats over other layout elements and holds result selectors)
@@ -58,45 +61,16 @@ export default function PhaseResults({
   currentQuestionIndex,
   teamId,
   gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
+  answerChoices,
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const phaseNo = currentState === GameSessionState.PHASE_1_RESULTS ? 1 : 2;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const originalScore = currentTeam?.score ?? 0;
   const [scoreFooter, setScoreFooter] = useState(originalScore); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const selectedAnswer = ModelHelper.getSelectedAnswer(currentTeam!, currentQuestion, phaseNo);
 
-  // step 1: get all answers from player
-  let teamAnswers;
-  if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-      currentTeam,
-      currentQuestion.id
-    );
-  }
-
-  // step 2: get the answer the player selected this round
-  const findSelectedAnswer = (answers: (ITeamAnswer | null)[]) => {
-    const selectedAnswer = answers.find((teamAnswer: ITeamAnswer | null) =>
-      phaseNo === 1
-        ? teamAnswer?.isChosen === true
-        : teamAnswer?.isTrickAnswer === true
-    );
-    return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
-  };
-
-  let selectedAnswer;
-  if (currentTeam != null && !isNullOrUndefined(teamAnswers)) {
-    selectedAnswer = findSelectedAnswer(teamAnswers);
-  }
-
-  // step 3: get all possible answers to the question
-  const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-  }));
-
-  // step 4: calculate new score for use in footer (todo: update gamesession object through api call)
+  // calculate new score for use in footer (todo: update gamesession object through api call)
   const calculateNewScore = (
     session: IGameSession,
     question: IQuestion,

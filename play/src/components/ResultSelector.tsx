@@ -37,8 +37,8 @@ interface ResultSelectorProps {
   answerStatus: AnswerState;
   index: number;
   answerText: string;
-  percentageText: string;
-  currentState: GameSessionState;
+  percentageText?: string;
+  currentState?: GameSessionState;
 }
 
 export default function ResultSelector({
@@ -118,14 +118,14 @@ export default function ResultSelector({
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (
-        <Box>
+        <Box sx={{width: '100%'}}>
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
-        <Box>
-          <Box sx={{ position: 'relative', height: 0 }}>
+        <Box sx={{width: '100%'}}>
+          <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
             <CorrectStarsStyled
               src={CorrectStars}
               alt="Stars icon that denotes player is correct"

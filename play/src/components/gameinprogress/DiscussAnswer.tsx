@@ -3,12 +3,16 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Box, Typography, Grid, Stack } from '@mui/material';
 import {
   GameSessionState,
+  ModelHelper,
+  ITeam,
+  IQuestion,
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { v4 as uuidv4 } from 'uuid';
+import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../QuestionCard';
 import DiscussAnswerCard from '../DiscussAnswerCard';
-import AnswerCard from '../AnswerCard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -31,13 +35,11 @@ interface DiscussAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: { text: string; isCorrectAnswer: boolean; }[] | undefined;
+  answerChoices: { text: string; isCorrectAnswer: boolean; reason: string; }[] | undefined;
   instructions: string[];
-  isSubmitted: boolean;
-  handleSubmitAnswer: () => void;
   currentState: GameSessionState;
-  selectedAnswer: number | null;
-  handleSelectAnswer: (answer: number) => void;
+  currentTeam: ITeam;
+  currentQuestion: IQuestion;
 }
 
 export default function DiscussAnswer({ 
@@ -46,15 +48,17 @@ export default function DiscussAnswer({
     questionUrl,
     answerChoices,
     instructions,
-    isSubmitted,
-    handleSubmitAnswer,
     currentState,
-    selectedAnswer,
-    handleSelectAnswer,
+    currentTeam,
+    currentQuestion,
 } : DiscussAnswerProps ){
   const theme = useTheme();
-
-  const questionContents = (
+  const correctAnswer = answerChoices?.find((answer) => answer.isCorrectAnswer);
+  const correctIndex = answerChoices?.findIndex((answer) => answer.isCorrectAnswer);
+  const phaseNo = currentState === GameSessionState.PHASE_1_DISCUSS ? 1 : 2;
+  const selectedAnswer = ModelHelper.getSelectedAnswer(currentTeam!, currentQuestion, phaseNo);
+  const isPlayerCorrect = (correctAnswer?.text === selectedAnswer?.text);
+  const questionCorrectAnswerContents = (
     <>
       <Typography
         variant="h2"
@@ -73,16 +77,15 @@ export default function DiscussAnswer({
             imageUrl={questionUrl}
           />
           <DiscussAnswerCard
-            isPlayerCorrect
+            isPlayerCorrect={isPlayerCorrect}
             instructions={instructions}
-            // answerStatus
-            // index
-            // answerText
-            // percentageText
-            // currentState
+            answerStatus={isPlayerCorrect ? AnswerState.PLAYER_SELECTED_CORRECT : AnswerState.CORRECT}
+            answerText={correctAnswer?.text ?? ''}
+            answerIndex={correctIndex ?? 0}
+            currentState={currentState}
           />
         </Stack>
-        {isSmallDevice ? (
+        {isSmallDevice && (
           <Typography
             variant="body1"
             sx={{
@@ -93,37 +96,48 @@ export default function DiscussAnswer({
           >
             Scroll to the left to answer the question.
           </Typography>
-        ) : null}
+        )}
       </ScrollBox>
     </>
   );
 
-  const answerContents = (
+  const incorrectAnswerContents = (
     <>
-      <Typography
+       <Typography
         variant="h2"
         sx={{
-          marginTop: '16px',
+          marginTop: `${theme.sizing.smallPadding}px`,
           marginBottom: `${theme.sizing.smallPadding}px`,
           textAlign: 'center',
         }}
       >
-        Answer
+        Incorrect Answers
       </Typography>
       <ScrollBox>
-        <AnswerCard
-          answers={answerChoices}
-          isSubmitted={isSubmitted}
-          handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
-          selectedAnswer={selectedAnswer}
-          handleSelectAnswer={handleSelectAnswer}
-        />
+        <Stack spacing = {1}>
+          { answerChoices?.map((answer, index) => (
+            (!answer.isCorrectAnswer && (
+                <DiscussAnswerCard
+                  isPlayerCorrect={isPlayerCorrect}
+                  instructions={instructions}
+                  answerStatus={
+                    (answer.text === selectedAnswer?.text) ? 
+                      AnswerState.SELECTED
+                      :
+                      AnswerState.DEFAULT
+                  }
+                  answerText={answer.text}
+                  answerIndex={index}
+                  answerReason={answer.reason}
+                  currentState={currentState}
+                  key={uuidv4()}
+                />
+            ))
+          ))}
+        </Stack>
       </ScrollBox>
     </>
   );
-
-
 
   return (
     <>
@@ -153,7 +167,7 @@ export default function DiscussAnswer({
               height: '100%',
             }}
           >
-            {questionContents}
+            {questionCorrectAnswerContents}
           </SwiperSlide>
           <SwiperSlide
             style={{
@@ -163,15 +177,15 @@ export default function DiscussAnswer({
               height: '100%',
             }}
           >
-            {answerContents}
+            {incorrectAnswerContents}
           </SwiperSlide>
         </Swiper>
       ) : (
-        questionContents
+        questionCorrectAnswerContents
       )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
-      {answerContents}
+      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+      {incorrectAnswerContents}
       </Grid>
     </>
   );

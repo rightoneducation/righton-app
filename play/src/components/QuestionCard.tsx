@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
@@ -12,11 +13,12 @@ export default function QuestionCard({
   questionText,
   imageUrl,
 }: QuestionCardProps) {
+  const theme = useTheme();
   return (
     <BodyCardStyled elevation={5}>
       <BodyCardContainerStyled>
         <img
-          style={{ width: '75%', height: 'auto' }}
+          style={{ width: '75%', height: 'auto', paddingBottom: `${theme.sizing.smallPadding}px` }}
           src={imageUrl}
           alt="Question"
         />

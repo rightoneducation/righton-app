@@ -30,6 +30,12 @@ interface GameInProgressProps {
   questions: IQuestion[];
   currentQuestionIndex?: number | null;
   teamId: string;
+  answerChoices: {
+    id: string;
+    text: string;
+    isCorrectAnswer: boolean;
+    reason: string;
+  }[];
 }
 
 export default function GameInProgress({
@@ -38,7 +44,8 @@ export default function GameInProgress({
   teamAvatar,
   questions,
   currentQuestionIndex,
-  teamId, // eslint-disable-line @typescript-eslint/no-unused-vars
+  teamId, 
+  answerChoices
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -79,12 +86,6 @@ export default function GameInProgress({
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
-  const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-  }));
-
   const handleTimerIsFinished = () => {
     setTimerIsPaused(true);
   };
@@ -96,7 +97,7 @@ export default function GameInProgress({
   const handleSelectAnswer = (index: number) => {
     setSelectedAnswer(index);
   };
-  console.log(currentQuestion);
+
   return (
     <StackContainerStyled
       direction="column"
@@ -118,18 +119,30 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <BodyContentAreaStyled container style={{alignItems: 'flex-start'}} spacing={isSmallDevice ? 0 : 2}>
-         <DiscussAnswer
-          isSmallDevice={isSmallDevice}
-          questionText={questionText}
-          questionUrl={questionUrl ?? ''}
-          answerChoices={answerChoices}
-          instructions={instructions ?? ['']}
-          isSubmitted={isSubmitted}
-          handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
-          selectedAnswer={selectedAnswer}
-          handleSelectAnswer={handleSelectAnswer} 
-        />
+        { currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? 
+          <ChooseAnswer
+            isSmallDevice={isSmallDevice}
+            questionText={questionText}
+            questionUrl={questionUrl ?? ''}
+            answerChoices={answerChoices}
+            isSubmitted={isSubmitted}
+            handleSubmitAnswer={handleSubmitAnswer}
+            currentState={currentState}
+            selectedAnswer={selectedAnswer}
+            handleSelectAnswer={handleSelectAnswer}
+          />
+        :
+          <DiscussAnswer
+            isSmallDevice={isSmallDevice}
+            questionText={questionText}
+            questionUrl={questionUrl ?? ''}
+            answerChoices={answerChoices}
+            instructions={instructions ?? ['']}
+            currentState={currentState}
+            currentTeam={currentTeam!}
+            currentQuestion={currentQuestion}
+          />
+        }
         </BodyContentAreaStyled>
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>
