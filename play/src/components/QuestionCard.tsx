@@ -18,7 +18,11 @@ export default function QuestionCard({
     <BodyCardStyled elevation={5}>
       <BodyCardContainerStyled>
         <img
-          style={{ width: '75%', height: 'auto', paddingBottom: `${theme.sizing.smallPadding}px` }}
+          style={{
+            width: '75%',
+            height: 'auto',
+            paddingBottom: `${theme.sizing.smallPadding}px`,
+          }}
           src={imageUrl}
           alt="Question"
         />

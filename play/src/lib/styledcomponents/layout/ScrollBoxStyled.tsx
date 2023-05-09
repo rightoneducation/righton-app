@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
-/** 
+/**
  * lower-level container for background section in body
  * creates a box that constrains touch scrolling to vertical only so that it doesn't conflict with swiper horizontal scrolling
  */

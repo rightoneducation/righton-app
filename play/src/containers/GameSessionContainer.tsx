@@ -17,22 +17,21 @@ import StartPhase2 from '../pages/StartPhase2';
 import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState(
+  const [gameSession, setGameSession] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
     // TODO: update exchange mock gamesession with subscription via @righton/networking
     GameSessionParser.gameSessionFromAWSGameSession(
       MockGameSession as IAWSGameSession
     ) as IGameSession
   );
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  // TODO: add gameSession subscription and update below states accordingly.  
+  // TODO: add gameSession subscription and update below states accordingly.
   const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     JoinGameState.SPLASH_SCREEN
   );
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionState.PHASE_1_DISCUSS
   );
-  const [finalResultsState, setFinalResultsState] = useState(
-    // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
     FinalResultsState.LEADERBOARD
   );
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -40,8 +39,9 @@ export default function GameSessionContainer() {
   const leader = true;
   const teamId = '2d609343-de50-4830-b65e-71eb72bb9bef';
 
-  const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex ?? 0];
-  const answerChoices = currentQuestion.choices!.map((choice: IChoice) => ({
+  const currentQuestion =
+    gameSession.questions[gameSession.currentQuestionIndex ?? 0];
+  const answerChoices = currentQuestion.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
     id: uuidv4(),
     text: choice.text,
     isCorrectAnswer: choice.isAnswer,
@@ -69,7 +69,7 @@ export default function GameSessionContainer() {
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-      return( 
+      return (
         <GameInProgress
           {...gameSession}
           teamAvatar={teamAvatar}

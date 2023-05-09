@@ -29,36 +29,80 @@ export default function DiscussAnswerCard({
 }: DiscussAnswerCardProps) {
   const theme = useTheme();
   const resultText = isPlayerCorrect ? 'Yes, ' : 'Nice try, ';
-  const correctCard = (answerStatus === AnswerState.CORRECT || answerStatus === AnswerState.PLAYER_SELECTED_CORRECT);
+  const correctCard =
+    answerStatus === AnswerState.CORRECT ||
+    answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
   return (
     <BodyCardStyled elevation={5}>
-      <BodyCardContainerStyled sx={{alignItems: 'flex-start'}}>
-        { correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && 
-          <Box display="inline" sx={{paddingBottom: `${theme.sizing.extraSmallPadding}px`}}> 
-            <Typography variant="body1" display="inline" sx={{fontWeight: 700, left: 0, paddingLeft: `${theme.sizing.extraSmallPadding}px`}}> 
+      <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
+        {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
+          <Box
+            display="inline"
+            sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
+          >
+            <Typography
+              variant="body1"
+              display="inline"
+              sx={{
+                fontWeight: 700,
+                left: 0,
+                paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+              }}
+            >
               {resultText}
             </Typography>
-            <Typography variant="body1" display="inline"> the correct answer is... </Typography>  
+            <Typography variant="body1" display="inline">
+              {' '}
+              the correct answer is...{' '}
+            </Typography>
           </Box>
-         }
-         <ResultSelector 
+        )}
+        <ResultSelector
           answerStatus={answerStatus}
           index={answerIndex}
           answerText={answerText}
-        /> 
-        <Stack spacing={1} sx={{paddingTop: `${theme.sizing.extraSmallPadding}px`}}>
-          { correctCard ?    
+        />
+        <Stack
+          spacing={1}
+          sx={{ paddingTop: `${theme.sizing.extraSmallPadding}px` }}
+        >
+          {correctCard ? (
             instructions.map((instruction, index) => (
-            <Box sx={{display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start'}} key={uuidv4()}>
-              <Box sx={{width:'30px'}}>
-                <Typography variant="h3" sx={{width: '30px', fontWeight: 700, color: theme.palette.primary.darkPurple, lineHeight: '20px', textAlign: 'right'}}> {index+1} </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                }}
+                key={uuidv4()}
+              >
+                <Box sx={{ width: '30px' }}>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      width: '30px',
+                      fontWeight: 700,
+                      color: theme.palette.primary.darkPurple,
+                      lineHeight: '20px',
+                      textAlign: 'right',
+                    }}
+                  >
+                    {' '}
+                    {index + 1}{' '}
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="body1"
+                  sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px` }}
+                >
+                  {' '}
+                  {instruction}{' '}
+                </Typography>
               </Box>
-              <Typography variant="body1" sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px`}}> {instruction} </Typography>
-            </Box>
             ))
-          :
-          <Box>{answerReason}</Box>
-          }
+          ) : (
+            <Box>{answerReason}</Box>
+          )}
         </Stack>
       </BodyCardContainerStyled>
     </BodyCardStyled>

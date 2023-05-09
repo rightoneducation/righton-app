@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Box } from '@mui/material';
 import {
   GameSessionState,
   ITeam,
   IQuestion,
-  IChoice,
   ModelHelper,
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
@@ -44,8 +41,8 @@ export default function GameInProgress({
   teamAvatar,
   questions,
   currentQuestionIndex,
-  teamId, 
-  answerChoices
+  teamId,
+  answerChoices,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -53,7 +50,8 @@ export default function GameInProgress({
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );
@@ -118,31 +116,36 @@ export default function GameInProgress({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaStyled container style={{alignItems: 'flex-start'}} spacing={isSmallDevice ? 0 : 2}>
-        { currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? 
-          <ChooseAnswer
-            isSmallDevice={isSmallDevice}
-            questionText={questionText}
-            questionUrl={questionUrl ?? ''}
-            answerChoices={answerChoices}
-            isSubmitted={isSubmitted}
-            handleSubmitAnswer={handleSubmitAnswer}
-            currentState={currentState}
-            selectedAnswer={selectedAnswer}
-            handleSelectAnswer={handleSelectAnswer}
-          />
-        :
-          <DiscussAnswer
-            isSmallDevice={isSmallDevice}
-            questionText={questionText}
-            questionUrl={questionUrl ?? ''}
-            answerChoices={answerChoices}
-            instructions={instructions ?? ['']}
-            currentState={currentState}
-            currentTeam={currentTeam!}
-            currentQuestion={currentQuestion}
-          />
-        }
+        <BodyContentAreaStyled
+          container
+          style={{ alignItems: 'flex-start' }}
+          spacing={isSmallDevice ? 0 : 2}
+        >
+          {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+            <ChooseAnswer
+              isSmallDevice={isSmallDevice}
+              questionText={questionText}
+              questionUrl={questionUrl ?? ''}
+              answerChoices={answerChoices}
+              isSubmitted={isSubmitted}
+              handleSubmitAnswer={handleSubmitAnswer}
+              currentState={currentState}
+              selectedAnswer={selectedAnswer}
+              handleSelectAnswer={handleSelectAnswer}
+            />
+          ) : (
+            <DiscussAnswer
+              isSmallDevice={isSmallDevice}
+              questionText={questionText}
+              questionUrl={questionUrl ?? ''}
+              answerChoices={answerChoices}
+              instructions={instructions ?? ['']}
+              currentState={currentState}
+              currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
+              currentQuestion={currentQuestion}
+            />
+          )}
         </BodyContentAreaStyled>
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>

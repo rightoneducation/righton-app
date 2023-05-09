@@ -3,13 +3,9 @@ import {
   GameSessionState,
   IGameSession,
   ITeam,
-  ITeamAnswer,
   IQuestion,
-  IChoice,
   ModelHelper,
-  isNullOrUndefined,
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
 import ResultsCard from '../components/ResultsCard';
 import FooterContent from '../components/FooterContent';
@@ -68,7 +64,11 @@ export default function PhaseResults({
   const currentTeam = teams?.find((team) => team.id === teamId);
   const originalScore = currentTeam?.score ?? 0;
   const [scoreFooter, setScoreFooter] = useState(originalScore); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const selectedAnswer = ModelHelper.getSelectedAnswer(currentTeam!, currentQuestion, phaseNo);
+  const selectedAnswer = ModelHelper.getSelectedAnswer(
+    currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion,
+    phaseNo
+  );
 
   // calculate new score for use in footer (todo: update gamesession object through api call)
   const calculateNewScore = (
@@ -122,7 +122,7 @@ export default function PhaseResults({
           newPoints={calculateNewScore(
             gameSession,
             gameSession.questions[currentQuestionIndex ?? 0],
-            currentTeam!  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
           )}
           score={scoreFooter}
         />

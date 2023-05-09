@@ -1,9 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Typography, Grid } from '@mui/material';
-import {
-  GameSessionState,
-} from '@righton/networking';
+import { GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import QuestionCard from '../QuestionCard';
@@ -16,7 +14,7 @@ interface ChooseAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: { text: string; isCorrectAnswer: boolean; }[] | undefined;
+  answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   handleSubmitAnswer: () => void;
   currentState: GameSessionState;
@@ -24,17 +22,17 @@ interface ChooseAnswerProps {
   handleSelectAnswer: (answer: number) => void;
 }
 
-export default function ChooseAnswer({ 
-    isSmallDevice, 
-    questionText,
-    questionUrl,
-    answerChoices,
-    isSubmitted,
-    handleSubmitAnswer,
-    currentState,
-    selectedAnswer,
-    handleSelectAnswer,
-} : ChooseAnswerProps ){
+export default function ChooseAnswer({
+  isSmallDevice,
+  questionText,
+  questionUrl,
+  answerChoices,
+  isSubmitted,
+  handleSubmitAnswer,
+  currentState,
+  selectedAnswer,
+  handleSelectAnswer,
+}: ChooseAnswerProps) {
   const theme = useTheme();
   const questionContents = (
     <>
@@ -49,10 +47,7 @@ export default function ChooseAnswer({
         Question
       </Typography>
       <ScrollBoxStyled>
-        <QuestionCard
-          questionText={questionText}
-          imageUrl={questionUrl}
-        />
+        <QuestionCard questionText={questionText} imageUrl={questionUrl} />
         {isSmallDevice ? (
           <Typography
             variant="body1"
@@ -94,55 +89,49 @@ export default function ChooseAnswer({
     </>
   );
 
-
-
   return (
     <>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-      {isSmallDevice ? (
-        <Swiper
-          modules={[Pagination]}
-          spaceBetween={24}
-          centeredSlides
-          slidesPerView="auto"
-          pagination={{
-            el: '.swiper-pagination-container',
-            bulletClass: 'swiper-pagination-bullet',
-            bulletActiveClass: 'swiper-pagination-bullet-active',
-            clickable: true,
-            renderBullet(index, className) {
-              return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-            },
-          }}
-          style={{ height: '100%' }}
-        >
-          <SwiperSlide
-            style={{
-              width: `calc(100% - ${
-                theme.sizing.extraLargePadding * 2
-              }px`,
-              height: '100%',
+        {isSmallDevice ? (
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={24}
+            centeredSlides
+            slidesPerView="auto"
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index, className) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              },
             }}
+            style={{ height: '100%' }}
           >
-            {questionContents}
-          </SwiperSlide>
-          <SwiperSlide
-            style={{
-              width: `calc(100% - ${
-                theme.sizing.extraLargePadding * 2
-              }px`,
-              height: '100%',
-            }}
-          >
-            {answerContents}
-          </SwiperSlide>
-        </Swiper>
-      ) : (
-        questionContents
-      )}
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {questionContents}
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {answerContents}
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          questionContents
+        )}
       </Grid>
       <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
-      {answerContents}
+        {answerContents}
       </Grid>
     </>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Box, Typography, Grid, Stack } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Typography, Grid, Stack } from '@mui/material';
 import {
   GameSessionState,
   ModelHelper,
@@ -21,29 +21,37 @@ interface DiscussAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: { text: string; isCorrectAnswer: boolean; reason: string; }[] | undefined;
+  answerChoices:
+    | { text: string; isCorrectAnswer: boolean; reason: string }[]
+    | undefined;
   instructions: string[];
   currentState: GameSessionState;
   currentTeam: ITeam;
   currentQuestion: IQuestion;
 }
 
-export default function DiscussAnswer({ 
-    isSmallDevice, 
-    questionText,
-    questionUrl,
-    answerChoices,
-    instructions,
-    currentState,
-    currentTeam,
-    currentQuestion,
-} : DiscussAnswerProps ){
+export default function DiscussAnswer({
+  isSmallDevice,
+  questionText,
+  questionUrl,
+  answerChoices,
+  instructions,
+  currentState,
+  currentTeam,
+  currentQuestion,
+}: DiscussAnswerProps) {
   const theme = useTheme();
   const correctAnswer = answerChoices?.find((answer) => answer.isCorrectAnswer);
-  const correctIndex = answerChoices?.findIndex((answer) => answer.isCorrectAnswer);
+  const correctIndex = answerChoices?.findIndex(
+    (answer) => answer.isCorrectAnswer
+  );
   const phaseNo = currentState === GameSessionState.PHASE_1_DISCUSS ? 1 : 2;
-  const selectedAnswer = ModelHelper.getSelectedAnswer(currentTeam!, currentQuestion, phaseNo);
-  const isPlayerCorrect = (correctAnswer?.text === selectedAnswer?.text);
+  const selectedAnswer = ModelHelper.getSelectedAnswer(
+    currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion,
+    phaseNo
+  );
+  const isPlayerCorrect = correctAnswer?.text === selectedAnswer?.text;
   const questionCorrectAnswerContents = (
     <>
       <Typography
@@ -57,15 +65,16 @@ export default function DiscussAnswer({
         Question and Correct Answer
       </Typography>
       <ScrollBoxStyled>
-        <Stack spacing = {1}>
-          <QuestionCard
-            questionText={questionText}
-            imageUrl={questionUrl}
-          />
+        <Stack spacing={1}>
+          <QuestionCard questionText={questionText} imageUrl={questionUrl} />
           <DiscussAnswerCard
             isPlayerCorrect={isPlayerCorrect}
             instructions={instructions}
-            answerStatus={isPlayerCorrect ? AnswerState.PLAYER_SELECTED_CORRECT : AnswerState.CORRECT}
+            answerStatus={
+              isPlayerCorrect
+                ? AnswerState.PLAYER_SELECTED_CORRECT
+                : AnswerState.CORRECT
+            }
             answerText={correctAnswer?.text ?? ''}
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
@@ -89,7 +98,7 @@ export default function DiscussAnswer({
 
   const incorrectAnswerContents = (
     <>
-       <Typography
+      <Typography
         variant="h2"
         sx={{
           marginTop: `${theme.sizing.smallPadding}px`,
@@ -100,17 +109,17 @@ export default function DiscussAnswer({
         Incorrect Answers
       </Typography>
       <ScrollBoxStyled>
-        <Stack spacing = {1}>
-          { answerChoices?.map((answer, index) => (
-            (!answer.isCorrectAnswer && (
+        <Stack spacing={1}>
+          {answerChoices?.map(
+            (answer, index) =>
+              !answer.isCorrectAnswer && (
                 <DiscussAnswerCard
                   isPlayerCorrect={isPlayerCorrect}
                   instructions={instructions}
                   answerStatus={
-                    (answer.text === selectedAnswer?.text) ? 
-                      AnswerState.SELECTED
-                      :
-                      AnswerState.DEFAULT
+                    answer.text === selectedAnswer?.text
+                      ? AnswerState.SELECTED
+                      : AnswerState.DEFAULT
                   }
                   answerText={answer.text}
                   answerIndex={index}
@@ -118,8 +127,8 @@ export default function DiscussAnswer({
                   currentState={currentState}
                   key={uuidv4()}
                 />
-            ))
-          ))}
+              )
+          )}
         </Stack>
       </ScrollBoxStyled>
     </>
@@ -128,50 +137,46 @@ export default function DiscussAnswer({
   return (
     <>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-      {isSmallDevice ? (
-        <Swiper
-          modules={[Pagination]}
-          spaceBetween={24}
-          centeredSlides
-          slidesPerView="auto"
-          pagination={{
-            el: '.swiper-pagination-container',
-            bulletClass: 'swiper-pagination-bullet',
-            bulletActiveClass: 'swiper-pagination-bullet-active',
-            clickable: true,
-            renderBullet(index, className) {
-              return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-            },
-          }}
-          style={{ height: '100%' }}
-        >
-          <SwiperSlide
-            style={{
-              width: `calc(100% - ${
-                theme.sizing.extraLargePadding * 2
-              }px`,
-              height: '100%',
+        {isSmallDevice ? (
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={24}
+            centeredSlides
+            slidesPerView="auto"
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index, className) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              },
             }}
+            style={{ height: '100%' }}
           >
-            {questionCorrectAnswerContents}
-          </SwiperSlide>
-          <SwiperSlide
-            style={{
-              width: `calc(100% - ${
-                theme.sizing.extraLargePadding * 2
-              }px`,
-              height: '100%',
-            }}
-          >
-            {incorrectAnswerContents}
-          </SwiperSlide>
-        </Swiper>
-      ) : (
-        questionCorrectAnswerContents
-      )}
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {questionCorrectAnswerContents}
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {incorrectAnswerContents}
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          questionCorrectAnswerContents
+        )}
       </Grid>
       <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
-      {incorrectAnswerContents}
+        {incorrectAnswerContents}
       </Grid>
     </>
   );
