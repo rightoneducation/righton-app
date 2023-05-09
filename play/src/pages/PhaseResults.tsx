@@ -47,7 +47,7 @@ interface PhaseResultsProps {
  *
  * ResultsCard.tsx (card container that floats over other layout elements and holds result selectors)
  *
- * - This takes all the answers and, based on info from PhaseResults.tsx, determines the type of result selector to display
+ * - This takes all the answers and determines the type of result selector to display
  * - These are assigned during the mapping of the answers when rendering result selectors
  *
  * ResultSelector.tsx (individual result selector per answer option)
