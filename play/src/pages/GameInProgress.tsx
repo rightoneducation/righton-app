@@ -5,6 +5,7 @@ import { Typography, Box } from '@mui/material';
 import {
   GameSessionState,
   ITeam,
+  ITeamAnswer,
   IQuestion,
   IChoice,
   ModelHelper,
@@ -30,6 +31,8 @@ interface GameInProgressProps {
   questions: IQuestion[];
   currentQuestionIndex?: number | null;
   teamId: string;
+  selectedAnswer?: ITeamAnswer | null;
+  answerChoices?: { id: string; text: string; isCorrectAnswer: boolean; }[] | null;
 }
 
 export default function GameInProgress({
@@ -39,6 +42,8 @@ export default function GameInProgress({
   questions,
   currentQuestionIndex,
   teamId, // eslint-disable-line @typescript-eslint/no-unused-vars
+  selectedAnswer,
+  answerChoices,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -77,13 +82,7 @@ export default function GameInProgress({
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-
-  const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-  }));
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const handleTimerIsFinished = () => {
     setTimerIsPaused(true);
@@ -93,8 +92,8 @@ export default function GameInProgress({
     setIsSubmitted(true);
   };
 
-  const handleSelectAnswer = (index: number) => {
-    setSelectedAnswer(index);
+  const handleSelectedIndex = (index: number) => {
+    setSelectedIndex(index);
   };
   console.log(currentQuestion);
   return (
@@ -122,13 +121,13 @@ export default function GameInProgress({
           isSmallDevice={isSmallDevice}
           questionText={questionText}
           questionUrl={questionUrl ?? ''}
-          answerChoices={answerChoices}
+          answerChoices={answerChoices ?? []}
           instructions={instructions ?? ['']}
           isSubmitted={isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
-          selectedAnswer={selectedAnswer}
-          handleSelectAnswer={handleSelectAnswer} 
+          selectedAnswer={selectedIndex}
+          handleSelectAnswer={handleSelectedIndex} 
         />
         </BodyContentAreaStyled>
       </BodyStackContainerStyled>
