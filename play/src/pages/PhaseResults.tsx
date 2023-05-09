@@ -5,8 +5,11 @@ import {
   ITeam,
   ITeamAnswer,
   IQuestion,
+  IChoice,
   ModelHelper,
+  isNullOrUndefined,
 } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 import HeaderContent from '../components/HeaderContent';
 import ResultsCard from '../components/ResultsCard';
 import FooterContent from '../components/FooterContent';
@@ -21,14 +24,12 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
-  currentTeam: ITeam;
+  teams?: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
-  currentQuestion: IQuestion;
-  selectedAnswer: ITeamAnswer | null;
-  answerChoices: { id: string; text: string; isCorrectAnswer: boolean; }[] | null;
+  currentQuestionIndex?: number | null;
+  teamId: string;
   gameSession: IGameSession;
-  phaseNo: number;
 }
 
 /**
@@ -38,6 +39,7 @@ interface PhaseResultsProps {
  *
  * PhaseResults.tsx (page-level container, including header/body/footer content)
  *
+ * - Gets all answers from player, the selected answer and all possible answers to a question
  * - Calculates final scores using helper functions and sends to footer for updated display
  *
  * ResultsCard.tsx (card container that floats over other layout elements and holds result selectors)
@@ -50,20 +52,51 @@ interface PhaseResultsProps {
  * - Styling is provided based on the AnswerType that is received from ResultsCard.tsx
  */
 export default function PhaseResults({
-  currentTeam,
+  teams,
   currentState,
   teamAvatar,
-  currentQuestion,
-  selectedAnswer,
-  answerChoices,
+  currentQuestionIndex,
+  teamId,
   gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
-  phaseNo,
 }: PhaseResultsProps) {
-
+  const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
+  const phaseNo = currentState === GameSessionState.PHASE_1_RESULTS ? 1 : 2;
+  const currentTeam = teams?.find((team) => team.id === teamId);
   const originalScore = currentTeam?.score ?? 0;
   const [scoreFooter, setScoreFooter] = useState(originalScore); // eslint-disable-line @typescript-eslint/no-unused-vars
 
-  // calculate new score for use in footer (todo: update gamesession object through api call)
+  // step 1: get all answers from player
+  let teamAnswers;
+  if (currentTeam != null) {
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
+      currentTeam,
+      currentQuestion.id
+    );
+  }
+
+  // step 2: get the answer the player selected this round
+  const findSelectedAnswer = (answers: (ITeamAnswer | null)[]) => {
+    const selectedAnswer = answers.find((teamAnswer: ITeamAnswer | null) =>
+      phaseNo === 1
+        ? teamAnswer?.isChosen === true
+        : teamAnswer?.isTrickAnswer === true
+    );
+    return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
+  };
+
+  let selectedAnswer;
+  if (currentTeam != null && !isNullOrUndefined(teamAnswers)) {
+    selectedAnswer = findSelectedAnswer(teamAnswers);
+  }
+
+  // step 3: get all possible answers to the question
+  const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
+    id: uuidv4(),
+    text: choice.text,
+    isCorrectAnswer: choice.isAnswer,
+  }));
+
+  // step 4: calculate new score for use in footer (todo: update gamesession object through api call)
   const calculateNewScore = (
     session: IGameSession,
     question: IQuestion,
@@ -114,7 +147,7 @@ export default function PhaseResults({
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           newPoints={calculateNewScore(
             gameSession,
-            currentQuestion,
+            gameSession.questions[currentQuestionIndex ?? 0],
             currentTeam!  // eslint-disable-line @typescript-eslint/no-non-null-assertion
           )}
           score={scoreFooter}

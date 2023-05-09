@@ -14,7 +14,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 
 interface CardResultsProps {
   phaseNo: number;
-  answers: { text: string; isCorrectAnswer: boolean }[] | null;
+  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   selectedAnswer: ITeamAnswer | null;
   currentState: GameSessionState;
   currentQuestionId: number;
