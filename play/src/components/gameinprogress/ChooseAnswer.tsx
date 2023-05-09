@@ -8,23 +8,9 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import QuestionCard from '../QuestionCard';
 import AnswerCard from '../AnswerCard';
+import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
-const ScrollBox = styled(Box)(({ theme }) => ({
-  height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px)`, // footer height & 8px grid spacing
-  paddingBottom: `${theme.sizing.extraSmallPadding}px`, // added so box shadow shows around edge of card
-  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-  paddingRight: `${theme.sizing.extraSmallPadding}px`,
-  overflow: 'auto',
-  touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none', // IE and Edge
-}));
 
 interface ChooseAnswerProps {
   isSmallDevice: boolean;
@@ -62,7 +48,7 @@ export default function ChooseAnswer({
       >
         Question
       </Typography>
-      <ScrollBox>
+      <ScrollBoxStyled>
         <QuestionCard
           questionText={questionText}
           imageUrl={questionUrl}
@@ -79,7 +65,7 @@ export default function ChooseAnswer({
             Scroll to the left to answer the question.
           </Typography>
         ) : null}
-      </ScrollBox>
+      </ScrollBoxStyled>
     </>
   );
 
@@ -95,7 +81,7 @@ export default function ChooseAnswer({
       >
         Answer
       </Typography>
-      <ScrollBox>
+      <ScrollBoxStyled>
         <AnswerCard
           answers={answerChoices}
           isSubmitted={isSubmitted}
@@ -104,7 +90,7 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
-      </ScrollBox>
+      </ScrollBoxStyled>
     </>
   );
 
