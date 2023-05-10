@@ -52,8 +52,7 @@ export default function DiscussAnswerCard({
               {resultText}
             </Typography>
             <Typography variant="body1" display="inline">
-              {' '}
-              the correct answer is...{' '}
+              the correct answer is...
             </Typography>
           </Box>
         )}
