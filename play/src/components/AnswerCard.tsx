@@ -29,8 +29,7 @@ export default function AnswerCard({
   const correctText = (
     <Box display="inline" sx={{ textAlign: 'center' }}>
       <Typography variant="h4" display="inline">
-        {' '}
-        Choose the{' '}
+        Choose the
       </Typography>
       <Typography
         variant="h4"
