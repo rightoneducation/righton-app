@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Tooltip } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import CorrectStars from '../img/CorrectStars.svg';
@@ -59,6 +59,19 @@ export default function ResultSelector({
     [AnswerState.PREVIOUS]: '',
   };
 
+  const image = (
+    <img
+      src={imageMap[answerStatus]}
+      style={{
+        position: 'relative',
+        width: `${theme.sizing.smallPadding}px`,
+        height: `${theme.sizing.smallPadding}px`,
+        paddingTop: '2px',
+      }}
+      alt="SelectedAnswerImage"
+    />
+  );
+
   const resultContents = (
     <>
       <Box style={{ display: 'flex', alignItems: 'center' }}>
@@ -100,16 +113,13 @@ export default function ResultSelector({
         )}
         {answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT && (
-            <img
-              src={imageMap[answerStatus]}
-              style={{
-                position: 'relative',
-                width: `${theme.sizing.smallPadding}px`,
-                height: `${theme.sizing.smallPadding}px`,
-                paddingTop: '2px',
-              }}
-              alt="SelectedAnswerImage"
-            />
+            answerStatus === AnswerState.SELECTED ? (
+            <Tooltip title='Your Answer' enterTouchDelay={700} enterDelay={700} enterNextDelay={700} placement="top" arrow>
+              {image}
+            </Tooltip>
+            ) : (
+              image
+            )
           )}
       </Box>
     </>
