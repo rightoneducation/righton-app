@@ -15,7 +15,7 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaStyled } from '../lib/styledcomponents/layout/BodyContentAreaStyled';
+import { BodyContentAreaDoubleColumnStyled, BodyContentAreaSingleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ChooseAnswer from '../components/gameinprogress/ChooseAnswer';
 import DiscussAnswer from '../components/gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
@@ -115,37 +115,32 @@ export default function GameInProgress({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaStyled
-          container
-          style={{ alignItems: 'flex-start' }}
-          spacing={isSmallDevice ? 0 : 2}
-        >
-          {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+        {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
           currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
-            <ChooseAnswer
-              isSmallDevice={isSmallDevice}
-              questionText={questionText}
-              questionUrl={questionUrl ?? ''}
-              answerChoices={answerChoices}
-              isSubmitted={isSubmitted}
-              handleSubmitAnswer={handleSubmitAnswer}
-              currentState={currentState}
-              selectedAnswer={selectedAnswer}
-              handleSelectAnswer={handleSelectAnswer}
-            />
+              <ChooseAnswer
+                isSmallDevice={isSmallDevice}
+                questionText={questionText}
+                questionUrl={questionUrl ?? ''}
+                answerChoices={answerChoices}
+                isSubmitted={isSubmitted}
+                handleSubmitAnswer={handleSubmitAnswer}
+                currentState={currentState}
+                selectedAnswer={selectedAnswer}
+                handleSelectAnswer={handleSelectAnswer}
+              />
           ) : (
-            <DiscussAnswer
-              isSmallDevice={isSmallDevice}
-              questionText={questionText}
-              questionUrl={questionUrl ?? ''}
-              answerChoices={answerChoices}
-              instructions={instructions ?? ['']}
-              currentState={currentState}
-              currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-              currentQuestion={currentQuestion}
-            />
+              <DiscussAnswer
+                isSmallDevice={isSmallDevice}
+                questionText={questionText}
+                questionUrl={questionUrl ?? ''}
+                answerChoices={answerChoices}
+                instructions={instructions ?? ['']}
+                currentState={currentState}
+                currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
+                currentQuestion={currentQuestion}
+              />
           )}
-        </BodyContentAreaStyled>
+        
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>
         {isSmallDevice ? (

@@ -4,6 +4,7 @@ import { Box, Typography, Grid } from '@mui/material';
 import { GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../QuestionCard';
 import AnswerCard from '../AnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -90,7 +91,10 @@ export default function ChooseAnswer({
   );
 
   return (
-    <>
+    <BodyContentAreaDoubleColumnStyled
+      container
+      spacing = {isSmallDevice ? 0 : 2}
+    >
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         {isSmallDevice ? (
           <Swiper
@@ -130,9 +134,9 @@ export default function ChooseAnswer({
           questionContents
         )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
+      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
         {answerContents}
       </Grid>
-    </>
+    </BodyContentAreaDoubleColumnStyled>
   );
 }

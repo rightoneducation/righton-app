@@ -14,7 +14,7 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaPhaseResultsStyled } from '../lib/styledcomponents/layout/BodyContentAreaStyled';
+import { BodyContentAreaPhaseResultsStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';

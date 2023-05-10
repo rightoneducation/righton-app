@@ -2,8 +2,11 @@ import React from 'react';
 import {
   IGameSession,
   IAWSGameSession,
+  GameSessionState,
   GameSessionParser,
+  IChoice,
 } from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import GameInProgress from './GameInProgress';
@@ -28,22 +31,54 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-export const TestStoryOne = Template.bind({});
-TestStoryOne.args = {
+const answerChoices = gameSession.questions[0].choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  id: uuidv4(),
+  text: choice.text,
+  isCorrectAnswer: choice.isAnswer,
+  reason: choice.reason ?? '',
+}));
+
+export const ChooseCorrectAnswer = Template.bind({});
+ChooseCorrectAnswer.args = {
   teamAvatar: 0,
   teams: gameSession.teams,
-  currentState: gameSession.currentState,
+  currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
   teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
+  answerChoices,
 };
 
-export const TestStoryTwo = Template.bind({});
-TestStoryTwo.args = {
-  teamAvatar: 1,
+export const ChooseTrickiestAnswer = Template.bind({});
+ChooseTrickiestAnswer.args = {
+  teamAvatar: 0,
   teams: gameSession.teams,
-  currentState: gameSession.currentState,
+  currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: '2d609343-de50-4830-b65e-13432234sfasdfsadf',
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
+  answerChoices,
 };
+
+export const DiscussPhase1 = Template.bind({});
+DiscussPhase1.args = {
+  teamAvatar: 0,
+  teams: gameSession.teams,
+  currentState: GameSessionState.PHASE_1_DISCUSS,
+  questions: gameSession.questions,
+  currentQuestionIndex: gameSession.currentQuestionIndex,
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
+  answerChoices,
+};
+
+export const DiscussPhase2 = Template.bind({});
+DiscussPhase2.args = {
+  teamAvatar: 0,
+  teams: gameSession.teams,
+  currentState: GameSessionState.PHASE_2_DISCUSS,
+  questions: gameSession.questions,
+  currentQuestionIndex: gameSession.currentQuestionIndex,
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
+  answerChoices,
+};
+

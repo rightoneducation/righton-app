@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Grid, Stack } from '@mui/material';
+import { Typography, Grid, Stack, Box } from '@mui/material';
 import {
   GameSessionState,
   ModelHelper,
@@ -16,6 +16,7 @@ import DiscussAnswerCard from '../DiscussAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { BodyContentAreaDoubleColumnStyled, BodyContentAreaSingleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -65,7 +66,7 @@ export default function DiscussAnswer({
         Question and Correct Answer
       </Typography>
       <ScrollBoxStyled>
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           <QuestionCard questionText={questionText} imageUrl={questionUrl} />
           <DiscussAnswerCard
             isPlayerCorrect={isPlayerCorrect}
@@ -80,7 +81,7 @@ export default function DiscussAnswer({
             currentState={currentState}
           />
         </Stack>
-        {isSmallDevice && (
+        {isSmallDevice && currentState === GameSessionState.PHASE_2_DISCUSS && (
           <Typography
             variant="body1"
             sx={{
@@ -109,7 +110,7 @@ export default function DiscussAnswer({
         Incorrect Answers
       </Typography>
       <ScrollBoxStyled>
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           {answerChoices?.map(
             (answer, index) =>
               !answer.isCorrectAnswer && (
@@ -135,49 +136,60 @@ export default function DiscussAnswer({
   );
 
   return (
-    <>
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {isSmallDevice ? (
-          <Swiper
-            modules={[Pagination]}
-            spaceBetween={24}
-            centeredSlides
-            slidesPerView="auto"
-            pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
-              clickable: true,
-              renderBullet(index, className) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-              },
-            }}
-            style={{ height: '100%' }}
-          >
-            <SwiperSlide
-              style={{
-                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
-                height: '100%',
-              }}
-            >
-              {questionCorrectAnswerContents}
-            </SwiperSlide>
-            <SwiperSlide
-              style={{
-                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
-                height: '100%',
-              }}
-            >
-              {incorrectAnswerContents}
-            </SwiperSlide>
-          </Swiper>
-        ) : (
-          questionCorrectAnswerContents
-        )}
-      </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {incorrectAnswerContents}
-      </Grid>
-    </>
+    currentState === GameSessionState.PHASE_2_DISCUSS ? (
+        <BodyContentAreaDoubleColumnStyled
+            container
+            spacing = {isSmallDevice ? 0 : 2}
+        >
+          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+            {isSmallDevice ? (
+              <Swiper
+                modules={[Pagination]}
+                spaceBetween={24}
+                centeredSlides
+                slidesPerView="auto"
+                pagination={{
+                  el: '.swiper-pagination-container',
+                  bulletClass: 'swiper-pagination-bullet',
+                  bulletActiveClass: 'swiper-pagination-bullet-active',
+                  clickable: true,
+                  renderBullet(index, className) {
+                    return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+                  },
+                }}
+                style={{ height: '100%' }}
+              >
+                <SwiperSlide
+                  style={{
+                    width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                    height: '100%',
+                  }}
+                >
+                  {questionCorrectAnswerContents}
+                </SwiperSlide>
+                <SwiperSlide
+                  style={{
+                    width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                    height: '100%',
+                  }}
+                >
+                  {incorrectAnswerContents}
+                </SwiperSlide>
+              </Swiper>
+            ) : (
+              questionCorrectAnswerContents
+            )}
+          </Grid>
+          <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+            {incorrectAnswerContents}
+          </Grid>
+        </BodyContentAreaDoubleColumnStyled>
+    ) 
+    :
+    <BodyContentAreaSingleColumnStyled>
+      <Box sx={{width: '100%', height: '100%'}}>
+      {questionCorrectAnswerContents}
+      </Box>
+    </BodyContentAreaSingleColumnStyled>
   );
 }
