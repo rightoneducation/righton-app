@@ -4,9 +4,11 @@ import {
   GameSessionState,
   IAWSGameSession,
   GameSessionParser,
+  IChoice,
 } from '@righton/networking';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { v4 as uuidv4 } from 'uuid';
 import PhaseResults from './PhaseResults';
 import MockGameSession from '../mock/MockGameSession.json';
 import Theme from '../lib/Theme';
@@ -29,6 +31,13 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
+const answerChoices = gameSession.questions[0].choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  id: uuidv4(),
+  text: choice.text,
+  isCorrectAnswer: choice.isAnswer,
+  reason: choice.reason ?? '',
+}));
+
 export const PhaseOne = Template.bind({});
 PhaseOne.args = {
   teams: gameSession.teams,
@@ -37,6 +46,7 @@ PhaseOne.args = {
   currentQuestionIndex: gameSession.currentQuestionIndex,
   teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   gameSession,
+  answerChoices,
 };
 
 export const PhaseTwo = Template.bind({});
@@ -47,4 +57,5 @@ PhaseTwo.args = {
   currentQuestionIndex: gameSession.currentQuestionIndex,
   teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   gameSession,
+  answerChoices,
 };

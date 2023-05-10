@@ -87,21 +87,21 @@ export default function DiscussAnswerCard({
                       textAlign: 'right',
                     }}
                   >
-                    {' '}
-                    {index + 1}{' '}
+                    {index + 1}
                   </Typography>
                 </Box>
                 <Typography
                   variant="body1"
                   sx={{ paddingLeft: `${theme.sizing.extraSmallPadding}px` }}
                 >
-                  {' '}
-                  {instruction}{' '}
+                  {instruction}
                 </Typography>
               </Box>
             ))
           ) : (
-            <Box>{answerReason}</Box>
+            <Typography variant="body1">
+              {answerReason}
+            </Typography>
           )}
         </Stack>
       </BodyCardContainerStyled>
