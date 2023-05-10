@@ -89,7 +89,7 @@ export default function DiscussAnswer({
               opacity: 0.5,
             }}
           >
-            Scroll to the left to answer the question.
+            Scroll to the left to view incorrect answers.
           </Typography>
         )}
       </ScrollBoxStyled>
