@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { Container, Typography, Box, Tooltip } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
@@ -59,6 +59,10 @@ export default function ResultSelector({
     [AnswerState.PREVIOUS]: '',
   };
 
+  const handleContextMenu: any = (event: any) => {
+    event.preventDefault();
+  };
+
   const image = (
     <img
       src={imageMap[answerStatus]}
@@ -114,8 +118,10 @@ export default function ResultSelector({
         {answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT && (
             answerStatus === AnswerState.SELECTED ? (
-            <Tooltip title='Your Answer' enterTouchDelay={700} enterDelay={700} enterNextDelay={700} placement="top" arrow>
-              {image}
+            <Tooltip title='Your Answer' placement="top" arrow>
+              <div onContextMenu={handleContextMenu}>
+              sup
+              </div>
             </Tooltip>
             ) : (
               image
