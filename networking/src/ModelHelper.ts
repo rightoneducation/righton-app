@@ -33,7 +33,7 @@ export abstract class ModelHelper {
             return !isNullOrUndefined(choice.isAnswer) && choice.isAnswer
         }) ?? null
     }
-    static getSelectedAnswer(team: ITeam, question: IQuestion, phaseNo: number): ITeamAnswer | null {
+    static getSelectedAnswer(team: ITeam, question: IQuestion, currentState: GameSessionState): ITeamAnswer | null {
         // step 1: get all answers from player
         let teamAnswers;
         if (team != null) {
@@ -45,7 +45,7 @@ export abstract class ModelHelper {
         // step 2: get the answer the player selected this round
         const findSelectedAnswer = (answers: (ITeamAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: ITeamAnswer | null) => 
-                phaseNo === 1
+                currentState === GameSessionState.PHASE_1_RESULTS || currentState === GameSessionState.PHASE_1_DISCUSS
                     ? teamAnswer?.isChosen === true
                     : teamAnswer?.isTrickAnswer === true
             );
