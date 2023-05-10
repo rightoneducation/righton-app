@@ -59,7 +59,8 @@ export default function ResultSelector({
     [AnswerState.PREVIOUS]: '',
   };
 
-  const handleContextMenu: any = (event: any) => {
+  // disables context menu when longclicking on image
+  const handleContextMenu: MouseEventHandler<HTMLElement> = (event) => {
     event.preventDefault();
   };
 
@@ -71,8 +72,12 @@ export default function ResultSelector({
         width: `${theme.sizing.smallPadding}px`,
         height: `${theme.sizing.smallPadding}px`,
         paddingTop: '2px',
+        // disable touch callout when longclicking on image
+        WebkitTouchCallout: 'none', 
       }}
       alt="SelectedAnswerImage"
+      // disable context menu when longclicking on image 
+      onContextMenu={handleContextMenu} 
     />
   );
 
@@ -119,9 +124,7 @@ export default function ResultSelector({
           answerStatus !== AnswerState.DEFAULT && (
             answerStatus === AnswerState.SELECTED ? (
             <Tooltip title='Your Answer' placement="top" arrow>
-              <div onContextMenu={handleContextMenu}>
-              sup
-              </div>
+             {image}
             </Tooltip>
             ) : (
               image
