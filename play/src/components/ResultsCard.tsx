@@ -13,7 +13,6 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface CardResultsProps {
-  phaseNo: number;
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   selectedAnswer: ITeamAnswer | null;
   currentState: GameSessionState;
@@ -22,7 +21,6 @@ interface CardResultsProps {
 }
 
 export default function CardResults({
-  phaseNo,
   answers,
   selectedAnswer,
   currentState,
@@ -51,7 +49,7 @@ export default function CardResults({
               index={index}
               answerText={answer.text}
               percentageText={
-                phaseNo === 1
+                currentState === GameSessionState.PHASE_1_RESULTS
                   ? ''
                   : `${ModelHelper.calculateBasicModeWrongAnswerScore(
                       gameSession,

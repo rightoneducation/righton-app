@@ -60,14 +60,13 @@ export default function PhaseResults({
   answerChoices,
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
-  const phaseNo = currentState === GameSessionState.PHASE_1_RESULTS ? 1 : 2;
   const currentTeam = teams?.find((team) => team.id === teamId);
   const originalScore = currentTeam?.score ?? 0;
   const [scoreFooter, setScoreFooter] = useState(originalScore); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
-    phaseNo
+    currentState
   );
 
   // calculate new score for use in footer (todo: update gamesession object through api call)
@@ -106,7 +105,6 @@ export default function PhaseResults({
         <BodyBoxLowerStyled />
         <BodyContentAreaPhaseResultsStyled container>
           <ResultsCard
-            phaseNo={phaseNo}
             gameSession={gameSession}
             answers={answerChoices}
             selectedAnswer={selectedAnswer ?? null}

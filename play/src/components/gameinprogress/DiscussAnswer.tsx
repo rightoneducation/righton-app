@@ -46,11 +46,10 @@ export default function DiscussAnswer({
   const correctIndex = answerChoices?.findIndex(
     (answer) => answer.isCorrectAnswer
   );
-  const phaseNo = currentState === GameSessionState.PHASE_1_DISCUSS ? 1 : 2;
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
-    phaseNo
+    currentState
   );
   const isPlayerCorrect = correctAnswer?.text === selectedAnswer?.text;
   const questionCorrectAnswerContents = (

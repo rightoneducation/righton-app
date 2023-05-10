@@ -29,7 +29,7 @@ export default function GameSessionContainer() {
     JoinGameState.SPLASH_SCREEN
   );
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.PHASE_2_DISCUSS
+    GameSessionState.PHASE_1_DISCUSS
   );
   const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
     FinalResultsState.LEADERBOARD
