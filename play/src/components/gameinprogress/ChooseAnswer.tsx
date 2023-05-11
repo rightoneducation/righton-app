@@ -99,7 +99,7 @@ export default function ChooseAnswer({
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
-            spaceBetween={24}
+            spaceBetween={4}
             centeredSlides
             slidesPerView="auto"
             pagination={{
@@ -115,7 +115,7 @@ export default function ChooseAnswer({
           >
             <SwiperSlide
               style={{
-                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
                 height: '100%',
               }}
             >
@@ -123,7 +123,7 @@ export default function ChooseAnswer({
             </SwiperSlide>
             <SwiperSlide
               style={{
-                width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
                 height: '100%',
               }}
             >

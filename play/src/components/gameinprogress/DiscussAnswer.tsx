@@ -144,7 +144,7 @@ export default function DiscussAnswer({
             {isSmallDevice ? (
               <Swiper
                 modules={[Pagination]}
-                spaceBetween={24}
+                spaceBetween={4}
                 centeredSlides
                 slidesPerView="auto"
                 pagination={{
@@ -160,7 +160,7 @@ export default function DiscussAnswer({
               >
                 <SwiperSlide
                   style={{
-                    width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                    width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
                     height: '100%',
                   }}
                 >
@@ -168,7 +168,7 @@ export default function DiscussAnswer({
                 </SwiperSlide>
                 <SwiperSlide
                   style={{
-                    width: `calc(100% - ${theme.sizing.extraLargePadding * 2}px`,
+                    width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
                     height: '100%',
                   }}
                 >
