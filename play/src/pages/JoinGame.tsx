@@ -25,11 +25,10 @@ export default function JoinGame() {
     JoinGameState.SPLASH_SCREEN
   );
   const [inputError, setInputError] = useState(false); 
-  const [firstNameValue, setFirstNameValue] = useState('');
-  const [lastNameValue, setLastNameValue] = useState('');
   const [avatar, setAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [selectedAvatar, setSelectedAvatar] = useState<number>(Math.floor(Math.random() * 6)); // default selection is random number between 0 and 5
   const [gameSessionId, setGameSessionId] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [playerName, setPlayerName] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const handleSplashScreenClick = () => {
     setJoinGameState(JoinGameState.ENTER_GAME_CODE);
@@ -63,7 +62,16 @@ export default function JoinGame() {
       }
     );
   }
+
+  const handlePlayerNameClick = (inputFirstName: string, inputLastName: string) => {
+    setPlayerName(`${inputFirstName} ${inputLastName}`);
+    console.log(playerName);
+    setJoinGameState(JoinGameState.SELECT_AVATAR);
+  };
   
+  const handleAvatarSelectClick = (inputAvatar: number) => {
+    setAvatar(inputAvatar);
+  };
 
   switch (joinGameState) {
     case JoinGameState.HOW_TO_PLAY:
@@ -72,20 +80,16 @@ export default function JoinGame() {
       return (
         <SelectAvatar
           selectedAvatar={selectedAvatar}
+          playerName={playerName}
           handleAvatarSelected={setSelectedAvatar}
-          firstNameValue={firstNameValue}
-          lastNameValue={lastNameValue}
           isSmallDevice={isSmallDevice}
         />
       );
     case JoinGameState.ENTER_NAME:
       return (
         <EnterPlayerName
-          firstNameValue={firstNameValue}
-          lastNameValue={lastNameValue}
-          setFirstNameValue={setFirstNameValue}
-          setLastNameValue={setLastNameValue}
           isSmallDevice={isSmallDevice}
+          handlePlayerNameClick={handlePlayerNameClick}
         />
       );
     case JoinGameState.ENTER_GAME_CODE:

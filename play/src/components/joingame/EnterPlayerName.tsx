@@ -23,22 +23,18 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterPlayerNameProps {
-  firstNameValue: string;
-  setFirstNameValue: (newValue: string) => void;
-  lastNameValue: string;
-  setLastNameValue: (newValue: string) => void;
   isSmallDevice: boolean;
+  handlePlayerNameClick: (firstNameValue: string, lastNameValue: string) => void;
 }
 
 export default function EnterPlayerName({
-  firstNameValue,
-  setFirstNameValue,
-  lastNameValue,
-  setLastNameValue,
   isSmallDevice,
+  handlePlayerNameClick,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
-  const [inputError, setInputError] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [firstNameValue, setFirstNameValue] = useState('');
+  const [lastNameValue, setLastNameValue] = useState('');
+
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={isSmallDevice ? 2 : 5}>
@@ -100,12 +96,11 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled>
+        <IntroButtonStyled onClick={()=> handlePlayerNameClick(firstNameValue, lastNameValue)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Enter
           </Typography>
         </IntroButtonStyled>
-        {inputError ? (
           <PaddedContainer>
             <Typography
               variant="h2"
@@ -124,7 +119,6 @@ export default function EnterPlayerName({
               not be stored.
             </Typography>
           </PaddedContainer>
-        ) : null}
       </StackContainer>
     </BackgroundContainerStyled>
   );

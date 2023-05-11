@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
-
 import { InputPlaceholder } from '../../lib/PlayModels';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
