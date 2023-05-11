@@ -8,7 +8,7 @@ import {
 } from '../../../lib/styledcomponents/CarouselElementsStyled';
 import HowToPlay_Phase2Circle from '../../../img/HowToPlay_Phase2Circle.svg';
 import HowToPlay_PinkMonster2 from '../../../img/HowToPlay_PinkMonster2.svg';
-import HowToPlay_Screenshot3 from '../../../img/HowToPlay_Screenshot3.svg';
+import HowToPlay_Screenshot3 from '../../../img/HowToPlay_Screenshot3.png';
 
 export default function HowToPlaySlide3Content() {
   const theme = useTheme();

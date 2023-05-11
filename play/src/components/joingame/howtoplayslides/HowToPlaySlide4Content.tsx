@@ -7,7 +7,7 @@ import {
   ScreenshotImageStyled,
 } from '../../../lib/styledcomponents/CarouselElementsStyled';
 import HowToPlay_BlueMonster from '../../../img/HowToPlay_BlueMonster.svg';
-import HowToPlay_Screenshot4 from '../../../img/HowToPlay_Screenshot4.svg';
+import HowToPlay_Screenshot4 from '../../../img/HowToPlay_Screenshot4.png';
 
 export default function HowToPlaySlide4Content() {
   const theme = useTheme();
