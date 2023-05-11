@@ -30,7 +30,11 @@ const BottomBox = styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.mediumPadding}px`,
 }));
 
-export default function SplashScreen() {
+interface SplashScreenProps {
+  handleSplashScreenClick: () => void;
+}
+
+export default function SplashScreen({handleSplashScreenClick}: SplashScreenProps) {
   const theme = useTheme();
   return (
     <BackgroundContainerStyled>
@@ -60,6 +64,7 @@ export default function SplashScreen() {
           </Stack>
           <BottomBox>
             <IntroButtonStyled
+              onClick={handleSplashScreenClick}
               style={{
                 background: `${theme.palette.primary.highlightGradient}`,
                 boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',

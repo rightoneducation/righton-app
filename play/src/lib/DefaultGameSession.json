@@ -1,0 +1,15 @@
+{
+  "id": "default-game",
+  "gameCode": 1234,
+  "gameId": 1234,
+  "currentQuestionIndex": 0,
+  "currentState": "TEAMS_JOINING",
+  "isAdvancedMode": false,
+  "phaseOneTime": 180,
+  "phaseTwoTime": 180,
+  "updatedAt": "default-game",
+  "createdAt": "default-game",
+  "questions": {
+    "items": [
+      {}]}
+}

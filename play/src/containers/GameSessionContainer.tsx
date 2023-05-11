@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import {
+  ApiClient,
+  Environment,
   IGameSession,
   IChoice,
   IAWSGameSession,
@@ -7,7 +10,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import MockGameSession from '../mock/MockGameSession.json';
+import DefaultGameSession from '../lib/DefaultGameSession.json'
 import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
@@ -17,17 +20,28 @@ import StartPhase2 from '../pages/StartPhase2';
 import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
-    // TODO: update exchange mock gamesession with subscription via @righton/networking
+
+  let { gameSessionId } = useParams<{ gameSessionId: string }>();
+  const apiClient = new ApiClient(Environment.Staging);
+  gameSessionId = '15baaba8-7ab8-4916-8e55-631161cbf42a';
+ 
+  const [gameSession, setGameSession] = useState<IGameSession>(
     GameSessionParser.gameSessionFromAWSGameSession(
-      MockGameSession as IAWSGameSession
-    ) as IGameSession
+      DefaultGameSession as IAWSGameSession
+  ) as IGameSession
   );
+
+  const handleJoinGame = (inputGameSessionId: string) => {
+    let gameSessionSubscription: any | null = null;
+    gameSessionSubscription = apiClient.subscribeUpdateGameSession(inputGameSessionId, response => {
+      setGameSession({ ...response });
+    });
+  }
+  handleJoinGame(gameSessionId);
+  
   const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   // TODO: add gameSession subscription and update below states accordingly.
-  const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    JoinGameState.SPLASH_SCREEN
-  );
+ 
   const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
     GameSessionState.PHASE_2_DISCUSS
   );
@@ -52,9 +66,9 @@ export default function GameSessionContainer() {
     setIsPregameCountdown(false);
   };
 
-  switch (gameState) {
+  switch (gameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:
-      return <JoinGame joinGameState={joinGameState} />;
+      return <JoinGame />;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown

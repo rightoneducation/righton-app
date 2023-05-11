@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof JoinGame> = function JoinGameTemplate(
 ) {
   return (
     <ThemeProvider theme={Theme}>
-      <JoinGame {...args} />
+      <JoinGame  />
     </ThemeProvider>
   );
 };

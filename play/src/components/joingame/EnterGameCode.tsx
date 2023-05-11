@@ -1,6 +1,7 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+
 import { InputPlaceholder } from '../../lib/PlayModels';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
@@ -20,17 +21,16 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterGameCodeProps {
-  gameCodeValue: string;
-  setGameCodeValue: (newValue: string) => void;
+  handleGameCodeClick: (gameSessionId: string) => void;
   inputError: boolean;
 }
 
 export default function EnterGameCode({
-  gameCodeValue,
-  setGameCodeValue,
-  inputError,
+  handleGameCodeClick,
+  inputError
 }: EnterGameCodeProps) {
   const theme = useTheme();
+  const [gameCodeValue, setGameCodeValue] = useState<string>('');
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +68,7 @@ export default function EnterGameCode({
               inputProps: {
                 inputMode: 'numeric',
                 pattern: '[0-9]*',
+                maxLength: 4,
                 style: {
                   color: theme.palette.primary.darkBlue,
                   paddingTop: '9px',
@@ -78,7 +79,7 @@ export default function EnterGameCode({
             }}
           />
         </Box>
-        <IntroButtonStyled>
+        <IntroButtonStyled onClick={() => handleGameCodeClick(gameCodeValue)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Join
           </Typography>

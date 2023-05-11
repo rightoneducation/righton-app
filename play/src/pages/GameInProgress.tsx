@@ -15,7 +15,6 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaDoubleColumnStyled, BodyContentAreaSingleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ChooseAnswer from '../components/gameinprogress/ChooseAnswer';
 import DiscussAnswer from '../components/gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';

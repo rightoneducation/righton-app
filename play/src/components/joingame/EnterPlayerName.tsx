@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
@@ -28,7 +28,6 @@ interface EnterPlayerNameProps {
   lastNameValue: string;
   setLastNameValue: (newValue: string) => void;
   isSmallDevice: boolean;
-  inputError: boolean;
 }
 
 export default function EnterPlayerName({
@@ -37,10 +36,9 @@ export default function EnterPlayerName({
   lastNameValue,
   setLastNameValue,
   isSmallDevice,
-  inputError,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
-
+  const [inputError, setInputError] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={isSmallDevice ? 2 : 5}>
