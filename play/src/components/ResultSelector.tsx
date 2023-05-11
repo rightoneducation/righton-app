@@ -123,7 +123,7 @@ export default function ResultSelector({
         {answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT && (
             answerStatus === AnswerState.SELECTED ? (
-            <Tooltip title='Your Answer' placement="top" arrow enterTouchDelay={300} leaveTouchDelay={300}>
+            <Tooltip title='Your Answer' placement="top" arrow enterTouchDelay={0} leaveTouchDelay={300}>
              {image}
             </Tooltip>
             ) : (
