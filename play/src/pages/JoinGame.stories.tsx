@@ -15,32 +15,32 @@ const Template: ComponentStory<typeof JoinGame> = function JoinGameTemplate(
 ) {
   return (
     <ThemeProvider theme={Theme}>
-      <JoinGame  />
+      <JoinGame {...args} />
     </ThemeProvider>
   );
 };
 
 export const SplashScreen = Template.bind({});
 SplashScreen.args = {
-  joinGameState: JoinGameState.SPLASH_SCREEN,
+  // joinGameState: JoinGameState.SPLASH_SCREEN,
 };
 
 export const EnterGameCode = Template.bind({});
 EnterGameCode.args = {
-  joinGameState: JoinGameState.ENTER_GAME_CODE,
+  // joinGameState: JoinGameState.ENTER_GAME_CODE,
 };
 
 export const EnterPlayerName = Template.bind({});
 EnterPlayerName.args = {
-  joinGameState: JoinGameState.ENTER_NAME,
+  // joinGameState: JoinGameState.ENTER_NAME,
 };
 
 export const SelectAvatar = Template.bind({});
 SelectAvatar.args = {
-  joinGameState: JoinGameState.SELECT_AVATAR,
+  // joinGameState: JoinGameState.SELECT_AVATAR,
 };
 
 export const HowToPlay = Template.bind({});
 HowToPlay.args = {
-  joinGameState: JoinGameState.HOW_TO_PLAY,
+  // joinGameState: JoinGameState.HOW_TO_PLAY,
 };

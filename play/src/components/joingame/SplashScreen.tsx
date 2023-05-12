@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+import { JoinGameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import MagicHatHero from '../../img/MagicHatHero.svg';
@@ -31,10 +32,10 @@ const BottomBox = styled(Box)(({ theme }) => ({
 }));
 
 interface SplashScreenProps {
-  handleSplashScreenClick: () => void;
+  setJoinGameState: (gameState: JoinGameState) => void;
 }
 
-export default function SplashScreen({handleSplashScreenClick}: SplashScreenProps) {
+export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
   const theme = useTheme();
   return (
     <BackgroundContainerStyled>
@@ -64,7 +65,7 @@ export default function SplashScreen({handleSplashScreenClick}: SplashScreenProp
           </Stack>
           <BottomBox>
             <IntroButtonStyled
-              onClick={handleSplashScreenClick}
+              onClick={() => setJoinGameState(JoinGameState.ENTER_GAME_CODE)}
               style={{
                 background: `${theme.palette.primary.highlightGradient}`,
                 boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',

@@ -17,45 +17,29 @@ import PhaseResults from '../pages/PhaseResults';
 import JoinGame from '../pages/JoinGame';
 import FinalResults from '../pages/FinalResults';
 import StartPhase2 from '../pages/StartPhase2';
-import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
+import { FinalResultsState, JoinGameData } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
-
-  let { gameSessionId } = useParams<{ gameSessionId: string }>();
   const apiClient = new ApiClient(Environment.Staging);
-  gameSessionId = '15baaba8-7ab8-4916-8e55-631161cbf42a';
- 
+  let { gameSessionId } = useParams<{ gameSessionId: string }>();
   const [gameSession, setGameSession] = useState<IGameSession>(
     GameSessionParser.gameSessionFromAWSGameSession(
       DefaultGameSession as IAWSGameSession
   ) as IGameSession
   );
-
-  const handleJoinGame = (inputGameSessionId: string) => {
-    let gameSessionSubscription: any | null = null;
-    gameSessionSubscription = apiClient.subscribeUpdateGameSession(inputGameSessionId, response => {
-      setGameSession({ ...response });
-    });
-  }
-  handleJoinGame(gameSessionId);
   
-  const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  // TODO: add gameSession subscription and update below states accordingly.
- 
-  const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.PHASE_2_DISCUSS
-  );
+  const [teamAvatar, setTeamAvatar] = useState(0); 
   const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
     FinalResultsState.LEADERBOARD
   );
-  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true); 
   const selectedAvatar = 0;
   const leader = true;
   const teamId = '2d609343-de50-4830-b65e-71eb72bb9bef';
 
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex ?? 0];
-  const answerChoices = currentQuestion.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const answerChoices = currentQuestion.choices!.map((choice: IChoice) => ({ 
     id: uuidv4(),
     text: choice.text,
     isCorrectAnswer: choice.isAnswer,
@@ -66,9 +50,31 @@ export default function GameSessionContainer() {
     setIsPregameCountdown(false);
   };
 
+  const handleJoinGameFinished = (joinGameData: JoinGameData) => {
+    // const testGameSessionId = '819e1e7f-79d2-48f7-90a4-c301951a77aa';
+    console.log("sup");
+
+  //  console.log(joinGameData.gameSessionId)
+  //   apiClient.getGameSession(joinGameData.gameSessionId).then(response => {
+  //     console.log(response.id);
+  //     console.log(response);
+  //   });
+   
+    gameSessionId = joinGameData.gameSessionId;
+    let gameSessionSubscription: any | null = null;
+    gameSessionSubscription =  apiClient.subscribeUpdateGameSession(gameSessionId, response => { console.log(response)});
+    
+
+    setTeamAvatar(joinGameData.selectedAvatar);
+
+    return () => {
+      gameSessionSubscription?.unsubscribe();
+    };
+  };
+
   switch (gameSession.currentState) {
     case GameSessionState.TEAMS_JOINING:
-      return <JoinGame />;
+      return <JoinGame handleJoinGameFinished={(joinGameData) => handleJoinGameFinished(joinGameData)}/>;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown
@@ -98,7 +104,7 @@ export default function GameSessionContainer() {
           {...gameSession}
           gameSession={gameSession}
           currentQuestionIndex={gameSession.currentQuestionIndex ?? 0}
-          currentState={gameState}
+          currentState={gameSession.currentState}
           teamAvatar={teamAvatar}
           teamId={teamId}
           answerChoices={answerChoices}
@@ -110,7 +116,7 @@ export default function GameSessionContainer() {
       return (
         <FinalResults
           {...gameSession}
-          currentState={gameState}
+          currentState={gameSession.currentState}
           score={120}
           selectedAvatar={selectedAvatar}
           teamId={teamId}

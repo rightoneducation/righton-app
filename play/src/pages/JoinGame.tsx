@@ -12,11 +12,14 @@ import EnterGameCode from '../components/joingame/EnterGameCode';
 import EnterPlayerName from '../components/joingame/EnterPlayerName';
 import SelectAvatar from '../components/joingame/SelectAvatar';
 import HowToPlay from '../components/joingame/HowToPlay';
-import { JoinGameState } from '../lib/PlayModels';
+import { JoinGameState, JoinGameData } from '../lib/PlayModels';
 
 
+interface JoinGameFinished {
+  handleJoinGameFinished: (joinGameData: JoinGameData) => void;
+}
 
-export default function JoinGame() {
+export default function JoinGame({handleJoinGameFinished}: JoinGameFinished) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const apiClient = new ApiClient(Environment.Staging);
@@ -24,15 +27,13 @@ export default function JoinGame() {
   const [joinGameState, setJoinGameState] = useState<JoinGameState>(
     JoinGameState.SPLASH_SCREEN
   );
-  const [inputError, setInputError] = useState(false); 
-  const [avatar, setAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [selectedAvatar, setSelectedAvatar] = useState<number>(Math.floor(Math.random() * 6)); // default selection is random number between 0 and 5
-  const [gameSessionId, setGameSessionId] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [playerName, setPlayerName] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
 
-  const handleSplashScreenClick = () => {
-    setJoinGameState(JoinGameState.ENTER_GAME_CODE);
-  }
+
+  const [inputError, setInputError] = useState(false); 
+  const [firstName, setFirstName] = useState(''); 
+  const [lastName, setLastName] = useState(''); 
+  const [selectedAvatar, setSelectedAvatar] = useState<number>(Math.floor(Math.random() * 6)); 
+  const [gameSessionId, setGameSessionId] = useState(''); 
 
   // on click of game code button, check if game code is valid 
   // if game code is invalid, set inputError to true to display error message
@@ -57,20 +58,20 @@ export default function JoinGame() {
         setGameSessionId(gameSessionResponse.id);
         setJoinGameState(JoinGameState.ENTER_NAME);
       })
-      .catch((e) => {
+      .catch(() => {
         setInputError(true);
       }
     );
   }
-
-  const handlePlayerNameClick = (inputFirstName: string, inputLastName: string) => {
-    setPlayerName(`${inputFirstName} ${inputLastName}`);
-    console.log(playerName);
-    setJoinGameState(JoinGameState.SELECT_AVATAR);
-  };
   
-  const handleAvatarSelectClick = (inputAvatar: number) => {
-    setAvatar(inputAvatar);
+  const handleAvatarSelectClick = () => {
+    const joinGameData = {
+      gameSessionId,
+      firstName,
+      lastName,
+      selectedAvatar,
+    }
+    handleJoinGameFinished(joinGameData);
   };
 
   switch (joinGameState) {
@@ -80,16 +81,22 @@ export default function JoinGame() {
       return (
         <SelectAvatar
           selectedAvatar={selectedAvatar}
-          playerName={playerName}
-          handleAvatarSelected={setSelectedAvatar}
+          firstName={firstName}
+          lastName={lastName}
+          setSelectedAvatar={setSelectedAvatar}
           isSmallDevice={isSmallDevice}
+          handleAvatarSelectClick={handleAvatarSelectClick}
         />
       );
     case JoinGameState.ENTER_NAME:
       return (
         <EnterPlayerName
           isSmallDevice={isSmallDevice}
-          handlePlayerNameClick={handlePlayerNameClick}
+          firstName={firstName}
+          setFirstName={setFirstName}
+          lastName={lastName}
+          setLastName={setLastName}
+          setJoinGameState={setJoinGameState}
         />
       );
     case JoinGameState.ENTER_GAME_CODE:
@@ -101,6 +108,6 @@ export default function JoinGame() {
       );
     case JoinGameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen handleSplashScreenClick={handleSplashScreenClick} />;
+      return <SplashScreen setJoinGameState={setJoinGameState} />;
   }
 }

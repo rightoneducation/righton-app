@@ -79,16 +79,20 @@ const BottomContainer = styled(Box)(({ theme }) => ({
 
 interface SelectAvatarProps {
   selectedAvatar: number;
-  handleAvatarSelected: (value: number) => void;
-  playerName: string;
+  setSelectedAvatar: (value: number) => void;
+  firstName: string;
+  lastName: string;
   isSmallDevice: boolean;
+  handleAvatarSelectClick: () => void;
 }
 
 export default function SelectAvatar({
   selectedAvatar,
-  handleAvatarSelected,
-  playerName,
+  setSelectedAvatar,
+  firstName,
+  lastName,
   isSmallDevice,
+  handleAvatarSelectClick,
 }: SelectAvatarProps) {
   const theme = useTheme();
 
@@ -111,7 +115,7 @@ export default function SelectAvatar({
                 <AvatarIconStyled
                   src={monsterMap[index].icon}
                   onClick={() => {
-                    handleAvatarSelected(index);
+                    setSelectedAvatar(index);
                   }}
                   isSelected={index === selectedAvatar}
                   alt="avatar"
@@ -128,9 +132,9 @@ export default function SelectAvatar({
         </MonsterContainer>
         <BottomContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {playerName}
+            {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled> Choose </GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={handleAvatarSelectClick}> Choose </GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
     </BackgroundContainerStyled>

@@ -4,7 +4,7 @@ import { Stack, Box, Grid, Typography } from '@mui/material';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
-import { InputPlaceholder } from '../../lib/PlayModels';
+import { JoinGameState, InputPlaceholder } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -24,16 +24,23 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 
 interface EnterPlayerNameProps {
   isSmallDevice: boolean;
-  handlePlayerNameClick: (firstNameValue: string, lastNameValue: string) => void;
+  firstName: string;
+  setFirstName: (firstName: string) => void;
+  lastName: string;
+  setLastName: (lastName: string) => void;
+  setJoinGameState: (gameState: JoinGameState) => void;
 }
 
 export default function EnterPlayerName({
   isSmallDevice,
-  handlePlayerNameClick,
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  setJoinGameState,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
-  const [firstNameValue, setFirstNameValue] = useState('');
-  const [lastNameValue, setLastNameValue] = useState('');
+
 
   return (
     <BackgroundContainerStyled>
@@ -58,8 +65,8 @@ export default function EnterPlayerName({
                 variant="filled"
                 autoComplete="off"
                 placeholder={InputPlaceholder.FIRST_NAME}
-                onChange={(event) => setFirstNameValue(event.target.value)}
-                value={firstNameValue}
+                onChange={(event) => setFirstName(event.target.value)}
+                value={firstName}
                 InputProps={{
                   disableUnderline: true,
                   inputProps: {
@@ -79,8 +86,8 @@ export default function EnterPlayerName({
                 variant="filled"
                 autoComplete="off"
                 placeholder={InputPlaceholder.LAST_NAME}
-                onChange={(event) => setLastNameValue(event.target.value)}
-                value={lastNameValue}
+                onChange={(event) => setLastName(event.target.value)}
+                value={lastName}
                 InputProps={{
                   disableUnderline: true,
                   inputProps: {
@@ -96,7 +103,7 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled onClick={()=> handlePlayerNameClick(firstNameValue, lastNameValue)}>
+        <IntroButtonStyled onClick={()=> setJoinGameState(JoinGameState.SELECT_AVATAR)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Enter
           </Typography>

@@ -62,6 +62,20 @@ export enum FinalResultsState {
   LEADERBOARD = 'LEADERBOARD',
 }
 
+/**
+ * Data object that holds required info to join game and add team to game sesssion object at start of game
+ * @param {string} gameSessionId - id of game session
+ * @param {string} firstName - first name of player
+ * @param {string} lastName - last name of player
+ * @param {number} selectedAvatar - avatar selected by player
+ */
+export interface JoinGameData {
+  gameSessionId: string;
+  firstName: string;
+  lastName: string;
+  selectedAvatar: number;
+}
+
 interface MonsterMap {
   [key: number]: {
     icon: string;
