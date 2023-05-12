@@ -21,7 +21,6 @@ import { FinalResultsState, JoinGameData } from '../lib/PlayModels';
 
 export default function GameSessionContainer() {
   const apiClient = new ApiClient(Environment.Staging);
-  let { gameSessionId } = useParams<{ gameSessionId: string }>();
   const [gameSession, setGameSession] = useState<IGameSession>(
     GameSessionParser.gameSessionFromAWSGameSession(
       DefaultGameSession as IAWSGameSession
@@ -50,26 +49,44 @@ export default function GameSessionContainer() {
     setIsPregameCountdown(false);
   };
 
-  const handleJoinGameFinished = (joinGameData: JoinGameData) => {
-    // const testGameSessionId = '819e1e7f-79d2-48f7-90a4-c301951a77aa';
-    console.log("sup");
-
-  //  console.log(joinGameData.gameSessionId)
-  //   apiClient.getGameSession(joinGameData.gameSessionId).then(response => {
-  //     console.log(response.id);
-  //     console.log(response);
-  //   });
-   
-    gameSessionId = joinGameData.gameSessionId;
+  const subscribeToGame = (gameSessionId: string) => {
     let gameSessionSubscription: any | null = null;
-    gameSessionSubscription =  apiClient.subscribeUpdateGameSession(gameSessionId, response => { console.log(response)});
-    
-
-    setTeamAvatar(joinGameData.selectedAvatar);
-
+    gameSessionSubscription =  apiClient.subscribeUpdateGameSession(gameSessionId, response => { setGameSession({ ...gameSession, ...response }) });
+    console.log("subscribed to game session");
     return () => {
       gameSessionSubscription?.unsubscribe();
     };
+  };
+
+  const addTeamToGame = (joinGameData: JoinGameData) => {
+    const teamName = `${joinGameData.firstName} ${joinGameData.lastName}`;
+    apiClient.addTeamToGameSessionId(joinGameData.gameSessionId, teamName, null)
+    .then((team) => {
+      if (!team) {
+        console.error("Failed to add team")
+      }
+      else {
+        apiClient.addTeamMemberToTeam(team.id, true, uuidv4())
+        .then((teamMember) => {
+          if (!teamMember) {
+            console.error("Failed to add team member")
+          }
+        }).catch((error) => {
+          console.error(error)
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  };
+
+  // when a player selects a team avatar, we need to add them to the game and subscribe to the game session
+  // TODO: add in rejoin functionality, starting here 
+  const handleJoinGameFinished = (joinGameData: JoinGameData) => {
+    setTeamAvatar(joinGameData.selectedAvatar);
+    addTeamToGame(joinGameData);
+    subscribeToGame(joinGameData.gameSessionId);
   };
 
   switch (gameSession.currentState) {

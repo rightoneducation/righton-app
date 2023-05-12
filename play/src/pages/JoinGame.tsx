@@ -72,6 +72,7 @@ export default function JoinGame({handleJoinGameFinished}: JoinGameFinished) {
       selectedAvatar,
     }
     handleJoinGameFinished(joinGameData);
+    setJoinGameState(JoinGameState.HOW_TO_PLAY);
   };
 
   switch (joinGameState) {
