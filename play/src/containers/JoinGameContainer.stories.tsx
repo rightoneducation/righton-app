@@ -1,21 +1,21 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
-import JoinGame from './JoinGame';
+import JoinGameContainer from './JoinGameContainer';
 import { JoinGameState } from '../lib/PlayModels';
 import Theme from '../lib/Theme';
 
 export default {
-  title: 'Design System/4_Pages/JoinGame',
-  component: JoinGame,
-} as ComponentMeta<typeof JoinGame>;
+  title: 'Design System/4_Pages/JoinGameContainer',
+  component: JoinGameContainer,
+} as ComponentMeta<typeof JoinGameContainer>;
 
-const Template: ComponentStory<typeof JoinGame> = function JoinGameTemplate(
+const Template: ComponentStory<typeof JoinGameContainer> = function JoinGameContainerTemplate(
   args
 ) {
   return (
     <ThemeProvider theme={Theme}>
-      <JoinGame {...args} />
+      <JoinGameContainer {...args} />
     </ThemeProvider>
   );
 };

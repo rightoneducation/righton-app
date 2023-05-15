@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
+import { isNullOrUndefined } from '@righton/networking';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import { isNameValid } from '../../lib/HelperFunctions';
 import { JoinGameState, InputPlaceholder } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
@@ -40,7 +42,13 @@ export default function EnterPlayerName({
   setJoinGameState,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
+  const [shouldShowError, setShouldShowError] = useState<boolean>(false);
 
+  const validateInput = () => {
+    if (isNameValid(firstName) && isNameValid(lastName))
+      setJoinGameState(JoinGameState.SELECT_AVATAR);
+    else setShouldShowError(true);
+  };
 
   return (
     <BackgroundContainerStyled>
@@ -66,6 +74,7 @@ export default function EnterPlayerName({
                 autoComplete="off"
                 placeholder={InputPlaceholder.FIRST_NAME}
                 onChange={(event) => setFirstName(event.target.value)}
+                onFocus={(event)=> setShouldShowError(false)}
                 value={firstName}
                 InputProps={{
                   disableUnderline: true,
@@ -87,6 +96,7 @@ export default function EnterPlayerName({
                 autoComplete="off"
                 placeholder={InputPlaceholder.LAST_NAME}
                 onChange={(event) => setLastName(event.target.value)}
+                onFocus={(event)=> setShouldShowError(false)}
                 value={lastName}
                 InputProps={{
                   disableUnderline: true,
@@ -103,7 +113,7 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled onClick={()=> setJoinGameState(JoinGameState.SELECT_AVATAR)}>
+        <IntroButtonStyled onClick={validateInput}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Enter
           </Typography>
@@ -125,6 +135,14 @@ export default function EnterPlayerName({
               This will be used to identify you only during the game, and will
               not be stored.
             </Typography>
+            { shouldShowError && ( 
+              <Typography
+                variant="h2"
+                sx={{ fontWeight: 400, textAlign: 'center' }}
+              >
+                Invalid Input.
+              </Typography>
+            )}
           </PaddedContainer>
       </StackContainer>
     </BackgroundContainerStyled>

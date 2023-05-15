@@ -63,13 +63,13 @@ export enum FinalResultsState {
 }
 
 /**
- * Data object that holds required info to join game and add team to game sesssion object at start of game
+ * Data object that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session
  * @param {string} firstName - first name of player
  * @param {string} lastName - last name of player
  * @param {number} selectedAvatar - avatar selected by player
  */
-export interface JoinGameData {
+export interface JoinBasicGameData {
   gameSessionId: string;
   firstName: string;
   lastName: string;

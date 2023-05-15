@@ -134,7 +134,7 @@ export default function SelectAvatar({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled onClick={handleAvatarSelectClick}> Choose </GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>Choose</GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
     </BackgroundContainerStyled>

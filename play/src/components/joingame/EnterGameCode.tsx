@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { InputPlaceholder } from '../../lib/PlayModels';
+import { isGameCodeValid } from '../../lib/HelperFunctions';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
@@ -20,22 +21,29 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterGameCodeProps {
-  handleGameCodeClick: (gameSessionId: string) => void;
-  inputError: boolean;
+  handleGameCodeClick: (gameSessionId: string) => Promise<boolean>;
 }
 
 export default function EnterGameCode({
   handleGameCodeClick,
-  inputError
 }: EnterGameCodeProps) {
   const theme = useTheme();
   const [gameCodeValue, setGameCodeValue] = useState<string>('');
+  const [shouldShowError, setShouldShowError] = useState<boolean>(false);
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const numericValue = newValue.replace(/[^0-9]/g, ''); // Remove non-numeric characters
     setGameCodeValue(numericValue);
+  };
+
+  const validateInput = async (inputGameCodeValue: string) => {
+    const isGameCodeSuccess = await handleGameCodeClick(inputGameCodeValue);
+    if (!isGameCodeSuccess)
+      setShouldShowError(true);
+    else
+      setShouldShowError(false);
   };
 
   return (
@@ -78,12 +86,12 @@ export default function EnterGameCode({
             }}
           />
         </Box>
-        <IntroButtonStyled onClick={() => handleGameCodeClick(gameCodeValue)}>
+        <IntroButtonStyled onClick={() => validateInput(gameCodeValue)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             Join
           </Typography>
         </IntroButtonStyled>
-        {inputError && (
+        {shouldShowError && (
           <PaddedContainer>
             <Typography
               variant="h2"

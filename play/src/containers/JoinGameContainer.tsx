@@ -12,11 +12,12 @@ import EnterGameCode from '../components/joingame/EnterGameCode';
 import EnterPlayerName from '../components/joingame/EnterPlayerName';
 import SelectAvatar from '../components/joingame/SelectAvatar';
 import HowToPlay from '../components/joingame/HowToPlay';
-import { JoinGameState, JoinGameData } from '../lib/PlayModels';
+import { JoinGameState, JoinBasicGameData } from '../lib/PlayModels';
+import { isGameCodeValid, isNameValid } from '../lib/HelperFunctions';
 
 
 interface JoinGameFinished {
-  handleJoinGameFinished: (joinGameData: JoinGameData) => void;
+  handleJoinGameFinished: (JoinBasicGameData: JoinBasicGameData) => void;
 }
 
 export default function JoinGame({handleJoinGameFinished}: JoinGameFinished) {
@@ -28,51 +29,48 @@ export default function JoinGame({handleJoinGameFinished}: JoinGameFinished) {
     JoinGameState.SPLASH_SCREEN
   );
 
-
-  const [inputError, setInputError] = useState(false); 
   const [firstName, setFirstName] = useState(''); 
   const [lastName, setLastName] = useState(''); 
   const [selectedAvatar, setSelectedAvatar] = useState<number>(Math.floor(Math.random() * 6)); 
   const [gameSessionId, setGameSessionId] = useState(''); 
 
   // on click of game code button, check if game code is valid 
-  // if game code is invalid, set inputError to true to display error message
+  // if game code is invalid, return false to display error
   // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
-  const handleGameCodeClick = (inputGameCodeValue: string) => {
-    if (isNullOrUndefined(inputGameCodeValue)) {
-      setInputError(true);
-      return;
+  const handleGameCodeClick = async (inputGameCodeValue: string):Promise<boolean> => {
+    if (!isGameCodeValid(inputGameCodeValue)) {
+      return false;
     }
-    apiClient.getGameSessionByCode(parseInt(inputGameCodeValue, 10))
-      .then((gameSessionResponse) => {
-        if (isNullOrUndefined(gameSessionResponse)) {
-          setInputError(true);
-          return;
-        } 
-        if (
-          gameSessionResponse.currentState === GameSessionState.FINISHED ||
-          gameSessionResponse.currentState === GameSessionState.NOT_STARTED) {
-          setInputError(true);
-          return;
-        }
-        setGameSessionId(gameSessionResponse.id);
-        setJoinGameState(JoinGameState.ENTER_NAME);
-      })
-      .catch(() => {
-        setInputError(true);
+    try {
+     const gameSessionResponse = await apiClient.getGameSessionByCode(parseInt(inputGameCodeValue, 10));
+      if (isNullOrUndefined(gameSessionResponse)) {
+        return false;
+      } 
+      if (
+        gameSessionResponse.currentState === GameSessionState.FINISHED ||
+        gameSessionResponse.currentState === GameSessionState.NOT_STARTED) {
+        return false;
       }
-    );
+      setGameSessionId(gameSessionResponse.id);
+      setJoinGameState(JoinGameState.ENTER_NAME);
+      return true;
+    }
+    catch (error){
+      return false;
+    }
   }
   
   const handleAvatarSelectClick = () => {
-    const joinGameData = {
-      gameSessionId,
-      firstName,
-      lastName,
-      selectedAvatar,
+    if (isNameValid(firstName) && isNameValid(lastName)) {
+      const joinBasicGameData = {
+        gameSessionId,
+        firstName,
+        lastName,
+        selectedAvatar,
+      }
+      handleJoinGameFinished(joinBasicGameData);
+      setJoinGameState(JoinGameState.HOW_TO_PLAY);
     }
-    handleJoinGameFinished(joinGameData);
-    setJoinGameState(JoinGameState.HOW_TO_PLAY);
   };
 
   switch (joinGameState) {
@@ -104,7 +102,6 @@ export default function JoinGame({handleJoinGameFinished}: JoinGameFinished) {
       return (
         <EnterGameCode
           handleGameCodeClick={handleGameCodeClick}
-          inputError={inputError}
         />
       );
     case JoinGameState.SPLASH_SCREEN:
