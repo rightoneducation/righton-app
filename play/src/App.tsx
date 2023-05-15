@@ -8,7 +8,6 @@ import {
 import GameSessionContainer from './containers/GameSessionContainer';
 import Theme from './lib/Theme';
 
-
 function RedirectToCentralIfMissing() {
   window.location.href = 'http://central.rightoneducation.com/';
   return null;
