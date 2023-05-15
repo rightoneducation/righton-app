@@ -2,6 +2,7 @@ import { InputPlaceholder } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
+ * TODO: add check for inappropriate words
  * @param name - the inputted string for the name
  * @returns - true if the name is valid, false otherwise
  */
