@@ -65,7 +65,7 @@ export default function EnterPlayerName({
         />
         <PaddedContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('playername.title')}
+            {t('joingame.playername.title')}
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
@@ -73,7 +73,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={t('playername.firstnamedefault') ?? ''}
+                placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                 onChange={(event) => setFirstName(event.target.value)}
                 onFocus={(event)=> setShouldShowError(false)}
                 value={firstName}
@@ -95,7 +95,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={t('playername.lastnamedefault') ?? ''}
+                placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                 onChange={(event) => setLastName(event.target.value)}
                 onFocus={(event)=> setShouldShowError(false)}
                 value={lastName}
@@ -116,7 +116,7 @@ export default function EnterPlayerName({
         </PaddedContainer>
         <IntroButtonStyled onClick={validateInput}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('playername.button')}
+            {t('joingame.playername.button')}
           </Typography>
         </IntroButtonStyled>
           <PaddedContainer>
@@ -127,13 +127,13 @@ export default function EnterPlayerName({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              {t('playername.description1')}
+              {t('joingame.playername.description1')}
             </Typography>
             <Typography
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
-              {t('playername.description2')}
+              {t('joingame.playername.description2')}
             </Typography>
             { shouldShowError && ( 
               <Typography

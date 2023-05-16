@@ -62,7 +62,7 @@ export default function EnterGameCode({
         {/* container here to trim the spacing set by parent stack between text and input, typ */}
         <Box>
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-            {t('gamecode.title')}
+            {t('joingame.gamecode.title')}
           </Typography>
           <InputTextFieldStyled
             fullWidth
@@ -89,7 +89,7 @@ export default function EnterGameCode({
         </Box>
         <IntroButtonStyled onClick={() => validateInput(gameCodeValue)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('gamecode.button')}
+            {t('joingame.gamecode.button')}
           </Typography>
         </IntroButtonStyled>
         {shouldShowError && (
@@ -102,10 +102,10 @@ export default function EnterGameCode({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              {t('gamecode.error1')}
+              {t('joingame.gamecode.error1')}
             </Typography>
             <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-              {t('gamecode.error2')}
+              {t('joingame.gamecode.error2')}
             </Typography>
           </PaddedContainer>
         )}

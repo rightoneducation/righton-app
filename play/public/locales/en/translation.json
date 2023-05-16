@@ -1,33 +1,35 @@
 {
-  "splash": {
-    "title": "Unlocking every student's potential in math!",
-    "button": "Join Game"
-  },
-  "gamecode": {
-    "title": "Enter Game Code",
-    "button": "Join",
-    "error1": "We are unable to join this game.",
-    "error2": "Check the Game Code and try again." 
-  },
-  "playername": {
-    "title": "Enter Your Name",
-    "firstnamedefault": "First Name",
-    "lastnamedefault": "Last Name",
-    "button": "Enter",
-    "description1": "Type in both your first and last name to enter the game.",
-    "description2": "This will be used to identify you only during the game, and will not be stored."
-  }, 
-  "selectavatar": {
-    "title": "Choose Your Avatar!",
-    "button": "Choose"
-  },
-  "howtoplay": {
-    "title": "How to Play!",
-    "slide0": "Read the multiple-choice question",
-    "slide1": "Gain points by choosing the correct answer...",
-    "slide2": "Read step-by-step solutions",
-    "slide3": "Gain more points by guessing the most popular incorrect answer!",
-    "slide4": "The most total points wins!",
-    "description": "Waiting for the game to start..."
+  "joingame": {
+    "splash": {
+      "title": "Unlocking every student's potential in math!",
+      "button": "Join Game"
+    },
+    "gamecode": {
+      "title": "Enter Game Code",
+      "button": "Join",
+      "error1": "We are unable to join this game.",
+      "error2": "Check the Game Code and try again." 
+    },
+    "playername": {
+      "title": "Enter Your Name",
+      "firstnamedefault": "First Name",
+      "lastnamedefault": "Last Name",
+      "button": "Enter",
+      "description1": "Type in both your first and last name to enter the game.",
+      "description2": "This will be used to identify you only during the game, and will not be stored."
+    }, 
+    "selectavatar": {
+      "title": "Choose Your Avatar!",
+      "button": "Choose"
+    },
+    "howtoplay": {
+      "title": "How to Play!",
+      "slide0": "Read the multiple-choice question",
+      "slide1": "Gain points by choosing the correct answer...",
+      "slide2": "Read step-by-step solutions",
+      "slide3": "Gain more points by guessing the most popular incorrect answer!",
+      "slide4": "The most total points wins!",
+      "description": "Waiting for the game to start..."
+    }
   }
 }

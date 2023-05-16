@@ -109,7 +109,7 @@ export default function SelectAvatar({
               paddingTop: `${theme.sizing.mediumPadding}px`,
             }}
           >
-            {t('selectavatar.title')}
+            {t('joingame.selectavatar.title')}
           </Typography>
           <GridContainer>
             {Object.keys(monsterMap).map((value, index) => (
@@ -136,7 +136,7 @@ export default function SelectAvatar({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>{t('selectavatar.button')}</GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>{t('joingame.selectavatar.button')}</GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
     </BackgroundContainerStyled>

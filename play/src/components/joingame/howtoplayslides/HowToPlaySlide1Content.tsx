@@ -48,7 +48,7 @@ export default function HowToPlaySlide1Content() {
           width: '250px',
         }}
       >
-        {t('howtoplay.slide1')}
+        {t('joingame.howtoplay.slide1')}
       </Typography>
     </>
   );
