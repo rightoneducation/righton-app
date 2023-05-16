@@ -60,7 +60,7 @@ export default function HowToPlaySlide2Content() {
           width: '250px',
         }}
       >
-        {t('howtoplay.slide2')}
+        {t('joingame.howtoplay.slide2')}
       </Typography>
     </>
   );
