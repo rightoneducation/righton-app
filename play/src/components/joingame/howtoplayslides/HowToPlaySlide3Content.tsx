@@ -48,7 +48,7 @@ export default function HowToPlaySlide3Content() {
           width: '350px',
         }}
       >
-        {t('howtoplay_slide3')}
+        {t('howtoplay.slide3')}
       </Typography>
     </>
   );

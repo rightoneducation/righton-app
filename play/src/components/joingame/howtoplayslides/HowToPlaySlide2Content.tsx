@@ -60,7 +60,7 @@ export default function HowToPlaySlide2Content() {
           width: '250px',
         }}
       >
-        {t('howtoplay_slide2')}
+        {t('howtoplay.slide2')}
       </Typography>
     </>
   );

@@ -63,7 +63,7 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
                 paddingRight: `${theme.sizing.mediumPadding}px`,
               }}
             >
-             {t('splash_title')}
+             {t('splash.title')}
             </Typography>
           </Stack>
           <BottomBox>
@@ -75,7 +75,7 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
               }}
             >
               <Typography variant="h2" sx={{ textAlign: 'center' }}>
-              {t('splash_button')}
+              {t('splash.button')}
               </Typography>
             </IntroButtonStyled>
           </BottomBox>

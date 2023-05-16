@@ -49,7 +49,7 @@ export default function JoinGame() {
             paddingTop: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          {t('howtoplay_title')}
+          {t('howtoplay.title')}
         </Typography>
         <Box style={{ width: '100%' }}>
           <HowToPlaySwiper
@@ -95,7 +95,7 @@ export default function JoinGame() {
             paddingBottom: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          {t('howtoplay_description')}
+          {t('howtoplay.description')}
         </Typography>
       </StackContainer>
     </BackgroundContainerStyled>

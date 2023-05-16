@@ -1,23 +1,33 @@
 {
-  "splash_title": "¡Liberando el potencial de cada estudiante en matemáticas!",
-  "splash_button": "Unete al juego",
-  "gamecode_title": "Ingrese el código del juego",
-  "gamecode_button": "Unirse",
-  "gamecode_error1": "Nosotras no podemos unirnos a este juego.",
-  "gamecode_error2": "Comprueba el código del juego e inténtalo de nuevo.",
-  "playername_title": "Introduzca su nombre",
-  "playername_firstnamedefault": "Nombre de pila",
-  "playername_lastnamedefault": "Apellido",
-  "playername_button": "Ingresar",
-  "playername_description1": "Escriba su nombre y apellido para ingresar al juego.",
-  "playername_description2": "Esto se usará para identificarlo solo durante el juego y no se almacenará.",
-  "selectavatar_title": "¡Elige tu avatar!",
-  "selectavatar_button": "Elegir",
-  "howtoplay_title": "¡Cómo jugar!",
-  "howtoplay_slide0": "Lea la pregunta de opción múltiple",
-  "howtoplay_slide1": "Gana puntos eligiendo la respuesta correcta...",
-  "howtoplay_slide2": "Leer soluciones paso a paso",
-  "howtoplay_slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
-  "howtoplay_slide4": "¡La mayor cantidad de puntos totales gana!",
-  "howtoplay_description": "Esperando a que comience el juego..."
+  "splash": {
+    "title": "¡Liberando el potencial de cada estudiante en matemáticas!",
+    "button": "Unete al juego"
+  },
+  "gamecode": {
+    "title": "Ingrese el código del juego",
+    "button": "Unirse",
+    "error1": "Nosotras no podemos unirnos a este juego.",
+    "error2": "Comprueba el código del juego e inténtalo de nuevo."
+  },
+  "playername": {
+    "title": "Introduzca su nombre",
+    "firstnamedefault": "Nombre de pila",
+    "lastnamedefault": "Apellido",
+    "button": "Ingresar",
+    "description1": "Escriba su nombre y apellido para ingresar al juego.",
+    "description2": "Esto se usará para identificarlo solo durante el juego y no se almacenará."
+  },
+  "selectavatar": {
+    "title": "¡Elige tu avatar!",
+    "button": "Elegir"
+  },
+  "howtoplay": {
+    "title": "¡Cómo jugar!",
+    "slide0": "Lea la pregunta de opción múltiple",
+    "slide1": "Gana puntos eligiendo la respuesta correcta...",
+    "slide2": "Leer soluciones paso a paso",
+    "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
+    "slide4": "¡La mayor cantidad de puntos totales gana!",
+    "description": "Esperando a que comience el juego..."
+  }
 }

@@ -12,7 +12,8 @@ i18n
   .use(LanguageDetector)
   .init({
     fallbackLng: 'en',
-    debug: true,
+    keySeparator: '.', // to support nested translations
+    debug: false,
     detection: {
       // move browser detection up in the priority line for autodetecting language
       order: ['querystring', 'navigator', 'cookie', 'localStorage', 'sessionStorage', 'htmlTag', 'path', 'subdomain'],
