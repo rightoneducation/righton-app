@@ -49,15 +49,19 @@ export default function GameInProgressContainer({gameSession, currentState, team
         {...gameSession}
         teamAvatar={teamAvatar}
         answerChoices={answerChoices}
+        currentState={currentState}
         teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
       />
     );
   case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
+  case GameSessionState.PHASE_1_DISCUSS:
+  case GameSessionState.PHASE_2_DISCUSS:
     return (
       <GameInProgress
         {...gameSession}
         teamAvatar={teamAvatar}
         answerChoices={answerChoices}
+        currentState={currentState}
         teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
       />
     );
@@ -68,7 +72,7 @@ export default function GameInProgressContainer({gameSession, currentState, team
         {...gameSession}
         gameSession={gameSession}
         currentQuestionIndex={gameSession!.currentQuestionIndex ?? 0}
-        currentState={gameSession!.currentState}
+        currentState={currentState}
         teamAvatar={teamAvatar}
         teamId={teamId}
         answerChoices={answerChoices}
@@ -81,7 +85,7 @@ export default function GameInProgressContainer({gameSession, currentState, team
     return (
       <FinalResults
         {...gameSession}
-        currentState={gameSession!.currentState}
+        currentState={currentState}
         score={120}
         selectedAvatar={teamAvatar}
         teamId={teamId}

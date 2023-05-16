@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import {
   ApiClient,
   IGameSession,
+  GameSessionParser,
   GameSessionState,
+  IAWSGameSession
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next'; // debug
+import MockGameSession from '../mock/MockGameSession.json';
 import JoinGameContainer from './JoinGameContainer';
 import ConnectedGameContainer from './GameInProgressContainer';
 import { JoinBasicGameData } from '../lib/PlayModels';
@@ -80,7 +83,12 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
         </>
       );
     default:
-      return gameSession && <ConnectedGameContainer gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} />;
+      return gameSession && (
+        <>
+          <button type='button' onClick={() => changeLanguage()} style={{position: 'absolute', top: 0, left: 0, zIndex: 5}}>lang</button>
+          <ConnectedGameContainer gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} />
+        </>
+      );
      
   }
 }

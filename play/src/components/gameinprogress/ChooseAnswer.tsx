@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Typography, Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -35,6 +36,7 @@ export default function ChooseAnswer({
   handleSelectAnswer,
 }: ChooseAnswerProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const questionContents = (
     <>
       <Typography
@@ -45,7 +47,7 @@ export default function ChooseAnswer({
           textAlign: 'center',
         }}
       >
-        Question
+       {t('gameinprogress.chooseanswer.questioncolumn')}
       </Typography>
       <ScrollBoxStyled>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -58,7 +60,7 @@ export default function ChooseAnswer({
               opacity: 0.5,
             }}
           >
-            Scroll to the left to answer the question.
+            {t('gameinprogress.general.swipealert')}
           </Typography>
         ) : null}
       </ScrollBoxStyled>
@@ -75,7 +77,7 @@ export default function ChooseAnswer({
           textAlign: 'center',
         }}
       >
-        Answer
+        {t('gameinprogress.chooseanswer.answercolumn')}
       </Typography>
       <ScrollBoxStyled>
         <AnswerCard
@@ -86,6 +88,30 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
+         {isSubmitted ? 
+        <>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 700,
+              textAlign: 'center',
+              marginTop: `${theme.sizing.largePadding}px`,
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou1')}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 700,
+              textAlign: 'center',
+              marginTop: `${theme.sizing.largePadding}px`,
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
+        </>
+        : null}
       </ScrollBoxStyled>
     </>
   );

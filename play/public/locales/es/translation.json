@@ -29,5 +29,65 @@
     "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
     "slide4": "¡La mayor cantidad de puntos totales gana!",
     "description": "Esperando a que comience el juego..."
+  },
+  "pregamecountdown": {
+    "subtitle1": "Su pregunta \n aparecerá pronto.",
+    "subtitle2": "¡Elige la respuesta correcta!"
+  },
+  "gameinprogress": {
+    "header": {
+      "notstarted": "Responde la Pregunta",
+      "teamsjoining": "Responde la Pregunta",
+      "choosecorrectanswer": "Responde la Pregunta",
+      "choosetrickiestanswer": "¡Elige el más complicado!",
+      "phase1discuss": "Respuesta Explicaciones",
+      "phase2discuss": "Respuesta Explicaciones",
+      "phase2start": "Respuesta Explicaciones",
+      "phase1results": "Resultados de la Fase 1",
+      "phase2results": "Resultados de la Fase 2",
+      "finalresults": "Tabla de Clasificación",
+      "finished": "Responde la Pregunta",
+      "correct": "Correcta!",
+      "incorrect": "¡Buen Intento!"
+    },
+    "general": {
+      "swipealert": "Desliza hacia la izquierda para responder la pregunta."
+    },
+    "chooseanswer": {
+      "questioncolumn": "Pregunta",
+      "answercolumn": "Respuesta",
+      "answerthankyou1": "¡Gracias por enviar!",
+      "answerthankyou2": "Esperando a que tu profesor avance a la siguiente sección.",
+      "correcttext1": "Elegir el",
+      "correcttext2": "respuesta correcta",
+      "incorrecttext1": "¿Cuál crees que es la",
+      "incorrecttext2": "respuesta engañosa",
+      "incorrecttext3": "más popular entre tu clase?"
+    },
+    "discussanswer": {
+      "questionanswercolumn": "Pregunta y Respuesta Correcta",
+      "incorrectanswercolumn": "Respuestas Incorrectas",
+      "correcttext": "Sí, ",
+      "nicetrytext": "Buen intento, ",
+      "correctanswertext": "la respuesta correcta es..."
+    },
+    "startphase2": {
+      "title": "Empezando la Fase 2...",
+      "subtitle1": "¡Donde la respuesta incorrecta más popular gana la mayor cantidad de puntos!",
+      "subtitle2": "¡Elige la respuesta que crees que engañó a la mayoría de tus compañeras!"
+    },
+    "button": {
+      "submit": "Enviar Respuesta",
+      "submitted": "Enviada"
+    }
+  },
+  "finalresults": {
+    "congrats": {
+      "title": "Has ganado un total de",
+      "points": "puntos",
+      "top5": "¡Felicidades! \n ¡Estás entre los 5 primeros!",
+      "greatjob": "¡Gran trabajo!",
+      "button": "Ver tabla de posiciones"
+    }
   }
 }

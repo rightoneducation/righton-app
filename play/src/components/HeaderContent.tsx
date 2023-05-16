@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import Timer from './Timer';
 
@@ -30,29 +31,30 @@ export default function HeaderContent({
   isCorrect,
   isIncorrect,
 }: HeaderContentProps) {
+  const { t } = useTranslation();
   const stateMap = {
-    [GameSessionState.NOT_STARTED]: 'Answer the Question',
-    [GameSessionState.TEAMS_JOINING]: 'Answer the Question',
-    [GameSessionState.CHOOSE_CORRECT_ANSWER]: 'Answer the Question',
-    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: 'Pick the Trickiest!',
-    [GameSessionState.PHASE_1_DISCUSS]: 'Answer Explanations',
-    [GameSessionState.PHASE_2_DISCUSS]: 'Answer Explanations',
-    [GameSessionState.PHASE_2_START]: 'Answer Explanations',
-    [GameSessionState.PHASE_1_RESULTS]: 'Phase 1 Results',
-    [GameSessionState.PHASE_2_RESULTS]: 'Phase 2 Results',
-    [GameSessionState.FINAL_RESULTS]: 'Leaderboard',
-    [GameSessionState.FINISHED]: 'Answer the Question',
+    [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
+    [GameSessionState.TEAMS_JOINING]: t('gameinprogress.header.teamsjoining'),
+    [GameSessionState.CHOOSE_CORRECT_ANSWER]: t('gameinprogress.header.choosecorrectanswer'),
+    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: t('gameinprogress.header.choosetrickiestanswer'),
+    [GameSessionState.PHASE_1_DISCUSS]: t('gameinprogress.header.phase1discuss'),
+    [GameSessionState.PHASE_2_DISCUSS]: t('gameinprogress.header.phase2discuss'),
+    [GameSessionState.PHASE_2_START]: t('gameinprogress.header.phase2start'),
+    [GameSessionState.PHASE_1_RESULTS]: t('gameinprogress.header.phase1results'),
+    [GameSessionState.PHASE_2_RESULTS]: t('gameinprogress.header.phase2results'),
+    [GameSessionState.FINAL_RESULTS]: t('gameinprogress.header.finalresults'),
+    [GameSessionState.FINISHED]: t('gameinprogress.header.finished'),
   };
   const stateCheck = (
     currentStateForCheck: GameSessionState,
     isCorrectForCheck: boolean,
     isIncorrectForCheck: boolean
   ) => {
-    if (isCorrectForCheck) return 'Correct!';
-    if (isIncorrectForCheck) return 'Nice Try!';
+    if (isCorrectForCheck) return t('gameinprogress.header.correct');
+    if (isIncorrectForCheck) return t('gameinprogress.header.incorrect');
     return stateMap[currentStateForCheck];
   };
-
+  
   return (
     <HeaderContainer>
       <Typography variant="h1">
