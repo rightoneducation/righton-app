@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next';
 import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarIconStyled from '../../lib/styledcomponents/AvatarIconStyled';
@@ -95,6 +96,7 @@ export default function SelectAvatar({
   handleAvatarSelectClick,
 }: SelectAvatarProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
@@ -107,7 +109,7 @@ export default function SelectAvatar({
               paddingTop: `${theme.sizing.mediumPadding}px`,
             }}
           >
-            Choose Your Avatar!
+            {t('selectavatar_title')}
           </Typography>
           <GridContainer>
             {Object.keys(monsterMap).map((value, index) => (
@@ -134,7 +136,7 @@ export default function SelectAvatar({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>Choose</GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>{t('selectavatar_button')}</GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
     </BackgroundContainerStyled>

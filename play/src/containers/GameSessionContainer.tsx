@@ -5,6 +5,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next'; // debug
 import JoinGameContainer from './JoinGameContainer';
 import ConnectedGameContainer from './GameInProgressContainer';
 import { JoinBasicGameData } from '../lib/PlayModels';
@@ -60,9 +61,24 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
     subscribeToGame(joinBasicGameData.gameSessionId);
   };
 
+  const { i18n } = useTranslation(); // debug
+
+  const changeLanguage = () => { // debug
+    if (i18n.language === 'en') {
+      i18n.changeLanguage('es');
+    }
+    else 
+      i18n.changeLanguage('en');
+  }
+
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
-      return <JoinGameContainer handleJoinGameFinished={(joinBasicGameData) => handleJoinBasicGameFinished(joinBasicGameData)}/>;
+      return ( 
+        <>
+          <button type='button' onClick={() => changeLanguage()} style={{position: 'absolute', top: 0, left: 0, zIndex: 5}}>lang</button>
+          <JoinGameContainer handleJoinGameFinished={(joinBasicGameData) => handleJoinBasicGameFinished(joinBasicGameData)}/>
+        </>
+      );
     default:
       return gameSession && <ConnectedGameContainer gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} />;
      

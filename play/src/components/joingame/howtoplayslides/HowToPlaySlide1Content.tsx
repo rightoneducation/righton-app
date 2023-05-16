@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   OverlayContainerStyled,
   OverlayImageStyled,
@@ -12,7 +13,8 @@ import HowToPlay_Screenshot1 from '../../../img/HowToPlay_Screenshot1.svg';
 
 export default function HowToPlaySlide1Content() {
   const theme = useTheme();
-
+  const { t } = useTranslation();
+  
   return (
     <>
       <OverlayContainerStyled>
@@ -46,7 +48,7 @@ export default function HowToPlaySlide1Content() {
           width: '250px',
         }}
       >
-        Gain points by choosing the correct answer...
+        {t('howtoplay_slide1')}
       </Typography>
     </>
   );

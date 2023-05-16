@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
-import { isNullOrUndefined } from '@righton/networking';
+import { useTranslation } from 'react-i18next';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import { isNameValid } from '../../lib/HelperFunctions';
-import { JoinGameState, InputPlaceholder } from '../../lib/PlayModels';
+import { JoinGameState } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -42,6 +42,7 @@ export default function EnterPlayerName({
   setJoinGameState,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [shouldShowError, setShouldShowError] = useState<boolean>(false);
 
   const validateInput = () => {
@@ -64,7 +65,7 @@ export default function EnterPlayerName({
         />
         <PaddedContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Enter Your Name
+            {t('playername_title')}
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
@@ -72,7 +73,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={InputPlaceholder.FIRST_NAME}
+                placeholder={t('playername_firstnamedefault') ?? ''}
                 onChange={(event) => setFirstName(event.target.value)}
                 onFocus={(event)=> setShouldShowError(false)}
                 value={firstName}
@@ -94,7 +95,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={InputPlaceholder.LAST_NAME}
+                placeholder={t('playername_lastnamedefault') ?? ''}
                 onChange={(event) => setLastName(event.target.value)}
                 onFocus={(event)=> setShouldShowError(false)}
                 value={lastName}
@@ -115,7 +116,7 @@ export default function EnterPlayerName({
         </PaddedContainer>
         <IntroButtonStyled onClick={validateInput}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Enter
+            {t('playername_button')}
           </Typography>
         </IntroButtonStyled>
           <PaddedContainer>
@@ -126,14 +127,13 @@ export default function EnterPlayerName({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              Type in both your first and last name to enter the game.
+              {t('playername_description1')}
             </Typography>
             <Typography
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
-              This will be used to identify you only during the game, and will
-              not be stored.
+              {t('playername_description2')}
             </Typography>
             { shouldShowError && ( 
               <Typography

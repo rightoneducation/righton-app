@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { InputPlaceholder } from './PlayModels';
 
 /**
@@ -9,8 +10,8 @@ import { InputPlaceholder } from './PlayModels';
 export const isNameValid = (name: string) => {
   return (
     name.trim() !== '' && // check for falsy w/o spaces, typ
-    name !== InputPlaceholder.FIRST_NAME && // check if default value, typ
-    name !== InputPlaceholder.LAST_NAME
+    name !== i18n.t('playername_firstnamedefault') && // check if default value, typ
+    name !== i18n.t('playername_lastnamedefault')
   ); 
 };
 
