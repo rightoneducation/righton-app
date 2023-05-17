@@ -32,6 +32,7 @@ interface GameInProgressProps {
     isCorrectAnswer: boolean;
     reason: string;
   }[];
+  addTeamAnswerToTeamMember: (question: IQuestion, answerText: string, currentState: GameSessionState) => void;
 }
 
 export default function GameInProgress({
@@ -42,6 +43,7 @@ export default function GameInProgress({
   currentQuestionIndex,
   teamId,
   answerChoices,
+  addTeamAnswerToTeamMember,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -86,7 +88,8 @@ export default function GameInProgress({
     setTimerIsPaused(true);
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = (answerText: string) => {
+    addTeamAnswerToTeamMember(currentQuestion, answerText, currentState);
     setIsSubmitted(true);
   };
 

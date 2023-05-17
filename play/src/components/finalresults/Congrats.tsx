@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
-import { monsterMap } from '../../lib/PlayModels';
+import { monsterMap, FinalResultsState } from '../../lib/PlayModels';
 import Podium from '../../img/Podium.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -51,13 +51,15 @@ interface CongratsProps {
   isSmallDevice: boolean;
   selectedAvatar: number;
   leader: boolean;
+  setFinalResultsState: (newState: FinalResultsState) => void;
 }
 
 export default function Congrats({
   score,
   isSmallDevice,
   selectedAvatar,
-  leader
+  leader,
+  setFinalResultsState
 }: CongratsProps) {
   const theme = useTheme();
   const introString = `You've earned a total of`;
@@ -96,7 +98,7 @@ export default function Congrats({
           <img src={Podium} alt="podium" style={{position: 'absolute', width: '150px', zIndex: -1, top: '100%', marginTop: '-20px'}}/>
         </Stack>
         <BottomBox style={{zIndex:1}}> 
-          <GamePlayButtonStyled > View Leaderboard </GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={()=>setFinalResultsState(FinalResultsState.LEADERBOARD)}> View Leaderboard </GamePlayButtonStyled>
         </BottomBox>
       </StackContainer>
     </BackgroundContainerStyled>

@@ -3,6 +3,7 @@ import {
   ApiClient,
   IGameSession,
   GameSessionState,
+  IQuestion,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import JoinGameContainer from './JoinGameContainer';
@@ -16,6 +17,8 @@ interface GameSessionContainerProps {
 export default function GameSessionContainer({ apiClient }: GameSessionContainerProps) {
   const [currentState, setCurrentState] = useState(GameSessionState.TEAMS_JOINING); 
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  const [teamId, setTeamId] = useState<string>('');
+  const [teamMemberId, setTeamMemberID] = useState<string>('');
   const [teamAvatar, setTeamAvatar] = useState<number>(0);
   const subscribeToGame = (gameSessionId: string) => {
     let gameSessionSubscription: any | null = null;
@@ -33,6 +36,7 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
     const teamName = `${joinBasicGameData.firstName} ${joinBasicGameData.lastName}`;
     try {
       const team = await apiClient.addTeamToGameSessionId(joinBasicGameData.gameSessionId, teamName, null)
+      setTeamId(team.id);
       if (!team) {
         console.error("Failed to add team")
       }
@@ -42,10 +46,26 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
           if (!teamMember) {
             console.error("Failed to add team member")
           }
+          setTeamMemberID(teamMember.id);
         }).catch((error) => {
-          console.error(error)
-        })
+          console.error(error);
+        });
       }
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
+  const addTeamAnswerToTeamMember = async (question: IQuestion, answerText: string, gameSessionState: GameSessionState) => {
+    try{
+      await apiClient.addTeamAnswer(
+        teamMemberId,
+        question.id,
+        answerText,
+        gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        gameSessionState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+     )
     }
     catch (error) {
       console.error(error)
@@ -62,9 +82,10 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
 
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
+    case GameSessionState.FINISHED:
       return <JoinGameContainer handleJoinGameFinished={(joinBasicGameData) => handleJoinBasicGameFinished(joinBasicGameData)}/>;
     default:
-      return gameSession && <ConnectedGameContainer gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} />;
+      return gameSession && <ConnectedGameContainer teamId={teamId} gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}/>;
      
   }
 }
