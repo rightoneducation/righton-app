@@ -57,8 +57,6 @@ export default function ScoreIndicator({
     const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
       if (newPoints && newPoints > 0 && handleUpdateScore){
-        // const newScore = score + newPoints;
-        // setScore(newScore);
         handleUpdateScore(score + newPoints);
       }
     };
