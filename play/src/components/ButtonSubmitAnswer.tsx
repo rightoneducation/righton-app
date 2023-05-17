@@ -8,12 +8,16 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
-  handleSubmitAnswer: (isSubmitted: boolean) => void;
+  selectedAnswer: number | null;
+  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  handleSubmitAnswer: (answer: string) => void;
 }
 
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  selectedAnswer,
+  answers,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const buttonText = isSubmitted ? 'Submitted' : 'Submit Answer';
@@ -24,7 +28,8 @@ export default function ButtonSubmitAnswer({
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       onClick={() => {
-        handleSubmitAnswer(true);
+        const answerText = answers?.[selectedAnswer ?? 0]?.text;
+        handleSubmitAnswer(answerText ?? '');
       }}
     >
       {buttonContents}
