@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import React, { MouseEventHandler } from 'react';
+import { Container, Typography, Box, Tooltip } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { GameSessionState } from '@righton/networking';
 import CorrectStars from '../img/CorrectStars.svg';
@@ -37,8 +37,8 @@ interface ResultSelectorProps {
   answerStatus: AnswerState;
   index: number;
   answerText: string;
-  percentageText: string;
-  currentState: GameSessionState;
+  percentageText?: string;
+  currentState?: GameSessionState;
 }
 
 export default function ResultSelector({
@@ -58,6 +58,28 @@ export default function ResultSelector({
     [AnswerState.SELECTED]: SelectedAnswer,
     [AnswerState.PREVIOUS]: '',
   };
+
+  // disables context menu when longclicking on image
+  const handleContextMenu: MouseEventHandler<HTMLElement> = (event) => {
+    event.preventDefault();
+  };
+
+  const image = (
+    <img
+      src={imageMap[answerStatus]}
+      style={{
+        position: 'relative',
+        width: `${theme.sizing.smallPadding}px`,
+        height: `${theme.sizing.smallPadding}px`,
+        paddingTop: '2px',
+        // disable touch callout when longclicking on image
+        WebkitTouchCallout: 'none', 
+      }}
+      alt="SelectedAnswerImage"
+      // disable context menu when longclicking on image 
+      onContextMenu={handleContextMenu} 
+    />
+  );
 
   const resultContents = (
     <>
@@ -100,16 +122,13 @@ export default function ResultSelector({
         )}
         {answerStatus !== AnswerState.PREVIOUS &&
           answerStatus !== AnswerState.DEFAULT && (
-            <img
-              src={imageMap[answerStatus]}
-              style={{
-                position: 'relative',
-                width: `${theme.sizing.smallPadding}px`,
-                height: `${theme.sizing.smallPadding}px`,
-                paddingTop: '2px',
-              }}
-              alt="SelectedAnswerImage"
-            />
+            answerStatus === AnswerState.SELECTED ? (
+            <Tooltip title='Your Answer' placement="top" arrow enterTouchDelay={0} leaveTouchDelay={300}>
+             {image}
+            </Tooltip>
+            ) : (
+              image
+            )
           )}
       </Box>
     </>
@@ -118,14 +137,14 @@ export default function ResultSelector({
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (
-        <Box>
+        <Box sx={{ width: '100%' }}>
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
-        <Box>
-          <Box sx={{ position: 'relative', height: 0 }}>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
             <CorrectStarsStyled
               src={CorrectStars}
               alt="Stars icon that denotes player is correct"

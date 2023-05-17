@@ -27,26 +27,34 @@ export default function AnswerCard({
 }: AnswerCardProps) {
   const theme = useTheme();
   const correctText = (
-    <Box display="flex" alignContent="flex-start">
-      <Typography variant="h4"> Choose the&nbsp; </Typography>
-      <Typography variant="h4" sx={{ color: `${theme.palette.primary.green}` }}>
+    <Box display="inline" sx={{ textAlign: 'center' }}>
+      <Typography variant="h4" display="inline">
+        Choose the
+      </Typography>
+      <Typography
+        variant="h4"
+        display="inline"
+        sx={{ color: `${theme.palette.primary.green}` }}
+      >
         correct answer
       </Typography>
     </Box>
   );
   const trickText = (
-    <Box display="flex" alignContent="flex-start">
-      <Typography variant="h4">
+    <Box display="inline" sx={{ textAlign: 'center' }}>
+      <Typography variant="h4" display="inline">
         What do you think is the most popular&nbsp;
       </Typography>
       <Typography
         display="inline"
         variant="h4"
-        sx={{ color: `${theme.palette.primary.red}`, display: 'inline' }}
+        sx={{ color: `${theme.palette.primary.red}` }}
       >
-        trick answer
+        trick answer&nbsp;
       </Typography>
-      <Typography variant="h4"> &nbsp;among your class? </Typography>
+      <Typography variant="h4" display="inline">
+        among your class?
+      </Typography>
     </Box>
   );
 

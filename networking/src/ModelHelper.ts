@@ -33,7 +33,30 @@ export abstract class ModelHelper {
             return !isNullOrUndefined(choice.isAnswer) && choice.isAnswer
         }) ?? null
     }
+    static getSelectedAnswer(team: ITeam, question: IQuestion, currentState: GameSessionState): ITeamAnswer | null {
+        // step 1: get all answers from player
+        let teamAnswers;
+        if (team != null) {
+            teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
+            team,
+            question.id
+            );
+        }
+        // step 2: get the answer the player selected this round
+        const findSelectedAnswer = (answers: (ITeamAnswer | null)[]) => {
+            const selectedAnswer = answers.find((teamAnswer: ITeamAnswer | null) => 
+                currentState === GameSessionState.PHASE_1_RESULTS || currentState === GameSessionState.PHASE_1_DISCUSS
+                    ? teamAnswer?.isChosen === true
+                    : teamAnswer?.isTrickAnswer === true
+            );
+            return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
+        };
 
+        if (team != null && !isNullOrUndefined(teamAnswers)) {
+            return findSelectedAnswer(teamAnswers);
+        }
+        return null;
+    }
     static getSelectedTrickAnswer(team: ITeam, questionId: number): ITeamAnswer | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length !== 1) {

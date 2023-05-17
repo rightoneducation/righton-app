@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Box, Grid } from '@mui/material';
 import {
   GameSessionState,
   ITeam,
   IQuestion,
-  IChoice,
   ModelHelper,
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import HeaderContent from '../components/HeaderContent';
-import QuestionCard from '../components/QuestionCard';
-import AnswerCard from '../components/AnswerCard';
 import FooterContent from '../components/FooterContent';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
@@ -22,25 +15,10 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaStyled } from '../lib/styledcomponents/layout/BodyContentAreaStyled';
+import { BodyContentAreaDoubleColumnStyled, BodyContentAreaSingleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
+import ChooseAnswer from '../components/gameinprogress/ChooseAnswer';
+import DiscussAnswer from '../components/gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import 'swiper/css';
-import 'swiper/css/pagination';
-
-const ScrollBox = styled(Box)(({ theme }) => ({
-  height: `calc(100% - ${theme.sizing.footerHeight}px - ${theme.sizing.extraSmallPadding}px)`, // footer height & 8px grid spacing
-  paddingBottom: `${theme.sizing.extraSmallPadding}px`, // added so box shadow shows around edge of card
-  paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-  paddingRight: `${theme.sizing.extraSmallPadding}px`,
-  overflow: 'auto',
-  touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
-  '&::-webkit-scrollbar': {
-    // Chrome and Safari
-    display: 'none',
-  },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none', // IE and Edge
-}));
 
 interface GameInProgressProps {
   teams?: ITeam[];
@@ -49,6 +27,12 @@ interface GameInProgressProps {
   questions: IQuestion[];
   currentQuestionIndex?: number | null;
   teamId: string;
+  answerChoices: {
+    id: string;
+    text: string;
+    isCorrectAnswer: boolean;
+    reason: string;
+  }[];
 }
 
 export default function GameInProgress({
@@ -57,7 +41,8 @@ export default function GameInProgress({
   teamAvatar,
   questions,
   currentQuestionIndex,
-  teamId, // eslint-disable-line @typescript-eslint/no-unused-vars
+  teamId,
+  answerChoices,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -93,15 +78,10 @@ export default function GameInProgress({
   const questionText = divideQuestionString(currentQuestion?.text);
 
   const questionUrl = currentQuestion?.imageUrl;
+  const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-
-  const answerChoices = currentQuestion?.choices?.map((choice: IChoice) => ({
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-  }));
 
   const handleTimerIsFinished = () => {
     setTimerIsPaused(true);
@@ -114,64 +94,6 @@ export default function GameInProgress({
   const handleSelectAnswer = (index: number) => {
     setSelectedAnswer(index);
   };
-
-  const questionContents = (
-    <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        Question
-      </Typography>
-      <ScrollBox>
-        <QuestionCard
-          questionText={questionText}
-          imageUrl={questionUrl ?? ''}
-        />
-        {isSmallDevice ? (
-          <Typography
-            variant="body1"
-            sx={{
-              textAlign: 'center',
-              marginTop: `${theme.sizing.largePadding}px`,
-              opacity: 0.5,
-            }}
-          >
-            Scroll to the left to answer the question.
-          </Typography>
-        ) : null}
-      </ScrollBox>
-    </>
-  );
-
-  const answerContents = (
-    <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: '16px',
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        Answer
-      </Typography>
-      <ScrollBox>
-        <AnswerCard
-          answers={answerChoices}
-          isSubmitted={isSubmitted}
-          handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
-          selectedAnswer={selectedAnswer}
-          handleSelectAnswer={handleSelectAnswer}
-        />
-      </ScrollBox>
-    </>
-  );
 
   return (
     <StackContainerStyled
@@ -193,54 +115,32 @@ export default function GameInProgress({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaStyled container style={{alignItems: 'flex-start'}} spacing={isSmallDevice ? 0 : 2}>
-          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-            {isSmallDevice ? (
-              <Swiper
-                modules={[Pagination]}
-                spaceBetween={24}
-                centeredSlides
-                slidesPerView="auto"
-                pagination={{
-                  el: '.swiper-pagination-container',
-                  bulletClass: 'swiper-pagination-bullet',
-                  bulletActiveClass: 'swiper-pagination-bullet-active',
-                  clickable: true,
-                  renderBullet(index, className) {
-                    return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-                  },
-                }}
-                style={{ height: '100%' }}
-              >
-                <SwiperSlide
-                  style={{
-                    width: `calc(100% - ${
-                      theme.sizing.extraLargePadding * 2
-                    }px`,
-                    height: '100%',
-                  }}
-                >
-                  {questionContents}
-                </SwiperSlide>
-                <SwiperSlide
-                  style={{
-                    width: `calc(100% - ${
-                      theme.sizing.extraLargePadding * 2
-                    }px`,
-                    height: '100%',
-                  }}
-                >
-                  {answerContents}
-                </SwiperSlide>
-              </Swiper>
-            ) : (
-              questionContents
-            )}
-          </Grid>
-          <Grid item xs={0} sm={6} sx={{ width: '100%' }}>
-            {answerContents}
-          </Grid>
-        </BodyContentAreaStyled>
+        {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+              <ChooseAnswer
+                isSmallDevice={isSmallDevice}
+                questionText={questionText}
+                questionUrl={questionUrl ?? ''}
+                answerChoices={answerChoices}
+                isSubmitted={isSubmitted}
+                handleSubmitAnswer={handleSubmitAnswer}
+                currentState={currentState}
+                selectedAnswer={selectedAnswer}
+                handleSelectAnswer={handleSelectAnswer}
+              />
+          ) : (
+              <DiscussAnswer
+                isSmallDevice={isSmallDevice}
+                questionText={questionText}
+                questionUrl={questionUrl ?? ''}
+                answerChoices={answerChoices}
+                instructions={instructions ?? ['']}
+                currentState={currentState}
+                currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
+                currentQuestion={currentQuestion}
+              />
+          )}
+        
       </BodyStackContainerStyled>
       <FooterStackContainerStyled>
         {isSmallDevice ? (

@@ -13,7 +13,7 @@ import HeaderStackContainerStyled from '../../lib/styledcomponents/layout/Header
 import BodyStackContainerStyled from '../../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/layout/BodyContentAreaStyled';
+import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import FooterStackContainerStyled from '../../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
