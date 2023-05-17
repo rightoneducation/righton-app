@@ -12,7 +12,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: () => void;
+  handleSubmitAnswer: (answerText: string) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (index: number) => void;
@@ -84,6 +84,8 @@ export default function AnswerCard({
         </Stack>
         <ButtonSubmitAnswer
           isSubmitted={isSubmitted}
+          selectedAnswer={selectedAnswer}
+          answers={answers}
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
         />

@@ -4,7 +4,7 @@ import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
-import { monsterMap } from '../../lib/PlayModels';
+import { monsterMap, FinalResultsState } from '../../lib/PlayModels';
 import Podium from '../../img/Podium.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -52,13 +52,15 @@ interface CongratsProps {
   isSmallDevice: boolean;
   selectedAvatar: number;
   leader: boolean;
+  setFinalResultsState: (newState: FinalResultsState) => void;
 }
 
 export default function Congrats({
   score,
   isSmallDevice,
   selectedAvatar,
-  leader
+  leader,
+  setFinalResultsState
 }: CongratsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -95,7 +97,7 @@ export default function Congrats({
           <img src={Podium} alt="podium" style={{position: 'absolute', width: '150px', zIndex: -1, top: '100%', marginTop: '-20px'}}/>
         </Stack>
         <BottomBox style={{zIndex:1}}> 
-          <GamePlayButtonStyled > {t('finalresults.congrats.button')}</GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={()=>setFinalResultsState(FinalResultsState.LEADERBOARD)}> {t('finalresults.congrats.button')} </GamePlayButtonStyled>
         </BottomBox>
       </StackContainer>
     </BackgroundContainerStyled>
