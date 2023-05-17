@@ -41,29 +41,32 @@ const NewPointsAnimation = styled('div')({
 });
 
 interface ScoreIndicatorProps {
-  newPoints: number;
-  score: number | null;
+  newPoints?: number;
+  score: number;
+  handleUpdateScore?: (newScore: number) => void;
 }
 
 export default function ScoreIndicator({
   newPoints,
   score,
+  handleUpdateScore
 }: ScoreIndicatorProps) {
-  const [currentScore, setCurrentScore] = useState(
-    isNullOrUndefined(score) ? 0 : score
-  );
 
   // adds an eventLister to add the new points to the existing score when the animation completes
   useEffect(() => {
     const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
-      setCurrentScore((prevScore) => prevScore + newPoints);
+      if (newPoints && newPoints > 0 && handleUpdateScore){
+        // const newScore = score + newPoints;
+        // setScore(newScore);
+        handleUpdateScore(score + newPoints);
+      }
     };
     element?.addEventListener('animationend', handleAnimationEnd);
     return () => {
       element?.removeEventListener('animationend', handleAnimationEnd);
     };
-  }, [newPoints]);
+  }, [newPoints]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box>
@@ -76,7 +79,7 @@ export default function ScoreIndicator({
       </NewPointsAnimation>
       <ScorePill>
         <Typography variant="overline">
-          {isNullOrUndefined(currentScore) ? 0 : currentScore}
+          {isNullOrUndefined(score) ? 0 : score}
         </Typography>
       </ScorePill>
     </Box>

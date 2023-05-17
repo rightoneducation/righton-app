@@ -7,9 +7,8 @@ import {
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next'; // debug
-import MockGameSession from '../mock/MockGameSession.json';
 import JoinGameContainer from './JoinGameContainer';
-import ConnectedGameContainer from './GameInProgressContainer';
+import GameInProgressContainer from './GameInProgressContainer';
 import { JoinBasicGameData } from '../lib/PlayModels';
 
 interface GameSessionContainerProps {
@@ -22,6 +21,7 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
   const [teamId, setTeamId] = useState<string>('');
   const [teamMemberId, setTeamMemberID] = useState<string>('');
   const [teamAvatar, setTeamAvatar] = useState<number>(0);
+
   const subscribeToGame = (gameSessionId: string) => {
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription =  apiClient.subscribeUpdateGameSession(gameSessionId, response => { 
@@ -74,6 +74,15 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
     }
   };
 
+  const updateTeamScore = async (inputTeamId: string, inputScore: number) => {
+    try {
+      await apiClient.updateTeam({id: inputTeamId, score: inputScore});
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
   // when a player selects a team avatar, we need to add them to the game and subscribe to the game session
   // TODO: add in rejoin functionality, starting here 
   const handleJoinBasicGameFinished = (joinBasicGameData: JoinBasicGameData) => {
@@ -104,7 +113,7 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
       return gameSession && (
         <>
           <button type='button' onClick={() => changeLanguage()} style={{position: 'absolute', top: 0, left: 0, zIndex: 5}}>lang</button>
-          <ConnectedGameContainer teamId={teamId} gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}/>
+          <GameInProgressContainer teamId={teamId} gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} addTeamAnswerToTeamMember={addTeamAnswerToTeamMember} updateTeamScore={updateTeamScore}/>
         </>
       );  
   }
