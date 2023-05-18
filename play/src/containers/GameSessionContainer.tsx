@@ -93,7 +93,7 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
     case GameSessionState.FINISHED:
-      return  <JoinGameContainer handleJoinGameFinished={(joinBasicGameData) => handleJoinBasicGameFinished(joinBasicGameData)}/>;
+      return <JoinGameContainer handleJoinGameFinished={(joinBasicGameData) => handleJoinBasicGameFinished(joinBasicGameData)}/>;
     default:
       return (
         gameSession && 
