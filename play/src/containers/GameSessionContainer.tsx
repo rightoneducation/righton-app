@@ -103,6 +103,7 @@ export default function GameSessionContainer({ apiClient }: GameSessionContainer
 
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
+    case GameSessionState.FINISHED:
       return ( 
         <>
           <button type='button' onClick={() => changeLanguage()} style={{position: 'absolute', top: 0, left: 0, zIndex: 5}}>lang</button>

@@ -11,7 +11,6 @@ import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import FinalResults from '../pages/FinalResults';
 import StartPhase2 from '../pages/StartPhase2';
-import { FinalResultsState, JoinBasicGameData } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   gameSession: IGameSession;
@@ -27,6 +26,7 @@ export default function GameInProgressContainer({gameSession, teamId, currentSta
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true); 
   const currentQuestion =   gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
   const currentTeam = gameSession?.teams?.find((team) => team.id === teamId);
+  // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
   const answerChoices = currentQuestion?.choices!.map((choice: IChoice) => ({

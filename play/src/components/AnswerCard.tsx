@@ -59,6 +59,13 @@ export default function AnswerCard({
       </Typography>
     </Box>
   );
+  const getAnswerStatus = (answer: {text: string, isCorrectAnswer: boolean}, index: number)=> {
+    if (selectedAnswer === index)
+      return AnswerState.SELECTED;
+    if (answer.isCorrectAnswer && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+      return AnswerState.CORRECT;
+    return AnswerState.DEFAULT;
+  };
 
   return (
     <BodyCardStyled elevation={5}>
@@ -70,9 +77,7 @@ export default function AnswerCard({
           {answers?.map((answer, index) => (
             <AnswerSelector
               answerStatus={
-                selectedAnswer === index
-                  ? AnswerState.SELECTED
-                  : AnswerState.DEFAULT
+                getAnswerStatus(answer, index)
               }
               isSubmitted={isSubmitted}
               index={index}
