@@ -6,8 +6,8 @@ import {
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { Grid } from '@mui/material';
-import HeaderContent from '../HeaderContent';
-import FooterContent from '../FooterContent';
+import HeaderContent from '../../components/HeaderContent';
+import FooterContent from '../../components/FooterContent';
 import StackContainerStyled from '../../lib/styledcomponents/layout/StackContainerStyled';
 import HeaderStackContainerStyled from '../../lib/styledcomponents/layout/HeaderStackContainerStyled';
 import BodyStackContainerStyled from '../../lib/styledcomponents/layout/BodyStackContainerStyled';
@@ -17,7 +17,7 @@ import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/lay
 import FooterStackContainerStyled from '../../lib/styledcomponents/layout/FooterStackContainerStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import LeaderboardSelector from '../LeaderboardSelector';
+import LeaderboardSelector from '../../components/LeaderboardSelector';
 
 interface LeaderboardProps {
   teams?: ITeam[];

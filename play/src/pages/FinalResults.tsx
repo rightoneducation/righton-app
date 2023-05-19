@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ITeam, GameSessionState } from '@righton/networking';
-import Leaderboard from '../components/finalresults/Leaderboard';
-import Congrats from '../components/finalresults/Congrats';
+import Leaderboard from './finalresults/Leaderboard';
+import Congrats from './finalresults/Congrats';
 import { FinalResultsState } from '../lib/PlayModels';
 
 interface FinalResultsProps {

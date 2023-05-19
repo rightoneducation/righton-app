@@ -15,8 +15,8 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import ChooseAnswer from '../components/gameinprogress/ChooseAnswer';
-import DiscussAnswer from '../components/gameinprogress/DiscussAnswer';
+import ChooseAnswer from './gameinprogress/ChooseAnswer';
+import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 
 interface GameInProgressProps {

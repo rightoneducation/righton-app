@@ -7,11 +7,11 @@ import {
   isNullOrUndefined,
   GameSessionState,
 } from '@righton/networking';
-import SplashScreen from '../components/joingame/SplashScreen';
-import EnterGameCode from '../components/joingame/EnterGameCode';
-import EnterPlayerName from '../components/joingame/EnterPlayerName';
-import SelectAvatar from '../components/joingame/SelectAvatar';
-import HowToPlay from '../components/joingame/HowToPlay';
+import SplashScreen from '../pages/joingame/SplashScreen';
+import EnterGameCode from '../pages/joingame/EnterGameCode';
+import EnterPlayerName from '../pages/joingame/EnterPlayerName';
+import SelectAvatar from '../pages/joingame/SelectAvatar';
+import HowToPlay from '../pages/joingame/HowToPlay';
 import { JoinGameState, JoinBasicGameData } from '../lib/PlayModels';
 import { isGameCodeValid, isNameValid } from '../lib/HelperFunctions';
 
