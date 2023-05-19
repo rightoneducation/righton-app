@@ -33,5 +33,5 @@ Default.args = {
     `${countdownColor}, 0.8)`,
     `${countdownColor}, 0.9)`,
     `${countdownColor}, 1)`,
-  ]
+  ],
 };

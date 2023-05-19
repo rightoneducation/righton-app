@@ -2,20 +2,20 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-
 import {
   OverlayContainerStyled,
   OverlayImageStyled,
   ScreenshotImageStyled,
 } from '../../../lib/styledcomponents/CarouselElementsStyled';
 import HowToPlay_Phase1Circle from '../../../img/HowToPlay_Phase1Circle.svg';
-import HowToPlay_OrangeMonster from '../../../img/HowToPlay_OrangeMonster.svg';
-import HowToPlay_Screenshot0 from '../../../img/HowToPlay_Screenshot0.png';
+import HowToPlay_GreenMonster from '../../../img/HowToPlay_GreenMonster.svg';
+import HowToPlay_PinkMonster from '../../../img/HowToPlay_PinkMonster.svg';
+import HowToPlay_Screenshot2 from '../../../img/HowToPlay_Screenshot2.png';
 
-export default function HowToPlaySlide0Content() {
+export default function HowToPlaySlide2Content() {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <>
       <OverlayContainerStyled>
@@ -30,17 +30,28 @@ export default function HowToPlaySlide0Content() {
           }}
         />
         <OverlayImageStyled
-          src={HowToPlay_OrangeMonster}
+          src={HowToPlay_GreenMonster}
           alt="monster"
           sx={{
-            bottom: '45px',
-            left: '110px',
-            width: '200px',
+            bottom: '80px',
+            left: '180px',
+            width: '90px',
+            height: 'auto',
+            zIndex: -1,
+          }}
+        />
+        <OverlayImageStyled
+          src={HowToPlay_PinkMonster}
+          alt="monster"
+          sx={{
+            bottom: '80px',
+            left: '430px',
+            width: '90px',
             height: 'auto',
           }}
         />
       </OverlayContainerStyled>
-      <ScreenshotImageStyled src={HowToPlay_Screenshot0} alt="monster" />
+      <ScreenshotImageStyled src={HowToPlay_Screenshot2} alt="monster" />
       <Typography
         variant="h2"
         sx={{
@@ -49,7 +60,7 @@ export default function HowToPlaySlide0Content() {
           width: '250px',
         }}
       >
-        {t('joingame.howtoplay.slide0')}
+        {t('joingame.howtoplay.slide2')}
       </Typography>
     </>
   );

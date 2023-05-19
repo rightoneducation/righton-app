@@ -27,17 +27,17 @@ import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
  * @param {string} PREVIOUS - answer player has selected in previous phase
  */
 export enum AnswerState {
-  DEFAULT = 'DEFAULT', 
-  CORRECT = 'CORRECT', 
-  PLAYER_SELECTED_CORRECT = 'PLAYER_SELECTED_CORRECT', 
-  SELECTED = 'SELECTED', 
-  PREVIOUS = 'PREVIOUS', 
+  DEFAULT = 'DEFAULT',
+  CORRECT = 'CORRECT',
+  PLAYER_SELECTED_CORRECT = 'PLAYER_SELECTED_CORRECT',
+  SELECTED = 'SELECTED',
+  PREVIOUS = 'PREVIOUS',
 }
 
 /**
  * JoinGameState handles the substate changes for GameSessionState.JOIN_GAME
  * @enum JoingGameState
- * @param {string} SPLASH_SCREEN - initial screen for game 
+ * @param {string} SPLASH_SCREEN - initial screen for game
  * @param {string} ENTER_GAME_CODE - screen for entering game code
  * @param {string} ENTER_NAME - screen for entering player name
  * @param {string} SELECT_AVATAR - screen for selecting player avatar

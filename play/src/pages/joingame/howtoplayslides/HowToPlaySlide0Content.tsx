@@ -2,19 +2,20 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+
 import {
   OverlayContainerStyled,
   OverlayImageStyled,
   ScreenshotImageStyled,
 } from '../../../lib/styledcomponents/CarouselElementsStyled';
 import HowToPlay_Phase1Circle from '../../../img/HowToPlay_Phase1Circle.svg';
-import HowToPlay_RedMonster from '../../../img/HowToPlay_RedMonster.svg';
-import HowToPlay_Screenshot1 from '../../../img/HowToPlay_Screenshot1.png';
+import HowToPlay_OrangeMonster from '../../../img/HowToPlay_OrangeMonster.svg';
+import HowToPlay_Screenshot0 from '../../../img/HowToPlay_Screenshot0.png';
 
-export default function HowToPlaySlide1Content() {
+export default function HowToPlaySlide0Content() {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <>
       <OverlayContainerStyled>
@@ -29,17 +30,17 @@ export default function HowToPlaySlide1Content() {
           }}
         />
         <OverlayImageStyled
-          src={HowToPlay_RedMonster}
+          src={HowToPlay_OrangeMonster}
           alt="monster"
           sx={{
-            bottom: '60px',
-            left: '420px',
-            width: '115px',
+            bottom: '45px',
+            left: '110px',
+            width: '200px',
             height: 'auto',
           }}
         />
       </OverlayContainerStyled>
-      <ScreenshotImageStyled src={HowToPlay_Screenshot1} alt="monster" />
+      <ScreenshotImageStyled src={HowToPlay_Screenshot0} alt="monster" />
       <Typography
         variant="h2"
         sx={{
@@ -48,7 +49,7 @@ export default function HowToPlaySlide1Content() {
           width: '250px',
         }}
       >
-        {t('joingame.howtoplay.slide1')}
+        {t('joingame.howtoplay.slide0')}
       </Typography>
     </>
   );

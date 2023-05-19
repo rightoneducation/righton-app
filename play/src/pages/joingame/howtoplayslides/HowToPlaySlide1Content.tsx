@@ -8,14 +8,13 @@ import {
   ScreenshotImageStyled,
 } from '../../../lib/styledcomponents/CarouselElementsStyled';
 import HowToPlay_Phase1Circle from '../../../img/HowToPlay_Phase1Circle.svg';
-import HowToPlay_GreenMonster from '../../../img/HowToPlay_GreenMonster.svg';
-import HowToPlay_PinkMonster from '../../../img/HowToPlay_PinkMonster.svg';
-import HowToPlay_Screenshot2 from '../../../img/HowToPlay_Screenshot2.png';
+import HowToPlay_RedMonster from '../../../img/HowToPlay_RedMonster.svg';
+import HowToPlay_Screenshot1 from '../../../img/HowToPlay_Screenshot1.png';
 
-export default function HowToPlaySlide2Content() {
+export default function HowToPlaySlide1Content() {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <>
       <OverlayContainerStyled>
@@ -30,28 +29,17 @@ export default function HowToPlaySlide2Content() {
           }}
         />
         <OverlayImageStyled
-          src={HowToPlay_GreenMonster}
+          src={HowToPlay_RedMonster}
           alt="monster"
           sx={{
-            bottom: '80px',
-            left: '180px',
-            width: '90px',
-            height: 'auto',
-            zIndex: -1,
-          }}
-        />
-        <OverlayImageStyled
-          src={HowToPlay_PinkMonster}
-          alt="monster"
-          sx={{
-            bottom: '80px',
-            left: '430px',
-            width: '90px',
+            bottom: '60px',
+            left: '420px',
+            width: '115px',
             height: 'auto',
           }}
         />
       </OverlayContainerStyled>
-      <ScreenshotImageStyled src={HowToPlay_Screenshot2} alt="monster" />
+      <ScreenshotImageStyled src={HowToPlay_Screenshot1} alt="monster" />
       <Typography
         variant="h2"
         sx={{
@@ -60,7 +48,7 @@ export default function HowToPlaySlide2Content() {
           width: '250px',
         }}
       >
-        {t('joingame.howtoplay.slide2')}
+        {t('joingame.howtoplay.slide1')}
       </Typography>
     </>
   );

@@ -16,12 +16,20 @@ i18n
     debug: false,
     detection: {
       // move browser detection up in the priority line for autodetecting language
-      order: ['querystring', 'navigator', 'cookie', 'localStorage', 'sessionStorage', 'htmlTag', 'path', 'subdomain'],
+      order: [
+        'querystring',
+        'navigator',
+        'cookie',
+        'localStorage',
+        'sessionStorage',
+        'htmlTag',
+        'path',
+        'subdomain',
+      ],
     },
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
-    }
-
+    },
   });
 
 export default i18n;

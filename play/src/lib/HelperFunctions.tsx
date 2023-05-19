@@ -12,7 +12,7 @@ export const isNameValid = (name: string) => {
     name.trim() !== '' && // check for falsy w/o spaces, typ
     name !== i18n.t('playername_firstnamedefault') && // check if default value, typ
     name !== i18n.t('playername_lastnamedefault')
-  ); 
+  );
 };
 
 /**
@@ -22,8 +22,8 @@ export const isNameValid = (name: string) => {
  */
 export const isGameCodeValid = (gameCode: string) => {
   return (
-    gameCode.trim() !== '' && 
-    gameCode !== InputPlaceholder.GAME_CODE && 
+    gameCode.trim() !== '' &&
+    gameCode !== InputPlaceholder.GAME_CODE &&
     gameCode.length === 4 &&
     !Number.isNaN(parseInt(gameCode, 10))
   );

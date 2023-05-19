@@ -12,12 +12,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../../lib/PlayModels';
-import QuestionCard from '../QuestionCard';
-import DiscussAnswerCard from '../DiscussAnswerCard';
+import QuestionCard from '../../components/QuestionCard';
+import DiscussAnswerCard from '../../components/DiscussAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { BodyContentAreaDoubleColumnStyled, BodyContentAreaSingleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+import {
+  BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaSingleColumnStyled,
+} from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -136,60 +139,58 @@ export default function DiscussAnswer({
     </>
   );
 
-  return (
-    currentState === GameSessionState.PHASE_2_DISCUSS ? (
-        <BodyContentAreaDoubleColumnStyled
-            container
-            spacing = {isSmallDevice ? 0 : 2}
-        >
-          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-            {isSmallDevice ? (
-              <Swiper
-                modules={[Pagination]}
-                spaceBetween={4}
-                centeredSlides
-                slidesPerView="auto"
-                pagination={{
-                  el: '.swiper-pagination-container',
-                  bulletClass: 'swiper-pagination-bullet',
-                  bulletActiveClass: 'swiper-pagination-bullet-active',
-                  clickable: true,
-                  renderBullet(index, className) {
-                    return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-                  },
-                }}
-                style={{ height: '100%' }}
-              >
-                <SwiperSlide
-                  style={{
-                    width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                    height: '100%',
-                  }}
-                >
-                  {questionCorrectAnswerContents}
-                </SwiperSlide>
-                <SwiperSlide
-                  style={{
-                    width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                    height: '100%',
-                  }}
-                >
-                  {incorrectAnswerContents}
-                </SwiperSlide>
-              </Swiper>
-            ) : (
-              questionCorrectAnswerContents
-            )}
-          </Grid>
-          <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
-            {incorrectAnswerContents}
-          </Grid>
-        </BodyContentAreaDoubleColumnStyled>
-    ) 
-    :
+  return currentState === GameSessionState.PHASE_2_DISCUSS ? (
+    <BodyContentAreaDoubleColumnStyled
+      container
+      spacing={isSmallDevice ? 0 : 2}
+    >
+      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+        {isSmallDevice ? (
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={4}
+            centeredSlides
+            slidesPerView="auto"
+            pagination={{
+              el: '.swiper-pagination-container',
+              bulletClass: 'swiper-pagination-bullet',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              clickable: true,
+              renderBullet(index, className) {
+                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+              },
+            }}
+            style={{ height: '100%' }}
+          >
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {questionCorrectAnswerContents}
+            </SwiperSlide>
+            <SwiperSlide
+              style={{
+                width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
+                height: '100%',
+              }}
+            >
+              {incorrectAnswerContents}
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          questionCorrectAnswerContents
+        )}
+      </Grid>
+      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+        {incorrectAnswerContents}
+      </Grid>
+    </BodyContentAreaDoubleColumnStyled>
+  ) : (
     <BodyContentAreaSingleColumnStyled>
-      <Box sx={{width: '100%', height: '100%'}}>
-      {questionCorrectAnswerContents}
+      <Box sx={{ width: '100%', height: '100%' }}>
+        {questionCorrectAnswerContents}
       </Box>
     </BodyContentAreaSingleColumnStyled>
   );

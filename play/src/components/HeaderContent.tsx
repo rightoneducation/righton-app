@@ -35,13 +35,25 @@ export default function HeaderContent({
   const stateMap = {
     [GameSessionState.NOT_STARTED]: t('gameinprogress.header.notstarted'),
     [GameSessionState.TEAMS_JOINING]: t('gameinprogress.header.teamsjoining'),
-    [GameSessionState.CHOOSE_CORRECT_ANSWER]: t('gameinprogress.header.choosecorrectanswer'),
-    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: t('gameinprogress.header.choosetrickiestanswer'),
-    [GameSessionState.PHASE_1_DISCUSS]: t('gameinprogress.header.phase1discuss'),
-    [GameSessionState.PHASE_2_DISCUSS]: t('gameinprogress.header.phase2discuss'),
+    [GameSessionState.CHOOSE_CORRECT_ANSWER]: t(
+      'gameinprogress.header.choosecorrectanswer'
+    ),
+    [GameSessionState.CHOOSE_TRICKIEST_ANSWER]: t(
+      'gameinprogress.header.choosetrickiestanswer'
+    ),
+    [GameSessionState.PHASE_1_DISCUSS]: t(
+      'gameinprogress.header.phase1discuss'
+    ),
+    [GameSessionState.PHASE_2_DISCUSS]: t(
+      'gameinprogress.header.phase2discuss'
+    ),
     [GameSessionState.PHASE_2_START]: t('gameinprogress.header.phase2start'),
-    [GameSessionState.PHASE_1_RESULTS]: t('gameinprogress.header.phase1results'),
-    [GameSessionState.PHASE_2_RESULTS]: t('gameinprogress.header.phase2results'),
+    [GameSessionState.PHASE_1_RESULTS]: t(
+      'gameinprogress.header.phase1results'
+    ),
+    [GameSessionState.PHASE_2_RESULTS]: t(
+      'gameinprogress.header.phase2results'
+    ),
     [GameSessionState.FINAL_RESULTS]: t('gameinprogress.header.finalresults'),
     [GameSessionState.FINISHED]: t('gameinprogress.header.finished'),
   };
@@ -54,7 +66,7 @@ export default function HeaderContent({
     if (isIncorrectForCheck) return t('gameinprogress.header.incorrect');
     return stateMap[currentStateForCheck];
   };
-  
+
   return (
     <HeaderContainer>
       <Typography variant="h1">

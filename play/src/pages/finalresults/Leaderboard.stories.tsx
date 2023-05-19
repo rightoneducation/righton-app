@@ -15,17 +15,14 @@ export default {
   component: Leaderboard,
 } as ComponentMeta<typeof Leaderboard>;
 
-const Template: ComponentStory<typeof Leaderboard> = function LeaderboardTemplate(
-  args
-) {
-
-
-  return (
-    <ThemeProvider theme={Theme}>
-      <Leaderboard {...args} />
-    </ThemeProvider>
-  );
-};
+const Template: ComponentStory<typeof Leaderboard> =
+  function LeaderboardTemplate(args) {
+    return (
+      <ThemeProvider theme={Theme}>
+        <Leaderboard {...args} />
+      </ThemeProvider>
+    );
+  };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
@@ -35,6 +32,5 @@ export const Default = Template.bind({});
 Default.args = {
   teams: gameSession.teams,
   teamAvatar: 0,
-  teamId: "2d609343-de50-4830-b65e-71eb72bb9bef",
-  score: 10,
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
 };
