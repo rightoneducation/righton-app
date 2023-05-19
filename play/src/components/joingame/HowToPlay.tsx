@@ -3,6 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
 import HowToPlaySlide0Content from './howtoplayslides/HowToPlaySlide0Content';
@@ -36,6 +37,7 @@ const HowToPlaySwiper = styled(Swiper)({
 
 export default function JoinGame() {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
@@ -47,7 +49,7 @@ export default function JoinGame() {
             paddingTop: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          How to Play!
+          {t('joingame.howtoplay.title')}
         </Typography>
         <Box style={{ width: '100%' }}>
           <HowToPlaySwiper
@@ -93,7 +95,7 @@ export default function JoinGame() {
             paddingBottom: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          Waiting for the game to start...
+          {t('joingame.howtoplay.description')}
         </Typography>
       </StackContainer>
     </BackgroundContainerStyled>

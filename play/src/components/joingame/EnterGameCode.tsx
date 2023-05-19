@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { InputPlaceholder } from '../../lib/PlayModels';
-import { isGameCodeValid } from '../../lib/HelperFunctions';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
@@ -28,6 +28,7 @@ export default function EnterGameCode({
   handleGameCodeClick,
 }: EnterGameCodeProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [gameCodeValue, setGameCodeValue] = useState<string>('');
   const [shouldShowError, setShouldShowError] = useState<boolean>(false);
 
@@ -61,7 +62,7 @@ export default function EnterGameCode({
         {/* container here to trim the spacing set by parent stack between text and input, typ */}
         <Box>
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-            Enter Game Code
+            {t('joingame.gamecode.title')}
           </Typography>
           <InputTextFieldStyled
             fullWidth
@@ -88,7 +89,7 @@ export default function EnterGameCode({
         </Box>
         <IntroButtonStyled onClick={() => validateInput(gameCodeValue)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Join
+            {t('joingame.gamecode.button')}
           </Typography>
         </IntroButtonStyled>
         {shouldShowError && (
@@ -101,10 +102,10 @@ export default function EnterGameCode({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              We are unable to join this game.
+              {t('joingame.gamecode.error1')}
             </Typography>
             <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-              Check the Game Code and try again.
+              {t('joingame.gamecode.error2')}
             </Typography>
           </PaddedContainer>
         )}

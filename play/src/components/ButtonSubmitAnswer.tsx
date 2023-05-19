@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
@@ -20,7 +21,8 @@ export default function ButtonSubmitAnswer({
   answers,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
-  const buttonText = isSubmitted ? 'Submitted' : 'Submit Answer';
+  const { t } = useTranslation();
+  const buttonText = isSubmitted ? t('gameinprogress.button.submitted') : t('gameinprogress.button.submit');
   const buttonContents = (
     <Typography variant="button"> {buttonText} </Typography>
   );

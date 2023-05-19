@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 
 // gameplay button
 export const GamePlayButtonStyled = styled(Button)(({ theme }) => ({
-  width: '160px', // per figma
+  minWidth: '180px', // per figma
   height: '26px',
   borderRadius: '22px',
   textTransform: 'none',

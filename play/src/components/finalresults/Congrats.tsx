@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
 import { monsterMap, FinalResultsState } from '../../lib/PlayModels';
@@ -62,30 +63,28 @@ export default function Congrats({
   setFinalResultsState
 }: CongratsProps) {
   const theme = useTheme();
-  const introString = `You've earned a total of`;
-  const congratsString = 'Congratulations! \n You are in the top 5!';
-  const greatJobString = 'Great job!';
+  const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={3} > 
           <Box style={{zIndex:1}}>
             <Typography variant="h1" sx={{ textAlign: 'center' }}>
-              {introString}
+            {t('finalresults.congrats.title')}
             </Typography>
             <Typography variant="h1" sx={{ fontSize: '36px', textAlign: 'center', paddingTop: `${theme.sizing.smallPadding}px` }}>
-              {`${score} points`}
+              {`${score} ${t('finalresults.congrats.points')}`}
             </Typography>
           </Box>
         <Stack style={{zIndex:0 , display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'}}>
           <SignCard>
             { leader ? 
               <Typography variant="h2" sx={{ textAlign: 'center', whiteSpace: 'pre-wrap'}}>
-                {congratsString}
+                {t('finalresults.congrats.top5')}
               </Typography>
             :
               <Typography variant="h6" sx={{ textAlign: 'center'}}>
-               {greatJobString}
+                {t('finalresults.congrats.greatjob')}
               </Typography>
             }
           </SignCard>
@@ -98,7 +97,7 @@ export default function Congrats({
           <img src={Podium} alt="podium" style={{position: 'absolute', width: '150px', zIndex: -1, top: '100%', marginTop: '-20px'}}/>
         </Stack>
         <BottomBox style={{zIndex:1}}> 
-          <GamePlayButtonStyled onClick={()=>setFinalResultsState(FinalResultsState.LEADERBOARD)}> View Leaderboard </GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={()=>setFinalResultsState(FinalResultsState.LEADERBOARD)}> {t('finalresults.congrats.button')} </GamePlayButtonStyled>
         </BottomBox>
       </StackContainer>
     </BackgroundContainerStyled>

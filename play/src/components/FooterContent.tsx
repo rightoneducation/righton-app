@@ -32,8 +32,9 @@ const Avatar = styled('img')({
 interface HeaderProps {
   avatar: number;
   teamName: string;
-  newPoints: number;
-  score: number | null;
+  newPoints?: number;
+  score: number;
+  handleUpdateScore?: (newScore: number) => void;
 }
 
 export default function Header({
@@ -41,6 +42,7 @@ export default function Header({
   teamName,
   newPoints,
   score,
+  handleUpdateScore
 }: HeaderProps) {
   const theme = useTheme();
 
@@ -55,7 +57,11 @@ export default function Header({
           {teamName}
         </Typography>
       </FooterLeftContainer>
-      <ScoreIndicator newPoints={newPoints} score={score} />
+      {handleUpdateScore ?
+        <ScoreIndicator newPoints={newPoints} score={score} handleUpdateScore={handleUpdateScore}/>
+      :
+        <ScoreIndicator newPoints={newPoints} score={score}/>
+      }
     </FooterContainer>
   );
 }

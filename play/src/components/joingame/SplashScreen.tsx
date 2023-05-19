@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { JoinGameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
@@ -37,6 +38,8 @@ interface SplashScreenProps {
 
 export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
+
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
@@ -60,7 +63,7 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
                 paddingRight: `${theme.sizing.mediumPadding}px`,
               }}
             >
-              Unlocking every student`s potential in math!
+             {t('joingame.splash.title')}
             </Typography>
           </Stack>
           <BottomBox>
@@ -72,7 +75,7 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
               }}
             >
               <Typography variant="h2" sx={{ textAlign: 'center' }}>
-                Join Game
+              {t('joingame.splash.button')}
               </Typography>
             </IntroButtonStyled>
           </BottomBox>

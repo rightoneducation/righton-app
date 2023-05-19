@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   OverlayContainerStyled,
   OverlayImageStyled,
@@ -11,7 +12,8 @@ import HowToPlay_Screenshot4 from '../../../img/HowToPlay_Screenshot4.svg';
 
 export default function HowToPlaySlide4Content() {
   const theme = useTheme();
-
+  const { t } = useTranslation();
+  
   return (
     <>
       <OverlayContainerStyled>
@@ -36,7 +38,7 @@ export default function HowToPlaySlide4Content() {
           width: '350px',
         }}
       >
-        The most total points wins!
+        {t('joingame.howtoplay.slide4')}
       </Typography>
     </>
   );
