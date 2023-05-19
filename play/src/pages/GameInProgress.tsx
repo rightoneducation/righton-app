@@ -26,6 +26,7 @@ interface GameInProgressProps {
   questions: IQuestion[];
   currentQuestionIndex?: number | null;
   teamId: string;
+  score: number;
   answerChoices: {
     id: string;
     text: string;
@@ -42,8 +43,9 @@ export default function GameInProgress({
   questions,
   currentQuestionIndex,
   teamId,
+  score,
   answerChoices,
-  addTeamAnswerToTeamMember,
+  addTeamAnswerToTeamMember
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -151,8 +153,7 @@ export default function GameInProgress({
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
-          newPoints={10}
-          score={120}
+          score={score}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>
