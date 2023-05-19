@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Grid, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
-import { InputPlaceholder } from '../../lib/PlayModels';
+import { isNameValid } from '../../lib/HelperFunctions';
+import { JoinGameState } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -23,23 +25,31 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterPlayerNameProps {
-  firstNameValue: string;
-  setFirstNameValue: (newValue: string) => void;
-  lastNameValue: string;
-  setLastNameValue: (newValue: string) => void;
   isSmallDevice: boolean;
-  inputError: boolean;
+  firstName: string;
+  setFirstName: (firstName: string) => void;
+  lastName: string;
+  setLastName: (lastName: string) => void;
+  setJoinGameState: (gameState: JoinGameState) => void;
 }
 
 export default function EnterPlayerName({
-  firstNameValue,
-  setFirstNameValue,
-  lastNameValue,
-  setLastNameValue,
   isSmallDevice,
-  inputError,
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  setJoinGameState,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const [shouldShowError, setShouldShowError] = useState<boolean>(false);
+
+  const validateInput = () => {
+    if (isNameValid(firstName) && isNameValid(lastName))
+      setJoinGameState(JoinGameState.SELECT_AVATAR);
+    else setShouldShowError(true);
+  };
 
   return (
     <BackgroundContainerStyled>
@@ -55,7 +65,7 @@ export default function EnterPlayerName({
         />
         <PaddedContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Enter Your Name
+            {t('joingame.playername.title')}
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
@@ -63,9 +73,10 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={InputPlaceholder.FIRST_NAME}
-                onChange={(event) => setFirstNameValue(event.target.value)}
-                value={firstNameValue}
+                placeholder={t('joingame.playername.firstnamedefault') ?? ''}
+                onChange={(event) => setFirstName(event.target.value)}
+                onFocus={(event)=> setShouldShowError(false)}
+                value={firstName}
                 InputProps={{
                   disableUnderline: true,
                   inputProps: {
@@ -84,9 +95,10 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={InputPlaceholder.LAST_NAME}
-                onChange={(event) => setLastNameValue(event.target.value)}
-                value={lastNameValue}
+                placeholder={t('joingame.playername.lastnamedefault') ?? ''}
+                onChange={(event) => setLastName(event.target.value)}
+                onFocus={(event)=> setShouldShowError(false)}
+                value={lastName}
                 InputProps={{
                   disableUnderline: true,
                   inputProps: {
@@ -102,12 +114,11 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled>
+        <IntroButtonStyled onClick={validateInput}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Enter
+            {t('joingame.playername.button')}
           </Typography>
         </IntroButtonStyled>
-        {inputError ? (
           <PaddedContainer>
             <Typography
               variant="h2"
@@ -116,17 +127,23 @@ export default function EnterPlayerName({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              Type in both your first and last name to enter the game.
+              {t('joingame.playername.description1')}
             </Typography>
             <Typography
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
-              This will be used to identify you only during the game, and will
-              not be stored.
+              {t('joingame.playername.description2')}
             </Typography>
+            { shouldShowError && ( 
+              <Typography
+                variant="h2"
+                sx={{ fontWeight: 400, textAlign: 'center' }}
+              >
+                Invalid Input.
+              </Typography>
+            )}
           </PaddedContainer>
-        ) : null}
       </StackContainer>
     </BackgroundContainerStyled>
   );

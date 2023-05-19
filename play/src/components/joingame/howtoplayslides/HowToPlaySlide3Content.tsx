@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   OverlayContainerStyled,
   OverlayImageStyled,
@@ -12,7 +13,8 @@ import HowToPlay_Screenshot3 from '../../../img/HowToPlay_Screenshot3.png';
 
 export default function HowToPlaySlide3Content() {
   const theme = useTheme();
-
+  const { t } = useTranslation();
+  
   return (
     <>
       <OverlayContainerStyled>
@@ -46,7 +48,7 @@ export default function HowToPlaySlide3Content() {
           width: '350px',
         }}
       >
-        Gain more points by guessing the most popular incorrect answer!
+        {t('joingame.howtoplay.slide3')}
       </Typography>
     </>
   );

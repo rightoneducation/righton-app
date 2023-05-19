@@ -1,117 +1,103 @@
 import React, { useState } from 'react';
 import {
+  ApiClient,
   IGameSession,
-  IChoice,
-  IAWSGameSession,
-  GameSessionParser,
   GameSessionState,
+  IQuestion,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import MockGameSession from '../mock/MockGameSession.json';
-import PregameCountdown from '../pages/PregameCountdown';
-import GameInProgress from '../pages/GameInProgress';
-import PhaseResults from '../pages/PhaseResults';
-import JoinGame from '../pages/JoinGame';
-import FinalResults from '../pages/FinalResults';
-import StartPhase2 from '../pages/StartPhase2';
-import { JoinGameState, FinalResultsState } from '../lib/PlayModels';
+import JoinGameContainer from './JoinGameContainer';
+import GameInProgressContainer from './GameInProgressContainer';
+import { JoinBasicGameData } from '../lib/PlayModels';
 
-export default function GameSessionContainer() {
-  const [gameSession, setGameSession] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
-    // TODO: update exchange mock gamesession with subscription via @righton/networking
-    GameSessionParser.gameSessionFromAWSGameSession(
-      MockGameSession as IAWSGameSession
-    ) as IGameSession
-  );
-  const [teamAvatar, setTeamAvatar] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
-  // TODO: add gameSession subscription and update below states accordingly.
-  const [joinGameState, setjoinGameState] = useState<JoinGameState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    JoinGameState.SPLASH_SCREEN
-  );
-  const [gameState, setGameState] = useState<GameSessionState>( // eslint-disable-line @typescript-eslint/no-unused-vars
-    GameSessionState.PHASE_2_DISCUSS
-  );
-  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
-    FinalResultsState.LEADERBOARD
-  );
-  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const selectedAvatar = 0;
-  const leader = true;
-  const teamId = '2d609343-de50-4830-b65e-71eb72bb9bef';
+interface GameSessionContainerProps {
+  apiClient: ApiClient;
+}
 
-  const currentQuestion =
-    gameSession.questions[gameSession.currentQuestionIndex ?? 0];
-  const answerChoices = currentQuestion.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-    reason: choice.reason ?? '',
-  }));
+export default function GameSessionContainer({ apiClient }: GameSessionContainerProps) {
+  const [currentState, setCurrentState] = useState(GameSessionState.TEAMS_JOINING); 
+  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  const [teamId, setTeamId] = useState<string>('');
+  const [teamMemberId, setTeamMemberID] = useState<string>('');
+  const [teamAvatar, setTeamAvatar] = useState<number>(0);
 
-  const handlePregameTimerFinished = () => {
-    setIsPregameCountdown(false);
+  const subscribeToGame = (gameSessionId: string) => {
+    let gameSessionSubscription: any | null = null;
+    gameSessionSubscription =  apiClient.subscribeUpdateGameSession(gameSessionId, response => { 
+      setGameSession({ ...gameSession, ...response });
+      setCurrentState(response.currentState);
+    });
+    console.debug(`subscribed to game session with id: ${gameSessionId}`);
+    return () => {
+      gameSessionSubscription?.unsubscribe();
+    };
   };
 
-  switch (gameState) {
+  const addTeamToGame = async (joinBasicGameData: JoinBasicGameData) => {
+    const teamName = `${joinBasicGameData.firstName} ${joinBasicGameData.lastName}`;
+    try {
+      const team = await apiClient.addTeamToGameSessionId(joinBasicGameData.gameSessionId, teamName, null)
+      setTeamId(team.id);
+      if (!team) {
+        console.error("Failed to add team")
+      }
+      else {
+        apiClient.addTeamMemberToTeam(team.id, true, uuidv4())
+        .then((teamMember) => {
+          if (!teamMember) {
+            console.error("Failed to add team member")
+          }
+          setTeamMemberID(teamMember.id);
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
+  const addTeamAnswerToTeamMember = async (question: IQuestion, answerText: string, gameSessionState: GameSessionState) => {
+    try{
+      await apiClient.addTeamAnswer(
+        teamMemberId,
+        question.id,
+        answerText,
+        gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        gameSessionState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+     )
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
+  const updateTeamScore = async (inputTeamId: string, inputScore: number) => {
+    try {
+      await apiClient.updateTeam({id: inputTeamId, score: inputScore});
+    }
+    catch (error) {
+      console.error(error)
+    }
+  };
+
+  // when a player selects a team avatar, we need to add them to the game and subscribe to the game session
+  // TODO: add in rejoin functionality, starting here 
+  const handleJoinBasicGameFinished = (joinBasicGameData: JoinBasicGameData) => {
+    setTeamAvatar(joinBasicGameData.selectedAvatar);
+    addTeamToGame(joinBasicGameData);
+    subscribeToGame(joinBasicGameData.gameSessionId);
+  };
+
+  switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
-      return <JoinGame joinGameState={joinGameState} />;
-    case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      return isPregameCountdown ? (
-        <PregameCountdown
-          handlePregameTimerFinished={handlePregameTimerFinished}
-        />
-      ) : (
-        <GameInProgress
-          {...gameSession}
-          teamAvatar={teamAvatar}
-          answerChoices={answerChoices}
-          teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
-        />
-      );
-    case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-      return (
-        <GameInProgress
-          {...gameSession}
-          teamAvatar={teamAvatar}
-          answerChoices={answerChoices}
-          teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
-        />
-      );
-    case GameSessionState.PHASE_1_RESULTS:
-    case GameSessionState.PHASE_2_RESULTS:
-      return (
-        <PhaseResults
-          {...gameSession}
-          gameSession={gameSession}
-          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0}
-          currentState={gameState}
-          teamAvatar={teamAvatar}
-          teamId={teamId}
-          answerChoices={answerChoices}
-        />
-      );
-    case GameSessionState.PHASE_2_START:
-      return <StartPhase2 />;
-    case GameSessionState.FINAL_RESULTS:
-      return (
-        <FinalResults
-          {...gameSession}
-          currentState={gameState}
-          score={120}
-          selectedAvatar={selectedAvatar}
-          teamId={teamId}
-          leader={leader}
-          finalResultsState={finalResultsState}
-        />
-      );
+    case GameSessionState.FINISHED:
+      return <JoinGameContainer handleJoinGameFinished={(joinBasicGameData) => handleJoinBasicGameFinished(joinBasicGameData)}/>;
     default:
       return (
-        <GameInProgress
-          {...gameSession}
-          teamAvatar={teamAvatar}
-          answerChoices={answerChoices}
-          teamId="2d609343-de50-4830-b65e-71eb72bb9bef"
-        />
+        gameSession && 
+        <GameInProgressContainer teamId={teamId} gameSession={gameSession} currentState={currentState} setCurrentState={setCurrentState} teamAvatar={teamAvatar} addTeamAnswerToTeamMember={addTeamAnswerToTeamMember} updateTeamScore={updateTeamScore}/>
       );
   }
 }

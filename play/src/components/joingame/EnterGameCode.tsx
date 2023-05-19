@@ -1,6 +1,7 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { InputPlaceholder } from '../../lib/PlayModels';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
@@ -20,23 +21,30 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterGameCodeProps {
-  gameCodeValue: string;
-  setGameCodeValue: (newValue: string) => void;
-  inputError: boolean;
+  handleGameCodeClick: (gameSessionId: string) => Promise<boolean>;
 }
 
 export default function EnterGameCode({
-  gameCodeValue,
-  setGameCodeValue,
-  inputError,
+  handleGameCodeClick,
 }: EnterGameCodeProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const [gameCodeValue, setGameCodeValue] = useState<string>('');
+  const [shouldShowError, setShouldShowError] = useState<boolean>(false);
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const numericValue = newValue.replace(/[^0-9]/g, ''); // Remove non-numeric characters
     setGameCodeValue(numericValue);
+  };
+
+  const validateInput = async (inputGameCodeValue: string) => {
+    const isGameCodeSuccess = await handleGameCodeClick(inputGameCodeValue);
+    if (!isGameCodeSuccess)
+      setShouldShowError(true);
+    else
+      setShouldShowError(false);
   };
 
   return (
@@ -54,7 +62,7 @@ export default function EnterGameCode({
         {/* container here to trim the spacing set by parent stack between text and input, typ */}
         <Box>
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-            Enter Game Code
+            {t('joingame.gamecode.title')}
           </Typography>
           <InputTextFieldStyled
             fullWidth
@@ -68,6 +76,7 @@ export default function EnterGameCode({
               inputProps: {
                 inputMode: 'numeric',
                 pattern: '[0-9]*',
+                maxLength: 4,
                 style: {
                   color: theme.palette.primary.darkBlue,
                   paddingTop: '9px',
@@ -78,12 +87,12 @@ export default function EnterGameCode({
             }}
           />
         </Box>
-        <IntroButtonStyled>
+        <IntroButtonStyled onClick={() => validateInput(gameCodeValue)}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Join
+            {t('joingame.gamecode.button')}
           </Typography>
         </IntroButtonStyled>
-        {inputError && (
+        {shouldShowError && (
           <PaddedContainer>
             <Typography
               variant="h2"
@@ -93,10 +102,10 @@ export default function EnterGameCode({
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              We are unable to join this game.
+              {t('joingame.gamecode.error1')}
             </Typography>
             <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-              Check the Game Code and try again.
+              {t('joingame.gamecode.error2')}
             </Typography>
           </PaddedContainer>
         )}

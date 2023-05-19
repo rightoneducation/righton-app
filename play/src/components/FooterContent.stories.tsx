@@ -63,5 +63,5 @@ Team5.args = {
   avatar: 5,
   teamName: 'Michelangelo Caravaggio',
   newPoints: 10,
-  score: null,
+  score: 0,
 };

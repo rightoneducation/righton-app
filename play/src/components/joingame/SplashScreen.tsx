@@ -1,6 +1,8 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { JoinGameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import MagicHatHero from '../../img/MagicHatHero.svg';
@@ -30,8 +32,14 @@ const BottomBox = styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.mediumPadding}px`,
 }));
 
-export default function SplashScreen() {
+interface SplashScreenProps {
+  setJoinGameState: (gameState: JoinGameState) => void;
+}
+
+export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
+
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
@@ -55,18 +63,19 @@ export default function SplashScreen() {
                 paddingRight: `${theme.sizing.mediumPadding}px`,
               }}
             >
-              Unlocking every student`s potential in math!
+             {t('joingame.splash.title')}
             </Typography>
           </Stack>
           <BottomBox>
             <IntroButtonStyled
+              onClick={() => setJoinGameState(JoinGameState.ENTER_GAME_CODE)}
               style={{
                 background: `${theme.palette.primary.highlightGradient}`,
                 boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
               }}
             >
               <Typography variant="h2" sx={{ textAlign: 'center' }}>
-                Join Game
+              {t('joingame.splash.button')}
               </Typography>
             </IntroButtonStyled>
           </BottomBox>

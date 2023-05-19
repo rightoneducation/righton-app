@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { GameSessionState } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
@@ -28,7 +29,8 @@ export default function DiscussAnswerCard({
   currentState,
 }: DiscussAnswerCardProps) {
   const theme = useTheme();
-  const resultText = isPlayerCorrect ? 'Yes, ' : 'Nice try, ';
+  const { t } = useTranslation();
+  const resultText = isPlayerCorrect ? t('gameinprogress.discussanswer.correcttext') : t('gameinprogress.discussanswer.nicetrytext');
   const correctCard =
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
@@ -52,7 +54,7 @@ export default function DiscussAnswerCard({
               {resultText}
             </Typography>
             <Typography variant="body1" display="inline">
-              the correct answer is...
+              {t('gameinprogress.discussanswer.correctanswertext')}
             </Typography>
           </Box>
         )}

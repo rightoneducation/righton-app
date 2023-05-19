@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next';
 import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarIconStyled from '../../lib/styledcomponents/AvatarIconStyled';
@@ -79,20 +80,23 @@ const BottomContainer = styled(Box)(({ theme }) => ({
 
 interface SelectAvatarProps {
   selectedAvatar: number;
-  handleAvatarSelected: (value: number) => void;
-  firstNameValue: string;
-  lastNameValue: string;
+  setSelectedAvatar: (value: number) => void;
+  firstName: string;
+  lastName: string;
   isSmallDevice: boolean;
+  handleAvatarSelectClick: () => void;
 }
 
 export default function SelectAvatar({
   selectedAvatar,
-  handleAvatarSelected,
-  firstNameValue,
-  lastNameValue,
+  setSelectedAvatar,
+  firstName,
+  lastName,
   isSmallDevice,
+  handleAvatarSelectClick,
 }: SelectAvatarProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
@@ -105,7 +109,7 @@ export default function SelectAvatar({
               paddingTop: `${theme.sizing.mediumPadding}px`,
             }}
           >
-            Choose Your Avatar!
+            {t('joingame.selectavatar.title')}
           </Typography>
           <GridContainer>
             {Object.keys(monsterMap).map((value, index) => (
@@ -113,7 +117,7 @@ export default function SelectAvatar({
                 <AvatarIconStyled
                   src={monsterMap[index].icon}
                   onClick={() => {
-                    handleAvatarSelected(index);
+                    setSelectedAvatar(index);
                   }}
                   isSelected={index === selectedAvatar}
                   alt="avatar"
@@ -130,9 +134,9 @@ export default function SelectAvatar({
         </MonsterContainer>
         <BottomContainer>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {`${firstNameValue} ${lastNameValue}`}
+            {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled> Choose </GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>{t('joingame.selectavatar.button')}</GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
     </BackgroundContainerStyled>

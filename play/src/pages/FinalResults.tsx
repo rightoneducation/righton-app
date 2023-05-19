@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ITeam, GameSessionState } from '@righton/networking';
@@ -13,7 +13,6 @@ interface FinalResultsProps {
   selectedAvatar: number;
   teamId: string;
   leader: boolean;
-  finalResultsState: FinalResultsState;
 }
 
 export default function FinalResults({
@@ -23,10 +22,12 @@ export default function FinalResults({
   selectedAvatar,
   teamId,
   leader,
-  finalResultsState,
 }: FinalResultsProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
+  FinalResultsState.CONGRATS
+);
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
@@ -48,6 +49,7 @@ export default function FinalResults({
           isSmallDevice={isSmallDevice}
           selectedAvatar={selectedAvatar}
           leader={leader}
+          setFinalResultsState={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
         />
       );
   }

@@ -15,7 +15,6 @@ import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderSta
 import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaDoubleColumnStyled, BodyContentAreaSingleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import ChooseAnswer from '../components/gameinprogress/ChooseAnswer';
 import DiscussAnswer from '../components/gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
@@ -27,12 +26,14 @@ interface GameInProgressProps {
   questions: IQuestion[];
   currentQuestionIndex?: number | null;
   teamId: string;
+  score: number;
   answerChoices: {
     id: string;
     text: string;
     isCorrectAnswer: boolean;
     reason: string;
   }[];
+  addTeamAnswerToTeamMember: (question: IQuestion, answerText: string, currentState: GameSessionState) => void;
 }
 
 export default function GameInProgress({
@@ -42,7 +43,9 @@ export default function GameInProgress({
   questions,
   currentQuestionIndex,
   teamId,
+  score,
   answerChoices,
+  addTeamAnswerToTeamMember
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -87,7 +90,8 @@ export default function GameInProgress({
     setTimerIsPaused(true);
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = (answerText: string) => {
+    addTeamAnswerToTeamMember(currentQuestion, answerText, currentState);
     setIsSubmitted(true);
   };
 
@@ -149,8 +153,7 @@ export default function GameInProgress({
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
-          newPoints={10}
-          score={120}
+          score={score}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

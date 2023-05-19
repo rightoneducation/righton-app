@@ -31,6 +31,8 @@ interface PhaseResultsProps {
     text: string;
     isCorrectAnswer: boolean;
   }[];
+  score: number;
+  handleUpdateScore: (newScore: number) => void;
 }
 
 /**
@@ -58,11 +60,11 @@ export default function PhaseResults({
   teamId,
   gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
   answerChoices,
+  score,
+  handleUpdateScore
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
-  const originalScore = currentTeam?.score ?? 0;
-  const [scoreFooter, setScoreFooter] = useState(originalScore); // eslint-disable-line @typescript-eslint/no-unused-vars
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
@@ -122,7 +124,8 @@ export default function PhaseResults({
             gameSession.questions[currentQuestionIndex ?? 0],
             currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
           )}
-          score={scoreFooter}
+          score={score}
+          handleUpdateScore={handleUpdateScore}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

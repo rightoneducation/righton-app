@@ -10,6 +10,7 @@ import {
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next';
 import { AnswerState } from '../../lib/PlayModels';
 import QuestionCard from '../QuestionCard';
 import DiscussAnswerCard from '../DiscussAnswerCard';
@@ -42,6 +43,7 @@ export default function DiscussAnswer({
   currentQuestion,
 }: DiscussAnswerProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const correctAnswer = answerChoices?.find((answer) => answer.isCorrectAnswer);
   const correctIndex = answerChoices?.findIndex(
     (answer) => answer.isCorrectAnswer
@@ -62,7 +64,7 @@ export default function DiscussAnswer({
           textAlign: 'center',
         }}
       >
-        Question and Correct Answer
+        {t('gameinprogress.discussanswer.questionanswercolumn')}
       </Typography>
       <ScrollBoxStyled>
         <Stack spacing={2}>
@@ -89,7 +91,7 @@ export default function DiscussAnswer({
               opacity: 0.5,
             }}
           >
-            Scroll to the left to view incorrect answers.
+            {t('gameinprogress.general.swipealert')}
           </Typography>
         )}
       </ScrollBoxStyled>
@@ -106,7 +108,7 @@ export default function DiscussAnswer({
           textAlign: 'center',
         }}
       >
-        Incorrect Answers
+        {t('gameinprogress.discussanswer.incorrectanswercolumn')}
       </Typography>
       <ScrollBoxStyled>
         <Stack spacing={2}>
