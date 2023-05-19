@@ -50,13 +50,11 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
-        <Box sx={{ position: 'absolute', height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <RejoinModal 
-            handleModalButtonOnClick={handleModalButtonOnClick}
-            isModalVisible={isModalVisible} 
-            setIsModalVisible={setIsModalVisible}
-          />
-        </Box>
+        <RejoinModal 
+          handleModalButtonOnClick={handleModalButtonOnClick}
+          isModalVisible={isModalVisible} 
+          setIsModalVisible={setIsModalVisible}
+        />
         <StackContainer spacing={5}>
           <Stack sx={{ alignItems: 'center' }} spacing={2}>
             <img
