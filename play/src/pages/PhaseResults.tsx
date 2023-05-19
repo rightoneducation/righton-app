@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   GameSessionState,
   IGameSession,
@@ -61,7 +61,7 @@ export default function PhaseResults({
   gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
   answerChoices,
   score,
-  handleUpdateScore
+  handleUpdateScore,
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);

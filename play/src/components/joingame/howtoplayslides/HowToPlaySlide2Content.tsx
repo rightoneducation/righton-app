@@ -15,7 +15,7 @@ import HowToPlay_Screenshot2 from '../../../img/HowToPlay_Screenshot2.png';
 export default function HowToPlaySlide2Content() {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <>
       <OverlayContainerStyled>

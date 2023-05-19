@@ -24,7 +24,6 @@ interface LeaderboardProps {
   currentState: GameSessionState;
   teamAvatar: number;
   teamId: string;
-  score: number;
   isSmallDevice: boolean;
 }
 
@@ -33,15 +32,12 @@ export default function Leaderboard({
   currentState,
   teamAvatar,
   teamId,
-  score,
   isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
   const teamSorter = (inputTeams: ITeam[]) => {
-    inputTeams.sort((a, b) => (
-      b.score - a.score
-    ));
-    return teams!;
+    inputTeams.sort((a, b) => b.score - a.score);
+    return teams!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
   };
 
   let sortedTeams: ITeam[] = [];
@@ -51,21 +47,21 @@ export default function Leaderboard({
 
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
   // ref req'd for height of container
-  const containerRef = useRef<HTMLDivElement>(null); 
+  const containerRef = useRef<HTMLDivElement>(null);
   // ref req'd for height of item
   const itemRef = useRef<HTMLDivElement>(null);
   // height of subcontainer
   const [subContainerHeight, setSubContainerHeight] = useState<number>(0);
 
   useEffect(() => {
-     // check if the container element has been loaded yet
+    // check if the container element has been loaded yet
     if (containerRef.current && itemRef.current) {
       // get height of container
-      const containerHeight = containerRef.current.clientHeight; 
+      const containerHeight = containerRef.current.clientHeight;
       // get height of item
-      const itemHeight = itemRef.current.clientHeight; 
+      const itemHeight = itemRef.current.clientHeight;
       // adjust height of subcontainer to be a multiple of the item height
-      setSubContainerHeight(containerHeight - (containerHeight % itemHeight)); 
+      setSubContainerHeight(containerHeight - (containerHeight % itemHeight));
     }
   }, [containerRef.current?.clientHeight, subContainerHeight]); // updates whenever the container is resized
 

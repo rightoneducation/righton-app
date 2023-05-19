@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
@@ -49,14 +49,13 @@ interface ScoreIndicatorProps {
 export default function ScoreIndicator({
   newPoints,
   score,
-  handleUpdateScore
+  handleUpdateScore,
 }: ScoreIndicatorProps) {
-
   // adds an eventLister to add the new points to the existing score when the animation completes
   useEffect(() => {
     const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
-      if (newPoints && newPoints > 0 && handleUpdateScore){
+      if (newPoints && newPoints > 0 && handleUpdateScore) {
         handleUpdateScore(score + newPoints);
       }
     };

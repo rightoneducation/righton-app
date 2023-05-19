@@ -75,7 +75,7 @@ export default function EnterPlayerName({
                 autoComplete="off"
                 placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                 onChange={(event) => setFirstName(event.target.value)}
-                onFocus={(event)=> setShouldShowError(false)}
+                onFocus={() => setShouldShowError(false)}
                 value={firstName}
                 InputProps={{
                   disableUnderline: true,
@@ -97,7 +97,7 @@ export default function EnterPlayerName({
                 autoComplete="off"
                 placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                 onChange={(event) => setLastName(event.target.value)}
-                onFocus={(event)=> setShouldShowError(false)}
+                onFocus={() => setShouldShowError(false)}
                 value={lastName}
                 InputProps={{
                   disableUnderline: true,
@@ -119,31 +119,31 @@ export default function EnterPlayerName({
             {t('joingame.playername.button')}
           </Typography>
         </IntroButtonStyled>
-          <PaddedContainer>
-            <Typography
-              variant="h2"
-              sx={{
-                textAlign: 'center',
-                marginBottom: `${theme.sizing.smallPadding}px`,
-              }}
-            >
-              {t('joingame.playername.description1')}
-            </Typography>
+        <PaddedContainer>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: 'center',
+              marginBottom: `${theme.sizing.smallPadding}px`,
+            }}
+          >
+            {t('joingame.playername.description1')}
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{ fontWeight: 400, textAlign: 'center' }}
+          >
+            {t('joingame.playername.description2')}
+          </Typography>
+          {shouldShowError && (
             <Typography
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
-              {t('joingame.playername.description2')}
+              Invalid Input.
             </Typography>
-            { shouldShowError && ( 
-              <Typography
-                variant="h2"
-                sx={{ fontWeight: 400, textAlign: 'center' }}
-              >
-                Invalid Input.
-              </Typography>
-            )}
-          </PaddedContainer>
+          )}
+        </PaddedContainer>
       </StackContainer>
     </BackgroundContainerStyled>
   );

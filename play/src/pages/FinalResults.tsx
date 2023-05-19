@@ -25,9 +25,10 @@ export default function FinalResults({
 }: FinalResultsProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
-  FinalResultsState.CONGRATS
-);
+  const [finalResultsState, setFinalResultsState] = useState(
+    // eslint-disable-line @typescript-eslint/no-unused-vars
+    FinalResultsState.CONGRATS
+  );
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
@@ -49,7 +50,9 @@ export default function FinalResults({
           isSmallDevice={isSmallDevice}
           selectedAvatar={selectedAvatar}
           leader={leader}
-          setFinalResultsState={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
+          setFinalResultsState={() =>
+            setFinalResultsState(FinalResultsState.LEADERBOARD)
+          }
         />
       );
   }

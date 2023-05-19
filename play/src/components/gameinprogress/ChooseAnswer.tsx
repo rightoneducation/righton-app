@@ -1,6 +1,6 @@
 import React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Box, Typography, Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Typography, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -47,7 +47,7 @@ export default function ChooseAnswer({
           textAlign: 'center',
         }}
       >
-       {t('gameinprogress.chooseanswer.questioncolumn')}
+        {t('gameinprogress.chooseanswer.questioncolumn')}
       </Typography>
       <ScrollBoxStyled>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -88,30 +88,30 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
-         {isSubmitted ? 
-        <>
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 700,
-              textAlign: 'center',
-              marginTop: `${theme.sizing.largePadding}px`,
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou1')}
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 700,
-              textAlign: 'center',
-              marginTop: `${theme.sizing.largePadding}px`,
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou2')}
-          </Typography>
-        </>
-        : null}
+        {isSubmitted ? (
+          <>
+            <Typography
+              variant="body1"
+              sx={{
+                fontWeight: 700,
+                textAlign: 'center',
+                marginTop: `${theme.sizing.largePadding}px`,
+              }}
+            >
+              {t('gameinprogress.chooseanswer.answerthankyou1')}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                fontWeight: 700,
+                textAlign: 'center',
+                marginTop: `${theme.sizing.largePadding}px`,
+              }}
+            >
+              {t('gameinprogress.chooseanswer.answerthankyou2')}
+            </Typography>
+          </>
+        ) : null}
       </ScrollBoxStyled>
     </>
   );
@@ -119,7 +119,7 @@ export default function ChooseAnswer({
   return (
     <BodyContentAreaDoubleColumnStyled
       container
-      spacing = {isSmallDevice ? 0 : 2}
+      spacing={isSmallDevice ? 0 : 2}
     >
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         {isSmallDevice ? (

@@ -13,7 +13,7 @@ import HowToPlay_Screenshot4 from '../../../img/HowToPlay_Screenshot4.png';
 export default function HowToPlaySlide4Content() {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <>
       <OverlayContainerStyled>

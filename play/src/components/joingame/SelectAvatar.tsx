@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
@@ -136,7 +136,9 @@ export default function SelectAvatar({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>{t('joingame.selectavatar.button')}</GamePlayButtonStyled>
+          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>
+            {t('joingame.selectavatar.button')}
+          </GamePlayButtonStyled>
         </BottomContainer>
       </StackContainer>
     </BackgroundContainerStyled>
