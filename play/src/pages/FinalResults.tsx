@@ -38,7 +38,6 @@ export default function FinalResults({
           currentState={currentState}
           teamAvatar={selectedAvatar}
           teamId={teamId}
-          score={score}
           isSmallDevice={isSmallDevice}
         />
       );
@@ -47,7 +46,6 @@ export default function FinalResults({
       return (
         <Congrats
           score={score}
-          isSmallDevice={isSmallDevice}
           selectedAvatar={selectedAvatar}
           leader={leader}
           setFinalResultsState={() =>
