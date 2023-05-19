@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { JoinGameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import RejoinModal from '../RejoinModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
 
@@ -40,9 +41,22 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
+  const handleModalButtonOnClick = () => {
+    console.log("Click");
+  };
+
+  const [isModalVisible, setIsModalVisible] = React.useState(true);
+
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
+        <Box sx={{ position: 'absolute', height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <RejoinModal 
+            handleModalButtonOnClick={handleModalButtonOnClick}
+            isModalVisible={isModalVisible} 
+            setIsModalVisible={setIsModalVisible}
+          />
+        </Box>
         <StackContainer spacing={5}>
           <Stack sx={{ alignItems: 'center' }} spacing={2}>
             <img

@@ -4,6 +4,12 @@
       "title": "¡Liberando el potencial de cada estudiante en matemáticas!",
       "button": "Unete al juego"
     },
+    "rejoinmodal": {
+      "title1": "Hemos detectado que te desconectaron de un juego en curso.",
+      "title2": "¿Te gustaría volver a unirte?",
+      "button1": "Sí",
+      "button2": "No"
+    },
     "gamecode": {
       "title": "Ingrese el código del juego",
       "button": "Unirse",
