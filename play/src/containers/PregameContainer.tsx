@@ -7,19 +7,19 @@ import {
   isNullOrUndefined,
   GameSessionState,
 } from '@righton/networking';
-import SplashScreen from '../pages/joingame/SplashScreen';
-import EnterGameCode from '../pages/joingame/EnterGameCode';
-import EnterPlayerName from '../pages/joingame/EnterPlayerName';
-import SelectAvatar from '../pages/joingame/SelectAvatar';
-import HowToPlay from '../pages/joingame/HowToPlay';
+import SplashScreen from '../pages/pregame/SplashScreen';
+import EnterGameCode from '../pages/pregame/EnterGameCode';
+import EnterPlayerName from '../pages/pregame/EnterPlayerName';
+import SelectAvatar from '../pages/pregame/SelectAvatar';
+import HowToPlay from '../pages/pregame/HowToPlay';
 import { JoinGameState, JoinBasicGameData } from '../lib/PlayModels';
 import { isGameCodeValid, isNameValid } from '../lib/HelperFunctions';
 
-interface JoinGameFinished {
-  handleJoinGameFinished: (JoinBasicGameData: JoinBasicGameData) => void;
+interface PregameFinished {
+  handlePregameFinished: (joinBasicGameData: JoinBasicGameData) => void;
 }
 
-export default function JoinGame({ handleJoinGameFinished }: JoinGameFinished) {
+export default function Pregame({ handlePregameFinished }: PregameFinished) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const apiClient = new ApiClient(Environment.Staging);
@@ -73,7 +73,7 @@ export default function JoinGame({ handleJoinGameFinished }: JoinGameFinished) {
         lastName,
         selectedAvatar,
       };
-      handleJoinGameFinished(joinBasicGameData);
+      handlePregameFinished(joinBasicGameData);
       setJoinGameState(JoinGameState.HOW_TO_PLAY);
     }
   };

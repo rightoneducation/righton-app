@@ -6,7 +6,7 @@ import {
   IQuestion,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import JoinGameContainer from './JoinGameContainer';
+import PregameContainer from './PregameContainer';
 import GameInProgressContainer from './GameInProgressContainer';
 import { JoinBasicGameData } from '../lib/PlayModels';
 
@@ -109,8 +109,8 @@ export default function GameSessionContainer({
     case GameSessionState.TEAMS_JOINING:
     case GameSessionState.FINISHED:
       return (
-        <JoinGameContainer
-          handleJoinGameFinished={(joinBasicGameData) =>
+        <PregameContainer
+          handlePregameFinished={(joinBasicGameData: JoinBasicGameData) =>
             handleJoinBasicGameFinished(joinBasicGameData)
           }
         />
