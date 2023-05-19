@@ -17,7 +17,7 @@ interface ChooseAnswerProps {
   questionUrl: string;
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: () => void;
+  handleSubmitAnswer: (answerText: string) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
