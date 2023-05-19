@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
@@ -26,37 +27,45 @@ export default function AnswerCard({
   handleSelectAnswer,
 }: AnswerCardProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
   const correctText = (
     <Box display="inline" sx={{ textAlign: 'center' }}>
       <Typography variant="h4" display="inline">
-        Choose the
+        {t('gameinprogress.chooseanswer.correcttext1')}
       </Typography>
       <Typography
         variant="h4"
         display="inline"
         sx={{ color: `${theme.palette.primary.green}` }}
       >
-        correct answer
+         &nbsp;{t('gameinprogress.chooseanswer.correcttext2')}
       </Typography>
     </Box>
   );
   const trickText = (
     <Box display="inline" sx={{ textAlign: 'center' }}>
       <Typography variant="h4" display="inline">
-        What do you think is the most popular&nbsp;
+      {t('gameinprogress.chooseanswer.incorrecttext1')}&nbsp;
       </Typography>
       <Typography
         display="inline"
         variant="h4"
         sx={{ color: `${theme.palette.primary.red}` }}
       >
-        trick answer&nbsp;
+        {t('gameinprogress.chooseanswer.incorrecttext2')}&nbsp;
       </Typography>
       <Typography variant="h4" display="inline">
-        among your class?
+        {t('gameinprogress.chooseanswer.incorrecttext3')}
       </Typography>
     </Box>
   );
+  const getAnswerStatus = (answer: {text: string, isCorrectAnswer: boolean}, index: number)=> {
+    if (selectedAnswer === index)
+      return AnswerState.SELECTED;
+    if (answer.isCorrectAnswer && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+      return AnswerState.CORRECT;
+    return AnswerState.DEFAULT;
+  };
 
   return (
     <BodyCardStyled elevation={5}>
@@ -68,9 +77,7 @@ export default function AnswerCard({
           {answers?.map((answer, index) => (
             <AnswerSelector
               answerStatus={
-                selectedAnswer === index
-                  ? AnswerState.SELECTED
-                  : AnswerState.DEFAULT
+                getAnswerStatus(answer, index)
               }
               isSubmitted={isSubmitted}
               index={index}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
 import MagicHat from '../img/MagicHat.svg';
 
@@ -26,6 +27,7 @@ const title2 = 'Pick the answer you think tricked most of your classmates!';
 
 export default function StartPhase2() {
   const theme = useTheme();
+  const { t } = useTranslation();
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
@@ -36,7 +38,7 @@ export default function StartPhase2() {
               weight: 700,
             }}
           >
-            {title}
+            {t('gameinprogress.startphase2.title')}
           </TypographyStyled>
           <TypographyStyled
             variant="body2"
@@ -44,7 +46,7 @@ export default function StartPhase2() {
               color: `${theme.palette.primary.main}`,
             }}
           >
-            {subtitle}
+            {t('gameinprogress.startphase2.subtitle1')}
           </TypographyStyled>
         </Stack>
         <img
@@ -57,7 +59,7 @@ export default function StartPhase2() {
           alt="Question"
         />
         <TypographyStyled variant="h2">
-          {title2}
+          {t('gameinprogress.startphase2.subtitle2')}
         </TypographyStyled>
       </StackContainer>
     </BackgroundContainerStyled>

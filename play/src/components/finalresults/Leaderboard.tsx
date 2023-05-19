@@ -114,8 +114,7 @@ export default function Leaderboard({
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
-          newPoints={0}
-          score={score}
+          score={currentTeam ? currentTeam.score : 0}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

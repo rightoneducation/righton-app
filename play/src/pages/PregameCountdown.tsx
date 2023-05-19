@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
 import RadialTimer from '../components/RadialTimer';
 
@@ -28,8 +29,8 @@ export default function StartPhase2({
   handlePregameTimerFinished,
 }: StartPhase2Props) {
   const theme = useTheme();
-  const subtitle1 = 'Your question \n will appear soon.';
-  const subtitle2 = 'Pick the correct answer!';
+  const { t } = useTranslation();
+
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
@@ -48,8 +49,8 @@ export default function StartPhase2({
           timerStartInSeconds={3}
           handlePregameTimerFinished={handlePregameTimerFinished}
         />
-        <TypographyStyled variant="h2">{subtitle1}</TypographyStyled>
-        <TypographyStyled variant="h2">{subtitle2}</TypographyStyled>
+        <TypographyStyled variant="h2">{t('pregamecountdown.subtitle1')}</TypographyStyled>
+        <TypographyStyled variant="h2">{t('pregamecountdown.subtitle2')}</TypographyStyled>
       </StackContainer>
     </BackgroundContainerStyled>
   );
