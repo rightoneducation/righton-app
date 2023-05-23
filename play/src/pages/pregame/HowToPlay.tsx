@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
@@ -35,9 +35,18 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-export default function JoinGame() {
+interface HowToPlayProps {
+  handleSubscribeToGame: () => void;
+}
+
+export default function HowToPlay({handleSubscribeToGame}: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+
+  // subscribe to game on load of Hpw To Play page
+  useEffect(() => { 
+    handleSubscribeToGame();
+  },[]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <BackgroundContainerStyled>

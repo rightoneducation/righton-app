@@ -1,3 +1,4 @@
+import { IGameSession } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -34,16 +35,27 @@ export enum AnswerState {
   PREVIOUS = 'PREVIOUS',
 }
 
+/** 
+ * OverallGameState handles the state changes between the Pregame or GameInProgress phases
+ * Pregame: user-controlled, joining the game
+ * GameInProgress: subscription-controlled, playing the game
+ * @enum OverallGameState
+ */
+export enum OverallGameState {
+  PREGAME = 'PREGAME',
+  GAME_IN_PROGRESS = 'GAME_IN_PROGRESS',
+}
+
 /**
- * JoinGameState handles the substate changes for GameSessionState.JOIN_GAME
- * @enum JoingGameState
+ * PregameState handles the substate changes for GameSessionState.JOIN_GAME
+ * @enum PregameState
  * @param {string} SPLASH_SCREEN - initial screen for game
  * @param {string} ENTER_GAME_CODE - screen for entering game code
  * @param {string} ENTER_NAME - screen for entering player name
  * @param {string} SELECT_AVATAR - screen for selecting player avatar
  * @param {string} HOW_TO_PLAY - screen for displaying how to play
  */
-export enum JoinGameState {
+export enum PregameState {
   SPLASH_SCREEN = 'SPLASH_SCREEN',
   ENTER_GAME_CODE = 'ENTER_GAME_CODE',
   ENTER_NAME = 'ENTER_NAME',
@@ -53,7 +65,7 @@ export enum JoinGameState {
 
 /**
  * FinalResultsState handles the substate changes for GameSessionState.FINAL_RESULTS
- * @enum JoingGameState
+ * @enum PregameState
  * @param {string} CONGRATS - screen for displaying congrats message
  * @param {string} LEADERBOARD - screen for displaying leaderboard
  */
@@ -69,10 +81,10 @@ export enum FinalResultsState {
  * @param {string} lastName - last name of player
  * @param {number} selectedAvatar - avatar selected by player
  */
-export interface JoinBasicGameData {
-  gameSessionId: string;
-  firstName: string;
-  lastName: string;
+export interface PregameModel {
+  gameSession: IGameSession;
+  teamId: string;
+  teamMemberId: string;
   selectedAvatar: number;
 }
 

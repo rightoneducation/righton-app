@@ -1,43 +1,38 @@
 import React, { useState } from 'react';
 import {
+  ApiClient,
   IGameSession,
   IChoice,
   IQuestion,
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import HowToPlay from '../pages/pregame/HowToPlay';
 import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import FinalResults from '../pages/FinalResults';
 import StartPhase2 from '../pages/StartPhase2';
+import { PregameModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
-  gameSession: IGameSession;
-  teamId: string;
-  currentState: GameSessionState;
-  setCurrentState: (state: GameSessionState) => void;
-  teamAvatar: number;
-  addTeamAnswerToTeamMember: (
-    question: IQuestion,
-    answerText: string,
-    gameSessionState: GameSessionState
-  ) => void;
-  updateTeamScore: (teamId: string, score: number) => void;
+  pregameModel: PregameModel;
+  apiClient: ApiClient;
+  handleGameInProgressFinished: () => void;
 }
 
 export default function GameInProgressContainer({
-  gameSession,
-  teamId,
-  currentState,
-  teamAvatar,
-  addTeamAnswerToTeamMember,
-  updateTeamScore,
+  pregameModel,
+  apiClient,
+  handleGameInProgressFinished,
 }: GameInProgressContainerProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
+  const [gameSession, setGameSession] = useState<IGameSession>(pregameModel.gameSession);
+  const [currentState, setCurrentState] = useState<GameSessionState>(
+    GameSessionState.TEAMS_JOINING);
   const currentQuestion =
     gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession?.teams?.find((team) => team.id === teamId);
+  const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
@@ -47,17 +42,65 @@ export default function GameInProgressContainer({
     isCorrectAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
   }));
+  
+  // triggered on initial load of HotToPlay page via useEffect
+  const handleSubscribeToGame = () => {
+    let gameSessionSubscription: any | null = null; // eslint-disable-line @typescript-eslint/no-explicit-any
+    gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+      gameSession.id,
+      (response) => {
+        if (response.currentState === GameSessionState.FINISHED) {
+          handleGameInProgressFinished();
+        }
+        setGameSession({ ...gameSession, ...response });
+        setCurrentState(response.currentState);
+      }
+    );
+    console.debug(`subscribed to game session with id: ${gameSession.id}`);
+    return () => {
+      gameSessionSubscription?.unsubscribe();
+    };
+  };
 
+  
+  const addTeamAnswerToTeamMember = async (
+    question: IQuestion,
+    answerText: string,
+    gameSessionState: GameSessionState
+  ) => {
+    try {
+      await apiClient.addTeamAnswer(
+        pregameModel.teamMemberId,
+        question.id,
+        answerText,
+        gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        gameSessionState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateTeamScore = async (inputTeamId: string, inputScore: number) => {
+    try {
+      await apiClient.updateTeam({ id: inputTeamId, score: inputScore });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   const handlePregameTimerFinished = () => {
     setIsPregameCountdown(false);
   };
 
   const handleUpdateScore = (inputScore: number) => {
-    updateTeamScore(teamId, inputScore);
+    updateTeamScore(pregameModel.teamId, inputScore);
     setScore(inputScore);
   };
 
   switch (currentState) {
+    case GameSessionState.TEAMS_JOINING:
+      return <HowToPlay handleSubscribeToGame={handleSubscribeToGame}/>;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown
@@ -66,9 +109,9 @@ export default function GameInProgressContainer({
       ) : (
         <GameInProgress
           {...gameSession}
-          teamAvatar={teamAvatar}
+          teamAvatar={pregameModel.selectedAvatar}
           answerChoices={answerChoices}
-          teamId={teamId}
+          teamId={pregameModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
         />
@@ -79,9 +122,9 @@ export default function GameInProgressContainer({
       return (
         <GameInProgress
           {...gameSession}
-          teamAvatar={teamAvatar}
+          teamAvatar={pregameModel.selectedAvatar}
           answerChoices={answerChoices}
-          teamId={teamId}
+          teamId={pregameModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
         />
@@ -93,8 +136,8 @@ export default function GameInProgressContainer({
           {...gameSession}
           gameSession={gameSession}
           currentQuestionIndex={gameSession!.currentQuestionIndex ?? 0} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamAvatar={teamAvatar}
-          teamId={teamId}
+          teamAvatar={pregameModel.selectedAvatar}
+          teamId={pregameModel.teamId}
           answerChoices={answerChoices}
           score={score}
           handleUpdateScore={handleUpdateScore}
@@ -109,8 +152,8 @@ export default function GameInProgressContainer({
           {...gameSession}
           currentState={currentState}
           score={score}
-          selectedAvatar={teamAvatar}
-          teamId={teamId}
+          selectedAvatar={pregameModel.selectedAvatar}
+          teamId={pregameModel.teamId}
           leader={leader}
         />
       );

@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ApiClient,
   Environment,
   isNullOrUndefined,
+  IGameSession,
   GameSessionState,
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import HowToPlay from '../pages/pregame/HowToPlay';
-import { JoinGameState, JoinBasicGameData } from '../lib/PlayModels';
-import { isGameCodeValid, isNameValid } from '../lib/HelperFunctions';
+import { PregameState, PregameModel } from '../lib/PlayModels';
+import { isGameCodeValid } from '../lib/HelperFunctions';
 
 interface PregameFinished {
-  handlePregameFinished: (joinBasicGameData: JoinBasicGameData) => void;
+  handlePregameFinished: (pregameModel: PregameModel) => void;
 }
 
 export default function Pregame({ handlePregameFinished }: PregameFinished) {
@@ -24,16 +25,18 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const apiClient = new ApiClient(Environment.Staging);
 
-  const [joinGameState, setJoinGameState] = useState<JoinGameState>(
-    JoinGameState.SPLASH_SCREEN
+  const [pregameState, setPregameState] = useState<PregameState>(
+    PregameState.SPLASH_SCREEN
   );
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );
-  const [gameSessionId, setGameSessionId] = useState('');
+  // TODO: coord with u/x for modal to pop up this error message
+  const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
@@ -57,31 +60,65 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
       ) {
         return false;
       }
-      setGameSessionId(gameSessionResponse.id);
-      setJoinGameState(JoinGameState.ENTER_NAME);
+      setGameSession(gameSessionResponse);
+      setPregameState(PregameState.ENTER_NAME);
       return true;
     } catch (error) {
       return false;
     }
   };
 
-  const handleAvatarSelectClick = () => {
-    if (isNameValid(firstName) && isNameValid(lastName)) {
-      const joinBasicGameData = {
-        gameSessionId,
-        firstName,
-        lastName,
-        selectedAvatar,
-      };
-      handlePregameFinished(joinBasicGameData);
-      setJoinGameState(JoinGameState.HOW_TO_PLAY);
+  const addTeamToGame = async () => {
+    const teamName = `${firstName} ${lastName}`;
+    try {
+      const team = await apiClient.addTeamToGameSessionId(
+        gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        teamName,
+        null
+      );
+      if (!team) {
+        setAPIError(true);
+      } else {
+        try {
+          const teamMember = await apiClient.addTeamMemberToTeam(team.id, true, uuidv4());
+          if (!teamMember) {
+            setAPIError(true);
+          }
+          return { teamId: team.id, teamMemberId: teamMember.id };
+        } catch (error) {
+          setAPIError(true);
+        }
+      }
+    } catch (error) {
+      setAPIError(true);
+    }
+    return undefined;
+  };
+  
+  const handleAvatarSelectClick = async () => {
+    try {
+      if (gameSession) {
+        const teamInfo = await addTeamToGame();
+        if (!teamInfo) {
+          setAPIError(true);
+          return;
+        }
+        const pregameModel: PregameModel = {
+          gameSession,
+          teamId: teamInfo.teamId,
+          teamMemberId: teamInfo.teamMemberId,
+          selectedAvatar,
+        };
+        handlePregameFinished(pregameModel);
+      }
+    }
+    catch (error) {
+      setAPIError(true);
     }
   };
 
-  switch (joinGameState) {
-    case JoinGameState.HOW_TO_PLAY:
-      return <HowToPlay />;
-    case JoinGameState.SELECT_AVATAR:
+  switch (pregameState) {
+    case PregameState.SELECT_AVATAR:
       return (
         <SelectAvatar
           selectedAvatar={selectedAvatar}
@@ -92,7 +129,7 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
           handleAvatarSelectClick={handleAvatarSelectClick}
         />
       );
-    case JoinGameState.ENTER_NAME:
+    case PregameState.ENTER_NAME:
       return (
         <EnterPlayerName
           isSmallDevice={isSmallDevice}
@@ -100,13 +137,13 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
-          setJoinGameState={setJoinGameState}
+          setPregameState={setPregameState}
         />
       );
-    case JoinGameState.ENTER_GAME_CODE:
+    case PregameState.ENTER_GAME_CODE:
       return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
-    case JoinGameState.SPLASH_SCREEN:
+    case PregameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen setJoinGameState={setJoinGameState} />;
+      return <SplashScreen setPregameState={setPregameState} />;
   }
 }
