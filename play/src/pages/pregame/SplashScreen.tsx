@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { PregameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
-import RejoinModal from '../RejoinModal';
+import RejoinModal from '../../components/RejoinModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
 
