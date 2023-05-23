@@ -11,7 +11,7 @@ import HowToPlay from '../pages/pregame/HowToPlay';
 import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
-import FinalResults from '../pages/FinalResults';
+import FinalResultsContainer from './FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';
 import { PregameModel } from '../lib/PlayModels';
 
@@ -148,7 +148,7 @@ export default function GameInProgressContainer({
     case GameSessionState.FINAL_RESULTS:
     default:
       return (
-        <FinalResults
+        <FinalResultsContainer
           {...gameSession}
           currentState={currentState}
           score={score}

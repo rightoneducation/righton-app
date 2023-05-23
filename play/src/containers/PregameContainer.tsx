@@ -4,7 +4,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
 import {
   ApiClient,
-  Environment,
   isNullOrUndefined,
   IGameSession,
   GameSessionState,
@@ -15,15 +14,15 @@ import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
 import { PregameState, PregameModel } from '../lib/PlayModels';
 import { isGameCodeValid } from '../lib/HelperFunctions';
+import GameInProgressContainer from './GameInProgressContainer';
 
 interface PregameFinished {
-  handlePregameFinished: (pregameModel: PregameModel) => void;
+  apiClient: ApiClient;
 }
 
-export default function Pregame({ handlePregameFinished }: PregameFinished) {
+export default function Pregame({ apiClient }: PregameFinished) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const apiClient = new ApiClient(Environment.Staging);
 
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
@@ -35,6 +34,7 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );
+  const [pregameModel, setPregameModel] = useState<PregameModel | null>(null);
   // TODO: coord with u/x for modal to pop up this error message
   const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
 
@@ -103,13 +103,13 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
           setAPIError(true);
           return;
         }
-        const pregameModel: PregameModel = {
+        setPregameModel({
           gameSession,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
-        };
-        handlePregameFinished(pregameModel);
+        });
+        setPregameState(PregameState.FINISHED);
       }
     }
     catch (error) {
@@ -117,7 +117,20 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
     }
   };
 
+  const handleGameInProgressFinished = () => {
+    setPregameState(PregameState.SPLASH_SCREEN);
+  };
+
   switch (pregameState) {
+    case PregameState.FINISHED:
+      return (
+        pregameModel && 
+        <GameInProgressContainer
+          apiClient={apiClient}
+          pregameModel={pregameModel} // eslint-disable-line @typescript-eslint/no-non-null-assertion
+          handleGameInProgressFinished={handleGameInProgressFinished}
+        />
+      )
     case PregameState.SELECT_AVATAR:
       return (
         <SelectAvatar
