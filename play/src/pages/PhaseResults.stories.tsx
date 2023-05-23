@@ -31,12 +31,14 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  id: uuidv4(),
-  text: choice.text,
-  isCorrectAnswer: choice.isAnswer,
-  reason: choice.reason ?? '',
-}));
+const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  (choice: IChoice) => ({
+    id: uuidv4(),
+    text: choice.text,
+    isCorrectAnswer: choice.isAnswer,
+    reason: choice.reason ?? '',
+  })
+);
 
 export const PhaseOne = Template.bind({});
 PhaseOne.args = {

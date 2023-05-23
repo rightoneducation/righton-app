@@ -73,11 +73,11 @@ export default function ResultSelector({
         height: `${theme.sizing.smallPadding}px`,
         paddingTop: '2px',
         // disable touch callout when longclicking on image
-        WebkitTouchCallout: 'none', 
+        WebkitTouchCallout: 'none',
       }}
       alt="SelectedAnswerImage"
-      // disable context menu when longclicking on image 
-      onContextMenu={handleContextMenu} 
+      // disable context menu when longclicking on image
+      onContextMenu={handleContextMenu}
     />
   );
 
@@ -121,15 +121,20 @@ export default function ResultSelector({
           </Typography>
         )}
         {answerStatus !== AnswerState.PREVIOUS &&
-          answerStatus !== AnswerState.DEFAULT && (
-            answerStatus === AnswerState.SELECTED ? (
-            <Tooltip title='Your Answer' placement="top" arrow enterTouchDelay={0} leaveTouchDelay={300}>
-             {image}
+          answerStatus !== AnswerState.DEFAULT &&
+          (answerStatus === AnswerState.SELECTED ? (
+            <Tooltip
+              title="Your Answer"
+              placement="top"
+              arrow
+              enterTouchDelay={0}
+              leaveTouchDelay={300}
+            >
+              {image}
             </Tooltip>
-            ) : (
-              image
-            )
-          )}
+          ) : (
+            image
+          ))}
       </Box>
     </>
   );

@@ -41,10 +41,8 @@ export default function EnterGameCode({
 
   const validateInput = async (inputGameCodeValue: string) => {
     const isGameCodeSuccess = await handleGameCodeClick(inputGameCodeValue);
-    if (!isGameCodeSuccess)
-      setShouldShowError(true);
-    else
-      setShouldShowError(false);
+    if (!isGameCodeSuccess) setShouldShowError(true);
+    else setShouldShowError(false);
   };
 
   return (

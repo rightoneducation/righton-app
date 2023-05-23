@@ -18,12 +18,8 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
   textAlign: `center`,
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
-  whiteSpace: 'pre-wrap'
+  whiteSpace: 'pre-wrap',
 }));
-
-const title = 'Starting Phase 2...';
-const subtitle = 'where the most popular wrong answer wins the most points!';
-const title2 = 'Pick the answer you think tricked most of your classmates!';
 
 export default function StartPhase2() {
   const theme = useTheme();

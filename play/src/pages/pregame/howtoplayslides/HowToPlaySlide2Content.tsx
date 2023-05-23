@@ -10,12 +10,12 @@ import {
 import HowToPlay_Phase1Circle from '../../../img/HowToPlay_Phase1Circle.svg';
 import HowToPlay_GreenMonster from '../../../img/HowToPlay_GreenMonster.svg';
 import HowToPlay_PinkMonster from '../../../img/HowToPlay_PinkMonster.svg';
-import HowToPlay_Screenshot2 from '../../../img/HowToPlay_Screenshot2.svg';
+import HowToPlay_Screenshot2 from '../../../img/HowToPlay_Screenshot2.png';
 
 export default function HowToPlaySlide2Content() {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <>
       <OverlayContainerStyled>

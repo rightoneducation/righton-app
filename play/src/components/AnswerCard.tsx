@@ -38,14 +38,14 @@ export default function AnswerCard({
         display="inline"
         sx={{ color: `${theme.palette.primary.green}` }}
       >
-         &nbsp;{t('gameinprogress.chooseanswer.correcttext2')}
+        &nbsp;{t('gameinprogress.chooseanswer.correcttext2')}
       </Typography>
     </Box>
   );
   const trickText = (
     <Box display="inline" sx={{ textAlign: 'center' }}>
       <Typography variant="h4" display="inline">
-      {t('gameinprogress.chooseanswer.incorrecttext1')}&nbsp;
+        {t('gameinprogress.chooseanswer.incorrecttext1')}&nbsp;
       </Typography>
       <Typography
         display="inline"
@@ -59,10 +59,15 @@ export default function AnswerCard({
       </Typography>
     </Box>
   );
-  const getAnswerStatus = (answer: {text: string, isCorrectAnswer: boolean}, index: number)=> {
-    if (selectedAnswer === index)
-      return AnswerState.SELECTED;
-    if (answer.isCorrectAnswer && currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+  const getAnswerStatus = (
+    answer: { text: string; isCorrectAnswer: boolean },
+    index: number
+  ) => {
+    if (selectedAnswer === index) return AnswerState.SELECTED;
+    if (
+      answer.isCorrectAnswer &&
+      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    )
       return AnswerState.CORRECT;
     return AnswerState.DEFAULT;
   };
@@ -76,9 +81,7 @@ export default function AnswerCard({
         <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
             <AnswerSelector
-              answerStatus={
-                getAnswerStatus(answer, index)
-              }
+              answerStatus={getAnswerStatus(answer, index)}
               isSubmitted={isSubmitted}
               index={index}
               answerText={answer.text}

@@ -12,11 +12,11 @@ const radialGradient =
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
-const secondaryColor = '#8E2E9D'; // placeholder for dark mode
+const secondaryColor = '#8E2E9D'; // eslint-disable-line @typescript-eslint/no-unused-vars
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const playerNameTextColor = '#AEAEAE'; // player name
-const darkPurpleColor = '#4700B2'; // phase results, selected answer 
+const darkPurpleColor = '#4700B2'; // phase results, selected answer
 const greenColor = '#22AE48'; // answer card title highlight (correct answer phase)
 const redColor = '#FF0000'; // answer card title highlight (trickiest answer phase)
 const blueColor = '#22ADFF'; // highlights around selected answer, pagination bullet

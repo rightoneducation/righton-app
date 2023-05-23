@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
-import  AvatarIconStyled  from './AvatarIconStyled';
+import AvatarIconStyled from './AvatarIconStyled';
 import MonsterIcon from '../../img/MonsterIcon0.svg';
 
 export default {
@@ -9,17 +9,16 @@ export default {
   component: AvatarIconStyled,
 } as ComponentMeta<typeof AvatarIconStyled>;
 
-const Template: ComponentStory<typeof AvatarIconStyled> = function AvatarIconStyledTemplate(
-  args
-) {
-  const theme = useTheme();
+const Template: ComponentStory<typeof AvatarIconStyled> =
+  function AvatarIconStyledTemplate(args) {
+    const theme = useTheme();
 
-  return (
-    <ThemeProvider theme={theme}>
-      <AvatarIconStyled src={MonsterIcon} {...args} />
-    </ThemeProvider>
-  );
-};
+    return (
+      <ThemeProvider theme={theme}>
+        <AvatarIconStyled src={MonsterIcon} {...args} />
+      </ThemeProvider>
+    );
+  };
 
 export const Default = Template.bind({});
 Default.args = {

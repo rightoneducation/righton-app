@@ -49,8 +49,12 @@ export default function StartPhase2({
           timerStartInSeconds={3}
           handlePregameTimerFinished={handlePregameTimerFinished}
         />
-        <TypographyStyled variant="h2">{t('pregamecountdown.subtitle1')}</TypographyStyled>
-        <TypographyStyled variant="h2">{t('pregamecountdown.subtitle2')}</TypographyStyled>
+        <TypographyStyled variant="h2">
+          {t('pregamecountdown.subtitle1')}
+        </TypographyStyled>
+        <TypographyStyled variant="h2">
+          {t('pregamecountdown.subtitle2')}
+        </TypographyStyled>
       </StackContainer>
     </BackgroundContainerStyled>
   );

@@ -18,7 +18,7 @@ const StackContainer = styled(Stack)(({ theme }) => ({
   maxWidth: theme.breakpoints.values.xs,
 }));
 
-const SignCard = styled(Box)(({ theme }) => ({
+const SignCard = styled(Box)({
   width: '259px',
   height: '102px',
   background: 'rgba(255, 177, 92, 0.85)',
@@ -26,15 +26,15 @@ const SignCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '-30px'
-}));
+  marginBottom: '-30px',
+});
 
 const MonsterContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-end',
   minHeight: '100px',
-  width:  '150px',
+  width: '150px',
   paddingTop: `${theme.sizing.smallPadding}px`,
 }));
 
@@ -49,7 +49,6 @@ const BottomBox = styled(Box)(({ theme }) => ({
 
 interface CongratsProps {
   score: number;
-  isSmallDevice: boolean;
   selectedAvatar: number;
   leader: boolean;
   setFinalResultsState: (newState: FinalResultsState) => void;
@@ -57,47 +56,76 @@ interface CongratsProps {
 
 export default function Congrats({
   score,
-  isSmallDevice,
   selectedAvatar,
   leader,
-  setFinalResultsState
+  setFinalResultsState,
 }: CongratsProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer spacing={3} > 
-          <Box style={{zIndex:1}}>
-            <Typography variant="h1" sx={{ textAlign: 'center' }}>
+      <StackContainer spacing={3}>
+        <Box style={{ zIndex: 1 }}>
+          <Typography variant="h1" sx={{ textAlign: 'center' }}>
             {t('finalresults.congrats.title')}
-            </Typography>
-            <Typography variant="h1" sx={{ fontSize: '36px', textAlign: 'center', paddingTop: `${theme.sizing.smallPadding}px` }}>
-              {`${score} ${t('finalresults.congrats.points')}`}
-            </Typography>
-          </Box>
-        <Stack style={{zIndex:0 , display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'}}>
+          </Typography>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: '36px',
+              textAlign: 'center',
+              paddingTop: `${theme.sizing.smallPadding}px`,
+            }}
+          >
+            {`${score} ${t('finalresults.congrats.points')}`}
+          </Typography>
+        </Box>
+        <Stack
+          style={{
+            zIndex: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            position: 'relative',
+          }}
+        >
           <SignCard>
-            { leader ? 
-              <Typography variant="h2" sx={{ textAlign: 'center', whiteSpace: 'pre-wrap'}}>
+            {leader ? (
+              <Typography
+                variant="h2"
+                sx={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}
+              >
                 {t('finalresults.congrats.top5')}
               </Typography>
-            :
-              <Typography variant="h6" sx={{ textAlign: 'center'}}>
+            ) : (
+              <Typography variant="h6" sx={{ textAlign: 'center' }}>
                 {t('finalresults.congrats.greatjob')}
               </Typography>
-            }
+            )}
           </SignCard>
-          <MonsterContainer style={{zIndex:0}}>
-            <Monster
-              src={monsterMap[selectedAvatar].handsup}
-              alt="monster"
-            />
+          <MonsterContainer style={{ zIndex: 0 }}>
+            <Monster src={monsterMap[selectedAvatar].handsup} alt="monster" />
           </MonsterContainer>
-          <img src={Podium} alt="podium" style={{position: 'absolute', width: '150px', zIndex: -1, top: '100%', marginTop: '-20px'}}/>
+          <img
+            src={Podium}
+            alt="podium"
+            style={{
+              position: 'absolute',
+              width: '150px',
+              zIndex: -1,
+              top: '100%',
+              marginTop: '-20px',
+            }}
+          />
         </Stack>
-        <BottomBox style={{zIndex:1}}> 
-          <GamePlayButtonStyled onClick={()=>setFinalResultsState(FinalResultsState.LEADERBOARD)}> {t('finalresults.congrats.button')} </GamePlayButtonStyled>
+        <BottomBox style={{ zIndex: 1 }}>
+          <GamePlayButtonStyled
+            onClick={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
+          >
+            {' '}
+            {t('finalresults.congrats.button')}{' '}
+          </GamePlayButtonStyled>
         </BottomBox>
       </StackContainer>
     </BackgroundContainerStyled>

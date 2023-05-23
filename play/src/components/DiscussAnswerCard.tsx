@@ -30,7 +30,9 @@ export default function DiscussAnswerCard({
 }: DiscussAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const resultText = isPlayerCorrect ? t('gameinprogress.discussanswer.correcttext') : t('gameinprogress.discussanswer.nicetrytext');
+  const resultText = isPlayerCorrect
+    ? t('gameinprogress.discussanswer.correcttext')
+    : t('gameinprogress.discussanswer.nicetrytext');
   const correctCard =
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
@@ -100,9 +102,7 @@ export default function DiscussAnswerCard({
               </Box>
             ))
           ) : (
-            <Typography variant="body1">
-              {answerReason}
-            </Typography>
+            <Typography variant="body1">{answerReason}</Typography>
           )}
         </Stack>
       </BodyCardContainerStyled>

@@ -14,7 +14,7 @@
       "title": "Enter Game Code",
       "button": "Join",
       "error1": "We are unable to join this game.",
-      "error2": "Check the Game Code and try again." 
+      "error2": "Check the Game Code and try again."
     },
     "playername": {
       "title": "Enter Your Name",
@@ -23,7 +23,7 @@
       "button": "Enter",
       "description1": "Type in both your first and last name to enter the game.",
       "description2": "This will be used to identify you only during the game, and will not be stored."
-    }, 
+    },
     "selectavatar": {
       "title": "Choose Your Avatar!",
       "button": "Choose"

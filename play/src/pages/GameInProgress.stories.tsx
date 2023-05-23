@@ -31,12 +31,14 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  id: uuidv4(),
-  text: choice.text,
-  isCorrectAnswer: choice.isAnswer,
-  reason: choice.reason ?? '',
-}));
+const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  (choice: IChoice) => ({
+    id: uuidv4(),
+    text: choice.text,
+    isCorrectAnswer: choice.isAnswer,
+    reason: choice.reason ?? '',
+  })
+);
 
 export const ChooseCorrectAnswer = Template.bind({});
 ChooseCorrectAnswer.args = {
@@ -81,4 +83,3 @@ DiscussPhase2.args = {
   teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   answerChoices,
 };
-

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ITeam, GameSessionState } from '@righton/networking';
-import Leaderboard from '../components/finalresults/Leaderboard';
-import Congrats from '../components/finalresults/Congrats';
+import Leaderboard from '../pages/finalresults/Leaderboard';
+import Congrats from '../pages/finalresults/Congrats';
 import { FinalResultsState } from '../lib/PlayModels';
 
-interface FinalResultsProps {
+interface FinalResultsContainerProps {
   teams?: ITeam[];
   currentState: GameSessionState;
   score: number;
@@ -15,19 +15,19 @@ interface FinalResultsProps {
   leader: boolean;
 }
 
-export default function FinalResults({
+export default function FinalResultsContainer({
   teams,
   currentState,
   score,
   selectedAvatar,
   teamId,
   leader,
-}: FinalResultsProps) {
+}: FinalResultsContainerProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const [finalResultsState, setFinalResultsState] = useState( // eslint-disable-line @typescript-eslint/no-unused-vars
-  FinalResultsState.CONGRATS
-);
+  const [finalResultsState, setFinalResultsState] = useState(
+    FinalResultsState.CONGRATS
+  );
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
@@ -37,7 +37,6 @@ export default function FinalResults({
           currentState={currentState}
           teamAvatar={selectedAvatar}
           teamId={teamId}
-          score={score}
           isSmallDevice={isSmallDevice}
         />
       );
@@ -46,10 +45,11 @@ export default function FinalResults({
       return (
         <Congrats
           score={score}
-          isSmallDevice={isSmallDevice}
           selectedAvatar={selectedAvatar}
           leader={leader}
-          setFinalResultsState={() => setFinalResultsState(FinalResultsState.LEADERBOARD)}
+          setFinalResultsState={() =>
+            setFinalResultsState(FinalResultsState.LEADERBOARD)
+          }
         />
       );
   }

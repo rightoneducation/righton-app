@@ -6,7 +6,7 @@ import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyle
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import { isNameValid } from '../../lib/HelperFunctions';
-import { JoinGameState } from '../../lib/PlayModels';
+import { PregameState } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -30,7 +30,7 @@ interface EnterPlayerNameProps {
   setFirstName: (firstName: string) => void;
   lastName: string;
   setLastName: (lastName: string) => void;
-  setJoinGameState: (gameState: JoinGameState) => void;
+  setPregameState: (gameState: PregameState) => void;
 }
 
 export default function EnterPlayerName({
@@ -39,7 +39,7 @@ export default function EnterPlayerName({
   setFirstName,
   lastName,
   setLastName,
-  setJoinGameState,
+  setPregameState,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export default function EnterPlayerName({
 
   const validateInput = () => {
     if (isNameValid(firstName) && isNameValid(lastName))
-      setJoinGameState(JoinGameState.SELECT_AVATAR);
+      setPregameState(PregameState.SELECT_AVATAR);
     else setShouldShowError(true);
   };
 
@@ -75,7 +75,7 @@ export default function EnterPlayerName({
                 autoComplete="off"
                 placeholder={t('joingame.playername.firstnamedefault') ?? ''}
                 onChange={(event) => setFirstName(event.target.value)}
-                onFocus={(event)=> setShouldShowError(false)}
+                onFocus={() => setShouldShowError(false)}
                 value={firstName}
                 InputProps={{
                   disableUnderline: true,
@@ -97,7 +97,7 @@ export default function EnterPlayerName({
                 autoComplete="off"
                 placeholder={t('joingame.playername.lastnamedefault') ?? ''}
                 onChange={(event) => setLastName(event.target.value)}
-                onFocus={(event)=> setShouldShowError(false)}
+                onFocus={() => setShouldShowError(false)}
                 value={lastName}
                 InputProps={{
                   disableUnderline: true,
@@ -119,31 +119,31 @@ export default function EnterPlayerName({
             {t('joingame.playername.button')}
           </Typography>
         </IntroButtonStyled>
-          <PaddedContainer>
-            <Typography
-              variant="h2"
-              sx={{
-                textAlign: 'center',
-                marginBottom: `${theme.sizing.smallPadding}px`,
-              }}
-            >
-              {t('joingame.playername.description1')}
-            </Typography>
+        <PaddedContainer>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: 'center',
+              marginBottom: `${theme.sizing.smallPadding}px`,
+            }}
+          >
+            {t('joingame.playername.description1')}
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{ fontWeight: 400, textAlign: 'center' }}
+          >
+            {t('joingame.playername.description2')}
+          </Typography>
+          {shouldShowError && (
             <Typography
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
-              {t('joingame.playername.description2')}
+              Invalid Input.
             </Typography>
-            { shouldShowError && ( 
-              <Typography
-                variant="h2"
-                sx={{ fontWeight: 400, textAlign: 'center' }}
-              >
-                Invalid Input.
-              </Typography>
-            )}
-          </PaddedContainer>
+          )}
+        </PaddedContainer>
       </StackContainer>
     </BackgroundContainerStyled>
   );

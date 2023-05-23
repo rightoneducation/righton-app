@@ -66,7 +66,19 @@ export default function RadialTimer({
     );
     const fA = delta > PI ? 1 : 0;
     const fS = delta > 0 ? 1 : 0;
-    const path = ['M', sX, sY, 'A', rx, ry, (theta / tau) * 360, fA, fS, eX, eY];
+    const path = [
+      'M',
+      sX,
+      sY,
+      'A',
+      rx,
+      ry,
+      (theta / tau) * 360,
+      fA,
+      fS,
+      eX,
+      eY,
+    ];
     return path.join(' ');
   };
 

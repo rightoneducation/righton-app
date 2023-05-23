@@ -22,7 +22,9 @@ export default function ButtonSubmitAnswer({
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
-  const buttonText = isSubmitted ? t('gameinprogress.button.submitted') : t('gameinprogress.button.submit');
+  const buttonText = isSubmitted
+    ? t('gameinprogress.button.submitted')
+    : t('gameinprogress.button.submit');
   const buttonContents = (
     <Typography variant="button"> {buttonText} </Typography>
   );
@@ -37,6 +39,9 @@ export default function ButtonSubmitAnswer({
       {buttonContents}
     </GamePlayButtonStyled>
   ) : (
-    <GamePlayButtonStyledDisabled disabled> {buttonContents} </GamePlayButtonStyledDisabled>
+    <GamePlayButtonStyledDisabled disabled>
+      {' '}
+      {buttonContents}{' '}
+    </GamePlayButtonStyledDisabled>
   );
 }
