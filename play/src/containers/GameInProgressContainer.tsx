@@ -27,13 +27,18 @@ export default function GameInProgressContainer({
   handleGameInProgressFinished,
 }: GameInProgressContainerProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const [gameSession, setGameSession] = useState<IGameSession>(pregameModel.gameSession);
+  const [gameSession, setGameSession] = useState<IGameSession>(
+    pregameModel.gameSession
+  );
   const [currentState, setCurrentState] = useState<GameSessionState>(
-    pregameModel.gameSession.currentState);
-  const [isRejoin, setIsRejoin] = useState<boolean>(pregameModel.isRejoin);
+    pregameModel.gameSession.currentState
+  );
+  const [isRejoin, setIsRejoin] = useState<boolean>(pregameModel.isRejoin); // eslint-disable-line @typescript-eslint/no-unused-vars
   const currentQuestion =
     gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
+  const currentTeam = gameSession?.teams?.find(
+    (team) => team.id === pregameModel.teamId
+  );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
@@ -43,7 +48,7 @@ export default function GameInProgressContainer({
     isCorrectAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
   }));
-  
+
   // subscribes to game on initial container load
   useEffect(() => {
     let gameSessionSubscription: any | null = null; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -88,7 +93,7 @@ export default function GameInProgressContainer({
       console.error(error);
     }
   };
-  
+
   const handlePregameTimerFinished = () => {
     setIsPregameCountdown(false);
   };

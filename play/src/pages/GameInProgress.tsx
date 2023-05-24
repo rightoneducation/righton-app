@@ -6,7 +6,7 @@ import {
   ITeam,
   IQuestion,
   ModelHelper,
-  isNullOrUndefined
+  isNullOrUndefined,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -52,7 +52,7 @@ export default function GameInProgress({
   score,
   answerChoices,
   addTeamAnswerToTeamMember,
-  isRejoin
+  isRejoin,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -94,28 +94,34 @@ export default function GameInProgress({
 
   // checks if a player is rejoining into an answering question phase in which they have already answered
   const checkIsSubmitted = () => {
-    if (!isRejoin)
-      return false;
+    if (!isRejoin) return false;
     let submitted = false;
-    const answers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(currentTeam!, currentQuestion.id)
-    if (!isNullOrUndefined(answers)){
+    const answers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
+      currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      currentQuestion.id
+    );
+    if (!isNullOrUndefined(answers)) {
       answers.forEach((answer) => {
-        if (answer){  
-          answerChoices.forEach((answerChoice, index) => { 
-            if (answerChoice.text === answer.text){
-              if ((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) || (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && answer.isTrickAnswer)) {
+        if (answer) {
+          answerChoices.forEach((answerChoice, index) => {
+            if (answerChoice.text === answer.text) {
+              if (
+                (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
+                  answer.isChosen) ||
+                (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
+                  answer.isTrickAnswer)
+              ) {
                 setSelectedAnswer(index);
                 submitted = true;
               }
             }
-  
-          })
+          });
         }
-      })
+      });
     }
     return submitted;
   };
-  
+
   const [isSubmitted, setIsSubmitted] = useState<boolean>(checkIsSubmitted);
 
   const handleTimerIsFinished = () => {

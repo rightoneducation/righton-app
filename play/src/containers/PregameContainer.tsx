@@ -80,7 +80,11 @@ export default function Pregame({ apiClient }: PregameFinished) {
         setAPIError(true);
       } else {
         try {
-          const teamMember = await apiClient.addTeamMemberToTeam(team.id, true, uuidv4());
+          const teamMember = await apiClient.addTeamMemberToTeam(
+            team.id,
+            true,
+            uuidv4()
+          );
           if (!teamMember) {
             setAPIError(true);
           }
@@ -94,7 +98,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
     }
     return undefined;
   };
-  
+
   const handleAvatarSelectClick = async () => {
     try {
       if (gameSession) {
@@ -110,12 +114,16 @@ export default function Pregame({ apiClient }: PregameFinished) {
           selectedAvatar,
           isRejoin: false,
         });
-        const storageObject: LocalSession = { gameSessionId: gameSession.id, teamId: teamInfo.teamId, teamMemberId: teamInfo.teamMemberId, selectedAvatar };
+        const storageObject: LocalSession = {
+          gameSessionId: gameSession.id,
+          teamId: teamInfo.teamId,
+          teamMemberId: teamInfo.teamMemberId,
+          selectedAvatar,
+        };
         window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
         setPregameState(PregameState.FINISHED);
       }
-    }
-    catch (error) {
+    } catch (error) {
       setAPIError(true);
     }
   };
@@ -129,8 +137,10 @@ export default function Pregame({ apiClient }: PregameFinished) {
     const storageObject = window.localStorage.getItem('rightOn');
     if (storageObject) {
       const localSession: LocalSession = JSON.parse(storageObject);
-      const localGameSession = await apiClient.getGameSession(localSession.gameSessionId);
-      
+      const localGameSession = await apiClient.getGameSession(
+        localSession.gameSessionId
+      );
+
       setPregameModel({
         gameSession: localGameSession,
         teamId: localSession.teamId,
@@ -145,13 +155,14 @@ export default function Pregame({ apiClient }: PregameFinished) {
   switch (pregameState) {
     case PregameState.FINISHED:
       return (
-        pregameModel && 
-        <GameInProgressContainer
-          apiClient={apiClient}
-          pregameModel={pregameModel} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          handleGameInProgressFinished={handleGameInProgressFinished}
-        />
-      )
+        pregameModel && (
+          <GameInProgressContainer
+            apiClient={apiClient}
+            pregameModel={pregameModel} // eslint-disable-line @typescript-eslint/no-non-null-assertion
+            handleGameInProgressFinished={handleGameInProgressFinished}
+          />
+        )
+      );
     case PregameState.SELECT_AVATAR:
       return (
         <SelectAvatar
@@ -178,6 +189,11 @@ export default function Pregame({ apiClient }: PregameFinished) {
       return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
     case PregameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen setPregameState={setPregameState} handleRejoinSession={handleRejoinSession}/>;
+      return (
+        <SplashScreen
+          setPregameState={setPregameState}
+          handleRejoinSession={handleRejoinSession}
+        />
+      );
   }
 }

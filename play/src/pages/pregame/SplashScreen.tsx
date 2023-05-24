@@ -38,7 +38,10 @@ interface SplashScreenProps {
   handleRejoinSession: () => void;
 }
 
-export default function SplashScreen({ setPregameState, handleRejoinSession }: SplashScreenProps) {
+export default function SplashScreen({
+  setPregameState,
+  handleRejoinSession,
+}: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -47,9 +50,9 @@ export default function SplashScreen({ setPregameState, handleRejoinSession }: S
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
-        <RejoinModal 
+        <RejoinModal
           handleRejoinSession={handleRejoinSession}
-          isModalVisible={isModalVisible} 
+          isModalVisible={isModalVisible}
           setIsModalVisible={setIsModalVisible}
         />
         <StackContainer spacing={5}>

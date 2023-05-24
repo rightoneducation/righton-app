@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
@@ -12,12 +12,16 @@ interface RejoinModalProps {
   setIsModalVisible: (isModalVisible: boolean) => void;
 }
 
-export default function RejoinModal({handleRejoinSession, isModalVisible, setIsModalVisible}: RejoinModalProps) {
+export default function RejoinModal({
+  handleRejoinSession,
+  isModalVisible,
+  setIsModalVisible,
+}: RejoinModalProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
-    <Modal 
+    <Modal
       isOpen={isModalVisible}
       contentLabel="Rejoin Modal"
       style={{
@@ -35,37 +39,37 @@ export default function RejoinModal({handleRejoinSession, isModalVisible, setIsM
           width: '100%',
           minHeight: '100vh',
           backgroundColor: 'rgba(0, 0, 0, 0.65)',
-          overflow: "hidden",
+          overflow: 'hidden',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        }
+        },
       }}
       onRequestClose={() => setIsModalVisible(false)}
       shouldCloseOnOverlayClick
       appElement={document.getElementById('root') || undefined}
     >
       <BodyCardContainerStyled spacing={2}>
-        <Typography variant="h4" sx={{textAlign: 'center'}}>{t('joingame.rejoinmodal.title1')}</Typography>
+        <Typography variant="h4" sx={{ textAlign: 'center' }}>
+          {t('joingame.rejoinmodal.title1')}
+        </Typography>
         <Typography variant="h4">{t('joingame.rejoinmodal.title2')}</Typography>
         <IntroButtonStyled
-            onClick={() => {
-              handleRejoinSession();
-              setIsModalVisible(false);
-            }}
-            style={{
-              background: `${theme.palette.primary.highlightGradient}`,
-              boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-            }}
-          >
+          onClick={() => {
+            handleRejoinSession();
+            setIsModalVisible(false);
+          }}
+          style={{
+            background: `${theme.palette.primary.highlightGradient}`,
+            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
+          }}
+        >
           {t('joingame.rejoinmodal.button1')}
-          </IntroButtonStyled>
-          <IntroButtonStyled
-            onClick={() => setIsModalVisible(false)}
-          >
+        </IntroButtonStyled>
+        <IntroButtonStyled onClick={() => setIsModalVisible(false)}>
           {t('joingame.rejoinmodal.button2')}
-          </IntroButtonStyled>
+        </IntroButtonStyled>
       </BodyCardContainerStyled>
-    </Modal> 
+    </Modal>
   );
 }

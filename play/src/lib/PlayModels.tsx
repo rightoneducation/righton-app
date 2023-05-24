@@ -35,7 +35,7 @@ export enum AnswerState {
   PREVIOUS = 'PREVIOUS',
 }
 
-/** 
+/**
  * OverallGameState handles the state changes between the Pregame or GameInProgress phases
  * Pregame: user-controlled, joining the game
  * GameInProgress: subscription-controlled, playing the game
