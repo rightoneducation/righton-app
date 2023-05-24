@@ -28,7 +28,7 @@ export default function FinalResultsContainer({
   const [finalResultsState, setFinalResultsState] = useState(
     FinalResultsState.CONGRATS
   );
-
+  
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
       return (

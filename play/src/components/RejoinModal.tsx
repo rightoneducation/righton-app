@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 import Modal from 'react-modal';
@@ -7,12 +7,12 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 
 interface RejoinModalProps {
-  handleModalButtonOnClick: () => void;
+  handleRejoinSession: () => void;
   isModalVisible: boolean;
   setIsModalVisible: (isModalVisible: boolean) => void;
 }
 
-export default function RejoinModal({handleModalButtonOnClick, isModalVisible, setIsModalVisible}: RejoinModalProps) {
+export default function RejoinModal({handleRejoinSession, isModalVisible, setIsModalVisible}: RejoinModalProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -49,7 +49,10 @@ export default function RejoinModal({handleModalButtonOnClick, isModalVisible, s
         <Typography variant="h4" sx={{textAlign: 'center'}}>{t('joingame.rejoinmodal.title1')}</Typography>
         <Typography variant="h4">{t('joingame.rejoinmodal.title2')}</Typography>
         <IntroButtonStyled
-            onClick={() => setIsModalVisible(true)}
+            onClick={() => {
+              handleRejoinSession();
+              setIsModalVisible(false);
+            }}
             style={{
               background: `${theme.palette.primary.highlightGradient}`,
               boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ApiClient,
   IGameSession,
@@ -29,7 +29,8 @@ export default function GameInProgressContainer({
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
   const [gameSession, setGameSession] = useState<IGameSession>(pregameModel.gameSession);
   const [currentState, setCurrentState] = useState<GameSessionState>(
-    GameSessionState.TEAMS_JOINING);
+    pregameModel.gameSession.currentState);
+  const [isRejoin, setIsRejoin] = useState<boolean>(pregameModel.isRejoin);
   const currentQuestion =
     gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
   const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
@@ -43,8 +44,8 @@ export default function GameInProgressContainer({
     reason: choice.reason ?? '',
   }));
   
-  // triggered on initial load of HotToPlay page via useEffect
-  const handleSubscribeToGame = () => {
+  // subscribes to game on initial container load
+  useEffect(() => {
     let gameSessionSubscription: any | null = null; // eslint-disable-line @typescript-eslint/no-explicit-any
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(
       gameSession.id,
@@ -60,9 +61,8 @@ export default function GameInProgressContainer({
     return () => {
       gameSessionSubscription?.unsubscribe();
     };
-  };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  
   const addTeamAnswerToTeamMember = async (
     question: IQuestion,
     answerText: string,
@@ -100,7 +100,7 @@ export default function GameInProgressContainer({
 
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
-      return <HowToPlay handleSubscribeToGame={handleSubscribeToGame}/>;
+      return <HowToPlay />;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown
@@ -114,6 +114,7 @@ export default function GameInProgressContainer({
           teamId={pregameModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
+          isRejoin={isRejoin}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -127,6 +128,7 @@ export default function GameInProgressContainer({
           teamId={pregameModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
+          isRejoin={isRejoin}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:

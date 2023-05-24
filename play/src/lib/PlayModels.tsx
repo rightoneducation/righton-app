@@ -86,6 +86,14 @@ export interface PregameModel {
   teamId: string;
   teamMemberId: string;
   selectedAvatar: number;
+  isRejoin: boolean;
+}
+
+export interface LocalSession {
+  gameSessionId: string;
+  teamId: string;
+  teamMemberId: string;
+  selectedAvatar: number;
 }
 
 interface MonsterMap {

@@ -12,7 +12,7 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, PregameModel } from '../lib/PlayModels';
+import { PregameState, PregameModel, LocalSession } from '../lib/PlayModels';
 import { isGameCodeValid } from '../lib/HelperFunctions';
 import GameInProgressContainer from './GameInProgressContainer';
 
@@ -108,7 +108,10 @@ export default function Pregame({ apiClient }: PregameFinished) {
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
+          isRejoin: false,
         });
+        const storageObject: LocalSession = { gameSessionId: gameSession.id, teamId: teamInfo.teamId, teamMemberId: teamInfo.teamMemberId, selectedAvatar };
+        window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
         setPregameState(PregameState.FINISHED);
       }
     }
@@ -118,7 +121,25 @@ export default function Pregame({ apiClient }: PregameFinished) {
   };
 
   const handleGameInProgressFinished = () => {
+    window.localStorage.removeItem('rightOn');
     setPregameState(PregameState.SPLASH_SCREEN);
+  };
+
+  const handleRejoinSession = async () => {
+    const storageObject = window.localStorage.getItem('rightOn');
+    if (storageObject) {
+      const localSession: LocalSession = JSON.parse(storageObject);
+      const localGameSession = await apiClient.getGameSession(localSession.gameSessionId);
+      
+      setPregameModel({
+        gameSession: localGameSession,
+        teamId: localSession.teamId,
+        teamMemberId: localSession.teamMemberId,
+        selectedAvatar: localSession.selectedAvatar,
+        isRejoin: true,
+      });
+      setPregameState(PregameState.FINISHED);
+    }
   };
 
   switch (pregameState) {
@@ -157,6 +178,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
       return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
     case PregameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen setPregameState={setPregameState} />;
+      return <SplashScreen setPregameState={setPregameState} handleRejoinSession={handleRejoinSession}/>;
   }
 }

@@ -35,15 +35,12 @@ const BottomBox = styled(Box)(({ theme }) => ({
 
 interface SplashScreenProps {
   setPregameState: (gameState: PregameState) => void;
+  handleRejoinSession: () => void;
 }
 
-export default function SplashScreen({ setPregameState }: SplashScreenProps) {
+export default function SplashScreen({ setPregameState, handleRejoinSession }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-
-  const handleModalButtonOnClick = () => {
-    console.log("Click");
-  };
 
   const [isModalVisible, setIsModalVisible] = React.useState(true);
 
@@ -51,7 +48,7 @@ export default function SplashScreen({ setPregameState }: SplashScreenProps) {
     <BackgroundContainerStyled>
       <HeroContainer>
         <RejoinModal 
-          handleModalButtonOnClick={handleModalButtonOnClick}
+          handleRejoinSession={handleRejoinSession}
           isModalVisible={isModalVisible} 
           setIsModalVisible={setIsModalVisible}
         />
