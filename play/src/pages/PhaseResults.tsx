@@ -88,7 +88,6 @@ export default function PhaseResults({
       );
     } else {
       setIsRejoin(false);
-    
     }
     setNewScore(calcNewScore)
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
