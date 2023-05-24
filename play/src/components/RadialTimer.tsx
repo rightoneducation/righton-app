@@ -13,14 +13,14 @@ interface RadialTimerProps {
   inputColors: string[];
   radius: number;
   timerStartInSeconds: number;
-  handlePregameTimerFinished: (timerFinished: boolean) => void;
+  setIsPregameCountdown: (isPregameCountdown: boolean) => void;
 }
 
 export default function RadialTimer({
   inputColors,
   radius,
   timerStartInSeconds,
-  handlePregameTimerFinished,
+  setIsPregameCountdown
 }: RadialTimerProps) {
   const { cos, sin, PI } = Math;
   const tau = 2 * PI;
@@ -120,7 +120,7 @@ export default function RadialTimer({
         setColors(c);
         setCurrentTimeMilli((prevTime) => prevTime - timeInterval);
       }, timeInterval);
-    } else handlePregameTimerFinished(false);
+    } else setIsPregameCountdown(false);
     return () => clearInterval(timer);
   }, [currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -66,7 +66,10 @@ export default function RejoinModal({
         >
           {t('joingame.rejoinmodal.button1')}
         </IntroButtonStyled>
-        <IntroButtonStyled onClick={() => setIsModalVisible(false)}>
+        <IntroButtonStyled onClick={() => {
+          window.localStorage.removeItem('rightOn');
+          setIsModalVisible(false);
+        }}>
           {t('joingame.rejoinmodal.button2')}
         </IntroButtonStyled>
       </BodyCardContainerStyled>

@@ -45,7 +45,14 @@ export default function SplashScreen({
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const [isModalVisible, setIsModalVisible] = React.useState(true);
+  const checkForRejoin = () => {
+    const rejoinSession = localStorage.getItem('rightOn');
+    if (rejoinSession) {
+      return true;
+    }
+    return false;
+  }
+  const [isModalVisible, setIsModalVisible] = React.useState(checkForRejoin());
 
   return (
     <BackgroundContainerStyled>

@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   GameSessionState,
   IGameSession,
   ITeam,
-  IQuestion,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -33,6 +32,8 @@ interface PhaseResultsProps {
   }[];
   score: number;
   handleUpdateScore: (newScore: number) => void;
+  isRejoin: boolean;
+  setIsRejoin: (isRejoin: boolean) => void;
 }
 
 /**
@@ -62,6 +63,8 @@ export default function PhaseResults({
   answerChoices,
   score,
   handleUpdateScore,
+  isRejoin,
+  setIsRejoin
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
@@ -70,20 +73,27 @@ export default function PhaseResults({
     currentQuestion,
     currentState
   );
+  
+  const [newScore, setNewScore] = React.useState<number>(0);
 
-  // calculate new score for use in footer (todo: update gamesession object through api call)
-  const calculateNewScore = (
-    session: IGameSession,
-    question: IQuestion,
-    team: ITeam
-  ) => {
-    const newScore = ModelHelper.calculateBasicModeScoreForQuestion(
-      session,
-      question,
-      team
-    );
-    return newScore;
-  };
+  // calculate new score for use in footer
+  // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
+  useEffect(() => {
+    let calcNewScore = 0;
+    if (!isRejoin){ 
+        calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+        gameSession,
+        currentQuestion,
+        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      );
+    } else {
+      setIsRejoin(false);
+    
+    }
+    setNewScore(calcNewScore)
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+
 
   return (
     <StackContainerStyled
@@ -119,11 +129,7 @@ export default function PhaseResults({
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
-          newPoints={calculateNewScore(
-            gameSession,
-            gameSession.questions[currentQuestionIndex ?? 0],
-            currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          )}
+          newPoints={newScore}
           score={score}
           handleUpdateScore={handleUpdateScore}
         />

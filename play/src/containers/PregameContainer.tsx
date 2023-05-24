@@ -35,6 +35,8 @@ export default function Pregame({ apiClient }: PregameFinished) {
     Math.floor(Math.random() * 6)
   );
   const [pregameModel, setPregameModel] = useState<PregameModel | null>(null);
+  // hoisted this to pregamecontainer so it can be reset on rejoin click, rather than resetting on every gameinprogress screen
+  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
   // TODO: coord with u/x for modal to pop up this error message
   const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
 
@@ -129,7 +131,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
   };
 
   const handleGameInProgressFinished = () => {
-    window.localStorage.removeItem('rightOn');
     setPregameState(PregameState.SPLASH_SCREEN);
   };
 
@@ -140,7 +141,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
       const localGameSession = await apiClient.getGameSession(
         localSession.gameSessionId
       );
-
       setPregameModel({
         gameSession: localGameSession,
         teamId: localSession.teamId,
@@ -148,6 +148,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
         selectedAvatar: localSession.selectedAvatar,
         isRejoin: true,
       });
+      setIsPregameCountdown(false);
       setPregameState(PregameState.FINISHED);
     }
   };
@@ -157,6 +158,8 @@ export default function Pregame({ apiClient }: PregameFinished) {
       return (
         pregameModel && (
           <GameInProgressContainer
+            isPregameCountdown={isPregameCountdown}
+            setIsPregameCountdown={setIsPregameCountdown}
             apiClient={apiClient}
             pregameModel={pregameModel} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             handleGameInProgressFinished={handleGameInProgressFinished}

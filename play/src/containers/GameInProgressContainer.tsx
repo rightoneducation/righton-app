@@ -16,17 +16,21 @@ import StartPhase2 from '../pages/StartPhase2';
 import { PregameModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
+  isPregameCountdown: boolean;
+  setIsPregameCountdown: (isPregameCountdown: boolean) => void;
   pregameModel: PregameModel;
   apiClient: ApiClient;
   handleGameInProgressFinished: () => void;
 }
 
 export default function GameInProgressContainer({
+  isPregameCountdown,
+  setIsPregameCountdown,
   pregameModel,
   apiClient,
   handleGameInProgressFinished,
 }: GameInProgressContainerProps) {
-  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
+
   const [gameSession, setGameSession] = useState<IGameSession>(
     pregameModel.gameSession
   );
@@ -94,10 +98,6 @@ export default function GameInProgressContainer({
     }
   };
 
-  const handlePregameTimerFinished = () => {
-    setIsPregameCountdown(false);
-  };
-
   const handleUpdateScore = (inputScore: number) => {
     updateTeamScore(pregameModel.teamId, inputScore);
     setScore(inputScore);
@@ -109,7 +109,7 @@ export default function GameInProgressContainer({
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown
-          handlePregameTimerFinished={handlePregameTimerFinished}
+          setIsPregameCountdown={setIsPregameCountdown}
         />
       ) : (
         <GameInProgress
@@ -120,6 +120,7 @@ export default function GameInProgressContainer({
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           isRejoin={isRejoin}
+          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -134,6 +135,7 @@ export default function GameInProgressContainer({
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           isRejoin={isRejoin}
+          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -148,6 +150,8 @@ export default function GameInProgressContainer({
           answerChoices={answerChoices}
           score={score}
           handleUpdateScore={handleUpdateScore}
+          isRejoin={isRejoin}
+          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.PHASE_2_START:

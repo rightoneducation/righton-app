@@ -22,11 +22,11 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
 }));
 
 interface StartPhase2Props {
-  handlePregameTimerFinished: () => void;
+  setIsPregameCountdown: (isPregameCountdown: boolean) => void;
 }
 
 export default function StartPhase2({
-  handlePregameTimerFinished,
+  setIsPregameCountdown
 }: StartPhase2Props) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export default function StartPhase2({
           ]}
           radius={110}
           timerStartInSeconds={3}
-          handlePregameTimerFinished={handlePregameTimerFinished}
+          setIsPregameCountdown={setIsPregameCountdown}
         />
         <TypographyStyled variant="h2">
           {t('pregamecountdown.subtitle1')}

@@ -45,6 +45,11 @@ export default function Leaderboard({
     sortedTeams = teamSorter(teams);
   }
 
+  // remove locally stored game info when reaching leaderboard
+  useEffect(() => {
+    window.localStorage.removeItem('rightOn');
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
   // ref req'd for height of container
   const containerRef = useRef<HTMLDivElement>(null);
