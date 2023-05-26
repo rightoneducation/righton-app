@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { PregameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import ErrorModal from '../../components/ErrorModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
 
@@ -34,14 +35,20 @@ const BottomBox = styled(Box)(({ theme }) => ({
 
 interface SplashScreenProps {
   setPregameState: (gameState: PregameState) => void;
+  isConnectionError: boolean;
 }
 
-export default function SplashScreen({ setPregameState }: SplashScreenProps) {
+export default function SplashScreen({ setPregameState, isConnectionError }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [isModalVisible, setIsModalVisible] = React.useState(isConnectionError);
 
   return (
     <BackgroundContainerStyled>
+        <ErrorModal
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+        />
       <HeroContainer>
         <StackContainer spacing={5}>
           <Stack sx={{ alignItems: 'center' }} spacing={2}>

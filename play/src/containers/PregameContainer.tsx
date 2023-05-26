@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,16 +13,17 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, PregameModel } from '../lib/PlayModels';
+import { PregameState, PregameModel, LocalSessionModel } from '../lib/PlayModels';
 import { isGameCodeValid } from '../lib/HelperFunctions';
-import GameInProgressContainer from './GameInProgressContainer';
 
 interface PregameFinished {
   apiClient: ApiClient;
+  isConnectionError: boolean;
 }
 
-export default function Pregame({ apiClient }: PregameFinished) {
+export default function Pregame({ apiClient, isConnectionError }: PregameFinished) {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [pregameState, setPregameState] = useState<PregameState>(
@@ -34,7 +36,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );
-  const [pregameModel, setPregameModel] = useState<PregameModel | null>(null);
   // TODO: coord with u/x for modal to pop up this error message
   const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
 
@@ -103,13 +104,14 @@ export default function Pregame({ apiClient }: PregameFinished) {
           setAPIError(true);
           return;
         }
-        setPregameModel({
-          gameSession,
+        const storageObject: LocalSessionModel = {
+          gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
-        });
-        setPregameState(PregameState.FINISHED);
+        };
+        window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
+        navigate(`/game`);
       }
     }
     catch (error) {
@@ -122,15 +124,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
   };
 
   switch (pregameState) {
-    case PregameState.FINISHED:
-      return (
-        pregameModel && 
-        <GameInProgressContainer
-          apiClient={apiClient}
-          pregameModel={pregameModel} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          handleGameInProgressFinished={handleGameInProgressFinished}
-        />
-      )
     case PregameState.SELECT_AVATAR:
       return (
         <SelectAvatar
@@ -157,6 +150,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
       return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
     case PregameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen setPregameState={setPregameState} />;
+      return <SplashScreen setPregameState={setPregameState} isConnectionError={isConnectionError}/>;
   }
 }

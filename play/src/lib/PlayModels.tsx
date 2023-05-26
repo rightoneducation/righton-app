@@ -88,6 +88,13 @@ export interface PregameModel {
   selectedAvatar: number;
 }
 
+export interface LocalSessionModel {
+  gameSessionId: string;
+  teamId: string;
+  teamMemberId: string;
+  selectedAvatar: number;
+}
+
 interface MonsterMap {
   [key: number]: {
     icon: string;

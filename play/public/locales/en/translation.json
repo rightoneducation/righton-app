@@ -4,6 +4,11 @@
       "title": "Unlocking every student's potential in math!",
       "button": "Join Game"
     },
+    "errormodal": {
+      "title1": "There has been an error connecting to the game.",
+      "title2": "Please try again.",
+      "button1": "OK"
+    },
     "gamecode": {
       "title": "Enter Game Code",
       "button": "Join",

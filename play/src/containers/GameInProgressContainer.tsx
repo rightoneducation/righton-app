@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import {
   ApiClient,
+  Environment,
   IGameSession,
   IChoice,
   IQuestion,
@@ -16,20 +18,15 @@ import StartPhase2 from '../pages/StartPhase2';
 import { PregameModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
-  pregameModel: PregameModel;
   apiClient: ApiClient;
-  handleGameInProgressFinished: () => void;
 }
 
-export default function GameInProgressContainer({
-  pregameModel,
-  apiClient,
-  handleGameInProgressFinished,
-}: GameInProgressContainerProps) {
+export function GameInProgressContainer({apiClient}:GameInProgressContainerProps) {
+  const pregameModel = useLoaderData() as PregameModel;
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
   const [gameSession, setGameSession] = useState<IGameSession>(pregameModel.gameSession);
   const [currentState, setCurrentState] = useState<GameSessionState>(
-    GameSessionState.TEAMS_JOINING);
+    pregameModel.gameSession.currentState);
   const currentQuestion =
     gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
   const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
@@ -42,27 +39,20 @@ export default function GameInProgressContainer({
     isCorrectAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
   }));
-  
-  // triggered on initial load of HotToPlay page via useEffect
-  const handleSubscribeToGame = () => {
-    let gameSessionSubscription: any | null = null; // eslint-disable-line @typescript-eslint/no-explicit-any
-    gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-      gameSession.id,
+
+  useEffect(() => {
+    const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+      pregameModel.gameSession.id,
       (response) => {
-        if (response.currentState === GameSessionState.FINISHED) {
-          handleGameInProgressFinished();
-        }
         setGameSession({ ...gameSession, ...response });
         setCurrentState(response.currentState);
       }
     );
-    console.debug(`subscribed to game session with id: ${gameSession.id}`);
     return () => {
-      gameSessionSubscription?.unsubscribe();
+      gameSessionSubscription.unsubscribe();
     };
-  };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  
   const addTeamAnswerToTeamMember = async (
     question: IQuestion,
     answerText: string,
@@ -100,7 +90,7 @@ export default function GameInProgressContainer({
 
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
-      return <HowToPlay handleSubscribeToGame={handleSubscribeToGame}/>;
+      return <HowToPlay />;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown
@@ -159,3 +149,24 @@ export default function GameInProgressContainer({
       );
   }
 }
+
+// preloads game data from local storage
+export const GameInProgressLoader = async () => {
+  const apiClient = new ApiClient(Environment.Staging);
+  let pregameModel = JSON.parse(window.localStorage.getItem('rightOn') ?? '');
+  if (pregameModel){
+    try {
+      await apiClient.getGameSession(pregameModel.gameSessionId).then(response => {
+        pregameModel = {
+          gameSession: response,
+          teamId: pregameModel.teamId,
+          teamMemberId: pregameModel.teamMemberId,
+          selectedAvatar: pregameModel.selectedAvatar
+        }
+      });
+    } catch {
+      throw Error('Error loading game session');
+    }
+  }
+  return pregameModel;
+};
