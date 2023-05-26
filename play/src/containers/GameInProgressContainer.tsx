@@ -15,18 +15,18 @@ import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import FinalResultsContainer from './FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';
-import { PregameModel } from '../lib/PlayModels';
+import { LocalSessionModel, PregameModel } from '../lib/PlayModels';
+import useFetchAndSubscribe from '../hooks/useFetchAndSubscribe';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
 }
 
 export function GameInProgressContainer({apiClient}:GameInProgressContainerProps) {
-  const pregameModel = useLoaderData() as PregameModel;
+  const pregameModel = useLoaderData() as LocalSessionModel;
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const [gameSession, setGameSession] = useState<IGameSession>(pregameModel.gameSession);
-  const [currentState, setCurrentState] = useState<GameSessionState>(
-    pregameModel.gameSession.currentState);
+  const gameSession = useFetchAndSubscribe(pregameModel.gameSessionId, apiClient);
+  const currentState = gameSession?.currentState ?? GameSessionState.TEAMS_JOINING;
   const currentQuestion =
     gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
   const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
@@ -38,20 +38,7 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     text: choice.text,
     isCorrectAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
-  }));
-
-  useEffect(() => {
-    const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-      pregameModel.gameSession.id,
-      (response) => {
-        setGameSession({ ...gameSession, ...response });
-        setCurrentState(response.currentState);
-      }
-    );
-    return () => {
-      gameSessionSubscription.unsubscribe();
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  })) ?? [];
 
   const addTeamAnswerToTeamMember = async (
     question: IQuestion,
@@ -97,6 +84,7 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
           handlePregameTimerFinished={handlePregameTimerFinished}
         />
       ) : (
+        gameSession &&
         <GameInProgress
           {...gameSession}
           teamAvatar={pregameModel.selectedAvatar}
@@ -110,6 +98,7 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.PHASE_2_DISCUSS:
       return (
+        gameSession &&
         <GameInProgress
           {...gameSession}
           teamAvatar={pregameModel.selectedAvatar}
@@ -122,6 +111,7 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
       return (
+        gameSession &&
         <PhaseResults
           {...gameSession}
           gameSession={gameSession}
@@ -152,21 +142,9 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
 
 // preloads game data from local storage
 export const GameInProgressLoader = async () => {
-  const apiClient = new ApiClient(Environment.Staging);
-  let pregameModel = JSON.parse(window.localStorage.getItem('rightOn') ?? '');
-  if (pregameModel){
-    try {
-      await apiClient.getGameSession(pregameModel.gameSessionId).then(response => {
-        pregameModel = {
-          gameSession: response,
-          teamId: pregameModel.teamId,
-          teamMemberId: pregameModel.teamMemberId,
-          selectedAvatar: pregameModel.selectedAvatar
-        }
-      });
-    } catch {
-      throw Error('Error loading game session');
-    }
+  const pregameModel = JSON.parse(window.localStorage.getItem('rightOn') ?? '');
+  if (pregameModel === null) {
+    throw Error('Local data error');
   }
   return pregameModel;
 };

@@ -28,7 +28,7 @@ const router = createBrowserRouter(
         path="/game"
         element={<GameInProgressContainer apiClient={apiClient} />}
         loader={GameInProgressLoader}
-        errorElement={<PregameContainer apiClient={apiClient} isConnectionError={true}/>}
+        errorElement={<PregameContainer apiClient={apiClient} isConnectionError/>}
       />
       <Route element={<RedirectToPlayIfMissing />} />
   </>
