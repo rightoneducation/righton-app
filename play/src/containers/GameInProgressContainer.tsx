@@ -23,13 +23,13 @@ interface GameInProgressContainerProps {
 }
 
 export function GameInProgressContainer({apiClient}:GameInProgressContainerProps) {
-  const pregameModel = useLoaderData() as LocalSessionModel;
+  const pregameModel = useLoaderData() as PregameModel;
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const gameSession = useFetchAndSubscribe(pregameModel.gameSessionId, apiClient);
-  const currentState = gameSession?.currentState ?? GameSessionState.TEAMS_JOINING;
+  const gameSession = useFetchAndSubscribe(pregameModel.gameSession, apiClient);
+  const {currentState}  = gameSession;
   const currentQuestion =
-    gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
+    gameSession.questions[gameSession.currentQuestionIndex ?? 0];
+  const currentTeam = gameSession.teams?.find((team) => team.id === pregameModel.teamId);
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
@@ -84,7 +84,6 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
           handlePregameTimerFinished={handlePregameTimerFinished}
         />
       ) : (
-        gameSession &&
         <GameInProgress
           {...gameSession}
           teamAvatar={pregameModel.selectedAvatar}
@@ -98,7 +97,6 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.PHASE_2_DISCUSS:
       return (
-        gameSession &&
         <GameInProgress
           {...gameSession}
           teamAvatar={pregameModel.selectedAvatar}
@@ -111,7 +109,6 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_RESULTS:
       return (
-        gameSession &&
         <PhaseResults
           {...gameSession}
           gameSession={gameSession}

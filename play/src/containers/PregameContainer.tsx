@@ -104,8 +104,8 @@ export default function Pregame({ apiClient, isConnectionError }: PregameFinishe
           setAPIError(true);
           return;
         }
-        const storageObject: LocalSessionModel = {
-          gameSessionId: gameSession.id,
+        const storageObject: PregameModel = {
+          gameSession,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,

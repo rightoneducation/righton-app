@@ -13,28 +13,33 @@ import {
  * @param apiClient 
  * @returns 
  */
-export default function useFetchAndSubscribe(gameSessionId: string, apiClient: ApiClient) {
-  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-    useEffect(() => {
-      // prevents runaway condition by ignoring updates to state after component unmounts
-      let ignore = false;
-      apiClient.getGameSession(gameSessionId).then(fetchedGameSession => {
-        if (!ignore)
-          // have to fetch game first in case user is rejoining a session because subscription doesn't return initial gameSession
-          setGameSession(fetchedGameSession);
-        const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-          fetchedGameSession.id,
-          (subscribedSession) => {
-            if (!ignore)
-              setGameSession(subscribedSession);
-          }
-        );
-        return () => {
-          // if component unmounts, ignore any updates to state
-          ignore = true;
-          gameSessionSubscription.unsubscribe();
-        };
-      });
-    }, [gameSessionId, apiClient]);
-  return gameSession;
+export default function useFetchAndSubscribe(gameSession: IGameSession, apiClient: ApiClient) {
+  const [fetchedGameSession, setFetchedGameSession] = useState<IGameSession>(gameSession);
+  useEffect(() => {
+    // prevents runaway condition by ignoring updates to state after component unmounts
+    let ignore = false;
+    async function fetchGameSession() {
+     const fetchedGame =  await apiClient.getGameSession(gameSession.id);
+      if (!ignore)
+        setFetchedGameSession(fetchedGame);
+      const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+        fetchedGame.id,
+        (subscribedSession) => {
+          if (!ignore)
+            setFetchedGameSession(subscribedSession);
+        }
+      );
+      return () => {
+        gameSessionSubscription.unsubscribe();
+      }
+    }
+ 
+    fetchGameSession();
+    return () => {
+      // if component unmounts, ignore any updates to state
+      ignore = true;
+    };
+  }, [gameSession.id, apiClient]);
+ 
+  return fetchedGameSession as IGameSession;
 }
