@@ -105,7 +105,7 @@ export default function Pregame({ apiClient, isConnectionError }: PregameFinishe
           return;
         }
         const storageObject: PregameModel = {
-          gameSession,
+          gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
@@ -122,7 +122,7 @@ export default function Pregame({ apiClient, isConnectionError }: PregameFinishe
   const handleGameInProgressFinished = () => {
     setPregameState(PregameState.SPLASH_SCREEN);
   };
-
+ 
   switch (pregameState) {
     case PregameState.SELECT_AVATAR:
       return (
