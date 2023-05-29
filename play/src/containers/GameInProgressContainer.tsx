@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import {
   ApiClient,
-  Environment,
-  IGameSession,
   IChoice,
   IQuestion,
   GameSessionState,
@@ -15,7 +13,8 @@ import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import FinalResultsContainer from './FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';
-import { PregameModel } from '../lib/PlayModels';
+import { LocalSessionModel, PregameModel } from '../lib/PlayModels';
+import useSubscribeGameSession from '../hooks/useSubscribeGameSession';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -24,11 +23,11 @@ interface GameInProgressContainerProps {
 export function GameInProgressContainer({apiClient}:GameInProgressContainerProps) {
   const pregameModel = useLoaderData() as PregameModel;
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const [gameSession, setGameSession] = useState<IGameSession>(pregameModel.gameSession);
-  const [currentState, setCurrentState] = useState<GameSessionState>(
-    pregameModel.gameSession.currentState);
+  // subscribes to gameSession using useSubscribeGameSession hook (uses useSyncExternalStore)
+  const gameSession = useSubscribeGameSession(pregameModel.gameSessionId, apiClient);
+  const currentState  = gameSession ? gameSession.currentState : GameSessionState.TEAMS_JOINING;
   const currentQuestion =
-    gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
+    gameSession?.questions[gameSession.currentQuestionIndex ?? 0];
   const currentTeam = gameSession?.teams?.find((team) => team.id === pregameModel.teamId);
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
@@ -38,20 +37,7 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     text: choice.text,
     isCorrectAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
-  }));
-
-  useEffect(() => {
-    const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-      pregameModel.gameSession.id,
-      (response) => {
-        setGameSession({ ...gameSession, ...response });
-        setCurrentState(response.currentState);
-      }
-    );
-    return () => {
-      gameSessionSubscription.unsubscribe();
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  })) ?? [];
 
   const addTeamAnswerToTeamMember = async (
     question: IQuestion,
@@ -88,6 +74,12 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
     setScore(inputScore);
   };
 
+  try { // eslint-disable-line no-useless-catch
+    throw new Error("Division by zero");
+
+} catch (error) {
+  throw error;
+}
   switch (currentState) {
     case GameSessionState.TEAMS_JOINING:
       return <HowToPlay />;
@@ -152,21 +144,9 @@ export function GameInProgressContainer({apiClient}:GameInProgressContainerProps
 
 // preloads game data from local storage
 export const GameInProgressLoader = async () => {
-  const apiClient = new ApiClient(Environment.Staging);
-  let pregameModel = JSON.parse(window.localStorage.getItem('rightOn') ?? '');
-  if (pregameModel){
-    try {
-      await apiClient.getGameSession(pregameModel.gameSessionId).then(response => {
-        pregameModel = {
-          gameSession: response,
-          teamId: pregameModel.teamId,
-          teamMemberId: pregameModel.teamMemberId,
-          selectedAvatar: pregameModel.selectedAvatar
-        }
-      });
-    } catch {
-      throw Error('Error loading game session');
-    }
+  const pregameModel = JSON.parse(window.localStorage.getItem('rightOn') ?? '');
+  if (pregameModel === null) {
+    throw Error('Local data error');
   }
   return pregameModel;
 };

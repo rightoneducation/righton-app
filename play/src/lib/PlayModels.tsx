@@ -82,7 +82,7 @@ export enum FinalResultsState {
  * @param {number} selectedAvatar - avatar selected by player
  */
 export interface PregameModel {
-  gameSession: IGameSession;
+  gameSessionId: string;
   teamId: string;
   teamMemberId: string;
   selectedAvatar: number;
