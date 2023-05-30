@@ -198,17 +198,11 @@ const GameSessionContainer = () => {
   const handleStartGame = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
-    console.log("CONNECTED TO HOST");
     if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-      // setIsTimerActive(true);
-      // setIsModalOpen(true);
       handleUpdateGameSession({ currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 });
       setIsTimerActive(true);
       setIsModalOpen(true);
     }
-    // else {
-    //   handleUpdateGameSession({ currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 });
-    // }
   };
 
   if (!gameSession) {
