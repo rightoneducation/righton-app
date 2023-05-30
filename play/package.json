@@ -22,7 +22,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^12.3.0",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "storybook": "^6.5.16",
     "styled-components": "^5.3.9",
     "swiper": "^9.2.0",
