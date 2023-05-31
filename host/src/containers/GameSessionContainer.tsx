@@ -164,12 +164,11 @@ const GameSessionContainer = () => {
   const checkGameTimer = (gameSession) => {
     if (gameSession.currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && gameSession.currentState !== GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
       setGameTimer(false);
-      setGameTimerZero(false);
     }
     else {
       setGameTimer(true);
-      setGameTimerZero(false);
     }
+    setGameTimerZero(false);
   };
 
   const handleStartGameModalTimerFinished = () => {
@@ -217,6 +216,7 @@ const GameSessionContainer = () => {
       if (isModalOpen) {
         return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} handleStartGame={handleStartGame} />;
       }
+      break;
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
