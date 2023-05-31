@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ApiClient,
   IGameSession,
@@ -11,37 +11,51 @@ import {
  * @param apiClient 
  * @returns 
  */
-export default function useFetchAndSubscribeGameSession(gameSessionId: string, apiClient: ApiClient) {
+export default function useFetchAndSubscribeGameSession(gameSessionId: string, apiClient: ApiClient, retry: number) {
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true); 
   const [error, setError] = useState<string>('');
-
+  
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
     let ignore = false;
-    apiClient.getGameSession(gameSessionId)
+    apiClient.getGameSession('gameSessionId')
       .then((fetchedGame) => {
         if (!fetchedGame)
           setError('Game session not found');
-        const gameSessionSubscription = apiClient.subscribeUpdateGameSession(fetchedGame.id, response => {
-          if (!response)
-            setError('Game session not found');
-          // Update the gameSession object and trigger the callback
-          if (!ignore)
-            setGameSession((prevGame) => ({ ...prevGame, ...response }));
-        });
-        setIsLoading(false);
+        try {
+          const gameSessionSubscription = apiClient.subscribeUpdateGameSession(fetchedGame.id, response => {
+            if (!response)
+              setError('Subscription could not be established');
+            // Update the gameSession object and trigger the callback
+            if (!ignore)
+              setGameSession((prevGame) => ({ ...prevGame, ...response }));
+          });
+          setIsLoading(false);
+          return () => {
+            ignore = true;
+            gameSessionSubscription.unsubscribe();
+          };
+        } catch (e) {
+          setIsLoading(false);
+          if (e instanceof Error)
+            setError(e.message);
+          else 
+            setError('Subscription could not be established');
+        }
         return () => {
           // if component unmounts, ignore any updates to state
-          ignore=true;
-          gameSessionSubscription.unsubscribe();
+          ignore = true;
         }
       })
       .catch((e) => {
         setIsLoading(false);
-        setError('Game session not found');
+        if (e instanceof Error)
+          setError(e.message);
+        else 
+          setError('Game session could not be found');
       })
-  }, [gameSessionId, apiClient]); 
+  }, [gameSessionId, apiClient, retry]); 
 
   return { isLoading, error, gameSession };
 }

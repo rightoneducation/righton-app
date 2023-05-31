@@ -35,28 +35,26 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-const BottomText = (isLoading: boolean, isError: string) => {
-  console.log('sup');
+const BottomText = (isLoading: boolean, isError: boolean) => {
   const { t } = useTranslation(); 
   if (isLoading)
     return t('joingame.howtoplay.loading');
   if (isError)
-    return `${t('joingame.howtoplay.error')}${isError}`;
+    return '';
   return t('joingame.howtoplay.description'); 
 };
 
 interface HowToPlayProps {
+  isError: boolean;
   isLoading: boolean;
-  isError: string;
 }
 
-export default function HowToPlay({ isLoading, isError }: HowToPlayProps) {
+export default function HowToPlay({ isError, isLoading }: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer>
         <Typography
           variant="h2"
           sx={{
@@ -66,7 +64,7 @@ export default function HowToPlay({ isLoading, isError }: HowToPlayProps) {
         >
           {t('joingame.howtoplay.title')}
         </Typography>
-        <Box style={{ width: '100%' }}>
+        <StackContainer style={{position: 'absolute', justifyContent: 'center'}}>
           <HowToPlaySwiper
             modules={[Pagination]}
             slidesPerView={1}
@@ -100,10 +98,12 @@ export default function HowToPlay({ isLoading, isError }: HowToPlayProps) {
             className="swiper-pagination-container"
             style={{ paddingTop: `${theme.sizing.largePadding}px` }}
           />
-        </Box>
+        </StackContainer>
         <Typography
           variant="h4"
           sx={{
+            position: 'absolute',
+            bottom: 0,
             color: `${theme.palette.primary.main}`,
             fontWeight: 400,
             textAlign: 'center',
@@ -112,7 +112,6 @@ export default function HowToPlay({ isLoading, isError }: HowToPlayProps) {
         >
           { BottomText(isLoading, isError) }
         </Typography>
-      </StackContainer>
     </BackgroundContainerStyled>
   );
 }

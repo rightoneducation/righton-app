@@ -22,7 +22,7 @@ const router = createBrowserRouter(
     <>
       <Route
         path="/"
-        element={<PregameContainer apiClient={apiClient} isConnectionError={false}/>}
+        element={<PregameContainer apiClient={apiClient} />}
       />
       <Route 
         path="/game"

@@ -5,9 +5,10 @@
       "button": "Join Game"
     },
     "errormodal": {
-      "title1": "There has been an error connecting to the game.",
+      "title1": "An error has occurred with the following error message:",
       "title2": "Please try again.",
-      "button1": "OK"
+      "button1": "Try Again",
+      "button2": "Return to Main Menu"
     },
     "gamecode": {
       "title": "Enter Game Code",

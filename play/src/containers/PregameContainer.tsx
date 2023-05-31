@@ -13,15 +13,14 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, PregameModel, LocalSessionModel } from '../lib/PlayModels';
+import { PregameState, PregameModel } from '../lib/PlayModels';
 import { isGameCodeValid } from '../lib/HelperFunctions';
 
 interface PregameFinished {
   apiClient: ApiClient;
-  isConnectionError: boolean;
 }
 
-export default function Pregame({ apiClient, isConnectionError }: PregameFinished) {
+export default function Pregame({ apiClient }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -118,10 +117,6 @@ export default function Pregame({ apiClient, isConnectionError }: PregameFinishe
       setAPIError(true);
     }
   };
-
-  const handleGameInProgressFinished = () => {
-    setPregameState(PregameState.SPLASH_SCREEN);
-  };
  
   switch (pregameState) {
     case PregameState.SELECT_AVATAR:
@@ -150,6 +145,6 @@ export default function Pregame({ apiClient, isConnectionError }: PregameFinishe
       return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
     case PregameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen setPregameState={setPregameState} isConnectionError={isConnectionError}/>;
+      return <SplashScreen setPregameState={setPregameState} />;
   }
 }

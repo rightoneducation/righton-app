@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
 import {
   ApiClient,
   IChoice,
@@ -8,7 +7,6 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import HowToPlay from '../pages/pregame/HowToPlay';
 import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
@@ -74,8 +72,6 @@ export default function GameInProgressContainer({apiClient, gameSession, pregame
   };
 
   switch (currentState) {
-    case GameSessionState.TEAMS_JOINING:
-      return <HowToPlay isLoading={false} isError=''/>;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown ? (
         <PregameCountdown
@@ -134,13 +130,3 @@ export default function GameInProgressContainer({apiClient, gameSession, pregame
       );
   }
 }
-
-// preloads game data from local storage
-export const GameInProgressLoader = async () => {
-  const pregameModel = JSON.parse(window.localStorage.getItem('rightOn') ?? '');
-  if (pregameModel === null) {
-    throw Error('Local data error');
-  }
-  return pregameModel;
-};
-
