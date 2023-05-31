@@ -1,3 +1,5 @@
+[Please complete the below PR template as best as you can, deleting the placeholder text/screenshots/video and including any relevant information you have. You can also delete this text too! :v:]
+
 **Issue:**
 
 A brief description of the issue that the PR resolves. Please include links to any discussions on slack or github issues are perfect there.
