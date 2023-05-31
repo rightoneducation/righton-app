@@ -34,7 +34,9 @@
       "slide2": "Read step-by-step solutions",
       "slide3": "Gain more points by guessing the most popular incorrect answer!",
       "slide4": "The most total points wins!",
-      "description": "Waiting for the game to start..."
+      "description": "Waiting for the game to start...",
+      "loading": "Getting game session...",
+      "error": "Error: "
     }
   },
   "pregamecountdown": {

@@ -35,7 +35,22 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-export default function HowToPlay() {
+const BottomText = (isLoading: boolean, isError: string) => {
+  console.log('sup');
+  const { t } = useTranslation(); 
+  if (isLoading)
+    return t('joingame.howtoplay.loading');
+  if (isError)
+    return `${t('joingame.howtoplay.error')}${isError}`;
+  return t('joingame.howtoplay.description'); 
+};
+
+interface HowToPlayProps {
+  isLoading: boolean;
+  isError: string;
+}
+
+export default function HowToPlay({ isLoading, isError }: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -95,7 +110,7 @@ export default function HowToPlay() {
             paddingBottom: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          {t('joingame.howtoplay.description')}
+          { BottomText(isLoading, isError) }
         </Typography>
       </StackContainer>
     </BackgroundContainerStyled>

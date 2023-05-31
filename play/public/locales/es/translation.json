@@ -29,7 +29,9 @@
       "slide2": "Leer soluciones paso a paso",
       "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
       "slide4": "¡La mayor cantidad de puntos totales gana!",
-      "description": "Esperando a que comience el juego..."
+      "description": "Esperando a que comience el juego...",
+      "loading": "Obteniendo sesión de juego...",
+      "error": "Error: "
     }
   },
   "pregamecountdown": {
