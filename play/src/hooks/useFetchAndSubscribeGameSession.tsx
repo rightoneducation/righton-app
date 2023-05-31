@@ -19,7 +19,7 @@ export default function useFetchAndSubscribeGameSession(gameSessionId: string, a
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
     let ignore = false;
-    apiClient.getGameSession('gameSessionId')
+    apiClient.getGameSession(gameSessionId)
       .then((fetchedGame) => {
         if (!fetchedGame)
           setError('Game session not found');

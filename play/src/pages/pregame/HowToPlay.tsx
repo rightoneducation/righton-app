@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTranslation } from 'react-i18next';
