@@ -172,33 +172,31 @@ const GameSessionContainer = () => {
   };
 
   const handleStartGameModalTimerFinished = () => {
-    let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 };
-    apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
-      .then(response => {
-        localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
-        setHeaderGameCurrentTime(gameSession.phaseOneTime);
-        checkGameTimer(response);
-        setGameSession(response);
-
-        const teamDataRequests = response.teams.map(team => {
-          return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
-        });
-
-        Promise.all(teamDataRequests)
-          .then(responses => {
-            setTeamsArray(responses);
-            setIsModalOpen(false);
-          })
-          .catch(reason => console.log(reason));
-      });
-
+    setIsModalOpen(false);
   };
 
   const handleStartGame = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
     if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-      handleUpdateGameSession({ currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 });
+      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 };
+      apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+        .then(response => {
+          localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
+          setHeaderGameCurrentTime(gameSession.phaseOneTime);
+          checkGameTimer(response);
+          setGameSession(response);
+
+          const teamDataRequests = response.teams.map(team => {
+            return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+          });
+
+          Promise.all(teamDataRequests)
+            .then(responses => {
+              setTeamsArray(responses);
+            })
+            .catch(reason => console.log(reason));
+        });
       setIsTimerActive(true);
       setIsModalOpen(true);
     }
@@ -216,7 +214,6 @@ const GameSessionContainer = () => {
       if (isModalOpen) {
         return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} handleStartGame={handleStartGame} />;
       }
-      break;
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
