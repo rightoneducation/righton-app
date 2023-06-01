@@ -17,10 +17,7 @@ export default function useFetchAndSubscribeGameSession(
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
-  const [error, setError] = useState<{ title1: string; title2: string }>({
-    title1: t('error.connecting.title1'),
-    title2: '',
-  });
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
@@ -28,25 +25,19 @@ export default function useFetchAndSubscribeGameSession(
     // if player is retrying after an error, reset state values to 'isLoading' conditions unless the api call fails again
     if (retry > 0) {
       setIsLoading(true);
-      setError({ title1: '', title2: '' });
+      setError('');
     }
     apiClient
       .getGameSession(gameSessionId)
       .then((fetchedGame) => {
         if (!fetchedGame)
-          setError({
-            title1: t('error.connecting.title1'),
-            title2: t('error.connecting.gamesessionerror'),
-          });
+          setError(`${t('error.connecting.gamesessionerror')}`);
         try {
           const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
             fetchedGame.id,
             (response) => {
               if (!response)
-                setError({
-                  title1: t('error.connecting.title1'),
-                  title2: t('error.connecting.subscriptionerror'),
-                });
+                setError(`${t('error.connecting.subscriptionerror')}`);
               // Update the gameSession object and trigger the callback
               if (!ignore)
                 setGameSession((prevGame) => ({ ...prevGame, ...response }));
@@ -60,15 +51,9 @@ export default function useFetchAndSubscribeGameSession(
         } catch (e) {
           setIsLoading(false);
           if (e instanceof Error)
-            setError({
-              title1: t('error.connecting.title1'),
-              title2: e.message,
-            });
+            setError(e.message);
           else
-            setError({
-              title1: t('error.connecting.title1'),
-              title2: t('error.connecting.subscriptionerror'),
-            });
+            setError(`${t('error.connecting.subscriptionerror')}`);
         }
         return () => {
           // if component unmounts, ignore any updates to state
@@ -78,14 +63,10 @@ export default function useFetchAndSubscribeGameSession(
       .catch((e) => {
         setIsLoading(false);
         if (e instanceof Error)
-          setError({ title1: t('error.connecting.title1'), title2: e.message });
+          setError(e.message);
         else
-          setError({
-            title1: t('error.connecting.title1'),
-            title2: t('error.connecting.gamesessionerror'),
-          });
+          setError(`${t('error.connecting.gamesessionerror')}`);
       });
   }, [gameSessionId, apiClient, t, retry]);
-
   return { isLoading, error, gameSession };
 }

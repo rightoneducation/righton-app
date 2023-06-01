@@ -34,30 +34,21 @@ const handleRetry = () => {
 export const InitialError = Template.bind({});
 
 InitialError.args = {
-  errorText: {
-    title1: 'An error has occurred with the following error message:',
-    title2: 'Sample Error Message',
-  },
+  errorText: 'Sample Error Message',
   retry: retryCount,
   handleRetry,
 };
 
 export const RetryInProgress = Template.bind({});
 RetryInProgress.args = {
-  errorText: {
-    title1: 'Trying to reconnect...',
-    title2: '',
-  },
+  errorText: '',
   retry: retryCount,
   handleRetry,
 };
 
 export const RetriedTwice = Template.bind({});
 RetriedTwice.args = {
-  errorText: {
-    title1: 'An error has occurred with the following error message:',
-    title2: 'Sample Error Message',
-  },
+  errorText: 'An error has occurred with the following error message:',
   retry: 2,
   handleRetry,
 };

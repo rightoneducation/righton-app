@@ -34,7 +34,7 @@ export default function GameInProgressContainer(
   // if gamesession is loading/errored/waiting for teacher to start game
   if (!subscription.gameSession) {
     // if errored, show howToPlay page and error modal
-    if (subscription.error.title2) {
+    if (subscription.error) {
       return (
         <>
           <HowToPlay isLoading={false} isError />

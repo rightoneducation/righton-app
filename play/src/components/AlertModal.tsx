@@ -8,10 +8,7 @@ import Modal from 'react-modal';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 
 interface AlertModalProps {
-  errorText: {
-    title1: string;
-    title2: string;
-  };
+  errorText: string;
   retry: number;
   handleRetry: () => void;
 }
@@ -63,13 +60,13 @@ export default function AlertModal({
     >
       <Stack spacing={2}>
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
-          {errorText.title1}
+          {t('error.connecting.title1')}
         </Typography>
         <Typography
           variant="h4"
           sx={{ textAlign: 'center', fontStyle: 'italic' }}
         >
-          {errorText.title2}
+          {errorText}
         </Typography>
       </Stack>
       <Stack spacing={2} style={{ alignItems: 'center' }}>
