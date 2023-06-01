@@ -26,7 +26,7 @@ export default function useFetchAndSubscribeGameSession(gameSessionId: string, a
       setIsLoading(true);
       setError({title1: '', title2: ''});
     }
-    apiClient.getGameSession('gameSessionId')
+    apiClient.getGameSession(gameSessionId)
       .then((fetchedGame) => {
         if (!fetchedGame)
           setError({title1: t('joingame.errormodal.title1'), title2:'Game session not found'});
