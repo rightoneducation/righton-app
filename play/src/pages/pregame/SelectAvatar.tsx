@@ -97,6 +97,7 @@ export default function SelectAvatar({
 }: SelectAvatarProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [isButtonPressed, setIsButtonPressed] = React.useState(false);
 
   return (
     <BackgroundContainerStyled>
@@ -136,7 +137,13 @@ export default function SelectAvatar({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled onClick={handleAvatarSelectClick}>
+          <GamePlayButtonStyled
+            onClick={() => {
+              handleAvatarSelectClick();
+              setIsButtonPressed(true);
+            }}
+            disabled={isButtonPressed}
+          >
             {t('joingame.selectavatar.button')}
           </GamePlayButtonStyled>
         </BottomContainer>

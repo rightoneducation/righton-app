@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTranslation } from 'react-i18next';
@@ -35,69 +35,83 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-export default function HowToPlay() {
+const BottomText = (isLoading: boolean, isError: boolean) => {
+  const { t } = useTranslation();
+  if (isLoading) return t('howtoplay.loading');
+  if (isError) return '';
+  return t('howtoplay.description');
+};
+
+interface HowToPlayProps {
+  isError: boolean;
+  isLoading: boolean;
+}
+
+export default function HowToPlay({ isError, isLoading }: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer>
-        <Typography
-          variant="h2"
-          sx={{
-            textAlign: 'center',
-            paddingTop: `${theme.sizing.mediumPadding}px`,
+      <Typography
+        variant="h2"
+        sx={{
+          textAlign: 'center',
+          paddingTop: `${theme.sizing.mediumPadding}px`,
+        }}
+      >
+        {t('howtoplay.title')}
+      </Typography>
+      <StackContainer
+        style={{ position: 'absolute', justifyContent: 'center' }}
+      >
+        <HowToPlaySwiper
+          modules={[Pagination]}
+          slidesPerView={1}
+          pagination={{
+            el: '.swiper-pagination-container',
+            bulletClass: 'swiper-pagination-bullet',
+            bulletActiveClass: 'swiper-pagination-bullet-active',
+            clickable: true,
+            renderBullet(index, className) {
+              return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+            },
           }}
         >
-          {t('joingame.howtoplay.title')}
-        </Typography>
-        <Box style={{ width: '100%' }}>
-          <HowToPlaySwiper
-            modules={[Pagination]}
-            slidesPerView={1}
-            pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
-              clickable: true,
-              renderBullet(index, className) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-              },
-            }}
-          >
-            <SwiperSlide>
-              <HowToPlaySlide0Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide1Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide2Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide3Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide4Content />
-            </SwiperSlide>
-          </HowToPlaySwiper>
-          <PaginationContainerStyled
-            className="swiper-pagination-container"
-            style={{ paddingTop: `${theme.sizing.largePadding}px` }}
-          />
-        </Box>
-        <Typography
-          variant="h4"
-          sx={{
-            color: `${theme.palette.primary.main}`,
-            fontWeight: 400,
-            textAlign: 'center',
-            paddingBottom: `${theme.sizing.mediumPadding}px`,
-          }}
-        >
-          {t('joingame.howtoplay.description')}
-        </Typography>
+          <SwiperSlide>
+            <HowToPlaySlide0Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide1Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide2Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide3Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide4Content />
+          </SwiperSlide>
+        </HowToPlaySwiper>
+        <PaginationContainerStyled
+          className="swiper-pagination-container"
+          style={{ paddingTop: `${theme.sizing.largePadding}px` }}
+        />
       </StackContainer>
+      <Typography
+        variant="h4"
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          color: `${theme.palette.primary.main}`,
+          fontWeight: 400,
+          textAlign: 'center',
+          paddingBottom: `${theme.sizing.mediumPadding}px`,
+        }}
+      >
+        {BottomText(isLoading, isError)}
+      </Typography>
     </BackgroundContainerStyled>
   );
 }

@@ -83,6 +83,8 @@ export default function GameInProgress({
           qmarkLocation + 1
         );
       }
+    } else {
+      questionText = inputText;
     }
     return [introText, questionText];
   };

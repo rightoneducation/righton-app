@@ -1,4 +1,3 @@
-import { IGameSession } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -82,7 +81,7 @@ export enum FinalResultsState {
  * @param {number} selectedAvatar - avatar selected by player
  */
 export interface PregameModel {
-  gameSession: IGameSession;
+  gameSessionId: string;
   teamId: string;
   teamMemberId: string;
   selectedAvatar: number;
