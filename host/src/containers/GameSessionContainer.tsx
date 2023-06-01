@@ -171,10 +171,6 @@ const GameSessionContainer = () => {
     setGameTimerZero(false);
   };
 
-  const handleStartGameModalTimerFinished = () => {
-    setIsModalOpen(false);
-  };
-
   const handleStartGame = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
@@ -209,15 +205,12 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} handleStartGame={handleStartGame} />;
+      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      if (isModalOpen) {
-        return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} isModalOpen={isModalOpen} handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} handleStartGame={handleStartGame} />;
-      }
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} />;
+      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isModalOpen} />;
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
