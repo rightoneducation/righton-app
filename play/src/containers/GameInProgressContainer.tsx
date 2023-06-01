@@ -33,10 +33,10 @@ export default function GameInProgressContainer(props:GameInProgressContainerPro
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession 
   const  subscription = useFetchAndSubscribeGameSession(pregameModel.gameSessionId, apiClient, retry);
 
-  // this listens for changes to the retry state and updates the error text accordingly
+  // this listens for changes to subscription and updates the error text accordingly
   React.useEffect(() => {
     setErrorText({title1: t('joingame.errormodal.title1'), title2: subscription.error ?? 'Game Session Could Not Be Found'});
-  }, [retry, subscription.error, t]);
+  }, [subscription, t]);
   
   // if gamesession is loading/errored/waiting for teacher to start game
   if (!subscription.gameSession){
