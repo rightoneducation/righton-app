@@ -8,9 +8,9 @@ import Modal from 'react-modal';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 
 interface AlertModalProps {
-  errorText: { 
-    title1: string, 
-    title2: string
+  errorText: {
+    title1: string;
+    title2: string;
   };
   retry: number;
   handleRetry: () => void;
@@ -25,7 +25,7 @@ export default function AlertModal({
   const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   return (
     <Modal
       isOpen
@@ -33,7 +33,9 @@ export default function AlertModal({
       style={{
         content: {
           position: 'absolute',
-          width: isExtraSmallDevice ? `calc(100% - (2 * ${theme.sizing.extraLargePadding}px))` : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.extraLargePadding}px))`, 
+          width: isExtraSmallDevice
+            ? `calc(100% - (2 * ${theme.sizing.extraLargePadding}px))`
+            : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.extraLargePadding}px))`,
           minWidth: '200px',
           minHeight: '200px',
           inset: 'auto',
@@ -56,41 +58,45 @@ export default function AlertModal({
           alignItems: 'center',
         },
       }}
-      shouldCloseOnOverlayClick = {false}
+      shouldCloseOnOverlayClick={false}
       appElement={document.getElementById('root') || undefined}
     >
-        <Stack spacing={2}>
+      <Stack spacing={2}>
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
           {errorText.title1}
         </Typography>
-        <Typography variant="h4" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
-         {errorText.title2}
+        <Typography
+          variant="h4"
+          sx={{ textAlign: 'center', fontStyle: 'italic' }}
+        >
+          {errorText.title2}
         </Typography>
-        </Stack>
-        <Stack spacing={2} style={{alignItems:'center'}}>
-          <IntroButtonStyled
-            onClick={() => {
-              handleRetry();
-            }}
-            style={{
-              background: `${theme.palette.primary.highlightGradient}`,
-              boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-            }}
-          >
-            {t('error.connecting.button1')}{retry > 0 ? ` (${retry})` : null}
-          </IntroButtonStyled>
-          <IntroButtonStyled
-            onClick={() => {
-              window.localStorage.removeItem('rightOn')
-              navigate('/');
-            }}
-            style={{
-              boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-            }}
-          >
-            {t('error.connecting.button2')}
-          </IntroButtonStyled>
-        </Stack>
+      </Stack>
+      <Stack spacing={2} style={{ alignItems: 'center' }}>
+        <IntroButtonStyled
+          onClick={() => {
+            handleRetry();
+          }}
+          style={{
+            background: `${theme.palette.primary.highlightGradient}`,
+            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
+          }}
+        >
+          {t('error.connecting.button1')}
+          {retry > 0 ? ` (${retry})` : null}
+        </IntroButtonStyled>
+        <IntroButtonStyled
+          onClick={() => {
+            window.localStorage.removeItem('rightOn');
+            navigate('/');
+          }}
+          style={{
+            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
+          }}
+        >
+          {t('error.connecting.button2')}
+        </IntroButtonStyled>
+      </Stack>
     </Modal>
   );
 }

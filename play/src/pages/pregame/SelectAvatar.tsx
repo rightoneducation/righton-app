@@ -137,11 +137,13 @@ export default function SelectAvatar({
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
-          <GamePlayButtonStyled onClick={() => {
-            handleAvatarSelectClick();
-            setIsButtonPressed(true);
-            }} 
-            disabled={isButtonPressed}>
+          <GamePlayButtonStyled
+            onClick={() => {
+              handleAvatarSelectClick();
+              setIsButtonPressed(true);
+            }}
+            disabled={isButtonPressed}
+          >
             {t('joingame.selectavatar.button')}
           </GamePlayButtonStyled>
         </BottomContainer>

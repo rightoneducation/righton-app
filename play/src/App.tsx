@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  createBrowserRouter, 
+  createBrowserRouter,
   createRoutesFromElements,
-  Route, 
-  RouterProvider
-} from 'react-router-dom'
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
 import { ApiClient, Environment } from '@righton/networking';
 import PregameContainer from './containers/PregameContainer';
@@ -20,16 +20,13 @@ const apiClient = new ApiClient(Environment.Staging);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
+      <Route path="/" element={<PregameContainer apiClient={apiClient} />} />
       <Route
-        path="/"
-        element={<PregameContainer apiClient={apiClient} />}
-      />
-      <Route 
         path="/game"
         element={<GameInProgressContainer apiClient={apiClient} />}
       />
       <Route element={<RedirectToPlayIfMissing />} />
-  </>
+    </>
   )
 );
 

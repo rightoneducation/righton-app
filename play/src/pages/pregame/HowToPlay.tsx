@@ -36,12 +36,10 @@ const HowToPlaySwiper = styled(Swiper)({
 });
 
 const BottomText = (isLoading: boolean, isError: boolean) => {
-  const { t } = useTranslation(); 
-  if (isLoading)
-    return t('howtoplay.loading');
-  if (isError)
-    return '';
-  return t('howtoplay.description'); 
+  const { t } = useTranslation();
+  if (isLoading) return t('howtoplay.loading');
+  if (isError) return '';
+  return t('howtoplay.description');
 };
 
 interface HowToPlayProps {
@@ -55,63 +53,65 @@ export default function HowToPlay({ isError, isLoading }: HowToPlayProps) {
 
   return (
     <BackgroundContainerStyled>
-        <Typography
-          variant="h2"
-          sx={{
-            textAlign: 'center',
-            paddingTop: `${theme.sizing.mediumPadding}px`,
+      <Typography
+        variant="h2"
+        sx={{
+          textAlign: 'center',
+          paddingTop: `${theme.sizing.mediumPadding}px`,
+        }}
+      >
+        {t('howtoplay.title')}
+      </Typography>
+      <StackContainer
+        style={{ position: 'absolute', justifyContent: 'center' }}
+      >
+        <HowToPlaySwiper
+          modules={[Pagination]}
+          slidesPerView={1}
+          pagination={{
+            el: '.swiper-pagination-container',
+            bulletClass: 'swiper-pagination-bullet',
+            bulletActiveClass: 'swiper-pagination-bullet-active',
+            clickable: true,
+            renderBullet(index, className) {
+              return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+            },
           }}
         >
-          {t('howtoplay.title')}
-        </Typography>
-        <StackContainer style={{position: 'absolute', justifyContent: 'center'}}>
-          <HowToPlaySwiper
-            modules={[Pagination]}
-            slidesPerView={1}
-            pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
-              clickable: true,
-              renderBullet(index, className) {
-                return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
-              },
-            }}
-          >
-            <SwiperSlide>
-              <HowToPlaySlide0Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide1Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide2Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide3Content />
-            </SwiperSlide>
-            <SwiperSlide>
-              <HowToPlaySlide4Content />
-            </SwiperSlide>
-          </HowToPlaySwiper>
-          <PaginationContainerStyled
-            className="swiper-pagination-container"
-            style={{ paddingTop: `${theme.sizing.largePadding}px` }}
-          />
-        </StackContainer>
-        <Typography
-          variant="h4"
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            color: `${theme.palette.primary.main}`,
-            fontWeight: 400,
-            textAlign: 'center',
-            paddingBottom: `${theme.sizing.mediumPadding}px`,
-          }}
-        >
-          { BottomText(isLoading, isError) }
-        </Typography>
+          <SwiperSlide>
+            <HowToPlaySlide0Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide1Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide2Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide3Content />
+          </SwiperSlide>
+          <SwiperSlide>
+            <HowToPlaySlide4Content />
+          </SwiperSlide>
+        </HowToPlaySwiper>
+        <PaginationContainerStyled
+          className="swiper-pagination-container"
+          style={{ paddingTop: `${theme.sizing.largePadding}px` }}
+        />
+      </StackContainer>
+      <Typography
+        variant="h4"
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          color: `${theme.palette.primary.main}`,
+          fontWeight: 400,
+          textAlign: 'center',
+          paddingBottom: `${theme.sizing.mediumPadding}px`,
+        }}
+      >
+        {BottomText(isLoading, isError)}
+      </Typography>
     </BackgroundContainerStyled>
   );
 }

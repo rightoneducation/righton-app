@@ -95,11 +95,11 @@
   },
   "error": {
     "connecting": {
-        "title1": "Se ha producido un error con el siguiente mensaje de error:",
-        "gamesessionerror": "Sesión de juego no encontrada",
-        "subscriptionerror": "Subscription could not be established",
-        "button1": "No se pudo establecer la suscripción",
-        "button2": "Volver al menú principal"
+      "title1": "Se ha producido un error con el siguiente mensaje de error:",
+      "gamesessionerror": "Sesión de juego no encontrada",
+      "subscriptionerror": "Subscription could not be established",
+      "button1": "No se pudo establecer la suscripción",
+      "button2": "Volver al menú principal"
     }
   }
 }

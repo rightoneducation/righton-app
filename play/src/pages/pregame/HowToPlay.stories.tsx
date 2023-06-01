@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof HowToPlay> = function AnswerCardTemplate(
   args
 ) {
   return (
-    <I18nextProvider i18n={i18n} defaultNS='translation'>
+    <I18nextProvider i18n={i18n} defaultNS="translation">
       <BrowserRouter>
         <ThemeProvider theme={Theme}>
           <HowToPlay {...args} />

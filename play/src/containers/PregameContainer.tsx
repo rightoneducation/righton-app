@@ -80,7 +80,11 @@ export default function Pregame({ apiClient }: PregameFinished) {
         setAPIError(true);
       } else {
         try {
-          const teamMember = await apiClient.addTeamMemberToTeam(team.id, true, uuidv4());
+          const teamMember = await apiClient.addTeamMemberToTeam(
+            team.id,
+            true,
+            uuidv4()
+          );
           if (!teamMember) {
             setAPIError(true);
           }
@@ -94,7 +98,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
     }
     return undefined;
   };
-  
+
   const handleAvatarSelectClick = async () => {
     try {
       if (gameSession) {
@@ -112,12 +116,11 @@ export default function Pregame({ apiClient }: PregameFinished) {
         window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
         navigate(`/game`);
       }
-    }
-    catch (error) {
+    } catch (error) {
       setAPIError(true);
     }
   };
- 
+
   switch (pregameState) {
     case PregameState.SELECT_AVATAR:
       return (

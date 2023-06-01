@@ -15,26 +15,33 @@ import StartPhase2 from '../pages/StartPhase2';
 import { PregameModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
- apiClient: ApiClient;
- gameSession: IGameSession;
- pregameModel: PregameModel;
+  apiClient: ApiClient;
+  gameSession: IGameSession;
+  pregameModel: PregameModel;
 }
 
-export default function GameInProgressContainer({apiClient, gameSession, pregameModel} : GameInProgressContainerProps) {
+export default function GameInProgressContainer({
+  apiClient,
+  gameSession,
+  pregameModel,
+}: GameInProgressContainerProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const { currentState }  =  gameSession;
+  const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession.teams?.find((team) => team.id === pregameModel.teamId);
+  const currentTeam = gameSession.teams?.find(
+    (team) => team.id === pregameModel.teamId
+  );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
-  const answerChoices = currentQuestion?.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-    reason: choice.reason ?? '',
-  })) ?? [];
+  const answerChoices =
+    currentQuestion?.choices!.map((choice: IChoice) => ({  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      id: uuidv4(),
+      text: choice.text,
+      isCorrectAnswer: choice.isAnswer,
+      reason: choice.reason ?? '',
+    })) ?? [];
 
   const addTeamAnswerToTeamMember = async (
     question: IQuestion,
@@ -61,7 +68,7 @@ export default function GameInProgressContainer({apiClient, gameSession, pregame
       console.error(error);
     }
   };
-  
+
   const handlePregameTimerFinished = () => {
     setIsPregameCountdown(false);
   };

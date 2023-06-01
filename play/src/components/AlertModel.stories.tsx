@@ -16,7 +16,7 @@ const Template: ComponentStory<typeof AlertModal> = function AnswerCardTemplate(
   args
 ) {
   return (
-    <I18nextProvider i18n={i18n} defaultNS='translation'>
+    <I18nextProvider i18n={i18n} defaultNS="translation">
       <BrowserRouter>
         <ThemeProvider theme={Theme}>
           <AlertModal {...args} />
@@ -29,13 +29,13 @@ const Template: ComponentStory<typeof AlertModal> = function AnswerCardTemplate(
 let retryCount = 0;
 const handleRetry = () => {
   retryCount += 1;
-}
+};
 
 export const InitialError = Template.bind({});
 
 InitialError.args = {
   errorText: {
-    title1: 'An error has occurred with the following error message:', 
+    title1: 'An error has occurred with the following error message:',
     title2: 'Sample Error Message',
   },
   retry: retryCount,
@@ -45,7 +45,7 @@ InitialError.args = {
 export const RetryInProgress = Template.bind({});
 RetryInProgress.args = {
   errorText: {
-    title1: 'Trying to reconnect...', 
+    title1: 'Trying to reconnect...',
     title2: '',
   },
   retry: retryCount,
@@ -55,11 +55,9 @@ RetryInProgress.args = {
 export const RetriedTwice = Template.bind({});
 RetriedTwice.args = {
   errorText: {
-    title1: 'An error has occurred with the following error message:', 
+    title1: 'An error has occurred with the following error message:',
     title2: 'Sample Error Message',
   },
   retry: 2,
   handleRetry,
 };
-
-
