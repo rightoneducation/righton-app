@@ -87,6 +87,7 @@ export default function AlertModal({
           </IntroButtonStyled>
           <IntroButtonStyled
             onClick={() => {
+              window.localStorage.removeItem('rightOn')
               navigate('/');
             }}
             style={{
