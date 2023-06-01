@@ -1,19 +1,19 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
-import JoinGameContainer from './JoinGameContainer';
+import PregameContainer from './PregameContainer';
 import Theme from '../lib/Theme';
 
 export default {
-  title: 'Design System/4_Pages/JoinGameContainer',
-  component: JoinGameContainer,
-} as ComponentMeta<typeof JoinGameContainer>;
+  title: 'Design System/4_Pages/PregameContainer',
+  component: PregameContainer,
+} as ComponentMeta<typeof PregameContainer>;
 
-const Template: ComponentStory<typeof JoinGameContainer> =
-  function JoinGameContainerTemplate(args) {
+const Template: ComponentStory<typeof PregameContainer> =
+  function PregameContainerTemplate(args) {
     return (
       <ThemeProvider theme={Theme}>
-        <JoinGameContainer {...args} />
+        <PregameContainer {...args} />
       </ThemeProvider>
     );
   };
