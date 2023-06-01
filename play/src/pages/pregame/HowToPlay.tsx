@@ -38,10 +38,10 @@ const HowToPlaySwiper = styled(Swiper)({
 const BottomText = (isLoading: boolean, isError: boolean) => {
   const { t } = useTranslation(); 
   if (isLoading)
-    return t('joingame.howtoplay.loading');
+    return t('howtoplay.loading');
   if (isError)
     return '';
-  return t('joingame.howtoplay.description'); 
+  return t('howtoplay.description'); 
 };
 
 interface HowToPlayProps {
@@ -62,7 +62,7 @@ export default function HowToPlay({ isError, isLoading }: HowToPlayProps) {
             paddingTop: `${theme.sizing.mediumPadding}px`,
           }}
         >
-          {t('joingame.howtoplay.title')}
+          {t('howtoplay.title')}
         </Typography>
         <StackContainer style={{position: 'absolute', justifyContent: 'center'}}>
           <HowToPlaySwiper

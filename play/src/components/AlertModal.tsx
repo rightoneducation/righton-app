@@ -25,12 +25,6 @@ export default function AlertModal({
   const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  // will expand this to include rejoin game modal text in following PR
-  const modalText = {
-    button1: t('joingame.errormodal.button1'),
-    button2: t('joingame.errormodal.button2')
-  };
   
   return (
     <Modal
@@ -83,7 +77,7 @@ export default function AlertModal({
               boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
             }}
           >
-            {t('joingame.errormodal.button1')}{retry > 0 ? ` (${retry})` : null}
+            {t('error.connecting.button1')}{retry > 0 ? ` (${retry})` : null}
           </IntroButtonStyled>
           <IntroButtonStyled
             onClick={() => {
@@ -94,7 +88,7 @@ export default function AlertModal({
               boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
             }}
           >
-            {modalText.button2}
+            {t('error.connecting.button2')}
           </IntroButtonStyled>
         </Stack>
     </Modal>

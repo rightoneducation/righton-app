@@ -16,7 +16,7 @@ export default function useFetchAndSubscribeGameSession(gameSessionId: string, a
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true); 
   const { t } = useTranslation();
-  const [error, setError] = useState<{title1:string, title2:string}>({title1: t('joingame.errormodal.title1'), title2: ''});
+  const [error, setError] = useState<{title1:string, title2:string}>({title1: t('error.connecting.title1'), title2: ''});
   
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
@@ -29,11 +29,11 @@ export default function useFetchAndSubscribeGameSession(gameSessionId: string, a
     apiClient.getGameSession(gameSessionId)
       .then((fetchedGame) => {
         if (!fetchedGame)
-          setError({title1: t('joingame.errormodal.title1'), title2:'Game session not found'});
+          setError({title1: t('error.connecting.title1'), title2: t('error.connecting.gamesessionerror')});
         try {
           const gameSessionSubscription = apiClient.subscribeUpdateGameSession(fetchedGame.id, response => {
             if (!response)
-            setError({title1: t('joingame.errormodal.title1'), title2:'Subscription could not be established'});
+            setError({title1: t('error.connecting.title1'), title2: t('error.connecting.subscriptionerror')});
             // Update the gameSession object and trigger the callback
             if (!ignore)
               setGameSession((prevGame) => ({ ...prevGame, ...response }));
@@ -46,9 +46,9 @@ export default function useFetchAndSubscribeGameSession(gameSessionId: string, a
         } catch (e) {
             setIsLoading(false);
             if (e instanceof Error)
-              setError({title1: t('joingame.errormodal.title1'), title2: e.message});
+              setError({title1: t('error.connecting.title1'), title2: e.message});
             else 
-              setError({title1: t('joingame.errormodal.title1'), title2:'Subscription could not be established'});
+              setError({title1: t('error.connecting.title1'), title2: t('error.connecting.subscriptionerror')});
         }
         return () => {
           // if component unmounts, ignore any updates to state
@@ -58,9 +58,9 @@ export default function useFetchAndSubscribeGameSession(gameSessionId: string, a
       .catch((e) => {
         setIsLoading(false);
         if (e instanceof Error)
-          setError({title1: t('joingame.errormodal.title1'), title2: e.message});
+          setError({title1: t('error.connecting.title1'), title2: e.message});
         else 
-          setError({title1: t('joingame.errormodal.title1'), title2:'Game session not found'});
+          setError({title1: t('error.connecting.title1'), title2: t('error.connecting.gamesessionerror')});
       })
   }, [gameSessionId, apiClient, t, retry]); 
 
