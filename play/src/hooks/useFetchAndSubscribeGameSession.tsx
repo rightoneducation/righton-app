@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ApiClient, IGameSession } from '@righton/networking';
+import { isNullOrUndefined, ApiClient, IGameSession } from '@righton/networking';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -27,46 +27,53 @@ export default function useFetchAndSubscribeGameSession(
       setIsLoading(true);
       setError('');
     }
-    apiClient
-      .getGameSession('gameSessionId')
-      .then((fetchedGame) => {
-        if (!fetchedGame)
-          setError(`${t('error.connecting.gamesessionerror')}`);
-        try {
-          const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-            fetchedGame.id,
-            (response) => {
-              if (!response)
-                setError(`${t('error.connecting.subscriptionerror')}`);
-              // Update the gameSession object and trigger the callback
-              if (!ignore)
-                setGameSession((prevGame) => ({ ...prevGame, ...response }));
-            }
-          );
-          setIsLoading(false);
+    // if gamesessionId is null, set error and prevent api calls
+    if (isNullOrUndefined(gameSessionId)){
+      setError(`${t('error.connecting.gamesessionerror')}`);
+      setIsLoading(false);
+    }
+    else {
+      apiClient
+        .getGameSession(gameSessionId)
+        .then((fetchedGame) => {
+          if (!fetchedGame)
+            setError(`${t('error.connecting.gamesessionerror')}`);
+          try {
+            const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+              fetchedGame.id,
+              (response) => {
+                if (!response)
+                  setError(`${t('error.connecting.subscriptionerror')}`);
+                // Update the gameSession object and trigger the callback
+                if (!ignore)
+                  setGameSession((prevGame) => ({ ...prevGame, ...response }));
+              }
+            );
+            setIsLoading(false);
+            return () => {
+              ignore = true;
+              gameSessionSubscription.unsubscribe();
+            };
+          } catch (e) {
+            setIsLoading(false);
+            if (e instanceof Error)
+              setError(e.message);
+            else
+              setError(`${t('error.connecting.subscriptionerror')}`);
+          }
           return () => {
+            // if component unmounts, ignore any updates to state
             ignore = true;
-            gameSessionSubscription.unsubscribe();
           };
-        } catch (e) {
+        })
+        .catch((e) => {
           setIsLoading(false);
           if (e instanceof Error)
             setError(e.message);
           else
-            setError(`${t('error.connecting.subscriptionerror')}`);
-        }
-        return () => {
-          // if component unmounts, ignore any updates to state
-          ignore = true;
-        };
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        if (e instanceof Error)
-          setError(e.message);
-        else
-          setError(`${t('error.connecting.gamesessionerror')}`);
-      });
+            setError(`${t('error.connecting.gamesessionerror')}`);
+        });
+    }
   }, [gameSessionId, apiClient, t, retry]);
   return { isLoading, error, gameSession };
 }

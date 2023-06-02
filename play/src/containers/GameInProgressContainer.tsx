@@ -1,11 +1,13 @@
 import React from 'react';
-import { ApiClient } from '@righton/networking';
+import { ApiClient, isNullOrUndefined } from '@righton/networking';
+import {Navigate} from 'react-router-dom';
 import useFetchLocalData from '../hooks/useFetchLocalData';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import HowToPlay from '../pages/pregame/HowToPlay';
 import AlertModal from '../components/AlertModal';
 import { HowToPlayMode } from '../lib/PlayModels';
+
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -23,15 +25,18 @@ export default function GameInProgressContainer(
 
   // loads game data from local storage
   // if no game data, redirects to splashscreen
-  const pregameModel = useFetchLocalData();
+  const pregameModel = useFetchLocalData(); 
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
-    pregameModel.gameSessionId,
+    pregameModel?.gameSessionId,
     apiClient,
     retry
   );
 
+  // if there isn't data in localstorage automatically redirect to the splashscreen
+  if (isNullOrUndefined(pregameModel)) 
+    return <Navigate replace to="/" />;
   // if gamesession is loading/errored/waiting for teacher to start game
   if (!subscription.gameSession) {
     // if errored, show howToPlay page and error modal
