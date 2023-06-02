@@ -96,12 +96,12 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a question");
       return;
     }
-    if (question.choices[0].text == null || question.choices[0].text == "") {
+    if (question.choices[0].text == null || question.choices[0].text === "") {
       window.alert("Please enter a correct answer")
       return;
     }
     for (let choiceI = 1; choiceI < (question.choices).length; choiceI++) {
-      if (question.choices[choiceI].text == null || question.choices[choiceI].text == "") {
+      if (question.choices[choiceI].text == null || question.choices[choiceI].text === "") {
         window.alert("Please enter an answer for wrong answer " + choiceI);
         return;
       }
@@ -120,15 +120,15 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       return;
     }
 
-    console.log("--------------------------------------------------------------")
-    console.log("question choices: ")
-    console.log((question.choices).length)
-    for (let i = 0; i < (question.choices).length; i++) {
-      console.log("-------")
-      console.log("choice " + i + ":");
-      console.log("   text: " + question.choices[i].text)
-      console.log("   isAnswer: " + question.choices[i].isAnswer)
-    }
+    // console.log("--------------------------------------------------------------")
+    // console.log("question choices: ")
+    // console.log((question.choices).length)
+    // for (let i = 0; i < (question.choices).length; i++) {
+    //   console.log("-------")
+    //   console.log("choice " + i + ":");
+    //   console.log("   text: " + question.choices[i].text)
+    //   console.log("   isAnswer: " + question.choices[i].isAnswer)
+    // }
 
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
