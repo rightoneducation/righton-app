@@ -29,6 +29,9 @@
       "button": "Elegir"
     }
   },
+  "lobby": {
+    "title": "Reincorporarse al juego..."
+  },
   "howtoplay": {
     "title": "¡Cómo jugar!",
     "slide0": "Lea la pregunta de opción múltiple",

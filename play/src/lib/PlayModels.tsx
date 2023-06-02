@@ -88,17 +88,11 @@ export interface PregameModel {
   isRejoin: boolean;
 }
 
-export interface LocalSession {
-  gameSessionId: string;
-  teamId: string;
-  teamMemberId: string;
-  selectedAvatar: number;
-}
-
-export enum HowToPlayMode {
+export enum LobbyMode {
   ERROR = 'ERROR',
   LOADING = 'LOADING',
   READY = 'READY',
+  REJOIN = 'REJOIN',
 }
 
 interface MonsterMap {

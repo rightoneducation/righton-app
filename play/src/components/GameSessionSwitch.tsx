@@ -26,6 +26,7 @@ export default function GameInProgressContainer({
   pregameModel,
 }: GameInProgressContainerProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
+  const [isRejoin, setIsRejoin] = useState<boolean>(pregameModel.isRejoin);
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex ?? 0];
@@ -36,7 +37,8 @@ export default function GameInProgressContainer({
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
   const answerChoices =
-    currentQuestion?.choices!.map((choice: IChoice) => ({  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion?.choices!.map((choice: IChoice) => ({
+      // eslint-disable-line @typescript-eslint/no-non-null-assertion
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
@@ -69,21 +71,16 @@ export default function GameInProgressContainer({
     }
   };
 
-  const handlePregameTimerFinished = () => {
-    setIsPregameCountdown(false);
-  };
-
   const handleUpdateScore = (inputScore: number) => {
     updateTeamScore(pregameModel.teamId, inputScore);
     setScore(inputScore);
   };
-
+  console.log(pregameModel);
+  console.log(isRejoin);
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      return isPregameCountdown ? (
-        <PregameCountdown
-          handlePregameTimerFinished={handlePregameTimerFinished}
-        />
+      return isPregameCountdown && !isRejoin ? (
+        <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} />
       ) : (
         <GameInProgress
           {...gameSession}
@@ -92,6 +89,8 @@ export default function GameInProgressContainer({
           teamId={pregameModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
+          isRejoin={isRejoin}
+          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -105,6 +104,8 @@ export default function GameInProgressContainer({
           teamId={pregameModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
+          isRejoin={isRejoin}
+          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -119,6 +120,8 @@ export default function GameInProgressContainer({
           answerChoices={answerChoices}
           score={score}
           handleUpdateScore={handleUpdateScore}
+          isRejoin={isRejoin}
+          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.PHASE_2_START:

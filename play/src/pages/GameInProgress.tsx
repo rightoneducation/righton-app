@@ -62,7 +62,8 @@ export default function GameInProgress({
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
+      // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );
@@ -99,7 +100,7 @@ export default function GameInProgress({
   // checks if a player is rejoining into an answering question phase in which they have already answered
   // using a useEffect here to prevent setIsRejoin updating a state variable in the middle of a render
   useEffect(() => {
-    if (isRejoin) { 
+    if (isRejoin) {
       let submitted = false;
       const answers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
         currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
@@ -124,7 +125,7 @@ export default function GameInProgress({
           }
         });
       }
-      setIsRejoin(false);
+      // setIsRejoin(false);
       setIsSubmitted(submitted);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

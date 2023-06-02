@@ -4,14 +4,13 @@ import { Stack, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTranslation } from 'react-i18next';
-import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
 import HowToPlaySlide0Content from './howtoplayslides/HowToPlaySlide0Content';
 import HowToPlaySlide1Content from './howtoplayslides/HowToPlaySlide1Content';
 import HowToPlaySlide2Content from './howtoplayslides/HowToPlaySlide2Content';
 import HowToPlaySlide3Content from './howtoplayslides/HowToPlaySlide3Content';
 import HowToPlaySlide4Content from './howtoplayslides/HowToPlaySlide4Content';
-import { HowToPlayMode } from '../../lib/PlayModels';
+import { LobbyMode } from '../../lib/PlayModels';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -36,23 +35,23 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-const BottomText = (mode: HowToPlayMode) => {
+const BottomText = (mode: LobbyMode) => {
   const { t } = useTranslation();
-  if (mode === HowToPlayMode.LOADING) return t('howtoplay.loading');
-  if (mode === HowToPlayMode.ERROR) return '';
+  if (mode === LobbyMode.LOADING) return t('howtoplay.loading');
+  if (mode === LobbyMode.ERROR) return '';
   return t('howtoplay.description');
 };
 
 interface HowToPlayProps {
-  mode: HowToPlayMode;
+  mode: LobbyMode;
 }
 
-export default function HowToPlay({mode}: HowToPlayProps) {
+export default function HowToPlay({ mode }: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
   return (
-    <BackgroundContainerStyled>
+    <>
       <Typography
         variant="h2"
         sx={{
@@ -112,6 +111,6 @@ export default function HowToPlay({mode}: HowToPlayProps) {
       >
         {BottomText(mode)}
       </Typography>
-    </BackgroundContainerStyled>
+    </>
   );
 }

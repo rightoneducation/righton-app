@@ -2,7 +2,8 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { PregameState } from '../../lib/PlayModels';
+import { isNullOrUndefined } from '@righton/networking';
+import { PregameState, PregameModel } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import RejoinModal from '../../components/RejoinModal';
@@ -34,25 +35,21 @@ const BottomBox = styled(Box)(({ theme }) => ({
 }));
 
 interface SplashScreenProps {
+  rejoinGameObject: PregameModel | null;
   setPregameState: (gameState: PregameState) => void;
   handleRejoinSession: () => void;
 }
 
 export default function SplashScreen({
+  rejoinGameObject,
   setPregameState,
   handleRejoinSession,
 }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-
-  const checkForRejoin = () => {
-    const rejoinSession = localStorage.getItem('rightOn');
-    if (rejoinSession) {
-      return true;
-    }
-    return false;
-  }
-  const [isModalVisible, setIsModalVisible] = React.useState(checkForRejoin());
+  const [isModalVisible, setIsModalVisible] = React.useState(
+    !isNullOrUndefined(rejoinGameObject)
+  );
 
   return (
     <BackgroundContainerStyled>

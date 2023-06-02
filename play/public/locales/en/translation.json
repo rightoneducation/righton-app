@@ -29,6 +29,9 @@
       "button": "Choose"
     }
   },
+  "lobby": {
+    "title": "Rejoining Game..."
+  },
   "howtoplay": {
     "title": "How to Play!",
     "slide0": "Read the multiple-choice question",
