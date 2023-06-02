@@ -100,6 +100,18 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a correct answer")
       return;
     }
+    // console.log(question.instructions.length)
+    console.log(question.instructions == null);
+    if (question.instructions == null) {
+      window.alert("Please provide at least one step for the correct answer explanation");
+      return;
+    }
+    // for (let stepI = 0; stepI < question.instructions.length; stepI++) {
+    //   if (question.instructions[stepI] == null || question.instructions[stepI] === "") {
+    //     window.alert("Please provide at least one step for the correct answer explanation");
+    //     return;
+    //   }
+    // }
     for (let choiceI = 1; choiceI < (question.choices).length; choiceI++) {
       if (question.choices[choiceI].text == null || question.choices[choiceI].text === "") {
         window.alert("Please enter an answer for wrong answer " + choiceI);
@@ -120,6 +132,10 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       return;
     }
 
+    console.log("------------");
+    for (let stepI = 0; stepI < question.instructions.length; stepI++) {
+      console.log("   step " + stepI + ":" + question.instructions[stepI]);
+    }
     // console.log("--------------------------------------------------------------")
     // console.log("question choices: ")
     // console.log((question.choices).length)
