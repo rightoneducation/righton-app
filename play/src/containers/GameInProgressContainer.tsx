@@ -38,12 +38,12 @@ export default function GameInProgressContainer(
     if (subscription.error) {
       return (
         <>
-          <HowToPlay mode={HowToPlayMode.ERROR} />
           <AlertModal
             errorText={subscription.error}
             retry={retry}
             handleRetry={handleRetry}
           />
+          <HowToPlay mode={HowToPlayMode.ERROR} />
         </>
       );
     }
