@@ -100,18 +100,10 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a correct answer")
       return;
     }
-    // console.log(question.instructions.length)
-    console.log(question.instructions == null);
-    if (question.instructions == null) {
+    if (question.instructions == null || question.instructions[0] == null || question.instructions[0] === "") {
       window.alert("Please provide at least one step for the correct answer explanation");
       return;
     }
-    // for (let stepI = 0; stepI < question.instructions.length; stepI++) {
-    //   if (question.instructions[stepI] == null || question.instructions[stepI] === "") {
-    //     window.alert("Please provide at least one step for the correct answer explanation");
-    //     return;
-    //   }
-    // }
     for (let choiceI = 1; choiceI < (question.choices).length; choiceI++) {
       if (question.choices[choiceI].text == null || question.choices[choiceI].text === "") {
         window.alert("Please enter an answer for wrong answer " + choiceI);
@@ -122,7 +114,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a grade level");
       return;
     }
-
     if (question.domain == null || question.domain === "") {
       window.alert("Please enter a domain/subject");
       return;
@@ -131,21 +122,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a cluster to save the game");
       return;
     }
-
-    console.log("------------");
-    for (let stepI = 0; stepI < question.instructions.length; stepI++) {
-      console.log("   step " + stepI + ":" + question.instructions[stepI]);
-    }
-    // console.log("--------------------------------------------------------------")
-    // console.log("question choices: ")
-    // console.log((question.choices).length)
-    // for (let i = 0; i < (question.choices).length; i++) {
-    //   console.log("-------")
-    //   console.log("choice " + i + ":");
-    //   console.log("   text: " + question.choices[i].text)
-    //   console.log("   isAnswer: " + question.choices[i].isAnswer)
-    // }
-
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions);
