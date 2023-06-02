@@ -5,6 +5,7 @@ import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSe
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import HowToPlay from '../pages/pregame/HowToPlay';
 import AlertModal from '../components/AlertModal';
+import { HowToPlayMode } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -37,7 +38,7 @@ export default function GameInProgressContainer(
     if (subscription.error) {
       return (
         <>
-          <HowToPlay isLoading={false} isError />
+          <HowToPlay mode={HowToPlayMode.ERROR} />
           <AlertModal
             errorText={subscription.error}
             retry={retry}
@@ -47,9 +48,9 @@ export default function GameInProgressContainer(
       );
     }
     // if loading, display loading message on bottom of How to Play page
-    if (subscription.isLoading) return <HowToPlay isLoading isError={false} />;
+    if (subscription.isLoading) return <HowToPlay mode={HowToPlayMode.LOADING} />;
     // if waiting for teacher, display waiting message on How to Play page
-    return <HowToPlay isLoading={false} isError={false} />;
+    return <HowToPlay mode={HowToPlayMode.READY} />;
   }
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
