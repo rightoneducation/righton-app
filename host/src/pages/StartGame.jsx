@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
-import GameLoadModal from "../components/GameLoadModal";
 
 export default function StartGame({
   teams = [],
@@ -13,15 +12,12 @@ export default function StartGame({
   gameSessionId,
   gameCode,
   currentState,
-  handleStartGame,
-  isModalOpen,
-  handleStartGameModalTimerFinished
+  handleStartGame
 }) {
   const classes = useStyles();
 
   return (
     <div className={classes.background}>
-      <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={isModalOpen}/>
       <div>
         <HostHeader gameCode={gameCode} currentState={currentState} />
         <GameCard questions={questions} title={title} />
@@ -29,7 +25,7 @@ export default function StartGame({
         <CurrentStudents teams={teams} />
       </div>
       <FooterStartGame
-        teamsLength={(teams ? teams.length:0)}
+        teamsLength={(teams ? teams.length : 0)}
         gameSessionId={gameSessionId}
         currentState={currentState}
         handleStartGame={handleStartGame}
