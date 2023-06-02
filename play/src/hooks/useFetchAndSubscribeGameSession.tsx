@@ -28,7 +28,7 @@ export default function useFetchAndSubscribeGameSession(
       setError('');
     }
     apiClient
-      .getGameSession(gameSessionId)
+      .getGameSession('gameSessionId')
       .then((fetchedGame) => {
         if (!fetchedGame)
           setError(`${t('error.connecting.gamesessionerror')}`);

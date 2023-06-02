@@ -95,6 +95,12 @@ export interface LocalSession {
   selectedAvatar: number;
 }
 
+export enum HowToPlayMode {
+  ERROR = 'ERROR',
+  LOADING = 'LOADING',
+  READY = 'READY',
+}
+
 interface MonsterMap {
   [key: number]: {
     icon: string;

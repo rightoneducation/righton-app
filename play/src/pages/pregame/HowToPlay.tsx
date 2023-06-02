@@ -11,6 +11,7 @@ import HowToPlaySlide1Content from './howtoplayslides/HowToPlaySlide1Content';
 import HowToPlaySlide2Content from './howtoplayslides/HowToPlaySlide2Content';
 import HowToPlaySlide3Content from './howtoplayslides/HowToPlaySlide3Content';
 import HowToPlaySlide4Content from './howtoplayslides/HowToPlaySlide4Content';
+import { HowToPlayMode } from '../../lib/PlayModels';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -35,19 +36,18 @@ const HowToPlaySwiper = styled(Swiper)({
   },
 });
 
-const BottomText = (isLoading: boolean, isError: boolean) => {
+const BottomText = (mode: HowToPlayMode) => {
   const { t } = useTranslation();
-  if (isLoading) return t('howtoplay.loading');
-  if (isError) return '';
+  if (mode === HowToPlayMode.LOADING) return t('howtoplay.loading');
+  if (mode === HowToPlayMode.ERROR) return '';
   return t('howtoplay.description');
 };
 
 interface HowToPlayProps {
-  isError: boolean;
-  isLoading: boolean;
+  mode: HowToPlayMode;
 }
 
-export default function HowToPlay({ isError, isLoading }: HowToPlayProps) {
+export default function HowToPlay({mode}: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -110,7 +110,7 @@ export default function HowToPlay({ isError, isLoading }: HowToPlayProps) {
           paddingBottom: `${theme.sizing.mediumPadding}px`,
         }}
       >
-        {BottomText(isLoading, isError)}
+        {BottomText(mode)}
       </Typography>
     </BackgroundContainerStyled>
   );
