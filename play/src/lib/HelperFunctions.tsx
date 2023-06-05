@@ -98,7 +98,8 @@ export const fetchLocalData = () => {
     isNullOrUndefined(parsedPregameModel.gameSessionId) ||
     isNullOrUndefined(parsedPregameModel.teamId) ||
     isNullOrUndefined(parsedPregameModel.teamMemberId) ||
-    isNullOrUndefined(parsedPregameModel.selectedAvatar)
+    isNullOrUndefined(parsedPregameModel.selectedAvatar) ||
+    isNullOrUndefined(parsedPregameModel.isRejoin)
   )
     return null;
   // passes validated pregameModel to GameInProgressContainer

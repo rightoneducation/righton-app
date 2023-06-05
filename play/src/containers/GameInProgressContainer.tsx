@@ -42,7 +42,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
   ) {
     // if player is rejoining, show lobby in rejoining mode
-    if (pregameModel.isRejoin === true) {
+    if (pregameModel.isRejoin === true && subscription.gameSession?.currentState !== GameSessionState.TEAMS_JOINING) {
       return <Lobby mode={LobbyMode.REJOIN} />;
     }
     // if errored, show howToPlay page and error modal
@@ -76,7 +76,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 
 export function GameInProgressContainerLoader() {
   const pregameModel = fetchLocalData();
-  if (!pregameModel.isRejoin) {
+  if (pregameModel && !pregameModel.isRejoin) {
     const updatedModelForNextReload = { ...pregameModel, isRejoin: true };
     window.localStorage.setItem(
       'rightOn',

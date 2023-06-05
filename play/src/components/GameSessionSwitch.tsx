@@ -7,6 +7,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
+import { Navigate } from 'react-router-dom';
 import PregameCountdown from '../pages/PregameCountdown';
 import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
@@ -27,7 +28,7 @@ export default function GameInProgressContainer({
   gameSession,
   pregameModel,
 }: GameInProgressContainerProps) {
-  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
+  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(!isRejoin);
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex ?? 0];
@@ -122,7 +123,6 @@ export default function GameInProgressContainer({
     case GameSessionState.PHASE_2_START:
       return <StartPhase2 />;
     case GameSessionState.FINAL_RESULTS:
-    default:
       return (
         <FinalResultsContainer
           {...gameSession}
@@ -133,5 +133,7 @@ export default function GameInProgressContainer({
           leader={leader}
         />
       );
+    default:
+      return <Navigate replace to="/" />;
   }
 }
