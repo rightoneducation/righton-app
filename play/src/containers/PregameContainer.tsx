@@ -14,8 +14,7 @@ import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
 import { PregameState, PregameModel } from '../lib/PlayModels';
-import { isGameCodeValid } from '../lib/HelperFunctions';
-import useFetchLocalData from '../hooks/useFetchLocalData';
+import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
   apiClient: ApiClient;
@@ -30,7 +29,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
     PregameState.SPLASH_SCREEN
   );
   // retreive local storage data so that player can choose to rejoin game
-  const rejoinGameObject = useFetchLocalData();
+  const rejoinGameObject = fetchLocalData();
   // state variables used to collect player information in pregame phase
   // information is loaded into local storage on select avatar screen and passed to /game
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);

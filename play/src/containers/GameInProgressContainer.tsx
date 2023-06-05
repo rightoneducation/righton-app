@@ -5,7 +5,7 @@ import {
   GameSessionState
 } from '@righton/networking';
 import { Navigate, useLoaderData } from 'react-router-dom';
-import useFetchLocalData from '../hooks/useFetchLocalData';
+import { fetchLocalData } from '../lib/HelperFunctions';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import Lobby from '../pages/pregame/Lobby';
@@ -75,11 +75,11 @@ export function GameInProgressContainer(
 }
 
 export function GameInProgressContainerLoader(){
-  let pregameModel = useFetchLocalData();
-  if (!pregameModel.firstLaunch) {
-    pregameModel = { ...pregameModel, isRejoin: true };
-  } else {
+  let pregameModel = fetchLocalData();
+  if (pregameModel.firstLaunch) {
     pregameModel = { ...pregameModel, firstLaunch: false };
+  } else {
+    pregameModel = { ...pregameModel, isRejoin: true };
   }
   window.localStorage.setItem('rightOn', JSON.stringify(pregameModel));
   return pregameModel;
