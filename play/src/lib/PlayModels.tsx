@@ -103,19 +103,6 @@ export interface PregameModel {
   isRejoin: boolean;
 }
 
-/**
- * Type interface that holds extra info req'd to prevent duplicate inputs when rejoining
- * This prevents players from leaving and rejoining a game to submit multiple answers or to get extra points
- * @param {string} selectedAnswer - index of answer selected by player
- * @param {boolean} answerSubmitted - boolean to indicate if player has submitted an answer
- * @param {boolean} phaseResult - boolean to indicate if player has submitted an answer
- */
-export interface RejoinSupplment {
-  selectedAnswer: number;
-  answerSubmitted: boolean;
-  phaseResult: boolean;
-}
-
 interface MonsterMap {
   [key: number]: {
     icon: string;
