@@ -76,6 +76,10 @@ export const checkForSubmittedAnswerOnRejoin = (
   return { selectedAnswerIndex, isSubmitted };
 }
 
+/**
+ * retrieves local data from local storage and validates it
+ * @returns - the pregameModel if valid, null otherwise
+ */
 export const fetchLocalData = () => {
   const pregameModel = window.localStorage.getItem('rightOn');
   if (isNullOrUndefined(pregameModel)) return null;
