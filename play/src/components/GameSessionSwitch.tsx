@@ -38,8 +38,7 @@ export default function GameInProgressContainer({
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
   const answerChoices =
-    currentQuestion?.choices!.map((choice: IChoice) => ({
-      // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion?.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,

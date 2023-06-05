@@ -1,5 +1,9 @@
 import i18n from 'i18next';
-import { ITeamAnswer, GameSessionState, isNullOrUndefined } from "@righton/networking";
+import {
+  ITeamAnswer,
+  GameSessionState,
+  isNullOrUndefined,
+} from '@righton/networking';
 import { InputPlaceholder } from './PlayModels';
 
 /**
@@ -47,12 +51,16 @@ export const checkForSubmittedAnswerOnRejoin = (
     isCorrectAnswer: boolean;
     reason: string;
   }[],
-  currentState: GameSessionState,
-): {selectedAnswerIndex: number | null, isSubmitted: boolean} => {
+  currentState: GameSessionState
+): { selectedAnswerIndex: number | null; isSubmitted: boolean } => {
   let selectedAnswerIndex = null;
   let isSubmitted = false;
-  
-  if (isRejoin && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)){
+
+  if (
+    isRejoin &&
+    (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+  ) {
     if (!isNullOrUndefined(answers)) {
       answers.forEach((answer) => {
         if (answer) {
@@ -64,8 +72,8 @@ export const checkForSubmittedAnswerOnRejoin = (
                 (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
                   answer.isTrickAnswer)
               ) {
-               selectedAnswerIndex = index;
-               isSubmitted = true;
+                selectedAnswerIndex = index;
+                isSubmitted = true;
               }
             }
           });
@@ -74,7 +82,7 @@ export const checkForSubmittedAnswerOnRejoin = (
     }
   }
   return { selectedAnswerIndex, isSubmitted };
-}
+};
 
 /**
  * retrieves local data from local storage and validates it
@@ -95,4 +103,4 @@ export const fetchLocalData = () => {
     return null;
   // passes validated pregameModel to GameInProgressContainer
   return parsedPregameModel;
-}
+};

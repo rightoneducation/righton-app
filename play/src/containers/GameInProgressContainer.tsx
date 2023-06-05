@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   ApiClient,
   isNullOrUndefined,
-  GameSessionState
+  GameSessionState,
 } from '@righton/networking';
 import { Navigate, useLoaderData } from 'react-router-dom';
 import { fetchLocalData } from '../lib/HelperFunctions';
@@ -16,9 +16,7 @@ interface GameInProgressContainerProps {
   apiClient: ApiClient;
 }
 
-export function GameInProgressContainer(
-  props: GameInProgressContainerProps
-) {
+export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const { apiClient } = props;
   const [retry, setRetry] = useState<number>(0);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
@@ -39,7 +37,10 @@ export function GameInProgressContainer(
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(pregameModel)) return <Navigate replace to="/" />;
   // if gamesession is loading/errored/waiting for teacher to start game
-  if (!subscription.gameSession || subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING) {
+  if (
+    !subscription.gameSession ||
+    subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
+  ) {
     // if player is rejoining, show lobby in rejoining mode
     if (pregameModel.isRejoin === true) {
       return <Lobby mode={LobbyMode.REJOIN} />;
@@ -73,11 +74,14 @@ export function GameInProgressContainer(
   );
 }
 
-export function GameInProgressContainerLoader(){
+export function GameInProgressContainerLoader() {
   const pregameModel = fetchLocalData();
   if (!pregameModel.isRejoin) {
     const updatedModelForNextReload = { ...pregameModel, isRejoin: true };
-    window.localStorage.setItem('rightOn', JSON.stringify(updatedModelForNextReload));
-  } 
+    window.localStorage.setItem(
+      'rightOn',
+      JSON.stringify(updatedModelForNextReload)
+    );
+  }
   return pregameModel;
 }

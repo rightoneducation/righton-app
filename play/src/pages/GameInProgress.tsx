@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -6,7 +6,6 @@ import {
   ITeam,
   IQuestion,
   ModelHelper,
-  isNullOrUndefined,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -94,9 +93,18 @@ export default function GameInProgress({
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // checks if a player is rejoining into an answering question phase in which they have already answered
-  const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(isRejoin, teamAnswers, answerChoices, currentState);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(rejoinSubmittedAnswer.selectedAnswerIndex);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(rejoinSubmittedAnswer.isSubmitted);
+  const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+    isRejoin,
+    teamAnswers,
+    answerChoices,
+    currentState
+  );
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(
+    rejoinSubmittedAnswer.selectedAnswerIndex
+  );
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(
+    rejoinSubmittedAnswer.isSubmitted
+  );
 
   const handleTimerIsFinished = () => {
     setTimerIsPaused(true);

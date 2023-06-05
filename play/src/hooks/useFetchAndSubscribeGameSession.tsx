@@ -52,7 +52,7 @@ export default function useFetchAndSubscribeGameSession(
                   if (!response)
                     setError(`${t('error.connecting.subscriptionerror')}`);
                   // Update the gameSession object and trigger the callback
-                  if (!ignore){
+                  if (!ignore) {
                     setGameSession((prevGame) => ({
                       ...prevGame,
                       ...response,
