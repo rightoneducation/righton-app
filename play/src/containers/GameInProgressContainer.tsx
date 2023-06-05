@@ -28,7 +28,6 @@ export function GameInProgressContainer(
   // loads game data from local storage
   // if no game data, redirects to splashscreen
   const pregameModel = useLoaderData() as PregameModel;
-  console.log(pregameModel);
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
@@ -75,12 +74,10 @@ export function GameInProgressContainer(
 }
 
 export function GameInProgressContainerLoader(){
-  let pregameModel = fetchLocalData();
-  if (pregameModel.firstLaunch) {
-    pregameModel = { ...pregameModel, firstLaunch: false };
-  } else {
-    pregameModel = { ...pregameModel, isRejoin: true };
-  }
-  window.localStorage.setItem('rightOn', JSON.stringify(pregameModel));
+  const pregameModel = fetchLocalData();
+  if (!pregameModel.isRejoin) {
+    const updatedModelForNextReload = { ...pregameModel, isRejoin: true };
+    window.localStorage.setItem('rightOn', JSON.stringify(updatedModelForNextReload));
+  } 
   return pregameModel;
 }

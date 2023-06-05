@@ -13,7 +13,6 @@ interface LobbyProps {
 export default function Lobby({ mode }: LobbyProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  console.log(mode);
   return (
     <BackgroundContainerStyled>
       {mode === LobbyMode.REJOIN ? (
