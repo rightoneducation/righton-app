@@ -23,7 +23,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const handleRetry = () => {
     setRetry(retry + 1);
   };
-  // loads game data from local storage
+  // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
   const pregameModel = useLoaderData() as PregameModel;
   // uses local game data to subscribe to gameSession
