@@ -8,7 +8,7 @@ import {
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // change to mui v5 see CSS Injection Order section of https://mui.com/material-ui/guides/interoperability/
 import { ApiClient, Environment } from '@righton/networking';
 import PregameContainer from './containers/PregameContainer';
-import GameInProgressContainer from './containers/GameInProgressContainer';
+import {GameInProgressContainer, GameInProgressContainerLoader} from './containers/GameInProgressContainer';
 import Theme from './lib/Theme';
 
 function RedirectToPlayIfMissing() {
@@ -24,6 +24,7 @@ const router = createBrowserRouter(
       <Route
         path="/game"
         element={<GameInProgressContainer apiClient={apiClient} />}
+        loader={GameInProgressContainerLoader}
       />
       <Route element={<RedirectToPlayIfMissing />} />
     </>

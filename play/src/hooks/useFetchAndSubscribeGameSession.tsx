@@ -43,7 +43,7 @@ export default function useFetchAndSubscribeGameSession(
         .then((fetchedGame) => {
           if (!fetchedGame)
             setError(`${t('error.connecting.gamesessionerror')}`);
-          if (!ignore && isRejoin) setGameSession(fetchedGame);
+          if (!ignore) setGameSession(fetchedGame);
           try {
             const gameSessionSubscription =
               apiClient.subscribeUpdateGameSession(

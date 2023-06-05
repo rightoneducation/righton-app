@@ -100,6 +100,7 @@ export interface PregameModel {
   teamId: string;
   teamMemberId: string;
   selectedAvatar: number;
+  firstLaunch: boolean;
   isRejoin: boolean;
 }
 

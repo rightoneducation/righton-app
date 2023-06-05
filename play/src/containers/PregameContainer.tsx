@@ -125,6 +125,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
+          firstLaunch: true,
           isRejoin: false,
         };
         window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
