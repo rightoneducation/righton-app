@@ -74,7 +74,22 @@ export enum FinalResultsState {
 }
 
 /**
- * Data object that holds required info to join a 'basic' game and add team to game sesssion object at start of game
+ * Enum that holds the various states for the lobby, based on the fetching and subscription to the gameSession object
+ * @enum LobbyMode
+ * @param {string} ERROR - error state
+ * @param {string} LOADING - loading state
+ * @param {string} READY - waiting for teacher state
+ * @param {string} REJOIN - if player is rejoining state
+ */
+export enum LobbyMode {
+  ERROR = 'ERROR',
+  LOADING = 'LOADING',
+  READY = 'READY',
+  REJOIN = 'REJOIN',
+}
+
+/**
+ * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session
  * @param {string} firstName - first name of player
  * @param {string} lastName - last name of player
@@ -88,11 +103,17 @@ export interface PregameModel {
   isRejoin: boolean;
 }
 
-export enum LobbyMode {
-  ERROR = 'ERROR',
-  LOADING = 'LOADING',
-  READY = 'READY',
-  REJOIN = 'REJOIN',
+/**
+ * Type interface that holds extra info req'd to prevent duplicate inputs when rejoining
+ * This prevents players from leaving and rejoining a game to submit multiple answers or to get extra points
+ * @param {string} selectedAnswer - index of answer selected by player
+ * @param {boolean} answerSubmitted - boolean to indicate if player has submitted an answer
+ * @param {boolean} phaseResult - boolean to indicate if player has submitted an answer
+ */
+export interface RejoinSupplment {
+  selectedAnswer: number;
+  answerSubmitted: boolean;
+  phaseResult: boolean;
 }
 
 interface MonsterMap {

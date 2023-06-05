@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ApiClient,
   isNullOrUndefined,
-  GameSessionState,
 } from '@righton/networking';
 import { Navigate } from 'react-router-dom';
 import useFetchLocalData from '../hooks/useFetchLocalData';
@@ -20,12 +19,11 @@ export default function GameInProgressContainer(
   props: GameInProgressContainerProps
 ) {
   const { apiClient } = props;
-  const [retry, setRetry] = React.useState<number>(0);
+  const [retry, setRetry] = useState<number>(0);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
     setRetry(retry + 1);
   };
-
   // loads game data from local storage
   // if no game data, redirects to splashscreen
   const pregameModel = useFetchLocalData();
@@ -34,8 +32,10 @@ export default function GameInProgressContainer(
   const subscription = useFetchAndSubscribeGameSession(
     pregameModel?.gameSessionId,
     apiClient,
-    retry
+    retry,
+    pregameModel?.isRejoin
   );
+  console.log(subscription);
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(pregameModel)) return <Navigate replace to="/" />;
   // if gamesession is loading/errored/waiting for teacher to start game
@@ -65,6 +65,7 @@ export default function GameInProgressContainer(
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
+      isRejoin={subscription.isRejoin}
       pregameModel={pregameModel}
       gameSession={subscription.gameSession}
       {...props}

@@ -33,7 +33,6 @@ interface PhaseResultsProps {
   score: number;
   handleUpdateScore: (newScore: number) => void;
   isRejoin: boolean;
-  setIsRejoin: (isRejoin: boolean) => void;
 }
 
 /**
@@ -64,7 +63,6 @@ export default function PhaseResults({
   score,
   handleUpdateScore,
   isRejoin,
-  setIsRejoin
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
@@ -86,8 +84,6 @@ export default function PhaseResults({
         currentQuestion,
         currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
       );
-    } else {
-      setIsRejoin(false);
     }
     setNewScore(calcNewScore)
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

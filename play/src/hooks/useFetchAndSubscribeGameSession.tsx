@@ -16,12 +16,14 @@ import {
 export default function useFetchAndSubscribeGameSession(
   gameSessionId: string,
   apiClient: ApiClient,
-  retry: number
+  retry: number,
+  isInitialRejoin: boolean
 ) {
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
   const [error, setError] = useState<string>('');
+  const [isRejoin, setIsRejoin] = useState<boolean>(isInitialRejoin);
 
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
@@ -41,7 +43,7 @@ export default function useFetchAndSubscribeGameSession(
         .then((fetchedGame) => {
           if (!fetchedGame)
             setError(`${t('error.connecting.gamesessionerror')}`);
-          if (!ignore) setGameSession(fetchedGame);
+          if (!ignore && isRejoin) setGameSession(fetchedGame);
           try {
             const gameSessionSubscription =
               apiClient.subscribeUpdateGameSession(
@@ -50,11 +52,13 @@ export default function useFetchAndSubscribeGameSession(
                   if (!response)
                     setError(`${t('error.connecting.subscriptionerror')}`);
                   // Update the gameSession object and trigger the callback
-                  if (!ignore)
+                  if (!ignore){
                     setGameSession((prevGame) => ({
                       ...prevGame,
                       ...response,
                     }));
+                    setIsRejoin(false);
+                  }
                 }
               );
             setIsLoading(false);
@@ -78,6 +82,6 @@ export default function useFetchAndSubscribeGameSession(
           else setError(`${t('error.connecting.gamesessionerror')}`);
         });
     }
-  }, [gameSessionId, apiClient, t, retry]);
-  return { isLoading, error, gameSession };
+  }, [gameSessionId, apiClient, t, retry, isRejoin]);
+  return { isLoading, error, gameSession, isRejoin };
 }

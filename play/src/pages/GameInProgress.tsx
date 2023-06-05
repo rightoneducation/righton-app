@@ -19,6 +19,7 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
+import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 
 interface GameInProgressProps {
   teams?: ITeam[];
@@ -40,7 +41,6 @@ interface GameInProgressProps {
     currentState: GameSessionState
   ) => void;
   isRejoin: boolean;
-  setIsRejoin: (isRejoin: boolean) => void;
 }
 
 export default function GameInProgress({
@@ -54,7 +54,6 @@ export default function GameInProgress({
   answerChoices,
   addTeamAnswerToTeamMember,
   isRejoin,
-  setIsRejoin,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -94,41 +93,10 @@ export default function GameInProgress({
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
   // checks if a player is rejoining into an answering question phase in which they have already answered
-  // using a useEffect here to prevent setIsRejoin updating a state variable in the middle of a render
-  useEffect(() => {
-    if (isRejoin) {
-      let submitted = false;
-      const answers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-        currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        currentQuestion.id
-      );
-      if (!isNullOrUndefined(answers)) {
-        answers.forEach((answer) => {
-          if (answer) {
-            answerChoices.forEach((answerChoice, index) => {
-              if (answerChoice.text === answer.text) {
-                if (
-                  (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
-                    answer.isChosen) ||
-                  (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
-                    answer.isTrickAnswer)
-                ) {
-                  setSelectedAnswer(index);
-                  submitted = true;
-                }
-              }
-            });
-          }
-        });
-      }
-      // setIsRejoin(false);
-      setIsSubmitted(submitted);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(isRejoin, teamAnswers, answerChoices, currentState);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(rejoinSubmittedAnswer.selectedAnswerIndex);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(rejoinSubmittedAnswer.isSubmitted);
 
   const handleTimerIsFinished = () => {
     setTimerIsPaused(true);

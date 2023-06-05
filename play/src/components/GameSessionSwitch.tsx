@@ -16,17 +16,18 @@ import { PregameModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
+  isRejoin: boolean;
   gameSession: IGameSession;
   pregameModel: PregameModel;
 }
 
 export default function GameInProgressContainer({
   apiClient,
+  isRejoin,
   gameSession,
   pregameModel,
 }: GameInProgressContainerProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const [isRejoin, setIsRejoin] = useState<boolean>(pregameModel.isRejoin);
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex ?? 0];
@@ -44,7 +45,6 @@ export default function GameInProgressContainer({
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
-
   const addTeamAnswerToTeamMember = async (
     question: IQuestion,
     answerText: string,
@@ -75,8 +75,7 @@ export default function GameInProgressContainer({
     updateTeamScore(pregameModel.teamId, inputScore);
     setScore(inputScore);
   };
-  console.log(pregameModel);
-  console.log(isRejoin);
+
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isPregameCountdown && !isRejoin ? (
@@ -90,7 +89,6 @@ export default function GameInProgressContainer({
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           isRejoin={isRejoin}
-          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -105,7 +103,6 @@ export default function GameInProgressContainer({
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           isRejoin={isRejoin}
-          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -121,7 +118,6 @@ export default function GameInProgressContainer({
           score={score}
           handleUpdateScore={handleUpdateScore}
           isRejoin={isRejoin}
-          setIsRejoin={setIsRejoin}
         />
       );
     case GameSessionState.PHASE_2_START:
