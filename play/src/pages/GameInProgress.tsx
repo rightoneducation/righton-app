@@ -63,23 +63,33 @@ export default function GameInProgress({
     );
   }
 
-  // this breaks down the question text from the gameSession to isolate the sentence with the question mark for formatting purposes in the component
+  // this breaks down the question text from the gameSession for bold formatting of the question text
+  // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
+  // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
+  // if neither of those, it just uses the default entire string as the question text
   const divideQuestionString = (inputText: string) => {
     const qmarkLocation = inputText.lastIndexOf('?');
+    const lastPeriodLocation = inputText.lastIndexOf('.');
     let introText = '';
-    let questionText = '';
-
+    let questionText = inputText;
     if (qmarkLocation !== -1) {
-      const periodLocation = inputText.lastIndexOf('.');
-      if (periodLocation !== -1 && periodLocation < qmarkLocation) {
+      const splicedString = inputText.substring(0, qmarkLocation + 1);
+      const periodLocation = splicedString.lastIndexOf('.');
+      questionText = splicedString;
+      if (periodLocation !== -1) {
         introText = inputText.substring(0, periodLocation + 1);
-        questionText = inputText.substring(
-          periodLocation + 1,
-          qmarkLocation + 1
-        );
+        questionText = inputText.substring(periodLocation + 1, inputText.length);
       }
     } else {
-      questionText = inputText;
+      const splicedString = inputText.substring(0, lastPeriodLocation);
+      const secondLastPeriodLocation = splicedString.lastIndexOf('.');
+      if (secondLastPeriodLocation !== -1) {
+        introText = inputText.substring(0, secondLastPeriodLocation + 1);
+        questionText = inputText.substring(
+          secondLastPeriodLocation + 1,
+          inputText.length
+        );
+      }
     }
     return [introText, questionText];
   };
