@@ -64,7 +64,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     // if loading, display loading message on bottom of How to Play page
     if (subscription.isLoading) return <Lobby mode={LobbyMode.LOADING} />;
     // if waiting for teacher, display waiting message on How to Play page
-    return <Lobby mode={LobbyMode.REJOIN} />;
+    return <Lobby mode={LobbyMode.READY} />;
   }
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
