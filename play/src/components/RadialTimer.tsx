@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { TimerMode } from '../lib/PlayModels';
 
 const TimerContainer = styled('div')({
   display: 'flex',
@@ -10,18 +12,21 @@ const TimerContainer = styled('div')({
 });
 
 interface RadialTimerProps {
+  mode: TimerMode;
   inputColors: string[];
   radius: number;
   timerStartInSeconds: number;
-  setIsPregameCountdown: (isPregameCountdown: boolean) => void;
+  setIsPregameCountdown?: (isPregameCountdown: boolean) => void;
 }
 
 export default function RadialTimer({
+  mode,
   inputColors,
   radius,
   timerStartInSeconds,
-  setIsPregameCountdown
+  setIsPregameCountdown,
 }: RadialTimerProps) {
+  const { t } = useTranslation();
   const { cos, sin, PI } = Math;
   const tau = 2 * PI;
   const multiply = ([a, b, c, d]: number[], x: number, y: number) => [
@@ -110,8 +115,8 @@ export default function RadialTimer({
   ); // millisecond updates to smooth out progress bar
   const currentTime = Math.ceil(currentTimeMilli / 1000);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
+  const countdownTimer = () => {
+    let timer: NodeJS.Timeout | undefined;
     if (currentTimeMilli > 0) {
       timer = setInterval(() => {
         const c = colors
@@ -120,7 +125,34 @@ export default function RadialTimer({
         setColors(c);
         setCurrentTimeMilli((prevTime) => prevTime - timeInterval);
       }, timeInterval);
-    } else setIsPregameCountdown(false);
+    } else if (setIsPregameCountdown) {
+      setIsPregameCountdown(false);
+    }
+    return timer;
+  };
+
+  const countupTimer = () => {
+    let timer: NodeJS.Timeout | undefined;
+    // adding in a stop at 2 minutes so the timer doesn't run indefinitely
+    if (currentTimeMilli < 120000) {
+      timer = setInterval(() => {
+        const c = colors
+          .slice(colors.length - 1)
+          .concat(colors.slice(0, colors.length - 1));
+        setColors(c);
+        setCurrentTimeMilli((prevTime) => prevTime + timeInterval);
+      }, timeInterval);
+    }
+    return timer;
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | undefined;
+    if (mode === TimerMode.COUNTDOWN) {
+      timer = countdownTimer();
+    } else {
+      timer = countupTimer();
+    }
     return () => clearInterval(timer);
   }, [currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -134,12 +166,21 @@ export default function RadialTimer({
       >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      <Typography
-        variant="h1"
-        sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
-      >
-        {currentTime}
-      </Typography>
+      {mode === TimerMode.COUNTDOWN ? (
+        <Typography
+          variant="h1"
+          sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
+        >
+          {currentTime}
+        </Typography>
+      ) : (
+        <Typography
+          variant="h1"
+          sx={{ position: 'absolute', textAlign: 'center', fontSize: '54px' }}
+        >
+          {t('lobby.title')}
+        </Typography>
+      )}
     </TimerContainer>
   );
 }

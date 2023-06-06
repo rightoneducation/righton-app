@@ -28,7 +28,9 @@ export default function GameInProgressContainer({
   gameSession,
   pregameModel,
 }: GameInProgressContainerProps) {
-  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(!isRejoin);
+  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
+    !isRejoin
+  );
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex ?? 0];
@@ -39,7 +41,8 @@ export default function GameInProgressContainer({
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
   const answerChoices =
-    currentQuestion?.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion?.choices!.map((choice: IChoice) => ({
+      // eslint-disable-line @typescript-eslint/no-non-null-assertion
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,

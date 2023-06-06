@@ -4,6 +4,7 @@ import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
 import RadialTimer from '../components/RadialTimer';
+import { TimerMode } from '../lib/PlayModels';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
   display: 'flex',
@@ -26,7 +27,7 @@ interface StartPhase2Props {
 }
 
 export default function StartPhase2({
-  setIsPregameCountdown
+  setIsPregameCountdown,
 }: StartPhase2Props) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -35,6 +36,7 @@ export default function StartPhase2({
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
         <RadialTimer
+          mode={TimerMode.COUNTDOWN}
           inputColors={[
             `${theme.palette.primary.countdownColor}, 0.3)`,
             `${theme.palette.primary.countdownColor}, 0.4)`,

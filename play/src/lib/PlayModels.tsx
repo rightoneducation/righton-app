@@ -88,6 +88,11 @@ export enum LobbyMode {
   REJOIN = 'REJOIN',
 }
 
+export enum TimerMode {
+  COUNTDOWN = 'COUNTDOWN',
+  JOIN = 'JOIN',
+}
+
 /**
  * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session

@@ -71,24 +71,22 @@ export default function PhaseResults({
     currentQuestion,
     currentState
   );
-  
+
   const [newScore, setNewScore] = React.useState<number>(0);
 
   // calculate new score for use in footer
   // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
   useEffect(() => {
     let calcNewScore = 0;
-    if (!isRejoin){ 
-        calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+    if (!isRejoin) {
+      calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
         gameSession,
         currentQuestion,
         currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
       );
     }
-    setNewScore(calcNewScore)
+    setNewScore(calcNewScore);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-
 
   return (
     <StackContainerStyled
