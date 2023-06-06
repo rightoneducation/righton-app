@@ -18,14 +18,6 @@ export default function QuestionFormAnswerDropdown({
 
   // instructions can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
   // TODO: clean up how we are handling instructions for more consistency
-  console.log("----------------------WHAT IS INSTRUCTION--------------------------------");
-  if (!instructions)
-    console.log("!instructions \n" + instructions + " (" + typeof instructions + ")");
-  else if (Array.isArray(instructions))
-    console.log("Array.isArray(instructions \n" + instructions + " (" + typeof instructions + ")");
-  else
-    console.log("ELSE\n" + instructions + " (" + typeof instructions + ")");
-
   const instructionsHandler = (instructions) => {
     if (!instructions)
       return null;
@@ -35,8 +27,7 @@ export default function QuestionFormAnswerDropdown({
       return JSON.parse(instructions);
   }
   const instructionsArray = instructionsHandler(instructions);
-  console.log("instructionsArray \n" + instructionsArray + " (" + typeof instructionsArray + ")");
-  console.log("----------------------WHAT IS INSTRUCTION--------------------------------");
+
   return (
     <Grid item xs={12}>
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>

@@ -22,7 +22,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       const copyOfOriginal = { ...originalQuestion }
       copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
       copyOfOriginal.instructions = JSON.parse(copyOfOriginal.instructions);
-      // console.log(typeof copyOfOriginal.instructions);
       return copyOfOriginal
     }
     return {
@@ -51,17 +50,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     return newString;
   }
 
-  // console.log("-------------INSTRUCTION STATE--------------------")
-  // console.log(question.instructions + ", ( " + typeof question.instructions + " )");
-  // console.log(JSON.parse(question.instructions));
-  // console.log(!(typeof question.instructions === "string"));
-  // for (let i = 0; i < question.instructions.length; i++) {
-  //   console.log(question.instructions[i]);
-  //   console.log(question.instructions[i] === "");
-  // }
-  // console.log(question.instructions.filter(step => step !== ""));
-  // console.log("-------------INSTRUCTION STATE--------------------");
-
   // When the correct answer is changed/update this function handles that change
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
@@ -81,15 +69,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   // Handles addition of new step in the correct answer instructions set
   const addInstruction = useCallback(() => {
-    // console.log("-------------ADD INSTRUCTION--------------------")
-
     const instructions = question.instructions == null ? [''] : [...question.instructions, ''];
-    // const instructions = question.instructions == null ? [''] :
-    //   (typeof question.instructions === "string") ? JSON.parse(question.instructions) : [...question.instructions, ''];
-
     setQuestion({ ...question, instructions });
   }, [question, setQuestion]);
-  // console.log("-------------ADD INSTRUCTION--------------------")
 
   // Handles the edit/updating of a step in correct answers instructions set
   const onStepChangeMaker = useCallback((index) => ({ currentTarget }) => {
@@ -142,7 +124,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
-    console.log(typeof questionToSend.instructions);
     questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
 
     let newQuestion;
