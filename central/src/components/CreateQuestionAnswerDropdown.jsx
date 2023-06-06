@@ -18,60 +18,25 @@ export default function QuestionFormAnswerDropdown({
 
   // instructions can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
   // TODO: clean up how we are handling instructions for more consistency
-  console.log("------------------------------------------------------");
+  console.log("----------------------WHAT IS INSTRUCTION--------------------------------");
   if (!instructions)
-    console.log("!instructions");
+    console.log("!instructions \n" + instructions + " (" + typeof instructions + ")");
   else if (Array.isArray(instructions))
-    console.log("Array.isArray(instructions \n" + typeof instructions + "\n" + instructions);
+    console.log("Array.isArray(instructions \n" + instructions + " (" + typeof instructions + ")");
   else
-    console.log("ELSE\n" + instructions);
+    console.log("ELSE\n" + instructions + " (" + typeof instructions + ")");
 
-  console.log("------");
   const instructionsHandler = (instructions) => {
     if (!instructions)
-      // console.log("!instructions");
       return null;
     else if (Array.isArray(instructions))
-      // console.log("Array.isArray(instructions)");
       return instructions;
     else
-      // console.log("ELSE");
       return JSON.parse(instructions);
   }
-
   const instructionsArray = instructionsHandler(instructions);
-  // let cleanArray = [];
-  // console.log("instructionsArray: " + typeof instructionsArray);
-  // console.log(instructionsArray);
-  // console.log("raw string instructions: \n" + instructions);
-  // console.log("type: " + instructions);
-  // if (typeof instructions === "string") {
-  //   let instructionsNoBrack = instructions.slice(1, -1);
-  //   instructionsNoBrack = instructionsNoBrack.replace(/\\/g, "");
-  //   console.log("instructions SLICED: \n" + instructionsNoBrack);
-  //   let instructArr = instructionsNoBrack.split(",");
-  //   console.log(instructArr);
-
-  //   console.log("instructions split by comma: \n");
-  //   for (let i = 0; i < instructArr.length; i++) {
-  //     instructArr[i] = instructArr[i].slice(1, -1);
-  //     console.log(instructArr[i]);
-  //   }
-  //   let rejoinedStr = instructArr.join("");
-  //   let cleanArr = rejoinedStr.split("]");
-  //   console.log("cleanArr: " + cleanArr);
-  //   for (let i = 0; i < cleanArr.length; i++) {
-  //     cleanArr[i] = cleanArr[i].replace('[\"', '');
-  //     cleanArr[i] = cleanArr[i].replace('\"', '');
-  //     console.log(cleanArr[i]);
-  //   }
-  //   cleanArray = cleanArr;
-  // }
-
-  // console.log("rejoined string: " + rejoinedStr);
-  // rejoinedStr = rejoinedStr.slice(2, -2);
-  // console.log("rejoined string without open and close quotes and bracks: " + rejoinedStr);
-
+  console.log("instructionsArray \n" + instructionsArray + " (" + typeof instructionsArray + ")");
+  console.log("----------------------WHAT IS INSTRUCTION--------------------------------");
   return (
     <Grid item xs={12}>
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>
