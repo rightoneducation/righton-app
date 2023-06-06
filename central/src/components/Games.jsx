@@ -19,19 +19,21 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
     setSortType(value);
   };
   const [sortByCheck, setSortByCheck] = React.useState(false);
-
+  // console.log(getGameById(games, 3867).questions[3].instructions.length);
+  // console.log(getGameById(games, 3867).questions[3].instructions);
+  // console.log(getGameById(games, 3867).questions[3].instructions.split(","));
   return (
     <Grid container className={classes.root} spacing={4}>
       <Switch>
         <Route path="/" exact>
           <Grid item xs={12} className={classes.sidebar}>
             <Box className={classes.actions}>
-              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile}/> 
-              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile}/> 
+              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
+              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
-              <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth}/>
-            </Grid>          
+              <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
+            </Grid>
           </Grid>
         </Route>
         {match && getGameById(games, match.params.gameId) && (
@@ -50,21 +52,21 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
                   const { gameId } = match.params;
                   const game = getGameById(games, gameId);
                   handleSearchClick(false);
-                  return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth}/>;
+                  return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />;
                 }
               } />
             </Switch>
           </Grid>
         )}
         <Route path='/gamemaker/:gameId' render={
-          isUserAuth && ( 
+          isUserAuth && (
             ({ match }) => {
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion}/>
+              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} />
             }
-          )           
+          )
         } />
       </Switch>
     </Grid>

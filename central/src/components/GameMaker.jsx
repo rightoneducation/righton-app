@@ -128,7 +128,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
   }
 
-
+  // console.log(questions[0].instructions == null ? "no instructions yet" : questions[0].instructions.length);
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
     if (gameDetails.id !== 0) {
@@ -143,13 +143,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
       delete gameDetails.questions;
       delete gameDetails.id;
       newSave(gameDetails, questionIDs);
-      
+
     }
     event.preventDefault();
     history.push('/');
   };
 
-  const handleStringInput = (value)=>{
+  const handleStringInput = (value) => {
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
   }
@@ -181,7 +181,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled())}}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -193,7 +193,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
                       fullWidth
                       multiline
                       rows={3}
