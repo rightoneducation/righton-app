@@ -69,9 +69,9 @@
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
       "incorrectanswercolumn": "Respuestas Incorrectas",
-      "correcttext": "Sí, ",
-      "nicetrytext": "Buen intento, ",
-      "correctanswertext": "la respuesta correcta es..."
+      "correcttext": "Correcta!",
+      "nicetrytext": "Buen intento",
+      "correctanswertext": "La respuesta es..."
     },
     "startphase2": {
       "title": "Empezando la Fase 2...",

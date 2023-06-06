@@ -69,9 +69,9 @@
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
       "incorrectanswercolumn": "Incorrect Answers",
-      "correcttext": "Yes, ",
-      "nicetrytext": "Nice try, ",
-      "correctanswertext": "the correct answer is..."
+      "correcttext": "Correct!",
+      "nicetrytext": "Nice try",
+      "correctanswertext": "The answer is..."
     },
     "startphase2": {
       "title": "Starting Phase 2...",
