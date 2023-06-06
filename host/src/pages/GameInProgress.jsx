@@ -22,7 +22,8 @@ export default function GameInProgress({
   headerGameCurrentTime,
   gameTimer,
   gameTimerZero,
-  isLoadModalOpen
+  isLoadModalOpen,
+  setIsLoadModalOpen,
 }) {
 
   const classes = useStyles();
@@ -31,7 +32,6 @@ export default function GameInProgress({
   let answerArray;
   let totalAnswers;
   let [modalOpen, setModalOpen] = useState(false);
-  let [loadModalOpen, setLoadModalOpen] = useState(isLoadModalOpen)
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
 
     //0-not started
@@ -75,7 +75,7 @@ export default function GameInProgress({
 
   // handles the countdown modal closing once the countdown is finished
   const handleStartGameModalTimerFinished = () => {
-    setLoadModalOpen(false);
+    setIsLoadModalOpen(false);
   };
 
 
@@ -159,7 +159,7 @@ export default function GameInProgress({
 
   return (
     <div className={classes.background}>
-      <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={loadModalOpen} />
+      <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={isLoadModalOpen} />
       <div
         style={{
           backgroundImage: `url(${CheckMark})`,

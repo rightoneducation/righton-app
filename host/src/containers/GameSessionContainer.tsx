@@ -20,7 +20,7 @@ const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
   const [isTimerActive, setIsTimerActive] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
   const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStore'));
   const [gameTimer, setGameTimer] = useState(false);
@@ -108,13 +108,13 @@ const GameSessionContainer = () => {
 
   // stops scrolling on the startgame modal
   useEffect(() => {
-    if (isModalOpen) {
+    if (isLoadModalOpen) {
       document.body.style.overflow = 'hidden';
     }
     else {
       document.body.style.overflow = 'unset';
     }
-  }, [isModalOpen]);
+  }, [isLoadModalOpen]);
 
 
   // headerGame timer, 1 second interval, update localstorage in case page resets
@@ -194,7 +194,7 @@ const GameSessionContainer = () => {
             .catch(reason => console.log(reason));
         });
       setIsTimerActive(true);
-      setIsModalOpen(true);
+      setIsLoadModalOpen(true);
     }
   };
 
@@ -210,7 +210,7 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isModalOpen} />;
+      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen}/>;
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
