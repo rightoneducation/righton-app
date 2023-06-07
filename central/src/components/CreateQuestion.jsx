@@ -100,7 +100,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a correct answer")
       return;
     }
-    if (question.instructions == null || question.instructions[0] == null || question.instructions[0] === "") {
+    if (question.instructions == null || question.instructions.filter(step => step !== "").length < 1) {
       window.alert("Please provide at least one step for the correct answer explanation");
       return;
     }

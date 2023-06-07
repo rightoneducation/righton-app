@@ -19,9 +19,6 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
     setSortType(value);
   };
   const [sortByCheck, setSortByCheck] = React.useState(false);
-  // console.log(getGameById(games, 3867).questions[3].instructions.length);
-  // console.log(getGameById(games, 3867).questions[3].instructions);
-  // console.log(getGameById(games, 3867).questions[3].instructions.split(","));
   return (
     <Grid container className={classes.root} spacing={4}>
       <Switch>
@@ -64,7 +61,7 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} />
+              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} />;
             }
           )
         } />
