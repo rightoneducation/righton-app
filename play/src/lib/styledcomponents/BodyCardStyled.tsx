@@ -9,4 +9,5 @@ export default styled(Paper)(({ theme }) => ({
   borderRadius: '24px',
   padding: `${theme.sizing.smallPadding}px`,
   backgroundColor: theme.palette.primary.main,
+  boxShadow:  '0px 8px 16px -4px rgba(92, 118, 145, 0.4)'
 }));
