@@ -38,7 +38,7 @@ export default function CardResults({
 
   return (
     <BodyCardStyled
-      elevation={5}
+      elevation={10}
       sx={{ boxSizing: 'border-box', width: '100%' }}
     >
       <BodyCardContainerStyled spacing={2}>

@@ -34,7 +34,7 @@ export default function HowToPlaySlide3Content() {
           sx={{
             bottom: '90px',
             left: '400px',
-            width: '90px',
+            width: '140px',
             height: 'auto',
           }}
         />

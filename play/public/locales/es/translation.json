@@ -53,7 +53,7 @@
       "incorrect": "¡Buen Intento!"
     },
     "general": {
-      "swipealert": "Desliza hacia la izquierda para responder la pregunta."
+      "swipealert": "Desliza el dedo hacia la izquierda para responder a la pregunta."
     },
     "chooseanswer": {
       "questioncolumn": "Pregunta",
@@ -63,15 +63,15 @@
       "correcttext1": "Elegir el",
       "correcttext2": "respuesta correcta",
       "incorrecttext1": "¿Cuál crees que es la",
-      "incorrecttext2": "respuesta engañosa",
+      "incorrecttext2": "respuesta incorrecta",
       "incorrecttext3": "más popular entre tu clase?"
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
       "incorrectanswercolumn": "Respuestas Incorrectas",
-      "correcttext": "Sí, ",
-      "nicetrytext": "Buen intento, ",
-      "correctanswertext": "la respuesta correcta es..."
+      "correcttext": "Correcta!",
+      "nicetrytext": "Buen intento",
+      "correctanswertext": "La respuesta es..."
     },
     "startphase2": {
       "title": "Empezando la Fase 2...",
