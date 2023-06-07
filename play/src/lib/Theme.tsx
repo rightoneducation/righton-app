@@ -41,6 +41,7 @@ const smallPadding = 16; // upper and lower margins on text, spacing of content 
 const mediumPadding = 24; // timer margin
 const largePadding = 32; // text spacing on answer selector, top margin on titles
 const extraLargePadding = 48; // spacing between card and edge of screen
+const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
@@ -53,6 +54,7 @@ declare module '@mui/material/styles' {
       mediumPadding: number;
       largePadding: number;
       extraLargePadding: number;
+      extraExtraLargePadding: number;
     };
   }
 
@@ -65,6 +67,7 @@ declare module '@mui/material/styles' {
       mediumPadding?: number;
       largePadding?: number;
       extraLargePadding?: number;
+      extraExtraLargePadding?: number;
     };
   }
 
@@ -118,6 +121,7 @@ export default createTheme({
     mediumPadding,
     largePadding,
     extraLargePadding,
+    extraExtraLargePadding
   },
   palette: {
     primary: {
