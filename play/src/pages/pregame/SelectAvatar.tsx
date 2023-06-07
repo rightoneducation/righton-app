@@ -22,7 +22,7 @@ const GridContainer = styled('div')(({ theme }) => ({
   // using CSS Grid here because mui Grid responsiveness produces changes in spacing when crossing breakpoints
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
-  spacing: `${theme.sizing.mediumPadding}px`,
+  gridGap: `${theme.sizing. extraSmallPadding}px`,
 }));
 
 const AvatarIconContainer = styled(Box)({
@@ -35,13 +35,13 @@ const AvatarIconContainer = styled(Box)({
   borderRadius: '20px',
 });
 
-interface MonsterContainerProps {
+interface ContainerProps {
   isSmallDevice: boolean;
 }
 
 const MonsterContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isSmallDevice',
-})<MonsterContainerProps>(({ isSmallDevice, theme }) => ({
+})<ContainerProps>(({ isSmallDevice, theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'flex-end',
@@ -70,11 +70,13 @@ const Monster = styled('img')({
   },
 });
 
-const BottomContainer = styled(Box)(({ theme }) => ({
+const BottomContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isSmallDevice',
+})<ContainerProps>(({ isSmallDevice, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: `${theme.sizing.largePadding}px`,
+  paddingBottom: isSmallDevice ? `${theme.sizing.extraExtraLargePadding}px`: `${theme.sizing.largePadding}px`,
   gap: 12,
 }));
 
@@ -132,7 +134,7 @@ export default function SelectAvatar({
             alt="monster"
           />
         </MonsterContainer>
-        <BottomContainer>
+        <BottomContainer isSmallDevice={isSmallDevice}>
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {`${firstName} ${lastName}`}
           </Typography>
