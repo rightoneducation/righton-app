@@ -104,7 +104,7 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
         />
       );
     case JoinGameState.ENTER_GAME_CODE:
-      return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
+      return <EnterGameCode isSmallDevice={isSmallDevice} handleGameCodeClick={handleGameCodeClick} />;
     case JoinGameState.SPLASH_SCREEN:
     default:
       return <SplashScreen setJoinGameState={setJoinGameState} />;

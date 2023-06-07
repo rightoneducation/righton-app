@@ -21,10 +21,12 @@ const PaddedContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface EnterGameCodeProps {
+  isSmallDevice: boolean;
   handleGameCodeClick: (gameSessionId: string) => Promise<boolean>;
 }
 
 export default function EnterGameCode({
+  isSmallDevice,
   handleGameCodeClick,
 }: EnterGameCodeProps) {
   const theme = useTheme();
@@ -47,7 +49,7 @@ export default function EnterGameCode({
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer spacing={5}>
+      <StackContainer spacing={isSmallDevice ? 4 : 5}>
         <img
           style={{
             width: '214px',

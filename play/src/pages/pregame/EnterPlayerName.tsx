@@ -53,7 +53,7 @@ export default function EnterPlayerName({
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer spacing={4}>
+      <StackContainer spacing={isSmallDevice ? 4 : 5}>
         <img
           style={{
             width: '214px',
