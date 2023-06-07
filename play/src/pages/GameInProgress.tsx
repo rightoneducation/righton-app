@@ -4,6 +4,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   GameSessionState,
   ITeam,
+  ITeamAnswer,
   IQuestion,
   ModelHelper,
 } from '@righton/networking';
@@ -58,10 +59,9 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
-  let teamAnswers;
+  let teamAnswers : (ITeamAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );
@@ -92,18 +92,18 @@ export default function GameInProgress({
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
-  // checks if a player is rejoining into an answering question phase in which they have already answered
-  const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-    isRejoin,
-    teamAnswers,
-    answerChoices,
-    currentState
-  );
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(
-    rejoinSubmittedAnswer.selectedAnswerIndex
-  );
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(
-    rejoinSubmittedAnswer.isSubmitted
+  // state for whether a player is selecting an answer and if they submitted that answer
+  // initialized through a check on isRejoin to prevent double answers on rejoin
+  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{selectedAnswerIndex: number | null, isSubmitted: boolean}>(() => {
+      let rejoinSubmittedAnswer = null; 
+      rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+        isRejoin,
+        teamAnswers,
+        answerChoices,
+        currentState
+      );
+      return rejoinSubmittedAnswer;
+    }
   );
 
   const handleTimerIsFinished = () => {
@@ -112,11 +112,11 @@ export default function GameInProgress({
 
   const handleSubmitAnswer = (answerText: string) => {
     addTeamAnswerToTeamMember(currentQuestion, answerText, currentState);
-    setIsSubmitted(true);
+    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true}));
   };
 
   const handleSelectAnswer = (index: number) => {
-    setSelectedAnswer(index);
+    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index}));
   };
 
   return (
@@ -146,10 +146,10 @@ export default function GameInProgress({
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={isSubmitted}
+            isSubmitted={selectSubmitAnswer.isSubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={selectedAnswer}
+            selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
           />
         ) : (

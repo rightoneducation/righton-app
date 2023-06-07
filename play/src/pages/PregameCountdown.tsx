@@ -35,22 +35,22 @@ export default function StartPhase2({
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
-        <RadialTimer
-          mode={TimerMode.COUNTDOWN}
-          inputColors={[
-            `${theme.palette.primary.countdownColor}, 0.3)`,
-            `${theme.palette.primary.countdownColor}, 0.4)`,
-            `${theme.palette.primary.countdownColor}, 0.5)`,
-            `${theme.palette.primary.countdownColor}, 0.6)`,
-            `${theme.palette.primary.countdownColor}, 0.7)`,
-            `${theme.palette.primary.countdownColor}, 0.8)`,
-            `${theme.palette.primary.countdownColor}, 0.9)`,
-            `${theme.palette.primary.countdownColor}, 1)`,
-          ]}
-          radius={110}
-          timerStartInSeconds={3}
-          setIsPregameCountdown={setIsPregameCountdown}
-        />
+          <RadialTimer
+            mode={TimerMode.COUNTDOWN}
+            inputColors={[
+              `${theme.palette.primary.countdownColor}, 0.3)`,
+              `${theme.palette.primary.countdownColor}, 0.4)`,
+              `${theme.palette.primary.countdownColor}, 0.5)`,
+              `${theme.palette.primary.countdownColor}, 0.6)`,
+              `${theme.palette.primary.countdownColor}, 0.7)`,
+              `${theme.palette.primary.countdownColor}, 0.8)`,
+              `${theme.palette.primary.countdownColor}, 0.9)`,
+              `${theme.palette.primary.countdownColor}, 1)`,
+            ]}
+            radius={110}
+            timerStartInSeconds={3}
+            setIsPregameCountdown={setIsPregameCountdown}
+          />
         <TypographyStyled variant="h2">
           {t('pregamecountdown.subtitle1')}
         </TypographyStyled>

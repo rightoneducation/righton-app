@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { TimerMode } from '../lib/PlayModels';
 
 const TimerContainer = styled('div')({
@@ -26,7 +25,6 @@ export default function RadialTimer({
   timerStartInSeconds,
   setIsPregameCountdown,
 }: RadialTimerProps) {
-  const { t } = useTranslation();
   const { cos, sin, PI } = Math;
   const tau = 2 * PI;
   const multiply = ([a, b, c, d]: number[], x: number, y: number) => [
@@ -166,21 +164,14 @@ export default function RadialTimer({
       >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      {mode === TimerMode.COUNTDOWN ? (
+      {mode === TimerMode.COUNTDOWN && 
         <Typography
           variant="h1"
           sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
         >
           {currentTime}
         </Typography>
-      ) : (
-        <Typography
-          variant="h1"
-          sx={{ position: 'absolute', textAlign: 'center', fontSize: '54px' }}
-        >
-          {t('lobby.title')}
-        </Typography>
-      )}
+      }
     </TimerContainer>
   );
 }
