@@ -128,7 +128,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
   }
 
-  // console.log(questions[0].instructions == null ? "no instructions yet" : questions[0].instructions.length);
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
     if (gameDetails.id !== 0) {
@@ -358,7 +357,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
           {({ match }) => {
             const { gameId, createQuestionIndex } = match.params
             const gameNumber = Number(gameId) === 0;
-            return <QuestionForm question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion} />;
+            return <QuestionForm
+              onChange={setDisabled(isButtonDisabled())}
+              question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]}
+              updateQuestion={updateQuestion}
+              cloneQuestion={cloneQuestion}
+              gameId={gameId}
+              gameQuestion={handleGameQuestion} />;
           }} />
 
         <Route path="/gamemaker/:gameId">
