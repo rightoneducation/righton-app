@@ -37,7 +37,7 @@ export default function DiscussAnswerCard({
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
   return (
-    <BodyCardStyled elevation={5}>
+    <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
