@@ -23,6 +23,8 @@ interface GameInProgressProps {
   teams?: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
+  phaseOneTime: number;
+  phaseTwoTime: number;
   questions: IQuestion[];
   currentQuestionIndex?: number | null;
   teamId: string;
@@ -40,11 +42,14 @@ interface GameInProgressProps {
   ) => void;
 }
 
+
 export default function GameInProgress({
   teams,
   currentState,
   teamAvatar,
   questions,
+  phaseOneTime,
+  phaseTwoTime,
   currentQuestionIndex,
   teamId,
   score,
@@ -126,7 +131,7 @@ export default function GameInProgress({
           currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
-          totalTime={15}
+          totalTime={currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
@@ -136,7 +141,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
