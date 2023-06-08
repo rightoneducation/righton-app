@@ -12,7 +12,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
-
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -22,9 +21,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     if (originalQuestion) {
       const copyOfOriginal = { ...originalQuestion }
       copyOfOriginal.choices = JSON.parse(copyOfOriginal.choices)
+      copyOfOriginal.instructions = JSON.parse(copyOfOriginal.instructions);
       return copyOfOriginal
     }
-
     return {
       text: '',
       imageUrl: '',
@@ -46,9 +45,13 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
   }, [gameId, history]);
 
-  const handleStringInput = (value)=>{
+  const handleStringInput = (value) => {
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
+  }
+
+  const isNullOrEmpty = (str) => {
+    return !str || str.length < 1;
   }
 
   // When the correct answer is changed/update this function handles that change
@@ -93,17 +96,29 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
   const handleSaveQuestion = async (question) => {
-    if (question.text == null || question.text === "") {
+    if (isNullOrEmpty(question.text)) {
       window.alert("Please enter a question");
       return;
     }
-
-    if (question.grade == null || question.grade === "") {
+    if (isNullOrEmpty(question.choices[0].text)) {
+      window.alert("Please enter a correct answer")
+      return;
+    }
+    if (question.instructions == null || question.instructions.filter(step => !isNullOrEmpty(step)).length < 1) {
+      window.alert("Please provide at least one step for the correct answer explanation");
+      return;
+    }
+    for (let idx = 1; idx < (question.choices).length; idx++) {
+      if (isNullOrEmpty(question.choices[idx].text)) {
+        window.alert(`Please enter an answer for wrong answer  ${idx}`);
+        return;
+      }
+    }
+    if (isNullOrEmpty(question.grade)) {
       window.alert("Please enter a grade level");
       return;
     }
-
-    if (question.domain == null || question.domain === "") {
+    if (isNullOrEmpty(question.domain)) {
       window.alert("Please enter a domain/subject");
       return;
     }
@@ -111,11 +126,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       window.alert("Please enter a cluster to save the game");
       return;
     }
-
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
-    questionToSend.instructions = JSON.stringify(questionToSend.instructions);
-
+    questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
 
     let newQuestion;
     if (questionToSend.id) {
