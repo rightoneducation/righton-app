@@ -50,6 +50,10 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     return newString;
   }
 
+  const isNullOrEmpty = (str) => {
+    return !str || str.length < 1;
+  }
+
   // When the correct answer is changed/update this function handles that change
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
@@ -92,29 +96,29 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
   const handleSaveQuestion = async (question) => {
-    if (question.text == null || question.text === "") {
+    if (isNullOrEmpty(question.text)) {
       window.alert("Please enter a question");
       return;
     }
-    if (question.choices[0].text == null || question.choices[0].text === "") {
+    if (isNullOrEmpty(question.choices[0].text)) {
       window.alert("Please enter a correct answer")
       return;
     }
-    if (question.instructions == null || question.instructions.filter(step => step !== "").length < 1) {
+    if (question.instructions == null || question.instructions.filter(step => !isNullOrEmpty(step)).length < 1) {
       window.alert("Please provide at least one step for the correct answer explanation");
       return;
     }
-    for (let choiceI = 1; choiceI < (question.choices).length; choiceI++) {
-      if (question.choices[choiceI].text == null || question.choices[choiceI].text === "") {
-        window.alert("Please enter an answer for wrong answer " + choiceI);
+    for (let idx = 1; idx < (question.choices).length; idx++) {
+      if (isNullOrEmpty(question.choices[idx].text)) {
+        window.alert(`Please enter an answer for wrong answer  ${idx}`);
         return;
       }
     }
-    if (question.grade == null || question.grade === "") {
+    if (isNullOrEmpty(question.grade)) {
       window.alert("Please enter a grade level");
       return;
     }
-    if (question.domain == null || question.domain === "") {
+    if (isNullOrEmpty(question.domain)) {
       window.alert("Please enter a domain/subject");
       return;
     }
