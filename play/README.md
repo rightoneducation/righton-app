@@ -10,11 +10,13 @@ Play is the student facing RightOn! app built with ReactJS and Typescript.
 2. yarn install
 
 <strong> link networking for models, helper functions etc </strong>  
-3. change directory to networking  
-4. yarn link  
-5. change directory back to play  
-6. yarn link '@righton/networking'  
-7. yarn start
+3. change directory to networking   
+4. yarn install  
+5. yarn run build   
+6. yarn link  
+7. change directory back to play  
+8. yarn link '@righton/networking'  
+9. yarn start
 
 ### Scripts:
 

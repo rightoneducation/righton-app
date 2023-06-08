@@ -128,7 +128,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
     }
   }
 
-
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
     if (gameDetails.id !== 0) {
@@ -143,13 +142,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
       delete gameDetails.questions;
       delete gameDetails.id;
       newSave(gameDetails, questionIDs);
-      
+
     }
     event.preventDefault();
     history.push('/');
   };
 
-  const handleStringInput = (value)=>{
+  const handleStringInput = (value) => {
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
   }
@@ -181,7 +180,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Title'
                       value={gameDetails.title}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled())}}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, title: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
                       fullWidth
                       required
                       className={classes.gameTitle}
@@ -193,7 +192,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
                       variant='outlined'
                       label='Game Text'
                       value={gameDetails.description}
-                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput( currentTarget.value ) }); setDisabled(isButtonDisabled()) }}
+                      onChange={({ currentTarget }) => { setGameDetails({ ...gameDetails, description: handleStringInput(currentTarget.value) }); setDisabled(isButtonDisabled()) }}
                       fullWidth
                       multiline
                       rows={3}
@@ -358,7 +357,13 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
           {({ match }) => {
             const { gameId, createQuestionIndex } = match.params
             const gameNumber = Number(gameId) === 0;
-            return <QuestionForm question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]} updateQuestion={updateQuestion} cloneQuestion={cloneQuestion} gameId={gameId} gameQuestion={handleGameQuestion} />;
+            return <QuestionForm
+              onChange={setDisabled(isButtonDisabled())}
+              question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]}
+              updateQuestion={updateQuestion}
+              cloneQuestion={cloneQuestion}
+              gameId={gameId}
+              gameQuestion={handleGameQuestion} />;
           }} />
 
         <Route path="/gamemaker/:gameId">

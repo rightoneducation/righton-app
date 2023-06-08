@@ -34,8 +34,8 @@ export default function HowToPlaySlide0Content() {
           alt="monster"
           sx={{
             bottom: '45px',
-            left: '110px',
-            width: '200px',
+            left: '90px',
+            width: '230px',
             height: 'auto',
           }}
         />

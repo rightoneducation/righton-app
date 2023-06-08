@@ -37,25 +37,17 @@ export default function DiscussAnswerCard({
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
   return (
-    <BodyCardStyled elevation={5}>
+    <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
-          <Box
-            display="inline"
-            sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
-          >
+          <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
             <Typography
-              variant="body1"
-              display="inline"
-              sx={{
-                fontWeight: 700,
-                left: 0,
-                paddingLeft: `${theme.sizing.extraSmallPadding}px`,
-              }}
+              variant="subtitle1" 
+              sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
             >
               {resultText}
-            </Typography>
-            <Typography variant="body1" display="inline">
+            </Typography >
+            <Typography variant="body1">
               {t('gameinprogress.discussanswer.correctanswertext')}
             </Typography>
           </Box>

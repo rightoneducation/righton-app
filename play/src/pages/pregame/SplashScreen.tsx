@@ -31,7 +31,7 @@ const StackContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const BottomBox = styled(Box)(({ theme }) => ({
-  paddingBottom: `${theme.sizing.mediumPadding}px`,
+  paddingBottom: `${theme.sizing.extraExtraLargePadding}px`,
 }));
 
 interface SplashScreenProps {
