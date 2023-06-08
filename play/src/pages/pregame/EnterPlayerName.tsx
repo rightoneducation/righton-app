@@ -53,7 +53,7 @@ export default function EnterPlayerName({
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer spacing={isSmallDevice ? 2 : 5}>
+      <StackContainer spacing={isSmallDevice ? 4 : 5}>
         <img
           style={{
             width: '214px',
@@ -85,6 +85,7 @@ export default function EnterPlayerName({
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
+                      fontFamily: 'Poppins'
                     },
                   },
                 }}
@@ -107,6 +108,7 @@ export default function EnterPlayerName({
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
+                      fontFamily: 'Poppins'
                     },
                   },
                 }}

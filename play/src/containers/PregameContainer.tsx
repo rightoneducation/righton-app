@@ -145,7 +145,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
         />
       );
     case PregameState.ENTER_GAME_CODE:
-      return <EnterGameCode handleGameCodeClick={handleGameCodeClick} />;
+      return <EnterGameCode isSmallDevice={isSmallDevice} handleGameCodeClick={handleGameCodeClick} />;
     case PregameState.SPLASH_SCREEN:
     default:
       return <SplashScreen setPregameState={setPregameState} />;

@@ -15,7 +15,7 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const theme = useTheme();
   return (
-    <BodyCardStyled elevation={5}>
+    <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
         <img
           style={{

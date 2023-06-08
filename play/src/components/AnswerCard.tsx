@@ -73,7 +73,7 @@ export default function AnswerCard({
   };
 
   return (
-    <BodyCardStyled elevation={5}>
+    <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
           ? correctText
