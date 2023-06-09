@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import {
   GameSessionState,
   ITeam,
@@ -65,6 +65,14 @@ export default function Leaderboard({
     }
   }, [containerRef.current?.clientHeight, subContainerHeight]); // updates whenever the container is resized
 
+  const randomAvatarNumbers = useMemo(
+    () =>
+      (teams ?? [])
+        .filter((team) => team.id !== teamId)
+        .map(() => Math.floor(Math.random() * 6)),
+    [teams, teamId]
+  );
+  
   return (
     <StackContainerStyled
       direction="column"
@@ -91,14 +99,14 @@ export default function Leaderboard({
           isSmallDevice={isSmallDevice}
           spacing={2}
         >
-          {sortedTeams?.map((team: ITeam) => (
+          {sortedTeams?.map((team: ITeam, index: number) => (
             <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
               <LeaderboardSelector
                 teamName={team.name ? team.name : 'Team One'}
                 teamAvatar={
                   team === currentTeam
                     ? teamAvatar
-                    : Math.floor(Math.random() * 6)
+                    : randomAvatarNumbers[index]
                 }
                 teamScore={team.score}
               />
