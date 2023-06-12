@@ -45,7 +45,6 @@ interface GameInProgressProps {
   isRejoin: boolean;
 }
 
-
 export default function GameInProgress({
   teams,
   currentState,
@@ -102,9 +101,8 @@ export default function GameInProgress({
     }
     return [introText, questionText];
   };
-  console.log("CURRENT STATE: " + currentState);
+
   useEffect(() => {
-    console.log("state change to " + currentState);
     // reset localstorage for timer to phase 1 time to prepare for phase 1
     if (currentState === GameSessionState.PHASE_2_DISCUSS) {
       localStorage.setItem('currentGameTimeStore', JSON.stringify(phaseOneTime));

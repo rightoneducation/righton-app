@@ -78,7 +78,6 @@ export default function HeaderContent({
           totalTime={totalTime}
           isFinished={isFinished}
           isPaused={isPaused}
-          currentState={currentState}
           handleTimerIsFinished={handleTimerIsFinished}
         />
       ) : null}

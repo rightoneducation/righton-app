@@ -31,7 +31,6 @@ interface TimerProps {
   totalTime: number;
   isPaused: boolean;
   isFinished: boolean;
-  currentState: GameSessionState;
   handleTimerIsFinished: () => void;
 }
 
@@ -39,7 +38,6 @@ export default function Timer({
   totalTime,
   isPaused,
   isFinished,
-  currentState,
   handleTimerIsFinished
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(totalTime * 1000); // millisecond updates to smooth out progress bar
@@ -56,26 +54,8 @@ export default function Timer({
 
   const isPausedRef = useRef<boolean>(isPaused);
 
-  // recursive countdown timer function using requestAnimationFrame
-  // function updateTimer(timestamp: number) {
-  //   if (!isPausedRef.current) {
-  //     if (prevTimeRef.current != null) {
-  //       const delta = timestamp - prevTimeRef.current;
-  //       setCurrentTimeMilli((prevTime) => prevTime - delta);
-
-  //     } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-
-  //     if (currentTimeMilli - (timestamp - originalTime) >= 0) {
-  //       prevTimeRef.current = timestamp;
-  //       animationRef.current = requestAnimationFrame(updateTimer);
-  //     } else handleTimerIsFinished();
-  //   }
-  // }
-
   // updates the current time as well as the localstorage in case of page reset
   useEffect(() => {
-    console.log("currTime: " + currTime);
-    console.log("localStorage: " + localStorage.getItem('currentGameTimeStore'));
     let refreshIntervalId = setInterval(() => {
       if (currTime > 0) {
         setCurrTime(currTime - 1);
@@ -104,19 +84,15 @@ export default function Timer({
 
   // useEffect to start off timer
   useEffect(() => {
-    console.log("this useEffect is called ONCE");
     if (!isPaused && !isFinished) {
       setCurrTime(currTime - 1);
       animationRef.current = currTime;
     }
-    // animationRef.current = requestAnimationFrame(updateTimer);
     return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the isPausedRef when the isPaused prop changes
   useEffect(() => {
-    console.log("this useEffect is called when isPaused changes");
-    console.log("isPaused: " + isPaused);
     setCurrTime(parseInt(JSON.parse(localStorage.getItem('currentGameTimeStore') as string)));
     isPausedRef.current = isPaused;
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
