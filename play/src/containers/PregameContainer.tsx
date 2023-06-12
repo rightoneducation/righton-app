@@ -7,7 +7,7 @@ import {
   ApiClient,
   isNullOrUndefined,
   IGameSession,
-  GameSessionState,
+  GameSessionState
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
@@ -15,6 +15,7 @@ import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
 import { PregameState, PregameModel } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
+import { PhaseOne } from '../pages/PhaseResults.stories';
 
 interface PregameFinished {
   apiClient: ApiClient;
@@ -71,6 +72,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
       ) {
         return false;
       }
+      localStorage.setItem('currentGameTimeStore', JSON.stringify(gameSessionResponse.phaseOneTime));
       setGameSession(gameSessionResponse);
       setPregameState(PregameState.ENTER_NAME);
       return true;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -64,7 +64,7 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
-  let teamAnswers : (ITeamAnswer | null)[] | null | undefined;
+  let teamAnswers: (ITeamAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
@@ -102,6 +102,18 @@ export default function GameInProgress({
     }
     return [introText, questionText];
   };
+  console.log("CURRENT STATE: " + currentState);
+  useEffect(() => {
+    console.log("state change to " + currentState);
+    // reset localstorage for timer to phase 1 time to prepare for phase 1
+    if (currentState === GameSessionState.PHASE_2_DISCUSS) {
+      localStorage.setItem('currentGameTimeStore', JSON.stringify(phaseOneTime));
+    }
+    // reset localstorage for timer to phase 2 time to prepare for phase 2
+    if (currentState === GameSessionState.PHASE_1_DISCUSS) {
+      localStorage.setItem('currentGameTimeStore', JSON.stringify(phaseTwoTime));
+    }
+  }, [currentState]);
 
   const questionText = divideQuestionString(currentQuestion?.text);
   const questionUrl = currentQuestion?.imageUrl;
@@ -109,16 +121,16 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on isRejoin to prevent double answers on rejoin
-  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{selectedAnswerIndex: number | null, isSubmitted: boolean}>(() => {
-      let rejoinSubmittedAnswer = null; 
-      rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-        isRejoin,
-        teamAnswers,
-        answerChoices,
-        currentState
-      );
-      return rejoinSubmittedAnswer;
-    }
+  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{ selectedAnswerIndex: number | null, isSubmitted: boolean }>(() => {
+    let rejoinSubmittedAnswer = null;
+    rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+      isRejoin,
+      teamAnswers,
+      answerChoices,
+      currentState
+    );
+    return rejoinSubmittedAnswer;
+  }
   );
 
   const handleTimerIsFinished = () => {
@@ -127,11 +139,11 @@ export default function GameInProgress({
 
   const handleSubmitAnswer = (answerText: string) => {
     addTeamAnswerToTeamMember(currentQuestion, answerText, currentState);
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true}));
+    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
   };
 
   const handleSelectAnswer = (index: number) => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index}));
+    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
 
   return (

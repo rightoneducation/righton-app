@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { json } from 'stream/consumers';
+import { GameSessionState } from '@righton/networking';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -30,6 +31,7 @@ interface TimerProps {
   totalTime: number;
   isPaused: boolean;
   isFinished: boolean;
+  currentState: GameSessionState;
   handleTimerIsFinished: () => void;
 }
 
@@ -37,7 +39,8 @@ export default function Timer({
   totalTime,
   isPaused,
   isFinished,
-  handleTimerIsFinished,
+  currentState,
+  handleTimerIsFinished
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(totalTime * 1000); // millisecond updates to smooth out progress bar
   const currentTime = currentTimeMilli / 1000;
@@ -69,6 +72,7 @@ export default function Timer({
   //   }
   // }
 
+  // updates the current time as well as the localstorage in case of page reset
   useEffect(() => {
     console.log("currTime: " + currTime);
     console.log("localStorage: " + localStorage.getItem('currentGameTimeStore'));
