@@ -49,10 +49,10 @@ export default function EnterGameCode({
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer spacing={isSmallDevice ? 4 : 5}>
+      <StackContainer sx={{minWidth: `${theme.sizing.pregameMinColumnWidth}px`}} spacing={isSmallDevice ? 4 : 5}>
         <img
           style={{
-            width: '214px',
+            width: `${theme.sizing.pregameMinColumnWidth}px`,
             height: '118px',
             paddingTop: `${theme.sizing.extraLargePadding}px`,
           }}
@@ -60,7 +60,7 @@ export default function EnterGameCode({
           alt="Question"
         />
         {/* container here to trim the spacing set by parent stack between text and input, typ */}
-        <Box>
+        <Box sx={{width: '100%'}}>
           <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
             {t('joingame.gamecode.title')}
           </Typography>

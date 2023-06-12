@@ -63,7 +63,7 @@ export default function SplashScreen({
           <Stack sx={{ alignItems: 'center' }} spacing={2}>
             <img
               style={{
-                width: '214px',
+                width: `${theme.sizing.pregameMinColumnWidth}px`,
                 height: '118px',
                 paddingTop: `${theme.sizing.extraLargePadding}px`,
               }}
