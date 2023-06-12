@@ -4,6 +4,7 @@ import { Stack, Typography } from '@mui/material';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import PaginationContainerStyled from '../../lib/styledcomponents/PaginationContainerStyled';
 import HowToPlaySlide0Content from './howtoplayslides/HowToPlaySlide0Content';
@@ -50,6 +51,12 @@ interface HowToPlayProps {
 export default function HowToPlay({mode}: HowToPlayProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const slideArray = [
+    <HowToPlaySlide1Content />,
+    <HowToPlaySlide2Content />,
+    <HowToPlaySlide3Content />,
+    <HowToPlaySlide4Content />
+  ];
 
   return (
     <BackgroundContainerStyled>
@@ -78,21 +85,11 @@ export default function HowToPlay({mode}: HowToPlayProps) {
             },
           }}
         >
-          <SwiperSlide>
-            <HowToPlaySlide0Content />
-          </SwiperSlide>
-          <SwiperSlide>
-            <HowToPlaySlide1Content />
-          </SwiperSlide>
-          <SwiperSlide>
-            <HowToPlaySlide2Content />
-          </SwiperSlide>
-          <SwiperSlide>
-            <HowToPlaySlide3Content />
-          </SwiperSlide>
-          <SwiperSlide>
-            <HowToPlaySlide4Content />
-          </SwiperSlide>
+          {slideArray.map((slide) => (
+            <SwiperSlide key={uuidv4()}>
+              {slide}
+            </SwiperSlide>
+          ))}
         </HowToPlaySwiper>
         <PaginationContainerStyled
           className="swiper-pagination-container"

@@ -36,35 +36,25 @@ export default function useFetchAndSubscribeGameSession(
       apiClient
         .getGameSession(gameSessionId)
         .then((fetchedGame) => {
-          if (!fetchedGame)
+          if (!fetchedGame || !fetchedGame.id)
             setError(`${t('error.connecting.gamesessionerror')}`);
-          try {
+            setIsLoading(false);
             const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
               fetchedGame.id,
               (response) => {
-                if (!response)
+                if (!response){
                   setError(`${t('error.connecting.subscriptionerror')}`);
+                  return;
+                }
                 // Update the gameSession object and trigger the callback
                 if (!ignore)
                   setGameSession((prevGame) => ({ ...prevGame, ...response }));
               }
             );
-            setIsLoading(false);
             return () => {
               ignore = true;
               gameSessionSubscription.unsubscribe();
             };
-          } catch (e) {
-            setIsLoading(false);
-            if (e instanceof Error)
-              setError(e.message);
-            else
-              setError(`${t('error.connecting.subscriptionerror')}`);
-          }
-          return () => {
-            // if component unmounts, ignore any updates to state
-            ignore = true;
-          };
         })
         .catch((e) => {
           setIsLoading(false);

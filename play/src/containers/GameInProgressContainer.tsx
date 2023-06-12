@@ -5,7 +5,7 @@ import useFetchLocalData from '../hooks/useFetchLocalData';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import HowToPlay from '../pages/pregame/HowToPlay';
-import AlertModal from '../components/AlertModal';
+import ErrorModal from '../components/ErrorModal';
 import { HowToPlayMode } from '../lib/PlayModels';
 
 
@@ -43,7 +43,8 @@ export default function GameInProgressContainer(
     if (subscription.error) {
       return (
         <>
-          <AlertModal
+          <ErrorModal
+            isModalOpen
             errorText={subscription.error}
             retry={retry}
             handleRetry={handleRetry}

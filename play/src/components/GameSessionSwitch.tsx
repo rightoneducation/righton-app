@@ -28,15 +28,15 @@ export default function GameInProgressContainer({
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
   const { currentState } = gameSession;
   const currentQuestion =
-    gameSession.questions[gameSession.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession.teams?.find(
+    gameSession.questions[gameSession.currentQuestionIndex!]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const currentTeam = gameSession.teams!.find( // eslint-disable-line @typescript-eslint/no-non-null-assertion
     (team) => team.id === pregameModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
   const answerChoices =
-    currentQuestion?.choices!.map((choice: IChoice) => ({  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion?.choices?.map((choice: IChoice) => ({ 
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
@@ -113,7 +113,7 @@ export default function GameInProgressContainer({
         <PhaseResults
           {...gameSession}
           gameSession={gameSession}
-          currentQuestionIndex={gameSession!.currentQuestionIndex ?? 0} // eslint-disable-line @typescript-eslint/no-non-null-assertion
+          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0} 
           teamAvatar={pregameModel.selectedAvatar}
           teamId={pregameModel.teamId}
           answerChoices={answerChoices}
