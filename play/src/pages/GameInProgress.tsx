@@ -4,7 +4,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   GameSessionState,
   ITeam,
-  ITeamAnswer,
   IQuestion,
   ModelHelper,
 } from '@righton/networking';
@@ -19,7 +18,6 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 
 interface GameInProgressProps {
   teams?: ITeam[];
@@ -42,8 +40,8 @@ interface GameInProgressProps {
     answerText: string,
     currentState: GameSessionState
   ) => void;
-  hasRejoined: boolean;
 }
+
 
 export default function GameInProgress({
   teams,
@@ -57,16 +55,14 @@ export default function GameInProgress({
   score,
   answerChoices,
   addTeamAnswerToTeamMember,
-  hasRejoined,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
-  let teamAnswers: (ITeamAnswer | null)[] | null | undefined;
+  let teamAnswers;
   if (currentTeam != null) {
-    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
-      // eslint-disable-line @typescript-eslint/no-unused-vars
+    teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId( // eslint-disable-line @typescript-eslint/no-unused-vars
       currentTeam,
       currentQuestion.id
     );
@@ -87,10 +83,7 @@ export default function GameInProgress({
       questionText = splicedString;
       if (periodLocation !== -1) {
         introText = inputText.substring(0, periodLocation + 1);
-        questionText = inputText.substring(
-          periodLocation + 1,
-          inputText.length
-        );
+        questionText = inputText.substring(periodLocation + 1, inputText.length);
       }
     } else {
       const splicedString = inputText.substring(0, lastPeriodLocation);
@@ -107,24 +100,12 @@ export default function GameInProgress({
   };
 
   const questionText = divideQuestionString(currentQuestion?.text);
+
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
-  // state for whether a player is selecting an answer and if they submitted that answer
-  // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{
-    selectedAnswerIndex: number | null;
-    isSubmitted: boolean;
-  }>(() => {
-    let rejoinSubmittedAnswer = null;
-    rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-      hasRejoined,
-      teamAnswers,
-      answerChoices,
-      currentState
-    );
-    return rejoinSubmittedAnswer;
-  });
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   const handleTimerIsFinished = () => {
     setTimerIsPaused(true);
@@ -132,11 +113,11 @@ export default function GameInProgress({
 
   const handleSubmitAnswer = (answerText: string) => {
     addTeamAnswerToTeamMember(currentQuestion, answerText, currentState);
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+    setIsSubmitted(true);
   };
 
   const handleSelectAnswer = (index: number) => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
+    setSelectedAnswer(index);
   };
 
   return (
@@ -150,11 +131,7 @@ export default function GameInProgress({
           currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
-          totalTime={
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-              ? phaseOneTime
-              : phaseTwoTime
-          }
+          totalTime={currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
@@ -164,16 +141,16 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={selectSubmitAnswer.isSubmitted}
+            isSubmitted={isSubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
+            selectedAnswer={selectedAnswer}
             handleSelectAnswer={handleSelectAnswer}
           />
         ) : (

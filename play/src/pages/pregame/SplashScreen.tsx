@@ -2,11 +2,9 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined } from '@righton/networking';
-import { PregameState, LocalModel } from '../../lib/PlayModels';
+import { PregameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
-import RejoinModal from '../../components/RejoinModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
 
@@ -35,30 +33,16 @@ const BottomBox = styled(Box)(({ theme }) => ({
 }));
 
 interface SplashScreenProps {
-  rejoinGameObject: LocalModel | null;
   setPregameState: (gameState: PregameState) => void;
-  handleRejoinSession: () => void;
 }
 
-export default function SplashScreen({
-  rejoinGameObject,
-  setPregameState,
-  handleRejoinSession,
-}: SplashScreenProps) {
+export default function SplashScreen({ setPregameState }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [isModalVisible, setIsModalVisible] = React.useState(
-    !isNullOrUndefined(rejoinGameObject)
-  );
 
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
-        <RejoinModal
-          handleRejoinSession={handleRejoinSession}
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
-        />
         <StackContainer spacing={5}>
           <Stack sx={{ alignItems: 'center' }} spacing={2}>
             <img

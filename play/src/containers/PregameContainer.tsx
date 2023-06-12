@@ -13,8 +13,8 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
-import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
+import { PregameState, PregameModel } from '../lib/PlayModels';
+import { isGameCodeValid } from '../lib/HelperFunctions';
 
 interface PregameFinished {
   apiClient: ApiClient;
@@ -28,29 +28,15 @@ export default function Pregame({ apiClient }: PregameFinished) {
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
-  // retreive local storage data so that player can choose to rejoin game
-  const rejoinGameObject = fetchLocalData();
-  // state variables used to collect player information in pregame phase
-  // information is loaded into local storage on select avatar screen and passed to /game
+
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );
-
   // TODO: coord with u/x for modal to pop up this error message
   const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
-
-  // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
-  const handleRejoinSession = () => {
-    const storageObject: LocalModel = {
-      ...rejoinGameObject,
-      hasRejoined: true,
-    };
-    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-    navigate(`/game`);
-  };
 
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
@@ -82,7 +68,6 @@ export default function Pregame({ apiClient }: PregameFinished) {
     }
   };
 
-  // create team and teammember on backend
   const addTeamToGame = async () => {
     const teamName = `${firstName} ${lastName}`;
     try {
@@ -113,7 +98,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
     }
     return undefined;
   };
-  // on click of avatar select button, add team and team member, store local storage data, and navigate to game
+
   const handleAvatarSelectClick = async () => {
     try {
       if (gameSession) {
@@ -122,14 +107,13 @@ export default function Pregame({ apiClient }: PregameFinished) {
           setAPIError(true);
           return;
         }
-        const storageObject: LocalModel = {
+        const storageObject: PregameModel = {
           gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
-          hasRejoined: false,
         };
-        window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+        window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
         navigate(`/game`);
       }
     } catch (error) {
@@ -161,20 +145,9 @@ export default function Pregame({ apiClient }: PregameFinished) {
         />
       );
     case PregameState.ENTER_GAME_CODE:
-      return (
-        <EnterGameCode
-          isSmallDevice={isSmallDevice}
-          handleGameCodeClick={handleGameCodeClick}
-        />
-      );
+      return <EnterGameCode isSmallDevice={isSmallDevice} handleGameCodeClick={handleGameCodeClick} />;
     case PregameState.SPLASH_SCREEN:
     default:
-      return (
-        <SplashScreen
-          rejoinGameObject={rejoinGameObject}
-          setPregameState={setPregameState}
-          handleRejoinSession={handleRejoinSession}
-        />
-      );
+      return <SplashScreen setPregameState={setPregameState} />;
   }
 }

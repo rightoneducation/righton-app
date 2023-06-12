@@ -74,38 +74,23 @@ export enum FinalResultsState {
 }
 
 /**
- * Enum that holds the various states for the lobby, based on the fetching and subscription to the gameSession object
- * @enum LobbyMode
- * @param {string} ERROR - error state
- * @param {string} LOADING - loading state
- * @param {string} READY - waiting for teacher state
- * @param {string} REJOIN - if player is rejoining state
- */
-export enum LobbyMode {
-  ERROR,
-  LOADING,
-  READY,
-  REJOIN,
-}
-
-export enum TimerMode {
-  COUNTDOWN,
-  JOIN,
-}
-
-/**
- * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
+ * Data object that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session
  * @param {string} firstName - first name of player
  * @param {string} lastName - last name of player
  * @param {number} selectedAvatar - avatar selected by player
  */
-export interface LocalModel {
+export interface PregameModel {
   gameSessionId: string;
   teamId: string;
   teamMemberId: string;
   selectedAvatar: number;
-  hasRejoined: boolean;
+}
+
+export enum HowToPlayMode {
+  ERROR,
+  LOADING,
+  READY,
 }
 
 interface MonsterMap {
@@ -159,8 +144,3 @@ export const monsterMap: MonsterMap = {
 export enum InputPlaceholder {
   GAME_CODE = '####',
 }
-
-/**
- *  string key for storage of game data in users local storage
- */
-export const StorageKey = 'rightOn';
