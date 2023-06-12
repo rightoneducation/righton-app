@@ -162,5 +162,5 @@ export enum InputPlaceholder {
 
 /**
  *  string key for storage of game data in users local storage
- */ 
+ */
 export const StorageKey = 'rightOn';

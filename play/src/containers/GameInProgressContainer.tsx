@@ -12,7 +12,6 @@ import Lobby from '../pages/pregame/Lobby';
 import ErrorModal from '../components/ErrorModal';
 import { LobbyMode, LocalModel, StorageKey } from '../lib/PlayModels';
 
-
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
 }

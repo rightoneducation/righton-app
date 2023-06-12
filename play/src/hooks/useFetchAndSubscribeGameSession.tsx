@@ -50,14 +50,13 @@ export default function useFetchAndSubscribeGameSession(
           const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
             fetchedGame.id,
             (response) => {
-              if (!response){
+              if (!response) {
                 setError(`${t('error.connecting.subscriptionerror')}`);
                 return;
               }
               // Update the gameSession object and trigger the callback
-              if (!ignore)
-                setHasRejoined(false);
-                setGameSession((prevGame) => ({ ...prevGame, ...response }));
+              if (!ignore) setHasRejoined(false);
+              setGameSession((prevGame) => ({ ...prevGame, ...response }));
             }
           );
           return () => {

@@ -166,14 +166,14 @@ export default function RadialTimer({
       >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      {mode === TimerMode.COUNTDOWN && 
+      {mode === TimerMode.COUNTDOWN && (
         <Typography
           variant="h1"
           sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
         >
           {currentTime}
         </Typography>
-      }
+      )}
     </TimerContainer>
   );
 }

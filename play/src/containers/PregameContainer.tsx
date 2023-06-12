@@ -44,7 +44,10 @@ export default function Pregame({ apiClient }: PregameFinished) {
 
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {
-    const storageObject: LocalModel = { ...rejoinGameObject, hasRejoined: true };
+    const storageObject: LocalModel = {
+      ...rejoinGameObject,
+      hasRejoined: true,
+    };
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
   };
@@ -158,7 +161,12 @@ export default function Pregame({ apiClient }: PregameFinished) {
         />
       );
     case PregameState.ENTER_GAME_CODE:
-      return <EnterGameCode isSmallDevice={isSmallDevice} handleGameCodeClick={handleGameCodeClick} />;
+      return (
+        <EnterGameCode
+          isSmallDevice={isSmallDevice}
+          handleGameCodeClick={handleGameCodeClick}
+        />
+      );
     case PregameState.SPLASH_SCREEN:
     default:
       return (

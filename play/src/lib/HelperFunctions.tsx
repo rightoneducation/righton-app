@@ -94,13 +94,15 @@ export const fetchLocalData = () => {
 
   const parsedLocalModel = JSON.parse(localModel);
   // checks for invalid data in localModel, returns null if found
-  if ([
-    parsedLocalModel.gameSessionId,
-    parsedLocalModel.teamId,
-    parsedLocalModel.teamMemberId,
-    parsedLocalModel.selectedAvatar,
-    parsedLocalModel.hasRejoined,
-  ].some(value => isNullOrUndefined(value)))
+  if (
+    [
+      parsedLocalModel.gameSessionId,
+      parsedLocalModel.teamId,
+      parsedLocalModel.teamMemberId,
+      parsedLocalModel.selectedAvatar,
+      parsedLocalModel.hasRejoined,
+    ].some((value) => isNullOrUndefined(value))
+  )
     return null;
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;

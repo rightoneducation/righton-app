@@ -35,13 +35,13 @@ export default function StartPhase2({
   return (
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
-          <RadialTimer
-            mode={TimerMode.COUNTDOWN}
-            inputColors={theme.palette.primary.radialTimerArray}
-            radius={110}
-            timerStartInSeconds={3}
-            setIsPregameCountdown={setIsPregameCountdown}
-          />
+        <RadialTimer
+          mode={TimerMode.COUNTDOWN}
+          inputColors={theme.palette.primary.radialTimerArray}
+          radius={110}
+          timerStartInSeconds={3}
+          setIsPregameCountdown={setIsPregameCountdown}
+        />
         <TypographyStyled variant="h2">
           {t('pregamecountdown.subtitle1')}
         </TypographyStyled>
