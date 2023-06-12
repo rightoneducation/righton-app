@@ -6,7 +6,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from '../../i18n';
 import HowToPlay from './HowToPlay';
 import Theme from '../../lib/Theme';
-import { LobbyMode } from '../../lib/PlayModels';
+import { HowToPlayMode } from '../../lib/PlayModels';
 
 export default {
   title: 'Design System/4_Pages/HowToPlay',
@@ -30,15 +30,15 @@ const Template: ComponentStory<typeof HowToPlay> = function AnswerCardTemplate(
 export const IsLoading = Template.bind({});
 
 IsLoading.args = {
-  mode: LobbyMode.LOADING,
+  mode: HowToPlayMode.LOADING,
 };
 
 export const IsWaitingForTeacher = Template.bind({});
 IsWaitingForTeacher.args = {
-  mode: LobbyMode.READY,
+  mode: HowToPlayMode.READY,
 };
 
 export const IsError = Template.bind({});
 IsError.args = {
-  mode: LobbyMode.ERROR,
+  mode: HowToPlayMode.ERROR,
 };

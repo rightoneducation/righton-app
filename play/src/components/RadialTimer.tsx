@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
-import { TimerMode } from '../lib/PlayModels';
 
 const TimerContainer = styled('div')({
   display: 'flex',
@@ -11,21 +10,17 @@ const TimerContainer = styled('div')({
 });
 
 interface RadialTimerProps {
-  mode: TimerMode;
   inputColors: string[];
   radius: number;
   timerStartInSeconds: number;
-  setIsPregameCountdown?: (isPregameCountdown: boolean) => void;
+  handlePregameTimerFinished: (timerFinished: boolean) => void;
 }
 
-type UndefinedTimer = NodeJS.Timeout | undefined;
-
 export default function RadialTimer({
-  mode,
   inputColors,
   radius,
   timerStartInSeconds,
-  setIsPregameCountdown,
+  handlePregameTimerFinished,
 }: RadialTimerProps) {
   const { cos, sin, PI } = Math;
   const tau = 2 * PI;
@@ -115,44 +110,17 @@ export default function RadialTimer({
   ); // millisecond updates to smooth out progress bar
   const currentTime = Math.ceil(currentTimeMilli / 1000);
 
-  const countdownTimer = () => {
-    let timer: NodeJS.Timeout | undefined;
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (currentTimeMilli > 0) {
       timer = setInterval(() => {
-        const color = colors
+        const c = colors
           .slice(colors.length - 1)
           .concat(colors.slice(0, colors.length - 1));
-        setColors(color);
+        setColors(c);
         setCurrentTimeMilli((prevTime) => prevTime - timeInterval);
       }, timeInterval);
-    } else if (setIsPregameCountdown) {
-      setIsPregameCountdown(false);
-    }
-    return timer;
-  };
-
-  const countupTimer = () => {
-    let timer: UndefinedTimer;
-    // adding in a stop at 2 minutes so the timer doesn't run indefinitely
-    if (currentTimeMilli < 120000) {
-      timer = setInterval(() => {
-        const color = colors
-          .slice(colors.length - 1)
-          .concat(colors.slice(0, colors.length - 1));
-        setColors(color);
-        setCurrentTimeMilli((prevTime) => prevTime + timeInterval);
-      }, timeInterval);
-    }
-    return timer;
-  };
-
-  useEffect(() => {
-    let timer: UndefinedTimer;
-    if (mode === TimerMode.COUNTDOWN) {
-      timer = countdownTimer();
-    } else {
-      timer = countupTimer();
-    }
+    } else handlePregameTimerFinished(false);
     return () => clearInterval(timer);
   }, [currentTimeMilli]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -166,14 +134,12 @@ export default function RadialTimer({
       >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      {mode === TimerMode.COUNTDOWN && (
-        <Typography
-          variant="h1"
-          sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
-        >
-          {currentTime}
-        </Typography>
-      )}
+      <Typography
+        variant="h1"
+        sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
+      >
+        {currentTime}
+      </Typography>
     </TimerContainer>
   );
 }
