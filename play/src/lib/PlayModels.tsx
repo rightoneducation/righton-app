@@ -27,11 +27,11 @@ import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
  * @param {string} PREVIOUS - answer player has selected in previous phase
  */
 export enum AnswerState {
-  DEFAULT = 'DEFAULT',
-  CORRECT = 'CORRECT',
-  PLAYER_SELECTED_CORRECT = 'PLAYER_SELECTED_CORRECT',
-  SELECTED = 'SELECTED',
-  PREVIOUS = 'PREVIOUS',
+  DEFAULT,
+  CORRECT,
+  PLAYER_SELECTED_CORRECT,
+  SELECTED,
+  PREVIOUS,
 }
 
 /**
@@ -41,8 +41,8 @@ export enum AnswerState {
  * @enum OverallGameState
  */
 export enum OverallGameState {
-  PREGAME = 'PREGAME',
-  GAME_IN_PROGRESS = 'GAME_IN_PROGRESS',
+  PREGAME,
+  GAME_IN_PROGRESS,
 }
 
 /**
@@ -55,11 +55,11 @@ export enum OverallGameState {
  * @param {string} HOW_TO_PLAY - screen for displaying how to play
  */
 export enum PregameState {
-  SPLASH_SCREEN = 'SPLASH_SCREEN',
-  ENTER_GAME_CODE = 'ENTER_GAME_CODE',
-  ENTER_NAME = 'ENTER_NAME',
-  SELECT_AVATAR = 'SELECT_AVATAR',
-  FINISHED = 'FINISHED',
+  SPLASH_SCREEN,
+  ENTER_GAME_CODE,
+  ENTER_NAME,
+  SELECT_AVATAR,
+  FINISHED,
 }
 
 /**
@@ -69,8 +69,8 @@ export enum PregameState {
  * @param {string} LEADERBOARD - screen for displaying leaderboard
  */
 export enum FinalResultsState {
-  CONGRATS = 'CONGRATS',
-  LEADERBOARD = 'LEADERBOARD',
+  CONGRATS,
+  LEADERBOARD,
 }
 
 /**
@@ -82,15 +82,15 @@ export enum FinalResultsState {
  * @param {string} REJOIN - if player is rejoining state
  */
 export enum LobbyMode {
-  ERROR = 'ERROR',
-  LOADING = 'LOADING',
-  READY = 'READY',
-  REJOIN = 'REJOIN',
+  ERROR,
+  LOADING,
+  READY,
+  REJOIN,
 }
 
 export enum TimerMode {
-  COUNTDOWN = 'COUNTDOWN',
-  JOIN = 'JOIN',
+  COUNTDOWN,
+  JOIN,
 }
 
 /**

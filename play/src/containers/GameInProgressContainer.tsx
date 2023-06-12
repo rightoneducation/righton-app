@@ -9,8 +9,9 @@ import { fetchLocalData } from '../lib/HelperFunctions';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import Lobby from '../pages/pregame/Lobby';
-import AlertModal from '../components/AlertModal';
+import ErrorModal from '../components/ErrorModal';
 import { LobbyMode, PregameModel } from '../lib/PlayModels';
+
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -52,7 +53,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     if (subscription.error) {
       return (
         <>
-          <AlertModal
+          <ErrorModal
+            isModalOpen
             errorText={subscription.error}
             retry={retry}
             handleRetry={handleRetry}
