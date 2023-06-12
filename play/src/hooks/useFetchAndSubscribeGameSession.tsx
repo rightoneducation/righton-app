@@ -41,26 +41,29 @@ export default function useFetchAndSubscribeGameSession(
       apiClient
         .getGameSession(gameSessionId)
         .then((fetchedGame) => {
-          if (!fetchedGame || !fetchedGame.id)
+          if (!fetchedGame || !fetchedGame.id) {
             setError(`${t('error.connecting.gamesessionerror')}`);
-            setIsLoading(false);
-            const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-              fetchedGame.id,
-              (response) => {
-                if (!response){
-                  setError(`${t('error.connecting.subscriptionerror')}`);
-                  return;
-                }
-                // Update the gameSession object and trigger the callback
-                if (!ignore)
-                  setGameSession((prevGame) => ({ ...prevGame, ...response }));
-                  setIsRejoin(false);
+            return null;
+          }
+          if (!ignore) setGameSession(fetchedGame);
+          setIsLoading(false);
+          const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+            fetchedGame.id,
+            (response) => {
+              if (!response){
+                setError(`${t('error.connecting.subscriptionerror')}`);
+                return;
               }
-            );
-            return () => {
-              ignore = true;
-              gameSessionSubscription.unsubscribe();
-            };
+              // Update the gameSession object and trigger the callback
+              if (!ignore)
+                setGameSession((prevGame) => ({ ...prevGame, ...response }));
+                setIsRejoin(false);
+            }
+          );
+          return () => {
+            ignore = true;
+            gameSessionSubscription.unsubscribe();
+          };
         })
         .catch((e) => {
           setIsLoading(false);
