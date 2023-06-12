@@ -1,44 +1,53 @@
-import React from 'react';
-import { ApiClient, isNullOrUndefined } from '@righton/networking';
-import {Navigate} from 'react-router-dom';
-import useFetchLocalData from '../hooks/useFetchLocalData';
+import React, { useState } from 'react';
+import {
+  ApiClient,
+  isNullOrUndefined,
+  GameSessionState,
+} from '@righton/networking';
+import { Navigate, useLoaderData } from 'react-router-dom';
+import { fetchLocalData } from '../lib/HelperFunctions';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
-import HowToPlay from '../pages/pregame/HowToPlay';
+import Lobby from '../pages/pregame/Lobby';
 import ErrorModal from '../components/ErrorModal';
-import { HowToPlayMode } from '../lib/PlayModels';
-
+import { LobbyMode, LocalModel, StorageKey } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
 }
 
-export default function GameInProgressContainer(
-  props: GameInProgressContainerProps
-) {
+export function GameInProgressContainer(props: GameInProgressContainerProps) {
   const { apiClient } = props;
-  const [retry, setRetry] = React.useState<number>(0);
+  const [retry, setRetry] = useState<number>(0);
   // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
   const handleRetry = () => {
     setRetry(retry + 1);
   };
-
-  // loads game data from local storage
+  // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
-  const pregameModel = useFetchLocalData(); 
+  const localModel = useLoaderData() as LocalModel;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
-    pregameModel?.gameSessionId,
+    localModel?.gameSessionId,
     apiClient,
-    retry
+    retry,
+    localModel?.hasRejoined
   );
-
   // if there isn't data in localstorage automatically redirect to the splashscreen
-  if (isNullOrUndefined(pregameModel)) 
-    return <Navigate replace to="/" />;
+  if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
   // if gamesession is loading/errored/waiting for teacher to start game
-  if (!subscription.gameSession) {
+  if (
+    !subscription.gameSession ||
+    subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
+  ) {
+    // if player is rejoining, show lobby in rejoining mode
+    if (
+      localModel.hasRejoined === true &&
+      subscription.gameSession?.currentState !== GameSessionState.TEAMS_JOINING
+    ) {
+      return <Lobby mode={LobbyMode.REJOIN} />;
+    }
     // if errored, show howToPlay page and error modal
     if (subscription.error) {
       return (
@@ -49,21 +58,34 @@ export default function GameInProgressContainer(
             retry={retry}
             handleRetry={handleRetry}
           />
-          <HowToPlay mode={HowToPlayMode.ERROR} />
+          <Lobby mode={LobbyMode.ERROR} />
         </>
       );
     }
     // if loading, display loading message on bottom of How to Play page
-    if (subscription.isLoading) return <HowToPlay mode={HowToPlayMode.LOADING} />;
+    if (subscription.isLoading) return <Lobby mode={LobbyMode.LOADING} />;
     // if waiting for teacher, display waiting message on How to Play page
-    return <HowToPlay mode={HowToPlayMode.READY} />;
+    return <Lobby mode={LobbyMode.READY} />;
   }
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
-      pregameModel={pregameModel}
+      hasRejoined={subscription.hasRejoined}
+      localModel={localModel}
       gameSession={subscription.gameSession}
       {...props}
     />
   );
+}
+
+export function LocalModelLoader(): LocalModel {
+  const localModel = fetchLocalData();
+  if (localModel && !localModel.hasRejoined) {
+    const updatedModelForNextReload = { ...localModel, hasRejoined: true };
+    window.localStorage.setItem(
+      StorageKey,
+      JSON.stringify(updatedModelForNextReload)
+    );
+  }
+  return localModel;
 }

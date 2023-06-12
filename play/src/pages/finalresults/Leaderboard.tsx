@@ -18,6 +18,7 @@ import FooterStackContainerStyled from '../../lib/styledcomponents/layout/Footer
 import 'swiper/css';
 import 'swiper/css/pagination';
 import LeaderboardSelector from '../../components/LeaderboardSelector';
+import { StorageKey } from '../../lib/PlayModels';
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -44,6 +45,11 @@ export default function Leaderboard({
   if (!isNullOrUndefined(teams)) {
     sortedTeams = teamSorter(teams);
   }
+
+  // remove locally stored game info when reaching leaderboard
+  useEffect(() => {
+    window.localStorage.removeItem(StorageKey);
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
   // ref req'd for height of container

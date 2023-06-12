@@ -4,6 +4,7 @@ import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
 import RadialTimer from '../components/RadialTimer';
+import { TimerMode } from '../lib/PlayModels';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
   display: 'flex',
@@ -22,11 +23,11 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
 }));
 
 interface StartPhase2Props {
-  handlePregameTimerFinished: () => void;
+  setIsPregameCountdown: (isPregameCountdown: boolean) => void;
 }
 
 export default function StartPhase2({
-  handlePregameTimerFinished,
+  setIsPregameCountdown,
 }: StartPhase2Props) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -35,19 +36,11 @@ export default function StartPhase2({
     <BackgroundContainerStyled>
       <StackContainer spacing={5}>
         <RadialTimer
-          inputColors={[
-            `${theme.palette.primary.countdownColor}, 0.3)`,
-            `${theme.palette.primary.countdownColor}, 0.4)`,
-            `${theme.palette.primary.countdownColor}, 0.5)`,
-            `${theme.palette.primary.countdownColor}, 0.6)`,
-            `${theme.palette.primary.countdownColor}, 0.7)`,
-            `${theme.palette.primary.countdownColor}, 0.8)`,
-            `${theme.palette.primary.countdownColor}, 0.9)`,
-            `${theme.palette.primary.countdownColor}, 1)`,
-          ]}
+          mode={TimerMode.COUNTDOWN}
+          inputColors={theme.palette.primary.radialTimerArray}
           radius={110}
           timerStartInSeconds={3}
-          handlePregameTimerFinished={handlePregameTimerFinished}
+          setIsPregameCountdown={setIsPregameCountdown}
         />
         <TypographyStyled variant="h2">
           {t('pregamecountdown.subtitle1')}
