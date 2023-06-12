@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
+import { json } from 'stream/consumers';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -41,6 +42,10 @@ export default function Timer({
   const [currentTimeMilli, setCurrentTimeMilli] = useState(totalTime * 1000); // millisecond updates to smooth out progress bar
   const currentTime = currentTimeMilli / 1000;
   const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
+  // TEST VARS
+  //const [currTimeMilli, setCurrTimeMilli] = useState(totalTime * 1000);
+  const [currTime, setCurrTime] = useState(totalTime);
+  const timeProgress = currTime / totalTime * 100;
 
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
@@ -49,19 +54,35 @@ export default function Timer({
   const isPausedRef = useRef<boolean>(isPaused);
 
   // recursive countdown timer function using requestAnimationFrame
-  function updateTimer(timestamp: number) {
-    if (!isPausedRef.current) {
-      if (prevTimeRef.current != null) {
-        const delta = timestamp - prevTimeRef.current;
-        setCurrentTimeMilli((prevTime) => prevTime - delta);
-      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
+  // function updateTimer(timestamp: number) {
+  //   if (!isPausedRef.current) {
+  //     if (prevTimeRef.current != null) {
+  //       const delta = timestamp - prevTimeRef.current;
+  //       setCurrentTimeMilli((prevTime) => prevTime - delta);
 
-      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
-        prevTimeRef.current = timestamp;
-        animationRef.current = requestAnimationFrame(updateTimer);
-      } else handleTimerIsFinished();
-    }
-  }
+  //     } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
+
+  //     if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+  //       prevTimeRef.current = timestamp;
+  //       animationRef.current = requestAnimationFrame(updateTimer);
+  //     } else handleTimerIsFinished();
+  //   }
+  // }
+
+  useEffect(() => {
+    console.log("currTime: " + currTime);
+    console.log("localStorage: " + localStorage.getItem('currentGameTimeStore'));
+    let refreshIntervalId = setInterval(() => {
+      if (currTime > 0) {
+        setCurrTime(currTime - 1);
+        localStorage.setItem('currentGameTimeStore', JSON.stringify(currTime - 1));
+        animationRef.current = currTime;
+      } else {
+        handleTimerIsFinished();
+      }
+    }, 1000);
+    return () => clearInterval(refreshIntervalId);
+  }, [currTime]);
 
   // generates timer string (needs to ensure that seconds are always 2 digits and don't show as 60)
   function getTimerString(currentTimeInput: number) {
@@ -79,20 +100,27 @@ export default function Timer({
 
   // useEffect to start off timer
   useEffect(() => {
-    if (!isPaused && !isFinished)
-      animationRef.current = requestAnimationFrame(updateTimer);
+    console.log("this useEffect is called ONCE");
+    if (!isPaused && !isFinished) {
+      setCurrTime(currTime - 1);
+      animationRef.current = currTime;
+    }
+    // animationRef.current = requestAnimationFrame(updateTimer);
     return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the isPausedRef when the isPaused prop changes
   useEffect(() => {
+    console.log("this useEffect is called when isPaused changes");
+    console.log("isPaused: " + isPaused);
+    setCurrTime(parseInt(JSON.parse(localStorage.getItem('currentGameTimeStore') as string)));
     isPausedRef.current = isPaused;
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">
-      <TimerBar value={progress} variant="determinate" />
-      <Typography variant="caption">{getTimerString(currentTime)}</Typography>
+      <TimerBar value={timeProgress} variant="determinate" />
+      <Typography variant="caption">{getTimerString(currTime)}</Typography>
     </TimerContainer>
   );
 }
