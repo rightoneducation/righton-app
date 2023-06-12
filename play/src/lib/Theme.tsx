@@ -46,6 +46,7 @@ const xl = 1536;
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
 const headerHeight = 68;
 const footerHeight = 60;
+const pregameMinColumnWidth = 215;
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
@@ -59,6 +60,7 @@ declare module '@mui/material/styles' {
     sizing: {
       headerHeight: number;
       footerHeight: number;
+      pregameMinColumnWidth: number;
       extraSmallPadding: number;
       smallPadding: number;
       mediumPadding: number;
@@ -72,6 +74,7 @@ declare module '@mui/material/styles' {
     sizing?: {
       headerHeight?: number;
       footerHeight?: number;
+      pregameMinColumnWidth?: number;
       extraSmallPadding?: number;
       smallPadding?: number;
       mediumPadding?: number;
@@ -128,6 +131,7 @@ export default createTheme({
   sizing: {
     headerHeight,
     footerHeight,
+    pregameMinColumnWidth,
     extraSmallPadding,
     smallPadding,
     mediumPadding,
