@@ -69,7 +69,6 @@ export default function AnswerSelector({
     [AnswerState.PREVIOUS]: SelectedAnswer,
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
   };
-
   const buttonContents = (
     <>
       <Typography
@@ -95,19 +94,21 @@ export default function AnswerSelector({
       >
         {answerText}
       </Typography>
-      <img
-        src={imageMap[answerStatus]}
-        style={{
-          position: 'absolute',
-          right: isSubmitted ? `17px` : `16px`,
-          width: `16px`,
-          height: `16px`,
-          paddingTop: '2px',
-          opacity:
-            isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
-        }}
-        alt="SelectedAnswerImage"
-      />
+      {!isSubmitted || answerStatus !== AnswerState.DEFAULT &&
+        <img
+          src={imageMap[answerStatus]}
+          style={{
+            position: 'absolute',
+            right: isSubmitted ? `17px` : `16px`,
+            width: `16px`,
+            height: `16px`,
+            paddingTop: '2px',
+            opacity:
+              isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
+          }}
+          alt="SelectedAnswerImage"
+        />
+      }
     </>
   );
 
