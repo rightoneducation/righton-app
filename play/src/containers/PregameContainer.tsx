@@ -13,7 +13,7 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, PregameModel } from '../lib/PlayModels';
+import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
@@ -44,8 +44,8 @@ export default function Pregame({ apiClient }: PregameFinished) {
 
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {
-    const storageObject: PregameModel = { ...rejoinGameObject, isRejoin: true };
-    window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
+    const storageObject: LocalModel = { ...rejoinGameObject, hasRejoined: true };
+    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
   };
 
@@ -119,14 +119,14 @@ export default function Pregame({ apiClient }: PregameFinished) {
           setAPIError(true);
           return;
         }
-        const storageObject: PregameModel = {
+        const storageObject: LocalModel = {
           gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
-          isRejoin: false,
+          hasRejoined: false,
         };
-        window.localStorage.setItem('rightOn', JSON.stringify(storageObject));
+        window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);
       }
     } catch (error) {

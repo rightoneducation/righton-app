@@ -100,12 +100,12 @@ export enum TimerMode {
  * @param {string} lastName - last name of player
  * @param {number} selectedAvatar - avatar selected by player
  */
-export interface PregameModel {
+export interface LocalModel {
   gameSessionId: string;
   teamId: string;
   teamMemberId: string;
   selectedAvatar: number;
-  isRejoin: boolean;
+  hasRejoined: boolean;
 }
 
 interface MonsterMap {
@@ -159,3 +159,7 @@ export const monsterMap: MonsterMap = {
 export enum InputPlaceholder {
   GAME_CODE = '####',
 }
+
+/** string key for storage of game data in users local storage
+ */ 
+export const StorageKey = 'rightOn';

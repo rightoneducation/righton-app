@@ -26,16 +26,7 @@ export default function Lobby({ mode }: LobbyProps) {
           </Typography>
           <RadialTimer
             mode={TimerMode.JOIN}
-            inputColors={[
-              `${theme.palette.primary.countdownColor}, 0.3)`,
-              `${theme.palette.primary.countdownColor}, 0.4)`,
-              `${theme.palette.primary.countdownColor}, 0.5)`,
-              `${theme.palette.primary.countdownColor}, 0.6)`,
-              `${theme.palette.primary.countdownColor}, 0.7)`,
-              `${theme.palette.primary.countdownColor}, 0.8)`,
-              `${theme.palette.primary.countdownColor}, 0.9)`,
-              `${theme.palette.primary.countdownColor}, 1)`,
-            ]}
+            inputColors={theme.palette.primary.radialTimerArray}
             radius={110}
             timerStartInSeconds={1}
           />

@@ -6,6 +6,7 @@ import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
+import { StorageKey } from '../lib/PlayModels';
 
 interface ErrorModalProps {
   isModalOpen: boolean;
@@ -86,7 +87,7 @@ export default function ErrorModal({
         </IntroButtonStyled>
         <IntroButtonStyled
           onClick={() => {
-            window.localStorage.removeItem('rightOn');
+            window.localStorage.removeItem(StorageKey);
             navigate('/');
           }}
           style={{

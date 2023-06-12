@@ -18,6 +18,8 @@ interface RadialTimerProps {
   setIsPregameCountdown?: (isPregameCountdown: boolean) => void;
 }
 
+type UndefinedTimer = NodeJS.Timeout | undefined;
+
 export default function RadialTimer({
   mode,
   inputColors,
@@ -117,10 +119,10 @@ export default function RadialTimer({
     let timer: NodeJS.Timeout | undefined;
     if (currentTimeMilli > 0) {
       timer = setInterval(() => {
-        const c = colors
+        const color = colors
           .slice(colors.length - 1)
           .concat(colors.slice(0, colors.length - 1));
-        setColors(c);
+        setColors(color);
         setCurrentTimeMilli((prevTime) => prevTime - timeInterval);
       }, timeInterval);
     } else if (setIsPregameCountdown) {
@@ -130,14 +132,14 @@ export default function RadialTimer({
   };
 
   const countupTimer = () => {
-    let timer: NodeJS.Timeout | undefined;
+    let timer: UndefinedTimer;
     // adding in a stop at 2 minutes so the timer doesn't run indefinitely
     if (currentTimeMilli < 120000) {
       timer = setInterval(() => {
-        const c = colors
+        const color = colors
           .slice(colors.length - 1)
           .concat(colors.slice(0, colors.length - 1));
-        setColors(c);
+        setColors(color);
         setCurrentTimeMilli((prevTime) => prevTime + timeInterval);
       }, timeInterval);
     }
@@ -145,7 +147,7 @@ export default function RadialTimer({
   };
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | undefined;
+    let timer: UndefinedTimer;
     if (mode === TimerMode.COUNTDOWN) {
       timer = countdownTimer();
     } else {

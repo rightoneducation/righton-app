@@ -42,7 +42,7 @@ interface GameInProgressProps {
     answerText: string,
     currentState: GameSessionState
   ) => void;
-  isRejoin: boolean;
+  hasRejoined: boolean;
 }
 
 
@@ -58,7 +58,7 @@ export default function GameInProgress({
   score,
   answerChoices,
   addTeamAnswerToTeamMember,
-  isRejoin,
+  hasRejoined,
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -108,11 +108,11 @@ export default function GameInProgress({
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
-  // initialized through a check on isRejoin to prevent double answers on rejoin
+  // initialized through a check on hasRejoined to prevent double answers on rejoin
   const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{selectedAnswerIndex: number | null, isSubmitted: boolean}>(() => {
       let rejoinSubmittedAnswer = null; 
       rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-        isRejoin,
+        hasRejoined,
         teamAnswers,
         answerChoices,
         currentState

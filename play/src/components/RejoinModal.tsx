@@ -5,6 +5,7 @@ import { Typography } from '@mui/material';
 import Modal from 'react-modal';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
+import { StorageKey } from '../lib/PlayModels';
 
 interface RejoinModalProps {
   handleRejoinSession: () => void;
@@ -68,7 +69,7 @@ export default function RejoinModal({
         </IntroButtonStyled>
         <IntroButtonStyled
           onClick={() => {
-            window.localStorage.removeItem('rightOn');
+            window.localStorage.removeItem(StorageKey);
             setIsModalVisible(false);
           }}
         >

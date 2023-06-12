@@ -23,7 +23,7 @@ export default function useFetchAndSubscribeGameSession(
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
   const [error, setError] = useState<string>('');
-  const [isRejoin, setIsRejoin] = useState<boolean>(isInitialRejoin);
+  const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
 
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
@@ -56,8 +56,8 @@ export default function useFetchAndSubscribeGameSession(
               }
               // Update the gameSession object and trigger the callback
               if (!ignore)
+                setHasRejoined(false);
                 setGameSession((prevGame) => ({ ...prevGame, ...response }));
-                setIsRejoin(false);
             }
           );
           return () => {
@@ -71,6 +71,6 @@ export default function useFetchAndSubscribeGameSession(
           else setError(`${t('error.connecting.gamesessionerror')}`);
         });
     }
-  }, [gameSessionId, apiClient, t, retry, isRejoin]);
-  return { isLoading, error, gameSession, isRejoin };
+  }, [gameSessionId, apiClient, t, retry, hasRejoined]);
+  return { isLoading, error, gameSession, hasRejoined };
 }
