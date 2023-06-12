@@ -160,6 +160,7 @@ export enum InputPlaceholder {
   GAME_CODE = '####',
 }
 
-/** string key for storage of game data in users local storage
+/**
+ *  string key for storage of game data in users local storage
  */ 
 export const StorageKey = 'rightOn';
