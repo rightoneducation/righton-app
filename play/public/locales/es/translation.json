@@ -21,16 +21,17 @@
     "selectavatar": {
       "title": "¡Elige tu avatar!",
       "button": "Elegir"
-    },
-    "howtoplay": {
-      "title": "¡Cómo jugar!",
-      "slide0": "Lea la pregunta de opción múltiple",
-      "slide1": "Gana puntos eligiendo la respuesta correcta...",
-      "slide2": "Leer soluciones paso a paso",
-      "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
-      "slide4": "¡La mayor cantidad de puntos totales gana!",
-      "description": "Esperando a que comience el juego..."
     }
+  },
+  "howtoplay": {
+    "title": "¡Cómo jugar!",
+    "slide0": "Lea la pregunta de opción múltiple",
+    "slide1": "Gana puntos eligiendo la respuesta correcta...",
+    "slide2": "Leer soluciones paso a paso",
+    "slide3": "¡Gana más puntos adivinando la respuesta incorrecta más popular!",
+    "slide4": "¡La mayor cantidad de puntos totales gana!",
+    "description": "Esperando a que comience el juego...",
+    "loading": "Obteniendo sesión de juego..."
   },
   "pregamecountdown": {
     "subtitle1": "Su pregunta \n aparecerá pronto.",
@@ -90,6 +91,15 @@
       "top5": "¡Felicidades! \n ¡Estás entre los 5 primeros!",
       "greatjob": "¡Gran trabajo!",
       "button": "Ver tabla de posiciones"
+    }
+  },
+  "error": {
+    "connecting": {
+      "title1": "Se ha producido un error con el siguiente mensaje de error:",
+      "gamesessionerror": "Sesión de juego no encontrada",
+      "subscriptionerror": "Subscription could not be established",
+      "button1": "No se pudo establecer la suscripción",
+      "button2": "Volver al menú principal"
     }
   }
 }

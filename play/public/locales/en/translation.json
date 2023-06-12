@@ -21,16 +21,17 @@
     "selectavatar": {
       "title": "Choose Your Avatar!",
       "button": "Choose"
-    },
-    "howtoplay": {
-      "title": "How to Play!",
-      "slide0": "Read the multiple-choice question",
-      "slide1": "Gain points by choosing the correct answer...",
-      "slide2": "Read step-by-step solutions",
-      "slide3": "Gain more points by guessing the most popular incorrect answer!",
-      "slide4": "The most total points wins!",
-      "description": "Waiting for the game to start..."
     }
+  },
+  "howtoplay": {
+    "title": "How to Play!",
+    "slide0": "Read the multiple-choice question",
+    "slide1": "Gain points by choosing the correct answer...",
+    "slide2": "Read step-by-step solutions",
+    "slide3": "Gain more points by guessing the most popular incorrect answer!",
+    "slide4": "The most total points wins!",
+    "description": "Waiting for the game to start...",
+    "loading": "Getting game session..."
   },
   "pregamecountdown": {
     "subtitle1": "Your question \n will appear soon.",
@@ -90,6 +91,15 @@
       "top5": "Congratulations! \n You are in the top 5!",
       "greatjob": "Great job!",
       "button": "View leaderboard"
+    }
+  },
+  "error": {
+    "connecting": {
+      "title1": "An error has occurred with the following error message:",
+      "gamesessionerror": "Game session not found",
+      "subscriptionerror": "Subscription could not be established",
+      "button1": "Try Again",
+      "button2": "Return to Main Menu"
     }
   }
 }

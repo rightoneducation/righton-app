@@ -2,7 +2,7 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { JoinGameState } from '../../lib/PlayModels';
+import { PregameState } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import MagicHatHero from '../../img/MagicHatHero.svg';
@@ -33,10 +33,10 @@ const BottomBox = styled(Box)(({ theme }) => ({
 }));
 
 interface SplashScreenProps {
-  setJoinGameState: (gameState: JoinGameState) => void;
+  setPregameState: (gameState: PregameState) => void;
 }
 
-export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
+export default function SplashScreen({ setPregameState }: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -68,7 +68,7 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
           </Stack>
           <BottomBox>
             <IntroButtonStyled
-              onClick={() => setJoinGameState(JoinGameState.ENTER_GAME_CODE)}
+              onClick={() => setPregameState(PregameState.ENTER_GAME_CODE)}
               style={{
                 background: `${theme.palette.primary.highlightGradient}`,
                 boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
