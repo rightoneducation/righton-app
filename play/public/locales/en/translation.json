@@ -4,6 +4,12 @@
       "title": "Unlocking every student's potential in math!",
       "button": "Join Game"
     },
+    "rejoinmodal": {
+      "title1": "We have detected that you were disconnected from an ongoing game.",
+      "title2": "Would you like to rejoin?",
+      "button1": "Yes",
+      "button2": "No"
+    },
     "gamecode": {
       "title": "Enter Game Code",
       "button": "Join",
@@ -22,6 +28,9 @@
       "title": "Choose Your Avatar!",
       "button": "Choose"
     }
+  },
+  "lobby": {
+    "title": "Joining Game..."
   },
   "howtoplay": {
     "title": "How to Play!",

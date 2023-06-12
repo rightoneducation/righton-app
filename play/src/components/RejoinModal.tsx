@@ -1,51 +1,39 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Typography } from '@mui/material';
 import Modal from 'react-modal';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 import { StorageKey } from '../lib/PlayModels';
 
-interface ErrorModalProps {
-  isModalOpen: boolean;
-  errorText: string;
-  retry: number;
-  handleRetry: (errorText: string) => void;
+interface RejoinModalProps {
+  handleRejoinSession: () => void;
+  isModalVisible: boolean;
+  setIsModalVisible: (isModalVisible: boolean) => void;
 }
 
-export default function ErrorModal({
-  isModalOpen,
-  errorText,
-  retry,
-  handleRetry,
-}: ErrorModalProps) {
+export default function RejoinModal({
+  handleRejoinSession,
+  isModalVisible,
+  setIsModalVisible,
+}: RejoinModalProps) {
   const theme = useTheme();
-  const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
     <Modal
-      isOpen={isModalOpen}
+      isOpen={isModalVisible}
       contentLabel="Rejoin Modal"
       style={{
         content: {
           position: 'absolute',
-          width: isExtraSmallDevice
-            ? `calc(100% - (2 * ${theme.sizing.extraLargePadding}px))`
-            : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.extraLargePadding}px))`,
-          minWidth: '200px',
-          minHeight: '200px',
+          maxWidth: theme.breakpoints.values.xs,
           inset: 'auto',
           margin: '20px',
           borderRadius: '24px',
           backgroundColor: theme.palette.primary.main,
           boxShadow: `0px 20px 20px rgba(0, 0, 0, 0.25)`,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
         },
         overlay: {
           height: '100%',
@@ -58,45 +46,36 @@ export default function ErrorModal({
           alignItems: 'center',
         },
       }}
-      shouldCloseOnOverlayClick={false}
+      onRequestClose={() => setIsModalVisible(false)}
+      shouldCloseOnOverlayClick
       appElement={document.getElementById('root') || undefined}
     >
-      <Stack spacing={2}>
+      <BodyCardContainerStyled spacing={2}>
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
-          {t('error.connecting.title1')}
+          {t('joingame.rejoinmodal.title1')}
         </Typography>
-        <Typography
-          variant="h4"
-          sx={{ textAlign: 'center', fontStyle: 'italic' }}
-        >
-          {errorText}
-        </Typography>
-      </Stack>
-      <Stack spacing={2} style={{ alignItems: 'center' }}>
+        <Typography variant="h4">{t('joingame.rejoinmodal.title2')}</Typography>
         <IntroButtonStyled
           onClick={() => {
-            handleRetry(errorText);
+            handleRejoinSession();
+            setIsModalVisible(false);
           }}
           style={{
             background: `${theme.palette.primary.highlightGradient}`,
             boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
           }}
         >
-          {t('error.connecting.button1')}
-          {retry > 0 ? ` (${retry})` : null}
+          {t('joingame.rejoinmodal.button1')}
         </IntroButtonStyled>
         <IntroButtonStyled
           onClick={() => {
             window.localStorage.removeItem(StorageKey);
-            navigate('/');
-          }}
-          style={{
-            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
+            setIsModalVisible(false);
           }}
         >
-          {t('error.connecting.button2')}
+          {t('joingame.rejoinmodal.button2')}
         </IntroButtonStyled>
-      </Stack>
+      </BodyCardContainerStyled>
     </Modal>
   );
 }
