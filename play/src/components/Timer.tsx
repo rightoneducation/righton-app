@@ -40,13 +40,8 @@ export default function Timer({
   isFinished,
   handleTimerIsFinished
 }: TimerProps) {
-  const [currentTimeMilli, setCurrentTimeMilli] = useState(totalTime * 1000); // millisecond updates to smooth out progress bar
-  const currentTime = currentTimeMilli / 1000;
-  const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
-  // TEST VARS
-  //const [currTimeMilli, setCurrTimeMilli] = useState(totalTime * 1000);
-  const [currTime, setCurrTime] = useState(totalTime);
-  const timeProgress = currTime / totalTime * 100;
+  const [currentTime, setCurrentTime] = useState(totalTime);
+  const timeProgress = currentTime / totalTime * 100;
 
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
@@ -57,16 +52,16 @@ export default function Timer({
   // updates the current time as well as the localstorage in case of page reset
   useEffect(() => {
     let refreshIntervalId = setInterval(() => {
-      if (currTime > 0) {
-        setCurrTime(currTime - 1);
-        localStorage.setItem('currentGameTimeStore', JSON.stringify(currTime - 1));
-        animationRef.current = currTime;
+      if (currentTime > 0) {
+        setCurrentTime(currentTime - 1);
+        localStorage.setItem('currentGameTimeStore', JSON.stringify(currentTime - 1));
+        animationRef.current = currentTime;
       } else {
         handleTimerIsFinished();
       }
     }, 1000);
     return () => clearInterval(refreshIntervalId);
-  }, [currTime]);
+  }, [currentTime]);
 
   // generates timer string (needs to ensure that seconds are always 2 digits and don't show as 60)
   function getTimerString(currentTimeInput: number) {
@@ -85,22 +80,22 @@ export default function Timer({
   // useEffect to start off timer
   useEffect(() => {
     if (!isPaused && !isFinished) {
-      setCurrTime(currTime - 1);
-      animationRef.current = currTime;
+      setCurrentTime(currentTime - 1);
+      animationRef.current = currentTime;
     }
     return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the isPausedRef when the isPaused prop changes
   useEffect(() => {
-    setCurrTime(parseInt(JSON.parse(localStorage.getItem('currentGameTimeStore') as string)));
+    setCurrentTime(parseInt(JSON.parse(localStorage.getItem('currentGameTimeStore') as string)));
     isPausedRef.current = isPaused;
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">
       <TimerBar value={timeProgress} variant="determinate" />
-      <Typography variant="caption">{getTimerString(currTime)}</Typography>
+      <Typography variant="caption">{getTimerString(currentTime)}</Typography>
     </TimerContainer>
   );
 }
