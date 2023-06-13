@@ -25,6 +25,16 @@ const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answe
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
+const radialTimerArray = [
+  `${countdownColor}, 0.3)`,
+  `${countdownColor}, 0.4)`,
+  `${countdownColor}, 0.5)`,
+  `${countdownColor}, 0.6)`,
+  `${countdownColor}, 0.7)`,
+  `${countdownColor}, 0.8)`,
+  `${countdownColor}, 0.9)`,
+  `${countdownColor}, 1)`,
+]; // radial timer color array - appended with '0.x )' opacity when used in countdown
 
 // design tokens - breakpoints:
 const xs = 400;
@@ -36,6 +46,7 @@ const xl = 1536;
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
 const headerHeight = 68;
 const footerHeight = 60;
+const pregameMinColumnWidth = 215;
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
@@ -49,6 +60,7 @@ declare module '@mui/material/styles' {
     sizing: {
       headerHeight: number;
       footerHeight: number;
+      pregameMinColumnWidth: number;
       extraSmallPadding: number;
       smallPadding: number;
       mediumPadding: number;
@@ -62,6 +74,7 @@ declare module '@mui/material/styles' {
     sizing?: {
       headerHeight?: number;
       footerHeight?: number;
+      pregameMinColumnWidth?: number;
       extraSmallPadding?: number;
       smallPadding?: number;
       mediumPadding?: number;
@@ -87,6 +100,7 @@ declare module '@mui/material/styles' {
     lightGrey: string;
     correctColor: string;
     countdownColor: string;
+    radialTimerArray: string[];
   }
 
   interface SimplePaletteColorOptions {
@@ -106,6 +120,7 @@ declare module '@mui/material/styles' {
     lightGrey?: string;
     correctColor?: string;
     countdownColor: string;
+    radialTimerArray?: string[];
   }
 }
 
@@ -116,12 +131,13 @@ export default createTheme({
   sizing: {
     headerHeight,
     footerHeight,
+    pregameMinColumnWidth,
     extraSmallPadding,
     smallPadding,
     mediumPadding,
     largePadding,
     extraLargePadding,
-    extraExtraLargePadding
+    extraExtraLargePadding,
   },
   palette: {
     primary: {
@@ -141,6 +157,7 @@ export default createTheme({
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
       countdownColor,
+      radialTimerArray,
     },
   },
   typography: {
@@ -189,11 +206,11 @@ export default createTheme({
       color: primaryTextColor,
     },
     subtitle1: {
-    // correct/nice try discuss answer text
-    fontWeight: '800',
-    fontSize: '24px',
-    lineHeight: '38px',
-    color: darkestTextColor,
+      // correct/nice try discuss answer text
+      fontWeight: '800',
+      fontSize: '24px',
+      lineHeight: '38px',
+      color: darkestTextColor,
     },
     body1: {
       // question text

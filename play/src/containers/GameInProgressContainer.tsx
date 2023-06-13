@@ -9,8 +9,8 @@ import { fetchLocalData } from '../lib/HelperFunctions';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import Lobby from '../pages/pregame/Lobby';
-import AlertModal from '../components/AlertModal';
-import { LobbyMode, PregameModel } from '../lib/PlayModels';
+import ErrorModal from '../components/ErrorModal';
+import { LobbyMode, LocalModel, StorageKey } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -25,17 +25,17 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   };
   // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
-  const pregameModel = useLoaderData() as PregameModel;
+  const localModel = useLoaderData() as LocalModel;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
-    pregameModel?.gameSessionId,
+    localModel?.gameSessionId,
     apiClient,
     retry,
-    pregameModel?.isRejoin
+    localModel?.hasRejoined
   );
   // if there isn't data in localstorage automatically redirect to the splashscreen
-  if (isNullOrUndefined(pregameModel)) return <Navigate replace to="/" />;
+  if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
   // if gamesession is loading/errored/waiting for teacher to start game
   if (
     !subscription.gameSession ||
@@ -43,7 +43,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   ) {
     // if player is rejoining, show lobby in rejoining mode
     if (
-      pregameModel.isRejoin === true &&
+      localModel.hasRejoined === true &&
       subscription.gameSession?.currentState !== GameSessionState.TEAMS_JOINING
     ) {
       return <Lobby mode={LobbyMode.REJOIN} />;
@@ -52,7 +52,8 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     if (subscription.error) {
       return (
         <>
-          <AlertModal
+          <ErrorModal
+            isModalOpen
             errorText={subscription.error}
             retry={retry}
             handleRetry={handleRetry}
@@ -69,22 +70,22 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
-      isRejoin={subscription.isRejoin}
-      pregameModel={pregameModel}
+      hasRejoined={subscription.hasRejoined}
+      localModel={localModel}
       gameSession={subscription.gameSession}
       {...props}
     />
   );
 }
 
-export function GameInProgressContainerLoader() {
-  const pregameModel = fetchLocalData();
-  if (pregameModel && !pregameModel.isRejoin) {
-    const updatedModelForNextReload = { ...pregameModel, isRejoin: true };
+export function LocalModelLoader(): LocalModel {
+  const localModel = fetchLocalData();
+  if (localModel && !localModel.hasRejoined) {
+    const updatedModelForNextReload = { ...localModel, hasRejoined: true };
     window.localStorage.setItem(
-      'rightOn',
+      StorageKey,
       JSON.stringify(updatedModelForNextReload)
     );
   }
-  return pregameModel;
+  return localModel;
 }

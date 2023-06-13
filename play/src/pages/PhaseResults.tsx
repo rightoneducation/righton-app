@@ -32,7 +32,7 @@ interface PhaseResultsProps {
   }[];
   score: number;
   handleUpdateScore: (newScore: number) => void;
-  isRejoin: boolean;
+  hasRejoined: boolean;
 }
 
 /**
@@ -62,7 +62,7 @@ export default function PhaseResults({
   answerChoices,
   score,
   handleUpdateScore,
-  isRejoin,
+  hasRejoined,
 }: PhaseResultsProps) {
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
@@ -78,7 +78,7 @@ export default function PhaseResults({
   // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
   useEffect(() => {
     let calcNewScore = 0;
-    if (!isRejoin) {
+    if (!hasRejoined) {
       calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
         gameSession,
         currentQuestion,

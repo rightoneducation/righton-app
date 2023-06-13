@@ -6,18 +6,21 @@ import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
+import { StorageKey } from '../lib/PlayModels';
 
-interface AlertModalProps {
+interface ErrorModalProps {
+  isModalOpen: boolean;
   errorText: string;
   retry: number;
-  handleRetry: () => void;
+  handleRetry: (errorText: string) => void;
 }
 
-export default function AlertModal({
+export default function ErrorModal({
+  isModalOpen,
   errorText,
   retry,
   handleRetry,
-}: AlertModalProps) {
+}: ErrorModalProps) {
   const theme = useTheme();
   const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
@@ -25,7 +28,7 @@ export default function AlertModal({
 
   return (
     <Modal
-      isOpen
+      isOpen={isModalOpen}
       contentLabel="Rejoin Modal"
       style={{
         content: {
@@ -72,7 +75,7 @@ export default function AlertModal({
       <Stack spacing={2} style={{ alignItems: 'center' }}>
         <IntroButtonStyled
           onClick={() => {
-            handleRetry();
+            handleRetry(errorText);
           }}
           style={{
             background: `${theme.palette.primary.highlightGradient}`,
@@ -84,7 +87,7 @@ export default function AlertModal({
         </IntroButtonStyled>
         <IntroButtonStyled
           onClick={() => {
-            window.localStorage.removeItem('rightOn');
+            window.localStorage.removeItem(StorageKey);
             navigate('/');
           }}
           style={{

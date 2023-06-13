@@ -4,7 +4,7 @@ import {
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
-import { InputPlaceholder } from './PlayModels';
+import { InputPlaceholder, StorageKey } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -36,14 +36,14 @@ export const isGameCodeValid = (gameCode: string) => {
 
 /**
  * on rejoining game, this checks if the player has already submitted an answer
- * @param isRejoin - if a player is rejoining
+ * @param hasRejoined - if a player is rejoining
  * @param answers - the answers submitted by the player previously
  * @param answerChoices - the answer choices for the question on the backend
  * @param currentState - the current state of the game session
  * @returns - the index of the answer the player has submitted, null if they haven't submitted an answer and boolean to track submission
  */
 export const checkForSubmittedAnswerOnRejoin = (
-  isRejoin: boolean,
+  hasRejoined: boolean,
   answers: (ITeamAnswer | null)[] | null | undefined,
   answerChoices: {
     id: string;
@@ -57,7 +57,7 @@ export const checkForSubmittedAnswerOnRejoin = (
   let isSubmitted = false;
 
   if (
-    isRejoin &&
+    hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
   ) {
@@ -86,22 +86,24 @@ export const checkForSubmittedAnswerOnRejoin = (
 
 /**
  * retrieves local data from local storage and validates it
- * @returns - the pregameModel if valid, null otherwise
+ * @returns - the localModel if valid, null otherwise
  */
 export const fetchLocalData = () => {
-  const pregameModel = window.localStorage.getItem('rightOn');
-  if (isNullOrUndefined(pregameModel)) return null;
+  const localModel = window.localStorage.getItem(StorageKey);
+  if (isNullOrUndefined(localModel)) return null;
 
-  const parsedPregameModel = JSON.parse(pregameModel);
-  // checks for invalid data in pregameModel, returns null if found
+  const parsedLocalModel = JSON.parse(localModel);
+  // checks for invalid data in localModel, returns null if found
   if (
-    isNullOrUndefined(parsedPregameModel.gameSessionId) ||
-    isNullOrUndefined(parsedPregameModel.teamId) ||
-    isNullOrUndefined(parsedPregameModel.teamMemberId) ||
-    isNullOrUndefined(parsedPregameModel.selectedAvatar) ||
-    isNullOrUndefined(parsedPregameModel.isRejoin)
+    [
+      parsedLocalModel.gameSessionId,
+      parsedLocalModel.teamId,
+      parsedLocalModel.teamMemberId,
+      parsedLocalModel.selectedAvatar,
+      parsedLocalModel.hasRejoined,
+    ].some((value) => isNullOrUndefined(value))
   )
     return null;
-  // passes validated pregameModel to GameInProgressContainer
-  return parsedPregameModel;
+  // passes validated localModel to GameInProgressContainer
+  return parsedLocalModel;
 };

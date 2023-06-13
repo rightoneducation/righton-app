@@ -23,7 +23,7 @@ export default function useFetchAndSubscribeGameSession(
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
   const [error, setError] = useState<string>('');
-  const [isRejoin, setIsRejoin] = useState<boolean>(isInitialRejoin);
+  const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
 
   useEffect(() => {
     // prevents runaway condition by ignoring updates to state after component unmounts
@@ -41,39 +41,27 @@ export default function useFetchAndSubscribeGameSession(
       apiClient
         .getGameSession(gameSessionId)
         .then((fetchedGame) => {
-          if (!fetchedGame)
+          if (!fetchedGame || !fetchedGame.id) {
             setError(`${t('error.connecting.gamesessionerror')}`);
-          if (!ignore) setGameSession(fetchedGame);
-          try {
-            const gameSessionSubscription =
-              apiClient.subscribeUpdateGameSession(
-                fetchedGame.id,
-                (response) => {
-                  if (!response)
-                    setError(`${t('error.connecting.subscriptionerror')}`);
-                  // Update the gameSession object and trigger the callback
-                  if (!ignore) {
-                    setGameSession((prevGame) => ({
-                      ...prevGame,
-                      ...response,
-                    }));
-                    setIsRejoin(false);
-                  }
-                }
-              );
-            setIsLoading(false);
-            return () => {
-              ignore = true;
-              gameSessionSubscription.unsubscribe();
-            };
-          } catch (e) {
-            setIsLoading(false);
-            if (e instanceof Error) setError(e.message);
-            else setError(`${t('error.connecting.subscriptionerror')}`);
+            return null;
           }
+          if (!ignore) setGameSession(fetchedGame);
+          setIsLoading(false);
+          const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+            fetchedGame.id,
+            (response) => {
+              if (!response) {
+                setError(`${t('error.connecting.subscriptionerror')}`);
+                return;
+              }
+              // Update the gameSession object and trigger the callback
+              if (!ignore) setHasRejoined(false);
+              setGameSession((prevGame) => ({ ...prevGame, ...response }));
+            }
+          );
           return () => {
-            // if component unmounts, ignore any updates to state
             ignore = true;
+            gameSessionSubscription.unsubscribe();
           };
         })
         .catch((e) => {
@@ -82,6 +70,6 @@ export default function useFetchAndSubscribeGameSession(
           else setError(`${t('error.connecting.gamesessionerror')}`);
         });
     }
-  }, [gameSessionId, apiClient, t, retry, isRejoin]);
-  return { isLoading, error, gameSession, isRejoin };
+  }, [gameSessionId, apiClient, t, retry, hasRejoined]);
+  return { isLoading, error, gameSession, hasRejoined };
 }

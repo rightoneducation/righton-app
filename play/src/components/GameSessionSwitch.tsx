@@ -13,29 +13,29 @@ import GameInProgress from '../pages/GameInProgress';
 import PhaseResults from '../pages/PhaseResults';
 import FinalResultsContainer from '../containers/FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';
-import { PregameModel } from '../lib/PlayModels';
+import { LocalModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
-  isRejoin: boolean;
+  hasRejoined: boolean;
   gameSession: IGameSession;
-  pregameModel: PregameModel;
+  localModel: LocalModel;
 }
 
 export default function GameInProgressContainer({
   apiClient,
-  isRejoin,
+  hasRejoined,
   gameSession,
-  pregameModel,
+  localModel,
 }: GameInProgressContainerProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
-    !isRejoin
+    !hasRejoined
   );
   const { currentState } = gameSession;
   const currentQuestion =
-    gameSession.questions[gameSession.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession.teams?.find(
-    (team) => team.id === pregameModel.teamId
+    gameSession.questions[gameSession.currentQuestionIndex!]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const currentTeam = gameSession.teams!.find( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
@@ -44,9 +44,9 @@ export default function GameInProgressContainer({
   // this condition is used to display the pregamecountdown only on initial game start
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
-  const isGameFirstStarting = isPregameCountdown && !isRejoin;
+  const isGameFirstStarting = isPregameCountdown && !hasRejoined;
   const answerChoices =
-    currentQuestion?.choices!.map((choice: IChoice) => ({  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    currentQuestion?.choices?.map((choice: IChoice) => ({ 
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
@@ -59,7 +59,7 @@ export default function GameInProgressContainer({
   ) => {
     try {
       await apiClient.addTeamAnswer(
-        pregameModel.teamMemberId,
+        localModel.teamMemberId,
         question.id,
         answerText,
         gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER,
@@ -79,7 +79,7 @@ export default function GameInProgressContainer({
   };
 
   const handleUpdateScore = (inputScore: number) => {
-    updateTeamScore(pregameModel.teamId, inputScore);
+    updateTeamScore(localModel.teamId, inputScore);
     setScore(inputScore);
   };
 
@@ -90,12 +90,12 @@ export default function GameInProgressContainer({
       ) : (
         <GameInProgress
           {...gameSession}
-          teamAvatar={pregameModel.selectedAvatar}
+          teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
-          teamId={pregameModel.teamId}
+          teamId={localModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
-          isRejoin={isRejoin}
+          hasRejoined={hasRejoined}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -104,12 +104,12 @@ export default function GameInProgressContainer({
       return (
         <GameInProgress
           {...gameSession}
-          teamAvatar={pregameModel.selectedAvatar}
+          teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
-          teamId={pregameModel.teamId}
+          teamId={localModel.teamId}
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
-          isRejoin={isRejoin}
+          hasRejoined={hasRejoined}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -118,13 +118,13 @@ export default function GameInProgressContainer({
         <PhaseResults
           {...gameSession}
           gameSession={gameSession}
-          currentQuestionIndex={gameSession!.currentQuestionIndex ?? 0} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamAvatar={pregameModel.selectedAvatar}
-          teamId={pregameModel.teamId}
+          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0} 
+          teamAvatar={localModel.selectedAvatar}
+          teamId={localModel.teamId}
           answerChoices={answerChoices}
           score={score}
           handleUpdateScore={handleUpdateScore}
-          isRejoin={isRejoin}
+          hasRejoined={hasRejoined}
         />
       );
     case GameSessionState.PHASE_2_START:
@@ -135,8 +135,8 @@ export default function GameInProgressContainer({
           {...gameSession}
           currentState={currentState}
           score={score}
-          selectedAvatar={pregameModel.selectedAvatar}
-          teamId={pregameModel.teamId}
+          selectedAvatar={localModel.selectedAvatar}
+          teamId={localModel.teamId}
           leader={leader}
         />
       );

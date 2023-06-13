@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { isNullOrUndefined } from '@righton/networking';
-import { PregameState, PregameModel } from '../../lib/PlayModels';
+import { PregameState, LocalModel } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import RejoinModal from '../../components/RejoinModal';
@@ -35,7 +35,7 @@ const BottomBox = styled(Box)(({ theme }) => ({
 }));
 
 interface SplashScreenProps {
-  rejoinGameObject: PregameModel | null;
+  rejoinGameObject: LocalModel | null;
   setPregameState: (gameState: PregameState) => void;
   handleRejoinSession: () => void;
 }
@@ -63,7 +63,7 @@ export default function SplashScreen({
           <Stack sx={{ alignItems: 'center' }} spacing={2}>
             <img
               style={{
-                width: '214px',
+                width: `${theme.sizing.pregameMinColumnWidth}px`,
                 height: '118px',
                 paddingTop: `${theme.sizing.extraLargePadding}px`,
               }}

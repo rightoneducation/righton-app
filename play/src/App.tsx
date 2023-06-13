@@ -10,7 +10,7 @@ import { ApiClient, Environment } from '@righton/networking';
 import PregameContainer from './containers/PregameContainer';
 import {
   GameInProgressContainer,
-  GameInProgressContainerLoader,
+  LocalModelLoader,
 } from './containers/GameInProgressContainer';
 import Theme from './lib/Theme';
 
@@ -27,7 +27,7 @@ const router = createBrowserRouter(
       <Route
         path="/game"
         element={<GameInProgressContainer apiClient={apiClient} />}
-        loader={GameInProgressContainerLoader}
+        loader={LocalModelLoader}
       />
       <Route element={<RedirectToPlayIfMissing />} />
     </>

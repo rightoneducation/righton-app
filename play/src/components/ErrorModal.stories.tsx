@@ -4,22 +4,22 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '../i18n';
-import AlertModal from './AlertModal';
+import ErrorModal from './ErrorModal';
 import Theme from '../lib/Theme';
 
 export default {
-  title: 'Design System/2_Molecules/AlertModal',
-  component: AlertModal,
-} as ComponentMeta<typeof AlertModal>;
+  title: 'Design System/2_Molecules/ErrorModal',
+  component: ErrorModal,
+} as ComponentMeta<typeof ErrorModal>;
 
-const Template: ComponentStory<typeof AlertModal> = function AnswerCardTemplate(
+const Template: ComponentStory<typeof ErrorModal> = function AnswerCardTemplate(
   args
 ) {
   return (
     <I18nextProvider i18n={i18n} defaultNS="translation">
       <BrowserRouter>
         <ThemeProvider theme={Theme}>
-          <AlertModal {...args} />
+          <ErrorModal {...args} />
         </ThemeProvider>
       </BrowserRouter>
     </I18nextProvider>
