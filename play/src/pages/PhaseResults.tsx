@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
+  ApiClient,
   GameSessionState,
   IGameSession,
   ITeam,
@@ -15,10 +16,13 @@ import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyle
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
 import { BodyContentAreaPhaseResultsStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
+import ErrorModal from '../components/ErrorModal';
+import { ErrorType } from '../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface PhaseResultsProps {
+  apiClient: ApiClient;
   teams?: ITeam[];
   currentState: GameSessionState;
   teamAvatar: number;
@@ -53,6 +57,7 @@ interface PhaseResultsProps {
  * - Styling is provided based on the AnswerType that is received from ResultsCard.tsx
  */
 export default function PhaseResults({
+  apiClient,
   teams,
   currentState,
   teamAvatar,
@@ -64,6 +69,10 @@ export default function PhaseResults({
   handleUpdateScore,
   hasRejoined,
 }: PhaseResultsProps) {
+  // isError consists of two values:
+  // error: boolean - whether or not an error has occurred, used to display error modal
+  // withheldPoints: number - the number of points that were going to be assigned to the player before the error, so the player can retry the request
+  const [isError, setIsError] = useState<{error: boolean, withheldPoints: number}>({error: false, withheldPoints: 0});
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
@@ -72,21 +81,36 @@ export default function PhaseResults({
     currentState
   );
 
-  const [newScore, setNewScore] = React.useState<number>(0);
+  const [newPoints, setNewPoints] = React.useState<number>(0);
+
+  // update teamscore on the backend, if it fails, flag the error to pop the error modal
+  const updateTeamScore = async (inputTeamId: string, newScore: number) => {
+    try {
+      await apiClient.updateTeam({ id: inputTeamId, score: newScore + score});
+      setNewPoints(newScore);
+    } catch {
+      setIsError({error: true, withheldPoints: newScore});
+    }
+  };
 
   // calculate new score for use in footer
   // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
   useEffect(() => {
-    let calcNewScore = 0;
-    if (!hasRejoined) {
-      calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
-        gameSession,
-        currentQuestion,
-        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
-      );
-    }
-    setNewScore(calcNewScore);
+      let calcNewScore = 0;
+      if (!hasRejoined) {
+        calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+          gameSession,
+          currentQuestion,
+          currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        );
+      }
+      updateTeamScore(teamId, calcNewScore);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleRetry = () => {
+    setIsError((prev) => ({...prev, error: false}));
+    updateTeamScore(teamId, isError.withheldPoints);
+  };
 
   return (
     <StackContainerStyled
@@ -94,6 +118,12 @@ export default function PhaseResults({
       alignItems="center"
       justifyContent="space-between"
     >
+      <ErrorModal
+        isModalOpen={isError.error}
+        errorType={ErrorType.SCORE}
+        errorText="There was an error updating your score. Please try again."
+        handleRetry={handleRetry}
+      />
       <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
@@ -122,7 +152,7 @@ export default function PhaseResults({
         <FooterContent
           avatar={teamAvatar}
           teamName={currentTeam ? currentTeam.name : 'Team One'}
-          newPoints={newScore}
+          newPoints={newPoints}
           score={score}
           handleUpdateScore={handleUpdateScore}
         />

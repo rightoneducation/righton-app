@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   ApiClient,
   IChoice,
-  IQuestion,
   IGameSession,
   GameSessionState,
 } from '@righton/networking';
@@ -52,34 +51,10 @@ export default function GameInProgressContainer({
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
-  const addTeamAnswerToTeamMember = async (
-    question: IQuestion,
-    answerText: string,
-    gameSessionState: GameSessionState
-  ) => {
-    try {
-      await apiClient.addTeamAnswer(
-        localModel.teamMemberId,
-        question.id,
-        answerText,
-        gameSessionState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-        gameSessionState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
-  const updateTeamScore = async (inputTeamId: string, inputScore: number) => {
-    try {
-      await apiClient.updateTeam({ id: inputTeamId, score: inputScore });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
 
   const handleUpdateScore = (inputScore: number) => {
-    updateTeamScore(localModel.teamId, inputScore);
     setScore(inputScore);
   };
 
@@ -90,11 +65,12 @@ export default function GameInProgressContainer({
       ) : (
         <GameInProgress
           {...gameSession}
+          apiClient={apiClient}
+          teamMemberId={localModel.teamMemberId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
           teamId={localModel.teamId}
           score={score}
-          addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           hasRejoined={hasRejoined}
         />
       );
@@ -104,11 +80,12 @@ export default function GameInProgressContainer({
       return (
         <GameInProgress
           {...gameSession}
+          apiClient={apiClient}
+          teamMemberId={localModel.teamMemberId}
           teamAvatar={localModel.selectedAvatar}
           answerChoices={answerChoices}
           teamId={localModel.teamId}
           score={score}
-          addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           hasRejoined={hasRejoined}
         />
       );
@@ -117,6 +94,7 @@ export default function GameInProgressContainer({
       return (
         <PhaseResults
           {...gameSession}
+          apiClient={apiClient}
           gameSession={gameSession}
           currentQuestionIndex={gameSession.currentQuestionIndex ?? 0} 
           teamAvatar={localModel.selectedAvatar}

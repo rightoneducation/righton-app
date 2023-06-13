@@ -109,6 +109,9 @@
       "subscriptionerror": "Subscription could not be established",
       "button1": "Try Again",
       "button2": "Return to Main Menu"
+    },
+    "answering": {
+      "title1": "There has been an error in submitting your answer. Please try again."
     }
   }
 }

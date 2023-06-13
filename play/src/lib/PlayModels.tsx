@@ -93,6 +93,12 @@ export enum TimerMode {
   JOIN,
 }
 
+export enum ErrorType {
+  CONNECT,
+  ANSWER,
+  SCORE
+}
+
 /**
  * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session
