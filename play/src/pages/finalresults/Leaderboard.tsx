@@ -65,6 +65,7 @@ export default function Leaderboard({
     }
   }, [containerRef.current?.clientHeight, subContainerHeight]); // updates whenever the container is resized
 
+  //
   const randomAvatarNumbers = useMemo(
     () =>
       (teams ?? [])
