@@ -17,6 +17,7 @@ import { LocalModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
+  currentTimer: number;
   hasRejoined: boolean;
   gameSession: IGameSession;
   localModel: LocalModel;
@@ -24,6 +25,7 @@ interface GameInProgressContainerProps {
 
 export default function GameInProgressContainer({
   apiClient,
+  currentTimer,
   hasRejoined,
   gameSession,
   localModel,
@@ -46,7 +48,7 @@ export default function GameInProgressContainer({
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
   const answerChoices =
-    currentQuestion?.choices?.map((choice: IChoice) => ({ 
+    currentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
@@ -85,7 +87,7 @@ export default function GameInProgressContainer({
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      return isGameFirstStarting ? ( 
+      return isGameFirstStarting ? (
         <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} />
       ) : (
         <GameInProgress
@@ -96,6 +98,7 @@ export default function GameInProgressContainer({
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -110,6 +113,7 @@ export default function GameInProgressContainer({
           score={score}
           addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
           hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -118,7 +122,7 @@ export default function GameInProgressContainer({
         <PhaseResults
           {...gameSession}
           gameSession={gameSession}
-          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0} 
+          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0}
           teamAvatar={localModel.selectedAvatar}
           teamId={localModel.teamId}
           answerChoices={answerChoices}

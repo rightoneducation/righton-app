@@ -106,6 +106,7 @@ export interface LocalModel {
   teamMemberId: string;
   selectedAvatar: number;
   hasRejoined: boolean;
+  currentTimer: number;
 }
 
 interface MonsterMap {

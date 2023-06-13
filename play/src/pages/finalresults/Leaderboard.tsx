@@ -83,9 +83,10 @@ export default function Leaderboard({
           isCorrect={false}
           isIncorrect={false}
           totalTime={15}
+          currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => {}}
+          handleTimerIsFinished={() => { }}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled ref={containerRef}>

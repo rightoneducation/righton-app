@@ -1,9 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { json } from 'stream/consumers';
 import { GameSessionState } from '@righton/networking';
+import { LocalModel, StorageKey } from '../lib/PlayModels';
+import { fetchLocalData } from '../lib/HelperFunctions';
+import { cp } from 'fs';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -29,6 +32,7 @@ const TimerBar = styled(LinearProgress)(({ theme }) => ({
 
 interface TimerProps {
   totalTime: number;
+  currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
   handleTimerIsFinished: () => void;
@@ -36,34 +40,39 @@ interface TimerProps {
 
 export default function Timer({
   totalTime,
+  currentTimer,
   isPaused,
   isFinished,
   handleTimerIsFinished
 }: TimerProps) {
-  const [currentTime, setCurrentTime] = useState(totalTime);
-  const timeProgress = currentTime / totalTime * 100;
+  const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
+  const currentTime = Math.trunc(currentTimeMilli / 1000);
+  const progress = (currentTimeMilli / (totalTime * 1000)) * 100;
 
   const animationRef = useRef<number | null>(null);
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
-
   const isPausedRef = useRef<boolean>(isPaused);
+  const timeProgress = currentTime / totalTime * 100;
 
+  // retreive local storage data so that timer has correct value on rejoin
+  const rejoinGameObject = fetchLocalData();
   // updates the current time as well as the localstorage in case of page reset
-  useEffect(() => {
-    let refreshIntervalId = setInterval(() => {
-      if (currentTime > 0) {
-        setCurrentTime(currentTime - 1);
-        localStorage.setItem('currentGameTimeStore', JSON.stringify(currentTime - 1));
-        animationRef.current = currentTime;
-      } else {
-        handleTimerIsFinished();
-      }
-    }, 1000);
-    return () => clearInterval(refreshIntervalId);
-  }, [currentTime]);
+  // recursive countdown timer function using requestAnimationFrame
+  function updateTimer(timestamp: number) {
+    if (!isPausedRef.current) {
+      if (prevTimeRef.current != null) {
+        const delta = timestamp - prevTimeRef.current;
+        setCurrentTimeMilli((prevTime) => prevTime - delta);
+      } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
 
-  // generates timer string (needs to ensure that seconds are always 2 digits and don't show as 60)
+      if (currentTimeMilli - (timestamp - originalTime) >= 0) {
+        prevTimeRef.current = timestamp;
+        animationRef.current = requestAnimationFrame(updateTimer);
+      } else handleTimerIsFinished();
+    }
+  }
+
   function getTimerString(currentTimeInput: number) {
     let sec = 0;
     let secStr = '00';
@@ -74,28 +83,34 @@ export default function Timer({
       if (sec === 60) sec = 0;
       secStr = sec < 10 ? `0${sec}` : `${sec}`;
     }
+    const storageObject: LocalModel = {
+      ...rejoinGameObject,
+      currentTimer: currentTimeInput
+    };
+    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    //console.log(currentTimeInput);
+    //console.log((rejoinGameObject).hasRejoined);
     return `${min}:${secStr}`;
   }
+  const timerString = useMemo(() => getTimerString(currentTime), [currentTime]);
 
+  console.log(rejoinGameObject)
   // useEffect to start off timer
   useEffect(() => {
-    if (!isPaused && !isFinished) {
-      setCurrentTime(currentTime - 1);
-      animationRef.current = currentTime;
-    }
+    if (!isPaused && !isFinished)
+      animationRef.current = requestAnimationFrame(updateTimer);
     return () => cancelAnimationFrame(animationRef.current ?? 0);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the isPausedRef when the isPaused prop changes
   useEffect(() => {
-    setCurrentTime(parseInt(JSON.parse(localStorage.getItem('currentGameTimeStore') as string)));
     isPausedRef.current = isPaused;
   }, [isPaused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <TimerContainer maxWidth="sm">
-      <TimerBar value={timeProgress} variant="determinate" />
-      <Typography variant="caption">{getTimerString(currentTime)}</Typography>
+      <TimerBar value={progress} variant="determinate" />
+      <Typography variant="caption">{timerString}</Typography>
     </TimerContainer>
   );
 }

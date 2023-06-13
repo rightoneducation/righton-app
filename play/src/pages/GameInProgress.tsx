@@ -19,7 +19,8 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
+import { checkForSubmittedAnswerOnRejoin, fetchLocalData } from '../lib/HelperFunctions';
+import { StorageKey } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   teams?: ITeam[];
@@ -43,6 +44,7 @@ interface GameInProgressProps {
     currentState: GameSessionState
   ) => void;
   hasRejoined: boolean;
+  currentTimer: number;
 }
 
 export default function GameInProgress({
@@ -58,6 +60,7 @@ export default function GameInProgress({
   answerChoices,
   addTeamAnswerToTeamMember,
   hasRejoined,
+  currentTimer
 }: GameInProgressProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -71,6 +74,7 @@ export default function GameInProgress({
       currentQuestion.id
     );
   }
+  const rejoinGameObject = fetchLocalData();
 
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
@@ -161,11 +165,14 @@ export default function GameInProgress({
           currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
+          // if isRejoin is true, make localstorage instead of phaseOneTime and phaseTwoTime
           totalTime={
             currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
               ? phaseOneTime
               : phaseTwoTime
           }
+          // put check for refresh here
+          currentTimer={currentTimer}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}

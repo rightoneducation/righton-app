@@ -130,6 +130,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
           hasRejoined: false,
+          currentTimer: gameSession.phaseOneTime,
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);
