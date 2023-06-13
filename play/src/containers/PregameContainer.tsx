@@ -1,39 +1,56 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ApiClient,
-  Environment,
   isNullOrUndefined,
+  IGameSession,
   GameSessionState,
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import HowToPlay from '../pages/pregame/HowToPlay';
-import { JoinGameState, JoinBasicGameData } from '../lib/PlayModels';
-import { isGameCodeValid, isNameValid } from '../lib/HelperFunctions';
+import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
+import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
-  handlePregameFinished: (joinBasicGameData: JoinBasicGameData) => void;
+  apiClient: ApiClient;
 }
 
-export default function Pregame({ handlePregameFinished }: PregameFinished) {
+export default function Pregame({ apiClient }: PregameFinished) {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  const apiClient = new ApiClient(Environment.Staging);
 
-  const [joinGameState, setJoinGameState] = useState<JoinGameState>(
-    JoinGameState.SPLASH_SCREEN
+  const [pregameState, setPregameState] = useState<PregameState>(
+    PregameState.SPLASH_SCREEN
   );
-
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  // retreive local storage data so that player can choose to rejoin game
+  const rejoinGameObject = fetchLocalData();
+  // state variables used to collect player information in pregame phase
+  // information is loaded into local storage on select avatar screen and passed to /game
+  const [gameSession, setGameSession] = useState<IGameSession | null>(null);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );
-  const [gameSessionId, setGameSessionId] = useState('');
+
+  // TODO: coord with u/x for modal to pop up this error message
+  const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+
+  // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
+  const handleRejoinSession = () => {
+    const storageObject: LocalModel = {
+      ...rejoinGameObject,
+      hasRejoined: true,
+    };
+    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    navigate(`/game`);
+  };
 
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
@@ -57,31 +74,71 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
       ) {
         return false;
       }
-      setGameSessionId(gameSessionResponse.id);
-      setJoinGameState(JoinGameState.ENTER_NAME);
+      setGameSession(gameSessionResponse);
+      setPregameState(PregameState.ENTER_NAME);
       return true;
     } catch (error) {
       return false;
     }
   };
 
-  const handleAvatarSelectClick = () => {
-    if (isNameValid(firstName) && isNameValid(lastName)) {
-      const joinBasicGameData = {
-        gameSessionId,
-        firstName,
-        lastName,
-        selectedAvatar,
-      };
-      handlePregameFinished(joinBasicGameData);
-      setJoinGameState(JoinGameState.HOW_TO_PLAY);
+  // create team and teammember on backend
+  const addTeamToGame = async () => {
+    const teamName = `${firstName} ${lastName}`;
+    try {
+      const team = await apiClient.addTeamToGameSessionId(
+        gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        teamName,
+        null
+      );
+      if (!team) {
+        setAPIError(true);
+      } else {
+        try {
+          const teamMember = await apiClient.addTeamMemberToTeam(
+            team.id,
+            true,
+            uuidv4()
+          );
+          if (!teamMember) {
+            setAPIError(true);
+          }
+          return { teamId: team.id, teamMemberId: teamMember.id };
+        } catch (error) {
+          setAPIError(true);
+        }
+      }
+    } catch (error) {
+      setAPIError(true);
+    }
+    return undefined;
+  };
+  // on click of avatar select button, add team and team member, store local storage data, and navigate to game
+  const handleAvatarSelectClick = async () => {
+    try {
+      if (gameSession) {
+        const teamInfo = await addTeamToGame();
+        if (!teamInfo) {
+          setAPIError(true);
+          return;
+        }
+        const storageObject: LocalModel = {
+          gameSessionId: gameSession.id,
+          teamId: teamInfo.teamId,
+          teamMemberId: teamInfo.teamMemberId,
+          selectedAvatar,
+          hasRejoined: false,
+        };
+        window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+        navigate(`/game`);
+      }
+    } catch (error) {
+      setAPIError(true);
     }
   };
 
-  switch (joinGameState) {
-    case JoinGameState.HOW_TO_PLAY:
-      return <HowToPlay />;
-    case JoinGameState.SELECT_AVATAR:
+  switch (pregameState) {
+    case PregameState.SELECT_AVATAR:
       return (
         <SelectAvatar
           selectedAvatar={selectedAvatar}
@@ -92,7 +149,7 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
           handleAvatarSelectClick={handleAvatarSelectClick}
         />
       );
-    case JoinGameState.ENTER_NAME:
+    case PregameState.ENTER_NAME:
       return (
         <EnterPlayerName
           isSmallDevice={isSmallDevice}
@@ -100,13 +157,24 @@ export default function Pregame({ handlePregameFinished }: PregameFinished) {
           setFirstName={setFirstName}
           lastName={lastName}
           setLastName={setLastName}
-          setJoinGameState={setJoinGameState}
+          setPregameState={setPregameState}
         />
       );
-    case JoinGameState.ENTER_GAME_CODE:
-      return <EnterGameCode isSmallDevice={isSmallDevice} handleGameCodeClick={handleGameCodeClick} />;
-    case JoinGameState.SPLASH_SCREEN:
+    case PregameState.ENTER_GAME_CODE:
+      return (
+        <EnterGameCode
+          isSmallDevice={isSmallDevice}
+          handleGameCodeClick={handleGameCodeClick}
+        />
+      );
+    case PregameState.SPLASH_SCREEN:
     default:
-      return <SplashScreen setJoinGameState={setJoinGameState} />;
+      return (
+        <SplashScreen
+          rejoinGameObject={rejoinGameObject}
+          setPregameState={setPregameState}
+          handleRejoinSession={handleRejoinSession}
+        />
+      );
   }
 }

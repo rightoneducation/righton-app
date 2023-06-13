@@ -1,118 +1,91 @@
 import React, { useState } from 'react';
 import {
-  IGameSession,
-  IChoice,
-  IQuestion,
+  ApiClient,
+  isNullOrUndefined,
   GameSessionState,
 } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import PregameCountdown from '../pages/PregameCountdown';
-import GameInProgress from '../pages/GameInProgress';
-import PhaseResults from '../pages/PhaseResults';
-import FinalResults from '../pages/FinalResults';
-import StartPhase2 from '../pages/StartPhase2';
+import { Navigate, useLoaderData } from 'react-router-dom';
+import { fetchLocalData } from '../lib/HelperFunctions';
+import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
+import GameSessionSwitch from '../components/GameSessionSwitch';
+import Lobby from '../pages/pregame/Lobby';
+import ErrorModal from '../components/ErrorModal';
+import { LobbyMode, LocalModel, StorageKey } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
-  gameSession: IGameSession;
-  teamId: string;
-  currentState: GameSessionState;
-  setCurrentState: (state: GameSessionState) => void;
-  teamAvatar: number;
-  addTeamAnswerToTeamMember: (
-    question: IQuestion,
-    answerText: string,
-    gameSessionState: GameSessionState
-  ) => void;
-  updateTeamScore: (teamId: string, score: number) => void;
+  apiClient: ApiClient;
 }
 
-export default function GameInProgressContainer({
-  gameSession,
-  teamId,
-  currentState,
-  teamAvatar,
-  addTeamAnswerToTeamMember,
-  updateTeamScore,
-}: GameInProgressContainerProps) {
-  const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(true);
-  const currentQuestion =
-    gameSession?.questions[gameSession?.currentQuestionIndex ?? 0];
-  const currentTeam = gameSession?.teams?.find((team) => team.id === teamId);
-  // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
-  const [score, setScore] = useState(currentTeam?.score ?? 0);
-  const leader = true;
-  const answerChoices = currentQuestion?.choices!.map((choice: IChoice) => ({ // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    id: uuidv4(),
-    text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
-    reason: choice.reason ?? '',
-  }));
-
-  const handlePregameTimerFinished = () => {
-    setIsPregameCountdown(false);
+export function GameInProgressContainer(props: GameInProgressContainerProps) {
+  const { apiClient } = props;
+  const [retry, setRetry] = useState<number>(0);
+  // if user clicks retry on the error modal, increment retry state to force a rerender and another call to the api
+  const handleRetry = () => {
+    setRetry(retry + 1);
   };
-
-  const handleUpdateScore = (inputScore: number) => {
-    updateTeamScore(teamId, inputScore);
-    setScore(inputScore);
-  };
-
-  switch (currentState) {
-    case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      return isPregameCountdown ? (
-        <PregameCountdown
-          handlePregameTimerFinished={handlePregameTimerFinished}
-        />
-      ) : (
-        <GameInProgress
-          {...gameSession}
-          teamAvatar={teamAvatar}
-          answerChoices={answerChoices}
-          teamId={teamId}
-          score={score}
-          addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
-        />
-      );
-    case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
-    case GameSessionState.PHASE_1_DISCUSS:
-    case GameSessionState.PHASE_2_DISCUSS:
+  // retreives game data from react-router loader
+  // if no game data, redirects to splashscreen
+  const localModel = useLoaderData() as LocalModel;
+  // uses local game data to subscribe to gameSession
+  // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
+  const subscription = useFetchAndSubscribeGameSession(
+    localModel?.gameSessionId,
+    apiClient,
+    retry,
+    localModel?.hasRejoined
+  );
+  // if there isn't data in localstorage automatically redirect to the splashscreen
+  if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
+  // if gamesession is loading/errored/waiting for teacher to start game
+  if (
+    !subscription.gameSession ||
+    subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
+  ) {
+    // if player is rejoining, show lobby in rejoining mode
+    if (
+      localModel.hasRejoined === true &&
+      subscription.gameSession?.currentState !== GameSessionState.TEAMS_JOINING
+    ) {
+      return <Lobby mode={LobbyMode.REJOIN} />;
+    }
+    // if errored, show howToPlay page and error modal
+    if (subscription.error) {
       return (
-        <GameInProgress
-          {...gameSession}
-          teamAvatar={teamAvatar}
-          answerChoices={answerChoices}
-          teamId={teamId}
-          score={score}
-          addTeamAnswerToTeamMember={addTeamAnswerToTeamMember}
-        />
+        <>
+          <ErrorModal
+            isModalOpen
+            errorText={subscription.error}
+            retry={retry}
+            handleRetry={handleRetry}
+          />
+          <Lobby mode={LobbyMode.ERROR} />
+        </>
       );
-    case GameSessionState.PHASE_1_RESULTS:
-    case GameSessionState.PHASE_2_RESULTS:
-      return (
-        <PhaseResults
-          {...gameSession}
-          gameSession={gameSession}
-          currentQuestionIndex={gameSession!.currentQuestionIndex ?? 0} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamAvatar={teamAvatar}
-          teamId={teamId}
-          answerChoices={answerChoices}
-          score={score}
-          handleUpdateScore={handleUpdateScore}
-        />
-      );
-    case GameSessionState.PHASE_2_START:
-      return <StartPhase2 />;
-    case GameSessionState.FINAL_RESULTS:
-    default:
-      return (
-        <FinalResults
-          {...gameSession}
-          currentState={currentState}
-          score={score}
-          selectedAvatar={teamAvatar}
-          teamId={teamId}
-          leader={leader}
-        />
-      );
+    }
+    // if loading, display loading message on bottom of How to Play page
+    if (subscription.isLoading) return <Lobby mode={LobbyMode.LOADING} />;
+    // if waiting for teacher, display waiting message on How to Play page
+    return <Lobby mode={LobbyMode.READY} />;
   }
+  // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
+  return (
+    <GameSessionSwitch
+      hasRejoined={subscription.hasRejoined}
+      localModel={localModel}
+      gameSession={subscription.gameSession}
+      {...props}
+    />
+  );
+}
+
+export function LocalModelLoader(): LocalModel {
+  const localModel = fetchLocalData();
+  if (localModel && !localModel.hasRejoined) {
+    const updatedModelForNextReload = { ...localModel, hasRejoined: true };
+    window.localStorage.setItem(
+      StorageKey,
+      JSON.stringify(updatedModelForNextReload)
+    );
+  }
+  return localModel;
 }

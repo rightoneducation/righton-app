@@ -27,53 +27,85 @@ import MonsterHandsUp5 from '../img/MonsterHandsUp5.svg';
  * @param {string} PREVIOUS - answer player has selected in previous phase
  */
 export enum AnswerState {
-  DEFAULT = 'DEFAULT',
-  CORRECT = 'CORRECT',
-  PLAYER_SELECTED_CORRECT = 'PLAYER_SELECTED_CORRECT',
-  SELECTED = 'SELECTED',
-  PREVIOUS = 'PREVIOUS',
+  DEFAULT,
+  CORRECT,
+  PLAYER_SELECTED_CORRECT,
+  SELECTED,
+  PREVIOUS,
 }
 
 /**
- * JoinGameState handles the substate changes for GameSessionState.JOIN_GAME
- * @enum JoingGameState
+ * OverallGameState handles the state changes between the Pregame or GameInProgress phases
+ * Pregame: user-controlled, joining the game
+ * GameInProgress: subscription-controlled, playing the game
+ * @enum OverallGameState
+ */
+export enum OverallGameState {
+  PREGAME,
+  GAME_IN_PROGRESS,
+}
+
+/**
+ * PregameState handles the substate changes for GameSessionState.JOIN_GAME
+ * @enum PregameState
  * @param {string} SPLASH_SCREEN - initial screen for game
  * @param {string} ENTER_GAME_CODE - screen for entering game code
  * @param {string} ENTER_NAME - screen for entering player name
  * @param {string} SELECT_AVATAR - screen for selecting player avatar
  * @param {string} HOW_TO_PLAY - screen for displaying how to play
  */
-export enum JoinGameState {
-  SPLASH_SCREEN = 'SPLASH_SCREEN',
-  ENTER_GAME_CODE = 'ENTER_GAME_CODE',
-  ENTER_NAME = 'ENTER_NAME',
-  SELECT_AVATAR = 'SELECT_AVATAR',
-  HOW_TO_PLAY = 'HOW_TO_PLAY',
+export enum PregameState {
+  SPLASH_SCREEN,
+  ENTER_GAME_CODE,
+  ENTER_NAME,
+  SELECT_AVATAR,
+  FINISHED,
 }
 
 /**
  * FinalResultsState handles the substate changes for GameSessionState.FINAL_RESULTS
- * @enum JoingGameState
+ * @enum PregameState
  * @param {string} CONGRATS - screen for displaying congrats message
  * @param {string} LEADERBOARD - screen for displaying leaderboard
  */
 export enum FinalResultsState {
-  CONGRATS = 'CONGRATS',
-  LEADERBOARD = 'LEADERBOARD',
+  CONGRATS,
+  LEADERBOARD,
 }
 
 /**
- * Data object that holds required info to join a 'basic' game and add team to game sesssion object at start of game
+ * Enum that holds the various states for the lobby, based on the fetching and subscription to the gameSession object
+ * @enum LobbyMode
+ * @param {string} ERROR - error state
+ * @param {string} LOADING - loading state
+ * @param {string} READY - waiting for teacher state
+ * @param {string} REJOIN - if player is rejoining state
+ */
+export enum LobbyMode {
+  ERROR,
+  LOADING,
+  READY,
+  REJOIN,
+}
+
+export enum TimerMode {
+  COUNTDOWN,
+  JOIN,
+}
+
+/**
+ * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session
  * @param {string} firstName - first name of player
  * @param {string} lastName - last name of player
  * @param {number} selectedAvatar - avatar selected by player
  */
-export interface JoinBasicGameData {
+export interface LocalModel {
   gameSessionId: string;
-  firstName: string;
-  lastName: string;
+  teamId: string;
+  teamMemberId: string;
   selectedAvatar: number;
+  hasRejoined: boolean;
 }
 
 interface MonsterMap {
@@ -127,3 +159,8 @@ export const monsterMap: MonsterMap = {
 export enum InputPlaceholder {
   GAME_CODE = '####',
 }
+
+/**
+ *  string key for storage of game data in users local storage
+ */
+export const StorageKey = 'rightOn';

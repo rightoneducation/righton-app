@@ -6,7 +6,7 @@ import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyle
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import { isNameValid } from '../../lib/HelperFunctions';
-import { JoinGameState } from '../../lib/PlayModels';
+import { PregameState } from '../../lib/PlayModels';
 import Logo from '../../img/rightOnLogo.svg';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
@@ -30,7 +30,7 @@ interface EnterPlayerNameProps {
   setFirstName: (firstName: string) => void;
   lastName: string;
   setLastName: (lastName: string) => void;
-  setJoinGameState: (gameState: JoinGameState) => void;
+  setPregameState: (gameState: PregameState) => void;
 }
 
 export default function EnterPlayerName({
@@ -39,7 +39,7 @@ export default function EnterPlayerName({
   setFirstName,
   lastName,
   setLastName,
-  setJoinGameState,
+  setPregameState,
 }: EnterPlayerNameProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export default function EnterPlayerName({
 
   const validateInput = () => {
     if (isNameValid(firstName) && isNameValid(lastName))
-      setJoinGameState(JoinGameState.SELECT_AVATAR);
+      setPregameState(PregameState.SELECT_AVATAR);
     else setShouldShowError(true);
   };
 
@@ -56,7 +56,7 @@ export default function EnterPlayerName({
       <StackContainer spacing={isSmallDevice ? 4 : 5}>
         <img
           style={{
-            width: '214px',
+            width: `${theme.sizing.pregameMinColumnWidth}px`,
             height: '118px',
             paddingTop: `${theme.sizing.extraLargePadding}px`,
           }}

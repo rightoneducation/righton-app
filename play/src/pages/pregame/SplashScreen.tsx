@@ -2,9 +2,11 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { JoinGameState } from '../../lib/PlayModels';
+import { isNullOrUndefined } from '@righton/networking';
+import { PregameState, LocalModel } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import RejoinModal from '../../components/RejoinModal';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
 
@@ -33,21 +35,35 @@ const BottomBox = styled(Box)(({ theme }) => ({
 }));
 
 interface SplashScreenProps {
-  setJoinGameState: (gameState: JoinGameState) => void;
+  rejoinGameObject: LocalModel | null;
+  setPregameState: (gameState: PregameState) => void;
+  handleRejoinSession: () => void;
 }
 
-export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
+export default function SplashScreen({
+  rejoinGameObject,
+  setPregameState,
+  handleRejoinSession,
+}: SplashScreenProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [isModalVisible, setIsModalVisible] = React.useState(
+    !isNullOrUndefined(rejoinGameObject)
+  );
 
   return (
     <BackgroundContainerStyled>
       <HeroContainer>
+        <RejoinModal
+          handleRejoinSession={handleRejoinSession}
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+        />
         <StackContainer spacing={5}>
           <Stack sx={{ alignItems: 'center' }} spacing={2}>
             <img
               style={{
-                width: '214px',
+                width: `${theme.sizing.pregameMinColumnWidth}px`,
                 height: '118px',
                 paddingTop: `${theme.sizing.extraLargePadding}px`,
               }}
@@ -68,7 +84,7 @@ export default function SplashScreen({ setJoinGameState }: SplashScreenProps) {
           </Stack>
           <BottomBox>
             <IntroButtonStyled
-              onClick={() => setJoinGameState(JoinGameState.ENTER_GAME_CODE)}
+              onClick={() => setPregameState(PregameState.ENTER_GAME_CODE)}
               style={{
                 background: `${theme.palette.primary.highlightGradient}`,
                 boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
