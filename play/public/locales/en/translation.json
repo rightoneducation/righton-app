@@ -111,8 +111,8 @@
       "button2": "Return to Main Menu"
     },
     "game": {
-      "answer": "There has been an error in submitting your answer. Please try again.",
-      "score": "There was an error updating your score. Please try again."
+      "answer": "There was an error in submitting your answer. Please try again.",
+      "score": "There was an error in updating your score. Please try again."
     }
   }
 }

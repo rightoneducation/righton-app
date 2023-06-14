@@ -111,8 +111,8 @@
       "button2": "Volver al menú principal"
     },
     "game": {
-      "answer": "Ha habido un error al enviar su respuesta. Inténtalo de nuevo.",
-      "score": "Hubo un error al actualizar tu puntuación. Inténtalo de nuevo."
+      "answer": "Hubo un error al enviar su respuesta. Inténtalo de nuevo.",
+      "score": "Hubo un error al actualizar tu puntaje. Inténtalo de nuevo."
     }
   }
 }

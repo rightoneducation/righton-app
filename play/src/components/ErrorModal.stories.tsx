@@ -13,7 +13,7 @@ export default {
   component: ErrorModal,
 } as ComponentMeta<typeof ErrorModal>;
 
-const Template: ComponentStory<typeof ErrorModal> = function AnswerCardTemplate(
+const Template: ComponentStory<typeof ErrorModal> = function ErrorModalTemplate(
   args
 ) {
   return (
@@ -55,7 +55,15 @@ export const AnswerError = Template.bind({});
 AnswerError.args = {
   isModalOpen: true,
   errorType: ErrorType.ANSWER,
-  errorText: 'Sample Error Message',
   retry: 2,
   handleRetry,
 };
+
+export const ScoreError = Template.bind({});
+ScoreError.args = {
+  isModalOpen: true,
+  errorType: ErrorType.SCORE,
+  retry: 2,
+  handleRetry,
+};
+
