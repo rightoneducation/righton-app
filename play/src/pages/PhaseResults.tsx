@@ -121,7 +121,6 @@ export default function PhaseResults({
       <ErrorModal
         isModalOpen={isError.error}
         errorType={ErrorType.SCORE}
-        errorText="There was an error updating your score. Please try again."
         handleRetry={handleRetry}
       />
       <HeaderStackContainerStyled>

@@ -103,15 +103,16 @@
     }
   },
   "error": {
-    "connecting": {
+    "connect": {
       "title1": "An error has occurred with the following error message:",
       "gamesessionerror": "Game session not found",
       "subscriptionerror": "Subscription could not be established",
       "button1": "Try Again",
       "button2": "Return to Main Menu"
     },
-    "answering": {
-      "title1": "There has been an error in submitting your answer. Please try again."
+    "game": {
+      "answer": "There has been an error in submitting your answer. Please try again.",
+      "score": "There was an error updating your score. Please try again."
     }
   }
 }

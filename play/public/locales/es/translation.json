@@ -109,6 +109,10 @@
       "subscriptionerror": "Subscription could not be established",
       "button1": "No se pudo establecer la suscripción",
       "button2": "Volver al menú principal"
+    },
+    "game": {
+      "answer": "Ha habido un error al enviar su respuesta. Inténtalo de nuevo.",
+      "score": "Hubo un error al actualizar tu puntuación. Inténtalo de nuevo."
     }
   }
 }

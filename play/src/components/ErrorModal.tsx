@@ -11,9 +11,9 @@ import { StorageKey, ErrorType } from '../lib/PlayModels';
 interface ErrorModalProps {
   isModalOpen: boolean;
   errorType: ErrorType;
-  errorText: string;
+  errorText?: string;
   retry?: number;
-  handleRetry: (errorText: string) => void;
+  handleRetry: () => void;
 }
 
 export default function ErrorModal({
@@ -27,6 +27,12 @@ export default function ErrorModal({
   const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const upperTextMap = {
+    [ErrorType.CONNECT]: t('error.connect.title1'),
+    [ErrorType.ANSWER]: t('error.game.answer'),
+    [ErrorType.SCORE]: t('error.game.score'),
+  };
 
   const lowerText = [
     <Typography
@@ -46,7 +52,7 @@ export default function ErrorModal({
         boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
       }}
     >
-      {t('error.connecting.button2')}
+      {t('error.connect.button2')}
     </IntroButtonStyled>
   ];
 
@@ -87,11 +93,7 @@ export default function ErrorModal({
     >
       <Stack spacing={2} sx={{paddingBottom: `${theme.sizing.mediumPadding}px`}}>
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
-          { errorType === ErrorType.CONNECT ? 
-          `${t('error.connecting.title1')}`
-          :
-          `${t('error.answering.title1')}`
-          } 
+          {upperTextMap[errorType]} 
         </Typography>
         { errorType === ErrorType.CONNECT && 
           lowerText
@@ -100,7 +102,7 @@ export default function ErrorModal({
       <Stack spacing={2} style={{ alignItems: 'center' }}>
         <IntroButtonStyled
           onClick={() => {
-            handleRetry(errorText);
+            handleRetry();
           }}
           style={{
             background: `${theme.palette.primary.highlightGradient}`,
@@ -108,8 +110,8 @@ export default function ErrorModal({
           }}
         >
         { errorType === ErrorType.CONNECT ?
-          `${t('error.connecting.button1')} ${(retry && retry > 0) ? `(${retry})` : ''}` 
-          : t('error.connecting.button1')
+          `${t('error.connect.button1')} ${(retry && retry > 0) ? `(${retry})` : ''}` 
+          : t('error.connect.button1')
         }
         </IntroButtonStyled>
         { errorType === ErrorType.CONNECT && 
