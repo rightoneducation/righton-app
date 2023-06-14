@@ -49,7 +49,7 @@ export default function EnterGameCode({
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer sx={{minWidth: `${theme.sizing.pregameMinColumnWidth}px`}} spacing={isSmallDevice ? 4 : 5}>
+      <StackContainer sx={{width: `${theme.sizing.pregameMinColumnWidth}px`}} spacing={isSmallDevice ? 4 : 5}>
         <img
           style={{
             width: `${theme.sizing.pregameMinColumnWidth}px`,
