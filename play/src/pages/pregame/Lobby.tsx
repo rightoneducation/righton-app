@@ -20,7 +20,7 @@ export default function Lobby({ mode }: LobbyProps) {
         <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Typography
             variant="h1"
-            sx={{ position: 'absolute', alignItems:'center', fontSize: '54px' }}
+            sx={{ position: 'absolute', alignItems:'center', fontSize: '54px', textAlign: 'center', lineHeight: `${theme.sizing.extraLargePadding}px`}}
           >
             {t('lobby.title')}
           </Typography>
