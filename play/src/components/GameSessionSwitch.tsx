@@ -52,8 +52,6 @@ export default function GameInProgressContainer({
       reason: choice.reason ?? '',
     })) ?? [];
 
-
-
   const handleUpdateScore = (inputScore: number) => {
     setScore(inputScore);
   };

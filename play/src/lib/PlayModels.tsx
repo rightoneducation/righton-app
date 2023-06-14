@@ -93,6 +93,13 @@ export enum TimerMode {
   JOIN,
 }
 
+/**
+ * Enum that holds the various states for errors thrown to the ErrorModal.tsx component
+ * @enum ErrorType
+ * @param {string} CONNECT - error connecting to game session
+ * @param {string} ANSWER - error submitting answer
+ * @param {string} SCORE - error submitting score
+ */
 export enum ErrorType {
   CONNECT,
   ANSWER,
