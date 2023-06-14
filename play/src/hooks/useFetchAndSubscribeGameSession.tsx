@@ -5,6 +5,8 @@ import {
   ApiClient,
   IGameSession,
 } from '@righton/networking';
+import { StorageKey } from '../lib/PlayModels';
+import { fetchLocalData } from '../lib/HelperFunctions';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -57,6 +59,13 @@ export default function useFetchAndSubscribeGameSession(
               // Update the gameSession object and trigger the callback
               if (!ignore) setHasRejoined(false);
               setGameSession((prevGame) => ({ ...prevGame, ...response }));
+              // Update local storage so that hasRejoined is false
+              const localModel = fetchLocalData();
+              const updatedModelForNextReload = { ...localModel, hasRejoined: hasRejoined };
+              window.localStorage.setItem(StorageKey, JSON.stringify(updatedModelForNextReload));
+              console.log("SETTING HASREJOINED TO FALSE THRU SUBSCRIPTION");
+              console.log(hasRejoined);
+              console.log(window.localStorage.getItem(StorageKey));
             }
           );
           return () => {

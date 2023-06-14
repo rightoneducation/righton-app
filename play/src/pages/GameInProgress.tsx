@@ -122,6 +122,8 @@ export default function GameInProgress({
   }, [currentState]);
 
   const questionText = divideQuestionString(currentQuestion?.text);
+  const totalTime = currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ?
+    phaseOneTime : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -153,7 +155,7 @@ export default function GameInProgress({
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
-
+  console.log("currentTimer from GameInProgress: " + currentTimer);
   return (
     <StackContainerStyled
       direction="column"
@@ -166,13 +168,9 @@ export default function GameInProgress({
           isCorrect={false}
           isIncorrect={false}
           // if isRejoin is true, make localstorage instead of phaseOneTime and phaseTwoTime
-          totalTime={
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-              ? phaseOneTime
-              : phaseTwoTime
-          }
+          totalTime={totalTime}
           // put check for refresh here
-          currentTimer={currentTimer}
+          currentTimer={hasRejoined ? currentTimer : totalTime}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}

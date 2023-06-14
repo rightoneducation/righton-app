@@ -94,7 +94,7 @@ export default function Timer({
   }
   const timerString = useMemo(() => getTimerString(currentTime), [currentTime]);
 
-  console.log(rejoinGameObject)
+  // console.log(rejoinGameObject)
   // useEffect to start off timer
   useEffect(() => {
     if (!isPaused && !isFinished)

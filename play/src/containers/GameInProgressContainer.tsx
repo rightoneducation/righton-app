@@ -26,6 +26,10 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
   const localModel = useLoaderData() as LocalModel;
+
+  //TODO: Remove this after testing
+  const localModel2 = LocalModelLoader() as LocalModel;
+
   const currentTimer = localModel.currentTimer;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
@@ -33,8 +37,13 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.gameSessionId,
     apiClient,
     retry,
-    localModel?.hasRejoined
+    localModel2?.hasRejoined
   );
+  console.log("------------------GAMEINPROGRESSSC CALLED------------------");
+  console.log("localModel?.hasRejoined: " + localModel?.hasRejoined);
+  console.log("localModel: " + localModel);
+  console.log("subscription hasRejoined: " + subscription.hasRejoined);
+  console.log("-----------------------------------------------------------");
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
   // if gamesession is loading/errored/waiting for teacher to start game
@@ -79,7 +88,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     />
   );
 }
-
 export function LocalModelLoader(): LocalModel {
   const localModel = fetchLocalData();
   if (localModel && !localModel.hasRejoined) {
@@ -89,5 +97,8 @@ export function LocalModelLoader(): LocalModel {
       JSON.stringify(updatedModelForNextReload)
     );
   }
+  console.log("------------------LOCALMODELLOADER CALLED------------------");
+  console.log("local storage hasRejoined: " + window.localStorage.getItem(StorageKey));
+  console.log("-----------------------------------------------------------");
   return localModel;
 }

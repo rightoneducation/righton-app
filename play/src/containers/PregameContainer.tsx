@@ -52,7 +52,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
   };
-
+  console.log(rejoinGameObject);
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
   // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
