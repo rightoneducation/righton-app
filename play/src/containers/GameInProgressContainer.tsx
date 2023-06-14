@@ -4,7 +4,7 @@ import {
   isNullOrUndefined,
   GameSessionState,
 } from '@righton/networking';
-import { Navigate, useLoaderData } from 'react-router-dom';
+import { Navigate, useLoaderData, redirect } from 'react-router-dom';
 import { fetchLocalData } from '../lib/HelperFunctions';
 import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
 import GameSessionSwitch from '../components/GameSessionSwitch';
@@ -78,14 +78,17 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   );
 }
 
-export function LocalModelLoader(): LocalModel {
-  const localModel = fetchLocalData();
-  if (localModel && !localModel.hasRejoined) {
-    const updatedModelForNextReload = { ...localModel, hasRejoined: true };
+export function LocalModelLoader() {
+  let localModel = fetchLocalData();
+  if (localModel) {
+    if (!localModel.hasRejoined) {
+      localModel = { ...localModel, hasRejoined: true };
+    }
     window.localStorage.setItem(
       StorageKey,
-      JSON.stringify(updatedModelForNextReload)
+      JSON.stringify(localModel)
     );
+    return localModel;
   }
-  return localModel;
+  return redirect(`/`);
 }

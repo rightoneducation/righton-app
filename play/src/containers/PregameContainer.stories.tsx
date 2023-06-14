@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
-import PregameContainer from './PregameContainer';
+import { PregameContainer } from './PregameContainer';
 import Theme from '../lib/Theme';
 
 export default {
