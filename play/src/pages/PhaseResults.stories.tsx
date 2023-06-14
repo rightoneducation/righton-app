@@ -7,6 +7,7 @@ import {
   IChoice,
 } from '@righton/networking';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import PhaseResults from './PhaseResults';
@@ -16,6 +17,13 @@ import Theme from '../lib/Theme';
 export default {
   title: 'Design System/4_Pages/PhaseResults',
   component: PhaseResults,
+  decorators: [
+      (Story) => (
+        <MemoryRouter initialEntries={['/']}>
+          <Story />
+        </MemoryRouter>
+      ),
+    ],
 } as ComponentMeta<typeof PhaseResults>;
 
 const Template: ComponentStory<typeof PhaseResults> =
