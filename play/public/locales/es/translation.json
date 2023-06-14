@@ -103,7 +103,7 @@
     }
   },
   "error": {
-    "connecting": {
+    "connect": {
       "title1": "Se ha producido un error con el siguiente mensaje de error:",
       "gamesessionerror": "Sesión de juego no encontrada",
       "subscriptionerror": "Subscription could not be established",
