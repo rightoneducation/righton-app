@@ -29,7 +29,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
     PregameState.SPLASH_SCREEN
   );
   // retreive local storage data so that player can choose to rejoin game 
-  const rejoinGameObject = useLoaderData() as LocalModel;
+  const [rejoinGameObject, setRejoinGameObject] = useState<LocalModel | null>(useLoaderData() as LocalModel);
   // state variables used to collect player information in pregame phase
   // information is loaded into local storage on select avatar screen and passed to /game
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
@@ -51,7 +51,11 @@ export function PregameContainer({ apiClient }: PregameFinished) {
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
   };
-
+  // if player doesn't want to rejoin, remove the localStorage and set rejoinGameObject to null
+  const handleDontRejoinSession = () => {
+    window.localStorage.removeItem(StorageKey);
+    setRejoinGameObject(null);
+  }
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
   // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
@@ -175,6 +179,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           rejoinGameObject={rejoinGameObject}
           setPregameState={setPregameState}
           handleRejoinSession={handleRejoinSession}
+          handleDontRejoinSession={handleDontRejoinSession}
         />
       );
   }

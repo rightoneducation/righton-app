@@ -5,16 +5,17 @@ import { Typography } from '@mui/material';
 import Modal from 'react-modal';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
-import { StorageKey } from '../lib/PlayModels';
 
 interface RejoinModalProps {
   handleRejoinSession: () => void;
+  handleDontRejoinSession: () => void;
   isModalVisible: boolean;
   setIsModalVisible: (isModalVisible: boolean) => void;
 }
 
 export default function RejoinModal({
   handleRejoinSession,
+  handleDontRejoinSession,
   isModalVisible,
   setIsModalVisible,
 }: RejoinModalProps) {
@@ -69,7 +70,7 @@ export default function RejoinModal({
         </IntroButtonStyled>
         <IntroButtonStyled
           onClick={() => {
-            window.localStorage.removeItem(StorageKey);
+            handleDontRejoinSession();
             setIsModalVisible(false);
           }}
         >

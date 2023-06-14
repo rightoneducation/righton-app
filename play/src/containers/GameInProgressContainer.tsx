@@ -79,15 +79,15 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 }
 
 export function LocalModelLoader() {
-  let localModel = fetchLocalData();
+  const localModel = fetchLocalData();
   if (localModel) {
     if (!localModel.hasRejoined) {
-      localModel = { ...localModel, hasRejoined: true };
+      const updatedModelForNextRound = { ...localModel, hasRejoined: true };
+      window.localStorage.setItem(
+        StorageKey,
+        JSON.stringify(updatedModelForNextRound)
+      );
     }
-    window.localStorage.setItem(
-      StorageKey,
-      JSON.stringify(localModel)
-    );
     return localModel;
   }
   return redirect(`/`);
