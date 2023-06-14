@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { v4 as uuidv4 } from 'uuid';
 import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
 import CorrectAnswerImage from '../img/correctAnswerImage.svg';
 import SelectedAnswer from '../img/SelectedAnswer.svg';
@@ -73,6 +74,7 @@ export default function AnswerSelector({
   const selectorImage = [
     <img
       src={imageMap[answerStatus]}
+      key={uuidv4()}
       style={{
         position: 'absolute',
         right: isSubmitted ? `17px` : `16px`,
