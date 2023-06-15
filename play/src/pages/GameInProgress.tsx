@@ -144,7 +144,7 @@ export default function GameInProgress({
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
-  console.log("currentTimer from GameInProgress: " + currentTimer);
+
   return (
     <StackContainerStyled
       direction="column"

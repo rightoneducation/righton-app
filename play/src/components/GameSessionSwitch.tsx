@@ -46,7 +46,6 @@ export default function GameInProgressContainer({
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
-  console.log("FROM GAMESESSIONSWITCH \n HAS REJOINED: " + hasRejoined + "\n PREGAMECOUNTDOWN: " + isPregameCountdown + "\n ISGAMEFIRSTSTARTING: " + isGameFirstStarting);
   const answerChoices =
     currentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
