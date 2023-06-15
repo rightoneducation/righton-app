@@ -1,10 +1,10 @@
-import i18n from 'i18next';
+import i18n from "i18next";
 import {
   ITeamAnswer,
   GameSessionState,
   isNullOrUndefined,
-} from '@righton/networking';
-import { InputPlaceholder, StorageKey } from './PlayModels';
+} from "@righton/networking";
+import { InputPlaceholder, StorageKey } from "./PlayModels";
 
 /**
  * check if name entered isn't empty or the default value
@@ -14,9 +14,9 @@ import { InputPlaceholder, StorageKey } from './PlayModels';
  */
 export const isNameValid = (name: string) => {
   return (
-    name.trim() !== '' && // check for falsy w/o spaces, typ
-    name !== i18n.t('playername_firstnamedefault') && // check if default value, typ
-    name !== i18n.t('playername_lastnamedefault')
+    name.trim() !== "" && // check for falsy w/o spaces, typ
+    name !== i18n.t("playername_firstnamedefault") && // check if default value, typ
+    name !== i18n.t("playername_lastnamedefault")
   );
 };
 
@@ -27,7 +27,7 @@ export const isNameValid = (name: string) => {
  */
 export const isGameCodeValid = (gameCode: string) => {
   return (
-    gameCode.trim() !== '' &&
+    gameCode.trim() !== "" &&
     gameCode !== InputPlaceholder.GAME_CODE &&
     gameCode.length === 4 &&
     !Number.isNaN(parseInt(gameCode, 10))

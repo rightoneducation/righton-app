@@ -1,14 +1,14 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import {
   OverlayContainerStyled,
   OverlayImageStyled,
   ScreenshotImageStyled,
-} from '../../../lib/styledcomponents/CarouselElementsStyled';
-import HowToPlay_BlueMonster from '../../../img/HowToPlay_BlueMonster.svg';
-import HowToPlay_Screenshot4 from '../../../img/HowToPlay_Screenshot4.png';
+} from "../../../lib/styledcomponents/CarouselElementsStyled";
+import HowToPlay_BlueMonster from "../../../img/HowToPlay_BlueMonster.svg";
+import HowToPlay_Screenshot4 from "../../../img/HowToPlay_Screenshot4.png";
 
 export default function HowToPlaySlide4Content() {
   const theme = useTheme();
@@ -21,10 +21,10 @@ export default function HowToPlaySlide4Content() {
           src={HowToPlay_BlueMonster}
           alt="monster"
           sx={{
-            top: '30px',
-            left: '370px',
-            width: '140px',
-            height: 'auto',
+            top: "30px",
+            left: "370px",
+            width: "140px",
+            height: "auto",
             zIndex: -1,
           }}
         />
@@ -33,12 +33,12 @@ export default function HowToPlaySlide4Content() {
       <Typography
         variant="h2"
         sx={{
-          textAlign: 'center',
+          textAlign: "center",
           paddingTop: `${theme.sizing.mediumPadding}px`,
-          width: '350px',
+          width: "350px",
         }}
       >
-        {t('howtoplay.slide4')}
+        {t("howtoplay.slide4")}
       </Typography>
     </>
   );

@@ -1,13 +1,13 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Typography, Stack, Box } from '@mui/material';
-import { GameSessionState } from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { useTranslation } from 'react-i18next';
-import { AnswerState } from '../lib/PlayModels';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
-import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import ResultSelector from './ResultSelector';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Typography, Stack, Box } from "@mui/material";
+import { GameSessionState } from "@righton/networking";
+import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
+import { AnswerState } from "../lib/PlayModels";
+import BodyCardStyled from "../lib/styledcomponents/BodyCardStyled";
+import BodyCardContainerStyled from "../lib/styledcomponents/BodyCardContainerStyled";
+import ResultSelector from "./ResultSelector";
 
 interface DiscussAnswerCardProps {
   isPlayerCorrect: boolean;
@@ -31,24 +31,24 @@ export default function DiscussAnswerCard({
   const theme = useTheme();
   const { t } = useTranslation();
   const resultText = isPlayerCorrect
-    ? t('gameinprogress.discussanswer.correcttext')
-    : t('gameinprogress.discussanswer.nicetrytext');
+    ? t("gameinprogress.discussanswer.correcttext")
+    : t("gameinprogress.discussanswer.nicetrytext");
   const correctCard =
     answerStatus === AnswerState.CORRECT ||
     answerStatus === AnswerState.PLAYER_SELECTED_CORRECT;
   return (
     <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
+      <BodyCardContainerStyled sx={{ alignItems: "flex-start" }}>
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
             <Typography
-              variant="subtitle1" 
+              variant="subtitle1"
               sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
             >
               {resultText}
-            </Typography >
+            </Typography>
             <Typography variant="body1">
-              {t('gameinprogress.discussanswer.correctanswertext')}
+              {t("gameinprogress.discussanswer.correctanswertext")}
             </Typography>
           </Box>
         )}
@@ -65,21 +65,21 @@ export default function DiscussAnswerCard({
             instructions.map((instruction, index) => (
               <Box
                 sx={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
                 }}
                 key={uuidv4()}
               >
-                <Box sx={{ width: '30px' }}>
+                <Box sx={{ width: "30px" }}>
                   <Typography
                     variant="h3"
                     sx={{
-                      width: '30px',
+                      width: "30px",
                       fontWeight: 700,
                       color: theme.palette.primary.darkPurple,
-                      lineHeight: '20px',
-                      textAlign: 'right',
+                      lineHeight: "20px",
+                      textAlign: "right",
                     }}
                   >
                     {index + 1}

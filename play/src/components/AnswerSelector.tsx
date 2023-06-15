@@ -1,28 +1,28 @@
-import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
-import UnselectedAnswerImage from '../img/unselectedAnswerImage.svg';
-import CorrectAnswerImage from '../img/correctAnswerImage.svg';
-import SelectedAnswer from '../img/SelectedAnswer.svg';
-import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
-import { AnswerState } from '../lib/PlayModels';
+import React from "react";
+import { Button, Typography } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
+import { v4 as uuidv4 } from "uuid";
+import UnselectedAnswerImage from "../img/unselectedAnswerImage.svg";
+import CorrectAnswerImage from "../img/correctAnswerImage.svg";
+import SelectedAnswer from "../img/SelectedAnswer.svg";
+import PlayerCorrectImage from "../img/PlayerCorrectImage.svg";
+import { AnswerState } from "../lib/PlayModels";
 
 type AnswerSelectorProps = {
   isSubmitted: boolean;
 };
 
 const AnswerSelectorDefault = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'isSubmitted',
+  shouldForwardProp: (prop) => prop !== "isSubmitted",
 })<AnswerSelectorProps>(({ isSubmitted, theme }) => ({
-  boxSizing: 'border-box',
-  width: '100%',
-  minHeight: '42px',
-  borderRadius: '22px',
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  textTransform: 'none',
+  boxSizing: "border-box",
+  width: "100%",
+  minHeight: "42px",
+  borderRadius: "22px",
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  textTransform: "none",
   border: `1px solid ${theme.palette.primary.darkGrey}`,
   backgroundColor: isSubmitted
     ? `${theme.palette.primary.lightGrey}`
@@ -35,7 +35,7 @@ const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
 }));
 
 const AnswerSelectorSelected = styled(AnswerSelectorDefault, {
-  shouldForwardProp: (prop) => prop !== 'isSubmitted',
+  shouldForwardProp: (prop) => prop !== "isSubmitted",
 })(({ isSubmitted, theme }) => ({
   border: isSubmitted
     ? `1px solid ${theme.palette.primary.blue}`
@@ -61,7 +61,7 @@ export default function AnswerSelector({
   handleSelectAnswer,
 }: AnswerSelectorComponentProps) {
   const theme = useTheme();
-  const letterCode = 'A'.charCodeAt(0) + index;
+  const letterCode = "A".charCodeAt(0) + index;
 
   const imageMap = {
     [AnswerState.DEFAULT]: UnselectedAnswerImage,
@@ -76,16 +76,15 @@ export default function AnswerSelector({
       src={imageMap[answerStatus]}
       key={uuidv4()}
       style={{
-        position: 'absolute',
+        position: "absolute",
         right: isSubmitted ? `17px` : `16px`,
         width: `16px`,
         height: `16px`,
-        paddingTop: '2px',
-        opacity:
-          isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
+        paddingTop: "2px",
+        opacity: isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
       }}
       alt="SelectedAnswerImage"
-    />
+    />,
   ];
 
   const buttonContents = (
@@ -95,9 +94,9 @@ export default function AnswerSelector({
         sx={{
           paddingLeft:
             !isSubmitted && answerStatus === AnswerState.SELECTED
-              ? '1px'
-              : '2px', // compensates for increased border thickness when selected
-          paddingTop: '2px',
+              ? "1px"
+              : "2px", // compensates for increased border thickness when selected
+          paddingTop: "2px",
           opacity:
             isSubmitted || answerStatus === AnswerState.CORRECT ? 0.5 : 1,
         }}
@@ -113,16 +112,12 @@ export default function AnswerSelector({
       >
         {answerText}
       </Typography>
-      {!isSubmitted ?
-          selectorImage
-        :
-        (answerStatus !== AnswerState.DEFAULT && 
-          selectorImage
-        )
-      }
+      {!isSubmitted
+        ? selectorImage
+        : answerStatus !== AnswerState.DEFAULT && selectorImage}
     </>
   );
-  
+
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (

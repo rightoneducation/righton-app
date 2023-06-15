@@ -1,8 +1,8 @@
-import React from 'react';
-import { Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
-import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
+import React from "react";
+import { Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import BodyCardStyled from "../lib/styledcomponents/BodyCardStyled";
+import BodyCardContainerStyled from "../lib/styledcomponents/BodyCardContainerStyled";
 
 interface QuestionCardProps {
   questionText: string[];
@@ -19,8 +19,8 @@ export default function QuestionCard({
       <BodyCardContainerStyled>
         <img
           style={{
-            width: '75%',
-            height: 'auto',
+            width: "75%",
+            height: "auto",
             paddingBottom: `${theme.sizing.smallPadding}px`,
           }}
           src={imageUrl}
@@ -29,7 +29,7 @@ export default function QuestionCard({
         <Typography variant="body1"> {questionText[0]} </Typography>
         <Typography
           variant="body1"
-          sx={{ fontWeight: 700, whiteSpace: 'pre-line' }}
+          sx={{ fontWeight: 700, whiteSpace: "pre-line" }}
         >
           {`\n ${questionText[1]}`}
         </Typography>

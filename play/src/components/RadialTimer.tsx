@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
-import { Typography } from '@mui/material';
-import { TimerMode } from '../lib/PlayModels';
+import React, { useState, useEffect } from "react";
+import { styled } from "@mui/material/styles";
+import { Typography } from "@mui/material";
+import { TimerMode } from "../lib/PlayModels";
 
-const TimerContainer = styled('div')({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+const TimerContainer = styled("div")({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   opacity: 1,
 });
 
@@ -72,10 +72,10 @@ export default function RadialTimer({
     const fA = delta > PI ? 1 : 0;
     const fS = delta > 0 ? 1 : 0;
     const path = [
-      'M',
+      "M",
       sX,
       sY,
-      'A',
+      "A",
       rx,
       ry,
       (theta / tau) * 360,
@@ -84,7 +84,7 @@ export default function RadialTimer({
       eX,
       eY,
     ];
-    return path.join(' ');
+    return path.join(" ");
   };
 
   const Segments = (x: number, y: number, r: number, colors: string[]) => {
@@ -169,7 +169,7 @@ export default function RadialTimer({
       {mode === TimerMode.COUNTDOWN && (
         <Typography
           variant="h1"
-          sx={{ position: 'absolute', textAlign: 'center', fontSize: '108px' }}
+          sx={{ position: "absolute", textAlign: "center", fontSize: "108px" }}
         >
           {currentTime}
         </Typography>

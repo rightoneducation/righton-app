@@ -1,11 +1,11 @@
-import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { ThemeProvider } from '@mui/material/styles';
-import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import Theme from '../lib/Theme';
+import React from "react";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { ThemeProvider } from "@mui/material/styles";
+import ButtonSubmitAnswer from "./ButtonSubmitAnswer";
+import Theme from "../lib/Theme";
 
 export default {
-  title: 'Design System/1_Atoms/SmallButton',
+  title: "Design System/1_Atoms/SmallButton",
   component: ButtonSubmitAnswer,
 } as ComponentMeta<typeof ButtonSubmitAnswer>;
 

@@ -1,26 +1,26 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Typography, Grid, Stack, Box } from '@mui/material';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Typography, Grid, Stack, Box } from "@mui/material";
 import {
   GameSessionState,
   ModelHelper,
   ITeam,
   IQuestion,
-} from '@righton/networking';
-import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { v4 as uuidv4 } from 'uuid';
-import { useTranslation } from 'react-i18next';
-import { AnswerState } from '../../lib/PlayModels';
-import QuestionCard from '../../components/QuestionCard';
-import DiscussAnswerCard from '../../components/DiscussAnswerCard';
-import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import 'swiper/css';
-import 'swiper/css/pagination';
+} from "@righton/networking";
+import { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
+import { AnswerState } from "../../lib/PlayModels";
+import QuestionCard from "../../components/QuestionCard";
+import DiscussAnswerCard from "../../components/DiscussAnswerCard";
+import ScrollBoxStyled from "../../lib/styledcomponents/layout/ScrollBoxStyled";
+import "swiper/css";
+import "swiper/css/pagination";
 import {
   BodyContentAreaDoubleColumnStyled,
   BodyContentAreaSingleColumnStyled,
-} from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
+} from "../../lib/styledcomponents/layout/BodyContentAreasStyled";
 
 interface DiscussAnswerProps {
   isSmallDevice: boolean;
@@ -64,10 +64,10 @@ export default function DiscussAnswer({
         sx={{
           marginTop: `${theme.sizing.smallPadding}px`,
           marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
-        {t('gameinprogress.discussanswer.questionanswercolumn')}
+        {t("gameinprogress.discussanswer.questionanswercolumn")}
       </Typography>
       <ScrollBoxStyled>
         <Stack spacing={2}>
@@ -80,7 +80,7 @@ export default function DiscussAnswer({
                 ? AnswerState.PLAYER_SELECTED_CORRECT
                 : AnswerState.CORRECT
             }
-            answerText={correctAnswer?.text ?? ''}
+            answerText={correctAnswer?.text ?? ""}
             answerIndex={correctIndex ?? 0}
             currentState={currentState}
           />
@@ -89,12 +89,12 @@ export default function DiscussAnswer({
           <Typography
             variant="body1"
             sx={{
-              textAlign: 'center',
+              textAlign: "center",
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
             }}
           >
-            {t('gameinprogress.general.swipealert')}
+            {t("gameinprogress.general.swipealert")}
           </Typography>
         )}
       </ScrollBoxStyled>
@@ -108,10 +108,10 @@ export default function DiscussAnswer({
         sx={{
           marginTop: `${theme.sizing.smallPadding}px`,
           marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
-        {t('gameinprogress.discussanswer.incorrectanswercolumn')}
+        {t("gameinprogress.discussanswer.incorrectanswercolumn")}
       </Typography>
       <ScrollBoxStyled>
         <Stack spacing={2}>
@@ -144,7 +144,7 @@ export default function DiscussAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={6} sx={{ width: "100%", height: "100%" }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -152,20 +152,20 @@ export default function DiscussAnswer({
             centeredSlides
             slidesPerView="auto"
             pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
+              el: ".swiper-pagination-container",
+              bulletClass: "swiper-pagination-bullet",
+              bulletActiveClass: "swiper-pagination-bullet-active",
               clickable: true,
               renderBullet(index, className) {
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
               },
             }}
-            style={{ height: '100%' }}
+            style={{ height: "100%" }}
           >
             <SwiperSlide
               style={{
                 width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
+                height: "100%",
               }}
             >
               {questionCorrectAnswerContents}
@@ -173,7 +173,7 @@ export default function DiscussAnswer({
             <SwiperSlide
               style={{
                 width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
+                height: "100%",
               }}
             >
               {incorrectAnswerContents}
@@ -183,13 +183,13 @@ export default function DiscussAnswer({
           questionCorrectAnswerContents
         )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={0} sm={6} sx={{ width: "100%", height: "100%" }}>
         {incorrectAnswerContents}
       </Grid>
     </BodyContentAreaDoubleColumnStyled>
   ) : (
     <BodyContentAreaSingleColumnStyled>
-      <Box sx={{ width: '100%', height: '100%' }}>
+      <Box sx={{ width: "100%", height: "100%" }}>
         {questionCorrectAnswerContents}
       </Box>
     </BodyContentAreaSingleColumnStyled>

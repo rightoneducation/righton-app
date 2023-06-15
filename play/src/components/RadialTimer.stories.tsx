@@ -1,11 +1,11 @@
-import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { ThemeProvider } from '@mui/material/styles';
-import RadialTimer from './RadialTimer';
-import Theme from '../lib/Theme';
+import React from "react";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { ThemeProvider } from "@mui/material/styles";
+import RadialTimer from "./RadialTimer";
+import Theme from "../lib/Theme";
 
 export default {
-  title: 'Design System/1_Atoms/RadialTimer',
+  title: "Design System/1_Atoms/RadialTimer",
   component: RadialTimer,
 } as ComponentMeta<typeof RadialTimer>;
 
@@ -18,7 +18,7 @@ const Template: ComponentStory<typeof RadialTimer> =
     );
   };
 
-const countdownColor = 'rgba(225, 65, 107';
+const countdownColor = "rgba(225, 65, 107";
 
 export const Default = Template.bind({});
 Default.args = {

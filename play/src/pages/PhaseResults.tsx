@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ApiClient,
   GameSessionState,
   IGameSession,
   ITeam,
   ModelHelper,
-} from '@righton/networking';
-import HeaderContent from '../components/HeaderContent';
-import ResultsCard from '../components/ResultsCard';
-import FooterContent from '../components/FooterContent';
-import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
-import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
-import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
-import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
-import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaPhaseResultsStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
-import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import ErrorModal from '../components/ErrorModal';
-import { ErrorType } from '../lib/PlayModels';
-import 'swiper/css';
-import 'swiper/css/pagination';
+} from "@righton/networking";
+import HeaderContent from "../components/HeaderContent";
+import ResultsCard from "../components/ResultsCard";
+import FooterContent from "../components/FooterContent";
+import StackContainerStyled from "../lib/styledcomponents/layout/StackContainerStyled";
+import HeaderStackContainerStyled from "../lib/styledcomponents/layout/HeaderStackContainerStyled";
+import BodyStackContainerStyled from "../lib/styledcomponents/layout/BodyStackContainerStyled";
+import BodyBoxUpperStyled from "../lib/styledcomponents/layout/BodyBoxUpperStyled";
+import BodyBoxLowerStyled from "../lib/styledcomponents/layout/BodyBoxLowerStyled";
+import { BodyContentAreaPhaseResultsStyled } from "../lib/styledcomponents/layout/BodyContentAreasStyled";
+import FooterStackContainerStyled from "../lib/styledcomponents/layout/FooterStackContainerStyled";
+import ErrorModal from "../components/ErrorModal";
+import { ErrorType } from "../lib/PlayModels";
+import "swiper/css";
+import "swiper/css/pagination";
 
 interface PhaseResultsProps {
   apiClient: ApiClient;
@@ -72,7 +72,10 @@ export default function PhaseResults({
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
   // withheldPoints: number - the number of points that were going to be assigned to the player before the error, so the player can retry the request
-  const [isError, setIsError] = useState<{error: boolean, withheldPoints: number}>({error: false, withheldPoints: 0});
+  const [isError, setIsError] = useState<{
+    error: boolean;
+    withheldPoints: number;
+  }>({ error: false, withheldPoints: 0 });
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
@@ -86,29 +89,29 @@ export default function PhaseResults({
   // update teamscore on the backend, if it fails, flag the error to pop the error modal
   const updateTeamScore = async (inputTeamId: string, newScore: number) => {
     try {
-      await apiClient.updateTeam({ id: inputTeamId, score: newScore + score});
+      await apiClient.updateTeam({ id: inputTeamId, score: newScore + score });
       setNewPoints(newScore);
     } catch {
-      setIsError({error: true, withheldPoints: newScore});
+      setIsError({ error: true, withheldPoints: newScore });
     }
   };
 
   // calculate new score for use in footer
   // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
   useEffect(() => {
-      let calcNewScore = 0;
-      if (!hasRejoined) {
-        calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
-          gameSession,
-          currentQuestion,
-          currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        );
-      }
-      updateTeamScore(teamId, calcNewScore);
+    let calcNewScore = 0;
+    if (!hasRejoined) {
+      calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+        gameSession,
+        currentQuestion,
+        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      );
+    }
+    updateTeamScore(teamId, calcNewScore);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRetry = () => {
-    setIsError((prev) => ({...prev, error: false}));
+    setIsError((prev) => ({ ...prev, error: false }));
     updateTeamScore(teamId, isError.withheldPoints);
   };
 
@@ -132,7 +135,7 @@ export default function PhaseResults({
           currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => { }}
+          handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
@@ -151,7 +154,7 @@ export default function PhaseResults({
       <FooterStackContainerStyled>
         <FooterContent
           avatar={teamAvatar}
-          teamName={currentTeam ? currentTeam.name : 'Team One'}
+          teamName={currentTeam ? currentTeam.name : "Team One"}
           newPoints={newPoints}
           score={score}
           handleUpdateScore={handleUpdateScore}

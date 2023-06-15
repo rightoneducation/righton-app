@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Grid, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
-import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
-import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
-import { isNameValid } from '../../lib/HelperFunctions';
-import { PregameState } from '../../lib/PlayModels';
-import Logo from '../../img/rightOnLogo.svg';
+import React, { useState } from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import { Stack, Box, Grid, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import InputTextFieldStyled from "../../lib/styledcomponents/InputTextFieldStyled";
+import BackgroundContainerStyled from "../../lib/styledcomponents/layout/BackgroundContainerStyled";
+import IntroButtonStyled from "../../lib/styledcomponents/IntroButtonStyled";
+import { isNameValid } from "../../lib/HelperFunctions";
+import { PregameState } from "../../lib/PlayModels";
+import Logo from "../../img/rightOnLogo.svg";
 
 const StackContainer = styled(Stack)(({ theme }) => ({
-  position: 'fixed',
-  height: '100%',
+  position: "fixed",
+  height: "100%",
   top: 0,
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
   maxWidth: theme.breakpoints.values.xs,
 }));
 
@@ -57,15 +57,15 @@ export default function EnterPlayerName({
         <img
           style={{
             width: `${theme.sizing.pregameMinColumnWidth}px`,
-            height: '118px',
+            height: "118px",
             paddingTop: `${theme.sizing.extraLargePadding}px`,
           }}
           src={Logo}
           alt="Question"
         />
         <PaddedContainer>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('joingame.playername.title')}
+          <Typography variant="h2" sx={{ textAlign: "center" }}>
+            {t("joingame.playername.title")}
           </Typography>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
@@ -73,7 +73,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={t('joingame.playername.firstnamedefault') ?? ''}
+                placeholder={t("joingame.playername.firstnamedefault") ?? ""}
                 onChange={(event) => setFirstName(event.target.value)}
                 onFocus={() => setShouldShowError(false)}
                 value={firstName}
@@ -82,10 +82,10 @@ export default function EnterPlayerName({
                   inputProps: {
                     style: {
                       color: theme.palette.primary.darkBlue,
-                      paddingTop: '9px',
-                      textAlign: 'center',
+                      paddingTop: "9px",
+                      textAlign: "center",
                       fontSize: `${theme.typography.h2.fontSize}px`,
-                      fontFamily: 'Poppins'
+                      fontFamily: "Poppins",
                     },
                   },
                 }}
@@ -96,7 +96,7 @@ export default function EnterPlayerName({
                 fullWidth
                 variant="filled"
                 autoComplete="off"
-                placeholder={t('joingame.playername.lastnamedefault') ?? ''}
+                placeholder={t("joingame.playername.lastnamedefault") ?? ""}
                 onChange={(event) => setLastName(event.target.value)}
                 onFocus={() => setShouldShowError(false)}
                 value={lastName}
@@ -105,10 +105,10 @@ export default function EnterPlayerName({
                   inputProps: {
                     style: {
                       color: theme.palette.primary.darkBlue,
-                      paddingTop: '9px',
-                      textAlign: 'center',
+                      paddingTop: "9px",
+                      textAlign: "center",
                       fontSize: `${theme.typography.h2.fontSize}px`,
-                      fontFamily: 'Poppins'
+                      fontFamily: "Poppins",
                     },
                   },
                 }}
@@ -117,30 +117,30 @@ export default function EnterPlayerName({
           </Grid>
         </PaddedContainer>
         <IntroButtonStyled onClick={validateInput}>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('joingame.playername.button')}
+          <Typography variant="h2" sx={{ textAlign: "center" }}>
+            {t("joingame.playername.button")}
           </Typography>
         </IntroButtonStyled>
         <PaddedContainer>
           <Typography
             variant="h2"
             sx={{
-              textAlign: 'center',
+              textAlign: "center",
               marginBottom: `${theme.sizing.smallPadding}px`,
             }}
           >
-            {t('joingame.playername.description1')}
+            {t("joingame.playername.description1")}
           </Typography>
           <Typography
             variant="h2"
-            sx={{ fontWeight: 400, textAlign: 'center' }}
+            sx={{ fontWeight: 400, textAlign: "center" }}
           >
-            {t('joingame.playername.description2')}
+            {t("joingame.playername.description2")}
           </Typography>
           {shouldShowError && (
             <Typography
               variant="h2"
-              sx={{ fontWeight: 400, textAlign: 'center' }}
+              sx={{ fontWeight: 400, textAlign: "center" }}
             >
               Invalid Input.
             </Typography>
