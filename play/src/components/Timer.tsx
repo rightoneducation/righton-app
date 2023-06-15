@@ -2,11 +2,8 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { json } from 'stream/consumers';
-import { GameSessionState } from '@righton/networking';
 import { LocalModel, StorageKey } from '../lib/PlayModels';
 import { fetchLocalData } from '../lib/HelperFunctions';
-import { cp } from 'fs';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -73,24 +70,26 @@ export default function Timer({
     }
   }
 
-  function getTimerString(currentTimeInput: number) {
-    let sec = 0;
-    let secStr = '00';
-    let min = 0;
-    if (currentTimeInput >= 0) {
-      min = Math.floor(currentTimeInput / 60);
-      sec = Math.ceil(currentTimeInput % 60);
-      if (sec === 60) sec = 0;
-      secStr = sec < 10 ? `0${sec}` : `${sec}`;
+  const timerString = useMemo(() => {  
+    const getTimerString = (currentTimeInput: number) => {
+      let sec = 0;
+      let secStr = '00';
+      let min = 0;
+      if (currentTimeInput >= 0) {
+        min = Math.floor(currentTimeInput / 60);
+        sec = Math.ceil(currentTimeInput % 60);
+        if (sec === 60) sec = 0;
+        secStr = sec < 10 ? `0${sec}` : `${sec}`;
+      }
+      const storageObject: LocalModel = {
+        ...rejoinGameObject,
+        currentTimer: currentTimeInput
+      };
+      window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+      return `${min}:${secStr}`;
     }
-    const storageObject: LocalModel = {
-      ...rejoinGameObject,
-      currentTimer: currentTimeInput
-    };
-    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-    return `${min}:${secStr}`;
-  }
-  const timerString = useMemo(() => getTimerString(currentTime), [currentTime]);
+    return getTimerString(currentTime);
+}, [currentTime, rejoinGameObject]);
 
   // useEffect to start off timer
   useEffect(() => {
