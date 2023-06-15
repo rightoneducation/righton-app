@@ -1,5 +1,5 @@
-import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
 
 /**
  * lower-level container for background section in body
@@ -10,12 +10,12 @@ export default styled(Box)(({ theme }) => ({
   paddingBottom: `${theme.sizing.mediumPadding}px`, // added so box shadow shows around edge of card
   paddingLeft: `${theme.sizing.smallPadding}px`,
   paddingRight: `${theme.sizing.smallPadding}px`,
-  overflow: 'auto',
-  touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
-  '&::-webkit-scrollbar': {
+  overflow: "auto",
+  touchAction: "pan-y", // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+  "&::-webkit-scrollbar": {
     // Chrome and Safari
-    display: 'none',
+    display: "none",
   },
-  scrollbarWidth: 'none', // Firefox
-  '-ms-overflow-style': 'none', // IE and Edge
+  scrollbarWidth: "none", // Firefox
+  "-ms-overflow-style": "none", // IE and Edge
 }));

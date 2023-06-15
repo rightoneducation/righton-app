@@ -46,14 +46,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 const label = {
-  2: "Phase 1 of 2 - Choose Correct Answer",
-  3: "Phase 1 of 2 - Answer Explanation",
-  4: "Phase 1 of 2 - Results",
-  5: "Phase 2 of 2 - Instructions",
-  6: "Phase 2 of 2 - Choose Trickiest Answer",
-  7: "Phase 2 of 2 - Discussion",
-  8: "Phase 2 of 2 - Results",
-  9: "Proceed to RightOn Central"
+    2 : "Phase 1 of 2 - Choose Correct Answer",
+    3 : "Phase 1 of 2 - Answer Explanation",
+    4 : "Phase 1 of 2 - Results",
+    5 : "Phase 2 of 2 - Instructions",
+    6 : "Phase 2 of 2 - Choose Trickiest Answer",
+    7 : "Phase 2 of 2 - Discussion",
+    8 : "Phase 2 of 2 - Results",
+    9 : "Proceed to RightOn Central"
 };
 
 export default function HeaderGame({
@@ -75,18 +75,18 @@ export default function HeaderGame({
         shape="rounded"
         classes={{ ul: classes.ul }}
         count={totalQuestions}
-        page={currentQuestion + 1}
-      />
+        page={currentQuestion+1}
+      /> 
 
       <Typography className={classes.title}>
-        Question {currentQuestion + 1} of {totalQuestions}
+        Question {currentQuestion+1} of {totalQuestions}
       </Typography>
 
       <Typography className={classes.phases}>
-        {label[statePosition]}
+        {label[statePosition]} 
       </Typography>
-      {gameTimer && <Timer headerGameCurrentTime={headerGameCurrentTime} totalRoundTime={totalRoundTime} />}
-
+      {gameTimer && <Timer headerGameCurrentTime={headerGameCurrentTime} totalRoundTime={totalRoundTime} />} 
+     
     </div>
   );
 }

@@ -1,15 +1,15 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { ThemeProvider } from '@mui/material/styles';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '../../i18n';
-import HowToPlay from './HowToPlay';
-import Theme from '../../lib/Theme';
-import { LobbyMode } from '../../lib/PlayModels';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { ThemeProvider } from "@mui/material/styles";
+import { I18nextProvider } from "react-i18next";
+import i18n from "../../i18n";
+import HowToPlay from "./HowToPlay";
+import Theme from "../../lib/Theme";
+import { LobbyMode } from "../../lib/PlayModels";
 
 export default {
-  title: 'Design System/4_Pages/HowToPlay',
+  title: "Design System/4_Pages/HowToPlay",
   component: HowToPlay,
 } as ComponentMeta<typeof HowToPlay>;
 

@@ -1,17 +1,17 @@
-import React, { ChangeEvent, useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Stack, Box, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { InputPlaceholder } from '../../lib/PlayModels';
-import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
-import InputTextFieldStyled from '../../lib/styledcomponents/InputTextFieldStyled';
-import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
-import Logo from '../../img/rightOnLogo.svg';
+import React, { ChangeEvent, useState } from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import { Stack, Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { InputPlaceholder } from "../../lib/PlayModels";
+import IntroButtonStyled from "../../lib/styledcomponents/IntroButtonStyled";
+import InputTextFieldStyled from "../../lib/styledcomponents/InputTextFieldStyled";
+import BackgroundContainerStyled from "../../lib/styledcomponents/layout/BackgroundContainerStyled";
+import Logo from "../../img/rightOnLogo.svg";
 
 const StackContainer = styled(Stack)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   maxWidth: theme.breakpoints.values.xs,
 }));
 
@@ -31,13 +31,13 @@ export default function EnterGameCode({
 }: EnterGameCodeProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [gameCodeValue, setGameCodeValue] = useState<string>('');
+  const [gameCodeValue, setGameCodeValue] = useState<string>("");
   const [shouldShowError, setShouldShowError] = useState<boolean>(false);
 
   // parsing the input value due to mui textfield limitations see: https://mui.com/material-ui/react-text-field/
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    const numericValue = newValue.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    const numericValue = newValue.replace(/[^0-9]/g, ""); // Remove non-numeric characters
     setGameCodeValue(numericValue);
   };
 
@@ -49,20 +49,23 @@ export default function EnterGameCode({
 
   return (
     <BackgroundContainerStyled>
-      <StackContainer sx={{width: `${theme.sizing.pregameMinColumnWidth}px`}} spacing={isSmallDevice ? 4 : 5}>
+      <StackContainer
+        sx={{ width: `${theme.sizing.pregameMinColumnWidth}px` }}
+        spacing={isSmallDevice ? 4 : 5}
+      >
         <img
           style={{
             width: `${theme.sizing.pregameMinColumnWidth}px`,
-            height: '118px',
+            height: "118px",
             paddingTop: `${theme.sizing.extraLargePadding}px`,
           }}
           src={Logo}
           alt="Question"
         />
         {/* container here to trim the spacing set by parent stack between text and input, typ */}
-        <Box sx={{width: '100%'}}>
-          <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-            {t('joingame.gamecode.title')}
+        <Box sx={{ width: "100%" }}>
+          <Typography variant="h2" sx={{ weight: 700, textAlign: "center" }}>
+            {t("joingame.gamecode.title")}
           </Typography>
           <InputTextFieldStyled
             fullWidth
@@ -74,13 +77,13 @@ export default function EnterGameCode({
             InputProps={{
               disableUnderline: true,
               inputProps: {
-                inputMode: 'numeric',
-                pattern: '[0-9]*',
+                inputMode: "numeric",
+                pattern: "[0-9]*",
                 maxLength: 4,
                 style: {
                   color: theme.palette.primary.darkBlue,
-                  paddingTop: '9px',
-                  textAlign: 'center',
+                  paddingTop: "9px",
+                  textAlign: "center",
                   fontSize: `${theme.typography.h2.fontSize}px`,
                 },
               },
@@ -88,8 +91,8 @@ export default function EnterGameCode({
           />
         </Box>
         <IntroButtonStyled onClick={() => validateInput(gameCodeValue)}>
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            {t('joingame.gamecode.button')}
+          <Typography variant="h2" sx={{ textAlign: "center" }}>
+            {t("joingame.gamecode.button")}
           </Typography>
         </IntroButtonStyled>
         {shouldShowError && (
@@ -98,14 +101,14 @@ export default function EnterGameCode({
               variant="h2"
               sx={{
                 weight: 700,
-                textAlign: 'center',
+                textAlign: "center",
                 marginBottom: `${theme.sizing.smallPadding}px`,
               }}
             >
-              {t('joingame.gamecode.error1')}
+              {t("joingame.gamecode.error1")}
             </Typography>
-            <Typography variant="h2" sx={{ weight: 700, textAlign: 'center' }}>
-              {t('joingame.gamecode.error2')}
+            <Typography variant="h2" sx={{ weight: 700, textAlign: "center" }}>
+              {t("joingame.gamecode.error2")}
             </Typography>
           </PaddedContainer>
         )}

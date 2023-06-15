@@ -1,24 +1,24 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from "react";
 import {
   GameSessionState,
   ITeam,
   isNullOrUndefined,
-} from '@righton/networking';
-import { v4 as uuidv4 } from 'uuid';
-import { Grid } from '@mui/material';
-import HeaderContent from '../../components/HeaderContent';
-import FooterContent from '../../components/FooterContent';
-import StackContainerStyled from '../../lib/styledcomponents/layout/StackContainerStyled';
-import HeaderStackContainerStyled from '../../lib/styledcomponents/layout/HeaderStackContainerStyled';
-import BodyStackContainerStyled from '../../lib/styledcomponents/layout/BodyStackContainerStyled';
-import BodyBoxUpperStyled from '../../lib/styledcomponents/layout/BodyBoxUpperStyled';
-import BodyBoxLowerStyled from '../../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import { BodyContentAreaLeaderboardStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import FooterStackContainerStyled from '../../lib/styledcomponents/layout/FooterStackContainerStyled';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import LeaderboardSelector from '../../components/LeaderboardSelector';
-import { StorageKey } from '../../lib/PlayModels';
+} from "@righton/networking";
+import { v4 as uuidv4 } from "uuid";
+import { Grid } from "@mui/material";
+import HeaderContent from "../../components/HeaderContent";
+import FooterContent from "../../components/FooterContent";
+import StackContainerStyled from "../../lib/styledcomponents/layout/StackContainerStyled";
+import HeaderStackContainerStyled from "../../lib/styledcomponents/layout/HeaderStackContainerStyled";
+import BodyStackContainerStyled from "../../lib/styledcomponents/layout/BodyStackContainerStyled";
+import BodyBoxUpperStyled from "../../lib/styledcomponents/layout/BodyBoxUpperStyled";
+import BodyBoxLowerStyled from "../../lib/styledcomponents/layout/BodyBoxLowerStyled";
+import { BodyContentAreaLeaderboardStyled } from "../../lib/styledcomponents/layout/BodyContentAreasStyled";
+import FooterStackContainerStyled from "../../lib/styledcomponents/layout/FooterStackContainerStyled";
+import "swiper/css";
+import "swiper/css/pagination";
+import LeaderboardSelector from "../../components/LeaderboardSelector";
+import { StorageKey } from "../../lib/PlayModels";
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -49,7 +49,7 @@ export default function Leaderboard({
   // remove locally stored game info when reaching leaderboard
   useEffect(() => {
     window.localStorage.removeItem(StorageKey);
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
   // ref req'd for height of container
@@ -86,7 +86,7 @@ export default function Leaderboard({
           currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => { }}
+          handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled ref={containerRef}>
@@ -99,9 +99,9 @@ export default function Leaderboard({
           spacing={2}
         >
           {sortedTeams?.map((team: ITeam) => (
-            <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
+            <Grid item key={uuidv4()} ref={itemRef} sx={{ width: "100%" }}>
               <LeaderboardSelector
-                teamName={team.name ? team.name : 'Team One'}
+                teamName={team.name ? team.name : "Team One"}
                 teamAvatar={
                   team === currentTeam
                     ? teamAvatar
@@ -116,7 +116,7 @@ export default function Leaderboard({
       <FooterStackContainerStyled>
         <FooterContent
           avatar={teamAvatar}
-          teamName={currentTeam ? currentTeam.name : 'Team One'}
+          teamName={currentTeam ? currentTeam.name : "Team One"}
           score={currentTeam ? currentTeam.score : 0}
         />
       </FooterStackContainerStyled>

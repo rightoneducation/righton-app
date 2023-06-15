@@ -1,18 +1,18 @@
-import { styled } from '@mui/material/styles';
-import { Grid } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import { Grid } from "@mui/material";
 
 /* lower-level container for background content in body. floats above body boxes
 (body stack container -> body box upper, body box lower, body content area) */
 export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
-  position: 'absolute',
-  top: '0',
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  maxWidth: '824px',
-  width: '100%',
-  height: '100%',
-  overflow: 'hidden',
+  position: "absolute",
+  top: "0",
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  maxWidth: "824px",
+  width: "100%",
+  height: "100%",
+  overflow: "hidden",
   zIndex: 2,
 });
 
@@ -20,7 +20,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
 export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled
 )(({ theme }) => ({
-  justifyContent: 'center',
+  justifyContent: "center",
   maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
@@ -30,7 +30,7 @@ export const BodyContentAreaSingleColumnStyled = styled(
 export const BodyContentAreaPhaseResultsStyled = styled(
   BodyContentAreaSingleColumnStyled
 )({
-  position: 'fixed',
+  position: "fixed",
 });
 
 // content area of body that floats above background layers above - Phase Results Page
@@ -41,20 +41,20 @@ interface BodyContentLeaderboardProps {
 export const BodyContentAreaLeaderboardStyled = styled(
   BodyContentAreaDoubleColumnStyled,
   {
-    shouldForwardProp: (prop) => prop !== 'isSmallDevice',
+    shouldForwardProp: (prop) => prop !== "isSmallDevice",
   }
 )<BodyContentLeaderboardProps>(({ isSmallDevice, theme }) => ({
-  position: 'absolute',
+  position: "absolute",
   top: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: isSmallDevice ? 'flex-start' : 'center',
-  maxWidth: '500px',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: isSmallDevice ? "flex-start" : "center",
+  maxWidth: "500px",
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
-  height: '546px',
-  overflow: 'hidden',
-  flexWrap: 'nowrap',
+  height: "546px",
+  overflow: "hidden",
+  flexWrap: "nowrap",
   margin: 0,
 }));
