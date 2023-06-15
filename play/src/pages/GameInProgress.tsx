@@ -110,17 +110,6 @@ export default function GameInProgress({
     return [introText, questionText];
   };
 
-  useEffect(() => {
-    // reset localstorage for timer to phase 1 time to prepare for phase 1
-    if (currentState === GameSessionState.PHASE_2_DISCUSS) {
-      localStorage.setItem('currentGameTimeStore', JSON.stringify(phaseOneTime));
-    }
-    // reset localstorage for timer to phase 2 time to prepare for phase 2
-    if (currentState === GameSessionState.PHASE_1_DISCUSS) {
-      localStorage.setItem('currentGameTimeStore', JSON.stringify(phaseTwoTime));
-    }
-  }, [currentState]);
-
   const questionText = divideQuestionString(currentQuestion?.text);
   const totalTime = currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ?
     phaseOneTime : phaseTwoTime;
@@ -167,9 +156,7 @@ export default function GameInProgress({
           currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
-          // if isRejoin is true, make localstorage instead of phaseOneTime and phaseTwoTime
           totalTime={totalTime}
-          // put check for refresh here
           currentTimer={hasRejoined ? currentTimer : totalTime}
           isPaused={false}
           isFinished={false}

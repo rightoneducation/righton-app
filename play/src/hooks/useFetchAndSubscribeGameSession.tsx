@@ -59,10 +59,6 @@ export default function useFetchAndSubscribeGameSession(
               // Update the gameSession object and trigger the callback
               if (!ignore) setHasRejoined(false);
               setGameSession((prevGame) => ({ ...prevGame, ...response }));
-              // Update local storage so that hasRejoined is false
-              // const localModel = fetchLocalData();
-              // const updatedModelForNextReload = { ...localModel, hasRejoined: hasRejoined };
-              // window.localStorage.setItem(StorageKey, JSON.stringify(updatedModelForNextReload));
             }
           );
           return () => {

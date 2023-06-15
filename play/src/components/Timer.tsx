@@ -88,13 +88,10 @@ export default function Timer({
       currentTimer: currentTimeInput
     };
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-    //console.log(currentTimeInput);
-    //console.log((rejoinGameObject).hasRejoined);
     return `${min}:${secStr}`;
   }
   const timerString = useMemo(() => getTimerString(currentTime), [currentTime]);
 
-  // console.log(rejoinGameObject)
   // useEffect to start off timer
   useEffect(() => {
     if (!isPaused && !isFinished)
