@@ -75,7 +75,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
       ) {
         return false;
       }
-      localStorage.setItem('currentGameTimeStore', JSON.stringify(gameSessionResponse.phaseOneTime));
+      // localStorage.setItem('currentGameTimeStore', JSON.stringify(gameSessionResponse.phaseOneTime));
       setGameSession(gameSessionResponse);
       setPregameState(PregameState.ENTER_NAME);
       return true;

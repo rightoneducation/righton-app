@@ -37,7 +37,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     localModel?.gameSessionId,
     apiClient,
     retry,
-    localModel2?.hasRejoined
+    localModel?.hasRejoined
   );
   console.log("------------------GAMEINPROGRESSSC CALLED------------------");
   console.log("localModel?.hasRejoined: " + localModel?.hasRejoined);
