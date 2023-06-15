@@ -8,6 +8,7 @@ import {
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import GameInProgress from './GameInProgress';
 import MockGameSession from '../mock/MockGameSession.json';
@@ -16,6 +17,13 @@ import Theme from '../lib/Theme';
 export default {
   title: 'Design System/4_Pages/GameInProgress',
   component: GameInProgress,
+  decorators: [
+    (Story) => (
+      <MemoryRouter initialEntries={['/']}>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 } as ComponentMeta<typeof GameInProgress>;
 
 const Template: ComponentStory<typeof GameInProgress> =

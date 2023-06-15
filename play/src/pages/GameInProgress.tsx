@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
+  ApiClient,
   GameSessionState,
   ITeam,
   ITeamAnswer,
@@ -20,11 +21,14 @@ import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import { checkForSubmittedAnswerOnRejoin, fetchLocalData } from '../lib/HelperFunctions';
-import { StorageKey } from '../lib/PlayModels';
+import ErrorModal from '../components/ErrorModal';
+import { ErrorType } from '../lib/PlayModels';
 
 interface GameInProgressProps {
+  apiClient: ApiClient;
   teams?: ITeam[];
   currentState: GameSessionState;
+  teamMemberId: string;
   teamAvatar: number;
   phaseOneTime: number;
   phaseTwoTime: number;
@@ -38,18 +42,15 @@ interface GameInProgressProps {
     isCorrectAnswer: boolean;
     reason: string;
   }[];
-  addTeamAnswerToTeamMember: (
-    question: IQuestion,
-    answerText: string,
-    currentState: GameSessionState
-  ) => void;
   hasRejoined: boolean;
   currentTimer: number;
 }
 
 export default function GameInProgress({
+  apiClient,
   teams,
   currentState,
+  teamMemberId,
   teamAvatar,
   questions,
   phaseOneTime,
@@ -58,11 +59,11 @@ export default function GameInProgress({
   teamId,
   score,
   answerChoices,
-  addTeamAnswerToTeamMember,
   hasRejoined,
   currentTimer
 }: GameInProgressProps) {
   const theme = useTheme();
+  const [isError, setIsError] = useState(false);
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -136,10 +137,26 @@ export default function GameInProgress({
     setTimerIsPaused(true);
   };
 
-  const handleSubmitAnswer = (answerText: string) => {
-    addTeamAnswerToTeamMember(currentQuestion, answerText, currentState);
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+  const handleSubmitAnswer = async (answerText: string) => {
+    try {
+      await apiClient.addTeamAnswer(
+        teamMemberId,
+        currentQuestion.id,
+        answerText,
+        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      );
+      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+    }
+    catch {
+      setIsError(true);
+    }
   };
+
+  const handleRetry = () => {
+    setIsError(false);
+    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
+  }
 
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
@@ -151,6 +168,12 @@ export default function GameInProgress({
       alignItems="center"
       justifyContent="space-between"
     >
+      <ErrorModal
+        isModalOpen={isError}
+        errorType={ErrorType.ANSWER}
+        errorText=''
+        handleRetry={handleRetry}
+      />
       <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}

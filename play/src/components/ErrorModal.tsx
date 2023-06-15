@@ -6,17 +6,19 @@ import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
-import { StorageKey } from '../lib/PlayModels';
+import { StorageKey, ErrorType } from '../lib/PlayModels';
 
 interface ErrorModalProps {
   isModalOpen: boolean;
-  errorText: string;
-  retry: number;
-  handleRetry: (errorText: string) => void;
+  errorType: ErrorType;
+  errorText?: string;
+  retry?: number;
+  handleRetry: () => void;
 }
 
 export default function ErrorModal({
   isModalOpen,
+  errorType,
   errorText,
   retry,
   handleRetry,
@@ -25,6 +27,34 @@ export default function ErrorModal({
   const isExtraSmallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const upperTextMap = {
+    [ErrorType.CONNECT]: t('error.connect.title1'),
+    [ErrorType.ANSWER]: t('error.game.answer'),
+    [ErrorType.SCORE]: t('error.game.score'),
+  };
+
+  const lowerText = [
+    <Typography
+      variant="h4"
+      sx={{ textAlign: 'center', fontStyle: 'italic' }}
+    >
+      {errorText}
+    </Typography>
+  ];
+  const lowerButton = [
+    <IntroButtonStyled
+      onClick={() => {
+        window.localStorage.removeItem(StorageKey);
+        navigate('/');
+      }}
+      style={{
+        boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
+      }}
+    >
+      {t('error.connect.button2')}
+    </IntroButtonStyled>
+  ];
 
   return (
     <Modal
@@ -37,7 +67,7 @@ export default function ErrorModal({
             ? `calc(100% - (2 * ${theme.sizing.extraLargePadding}px))`
             : `calc(${theme.breakpoints.values.xs}px - (2 * ${theme.sizing.extraLargePadding}px))`,
           minWidth: '200px',
-          minHeight: '200px',
+          minHeight: '100px',
           inset: 'auto',
           margin: '20px',
           borderRadius: '24px',
@@ -61,41 +91,32 @@ export default function ErrorModal({
       shouldCloseOnOverlayClick={false}
       appElement={document.getElementById('root') || undefined}
     >
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{paddingBottom: `${theme.sizing.mediumPadding}px`}}>
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
-          {t('error.connecting.title1')}
+          {upperTextMap[errorType]} 
         </Typography>
-        <Typography
-          variant="h4"
-          sx={{ textAlign: 'center', fontStyle: 'italic' }}
-        >
-          {errorText}
-        </Typography>
+        { errorType === ErrorType.CONNECT && 
+          lowerText
+        }
       </Stack>
       <Stack spacing={2} style={{ alignItems: 'center' }}>
         <IntroButtonStyled
           onClick={() => {
-            handleRetry(errorText);
+            handleRetry();
           }}
           style={{
             background: `${theme.palette.primary.highlightGradient}`,
             boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
           }}
         >
-          {t('error.connecting.button1')}
-          {retry > 0 ? ` (${retry})` : null}
+        { errorType === ErrorType.CONNECT ?
+          `${t('error.connect.button1')} ${(retry && retry > 0) ? `(${retry})` : ''}` 
+          : t('error.connect.button1')
+        }
         </IntroButtonStyled>
-        <IntroButtonStyled
-          onClick={() => {
-            window.localStorage.removeItem(StorageKey);
-            navigate('/');
-          }}
-          style={{
-            boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
-          }}
-        >
-          {t('error.connecting.button2')}
-        </IntroButtonStyled>
+        { errorType === ErrorType.CONNECT && 
+          lowerButton
+        }
       </Stack>
     </Modal>
   );

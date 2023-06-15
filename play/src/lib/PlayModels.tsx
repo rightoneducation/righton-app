@@ -94,6 +94,19 @@ export enum TimerMode {
 }
 
 /**
+ * Enum that holds the various states for errors thrown to the ErrorModal.tsx component
+ * @enum ErrorType
+ * @param {string} CONNECT - error connecting to game session
+ * @param {string} ANSWER - error submitting answer
+ * @param {string} SCORE - error submitting score
+ */
+export enum ErrorType {
+  CONNECT,
+  ANSWER,
+  SCORE
+}
+
+/**
  * Type interface that holds required info to join a 'basic' game and add team to game sesssion object at start of game
  * @param {string} gameSessionId - id of game session
  * @param {string} firstName - first name of player

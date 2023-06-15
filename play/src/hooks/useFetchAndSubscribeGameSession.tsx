@@ -37,14 +37,14 @@ export default function useFetchAndSubscribeGameSession(
     }
     // if gamesessionId is null, set error and prevent api calls
     if (isNullOrUndefined(gameSessionId)) {
-      setError(`${t('error.connecting.gamesessionerror')}`);
+      setError(`${t('error.connect.gamesessionerror')}`);
       setIsLoading(false);
     } else {
       apiClient
         .getGameSession(gameSessionId)
         .then((fetchedGame) => {
           if (!fetchedGame || !fetchedGame.id) {
-            setError(`${t('error.connecting.gamesessionerror')}`);
+            setError(`${t('error.connect.gamesessionerror')}`);
             return null;
           }
           if (!ignore) setGameSession(fetchedGame);
@@ -53,7 +53,7 @@ export default function useFetchAndSubscribeGameSession(
             fetchedGame.id,
             (response) => {
               if (!response) {
-                setError(`${t('error.connecting.subscriptionerror')}`);
+                setError(`${t('error.connect.subscriptionerror')}`);
                 return;
               }
               // Update the gameSession object and trigger the callback
@@ -69,7 +69,7 @@ export default function useFetchAndSubscribeGameSession(
         .catch((e) => {
           setIsLoading(false);
           if (e instanceof Error) setError(e.message);
-          else setError(`${t('error.connecting.gamesessionerror')}`);
+          else setError(`${t('error.connect.gamesessionerror')}`);
         });
     }
   }, [gameSessionId, apiClient, t, retry, hasRejoined]);
