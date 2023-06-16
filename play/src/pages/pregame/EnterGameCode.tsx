@@ -66,6 +66,7 @@ export default function EnterGameCode({
           </Typography>
           <InputTextFieldStyled
             fullWidth
+            data-testid="gameCode-inputtextfield"
             variant="filled"
             autoComplete="off"
             placeholder={InputPlaceholder.GAME_CODE}
