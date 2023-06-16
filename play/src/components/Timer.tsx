@@ -50,7 +50,6 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
   const isPausedRef = useRef<boolean>(isPaused);
-  const timeProgress = currentTime / totalTime * 100;
 
   // retreive local storage data so that timer has correct value on rejoin
   const rejoinGameObject = fetchLocalData();

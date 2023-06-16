@@ -5,8 +5,6 @@ import {
   ApiClient,
   IGameSession,
 } from '@righton/networking';
-import { StorageKey } from '../lib/PlayModels';
-import { fetchLocalData } from '../lib/HelperFunctions';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:

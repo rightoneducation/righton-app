@@ -15,7 +15,6 @@ import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
 import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
-import { PhaseOne } from '../pages/PhaseResults.stories';
 
 interface PregameFinished {
   apiClient: ApiClient;

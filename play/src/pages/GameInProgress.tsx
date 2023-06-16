@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -20,7 +20,7 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import { checkForSubmittedAnswerOnRejoin, fetchLocalData } from '../lib/HelperFunctions';
+import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType } from '../lib/PlayModels';
 
@@ -75,7 +75,6 @@ export default function GameInProgress({
       currentQuestion.id
     );
   }
-  const rejoinGameObject = fetchLocalData();
 
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string

@@ -26,7 +26,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
   const localModel = useLoaderData() as LocalModel;
-  const currentTimer = localModel.currentTimer;
+  const { currentTimer } = localModel;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
