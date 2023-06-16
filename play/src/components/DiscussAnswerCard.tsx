@@ -42,7 +42,7 @@ export default function DiscussAnswerCard({
         {correctCard && currentState === GameSessionState.PHASE_1_DISCUSS && (
           <Box sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}>
             <Typography
-              variant="subtitle1" 
+              variant="subtitle1"
               sx={{ paddingBottom: `${theme.sizing.extraSmallPadding}px` }}
             >
               {resultText}

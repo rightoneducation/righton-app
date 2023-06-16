@@ -114,15 +114,15 @@ export default function AnswerSelector({
         {answerText}
       </Typography>
       {!isSubmitted ?
-          selectorImage
+        selectorImage
         :
-        (answerStatus !== AnswerState.DEFAULT && 
+        (answerStatus !== AnswerState.DEFAULT &&
           selectorImage
         )
       }
     </>
   );
-  
+
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (

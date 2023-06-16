@@ -111,8 +111,8 @@ export default function ResultSelector({
             sx={{
               paddingRight:
                 answerStatus === AnswerState.CORRECT ||
-                answerStatus === AnswerState.PREVIOUS ||
-                answerStatus === AnswerState.SELECTED
+                  answerStatus === AnswerState.PREVIOUS ||
+                  answerStatus === AnswerState.SELECTED
                   ? `${theme.sizing.extraSmallPadding}px`
                   : `${theme.sizing.mediumPadding}px`,
             }}

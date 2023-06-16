@@ -27,8 +27,8 @@ interface DiscussAnswerProps {
   questionText: string[];
   questionUrl: string;
   answerChoices:
-    | { text: string; isCorrectAnswer: boolean; reason: string }[]
-    | undefined;
+  | { text: string; isCorrectAnswer: boolean; reason: string }[]
+  | undefined;
   instructions: string[];
   currentState: GameSessionState;
   currentTeam: ITeam;

@@ -67,7 +67,7 @@ export default function Congrats({
     <BackgroundContainerStyled>
       <StackContainer spacing={3}>
         <Box style={{ zIndex: 1 }}>
-          <Typography variant="h1" sx={{ 
+          <Typography variant="h1" sx={{
             textAlign: 'center',
             paddingTop: `${theme.sizing.largePadding}px`,
           }}>

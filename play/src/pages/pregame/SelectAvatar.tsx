@@ -22,7 +22,7 @@ const GridContainer = styled('div')(({ theme }) => ({
   // using CSS Grid here because mui Grid responsiveness produces changes in spacing when crossing breakpoints
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
-  gridGap: `${theme.sizing. extraSmallPadding}px`,
+  gridGap: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 const AvatarIconContainer = styled(Box)({
@@ -76,7 +76,7 @@ const BottomContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: isSmallDevice ? `${theme.sizing.extraExtraLargePadding}px`: `${theme.sizing.largePadding}px`,
+  paddingBottom: isSmallDevice ? `${theme.sizing.extraExtraLargePadding}px` : `${theme.sizing.largePadding}px`,
   gap: 12,
 }));
 
