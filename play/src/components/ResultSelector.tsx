@@ -1,24 +1,24 @@
-import React, { MouseEventHandler } from "react";
-import { Container, Typography, Box, Tooltip } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
-import { GameSessionState } from "@righton/networking";
-import CorrectStars from "../img/CorrectStars.svg";
-import CorrectStars_Mirrored from "../img/CorrectStars_Mirrored.svg";
-import SelectedAnswer from "../img/SelectedAnswer.svg";
-import PlayerCorrectImage from "../img/PlayerCorrectImage.svg";
-import CorrectAnswerImage from "../img/correctAnswerImage.svg";
-import { AnswerState } from "../lib/PlayModels";
+import React, { MouseEventHandler } from 'react';
+import { Container, Typography, Box, Tooltip } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { GameSessionState } from '@righton/networking';
+import CorrectStars from '../img/CorrectStars.svg';
+import CorrectStars_Mirrored from '../img/CorrectStars_Mirrored.svg';
+import SelectedAnswer from '../img/SelectedAnswer.svg';
+import PlayerCorrectImage from '../img/PlayerCorrectImage.svg';
+import CorrectAnswerImage from '../img/correctAnswerImage.svg';
+import { AnswerState } from '../lib/PlayModels';
 
 const ResultSelectorDefault = styled(Container)(({ theme }) => ({
-  width: "100%",
-  minHeight: "42px",
-  borderRadius: "22px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  textTransform: "none",
+  width: '100%',
+  minHeight: '42px',
+  borderRadius: '22px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  textTransform: 'none',
   backgroundColor: theme.palette.primary.lightGrey,
-  maxWidth: "100%", // overwrite MUI default maxWidth
+  maxWidth: '100%', // overwrite MUI default maxWidth
   paddingLeft: `${theme.sizing.smallPadding}px`, // overwrite MUI default padding
   paddingRight: `${theme.sizing.smallPadding}px`,
 }));
@@ -27,10 +27,10 @@ const ResultSelectorCorrect = styled(ResultSelectorDefault)(({ theme }) => ({
   backgroundColor: theme.palette.primary.correctColor,
 }));
 
-const CorrectStarsStyled = styled("img")({
-  position: "absolute",
-  width: "16px",
-  height: "16px",
+const CorrectStarsStyled = styled('img')({
+  position: 'absolute',
+  width: '16px',
+  height: '16px',
 });
 
 interface ResultSelectorProps {
@@ -49,14 +49,14 @@ export default function ResultSelector({
   currentState,
 }: ResultSelectorProps) {
   const theme = useTheme();
-  const letterCode = "A".charCodeAt(0) + index;
+  const letterCode = 'A'.charCodeAt(0) + index;
 
   const imageMap = {
-    [AnswerState.DEFAULT]: "",
+    [AnswerState.DEFAULT]: '',
     [AnswerState.CORRECT]: CorrectAnswerImage,
     [AnswerState.PLAYER_SELECTED_CORRECT]: PlayerCorrectImage,
     [AnswerState.SELECTED]: SelectedAnswer,
-    [AnswerState.PREVIOUS]: "",
+    [AnswerState.PREVIOUS]: '',
   };
 
   // disables context menu when longclicking on image
@@ -68,12 +68,12 @@ export default function ResultSelector({
     <img
       src={imageMap[answerStatus]}
       style={{
-        position: "relative",
+        position: 'relative',
         width: `${theme.sizing.smallPadding}px`,
         height: `${theme.sizing.smallPadding}px`,
-        paddingTop: "2px",
+        paddingTop: '2px',
         // disable touch callout when longclicking on image
-        WebkitTouchCallout: "none",
+        WebkitTouchCallout: 'none',
       }}
       alt="SelectedAnswerImage"
       // disable context menu when longclicking on image
@@ -83,12 +83,12 @@ export default function ResultSelector({
 
   const resultContents = (
     <>
-      <Box style={{ display: "flex", alignItems: "center" }}>
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
         <Typography
           variant="h5"
           sx={{
-            paddingLeft: "1px",
-            paddingTop: "2px",
+            paddingLeft: '1px',
+            paddingTop: '2px',
             opacity: 0.5,
           }}
         >
@@ -104,15 +104,15 @@ export default function ResultSelector({
           {answerText}
         </Typography>
       </Box>
-      <Box style={{ display: "flex", alignItems: "center" }}>
+      <Box style={{ display: 'flex', alignItems: 'center' }}>
         {currentState === GameSessionState.PHASE_2_RESULTS && ( // if in phase 2, display percentage text
           <Typography
             variant="body2"
             sx={{
               paddingRight:
                 answerStatus === AnswerState.CORRECT ||
-                answerStatus === AnswerState.PREVIOUS ||
-                answerStatus === AnswerState.SELECTED
+                  answerStatus === AnswerState.PREVIOUS ||
+                  answerStatus === AnswerState.SELECTED
                   ? `${theme.sizing.extraSmallPadding}px`
                   : `${theme.sizing.mediumPadding}px`,
             }}
@@ -142,14 +142,14 @@ export default function ResultSelector({
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: '100%' }}>
           <ResultSelectorCorrect>{resultContents}</ResultSelectorCorrect>
         </Box>
       );
     case AnswerState.PLAYER_SELECTED_CORRECT:
       return (
-        <Box sx={{ width: "100%" }}>
-          <Box sx={{ position: "relative", height: 0, width: "100%" }}>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ position: 'relative', height: 0, width: '100%' }}>
             <CorrectStarsStyled
               src={CorrectStars}
               alt="Stars icon that denotes player is correct"

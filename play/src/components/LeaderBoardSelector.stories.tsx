@@ -1,11 +1,11 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { ThemeProvider } from "@mui/material/styles";
-import LeaderboardSelector from "./LeaderboardSelector";
-import Theme from "../lib/Theme";
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
+import LeaderboardSelector from './LeaderboardSelector';
+import Theme from '../lib/Theme';
 
 export default {
-  title: "Design System/2_Molecules/LeaderboardSelector",
+  title: 'Design System/2_Molecules/LeaderboardSelector',
   component: LeaderboardSelector,
 } as ComponentMeta<typeof LeaderboardSelector>;
 
@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof LeaderboardSelector> =
 
 export const Default = Template.bind({});
 Default.args = {
-  teamName: "Andrew Wyeth",
+  teamName: 'Andrew Wyeth',
   teamAvatar: 0,
   teamScore: 120,
 };

@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import { Typography, Box } from "@mui/material";
-import { isNullOrUndefined } from "@righton/networking";
+import React, { useEffect } from 'react';
+import { styled } from '@mui/material/styles';
+import { Typography, Box } from '@mui/material';
+import { isNullOrUndefined } from '@righton/networking';
 
-const ScorePill = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+const ScorePill = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   width: `58px`,
-  height: "22px",
-  borderRadius: "23px",
+  height: '22px',
+  borderRadius: '23px',
   background: `${theme.palette.primary.highlightGradient}`,
   zIndex: 1,
 }));
@@ -19,23 +19,23 @@ const NewPointsPill = styled(ScorePill)(({ theme }) => ({
   zIndex: 2,
 }));
 
-const NewPointsAnimation = styled("div")({
+const NewPointsAnimation = styled('div')({
   animation: `newScoreUp 1000ms cubic-bezier(0.4, 0, 0.2, 1)`,
   opacity: 0,
-  position: "absolute",
+  position: 'absolute',
   zIndex: 2,
-  "@keyframes newScoreUp": {
-    "0%": {
+  '@keyframes newScoreUp': {
+    '0%': {
       opacity: 0,
-      transform: "translateY(-110%)",
+      transform: 'translateY(-110%)',
     },
-    "50%": {
+    '50%': {
       opacity: 1,
-      transform: "translateY(-110%)",
+      transform: 'translateY(-110%)',
     },
-    "100%": {
+    '100%': {
       opacity: 1,
-      transform: "translateY(0)",
+      transform: 'translateY(0)',
     },
   },
 });
@@ -53,15 +53,15 @@ export default function ScoreIndicator({
 }: ScoreIndicatorProps) {
   // adds an eventLister to add the new points to the existing score when the animation completes
   useEffect(() => {
-    const element = document.getElementById("newPointsAnimation");
+    const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
       if (newPoints && newPoints > 0 && handleUpdateScore) {
         handleUpdateScore(score + newPoints);
       }
     };
-    element?.addEventListener("animationend", handleAnimationEnd);
+    element?.addEventListener('animationend', handleAnimationEnd);
     return () => {
-      element?.removeEventListener("animationend", handleAnimationEnd);
+      element?.removeEventListener('animationend', handleAnimationEnd);
     };
   }, [newPoints]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -1,16 +1,16 @@
-import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import { Stack } from "@mui/material";
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Stack } from '@mui/material';
 import {
   GameSessionState,
   IGameSession,
   ITeamAnswer,
   ModelHelper,
-} from "@righton/networking";
-import ResultSelector from "./ResultSelector";
-import { AnswerState } from "../lib/PlayModels";
-import BodyCardStyled from "../lib/styledcomponents/BodyCardStyled";
-import BodyCardContainerStyled from "../lib/styledcomponents/BodyCardContainerStyled";
+} from '@righton/networking';
+import ResultSelector from './ResultSelector';
+import { AnswerState } from '../lib/PlayModels';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface CardResultsProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
@@ -39,10 +39,10 @@ export default function CardResults({
   return (
     <BodyCardStyled
       elevation={10}
-      sx={{ boxSizing: "border-box", width: "100%" }}
+      sx={{ boxSizing: 'border-box', width: '100%' }}
     >
       <BodyCardContainerStyled spacing={2}>
-        <Stack spacing={2} sx={{ width: "100%" }}>
+        <Stack spacing={2} sx={{ width: '100%' }}>
           {answers?.map((answer, index) => (
             <ResultSelector
               answerStatus={answerType(answer)}
@@ -50,12 +50,12 @@ export default function CardResults({
               answerText={answer.text}
               percentageText={
                 currentState === GameSessionState.PHASE_1_RESULTS
-                  ? ""
+                  ? ''
                   : `${ModelHelper.calculateBasicModeWrongAnswerScore(
-                      gameSession,
-                      answer.text,
-                      currentQuestionId
-                    )}%`
+                    gameSession,
+                    answer.text,
+                    currentQuestionId
+                  )}%`
               }
               currentState={currentState}
               key={uuidv4()}

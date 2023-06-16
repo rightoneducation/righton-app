@@ -1,17 +1,17 @@
-import React from "react";
-import { styled, useTheme } from "@mui/material/styles";
-import { Stack, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import BackgroundContainerStyled from "../lib/styledcomponents/layout/BackgroundContainerStyled";
-import RadialTimer from "../components/RadialTimer";
-import { TimerMode } from "../lib/PlayModels";
+import React from 'react';
+import { styled, useTheme } from '@mui/material/styles';
+import { Stack, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import BackgroundContainerStyled from '../lib/styledcomponents/layout/BackgroundContainerStyled';
+import RadialTimer from '../components/RadialTimer';
+import { TimerMode } from '../lib/PlayModels';
 
 const StackContainer = styled(Stack)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100%',
   maxWidth: theme.breakpoints.values.xs,
 }));
 
@@ -19,7 +19,7 @@ const TypographyStyled = styled(Typography)(({ theme }) => ({
   textAlign: `center`,
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
-  whiteSpace: "pre-wrap",
+  whiteSpace: 'pre-wrap',
 }));
 
 interface StartPhase2Props {
@@ -43,10 +43,10 @@ export default function StartPhase2({
           setIsPregameCountdown={setIsPregameCountdown}
         />
         <TypographyStyled variant="h2">
-          {t("pregamecountdown.subtitle1")}
+          {t('pregamecountdown.subtitle1')}
         </TypographyStyled>
         <TypographyStyled variant="h2">
-          {t("pregamecountdown.subtitle2")}
+          {t('pregamecountdown.subtitle2')}
         </TypographyStyled>
       </StackContainer>
     </BackgroundContainerStyled>

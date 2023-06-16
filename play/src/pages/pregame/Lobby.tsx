@@ -1,11 +1,11 @@
-import React from "react";
-import { useTheme } from "@mui/material/styles";
-import { Box, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import BackgroundContainerStyled from "../../lib/styledcomponents/layout/BackgroundContainerStyled";
-import { LobbyMode, TimerMode } from "../../lib/PlayModels";
-import RadialTimer from "../../components/RadialTimer";
-import HowToPlay from "./HowToPlay";
+import React from 'react';
+import { useTheme } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
+import { LobbyMode, TimerMode } from '../../lib/PlayModels';
+import RadialTimer from '../../components/RadialTimer';
+import HowToPlay from './HowToPlay';
 
 interface LobbyProps {
   mode: LobbyMode;
@@ -17,25 +17,12 @@ export default function Lobby({ mode }: LobbyProps) {
   return (
     <BackgroundContainerStyled>
       {mode === LobbyMode.REJOIN ? (
-        <Box
-          sx={{
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Typography
             variant="h1"
-            sx={{
-              position: "absolute",
-              alignItems: "center",
-              fontSize: "54px",
-              textAlign: "center",
-              lineHeight: `${theme.sizing.extraLargePadding}px`,
-            }}
+            sx={{ position: 'absolute', alignItems: 'center', fontSize: '54px', textAlign: 'center', lineHeight: `${theme.sizing.extraLargePadding}px` }}
           >
-            {t("lobby.title")}
+            {t('lobby.title')}
           </Typography>
           <RadialTimer
             mode={TimerMode.JOIN}

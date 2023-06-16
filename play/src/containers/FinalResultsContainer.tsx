@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { ITeam, GameSessionState } from "@righton/networking";
-import Leaderboard from "../pages/finalresults/Leaderboard";
-import Congrats from "../pages/finalresults/Congrats";
-import { FinalResultsState } from "../lib/PlayModels";
+import React, { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { ITeam, GameSessionState } from '@righton/networking';
+import Leaderboard from '../pages/finalresults/Leaderboard';
+import Congrats from '../pages/finalresults/Congrats';
+import { FinalResultsState } from '../lib/PlayModels';
 
 interface FinalResultsContainerProps {
   teams?: ITeam[];
@@ -24,7 +24,7 @@ export default function FinalResultsContainer({
   leader,
 }: FinalResultsContainerProps) {
   const theme = useTheme();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [finalResultsState, setFinalResultsState] = useState(
     FinalResultsState.CONGRATS
   );
