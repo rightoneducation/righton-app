@@ -60,7 +60,7 @@ export default function GameInProgress({
   score,
   answerChoices,
   hasRejoined,
-  currentTimer
+  currentTimer,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isError, setIsError] = useState(false);
@@ -111,8 +111,10 @@ export default function GameInProgress({
   };
 
   const questionText = divideQuestionString(currentQuestion?.text);
-  const totalTime = currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ?
-    phaseOneTime : phaseTwoTime;
+  const totalTime =
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+      ? phaseOneTime
+      : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -146,8 +148,7 @@ export default function GameInProgress({
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
-    }
-    catch {
+    } catch {
       setIsError(true);
     }
   };
@@ -155,7 +156,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     setIsError(false);
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
-  }
+  };
 
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
@@ -170,7 +171,7 @@ export default function GameInProgress({
       <ErrorModal
         isModalOpen={isError}
         errorType={ErrorType.ANSWER}
-        errorText=''
+        errorText=""
         handleRetry={handleRetry}
       />
       <HeaderStackContainerStyled>
@@ -189,7 +190,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}

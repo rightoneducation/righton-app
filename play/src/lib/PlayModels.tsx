@@ -103,7 +103,7 @@ export enum TimerMode {
 export enum ErrorType {
   CONNECT,
   ANSWER,
-  SCORE
+  SCORE,
 }
 
 /**

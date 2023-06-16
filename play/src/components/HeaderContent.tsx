@@ -75,7 +75,7 @@ export default function HeaderContent({
         {stateCheck(currentState, isCorrect, isIncorrect)}
       </Typography>
       {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
         <Timer
           totalTime={totalTime}
           currentTimer={currentTimer}

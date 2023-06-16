@@ -10,7 +10,12 @@ import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSe
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import Lobby from '../pages/pregame/Lobby';
 import ErrorModal from '../components/ErrorModal';
-import { LobbyMode, LocalModel, StorageKey, ErrorType } from '../lib/PlayModels';
+import {
+  LobbyMode,
+  LocalModel,
+  StorageKey,
+  ErrorType,
+} from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;

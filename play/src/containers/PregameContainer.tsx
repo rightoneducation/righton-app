@@ -7,7 +7,7 @@ import {
   ApiClient,
   isNullOrUndefined,
   IGameSession,
-  GameSessionState
+  GameSessionState,
 } from '@righton/networking';
 import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';

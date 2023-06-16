@@ -40,7 +40,7 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
-  handleTimerIsFinished
+  handleTimerIsFinished,
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
@@ -69,7 +69,7 @@ export default function Timer({
     }
   }
 
-  const timerString = useMemo(() => {  
+  const timerString = useMemo(() => {
     const getTimerString = (currentTimeInput: number) => {
       let sec = 0;
       let secStr = '00';
@@ -82,13 +82,13 @@ export default function Timer({
       }
       const storageObject: LocalModel = {
         ...rejoinGameObject,
-        currentTimer: currentTimeInput
+        currentTimer: currentTimeInput,
       };
       window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
-    }
+    };
     return getTimerString(currentTime);
-}, [currentTime, rejoinGameObject]);
+  }, [currentTime, rejoinGameObject]);
 
   // useEffect to start off timer
   useEffect(() => {
