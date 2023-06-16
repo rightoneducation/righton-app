@@ -112,9 +112,13 @@ export default function AnswerSelector({
       >
         {answerText}
       </Typography>
-      {!isSubmitted
-        ? selectorImage
-        : answerStatus !== AnswerState.DEFAULT && selectorImage}
+      {!isSubmitted ?
+        selectorImage
+        :
+        (answerStatus !== AnswerState.DEFAULT &&
+          selectorImage
+        )
+      }
     </>
   );
 
