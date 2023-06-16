@@ -1,11 +1,11 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { ThemeProvider, useTheme } from "@mui/material/styles";
-import AvatarIconStyled from "./AvatarIconStyled";
-import MonsterIcon from "../../img/MonsterIcon0.svg";
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
+import AvatarIconStyled from './AvatarIconStyled';
+import MonsterIcon from '../../img/MonsterIcon0.svg';
 
 export default {
-  title: "Design System/1_Atoms/AvatarIconStyled",
+  title: 'Design System/1_Atoms/AvatarIconStyled',
   component: AvatarIconStyled,
 } as ComponentMeta<typeof AvatarIconStyled>;
 
