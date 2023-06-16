@@ -6,9 +6,9 @@ import { LocalModel, StorageKey } from '../lib/PlayModels';
 import { fetchLocalData } from '../lib/HelperFunctions';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
   marginLeft: `${theme.sizing.mediumPadding}px`,
   marginRight: `${theme.sizing.mediumPadding}px`,
   marginTop: `${theme.sizing.extraSmallPadding}px`,
@@ -16,13 +16,13 @@ const TimerContainer = styled(Container)(({ theme }) => ({
 }));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
-  borderRadius: "40px",
-  display: "inline-block",
+  borderRadius: '40px',
+  display: 'inline-block',
   marginRight: `${theme.sizing.extraSmallPadding}px`,
   height: `${theme.sizing.extraSmallPadding}px`,
   width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
   backgroundColor: theme.palette.primary.main,
-  "& .MuiLinearProgress-bar": {
+  '& .MuiLinearProgress-bar': {
     background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
   },
 }));
@@ -40,7 +40,7 @@ export default function Timer({
   currentTimer,
   isPaused,
   isFinished,
-  handleTimerIsFinished,
+  handleTimerIsFinished
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
@@ -50,6 +50,7 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
   const isPausedRef = useRef<boolean>(isPaused);
+  const timeProgress = currentTime / totalTime * 100;
 
   // retreive local storage data so that timer has correct value on rejoin
   const rejoinGameObject = fetchLocalData();
@@ -69,10 +70,10 @@ export default function Timer({
     }
   }
 
-  const timerString = useMemo(() => {
+  const timerString = useMemo(() => {  
     const getTimerString = (currentTimeInput: number) => {
       let sec = 0;
-      let secStr = "00";
+      let secStr = '00';
       let min = 0;
       if (currentTimeInput >= 0) {
         min = Math.floor(currentTimeInput / 60);
@@ -82,13 +83,13 @@ export default function Timer({
       }
       const storageObject: LocalModel = {
         ...rejoinGameObject,
-        currentTimer: currentTimeInput,
+        currentTimer: currentTimeInput
       };
       window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
-    };
+    }
     return getTimerString(currentTime);
-  }, [currentTime, rejoinGameObject]);
+}, [currentTime, rejoinGameObject]);
 
   // useEffect to start off timer
   useEffect(() => {

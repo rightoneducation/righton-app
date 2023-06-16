@@ -1,12 +1,12 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { ThemeProvider } from "@mui/material/styles";
-import { GameSessionState } from "@righton/networking";
-import HeaderContent from "./HeaderContent";
-import Theme from "../lib/Theme";
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
+import { GameSessionState } from '@righton/networking';
+import HeaderContent from './HeaderContent';
+import Theme from '../lib/Theme';
 
 export default {
-  title: "Design System/3_Organisms/HeaderContent",
+  title: 'Design System/3_Organisms/HeaderContent',
   component: HeaderContent,
 } as ComponentMeta<typeof HeaderContent>;
 
@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof HeaderContent> =
   };
 
 const handleTimerIsFinished = () => {
-  console.debug("finished");
+  console.debug('finished');
 };
 
 export const ChooseCorrectAnswer = Template.bind({});

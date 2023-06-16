@@ -1,25 +1,25 @@
-import React from "react";
+import React from 'react';
 import {
   IGameSession,
   IAWSGameSession,
   GameSessionState,
   GameSessionParser,
   IChoice,
-} from "@righton/networking";
-import { v4 as uuidv4 } from "uuid";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { MemoryRouter } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import GameInProgress from "./GameInProgress";
-import MockGameSession from "../mock/MockGameSession.json";
-import Theme from "../lib/Theme";
+} from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import GameInProgress from './GameInProgress';
+import MockGameSession from '../mock/MockGameSession.json';
+import Theme from '../lib/Theme';
 
 export default {
-  title: "Design System/4_Pages/GameInProgress",
+  title: 'Design System/4_Pages/GameInProgress',
   component: GameInProgress,
   decorators: [
     (Story) => (
-      <MemoryRouter initialEntries={["/"]}>
+      <MemoryRouter initialEntries={['/']}>
         <Story />
       </MemoryRouter>
     ),
@@ -39,13 +39,12 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map(
-  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
   (choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,
     isCorrectAnswer: choice.isAnswer,
-    reason: choice.reason ?? "",
+    reason: choice.reason ?? '',
   })
 );
 
@@ -56,7 +55,7 @@ ChooseCorrectAnswer.args = {
   currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: "2d609343-de50-4830-b65e-71eb72bb9bef",
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   answerChoices,
 };
 
@@ -67,7 +66,7 @@ ChooseTrickiestAnswer.args = {
   currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: "2d609343-de50-4830-b65e-71eb72bb9bef",
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   answerChoices,
 };
 
@@ -78,7 +77,7 @@ DiscussPhase1.args = {
   currentState: GameSessionState.PHASE_1_DISCUSS,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: "2d609343-de50-4830-b65e-71eb72bb9bef",
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   answerChoices,
 };
 
@@ -89,6 +88,6 @@ DiscussPhase2.args = {
   currentState: GameSessionState.PHASE_2_DISCUSS,
   questions: gameSession.questions,
   currentQuestionIndex: gameSession.currentQuestionIndex,
-  teamId: "2d609343-de50-4830-b65e-71eb72bb9bef",
+  teamId: '2d609343-de50-4830-b65e-71eb72bb9bef',
   answerChoices,
 };

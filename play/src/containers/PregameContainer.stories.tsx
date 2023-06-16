@@ -1,16 +1,16 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { ThemeProvider } from "@mui/material/styles";
-import { MemoryRouter } from "react-router-dom";
-import PregameContainer from "./PregameContainer";
-import Theme from "../lib/Theme";
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ThemeProvider } from '@mui/material/styles';
+import { MemoryRouter } from 'react-router-dom';
+import PregameContainer from './PregameContainer';
+import Theme from '../lib/Theme';
 
 export default {
-  title: "Design System/4_Pages/PregameContainer",
+  title: 'Design System/4_Pages/PregameContainer',
   component: PregameContainer,
   decorators: [
     (Story) => (
-      <MemoryRouter initialEntries={["/"]}>
+      <MemoryRouter initialEntries={['/']}>
         <Story />
       </MemoryRouter>
     ),

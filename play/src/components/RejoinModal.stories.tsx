@@ -30,3 +30,4 @@ export const Default = Template.bind({});
 Default.args = {
   isModalVisible: true,
 };
+

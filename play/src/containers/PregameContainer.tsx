@@ -1,20 +1,21 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { v4 as uuidv4 } from 'uuid';
 import {
   ApiClient,
   isNullOrUndefined,
   IGameSession,
-  GameSessionState,
-} from "@righton/networking";
-import SplashScreen from "../pages/pregame/SplashScreen";
-import EnterGameCode from "../pages/pregame/EnterGameCode";
-import EnterPlayerName from "../pages/pregame/EnterPlayerName";
-import SelectAvatar from "../pages/pregame/SelectAvatar";
-import { PregameState, LocalModel, StorageKey } from "../lib/PlayModels";
-import { isGameCodeValid, fetchLocalData } from "../lib/HelperFunctions";
+  GameSessionState
+} from '@righton/networking';
+import SplashScreen from '../pages/pregame/SplashScreen';
+import EnterGameCode from '../pages/pregame/EnterGameCode';
+import EnterPlayerName from '../pages/pregame/EnterPlayerName';
+import SelectAvatar from '../pages/pregame/SelectAvatar';
+import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
+import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
+import { PhaseOne } from '../pages/PhaseResults.stories';
 
 interface PregameFinished {
   apiClient: ApiClient;
@@ -23,7 +24,7 @@ interface PregameFinished {
 export default function Pregame({ apiClient }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
@@ -33,8 +34,8 @@ export default function Pregame({ apiClient }: PregameFinished) {
   // state variables used to collect player information in pregame phase
   // information is loaded into local storage on select avatar screen and passed to /game
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<number>(
     Math.floor(Math.random() * 6)
   );

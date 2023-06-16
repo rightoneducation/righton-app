@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ApiClient,
   IChoice,
   IGameSession,
   GameSessionState,
-} from "@righton/networking";
-import { v4 as uuidv4 } from "uuid";
-import { Navigate } from "react-router-dom";
-import PregameCountdown from "../pages/PregameCountdown";
-import GameInProgress from "../pages/GameInProgress";
-import PhaseResults from "../pages/PhaseResults";
-import FinalResultsContainer from "../containers/FinalResultsContainer";
-import StartPhase2 from "../pages/StartPhase2";
-import { LocalModel } from "../lib/PlayModels";
+} from '@righton/networking';
+import { v4 as uuidv4 } from 'uuid';
+import { Navigate } from 'react-router-dom';
+import PregameCountdown from '../pages/PregameCountdown';
+import GameInProgress from '../pages/GameInProgress';
+import PhaseResults from '../pages/PhaseResults';
+import FinalResultsContainer from '../containers/FinalResultsContainer';
+import StartPhase2 from '../pages/StartPhase2';
+import { LocalModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -35,8 +35,7 @@ export default function GameInProgressContainer({
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex!]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  const currentTeam = gameSession.teams!.find(
-    // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const currentTeam = gameSession.teams!.find( // eslint-disable-line @typescript-eslint/no-non-null-assertion
     (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
@@ -51,7 +50,7 @@ export default function GameInProgressContainer({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
-      reason: choice.reason ?? "",
+      reason: choice.reason ?? '',
     })) ?? [];
 
   const handleUpdateScore = (inputScore: number) => {

@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   isNullOrUndefined,
   ApiClient,
   IGameSession,
-} from "@righton/networking";
+} from '@righton/networking';
+import { StorageKey } from '../lib/PlayModels';
+import { fetchLocalData } from '../lib/HelperFunctions';
 
 /**
  * Custom hook to fetch and subscribe to game session. Follows:
@@ -22,7 +24,7 @@ export default function useFetchAndSubscribeGameSession(
   const [gameSession, setGameSession] = useState<IGameSession>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { t } = useTranslation();
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
   const [hasRejoined, setHasRejoined] = useState<boolean>(isInitialRejoin);
 
   useEffect(() => {
@@ -31,18 +33,18 @@ export default function useFetchAndSubscribeGameSession(
     // if player is retrying after an error, reset state values to 'isLoading' conditions unless the api call fails again
     if (retry > 0) {
       setIsLoading(true);
-      setError("");
+      setError('');
     }
     // if gamesessionId is null, set error and prevent api calls
     if (isNullOrUndefined(gameSessionId)) {
-      setError(`${t("error.connect.gamesessionerror")}`);
+      setError(`${t('error.connect.gamesessionerror')}`);
       setIsLoading(false);
     } else {
       apiClient
         .getGameSession(gameSessionId)
         .then((fetchedGame) => {
           if (!fetchedGame || !fetchedGame.id) {
-            setError(`${t("error.connect.gamesessionerror")}`);
+            setError(`${t('error.connect.gamesessionerror')}`);
             return null;
           }
           if (!ignore) setGameSession(fetchedGame);
@@ -51,7 +53,7 @@ export default function useFetchAndSubscribeGameSession(
             fetchedGame.id,
             (response) => {
               if (!response) {
-                setError(`${t("error.connect.subscriptionerror")}`);
+                setError(`${t('error.connect.subscriptionerror')}`);
                 return;
               }
               // Update the gameSession object and trigger the callback
@@ -67,7 +69,7 @@ export default function useFetchAndSubscribeGameSession(
         .catch((e) => {
           setIsLoading(false);
           if (e instanceof Error) setError(e.message);
-          else setError(`${t("error.connect.gamesessionerror")}`);
+          else setError(`${t('error.connect.gamesessionerror')}`);
         });
     }
   }, [gameSessionId, apiClient, t, retry, hasRejoined]);

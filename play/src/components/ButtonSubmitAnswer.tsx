@@ -1,10 +1,10 @@
-import React from "react";
-import { Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
-} from "../lib/styledcomponents/GamePlayButtonStyled";
+} from '../lib/styledcomponents/GamePlayButtonStyled';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
@@ -23,17 +23,17 @@ export default function ButtonSubmitAnswer({
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
   const buttonText = isSubmitted
-    ? t("gameinprogress.button.submitted")
-    : t("gameinprogress.button.submit");
+    ? t('gameinprogress.button.submitted')
+    : t('gameinprogress.button.submit');
   const buttonContents = (
-    <Typography sx={{ textTransform: 'none' }} variant="button"> {buttonText} </Typography>
+    <Typography sx={{textTransform: 'none'}} variant="button"> {buttonText} </Typography>
   );
 
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        handleSubmitAnswer(answerText ?? "");
+        handleSubmitAnswer(answerText ?? '');
       }}
     >
       {buttonContents}

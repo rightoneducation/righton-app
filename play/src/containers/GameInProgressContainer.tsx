@@ -1,21 +1,16 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   ApiClient,
   isNullOrUndefined,
   GameSessionState,
-} from "@righton/networking";
-import { Navigate, useLoaderData } from "react-router-dom";
-import { fetchLocalData } from "../lib/HelperFunctions";
-import useFetchAndSubscribeGameSession from "../hooks/useFetchAndSubscribeGameSession";
-import GameSessionSwitch from "../components/GameSessionSwitch";
-import Lobby from "../pages/pregame/Lobby";
-import ErrorModal from "../components/ErrorModal";
-import {
-  LobbyMode,
-  LocalModel,
-  StorageKey,
-  ErrorType,
-} from "../lib/PlayModels";
+} from '@righton/networking';
+import { Navigate, useLoaderData } from 'react-router-dom';
+import { fetchLocalData } from '../lib/HelperFunctions';
+import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSession';
+import GameSessionSwitch from '../components/GameSessionSwitch';
+import Lobby from '../pages/pregame/Lobby';
+import ErrorModal from '../components/ErrorModal';
+import { LobbyMode, LocalModel, StorageKey, ErrorType } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -31,7 +26,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
   const localModel = useLoaderData() as LocalModel;
-  const { currentTimer } = localModel;
+  const currentTimer = localModel.currentTimer;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
