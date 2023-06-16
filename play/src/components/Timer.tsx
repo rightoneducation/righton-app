@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import { styled } from "@mui/material/styles";
-import { Container, Typography } from "@mui/material";
-import LinearProgress from "@mui/material/LinearProgress";
-import { LocalModel, StorageKey } from "../lib/PlayModels";
-import { fetchLocalData } from "../lib/HelperFunctions";
+import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { styled } from '@mui/material/styles';
+import { Container, Typography } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
+import { LocalModel, StorageKey } from '../lib/PlayModels';
+import { fetchLocalData } from '../lib/HelperFunctions';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: "flex",
