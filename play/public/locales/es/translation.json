@@ -103,12 +103,16 @@
     }
   },
   "error": {
-    "connecting": {
+    "connect": {
       "title1": "Se ha producido un error con el siguiente mensaje de error:",
       "gamesessionerror": "Sesión de juego no encontrada",
       "subscriptionerror": "Subscription could not be established",
       "button1": "No se pudo establecer la suscripción",
       "button2": "Volver al menú principal"
+    },
+    "game": {
+      "answer": "Hubo un error al enviar su respuesta. Inténtalo de nuevo.",
+      "score": "Hubo un error al actualizar tu puntaje. Inténtalo de nuevo."
     }
   }
 }
