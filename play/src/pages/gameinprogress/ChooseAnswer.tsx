@@ -1,16 +1,16 @@
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Typography, Grid } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { GameSessionState } from '@righton/networking';
-import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
-import QuestionCard from '../../components/QuestionCard';
-import AnswerCard from '../../components/AnswerCard';
-import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import 'swiper/css';
-import 'swiper/css/pagination';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import { Typography, Grid } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { GameSessionState } from "@righton/networking";
+import { Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { BodyContentAreaDoubleColumnStyled } from "../../lib/styledcomponents/layout/BodyContentAreasStyled";
+import QuestionCard from "../../components/QuestionCard";
+import AnswerCard from "../../components/AnswerCard";
+import ScrollBoxStyled from "../../lib/styledcomponents/layout/ScrollBoxStyled";
+import "swiper/css";
+import "swiper/css/pagination";
 
 interface ChooseAnswerProps {
   isSmallDevice: boolean;
@@ -46,10 +46,10 @@ export default function ChooseAnswer({
         sx={{
           marginTop: `${theme.sizing.smallPadding}px`,
           marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
-        {t('gameinprogress.chooseanswer.questioncolumn')}
+        {t("gameinprogress.chooseanswer.questioncolumn")}
       </Typography>
       <ScrollBoxStyled>
         <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -57,12 +57,12 @@ export default function ChooseAnswer({
           <Typography
             variant="body1"
             sx={{
-              textAlign: 'center',
+              textAlign: "center",
               marginTop: `${theme.sizing.largePadding}px`,
               opacity: 0.5,
             }}
           >
-            {t('gameinprogress.general.swipealert')}
+            {t("gameinprogress.general.swipealert")}
           </Typography>
         ) : null}
       </ScrollBoxStyled>
@@ -74,12 +74,12 @@ export default function ChooseAnswer({
       <Typography
         variant="h2"
         sx={{
-          marginTop: '16px',
+          marginTop: "16px",
           marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
-        {t('gameinprogress.chooseanswer.answercolumn')}
+        {t("gameinprogress.chooseanswer.answercolumn")}
       </Typography>
       <ScrollBoxStyled>
         <AnswerCard
@@ -92,25 +92,27 @@ export default function ChooseAnswer({
         />
         {isSubmitted ? (
           <>
-            {displaySubmitted ? (<Typography
-              variant="body1"
-              sx={{
-                fontWeight: 700,
-                textAlign: 'center',
-                marginTop: `${theme.sizing.largePadding}px`,
-              }}
-            >
-              {t('gameinprogress.chooseanswer.answerthankyou1')}
-            </Typography>) : null}
+            {displaySubmitted ? (
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: "center",
+                  marginTop: `${theme.sizing.largePadding}px`,
+                }}
+              >
+                {t("gameinprogress.chooseanswer.answerthankyou1")}
+              </Typography>
+            ) : null}
             <Typography
               variant="body1"
               sx={{
                 fontWeight: 700,
-                textAlign: 'center',
+                textAlign: "center",
                 marginTop: `${theme.sizing.largePadding}px`,
               }}
             >
-              {t('gameinprogress.chooseanswer.answerthankyou2')}
+              {t("gameinprogress.chooseanswer.answerthankyou2")}
             </Typography>
           </>
         ) : null}
@@ -123,7 +125,7 @@ export default function ChooseAnswer({
       container
       spacing={isSmallDevice ? 0 : 2}
     >
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={12} sm={6} sx={{ width: "100%", height: "100%" }}>
         {isSmallDevice ? (
           <Swiper
             modules={[Pagination]}
@@ -131,20 +133,20 @@ export default function ChooseAnswer({
             centeredSlides
             slidesPerView="auto"
             pagination={{
-              el: '.swiper-pagination-container',
-              bulletClass: 'swiper-pagination-bullet',
-              bulletActiveClass: 'swiper-pagination-bullet-active',
+              el: ".swiper-pagination-container",
+              bulletClass: "swiper-pagination-bullet",
+              bulletActiveClass: "swiper-pagination-bullet-active",
               clickable: true,
               renderBullet(index, className) {
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
               },
             }}
-            style={{ height: '100%' }}
+            style={{ height: "100%" }}
           >
             <SwiperSlide
               style={{
                 width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
+                height: "100%",
               }}
             >
               {questionContents}
@@ -152,7 +154,7 @@ export default function ChooseAnswer({
             <SwiperSlide
               style={{
                 width: `calc(100% - ${theme.sizing.largePadding * 2}px`,
-                height: '100%',
+                height: "100%",
               }}
             >
               {answerContents}
@@ -162,7 +164,7 @@ export default function ChooseAnswer({
           questionContents
         )}
       </Grid>
-      <Grid item xs={0} sm={6} sx={{ width: '100%', height: '100%' }}>
+      <Grid item xs={0} sm={6} sx={{ width: "100%", height: "100%" }}>
         {answerContents}
       </Grid>
     </BodyContentAreaDoubleColumnStyled>

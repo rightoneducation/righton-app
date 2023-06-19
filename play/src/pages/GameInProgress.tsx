@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { useState } from "react";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import {
   ApiClient,
   GameSessionState,
@@ -8,21 +8,21 @@ import {
   ITeamAnswer,
   IQuestion,
   ModelHelper,
-} from '@righton/networking';
-import HeaderContent from '../components/HeaderContent';
-import FooterContent from '../components/FooterContent';
-import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
-import StackContainerStyled from '../lib/styledcomponents/layout/StackContainerStyled';
-import HeaderStackContainerStyled from '../lib/styledcomponents/layout/HeaderStackContainerStyled';
-import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackContainerStyled';
-import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
-import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
-import ChooseAnswer from './gameinprogress/ChooseAnswer';
-import DiscussAnswer from './gameinprogress/DiscussAnswer';
-import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
-import ErrorModal from '../components/ErrorModal';
-import { ErrorType } from '../lib/PlayModels';
+} from "@righton/networking";
+import HeaderContent from "../components/HeaderContent";
+import FooterContent from "../components/FooterContent";
+import PaginationContainerStyled from "../lib/styledcomponents/PaginationContainerStyled";
+import StackContainerStyled from "../lib/styledcomponents/layout/StackContainerStyled";
+import HeaderStackContainerStyled from "../lib/styledcomponents/layout/HeaderStackContainerStyled";
+import BodyStackContainerStyled from "../lib/styledcomponents/layout/BodyStackContainerStyled";
+import BodyBoxUpperStyled from "../lib/styledcomponents/layout/BodyBoxUpperStyled";
+import BodyBoxLowerStyled from "../lib/styledcomponents/layout/BodyBoxLowerStyled";
+import ChooseAnswer from "./gameinprogress/ChooseAnswer";
+import DiscussAnswer from "./gameinprogress/DiscussAnswer";
+import FooterStackContainerStyled from "../lib/styledcomponents/layout/FooterStackContainerStyled";
+import { checkForSubmittedAnswerOnRejoin } from "../lib/HelperFunctions";
+import ErrorModal from "../components/ErrorModal";
+import { ErrorType } from "../lib/PlayModels";
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -65,7 +65,7 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isError, setIsError] = useState(false);
   const [displaySubmitted, setDisplaySubmitted] = useState(false);
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallDevice = useMediaQuery(theme.breakpoints.down("sm"));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
   let teamAnswers: (ITeamAnswer | null)[] | null | undefined;
@@ -82,13 +82,13 @@ export default function GameInProgress({
   // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
   // if neither of those, it just uses the default entire string as the question text
   const divideQuestionString = (inputText: string) => {
-    const qmarkLocation = inputText.lastIndexOf('?');
-    const lastPeriodLocation = inputText.lastIndexOf('.');
-    let introText = '';
+    const qmarkLocation = inputText.lastIndexOf("?");
+    const lastPeriodLocation = inputText.lastIndexOf(".");
+    let introText = "";
     let questionText = inputText;
     if (qmarkLocation !== -1) {
       const splicedString = inputText.substring(0, qmarkLocation + 1);
-      const periodLocation = splicedString.lastIndexOf('.');
+      const periodLocation = splicedString.lastIndexOf(".");
       questionText = splicedString;
       if (periodLocation !== -1) {
         introText = inputText.substring(0, periodLocation + 1);
@@ -99,7 +99,7 @@ export default function GameInProgress({
       }
     } else {
       const splicedString = inputText.substring(0, lastPeriodLocation);
-      const secondLastPeriodLocation = splicedString.lastIndexOf('.');
+      const secondLastPeriodLocation = splicedString.lastIndexOf(".");
       if (secondLastPeriodLocation !== -1) {
         introText = inputText.substring(0, secondLastPeriodLocation + 1);
         questionText = inputText.substring(
@@ -193,11 +193,11 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
-            questionUrl={questionUrl ?? ''}
+            questionUrl={questionUrl ?? ""}
             answerChoices={answerChoices}
             isSubmitted={selectSubmitAnswer.isSubmitted}
             displaySubmitted={displaySubmitted} // we do not want to display submitted if timer has run out and the user did not select an ans: if timer has run out, submitted is false
@@ -210,9 +210,9 @@ export default function GameInProgress({
           <DiscussAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
-            questionUrl={questionUrl ?? ''}
+            questionUrl={questionUrl ?? ""}
             answerChoices={answerChoices}
-            instructions={instructions ?? ['']}
+            instructions={instructions ?? [""]}
             currentState={currentState}
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             currentQuestion={currentQuestion}
@@ -225,7 +225,7 @@ export default function GameInProgress({
         ) : null}
         <FooterContent
           avatar={teamAvatar}
-          teamName={currentTeam ? currentTeam.name : 'Team One'}
+          teamName={currentTeam ? currentTeam.name : "Team One"}
           score={score}
         />
       </FooterStackContainerStyled>
