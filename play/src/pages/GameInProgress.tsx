@@ -20,8 +20,8 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import ErrorModal from '../components/ErrorModal';
 import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
+import ErrorModal from '../components/ErrorModal';
 import { ErrorType } from '../lib/PlayModels';
 
 interface GameInProgressProps {
@@ -43,6 +43,7 @@ interface GameInProgressProps {
     reason: string;
   }[];
   hasRejoined: boolean;
+  currentTimer: number;
 }
 
 export default function GameInProgress({
@@ -59,6 +60,7 @@ export default function GameInProgress({
   score,
   answerChoices,
   hasRejoined,
+  currentTimer,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isError, setIsError] = useState(false);
@@ -109,6 +111,10 @@ export default function GameInProgress({
   };
 
   const questionText = divideQuestionString(currentQuestion?.text);
+  const totalTime =
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+      ? phaseOneTime
+      : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -133,7 +139,7 @@ export default function GameInProgress({
   };
 
   const handleSubmitAnswer = async (answerText: string) => {
-    try { 
+    try {
       await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
@@ -142,8 +148,7 @@ export default function GameInProgress({
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
-    }
-    catch {
+    } catch {
       setIsError(true);
     }
   };
@@ -151,7 +156,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     setIsError(false);
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
-  }
+  };
 
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
@@ -164,21 +169,18 @@ export default function GameInProgress({
       justifyContent="space-between"
     >
       <ErrorModal
-          isModalOpen={isError}
-          errorType={ErrorType.ANSWER}
-          errorText=''
-          handleRetry={handleRetry}
+        isModalOpen={isError}
+        errorType={ErrorType.ANSWER}
+        errorText=""
+        handleRetry={handleRetry}
       />
       <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
           isCorrect={false}
           isIncorrect={false}
-          totalTime={
-            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-              ? phaseOneTime
-              : phaseTwoTime
-          }
+          totalTime={totalTime}
+          currentTimer={hasRejoined ? currentTimer : totalTime}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}

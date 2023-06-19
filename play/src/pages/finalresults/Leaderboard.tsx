@@ -49,7 +49,7 @@ export default function Leaderboard({
   // remove locally stored game info when reaching leaderboard
   useEffect(() => {
     window.localStorage.removeItem(StorageKey);
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // this gets the height of the container ref and then adjusts the height of the subcontainer for the leaderboard so there isn't any partial overflow
   // ref req'd for height of container
@@ -83,6 +83,7 @@ export default function Leaderboard({
           isCorrect={false}
           isIncorrect={false}
           totalTime={15}
+          currentTimer={0}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={() => {}}

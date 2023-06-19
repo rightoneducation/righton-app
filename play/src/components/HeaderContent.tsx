@@ -15,6 +15,7 @@ const HeaderContainer = styled('div')({
 interface HeaderContentProps {
   currentState: GameSessionState;
   totalTime: number;
+  currentTimer: number;
   isPaused: boolean;
   isFinished: boolean;
   handleTimerIsFinished: () => void;
@@ -25,6 +26,7 @@ interface HeaderContentProps {
 export default function HeaderContent({
   currentState,
   totalTime,
+  currentTimer,
   isPaused,
   isFinished,
   handleTimerIsFinished,
@@ -76,6 +78,7 @@ export default function HeaderContent({
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
         <Timer
           totalTime={totalTime}
+          currentTimer={currentTimer}
           isFinished={isFinished}
           isPaused={isPaused}
           handleTimerIsFinished={handleTimerIsFinished}
