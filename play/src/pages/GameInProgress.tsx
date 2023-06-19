@@ -23,7 +23,6 @@ import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterSta
 import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType } from '../lib/PlayModels';
-import { Console } from 'console';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
