@@ -193,14 +193,14 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ""}
             answerChoices={answerChoices}
             isSubmitted={selectSubmitAnswer.isSubmitted}
-            displaySubmitted={displaySubmitted} // we do not want to display submitted if timer has run out and the user did not select an ans: if timer has run out, submitted is false
+            displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
             selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
