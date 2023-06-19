@@ -75,9 +75,7 @@ export default function Timer({
       let secStr = '00';
       let min = 0;
       if (currentTimeInput >= 0) {
-        console.log("currentTimeInput: " + currentTimeInput);
         min = Math.floor(currentTimeInput / 60);
-        console.log("min: " + min);
         sec = Math.ceil(currentTimeInput % 60);
         if (sec === 60) sec = 0;
         secStr = sec < 10 ? `0${sec}` : `${sec}`;
