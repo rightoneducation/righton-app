@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { LocalModel, StorageKey } from '../lib/PlayModels';
 import { fetchLocalData } from '../lib/HelperFunctions';
@@ -25,6 +25,12 @@ const TimerBar = styled(LinearProgress)(({ theme }) => ({
   '& .MuiLinearProgress-bar': {
     background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
   },
+}));
+
+const TimerText = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  width: `${theme.sizing.extraSmallPadding}px`
 }));
 
 interface TimerProps {
@@ -105,7 +111,9 @@ export default function Timer({
   return (
     <TimerContainer maxWidth="sm">
       <TimerBar value={progress} variant="determinate" />
-      <Typography variant="caption">{timerString}</Typography>
+      <TimerText maxWidth="sm">
+        <Typography alignSelf="center" variant="caption">{timerString}</Typography>
+      </TimerText>
     </TimerContainer>
   );
 }
