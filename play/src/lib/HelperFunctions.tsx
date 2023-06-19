@@ -52,7 +52,7 @@ export const checkForSubmittedAnswerOnRejoin = (
     reason: string;
   }[],
   currentState: GameSessionState
-): { selectedAnswerIndex: number | null; isSubmitted: boolean } => {
+): { selectedAnswerIndex: number | null; isSubmitted: boolean; } => {
   let selectedAnswerIndex = null;
   let isSubmitted = false;
 
