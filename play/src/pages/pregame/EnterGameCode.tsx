@@ -65,8 +65,8 @@ export default function EnterGameCode({
             {t('joingame.gamecode.title')}
           </Typography>
           <InputTextFieldStyled
-            fullWidth
             data-testid="gameCode-inputtextfield"
+            fullWidth
             variant="filled"
             autoComplete="off"
             placeholder={InputPlaceholder.GAME_CODE}

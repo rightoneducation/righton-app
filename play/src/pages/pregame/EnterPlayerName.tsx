@@ -70,6 +70,7 @@ export default function EnterPlayerName({
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
               <InputTextFieldStyled
+                data-testid="playername-firstinputtextfield"
                 fullWidth
                 variant="filled"
                 autoComplete="off"
@@ -93,6 +94,7 @@ export default function EnterPlayerName({
             </Grid>
             <Grid item xs={6}>
               <InputTextFieldStyled
+                data-testid="playername-lastinputtextfield"
                 fullWidth
                 variant="filled"
                 autoComplete="off"

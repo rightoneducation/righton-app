@@ -1,5 +1,8 @@
-import type { Config } from "@jest/types"
 
+import type { Config } from "@jest/types"
+import path from 'path';
+const networkingPath = path.resolve(__dirname, '../networking/lib/src');
+console.log(networkingPath);
 const config: Config.InitialOptions = {
     preset: "ts-jest",
     testEnvironment: "node",
@@ -9,9 +12,14 @@ const config: Config.InitialOptions = {
     collectCoverage: true,
     transform: {
         "^.+\\.test.(ts|tsx)$": "ts-jest",
-        "^.+\\.svg$": "<rootDir>/tests/transformers/svgTransform.ts",
+        '^.+\\.js?$': require.resolve('babel-jest'),
+        [`(${networkingPath.replace(/\\/g, '\\\\')}).+\\.(js)$`]: "babel-jest",
+        "^.+\\.svg$": "<rootDir>/tests/transformers/svgTransform.ts"
     },
-    transformIgnorePatterns: ["src/.+.(js|jsx)$"],
+    transformIgnorePatterns: [
+        "node_modules/(?!(@aws-sdk|uuid))",
+        "<rootDir>/../networking/node_modules/(?!(@aws-sdk|uuid))"
+    ],
     watchman: false,
     setupFilesAfterEnv: ["<rootDir>/jest-setup.ts"],
 }
