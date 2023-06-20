@@ -12,13 +12,14 @@ i18n
   .use(LanguageDetector)
   .init({
     fallbackLng: 'en',
+    supportedLngs: ['en', 'es'],
     keySeparator: '.', // to support nested translations
     debug: false,
     detection: {
       // move browser detection up in the priority line for autodetecting language
       order: [
-        'querystring',
         'navigator',
+        'querystring',
         'cookie',
         'localStorage',
         'sessionStorage',

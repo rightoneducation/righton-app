@@ -103,7 +103,7 @@ export enum TimerMode {
 export enum ErrorType {
   CONNECT,
   ANSWER,
-  SCORE
+  SCORE,
 }
 
 /**
@@ -121,6 +121,7 @@ export interface LocalModel {
   teamMemberId: string;
   selectedAvatar: number;
   hasRejoined: boolean;
+  currentTimer: number;
 }
 
 interface MonsterMap {

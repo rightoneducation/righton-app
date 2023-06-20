@@ -16,6 +16,7 @@ import { LocalModel } from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
+  currentTimer: number;
   hasRejoined: boolean;
   gameSession: IGameSession;
   localModel: LocalModel;
@@ -23,6 +24,7 @@ interface GameInProgressContainerProps {
 
 export default function GameInProgressContainer({
   apiClient,
+  currentTimer,
   hasRejoined,
   gameSession,
   localModel,
@@ -39,13 +41,12 @@ export default function GameInProgressContainer({
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const [score, setScore] = useState(currentTeam?.score ?? 0);
   const leader = true;
-
   // this condition is used to display the pregamecountdown only on initial game start
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
   const answerChoices =
-    currentQuestion?.choices?.map((choice: IChoice) => ({ 
+    currentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
@@ -58,7 +59,7 @@ export default function GameInProgressContainer({
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
-      return isGameFirstStarting ? ( 
+      return isGameFirstStarting ? (
         <PregameCountdown setIsPregameCountdown={setIsPregameCountdown} />
       ) : (
         <GameInProgress
@@ -70,6 +71,7 @@ export default function GameInProgressContainer({
           teamId={localModel.teamId}
           score={score}
           hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -85,6 +87,7 @@ export default function GameInProgressContainer({
           teamId={localModel.teamId}
           score={score}
           hasRejoined={hasRejoined}
+          currentTimer={currentTimer}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -94,7 +97,7 @@ export default function GameInProgressContainer({
           {...gameSession}
           apiClient={apiClient}
           gameSession={gameSession}
-          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0} 
+          currentQuestionIndex={gameSession.currentQuestionIndex ?? 0}
           teamAvatar={localModel.selectedAvatar}
           teamId={localModel.teamId}
           answerChoices={answerChoices}
