@@ -12,7 +12,7 @@ const config: Config.InitialOptions = {
     collectCoverage: true,
     transform: {
         "^.+\\.test.(ts|tsx)$": "ts-jest",
-        '^.+\\.js?$': require.resolve('babel-jest'),
+        // using babel-jest for symlinked modules
         [`(${networkingPath.replace(/\\/g, '\\\\')}).+\\.(js)$`]: "babel-jest",
         "^.+\\.svg$": "<rootDir>/tests/transformers/svgTransform.ts"
     },
