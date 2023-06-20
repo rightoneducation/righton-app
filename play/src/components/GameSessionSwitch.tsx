@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ApiClient,
   IChoice,
@@ -52,6 +52,13 @@ export default function GameInProgressContainer({
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
+  
+  // using a useEffect here to track the prop changes to gameSession that change currentTeam.score
+  // justifying the use here because we score to be state to manipulate it during phase results and we also need to track updates from the backend
+  // this seems like the use case for a useEffect
+  useEffect(() => {
+    setScore(currentTeam?.score ?? 0);
+  }, [currentTeam?.score])
 
   const handleUpdateScore = (inputScore: number) => {
     setScore(inputScore);
