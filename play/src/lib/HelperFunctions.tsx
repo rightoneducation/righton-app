@@ -90,9 +90,18 @@ export const checkForSubmittedAnswerOnRejoin = (
  */
 export const fetchLocalData = () => {
   const localModel = window.localStorage.getItem(StorageKey);
+  const currentTime = new Date().getTime() / 60000;
+ 
   if (isNullOrUndefined(localModel)) return null;
-
   const parsedLocalModel = JSON.parse(localModel);
+  const elapsedTime = currentTime - parsedLocalModel.currentTime;
+
+  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
+  if (elapsedTime > 120) {
+   window.localStorage.removeItem(StorageKey);
+   return null;
+  }
+
   // checks for invalid data in localModel, returns null if found
   if (
     [
@@ -102,8 +111,10 @@ export const fetchLocalData = () => {
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
     ].some((value) => isNullOrUndefined(value))
-  )
+  ) {
+    window.localStorage.removeItem(StorageKey);
     return null;
+  }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
 };
