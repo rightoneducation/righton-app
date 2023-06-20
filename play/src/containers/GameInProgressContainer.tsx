@@ -86,6 +86,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     />
   );
 }
+
 export function LocalModelLoader(): LocalModel {
   const localModel = fetchLocalData();
   if (localModel && !localModel.hasRejoined) {

@@ -34,7 +34,6 @@ interface FooterContentProps {
   teamName: string;
   newPoints?: number;
   score: number;
-  handleUpdateScore?: (newScore: number) => void;
 }
 
 export default function FooterContent({
@@ -42,7 +41,6 @@ export default function FooterContent({
   teamName,
   newPoints,
   score,
-  handleUpdateScore,
 }: FooterContentProps) {
   const theme = useTheme();
 
@@ -57,15 +55,7 @@ export default function FooterContent({
           {teamName}
         </Typography>
       </FooterLeftContainer>
-      {handleUpdateScore ? (
-        <ScoreIndicator
-          newPoints={newPoints}
-          score={score}
-          handleUpdateScore={handleUpdateScore}
-        />
-      ) : (
-        <ScoreIndicator newPoints={newPoints} score={score} />
-      )}
+      <ScoreIndicator newPoints={newPoints} score={score} />
     </FooterContainer>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,7 +20,7 @@ interface PregameFinished {
   apiClient: ApiClient;
 }
 
-export default function Pregame({ apiClient }: PregameFinished) {
+export function PregameContainer({ apiClient }: PregameFinished) {
   const theme = useTheme();
   const navigate = useNavigate();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -28,8 +28,8 @@ export default function Pregame({ apiClient }: PregameFinished) {
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
-  // retreive local storage data so that player can choose to rejoin game
-  const rejoinGameObject = fetchLocalData();
+  // retreive local storage data so that player can choose to rejoin game 
+  const [rejoinGameObject, setRejoinGameObject] = useState<LocalModel | null>(useLoaderData() as LocalModel);
   // state variables used to collect player information in pregame phase
   // information is loaded into local storage on select avatar screen and passed to /game
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
@@ -47,7 +47,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {
     const storageObject: LocalModel = {
-      ...rejoinGameObject,
+      ...rejoinGameObject!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
       hasRejoined: true,
     };
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
@@ -59,6 +59,11 @@ export default function Pregame({ apiClient }: PregameFinished) {
     setReenableChooseButton(true);
   };
 
+  // if player doesn't want to rejoin, remove the localStorage and set rejoinGameObject to null
+  const handleDontRejoinSession = () => {
+    window.localStorage.removeItem(StorageKey);
+    setRejoinGameObject(null);
+  }
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
   // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
@@ -130,6 +135,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
           return;
         }
         const storageObject: LocalModel = {
+          currentTime: new Date().getTime() / 60000,
           gameSessionId: gameSession.id,
           teamId: teamInfo.teamId,
           teamMemberId: teamInfo.teamMemberId,
@@ -185,7 +191,12 @@ export default function Pregame({ apiClient }: PregameFinished) {
           rejoinGameObject={rejoinGameObject}
           setPregameState={setPregameState}
           handleRejoinSession={handleRejoinSession}
+          handleDontRejoinSession={handleDontRejoinSession}
         />
       );
   }
+}
+
+export function PregameLocalModelLoader(): LocalModel | null {
+  return fetchLocalData();
 }

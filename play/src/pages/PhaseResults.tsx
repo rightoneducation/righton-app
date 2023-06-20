@@ -35,7 +35,6 @@ interface PhaseResultsProps {
     isCorrectAnswer: boolean;
   }[];
   score: number;
-  handleUpdateScore: (newScore: number) => void;
   hasRejoined: boolean;
 }
 
@@ -66,7 +65,6 @@ export default function PhaseResults({
   gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
   answerChoices,
   score,
-  handleUpdateScore,
   hasRejoined,
 }: PhaseResultsProps) {
   // isError consists of two values:
@@ -157,7 +155,6 @@ export default function PhaseResults({
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           newPoints={newPoints}
           score={score}
-          handleUpdateScore={handleUpdateScore}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>
