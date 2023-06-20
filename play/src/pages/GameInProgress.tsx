@@ -64,6 +64,7 @@ export default function GameInProgress({
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isError, setIsError] = useState(false);
+  const [displaySubmitted, setDisplaySubmitted] = useState(false);
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -135,6 +136,7 @@ export default function GameInProgress({
   });
 
   const handleTimerIsFinished = () => {
+    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
@@ -148,6 +150,7 @@ export default function GameInProgress({
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+      setDisplaySubmitted(true);
     } catch {
       setIsError(true);
     }
@@ -197,6 +200,7 @@ export default function GameInProgress({
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
             isSubmitted={selectSubmitAnswer.isSubmitted}
+            displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
             selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}

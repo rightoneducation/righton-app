@@ -27,6 +27,12 @@ const TimerBar = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+const TimerText = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  width: `${theme.sizing.extraSmallPadding}px`,
+}));
+
 interface TimerProps {
   totalTime: number;
   currentTimer: number;
@@ -105,7 +111,11 @@ export default function Timer({
   return (
     <TimerContainer maxWidth="sm">
       <TimerBar value={progress} variant="determinate" />
-      <Typography variant="caption">{timerString}</Typography>
+      <TimerText maxWidth="sm">
+        <Typography alignSelf="center" variant="caption">
+          {timerString}
+        </Typography>
+      </TimerText>
     </TimerContainer>
   );
 }
