@@ -41,7 +41,8 @@ export default function Pregame({ apiClient }: PregameFinished) {
 
   // TODO: coord with u/x for modal to pop up this error message
   const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [reenableChooseButton, setReenableChooseButton] = useState<boolean>(false);
+  const [reenableChooseButton, setReenableChooseButton] =
+    useState<boolean>(false);
 
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {

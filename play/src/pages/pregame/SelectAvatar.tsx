@@ -77,7 +77,9 @@ const BottomContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: isSmallDevice ? `${theme.sizing.extraExtraLargePadding}px` : `${theme.sizing.largePadding}px`,
+  paddingBottom: isSmallDevice
+    ? `${theme.sizing.extraExtraLargePadding}px`
+    : `${theme.sizing.largePadding}px`,
   gap: 12,
 }));
 
@@ -102,7 +104,7 @@ export default function SelectAvatar({
   handleAvatarSelectClick,
   displayErrorModal,
   handleRetry,
-  reenableButton
+  reenableButton,
 }: SelectAvatarProps) {
   const theme = useTheme();
   const { t } = useTranslation();

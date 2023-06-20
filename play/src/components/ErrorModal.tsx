@@ -32,16 +32,13 @@ export default function ErrorModal({
     [ErrorType.CONNECT]: t('error.connect.title1'),
     [ErrorType.ANSWER]: t('error.game.answer'),
     [ErrorType.SCORE]: t('error.game.score'),
-    [ErrorType.JOIN]: t('error.connect.join')
+    [ErrorType.JOIN]: t('error.connect.join'),
   };
 
   const lowerText = [
-    <Typography
-      variant="h4"
-      sx={{ textAlign: 'center', fontStyle: 'italic' }}
-    >
+    <Typography variant="h4" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
       {errorText}
-    </Typography>
+    </Typography>,
   ];
   const lowerButton = [
     <IntroButtonStyled
@@ -54,7 +51,7 @@ export default function ErrorModal({
       }}
     >
       {t('error.connect.button2')}
-    </IntroButtonStyled>
+    </IntroButtonStyled>,
   ];
 
   return (
@@ -92,13 +89,14 @@ export default function ErrorModal({
       shouldCloseOnOverlayClick={false}
       appElement={document.getElementById('root') || undefined}
     >
-      <Stack spacing={2} sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}>
+      <Stack
+        spacing={2}
+        sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}
+      >
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
           {upperTextMap[errorType]}
         </Typography>
-        {errorType === ErrorType.CONNECT &&
-          lowerText
-        }
+        {errorType === ErrorType.CONNECT && lowerText}
       </Stack>
       <Stack spacing={2} style={{ alignItems: 'center' }}>
         <IntroButtonStyled
@@ -110,14 +108,13 @@ export default function ErrorModal({
             boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
           }}
         >
-          {errorType === ErrorType.CONNECT ?
-            `${t('error.connect.button1')} ${(retry && retry > 0) ? `(${retry})` : ''}`
-            : t('error.connect.button1')
-          }
+          {errorType === ErrorType.CONNECT
+            ? `${t('error.connect.button1')} ${
+                retry && retry > 0 ? `(${retry})` : ''
+              }`
+            : t('error.connect.button1')}
         </IntroButtonStyled>
-        {errorType === ErrorType.CONNECT &&
-          lowerButton
-        }
+        {errorType === ErrorType.CONNECT && lowerButton}
       </Stack>
     </Modal>
   );
