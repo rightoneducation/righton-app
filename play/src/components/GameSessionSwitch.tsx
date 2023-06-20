@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   ApiClient,
   IChoice,
@@ -39,7 +39,7 @@ export default function GameInProgressContainer({
     (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
-  const [score, setScore] = useState(currentTeam?.score ?? 0);
+  const score = currentTeam?.score ?? 0;
   const leader = true;
   // this condition is used to display the pregamecountdown only on initial game start
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
@@ -52,17 +52,6 @@ export default function GameInProgressContainer({
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
-  
-  // using a useEffect here to track the prop changes to gameSession that change currentTeam.score
-  // justifying the use here because we score to be state to manipulate it during phase results and we also need to track updates from the backend
-  // this seems like the use case for a useEffect
-  useEffect(() => {
-    setScore(currentTeam?.score ?? 0);
-  }, [currentTeam?.score])
-
-  const handleUpdateScore = (inputScore: number) => {
-    setScore(inputScore);
-  };
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
@@ -109,7 +98,6 @@ export default function GameInProgressContainer({
           teamId={localModel.teamId}
           answerChoices={answerChoices}
           score={score}
-          handleUpdateScore={handleUpdateScore}
           hasRejoined={hasRejoined}
         />
       );
