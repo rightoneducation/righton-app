@@ -141,6 +141,7 @@ export default function EnterPlayerName({
           </Typography>
           {shouldShowError && (
             <Typography
+              data-testid="playername-invalidtext"
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >
