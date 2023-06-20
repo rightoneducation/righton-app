@@ -1,14 +1,14 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import { styled } from "@mui/material/styles";
-import { Container, Typography } from "@mui/material";
-import LinearProgress from "@mui/material/LinearProgress";
-import { LocalModel, StorageKey } from "../lib/PlayModels";
-import { fetchLocalData } from "../lib/HelperFunctions";
+import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { styled } from '@mui/material/styles';
+import { Container, Typography } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
+import { LocalModel, StorageKey } from '../lib/PlayModels';
+import { fetchLocalData } from '../lib/HelperFunctions';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
   marginLeft: `${theme.sizing.mediumPadding}px`,
   marginRight: `${theme.sizing.mediumPadding}px`,
   marginTop: `${theme.sizing.extraSmallPadding}px`,
@@ -16,20 +16,20 @@ const TimerContainer = styled(Container)(({ theme }) => ({
 }));
 
 const TimerBar = styled(LinearProgress)(({ theme }) => ({
-  borderRadius: "40px",
-  display: "inline-block",
+  borderRadius: '40px',
+  display: 'inline-block',
   marginRight: `${theme.sizing.extraSmallPadding}px`,
   height: `${theme.sizing.extraSmallPadding}px`,
   width: `calc(100% - ${theme.sizing.mediumPadding}px)`,
   backgroundColor: theme.palette.primary.main,
-  "& .MuiLinearProgress-bar": {
+  '& .MuiLinearProgress-bar': {
     background: `linear-gradient(90deg, #349E15 0%, #7DC642 100%)`,
   },
 }));
 
 const TimerText = styled(Container)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "center",
+  display: 'flex',
+  justifyContent: 'center',
   width: `${theme.sizing.extraSmallPadding}px`,
 }));
 
@@ -78,7 +78,7 @@ export default function Timer({
   const timerString = useMemo(() => {
     const getTimerString = (currentTimeInput: number) => {
       let sec = 0;
-      let secStr = "00";
+      let secStr = '00';
       let min = 0;
       if (currentTimeInput >= 0) {
         min = Math.floor(currentTimeInput / 60);
