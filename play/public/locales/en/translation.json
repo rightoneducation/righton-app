@@ -108,7 +108,8 @@
       "gamesessionerror": "Game session not found",
       "subscriptionerror": "Subscription could not be established",
       "button1": "Try Again",
-      "button2": "Return to Main Menu"
+      "button2": "Return to Main Menu",
+      "join": "Unable to join game. Please try again"
     },
     "game": {
       "answer": "There was an error in submitting your answer. Please try again.",

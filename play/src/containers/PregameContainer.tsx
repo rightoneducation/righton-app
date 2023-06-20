@@ -41,6 +41,7 @@ export default function Pregame({ apiClient }: PregameFinished) {
 
   // TODO: coord with u/x for modal to pop up this error message
   const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [reenableChooseButton, setReenableChooseButton] = useState<boolean>(false);
 
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {
@@ -50,6 +51,11 @@ export default function Pregame({ apiClient }: PregameFinished) {
     };
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
+  };
+
+  const handleRetryJoin = () => {
+    setAPIError(false);
+    setReenableChooseButton(true);
   };
 
   // on click of game code button, check if game code is valid
@@ -148,6 +154,9 @@ export default function Pregame({ apiClient }: PregameFinished) {
           setSelectedAvatar={setSelectedAvatar}
           isSmallDevice={isSmallDevice}
           handleAvatarSelectClick={handleAvatarSelectClick}
+          displayErrorModal={APIerror}
+          handleRetry={handleRetryJoin}
+          reenableButton={reenableChooseButton}
         />
       );
     case PregameState.ENTER_NAME:

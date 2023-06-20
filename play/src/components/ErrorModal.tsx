@@ -32,6 +32,7 @@ export default function ErrorModal({
     [ErrorType.CONNECT]: t('error.connect.title1'),
     [ErrorType.ANSWER]: t('error.game.answer'),
     [ErrorType.SCORE]: t('error.game.score'),
+    [ErrorType.JOIN]: t('error.connect.join')
   };
 
   const lowerText = [
@@ -91,11 +92,11 @@ export default function ErrorModal({
       shouldCloseOnOverlayClick={false}
       appElement={document.getElementById('root') || undefined}
     >
-      <Stack spacing={2} sx={{paddingBottom: `${theme.sizing.mediumPadding}px`}}>
+      <Stack spacing={2} sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}>
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
-          {upperTextMap[errorType]} 
+          {upperTextMap[errorType]}
         </Typography>
-        { errorType === ErrorType.CONNECT && 
+        {errorType === ErrorType.CONNECT &&
           lowerText
         }
       </Stack>
@@ -109,12 +110,12 @@ export default function ErrorModal({
             boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
           }}
         >
-        { errorType === ErrorType.CONNECT ?
-          `${t('error.connect.button1')} ${(retry && retry > 0) ? `(${retry})` : ''}` 
-          : t('error.connect.button1')
-        }
+          {errorType === ErrorType.CONNECT ?
+            `${t('error.connect.button1')} ${(retry && retry > 0) ? `(${retry})` : ''}`
+            : t('error.connect.button1')
+          }
         </IntroButtonStyled>
-        { errorType === ErrorType.CONNECT && 
+        {errorType === ErrorType.CONNECT &&
           lowerButton
         }
       </Stack>
