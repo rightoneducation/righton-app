@@ -31,7 +31,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // retreives game data from react-router loader
   // if no game data, redirects to splashscreen
   const localModel = useLoaderData() as LocalModel;
-  const { currentTimer } = localModel;
   // uses local game data to subscribe to gameSession
   // fetches gameSession first, then subscribes to data, finally returns object with loading, error and gamesession
   const subscription = useFetchAndSubscribeGameSession(
@@ -43,6 +42,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
+  
   // if gamesession is loading/errored/waiting for teacher to start game
   if (
     !subscription.gameSession ||
@@ -78,7 +78,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
-      currentTimer={currentTimer}
+      currentTimer={localModel.currentTimer}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}
