@@ -4,7 +4,7 @@ import {
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
-import { InputPlaceholder, StorageKey } from './PlayModels';
+import { InputPlaceholder, StorageKey, LocalModel } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -85,12 +85,23 @@ export const checkForSubmittedAnswerOnRejoin = (
 };
 
 /**
- * retrieves local data from local storage and validates it
+ * retrieves local data from local storage and calls validator function
  * @returns - the localModel if valid, null otherwise
  */
 export const fetchLocalData = () => {
   const localModel = window.localStorage.getItem(StorageKey);
-  if (isNullOrUndefined(localModel)) return null;
+  console.log(localModel);
+  return validateLocalModel(localModel);
+};
+
+/**
+ * validates localModel retrieved from local storage
+ * separate function to allow for ease of testing
+ * @param localModel - the localModel retrieved from local storage
+ * @returns - the localModel if valid, null otherwise
+ */
+export const validateLocalModel = (localModel: string | null) => {
+  if (isNullOrUndefined(localModel) || localModel === '') return null;
 
   const parsedLocalModel = JSON.parse(localModel);
   // checks for invalid data in localModel, returns null if found

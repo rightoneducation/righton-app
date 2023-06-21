@@ -2,12 +2,13 @@ import {
   isNameValid,
   isGameCodeValid,
   checkForSubmittedAnswerOnRejoin,
-  fetchLocalData
+  validateLocalModel
 } from '../../src/lib/HelperFunctions';
 import i18n from '../mockTranslations';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
 import { GameSessionState } from '@righton/networking';
 import teamAnswers from './mock/teamAnswers.json'
+import localModel from './mock/localModel.json'
 
 
 describe('HelperFunctions', () => {
@@ -34,12 +35,30 @@ describe('HelperFunctions', () => {
 
   it ('checkForSubmittedAnswerOnRejoin', () => {
     let answerChoices = [{id: '4790', text: '60%', isCorrectAnswer: true, reason: 'reason'}];
+    // expects a rejoined answer that corresponds to the current game answer to return true 
     expect(checkForSubmittedAnswerOnRejoin(true, teamAnswers, answerChoices, GameSessionState.CHOOSE_CORRECT_ANSWER)).toEqual({selectedAnswerIndex: 0, isSubmitted: true});
+    // wrong phase
+    expect(checkForSubmittedAnswerOnRejoin(true, teamAnswers, answerChoices, GameSessionState.CHOOSE_TRICKIEST_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});    
+    // already submitted trickiest answer
+    answerChoices = [{id: '4790', text: '30%', isCorrectAnswer: false, reason: 'reason'}];
+    expect(checkForSubmittedAnswerOnRejoin(true, teamAnswers, answerChoices, GameSessionState.CHOOSE_TRICKIEST_ANSWER)).toEqual({selectedAnswerIndex: 0, isSubmitted: true});    
+    // wrong phase
+    expect(checkForSubmittedAnswerOnRejoin(true, teamAnswers, answerChoices, GameSessionState.PHASE_2_DISCUSS)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
+    // no answers submitted
+    expect(checkForSubmittedAnswerOnRejoin(true, null, answerChoices, GameSessionState.CHOOSE_TRICKIEST_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
+    // no rejoin
     expect(checkForSubmittedAnswerOnRejoin(false, teamAnswers, answerChoices, GameSessionState.CHOOSE_CORRECT_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
+    // no rejoin
     expect(checkForSubmittedAnswerOnRejoin(false, teamAnswers, answerChoices, GameSessionState.CHOOSE_TRICKIEST_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
   });
 
-  it ('fetchLocalData', () => {});
-   
+  // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out so it can be tested below
+
+  it ('validateLocalModel', () => {
+    //expect(validateLocalModel('')).toBe(false);
+    expect(validateLocalModel(null)).toBe(null);
+    console.log(JSON.parse('{"gameSessionId":"e51eb1e7-7141-4bfe-ab4e-0cd02670b32c","teamId":"3d796b32-7dab-4585-90ab-ef21df4a1814","teamMemberId":"15ac7afc-0884-40b0-8d05-aa79602a28d8","selectedAvatar":2,"hasRejoined":false}'));
+   expect(validateLocalModel(`{"gameSessionId":"e51eb1e7-7141-4bfe-ab4e-0cd02670b32c","teamId":"3d796b32-7dab-4585-90ab-ef21df4a1814","teamMemberId":"15ac7afc-0884-40b0-8d05-aa79602a28d8","selectedAvatar":2,"hasRejoined":false}`)).toStrictEqual(localModel);
+  });
 });
 
