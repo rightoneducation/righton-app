@@ -14,7 +14,7 @@ import FinalResultsContainer from '../containers/FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';
 import { LocalModel } from '../lib/PlayModels';
 
-interface GameInProgressContainerProps {
+interface GameSessionSwitchProps {
   apiClient: ApiClient;
   currentTimer: number;
   hasRejoined: boolean;
@@ -22,13 +22,13 @@ interface GameInProgressContainerProps {
   localModel: LocalModel;
 }
 
-export default function GameInProgressContainer({
+export default function GameSessionSwitch({
   apiClient,
   currentTimer,
   hasRejoined,
   gameSession,
   localModel,
-}: GameInProgressContainerProps) {
+}: GameSessionSwitchProps) {
   const [isPregameCountdown, setIsPregameCountdown] = useState<boolean>(
     !hasRejoined
   );
@@ -68,6 +68,7 @@ export default function GameInProgressContainer({
           score={score}
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
+          localModel={localModel}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -84,6 +85,7 @@ export default function GameInProgressContainer({
           score={score}
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
+          localModel={localModel}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
