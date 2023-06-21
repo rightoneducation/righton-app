@@ -88,6 +88,7 @@ export default function Timer({
       const storageObject: LocalModel = {
         ...localModel,
         currentTimer: currentTimeInput,
+        hasRejoined: true,
       };
       window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
