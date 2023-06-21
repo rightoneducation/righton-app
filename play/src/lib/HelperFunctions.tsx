@@ -92,26 +92,29 @@ export const checkForSubmittedAnswerOnRejoin = (
  */
 export const validateLocalModel = (localModel: string | null) => { 
   if (isNullOrUndefined(localModel) || localModel === '') return null;
-  const currentTime = new Date().getTime() / 60000;
   const parsedLocalModel = JSON.parse(localModel);
-  const elapsedTime = currentTime - parsedLocalModel.currentTime;
-
-  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
-  if (elapsedTime > 120) {
-   return null;
-  }
-
+ 
   // checks for invalid data in localModel, returns null if found
   if (
     [
+      parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
       parsedLocalModel.teamMemberId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
+      parsedLocalModel.currentTimer,
     ].some((value) => isNullOrUndefined(value) || value === '')
   ) {
     return null;
+  }
+
+  const currentTime = new Date().getTime() / 60000;
+  const elapsedTime = currentTime - parsedLocalModel.currentTime;
+
+  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
+  if (elapsedTime > 120) {
+   return null;
   }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
