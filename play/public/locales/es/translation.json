@@ -108,7 +108,8 @@
       "gamesessionerror": "Sesión de juego no encontrada",
       "subscriptionerror": "Subscription could not be established",
       "button1": "No se pudo establecer la suscripción",
-      "button2": "Volver al menú principal"
+      "button2": "Volver al menú principal",
+      "join": "Incapaz de unirse al juego. Inténtalo de nuevo"
     },
     "game": {
       "answer": "Hubo un error al enviar su respuesta. Inténtalo de nuevo.",

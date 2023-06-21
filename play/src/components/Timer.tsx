@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { LocalModel, StorageKey } from '../lib/PlayModels';
-import { fetchLocalData } from '../lib/HelperFunctions';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -39,6 +38,7 @@ interface TimerProps {
   isPaused: boolean;
   isFinished: boolean;
   handleTimerIsFinished: () => void;
+  localModel: LocalModel;
 }
 
 export default function Timer({
@@ -47,6 +47,7 @@ export default function Timer({
   isPaused,
   isFinished,
   handleTimerIsFinished,
+  localModel,
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
@@ -57,8 +58,6 @@ export default function Timer({
   let originalTime: number;
   const isPausedRef = useRef<boolean>(isPaused);
 
-  // retreive local storage data so that timer has correct value on rejoin
-  const rejoinGameObject = fetchLocalData();
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
@@ -87,14 +86,14 @@ export default function Timer({
         secStr = sec < 10 ? `0${sec}` : `${sec}`;
       }
       const storageObject: LocalModel = {
-        ...rejoinGameObject,
+        ...localModel,
         currentTimer: currentTimeInput,
       };
       window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
-  }, [currentTime, rejoinGameObject]);
+  }, [currentTime, localModel]);
 
   // useEffect to start off timer
   useEffect(() => {

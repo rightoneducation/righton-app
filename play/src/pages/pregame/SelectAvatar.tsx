@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { GamePlayButtonStyled } from '../../lib/styledcomponents/GamePlayButtonStyled';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import AvatarIconStyled from '../../lib/styledcomponents/AvatarIconStyled';
-import { monsterMap } from '../../lib/PlayModels';
+import { monsterMap, ErrorType } from '../../lib/PlayModels';
+import ErrorModal from '../../components/ErrorModal';
 
 // stack container for select avatar screen
 
@@ -22,7 +23,7 @@ const GridContainer = styled('div')(({ theme }) => ({
   // using CSS Grid here because mui Grid responsiveness produces changes in spacing when crossing breakpoints
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
-  gridGap: `${theme.sizing. extraSmallPadding}px`,
+  gridGap: `${theme.sizing.extraSmallPadding}px`,
 }));
 
 const AvatarIconContainer = styled(Box)({
@@ -76,7 +77,9 @@ const BottomContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  paddingBottom: isSmallDevice ? `${theme.sizing.extraExtraLargePadding}px`: `${theme.sizing.largePadding}px`,
+  paddingBottom: isSmallDevice
+    ? `${theme.sizing.extraExtraLargePadding}px`
+    : `${theme.sizing.largePadding}px`,
   gap: 12,
 }));
 
@@ -86,6 +89,8 @@ interface SelectAvatarProps {
   firstName: string;
   lastName: string;
   isSmallDevice: boolean;
+  isAPIError: boolean;
+  setIsAPIError: (value: boolean) => void;
   handleAvatarSelectClick: () => void;
 }
 
@@ -96,14 +101,27 @@ export default function SelectAvatar({
   lastName,
   isSmallDevice,
   handleAvatarSelectClick,
+  isAPIError,
+  setIsAPIError,
 }: SelectAvatarProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const [isButtonPressed, setIsButtonPressed] = React.useState(false);
 
+  const handleRetryClick = () => {
+    setIsAPIError(false);
+    setIsButtonPressed(false);
+  };
+
   return (
     <BackgroundContainerStyled>
       <StackContainer>
+        <ErrorModal
+          isModalOpen={isAPIError}
+          errorType={ErrorType.JOIN}
+          errorText=""
+          handleRetry={handleRetryClick}
+        />
         <Stack spacing={2}>
           <Typography
             variant="h2"
