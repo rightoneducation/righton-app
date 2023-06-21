@@ -48,7 +48,6 @@ describe('EnterPlayerName', () => {
     const setFirstName = jest.fn();
     const setLastName = jest.fn();
     const setPregameState = jest.fn();
-    const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
         isSmallDevice={true}
@@ -59,7 +58,7 @@ describe('EnterPlayerName', () => {
         setPregameState={setPregameState}
       />
     );
-    const buttonElement = screen.getByText(buttonText);
+    const buttonElement = screen.getByTestId('playername-button');
     fireEvent.click(buttonElement);
     // expects invalid text to render
     expect(screen.getByTestId('playername-invalidtext')).toBeInTheDocument();

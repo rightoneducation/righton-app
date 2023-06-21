@@ -118,7 +118,10 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled onClick={validateInput}>
+        <IntroButtonStyled 
+          data-testid="playername-button" 
+          onClick={validateInput}
+        >
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {t('joingame.playername.button')}
           </Typography>
