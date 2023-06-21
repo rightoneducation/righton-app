@@ -28,8 +28,10 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   const [pregameState, setPregameState] = useState<PregameState>(
     PregameState.SPLASH_SCREEN
   );
-  // retreive local storage data so that player can choose to rejoin game 
-  const [rejoinGameObject, setRejoinGameObject] = useState<LocalModel | null>(useLoaderData() as LocalModel);
+  // retreive local storage data so that player can choose to rejoin game
+  const [rejoinGameObject, setRejoinGameObject] = useState<LocalModel | null>(
+    useLoaderData() as LocalModel
+  );
   // state variables used to collect player information in pregame phase
   // information is loaded into local storage on select avatar screen and passed to /game
   const [gameSession, setGameSession] = useState<IGameSession | null>(null);
@@ -40,7 +42,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   );
 
   // TODO: coord with u/x for modal to pop up this error message
-  const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [isAPIerror, setIsAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   // if player has opted to rejoin old game session through modal on SplashScreen, set local storage data and navigate to game
   const handleRejoinSession = () => {
@@ -51,11 +53,12 @@ export function PregameContainer({ apiClient }: PregameFinished) {
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
     navigate(`/game`);
   };
+
   // if player doesn't want to rejoin, remove the localStorage and set rejoinGameObject to null
   const handleDontRejoinSession = () => {
     window.localStorage.removeItem(StorageKey);
     setRejoinGameObject(null);
-  }
+  };
   // on click of game code button, check if game code is valid
   // if game code is invalid, return false to display error
   // if game code is valid, store gameSessionId for future subscription and advance to ENTER_NAME state
@@ -96,7 +99,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         null
       );
       if (!team) {
-        setAPIError(true);
+        setIsAPIError(true);
       } else {
         try {
           const teamMember = await apiClient.addTeamMemberToTeam(
@@ -105,15 +108,15 @@ export function PregameContainer({ apiClient }: PregameFinished) {
             uuidv4()
           );
           if (!teamMember) {
-            setAPIError(true);
+            setIsAPIError(true);
           }
           return { teamId: team.id, teamMemberId: teamMember.id };
         } catch (error) {
-          setAPIError(true);
+          setIsAPIError(true);
         }
       }
     } catch (error) {
-      setAPIError(true);
+      setIsAPIError(true);
     }
     return undefined;
   };
@@ -123,7 +126,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       if (gameSession) {
         const teamInfo = await addTeamToGame();
         if (!teamInfo) {
-          setAPIError(true);
+          setIsAPIError(true);
           return;
         }
         const storageObject: LocalModel = {
@@ -139,7 +142,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         navigate(`/game`);
       }
     } catch (error) {
-      setAPIError(true);
+      setIsAPIError(true);
     }
   };
 
@@ -153,6 +156,8 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           setSelectedAvatar={setSelectedAvatar}
           isSmallDevice={isSmallDevice}
           handleAvatarSelectClick={handleAvatarSelectClick}
+          isAPIError={isAPIerror}
+          setIsAPIError={setIsAPIError}
         />
       );
     case PregameState.ENTER_NAME:
