@@ -29,4 +29,5 @@ describe('HelperFunctions', () => {
     expect(isGameCodeValid(placeholderGameCode)).toBe(false);
   });
 
+  it ('checkForSubmittedAnswerOnRejoin', () => {});
 });
