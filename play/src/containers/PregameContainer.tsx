@@ -40,7 +40,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   );
 
   // TODO: coord with u/x for modal to pop up this error message
-  const [APIerror, setAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [isAPIerror, setIsAPIError] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [reenableChooseButton, setReenableChooseButton] =
     useState<boolean>(false);
 
@@ -55,7 +55,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   };
 
   const handleRetryJoin = () => {
-    setAPIError(false);
+    setIsAPIError(false);
     setReenableChooseButton(true);
   };
 
@@ -104,7 +104,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         null
       );
       if (!team) {
-        setAPIError(true);
+        setIsAPIError(true);
       } else {
         try {
           const teamMember = await apiClient.addTeamMemberToTeam(
@@ -113,15 +113,15 @@ export function PregameContainer({ apiClient }: PregameFinished) {
             uuidv4()
           );
           if (!teamMember) {
-            setAPIError(true);
+            setIsAPIError(true);
           }
           return { teamId: team.id, teamMemberId: teamMember.id };
         } catch (error) {
-          setAPIError(true);
+          setIsAPIError(true);
         }
       }
     } catch (error) {
-      setAPIError(true);
+      setIsAPIError(true);
     }
     return undefined;
   };
@@ -131,7 +131,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       if (gameSession) {
         const teamInfo = await addTeamToGame();
         if (!teamInfo) {
-          setAPIError(true);
+          setIsAPIError(true);
           return;
         }
         const storageObject: LocalModel = {
@@ -147,7 +147,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
         navigate(`/game`);
       }
     } catch (error) {
-      setAPIError(true);
+      setIsAPIError(true);
     }
   };
 
@@ -161,7 +161,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           setSelectedAvatar={setSelectedAvatar}
           isSmallDevice={isSmallDevice}
           handleAvatarSelectClick={handleAvatarSelectClick}
-          displayErrorModal={APIerror}
+          displayErrorModal={isAPIerror}
           handleRetry={handleRetryJoin}
           reenableButton={reenableChooseButton}
         />
