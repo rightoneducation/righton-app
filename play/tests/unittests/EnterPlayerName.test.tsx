@@ -16,20 +16,18 @@ export function renderWithThemeAndTranslation(children: React.ReactElement) {
   );
 }
 
-const setPregameState = (state: PregameState) => {};
+const setFirstName = jest.fn();
+const setLastName = jest.fn();
+const setPregameState = jest.fn();
 
 describe('EnterPlayerName', () => {
   it('should render the EnterPlayerName page', async () => {
-    const firstName = '';
-    const lastName = '';
-    const setFirstName = jest.fn();
-    const setLastName = jest.fn();
     renderWithThemeAndTranslation(
       <EnterPlayerName
         isSmallDevice={true}
-        firstName={firstName}
+        firstName={''}
         setFirstName={setFirstName}
-        lastName={lastName}
+        lastName={''}
         setLastName={setLastName}
         setPregameState={setPregameState}
       />
@@ -49,6 +47,7 @@ describe('EnterPlayerName', () => {
   it('first name is placeholder', async () => {
     const setFirstName = jest.fn();
     const setLastName = jest.fn();
+    const setPregameState = jest.fn();
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
@@ -67,8 +66,6 @@ describe('EnterPlayerName', () => {
   });
 
   it('last name is placeholder', async () => {
-    const setFirstName = jest.fn();
-    const setLastName = jest.fn();
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
@@ -87,9 +84,6 @@ describe('EnterPlayerName', () => {
   });
 
   it('both names valid', async () => {
-    const setFirstName = jest.fn();
-    const setLastName = jest.fn();
-    const setPregameState = jest.fn();
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
