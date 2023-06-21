@@ -113,7 +113,6 @@ export const validateLocalModel = (localModel: string | null) => {
   ) {
     return null;
   }
-  console.log(parsedLocalModel);
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
 };
