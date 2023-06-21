@@ -22,7 +22,7 @@ import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType } from '../lib/PlayModels';
+import { ErrorType, LocalModel } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -44,6 +44,7 @@ interface GameInProgressProps {
   }[];
   hasRejoined: boolean;
   currentTimer: number;
+  localModel: LocalModel;
 }
 
 export default function GameInProgress({
@@ -61,6 +62,7 @@ export default function GameInProgress({
   answerChoices,
   hasRejoined,
   currentTimer,
+  localModel,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isError, setIsError] = useState(false);
@@ -187,6 +189,7 @@ export default function GameInProgress({
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
+          localModel={localModel}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
