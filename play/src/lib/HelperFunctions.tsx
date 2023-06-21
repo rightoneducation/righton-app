@@ -4,7 +4,7 @@ import {
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
-import { InputPlaceholder, StorageKey, LocalModel } from './PlayModels';
+import { InputPlaceholder, StorageKey } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -85,14 +85,6 @@ export const checkForSubmittedAnswerOnRejoin = (
 };
 
 /**
- * retrieves local data from local storage and calls validator function
- * @returns - the localModel if valid, null otherwise
- */
-export const fetchLocalData = () => {
-  const localModel = window.localStorage.getItem(StorageKey);
-  return validateLocalModel(localModel);
-};
-/**
  * validates localModel retrieved from local storage
  * separate function to allow for ease of testing
  * @param localModel - the localModel retrieved from local storage
@@ -101,9 +93,6 @@ export const fetchLocalData = () => {
 export const validateLocalModel = (localModel: string | null) => { 
   if (isNullOrUndefined(localModel) || localModel === '') return null;
   const currentTime = new Date().getTime() / 60000;
- 
-  if (isNullOrUndefined(localModel)) return null;
-
   const parsedLocalModel = JSON.parse(localModel);
   const elapsedTime = currentTime - parsedLocalModel.currentTime;
 
@@ -126,6 +115,17 @@ export const validateLocalModel = (localModel: string | null) => {
     window.localStorage.removeItem(StorageKey);
     return null;
   }
+  console.log(parsedLocalModel);
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
+};
+
+/**
+ * retrieves local data from local storage and calls validator function
+ * @returns - the localModel if valid, null otherwise
+ */
+export const fetchLocalData = () => {
+  const localModel = window.localStorage.getItem(StorageKey);
+  console.log(localModel);
+  return validateLocalModel(localModel);
 };

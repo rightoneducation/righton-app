@@ -52,13 +52,13 @@ describe('HelperFunctions', () => {
     expect(checkForSubmittedAnswerOnRejoin(false, teamAnswers, answerChoices, GameSessionState.CHOOSE_TRICKIEST_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
   });
 
-  // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out so it can be tested below
-
   it ('validateLocalModel', () => {
-    //expect(validateLocalModel('')).toBe(false);
+    expect(validateLocalModel('')).toBe(false);
     expect(validateLocalModel(null)).toBe(null);
     console.log(JSON.parse('{"gameSessionId":"e51eb1e7-7141-4bfe-ab4e-0cd02670b32c","teamId":"3d796b32-7dab-4585-90ab-ef21df4a1814","teamMemberId":"15ac7afc-0884-40b0-8d05-aa79602a28d8","selectedAvatar":2,"hasRejoined":false}'));
    expect(validateLocalModel(`{"gameSessionId":"e51eb1e7-7141-4bfe-ab4e-0cd02670b32c","teamId":"3d796b32-7dab-4585-90ab-ef21df4a1814","teamMemberId":"15ac7afc-0884-40b0-8d05-aa79602a28d8","selectedAvatar":2,"hasRejoined":false}`)).toStrictEqual(localModel);
   });
+
+  // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out so it can be tested below
 });
 
