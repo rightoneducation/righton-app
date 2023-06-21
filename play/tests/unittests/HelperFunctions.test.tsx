@@ -4,8 +4,11 @@ import {
   checkForSubmittedAnswerOnRejoin,
   fetchLocalData
 } from '../../src/lib/HelperFunctions';
-import { InputPlaceholder } from '../../src/lib/PlayModels';
 import i18n from '../mockTranslations';
+import { InputPlaceholder } from '../../src/lib/PlayModels';
+import { GameSessionState } from '@righton/networking';
+import teamAnswers from './mock/teamAnswers.json'
+
 
 describe('HelperFunctions', () => {
   it ('isNameValid', () => {
@@ -29,5 +32,14 @@ describe('HelperFunctions', () => {
     expect(isGameCodeValid(placeholderGameCode)).toBe(false);
   });
 
-  it ('checkForSubmittedAnswerOnRejoin', () => {});
+  it ('checkForSubmittedAnswerOnRejoin', () => {
+    let answerChoices = [{id: '4790', text: '60%', isCorrectAnswer: true, reason: 'reason'}];
+    expect(checkForSubmittedAnswerOnRejoin(true, teamAnswers, answerChoices, GameSessionState.CHOOSE_CORRECT_ANSWER)).toEqual({selectedAnswerIndex: 0, isSubmitted: true});
+    expect(checkForSubmittedAnswerOnRejoin(false, teamAnswers, answerChoices, GameSessionState.CHOOSE_CORRECT_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
+    expect(checkForSubmittedAnswerOnRejoin(false, teamAnswers, answerChoices, GameSessionState.CHOOSE_TRICKIEST_ANSWER)).toEqual({selectedAnswerIndex: null, isSubmitted: false});
+  });
+
+  it ('fetchLocalData', () => {});
+   
 });
+
