@@ -15,8 +15,8 @@ import { InputPlaceholder, StorageKey } from './PlayModels';
 export const isNameValid = (name: string) => {
   return (
     name.trim() !== '' && // check for falsy w/o spaces, typ
-    name !== i18n.t('playername_firstnamedefault') && // check if default value, typ
-    name !== i18n.t('playername_lastnamedefault')
+    name !== i18n.t('joingame.playername.firstnamedefault') && // check if default value, typ
+    name !== i18n.t('joingame.playername.lastnamedefault')
   );
 };
 
