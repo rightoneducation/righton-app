@@ -89,9 +89,8 @@ interface SelectAvatarProps {
   firstName: string;
   lastName: string;
   isSmallDevice: boolean;
-  displayErrorModal: boolean;
-  handleRetry: () => void;
-  reenableButton: boolean;
+  isAPIError: boolean;
+  setIsAPIError: (value: boolean) => void;
   handleAvatarSelectClick: () => void;
 }
 
@@ -102,22 +101,26 @@ export default function SelectAvatar({
   lastName,
   isSmallDevice,
   handleAvatarSelectClick,
-  displayErrorModal,
-  handleRetry,
-  reenableButton,
+  isAPIError,
+  setIsAPIError,
 }: SelectAvatarProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const [isButtonPressed, setIsButtonPressed] = React.useState(false);
 
+  const handleRetryClick = () => {
+    setIsAPIError(false);
+    setIsButtonPressed(false);
+  };
+
   return (
     <BackgroundContainerStyled>
       <StackContainer>
         <ErrorModal
-          isModalOpen={displayErrorModal}
+          isModalOpen={isAPIError}
           errorType={ErrorType.JOIN}
           errorText=""
-          handleRetry={handleRetry}
+          handleRetry={handleRetryClick}
         />
         <Stack spacing={2}>
           <Typography
@@ -159,7 +162,7 @@ export default function SelectAvatar({
               handleAvatarSelectClick();
               setIsButtonPressed(true);
             }}
-            disabled={isButtonPressed && !reenableButton}
+            disabled={isButtonPressed}
           >
             {t('joingame.selectavatar.button')}
           </GamePlayButtonStyled>
