@@ -98,7 +98,6 @@ export const validateLocalModel = (localModel: string | null) => {
 
   // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
   if (elapsedTime > 120) {
-   window.localStorage.removeItem(StorageKey);
    return null;
   }
 
@@ -110,9 +109,8 @@ export const validateLocalModel = (localModel: string | null) => {
       parsedLocalModel.teamMemberId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
-    ].some((value) => isNullOrUndefined(value))
+    ].some((value) => isNullOrUndefined(value) || value === '')
   ) {
-    window.localStorage.removeItem(StorageKey);
     return null;
   }
   console.log(parsedLocalModel);
@@ -125,7 +123,8 @@ export const validateLocalModel = (localModel: string | null) => {
  * @returns - the localModel if valid, null otherwise
  */
 export const fetchLocalData = () => {
-  const localModel = window.localStorage.getItem(StorageKey);
-  console.log(localModel);
-  return validateLocalModel(localModel);
+  const localModel = validateLocalModel(window.localStorage.getItem(StorageKey));
+  if (!localModel)
+    window.localStorage.removeItem(StorageKey);
+  return localModel;
 };

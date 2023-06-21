@@ -53,10 +53,11 @@ describe('HelperFunctions', () => {
   });
 
   it ('validateLocalModel', () => {
-    expect(validateLocalModel('')).toBe(false);
+    const localModelString = '{"currentTime":28123113.553616665,"gameSessionId":"91d31b3f-f14c-4dd8-ae8b-a3e17164d31f","teamId":"e06c22a2-928f-4d6c-b511-252bcc34de6a","teamMemberId":"0ed40697-0635-43a5-b46a-29ef5fb56d5d","selectedAvatar":5,"hasRejoined":false,"currentTimer":297}';
+    expect(validateLocalModel(localModelString)).toStrictEqual(localModel);
+    expect(validateLocalModel('')).toBe(null);
     expect(validateLocalModel(null)).toBe(null);
-    console.log(JSON.parse('{"gameSessionId":"e51eb1e7-7141-4bfe-ab4e-0cd02670b32c","teamId":"3d796b32-7dab-4585-90ab-ef21df4a1814","teamMemberId":"15ac7afc-0884-40b0-8d05-aa79602a28d8","selectedAvatar":2,"hasRejoined":false}'));
-   expect(validateLocalModel(`{"gameSessionId":"e51eb1e7-7141-4bfe-ab4e-0cd02670b32c","teamId":"3d796b32-7dab-4585-90ab-ef21df4a1814","teamMemberId":"15ac7afc-0884-40b0-8d05-aa79602a28d8","selectedAvatar":2,"hasRejoined":false}`)).toStrictEqual(localModel);
+    expect(validateLocalModel('{"currentTime":1,"gameSessionId":"91d31b3f-f14c-4dd8-ae8b-a3e17164d31f","teamId":"e06c22a2-928f-4d6c-b511-252bcc34de6a","teamMemberId":"0ed40697-0635-43a5-b46a-29ef5fb56d5d","selectedAvatar":5,"hasRejoined":false,"currentTimer":297}')).toBe(null);
   });
 
   // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out so it can be tested below

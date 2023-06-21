@@ -1,7 +1,9 @@
 {
-  "gameSessionId": "e51eb1e7-7141-4bfe-ab4e-0cd02670b32c", 
-  "hasRejoined": false, 
-  "selectedAvatar": 2, 
-  "teamId": "3d796b32-7dab-4585-90ab-ef21df4a1814", 
-  "teamMemberId": "15ac7afc-0884-40b0-8d05-aa79602a28d8"
+  "currentTime": 28123113.553616665,
+  "gameSessionId": "91d31b3f-f14c-4dd8-ae8b-a3e17164d31f",
+  "teamId": "e06c22a2-928f-4d6c-b511-252bcc34de6a",
+  "teamMemberId": "0ed40697-0635-43a5-b46a-29ef5fb56d5d",
+  "selectedAvatar": 5,
+  "hasRejoined": false,
+  "currentTimer": 297
 }
