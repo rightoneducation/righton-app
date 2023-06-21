@@ -35,7 +35,6 @@ interface PhaseResultsProps {
     isCorrectAnswer: boolean;
   }[];
   score: number;
-  handleUpdateScore: (newScore: number) => void;
   hasRejoined: boolean;
 }
 
@@ -66,13 +65,15 @@ export default function PhaseResults({
   gameSession, // todo: adjust networking helper method for score calc to req only teams instead of gamesession
   answerChoices,
   score,
-  handleUpdateScore,
   hasRejoined,
 }: PhaseResultsProps) {
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
   // withheldPoints: number - the number of points that were going to be assigned to the player before the error, so the player can retry the request
-  const [isError, setIsError] = useState<{error: boolean, withheldPoints: number}>({error: false, withheldPoints: 0});
+  const [isError, setIsError] = useState<{
+    error: boolean;
+    withheldPoints: number;
+  }>({ error: false, withheldPoints: 0 });
   const currentQuestion = gameSession.questions[currentQuestionIndex ?? 0];
   const currentTeam = teams?.find((team) => team.id === teamId);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
@@ -86,29 +87,29 @@ export default function PhaseResults({
   // update teamscore on the backend, if it fails, flag the error to pop the error modal
   const updateTeamScore = async (inputTeamId: string, newScore: number) => {
     try {
-      await apiClient.updateTeam({ id: inputTeamId, score: newScore + score});
+      await apiClient.updateTeam({ id: inputTeamId, score: newScore + score });
       setNewPoints(newScore);
     } catch {
-      setIsError({error: true, withheldPoints: newScore});
+      setIsError({ error: true, withheldPoints: newScore });
     }
   };
 
   // calculate new score for use in footer
   // using useEffect here because scoreindicator causes parent rerenders as it listens to newScore while animating
   useEffect(() => {
-      let calcNewScore = 0;
-      if (!hasRejoined) {
-        calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
-          gameSession,
-          currentQuestion,
-          currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        );
-      }
-      updateTeamScore(teamId, calcNewScore);
+    let calcNewScore = 0;
+    if (!hasRejoined) {
+      calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
+        gameSession,
+        currentQuestion,
+        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      );
+    }
+    updateTeamScore(teamId, calcNewScore);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRetry = () => {
-    setIsError((prev) => ({...prev, error: false}));
+    setIsError((prev) => ({ ...prev, error: false }));
     updateTeamScore(teamId, isError.withheldPoints);
   };
 
@@ -129,6 +130,7 @@ export default function PhaseResults({
           isCorrect={false}
           isIncorrect={false}
           totalTime={15}
+          currentTimer={0}
           isPaused={false}
           isFinished={false}
           handleTimerIsFinished={() => {}}
@@ -153,7 +155,6 @@ export default function PhaseResults({
           teamName={currentTeam ? currentTeam.name : 'Team One'}
           newPoints={newPoints}
           score={score}
-          handleUpdateScore={handleUpdateScore}
         />
       </FooterStackContainerStyled>
     </StackContainerStyled>

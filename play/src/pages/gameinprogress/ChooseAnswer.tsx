@@ -18,6 +18,7 @@ interface ChooseAnswerProps {
   questionUrl: string;
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
+  displaySubmitted: boolean;
   handleSubmitAnswer: (answerText: string) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
@@ -30,6 +31,7 @@ export default function ChooseAnswer({
   questionUrl,
   answerChoices,
   isSubmitted,
+  displaySubmitted,
   handleSubmitAnswer,
   currentState,
   selectedAnswer,
@@ -90,16 +92,18 @@ export default function ChooseAnswer({
         />
         {isSubmitted ? (
           <>
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: 700,
-                textAlign: 'center',
-                marginTop: `${theme.sizing.largePadding}px`,
-              }}
-            >
-              {t('gameinprogress.chooseanswer.answerthankyou1')}
-            </Typography>
+            {displaySubmitted ? (
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 700,
+                  textAlign: 'center',
+                  marginTop: `${theme.sizing.largePadding}px`,
+                }}
+              >
+                {t('gameinprogress.chooseanswer.answerthankyou1')}
+              </Typography>
+            ) : null}
             <Typography
               variant="body1"
               sx={{

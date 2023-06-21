@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography, Box } from '@mui/material';
 import { isNullOrUndefined } from '@righton/networking';
@@ -43,20 +43,19 @@ const NewPointsAnimation = styled('div')({
 interface ScoreIndicatorProps {
   newPoints?: number;
   score: number;
-  handleUpdateScore?: (newScore: number) => void;
 }
 
 export default function ScoreIndicator({
   newPoints,
   score,
-  handleUpdateScore,
 }: ScoreIndicatorProps) {
+  const [newScore, setNewScore] = useState(score);
   // adds an eventLister to add the new points to the existing score when the animation completes
   useEffect(() => {
     const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
-      if (newPoints && newPoints > 0 && handleUpdateScore) {
-        handleUpdateScore(score + newPoints);
+      if (newPoints && newPoints > 0) {
+        setNewScore(score + newPoints);
       }
     };
     element?.addEventListener('animationend', handleAnimationEnd);
@@ -76,7 +75,7 @@ export default function ScoreIndicator({
       </NewPointsAnimation>
       <ScorePill>
         <Typography variant="overline">
-          {isNullOrUndefined(score) ? 0 : score}
+          {isNullOrUndefined(newScore) ? 0 : newScore}
         </Typography>
       </ScorePill>
     </Box>

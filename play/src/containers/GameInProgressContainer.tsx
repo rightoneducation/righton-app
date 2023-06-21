@@ -10,7 +10,12 @@ import useFetchAndSubscribeGameSession from '../hooks/useFetchAndSubscribeGameSe
 import GameSessionSwitch from '../components/GameSessionSwitch';
 import Lobby from '../pages/pregame/Lobby';
 import ErrorModal from '../components/ErrorModal';
-import { LobbyMode, LocalModel, StorageKey, ErrorType } from '../lib/PlayModels';
+import {
+  LobbyMode,
+  LocalModel,
+  StorageKey,
+  ErrorType,
+} from '../lib/PlayModels';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -34,8 +39,10 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     retry,
     localModel?.hasRejoined
   );
+
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
+  
   // if gamesession is loading/errored/waiting for teacher to start game
   if (
     !subscription.gameSession ||
@@ -71,6 +78,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   // if teacher has started game, pass updated gameSession object down to GameSessionSwitch
   return (
     <GameSessionSwitch
+      currentTimer={localModel.currentTimer}
       hasRejoined={subscription.hasRejoined}
       localModel={localModel}
       gameSession={subscription.gameSession}
