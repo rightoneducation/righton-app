@@ -73,13 +73,13 @@ export default function Leaderboard({
 
   const { current: avatarNumbers } = useRef<number[]>(
     teams
-    // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-      ? teams.map((team, index) => (team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)))
-    // if teams is invalid, then return empty array
-      : []
+      ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
+        teams.map((team, index) =>
+          team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+        )
+      : // if teams is invalid, then return empty array
+        []
   );
-  
-  console.log(avatarNumbers);
 
   return (
     <StackContainerStyled
@@ -96,7 +96,7 @@ export default function Leaderboard({
           currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => { }}
+          handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled ref={containerRef}>
