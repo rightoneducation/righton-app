@@ -35,7 +35,8 @@ export default function GameSessionSwitch({
   const { currentState } = gameSession;
   const currentQuestion =
     gameSession.questions[gameSession.currentQuestionIndex!]; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  const currentTeam = gameSession.teams!.find( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const currentTeam = gameSession.teams!.find(
+    // eslint-disable-line @typescript-eslint/no-non-null-assertion
     (team) => team.id === localModel.teamId
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS

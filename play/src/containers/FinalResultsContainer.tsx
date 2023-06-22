@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { ITeam, GameSessionState, isNullOrUndefined } from '@righton/networking';
+import {
+  ITeam,
+  GameSessionState,
+  isNullOrUndefined,
+} from '@righton/networking';
 import Leaderboard from '../pages/finalresults/Leaderboard';
 import Congrats from '../pages/finalresults/Congrats';
 import { FinalResultsState } from '../lib/PlayModels';
@@ -19,7 +23,7 @@ export default function FinalResultsContainer({
   currentState,
   score,
   selectedAvatar,
-  teamId
+  teamId,
 }: FinalResultsContainerProps) {
   const theme = useTheme();
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
@@ -36,7 +40,7 @@ export default function FinalResultsContainer({
       }
     }
     return false;
-  }
+  };
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
@@ -55,8 +59,11 @@ export default function FinalResultsContainer({
         <Congrats
           score={score}
           selectedAvatar={selectedAvatar}
-          leader={!isNullOrUndefined(teams) && !isNullOrUndefined(currentTeam) ?
-            isLeader(teams, currentTeam) : false}
+          leader={
+            !isNullOrUndefined(teams) && !isNullOrUndefined(currentTeam)
+              ? isLeader(teams, currentTeam)
+              : false
+          }
           setFinalResultsState={() =>
             setFinalResultsState(FinalResultsState.LEADERBOARD)
           }
