@@ -14,10 +14,12 @@ const config: Config.InitialOptions = {
     '^.+\\.(js|jsx)$': 'babel-jest',
     // using babel-jest for symlinked modules
     [`(${networkingPath.replace(/\\/g, '\\\\')}).+\\.(js)$`]: 'babel-jest',
+    '^.+\\.css$': '<rootDir>/tests/transformers/cssTransform.ts',
     '^.+\\.svg$': '<rootDir>/tests/transformers/svgTransform.ts',
+    '^.+\\.png$': '<rootDir>/tests/transformers/pngTransform.ts',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(@aws-sdk|uuid))',
+    '<rootDir>/node_modules/(?!(@aws-sdk|uuid|swiper|ssr-window))',
     '<rootDir>/../networking/node_modules/(?!(@aws-sdk|uuid))',
   ],
   watchman: false,
