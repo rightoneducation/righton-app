@@ -15,8 +15,8 @@ import { InputPlaceholder, StorageKey } from './PlayModels';
 export const isNameValid = (name: string) => {
   return (
     name.trim() !== '' && // check for falsy w/o spaces, typ
-    name !== i18n.t('playername_firstnamedefault') && // check if default value, typ
-    name !== i18n.t('playername_lastnamedefault')
+    name !== i18n.t('joingame.playername.firstnamedefault') && // check if default value, typ
+    name !== i18n.t('joingame.playername.lastnamedefault')
   );
 };
 
@@ -85,36 +85,48 @@ export const checkForSubmittedAnswerOnRejoin = (
 };
 
 /**
- * retrieves local data from local storage and validates it
+ * validates localModel retrieved from local storage
+ * separate function to allow for ease of testing
+ * @param localModel - the localModel retrieved from local storage
  * @returns - the localModel if valid, null otherwise
  */
-export const fetchLocalData = () => {
-  const localModel = window.localStorage.getItem(StorageKey);
-  const currentTime = new Date().getTime() / 60000;
- 
-  if (isNullOrUndefined(localModel)) return null;
+export const validateLocalModel = (localModel: string | null) => { 
+  if (isNullOrUndefined(localModel) || localModel === '') return null;
   const parsedLocalModel = JSON.parse(localModel);
-  const elapsedTime = currentTime - parsedLocalModel.currentTime;
-
-  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
-  if (elapsedTime > 120) {
-   window.localStorage.removeItem(StorageKey);
-   return null;
-  }
-
+ 
   // checks for invalid data in localModel, returns null if found
   if (
     [
+      parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
       parsedLocalModel.teamMemberId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
-    ].some((value) => isNullOrUndefined(value))
+      parsedLocalModel.currentTimer,
+    ].some((value) => isNullOrUndefined(value) || value === '')
   ) {
-    window.localStorage.removeItem(StorageKey);
     return null;
+  }
+
+  const currentTime = new Date().getTime() / 60000;
+  const elapsedTime = currentTime - parsedLocalModel.currentTime;
+
+  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
+  if (elapsedTime > 120) {
+   return null;
   }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
+};
+
+/**
+ * retrieves local data from local storage and calls validator function
+ * @returns - the localModel if valid, null otherwise
+ */
+export const fetchLocalData = () => {
+  const localModel = validateLocalModel(window.localStorage.getItem(StorageKey));
+  if (!localModel)
+    window.localStorage.removeItem(StorageKey);
+  return localModel;
 };

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "86fa4972-07d2-4ee5-b81a-58fb7af36c14",
+    "questionId": 4790,
+    "isChosen": true,
+    "isTrickAnswer": false,
+    "text": "60%",
+    "createdAt": "2023-06-21T20:42:04.305Z",
+    "updatedAt": "2023-06-21T20:42:04.305Z",
+    "teamMemberAnswersId": "62e427b1-b33c-486f-b73e-13e7869f8a0c"
+  },
+  {
+    "id": "cfedbf5a-4955-4319-8563-5f02a9752ee2",
+    "questionId": 4790,
+    "isChosen": false,
+    "isTrickAnswer": true,
+    "text": "30%",
+    "createdAt": "2023-06-21T20:42:14.504Z",
+    "updatedAt": "2023-06-21T20:42:14.504Z",
+    "teamMemberAnswersId": "62e427b1-b33c-486f-b73e-13e7869f8a0c"
+  }
+]
