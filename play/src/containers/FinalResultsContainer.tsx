@@ -31,11 +31,13 @@ export default function FinalResultsContainer({
     FinalResultsState.CONGRATS
   );
 
-  const currentTeam = teams?.find((team) => team.id === teamId);
-  const isLeader = (inputTeams: ITeam[], inputTeam: ITeam) => {
+  const isLeader = (inputTeams: ITeam[], inputTeamID: string) => {
     inputTeams.sort((a, b) => b.score - a.score);
+    if (inputTeams.length <= 5) {
+      return true;
+    }
     for (let idx = 0; idx < 5; idx += 1) {
-      if (inputTeams[idx].id === inputTeam.id) {
+      if (inputTeams[idx].id === inputTeamID) {
         return true;
       }
     }
@@ -60,8 +62,8 @@ export default function FinalResultsContainer({
           score={score}
           selectedAvatar={selectedAvatar}
           leader={
-            !isNullOrUndefined(teams) && !isNullOrUndefined(currentTeam)
-              ? isLeader(teams, currentTeam)
+            !isNullOrUndefined(teams) && !isNullOrUndefined(teamId)
+              ? isLeader(teams, teamId)
               : false
           }
           setFinalResultsState={() =>
