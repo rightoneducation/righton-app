@@ -11,7 +11,7 @@ import { PregameState } from '../../src/lib/PlayModels';
 export function renderWithThemeAndTranslation(children: React.ReactElement) {
   return render(
     <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={Theme}>{children}</ThemeProvider>{' '}
+      <ThemeProvider theme={Theme}>{children}</ThemeProvider>
     </I18nextProvider>
   );
 }

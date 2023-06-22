@@ -8,7 +8,6 @@ import i18n from '../mockTranslations';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
 import { GameSessionState } from '@righton/networking';
 import teamAnswers from './mock/teamAnswers.json';
-import localModel from './mock/localModel.json';
 
 describe('HelperFunctions', () => {
   it('isNameValid', () => {
@@ -105,10 +104,12 @@ describe('HelperFunctions', () => {
   });
 
   it('validateLocalModel', () => {
+    const currentTime = new Date().getTime() / 60000;
     const localModelString =
-      '{"currentTime":28123113.553616665,"gameSessionId":"91d31b3f-f14c-4dd8-ae8b-a3e17164d31f","teamId":"e06c22a2-928f-4d6c-b511-252bcc34de6a","teamMemberId":"0ed40697-0635-43a5-b46a-29ef5fb56d5d","selectedAvatar":5,"hasRejoined":false,"currentTimer":297}';
-    // expects fully populated localModel data with time elapsed < 120 minutes, all else is invalid
-    expect(validateLocalModel(localModelString)).toStrictEqual(localModel);
+      `{"currentTime":${currentTime},"gameSessionId":"91d31b3f-f14c-4dd8-ae8b-a3e17164d31f","teamId":"e06c22a2-928f-4d6c-b511-252bcc34de6a","teamMemberId":"0ed40697-0635-43a5-b46a-29ef5fb56d5d","selectedAvatar":5,"hasRejoined":false,"currentTimer":297}`;
+    const parsedLocalModel = JSON.parse(localModelString);
+      // expects fully populated localModel data with time elapsed < 120 minutes, all else is invalid
+    expect(validateLocalModel(localModelString)).toStrictEqual(parsedLocalModel);
     expect(validateLocalModel('')).toBe(null);
     expect(validateLocalModel(null)).toBe(null);
     expect(
