@@ -90,7 +90,6 @@ export default function ErrorModal({
       appElement={document.getElementById('root') || undefined}
     >
       <Stack
-        data-testid="errormodal"
         spacing={2}
         sx={{ paddingBottom: `${theme.sizing.mediumPadding}px` }}
       >

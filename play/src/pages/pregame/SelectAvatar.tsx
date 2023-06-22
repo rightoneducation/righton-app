@@ -136,7 +136,6 @@ export default function SelectAvatar({
             {Object.keys(monsterMap).map((value, index) => (
               <AvatarIconContainer key={uuidv4()}>
                 <AvatarIconStyled
-                  data-testid={`selectavatar-icon`}
                   src={monsterMap[index].icon}
                   onClick={() => {
                     setSelectedAvatar(index);
@@ -159,7 +158,6 @@ export default function SelectAvatar({
             {`${firstName} ${lastName}`}
           </Typography>
           <GamePlayButtonStyled
-            data-testid={`selectavatar-button`}
             onClick={() => {
               handleAvatarSelectClick();
               setIsButtonPressed(true);
