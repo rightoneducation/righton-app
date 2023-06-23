@@ -55,8 +55,6 @@ describe ('GameInProgressContainer', () => {
     // expects text fields to render, invalid text field not to render
     expect(
       screen.getByTestId('lobby-rejoin')
-    ).toBeInTheDocument();
-
+    ).toBeInTheDocument()
   });
-
 });
