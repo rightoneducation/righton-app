@@ -4,7 +4,7 @@ import {
   checkForSubmittedAnswerOnRejoin,
   validateLocalModel,
 } from '../../src/lib/HelperFunctions';
-import i18n from '../mockTranslations';
+import i18n from './mock/translations/mockTranslations';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
 import { GameSessionState } from '@righton/networking';
 import teamAnswers from './mock/teamAnswers.json';

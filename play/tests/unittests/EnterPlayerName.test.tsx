@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import Theme from '../../src/lib/Theme';
-import i18n from '../mockTranslations';
+import i18n from './mock/translations/mockTranslations';
 import EnterPlayerName from '../../src/pages/pregame/EnterPlayerName';
 import { PregameState } from '../../src/lib/PlayModels';
 

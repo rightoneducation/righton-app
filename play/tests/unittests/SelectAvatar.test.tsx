@@ -5,7 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import Theme from '../../src/lib/Theme';
-import i18n from '../mockTranslations';
+import i18n from './mock/translations/mockTranslations';
 import SelectAvatar from '../../src/pages/pregame/SelectAvatar';
 import ReactModal from 'react-modal';
 ReactModal.setAppElement('body');

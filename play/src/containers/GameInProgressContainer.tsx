@@ -39,7 +39,6 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     retry,
     localModel?.hasRejoined
   );
-
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
 
@@ -50,7 +49,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
   ) {
     // if player is rejoining, show lobby in rejoining mode
     if (
-      localModel.hasRejoined === true &&
+      subscription.hasRejoined === true &&
       subscription.gameSession?.currentState !== GameSessionState.TEAMS_JOINING
     ) {
       return <Lobby mode={LobbyMode.REJOIN} />;

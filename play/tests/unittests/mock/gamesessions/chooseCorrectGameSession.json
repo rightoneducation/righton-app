@@ -2,7 +2,7 @@
   "id": "91d31b3f-f14c-4dd8-ae8b-a3e17164d31f",
   "createdAt": "2023-03-07T17:14:50.860Z",
   "currentQuestionIndex": 0,
-  "currentState": "TEAMS_JOINING",
+  "currentState": "CHOOSE_CORRECT_ANSWER",
   "currentTimer": null,
   "description": "There’s a sale at the mall! These questions will help you calculate how much you save on items.",
   "gameCode": 3221,

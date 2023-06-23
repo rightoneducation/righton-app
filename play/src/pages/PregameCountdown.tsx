@@ -33,7 +33,9 @@ export default function StartPhase2({
   const { t } = useTranslation();
 
   return (
-    <BackgroundContainerStyled>
+    <BackgroundContainerStyled
+      data-testid="pregame-countdown"
+    >
       <StackContainer spacing={5}>
         <RadialTimer
           mode={TimerMode.COUNTDOWN}
