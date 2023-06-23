@@ -33,9 +33,7 @@ export default function FinalResultsContainer({
 
   const isLeader = (inputTeams: ITeam[], inputTeamID: string) => {
     inputTeams.sort((a, b) => b.score - a.score);
-    if (inputTeams.length <= 5) {
-      return true;
-    }
+    if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID)) return true;
     for (let idx = 0; idx < 5; idx += 1) {
       if (inputTeams[idx].id === inputTeamID) {
         return true;
