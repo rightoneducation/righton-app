@@ -251,6 +251,7 @@ export class ApiClient implements IApiClient {
         const input: CreateTeamInput = {
             name,
             score: 0,
+            selectedAvatarIndex: 0,
             teamQuestionId: questionId,
             gameSessionTeamsId: gameSessionId,
             teamQuestionGameSessionId: gameSessionId,
