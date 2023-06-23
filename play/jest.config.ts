@@ -5,6 +5,7 @@ console.log(networkingPath);
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  setupFiles: ["whatwg-fetch"],
   roots: ['<rootDir>'],
   testRegex: '((\\.| /)(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
@@ -17,6 +18,12 @@ const config: Config.InitialOptions = {
     '^.+\\.css$': '<rootDir>/tests/transformers/cssTransform.ts',
     '^.+\\.svg$': '<rootDir>/tests/transformers/svgTransform.ts',
     '^.+\\.png$': '<rootDir>/tests/transformers/pngTransform.ts',
+    '^.+\\.(ts|tsx|js|jsx)$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+      }
+    ],
   },
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!(@aws-sdk|uuid|swiper|ssr-window))',

@@ -61,6 +61,7 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
   return (
     <>
       <Typography
+        data-testid="lobby-rejoin" 
         variant="h2"
         sx={{
           textAlign: 'center',

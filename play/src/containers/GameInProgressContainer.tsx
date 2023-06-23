@@ -42,10 +42,10 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 
   // if there isn't data in localstorage automatically redirect to the splashscreen
   if (isNullOrUndefined(localModel)) return <Navigate replace to="/" />;
-  
+
   // if gamesession is loading/errored/waiting for teacher to start game
   if (
-    !subscription.gameSession ||
+    isNullOrUndefined(subscription.gameSession) ||
     subscription.gameSession.currentState === GameSessionState.TEAMS_JOINING
   ) {
     // if player is rejoining, show lobby in rejoining mode

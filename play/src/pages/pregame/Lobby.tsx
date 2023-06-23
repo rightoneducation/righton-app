@@ -18,7 +18,6 @@ export default function Lobby({ mode }: LobbyProps) {
     <BackgroundContainerStyled>
       {mode === LobbyMode.REJOIN ? (
         <Box
-          data-testid="lobby-rejoin" 
           sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Typography
             variant="h1"

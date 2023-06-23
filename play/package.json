@@ -94,7 +94,8 @@
     "prop-types": "^15.8.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "webpack": "^5.77.0"
+    "webpack": "^5.77.0",
+    "whatwg-fetch": "^3.6.2"
   },
   "resolutions": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
