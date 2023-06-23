@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -36,6 +36,7 @@ export default function FinalResultsContainer({
     if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID)) return true;
     return false;
   };
+  const leader = useRef<boolean>(teams && teamId ? isLeader(teams, teamId) : false);
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
@@ -54,11 +55,7 @@ export default function FinalResultsContainer({
         <Congrats
           score={score}
           selectedAvatar={selectedAvatar}
-          leader={
-            !isNullOrUndefined(teams) && !isNullOrUndefined(teamId)
-              ? isLeader(teams, teamId)
-              : false
-          }
+          leader={leader.current}
           setFinalResultsState={() =>
             setFinalResultsState(FinalResultsState.LEADERBOARD)
           }
