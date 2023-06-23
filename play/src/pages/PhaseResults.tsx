@@ -83,7 +83,6 @@ export default function PhaseResults({
   );
 
   const [newPoints, setNewPoints] = React.useState<number>(0);
-
   // update teamscore on the backend, if it fails, flag the error to pop the error modal
   const updateTeamScore = async (inputTeamId: string, newScore: number) => {
     try {
@@ -105,6 +104,7 @@ export default function PhaseResults({
         currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
       );
     }
+    console.log(calcNewScore);
     updateTeamScore(teamId, calcNewScore);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

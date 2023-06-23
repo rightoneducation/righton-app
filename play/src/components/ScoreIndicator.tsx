@@ -52,6 +52,7 @@ export default function ScoreIndicator({
   const [newScore, setNewScore] = useState(score);
   // adds an eventLister to add the new points to the existing score when the animation completes
   useEffect(() => {
+    console.log(newPoints);
     const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
       if (newPoints && newPoints > 0) {
@@ -69,12 +70,12 @@ export default function ScoreIndicator({
       <NewPointsAnimation id="newPointsAnimation">
         {newPoints && newPoints > 0 ? (
           <NewPointsPill>
-            <Typography variant="overline">{`+${newPoints}`}</Typography>
+            <Typography  variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         ) : null}
       </NewPointsAnimation>
       <ScorePill>
-        <Typography variant="overline">
+        <Typography data-testid="scoreindicator-newpoints" variant="overline">
           {isNullOrUndefined(newScore) ? 0 : newScore}
         </Typography>
       </ScorePill>
