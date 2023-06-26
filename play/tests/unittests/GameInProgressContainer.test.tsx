@@ -150,8 +150,6 @@ describe ('GameInProgressContainer', () => {
     expect(screen.getByText(howToPlayDescription)).toBeInTheDocument();
   });
 
-
-
   it('should render the GameSessionSwitch page (game begins)', async () => {
     const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
       mockChooseCorrectGameSession as IAWSGameSession

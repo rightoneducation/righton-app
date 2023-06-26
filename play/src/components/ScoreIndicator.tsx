@@ -52,7 +52,6 @@ export default function ScoreIndicator({
   const [newScore, setNewScore] = useState(score);
   // adds an eventLister to add the new points to the existing score when the animation completes
   useEffect(() => {
-    console.log(newPoints);
     const element = document.getElementById('newPointsAnimation');
     const handleAnimationEnd = () => {
       if (newPoints && newPoints > 0) {
