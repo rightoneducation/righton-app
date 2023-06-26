@@ -80,6 +80,7 @@ export abstract class ModelHelper {
         if (isNullOrUndefined(gameSession.teams)) {
             throw new Error("'teams' can't be null")
         }
+
         // Calculate how many teams have chosen the same answer as the passed team.
         const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, team: ITeam) => {
             if (isNullOrUndefined(team.teamMembers) ||
@@ -105,6 +106,7 @@ export abstract class ModelHelper {
 
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
+        
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
 
