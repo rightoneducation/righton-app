@@ -106,7 +106,7 @@ export abstract class ModelHelper {
 
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
-        
+
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
 
