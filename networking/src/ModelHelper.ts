@@ -80,7 +80,6 @@ export abstract class ModelHelper {
         if (isNullOrUndefined(gameSession.teams)) {
             throw new Error("'teams' can't be null")
         }
-        console.log(answerText);
         // Calculate how many teams have chosen the same answer as the passed team.
         const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, team: ITeam) => {
             if (isNullOrUndefined(team.teamMembers) ||
@@ -106,7 +105,6 @@ export abstract class ModelHelper {
 
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
-        console.log(totalNoChosenAnswer);
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
 
@@ -122,13 +120,12 @@ export abstract class ModelHelper {
             answers.length === 0) {
             return 0
         }
-        console.log("sup");
+
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
         let submittedTrickAnswer = answers.find(answer => answer?.isTrickAnswer && answer.questionId === currentQuestion.id)
-        console.log(submittedTrickAnswer);
+
         if (submittedTrickAnswer){
-            console.log(ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id));
           return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
         }
         else if (answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
