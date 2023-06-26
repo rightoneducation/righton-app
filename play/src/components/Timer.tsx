@@ -57,7 +57,10 @@ export default function Timer({
   const prevTimeRef = useRef<number | null>(null);
   let originalTime: number;
   const isPausedRef = useRef<boolean>(isPaused);
-
+  console.log("CurrentTimer");
+  console.log(currentTimer);
+  console.log("TotalTime");
+  console.log(totalTime);
   // updates the current time as well as the localstorage in case of page reset
   // recursive countdown timer function using requestAnimationFrame
   function updateTimer(timestamp: number) {
@@ -66,11 +69,17 @@ export default function Timer({
         const delta = timestamp - prevTimeRef.current;
         setCurrentTimeMilli((prevTime) => prevTime - delta);
       } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-
+      console.log("sup");
+      console.log(currentTimeMilli);
+      console.log(timestamp);
+      console.log(originalTime);
       if (currentTimeMilli - (timestamp - originalTime) >= 0) {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } else handleTimerIsFinished();
+      } else {
+        console.log("sup2");
+        handleTimerIsFinished();
+      }
     }
   }
 

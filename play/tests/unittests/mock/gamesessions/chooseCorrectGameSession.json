@@ -9,7 +9,7 @@
   "gameId": 3599,
   "imageUrl": "https://imageio.forbes.com/specials-images/dam/imageserve/1138257321/960x0.jpg",
   "isAdvancedMode": false,
-  "phaseOneTime": 180,
+  "phaseOneTime": 0,
   "phaseTwoTime": 180,
   "startTime": null,
   "title": "A Day at the Mall",

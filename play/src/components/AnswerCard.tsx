@@ -91,6 +91,7 @@ export default function AnswerCard({
           ))}
         </Stack>
         <ButtonSubmitAnswer
+          data-testid={`answer-button-${isSubmitted}`}
           isSubmitted={isSubmitted}
           selectedAnswer={selectedAnswer}
           answers={answers}
