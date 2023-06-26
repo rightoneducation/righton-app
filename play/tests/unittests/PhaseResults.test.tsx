@@ -21,7 +21,7 @@ import PhaseResults from '../../src/pages/PhaseResults';
 import mockPhaseOneZeroPointsGameSession from './mock/gamesessions/scoretests/phaseOneZeroPointsGameSession.json';
 import mockPhaseOneTenPointsGameSession from './mock/gamesessions/scoretests/phaseOneTenPointsGameSession.json';
 import mockPhaseTwoUnpopularAnswerGamesession from './mock/gamesessions/scoretests/phaseTwoUnpopularAnswerGameSession.json';
-import mockPhaseTwoPopularAnswerGamesession from './mock/gamesessions/scoretests/phaseTwoUnpopularAnswerGameSession.json';
+import mockPhaseTwoPopularAnswerGamesession from './mock/gamesessions/scoretests/phaseTwoPopularAnswerGameSession.json';
 
 ReactModal.setAppElement('body');
 
@@ -153,32 +153,13 @@ describe ('PhaseResults', () => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
       });
   
-      await waitFor(() => expect(apiClient.updateTeam).toHaveBeenCalled());
+      await waitFor(() => {
+        expect(apiClient.updateTeam).toHaveBeenCalled()});
   
       // tests that new score indicator has value of +10
       expect(apiClient.updateTeam).toHaveBeenCalledWith({
         id: gameSession.teams![0].id,
-        score: 186,
+        score: 187,
       });
     });
 });
-
-
-//   expect(screen.getByTestId('scoreindicator-newpoints')).toHaveTextContent('0');
-// describe ('PhaseResults', () => {
-//   it('Phase 1, correct answer', async () => {
-
-//   });
-// });
-
-// describe ('PhaseResults', () => {
-//   it('Phase 2, wrong answer', async () => {
-
-//   });
-// });
-
-// describe ('PhaseResults', () => {
-//   it('Phase 2, correct answer', async () => {
-
-//   });
-// });

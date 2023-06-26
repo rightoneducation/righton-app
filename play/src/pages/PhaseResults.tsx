@@ -104,7 +104,6 @@ export default function PhaseResults({
         currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
       );
     }
-    console.log(calcNewScore);
     updateTeamScore(teamId, calcNewScore);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
