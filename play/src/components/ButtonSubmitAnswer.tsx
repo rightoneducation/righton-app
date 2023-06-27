@@ -31,7 +31,7 @@ export default function ButtonSubmitAnswer({
 
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
-      data-testid={`answer-button-enabled`}
+      data-testid="answer-button-enabled"
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
         handleSubmitAnswer(answerText ?? '');
@@ -41,7 +41,7 @@ export default function ButtonSubmitAnswer({
     </GamePlayButtonStyled>
   ) : (
     <GamePlayButtonStyledDisabled 
-      data-testid={`answer-button-disabled`}
+      data-testid="answer-button-disabled"
       disabled
     >
       {buttonContents}

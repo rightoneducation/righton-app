@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types';
 import path from 'path';
+
 const networkingPath = path.resolve(__dirname, '../networking/lib/src');
-console.log(networkingPath);
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
