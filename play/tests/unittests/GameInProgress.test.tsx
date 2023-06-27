@@ -35,7 +35,8 @@ export function renderWithThemeRouterTranslation(
     text: string;
     isCorrectAnswer: boolean;
     reason: string;
-  }[]
+  }[],
+  currentTimer: number,
 ) {
   return render(
     <I18nextProvider i18n={i18n}>
@@ -50,7 +51,7 @@ export function renderWithThemeRouterTranslation(
           teamId={gameSession.teams![0].id}
           score={100}
           hasRejoined={true}
-          currentTimer={-1}
+          currentTimer={currentTimer}
           localModel={mockLocalModel}
         />
         </MemoryRouter>
@@ -70,7 +71,22 @@ const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
 };
 
 describe ('GameInProgress', () => {
-  // tests if timer is zero, function with timerIsFinished is called (so that isSubmitted === true)
+  // tests if timer is > 0, button on answer card is still enabled
+  it('Timer has time, isSubmitted === false', async () => {
+    // mock gameSession with timer at 0
+    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
+      mockGameSession as IAWSGameSession
+    ) as IGameSession;
+    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
+    act(() => {
+      renderWithThemeRouterTranslation(gameSession, mockAnswerChoices, 120);
+    });
+    // expects answer card button to be enabled
+    expect(screen.getByTestId('answer-button-disabled')).toBeInTheDocument();
+  });
+
+    // tests if timer is finished (-1 here), function with timerIsFinished is called (so that isSubmitted === true)
   it('Timer has time, isSubmitted === false', async () => {
     // mock gameSession with timer at 0
      const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
@@ -79,9 +95,9 @@ describe ('GameInProgress', () => {
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
-      renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
+      renderWithThemeRouterTranslation(gameSession, mockAnswerChoices, -1);
     });
-    // wait for updateTeam to be called (there's a useEffect and a mocked api happening in the component here)
-    expect(screen.getByTestId('answer-button-true')).toBeInTheDocument();
+     // expects answer card button to be disabled
+    expect(screen.getByTestId('answer-button-disabled')).toBeInTheDocument();
   });
 });
