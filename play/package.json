@@ -102,6 +102,76 @@
     "styled-components": "^5",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
+  "prettier": {
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "airbnb",
+      "airbnb/hooks",
+      "airbnb-typescript",
+      "prettier",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:import/typescript"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "project": "./tsconfig.eslint.json"
+    },
+    "plugins": [
+      "react",
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "ignorePatterns": [
+      "build/*",
+      "**/coverage/**",
+      "node_modules/*"
+    ],
+    "settings": {
+      "import/core-modules": [
+        "@righton/networking"
+      ]
+    },
+    "rules": {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.stories.*",
+            "**/.storybook/**/*.*",
+            "@righton/networking/*"
+          ],
+          "peerDependencies": true
+        }
+      ],
+      "react/jsx-props-no-spreading": [
+        "off"
+      ],
+      "react/require-default-props": [
+        "off"
+      ],
+      "arrow-body-style": [
+        "off"
+      ],
+      "no-console": [
+        1,
+        {
+          "allow": [
+            "debug",
+            "error"
+          ]
+        }
+      ]
+    }
+  },
   "readme": "readme.md",
   "_id": "play2@0.1.0"
 }
