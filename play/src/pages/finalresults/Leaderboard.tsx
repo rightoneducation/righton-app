@@ -81,12 +81,17 @@ export default function Leaderboard({
   const { current: avatarNumbers } = useRef<number[]>(
     teams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        teams.map((team, index) =>
-          team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
-        )
+      teams.map((team, index) =>
+        team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+      )
       : // if teams is invalid, then return empty array
-        []
+      []
   );
+  // top five scores are taken from sortedTeams
+  const topScores: number[] = sortedTeams.slice(0, 5).map((team) => team.score);
+  // filter through sortedTeams for all teams with the top five scores
+  const topTeams: ITeam[] = sortedTeams.filter((team) => topScores.includes(team.score));
+
 
   return (
     <StackContainerStyled
@@ -103,7 +108,7 @@ export default function Leaderboard({
           currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => {}}
+          handleTimerIsFinished={() => { }}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled ref={containerRef}>
@@ -115,7 +120,7 @@ export default function Leaderboard({
           isSmallDevice={isSmallDevice}
           spacing={2}
         >
-          {sortedTeams?.map((team: ITeam, index: number) => (
+          {topTeams?.map((team: ITeam, index: number) => (
             <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
               <LeaderboardSelector
                 teamName={team.name ? team.name : 'Team One'}
