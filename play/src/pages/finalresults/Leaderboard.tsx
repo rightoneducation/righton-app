@@ -87,10 +87,17 @@ export default function Leaderboard({
       : // if teams is invalid, then return empty array
       []
   );
-  // top five scores are taken from sortedTeams
-  const topScores: number[] = sortedTeams.slice(0, 5).map((team) => team.score);
-  // filter through sortedTeams for all teams with the top five scores
+
+  // create a set to store unique scores, makes sure no scores repeat
+  const scoreSet = new Set<number>();
+  sortedTeams.forEach((team) => scoreSet.add(team.score));
+
+  // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
+  const topScores: number[] = Array.from(scoreSet).sort((a, b) => b - a).slice(0, 5);
+
+  // Filter through sortedTeams for all teams with the top five unique scores
   const topTeams: ITeam[] = sortedTeams.filter((team) => topScores.includes(team.score));
+
 
 
   return (
