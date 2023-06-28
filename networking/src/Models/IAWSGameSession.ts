@@ -31,7 +31,6 @@ type AWSTeam = {
       items: Array<AWSTeamMember | null>
   } | null
   score: number
-  selectedAvatarIndex: number
   createdAt: string
   updatedAt?: string
   gameSessionTeamsId?: string | null

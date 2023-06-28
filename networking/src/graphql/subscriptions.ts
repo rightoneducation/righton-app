@@ -26,7 +26,6 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -42,32 +41,25 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -90,14 +82,11 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -116,16 +105,13 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -146,7 +132,6 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -162,29 +147,23 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -205,7 +184,6 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -221,29 +199,23 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -273,7 +245,6 @@ export const onCreateGameSession = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -289,32 +260,25 @@ export const onCreateGameSession = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -337,14 +301,11 @@ export const onCreateGameSession = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -374,7 +335,6 @@ export const onUpdateGameSession = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -390,32 +350,25 @@ export const onUpdateGameSession = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -438,14 +391,11 @@ export const onUpdateGameSession = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -475,7 +425,6 @@ export const onDeleteGameSession = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -491,32 +440,25 @@ export const onDeleteGameSession = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -539,14 +481,11 @@ export const onDeleteGameSession = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -567,7 +506,6 @@ export const onCreateTeam = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -583,29 +521,23 @@ export const onCreateTeam = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -626,7 +558,6 @@ export const onUpdateTeam = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -642,29 +573,23 @@ export const onUpdateTeam = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -685,7 +610,6 @@ export const onDeleteTeam = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -701,29 +625,23 @@ export const onDeleteTeam = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -744,16 +662,13 @@ export const onCreateTeamMember = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -774,16 +689,13 @@ export const onUpdateTeamMember = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -804,16 +716,13 @@ export const onDeleteTeamMember = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -830,7 +739,6 @@ export const onCreateTeamAnswer = /* GraphQL */ `
       createdAt
       updatedAt
       teamMemberAnswersId
-      __typename
     }
   }
 `;
@@ -847,7 +755,6 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
       createdAt
       updatedAt
       teamMemberAnswersId
-      __typename
     }
   }
 `;
@@ -864,7 +771,6 @@ export const onDeleteTeamAnswer = /* GraphQL */ `
       createdAt
       updatedAt
       teamMemberAnswersId
-      __typename
     }
   }
 `;

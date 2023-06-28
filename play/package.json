@@ -33,8 +33,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "yarn --cwd ../networking build && react-scripts start",
-    "build": "yarn --cwd ../networking build && react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint .",

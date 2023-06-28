@@ -20,7 +20,6 @@
         "id": "2d609343-de50-4830-b65e-71eb72bb9bef",
         "name": "Edward Hopper",
         "createdAt": "2023-03-07T17:14:50.860Z",
-        "selectedAvatarIndex": 0,
         "teamMembers": {
           "items": [
             {
@@ -99,7 +98,6 @@
         "id": "2d609343-de50-4830-b65e-13432234sfasdfsadf",
         "name": "Mark Rothko",
         "createdAt": "2023-03-07T17:14:50.860Z",
-        "selectedAvatarIndex": 0,
         "teamMembers": {
           "items": [
             {
@@ -178,7 +176,6 @@
         "id": "2d609343-de50-4830-b65e-13asdfasdf2234sfasdfsadf",
         "name": "Gustave Caillebotte",
         "createdAt": "2023-03-07T17:14:50.860Z",
-        "selectedAvatarIndex": 0,
         "teamMembers": {
           "items": [
             {
@@ -257,7 +254,6 @@
         "id": "2d609343-de50-4830-b65e-13a12312321fasfasdfsadf",
         "name": "Diane Arbus",
         "createdAt": "2023-03-07T17:14:50.860Z",
-        "selectedAvatarIndex": 0,
         "teamMembers": {
           "items": [
             {
@@ -334,9 +330,8 @@
       },
       {
         "id": "2d609343-de50-4830-b65e-13aasdfsadf312321fasfasdfsadf",
-        "name": "Hokusai Katsushika",
+        "name": "Katsushika Hokusai",
         "createdAt": "2023-03-07T17:14:50.860Z",
-        "selectedAvatarIndex": 0,
         "teamMembers": {
           "items": [
             {
@@ -415,7 +410,6 @@
         "id": "2d609343-de50-4830-b65e-13aasdfsadf312321fasfasdfsadf",
         "name": "Andrew Wyeth",
         "createdAt": "2023-03-07T17:14:50.860Z",
-        "selectedAvatarIndex": 0,
         "teamMembers": {
           "items": [
             {

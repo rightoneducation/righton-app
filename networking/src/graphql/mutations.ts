@@ -29,7 +29,6 @@ export const createGameSession = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -45,32 +44,25 @@ export const createGameSession = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -93,14 +85,11 @@ export const createGameSession = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -131,7 +120,6 @@ export const updateGameSession = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -147,32 +135,25 @@ export const updateGameSession = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -195,14 +176,11 @@ export const updateGameSession = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -233,7 +211,6 @@ export const deleteGameSession = /* GraphQL */ `
             grade
             order
             gameSessionId
-            __typename
           }
           teamMembers {
             items {
@@ -249,32 +226,25 @@ export const deleteGameSession = /* GraphQL */ `
                   createdAt
                   updatedAt
                   teamMemberAnswersId
-                  __typename
                 }
                 nextToken
-                __typename
               }
               deviceId
               createdAt
               updatedAt
               teamTeamMembersId
-              __typename
             }
             nextToken
-            __typename
           }
           score
-          selectedAvatarIndex
           createdAt
           updatedAt
           gameSessionTeamsId
           teamQuestionId
           teamQuestionOrder
           teamQuestionGameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       currentQuestionIndex
       currentState
@@ -297,14 +267,11 @@ export const deleteGameSession = /* GraphQL */ `
           grade
           order
           gameSessionId
-          __typename
         }
         nextToken
-        __typename
       }
       createdAt
       updatedAt
-      __typename
     }
   }
 `;
@@ -325,7 +292,6 @@ export const createQuestion = /* GraphQL */ `
       grade
       order
       gameSessionId
-      __typename
     }
   }
 `;
@@ -346,7 +312,6 @@ export const updateQuestion = /* GraphQL */ `
       grade
       order
       gameSessionId
-      __typename
     }
   }
 `;
@@ -367,7 +332,6 @@ export const deleteQuestion = /* GraphQL */ `
       grade
       order
       gameSessionId
-      __typename
     }
   }
 `;
@@ -391,7 +355,6 @@ export const createTeam = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -407,29 +370,23 @@ export const createTeam = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -453,7 +410,6 @@ export const updateTeam = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -469,29 +425,23 @@ export const updateTeam = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -515,7 +465,6 @@ export const deleteTeam = /* GraphQL */ `
         grade
         order
         gameSessionId
-        __typename
       }
       teamMembers {
         items {
@@ -531,29 +480,23 @@ export const deleteTeam = /* GraphQL */ `
               createdAt
               updatedAt
               teamMemberAnswersId
-              __typename
             }
             nextToken
-            __typename
           }
           deviceId
           createdAt
           updatedAt
           teamTeamMembersId
-          __typename
         }
         nextToken
-        __typename
       }
       score
-      selectedAvatarIndex
       createdAt
       updatedAt
       gameSessionTeamsId
       teamQuestionId
       teamQuestionOrder
       teamQuestionGameSessionId
-      __typename
     }
   }
 `;
@@ -575,16 +518,13 @@ export const createTeamMember = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -606,16 +546,13 @@ export const updateTeamMember = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -637,16 +574,13 @@ export const deleteTeamMember = /* GraphQL */ `
           createdAt
           updatedAt
           teamMemberAnswersId
-          __typename
         }
         nextToken
-        __typename
       }
       deviceId
       createdAt
       updatedAt
       teamTeamMembersId
-      __typename
     }
   }
 `;
@@ -664,7 +598,6 @@ export const createTeamAnswer = /* GraphQL */ `
       createdAt
       updatedAt
       teamMemberAnswersId
-      __typename
     }
   }
 `;
@@ -682,7 +615,6 @@ export const updateTeamAnswer = /* GraphQL */ `
       createdAt
       updatedAt
       teamMemberAnswersId
-      __typename
     }
   }
 `;
@@ -700,7 +632,6 @@ export const deleteTeamAnswer = /* GraphQL */ `
       createdAt
       updatedAt
       teamMemberAnswersId
-      __typename
     }
   }
 `;

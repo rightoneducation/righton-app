@@ -56,7 +56,6 @@ type Team @model {
   question: Question @hasOne
   teamMembers: [TeamMember] @hasMany
   score: Int! @default(value: "0")
-  selectedAvatarIndex: Int! @default(value: "0")
 }
 
 type TeamMember @model {
