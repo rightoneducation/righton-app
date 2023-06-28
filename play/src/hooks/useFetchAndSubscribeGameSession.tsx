@@ -33,43 +33,44 @@ export default function useFetchAndSubscribeGameSession(
       setIsLoading(true);
       setError('');
     }
-    // if gamesessionId is null, set error and prevent api calls
+    // if gameSessionId is null, set error and prevent api calls
     if (isNullOrUndefined(gameSessionId)) {
       setError(`${t('error.connect.gamesessionerror')}`);
       setIsLoading(false);
-    } else {
-      apiClient
-        .getGameSession(gameSessionId)
-        .then((fetchedGame) => {
-          if (!fetchedGame || !fetchedGame.id) {
-            setError(`${t('error.connect.gamesessionerror')}`);
-            return null;
-          }
-          if (!ignore) setGameSession(fetchedGame);
-          setIsLoading(false);
-          const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
-            fetchedGame.id,
-            (response) => {
-              if (!response) {
-                setError(`${t('error.connect.subscriptionerror')}`);
-                return;
-              }
-              // Update the gameSession object and trigger the callback
-              if (!ignore) setHasRejoined(false);
-              setGameSession((prevGame) => ({ ...prevGame, ...response }));
-            }
-          );
-          return () => {
-            ignore = true;
-            gameSessionSubscription.unsubscribe();
-          };
-        })
-        .catch((e) => {
-          setIsLoading(false);
-          if (e instanceof Error) setError(e.message);
-          else setError(`${t('error.connect.gamesessionerror')}`);
-        });
+      return;
     }
+
+    apiClient
+      .getGameSession(gameSessionId)
+      .then((fetchedGame) => {
+        if (!fetchedGame || !fetchedGame.id) {
+          setError(`${t('error.connect.gamesessionerror')}`);
+          return null;
+        }
+        if (!ignore) setGameSession(fetchedGame);
+        setIsLoading(false);
+        const gameSessionSubscription = apiClient.subscribeUpdateGameSession(
+          fetchedGame.id,
+          (response) => {
+            if (!response) {
+              setError(`${t('error.connect.subscriptionerror')}`);
+              return;
+            }
+            // Update the gameSession object and trigger the callback
+            if (!ignore) setHasRejoined(false);
+            setGameSession((prevGame) => ({ ...prevGame, ...response }));
+          }
+        );
+        return () => {
+          ignore = true;
+          gameSessionSubscription.unsubscribe();
+        };
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        if (e instanceof Error) setError(e.message);
+        else setError(`${t('error.connect.gamesessionerror')}`);
+      });
   }, [gameSessionId, apiClient, t, retry, hasRejoined]);
   return { isLoading, error, gameSession, hasRejoined };
 }

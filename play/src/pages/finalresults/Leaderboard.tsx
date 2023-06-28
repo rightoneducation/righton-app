@@ -37,7 +37,14 @@ export default function Leaderboard({
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
   const teamSorter = (inputTeams: ITeam[]) => {
-    inputTeams.sort((a, b) => b.score - a.score);
+    inputTeams.sort((a, b) => {
+      if (a.score !== b.score) {
+        // sort by score descending
+        return b.score - a.score;
+      }
+      // sort alphabetically by name if scores are tied
+      return a.name.localeCompare(b.name);
+    });
     return teams!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
   };
 
