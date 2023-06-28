@@ -50,7 +50,7 @@ function App() {
     gameSessionSubscription.current = apiClient.subscribeUpdateGameSession(
       gameSession.id,
       (gameSession) => {
-        console.log(`GameSessionUpdated: ${gameSession}`);
+        console.log(gameSession);
       }
     );
   };
