@@ -3,11 +3,16 @@ import {
   isGameCodeValid,
   checkForSubmittedAnswerOnRejoin,
   validateLocalModel,
+  teamSorter
 } from '../../src/lib/HelperFunctions';
 import i18n from './mock/translations/mockTranslations';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
 import { GameSessionState } from '@righton/networking';
 import teamAnswers from './mock/teamAnswers.json';
+import unsortedTeamsTied from './mock/teams/unsortedTeamsTied.json';
+import sortedTeamsTied from './mock/teams/sortedTeamsTied.json';
+import unsortedTeamsNoTies from './mock/teams/unsortedTeamsNoTies.json';
+import sortedTeamsNoTies from './mock/teams/sortedTeamsNoTies.json';
 
 describe('HelperFunctions', () => {
   it('isNameValid', () => {
@@ -154,5 +159,12 @@ describe('HelperFunctions', () => {
     ).toBe(null);
   });
 
-  // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out so it can be tested below
+  it('teamSorter', () => {
+    // if no ties, sort team by score only
+    expect(teamSorter(unsortedTeamsNoTies)).toStrictEqual(sortedTeamsNoTies);
+    // sort teams by score, then by name if tied
+    expect(teamSorter(unsortedTeamsTied)).toStrictEqual(sortedTeamsTied);
+  });
+
+  // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out for separate testing
 });

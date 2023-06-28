@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import {
   ITeamAnswer,
+  ITeam,
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
@@ -129,4 +130,21 @@ export const fetchLocalData = () => {
   if (!localModel)
     window.localStorage.removeItem(StorageKey);
   return localModel;
+};
+
+/**
+ * sorts teams by score descending, then alphabetically by name
+ * @param inputTeams - the teams to be sorted
+ * @returns - the sorted teams
+ */ 
+export const teamSorter = (inputTeams: ITeam[]) => {
+  const teams = inputTeams.sort((a, b) => {
+    if (a.score !== b.score) {
+      // sort by score descending
+      return b.score - a.score;
+    }
+    // sort alphabetically by name if scores are tied
+    return a.name.localeCompare(b.name);
+  });
+  return teams!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 };

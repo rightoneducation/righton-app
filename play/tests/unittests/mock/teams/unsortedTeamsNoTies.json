@@ -1,0 +1,38 @@
+[
+  {
+    "id": "",
+    "name": "A Team",
+    "teamMembers": [],
+    "score": 50,
+    "selectedAvatarIndex": 0,
+    "createdAt": "",
+    "updatedAt": "",
+    "gameSessionTeamsId": "",
+    "teamQuestionId": null,
+    "teamQuestionGameSessionId": ""
+  },
+  {
+    "id": "",
+    "name": "B Team",
+    "teamMembers": [],
+    "score": 0,
+    "selectedAvatarIndex": 0,
+    "createdAt": "",
+    "updatedAt": "",
+    "gameSessionTeamsId": "",
+    "teamQuestionId": null,
+    "teamQuestionGameSessionId": ""
+  },
+  {
+    "id": "",
+    "name": "C Team",
+    "teamMembers": [],
+    "score": 100,
+    "selectedAvatarIndex": 0,
+    "createdAt": "",
+    "updatedAt": "",
+    "gameSessionTeamsId": "",
+    "teamQuestionId": null,
+    "teamQuestionGameSessionId": ""
+  }
+]
