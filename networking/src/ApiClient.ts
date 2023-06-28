@@ -461,6 +461,7 @@ type AWSTeam = {
         items: Array<AWSTeamMember | null>
     } | null
     score: number
+    selectedAvatarIndex: number
     createdAt: string
     updatedAt?: string
     gameSessionTeamsId?: string | null
@@ -546,7 +547,6 @@ export class GameSessionParser {
             title,
             isAdvancedMode,
         } = awsGameSession || {}
-
         if (
             isNullOrUndefined(id) ||
             isNullOrUndefined(currentState) ||
@@ -602,7 +602,6 @@ export class GameSessionParser {
         if (isNullOrUndefined(awsTeams) || isNullOrUndefined(awsTeams.items)) {
             return []
         }
-
         return awsTeams.items.map((awsTeam) => {
             if (isNullOrUndefined(awsTeam)) {
                 throw new Error("Team can't be null in the backend.")
@@ -613,6 +612,7 @@ export class GameSessionParser {
                 name: awsTeam.name,
                 teamQuestionId: awsTeam.teamQuestionId,
                 score: awsTeam.score,
+                selectedAvatarIndex: awsTeam.selectedAvatarIndex,
                 createdAt: awsTeam.createdAt,
                 updatedAt: awsTeam.updatedAt,
                 gameSessionTeamsId: awsTeam.gameSessionTeamsId,
@@ -702,6 +702,7 @@ class TeamParser {
             name,
             teamMembers,
             score,
+            selectedAvatarIndex,
             createdAt,
             updatedAt,
             gameSessionTeamsId,
@@ -720,6 +721,7 @@ class TeamParser {
             name,
             teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
             score,
+            selectedAvatarIndex,
             createdAt,
             updatedAt,
             gameSessionTeamsId,
