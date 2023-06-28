@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "yarn --cwd ../networking build && react-scripts start",
-    "build": "yarn --cwd ../networking build && react-scripts buil",
+    "build": "yarn --cwd ../networking build && react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint .",
