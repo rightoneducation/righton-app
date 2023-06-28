@@ -66,7 +66,7 @@ describe('SelectAvatar', () => {
   });
 
 
-  it ('onclick should fire add teams callback' , async () => {
+  it ('error should reveal error modal' , async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
