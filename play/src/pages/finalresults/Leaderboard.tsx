@@ -19,6 +19,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import LeaderboardSelector from '../../components/LeaderboardSelector';
 import { StorageKey } from '../../lib/PlayModels';
+import { teamSorter } from '../../lib/HelperFunctions';
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -36,10 +37,6 @@ export default function Leaderboard({
   isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
-  const teamSorter = (inputTeams: ITeam[]) => {
-    inputTeams.sort((a, b) => b.score - a.score);
-    return teams!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  };
 
   let sortedTeams: ITeam[] = [];
   if (!isNullOrUndefined(teams)) {
