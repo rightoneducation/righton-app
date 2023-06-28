@@ -81,11 +81,11 @@ export default function Leaderboard({
   const { current: avatarNumbers } = useRef<number[]>(
     teams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-      teams.map((team, index) =>
-        team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
-      )
+        teams.map((team, index) =>
+          team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+        )
       : // if teams is invalid, then return empty array
-      []
+        []
   );
 
   // create a set to store unique scores, makes sure no scores repeat
@@ -93,12 +93,14 @@ export default function Leaderboard({
   sortedTeams.forEach((team) => scoreSet.add(team.score));
 
   // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
-  const topScores: number[] = Array.from(scoreSet).sort((a, b) => b - a).slice(0, 5);
+  const topScores: number[] = Array.from(scoreSet)
+    .sort((a, b) => b - a)
+    .slice(0, 5);
 
   // Filter through sortedTeams for all teams with the top five unique scores
-  const topTeams: ITeam[] = sortedTeams.filter((team) => topScores.includes(team.score));
-
-
+  const topTeams: ITeam[] = sortedTeams.filter((team) =>
+    topScores.includes(team.score)
+  );
 
   return (
     <StackContainerStyled
@@ -115,7 +117,7 @@ export default function Leaderboard({
           currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => { }}
+          handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled ref={containerRef}>
