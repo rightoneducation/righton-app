@@ -100,6 +100,8 @@ describe('EnterPlayerName', () => {
     expect(
       screen.queryByTestId('playername-invalidtext')
     ).not.toBeInTheDocument();
-    expect(setPregameStateMock).toHaveBeenCalledWith(PregameState.SELECT_AVATAR);
+    expect(setPregameStateMock).toHaveBeenCalledWith(
+      PregameState.SELECT_AVATAR
+    );
   });
 });

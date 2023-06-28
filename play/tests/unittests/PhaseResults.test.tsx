@@ -6,14 +6,14 @@ import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import ReactModal from 'react-modal';
-import { 
+import {
   ApiClient,
   Environment,
   GameSessionParser,
   IAWSGameSession,
   IGameSession,
   IChoice,
-  IQuestion
+  IQuestion,
 } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
@@ -37,7 +37,7 @@ apiClient.updateTeam = jest.fn().mockResolvedValue({});
 
 // function for rendering phase results with theme, router, and translation
 // intakes a mock gamesession based on test parameters
-export function renderWithThemeRouterTranslation(
+function renderWithThemeRouterTranslation(
   gameSession: IGameSession,
   mockAnswerChoices: {
     id: string;
@@ -70,22 +70,25 @@ export function renderWithThemeRouterTranslation(
 
 // function for getting answer choices from a question
 const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
-  return mockCurrentQuestion?.choices?.map((choice: IChoice) => ({
+  return (
+    mockCurrentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
-  })) ?? [];
+    })) ?? []
+  );
 };
 
-describe ('PhaseResults', () => {
+describe('PhaseResults', () => {
   // tests if player has answered incorrectly on phase 1 (starting score: 0, ending score: 0)
   it('Phase 1, wrong answer', async () => {
-     // mock gameSession with team that answered incorrectly on first question
-     const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
+    // mock gameSession with team that answered incorrectly on first question
+    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
       mockPhaseOneZeroPointsGameSession as IAWSGameSession
     ) as IGameSession;
-    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockCurrentQuestion =
+      gameSession.questions[gameSession.currentQuestionIndex!];
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
@@ -99,13 +102,14 @@ describe ('PhaseResults', () => {
     });
   });
 
-   // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-   it('Phase 1, correct answer', async () => {
+  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
+  it('Phase 1, correct answer', async () => {
     // mock gameSession with team that answered incorrectly on first question
     const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
       mockPhaseOneTenPointsGameSession as IAWSGameSession
     ) as IGameSession;
-    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockCurrentQuestion =
+      gameSession.questions[gameSession.currentQuestionIndex!];
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
@@ -120,46 +124,49 @@ describe ('PhaseResults', () => {
     });
   });
 
-    // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-    it('Phase 2, unpopular trick answer', async () => {
-      // mock gameSession with team that answered incorrectly on first question
-      const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-        mockPhaseTwoUnpopularAnswerGamesession as IAWSGameSession
-      ) as IGameSession;
-      const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
-      const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
-      act(() => {
-        renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
-      });
-  
-      await waitFor(() => expect(apiClient.updateTeam).toHaveBeenCalled());
-  
-      // tests that new score indicator has value of +10
-      expect(apiClient.updateTeam).toHaveBeenCalledWith({
-        id: gameSession.teams![0].id,
-        score: 120,
-      });
+  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
+  it('Phase 2, unpopular trick answer', async () => {
+    // mock gameSession with team that answered incorrectly on first question
+    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
+      mockPhaseTwoUnpopularAnswerGamesession as IAWSGameSession
+    ) as IGameSession;
+    const mockCurrentQuestion =
+      gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
+    act(() => {
+      renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
     });
 
-     // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-     it('Phase 2, popular trick answer', async () => {
-      // mock gameSession with team that answered incorrectly on first question
-      const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-        mockPhaseTwoPopularAnswerGamesession as IAWSGameSession
-      ) as IGameSession;
-      const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
-      const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
-      act(() => {
-        renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
-      });
-  
-      await waitFor(() => {
-        expect(apiClient.updateTeam).toHaveBeenCalled()});
-  
-      // tests that new score indicator has value of +10
-      expect(apiClient.updateTeam).toHaveBeenCalledWith({
-        id: gameSession.teams![0].id,
-        score: 187,
-      });
+    await waitFor(() => expect(apiClient.updateTeam).toHaveBeenCalled());
+
+    // tests that new score indicator has value of +10
+    expect(apiClient.updateTeam).toHaveBeenCalledWith({
+      id: gameSession.teams![0].id,
+      score: 120,
     });
+  });
+
+  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
+  it('Phase 2, popular trick answer', async () => {
+    // mock gameSession with team that answered incorrectly on first question
+    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
+      mockPhaseTwoPopularAnswerGamesession as IAWSGameSession
+    ) as IGameSession;
+    const mockCurrentQuestion =
+      gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
+    act(() => {
+      renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
+    });
+
+    await waitFor(() => {
+      expect(apiClient.updateTeam).toHaveBeenCalled();
+    });
+
+    // tests that new score indicator has value of +10
+    expect(apiClient.updateTeam).toHaveBeenCalledWith({
+      id: gameSession.teams![0].id,
+      score: 187,
+    });
+  });
 });

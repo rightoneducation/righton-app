@@ -2,12 +2,12 @@
   // configured per https://typescript-eslint.io/linting/typed-linting/monorepos/
   "extends": "./tsconfig.json",
   "include": [
-      "*.js",
-      "*.ts",
-      "./src/**/*.ts",
-      "./src/**/*.tsx",
-      "./tests/**/*.ts",
-      "./tests/**/*.tsx",
-    ],
-    "exclude": ["node_modules"] // required to override the parent config
+    "*.js",
+    "*.ts",
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./tests/**/*.ts",
+    "./tests/**/*.tsx"
+  ],
+  "exclude": ["node_modules"] // required to override the parent config
 }

@@ -1,37 +1,36 @@
 /** @jest-environment jsdom */
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import ReactModal from 'react-modal';
-import { 
+import {
   ApiClient,
   Environment,
   GameSessionParser,
   IAWSGameSession,
-  IGameSession 
+  IGameSession,
 } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import { GameInProgressContainer } from '../../src/containers/GameInProgressContainer';
 import mockLocalModel from './mock/localModel.json';
-import mockTeamsJoinGameSession from './mock/gamesessions/teamsJoinGameSession.json'
-import mockChooseCorrectGameSession from './mock/gamesessions/chooseCorrectGameSession.json'
+import mockTeamsJoinGameSession from './mock/gamesessions/teamsJoinGameSession.json';
+import mockChooseCorrectGameSession from './mock/gamesessions/chooseCorrectGameSession.json';
+import useFetchAndSubscribeGameSession from '../../src/hooks/useFetchAndSubscribeGameSession';
 
 ReactModal.setAppElement('body');
-
 // mock for useFetchAndSubscribeGameSession hook
 jest.mock('../../src/hooks/useFetchAndSubscribeGameSession', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
-import useFetchAndSubscribeGameSession from '../../src/hooks/useFetchAndSubscribeGameSession';
 
 // mock for mediaQueries from: https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -47,22 +46,20 @@ Object.defineProperty(window, 'matchMedia', {
 const apiClient = new ApiClient(Environment.Staging);
 const routes = [
   {
-    path: "/game",
+    path: '/game',
     element: <GameInProgressContainer apiClient={apiClient} />,
     loader: () => mockLocalModel,
   },
 ];
 const router = createMemoryRouter(routes, {
-  initialEntries: ['/game'],  // start the history at a specific location
-  initialIndex: 0,  // optional, defaults to 0
+  initialEntries: ['/game'], // start the history at a specific location
+  initialIndex: 0, // optional, defaults to 0
 });
 
-export function renderWithThemeRouterTranslation(children: React.ReactElement) {
+function renderWithThemeRouterTranslation(children: React.ReactElement) {
   return render(
     <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={Theme}>
-          {children}
-      </ThemeProvider>
+      <ThemeProvider theme={Theme}>{children}</ThemeProvider>
     </I18nextProvider>
   );
 }
@@ -71,9 +68,9 @@ export function renderWithThemeRouterTranslation(children: React.ReactElement) {
 const howToPlayLoading = i18n.t('howtoplay.loading');
 const howToPlayDescription = i18n.t('howtoplay.description');
 
-// tests that the gameinprogresscontainer renders the correct components 
+// tests that the gameinprogresscontainer renders the correct components
 // based on the received subscription object from the useFetchAndSubscribeGameSession hook
-describe ('GameInProgressContainer', () => {
+describe('GameInProgressContainer', () => {
   it('should render the GameSessionSwitch page (game begins)', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
@@ -82,15 +79,11 @@ describe ('GameInProgressContainer', () => {
       gameSession: null,
       hasRejoined: false,
     }));
-    renderWithThemeRouterTranslation(
-      <RouterProvider router={router} />
-    );
+    renderWithThemeRouterTranslation(<RouterProvider router={router} />);
     // expects error modal to be popped if there are connection errors
-    expect(
-      screen.getByTestId('errormodal')
-    ).toBeInTheDocument()
+    expect(screen.getByTestId('errormodal')).toBeInTheDocument();
   });
-  
+
   it('should render the lobby page in loading loading', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
@@ -99,15 +92,10 @@ describe ('GameInProgressContainer', () => {
       gameSession: null,
       hasRejoined: true,
     }));
-    renderWithThemeRouterTranslation(
-      <RouterProvider router={router} />
-    );
+    renderWithThemeRouterTranslation(<RouterProvider router={router} />);
     // expects lobby to render in Rejoin mode (Loading game...)
-    expect(
-      screen.getByTestId('lobby-rejoin')
-    ).toBeInTheDocument()
-  })
-
+    expect(screen.getByTestId('lobby-rejoin')).toBeInTheDocument();
+  });
 
   it('should render the GameSessionSwitch page (game begins)', async () => {
     // Mock the hook's return value
@@ -117,14 +105,10 @@ describe ('GameInProgressContainer', () => {
       gameSession: null,
       hasRejoined: false,
     }));
-    renderWithThemeRouterTranslation(
-      <RouterProvider router={router} />
-    );
-    // expects the how-to-play page to render 
+    renderWithThemeRouterTranslation(<RouterProvider router={router} />);
+    // expects the how-to-play page to render
     // expect 'Getting game session' text to render indicating app is connecting to game
-    expect(
-      screen.getByTestId('lobby-howtoplay')
-    ).toBeInTheDocument()
+    expect(screen.getByTestId('lobby-howtoplay')).toBeInTheDocument();
     expect(screen.getByText(howToPlayLoading)).toBeInTheDocument();
   });
 
@@ -136,17 +120,13 @@ describe ('GameInProgressContainer', () => {
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
       error: null,
-      gameSession: gameSession,
+      gameSession,
       hasRejoined: false,
     }));
-    renderWithThemeRouterTranslation(
-      <RouterProvider router={router} />
-    );
+    renderWithThemeRouterTranslation(<RouterProvider router={router} />);
     // expects the how-to-play page to render (connecting to game)
     // expects how to play description text to be rendered as howToPlay status text
-    expect(
-      screen.getByTestId('lobby-howtoplay')
-    ).toBeInTheDocument()
+    expect(screen.getByTestId('lobby-howtoplay')).toBeInTheDocument();
     expect(screen.getByText(howToPlayDescription)).toBeInTheDocument();
   });
 
@@ -158,15 +138,11 @@ describe ('GameInProgressContainer', () => {
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
       error: null,
-      gameSession: gameSession,
+      gameSession,
       hasRejoined: false,
     }));
-    renderWithThemeRouterTranslation(
-      <RouterProvider router={router} />
-    );
+    renderWithThemeRouterTranslation(<RouterProvider router={router} />);
     // expects the pregame countdown to start
-    expect(
-      screen.getByTestId('pregame-countdown')
-    ).toBeInTheDocument()
+    expect(screen.getByTestId('pregame-countdown')).toBeInTheDocument();
   });
 });

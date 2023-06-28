@@ -4,19 +4,17 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
+import ReactModal from 'react-modal';
 import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import SelectAvatar from '../../src/pages/pregame/SelectAvatar';
-import ReactModal from 'react-modal';
-ReactModal.setAppElement('body');
 
-export function renderWithThemeRouterTranslation(children: React.ReactElement) {
+ReactModal.setAppElement('body');
+function renderWithThemeRouterTranslation(children: React.ReactElement) {
   return render(
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={Theme}>
-        <BrowserRouter>
-          {children}
-        </BrowserRouter>
+        <BrowserRouter>{children}</BrowserRouter>
       </ThemeProvider>
     </I18nextProvider>
   );
@@ -31,10 +29,10 @@ describe('SelectAvatar', () => {
     renderWithThemeRouterTranslation(
       <SelectAvatar
         selectedAvatar={0}
-        firstName={'Test'}
-        lastName={'Test'}
+        firstName="Test"
+        lastName="Test"
         setSelectedAvatar={setSelectedAvatar}
-        isSmallDevice={true}
+        isSmallDevice
         handleAvatarSelectClick={handleAvatarSelectClick}
         isAPIError={false}
         setIsAPIError={setIsAPIError}
@@ -45,15 +43,15 @@ describe('SelectAvatar', () => {
     expect(screen.getByTestId('selectavatar-button')).toBeInTheDocument();
   });
 
-  it ('onclick should fire add teams callback' , async () => {
+  it('onclick should fire add teams callback', async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
         selectedAvatar={0}
-        firstName={'Test'}
-        lastName={'Test'}
+        firstName="Test"
+        lastName="Test"
         setSelectedAvatar={setSelectedAvatar}
-        isSmallDevice={true}
+        isSmallDevice
         handleAvatarSelectClick={handleAvatarSelectClick}
         isAPIError={false}
         setIsAPIError={setIsAPIError}
@@ -62,25 +60,22 @@ describe('SelectAvatar', () => {
     const buttonElement = screen.getByTestId('selectavatar-button');
     fireEvent.click(buttonElement);
     expect(handleAvatarSelectClick).toHaveBeenCalled();
-
   });
 
-
-  it ('onclick should fire add teams callback' , async () => {
+  it('onclick should fire add teams callback', async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
         selectedAvatar={0}
-        firstName={'Test'}
-        lastName={'Test'}
+        firstName="Test"
+        lastName="Test"
         setSelectedAvatar={setSelectedAvatar}
-        isSmallDevice={true}
+        isSmallDevice
         handleAvatarSelectClick={handleAvatarSelectClick}
-        isAPIError={true}
+        isAPIError
         setIsAPIError={setIsAPIError}
       />
     );
     expect(screen.getByTestId('errormodal')).toBeInTheDocument();
-
   });
 });
