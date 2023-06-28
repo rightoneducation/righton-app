@@ -28,7 +28,7 @@ apiClient.updateTeam = jest.fn().mockResolvedValue({});
 
 // function for rendering phase results with theme, router, and translation
 // intakes a mock gamesession based on test parameters
-export function renderWithThemeRouterTranslation(
+function renderWithThemeRouterTranslation(
   gameSession: IGameSession,
   mockAnswerChoices: {
     id: string;
@@ -45,12 +45,12 @@ export function renderWithThemeRouterTranslation(
         <GameInProgress
           {...gameSession}
           apiClient={apiClient}
-          teamMemberId={gameSession!.teams![0].teamMembers![0]!.id}
+          teamMemberId={gameSession!.teams![0].teamMembers![0]!.id} // es-lint-disable-line @typescript-eslint/no-non-null-assertion
           teamAvatar={0}
           answerChoices={mockAnswerChoices}
-          teamId={gameSession.teams![0].id}
+          teamId={gameSession.teams![0].id} // es-lint-disable-line @typescript-eslint/no-non-null-assertion
           score={100}
-          hasRejoined={true}
+          hasRejoined
           currentTimer={currentTimer}
           localModel={mockLocalModel}
         />
@@ -77,7 +77,7 @@ describe ('GameInProgress', () => {
     const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
       mockGameSession as IAWSGameSession
     ) as IGameSession;
-    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!]; // es-lint-disable-line @typescript-eslint/no-non-null-assertion
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices, 120);
@@ -92,7 +92,7 @@ describe ('GameInProgress', () => {
      const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
       mockGameSession as IAWSGameSession
     ) as IGameSession;
-    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!]; // es-lint-disable-line @typescript-eslint/no-non-null-assertion
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices, -1);

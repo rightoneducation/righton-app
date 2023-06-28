@@ -9,7 +9,7 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-export function renderWithTheme(children: React.ReactElement) {
+function renderWithTheme(children: React.ReactElement) {
   return render(<ThemeProvider theme={Theme}>{children}</ThemeProvider>);
 }
 
@@ -19,9 +19,9 @@ const handleGameCodeClick = jest.fn(async () => {
 
 describe('EnterGameCode', () => {
   it('should render the EnterGameCode page', async () => {
-    const { debug } = renderWithTheme(
+    renderWithTheme(
       <EnterGameCode
-        isSmallDevice={true}
+        isSmallDevice
         handleGameCodeClick={handleGameCodeClick}
       />
     );
@@ -30,9 +30,9 @@ describe('EnterGameCode', () => {
   });
 
   it('validate textfield input', async () => {
-    const { debug } = renderWithTheme(
+    renderWithTheme(
       <EnterGameCode
-        isSmallDevice={true}
+        isSmallDevice
         handleGameCodeClick={handleGameCodeClick}
       />
     );

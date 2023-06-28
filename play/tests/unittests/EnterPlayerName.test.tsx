@@ -8,7 +8,7 @@ import i18n from './mock/translations/mockTranslations';
 import EnterPlayerName from '../../src/pages/pregame/EnterPlayerName';
 import { PregameState } from '../../src/lib/PlayModels';
 
-export function renderWithThemeAndTranslation(children: React.ReactElement) {
+function renderWithThemeAndTranslation(children: React.ReactElement) {
   return render(
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={Theme}>{children}</ThemeProvider>
@@ -16,20 +16,20 @@ export function renderWithThemeAndTranslation(children: React.ReactElement) {
   );
 }
 
-const setFirstName = jest.fn();
-const setLastName = jest.fn();
-const setPregameState = jest.fn();
+const setFirstNameMock = jest.fn();
+const setLastNameMock = jest.fn();
+const setPregameStateMock = jest.fn();
 
 describe('EnterPlayerName', () => {
   it('should render the EnterPlayerName page', async () => {
     renderWithThemeAndTranslation(
       <EnterPlayerName
-        isSmallDevice={true}
-        firstName={''}
-        setFirstName={setFirstName}
-        lastName={''}
-        setLastName={setLastName}
-        setPregameState={setPregameState}
+        isSmallDevice
+        firstName=""
+        setFirstName={setFirstNameMock}
+        lastName=""
+        setLastName={setLastNameMock}
+        setPregameState={setPregameStateMock}
       />
     );
     // expects text fields to render, invalid text field not to render
@@ -50,10 +50,10 @@ describe('EnterPlayerName', () => {
     const setPregameState = jest.fn();
     renderWithThemeAndTranslation(
       <EnterPlayerName
-        isSmallDevice={true}
-        firstName={'First Name'}
+        isSmallDevice
+        firstName="First Name"
         setFirstName={setFirstName}
-        lastName={'Valid'}
+        lastName="Valid"
         setLastName={setLastName}
         setPregameState={setPregameState}
       />
@@ -68,12 +68,12 @@ describe('EnterPlayerName', () => {
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
-        isSmallDevice={true}
-        firstName={'Valid'}
-        setFirstName={setFirstName}
-        lastName={'Last Name'}
-        setLastName={setLastName}
-        setPregameState={setPregameState}
+        isSmallDevice
+        firstName="Valid"
+        setFirstName={setFirstNameMock}
+        lastName="Last Name"
+        setLastName={setLastNameMock}
+        setPregameState={setPregameStateMock}
       />
     );
     const buttonElement = screen.getByText(buttonText);
@@ -86,12 +86,12 @@ describe('EnterPlayerName', () => {
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
-        isSmallDevice={true}
-        firstName={'Valid'}
-        setFirstName={setFirstName}
-        lastName={'Valid'}
-        setLastName={setLastName}
-        setPregameState={setPregameState}
+        isSmallDevice
+        firstName="Valid"
+        setFirstName={setFirstNameMock}
+        lastName="Valid"
+        setLastName={setLastNameMock}
+        setPregameState={setPregameStateMock}
       />
     );
     const buttonElement = screen.getByText(buttonText);
@@ -100,6 +100,6 @@ describe('EnterPlayerName', () => {
     expect(
       screen.queryByTestId('playername-invalidtext')
     ).not.toBeInTheDocument();
-    expect(setPregameState).toHaveBeenCalledWith(PregameState.SELECT_AVATAR);
+    expect(setPregameStateMock).toHaveBeenCalledWith(PregameState.SELECT_AVATAR);
   });
 });
