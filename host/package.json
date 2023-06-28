@@ -49,9 +49,9 @@
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "npm run build --prefix ../networking && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "yarn --cwd ../networking build && react-scripts start",
+    "build": "yarn --cwd ../networking build && react-scripts build",
+    "test": "yarn --cwd ../networking build && react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
