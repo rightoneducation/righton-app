@@ -1,6 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   ITeam,
   GameSessionState,
@@ -25,8 +23,6 @@ export default function FinalResultsContainer({
   selectedAvatar,
   teamId,
 }: FinalResultsContainerProps) {
-  const theme = useTheme();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [finalResultsState, setFinalResultsState] = useState(
     FinalResultsState.CONGRATS
   );
@@ -48,7 +44,6 @@ export default function FinalResultsContainer({
           currentState={currentState}
           teamAvatar={selectedAvatar}
           teamId={teamId}
-          isSmallDevice={isSmallDevice}
         />
       );
     case FinalResultsState.CONGRATS:
