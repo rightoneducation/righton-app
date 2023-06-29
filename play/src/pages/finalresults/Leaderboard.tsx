@@ -81,13 +81,18 @@ export default function Leaderboard({
   const { current: avatarNumbers } = useRef<number[]>(
     teams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        teams.map((team, index) =>
-          team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
-        )
+      teams.map((team, index) =>
+        team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+      )
       : // if teams is invalid, then return empty array
-        []
+      []
   );
-
+  console.log("-----isSmallDevice-----");
+  console.log(isSmallDevice);
+  console.log("-----isSmallDevice-----");
+  console.log("---subContainerHeight--");
+  console.log(subContainerHeight);
+  console.log("---subContainerHeight--");
   return (
     <StackContainerStyled
       direction="column"
@@ -103,16 +108,14 @@ export default function Leaderboard({
           currentTimer={0}
           isPaused={false}
           isFinished={false}
-          handleTimerIsFinished={() => {}}
+          handleTimerIsFinished={() => { }}
         />
       </HeaderStackContainerStyled>
-      <BodyStackContainerStyled ref={containerRef}>
+      <BodyStackContainerStyled ref={containerRef} style={{ height: `${subContainerHeight}px` }}>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <BodyContentAreaLeaderboardStyled
           container
-          style={{ height: `${subContainerHeight}px` }}
-          isSmallDevice={isSmallDevice}
           spacing={2}
         >
           {sortedTeams?.map((team: ITeam, index: number) => (

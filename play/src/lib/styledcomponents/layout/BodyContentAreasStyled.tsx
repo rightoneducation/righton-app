@@ -34,27 +34,18 @@ export const BodyContentAreaPhaseResultsStyled = styled(
 });
 
 // content area of body that floats above background layers above - Phase Results Page
-interface BodyContentLeaderboardProps {
-  isSmallDevice: boolean;
-}
-
-export const BodyContentAreaLeaderboardStyled = styled(
-  BodyContentAreaDoubleColumnStyled,
-  {
-    shouldForwardProp: (prop) => prop !== 'isSmallDevice',
-  }
-)<BodyContentLeaderboardProps>(({ isSmallDevice, theme }) => ({
+export const BodyContentAreaLeaderboardStyled = styled(BodyContentAreaDoubleColumnStyled)(({ theme }) => ({
   position: 'absolute',
   top: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: isSmallDevice ? 'flex-start' : 'center',
+  justifyContent: 'flex-start',
   maxWidth: '500px',
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
-  height: '546px',
-  overflow: 'hidden',
+  height: '100%',
+  overflow: 'scroll',
   flexWrap: 'nowrap',
   margin: 0,
 }));
