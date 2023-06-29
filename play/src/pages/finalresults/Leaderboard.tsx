@@ -87,12 +87,7 @@ export default function Leaderboard({
       : // if teams is invalid, then return empty array
       []
   );
-  console.log("-----isSmallDevice-----");
-  console.log(isSmallDevice);
-  console.log("-----isSmallDevice-----");
-  console.log("---subContainerHeight--");
-  console.log(subContainerHeight);
-  console.log("---subContainerHeight--");
+
   return (
     <StackContainerStyled
       direction="column"

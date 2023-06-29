@@ -48,4 +48,11 @@ export const BodyContentAreaLeaderboardStyled = styled(BodyContentAreaDoubleColu
   overflow: 'scroll',
   flexWrap: 'nowrap',
   margin: 0,
+  touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none', // IE and Edge
 }));
