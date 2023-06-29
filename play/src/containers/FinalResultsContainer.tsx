@@ -30,7 +30,8 @@ export default function FinalResultsContainer({
   const isLeader = (inputTeams: ITeam[] | undefined, inputTeamID: string) => {
     if (!isNullOrUndefined(inputTeams) && !isNullOrUndefined(inputTeamID)) {
       inputTeams.sort((a, b) => b.score - a.score);
-      if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID)) return true;
+      if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID))
+        return true;
     }
     return false;
   };

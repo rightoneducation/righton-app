@@ -34,7 +34,9 @@ export const BodyContentAreaPhaseResultsStyled = styled(
 });
 
 // content area of body that floats above background layers above - Phase Results Page
-export const BodyContentAreaLeaderboardStyled = styled(BodyContentAreaDoubleColumnStyled)(({ theme }) => ({
+export const BodyContentAreaLeaderboardStyled = styled(
+  BodyContentAreaDoubleColumnStyled
+)(({ theme }) => ({
   position: 'absolute',
   top: 0,
   display: 'flex',
