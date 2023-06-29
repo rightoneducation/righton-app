@@ -88,6 +88,20 @@ export default function Leaderboard({
         []
   );
 
+  // create a set to store unique scores, makes sure no scores repeat
+  const scoreSet = new Set<number>();
+  sortedTeams.forEach((team) => scoreSet.add(team.score));
+
+  // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
+  const topScores: number[] = Array.from(scoreSet)
+    .sort((a, b) => b - a)
+    .slice(0, 5);
+
+  // Filter through sortedTeams for all teams with the top five unique scores
+  const topTeams: ITeam[] = sortedTeams.filter((team) =>
+    topScores.includes(team.score)
+  );
+
   return (
     <StackContainerStyled
       direction="column"
@@ -115,7 +129,7 @@ export default function Leaderboard({
           isSmallDevice={isSmallDevice}
           spacing={2}
         >
-          {sortedTeams?.map((team: ITeam, index: number) => (
+          {topTeams?.map((team: ITeam, index: number) => (
             <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
               <LeaderboardSelector
                 teamName={team.name ? team.name : 'Team One'}
