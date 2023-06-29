@@ -33,9 +33,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-scripts start",
-    "build": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-scripts build",
-    "test": "yarn --cwd ../networking build && mkdir -p ./node_modules/@righton/networking && rsync -r ../networking/lib ../networking/src ../networking/package.json ./node_modules/@righton/networking && react-scripts test",
+    "start": "yarn --cwd ../networking build && react-scripts start",
+    "build": "yarn --cwd ../networking build && react-scripts build",
+    "test": "yarn --cwd ../networking build && react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "format": "prettier --write .",
