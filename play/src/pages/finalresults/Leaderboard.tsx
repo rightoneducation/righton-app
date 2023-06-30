@@ -90,7 +90,7 @@ export default function Leaderboard({
 
   // create a set to store unique scores, makes sure no scores repeat
   const scoreSet = new Set<number>();
-  sortedTeams.forEach((team) => scoreSet.add(team.score));
+  teams?.forEach((team) => scoreSet.add(team.score));
 
   // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
   const topScores: number[] = Array.from(scoreSet)
