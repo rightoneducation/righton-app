@@ -37,11 +37,7 @@ export default function Leaderboard({
   isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
-
-  let sortedTeams: ITeam[] = [];
-  if (!isNullOrUndefined(teams)) {
-    sortedTeams = teamSorter(teams);
-  }
+  const sortedTeams: ITeam[] = useRef<ITeam[]>(!isNullOrUndefined(teams) ? teamSorter(teams) : []).current;
 
   // remove locally stored game info when reaching leaderboard
   useEffect(() => {
@@ -95,7 +91,7 @@ export default function Leaderboard({
           isSmallDevice={isSmallDevice}
           spacing={2}
         >
-          {sortedTeams?.map((team: ITeam) => (
+          {sortedTeams.map((team: ITeam) => (
             <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
               <LeaderboardSelector
                 teamName={team.name ? team.name : 'Team One'}
