@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
+import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -24,6 +25,10 @@ interface ChooseAnswerProps {
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
 }
+
+const handleSelectRating = (index: string) => {
+
+};
 
 export default function ChooseAnswer({
   isSmallDevice,
@@ -116,6 +121,8 @@ export default function ChooseAnswer({
             </Typography>
           </>
         ) : null}
+        <ConfidenceMeterCard
+          isSelected={false} />
       </ScrollBoxStyled>
     </>
   );

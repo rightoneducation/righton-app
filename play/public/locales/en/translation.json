@@ -74,7 +74,9 @@
       "correcttext2": "correct answer",
       "incorrecttext1": "What do you think the most popular",
       "incorrecttext2": "incorrect answer",
-      "incorrecttext3": "is among your class?"
+      "incorrecttext3": "is among your class?",
+      "confidenceheader": "Rate your confidence",
+      "confidencetext": "How sure were you of your answer?"
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
