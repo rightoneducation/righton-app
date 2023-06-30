@@ -1,6 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   ITeam,
   GameSessionState,
@@ -25,8 +23,6 @@ export default function FinalResultsContainer({
   selectedAvatar,
   teamId,
 }: FinalResultsContainerProps) {
-  const theme = useTheme();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [finalResultsState, setFinalResultsState] = useState(
     FinalResultsState.CONGRATS
   );
@@ -34,7 +30,8 @@ export default function FinalResultsContainer({
   const isLeader = (inputTeams: ITeam[] | undefined, inputTeamID: string) => {
     if (!isNullOrUndefined(inputTeams) && !isNullOrUndefined(inputTeamID)) {
       inputTeams.sort((a, b) => b.score - a.score);
-      if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID)) return true;
+      if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID))
+        return true;
     }
     return false;
   };
@@ -48,7 +45,6 @@ export default function FinalResultsContainer({
           currentState={currentState}
           teamAvatar={selectedAvatar}
           teamId={teamId}
-          isSmallDevice={isSmallDevice}
         />
       );
     case FinalResultsState.CONGRATS:
