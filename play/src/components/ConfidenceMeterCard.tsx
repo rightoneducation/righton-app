@@ -41,7 +41,7 @@ export default function ConfidenceMeterCard({
   ) => {
     return (
       <Box maxWidth={`${theme.sizing.extraLargePadding}px`} sx={{ textAlign: 'center', alignItems: 'center', marginX: `${theme.sizing.extraSmallPadding}px` }}>
-        <FormControlLabel value={confidenceOptionArray.indexOf(text) + 1} control={<Radio />} label={text} labelPlacement='bottom' sx={{ marginX: "0" }} />
+        <FormControlLabel value={confidenceOptionArray.indexOf(text) + 1} control={<Radio color="primary" />} label={text} labelPlacement='bottom' sx={{ marginX: "0" }} />
       </Box>
     )
   };
