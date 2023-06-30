@@ -1,13 +1,8 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Stack, Box } from '@mui/material';
+import { Typography, Box, RadioGroup, FormControlLabel, Radio, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined, GameSessionState } from '@righton/networking';
-import AnswerSelector from './AnswerSelector';
-import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
-import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface ConfidenceMeterCardProps {
   isSelected: boolean;
@@ -18,14 +13,21 @@ export default function ConfidenceMeterCard({
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const confidenceOptionArray = [
+    t('gameinprogress.chooseanswer.confidenceoption1'),
+    t('gameinprogress.chooseanswer.confidenceoption2'),
+    t('gameinprogress.chooseanswer.confidenceoption3'),
+    t('gameinprogress.chooseanswer.confidenceoption4'),
+    t('gameinprogress.chooseanswer.confidenceoption5')
+  ]
 
-  const confidenceHeader = <Box display="inline" sx={{ textAlign: 'left', margin: `${theme.sizing.extraSmallPadding}px`, width: '100%' }}>
-    <Typography variant='h4' sx={{ fontSize: `${theme.typography.h2.fontSize}px` }}>
+  const confidenceHeader = <Box display="inline" sx={{ textAlign: 'left', marginX: `${theme.sizing.extraSmallPadding}px`, width: '100%' }}>
+    <Typography variant="h2" sx={{ color: `${theme.palette.primary.darkBlue}` }}>
       {t('gameinprogress.chooseanswer.confidenceheader')}
     </Typography>
   </Box>
 
-  const chooseConfidenceText = <Box display="inline" sx={{ textAlign: 'center', marginY: `${theme.sizing.largePadding}px` }}>
+  const chooseConfidenceText = <Box display="inline" sx={{ textAlign: 'center', marginY: `${theme.sizing.mediumPadding}px` }}>
     <Typography variant="body1">
       {t('gameinprogress.chooseanswer.answerthankyou1')}
     </Typography>
@@ -34,12 +36,27 @@ export default function ConfidenceMeterCard({
     </Typography >
   </Box >
 
-  return (
-    <BodyCardStyled elevation={10}>
+  const responseOption = (
+    text: string
+  ) => {
+    return (
+      <Box maxWidth={`${theme.sizing.extraLargePadding}px`} sx={{ textAlign: 'center', alignItems: 'center', marginX: `${theme.sizing.extraSmallPadding}px` }}>
+        <FormControlLabel value={confidenceOptionArray.indexOf(text) + 1} control={<Radio />} label={text} labelPlacement='bottom' sx={{ marginX: "0" }} />
+      </Box>
+    )
+  };
 
+  const responseOptions = <Box display="inline" sx={{ alignItems: 'center' }}>
+    <RadioGroup row value="confidence" sx={{ textAlign: 'center', justifyContent: 'center' }}>
+      {confidenceOptionArray.map((option) => responseOption(option))}
+    </RadioGroup>
+  </Box>
+
+  return (
+    <BodyCardStyled>
       {confidenceHeader}
       {chooseConfidenceText}
-
+      {responseOptions}
     </BodyCardStyled>
   );
 }

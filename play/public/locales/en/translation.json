@@ -76,7 +76,12 @@
       "incorrecttext2": "incorrect answer",
       "incorrecttext3": "is among your class?",
       "confidenceheader": "Rate your confidence",
-      "confidencetext": "How sure were you of your answer?"
+      "confidencetext": "How sure were you of your answer?",
+      "confidenceoption1": "Not at all",
+      "confidenceoption2": "Kinda",
+      "confidenceoption3": "Quite",
+      "confidenceoption4": "Very",
+      "confidenceoption5": "Totally"
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
