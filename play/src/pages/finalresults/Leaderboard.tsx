@@ -25,7 +25,6 @@ interface LeaderboardProps {
   currentState: GameSessionState;
   teamAvatar: number;
   teamId: string;
-  isSmallDevice: boolean;
 }
 
 export default function Leaderboard({
@@ -33,7 +32,6 @@ export default function Leaderboard({
   currentState,
   teamAvatar,
   teamId,
-  isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
   const teamSorter = (inputTeams: ITeam[]) => {
@@ -81,7 +79,7 @@ export default function Leaderboard({
   const { current: avatarNumbers } = useRef<number[]>(
     teams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        teams.map((team, index) =>
+        teams.map((team) =>
           team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
         )
       : // if teams is invalid, then return empty array
@@ -120,15 +118,13 @@ export default function Leaderboard({
           handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
-      <BodyStackContainerStyled ref={containerRef}>
+      <BodyStackContainerStyled
+        ref={containerRef}
+        style={{ height: `${subContainerHeight}px` }}
+      >
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <BodyContentAreaLeaderboardStyled
-          container
-          style={{ height: `${subContainerHeight}px` }}
-          isSmallDevice={isSmallDevice}
-          spacing={2}
-        >
+        <BodyContentAreaLeaderboardStyled container spacing={2}>
           {topTeams?.map((team: ITeam, index: number) => (
             <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
               <LeaderboardSelector
