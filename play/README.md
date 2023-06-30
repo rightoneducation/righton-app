@@ -2,14 +2,18 @@
 
 [Play](https://play.rightoneducation.com) is the student facing RightOn! app built with ReactJS and Typescript. It makes use of [mui v5](https://mui.com/material-ui/migration/migration-v4/) for styling, [react-i18next](https://react.i18next.com/) for internationalization, [Storybook](https://storybook.js.org/) for UI development  and [jest](https://jestjs.io/docs/getting-started) for testing.
 
+### App Architecture:
+An breakdown of the general design and flow of the app can be found [here](https://github.com/rightoneducation/righton-app/wiki/Play-App---Architecture-Overview). This includes a description of core states of the app, the routing and the components and subcomponents that are governed by those states.
+
 ### Installation Instructions:
 
-<strong> install packages per package.json </strong>
+<strong> install packages per package.json: </strong>
 
 1. cd play
 2. yarn install
 
-<strong> link networking for models, helper functions etc </strong>  
+<strong> link networking for models, helper functions etc: </strong>
+
 3. change directory to networking  
 4. yarn install  
 5. yarn run build  
@@ -22,9 +26,10 @@
 
 1. 'yarn start' - runs react-scripts app
 2. 'yarn storybook' - starts up preview of storybooks
-3. 'yarn lint' - ESLints everything in /play
-4. 'yarn format' - applies prettier formatting to everything in /play
-5. 'yarn test' - runs tests via jest for *.test.tsx in the /tests folder
+3. 'yarn chromatic' - builds storybook to chromatic for coordination
+4. 'yarn lint' - ESLints everything in /play
+5. 'yarn format' - applies prettier formatting to everything in /play
+6. 'yarn test' - runs tests via jest for *.test.tsx in the /tests folder
 
 ### Styling:
 
