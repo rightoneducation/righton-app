@@ -98,16 +98,8 @@ export default function ChooseAnswer({
         {isSubmitted ? (
           <>
             {displaySubmitted ? (
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 700,
-                  textAlign: 'center',
-                  marginTop: `${theme.sizing.largePadding}px`,
-                }}
-              >
-                {t('gameinprogress.chooseanswer.answerthankyou1')}
-              </Typography>
+              <ConfidenceMeterCard
+                isSelected={false} />
             ) : null}
             <Typography
               variant="body1"
@@ -121,8 +113,6 @@ export default function ChooseAnswer({
             </Typography>
           </>
         ) : null}
-        <ConfidenceMeterCard
-          isSelected={false} />
       </ScrollBoxStyled>
     </>
   );

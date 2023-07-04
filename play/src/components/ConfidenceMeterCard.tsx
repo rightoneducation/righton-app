@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Box, RadioGroup, FormControlLabel, Radio, Grid } from '@mui/material';
+import { Typography, Box, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
@@ -11,6 +11,7 @@ interface ConfidenceMeterCardProps {
 export default function ConfidenceMeterCard({
   isSelected,
 }: ConfidenceMeterCardProps) {
+  const [value, setValue] = useState('');
   const theme = useTheme();
   const { t } = useTranslation();
   const confidenceOptionArray = [
@@ -21,13 +22,13 @@ export default function ConfidenceMeterCard({
     t('gameinprogress.chooseanswer.confidenceoption5')
   ]
 
-  const confidenceHeader = <Box display="inline" sx={{ textAlign: 'left', marginX: `${theme.sizing.extraSmallPadding}px`, width: '100%' }}>
+  const confidenceHeader = <Box display="inline" sx={{ textAlign: 'left', marginX: `${theme.sizing.extraSmallPadding}px`, width: '100%', marginBottom: `${theme.sizing.smallPadding}px` }}>
     <Typography variant="h2" sx={{ color: `${theme.palette.primary.darkBlue}` }}>
       {t('gameinprogress.chooseanswer.confidenceheader')}
     </Typography>
   </Box>
 
-  const chooseConfidenceText = <Box display="inline" sx={{ textAlign: 'center', marginY: `${theme.sizing.mediumPadding}px` }}>
+  const chooseConfidenceText = <Box display="inline" sx={{ textAlign: 'center' }}>
     <Typography variant="body1">
       {t('gameinprogress.chooseanswer.answerthankyou1')}
     </Typography>
@@ -41,22 +42,46 @@ export default function ConfidenceMeterCard({
   ) => {
     return (
       <Box maxWidth={`${theme.sizing.extraLargePadding}px`} sx={{ textAlign: 'center', alignItems: 'center', marginX: `${theme.sizing.extraSmallPadding}px` }}>
-        <FormControlLabel value={confidenceOptionArray.indexOf(text) + 1} control={<Radio color="primary" />} label={text} labelPlacement='bottom' sx={{ marginX: "0" }} />
+        <FormControlLabel value={confidenceOptionArray.indexOf(text)} control={<Radio sx={{
+          "&.Mui-checked": {
+            color: `${theme.palette.primary.blue}`
+          }
+        }} />} label={text} labelPlacement='bottom' sx={{ marginX: "0" }} />
       </Box>
     )
   };
 
-  const responseOptions = <Box display="inline" sx={{ alignItems: 'center' }}>
-    <RadioGroup row value="confidence" sx={{ textAlign: 'center', justifyContent: 'center' }}>
-      {confidenceOptionArray.map((option) => responseOption(option))}
-    </RadioGroup>
+  const sendingResponseText = <Box display="inline" sx={{ textAlign: 'center', marginBottom: `${theme.sizing.smallPadding}px` }}>
+    <Typography variant="body1" sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}>
+      {t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
+    </Typography>
   </Box>
 
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
+  console.log(value);
+  const responseOptions = <FormControl>
+    <RadioGroup
+      row
+      aria-labelledby="demo-controlled-radio-buttons-group"
+      name="controlled-radio-buttons-group"
+      value={value}
+      onChange={handleRadioChange}
+      sx={{ textAlign: 'center', justifyContent: 'center', marginY: `${theme.sizing.mediumPadding}px` }}
+    >
+      {confidenceOptionArray.map((option) => responseOption(option))}
+    </RadioGroup>
+  </FormControl>
+
   return (
-    <BodyCardStyled>
+    <BodyCardStyled sx={{
+      marginTop: `${theme.sizing.smallPadding}px`,
+    }}>
       {confidenceHeader}
       {chooseConfidenceText}
       {responseOptions}
+      {sendingResponseText}
     </BodyCardStyled>
   );
 }

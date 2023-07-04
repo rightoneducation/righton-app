@@ -81,7 +81,8 @@
       "confidenceoption2": "Kinda",
       "confidenceoption3": "Quite",
       "confidenceoption4": "Very",
-      "confidenceoption5": "Totally"
+      "confidenceoption5": "Totally",
+      "sendingconfidenceresponse": "Sending your response..."
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
