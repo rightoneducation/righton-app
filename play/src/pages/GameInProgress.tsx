@@ -8,6 +8,7 @@ import {
   ITeamAnswer,
   IQuestion,
   ModelHelper,
+  isNullOrUndefined,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -137,6 +138,10 @@ export default function GameInProgress({
     return rejoinSubmittedAnswer;
   });
 
+  // TODO: handle case where player is rejoining
+  const [isConfidenceSelected, setIsConfidenceSelected] = useState<boolean>(false);
+  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<number | null>(null);
+
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
@@ -166,6 +171,11 @@ export default function GameInProgress({
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
+
+  const handleSelectConfidence = (index: number) => {
+    setSelectedConfidenceOption(index);
+    setIsConfidenceSelected(true);
+  }
 
   return (
     <StackContainerStyled
@@ -208,6 +218,9 @@ export default function GameInProgress({
             currentState={currentState}
             selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
+            handleSelectConfidence={handleSelectConfidence}
+            isConfidenceSelected={isConfidenceSelected}
+            selectedConfidenceOption={selectedConfidenceOption}
           />
         ) : (
           <DiscussAnswer

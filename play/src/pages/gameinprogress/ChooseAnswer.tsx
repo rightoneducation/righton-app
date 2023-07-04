@@ -24,11 +24,10 @@ interface ChooseAnswerProps {
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
+  selectedConfidenceOption: number | null;
+  handleSelectConfidence: (option: number) => void;
+  isConfidenceSelected: boolean;
 }
-
-const handleSelectRating = (index: string) => {
-
-};
 
 export default function ChooseAnswer({
   isSmallDevice,
@@ -41,6 +40,9 @@ export default function ChooseAnswer({
   currentState,
   selectedAnswer,
   handleSelectAnswer,
+  selectedConfidenceOption,
+  handleSelectConfidence,
+  isConfidenceSelected
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -99,7 +101,10 @@ export default function ChooseAnswer({
           <>
             {displaySubmitted ? (
               <ConfidenceMeterCard
-                isSelected={false} />
+                selectedOption={selectedConfidenceOption}
+                handleSelectOption={handleSelectConfidence}
+                isSelected={isConfidenceSelected}
+              />
             ) : null}
             <Typography
               variant="body1"
