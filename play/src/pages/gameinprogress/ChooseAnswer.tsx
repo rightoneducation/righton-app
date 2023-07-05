@@ -42,7 +42,7 @@ export default function ChooseAnswer({
   handleSelectAnswer,
   selectedConfidenceOption,
   handleSelectConfidence,
-  isConfidenceSelected
+  isConfidenceSelected,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();

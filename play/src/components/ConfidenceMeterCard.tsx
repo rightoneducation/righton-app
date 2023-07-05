@@ -20,7 +20,7 @@ interface ConfidenceMeterCardProps {
 export default function ConfidenceMeterCard({
   selectedOption,
   handleSelectOption,
-  isSelected
+  isSelected,
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -138,8 +138,7 @@ export default function ConfidenceMeterCard({
       {confidenceHeader}
       {chooseConfidenceText}
       {responseOptions}
-      {isSelected ?
-        sendingResponseText : null}
+      {isSelected ? sendingResponseText : null}
     </BodyCardStyled>
   );
 }

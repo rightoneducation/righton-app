@@ -9,50 +9,49 @@ export default {
   component: ConfidenceMeterCard,
 } as ComponentMeta<typeof ConfidenceMeterCard>;
 
-const Template: ComponentStory<typeof ConfidenceMeterCard> = function ConfidenceMeterCardTemplate(
-  args
-) {
-  return (
-    <ThemeProvider theme={Theme}>
-      <ConfidenceMeterCard {...args} />
-    </ThemeProvider>
-  );
-};
+const Template: ComponentStory<typeof ConfidenceMeterCard> =
+  function ConfidenceMeterCardTemplate(args) {
+    return (
+      <ThemeProvider theme={Theme}>
+        <ConfidenceMeterCard {...args} />
+      </ThemeProvider>
+    );
+  };
 
 // no input i.e. no selected option without sending response text
 export const noSelection = Template.bind({});
 noSelection.args = {
   selectedOption: null,
-  isSelected: false
-}
+  isSelected: false,
+};
 
 // different inputs with sending response text
 export const notAtAll = Template.bind({});
 notAtAll.args = {
   selectedOption: 0,
-  isSelected: true
-}
+  isSelected: true,
+};
 
 export const kinda = Template.bind({});
 kinda.args = {
   selectedOption: 1,
-  isSelected: true
-}
+  isSelected: true,
+};
 
 export const quite = Template.bind({});
 quite.args = {
   selectedOption: 2,
-  isSelected: true
-}
+  isSelected: true,
+};
 
 export const very = Template.bind({});
 very.args = {
   selectedOption: 3,
-  isSelected: true
-}
+  isSelected: true,
+};
 
 export const totally = Template.bind({});
 totally.args = {
   selectedOption: 4,
-  isSelected: true
-}
+  isSelected: true,
+};

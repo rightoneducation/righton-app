@@ -138,8 +138,11 @@ export default function GameInProgress({
   });
 
   // TODO: handle case where player is rejoining
-  const [isConfidenceSelected, setIsConfidenceSelected] = useState<boolean>(false);
-  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<number | null>(null);
+  const [isConfidenceSelected, setIsConfidenceSelected] =
+    useState<boolean>(false);
+  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<
+    number | null
+  >(null);
 
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
@@ -174,7 +177,7 @@ export default function GameInProgress({
   const handleSelectConfidence = (index: number) => {
     setSelectedConfidenceOption(index);
     setIsConfidenceSelected(true);
-  }
+  };
 
   return (
     <StackContainerStyled
@@ -205,7 +208,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
