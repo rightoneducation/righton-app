@@ -8,7 +8,6 @@ import {
   ITeamAnswer,
   IQuestion,
   ModelHelper,
-  isNullOrUndefined,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';

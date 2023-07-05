@@ -1,5 +1,4 @@
 import React from 'react';
-import { GameSessionState } from '@righton/networking';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import ConfidenceMeterCard from './ConfidenceMeterCard';
