@@ -7,32 +7,18 @@ import { MemoryRouter } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import ReactModal from 'react-modal';
 import { 
-  ApiClient,
-  Environment,
-  GameSessionParser,
-  IAWSGameSession,
   IGameSession,
   IChoice,
-  IQuestion
+  IQuestion,
+  GameSessionState,
 } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import PhaseResults from '../../src/pages/PhaseResults';
-import mockPhaseOneZeroPointsGameSession from './mock/gamesessions/scoretests/phaseOneZeroPointsGameSession.json';
-import mockPhaseOneTenPointsGameSession from './mock/gamesessions/scoretests/phaseOneTenPointsGameSession.json';
-import mockPhaseTwoUnpopularAnswerGamesession from './mock/gamesessions/scoretests/phaseTwoUnpopularAnswerGameSession.json';
-import mockPhaseTwoPopularAnswerGamesession from './mock/gamesessions/scoretests/phaseTwoPopularAnswerGameSession.json';
+import apiClient from './mock/ApiClient.mock';
+import { createTeamMock, createTeamAnswerMock } from './mock/MockHelperFunctions';
 
 ReactModal.setAppElement('body');
-
-// Mock the ApiClient.updateTeam method
-jest.mock('@righton/networking', () => ({
-  ...jest.requireActual('@righton/networking'),
-  ApiClient: jest.fn().mockImplementation(() => ({
-    updateTeam: jest.fn(),
-  })),
-}));
-const apiClient = new ApiClient(Environment.Staging);
 apiClient.updateTeam = jest.fn().mockResolvedValue({});
 
 // function for rendering phase results with theme, router, and translation
@@ -81,12 +67,17 @@ const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
 describe ('PhaseResults', () => {
   // tests if player has answered incorrectly on phase 1 (starting score: 0, ending score: 0)
   it('Phase 1, wrong answer', async () => {
-     // mock gameSession with team that answered incorrectly on first question
-     const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      mockPhaseOneZeroPointsGameSession as IAWSGameSession
-    ) as IGameSession;
+    // mock gameSession with team that answered incorrectly on first question
+    const gameSession = await apiClient.createGameSession(1111, false);  
+    expect (gameSession).toBeDefined();
+    expect (gameSession.teams).toBeDefined();  
+    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'));
+    gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
+
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
+
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
     });
@@ -101,11 +92,14 @@ describe ('PhaseResults', () => {
 
    // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
    it('Phase 1, correct answer', async () => {
-    // mock gameSession with team that answered incorrectly on first question
-    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      mockPhaseOneTenPointsGameSession as IAWSGameSession
-    ) as IGameSession;
+    // mock gameSession with team that answered correctly on first question
+    const gameSession = await apiClient.createGameSession(1111, false);  
+    expect (gameSession).toBeDefined();
+    expect (gameSession.teams).toBeDefined();  
+    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+    gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'));
+    gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
@@ -123,10 +117,18 @@ describe ('PhaseResults', () => {
     // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
     it('Phase 2, unpopular trick answer', async () => {
       // mock gameSession with team that answered incorrectly on first question
-      const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-        mockPhaseTwoUnpopularAnswerGamesession as IAWSGameSession
-      ) as IGameSession;
+      // const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
+      //   mockPhaseTwoUnpopularAnswerGamesession as IAWSGameSession
+      // ) as IGameSession;
+      const gameSession = await apiClient.createGameSession(1111, false);  
+      expect (gameSession).toBeDefined();
+      expect (gameSession.teams).toBeDefined();  
+      gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession),createTeamMock(gameSession),createTeamMock(gameSession));
       const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+      gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2'));
+      gameSession.teams![1].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3'));
+      gameSession.teams![2].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3'));
+      gameSession.currentState = GameSessionState.PHASE_2_RESULTS;
       const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
       act(() => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
@@ -144,10 +146,15 @@ describe ('PhaseResults', () => {
      // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
      it('Phase 2, popular trick answer', async () => {
       // mock gameSession with team that answered incorrectly on first question
-      const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-        mockPhaseTwoPopularAnswerGamesession as IAWSGameSession
-      ) as IGameSession;
+      const gameSession = await apiClient.createGameSession(1111, false);  
+      expect (gameSession).toBeDefined();
+      expect (gameSession.teams).toBeDefined();  
+      gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession),createTeamMock(gameSession));
       const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+      gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2'));
+      gameSession.teams![1].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1'));
+      gameSession.teams![2].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1'));
+      gameSession.currentState = GameSessionState.PHASE_2_RESULTS;
       const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
       act(() => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);

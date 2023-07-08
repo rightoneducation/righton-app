@@ -1,29 +1,26 @@
 /** @jest-environment jsdom */
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, prettyDOM } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import ReactModal from 'react-modal';
-import { 
-  ApiClient,
-  Environment,
-  GameSessionParser,
-  IAWSGameSession,
-  IGameSession,
-  IChoice,
-  IQuestion
-} from '@righton/networking';
 import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import GameInProgress from '../../src/pages/GameInProgress';
-import mockGameSession from './mock/gamesessions/chooseCorrectGameSession.json';
-import mockLocalModel from './mock/localModel.json';
+import apiClient from './mock/ApiClient.mock';
+import { createTeamMock, createTeamAnswerMock, localModelLoaderMock } from './mock/MockHelperFunctions';
 
 ReactModal.setAppElement('body');
 
-const apiClient = new ApiClient(Environment.Staging);
+import { 
+  GameSessionParser,
+  IAWSGameSession,
+  GameSessionState,
+  IGameSession,
+  IChoice,
+  IQuestion } from '@righton/networking';
 apiClient.updateTeam = jest.fn().mockResolvedValue({});
 
 // function for rendering phase results with theme, router, and translation
@@ -52,7 +49,7 @@ export function renderWithThemeRouterTranslation(
           score={100}
           hasRejoined={true}
           currentTimer={currentTimer}
-          localModel={mockLocalModel}
+          localModel={localModelLoaderMock()}
         />
         </MemoryRouter>
       </ThemeProvider>
@@ -73,25 +70,34 @@ const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
 describe ('GameInProgress', () => {
   // tests if timer is > 0, button on answer card is still enabled
   it('Timer has time, isSubmitted === false', async () => {
+
     // mock gameSession with timer at 0
-    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      mockGameSession as IAWSGameSession
-    ) as IGameSession;
+    const gameSession = await apiClient.createGameSession(1111, false);  
+    expect (gameSession).toBeDefined();
+    expect (gameSession.teams).toBeDefined();
+    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
+    gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(0, true, false, '3'), createTeamAnswerMock(0, false, true, '1'));
+    gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices, 120);
     });
+
     // expects answer card button to be enabled
     expect(screen.getByTestId('answer-button-disabled')).toBeInTheDocument();
   });
 
-    // tests if timer is finished (-1 here), function with timerIsFinished is called (so that isSubmitted === true)
+
   it('Timer has time, isSubmitted === false', async () => {
     // mock gameSession with timer at 0
-     const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      mockGameSession as IAWSGameSession
-    ) as IGameSession;
+    const gameSession = await apiClient.createGameSession(1111, false);  
+    expect (gameSession).toBeDefined();
+    expect (gameSession.teams).toBeDefined();  
+    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
+    gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(0, true, false, '3'), createTeamAnswerMock(0, false, true, '1'));
+    gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
+
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
