@@ -16,7 +16,7 @@ import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import PhaseResults from '../../src/pages/PhaseResults';
 import apiClient from './mock/ApiClient.mock';
-import { createTeamMock, createTeamAnswerMock } from './mock/MockHelperFunctions';
+import { createTeamAnswerMock, createValidGameSession } from './mock/MockHelperFunctions';
 
 ReactModal.setAppElement('body');
 apiClient.updateTeam = jest.fn().mockResolvedValue({});
@@ -68,16 +68,11 @@ describe ('PhaseResults', () => {
   // tests if player has answered incorrectly on phase 1 (starting score: 0, ending score: 0)
   it('Phase 1, wrong answer', async () => {
     // mock gameSession with team that answered incorrectly on first question
-    const gameSession = await apiClient.createGameSession(1111, false);  
-    expect (gameSession).toBeDefined();
-    expect (gameSession.teams).toBeDefined();  
-    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0));
+    const gameSession = await createValidGameSession(2); 
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'));
     gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
-
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
-
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
     });
@@ -90,13 +85,10 @@ describe ('PhaseResults', () => {
     });
   });
 
-   // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-   it('Phase 1, correct answer', async () => {
+  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
+  it('Phase 1, correct answer', async () => {
     // mock gameSession with team that answered correctly on first question
-    const gameSession = await apiClient.createGameSession(1111, false);  
-    expect (gameSession).toBeDefined();
-    expect (gameSession.teams).toBeDefined();  
-    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0));
+    const gameSession = await createValidGameSession(2); 
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'));
     gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
@@ -104,9 +96,7 @@ describe ('PhaseResults', () => {
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
     });
-
     await waitFor(() => expect(apiClient.updateTeam).toHaveBeenCalled());
-
     // tests that new score indicator has value of +10
     expect(apiClient.updateTeam).toHaveBeenCalledWith({
       id: gameSession.teams![0].id,
@@ -114,59 +104,68 @@ describe ('PhaseResults', () => {
     });
   });
 
-    // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-    it('Phase 2, unpopular trick answer', async () => {
-      // mock gameSession with team that answered incorrectly on first question
-      // const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      //   mockPhaseTwoUnpopularAnswerGamesession as IAWSGameSession
-      // ) as IGameSession;
-      const gameSession = await apiClient.createGameSession(1111, false);  
-      expect (gameSession).toBeDefined();
-      expect (gameSession.teams).toBeDefined();  
-      gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0),createTeamMock(gameSession, "Team Name", 0),createTeamMock(gameSession, "Team Name", 0));
+  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
+  it('Phase 2, unpopular trick answer', async () => {
+    // mock gameSession with team that answered incorrectly on first question
+    const gameSession = await createValidGameSession(3); 
+    if (gameSession.teams) {
       const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
-      gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2'));
-      gameSession.teams![1].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3'));
-      gameSession.teams![2].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3'));
+      gameSession.teams[0].teamMembers![0]!.answers!.push(
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2')
+      );
+      gameSession.teams[1].teamMembers![0]!.answers!.push(
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3')
+      );
+      gameSession.teams[2].teamMembers![0]!.answers!.push(
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3')
+      );
       gameSession.currentState = GameSessionState.PHASE_2_RESULTS;
       const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
       act(() => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
       });
-  
       await waitFor(() => expect(apiClient.updateTeam).toHaveBeenCalled());
-  
       // tests that new score indicator has value of +10
       expect(apiClient.updateTeam).toHaveBeenCalledWith({
         id: gameSession.teams![0].id,
         score: 120,
       });
-    });
+    };
+  });
 
-     // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-     it('Phase 2, popular trick answer', async () => {
-      // mock gameSession with team that answered incorrectly on first question
-      const gameSession = await apiClient.createGameSession(1111, false);  
-      expect (gameSession).toBeDefined();
-      expect (gameSession.teams).toBeDefined();  
-      gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0),createTeamMock(gameSession, "Team Name", 0));
+  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
+  it('Phase 2, popular trick answer', async () => {
+    // mock gameSession with team that answered incorrectly on first question
+    const gameSession = await createValidGameSession(3); 
+    if (gameSession.teams) {
       const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
-      gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2'));
-      gameSession.teams![1].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1'));
-      gameSession.teams![2].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1'));
+      gameSession.teams![0].teamMembers![0]!.answers!.push(
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2')
+      );
+      gameSession.teams![1].teamMembers![0]!.answers!.push(
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'),
+        createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1')
+      );
+      gameSession.teams![2].teamMembers![0]!.answers!.push(
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'),
+        createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1')
+      );
       gameSession.currentState = GameSessionState.PHASE_2_RESULTS;
       const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
       act(() => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
       });
-  
       await waitFor(() => {
         expect(apiClient.updateTeam).toHaveBeenCalled()});
-  
       // tests that new score indicator has value of +10
       expect(apiClient.updateTeam).toHaveBeenCalledWith({
         id: gameSession.teams![0].id,
         score: 187,
       });
-    });
+    };
+  });
 });

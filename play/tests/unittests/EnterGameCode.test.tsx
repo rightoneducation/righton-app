@@ -19,18 +19,17 @@ const handleGameCodeClick = jest.fn(async () => {
 
 describe('EnterGameCode', () => {
   it('should render the EnterGameCode page', async () => {
-    const { debug } = renderWithTheme(
+    renderWithTheme(
       <EnterGameCode
         isSmallDevice={true}
         handleGameCodeClick={handleGameCodeClick}
       />
     );
     expect(screen.getByTestId('gameCode-inputtextfield')).toBeInTheDocument();
-    // debug();
   });
 
   it('validate textfield input', async () => {
-    const { debug } = renderWithTheme(
+    renderWithTheme(
       <EnterGameCode
         isSmallDevice={true}
         handleGameCodeClick={handleGameCodeClick}

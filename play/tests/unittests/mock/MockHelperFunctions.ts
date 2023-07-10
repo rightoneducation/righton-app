@@ -5,6 +5,7 @@ import {
   ITeamMember,
   ITeamAnswer
 } from '@righton/networking';
+import apiClient from './ApiClient.mock';
 import { LocalModel } from '../../../src/lib/PlayModels';
 
 export const createTeamMock = (gameSession: IGameSession, teamName: string, score: number): ITeam => {
@@ -64,3 +65,27 @@ export const localModelLoaderMock = () => {
     currentTimer: currentTime - 100,
   } as LocalModel;
 }
+
+/**
+ * Creates a valid game session with teams and team members
+ * @param numberOfTeams 
+ * @returns valid game session with teams and team members
+ */
+export const createValidGameSession = async (numberOfTeams: number) => {
+  const gameSession = await apiClient.createGameSession(1111, false);  
+  expect (gameSession).toBeDefined();
+  expect (gameSession.teams).toBeDefined();
+  for (let i = 0; i < numberOfTeams; i++){
+    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0));
+  }
+  if (gameSession.teams){ 
+    expect (gameSession).toHaveProperty('teams');
+    gameSession.teams.forEach((team) => {
+      expect (team).toHaveProperty('teamMembers');
+      team.teamMembers!.forEach((teamMember) => {
+        expect(teamMember).toHaveProperty('answers');
+      });
+    });
+  };
+  return gameSession as IGameSession;
+};

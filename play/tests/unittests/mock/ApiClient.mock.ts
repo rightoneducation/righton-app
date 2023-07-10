@@ -66,7 +66,7 @@ const mockCreateGameSession = (): IGameSession => {
     updatedAt: Date().toString(),
     createdAt: Date().toString(),
     teams: []
-  }
+  } as IGameSession;
 };
 
 apiClient.createGameSession = jest.fn().mockImplementation(mockCreateGameSession);

@@ -129,7 +129,6 @@ describe('HelperFunctions', () => {
 
   it('teamSorter', async () => {
     const mockTeamCompare = ["A Team", "B Team", "C Team", "D Team", "E Team", "F Team"];
-
     // if no ties, sort team by score only
     let gameSession = await apiClient.createGameSession(1111, false); 
     expect (gameSession).toBeDefined();
@@ -144,7 +143,6 @@ describe('HelperFunctions', () => {
     expect(sortedTeams[0].name).toEqual(mockTeamCompare[2]);
     expect(sortedTeams[1].name).toEqual(mockTeamCompare[0]);
     expect(sortedTeams[2].name).toEqual(mockTeamCompare[1]);
-
     // sort teams by score, then by name if tied
     gameSession = await apiClient.createGameSession(1111, false); 
     expect (gameSession).toBeDefined();
