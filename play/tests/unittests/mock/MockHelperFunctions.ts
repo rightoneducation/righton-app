@@ -7,12 +7,12 @@ import {
 } from '@righton/networking';
 import { LocalModel } from '../../../src/lib/PlayModels';
 
-export const createTeamMock = (gameSession: IGameSession): ITeam => {
+export const createTeamMock = (gameSession: IGameSession, teamName: string, score: number): ITeam => {
   return {
     id: randomUUID(),
-    name: "Team Name",
+    name: teamName,
     teamMembers: [createTeamMemberMock()],
-    score: 0,
+    score: score,
     selectedAvatarIndex: 0,
     createdAt: Date().toString(),
     updatedAt: Date().toString(),
@@ -53,7 +53,7 @@ export const createTeamAnswerMock = (
 };
 
 export const localModelLoaderMock = () => {
-  const currentTime = randomInt(100, 999);
+  const currentTime = new Date().getTime() / 60000;
   return {
     currentTime: currentTime,
     gameSessionId: randomUUID(),

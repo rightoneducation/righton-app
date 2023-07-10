@@ -94,7 +94,7 @@ export const checkForSubmittedAnswerOnRejoin = (
 export const validateLocalModel = (localModel: string | null) => { 
   if (isNullOrUndefined(localModel) || localModel === '') return null;
   const parsedLocalModel = JSON.parse(localModel);
- 
+
   // checks for invalid data in localModel, returns null if found
   if (
     [

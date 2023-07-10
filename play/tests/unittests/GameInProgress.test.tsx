@@ -75,7 +75,7 @@ describe ('GameInProgress', () => {
     const gameSession = await apiClient.createGameSession(1111, false);  
     expect (gameSession).toBeDefined();
     expect (gameSession.teams).toBeDefined();
-    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
+    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0));
     gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(0, true, false, '3'), createTeamAnswerMock(0, false, true, '1'));
     gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
@@ -94,7 +94,7 @@ describe ('GameInProgress', () => {
     const gameSession = await apiClient.createGameSession(1111, false);  
     expect (gameSession).toBeDefined();
     expect (gameSession.teams).toBeDefined();  
-    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
+    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0));
     gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(0, true, false, '3'), createTeamAnswerMock(0, false, true, '1'));
     gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
 

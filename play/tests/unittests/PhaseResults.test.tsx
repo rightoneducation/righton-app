@@ -71,7 +71,7 @@ describe ('PhaseResults', () => {
     const gameSession = await apiClient.createGameSession(1111, false);  
     expect (gameSession).toBeDefined();
     expect (gameSession.teams).toBeDefined();  
-    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
+    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0));
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'));
     gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
@@ -96,7 +96,7 @@ describe ('PhaseResults', () => {
     const gameSession = await apiClient.createGameSession(1111, false);  
     expect (gameSession).toBeDefined();
     expect (gameSession.teams).toBeDefined();  
-    gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession));
+    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0));
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
     gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'));
     gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
@@ -123,7 +123,7 @@ describe ('PhaseResults', () => {
       const gameSession = await apiClient.createGameSession(1111, false);  
       expect (gameSession).toBeDefined();
       expect (gameSession.teams).toBeDefined();  
-      gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession),createTeamMock(gameSession),createTeamMock(gameSession));
+      gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0),createTeamMock(gameSession, "Team Name", 0),createTeamMock(gameSession, "Team Name", 0));
       const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
       gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2'));
       gameSession.teams![1].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3'));
@@ -149,7 +149,7 @@ describe ('PhaseResults', () => {
       const gameSession = await apiClient.createGameSession(1111, false);  
       expect (gameSession).toBeDefined();
       expect (gameSession.teams).toBeDefined();  
-      gameSession.teams!.push(createTeamMock(gameSession), createTeamMock(gameSession),createTeamMock(gameSession));
+      gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0), createTeamMock(gameSession, "Team Name", 0),createTeamMock(gameSession, "Team Name", 0));
       const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
       gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2'));
       gameSession.teams![1].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '2'), createTeamAnswerMock(mockCurrentQuestion.id, false, true, '1'));
