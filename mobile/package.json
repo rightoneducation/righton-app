@@ -30,7 +30,7 @@
     "appcenter": "^4.4.5",
     "appcenter-analytics": "^4.4.5",
     "appcenter-crashes": "^4.4.5",
-    "aws-amplify": "^4.3.32",
+    "aws-amplify": "^5.3.3",
     "buffer": "^6.0.3",
     "classnames": "^2.3.1",
     "core-js": "^3.24.1",
