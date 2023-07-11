@@ -123,7 +123,7 @@
     "parserOptions": {
       "ecmaVersion": "latest",
       "sourceType": "module",
-      "project": "./tsconfig.json"
+      "project": "./tsconfig.eslint.json"
     },
     "plugins": [
       "react",
@@ -170,7 +170,17 @@
           ]
         }
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.test.tsx"
+        ],
+        "rules": {
+          "@typescript-eslint/no-non-null-assertion": "off"
+        }
+      }
+    ]
   },
   "readme": "readme.md",
   "_id": "play2@0.1.0"
