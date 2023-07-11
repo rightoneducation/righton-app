@@ -40,7 +40,6 @@ export default function GameSessionSwitch({
   );
   // locally held score value for duration of gameSession, updates backend during each PHASE_X_RESULTS
   const score = currentTeam?.score ?? 0;
-  const leader = true;
   // this condition is used to display the pregamecountdown only on initial game start
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
@@ -113,7 +112,6 @@ export default function GameSessionSwitch({
           score={score}
           selectedAvatar={localModel.selectedAvatar}
           teamId={localModel.teamId}
-          leader={leader}
         />
       );
     default:

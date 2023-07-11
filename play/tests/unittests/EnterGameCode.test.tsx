@@ -20,15 +20,20 @@ const handleGameCodeClick = jest.fn(async () => {
 describe('EnterGameCode', () => {
   it('should render the EnterGameCode page', async () => {
     renderWithTheme(
-      <EnterGameCode isSmallDevice handleGameCodeClick={handleGameCodeClick} />
+      <EnterGameCode
+        isSmallDevice={true}
+        handleGameCodeClick={handleGameCodeClick}
+      />
     );
     expect(screen.getByTestId('gameCode-inputtextfield')).toBeInTheDocument();
-    // debug();
   });
 
-  it('validate textfield input', async () => {
+  it('confirm textfield display when firing textfield input changes through validator function', async () => {
     renderWithTheme(
-      <EnterGameCode isSmallDevice handleGameCodeClick={handleGameCodeClick} />
+      <EnterGameCode
+        isSmallDevice={true}
+        handleGameCodeClick={handleGameCodeClick}
+      />
     );
     const inputElementContainer = screen.getByTestId('gameCode-inputtextfield');
     const inputElement = within(inputElementContainer).getByRole('textbox');

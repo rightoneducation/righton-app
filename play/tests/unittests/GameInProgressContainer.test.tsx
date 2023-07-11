@@ -5,20 +5,14 @@ import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import ReactModal from 'react-modal';
-import {
-  ApiClient,
-  Environment,
-  GameSessionParser,
-  IAWSGameSession,
-  IGameSession,
-} from '@righton/networking';
+import { GameSessionState } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
+import apiClient from './mock/ApiClient.mock';
 import { GameInProgressContainer } from '../../src/containers/GameInProgressContainer';
-import mockLocalModel from './mock/localModel.json';
-import mockTeamsJoinGameSession from './mock/gamesessions/teamsJoinGameSession.json';
-import mockChooseCorrectGameSession from './mock/gamesessions/chooseCorrectGameSession.json';
 import useFetchAndSubscribeGameSession from '../../src/hooks/useFetchAndSubscribeGameSession';
+import { localModelLoaderMock } from './mock/MockHelperFunctions';
+
 
 ReactModal.setAppElement('body');
 // mock for useFetchAndSubscribeGameSession hook
@@ -43,12 +37,11 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // mock for router object, specifically allowing mocked loader data to be passed to the component
-const apiClient = new ApiClient(Environment.Staging);
 const routes = [
   {
     path: '/game',
     element: <GameInProgressContainer apiClient={apiClient} />,
-    loader: () => mockLocalModel,
+    loader: () => localModelLoaderMock,
   },
 ];
 const router = createMemoryRouter(routes, {
@@ -70,8 +63,8 @@ const howToPlayDescription = i18n.t('howtoplay.description');
 
 // tests that the gameinprogresscontainer renders the correct components
 // based on the received subscription object from the useFetchAndSubscribeGameSession hook
-describe('GameInProgressContainer', () => {
-  it('should render the GameSessionSwitch page (game begins)', async () => {
+describe ('GameInProgressContainer', () => {
+  it('should render error modal', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
@@ -83,8 +76,8 @@ describe('GameInProgressContainer', () => {
     // expects error modal to be popped if there are connection errors
     expect(screen.getByTestId('errormodal')).toBeInTheDocument();
   });
-
-  it('should render the lobby page in loading loading', async () => {
+  
+  it('should render the lobby page in loading', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
@@ -97,7 +90,7 @@ describe('GameInProgressContainer', () => {
     expect(screen.getByTestId('lobby-rejoin')).toBeInTheDocument();
   });
 
-  it('should render the GameSessionSwitch page (game begins)', async () => {
+  it('should render the lobby page in getting game session', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: true,
@@ -112,10 +105,10 @@ describe('GameInProgressContainer', () => {
     expect(screen.getByText(howToPlayLoading)).toBeInTheDocument();
   });
 
-  it('should render the GameSessionSwitch page (game begins)', async () => {
-    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      mockTeamsJoinGameSession as IAWSGameSession
-    ) as IGameSession;
+  it('should render the lobby page in how to play', async () => {
+    const gameSession = await apiClient.createGameSession(1111, false);  
+    expect (gameSession).toBeDefined();
+    gameSession.currentState = GameSessionState.TEAMS_JOINING;
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
@@ -130,10 +123,10 @@ describe('GameInProgressContainer', () => {
     expect(screen.getByText(howToPlayDescription)).toBeInTheDocument();
   });
 
-  it('should render the GameSessionSwitch page (game begins)', async () => {
-    const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
-      mockChooseCorrectGameSession as IAWSGameSession
-    ) as IGameSession;
+  it('should render the GameSessionSwitch page (pregame countdown)', async () => {
+    const gameSession = await apiClient.createGameSession(1111, false);  
+    expect (gameSession).toBeDefined();
+    gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
