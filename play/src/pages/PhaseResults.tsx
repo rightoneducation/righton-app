@@ -83,7 +83,6 @@ export default function PhaseResults({
   );
 
   const [newPoints, setNewPoints] = React.useState<number>(0);
-
   // update teamscore on the backend, if it fails, flag the error to pop the error modal
   const updateTeamScore = async (inputTeamId: string, newScore: number) => {
     try {

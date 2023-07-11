@@ -19,6 +19,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import LeaderboardSelector from '../../components/LeaderboardSelector';
 import { StorageKey } from '../../lib/PlayModels';
+import { teamSorter } from '../../lib/HelperFunctions';
 
 interface LeaderboardProps {
   teams?: ITeam[];
@@ -34,33 +35,7 @@ export default function Leaderboard({
   teamId,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
-  const teamSorter = (inputTeams: ITeam[]) => {
-    // create a set to store unique scores with no repeats
-    const scoreSet = new Set<number>();
-    inputTeams.forEach((team) => scoreSet.add(team.score));
-    // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
-    const sortedTopScores: Set<number> = new Set(Array.from(scoreSet)
-      .sort((a, b) => b - a)
-      .slice(0, 5));
-    // Filter through sortedTeams for all teams with the top five unique scores
-    const topTeamsUnsorted: ITeam[] = inputTeams.filter((team) =>
-      sortedTopScores.has(team.score)
-    );
-    const topTeamsSorted: ITeam[] = topTeamsUnsorted.sort((a, b) => {
-      if (a.score !== b.score) {
-        // sort by score descending
-        return b.score - a.score;
-      }
-      // sort alphabetically by name if scores are tied
-      return a.name.localeCompare(b.name);
-    });
-    return topTeamsSorted;
-  };
-
-  let sortedTeams: ITeam[] = [];
-  if (!isNullOrUndefined(teams)) {
-    sortedTeams = teamSorter(teams);
-  }
+  const sortedTeams: ITeam[] = useRef<ITeam[]>(!isNullOrUndefined(teams) ? teamSorter(teams, 5) : []).current;
 
   // remove locally stored game info when reaching leaderboard
   useEffect(() => {

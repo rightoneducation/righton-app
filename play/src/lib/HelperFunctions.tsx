@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import {
   ITeamAnswer,
+  ITeam,
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
@@ -15,8 +16,8 @@ import { InputPlaceholder, StorageKey } from './PlayModels';
 export const isNameValid = (name: string) => {
   return (
     name.trim() !== '' && // check for falsy w/o spaces, typ
-    name !== i18n.t('playername_firstnamedefault') && // check if default value, typ
-    name !== i18n.t('playername_lastnamedefault')
+    name !== i18n.t('joingame.playername.firstnamedefault') && // check if default value, typ
+    name !== i18n.t('joingame.playername.lastnamedefault')
   );
 };
 
@@ -85,36 +86,78 @@ export const checkForSubmittedAnswerOnRejoin = (
 };
 
 /**
- * retrieves local data from local storage and validates it
+ * validates localModel retrieved from local storage
+ * separate function to allow for ease of testing
+ * @param localModel - the localModel retrieved from local storage
  * @returns - the localModel if valid, null otherwise
  */
-export const fetchLocalData = () => {
-  const localModel = window.localStorage.getItem(StorageKey);
-  const currentTime = new Date().getTime() / 60000;
- 
-  if (isNullOrUndefined(localModel)) return null;
+export const validateLocalModel = (localModel: string | null) => {
+  if (isNullOrUndefined(localModel) || localModel === '') return null;
   const parsedLocalModel = JSON.parse(localModel);
-  const elapsedTime = currentTime - parsedLocalModel.currentTime;
-
-  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
-  if (elapsedTime > 120) {
-   window.localStorage.removeItem(StorageKey);
-   return null;
-  }
 
   // checks for invalid data in localModel, returns null if found
   if (
     [
+      parsedLocalModel.currentTime,
       parsedLocalModel.gameSessionId,
       parsedLocalModel.teamId,
       parsedLocalModel.teamMemberId,
       parsedLocalModel.selectedAvatar,
       parsedLocalModel.hasRejoined,
-    ].some((value) => isNullOrUndefined(value))
+      parsedLocalModel.currentTimer,
+    ].some((value) => isNullOrUndefined(value) || value === '')
   ) {
-    window.localStorage.removeItem(StorageKey);
+    return null;
+  }
+
+  const currentTime = new Date().getTime() / 60000;
+  const elapsedTime = currentTime - parsedLocalModel.currentTime;
+
+  // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
+  if (elapsedTime > 120) {
     return null;
   }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
+};
+
+/**
+ * retrieves local data from local storage and calls validator function
+ * @returns - the localModel if valid, null otherwise
+ */
+export const fetchLocalData = () => {
+  const localModel = validateLocalModel(
+    window.localStorage.getItem(StorageKey)
+  );
+  if (!localModel) window.localStorage.removeItem(StorageKey);
+  return localModel;
+};
+
+/**
+ * sorts teams by score descending, then alphabetically by name
+ * only include teams with scores in the top five
+ * See this discussion for more info on implementation: 
+ * https://github.com/rightoneducation/righton-app/pull/685#discussion_r1248353666
+ * @param inputTeams - the teams to be sorted
+ * @param totalTeamsReturned - the number of teams to be returned
+ * @returns - the sorted teams
+ */ 
+export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
+  const sortedTeams = inputTeams.sort((lhs, rhs) => {
+    if (lhs.score !== rhs.score) {
+      return lhs.score - rhs.score;
+    }
+    return rhs.name.localeCompare(lhs.name);
+  });
+  let lastScore = -1;
+  let totalTeamsReturned = totalTeams;
+  const ret = []; // Array(totalTeamsReturned);
+  for (let i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i -= 1) {
+    if (sortedTeams[i].score !== lastScore) {
+        totalTeamsReturned -= 1;
+    }
+    ret.push(sortedTeams[i]);
+    lastScore = sortedTeams[i].score;
+  }
+  return ret as ITeam[];
 };
