@@ -65,8 +65,7 @@ const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
 };
 
 describe ('PhaseResults', () => {
-  // tests if player has answered incorrectly on phase 1 (starting score: 0, ending score: 0)
-  it('Phase 1, wrong answer', async () => {
+  it('tests that score doesnt increase when player has answered incorrectly on Phase One', async () => {
     // mock gameSession with team that answered incorrectly on first question
     const gameSession = await createValidGameSession(2); 
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
@@ -85,8 +84,7 @@ describe ('PhaseResults', () => {
     });
   });
 
-  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-  it('Phase 1, correct answer', async () => {
+  it('tests that score is increased by 10 pts when player answers correctly on Phase One', async () => {
     // mock gameSession with team that answered correctly on first question
     const gameSession = await createValidGameSession(2); 
     const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
@@ -104,8 +102,7 @@ describe ('PhaseResults', () => {
     });
   });
 
-  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-  it('Phase 2, unpopular trick answer', async () => {
+  it('test that a players score doesnt increase when picking an unpopular answer on Phase Two', async () => {
     // mock gameSession with team that answered incorrectly on first question
     const gameSession = await createValidGameSession(3); 
     if (gameSession.teams) {
@@ -128,7 +125,6 @@ describe ('PhaseResults', () => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
       });
       await waitFor(() => expect(apiClient.updateTeam).toHaveBeenCalled());
-      // tests that new score indicator has value of +10
       expect(apiClient.updateTeam).toHaveBeenCalledWith({
         id: gameSession.teams![0].id,
         score: 120,
@@ -136,8 +132,7 @@ describe ('PhaseResults', () => {
     };
   });
 
-  // tests if player has answered correctly on phase 1 (starting score: 120, ending score: 130)
-  it('Phase 2, popular trick answer', async () => {
+  it('tests that a player is awarded points equal to the percentage of players that answered their selection in Phase One', async () => {
     // mock gameSession with team that answered incorrectly on first question
     const gameSession = await createValidGameSession(3); 
     if (gameSession.teams) {

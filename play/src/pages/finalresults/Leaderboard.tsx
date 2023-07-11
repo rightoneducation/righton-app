@@ -37,7 +37,7 @@ export default function Leaderboard({
   isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
-  const sortedTeams: ITeam[] = useRef<ITeam[]>(!isNullOrUndefined(teams) ? teamSorter(teams) : []).current;
+  const sortedTeams: ITeam[] = useRef<ITeam[]>(!isNullOrUndefined(teams) ? teamSorter(teams, 5) : []).current;
 
   // remove locally stored game info when reaching leaderboard
   useEffect(() => {

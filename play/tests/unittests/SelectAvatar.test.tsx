@@ -24,6 +24,8 @@ export function renderWithThemeRouterTranslation(children: React.ReactElement) {
 
 const setSelectedAvatar = jest.fn();
 const setIsAPIError = jest.fn();
+const firstNameMock = 'Test';
+const lastNameMock = 'Test';
 
 describe('SelectAvatar', () => {
   it('should render the SelectAvatar page', async () => {
@@ -31,8 +33,8 @@ describe('SelectAvatar', () => {
     renderWithThemeRouterTranslation(
       <SelectAvatar
         selectedAvatar={0}
-        firstName={'Test'}
-        lastName={'Test'}
+        firstName={firstNameMock}
+        lastName={lastNameMock}
         setSelectedAvatar={setSelectedAvatar}
         isSmallDevice={true}
         handleAvatarSelectClick={handleAvatarSelectClick}
@@ -45,13 +47,13 @@ describe('SelectAvatar', () => {
     expect(screen.getByTestId('selectavatar-button')).toBeInTheDocument();
   });
 
-  it ('onclick should fire add teams callback' , async () => {
+  it ('should fire add teams callback on click' , async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
         selectedAvatar={0}
-        firstName={'Test'}
-        lastName={'Test'}
+        firstName={firstNameMock}
+        lastName={lastNameMock}
         setSelectedAvatar={setSelectedAvatar}
         isSmallDevice={true}
         handleAvatarSelectClick={handleAvatarSelectClick}
@@ -65,14 +67,13 @@ describe('SelectAvatar', () => {
 
   });
 
-
-  it ('onclick should fire add teams callback' , async () => {
+  it ('should display error modal when isAPIError === true' , async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
         selectedAvatar={0}
-        firstName={'Test'}
-        lastName={'Test'}
+        firstName={firstNameMock}
+        lastName={lastNameMock}
         setSelectedAvatar={setSelectedAvatar}
         isSmallDevice={true}
         handleAvatarSelectClick={handleAvatarSelectClick}
@@ -81,6 +82,5 @@ describe('SelectAvatar', () => {
       />
     );
     expect(screen.getByTestId('errormodal')).toBeInTheDocument();
-
   });
 });

@@ -67,16 +67,22 @@ export const localModelLoaderMock = () => {
 }
 
 /**
- * Creates a valid game session with teams and team members
+ * Creates a valid game session 
+ * Validate game session by checking for .toBeDefined() on all properties
+ * Populate gameSession with correct number of teams in default configuration
  * @param numberOfTeams 
  * @returns valid game session with teams and team members
  */
 export const createValidGameSession = async (numberOfTeams: number) => {
   const gameSession = await apiClient.createGameSession(1111, false);  
+  const defaultTeamName = "Team Name";
+  const defaultScore = 0;
   expect (gameSession).toBeDefined();
   expect (gameSession.teams).toBeDefined();
+  expect (gameSession.currentQuestionIndex).toBeDefined();
+  expect (gameSession.questions[gameSession.currentQuestionIndex!]).toBeDefined();
   for (let i = 0; i < numberOfTeams; i++){
-    gameSession.teams!.push(createTeamMock(gameSession, "Team Name", 0));
+    gameSession.teams!.push(createTeamMock(gameSession, defaultTeamName, defaultScore));
   }
   if (gameSession.teams){ 
     expect (gameSession).toHaveProperty('teams');

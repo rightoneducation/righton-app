@@ -28,7 +28,7 @@ describe('EnterGameCode', () => {
     expect(screen.getByTestId('gameCode-inputtextfield')).toBeInTheDocument();
   });
 
-  it('validate textfield input', async () => {
+  it('confirm textfield display when firing textfield input changes through validator function', async () => {
     renderWithTheme(
       <EnterGameCode
         isSmallDevice={true}

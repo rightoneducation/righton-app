@@ -66,7 +66,7 @@ const howToPlayDescription = i18n.t('howtoplay.description');
 // tests that the gameinprogresscontainer renders the correct components 
 // based on the received subscription object from the useFetchAndSubscribeGameSession hook
 describe ('GameInProgressContainer', () => {
-  it('should render the GameSessionSwitch page (game begins)', async () => {
+  it('should render error modal', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
@@ -83,7 +83,7 @@ describe ('GameInProgressContainer', () => {
     ).toBeInTheDocument()
   });
   
-  it('should render the lobby page in loading loading', async () => {
+  it('should render the lobby page in loading', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: false,
@@ -101,7 +101,7 @@ describe ('GameInProgressContainer', () => {
   })
 
 
-  it('should render the GameSessionSwitch page (game begins)', async () => {
+  it('should render the lobby page in getting game session', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
       isLoading: true,
@@ -120,7 +120,7 @@ describe ('GameInProgressContainer', () => {
     expect(screen.getByText(howToPlayLoading)).toBeInTheDocument();
   });
 
-  it('should render the GameSessionSwitch page (game begins)', async () => {
+  it('should render the lobby page in how to play', async () => {
     const gameSession = await apiClient.createGameSession(1111, false);  
     expect (gameSession).toBeDefined();
     gameSession.currentState = GameSessionState.TEAMS_JOINING;
@@ -142,7 +142,7 @@ describe ('GameInProgressContainer', () => {
     expect(screen.getByText(howToPlayDescription)).toBeInTheDocument();
   });
 
-  it('should render the GameSessionSwitch page (game begins)', async () => {
+  it('should render the GameSessionSwitch page (pregame countdown)', async () => {
     const gameSession = await apiClient.createGameSession(1111, false);  
     expect (gameSession).toBeDefined();
     gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;

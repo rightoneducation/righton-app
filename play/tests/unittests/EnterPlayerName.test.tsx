@@ -44,7 +44,7 @@ describe('EnterPlayerName', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('first name is placeholder', async () => {
+  it('should display invalid text if first name is placeholder', async () => {
     const setFirstName = jest.fn();
     const setLastName = jest.fn();
     const setPregameState = jest.fn();
@@ -64,7 +64,7 @@ describe('EnterPlayerName', () => {
     expect(screen.getByTestId('playername-invalidtext')).toBeInTheDocument();
   });
 
-  it('last name is placeholder', async () => {
+  it('should display invalid text if last name is placeholder', async () => {
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName
@@ -82,7 +82,7 @@ describe('EnterPlayerName', () => {
     expect(screen.getByTestId('playername-invalidtext')).toBeInTheDocument();
   });
 
-  it('both names valid', async () => {
+  it('should not display invalid text if both names valid', async () => {
     const buttonText = i18n.t('joingame.playername.button');
     renderWithThemeAndTranslation(
       <EnterPlayerName

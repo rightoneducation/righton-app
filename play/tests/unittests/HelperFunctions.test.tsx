@@ -13,7 +13,7 @@ import apiClient from './mock/ApiClient.mock';
 import { createTeamMock, createTeamAnswerMock, localModelLoaderMock }  from './mock/MockHelperFunctions';
 
 describe('HelperFunctions', () => {
-  it('isNameValid', () => {
+  it('should only produce an invalid result if the value is empty or matches the placeholder', () => {
     const placeholderFirstName = i18n.t('joingame.playername.firstnamedefault');
     const placeholderLastName = i18n.t('joingame.playername.lastnamedefault');
     // expects empty or placeholder names to be invalid, all else valid
@@ -23,7 +23,7 @@ describe('HelperFunctions', () => {
     expect(isNameValid(placeholderLastName)).toBe(false);
   });
 
-  it('isGameCodeValid', () => {
+  it('it should only produce a valid result if it is a 4 digit numeric', () => {
     // expects 4 digit numerical game code to be valid, all else invalid
     const placeholderGameCode = InputPlaceholder.GAME_CODE;
     expect(isGameCodeValid('1234')).toBe(true);
@@ -34,7 +34,7 @@ describe('HelperFunctions', () => {
     expect(isGameCodeValid(placeholderGameCode)).toBe(false);
   });
 
-  it('checkForSubmittedAnswerOnRejoin', () => {
+  it('tests that on rejoining in different phases, duplicated behaviour isnt held over', () => {
     const questionId = randomInt(1000, 9999);
     let answerChoices = [
       { id: questionId.toString(), text: '60%', isCorrectAnswer: true, reason: 'reason' },
@@ -112,7 +112,7 @@ describe('HelperFunctions', () => {
     ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
   });
 
-  it('validateLocalModel', () => {
+  it('tests if a local model is fully populated and no older than 120min', () => {
     const localModel = JSON.stringify(localModelLoaderMock());
     const parsedModel = JSON.parse(localModel);
     // expects fully populated localModel data with time elapsed < 120 minutes, all else is invalid
@@ -127,7 +127,7 @@ describe('HelperFunctions', () => {
     })
   });
 
-  it('teamSorter', async () => {
+  it('tests that sorting algorithm works (sorted by score first and then alphabetically in the event of a tie)', async () => {
     const mockTeamCompare = ["A Team", "B Team", "C Team", "D Team", "E Team", "F Team"];
     // if no ties, sort team by score only
     let gameSession = await apiClient.createGameSession(1111, false); 
@@ -138,7 +138,8 @@ describe('HelperFunctions', () => {
       createTeamMock(gameSession, mockTeamCompare[1], 0),
       createTeamMock(gameSession, mockTeamCompare[2], 100)
     );
-    let sortedTeams = teamSorter(gameSession.teams!);
+    let sortedTeams = teamSorter(gameSession.teams!, 5);
+    console.log(sortedTeams);
     expect(sortedTeams).toBeDefined();
     expect(sortedTeams[0].name).toEqual(mockTeamCompare[2]);
     expect(sortedTeams[1].name).toEqual(mockTeamCompare[0]);
@@ -155,7 +156,7 @@ describe('HelperFunctions', () => {
       createTeamMock(gameSession, mockTeamCompare[4], 50),
       createTeamMock(gameSession, mockTeamCompare[5], 100)
     );
-    sortedTeams = teamSorter(gameSession.teams!);
+    sortedTeams = teamSorter(gameSession.teams!, 5);
     expect(sortedTeams).toBeDefined();
     expect(sortedTeams[0].name).toEqual(mockTeamCompare[2]);
     expect(sortedTeams[1].name).toEqual(mockTeamCompare[5]);

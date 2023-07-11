@@ -135,28 +135,26 @@ export const fetchLocalData = () => {
 /**
  * sorts teams by score descending, then alphabetically by name
  * only include teams with scores in the top five
+ * See this discussion for more info on implementation: 
+ * https://github.com/rightoneducation/righton-app/pull/685#discussion_r1248353666
  * @param inputTeams - the teams to be sorted
+ * @param totalTeamsReturned - the number of teams to be returned
  * @returns - the sorted teams
  */ 
-export const teamSorter = (inputTeams: ITeam[]) => {
-    // create a set to store unique scores with no repeats
-    const scoreSet = new Set<number>();
-    inputTeams.forEach((team) => scoreSet.add(team.score));
-    // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
-    const sortedTopScores: Set<number> = new Set(Array.from(scoreSet)
-      .sort((a, b) => b - a)
-      .slice(0, 5));
-    // Filter through sortedTeams for all teams with the top five unique scores
-    const topTeamsUnsorted: ITeam[] = inputTeams.filter((team) =>
-      sortedTopScores.has(team.score)
-    );
-    const topTeamsSorted: ITeam[] = topTeamsUnsorted.sort((a, b) => {
-      if (a.score !== b.score) {
-        // sort by score descending
-        return b.score - a.score;
-      }
-      // sort alphabetically by name if scores are tied
-      return a.name.localeCompare(b.name);
-    });
-    return topTeamsSorted;
+export const teamSorter = (inputTeams: ITeam[], totalTeamsReturned: number) => {
+  const sortedTeams = inputTeams.sort((lhs, rhs) => {
+      return lhs.score - rhs.score ?? lhs.name.localeCompare(rhs.name);
+  });
+  var lastScore = -1;
+  let ret = Array(totalTeamsReturned);
+  console.log(sortedTeams.length-1);
+  for (var i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i--) {
+    if (sortedTeams[i].score !== lastScore) {
+        totalTeamsReturned -= 1;
+    }
+    ret.push(sortedTeams[i]);
+    lastScore = sortedTeams[i].score;
+  }
+  console.log(ret);
+  return ret as ITeam[];
 };

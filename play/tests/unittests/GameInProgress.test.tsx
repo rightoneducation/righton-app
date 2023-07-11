@@ -66,8 +66,7 @@ const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
 };
 
 describe ('GameInProgress', () => {
-  // tests if timer is > 0, button on answer card is still enabled
-  it('Timer has time, isSubmitted === false', async () => {
+  it('tests if timer is > 0, button on answer card is still enabled', async () => {
     // mock gameSession with timer at 0
     const gameSession = await createValidGameSession(2); 
     gameSession.teams![0].teamMembers![0]!.answers!.push(
@@ -84,8 +83,7 @@ describe ('GameInProgress', () => {
     expect(screen.getByTestId('answer-button-disabled')).toBeInTheDocument();
   });
 
-
-  it('Timer has time, isSubmitted === false', async () => {
+  it('tests if timer is < 0, button on answer card is disabled', async () => {
     // mock gameSession with timer at 0
     const gameSession = await createValidGameSession(2); 
     gameSession.teams![0].teamMembers![0]!.answers!.push(
