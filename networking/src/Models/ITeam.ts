@@ -7,6 +7,7 @@ export interface ITeam {
     question?: IQuestion | null
     teamMembers?: Array<ITeamMember | null> | null
     score: number
+    selectedAvatarIndex: number
     createdAt: string
     updatedAt?: string | null
     gameSessionTeamsId?: string | null

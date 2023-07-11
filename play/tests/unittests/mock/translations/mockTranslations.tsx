@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import translations from '../public/locales/en/translation.json';
+import translations from '../../../../public/locales/en/translation.json';
 
 i18n.init({
   lng: 'en',

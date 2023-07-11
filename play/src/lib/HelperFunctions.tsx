@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import {
   ITeamAnswer,
+  ITeam,
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
@@ -90,10 +91,10 @@ export const checkForSubmittedAnswerOnRejoin = (
  * @param localModel - the localModel retrieved from local storage
  * @returns - the localModel if valid, null otherwise
  */
-export const validateLocalModel = (localModel: string | null) => { 
+export const validateLocalModel = (localModel: string | null) => {
   if (isNullOrUndefined(localModel) || localModel === '') return null;
   const parsedLocalModel = JSON.parse(localModel);
- 
+
   // checks for invalid data in localModel, returns null if found
   if (
     [
@@ -114,7 +115,7 @@ export const validateLocalModel = (localModel: string | null) => {
 
   // if the time between last accessing localModel and now is greater than 2 hours, remove localModel
   if (elapsedTime > 120) {
-   return null;
+    return null;
   }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;
@@ -125,8 +126,38 @@ export const validateLocalModel = (localModel: string | null) => {
  * @returns - the localModel if valid, null otherwise
  */
 export const fetchLocalData = () => {
-  const localModel = validateLocalModel(window.localStorage.getItem(StorageKey));
-  if (!localModel)
-    window.localStorage.removeItem(StorageKey);
+  const localModel = validateLocalModel(
+    window.localStorage.getItem(StorageKey)
+  );
+  if (!localModel) window.localStorage.removeItem(StorageKey);
   return localModel;
+};
+
+/**
+ * sorts teams by score descending, then alphabetically by name
+ * only include teams with scores in the top five
+ * See this discussion for more info on implementation: 
+ * https://github.com/rightoneducation/righton-app/pull/685#discussion_r1248353666
+ * @param inputTeams - the teams to be sorted
+ * @param totalTeamsReturned - the number of teams to be returned
+ * @returns - the sorted teams
+ */ 
+export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
+  const sortedTeams = inputTeams.sort((lhs, rhs) => {
+    if (lhs.score !== rhs.score) {
+      return lhs.score - rhs.score;
+    }
+    return rhs.name.localeCompare(lhs.name);
+  });
+  let lastScore = -1;
+  let totalTeamsReturned = totalTeams;
+  const ret = []; // Array(totalTeamsReturned);
+  for (let i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i -= 1) {
+    if (sortedTeams[i].score !== lastScore) {
+        totalTeamsReturned -= 1;
+    }
+    ret.push(sortedTeams[i]);
+    lastScore = sortedTeams[i].score;
+  }
+  return ret as ITeam[];
 };

@@ -5,6 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
+import { v4 as uuidv4 } from 'uuid';
 import IntroButtonStyled from '../lib/styledcomponents/IntroButtonStyled';
 import { StorageKey, ErrorType } from '../lib/PlayModels';
 
@@ -36,12 +37,13 @@ export default function ErrorModal({
   };
 
   const lowerText = [
-    <Typography variant="h4" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
+    <Typography key={uuidv4()} variant="h4" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
       {errorText}
     </Typography>,
   ];
   const lowerButton = [
     <IntroButtonStyled
+      key={uuidv4()}
       onClick={() => {
         window.localStorage.removeItem(StorageKey);
         navigate('/');
