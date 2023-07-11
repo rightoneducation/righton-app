@@ -143,19 +143,20 @@ export const fetchLocalData = () => {
  */ 
 export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
   const sortedTeams = inputTeams.sort((lhs, rhs) => {
-      return lhs.score - rhs.score ?? lhs.name.localeCompare(rhs.name);
+    if (lhs.score !== rhs.score) {
+      return lhs.score - rhs.score;
+    }
+    return rhs.name.localeCompare(lhs.name);
   });
   let lastScore = -1;
   let totalTeamsReturned = totalTeams;
-  const ret = Array(totalTeamsReturned);
-  console.log(sortedTeams.length-1);
-  for (let i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i-=1) {
+  const ret = []; // Array(totalTeamsReturned);
+  for (let i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i -= 1) {
     if (sortedTeams[i].score !== lastScore) {
         totalTeamsReturned -= 1;
     }
     ret.push(sortedTeams[i]);
     lastScore = sortedTeams[i].score;
   }
-  console.log(ret);
   return ret as ITeam[];
 };

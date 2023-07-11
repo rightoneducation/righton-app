@@ -139,7 +139,6 @@ describe('HelperFunctions', () => {
       createTeamMock(gameSession, mockTeamCompare[2], 100)
     );
     let sortedTeams = teamSorter(gameSession.teams!, 5);
-    console.log(sortedTeams);
     expect(sortedTeams).toBeDefined();
     expect(sortedTeams[0].name).toEqual(mockTeamCompare[2]);
     expect(sortedTeams[1].name).toEqual(mockTeamCompare[0]);
