@@ -25,7 +25,6 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
-    "recharts": "^2.7.2",
     "storybook": "^6.5.16",
     "styled-components": "^5.3.9",
     "swiper": "^9.2.0",
