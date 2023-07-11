@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { ITeam, GameSessionState } from '@righton/networking';
+import React, { useState, useRef } from 'react';
+import {
+  ITeam,
+  GameSessionState,
+  isNullOrUndefined,
+} from '@righton/networking';
 import Leaderboard from '../pages/finalresults/Leaderboard';
 import Congrats from '../pages/finalresults/Congrats';
 import { FinalResultsState } from '../lib/PlayModels';
@@ -12,7 +14,6 @@ interface FinalResultsContainerProps {
   score: number;
   selectedAvatar: number;
   teamId: string;
-  leader: boolean;
 }
 
 export default function FinalResultsContainer({
@@ -21,13 +22,20 @@ export default function FinalResultsContainer({
   score,
   selectedAvatar,
   teamId,
-  leader,
 }: FinalResultsContainerProps) {
-  const theme = useTheme();
-  const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const [finalResultsState, setFinalResultsState] = useState(
     FinalResultsState.CONGRATS
   );
+
+  const isLeader = (inputTeams: ITeam[] | undefined, inputTeamID: string) => {
+    if (!isNullOrUndefined(inputTeams) && !isNullOrUndefined(inputTeamID)) {
+      inputTeams.sort((a, b) => b.score - a.score);
+      if (inputTeams.slice(0, 5).find((team) => team.id === inputTeamID))
+        return true;
+    }
+    return false;
+  };
+  const leader = useRef<boolean>(isLeader(teams, teamId));
 
   switch (finalResultsState) {
     case FinalResultsState.LEADERBOARD:
@@ -37,7 +45,6 @@ export default function FinalResultsContainer({
           currentState={currentState}
           teamAvatar={selectedAvatar}
           teamId={teamId}
-          isSmallDevice={isSmallDevice}
         />
       );
     case FinalResultsState.CONGRATS:
@@ -46,7 +53,7 @@ export default function FinalResultsContainer({
         <Congrats
           score={score}
           selectedAvatar={selectedAvatar}
-          leader={leader}
+          leader={leader.current}
           setFinalResultsState={() =>
             setFinalResultsState(FinalResultsState.LEADERBOARD)
           }

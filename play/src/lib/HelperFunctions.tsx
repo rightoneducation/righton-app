@@ -141,14 +141,15 @@ export const fetchLocalData = () => {
  * @param totalTeamsReturned - the number of teams to be returned
  * @returns - the sorted teams
  */ 
-export const teamSorter = (inputTeams: ITeam[], totalTeamsReturned: number) => {
+export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
   const sortedTeams = inputTeams.sort((lhs, rhs) => {
       return lhs.score - rhs.score ?? lhs.name.localeCompare(rhs.name);
   });
-  var lastScore = -1;
-  let ret = Array(totalTeamsReturned);
+  let lastScore = -1;
+  let totalTeamsReturned = totalTeams;
+  const ret = Array(totalTeamsReturned);
   console.log(sortedTeams.length-1);
-  for (var i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i--) {
+  for (let i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i-=1) {
     if (sortedTeams[i].score !== lastScore) {
         totalTeamsReturned -= 1;
     }

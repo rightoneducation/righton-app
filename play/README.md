@@ -1,15 +1,19 @@
 # RightOn! - Play App
 
-Play is the student facing RightOn! app built with ReactJS and Typescript.
+[Play](https://play.rightoneducation.com) is the student facing RightOn! app built with ReactJS and Typescript. It makes use of [mui v5](https://mui.com/material-ui/migration/migration-v4/) for styling, [react-i18next](https://react.i18next.com/) for internationalization, [Storybook](https://storybook.js.org/) for UI development  and [jest](https://jestjs.io/docs/getting-started) for testing.
 
-### Installation:
+### App Architecture:
+An breakdown of the general design and flow of the app can be found [here](https://github.com/rightoneducation/righton-app/wiki/Play-App---Architecture-Overview). This includes a description of core states of the app, the routing and the components and subcomponents that are governed by those states.
 
-<strong> install packages per package.json </strong>
+### Installation Instructions:
+
+<strong> install packages per package.json: </strong>
 
 1. cd play
 2. yarn install
 
-<strong> link networking for models, helper functions etc </strong>  
+<strong> link networking for models, helper functions etc: </strong>
+
 3. change directory to networking  
 4. yarn install  
 5. yarn run build  
@@ -22,8 +26,10 @@ Play is the student facing RightOn! app built with ReactJS and Typescript.
 
 1. 'yarn start' - runs react-scripts app
 2. 'yarn storybook' - starts up preview of storybooks
-3. 'yarn lint' - ESLints everything in \play
-4. 'yarn format' - applies prettier formatting to everything in \play
+3. 'yarn chromatic' - builds storybook to chromatic for coordination
+4. 'yarn lint' - ESLints everything in /play
+5. 'yarn format' - applies prettier formatting to everything in /play
+6. 'yarn test' - runs tests via jest for *.test.tsx in the /tests folder
 
 ### Styling:
 
@@ -51,22 +57,20 @@ There are some exceptions though:
 <strong> .prettierrc: </strong>
 
 1.  "singleQuote": true  
-    I just think single quotes are prettier :sunglasses:
+    I just think single quotes are nicer :sunglasses:
 
 ### Theming:
 
-lib\Theme.tsx has been added to centralize colors, fonts and breakpoints.
+lib/Theme.tsx has been added to centralize colors, fonts and breakpoints. This is deployed through the app via `<ThemeProvider>` in `App.tsx` and `import { styled, useTheme } from '@mui/material/styles';` 
 
-### Models:
+### Internationalization:
 
-lib\PlayModels.tsx contains all models used within play:
+Dictionaries are stored in `public/locales/{lang}/translations.json` and configured via `src/i18n.tsx` and deployed via `import './i18n';` in `index.tsx` and `import { useTranslation } from 'react-i18next';` 
 
-1. enum AnswerState  
-   Used to define states for the answerselector values
+We autodetect based on language settings in the browser and fall back to `EN` as a default.
 
-### TODO:
+### Testing:
 
-1. Adjust how GameSessionObject handles null/undefined to prevent messy null/undefined/? checks further down the code
-   https://github.com/rightoneducation/righton-app/issues/583
-2. Timer to pause on tab change etc.
-   https://github.com/rightoneducation/righton-app/issues/584
+Unit tests have been written to test and preserve core functionality within `play`. For a complete description of set up and configuration, please refer to these PRs: [PR679](https://github.com/rightoneducation/righton-app/pull/679) and [PR693](https://github.com/rightoneducation/righton-app/pull/693). For a complete description of tests being run, please refer to these PRs: [PR681](https://github.com/rightoneducation/righton-app/pull/681) and [PR685](https://github.com/rightoneducation/righton-app/pull/685).
+
+
