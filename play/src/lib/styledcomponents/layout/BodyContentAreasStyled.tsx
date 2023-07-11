@@ -34,27 +34,27 @@ export const BodyContentAreaPhaseResultsStyled = styled(
 });
 
 // content area of body that floats above background layers above - Phase Results Page
-interface BodyContentLeaderboardProps {
-  isSmallDevice: boolean;
-}
-
 export const BodyContentAreaLeaderboardStyled = styled(
-  BodyContentAreaDoubleColumnStyled,
-  {
-    shouldForwardProp: (prop) => prop !== 'isSmallDevice',
-  }
-)<BodyContentLeaderboardProps>(({ isSmallDevice, theme }) => ({
+  BodyContentAreaDoubleColumnStyled
+)(({ theme }) => ({
   position: 'absolute',
   top: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: isSmallDevice ? 'flex-start' : 'center',
+  justifyContent: 'flex-start',
   maxWidth: '500px',
   paddingLeft: `${theme.sizing.mediumPadding}px`,
   paddingRight: `${theme.sizing.mediumPadding}px`,
-  height: '546px',
-  overflow: 'hidden',
+  height: '100%',
+  overflow: 'scroll',
   flexWrap: 'nowrap',
   margin: 0,
+  touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+  '&::-webkit-scrollbar': {
+    // Chrome and Safari
+    display: 'none',
+  },
+  scrollbarWidth: 'none', // Firefox
+  '-ms-overflow-style': 'none', // IE and Edge
 }));

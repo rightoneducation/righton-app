@@ -25,7 +25,6 @@ interface LeaderboardProps {
   currentState: GameSessionState;
   teamAvatar: number;
   teamId: string;
-  isSmallDevice: boolean;
 }
 
 export default function Leaderboard({
@@ -33,11 +32,21 @@ export default function Leaderboard({
   currentState,
   teamAvatar,
   teamId,
-  isSmallDevice,
 }: LeaderboardProps) {
   const currentTeam = teams?.find((team) => team.id === teamId);
   const teamSorter = (inputTeams: ITeam[]) => {
-    inputTeams.sort((a, b) => {
+    // create a set to store unique scores with no repeats
+    const scoreSet = new Set<number>();
+    inputTeams.forEach((team) => scoreSet.add(team.score));
+    // convert the set to an array and sort it in descending order to retrieve only the top five highest scores
+    const sortedTopScores: Set<number> = new Set(Array.from(scoreSet)
+      .sort((a, b) => b - a)
+      .slice(0, 5));
+    // Filter through sortedTeams for all teams with the top five unique scores
+    const topTeamsUnsorted: ITeam[] = inputTeams.filter((team) =>
+      sortedTopScores.has(team.score)
+    );
+    const topTeamsSorted: ITeam[] = topTeamsUnsorted.sort((a, b) => {
       if (a.score !== b.score) {
         // sort by score descending
         return b.score - a.score;
@@ -45,7 +54,7 @@ export default function Leaderboard({
       // sort alphabetically by name if scores are tied
       return a.name.localeCompare(b.name);
     });
-    return teams!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    return topTeamsSorted;
   };
 
   let sortedTeams: ITeam[] = [];
@@ -81,13 +90,12 @@ export default function Leaderboard({
   const { current: avatarNumbers } = useRef<number[]>(
     teams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        teams.map((team, index) =>
+        teams.map((team) =>
           team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
         )
       : // if teams is invalid, then return empty array
         []
   );
-
   return (
     <StackContainerStyled
       direction="column"
@@ -106,16 +114,18 @@ export default function Leaderboard({
           handleTimerIsFinished={() => {}}
         />
       </HeaderStackContainerStyled>
-      <BodyStackContainerStyled ref={containerRef}>
+      <BodyStackContainerStyled
+        ref={containerRef}
+        style={{ height: `${subContainerHeight}px` }}
+      >
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <BodyContentAreaLeaderboardStyled
           container
           style={{ height: `${subContainerHeight}px` }}
-          isSmallDevice={isSmallDevice}
           spacing={2}
         >
-          {sortedTeams?.map((team: ITeam, index: number) => (
+          {sortedTeams.map((team: ITeam, index: number) => (
             <Grid item key={uuidv4()} ref={itemRef} sx={{ width: '100%' }}>
               <LeaderboardSelector
                 teamName={team.name ? team.name : 'Team One'}
