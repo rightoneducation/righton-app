@@ -15,12 +15,14 @@ interface ConfidenceMeterCardProps {
   selectedOption: number | null;
   handleSelectOption: (option: number) => void;
   isSelected: boolean;
+  isSmallDevice: boolean;
 }
 
 export default function ConfidenceMeterCard({
   selectedOption,
   handleSelectOption,
   isSelected,
+  isSmallDevice
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -60,19 +62,19 @@ export default function ConfidenceMeterCard({
       </Typography>
     </Box>
   );
-  const responseOption = (text: string) => {
+  const responseOption = (text: string, index: number) => {
     return (
       <Box
-        maxWidth={`${theme.sizing.extraLargePadding}px`}
+        maxWidth={isSmallDevice ? `${theme.sizing.largePadding}px` : `${theme.sizing.extraLargePadding}px`}
         sx={{
           textAlign: 'center',
           alignItems: 'center',
-          marginX: `${theme.sizing.extraSmallPadding}px`,
+          marginX: `${theme.sizing.extraSmallPadding}px`
         }}
       >
         <FormControlLabel
-          key={confidenceOptionArray.indexOf(text)}
-          value={confidenceOptionArray.indexOf(text)}
+          key={index}
+          value={index}
           control={
             <Radio
               sx={{
@@ -124,7 +126,7 @@ export default function ConfidenceMeterCard({
           marginY: `${theme.sizing.mediumPadding}px`,
         }}
       >
-        {confidenceOptionArray.map((option) => responseOption(option))}
+        {confidenceOptionArray.map((option, index) => responseOption(option, index))}
       </RadioGroup>
     </FormControl>
   );

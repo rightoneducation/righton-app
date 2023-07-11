@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import ConfidenceMeterCard from './ConfidenceMeterCard';
 import Theme from '../lib/Theme';
@@ -7,9 +7,9 @@ import Theme from '../lib/Theme';
 export default {
   title: 'Design System/3_Organisms/ConfidenceMeterCard',
   component: ConfidenceMeterCard,
-} as ComponentMeta<typeof ConfidenceMeterCard>;
+} as Meta<typeof ConfidenceMeterCard>;
 
-const Template: ComponentStory<typeof ConfidenceMeterCard> =
+const Template: StoryFn<typeof ConfidenceMeterCard> =
   function ConfidenceMeterCardTemplate(args) {
     return (
       <ThemeProvider theme={Theme}>

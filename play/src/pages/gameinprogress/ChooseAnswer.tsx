@@ -104,6 +104,7 @@ export default function ChooseAnswer({
                 selectedOption={selectedConfidenceOption}
                 handleSelectOption={handleSelectConfidence}
                 isSelected={isConfidenceSelected}
+                isSmallDevice={isSmallDevice}
               />
             ) : null}
             <Typography
