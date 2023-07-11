@@ -10,7 +10,7 @@ import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import GameInProgress from '../../src/pages/GameInProgress';
 import apiClient from './mock/ApiClient.mock';
-import { createTeamMock, createTeamAnswerMock, localModelLoaderMock, createValidGameSession } from './mock/MockHelperFunctions';
+import { createTeamAnswerMock, localModelLoaderMock, createValidGameSession } from './mock/MockHelperFunctions';
 
 ReactModal.setAppElement('body');
 
@@ -23,7 +23,7 @@ apiClient.updateTeam = jest.fn().mockResolvedValue({});
 
 // function for rendering phase results with theme, router, and translation
 // intakes a mock gamesession based on test parameters
-export function renderWithThemeRouterTranslation(
+function renderWithThemeRouterTranslation(
   gameSession: IGameSession,
   mockAnswerChoices: {
     id: string;
@@ -31,7 +31,7 @@ export function renderWithThemeRouterTranslation(
     isCorrectAnswer: boolean;
     reason: string;
   }[],
-  currentTimer: number,
+  currentTimer: number
 ) {
   return render(
     <I18nextProvider i18n={i18n}>
@@ -57,12 +57,14 @@ export function renderWithThemeRouterTranslation(
 
 // function for getting answer choices from a question
 const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
-  return mockCurrentQuestion?.choices?.map((choice: IChoice) => ({
+  return (
+    mockCurrentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
-  })) ?? [];
+    })) ?? []
+  );
 };
 
 describe ('GameInProgress', () => {
@@ -96,7 +98,7 @@ describe ('GameInProgress', () => {
     act(() => {
       renderWithThemeRouterTranslation(gameSession, mockAnswerChoices, -1);
     });
-     // expects answer card button to be disabled
+    // expects answer card button to be disabled
     expect(screen.getByTestId('answer-button-disabled')).toBeInTheDocument();
   });
 });

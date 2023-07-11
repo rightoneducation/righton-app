@@ -1,14 +1,14 @@
+import { GameSessionState } from '@righton/networking';
 import {
   isNameValid,
   isGameCodeValid,
   checkForSubmittedAnswerOnRejoin,
   validateLocalModel,
-  teamSorter
+  teamSorter,
 } from '../../src/lib/HelperFunctions';
 import { randomInt } from 'crypto'
 import i18n from './mock/translations/mockTranslations';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
-import { GameSessionState } from '@righton/networking';
 import apiClient from './mock/ApiClient.mock';
 import { createTeamMock, createTeamAnswerMock, localModelLoaderMock }  from './mock/MockHelperFunctions';
 

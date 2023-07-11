@@ -9,7 +9,7 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-export function renderWithTheme(children: React.ReactElement) {
+function renderWithTheme(children: React.ReactElement) {
   return render(<ThemeProvider theme={Theme}>{children}</ThemeProvider>);
 }
 

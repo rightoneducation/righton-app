@@ -23,7 +23,7 @@ apiClient.updateTeam = jest.fn().mockResolvedValue({});
 
 // function for rendering phase results with theme, router, and translation
 // intakes a mock gamesession based on test parameters
-export function renderWithThemeRouterTranslation(
+function renderWithThemeRouterTranslation(
   gameSession: IGameSession,
   mockAnswerChoices: {
     id: string;
@@ -56,12 +56,14 @@ export function renderWithThemeRouterTranslation(
 
 // function for getting answer choices from a question
 const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
-  return mockCurrentQuestion?.choices?.map((choice: IChoice) => ({
+  return (
+    mockCurrentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
-  })) ?? [];
+    })) ?? []
+  );
 };
 
 describe ('PhaseResults', () => {

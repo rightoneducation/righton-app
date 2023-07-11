@@ -5,7 +5,7 @@ const networkingPath = path.resolve(__dirname, '../networking/lib/src');
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  setupFiles: ["whatwg-fetch"],
+  setupFiles: ['whatwg-fetch'],
   roots: ['<rootDir>'],
   testRegex: '((\\.| /)(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
@@ -22,7 +22,7 @@ const config: Config.InitialOptions = {
       'ts-jest',
       {
         isolatedModules: true,
-      }
+      },
     ],
   },
   transformIgnorePatterns: [
