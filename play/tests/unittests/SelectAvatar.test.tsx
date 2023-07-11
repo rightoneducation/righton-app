@@ -67,7 +67,8 @@ describe('SelectAvatar', () => {
 
   });
 
-  it ('should display error modal when isAPIError === true' , async () => {
+
+  it ('error should reveal error modal' , async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
