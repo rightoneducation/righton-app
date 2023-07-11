@@ -6,7 +6,7 @@ import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import ReactModal from 'react-modal';
-import { 
+import {
   IGameSession,
   IChoice,
   IQuestion,
@@ -16,7 +16,10 @@ import Theme from '../../src/lib/Theme';
 import i18n from './mock/translations/mockTranslations';
 import PhaseResults from '../../src/pages/PhaseResults';
 import apiClient from './mock/ApiClient.mock';
-import { createTeamAnswerMock, createValidGameSession } from './mock/MockHelperFunctions';
+import {
+  createTeamAnswerMock,
+  createValidGameSession,
+} from './mock/MockHelperFunctions';
 
 ReactModal.setAppElement('body');
 apiClient.updateTeam = jest.fn().mockResolvedValue({});
@@ -66,12 +69,15 @@ const getAnswerChoices = (mockCurrentQuestion: IQuestion) => {
   );
 };
 
-describe ('PhaseResults', () => {
+describe('PhaseResults', () => {
   it('tests that score doesnt increase when player has answered incorrectly on Phase One', async () => {
     // mock gameSession with team that answered incorrectly on first question
-    const gameSession = await createValidGameSession(2); 
-    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
-    gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'));
+    const gameSession = await createValidGameSession(2);
+    const mockCurrentQuestion =
+      gameSession.questions[gameSession.currentQuestionIndex!];
+    gameSession.teams![0].teamMembers![0]!.answers!.push(
+      createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1')
+    );
     gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
@@ -88,9 +94,12 @@ describe ('PhaseResults', () => {
 
   it('tests that score is increased by 10 pts when player answers correctly on Phase One', async () => {
     // mock gameSession with team that answered correctly on first question
-    const gameSession = await createValidGameSession(2); 
-    const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
-    gameSession.teams![0].teamMembers![0]!.answers!.push(createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'));
+    const gameSession = await createValidGameSession(2);
+    const mockCurrentQuestion =
+      gameSession.questions[gameSession.currentQuestionIndex!];
+    gameSession.teams![0].teamMembers![0]!.answers!.push(
+      createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3')
+    );
     gameSession.currentState = GameSessionState.PHASE_1_RESULTS;
     const mockAnswerChoices = getAnswerChoices(mockCurrentQuestion);
     act(() => {
@@ -106,19 +115,20 @@ describe ('PhaseResults', () => {
 
   it('test that a players score doesnt increase when picking an unpopular answer on Phase Two', async () => {
     // mock gameSession with team that answered incorrectly on first question
-    const gameSession = await createValidGameSession(3); 
+    const gameSession = await createValidGameSession(3);
     if (gameSession.teams) {
-      const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+      const mockCurrentQuestion =
+        gameSession.questions[gameSession.currentQuestionIndex!];
       gameSession.teams[0].teamMembers![0]!.answers!.push(
-        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '1'),
         createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2')
       );
       gameSession.teams[1].teamMembers![0]!.answers!.push(
-        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'),
         createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3')
       );
       gameSession.teams[2].teamMembers![0]!.answers!.push(
-        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'),
         createTeamAnswerMock(mockCurrentQuestion.id, false, true, '3')
       );
       gameSession.currentState = GameSessionState.PHASE_2_RESULTS;
@@ -131,16 +141,17 @@ describe ('PhaseResults', () => {
         id: gameSession.teams![0].id,
         score: 120,
       });
-    };
+    }
   });
 
   it('tests that a player is awarded points equal to the percentage of players that answered their selection in Phase One', async () => {
     // mock gameSession with team that answered incorrectly on first question
-    const gameSession = await createValidGameSession(3); 
+    const gameSession = await createValidGameSession(3);
     if (gameSession.teams) {
-      const mockCurrentQuestion = gameSession.questions[gameSession.currentQuestionIndex!];
+      const mockCurrentQuestion =
+        gameSession.questions[gameSession.currentQuestionIndex!];
       gameSession.teams![0].teamMembers![0]!.answers!.push(
-        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'), 
+        createTeamAnswerMock(mockCurrentQuestion.id, true, false, '3'),
         createTeamAnswerMock(mockCurrentQuestion.id, false, true, '2')
       );
       gameSession.teams![1].teamMembers![0]!.answers!.push(
@@ -157,12 +168,13 @@ describe ('PhaseResults', () => {
         renderWithThemeRouterTranslation(gameSession, mockAnswerChoices);
       });
       await waitFor(() => {
-        expect(apiClient.updateTeam).toHaveBeenCalled()});
+        expect(apiClient.updateTeam).toHaveBeenCalled();
+      });
       // tests that new score indicator has value of +10
       expect(apiClient.updateTeam).toHaveBeenCalledWith({
         id: gameSession.teams![0].id,
         score: 187,
       });
-    };
+    }
   });
 });

@@ -21,7 +21,7 @@ describe('EnterGameCode', () => {
   it('should render the EnterGameCode page', async () => {
     renderWithTheme(
       <EnterGameCode
-        isSmallDevice={true}
+        isSmallDevice
         handleGameCodeClick={handleGameCodeClick}
       />
     );
@@ -31,7 +31,7 @@ describe('EnterGameCode', () => {
   it('confirm textfield display when firing textfield input changes through validator function', async () => {
     renderWithTheme(
       <EnterGameCode
-        isSmallDevice={true}
+        isSmallDevice
         handleGameCodeClick={handleGameCodeClick}
       />
     );

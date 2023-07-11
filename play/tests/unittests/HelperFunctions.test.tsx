@@ -1,4 +1,5 @@
 import { GameSessionState } from '@righton/networking';
+import { randomInt } from 'crypto';
 import {
   isNameValid,
   isGameCodeValid,
@@ -6,11 +7,14 @@ import {
   validateLocalModel,
   teamSorter,
 } from '../../src/lib/HelperFunctions';
-import { randomInt } from 'crypto'
 import i18n from './mock/translations/mockTranslations';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
 import apiClient from './mock/ApiClient.mock';
-import { createTeamMock, createTeamAnswerMock, localModelLoaderMock }  from './mock/MockHelperFunctions';
+import {
+  createTeamMock,
+  createTeamAnswerMock,
+  localModelLoaderMock,
+} from './mock/MockHelperFunctions';
 
 describe('HelperFunctions', () => {
   it('should only produce an invalid result if the value is empty or matches the placeholder', () => {
@@ -37,10 +41,15 @@ describe('HelperFunctions', () => {
   it('tests that on rejoining in different phases, duplicated behaviour isnt held over', () => {
     const questionId = randomInt(1000, 9999);
     let answerChoices = [
-      { id: questionId.toString(), text: '60%', isCorrectAnswer: true, reason: 'reason' },
+      {
+        id: questionId.toString(),
+        text: '60%',
+        isCorrectAnswer: true,
+        reason: 'reason',
+      },
     ];
 
-    let teamAnswers = [];
+    const teamAnswers = [];
     teamAnswers.push(createTeamAnswerMock(questionId, true, false, '60%'));
     teamAnswers.push(createTeamAnswerMock(questionId, false, true, '30%'));
 
@@ -64,7 +73,12 @@ describe('HelperFunctions', () => {
     ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
     // already submitted trickiest answer
     answerChoices = [
-      { id: questionId.toString(), text: '30%', isCorrectAnswer: false, reason: 'reason' },
+      {
+        id: questionId.toString(),
+        text: '30%',
+        isCorrectAnswer: false,
+        reason: 'reason',
+      },
     ];
     expect(
       checkForSubmittedAnswerOnRejoin(
@@ -120,21 +134,28 @@ describe('HelperFunctions', () => {
     expect(validateLocalModel('')).toBe(null);
     expect(validateLocalModel(null)).toBe(null);
     // replaces each key with null and expects validation to fail
-    Object.keys(parsedModel).forEach((key: any) => {
+    Object.keys(parsedModel).forEach((key: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       const testModel = JSON.parse(JSON.stringify(parsedModel));
       testModel[key] = null;
       expect(validateLocalModel(JSON.stringify(testModel))).toBe(null);
-    })
+    });
   });
 
   it('tests that sorting algorithm works (sorted by score first and then alphabetically in the event of a tie)', async () => {
-    const mockTeamCompare = ["A Team", "B Team", "C Team", "D Team", "E Team", "F Team"];
+    const mockTeamCompare = [
+      'A Team',
+      'B Team',
+      'C Team',
+      'D Team',
+      'E Team',
+      'F Team',
+    ];
     // if no ties, sort team by score only
-    let gameSession = await apiClient.createGameSession(1111, false); 
-    expect (gameSession).toBeDefined();
-    expect (gameSession.teams).toBeDefined();  
-    gameSession.teams!.push(createTeamMock(
-      gameSession, mockTeamCompare[0], 50),
+    let gameSession = await apiClient.createGameSession(1111, false);
+    expect(gameSession).toBeDefined();
+    expect(gameSession.teams).toBeDefined();
+    gameSession.teams!.push(
+      createTeamMock(gameSession, mockTeamCompare[0], 50),
       createTeamMock(gameSession, mockTeamCompare[1], 0),
       createTeamMock(gameSession, mockTeamCompare[2], 100)
     );
@@ -144,12 +165,12 @@ describe('HelperFunctions', () => {
     expect(sortedTeams[1].name).toEqual(mockTeamCompare[0]);
     expect(sortedTeams[2].name).toEqual(mockTeamCompare[1]);
     // sort teams by score, then by name if tied
-    gameSession = await apiClient.createGameSession(1111, false); 
-    expect (gameSession).toBeDefined();
-    expect (gameSession.teams).toBeDefined();  
+    gameSession = await apiClient.createGameSession(1111, false);
+    expect(gameSession).toBeDefined();
+    expect(gameSession.teams).toBeDefined();
     gameSession.teams!.push(
-      createTeamMock(gameSession, mockTeamCompare[0], 0), 
-      createTeamMock(gameSession, mockTeamCompare[1], 50), 
+      createTeamMock(gameSession, mockTeamCompare[0], 0),
+      createTeamMock(gameSession, mockTeamCompare[1], 50),
       createTeamMock(gameSession, mockTeamCompare[2], 100),
       createTeamMock(gameSession, mockTeamCompare[3], 50),
       createTeamMock(gameSession, mockTeamCompare[4], 50),

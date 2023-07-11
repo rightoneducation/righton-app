@@ -86,7 +86,7 @@ export default function EnterPlayerName({
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
-                      fontFamily: 'Poppins'
+                      fontFamily: 'Poppins',
                     },
                   },
                 }}
@@ -110,7 +110,7 @@ export default function EnterPlayerName({
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
-                      fontFamily: 'Poppins'
+                      fontFamily: 'Poppins',
                     },
                   },
                 }}
@@ -118,8 +118,8 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled 
-          data-testid="playername-button" 
+        <IntroButtonStyled
+          data-testid="playername-button"
           onClick={validateInput}
         >
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
