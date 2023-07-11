@@ -92,8 +92,6 @@ export function PregameContainer({ apiClient }: PregameFinished) {
   // create team and teammember on backend
   const addTeamToGame = async () => {
     const teamName = `${firstName} ${lastName}`;
-    console.log(teamName);
-    console.log(gameSession!.id);
     try {
       const team = await apiClient.addTeamToGameSessionId(
         gameSession!.id, // eslint-disable-line @typescript-eslint/no-non-null-assertion
@@ -127,7 +125,6 @@ export function PregameContainer({ apiClient }: PregameFinished) {
     try {
       if (gameSession) {
         const teamInfo = await addTeamToGame();
-        console.log("hi");
         if (!teamInfo) {
           setIsAPIError(true);
           return;
@@ -141,8 +138,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
         };
-        
-        console.log(storageObject);
+
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);
       }

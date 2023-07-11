@@ -18,12 +18,12 @@ export default {
   title: 'Design System/4_Pages/PhaseResults',
   component: PhaseResults,
   decorators: [
-      (Story) => (
-        <MemoryRouter initialEntries={['/']}>
-          <Story />
-        </MemoryRouter>
-      ),
-    ],
+    (Story) => (
+      <MemoryRouter initialEntries={['/']}>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 } as ComponentMeta<typeof PhaseResults>;
 
 const Template: ComponentStory<typeof PhaseResults> =
@@ -39,7 +39,7 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+const answerChoices = gameSession.questions[0].choices!.map(  // eslint-disable-line @typescript-eslint/no-non-null-assertion
   (choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,

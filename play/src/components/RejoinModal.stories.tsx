@@ -12,22 +12,20 @@ export default {
   component: RejoinModal,
 } as ComponentMeta<typeof RejoinModal>;
 
-const Template: ComponentStory<typeof RejoinModal> = function RejoinModalTemplate(
-  args
-) {
-  return (
-    <I18nextProvider i18n={i18n} defaultNS="translation">
-      <BrowserRouter>
-        <ThemeProvider theme={Theme}>
-          <RejoinModal {...args} />
-        </ThemeProvider>
-      </BrowserRouter>
-    </I18nextProvider>
-  );
-};
+const Template: ComponentStory<typeof RejoinModal> =
+  function RejoinModalTemplate(args) {
+    return (
+      <I18nextProvider i18n={i18n} defaultNS="translation">
+        <BrowserRouter>
+          <ThemeProvider theme={Theme}>
+            <RejoinModal {...args} />
+          </ThemeProvider>
+        </BrowserRouter>
+      </I18nextProvider>
+    );
+  };
 
 export const Default = Template.bind({});
 Default.args = {
   isModalVisible: true,
 };
-

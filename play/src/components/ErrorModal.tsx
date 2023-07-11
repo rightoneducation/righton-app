@@ -37,7 +37,11 @@ export default function ErrorModal({
   };
 
   const lowerText = [
-    <Typography key={uuidv4()} variant="h4" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
+    <Typography
+      key={uuidv4()}
+      variant="h4"
+      sx={{ textAlign: 'center', fontStyle: 'italic' }}
+    >
       {errorText}
     </Typography>,
   ];

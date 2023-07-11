@@ -45,7 +45,7 @@ describe('SelectAvatar', () => {
     expect(screen.getByTestId('selectavatar-button')).toBeInTheDocument();
   });
 
-  it ('should fire add teams callback on click' , async () => {
+  it('should fire add teams callback on click', async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar
@@ -64,8 +64,7 @@ describe('SelectAvatar', () => {
     expect(handleAvatarSelectClick).toHaveBeenCalled();
   });
 
-
-  it ('error should reveal error modal' , async () => {
+  it('error should reveal error modal', async () => {
     const handleAvatarSelectClick = jest.fn();
     renderWithThemeRouterTranslation(
       <SelectAvatar

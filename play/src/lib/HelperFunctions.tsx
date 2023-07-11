@@ -136,12 +136,12 @@ export const fetchLocalData = () => {
 /**
  * sorts teams by score descending, then alphabetically by name
  * only include teams with scores in the top five
- * See this discussion for more info on implementation: 
+ * See this discussion for more info on implementation:
  * https://github.com/rightoneducation/righton-app/pull/685#discussion_r1248353666
  * @param inputTeams - the teams to be sorted
  * @param totalTeamsReturned - the number of teams to be returned
  * @returns - the sorted teams
- */ 
+ */
 export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
   const sortedTeams = inputTeams.sort((lhs, rhs) => {
     if (lhs.score !== rhs.score) {
@@ -152,9 +152,13 @@ export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
   let lastScore = -1;
   let totalTeamsReturned = totalTeams;
   const ret = []; // Array(totalTeamsReturned);
-  for (let i = sortedTeams.length - 1; i >=0 && totalTeamsReturned > 0; i -= 1) {
+  for (
+    let i = sortedTeams.length - 1;
+    i >= 0 && totalTeamsReturned > 0;
+    i -= 1
+  ) {
     if (sortedTeams[i].score !== lastScore) {
-        totalTeamsReturned -= 1;
+      totalTeamsReturned -= 1;
     }
     ret.push(sortedTeams[i]);
     lastScore = sortedTeams[i].score;

@@ -69,7 +69,7 @@ export default function ScoreIndicator({
       <NewPointsAnimation id="newPointsAnimation">
         {newPoints && newPoints > 0 ? (
           <NewPointsPill>
-            <Typography  variant="overline">{`+${newPoints}`}</Typography>
+            <Typography variant="overline">{`+${newPoints}`}</Typography>
           </NewPointsPill>
         ) : null}
       </NewPointsAnimation>

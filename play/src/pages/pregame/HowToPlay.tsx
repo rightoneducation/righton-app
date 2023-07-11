@@ -55,13 +55,13 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
     <HowToPlaySlide1Content />,
     <HowToPlaySlide2Content />,
     <HowToPlaySlide3Content />,
-    <HowToPlaySlide4Content />
+    <HowToPlaySlide4Content />,
   ];
 
   return (
     <>
       <Typography
-        data-testid="lobby-howtoplay" 
+        data-testid="lobby-howtoplay"
         variant="h2"
         sx={{
           textAlign: 'center',
@@ -87,9 +87,7 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
           }}
         >
           {slideArray.map((slide) => (
-            <SwiperSlide key={uuidv4()}>
-              {slide}
-            </SwiperSlide>
+            <SwiperSlide key={uuidv4()}>{slide}</SwiperSlide>
           ))}
         </HowToPlaySwiper>
         <PaginationContainerStyled
@@ -98,7 +96,7 @@ export default function HowToPlay({ mode }: HowToPlayProps) {
         />
       </StackContainer>
       <Typography
-        data-testid="lobby-howtoplay-statustext" 
+        data-testid="lobby-howtoplay-statustext"
         variant="h4"
         sx={{
           position: 'absolute',

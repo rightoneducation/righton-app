@@ -29,7 +29,7 @@ const Template: ComponentStory<typeof ErrorModal> = function ErrorModalTemplate(
 
 let retryCount = 0;
 const handleRetry = () => {
-  retryCount += 1;  
+  retryCount += 1;
 };
 
 export const InitialError = Template.bind({});
@@ -66,4 +66,3 @@ ScoreError.args = {
   retry: 2,
   handleRetry,
 };
-

@@ -13,7 +13,6 @@ import { GameInProgressContainer } from '../../src/containers/GameInProgressCont
 import useFetchAndSubscribeGameSession from '../../src/hooks/useFetchAndSubscribeGameSession';
 import { localModelLoaderMock } from './mock/MockHelperFunctions';
 
-
 ReactModal.setAppElement('body');
 // mock for useFetchAndSubscribeGameSession hook
 jest.mock('../../src/hooks/useFetchAndSubscribeGameSession', () => ({
@@ -63,7 +62,7 @@ const howToPlayDescription = i18n.t('howtoplay.description');
 
 // tests that the gameinprogresscontainer renders the correct components
 // based on the received subscription object from the useFetchAndSubscribeGameSession hook
-describe ('GameInProgressContainer', () => {
+describe('GameInProgressContainer', () => {
   it('should render error modal', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
@@ -76,7 +75,7 @@ describe ('GameInProgressContainer', () => {
     // expects error modal to be popped if there are connection errors
     expect(screen.getByTestId('errormodal')).toBeInTheDocument();
   });
-  
+
   it('should render the lobby page in loading', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
@@ -106,8 +105,8 @@ describe ('GameInProgressContainer', () => {
   });
 
   it('should render the lobby page in how to play', async () => {
-    const gameSession = await apiClient.createGameSession(1111, false);  
-    expect (gameSession).toBeDefined();
+    const gameSession = await apiClient.createGameSession(1111, false);
+    expect(gameSession).toBeDefined();
     gameSession.currentState = GameSessionState.TEAMS_JOINING;
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
@@ -124,8 +123,8 @@ describe ('GameInProgressContainer', () => {
   });
 
   it('should render the GameSessionSwitch page (pregame countdown)', async () => {
-    const gameSession = await apiClient.createGameSession(1111, false);  
-    expect (gameSession).toBeDefined();
+    const gameSession = await apiClient.createGameSession(1111, false);
+    expect(gameSession).toBeDefined();
     gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
