@@ -7,13 +7,14 @@ import { PregameState, LocalModel } from '../../lib/PlayModels';
 import BackgroundContainerStyled from '../../lib/styledcomponents/layout/BackgroundContainerStyled';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
 import RejoinModal from '../../components/RejoinModal';
+import BarChartComponent from '../../components/BarChartComponent';
 import MagicHatHero from '../../img/MagicHatHero.svg';
 import Logo from '../../img/rightOnLogo.svg';
 
 const HeroContainer = styled(Box)({
   width: '100%',
   height: '100%',
-  backgroundImage: `url(${MagicHatHero})`,
+  // backgroundImage: `url(${MagicHatHero})`,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top center',
   display: 'flex',
@@ -84,6 +85,7 @@ export default function SplashScreen({
             >
               {t('joingame.splash.title')}
             </Typography>
+            <BarChartComponent />
           </Stack>
           <BottomBox>
             <IntroButtonStyled
