@@ -7,7 +7,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { GameSessionState } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
-import i18n from './mock/translations/mockTranslations';
+import i18n from '../../src/i18n.mock';
 import apiClient from './mock/ApiClient.mock';
 import { GameInProgressContainer } from '../../src/containers/GameInProgressContainer';
 import useFetchAndSubscribeGameSession from '../../src/hooks/useFetchAndSubscribeGameSession';

@@ -19,7 +19,7 @@ import {
   createValidGameSession,
 } from './mock/MockHelperFunctions';
 import Theme from '../../src/lib/Theme';
-import i18n from './mock/translations/mockTranslations';
+import i18n from '../../src/i18n.mock';
 import GameInProgress from '../../src/pages/GameInProgress';
 
 ReactModal.setAppElement('body');
