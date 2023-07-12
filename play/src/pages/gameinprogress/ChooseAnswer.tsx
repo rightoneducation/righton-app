@@ -140,7 +140,7 @@ export default function ChooseAnswer({
               bulletClass: 'swiper-pagination-bullet',
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
-              renderBullet(index, className) {
+              renderBullet(index: any, className: any) {
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
               },
             }}
