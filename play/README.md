@@ -1,8 +1,9 @@
 # RightOn! - Play App
 
-[Play](https://play.rightoneducation.com) is the student facing RightOn! app built with ReactJS and Typescript. It makes use of [mui v5](https://mui.com/material-ui/migration/migration-v4/) for styling, [react-i18next](https://react.i18next.com/) for internationalization, [Storybook](https://storybook.js.org/) for UI development  and [jest](https://jestjs.io/docs/getting-started) for testing.
+[Play](https://play.rightoneducation.com) is the student facing RightOn! app built with ReactJS and Typescript. It makes use of [mui v5](https://mui.com/material-ui/migration/migration-v4/) for styling, [react-i18next](https://react.i18next.com/) for internationalization, [Storybook](https://storybook.js.org/) for UI development and [jest](https://jestjs.io/docs/getting-started) for testing.
 
 ### App Architecture:
+
 An breakdown of the general design and flow of the app can be found [here](https://github.com/rightoneducation/righton-app/wiki/Play-App---Architecture-Overview). This includes a description of core states of the app, the routing and the components and subcomponents that are governed by those states.
 
 ### Installation Instructions:
@@ -14,12 +15,12 @@ An breakdown of the general design and flow of the app can be found [here](https
 
 <strong> link networking for models, helper functions etc: </strong>
 
-3. change directory to networking  
-4. yarn install  
-5. yarn run build  
-6. yarn link  
-7. change directory back to play  
-8. yarn link '@righton/networking'  
+3. change directory to networking
+4. yarn install
+5. yarn run build
+6. yarn link
+7. change directory back to play
+8. yarn link '@righton/networking'
 9. yarn start
 
 ### Scripts:
@@ -29,7 +30,7 @@ An breakdown of the general design and flow of the app can be found [here](https
 3. 'yarn chromatic' - builds storybook to chromatic for coordination
 4. 'yarn lint' - ESLints everything in /play
 5. 'yarn format' - applies prettier formatting to everything in /play
-6. 'yarn test' - runs tests via jest for *.test.tsx in the /tests folder
+6. 'yarn test' - runs tests via jest for \*.test.tsx in the /tests folder
 
 ### Styling:
 
@@ -61,16 +62,14 @@ There are some exceptions though:
 
 ### Theming:
 
-lib/Theme.tsx has been added to centralize colors, fonts and breakpoints. This is deployed through the app via `<ThemeProvider>` in `App.tsx` and `import { styled, useTheme } from '@mui/material/styles';` 
+lib/Theme.tsx has been added to centralize colors, fonts and breakpoints. This is deployed through the app via `<ThemeProvider>` in `App.tsx` and `import { styled, useTheme } from '@mui/material/styles';`
 
 ### Internationalization:
 
-Dictionaries are stored in `public/locales/{lang}/translations.json` and configured via `src/i18n.tsx` and deployed via `import './i18n';` in `index.tsx` and `import { useTranslation } from 'react-i18next';` 
+Dictionaries are stored in `public/locales/{lang}/translations.json` and configured via `src/i18n.tsx` and deployed via `import './i18n';` in `index.tsx` and `import { useTranslation } from 'react-i18next';`
 
 We autodetect based on language settings in the browser and fall back to `EN` as a default.
 
 ### Testing:
 
 Unit tests have been written to test and preserve core functionality within `play`. For a complete description of set up and configuration, please refer to these PRs: [PR679](https://github.com/rightoneducation/righton-app/pull/679) and [PR693](https://github.com/rightoneducation/righton-app/pull/693). For a complete description of tests being run, please refer to these PRs: [PR681](https://github.com/rightoneducation/righton-app/pull/681) and [PR685](https://github.com/rightoneducation/righton-app/pull/685).
-
-

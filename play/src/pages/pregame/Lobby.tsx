@@ -17,10 +17,24 @@ export default function Lobby({ mode }: LobbyProps) {
   return (
     <BackgroundContainerStyled>
       {mode === LobbyMode.REJOIN ? (
-        <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box
+          data-testid="lobby-rejoin"
+          sx={{
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <Typography
             variant="h1"
-            sx={{ position: 'absolute', alignItems:'center', fontSize: '54px', textAlign: 'center', lineHeight: `${theme.sizing.extraLargePadding}px`}}
+            sx={{
+              position: 'absolute',
+              alignItems: 'center',
+              fontSize: '54px',
+              textAlign: 'center',
+              lineHeight: `${theme.sizing.extraLargePadding}px`,
+            }}
           >
             {t('lobby.title')}
           </Typography>
