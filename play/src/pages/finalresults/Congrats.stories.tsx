@@ -1,20 +1,24 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { I18nextProvider } from 'react-i18next';
 import Congrats from './Congrats';
 import Theme from '../../lib/Theme';
+import i18n from '../../i18n.mock';
 
 export default {
   title: 'Design System/4_Pages/FinalResults_Congrats',
   component: Congrats,
-} as ComponentMeta<typeof Congrats>;
+} as Meta<typeof Congrats>;
 
-const Template: ComponentStory<typeof Congrats> = function CongratsTemplate(
+const Template: StoryFn<typeof Congrats> = function CongratsTemplate(
   args
 ) {
   return (
     <ThemeProvider theme={Theme}>
-      <Congrats {...args} />
+      <I18nextProvider i18n={i18n}>
+        <Congrats {...args} />
+      </I18nextProvider>
     </ThemeProvider>
   );
 };
