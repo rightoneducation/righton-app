@@ -98,3 +98,4 @@ $RECYCLE.BIN/
 # Hidden Files
 .*
 !/.gitignore
+!/.storybook/
