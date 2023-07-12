@@ -9,7 +9,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'; // c
 import { ApiClient, Environment } from '@righton/networking';
 import {
   PregameContainer,
-  PregameLocalModelLoader
+  PregameLocalModelLoader,
 } from './containers/PregameContainer';
 import {
   GameInProgressContainer,
@@ -26,10 +26,10 @@ const apiClient = new ApiClient(Environment.Staging);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route 
-        path="/" 
-        element={<PregameContainer apiClient={apiClient}/>}
-        loader={PregameLocalModelLoader} 
+      <Route
+        path="/"
+        element={<PregameContainer apiClient={apiClient} />}
+        loader={PregameLocalModelLoader}
       />
       <Route
         path="/game"
