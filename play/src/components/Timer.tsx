@@ -66,11 +66,12 @@ export default function Timer({
         const delta = timestamp - prevTimeRef.current;
         setCurrentTimeMilli((prevTime) => prevTime - delta);
       } else originalTime = timestamp; // this is the time taken for retreiving the first frame, need to add it to prevTimeRef for final comparison
-
       if (currentTimeMilli - (timestamp - originalTime) >= 0) {
         prevTimeRef.current = timestamp;
         animationRef.current = requestAnimationFrame(updateTimer);
-      } else handleTimerIsFinished();
+      } else {
+        handleTimerIsFinished();
+      }
     }
   }
 

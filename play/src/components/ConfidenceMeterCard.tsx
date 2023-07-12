@@ -65,7 +65,7 @@ export default function ConfidenceMeterCard({
   const responseOption = (text: string, index: number) => {
     return (
       <Box
-        maxWidth={isSmallDevice ? `${theme.sizing.largePadding}px` : `${theme.sizing.extraLargePadding}px`}
+        maxWidth={`${theme.sizing.extraLargePadding}px`}
         sx={{
           textAlign: 'center',
           alignItems: 'center',
@@ -77,6 +77,7 @@ export default function ConfidenceMeterCard({
           value={index}
           control={
             <Radio
+              size={isSmallDevice ? "small" : "medium"}
               sx={{
                 '&.Mui-checked': {
                   color: `${theme.palette.primary.blue}`,

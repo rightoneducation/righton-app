@@ -26,11 +26,15 @@ export default function ButtonSubmitAnswer({
     ? t('gameinprogress.button.submitted')
     : t('gameinprogress.button.submit');
   const buttonContents = (
-    <Typography sx={{textTransform: 'none'}} variant="button"> {buttonText} </Typography>
+    <Typography sx={{ textTransform: 'none' }} variant="button">
+      {' '}
+      {buttonText}{' '}
+    </Typography>
   );
 
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
+      data-testid="answer-button-enabled"
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
         handleSubmitAnswer(answerText ?? '');
@@ -39,7 +43,7 @@ export default function ButtonSubmitAnswer({
       {buttonContents}
     </GamePlayButtonStyled>
   ) : (
-    <GamePlayButtonStyledDisabled disabled>
+    <GamePlayButtonStyledDisabled data-testid="answer-button-disabled" disabled>
       {buttonContents}
     </GamePlayButtonStyledDisabled>
   );

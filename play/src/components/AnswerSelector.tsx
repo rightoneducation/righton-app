@@ -81,11 +81,10 @@ export default function AnswerSelector({
         width: `16px`,
         height: `16px`,
         paddingTop: '2px',
-        opacity:
-          isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
+        opacity: isSubmitted && answerStatus === AnswerState.SELECTED ? 0.5 : 1,
       }}
       alt="SelectedAnswerImage"
-    />
+    />,
   ];
 
   const buttonContents = (
@@ -113,16 +112,12 @@ export default function AnswerSelector({
       >
         {answerText}
       </Typography>
-      {!isSubmitted ?
-          selectorImage
-        :
-        (answerStatus !== AnswerState.DEFAULT && 
-          selectorImage
-        )
-      }
+      {!isSubmitted
+        ? selectorImage
+        : answerStatus !== AnswerState.DEFAULT && selectorImage}
     </>
   );
-  
+
   switch (answerStatus) {
     case AnswerState.CORRECT:
       return (
