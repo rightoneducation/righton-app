@@ -7,12 +7,14 @@ import {
   IChoice,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
+import { I18nextProvider } from 'react-i18next';
 import GameInProgress from './GameInProgress';
 import MockGameSession from '../mock/MockGameSession.json';
 import Theme from '../lib/Theme';
+import i18n from '../i18n.mock';
 
 export default {
   title: 'Design System/4_Pages/GameInProgress',
@@ -24,13 +26,15 @@ export default {
       </MemoryRouter>
     ),
   ],
-} as ComponentMeta<typeof GameInProgress>;
+} as Meta<typeof GameInProgress>;
 
-const Template: ComponentStory<typeof GameInProgress> =
+const Template: StoryFn<typeof GameInProgress> =
   function GameInProgressTemplate(args) {
     return (
       <ThemeProvider theme={Theme}>
-        <GameInProgress {...args} />
+        <I18nextProvider i18n={i18n}>
+          <GameInProgress {...args} />
+        </I18nextProvider>
       </ThemeProvider>
     );
   };
@@ -39,7 +43,7 @@ const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+const answerChoices = gameSession.questions[0].choices!.map(  // eslint-disable-line @typescript-eslint/no-non-null-assertion
   (choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,

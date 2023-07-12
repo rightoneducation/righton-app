@@ -74,7 +74,7 @@ export default function ScoreIndicator({
         ) : null}
       </NewPointsAnimation>
       <ScorePill>
-        <Typography variant="overline">
+        <Typography data-testid="scoreindicator-newpoints" variant="overline">
           {isNullOrUndefined(newScore) ? 0 : newScore}
         </Typography>
       </ScorePill>

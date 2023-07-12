@@ -1,35 +1,35 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '../i18n';
 import ErrorModal from './ErrorModal';
-import Theme from '../lib/Theme';
 import { ErrorType } from '../lib/PlayModels';
+import Theme from '../lib/Theme';
+import i18n from '../i18n.mock';
 
 export default {
   title: 'Design System/2_Molecules/ErrorModal',
   component: ErrorModal,
-} as ComponentMeta<typeof ErrorModal>;
+} as Meta<typeof ErrorModal>;
 
-const Template: ComponentStory<typeof ErrorModal> = function ErrorModalTemplate(
+const Template: StoryFn<typeof ErrorModal> = function ErrorModalTemplate(
   args
 ) {
   return (
-    <I18nextProvider i18n={i18n} defaultNS="translation">
       <BrowserRouter>
         <ThemeProvider theme={Theme}>
-          <ErrorModal {...args} />
+          <I18nextProvider i18n={i18n} defaultNS="translation">
+           <ErrorModal {...args} />
+          </I18nextProvider>
         </ThemeProvider>
       </BrowserRouter>
-    </I18nextProvider>
   );
 };
 
 let retryCount = 0;
 const handleRetry = () => {
-  retryCount += 1;  
+  retryCount += 1;
 };
 
 export const InitialError = Template.bind({});
@@ -66,4 +66,3 @@ ScoreError.args = {
   retry: 2,
   handleRetry,
 };
-

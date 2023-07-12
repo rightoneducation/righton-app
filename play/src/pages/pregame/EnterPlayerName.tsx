@@ -70,6 +70,7 @@ export default function EnterPlayerName({
           <Grid container spacing={2} wrap="nowrap">
             <Grid item xs={6}>
               <InputTextFieldStyled
+                data-testid="playername-firstinputtextfield"
                 fullWidth
                 variant="filled"
                 autoComplete="off"
@@ -85,7 +86,7 @@ export default function EnterPlayerName({
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
-                      fontFamily: 'Poppins'
+                      fontFamily: 'Poppins',
                     },
                   },
                 }}
@@ -93,6 +94,7 @@ export default function EnterPlayerName({
             </Grid>
             <Grid item xs={6}>
               <InputTextFieldStyled
+                data-testid="playername-lastinputtextfield"
                 fullWidth
                 variant="filled"
                 autoComplete="off"
@@ -108,7 +110,7 @@ export default function EnterPlayerName({
                       paddingTop: '9px',
                       textAlign: 'center',
                       fontSize: `${theme.typography.h2.fontSize}px`,
-                      fontFamily: 'Poppins'
+                      fontFamily: 'Poppins',
                     },
                   },
                 }}
@@ -116,7 +118,10 @@ export default function EnterPlayerName({
             </Grid>
           </Grid>
         </PaddedContainer>
-        <IntroButtonStyled onClick={validateInput}>
+        <IntroButtonStyled
+          data-testid="playername-button"
+          onClick={validateInput}
+        >
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {t('joingame.playername.button')}
           </Typography>
@@ -139,6 +144,7 @@ export default function EnterPlayerName({
           </Typography>
           {shouldShowError && (
             <Typography
+              data-testid="playername-invalidtext"
               variant="h2"
               sx={{ fontWeight: 400, textAlign: 'center' }}
             >

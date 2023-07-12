@@ -138,6 +138,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
         };
+
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);
       }
