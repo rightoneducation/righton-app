@@ -7,24 +7,27 @@ import {
   IChoice,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
-
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { I18nextProvider } from 'react-i18next';
 import { AnswerState } from '../lib/PlayModels';
 import MockGameSession from '../mock/MockGameSession.json';
 import DiscussAnswerCard from './DiscussAnswerCard';
 import Theme from '../lib/Theme';
+import i18n from '../i18n.mock';
 
 export default {
   title: 'Design System/3_Organisms/DiscussAnswerCard',
   component: DiscussAnswerCard,
-} as ComponentMeta<typeof DiscussAnswerCard>;
+} as Meta<typeof DiscussAnswerCard>;
 
-const Template: ComponentStory<typeof DiscussAnswerCard> =
+const Template: StoryFn<typeof DiscussAnswerCard> =
   function AnswerCardTemplate(args) {
     return (
       <ThemeProvider theme={Theme}>
-        <DiscussAnswerCard {...args} />
+        <I18nextProvider i18n={i18n}>
+          <DiscussAnswerCard {...args} />
+        </I18nextProvider>
       </ThemeProvider>
     );
   };

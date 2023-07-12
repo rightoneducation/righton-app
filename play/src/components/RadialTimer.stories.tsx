@@ -1,19 +1,23 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { I18nextProvider } from 'react-i18next';
 import RadialTimer from './RadialTimer';
 import Theme from '../lib/Theme';
+import i18n from '../i18n.mock';
 
 export default {
   title: 'Design System/1_Atoms/RadialTimer',
   component: RadialTimer,
-} as ComponentMeta<typeof RadialTimer>;
+} as Meta<typeof RadialTimer>;
 
-const Template: ComponentStory<typeof RadialTimer> =
+const Template: StoryFn<typeof RadialTimer> =
   function RadialTimerTemplate(args) {
     return (
       <ThemeProvider theme={Theme}>
-        <RadialTimer {...args} />
+        <I18nextProvider i18n={i18n}>
+          <RadialTimer {...args} />
+        </I18nextProvider>
       </ThemeProvider>
     );
   };
