@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   Typography,
@@ -9,6 +9,7 @@ import {
   FormControl,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { isNullOrUndefined } from '@righton/networking';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface ConfidenceMeterCardProps {
@@ -33,6 +34,8 @@ export default function ConfidenceMeterCard({
     t('gameinprogress.chooseanswer.confidenceoption4'),
     t('gameinprogress.chooseanswer.confidenceoption5'),
   ];
+  // TODO: maybe move this up but we'll see
+  const [timeOfLastSelect, setTimeOfLastSelect] = useState<number | null>(null);
 
   const confidenceHeader = (
     <Box
@@ -110,7 +113,11 @@ export default function ConfidenceMeterCard({
   );
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleSelectOption(parseInt((event.target as HTMLInputElement).value, 10));
+    const currentTime = new Date().getTime() / 1000;
+    if (isNullOrUndefined(timeOfLastSelect) || (currentTime - timeOfLastSelect) > 5) {
+      setTimeOfLastSelect(currentTime);
+      handleSelectOption(parseInt((event.target as HTMLInputElement).value, 10));
+    }
   };
 
   const responseOptions = (
@@ -135,7 +142,7 @@ export default function ConfidenceMeterCard({
   return (
     <BodyCardStyled
       sx={{
-        marginTop: `${theme.sizing.smallPadding}px`,
+        marginTop: `${theme.sizing.smallPadding}px`
       }}
     >
       {confidenceHeader}

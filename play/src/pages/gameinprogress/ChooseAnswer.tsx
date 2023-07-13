@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Collapse, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -97,27 +97,29 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
+        {/* <Collapse orientation="vertical" in={isSubmitted} timeout={500}> */}
+        {/* <Fade in={isSubmitted} timeout={500}>
+          <Box> */}
+        <ConfidenceMeterCard
+          selectedOption={selectedConfidenceOption}
+          handleSelectOption={handleSelectConfidence}
+          isSelected={isConfidenceSelected}
+          isSmallDevice={isSmallDevice}
+        />
+        {/* </Box>
+        </Fade> */}
+        {/* </Collapse> */}
         {isSubmitted ? (
-          <>
-            {displaySubmitted ? (
-              <ConfidenceMeterCard
-                selectedOption={selectedConfidenceOption}
-                handleSelectOption={handleSelectConfidence}
-                isSelected={isConfidenceSelected}
-                isSmallDevice={isSmallDevice}
-              />
-            ) : null}
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: 700,
-                textAlign: 'center',
-                marginTop: `${theme.sizing.largePadding}px`,
-              }}
-            >
-              {t('gameinprogress.chooseanswer.answerthankyou2')}
-            </Typography>
-          </>
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 700,
+              textAlign: 'center',
+              marginTop: `${theme.sizing.largePadding}px`,
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
         ) : null}
       </ScrollBoxStyled>
     </>
