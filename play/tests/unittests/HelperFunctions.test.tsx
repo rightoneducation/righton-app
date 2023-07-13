@@ -7,7 +7,7 @@ import {
   validateLocalModel,
   teamSorter,
 } from '../../src/lib/HelperFunctions';
-import i18n from './mock/translations/mockTranslations';
+import i18n from '../../src/i18n.mock';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
 import apiClient from './mock/ApiClient.mock';
 import {

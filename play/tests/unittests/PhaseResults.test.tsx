@@ -13,7 +13,7 @@ import {
   GameSessionState,
 } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
-import i18n from './mock/translations/mockTranslations';
+import i18n from '../../src/i18n.mock';
 import PhaseResults from '../../src/pages/PhaseResults';
 import apiClient from './mock/ApiClient.mock';
 import {

@@ -1,29 +1,29 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '../../i18n';
 import HowToPlay from './HowToPlay';
 import Theme from '../../lib/Theme';
 import { LobbyMode } from '../../lib/PlayModels';
+import i18n from '../../i18n';
 
 export default {
   title: 'Design System/4_Pages/HowToPlay',
   component: HowToPlay,
-} as ComponentMeta<typeof HowToPlay>;
+} as Meta<typeof HowToPlay>;
 
-const Template: ComponentStory<typeof HowToPlay> = function AnswerCardTemplate(
+const Template: StoryFn<typeof HowToPlay> = function AnswerCardTemplate(
   args
 ) {
   return (
-    <I18nextProvider i18n={i18n} defaultNS="translation">
-      <BrowserRouter>
-        <ThemeProvider theme={Theme}>
+    <BrowserRouter>
+      <ThemeProvider theme={Theme}>
+        <I18nextProvider i18n={i18n} defaultNS="translation">
           <HowToPlay {...args} />
-        </ThemeProvider>
-      </BrowserRouter>
-    </I18nextProvider>
+        </I18nextProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 
