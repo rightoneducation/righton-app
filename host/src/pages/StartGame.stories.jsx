@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import { GameSessionParser } from '@righton/networking';
 import StartGame from "./StartGame";
-import MockGameSession from "../../mocks/gamesession.json";
+import MockGameSession from "../mock/MockGameSession.json";
 
 export default {
   title: "StartGame",
   component: StartGame,
   argTypes: { handleSkipToResults: { action: "handleSkipToResults" } }
 };
-
+const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
 const Template = args => {
   const [teamsState, setTeamsState] = useState(args.teams.items);
   const removeTeam = index => {
@@ -20,7 +21,7 @@ const Template = args => {
   return (
     <StartGame
       {...args}
-      teams={{ items: teamsState }}
+      teams={teamsState}
       removeTeam={removeTeam}
     />
   );
@@ -28,7 +29,7 @@ const Template = args => {
 
 export const Initial = Template.bind({});
 Initial.args = {
-  ...MockGameSession,
+  ...gameSession,
   currentState: "INITAL_INTRO",
   currentQuestionId: 1,
   teams: {
@@ -38,7 +39,7 @@ Initial.args = {
 
 export const ThreePlayers = Template.bind({});
 ThreePlayers.args = {
-  ...MockGameSession,
+  ...gameSession,
   currentState: "INITAL_INTRO",
   currentQuestionId: 1,
   teams: {
@@ -58,7 +59,7 @@ ThreePlayers.args = {
 
 export const FivePlayers = Template.bind({});
 FivePlayers.args = {
-  ...MockGameSession,
+  ...gameSession,
   currentState: "INITAL_INTRO",
   currentQuestionId: 1,
   teams: {

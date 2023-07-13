@@ -13,26 +13,34 @@ export const Phase1 = Template.bind({});
 Phase1.args = {
   numPlayers: 0,
   totalAnswers: 0,
-  currentState: "INITIAL_INTRO"
+  currentState: "INITIAL_INTRO",
+  footerButtonText: "Continue",
+  gameTimer: true
 };
 
 export const Phase2 = Template.bind({});
 Phase2.args = {
   numPlayers: 7,
   totalAnswers: 2,
-  currentState: "REVIEWING_RESULT"
+  currentState: "REVIEWING_RESULT",
+  footerButtonText: "Go to Phase 2",
+  gameTimer: false
 };
 
 export const Phase3 = Template.bind({});
 Phase3.args = {
   numPlayers: 8,
   totalAnswers: 5,
-  currentState: "CHOOSING_TRICK_ANSWER"
+  currentState: "CHOOSING_TRICK_ANSWER",
+  footerButtonText: "Continue",
+  gameTimer: true
 };
 
 export const Phase4 = Template.bind({});
 Phase4.args = {
   numPlayers: 9,
   totalAnswers: 7,
-  currentState: "FINISHED"
+  currentState: "FINISHED",
+  footerButtonText: "Go to Next Question",
+  gameTimer: false
 };

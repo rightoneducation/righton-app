@@ -14,12 +14,12 @@ const Template = args => {
 export const Standard = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Standard.args = {
-  totalRoundTime: 15,
-  timeIsPaused: false,
+  totalRoundTime: 150,
+  headerGameCurrentTime: 100
 };
 
 export const Paused = Template.bind({});
 Paused.args = {
-  totalRoundTime: 15,
-  timeIsPaused: true,
+  totalRoundTime: 150,
+  headerGameCurrentTime: 80
 };

@@ -1,25 +1,30 @@
 import React from "react";
+import { GameSessionParser } from '@righton/networking';
 import GameInProgress from "./GameInProgress";
-import MockGameSession from "../../mocks/gamesession.json";
+import MockGameSession from "../mock/MockGameSession.json";
 
 export default {
   title: "GameInProgress",
   component: GameInProgress
 };
-
+const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
 const Template = args => <GameInProgress {...args} />;
 
 export const Initial = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Initial.args = {
-  ...MockGameSession,
-  currentState: "INITIAL_INTRO",
-  currentQuestionId: 1
+  ...gameSession,
+  currentState: "CHOOSE_CORRECT_ANSWER",
+  currentQuestionId: 0,
+  questions: gameSession.questions,
+  teamsArray: gameSession.teams
 };
 
 export const SecondQuestion = Template.bind({});
 SecondQuestion.args = {
-  ...MockGameSession,
-  currentState: "CHOOSING_TRICK_ANSWER",
-  currentQuestionId: 2
+  ...gameSession,
+  currentState: "CHOOSE_TRICKIEST_ANSWER",
+  currentQuestionId: 1,
+  questions: gameSession.questions,
+  teamsArray: gameSession.teams
 };
