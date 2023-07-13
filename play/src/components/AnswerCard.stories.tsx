@@ -1,21 +1,25 @@
 import React from 'react';
 import { GameSessionState } from '@righton/networking';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { I18nextProvider } from 'react-i18next';
 import AnswerCard from './AnswerCard';
 import Theme from '../lib/Theme';
+import i18n from '../i18n.mock';
 
 export default {
   title: 'Design System/3_Organisms/AnswerCard',
   component: AnswerCard,
-} as ComponentMeta<typeof AnswerCard>;
+} as Meta<typeof AnswerCard>;
 
-const Template: ComponentStory<typeof AnswerCard> = function AnswerCardTemplate(
+const Template: StoryFn<typeof AnswerCard> = function AnswerCardTemplate(
   args
 ) {
   return (
     <ThemeProvider theme={Theme}>
-      <AnswerCard {...args} />
+      <I18nextProvider i18n={i18n}>
+        <AnswerCard {...args} />
+      </I18nextProvider>
     </ThemeProvider>
   );
 };
