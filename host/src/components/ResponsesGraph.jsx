@@ -1,15 +1,11 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer } from 'victory';
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles({
   container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    maxHeight: '40vh',
-    width: '100%'
+    textAlign: 'center',
   },
 });
 
@@ -23,8 +19,10 @@ const ResponsesGraph = ({ responses }) => {
   }));
 
   return (
-    <Grid className={classes.container}>
-      
+    <Grid item xs={12} className={classes.container}>
+      <Typography style={{ color: 'rgba(255, 255, 255, 0.5)', marginTop: '10px', marginBottom: '-15px' }}>
+        Number of Players
+      </Typography>
       <VictoryChart
         domainPadding={20}
         containerComponent={<VictoryContainer />}
@@ -34,11 +32,9 @@ const ResponsesGraph = ({ responses }) => {
         <VictoryAxis
           dependentAxis
           standalone={false}
-          label={"Number of Players"} 
           orientation="top"
           style={{
             axis: { stroke: 'transparent' },
-            axisLabel: {fill:'rgba(255, 255, 255, 0.5)'},
             grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
             tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400'},
 
