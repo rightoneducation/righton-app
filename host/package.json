@@ -29,16 +29,15 @@
   "devDependencies": {
     "@babel/core": "^7.19.1",
     "@babel/eslint-parser": "^7.19.1",
-    "@storybook/addon-actions": "^6.5.11",
-    "@storybook/addon-essentials": "^6",
-    "@storybook/addon-interactions": "^6.5.11",
-    "@storybook/addon-links": "^6.5.11",
-    "@storybook/builder-webpack4": "^6.5.11",
-    "@storybook/manager-webpack4": "^6.5.11",
-    "@storybook/node-logger": "^6.5.11",
-    "@storybook/preset-create-react-app": "^4.1.2",
-    "@storybook/react": "^6.5.11",
-    "@storybook/testing-library": "^0.0.11",
+    "@storybook/addon-actions": "^7.0.27",
+    "@storybook/addon-essentials": "^7",
+    "@storybook/addon-interactions": "^7.0.27",
+    "@storybook/addon-links": "^7.0.27",
+    "@storybook/node-logger": "^7.0.27",
+    "@storybook/preset-create-react-app": "^7.0.27",
+    "@storybook/react": "^7.0.27",
+    "@storybook/react-webpack5": "^7.0.27",
+    "@storybook/testing-library": "^0.2.0",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -46,15 +45,16 @@
     "eslint-config-prettier": "^8.5.0",
     "file-system-cache": "1.0.5",
     "react-dev-utils": "^12.0.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "storybook": "^7.0.27"
   },
   "scripts": {
     "start": "yarn --cwd ../networking build && react-scripts start",
     "build": "yarn --cwd ../networking build && react-scripts build",
     "test": "yarn --cwd ../networking build && react-scripts test",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "storybook": "storybook dev -p 6006 -s public",
+    "build-storybook": "storybook build -s public"
   },
   "browserslist": {
     "production": [

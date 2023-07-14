@@ -1,57 +1,71 @@
 import React from "react";
+import { GameSessionParser } from '@righton/networking';
 import HeaderGame from "./HeaderGame";
-import MockGameSession from "../../mocks/gamesession.json";
+import MockGameSession from "../mock/MockGameSession.json";
 
 export default {
   title: "HeaderGame",
   component: HeaderGame,
   argTypes: { handleSkipToResults: { action: "handleSkipToResults" } }
 };
-
+const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
 const Template = args => <HeaderGame {...args} />;
 
 export const PhaseOne = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 PhaseOne.args = {
-  ...MockGameSession,
-  currentState: "PHASE_ONE",
+  ...gameSession,
+  statePosition: 2,
   phaseOneTime: 60,
   currentQuestion: 1,
-  totalQuestions: 3
+  totalQuestions: 3,
+  headerGameCurrentTime: 100,
+  totalRoundTime: 300,
+  gameTimer: true,
 };
 
 export const PhaseOneResults = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 PhaseOneResults.args = {
-  ...MockGameSession,
-  currentState: "PHASE_ONE_RESULTS",
+  ...gameSession,
+  statePosition: 3,
   currentQuestion: 1,
-  totalQuestions: 3
+  totalQuestions: 3,
+  headerGameCurrentTime: 100,
+  totalRoundTime: 300,
 };
 
 export const PhaseTwo = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 PhaseTwo.args = {
-  ...MockGameSession,
-  currentState: "PHASE_TWO",
+  ...gameSession,
+  statePosition: 6,
   phaseTwoTime: 300,
   currentQuestion: 1,
-  totalQuestions: 3
+  totalQuestions: 3,
+  headerGameCurrentTime: 100,
+  totalRoundTime: 300,
+  gameTimer: true,
 };
 
 export const PhaseTwoResults = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 PhaseTwoResults.args = {
-  ...MockGameSession,
-  currentState: "PHASE_TWO_RESULTS",
+  ...gameSession,
+  statePosition: 7,
   currentQuestion: 1,
-  totalQuestions: 3
+  totalQuestions: 3,
+  headerGameCurrentTime: 100,
+  totalRoundTime: 300,
 };
 
 export const SecondQuestion = Template.bind({});
 SecondQuestion.args = {
-  ...MockGameSession,
-  currentState: "PHASE_ONE",
+  ...gameSession,
+  statePosition: 3,
   currentQuestion: 2,
-  totalQuestions: 3
+  totalQuestions: 3,
+  headerGameCurrentTime: 100,
+  totalRoundTime: 300,
+  gameTimer: true
 };

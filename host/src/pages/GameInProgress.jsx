@@ -110,7 +110,6 @@ export default function GameInProgress({
         choicesTextArray[index] = choice.text;
       });
 
-
       teamsArray.forEach(team => {
         team.teamMembers && team.teamMembers.forEach(teamMember => {
           teamMember.answers && teamMember.answers.forEach(answer => {
