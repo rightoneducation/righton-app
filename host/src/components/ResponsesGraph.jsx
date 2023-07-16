@@ -18,6 +18,41 @@ const ResponsesGraph = ({ responses }) => {
     earnings: response.count,
   }));
 
+  // Define custom Victory theme inside the component
+  const customTheme = {
+    axis: {
+      style: {
+        axis: { stroke: 'rgba(255, 255, 255, 0.5)'},
+        grid: { stroke: 'transparent' },
+        tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Poppins', fontWeight: '800', padding: 10},
+      },
+    },
+    dependentAxis: {
+      style: {
+        axis: { stroke: 'transparent' },
+        grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
+        tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400' },
+        
+      },
+    },
+    bar: {
+      style: {
+        data: {
+          fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
+          stroke: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : 'transparent'),
+          strokeWidth: 1,
+        },
+        labels: {
+          fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : '#384466'),
+          fontFamily: 'Rubik',
+          fontWeight: '400',
+        },
+      },
+    },
+  };
+
+  const tickValues = reversedResponses.map(response => response.label);
+
   return (
     <Grid item xs={12} className={classes.container}>
       <Typography style={{ color: 'rgba(255, 255, 255, 0.5)', marginTop: '10px', marginBottom: '-15px' }}>
@@ -26,19 +61,17 @@ const ResponsesGraph = ({ responses }) => {
       <VictoryChart
         domainPadding={20}
         containerComponent={<VictoryContainer />}
+        theme={customTheme}
       >
-        
-        <VictoryAxis standalone={false} style={{ axis: { stroke: 'rgba(255, 255, 255, 0.5)' }, tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Poppins', fontWeight: '800' } }} />
+        <VictoryAxis
+          standalone={false}
+          tickValues={tickValues} 
+        />
         <VictoryAxis
           dependentAxis
+          crossAxis={false}
           standalone={false}
           orientation="top"
-          style={{
-            axis: { stroke: 'transparent' },
-            grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
-            tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400'},
-
-          }}
         />
         <VictoryBar
           data={data}
@@ -47,34 +80,11 @@ const ResponsesGraph = ({ responses }) => {
           horizontal
           cornerRadius={{ topLeft: 4, topRight: 4 }}
           labels={({ datum }) => `${datum.earnings}`}
-          style={{
-            data: {
-              fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
-              stroke: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : 'transparent'), // Set borderColor conditionally
-              strokeWidth: 1, // Set the borderWidth
-            },
-            labels: {
-              fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : '#384466'),
-              fontFamily: 'Rubik',
-              fontWeight: '400',
-            },
-          }}
           labelComponent={<VictoryLabel dx={-20} />}
         />
       </VictoryChart>
-      </Grid>
+    </Grid>
   );
 };
 
 export default ResponsesGraph;
-
-
-
-
-
-
-
-
-
-
-
