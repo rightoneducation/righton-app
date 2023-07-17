@@ -66,7 +66,6 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
         </Box>
         <CardContent className={expanded ? classes.expandedBox : classes.expandBox}>
           <Box className={correct ? classes.numAnsweredBoxRight : classes.numAnsweredBoxWrong}>
-            <Typography className={classes.numAnsweredText}> {numQuestionAnswers ? numQuestionAnswers : 0}</Typography>
           </Box>
         </CardContent>
       </Card>

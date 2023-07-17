@@ -18,7 +18,6 @@ const ResponsesGraph = ({ responses }) => {
     earnings: response.count,
   }));
 
-  // Define custom Victory theme inside the component
   const customTheme = {
     axis: {
       style: {
