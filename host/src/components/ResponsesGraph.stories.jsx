@@ -22,8 +22,5 @@ PhaseOne.args = {
     { label: 'C', count: 5 },
     { label: 'D', count: 20 },
   ],
-  numPlayers: 0,
-  totalAnswers: 0,
-  currentState: "INITIAL_INTRO",
 };
 
