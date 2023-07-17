@@ -1,4 +1,3 @@
-// ResponsesGraph.stories.js
 import React from 'react';
 import { GameSessionParser } from '@righton/networking';
 import MockGameSession from "../mock/MockGameSession.json";
