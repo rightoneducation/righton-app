@@ -7,6 +7,11 @@ const useStyles = makeStyles({
   container: {
     textAlign: 'center',
   },
+  title:{
+    color: 'rgba(255, 255, 255, 0.5)',
+    marginTop: '10px',
+    marginBottom: '-15px' 
+  },
 });
 
 const ResponsesGraph = ({ responses }) => {
@@ -14,8 +19,8 @@ const ResponsesGraph = ({ responses }) => {
 
   const reversedResponses = [...responses].reverse();
   const data = reversedResponses.map(response => ({
-    quarter: response.label,
-    earnings: response.count,
+    answerChoice: response.label,
+    answerCount: response.count,
   }));
 
   const customTheme = {
@@ -54,7 +59,7 @@ const ResponsesGraph = ({ responses }) => {
 
   return (
     <Grid item xs={12} className={classes.container}>
-      <Typography style={{ color: 'rgba(255, 255, 255, 0.5)', marginTop: '10px', marginBottom: '-15px' }}>
+      <Typography className={classes.title}>
         Number of Players
       </Typography>
       <VictoryChart
@@ -74,11 +79,11 @@ const ResponsesGraph = ({ responses }) => {
         />
         <VictoryBar
           data={data}
-          y="earnings"
-          x="quarter"
+          y="answerCount"
+          x="answerChoice"
           horizontal
           cornerRadius={{ topLeft: 4, topRight: 4 }}
-          labels={({ datum }) => `${datum.earnings}`}
+          labels={({ datum }) => `${datum.answerCount}`}
           labelComponent={<VictoryLabel dx={-20} />}
         />
       </VictoryChart>
