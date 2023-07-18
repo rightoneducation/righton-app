@@ -46,6 +46,7 @@ export default function ChooseAnswer({
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+
   const questionContents = (
     <>
       <Typography
@@ -97,18 +98,18 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
-        {/* <Collapse orientation="vertical" in={isSubmitted} timeout={500}> */}
-        {/* <Fade in={isSubmitted} timeout={500}>
-          <Box> */}
-        <ConfidenceMeterCard
-          selectedOption={selectedConfidenceOption}
-          handleSelectOption={handleSelectConfidence}
-          isSelected={isConfidenceSelected}
-          isSmallDevice={isSmallDevice}
-        />
-        {/* </Box>
-        </Fade> */}
-        {/* </Collapse> */}
+        {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+          <Fade in={isSubmitted} timeout={500}>
+            <Box>
+              <ConfidenceMeterCard
+                selectedOption={selectedConfidenceOption}
+                handleSelectOption={handleSelectConfidence}
+                isSelected={isConfidenceSelected}
+                isSmallDevice={isSmallDevice}
+              />
+            </Box>
+          </Fade>) : null
+        }
         {isSubmitted ? (
           <Typography
             variant="body1"
