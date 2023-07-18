@@ -17,13 +17,17 @@ interface ConfidenceMeterCardProps {
   handleSelectOption: (option: number) => void;
   isSelected: boolean;
   isSmallDevice: boolean;
+  timeOfLastSelect: number | null;
+  setTimeOfLastSelect: (time: number | null) => void;
 }
 
 export default function ConfidenceMeterCard({
   selectedOption,
   handleSelectOption,
   isSelected,
-  isSmallDevice
+  isSmallDevice,
+  timeOfLastSelect,
+  setTimeOfLastSelect
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -34,8 +38,6 @@ export default function ConfidenceMeterCard({
     t('gameinprogress.chooseanswer.confidenceoption4'),
     t('gameinprogress.chooseanswer.confidenceoption5'),
   ];
-  // TODO: maybe move this up but we'll see
-  const [timeOfLastSelect, setTimeOfLastSelect] = useState<number | null>(null);
 
   const confidenceHeader = (
     <Box

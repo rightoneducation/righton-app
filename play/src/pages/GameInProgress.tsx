@@ -143,6 +143,7 @@ export default function GameInProgress({
   const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<
     number | null
   >(null);
+  const [timeOfLastConfidenceSelect, setTimeOfLastConfidenceSelect] = useState<number | null>(null);
 
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
@@ -223,6 +224,8 @@ export default function GameInProgress({
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={isConfidenceSelected}
             selectedConfidenceOption={selectedConfidenceOption}
+            timeOfLastConfidenceSelect={timeOfLastConfidenceSelect}
+            setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
           />
         ) : (
           <DiscussAnswer

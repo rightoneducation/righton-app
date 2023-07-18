@@ -27,6 +27,8 @@ interface ChooseAnswerProps {
   selectedConfidenceOption: number | null;
   handleSelectConfidence: (option: number) => void;
   isConfidenceSelected: boolean;
+  timeOfLastConfidenceSelect: number | null;
+  setTimeOfLastConfidenceSelect: (time: number | null) => void;
 }
 
 export default function ChooseAnswer({
@@ -43,6 +45,8 @@ export default function ChooseAnswer({
   selectedConfidenceOption,
   handleSelectConfidence,
   isConfidenceSelected,
+  timeOfLastConfidenceSelect,
+  setTimeOfLastConfidenceSelect
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -77,6 +81,32 @@ export default function ChooseAnswer({
     </>
   );
 
+  const onSubmitDisplay = (
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+      <Fade in={displaySubmitted} timeout={500}>
+        <Box>
+          <ConfidenceMeterCard
+            selectedOption={selectedConfidenceOption}
+            handleSelectOption={handleSelectConfidence}
+            isSelected={isConfidenceSelected}
+            isSmallDevice={isSmallDevice}
+            timeOfLastSelect={timeOfLastConfidenceSelect}
+            setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+          />
+        </Box>
+      </Fade>) : <Typography
+        sx={{
+          fontWeight: 700,
+          marginTop: `${theme.sizing.largePadding}px`,
+          marginX: `${theme.sizing.largePadding}px`,
+          fontSize: `${theme.typography.h4.fontSize}px`,
+          textAlign: 'center'
+        }}
+      >
+      {t('gameinprogress.chooseanswer.answerthankyou1')}
+    </Typography>
+  )
+
   const answerContents = (
     <>
       <Typography
@@ -98,25 +128,17 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
-        {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
-          <Fade in={isSubmitted} timeout={500}>
-            <Box>
-              <ConfidenceMeterCard
-                selectedOption={selectedConfidenceOption}
-                handleSelectOption={handleSelectConfidence}
-                isSelected={isConfidenceSelected}
-                isSmallDevice={isSmallDevice}
-              />
-            </Box>
-          </Fade>) : null
-        }
+        {displaySubmitted ?
+          onSubmitDisplay
+          : null}
         {isSubmitted ? (
           <Typography
-            variant="body1"
             sx={{
               fontWeight: 700,
-              textAlign: 'center',
               marginTop: `${theme.sizing.largePadding}px`,
+              marginX: `${theme.sizing.largePadding}px`,
+              fontSize: `${theme.typography.h4.fontSize}px`,
+              textAlign: 'center'
             }}
           >
             {t('gameinprogress.chooseanswer.answerthankyou2')}
