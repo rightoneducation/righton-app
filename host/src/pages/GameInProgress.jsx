@@ -178,8 +178,20 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <Responses/>
-        <GameAnswers questions={questions} questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
+        <Responses
+          questions={questions}
+          questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
+          currentQuestionIndex={currentQuestionIndex}
+          answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
+          totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
+        />
+        <GameAnswers
+          questions={questions}
+          questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
+          currentQuestionIndex={currentQuestionIndex}
+          answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
+          totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
+        />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame

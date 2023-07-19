@@ -1,18 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
-import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer } from 'victory';
-import { makeStyles } from "@material-ui/core";
+import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
   },
-  title:{
+  title: {
     color: 'rgba(255, 255, 255, 0.5)',
     marginTop: '10px',
-    marginBottom: '-15px' 
+    marginBottom: '-15px',
   },
 });
+
+const SelectedBar = ({ x, y, width, height }) => {
+  const padding = 5;
+  const selectedWidth = width + padding * 2;
+  const selectedHeight = height + padding * 2;
+
+  return (
+    <rect
+      x={x - padding}
+      y={y - padding}
+      width={selectedWidth}
+      height={selectedHeight}
+      fill="rgba(255, 255, 255, 0.5)"
+      stroke="transparent"
+      strokeWidth={3}
+      rx={8}
+      ry={8}
+    />
+  );
+};
 
 const ResponsesGraph = ({ responses }) => {
   const classes = useStyles();
@@ -23,12 +43,18 @@ const ResponsesGraph = ({ responses }) => {
     answerCount: response.count,
   }));
 
+
   const customTheme = {
     axis: {
       style: {
-        axis: { stroke: 'rgba(255, 255, 255, 0.5)'},
+        axis: { stroke: 'rgba(255, 255, 255, 0.5)' },
         grid: { stroke: 'transparent' },
-        tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Poppins', fontWeight: '800', padding: 10},
+        tickLabels: {
+          fill: 'rgba(255, 255, 255, 0.5)',
+          fontFamily: 'Poppins',
+          fontWeight: '800',
+          padding: 10,
+        },
       },
     },
     dependentAxis: {
@@ -36,7 +62,6 @@ const ResponsesGraph = ({ responses }) => {
         axis: { stroke: 'transparent' },
         grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
         tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400' },
-        
       },
     },
     bar: {
@@ -57,6 +82,15 @@ const ResponsesGraph = ({ responses }) => {
 
   const tickValues = reversedResponses.map(response => response.label);
 
+  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+
+  const handleBarClick = (event) => {
+    const barElement = event.target;
+    const { x, y, width, height } = barElement.getBBox();
+    setSelectedBarInfo({ x, y, width, height });
+  };
+
+
   return (
     <Grid item xs={12} className={classes.container}>
       <Typography className={classes.title}>
@@ -69,7 +103,7 @@ const ResponsesGraph = ({ responses }) => {
       >
         <VictoryAxis
           standalone={false}
-          tickValues={tickValues} 
+          tickValues={tickValues}
         />
         <VictoryAxis
           dependentAxis
@@ -85,10 +119,32 @@ const ResponsesGraph = ({ responses }) => {
           cornerRadius={{ topLeft: 4, topRight: 4 }}
           labels={({ datum }) => `${datum.answerCount}`}
           labelComponent={<VictoryLabel dx={-20} />}
+          events={[
+            {
+              target: 'data',
+              eventHandlers: {
+                onClick: (event) => {
+                  handleBarClick(event); // Pass the event object to the handleBarClick function
+                  return [];
+                },
+              },
+            },
+          ]}
         />
+        {selectedBarInfo && ( // Render the SelectedBar only if selectedBarInfo is not null
+        <VictoryPortal>
+          <SelectedBar
+            x={selectedBarInfo.x - 20}
+            y={selectedBarInfo.y}
+            width={selectedBarInfo.width + 20}
+            height={selectedBarInfo.height}
+          />
+          </VictoryPortal>
+        )}
       </VictoryChart>
     </Grid>
   );
 };
 
 export default ResponsesGraph;
+
