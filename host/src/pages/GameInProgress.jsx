@@ -187,6 +187,9 @@ export default function GameInProgress({
           currentQuestionIndex={currentQuestionIndex}
           answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
           totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
+          numPlayers={teams ? teams.length : 0}
+          currentState={currentState}
+          statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
         />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />

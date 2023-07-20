@@ -34,14 +34,25 @@ const SelectedBar = ({ x, y, width, height }) => {
   );
 };
 
-const ResponsesGraph = ({ studentResponses }) => {
+const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentState, questionChoices, statePosition }) => {
   const classes = useStyles();
 
-  const reversedResponses = [...studentResponses].reverse();
+  const reversedResponses = [
+    { label: "-", count: numPlayers - totalAnswers },
+    ...studentResponses,
+  ].reverse();
+
+
   const data = reversedResponses.map(response => ({
     answerChoice: response.label,
     answerCount: response.count,
   }));
+
+  const correctChoiceIndex = questionChoices.findIndex(choice => choice.isAnswer)+1;
+  //dependent on feedback
+  //const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
+
+  console.log(statePosition);
 
   const customTheme = {
     axis: {
@@ -49,7 +60,7 @@ const ResponsesGraph = ({ studentResponses }) => {
         axis: { stroke: 'rgba(255, 255, 255, 0.5)' },
         grid: { stroke: 'transparent' },
         tickLabels: {
-          fill: 'rgba(255, 255, 255, 0.5)',
+          fill: ( statePosition === 6 ? ({ datum, index }) => (index === reversedResponses.length-1 - correctChoiceIndex ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)') : 'rgba(255, 255, 255, 0.5)'),
           fontFamily: 'Poppins',
           fontWeight: '800',
           padding: 10,
@@ -79,7 +90,7 @@ const ResponsesGraph = ({ studentResponses }) => {
     },
   };
 
-  const tickValues = reversedResponses.map(response => response.label);
+  const axisTickValues = reversedResponses.map(response => response.label);
 
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
 
@@ -87,7 +98,6 @@ const ResponsesGraph = ({ studentResponses }) => {
     const barElement = event.target;
     const { x, y, width, height } = barElement.getBBox();
     setSelectedBarInfo({ x, y, width, height });
-    console.log('Clicked bar info:', x, y, width, height);
   };
 
 
@@ -103,14 +113,25 @@ const ResponsesGraph = ({ studentResponses }) => {
       >
         <VictoryAxis
           standalone={false}
-          tickValues={tickValues}
+          tickValues={axisTickValues}
         />
+        {numPlayers < 5 && 
         <VictoryAxis
           dependentAxis
           crossAxis={false}
           standalone={false}
           orientation="top"
-        />
+          tickValues={[0]}
+        />}
+
+        {numPlayers >= 5 && 
+        <VictoryAxis
+          dependentAxis
+          crossAxis={false}
+          standalone={false}
+          orientation="top"
+        />}
+
         <VictoryBar
           data={data}
           y="answerCount"

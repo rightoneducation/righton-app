@@ -25,15 +25,14 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Responses(studentResponses) {
+export default function Responses({studentResponses, numPlayers, totalAnswers, currentState, questionChoices, statePosition}) {
   const classes = useStyles();
-  const responsesArray = studentResponses.studentResponses;
-  
+ 
   return (
     <Grid container className={classes.centerContent}>
         <Grid container className={classes.titleContainer}>
             <Typography className={classes.titleStyle}>Real-time Responses</Typography>
-            <ResponsesGraph studentResponses={responsesArray}/>
+            <ResponsesGraph studentResponses={studentResponses} numPlayers={numPlayers} totalAnswers={totalAnswers} currentState={currentState} questionChoices={questionChoices} statePosition={statePosition}/>
         </Grid>
     </Grid>
   );
