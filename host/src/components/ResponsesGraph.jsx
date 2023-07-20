@@ -34,15 +34,14 @@ const SelectedBar = ({ x, y, width, height }) => {
   );
 };
 
-const ResponsesGraph = ({ responses }) => {
+const ResponsesGraph = ({ studentResponses }) => {
   const classes = useStyles();
 
-  const reversedResponses = [...responses].reverse();
+  const reversedResponses = [...studentResponses].reverse();
   const data = reversedResponses.map(response => ({
     answerChoice: response.label,
     answerCount: response.count,
   }));
-
 
   const customTheme = {
     axis: {
@@ -68,7 +67,7 @@ const ResponsesGraph = ({ responses }) => {
       style: {
         data: {
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
-          stroke: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : 'transparent'),
+          stroke: ({ datum, index }) => (index === reversedResponses.length - 1 && datum.answerCount !== 0 ? '#FFF' : 'transparent'),
           strokeWidth: 1,
         },
         labels: {
@@ -88,6 +87,7 @@ const ResponsesGraph = ({ responses }) => {
     const barElement = event.target;
     const { x, y, width, height } = barElement.getBBox();
     setSelectedBarInfo({ x, y, width, height });
+    console.log('Clicked bar info:', x, y, width, height);
   };
 
 
@@ -117,21 +117,21 @@ const ResponsesGraph = ({ responses }) => {
           x="answerChoice"
           horizontal
           cornerRadius={{ topLeft: 4, topRight: 4 }}
-          labels={({ datum }) => `${datum.answerCount}`}
+          labels={({ datum }) => datum.answerCount !== 0 ? `${datum.answerCount}` : ""}
           labelComponent={<VictoryLabel dx={-20} />}
           events={[
             {
               target: 'data',
               eventHandlers: {
                 onClick: (event) => {
-                  handleBarClick(event); // Pass the event object to the handleBarClick function
+                  handleBarClick(event); 
                   return [];
                 },
               },
             },
           ]}
         />
-        {selectedBarInfo && ( // Render the SelectedBar only if selectedBarInfo is not null
+        {selectedBarInfo && ( 
         <VictoryPortal>
           <SelectedBar
             x={selectedBarInfo.x - 20}

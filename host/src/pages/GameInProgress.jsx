@@ -157,6 +157,8 @@ export default function GameInProgress({
   };
 
 
+  
+  
   return (
     <div className={classes.background}>
       <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={isLoadModalOpen} />
@@ -178,13 +180,7 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <Responses
-          questions={questions}
-          questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
-          currentQuestionIndex={currentQuestionIndex}
-          answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
-          totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
-        />
+        
         <GameAnswers
           questions={questions}
           questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}

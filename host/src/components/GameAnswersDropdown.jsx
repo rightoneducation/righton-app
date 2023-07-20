@@ -12,23 +12,12 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
-export default function GameAnswersDropdown({ answer, explanation, correct, numQuestionAnswers, totalAnswers, pos }) {
+export default function GameAnswersDropdown({ answer, explanation, correct, numQuestionAnswers, totalAnswers, pos, letterDictionary }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const letterDictionary = {
-    0:'A. ',
-    1:'B. ',
-    2:'C. ',
-    3:'D. ',
-    4:'E. ',
-    5:'F. ',
-    6:'G. ',
-    7:'H. ',
-    8:'I. '
-  }
+  
   return (
     <Grid className={classes.choices}>
-    {console.log(totalAnswers)}
       <Card
         className={correct ? classes.rightAnswer : classes.wrongAnswer}
         onClick={() => setExpanded(!expanded)}
