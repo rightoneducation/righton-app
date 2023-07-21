@@ -1,3 +1,4 @@
+import { ConfidenceLevel } from "../AWSMobileApi";
 
 export interface ITeamAnswer {
     id: string,
@@ -8,4 +9,5 @@ export interface ITeamAnswer {
     updatedAt?: string
     teamMemberAnswersId?: string | null
     isTrickAnswer: boolean
+    confidenceLevel: ConfidenceLevel
 }
