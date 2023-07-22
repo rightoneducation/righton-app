@@ -39,6 +39,7 @@ export const getGameSession = /* GraphQL */ `
                   isChosen
                   text
                   isTrickAnswer
+                  confidenceLevel
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -143,6 +144,7 @@ export const listGameSessions = /* GraphQL */ `
                     isChosen
                     text
                     isTrickAnswer
+                    confidenceLevel
                     createdAt
                     updatedAt
                     teamMemberAnswersId
@@ -292,6 +294,7 @@ export const getTeam = /* GraphQL */ `
               isChosen
               text
               isTrickAnswer
+              confidenceLevel
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -356,6 +359,7 @@ export const listTeams = /* GraphQL */ `
                 isChosen
                 text
                 isTrickAnswer
+                confidenceLevel
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -400,6 +404,7 @@ export const getTeamMember = /* GraphQL */ `
           isChosen
           text
           isTrickAnswer
+          confidenceLevel
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -433,6 +438,7 @@ export const listTeamMembers = /* GraphQL */ `
             isChosen
             text
             isTrickAnswer
+            confidenceLevel
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -460,6 +466,7 @@ export const getTeamAnswer = /* GraphQL */ `
       isChosen
       text
       isTrickAnswer
+      confidenceLevel
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -480,6 +487,7 @@ export const listTeamAnswers = /* GraphQL */ `
         isChosen
         text
         isTrickAnswer
+        confidenceLevel
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -540,6 +548,7 @@ export const gameSessionByState = /* GraphQL */ `
                     isChosen
                     text
                     isTrickAnswer
+                    confidenceLevel
                     createdAt
                     updatedAt
                     teamMemberAnswersId
@@ -655,6 +664,7 @@ export const gameSessionByCode = /* GraphQL */ `
                     isChosen
                     text
                     isTrickAnswer
+                    confidenceLevel
                     createdAt
                     updatedAt
                     teamMemberAnswersId

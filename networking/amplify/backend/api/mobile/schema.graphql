@@ -66,12 +66,22 @@ type TeamMember @model {
   deviceId: ID!
 }
 
+enum ConfidenceLevel {
+  NOT_RATED 
+  NOT_AT_ALL
+  KINDA
+  QUITE
+  VERY
+  TOTALLY
+}
+
 type TeamAnswer @model {
   id: ID!
   questionId: Int!
   isChosen: Boolean!
   text: String!
   isTrickAnswer: Boolean!
+  confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
 }
 
 type Subscription {

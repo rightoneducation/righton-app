@@ -39,6 +39,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
                   isChosen
                   text
                   isTrickAnswer
+                  confidenceLevel
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -113,6 +114,7 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
           isChosen
           text
           isTrickAnswer
+          confidenceLevel
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -159,6 +161,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
               isChosen
               text
               isTrickAnswer
+              confidenceLevel
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -218,6 +221,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
               isChosen
               text
               isTrickAnswer
+              confidenceLevel
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -286,6 +290,7 @@ export const onCreateGameSession = /* GraphQL */ `
                   isChosen
                   text
                   isTrickAnswer
+                  confidenceLevel
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -387,6 +392,7 @@ export const onUpdateGameSession = /* GraphQL */ `
                   isChosen
                   text
                   isTrickAnswer
+                  confidenceLevel
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -488,6 +494,7 @@ export const onDeleteGameSession = /* GraphQL */ `
                   isChosen
                   text
                   isTrickAnswer
+                  confidenceLevel
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -580,6 +587,7 @@ export const onCreateTeam = /* GraphQL */ `
               isChosen
               text
               isTrickAnswer
+              confidenceLevel
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -639,6 +647,7 @@ export const onUpdateTeam = /* GraphQL */ `
               isChosen
               text
               isTrickAnswer
+              confidenceLevel
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -698,6 +707,7 @@ export const onDeleteTeam = /* GraphQL */ `
               isChosen
               text
               isTrickAnswer
+              confidenceLevel
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -741,6 +751,7 @@ export const onCreateTeamMember = /* GraphQL */ `
           isChosen
           text
           isTrickAnswer
+          confidenceLevel
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -771,6 +782,7 @@ export const onUpdateTeamMember = /* GraphQL */ `
           isChosen
           text
           isTrickAnswer
+          confidenceLevel
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -801,6 +813,7 @@ export const onDeleteTeamMember = /* GraphQL */ `
           isChosen
           text
           isTrickAnswer
+          confidenceLevel
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -827,6 +840,7 @@ export const onCreateTeamAnswer = /* GraphQL */ `
       isChosen
       text
       isTrickAnswer
+      confidenceLevel
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -844,6 +858,7 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
       isChosen
       text
       isTrickAnswer
+      confidenceLevel
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -861,6 +876,7 @@ export const onDeleteTeamAnswer = /* GraphQL */ `
       isChosen
       text
       isTrickAnswer
+      confidenceLevel
       createdAt
       updatedAt
       teamMemberAnswersId
