@@ -2,6 +2,7 @@ import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
 import { Amplify, API, graphqlOperation } from "aws-amplify"
 import awsconfig from "./aws-exports"
 import {
+    ConfidenceLevel,
     CreateTeamAnswerInput, CreateTeamAnswerMutation,
     CreateTeamAnswerMutationVariables, CreateTeamInput,
     CreateTeamMemberInput,
@@ -307,6 +308,7 @@ export class ApiClient implements IApiClient {
             isTrickAnswer,
             text,
             teamMemberAnswersId: teamMemberId,
+            confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
@@ -504,6 +506,7 @@ type AWSTeamAnswer = {
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
+    confidenceLevel: ConfidenceLevel
 }
 
 export class GameSessionParser {
@@ -830,6 +833,7 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
+            confidenceLevel
         } = awsTeamAnswer || {}
 
         if (isNullOrUndefined(id) ||
@@ -850,6 +854,7 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
+            confidenceLevel
         }
         return teamAnswer
     }
