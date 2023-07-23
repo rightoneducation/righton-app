@@ -26,7 +26,7 @@ const SelectedBar = ({ x, y, width, height }) => {
       y={y - padding}
       width={selectedWidth}
       height={selectedHeight}
-      fill="rgba(255, 255, 255, 0.5)"
+      fill="rgba(255, 255, 255, 0.25)"
       stroke="transparent"
       strokeWidth={3}
       rx={8}
@@ -92,7 +92,11 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
   const handleBarClick = (event) => {
     const barElement = event.target;
     const { x, y, width, height } = barElement.getBBox();
-    setSelectedBarInfo({ x, y, width, height });
+    if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
+      setSelectedBarInfo(null);
+    } else {
+      setSelectedBarInfo({ x, y, width, height });
+    }
   };
 
   const CustomTick = ({ x, y, index, text }) => {
@@ -182,4 +186,3 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
 };
 
 export default ResponsesGraph;
-
