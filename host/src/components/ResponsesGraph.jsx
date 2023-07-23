@@ -35,7 +35,7 @@ const SelectedBar = ({ x, y, width, height }) => {
   );
 };
 
-const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentState, questionChoices, statePosition }) => {
+const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
   const classes = useStyles();
 
   const reversedResponses = [
