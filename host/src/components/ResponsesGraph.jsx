@@ -43,16 +43,14 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
     ...studentResponses,
   ].reverse();
 
-
   const data = reversedResponses.map(response => ({
     answerChoice: response.label,
     answerCount: response.count,
   }));
 
   const correctChoiceIndex = questionChoices.findIndex(choice => choice.isAnswer) + 1;
-  //dependent on feedback
-  //const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
-
+  // dependent on feedback
+  // const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
 
   const customTheme = {
     axis: {
@@ -89,7 +87,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
 
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
 
-  const handleBarClick = (event) => {
+  const selectedBar = (event) => {
     const barElement = event.target;
     const { x, y, width, height } = barElement.getBBox();
     if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
@@ -141,7 +139,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
             orientation="top"
             tickValues={[0]}
           />}
-
         {numPlayers >= 5 &&
           <VictoryAxis
             dependentAxis
@@ -149,7 +146,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
             standalone={false}
             orientation="top"
           />}
-
         <VictoryBar
           data={data}
           y="answerCount"
@@ -162,10 +158,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, currentSta
             {
               target: 'data',
               eventHandlers: {
-                onClick: (event) => {
-                  handleBarClick(event);
-                  return [];
-                },
+                onClick: selectedBar,
               },
             },
           ]}
