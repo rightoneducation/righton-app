@@ -7,19 +7,19 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import RichTextField from './RichTextEditor/RichTextEditor';
 
-interface AnswerCardProps {
+interface OpenAnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   handleSubmitAnswer: (answerText: string) => void;
   selectedAnswer: number | null;
 }
 
-export default function AnswerCard({
+export default function OpenAnswerCard({
   answers,
   isSubmitted,
   handleSubmitAnswer,
   selectedAnswer,
-}: AnswerCardProps) {
+}: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const [result, setResult] = useState<InputObject>();
@@ -30,7 +30,7 @@ export default function AnswerCard({
         <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
            Enter your answer
          </Typography> 
-        <RichTextField setResult={setResult} />
+        <RichTextField isSubmitted={isSubmitted} setResult={setResult} />
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

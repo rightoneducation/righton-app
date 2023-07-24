@@ -184,6 +184,7 @@ export enum InputPlaceholder {
 export const StorageKey = 'rightOn';
 
 export enum InputType {
+  MULTICHOICE,
   TEXT,
   FORMULA,
   NULL

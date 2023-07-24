@@ -5,17 +5,24 @@ import './RichTextEditor.css';
 import "katex/dist/katex.min.css";
 import { Typography, Box } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import { InputType, InputObject } from '../../lib/PlayModels';
 import IntroButtonStyled from '../../lib/styledcomponents/IntroButtonStyled';
+import {
+  GamePlayButtonStyled,
+  GamePlayButtonStyledDisabled,
+} from '../../lib/styledcomponents/GamePlayButtonStyled';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 
 window.katex = katex;
 
 interface RichTextEditorProps {
+  isSubmitted: boolean;
   setResult: (result: InputObject) => void;
 }
 
 export default function RichTextEditor ({
+  isSubmitted,
   setResult
 } : RichTextEditorProps) {
   const modules = {
@@ -29,7 +36,11 @@ export default function RichTextEditor ({
   ];
   const quillRef = useRef<ReactQuill>(null);
   const [draftContents, setDraftContents] = useState<string>('')
+  const { t } = useTranslation();
   const theme = useTheme();
+  const buttonText = isSubmitted
+  ? t('gameinprogress.button.submitted')
+  : t('gameinprogress.button.submit');
 
   const normalizeInput = () => {
     const text: string[] = [];
@@ -65,19 +76,19 @@ export default function RichTextEditor ({
           formats={formats}
           ref={quillRef}
           bounds={`[data-text-editor="name"]`}
-          style={{width:'300px', color: 'black'}}
+          style={{width:'100%', backgroundColor: isSubmitted ? '' : `${theme.palette.primary.lightGrey}` , borderRadius:'4px'}}
         />
-       <IntroButtonStyled
+        <GamePlayButtonStyled
           onClick={() => setResult(normalizeInput())}
           style={{
             background: `${theme.palette.primary.highlightGradient}`,
             boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',
           }}
         >
-          <Typography variant="h2" sx={{ textAlign: 'center' }}>
-            Submit Answer
+          <Typography sx={{ textTransform: 'none' }} variant="button">
+            {buttonText}
           </Typography>
-        </IntroButtonStyled>
+        </GamePlayButtonStyled>
   </Box>
   )
 }
