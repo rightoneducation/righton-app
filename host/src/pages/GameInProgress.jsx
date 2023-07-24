@@ -7,7 +7,6 @@ import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import Responses from "../components/Responses";
 import { isNullOrUndefined, GameSessionState } from "@righton/networking";
 
 
@@ -188,7 +187,6 @@ export default function GameInProgress({
           answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
           totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
           numPlayers={teams ? teams.length : 0}
-          currentState={currentState}
           statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
         />
       </div>

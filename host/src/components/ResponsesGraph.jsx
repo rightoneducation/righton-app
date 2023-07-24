@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
 import { makeStyles } from '@material-ui/core';
 import check from '../images/Pickedcheck.svg';
@@ -10,8 +10,12 @@ const useStyles = makeStyles({
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
-    marginTop: '10px',
-    marginBottom: '-15px',
+    fontFamily: 'Rubik',
+    fontSize: '17px'
+  },
+  titleContainer: {
+    marginBottom: '-5%',
+    marginTop: '5%',
   },
 });
 
@@ -37,7 +41,6 @@ const SelectedBar = ({ x, y, width, height }) => {
 
 const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
   const classes = useStyles();
-
   const reversedResponses = [
     { label: "-", count: numPlayers - totalAnswers },
     ...studentResponses,
@@ -49,8 +52,38 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   }));
 
   const correctChoiceIndex = questionChoices.findIndex(choice => choice.isAnswer) + 1;
-  // dependent on feedback
-  // const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
+
+  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+
+  const selectedBar = (event) => {
+    const barElement = event.target;
+    const { x, y, width, height } = barElement.getBBox();
+    if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
+      setSelectedBarInfo(null);
+    } else {
+      setSelectedBarInfo({ x, y, width, height });
+    }
+  };
+
+  const CustomTick = ({ x, y, index, text }) => {
+    const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
+    const fillTick = statePosition === 6 && showCustomTick;
+
+    return (
+      <g>
+        {showCustomTick && (
+          <foreignObject x={x - 25} y={y - 9.5} width={16} height={18}>
+            <img src={check} alt={"correct answer"} />
+          </foreignObject>
+        )}
+        <VictoryLabel x={x} y={y} text={text} style={{
+          fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+          fontFamily: 'Poppins',
+          fontWeight: '800',
+        }} />
+      </g>
+    );
+  };
 
   const customTheme = {
     axis: {
@@ -85,43 +118,13 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     },
   };
 
-  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
-
-  const selectedBar = (event) => {
-    const barElement = event.target;
-    const { x, y, width, height } = barElement.getBBox();
-    if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
-      setSelectedBarInfo(null);
-    } else {
-      setSelectedBarInfo({ x, y, width, height });
-    }
-  };
-
-  const CustomTick = ({ x, y, index, text }) => {
-    const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
-    const fillTick = statePosition === 6 && showCustomTick;
-
-    return (
-      <g>
-        {showCustomTick && (
-          <foreignObject x={x - 25} y={y - 9.5} width={16} height={18}>
-            <img src={check} alt={"correct answer"} />
-          </foreignObject>
-        )}
-        <VictoryLabel x={x} y={y} text={text} style={{
-          fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
-          fontFamily: 'Poppins',
-          fontWeight: '800',
-        }} />
-      </g>
-    );
-  };
-
   return (
     <Grid item xs={12} className={classes.container}>
-      <Typography className={classes.title}>
-        Number of Players
-      </Typography>
+      <div className={classes.titleContainer}>
+        <Typography className={classes.title}>
+          Number of players
+        </Typography>
+      </div>
       <VictoryChart
         domainPadding={20}
         containerComponent={<VictoryContainer />}

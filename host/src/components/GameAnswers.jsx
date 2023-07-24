@@ -5,7 +5,7 @@ import GameAnswersDropdown from "./GameAnswersDropdown";
 import Responses from "./Responses";
 import { isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswers({ questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, currentState, statePosition}) {
+export default function GameAnswers({ questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
   const letterDictionary = {
     0:'A. ',
     1:'B. ',
@@ -44,7 +44,6 @@ export default function GameAnswers({ questions, questionChoices, currentQuestio
           studentResponses={data}
           numPlayers={numPlayers}
           totalAnswers={totalAnswers}
-          currentState={currentState}
           questionChoices={questionChoices}
           statePosition={statePosition}
         />
