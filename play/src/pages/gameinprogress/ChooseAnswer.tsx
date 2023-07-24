@@ -7,7 +7,7 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
-import AnswerCard from '../../components/AnswerCard';
+import OpenAnswerCard from '../../components/OpenAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -82,13 +82,11 @@ export default function ChooseAnswer({
         {t('gameinprogress.chooseanswer.answercolumn')}
       </Typography>
       <ScrollBoxStyled>
-        <AnswerCard
+        <OpenAnswerCard
           answers={answerChoices}
           isSubmitted={isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
           selectedAnswer={selectedAnswer}
-          handleSelectAnswer={handleSelectAnswer}
         />
         {isSubmitted ? (
           <>

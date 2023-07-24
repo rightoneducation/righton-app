@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
-import { isNullOrUndefined, GameSessionState } from '@righton/networking';
-import ButtonSubmitAnswer from './ButtonSubmitAnswer';
+import { InputObject } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import RichTextField from './RichTextEditor/RichTextEditor';
@@ -23,22 +22,15 @@ export default function AnswerCard({
 }: AnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [contents, setContents] = useState('');
-  console.log(contents);
+  const [result, setResult] = useState<InputObject>();
 
   return (
     <BodyCardStyled elevation={10} >
       <BodyCardContainerStyled spacing={2}>
         <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
-           Enter Your Answer
+           Enter your answer
          </Typography> 
-        <RichTextField contents={contents} setContents={setContents} />
-        <ButtonSubmitAnswer
-          isSubmitted={isSubmitted}
-          answer={contents}
-          handleSubmitAnswer={handleSubmitAnswer}
-          isSelected={!isNullOrUndefined(contents)}
-        />
+        <RichTextField setResult={setResult} />
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );
