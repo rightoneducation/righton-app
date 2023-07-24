@@ -137,6 +137,14 @@ export default function GameInProgress({
     return rejoinSubmittedAnswer;
   });
 
+  // TODO: handle case where player is rejoining
+  const [isConfidenceSelected, setIsConfidenceSelected] =
+    useState<boolean>(false);
+  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<
+    number | null
+  >(null);
+  const [timeOfLastConfidenceSelect, setTimeOfLastConfidenceSelect] = useState<number | null>(null);
+
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
@@ -165,6 +173,11 @@ export default function GameInProgress({
 
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
+  };
+
+  const handleSelectConfidence = (index: number) => {
+    setSelectedConfidenceOption(index);
+    setIsConfidenceSelected(true);
   };
 
   return (
@@ -196,7 +209,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
@@ -208,6 +221,11 @@ export default function GameInProgress({
             currentState={currentState}
             selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
+            handleSelectConfidence={handleSelectConfidence}
+            isConfidenceSelected={isConfidenceSelected}
+            selectedConfidenceOption={selectedConfidenceOption}
+            timeOfLastConfidenceSelect={timeOfLastConfidenceSelect}
+            setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
           />
         ) : (
           <DiscussAnswer

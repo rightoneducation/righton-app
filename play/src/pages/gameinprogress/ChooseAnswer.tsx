@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Collapse, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
+import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -23,6 +24,11 @@ interface ChooseAnswerProps {
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
+  selectedConfidenceOption: number | null;
+  handleSelectConfidence: (option: number) => void;
+  isConfidenceSelected: boolean;
+  timeOfLastConfidenceSelect: number | null;
+  setTimeOfLastConfidenceSelect: (time: number | null) => void;
 }
 
 export default function ChooseAnswer({
@@ -36,9 +42,15 @@ export default function ChooseAnswer({
   currentState,
   selectedAnswer,
   handleSelectAnswer,
+  selectedConfidenceOption,
+  handleSelectConfidence,
+  isConfidenceSelected,
+  timeOfLastConfidenceSelect,
+  setTimeOfLastConfidenceSelect
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+
   const questionContents = (
     <>
       <Typography
@@ -69,6 +81,32 @@ export default function ChooseAnswer({
     </>
   );
 
+  const onSubmitDisplay = (
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+      <Fade in={displaySubmitted} timeout={500}>
+        <Box>
+          <ConfidenceMeterCard
+            selectedOption={selectedConfidenceOption}
+            handleSelectOption={handleSelectConfidence}
+            isSelected={isConfidenceSelected}
+            isSmallDevice={isSmallDevice}
+            timeOfLastSelect={timeOfLastConfidenceSelect}
+            setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+          />
+        </Box>
+      </Fade>) : <Typography
+        sx={{
+          fontWeight: 700,
+          marginTop: `${theme.sizing.largePadding}px`,
+          marginX: `${theme.sizing.largePadding}px`,
+          fontSize: `${theme.typography.h4.fontSize}px`,
+          textAlign: 'center'
+        }}
+      >
+      {t('gameinprogress.chooseanswer.answerthankyou1')}
+    </Typography>
+  )
+
   const answerContents = (
     <>
       <Typography
@@ -90,31 +128,21 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
+        {displaySubmitted ?
+          onSubmitDisplay
+          : null}
         {isSubmitted ? (
-          <>
-            {displaySubmitted ? (
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 700,
-                  textAlign: 'center',
-                  marginTop: `${theme.sizing.largePadding}px`,
-                }}
-              >
-                {t('gameinprogress.chooseanswer.answerthankyou1')}
-              </Typography>
-            ) : null}
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: 700,
-                textAlign: 'center',
-                marginTop: `${theme.sizing.largePadding}px`,
-              }}
-            >
-              {t('gameinprogress.chooseanswer.answerthankyou2')}
-            </Typography>
-          </>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              marginTop: `${theme.sizing.largePadding}px`,
+              marginX: `${theme.sizing.largePadding}px`,
+              fontSize: `${theme.typography.h4.fontSize}px`,
+              textAlign: 'center'
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
         ) : null}
       </ScrollBoxStyled>
     </>
@@ -137,7 +165,7 @@ export default function ChooseAnswer({
               bulletClass: 'swiper-pagination-bullet',
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
-              renderBullet(index, className) {
+              renderBullet(index: any, className: any) {
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
               },
             }}

@@ -74,7 +74,15 @@
       "correcttext2": "respuesta correcta",
       "incorrecttext1": "¿Cuál crees que es la",
       "incorrecttext2": "respuesta incorrecta",
-      "incorrecttext3": "más popular entre tu clase?"
+      "incorrecttext3": "más popular entre tu clase?",
+      "confidenceheader": "Califica tu confianza",
+      "confidencetext": "¿Qué tan segura estabas de tu respuesta?",
+      "confidenceoption1": "De nada",
+      "confidenceoption2": "Un poco",
+      "confidenceoption3": "Bastante",
+      "confidenceoption4": "Muy",
+      "confidenceoption5": "Totalmente",
+      "sendingconfidenceresponse": "Enviando tu respuesta..."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
