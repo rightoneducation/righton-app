@@ -85,6 +85,13 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     );
   };
 
+  const calculateRoundedTicks = () => {
+    const maxAnswerCount = Math.max(...data.map(response => response.answerCount));
+    const tickCount = Math.min(maxAnswerCount, 4);
+    const tickInterval = Math.ceil(maxAnswerCount / tickCount);
+    return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
+  };
+
   const customTheme = {
     axis: {
       style: {
@@ -148,6 +155,8 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             crossAxis={false}
             standalone={false}
             orientation="top"
+            tickValues={calculateRoundedTicks()}
+            tickFormat={tick => Math.round(tick)}
           />}
         <VictoryBar
           data={data}
