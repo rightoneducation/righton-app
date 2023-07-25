@@ -18,12 +18,12 @@ window.katex = katex;
 
 interface RichTextEditorProps {
   isSubmitted: boolean;
-  setResult: (result: InputObject) => void;
+  handleSubmitAnswer: (result: InputObject) => void;
 }
 
 export default function RichTextEditor ({
   isSubmitted,
-  setResult
+  handleSubmitAnswer
 } : RichTextEditorProps) {
   const modules = {
     toolbar: [
@@ -62,7 +62,7 @@ export default function RichTextEditor ({
         }
       });
     }
-    return {rawInput: draftContents, normalizedInput: text, inputType: format};
+    return {rawInput: draftContents, normalizedInput: text, inputType: format, isSubmitted: true};
   };
 
   return (
@@ -79,7 +79,7 @@ export default function RichTextEditor ({
           style={{width:'100%', backgroundColor: isSubmitted ? '' : `${theme.palette.primary.lightGrey}` , borderRadius:'4px'}}
         />
         <GamePlayButtonStyled
-          onClick={() => setResult(normalizeInput())}
+          onClick={() => handleSubmitAnswer(normalizeInput())}
           style={{
             background: `${theme.palette.primary.highlightGradient}`,
             boxShadow: '0px 5px 22px rgba(71, 217, 255, 0.3)',

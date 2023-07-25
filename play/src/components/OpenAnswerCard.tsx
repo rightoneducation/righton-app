@@ -10,7 +10,7 @@ import RichTextField from './RichTextEditor/RichTextEditor';
 interface OpenAnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  handleSubmitAnswer: (result: InputObject) => void;
   selectedAnswer: number | null;
 }
 
@@ -30,7 +30,7 @@ export default function OpenAnswerCard({
         <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
            Enter your answer
          </Typography> 
-        <RichTextField isSubmitted={isSubmitted} setResult={setResult} />
+        <RichTextField isSubmitted={isSubmitted} handleSubmitAnswer={handleSubmitAnswer} />
       </BodyCardContainerStyled>
     </BodyCardStyled>
   );

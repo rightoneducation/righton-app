@@ -9,6 +9,7 @@ import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/la
 import QuestionCard from '../../components/QuestionCard';
 import OpenAnswerCard from '../../components/OpenAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+import { InputObject } from '../../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -19,7 +20,7 @@ interface ChooseAnswerProps {
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  handleSubmitAnswer: (result: InputObject) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;

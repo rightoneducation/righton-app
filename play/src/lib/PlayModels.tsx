@@ -194,4 +194,5 @@ export interface InputObject {
   rawInput: string;
   normalizedInput: string[];
   inputType: InputType[];
+  isSubmitted: boolean;
 }

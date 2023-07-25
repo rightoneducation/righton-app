@@ -22,7 +22,7 @@ import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel } from '../lib/PlayModels';
+import { ErrorType, LocalModel, InputObject, InputType } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -123,35 +123,32 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{
-    selectedAnswerIndex: number | null;
-    isSubmitted: boolean;
-  }>(() => {
-    let rejoinSubmittedAnswer = null;
-    rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-      hasRejoined,
-      teamAnswers,
-      answerChoices,
-      currentState
-    );
-    return rejoinSubmittedAnswer;
-  });
+  const [answerObject, setAnswerObject] = useState<InputObject>({rawInput: '', normalizedInput: [''], inputType: [InputType.NULL], isSubmitted: false});
+    // let rejoinSubmittedAnswer = null;
+    // rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+    //   hasRejoined,
+    //   teamAnswers,
+    //   answerChoices,
+    //   currentState
+    // );
+    // return rejoinSubmittedAnswer;
+
 
   const handleTimerIsFinished = () => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+    setAnswerObject((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
-  const handleSubmitAnswer = async (answerText: string) => {
+  const handleSubmitAnswer = async (result: InputObject) => {
     try {
-      await apiClient.addTeamAnswer(
-        teamMemberId,
-        currentQuestion.id,
-        answerText,
-        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      );
-      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+      // await apiClient.addTeamAnswer(
+      //   teamMemberId,
+      //   currentQuestion.id,
+      //   result.normalizedInput,
+      //   currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+      //   currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      // );
+      setAnswerObject(result);
       setDisplaySubmitted(true);
     } catch {
       setIsError(true);
@@ -160,11 +157,11 @@ export default function GameInProgress({
 
   const handleRetry = () => {
     setIsError(false);
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
+    setAnswerObject((prev) => ({ ...prev, isSubmitted: false }));
   };
 
   const handleSelectAnswer = (index: number) => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
+    setAnswerObject((prev) => ({ ...prev, normalizedInput.push(index.toString()) }));
   };
 
   return (
