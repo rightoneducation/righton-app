@@ -2,6 +2,72 @@ import React from 'react';
 import { GameSessionParser } from '@righton/networking';
 import MockGameSession from "../mock/MockGameSession.json";
 import ResponsesGraph from './ResponsesGraph'; 
+import '@material-ui/core/styles/';
+import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core';
+
+const useStyles = makeStyles({
+  container: {
+    textAlign: 'center',
+  },
+  title: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontFamily: 'Rubik',
+    fontSize: '17px'
+  },
+  titleContainer: {
+    marginBottom: '-5%',
+    marginTop: '5%',
+  },
+});
+
+const customTheme = {
+  axis: {
+    style: {
+      axis: { stroke: 'rgba(255, 255, 255, 0.5)' },
+      grid: { stroke: 'transparent' },
+      tickLabels: {
+        padding: 20,
+      },
+    },
+  },
+  dependentAxis: {
+    style: {
+      axis: { stroke: 'transparent' },
+      grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
+      tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400' },
+    },
+  },
+  bar: {
+    style: {
+      data: {
+        fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
+        stroke: ({ datum, index }) => (index === reversedResponses.length - 1 && datum.answerCount !== 0 ? '#FFF' : 'transparent'),
+        strokeWidth: 1,
+      },
+      labels: {
+        fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : '#384466'),
+        fontFamily: 'Rubik',
+        fontWeight: '400',
+      },
+    },
+  },
+};
+
+const withStyles = (Story) => {
+  const classes = useStyles();
+  const theme = createMuiTheme(customTheme);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className={classes.container}>
+        <Story />
+      </div>
+    </ThemeProvider>
+  );
+};
+
+export const decorators = [withStyles];
+
 
 export default {
   title: 'ResponsesGraph',
