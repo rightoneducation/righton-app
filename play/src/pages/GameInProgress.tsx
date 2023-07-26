@@ -20,6 +20,7 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
+import DebugRadioGroup from '../components/DebugRadioGroup';
 import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, InputObject, InputType } from '../lib/PlayModels';
@@ -121,6 +122,7 @@ export default function GameInProgress({
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [radioValue, setRadioValue] = useState<number>(0);
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
   const [answerObject, setAnswerObject] = useState<InputObject>({rawInput: '', normalizedInput: [''], inputType: [InputType.NULL], isSubmitted: false});
@@ -140,6 +142,7 @@ export default function GameInProgress({
   };
 
   const handleSubmitAnswer = async (result: InputObject) => {
+    console.log(result);
     try {
       // await apiClient.addTeamAnswer(
       //   teamMemberId,
@@ -161,8 +164,7 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    setAnswerObject((prev) => ({ ...prev, normalizedInput: [index.toString()], })); 
-    console.log(answerObject);
+    setAnswerObject((prev) => ({ ...prev, rawInput: index.toString(), })); 
   };
 
   return (
@@ -177,6 +179,7 @@ export default function GameInProgress({
         errorText=""
         handleRetry={handleRetry}
       />
+      <DebugRadioGroup radioValue={radioValue} setRadioValue={setRadioValue} />
       <HeaderStackContainerStyled>
         <HeaderContent
           currentState={currentState}
@@ -205,6 +208,7 @@ export default function GameInProgress({
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
             handleSelectAnswer={handleSelectAnswer}
+            radioValue={radioValue}
           />
         ) : (
           <DiscussAnswer

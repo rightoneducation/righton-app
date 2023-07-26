@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import { AnswerState } from '../lib/PlayModels';
+import { AnswerState, InputObject, InputType } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  handleSubmitAnswer: (answer: InputObject) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (index: number) => void;
@@ -72,6 +72,12 @@ export default function AnswerCard({
     return AnswerState.DEFAULT;
   };
 
+  const handleRetrieveAnswer = () => {
+    console.log(selectedAnswer?.toString());
+    console.log(answers![selectedAnswer!].text);
+    handleSubmitAnswer({rawInput: selectedAnswer?.toString() ?? '', normalizedInput: [answers![selectedAnswer!].text] ?? '', inputType: [InputType.MULTICHOICE], isSubmitted: true});
+  };
+
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
@@ -91,11 +97,9 @@ export default function AnswerCard({
           ))}
         </Stack>
         <ButtonSubmitAnswer
-          isSubmitted={isSubmitted}
-          selectedAnswer={selectedAnswer}
-          answers={answers}
-          handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
+          isSubmitted={isSubmitted}
+          handleRetrieveAnswer={handleRetrieveAnswer}
         />
       </BodyCardContainerStyled>
     </BodyCardStyled>

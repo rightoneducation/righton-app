@@ -7,7 +7,8 @@ import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
-import OpenAnswerCard from '../../components/OpenAnswerCard';
+import AnswerCard from '../../components/AnswerCard';
+import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import { InputObject } from '../../lib/PlayModels';
 import 'swiper/css';
@@ -23,6 +24,7 @@ interface ChooseAnswerProps {
   handleSubmitAnswer: (result: InputObject) => void;
   currentState: GameSessionState;
   handleSelectAnswer: (answer: number) => void;
+  radioValue: number;
 }
 
 export default function ChooseAnswer({
@@ -35,6 +37,7 @@ export default function ChooseAnswer({
   handleSubmitAnswer,
   currentState,
   handleSelectAnswer,
+  radioValue
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -67,7 +70,7 @@ export default function ChooseAnswer({
       </ScrollBoxStyled>
     </>
   );
-
+  
   const answerContents = (
     <>
       <Typography
@@ -81,10 +84,21 @@ export default function ChooseAnswer({
         {t('gameinprogress.chooseanswer.answercolumn')}
       </Typography>
       <ScrollBoxStyled>
-        <OpenAnswerCard
-          isSubmitted={answerObject.isSubmitted}
-          handleSubmitAnswer={handleSubmitAnswer}
-        />
+        {radioValue === 0 ? 
+          <AnswerCard
+            answers={answerChoices}
+            isSubmitted={answerObject.isSubmitted}
+            handleSubmitAnswer={handleSubmitAnswer}
+            currentState={currentState}
+            selectedAnswer={parseInt(answerObject.rawInput[0], 10) ?? null}
+            handleSelectAnswer={handleSelectAnswer}
+          />
+          :
+          <OpenAnswerCard
+            isSubmitted={answerObject.isSubmitted}
+            handleSubmitAnswer={handleSubmitAnswer}
+          />
+        }
         {answerObject.isSubmitted ? (
           <>
             {displaySubmitted ? (
