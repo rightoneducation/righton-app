@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameSessionParser } from '@righton/networking';
-import MockGameSession from "../mock/MockGameSession.json";
-import ResponsesGraph from './ResponsesGraph'; 
+import MockGameSession from '../../mock/MockGameSession.json'
+import ResponsesGraph from './ResponsesGraph';
 
 export default {
   title: 'ResponsesGraph',
