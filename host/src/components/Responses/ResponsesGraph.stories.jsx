@@ -1,11 +1,7 @@
 import React from 'react';
-import { ThemeProvider, createTheme, makeStyles } from '@material-ui/core/styles';
 import { GameSessionParser } from '@righton/networking';
 import MockGameSession from "../mock/MockGameSession.json";
 import ResponsesGraph from './ResponsesGraph'; 
-import {
-  Typography,
-} from "@material-ui/core";
 
 export default {
   title: 'ResponsesGraph',
@@ -14,83 +10,7 @@ export default {
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
 
-const Template = args => (
-  <ThemeProvider theme={theme}>
-    <ResponsesGraph {...args} />
-  </ThemeProvider>
-);
-
-// Define custom styles using makeStyles
-const useStyles = makeStyles((theme) => ({
-  container: {
-    textAlign: 'center',
-    // Add any other styles you want to apply here
-  },
-  title: {
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontFamily: 'Rubik',
-    fontSize: '17px',
-    // Add any other styles you want to apply here
-  },
-  titleContainer: {
-    marginBottom: '-5%',
-    marginTop: '5%',
-    // Add any other styles you want to apply here
-  },
-}));
-
-// Define your custom theme for VictoryChart
-const customTheme = {
-  axis: {
-    style: {
-      axis: { stroke: 'rgba(255, 255, 255, 0.5)' },
-      grid: { stroke: 'transparent' },
-      tickLabels: {
-        padding: 20,
-        // Add any other styles you want to apply here
-      },
-    },
-  },
-  dependentAxis: {
-    style: {
-      axis: { stroke: 'transparent' },
-      grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
-      tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400' },
-      // Add any other styles you want to apply here
-    },
-  },
-  bar: {
-    style: {
-      data: {
-        strokeWidth: 1,
-      },
-      labels: {
-        fontFamily: 'Rubik',
-        fontWeight: '400',
-        // Add any other styles you want to apply here
-      },
-    },
-  },
-};
-
-const theme = createTheme({
-  // Your Material-UI theme customization goes here
-  // For example, you can define your custom typography, colors, etc.
-});
-
-const ResponsesGraphWrapper = (props) => {
-  const classes = useStyles(); // Apply the useStyles here
-  return (
-    <div className={classes.container}>
-      <div className={classes.titleContainer}>
-        <Typography className={classes.title}>
-          Number of players
-        </Typography>
-      </div>
-      <ResponsesGraph classes={classes} {...props} />
-    </div>
-  );
-};
+const Template = args => <ResponsesGraph {...args} />;
 
 export const differentAnswers = Template.bind({});
 differentAnswers.args = {

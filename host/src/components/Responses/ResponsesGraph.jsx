@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
 import { makeStyles } from '@material-ui/core';
-import check from '../images/Pickedcheck.svg';
+import CustomTick from './CustomTick';
 
 const useStyles = makeStyles({
   container: {
@@ -55,7 +55,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
 
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
 
-  const selectedBar = (event) => {
+  const selectBar = (event) => {
     const barElement = event.target;
     const { x, y, width, height } = barElement.getBBox();
     if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
@@ -63,26 +63,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     } else {
       setSelectedBarInfo({ x, y, width, height });
     }
-  };
-
-  const CustomTick = ({ x, y, index, text }) => {
-    const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
-    const fillTick = statePosition === 6 && showCustomTick;
-
-    return (
-      <g>
-        {showCustomTick && (
-          <foreignObject x={x - 25} y={y - 9.5} width={16} height={18}>
-            <img src={check} alt={"correct answer"} />
-          </foreignObject>
-        )}
-        <VictoryLabel x={x} y={y} text={text} style={{
-          fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
-          fontFamily: 'Poppins',
-          fontWeight: '800',
-        }} />
-      </g>
-    );
   };
 
   const calculateRoundedTicks = () => {
@@ -139,7 +119,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       >
         <VictoryAxis
           standalone={false}
-          tickLabelComponent={<CustomTick />}
+          tickLabelComponent={<CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
         />
         {numPlayers < 5 &&
           <VictoryAxis
@@ -170,7 +150,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             {
               target: 'data',
               eventHandlers: {
-                onClick: selectedBar,
+                onClick: selectBar,
               },
             },
           ]}

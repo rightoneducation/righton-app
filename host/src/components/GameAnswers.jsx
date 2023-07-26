@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
-import Responses from "./Responses";
+import Responses from "./Responses/Responses";
 import { isNullOrUndefined } from "@righton/networking";
 
 export default function GameAnswers({ questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
