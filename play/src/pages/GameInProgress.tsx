@@ -161,7 +161,8 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    setAnswerObject((prev) => ({ ...prev, normalizedInput.push(index.toString()) }));
+    setAnswerObject((prev) => ({ ...prev, normalizedInput: [index.toString()], })); 
+    console.log(answerObject);
   };
 
   return (
@@ -199,11 +200,10 @@ export default function GameInProgress({
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={selectSubmitAnswer.isSubmitted}
+            answerObject={answerObject}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
           />
         ) : (

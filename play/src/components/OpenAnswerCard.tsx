@@ -8,17 +8,13 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import RichTextField from './RichTextEditor/RichTextEditor';
 
 interface OpenAnswerCardProps {
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   handleSubmitAnswer: (result: InputObject) => void;
-  selectedAnswer: number | null;
 }
 
 export default function OpenAnswerCard({
-  answers,
   isSubmitted,
   handleSubmitAnswer,
-  selectedAnswer,
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();

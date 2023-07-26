@@ -8,7 +8,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { Navigate } from 'react-router-dom';
 import PregameCountdown from '../pages/PregameCountdown';
-import GameInProgress from '../pages/GameInProgress';
+import GameInProgress from '../pages/GameInProgress'; // eslint-disable-line import/no-named-as-default
 import PhaseResults from '../pages/PhaseResults';
 import FinalResultsContainer from '../containers/FinalResultsContainer';
 import StartPhase2 from '../pages/StartPhase2';

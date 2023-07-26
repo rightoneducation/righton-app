@@ -76,7 +76,7 @@ export default function RichTextEditor ({
           formats={formats}
           ref={quillRef}
           bounds={`[data-text-editor="name"]`}
-          style={{width:'100%', backgroundColor: isSubmitted ? '' : `${theme.palette.primary.lightGrey}` , borderRadius:'4px'}}
+          style={{width:'100%', backgroundColor: !isSubmitted ? '' : `${theme.palette.primary.lightGrey}` , borderRadius:'4px'}}
         />
         <GamePlayButtonStyled
           onClick={() => handleSubmitAnswer(normalizeInput())}

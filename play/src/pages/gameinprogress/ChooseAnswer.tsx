@@ -18,11 +18,10 @@ interface ChooseAnswerProps {
   questionText: string[];
   questionUrl: string;
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  isSubmitted: boolean;
+  answerObject: InputObject;
   displaySubmitted: boolean;
   handleSubmitAnswer: (result: InputObject) => void;
   currentState: GameSessionState;
-  selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
 }
 
@@ -31,11 +30,10 @@ export default function ChooseAnswer({
   questionText,
   questionUrl,
   answerChoices,
-  isSubmitted,
+  answerObject,
   displaySubmitted,
   handleSubmitAnswer,
   currentState,
-  selectedAnswer,
   handleSelectAnswer,
 }: ChooseAnswerProps) {
   const theme = useTheme();
@@ -84,12 +82,10 @@ export default function ChooseAnswer({
       </Typography>
       <ScrollBoxStyled>
         <OpenAnswerCard
-          answers={answerChoices}
-          isSubmitted={isSubmitted}
+          isSubmitted={answerObject.isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
-          selectedAnswer={selectedAnswer}
         />
-        {isSubmitted ? (
+        {answerObject.isSubmitted ? (
           <>
             {displaySubmitted ? (
               <Typography
