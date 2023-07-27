@@ -11,7 +11,7 @@ const useStyles = makeStyles({
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
     fontFamily: 'Rubik',
-    fontSize: '17px'
+    fontSize: '17px',
   },
   titleContainer: {
     marginBottom: '-5%',
@@ -41,21 +41,21 @@ const SelectedBar = ({ x, y, width, height }) => {
 
 const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
   const classes = useStyles();
+  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+
   const reversedResponses = [
     { label: "-", count: numPlayers - totalAnswers },
     ...studentResponses,
   ].reverse();
 
-  const data = reversedResponses.map(response => ({
-    answerChoice: response.label,
-    answerCount: response.count,
+  const data = reversedResponses.map(({ label, count }) => ({
+    answerChoice: label,
+    answerCount: count,
   }));
 
-  const correctChoiceIndex = questionChoices.findIndex(choice => choice.isAnswer) + 1;
+  const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
 
-  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
-
-  const selectBar = (event) => {
+  const handleSelectBar = (event) => {
     const barElement = event.target;
     const { x, y, width, height } = barElement.getBBox();
     if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
@@ -66,7 +66,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   };
 
   const calculateRoundedTicks = () => {
-    const maxAnswerCount = Math.max(...data.map(response => response.answerCount));
+    const maxAnswerCount = Math.max(...data.map(({ answerCount }) => answerCount));
     const tickCount = Math.min(maxAnswerCount, 4);
     const tickInterval = Math.ceil(maxAnswerCount / tickCount);
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
@@ -78,7 +78,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
         axis: { stroke: 'rgba(255, 255, 255, 0.5)' },
         grid: { stroke: 'transparent' },
         tickLabels: {
-          padding: 20,
+          padding: 20
         },
       },
     },
@@ -121,15 +121,16 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           standalone={false}
           tickLabelComponent={<CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
         />
-        {numPlayers < 5 &&
+        {numPlayers < 5 && (
           <VictoryAxis
             dependentAxis
             crossAxis={false}
             standalone={false}
             orientation="top"
             tickValues={[0]}
-          />}
-        {numPlayers >= 5 &&
+          />
+        )}
+        {numPlayers >= 5 && (
           <VictoryAxis
             dependentAxis
             crossAxis={false}
@@ -137,7 +138,8 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             orientation="top"
             tickValues={calculateRoundedTicks()}
             tickFormat={tick => Math.round(tick)}
-          />}
+          />
+        )}
         <VictoryBar
           data={data}
           y="answerCount"
@@ -150,7 +152,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             {
               target: 'data',
               eventHandlers: {
-                onClick: selectBar,
+                onClick: handleSelectBar,
               },
             },
           ]}
