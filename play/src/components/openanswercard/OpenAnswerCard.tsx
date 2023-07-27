@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
@@ -38,7 +38,19 @@ export default function OpenAnswerCard({
     'formula'
   ];
   const quillRef = useRef<ReactQuill>(null);
-  const [draftContents, setDraftContents] = useState<string>(answerObject.rawInput);
+  const [draftContents, setDraftContents] = useState<string>('');
+
+  useEffect(() => {
+    const editor = quillRef.current!.getEditor();
+    const quillDelta = {ops: [{insert: ''}]}
+    const mockAnswer = [{text: 'asdfsadf', inputType: InputType.TEXT}, {text: '\\sqrt(1/2 + 3/4)', inputType: InputType.FORMULA}, {text: 'asdfasdfsa', inputType: InputType.TEXT}];
+    mockAnswer.forEach((answer) => {
+
+    })
+
+    
+    editor.setContents(quillDelta);
+  }, []);
   console.log(answerObject);
   const normalizeInput = () => {
     const text: string[] = [];

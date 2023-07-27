@@ -55,34 +55,21 @@ export const checkForSubmittedAnswerOnRejoin = (
   }[],
   currentState: GameSessionState
 ): InputObject => {
-  let selectedAnswerIndex = '';
-  let isSubmitted = false;
-
+  const selectedAnswerIndex = '';
+  const isSubmitted = false;
+  const mockAnswer = [{text: 'asdfsadf', inputType: InputType.TEXT}, {text: '\\sqrt(1/2 + 3/4)', inputType: InputType.FORMULA}, {text: 'asdfasdfsa', inputType: InputType.TEXT}];
+  const returnedAnswer = {rawInput: '', normalizedInput: [], inputType: [], isSubmitted} as InputObject;
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
   ) {
-    if (!isNullOrUndefined(answers)) {
-      answers.forEach((answer) => {
-        if (answer) {
-          answerChoices.forEach((answerChoice, index) => {
-              if (
-                (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
-                  answer.isChosen) ||
-                (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
-                  answer.isTrickAnswer)
-              ) {
-                selectedAnswerIndex = DOMPurify.sanitize(answer.text.toString().replace(/\\"/g, '"'));
-                isSubmitted = true;
-              }
-          });
-        }
-      });
-    }
+    mockAnswer.forEach((answer) => {
+      returnedAnswer.normalizedInput.push(answer.text);
+      returnedAnswer.inputType.push(answer.inputType);
+    });
   }
-  console.log(selectedAnswerIndex);
-  return {rawInput: selectedAnswerIndex, normalizedInput: [''], inputType: [InputType.MULTICHOICE], isSubmitted};
+  return returnedAnswer;
 };
 
 /**
