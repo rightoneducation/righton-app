@@ -5,7 +5,8 @@ import {
   GameSessionState,
   isNullOrUndefined,
 } from '@righton/networking';
-import { InputPlaceholder, StorageKey } from './PlayModels';
+import * as DOMPurify from 'dompurify';
+import { InputPlaceholder, StorageKey, InputObject, InputType } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -53,8 +54,8 @@ export const checkForSubmittedAnswerOnRejoin = (
     reason: string;
   }[],
   currentState: GameSessionState
-): { selectedAnswerIndex: number | null; isSubmitted: boolean } => {
-  let selectedAnswerIndex = null;
+): InputObject => {
+  let selectedAnswerIndex = '';
   let isSubmitted = false;
 
   if (
@@ -66,23 +67,22 @@ export const checkForSubmittedAnswerOnRejoin = (
       answers.forEach((answer) => {
         if (answer) {
           answerChoices.forEach((answerChoice, index) => {
-            if (answerChoice.text === answer.text) {
               if (
                 (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
                   answer.isChosen) ||
                 (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
                   answer.isTrickAnswer)
               ) {
-                selectedAnswerIndex = index;
+                selectedAnswerIndex = DOMPurify.sanitize(answer.text.toString().replace(/\\"/g, '"'));
                 isSubmitted = true;
               }
-            }
           });
         }
       });
     }
   }
-  return { selectedAnswerIndex, isSubmitted };
+  console.log(selectedAnswerIndex);
+  return {rawInput: selectedAnswerIndex, normalizedInput: [''], inputType: [InputType.MULTICHOICE], isSubmitted};
 };
 
 /**

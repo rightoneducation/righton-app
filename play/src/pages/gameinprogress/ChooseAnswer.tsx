@@ -95,6 +95,7 @@ export default function ChooseAnswer({
           />
           :
           <OpenAnswerCard
+            answerObject={answerObject}
             isSubmitted={answerObject.isSubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
           />

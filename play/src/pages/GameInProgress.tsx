@@ -79,7 +79,7 @@ export default function GameInProgress({
       currentQuestion.id
     );
   }
-
+  console.log(teamAnswers);
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
   // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
@@ -125,32 +125,30 @@ export default function GameInProgress({
   const [radioValue, setRadioValue] = useState<number>(0);
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [answerObject, setAnswerObject] = useState<InputObject>({rawInput: '', normalizedInput: [''], inputType: [InputType.NULL], isSubmitted: false});
-    // let rejoinSubmittedAnswer = null;
-    // rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-    //   hasRejoined,
-    //   teamAnswers,
-    //   answerChoices,
-    //   currentState
-    // );
-    // return rejoinSubmittedAnswer;
-
-
+  const [answerObject, setAnswerObject] = useState<InputObject>(() => {
+      let rejoinSubmittedAnswer = null;
+      rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+      hasRejoined,
+      teamAnswers,
+      answerChoices,
+      currentState
+    );
+    return rejoinSubmittedAnswer;});
+  
   const handleTimerIsFinished = () => {
     setAnswerObject((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
   const handleSubmitAnswer = async (result: InputObject) => {
-    console.log(result);
     try {
-      // await apiClient.addTeamAnswer(
-      //   teamMemberId,
-      //   currentQuestion.id,
-      //   result.normalizedInput,
-      //   currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-      //   currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      // );
+      await apiClient.addTeamAnswer(
+        teamMemberId,
+        currentQuestion.id,
+        result.normalizedInput[0],
+        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      );
       setAnswerObject(result);
       setDisplaySubmitted(true);
     } catch {

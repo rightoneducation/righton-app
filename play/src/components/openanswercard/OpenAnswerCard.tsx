@@ -2,9 +2,10 @@ import React, { useState, useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
+import { isNullOrUndefined } from '@righton/networking';
+import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import katex from "katex";
-import { isNullOrUndefined } from '@righton/networking';
 import './ReactQuill.css';
 import "katex/dist/katex.min.css";
 import { InputObject, InputType } from '../../lib/PlayModels';
@@ -16,11 +17,13 @@ import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
 window.katex = katex;
 
 interface OpenAnswerCardProps {
+  answerObject: InputObject;
   isSubmitted: boolean;
   handleSubmitAnswer: (result: InputObject) => void;
 }
 
 export default function OpenAnswerCard({
+  answerObject,
   isSubmitted,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
@@ -35,14 +38,16 @@ export default function OpenAnswerCard({
     'formula'
   ];
   const quillRef = useRef<ReactQuill>(null);
-  const [draftContents, setDraftContents] = useState<string>('')
-
+  const [draftContents, setDraftContents] = useState<string>(answerObject.rawInput);
+  console.log(answerObject);
   const normalizeInput = () => {
     const text: string[] = [];
     const format: InputType[] = [];
     const editor = quillRef.current!.getEditor();
     const unprivilegedEditor = quillRef.current!.makeUnprivilegedEditor(editor);
     const quillContents = unprivilegedEditor.getContents();
+    console.log(quillContents);
+    const sanitizedContents = DOMPurify.sanitize(unprivilegedEditor.getHTML());
     if(quillRef.current) {
       quillContents.ops!.forEach((op:any) => {
         if(op.insert.formula) {
@@ -57,7 +62,7 @@ export default function OpenAnswerCard({
         }
       });
     }
-    return {rawInput: draftContents, normalizedInput: text, inputType: format, isSubmitted: true};
+    return {rawInput: sanitizedContents, normalizedInput: text, inputType: format, isSubmitted: true};
   };
 
   const handleRetrieveAnswer = () => {
