@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-### Backend Adjustment Proposal ###
+# Issue: Backend Adjustment  #
 
 ## Overview ##
 [A brief description of the proposed backend adjustment (What)]
