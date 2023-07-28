@@ -37,26 +37,27 @@ export default function OpenAnswerCard({
   const formats = [
     'formula'
   ];
-  const quillRef = useRef<ReactQuill>(null);
-  const [draftContents, setDraftContents] = useState<string>('');
+
+
+  let quillRef: any;
+  let editor;
+  let unprivilegedEditor: any;
+  const [draftContents, setDraftContents] = useState<any>('');
 
   useEffect(() => {
-    const editor = quillRef.current!.getEditor();
-    const quillDelta = {ops: [{insert: ''}]}
-    const mockAnswer = [{text: 'asdfsadf', inputType: InputType.TEXT}, {text: '\\sqrt(1/2 + 3/4)', inputType: InputType.FORMULA}, {text: 'asdfasdfsa', inputType: InputType.TEXT}];
-    mockAnswer.forEach((answer) => {
+    quillRef = useRef<ReactQuill>(null);
+    editor = quillRef.current!.getEditor();
+    unprivilegedEditor = quillRef.current!.makeUnprivilegedEditor(editor);
+  },[]);
 
-    })
-
-    
-    editor.setContents(quillDelta);
-  }, []);
-  console.log(answerObject);
+  const handleChange = () => {
+    const newContents = unprivilegedEditor.getContents();
+    console.log(newContents);
+    setDraftContents(newContents);
+  }
   const normalizeInput = () => {
     const text: string[] = [];
     const format: InputType[] = [];
-    const editor = quillRef.current!.getEditor();
-    const unprivilegedEditor = quillRef.current!.makeUnprivilegedEditor(editor);
     const quillContents = unprivilegedEditor.getContents();
     console.log(quillContents);
     const sanitizedContents = DOMPurify.sanitize(unprivilegedEditor.getHTML());
