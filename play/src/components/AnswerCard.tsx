@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import { AnswerState, InputObject, InputType } from '../lib/PlayModels';
+import { AnswerState, AnswerObject, AnswerType } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answer: InputObject) => void;
+  handleSubmitAnswer: (answer: AnswerObject) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (index: number) => void;
@@ -73,9 +73,14 @@ export default function AnswerCard({
   };
 
   const handleRetrieveAnswer = () => {
-    console.log(selectedAnswer?.toString());
-    console.log(answers![selectedAnswer!].text);
-    handleSubmitAnswer({rawInput: selectedAnswer?.toString() ?? '', normalizedInput: [answers![selectedAnswer!].text] ?? '', inputType: [InputType.MULTICHOICE], isSubmitted: true});
+    const answer = {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: null, isSubmitted: false} as AnswerObject;
+    if (answers && selectedAnswer !== null) {
+      answer.answerTexts.push(answers[selectedAnswer].text);
+      answer.answerTypes.push(AnswerType.MULTICHOICE);
+      answer.multiChoiceAnswerIndex = selectedAnswer;
+      answer.isSubmitted = true;
+    }
+    handleSubmitAnswer(answer);
   };
 
   return (

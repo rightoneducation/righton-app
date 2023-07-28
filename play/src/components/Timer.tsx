@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
+import { fetchLocalData } from '../lib/HelperFunctions';
 import { LocalModel, StorageKey } from '../lib/PlayModels';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
@@ -87,7 +88,7 @@ export default function Timer({
         secStr = sec < 10 ? `0${sec}` : `${sec}`;
       }
       const storageObject: LocalModel = {
-        ...localModel,
+        ...fetchLocalData(),
         currentTimer: currentTimeInput,
         hasRejoined: true,
       };
@@ -95,7 +96,7 @@ export default function Timer({
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
-  }, [currentTime, localModel]);
+  }, [currentTime]);
 
   // useEffect to start off timer
   useEffect(() => {

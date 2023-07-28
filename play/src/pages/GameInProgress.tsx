@@ -21,9 +21,9 @@ import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
 import DebugRadioGroup from '../components/DebugRadioGroup';
-import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
+import { checkForSubmittedAnswerOnRejoin, fetchLocalData } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, InputObject, InputType } from '../lib/PlayModels';
+import { ErrorType, LocalModel, StorageKey, AnswerObject, AnswerType } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -79,7 +79,6 @@ export default function GameInProgress({
       currentQuestion.id
     );
   }
-  console.log(teamAnswers);
   // this breaks down the question text from the gameSession for bold formatting of the question text
   // first, it looks for the last question mark and cuts the question from the proceeding period to the end of the string
   // second, if there isn't a question mark, it looks for the last period and cuts the question from the proceeding period to the end of the string
@@ -125,30 +124,35 @@ export default function GameInProgress({
   const [radioValue, setRadioValue] = useState<number>(0);
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [answerObject, setAnswerObject] = useState<InputObject>(() => {
+  const [answerObject, setAnswerObject] = useState<AnswerObject>(() => {
       let rejoinSubmittedAnswer = null;
       rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+      localModel,
       hasRejoined,
       teamAnswers,
       answerChoices,
       currentState
     );
-    return rejoinSubmittedAnswer;});
-  
+    return rejoinSubmittedAnswer;}
+  );
   const handleTimerIsFinished = () => {
     setAnswerObject((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
-  const handleSubmitAnswer = async (result: InputObject) => {
+  const handleSubmitAnswer = async (result: AnswerObject) => {
     try {
-      await apiClient.addTeamAnswer(
-        teamMemberId,
-        currentQuestion.id,
-        result.normalizedInput[0],
-        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      );
+      // TODO: update backend to accept new answer object
+      // await apiClient.addTeamAnswer(
+      //   teamMemberId,
+      //   currentQuestion.id,
+      //   result.answerTexts,
+      //   result.answerTypes,
+      //   currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+      //   currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      // );
+      console.log("Answer:");
+      console.log(result);
       setAnswerObject(result);
       setDisplaySubmitted(true);
     } catch {
@@ -162,7 +166,12 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    setAnswerObject((prev) => ({ ...prev, rawInput: index.toString(), })); 
+    const storageObject: LocalModel = {
+      ...fetchLocalData(),
+      presubmitAnswer: {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: index, isSubmitted: false} as AnswerObject,
+    };
+    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    setAnswerObject((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
 
   return (

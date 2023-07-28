@@ -6,7 +6,7 @@ import {
   isNullOrUndefined,
 } from '@righton/networking';
 import * as DOMPurify from 'dompurify';
-import { InputPlaceholder, StorageKey, InputObject, InputType } from './PlayModels';
+import { InputPlaceholder, StorageKey, AnswerObject, AnswerType, LocalModel } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -45,6 +45,7 @@ export const isGameCodeValid = (gameCode: string) => {
  * @returns - the index of the answer the player has submitted, null if they haven't submitted an answer and boolean to track submission
  */
 export const checkForSubmittedAnswerOnRejoin = (
+  localModel: LocalModel,
   hasRejoined: boolean,
   answers: (ITeamAnswer | null)[] | null | undefined,
   answerChoices: {
@@ -54,20 +55,23 @@ export const checkForSubmittedAnswerOnRejoin = (
     reason: string;
   }[],
   currentState: GameSessionState
-): InputObject => {
-  const selectedAnswerIndex = '';
-  const isSubmitted = false;
-  const mockAnswer = [{text: 'asdfsadf', inputType: InputType.TEXT}, {text: '\\sqrt(1/2 + 3/4)', inputType: InputType.FORMULA}, {text: 'asdfasdfsa', inputType: InputType.TEXT}];
-  const returnedAnswer = {rawInput: '', normalizedInput: [], inputType: [], isSubmitted} as InputObject;
+): AnswerObject => {
+  const mockAnswer = {answerTexts: ['asdfsadf','\\sqrt(1/2 + 3/4)','asdfasdfsa'], answerTypes: [AnswerType.TEXT, AnswerType.FORMULA, AnswerType.TEXT], isSubmitted: false } as AnswerObject;
+  let returnedAnswer: AnswerObject = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
   ) {
-    mockAnswer.forEach((answer) => {
-      returnedAnswer.normalizedInput.push(answer.text);
-      returnedAnswer.inputType.push(answer.inputType);
-    });
+    if (localModel.presubmitAnswer !== null) {
+      // set answer to presubmitAnswer
+      returnedAnswer = localModel.presubmitAnswer;
+      // remove presubmitAnswer from local storage
+      localModel.presubmitAnswer = null; // eslint-disable-line no-param-reassign
+      window.localStorage.setItem(StorageKey, JSON.stringify(localModel)); 
+    }
+    else 
+      returnedAnswer = mockAnswer;
   }
   return returnedAnswer;
 };
@@ -81,7 +85,6 @@ export const checkForSubmittedAnswerOnRejoin = (
 export const validateLocalModel = (localModel: string | null) => {
   if (isNullOrUndefined(localModel) || localModel === '') return null;
   const parsedLocalModel = JSON.parse(localModel);
-
   // checks for invalid data in localModel, returns null if found
   if (
     [

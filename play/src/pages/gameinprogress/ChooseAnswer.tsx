@@ -10,7 +10,7 @@ import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
 import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import { InputObject } from '../../lib/PlayModels';
+import { AnswerObject } from '../../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -19,9 +19,9 @@ interface ChooseAnswerProps {
   questionText: string[];
   questionUrl: string;
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  answerObject: InputObject;
+  answerObject: AnswerObject;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (result: InputObject) => void;
+  handleSubmitAnswer: (result: AnswerObject) => void;
   currentState: GameSessionState;
   handleSelectAnswer: (answer: number) => void;
   radioValue: number;
@@ -90,7 +90,7 @@ export default function ChooseAnswer({
             isSubmitted={answerObject.isSubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={parseInt(answerObject.rawInput[0], 10) ?? null}
+            selectedAnswer={answerObject.multiChoiceAnswerIndex ?? null}
             handleSelectAnswer={handleSelectAnswer}
           />
           :

@@ -124,6 +124,7 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
+  presubmitAnswer: AnswerObject | null;
 }
 
 interface MonsterMap {
@@ -183,16 +184,16 @@ export enum InputPlaceholder {
  */
 export const StorageKey = 'rightOn';
 
-export enum InputType {
+export enum AnswerType {
   MULTICHOICE,
   TEXT,
   FORMULA,
   NULL
 }
 
-export interface InputObject {
-  rawInput: string;
-  normalizedInput: string[];
-  inputType: InputType[];
+export interface AnswerObject {
+  answerTexts: string[];
+  answerTypes: AnswerType[];
+  multiChoiceAnswerIndex?: number | null;
   isSubmitted: boolean;
 }
