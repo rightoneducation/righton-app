@@ -93,18 +93,21 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       style: {
         data: {
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
-          stroke: ({ datum, index }) => (index === reversedResponses.length - 1 && datum.answerCount !== 0 ? '#FFF' : 'transparent'),
+          stroke: '#FFF',
           strokeWidth: 1,
         },
         labels: {
-          fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? '#FFF' : '#384466'),
+          fill: ({ datum, index }) => (index === reversedResponses.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
           fontFamily: 'Rubik',
           fontWeight: '400',
+          padding: 10,
         },
       },
     },
   };
 
+  //datum.answerCount !== 0 
+  //({ datum, index }) => (datum.answerCount !== 0  ? <VictoryLabel dx={-20} /> : <VictoryLabel dx={20} /> )
   return (
     <Grid item xs={12} className={classes.container}>
       <div className={classes.titleContainer}>
@@ -146,8 +149,10 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           x="answerChoice"
           horizontal
           cornerRadius={{ topLeft: 4, topRight: 4 }}
-          labels={({ datum }) => datum.answerCount !== 0 ? `${datum.answerCount}` : ""}
-          labelComponent={<VictoryLabel dx={-20} />}
+          labels={({ datum }) => `${datum.answerCount}`}
+          labelComponent={
+            <VictoryLabel dx={({ datum }) =>  datum.answerCount !== 0 ? -20 : 3} />
+          }
           events={[
             {
               target: 'data',
