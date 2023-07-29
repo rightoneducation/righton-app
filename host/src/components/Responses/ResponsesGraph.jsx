@@ -150,8 +150,9 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           horizontal
           cornerRadius={{ topLeft: 4, topRight: 4 }}
           labels={({ datum }) => `${datum.answerCount}`}
+          barWidth={({ datum }) =>  datum.answerCount !== 0 ? 15 : 30} 
           labelComponent={
-            <VictoryLabel dx={({ datum }) =>  datum.answerCount !== 0 ? -20 : 3} />
+            <VictoryLabel dx={({ datum }) =>  datum.answerCount !== 0 ? -20 : 3}/>
           }
           events={[
             {
