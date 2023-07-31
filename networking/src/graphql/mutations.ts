@@ -2,6 +2,183 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createGame = /* GraphQL */ `
+  mutation CreateGame(
+    $input: CreateGameInput!
+    $condition: ModelGameConditionInput
+  ) {
+    createGame(input: $input, condition: $condition) {
+      id
+      phaseOneTime
+      phaseTwoTime
+      title
+      description
+      imageUrl
+      questions {
+        items {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          cluster
+          domain
+          grade
+          standard
+          gameId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateGame = /* GraphQL */ `
+  mutation UpdateGame(
+    $input: UpdateGameInput!
+    $condition: ModelGameConditionInput
+  ) {
+    updateGame(input: $input, condition: $condition) {
+      id
+      phaseOneTime
+      phaseTwoTime
+      title
+      description
+      imageUrl
+      questions {
+        items {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          cluster
+          domain
+          grade
+          standard
+          gameId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteGame = /* GraphQL */ `
+  mutation DeleteGame(
+    $input: DeleteGameInput!
+    $condition: ModelGameConditionInput
+  ) {
+    deleteGame(input: $input, condition: $condition) {
+      id
+      phaseOneTime
+      phaseTwoTime
+      title
+      description
+      imageUrl
+      questions {
+        items {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          cluster
+          domain
+          grade
+          standard
+          gameId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createGameQuestion = /* GraphQL */ `
+  mutation CreateGameQuestion(
+    $input: CreateGameQuestionInput!
+    $condition: ModelGameQuestionConditionInput
+  ) {
+    createGameQuestion(input: $input, condition: $condition) {
+      id
+      text
+      choices
+      imageUrl
+      instructions
+      cluster
+      domain
+      grade
+      standard
+      gameId
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateGameQuestion = /* GraphQL */ `
+  mutation UpdateGameQuestion(
+    $input: UpdateGameQuestionInput!
+    $condition: ModelGameQuestionConditionInput
+  ) {
+    updateGameQuestion(input: $input, condition: $condition) {
+      id
+      text
+      choices
+      imageUrl
+      instructions
+      cluster
+      domain
+      grade
+      standard
+      gameId
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteGameQuestion = /* GraphQL */ `
+  mutation DeleteGameQuestion(
+    $input: DeleteGameQuestionInput!
+    $condition: ModelGameQuestionConditionInput
+  ) {
+    deleteGameQuestion(input: $input, condition: $condition) {
+      id
+      text
+      choices
+      imageUrl
+      instructions
+      cluster
+      domain
+      grade
+      standard
+      gameId
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createGameSession = /* GraphQL */ `
   mutation CreateGameSession(
     $input: CreateGameSessionInput!

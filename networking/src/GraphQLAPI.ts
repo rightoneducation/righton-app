@@ -2,53 +2,24 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateGameSessionInput = {
+export type CreateGameInput = {
   id?: string | null,
-  gameId: number,
-  startTime?: string | null,
-  phaseOneTime: number,
-  phaseTwoTime: number,
-  currentQuestionIndex?: number | null,
-  currentState: GameSessionState,
-  gameCode: number,
-  isAdvancedMode: boolean,
-  imageUrl?: string | null,
-  description?: string | null,
+  phaseOneTime?: number | null,
+  phaseTwoTime?: number | null,
   title?: string | null,
-  currentTimer?: number | null,
+  description?: string | null,
+  imageUrl?: string | null,
 };
 
-export enum GameSessionState {
-  NOT_STARTED = "NOT_STARTED",
-  TEAMS_JOINING = "TEAMS_JOINING",
-  CHOOSE_CORRECT_ANSWER = "CHOOSE_CORRECT_ANSWER",
-  PHASE_1_DISCUSS = "PHASE_1_DISCUSS",
-  PHASE_1_RESULTS = "PHASE_1_RESULTS",
-  PHASE_2_START = "PHASE_2_START",
-  CHOOSE_TRICKIEST_ANSWER = "CHOOSE_TRICKIEST_ANSWER",
-  PHASE_2_DISCUSS = "PHASE_2_DISCUSS",
-  PHASE_2_RESULTS = "PHASE_2_RESULTS",
-  FINAL_RESULTS = "FINAL_RESULTS",
-  FINISHED = "FINISHED",
-}
-
-
-export type ModelGameSessionConditionInput = {
-  gameId?: ModelIntInput | null,
-  startTime?: ModelStringInput | null,
+export type ModelGameConditionInput = {
   phaseOneTime?: ModelIntInput | null,
   phaseTwoTime?: ModelIntInput | null,
-  currentQuestionIndex?: ModelIntInput | null,
-  currentState?: ModelGameSessionStateInput | null,
-  gameCode?: ModelIntInput | null,
-  isAdvancedMode?: ModelBooleanInput | null,
-  imageUrl?: ModelStringInput | null,
-  description?: ModelStringInput | null,
   title?: ModelStringInput | null,
-  currentTimer?: ModelIntInput | null,
-  and?: Array< ModelGameSessionConditionInput | null > | null,
-  or?: Array< ModelGameSessionConditionInput | null > | null,
-  not?: ModelGameSessionConditionInput | null,
+  description?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  and?: Array< ModelGameConditionInput | null > | null,
+  or?: Array< ModelGameConditionInput | null > | null,
+  not?: ModelGameConditionInput | null,
 };
 
 export type ModelIntInput = {
@@ -103,16 +74,26 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelGameSessionStateInput = {
-  eq?: GameSessionState | null,
-  ne?: GameSessionState | null,
+export type Game = {
+  __typename: "Game",
+  id: string,
+  phaseOneTime?: number | null,
+  phaseTwoTime?: number | null,
+  title?: string | null,
+  description?: string | null,
+  imageUrl?: string | null,
+  questions?: ModelGameQuestionConnection | null,
+  createdAt: string,
+  updatedAt: string,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
+export type GameCommonFields = {
+  __typename: "GameCommonFields",
+  phaseOneTime?: number | null,
+  phaseTwoTime?: number | null,
+  title?: string | null,
+  description?: string | null,
+  imageUrl?: string | null,
 };
 
 export type GameSession = {
@@ -162,7 +143,7 @@ export type Question = {
   __typename: "Question",
   id: number,
   text: string,
-  choices?: string | null,
+  choices: string,
   imageUrl?: string | null,
   instructions?: string | null,
   standard?: string | null,
@@ -171,6 +152,34 @@ export type Question = {
   grade?: string | null,
   order: number,
   gameSessionId: string,
+};
+
+export type QuestionCommonFields = {
+  __typename: "QuestionCommonFields",
+  text: string,
+  choices: string,
+  imageUrl?: string | null,
+  instructions?: string | null,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
+};
+
+export type GameQuestion = {
+  __typename: "GameQuestion",
+  id: string,
+  text: string,
+  choices: string,
+  imageUrl?: string | null,
+  instructions?: string | null,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
+  gameId: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type ModelTeamMemberConnection = {
@@ -199,7 +208,7 @@ export type ModelTeamAnswerConnection = {
 export type TeamAnswer = {
   __typename: "TeamAnswer",
   id: string,
-  questionId: number,
+  questionId: string,
   isChosen: boolean,
   text: string,
   isTrickAnswer: boolean,
@@ -219,10 +228,135 @@ export enum ConfidenceLevel {
 }
 
 
+export enum GameSessionState {
+  NOT_STARTED = "NOT_STARTED",
+  TEAMS_JOINING = "TEAMS_JOINING",
+  CHOOSE_CORRECT_ANSWER = "CHOOSE_CORRECT_ANSWER",
+  PHASE_1_DISCUSS = "PHASE_1_DISCUSS",
+  PHASE_1_RESULTS = "PHASE_1_RESULTS",
+  PHASE_2_START = "PHASE_2_START",
+  CHOOSE_TRICKIEST_ANSWER = "CHOOSE_TRICKIEST_ANSWER",
+  PHASE_2_DISCUSS = "PHASE_2_DISCUSS",
+  PHASE_2_RESULTS = "PHASE_2_RESULTS",
+  FINAL_RESULTS = "FINAL_RESULTS",
+  FINISHED = "FINISHED",
+}
+
+
 export type ModelQuestionConnection = {
   __typename: "ModelQuestionConnection",
   items:  Array<Question | null >,
   nextToken?: string | null,
+};
+
+export type ModelGameQuestionConnection = {
+  __typename: "ModelGameQuestionConnection",
+  items:  Array<GameQuestion | null >,
+  nextToken?: string | null,
+};
+
+export type UpdateGameInput = {
+  id: string,
+  phaseOneTime?: number | null,
+  phaseTwoTime?: number | null,
+  title?: string | null,
+  description?: string | null,
+  imageUrl?: string | null,
+};
+
+export type DeleteGameInput = {
+  id: string,
+};
+
+export type CreateGameQuestionInput = {
+  id?: string | null,
+  text: string,
+  choices: string,
+  imageUrl?: string | null,
+  instructions?: string | null,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
+  gameId: string,
+};
+
+export type ModelGameQuestionConditionInput = {
+  text?: ModelStringInput | null,
+  choices?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  instructions?: ModelStringInput | null,
+  cluster?: ModelStringInput | null,
+  domain?: ModelStringInput | null,
+  grade?: ModelStringInput | null,
+  standard?: ModelStringInput | null,
+  and?: Array< ModelGameQuestionConditionInput | null > | null,
+  or?: Array< ModelGameQuestionConditionInput | null > | null,
+  not?: ModelGameQuestionConditionInput | null,
+};
+
+export type UpdateGameQuestionInput = {
+  id: string,
+  text?: string | null,
+  choices?: string | null,
+  imageUrl?: string | null,
+  instructions?: string | null,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  standard?: string | null,
+  gameId: string,
+};
+
+export type DeleteGameQuestionInput = {
+  id: string,
+  gameId: string,
+};
+
+export type CreateGameSessionInput = {
+  id?: string | null,
+  gameId: number,
+  startTime?: string | null,
+  phaseOneTime: number,
+  phaseTwoTime: number,
+  currentQuestionIndex?: number | null,
+  currentState: GameSessionState,
+  gameCode: number,
+  isAdvancedMode: boolean,
+  imageUrl?: string | null,
+  description?: string | null,
+  title?: string | null,
+  currentTimer?: number | null,
+};
+
+export type ModelGameSessionConditionInput = {
+  gameId?: ModelIntInput | null,
+  startTime?: ModelStringInput | null,
+  phaseOneTime?: ModelIntInput | null,
+  phaseTwoTime?: ModelIntInput | null,
+  currentQuestionIndex?: ModelIntInput | null,
+  currentState?: ModelGameSessionStateInput | null,
+  gameCode?: ModelIntInput | null,
+  isAdvancedMode?: ModelBooleanInput | null,
+  imageUrl?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  currentTimer?: ModelIntInput | null,
+  and?: Array< ModelGameSessionConditionInput | null > | null,
+  or?: Array< ModelGameSessionConditionInput | null > | null,
+  not?: ModelGameSessionConditionInput | null,
+};
+
+export type ModelGameSessionStateInput = {
+  eq?: GameSessionState | null,
+  ne?: GameSessionState | null,
+};
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type UpdateGameSessionInput = {
@@ -248,7 +382,7 @@ export type DeleteGameSessionInput = {
 export type CreateQuestionInput = {
   id?: number | null,
   text: string,
-  choices?: string | null,
+  choices: string,
   imageUrl?: string | null,
   instructions?: string | null,
   standard?: string | null,
@@ -377,7 +511,7 @@ export type DeleteTeamMemberInput = {
 
 export type CreateTeamAnswerInput = {
   id?: string | null,
-  questionId: number,
+  questionId: string,
   isChosen: boolean,
   text: string,
   isTrickAnswer: boolean,
@@ -386,7 +520,7 @@ export type CreateTeamAnswerInput = {
 };
 
 export type ModelTeamAnswerConditionInput = {
-  questionId?: ModelIntInput | null,
+  questionId?: ModelIDInput | null,
   isChosen?: ModelBooleanInput | null,
   text?: ModelStringInput | null,
   isTrickAnswer?: ModelBooleanInput | null,
@@ -404,7 +538,7 @@ export type ModelConfidenceLevelInput = {
 
 export type UpdateTeamAnswerInput = {
   id: string,
-  questionId?: number | null,
+  questionId?: string | null,
   isChosen?: boolean | null,
   text?: string | null,
   isTrickAnswer?: boolean | null,
@@ -415,6 +549,56 @@ export type UpdateTeamAnswerInput = {
 export type DeleteTeamAnswerInput = {
   id: string,
 };
+
+export type ModelGameFilterInput = {
+  id?: ModelIDInput | null,
+  phaseOneTime?: ModelIntInput | null,
+  phaseTwoTime?: ModelIntInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  and?: Array< ModelGameFilterInput | null > | null,
+  or?: Array< ModelGameFilterInput | null > | null,
+  not?: ModelGameFilterInput | null,
+};
+
+export type ModelGameConnection = {
+  __typename: "ModelGameConnection",
+  items:  Array<Game | null >,
+  nextToken?: string | null,
+};
+
+export type ModelIDKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
+export type ModelGameQuestionFilterInput = {
+  id?: ModelIDInput | null,
+  text?: ModelStringInput | null,
+  choices?: ModelStringInput | null,
+  imageUrl?: ModelStringInput | null,
+  instructions?: ModelStringInput | null,
+  cluster?: ModelStringInput | null,
+  domain?: ModelStringInput | null,
+  grade?: ModelStringInput | null,
+  standard?: ModelStringInput | null,
+  gameId?: ModelIDInput | null,
+  and?: Array< ModelGameQuestionFilterInput | null > | null,
+  or?: Array< ModelGameQuestionFilterInput | null > | null,
+  not?: ModelGameQuestionFilterInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
 
 export type ModelGameSessionFilterInput = {
   id?: ModelIDInput | null,
@@ -473,12 +657,6 @@ export type ModelQuestionFilterInput = {
   not?: ModelQuestionFilterInput | null,
 };
 
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
 export type ModelTeamFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -505,7 +683,7 @@ export type ModelTeamMemberFilterInput = {
 
 export type ModelTeamAnswerFilterInput = {
   id?: ModelIDInput | null,
-  questionId?: ModelIntInput | null,
+  questionId?: ModelIDInput | null,
   isChosen?: ModelBooleanInput | null,
   text?: ModelStringInput | null,
   isTrickAnswer?: ModelBooleanInput | null,
@@ -600,13 +778,196 @@ export type ModelSubscriptionTeamMemberFilterInput = {
 
 export type ModelSubscriptionTeamAnswerFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  questionId?: ModelSubscriptionIntInput | null,
+  questionId?: ModelSubscriptionIDInput | null,
   isChosen?: ModelSubscriptionBooleanInput | null,
   text?: ModelSubscriptionStringInput | null,
   isTrickAnswer?: ModelSubscriptionBooleanInput | null,
   confidenceLevel?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
   or?: Array< ModelSubscriptionTeamAnswerFilterInput | null > | null,
+};
+
+export type CreateGameMutationVariables = {
+  input: CreateGameInput,
+  condition?: ModelGameConditionInput | null,
+};
+
+export type CreateGameMutation = {
+  createGame?:  {
+    __typename: "Game",
+    id: string,
+    phaseOneTime?: number | null,
+    phaseTwoTime?: number | null,
+    title?: string | null,
+    description?: string | null,
+    imageUrl?: string | null,
+    questions?:  {
+      __typename: "ModelGameQuestionConnection",
+      items:  Array< {
+        __typename: "GameQuestion",
+        id: string,
+        text: string,
+        choices: string,
+        imageUrl?: string | null,
+        instructions?: string | null,
+        cluster?: string | null,
+        domain?: string | null,
+        grade?: string | null,
+        standard?: string | null,
+        gameId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateGameMutationVariables = {
+  input: UpdateGameInput,
+  condition?: ModelGameConditionInput | null,
+};
+
+export type UpdateGameMutation = {
+  updateGame?:  {
+    __typename: "Game",
+    id: string,
+    phaseOneTime?: number | null,
+    phaseTwoTime?: number | null,
+    title?: string | null,
+    description?: string | null,
+    imageUrl?: string | null,
+    questions?:  {
+      __typename: "ModelGameQuestionConnection",
+      items:  Array< {
+        __typename: "GameQuestion",
+        id: string,
+        text: string,
+        choices: string,
+        imageUrl?: string | null,
+        instructions?: string | null,
+        cluster?: string | null,
+        domain?: string | null,
+        grade?: string | null,
+        standard?: string | null,
+        gameId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteGameMutationVariables = {
+  input: DeleteGameInput,
+  condition?: ModelGameConditionInput | null,
+};
+
+export type DeleteGameMutation = {
+  deleteGame?:  {
+    __typename: "Game",
+    id: string,
+    phaseOneTime?: number | null,
+    phaseTwoTime?: number | null,
+    title?: string | null,
+    description?: string | null,
+    imageUrl?: string | null,
+    questions?:  {
+      __typename: "ModelGameQuestionConnection",
+      items:  Array< {
+        __typename: "GameQuestion",
+        id: string,
+        text: string,
+        choices: string,
+        imageUrl?: string | null,
+        instructions?: string | null,
+        cluster?: string | null,
+        domain?: string | null,
+        grade?: string | null,
+        standard?: string | null,
+        gameId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateGameQuestionMutationVariables = {
+  input: CreateGameQuestionInput,
+  condition?: ModelGameQuestionConditionInput | null,
+};
+
+export type CreateGameQuestionMutation = {
+  createGameQuestion?:  {
+    __typename: "GameQuestion",
+    id: string,
+    text: string,
+    choices: string,
+    imageUrl?: string | null,
+    instructions?: string | null,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+    gameId: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateGameQuestionMutationVariables = {
+  input: UpdateGameQuestionInput,
+  condition?: ModelGameQuestionConditionInput | null,
+};
+
+export type UpdateGameQuestionMutation = {
+  updateGameQuestion?:  {
+    __typename: "GameQuestion",
+    id: string,
+    text: string,
+    choices: string,
+    imageUrl?: string | null,
+    instructions?: string | null,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+    gameId: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteGameQuestionMutationVariables = {
+  input: DeleteGameQuestionInput,
+  condition?: ModelGameQuestionConditionInput | null,
+};
+
+export type DeleteGameQuestionMutation = {
+  deleteGameQuestion?:  {
+    __typename: "GameQuestion",
+    id: string,
+    text: string,
+    choices: string,
+    imageUrl?: string | null,
+    instructions?: string | null,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+    gameId: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateGameSessionMutationVariables = {
@@ -632,7 +993,7 @@ export type CreateGameSessionMutation = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -653,7 +1014,7 @@ export type CreateGameSessionMutation = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -696,7 +1057,7 @@ export type CreateGameSessionMutation = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -736,7 +1097,7 @@ export type UpdateGameSessionMutation = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -757,7 +1118,7 @@ export type UpdateGameSessionMutation = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -800,7 +1161,7 @@ export type UpdateGameSessionMutation = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -840,7 +1201,7 @@ export type DeleteGameSessionMutation = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -861,7 +1222,7 @@ export type DeleteGameSessionMutation = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -904,7 +1265,7 @@ export type DeleteGameSessionMutation = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -931,7 +1292,7 @@ export type CreateQuestionMutation = {
     __typename: "Question",
     id: number,
     text: string,
-    choices?: string | null,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     standard?: string | null,
@@ -953,7 +1314,7 @@ export type UpdateQuestionMutation = {
     __typename: "Question",
     id: number,
     text: string,
-    choices?: string | null,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     standard?: string | null,
@@ -975,7 +1336,7 @@ export type DeleteQuestionMutation = {
     __typename: "Question",
     id: number,
     text: string,
-    choices?: string | null,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     standard?: string | null,
@@ -1001,7 +1362,7 @@ export type CreateTeamMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -1022,7 +1383,7 @@ export type CreateTeamMutation = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -1065,7 +1426,7 @@ export type UpdateTeamMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -1086,7 +1447,7 @@ export type UpdateTeamMutation = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -1129,7 +1490,7 @@ export type DeleteTeamMutation = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -1150,7 +1511,7 @@ export type DeleteTeamMutation = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -1194,7 +1555,7 @@ export type CreateTeamMemberMutation = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -1227,7 +1588,7 @@ export type UpdateTeamMemberMutation = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -1260,7 +1621,7 @@ export type DeleteTeamMemberMutation = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -1287,7 +1648,7 @@ export type CreateTeamAnswerMutation = {
   createTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,
@@ -1307,7 +1668,7 @@ export type UpdateTeamAnswerMutation = {
   updateTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,
@@ -1327,7 +1688,7 @@ export type DeleteTeamAnswerMutation = {
   deleteTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,
@@ -1335,6 +1696,140 @@ export type DeleteTeamAnswerMutation = {
     createdAt: string,
     updatedAt: string,
     teamMemberAnswersId?: string | null,
+  } | null,
+};
+
+export type GetGameQueryVariables = {
+  id: string,
+};
+
+export type GetGameQuery = {
+  getGame?:  {
+    __typename: "Game",
+    id: string,
+    phaseOneTime?: number | null,
+    phaseTwoTime?: number | null,
+    title?: string | null,
+    description?: string | null,
+    imageUrl?: string | null,
+    questions?:  {
+      __typename: "ModelGameQuestionConnection",
+      items:  Array< {
+        __typename: "GameQuestion",
+        id: string,
+        text: string,
+        choices: string,
+        imageUrl?: string | null,
+        instructions?: string | null,
+        cluster?: string | null,
+        domain?: string | null,
+        grade?: string | null,
+        standard?: string | null,
+        gameId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListGamesQueryVariables = {
+  filter?: ModelGameFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListGamesQuery = {
+  listGames?:  {
+    __typename: "ModelGameConnection",
+    items:  Array< {
+      __typename: "Game",
+      id: string,
+      phaseOneTime?: number | null,
+      phaseTwoTime?: number | null,
+      title?: string | null,
+      description?: string | null,
+      imageUrl?: string | null,
+      questions?:  {
+        __typename: "ModelGameQuestionConnection",
+        items:  Array< {
+          __typename: "GameQuestion",
+          id: string,
+          text: string,
+          choices: string,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          standard?: string | null,
+          gameId: string,
+          createdAt: string,
+          updatedAt: string,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetGameQuestionQueryVariables = {
+  id: string,
+  gameId: string,
+};
+
+export type GetGameQuestionQuery = {
+  getGameQuestion?:  {
+    __typename: "GameQuestion",
+    id: string,
+    text: string,
+    choices: string,
+    imageUrl?: string | null,
+    instructions?: string | null,
+    cluster?: string | null,
+    domain?: string | null,
+    grade?: string | null,
+    standard?: string | null,
+    gameId: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListGameQuestionsQueryVariables = {
+  id?: string | null,
+  gameId?: ModelIDKeyConditionInput | null,
+  filter?: ModelGameQuestionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListGameQuestionsQuery = {
+  listGameQuestions?:  {
+    __typename: "ModelGameQuestionConnection",
+    items:  Array< {
+      __typename: "GameQuestion",
+      id: string,
+      text: string,
+      choices: string,
+      imageUrl?: string | null,
+      instructions?: string | null,
+      cluster?: string | null,
+      domain?: string | null,
+      grade?: string | null,
+      standard?: string | null,
+      gameId: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -1360,7 +1855,7 @@ export type GetGameSessionQuery = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -1381,7 +1876,7 @@ export type GetGameSessionQuery = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -1424,7 +1919,7 @@ export type GetGameSessionQuery = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -1467,7 +1962,7 @@ export type ListGameSessionsQuery = {
             __typename: "Question",
             id: number,
             text: string,
-            choices?: string | null,
+            choices: string,
             imageUrl?: string | null,
             instructions?: string | null,
             standard?: string | null,
@@ -1488,7 +1983,7 @@ export type ListGameSessionsQuery = {
                 items:  Array< {
                   __typename: "TeamAnswer",
                   id: string,
-                  questionId: number,
+                  questionId: string,
                   isChosen: boolean,
                   text: string,
                   isTrickAnswer: boolean,
@@ -1531,7 +2026,7 @@ export type ListGameSessionsQuery = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -1561,7 +2056,7 @@ export type GetQuestionQuery = {
     __typename: "Question",
     id: number,
     text: string,
-    choices?: string | null,
+    choices: string,
     imageUrl?: string | null,
     instructions?: string | null,
     standard?: string | null,
@@ -1589,7 +2084,7 @@ export type ListQuestionsQuery = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -1616,7 +2111,7 @@ export type GetTeamQuery = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -1637,7 +2132,7 @@ export type GetTeamQuery = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -1683,7 +2178,7 @@ export type ListTeamsQuery = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -1704,7 +2199,7 @@ export type ListTeamsQuery = {
             items:  Array< {
               __typename: "TeamAnswer",
               id: string,
-              questionId: number,
+              questionId: string,
               isChosen: boolean,
               text: string,
               isTrickAnswer: boolean,
@@ -1749,7 +2244,7 @@ export type GetTeamMemberQuery = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -1785,7 +2280,7 @@ export type ListTeamMembersQuery = {
         items:  Array< {
           __typename: "TeamAnswer",
           id: string,
-          questionId: number,
+          questionId: string,
           isChosen: boolean,
           text: string,
           isTrickAnswer: boolean,
@@ -1813,7 +2308,7 @@ export type GetTeamAnswerQuery = {
   getTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,
@@ -1836,7 +2331,7 @@ export type ListTeamAnswersQuery = {
     items:  Array< {
       __typename: "TeamAnswer",
       id: string,
-      questionId: number,
+      questionId: string,
       isChosen: boolean,
       text: string,
       isTrickAnswer: boolean,
@@ -1877,7 +2372,7 @@ export type GameSessionByStateQuery = {
             __typename: "Question",
             id: number,
             text: string,
-            choices?: string | null,
+            choices: string,
             imageUrl?: string | null,
             instructions?: string | null,
             standard?: string | null,
@@ -1898,7 +2393,7 @@ export type GameSessionByStateQuery = {
                 items:  Array< {
                   __typename: "TeamAnswer",
                   id: string,
-                  questionId: number,
+                  questionId: string,
                   isChosen: boolean,
                   text: string,
                   isTrickAnswer: boolean,
@@ -1941,7 +2436,7 @@ export type GameSessionByStateQuery = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -1988,7 +2483,7 @@ export type GameSessionByCodeQuery = {
             __typename: "Question",
             id: number,
             text: string,
-            choices?: string | null,
+            choices: string,
             imageUrl?: string | null,
             instructions?: string | null,
             standard?: string | null,
@@ -2009,7 +2504,7 @@ export type GameSessionByCodeQuery = {
                 items:  Array< {
                   __typename: "TeamAnswer",
                   id: string,
-                  questionId: number,
+                  questionId: string,
                   isChosen: boolean,
                   text: string,
                   isTrickAnswer: boolean,
@@ -2052,7 +2547,7 @@ export type GameSessionByCodeQuery = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -2093,7 +2588,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -2114,7 +2609,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -2157,7 +2652,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -2188,7 +2683,7 @@ export type OnTeamMemberUpdateByTeamIdSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -2219,7 +2714,7 @@ export type OnTeamCreateByGameSessionIdSubscription = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -2240,7 +2735,7 @@ export type OnTeamCreateByGameSessionIdSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -2282,7 +2777,7 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -2303,7 +2798,7 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -2354,7 +2849,7 @@ export type OnCreateGameSessionSubscription = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -2375,7 +2870,7 @@ export type OnCreateGameSessionSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -2418,7 +2913,7 @@ export type OnCreateGameSessionSubscription = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -2457,7 +2952,7 @@ export type OnUpdateGameSessionSubscription = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -2478,7 +2973,7 @@ export type OnUpdateGameSessionSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -2521,7 +3016,7 @@ export type OnUpdateGameSessionSubscription = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -2560,7 +3055,7 @@ export type OnDeleteGameSessionSubscription = {
           __typename: "Question",
           id: number,
           text: string,
-          choices?: string | null,
+          choices: string,
           imageUrl?: string | null,
           instructions?: string | null,
           standard?: string | null,
@@ -2581,7 +3076,7 @@ export type OnDeleteGameSessionSubscription = {
               items:  Array< {
                 __typename: "TeamAnswer",
                 id: string,
-                questionId: number,
+                questionId: string,
                 isChosen: boolean,
                 text: string,
                 isTrickAnswer: boolean,
@@ -2624,7 +3119,7 @@ export type OnDeleteGameSessionSubscription = {
         __typename: "Question",
         id: number,
         text: string,
-        choices?: string | null,
+        choices: string,
         imageUrl?: string | null,
         instructions?: string | null,
         standard?: string | null,
@@ -2654,7 +3149,7 @@ export type OnCreateTeamSubscription = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -2675,7 +3170,7 @@ export type OnCreateTeamSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -2717,7 +3212,7 @@ export type OnUpdateTeamSubscription = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -2738,7 +3233,7 @@ export type OnUpdateTeamSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -2780,7 +3275,7 @@ export type OnDeleteTeamSubscription = {
       __typename: "Question",
       id: number,
       text: string,
-      choices?: string | null,
+      choices: string,
       imageUrl?: string | null,
       instructions?: string | null,
       standard?: string | null,
@@ -2801,7 +3296,7 @@ export type OnDeleteTeamSubscription = {
           items:  Array< {
             __typename: "TeamAnswer",
             id: string,
-            questionId: number,
+            questionId: string,
             isChosen: boolean,
             text: string,
             isTrickAnswer: boolean,
@@ -2844,7 +3339,7 @@ export type OnCreateTeamMemberSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -2876,7 +3371,7 @@ export type OnUpdateTeamMemberSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -2908,7 +3403,7 @@ export type OnDeleteTeamMemberSubscription = {
       items:  Array< {
         __typename: "TeamAnswer",
         id: string,
-        questionId: number,
+        questionId: string,
         isChosen: boolean,
         text: string,
         isTrickAnswer: boolean,
@@ -2934,7 +3429,7 @@ export type OnCreateTeamAnswerSubscription = {
   onCreateTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,
@@ -2953,7 +3448,7 @@ export type OnUpdateTeamAnswerSubscription = {
   onUpdateTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,
@@ -2972,7 +3467,7 @@ export type OnDeleteTeamAnswerSubscription = {
   onDeleteTeamAnswer?:  {
     __typename: "TeamAnswer",
     id: string,
-    questionId: number,
+    questionId: string,
     isChosen: boolean,
     text: string,
     isTrickAnswer: boolean,

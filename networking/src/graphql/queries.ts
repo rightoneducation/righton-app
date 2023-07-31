@@ -2,6 +2,138 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getGame = /* GraphQL */ `
+  query GetGame($id: ID!) {
+    getGame(id: $id) {
+      id
+      phaseOneTime
+      phaseTwoTime
+      title
+      description
+      imageUrl
+      questions {
+        items {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          cluster
+          domain
+          grade
+          standard
+          gameId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listGames = /* GraphQL */ `
+  query ListGames(
+    $filter: ModelGameFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGames(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        phaseOneTime
+        phaseTwoTime
+        title
+        description
+        imageUrl
+        questions {
+          items {
+            id
+            text
+            choices
+            imageUrl
+            instructions
+            cluster
+            domain
+            grade
+            standard
+            gameId
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getGameQuestion = /* GraphQL */ `
+  query GetGameQuestion($id: ID!, $gameId: ID!) {
+    getGameQuestion(id: $id, gameId: $gameId) {
+      id
+      text
+      choices
+      imageUrl
+      instructions
+      cluster
+      domain
+      grade
+      standard
+      gameId
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listGameQuestions = /* GraphQL */ `
+  query ListGameQuestions(
+    $id: ID
+    $gameId: ModelIDKeyConditionInput
+    $filter: ModelGameQuestionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listGameQuestions(
+      id: $id
+      gameId: $gameId
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        text
+        choices
+        imageUrl
+        instructions
+        cluster
+        domain
+        grade
+        standard
+        gameId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getGameSession = /* GraphQL */ `
   query GetGameSession($id: ID!) {
     getGameSession(id: $id) {

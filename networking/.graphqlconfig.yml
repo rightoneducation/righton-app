@@ -1,6 +1,6 @@
 projects:
   mobile:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/mobile/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:
@@ -8,7 +8,7 @@ projects:
     extensions:
       amplify:
         codeGenTarget: typescript
-        generatedFileName: src/AWSMobileApi.ts
+        generatedFileName: src/GraphQLAPI.ts
         docsFilePath: src/graphql
         maxDepth: 8
 extensions:
