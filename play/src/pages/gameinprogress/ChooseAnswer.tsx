@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Grid, Collapse, Fade, Box } from '@mui/material';
+import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { GameSessionState, ConfidenceLevel } from '@righton/networking';
+import { ConfidenceLevel, GameSessionState } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -25,7 +25,7 @@ interface ChooseAnswerProps {
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
   selectedConfidenceOption: number | null;
-  handleSelectConfidence: (index: number, confidence: ConfidenceLevel) => void;
+  handleSelectConfidence: (option: number, confidence: ConfidenceLevel) => void;
   isConfidenceSelected: boolean;
   timeOfLastConfidenceSelect: number | null;
   setTimeOfLastConfidenceSelect: (time: number | null) => void;

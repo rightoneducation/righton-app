@@ -124,6 +124,7 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
+  const [teamAnswerId, setTeamAnswerId] = useState<string>(''); // This will be moved later (work in progress - Drew)
   const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{
     selectedAnswerIndex: number | null;
     isSubmitted: boolean;
@@ -141,11 +142,8 @@ export default function GameInProgress({
   // TODO: handle case where player is rejoining
   const [isConfidenceSelected, setIsConfidenceSelected] =
     useState<boolean>(false);
-  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<
-    number | null
-  >(null);
+  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<number | null>(null);
   const [timeOfLastConfidenceSelect, setTimeOfLastConfidenceSelect] = useState<number | null>(null);
-  const [teamAnswerId, setTeamAnswerId] = useState<string>(''); // this will be changed later -Drew
 
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
@@ -183,8 +181,7 @@ export default function GameInProgress({
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
       setSelectedConfidenceOption(index);
       setIsConfidenceSelected(true);
-    }
-    catch {
+    } catch {
       setIsError(true);
     }
   };
