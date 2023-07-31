@@ -1,861 +1,433 @@
-import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api"
-import { Amplify, API, graphqlOperation } from "aws-amplify"
-import awsconfig from "./aws-exports"
+import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
+import { Amplify, API, graphqlOperation } from "aws-amplify";
+import awsconfig from "./aws-exports";
 import {
-    ConfidenceLevel,
-    CreateTeamAnswerInput, CreateTeamAnswerMutation,
-    CreateTeamAnswerMutationVariables, CreateTeamInput,
-    CreateTeamMemberInput,
-    CreateTeamMemberMutation,
-    CreateTeamMemberMutationVariables,
-    CreateTeamMutation,
-    CreateTeamMutationVariables,
-    GameSessionState,
-    OnCreateTeamAnswerSubscription,
-    OnCreateTeamSubscription,
-    OnDeleteTeamSubscription,
-    OnGameSessionUpdatedByIdSubscription,
-    OnUpdateGameSessionSubscription,
-    OnUpdateTeamMemberSubscription,
-    UpdateGameSessionInput,
-    UpdateGameSessionMutation,
-    UpdateGameSessionMutationVariables, UpdateTeamAnswerInput, UpdateTeamInput, UpdateTeamAnswerMutation, UpdateTeamAnswerMutationVariables, UpdateTeamMutation, UpdateTeamMutationVariables
-} from "./AWSMobileApi"
+  ConfidenceLevel,
+  CreateTeamAnswerInput,
+  CreateTeamAnswerMutation,
+  CreateTeamAnswerMutationVariables,
+  CreateTeamInput,
+  CreateTeamMemberInput,
+  CreateTeamMemberMutation,
+  CreateTeamMemberMutationVariables,
+  CreateTeamMutation,
+  CreateTeamMutationVariables,
+  OnCreateTeamAnswerSubscription,
+  OnCreateTeamSubscription,
+  OnDeleteTeamSubscription,
+  OnGameSessionUpdatedByIdSubscription,
+  OnUpdateTeamMemberSubscription,
+  UpdateGameSessionInput,
+  UpdateGameSessionMutation,
+  UpdateGameSessionMutationVariables,
+  UpdateTeamAnswerInput,
+  UpdateTeamInput,
+  UpdateTeamAnswerMutation,
+  UpdateTeamAnswerMutationVariables,
+  UpdateTeamMutation,
+  UpdateTeamMutationVariables,
+} from "./GraphQLAPI";
 import {
-    gameSessionByCode,
-    getGameSession,
-    getTeam,
-    onCreateTeam,
-    onCreateTeamAnswer,
-    onDeleteTeam,
-    onGameSessionUpdatedById,
-    onUpdateTeamMember
-} from "./graphql"
+  gameSessionByCode,
+  getGameSession,
+  getTeam,
+  onCreateTeam,
+  onCreateTeamAnswer,
+  onDeleteTeam,
+  onGameSessionUpdatedById,
+  onUpdateTeamMember,
+} from "./graphql";
 import {
-    createTeam,
-    createTeamAnswer,
-    createTeamMember,
-    updateGameSession,
-    updateTeamAnswer,
-    updateTeam
-} from "./graphql/mutations"
-import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
-import { IGameSession } from "./Models/IGameSession"
-import { ITeam } from "./Models/ITeam"
+  createTeam,
+  createTeamAnswer,
+  createTeamMember,
+  updateGameSession,
+  updateTeamAnswer,
+  updateTeam,
+} from "./graphql/mutations";
+import { IApiClient, isNullOrUndefined } from "./IApiClient";
+import { AWSTeam, AWSTeamMember, ITeamAnswer, ITeamMember } from "./Models";
+import { IGameSession } from "./Models/IGameSession";
+import { ITeam } from "./Models/ITeam";
+import {
+  GameSessionParser,
+  TeamAnswerParser,
+  TeamMemberParser,
+  TeamParser,
+} from "./Parsers";
+import { Environment } from "./APIClients";
 
-Amplify.configure(awsconfig)
-
-export enum Environment {
-    Staging = "staging",
-}
+Amplify.configure(awsconfig);
 
 enum HTTPMethod {
-    Post = "POST",
+  Post = "POST",
 }
 
 interface GraphQLOptions {
-    input?: object
-    variables?: object
-    authMode?: GRAPHQL_AUTH_MODE
+  input?: object;
+  variables?: object;
+  authMode?: GRAPHQL_AUTH_MODE;
 }
 
 interface SubscriptionValue<T> {
-    value: {
-        data: T
-        errors: Array<any> | null
-    }
+  value: {
+    data: T;
+    errors: Array<any> | null;
+  };
 }
 
 export class ApiClient implements IApiClient {
-    private endpoint: string
+  private endpoint: string;
 
-    constructor(env: Environment) {
-        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
-    }
+  constructor(env: Environment) {
+    this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
+  }
 
-    createGameSession(
-        gameId: number,
-        isAdvancedMode: Boolean
-    ): Promise<IGameSession> {
-        return fetch(this.endpoint, {
-            method: HTTPMethod.Post,
-            headers: {
-                "content-type": "application/json",
-                connection: "keep-alive",
-                "Access-Control-Allow-Origin": "*",
-            },
-            body: JSON.stringify({
-                gameId: gameId,
-                isAdvancedMode: isAdvancedMode,
-            }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(response.statusText)
-                }
-                return response.json()
-            })
-            .then((response) => {
-                return GameSessionParser.gameSessionFromAWSGameSession(response)
-            })
-    }
-
-    async getGameSession(id: string): Promise<IGameSession> {
-        let result = (await API.graphql(
-            graphqlOperation(getGameSession, { id })
-        )) as { data: any }
-        return GameSessionParser.gameSessionFromAWSGameSession(
-            result.data.getGameSession
-        )
-    }
-
-    async getTeam(id: string): Promise<ITeam> {
-        let result = (await API.graphql(graphqlOperation(getTeam, { id }))) as {
-            data: any
+  createGameSession(
+    gameId: number,
+    isAdvancedMode: Boolean
+  ): Promise<IGameSession> {
+    return fetch(this.endpoint, {
+      method: HTTPMethod.Post,
+      headers: {
+        "content-type": "application/json",
+        connection: "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        gameId: gameId,
+        isAdvancedMode: isAdvancedMode,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
-        return TeamParser.teamFromAWSTeam(result.data.getTeam)
+        return response.json();
+      })
+      .then((response) => {
+        return GameSessionParser.gameSessionFromAWSGameSession(response);
+      });
+  }
+
+  async getGameSession(id: string): Promise<IGameSession> {
+    let result = (await API.graphql(
+      graphqlOperation(getGameSession, { id })
+    )) as { data: any };
+    return GameSessionParser.gameSessionFromAWSGameSession(
+      result.data.getGameSession
+    );
+  }
+
+  async getTeam(id: string): Promise<ITeam> {
+    let result = (await API.graphql(graphqlOperation(getTeam, { id }))) as {
+      data: any;
+    };
+    return TeamParser.teamFromAWSTeam(result.data.getTeam);
+  }
+
+  async updateGameSession(
+    awsGameSessionInput: UpdateGameSessionInput
+  ): Promise<IGameSession> {
+    let updateGameSessionInput: UpdateGameSessionInput = awsGameSessionInput;
+    let variables: UpdateGameSessionMutationVariables = {
+      input: updateGameSessionInput,
+    };
+    let result = await this.callGraphQL<UpdateGameSessionMutation>(
+      updateGameSession,
+      variables
+    );
+    if (result.errors != null) {
+      throw new Error(`failed to update game session: ${result.errors}`);
     }
 
-    async updateGameSession(
-        awsGameSessionInput: UpdateGameSessionInput
-    ): Promise<IGameSession> {
-        let updateGameSessionInput: UpdateGameSessionInput = awsGameSessionInput
-        let variables: UpdateGameSessionMutationVariables = {
-            input: updateGameSessionInput,
-        }
-        let result = await this.callGraphQL<UpdateGameSessionMutation>(
-            updateGameSession,
-            variables
-        )
-        if (result.errors != null) {
-            throw new Error(`failed to update game session: ${result.errors}`)
-        }
-
-        if (result.data == null) {
-            throw new Error("Failed to update the game session")
-        }
-
-        return this.mapUpdateGameSessionMutation(result.data)
+    if (result.data == null) {
+      throw new Error("Failed to update the game session");
     }
 
-    subscribeUpdateGameSession(
-        id: string,
-        callback: (result: IGameSession) => void
+    return this.mapUpdateGameSessionMutation(result.data);
+  }
+
+  subscribeUpdateGameSession(
+    id: string,
+    callback: (result: IGameSession) => void
+  ) {
+    return this.subscribeGraphQL<OnGameSessionUpdatedByIdSubscription>(
+      {
+        query: onGameSessionUpdatedById,
+        variables: {
+          id: id,
+        },
+      },
+      (value: OnGameSessionUpdatedByIdSubscription) => {
+        let gameSession = this.mapOnGameSessionUpdatedByIdSubscription(value);
+        callback(gameSession);
+      }
+    );
+  }
+
+  subscribeUpdateTeamMember(
+    id: string,
+    callback: (result: ITeamMember) => void
+  ) {
+    return this.subscribeGraphQL<OnUpdateTeamMemberSubscription>(
+      {
+        query: onUpdateTeamMember,
+        variables: {
+          id: id,
+        },
+      },
+      (value: OnUpdateTeamMemberSubscription) => {
+        let teamMember = this.mapOnUpdateTeamMemberSubscription(value);
+        callback(teamMember);
+      }
+    );
+  }
+
+  subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
+    return this.subscribeGraphQL<OnCreateTeamSubscription>(
+      {
+        query: onCreateTeam,
+        variables: {
+          id: id,
+        },
+      },
+      (value: OnCreateTeamSubscription) => {
+        let team = this.mapOnCreateTeamSubscription(value);
+        callback(team);
+      }
+    );
+  }
+
+  subscribeDeleteTeam(id: string, callback: (result: ITeam) => void) {
+    return this.subscribeGraphQL<OnDeleteTeamSubscription>(
+      {
+        query: onDeleteTeam,
+        variables: {
+          id: id,
+        },
+      },
+      (value: OnDeleteTeamSubscription) => {
+        let team = this.mapOnDeleteTeamSubscription(value);
+        callback(team);
+      }
+    );
+  }
+
+  subscribeCreateTeamAnswer(
+    id: string,
+    callback: (result: ITeamAnswer) => void
+  ) {
+    return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
+      {
+        query: onCreateTeamAnswer,
+        variables: {
+          id: id,
+        },
+      },
+      (value: OnCreateTeamAnswerSubscription) => {
+        let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value);
+        callback(teamAnswer);
+      }
+    );
+  }
+
+  async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
+    let result = (await API.graphql(
+      graphqlOperation(gameSessionByCode, { gameCode })
+    )) as { data: any };
+    if (
+      isNullOrUndefined(result.data) ||
+      isNullOrUndefined(result.data.gameSessionByCode) ||
+      isNullOrUndefined(result.data.gameSessionByCode.items) ||
+      result.data.gameSessionByCode.items.length == 0
     ) {
-        return this.subscribeGraphQL<OnGameSessionUpdatedByIdSubscription>(
-            {
-                query: onGameSessionUpdatedById,
-                variables: {
-                    id: id,
-                },
-            },
-            (value: OnGameSessionUpdatedByIdSubscription) => {
-                let gameSession =
-                    this.mapOnGameSessionUpdatedByIdSubscription(value)
-                callback(gameSession)
-            }
-        )
+      return null;
     }
+    if (result.data.gameSessionByCode.items.length > 1) {
+      throw new Error(`Multiple game sessions exist for ${gameCode}`);
+    }
+    return GameSessionParser.gameSessionFromAWSGameSession(
+      result.data.gameSessionByCode.items[0]
+    );
+  }
 
-    subscribeUpdateTeamMember(
-        id: string,
-        callback: (result: ITeamMember) => void
+  async addTeamToGameSessionId(
+    gameSessionId: string,
+    name: string,
+    questionId: string | null
+  ): Promise<ITeam> {
+    const input: CreateTeamInput = {
+      name,
+      score: 0,
+      selectedAvatarIndex: 0,
+      teamQuestionId: questionId,
+      gameSessionTeamsId: gameSessionId,
+      teamQuestionGameSessionId: gameSessionId,
+    };
+    const variables: CreateTeamMutationVariables = { input };
+    const team = await this.callGraphQL<CreateTeamMutation>(
+      createTeam,
+      variables
+    );
+    if (
+      isNullOrUndefined(team.data) ||
+      isNullOrUndefined(team.data.createTeam)
     ) {
-        return this.subscribeGraphQL<OnUpdateTeamMemberSubscription>(
-            {
-                query: onUpdateTeamMember,
-                variables: {
-                    id: id,
-                },
-            },
-            (value: OnUpdateTeamMemberSubscription) => {
-                let teamMember = this.mapOnUpdateTeamMemberSubscription(value)
-                callback(teamMember)
-            }
-        )
+      throw new Error(`Failed to create team`);
     }
+    return TeamParser.teamFromAWSTeam(team.data.createTeam as AWSTeam);
+  }
 
-    subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
-        return this.subscribeGraphQL<OnCreateTeamSubscription>(
-            {
-                query: onCreateTeam,
-                variables: {
-                    id: id,
-                },
-            },
-            (value: OnCreateTeamSubscription) => {
-                let team = this.mapOnCreateTeamSubscription(value)
-                callback(team)
-            }
-        )
-    }
-
-    subscribeDeleteTeam(id: string, callback: (result: ITeam) => void) {
-        return this.subscribeGraphQL<OnDeleteTeamSubscription>(
-            {
-                query: onDeleteTeam,
-                variables: {
-                    id: id,
-                },
-            },
-            (value: OnDeleteTeamSubscription) => {
-                let team = this.mapOnDeleteTeamSubscription(value)
-                callback(team)
-            }
-        )
-    }
-
-    subscribeCreateTeamAnswer(
-        id: string,
-        callback: (result: ITeamAnswer) => void
+  async addTeamMemberToTeam(
+    teamId: string,
+    isFacilitator: boolean = false,
+    deviceId: string
+  ): Promise<ITeamMember> {
+    const input: CreateTeamMemberInput = {
+      isFacilitator,
+      deviceId,
+      teamTeamMembersId: teamId,
+    };
+    const variables: CreateTeamMemberMutationVariables = { input };
+    const member = await this.callGraphQL<CreateTeamMemberMutation>(
+      createTeamMember,
+      variables
+    );
+    if (
+      isNullOrUndefined(member.data) ||
+      isNullOrUndefined(member.data.createTeamMember)
     ) {
-        return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
-            {
-                query: onCreateTeamAnswer,
-                variables: {
-                    id: id,
-                },
-            },
-            (value: OnCreateTeamAnswerSubscription) => {
-                let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value)
-                callback(teamAnswer)
-            }
-        )
+      throw new Error(`Failed to create team member`);
     }
+    return TeamMemberParser.teamMemberFromAWSTeamMember(
+      member.data.createTeamMember as AWSTeamMember
+    );
+  }
 
-    async getGameSessionByCode(gameCode: number): Promise<IGameSession | null> {
-        let result = (await API.graphql(
-            graphqlOperation(gameSessionByCode, { gameCode })
-        )) as { data: any }
-        if (
-            isNullOrUndefined(result.data) ||
-            isNullOrUndefined(result.data.gameSessionByCode) ||
-            isNullOrUndefined(result.data.gameSessionByCode.items) ||
-            result.data.gameSessionByCode.items.length == 0
-        ) {
-            return null
-        }
-        if (result.data.gameSessionByCode.items.length > 1) {
-            throw new Error(`Multiple game sessions exist for ${gameCode}`)
-        }
-        return GameSessionParser.gameSessionFromAWSGameSession(
-            result.data.gameSessionByCode.items[0]
-        )
-    }
-
-    async addTeamToGameSessionId(
-        gameSessionId: string,
-        name: string,
-        questionId: string | null
-    ): Promise<ITeam> {
-        const input: CreateTeamInput = {
-            name,
-            score: 0,
-            selectedAvatarIndex: 0,
-            teamQuestionId: questionId,
-            gameSessionTeamsId: gameSessionId,
-            teamQuestionGameSessionId: gameSessionId,
-        }
-        const variables: CreateTeamMutationVariables = { input }
-        const team = await this.callGraphQL<CreateTeamMutation>(
-            createTeam,
-            variables
-        )
-        if (
-            isNullOrUndefined(team.data) ||
-            isNullOrUndefined(team.data.createTeam)
-        ) {
-            throw new Error(`Failed to create team`)
-        }
-        return TeamParser.teamFromAWSTeam(team.data.createTeam as AWSTeam)
-    }
-
-    async addTeamMemberToTeam(
-        teamId: string,
-        isFacilitator: boolean = false,
-        deviceId: string
-    ): Promise<ITeamMember> {
-        const input: CreateTeamMemberInput = {
-            isFacilitator,
-            deviceId,
-            teamTeamMembersId: teamId,
-        }
-        const variables: CreateTeamMemberMutationVariables = { input }
-        const member = await this.callGraphQL<CreateTeamMemberMutation>(
-            createTeamMember,
-            variables
-        )
-        if (
-            isNullOrUndefined(member.data) ||
-            isNullOrUndefined(member.data.createTeamMember)
-        ) {
-            throw new Error(`Failed to create team member`)
-        }
-        return TeamMemberParser.teamMemberFromAWSTeamMember(member.data.createTeamMember as AWSTeamMember)
-    }
-
-    async addTeamAnswer(
-        teamMemberId: string,
-        questionId: number,
-        text: string,
-        isChosen: boolean = false,
-        isTrickAnswer: boolean = false
-    ): Promise<ITeamAnswer> {
-        const input: CreateTeamAnswerInput = {
-            questionId,
-            isChosen,
-            isTrickAnswer,
-            text,
-            teamMemberAnswersId: teamMemberId,
-            confidenceLevel: ConfidenceLevel.NOT_RATED
-        }
-        const variables: CreateTeamAnswerMutationVariables = { input }
-        const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
-            createTeamAnswer,
-            variables
-        )
-        if (
-            isNullOrUndefined(answer.data) ||
-            isNullOrUndefined(answer.data.createTeamAnswer)
-        ) {
-            throw new Error(`Failed to create team answer`)
-        }
-        return answer.data.createTeamAnswer as ITeamAnswer
-    }
-
-    async updateTeamAnswer(
-        teamAnswerId: string,
-        isChosen: boolean | null = null
-    ): Promise<ITeamAnswer> {
-        const input: UpdateTeamAnswerInput = {
-            id: teamAnswerId,
-            isChosen,
-        }
-        const variables: UpdateTeamAnswerMutationVariables = { input }
-        const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
-            updateTeamAnswer,
-            variables
-        )
-        if (
-            isNullOrUndefined(answer.data) ||
-            isNullOrUndefined(answer.data.updateTeamAnswer)
-        ) {
-            throw new Error(`Failed to update team answer`)
-        }
-        return answer.data.updateTeamAnswer as ITeamAnswer
-    }
-
-    async updateTeam(
-      teamInput: UpdateTeamInput
-    ): Promise<ITeam> {
-        const input: UpdateTeamInput = teamInput
-        const variables: UpdateTeamMutationVariables = { input }
-        const team = await this.callGraphQL<UpdateTeamMutation>(
-            updateTeam,
-            variables
-        )
-        if (
-            isNullOrUndefined(team.data) ||
-            isNullOrUndefined(team.data.updateTeam)
-        ) {
-            throw new Error(`Failed to update team`)
-        }
-        return team.data.updateTeam as ITeam
-    }
-
-
-    // Private methods
-    private subscribeGraphQL<T>(
-        subscription: any,
-        callback: (value: T) => void
+  async addTeamAnswer(
+    teamMemberId: string,
+    questionId: string,
+    text: string,
+    isChosen: boolean = false,
+    isTrickAnswer: boolean = false
+  ): Promise<ITeamAnswer> {
+    const input: CreateTeamAnswerInput = {
+      questionId,
+      isChosen,
+      isTrickAnswer,
+      text,
+      teamMemberAnswersId: teamMemberId,
+      confidenceLevel: ConfidenceLevel.NOT_RATED,
+    };
+    const variables: CreateTeamAnswerMutationVariables = { input };
+    const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
+      createTeamAnswer,
+      variables
+    );
+    if (
+      isNullOrUndefined(answer.data) ||
+      isNullOrUndefined(answer.data.createTeamAnswer)
     ) {
-        //@ts-ignore
-        return API.graphql(subscription).subscribe({
-            next: (response: SubscriptionValue<T>) => {
-                if (!isNullOrUndefined(response.value.errors)) {
-                    console.error(response.value.errors)
-                }
-                callback(response.value.data)
-            },
-            error: (error: any) => console.warn(error),
-        })
+      throw new Error(`Failed to create team answer`);
     }
+    return answer.data.createTeamAnswer as ITeamAnswer;
+  }
 
-    private async callGraphQL<T>(
-        query: any,
-        options?: GraphQLOptions
-    ): Promise<GraphQLResult<T>> {
-        return (await API.graphql(
-            graphqlOperation(query, options)
-        )) as GraphQLResult<T>
+  async updateTeamAnswer(
+    teamAnswerId: string,
+    isChosen: boolean | null = null
+  ): Promise<ITeamAnswer> {
+    const input: UpdateTeamAnswerInput = {
+      id: teamAnswerId,
+      isChosen,
+    };
+    const variables: UpdateTeamAnswerMutationVariables = { input };
+    const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
+      updateTeamAnswer,
+      variables
+    );
+    if (
+      isNullOrUndefined(answer.data) ||
+      isNullOrUndefined(answer.data.updateTeamAnswer)
+    ) {
+      throw new Error(`Failed to update team answer`);
     }
+    return answer.data.updateTeamAnswer as ITeamAnswer;
+  }
 
-    private mapUpdateGameSessionMutation(
-        updateGameSession: UpdateGameSessionMutation
-    ): IGameSession {
-        return GameSessionParser.gameSessionFromMutation(updateGameSession)
+  async updateTeam(teamInput: UpdateTeamInput): Promise<ITeam> {
+    const input: UpdateTeamInput = teamInput;
+    const variables: UpdateTeamMutationVariables = { input };
+    const team = await this.callGraphQL<UpdateTeamMutation>(
+      updateTeam,
+      variables
+    );
+    if (
+      isNullOrUndefined(team.data) ||
+      isNullOrUndefined(team.data.updateTeam)
+    ) {
+      throw new Error(`Failed to update team`);
     }
+    return team.data.updateTeam as ITeam;
+  }
 
-    private mapOnGameSessionUpdatedByIdSubscription(
-        subscription: OnGameSessionUpdatedByIdSubscription
-    ): IGameSession {
-        return GameSessionParser.gameSessionFromSubscriptionById(subscription)
-    }
-
-    private mapOnCreateTeamSubscription(
-        subscription: OnCreateTeamSubscription
-    ): ITeam {
-        return TeamParser.teamFromCreateTeamSubscription(subscription)
-    }
-
-    private mapOnDeleteTeamSubscription(
-        subscription: OnDeleteTeamSubscription
-    ): ITeam {
-        return TeamParser.teamFromDeleteTeamSubscription(subscription)
-    }
-
-    private mapOnUpdateTeamMemberSubscription(
-        subscription: OnUpdateTeamMemberSubscription
-    ): ITeamMember {
-        return TeamMemberParser.teamMemberFromTeamMemberSubscription(
-            subscription
-        )
-    }
-
-    private mapOnCreateTeamAnswerSubscription(
-        subscription: OnCreateTeamAnswerSubscription
-    ): ITeamAnswer {
-        return TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(
-            subscription
-        )
-    }
-}
-
-type AWSGameSession = {
-    id: string
-    gameId: number
-    startTime?: string | null
-    phaseOneTime: number
-    phaseTwoTime: number
-    teams?: {
-        items: Array<AWSTeam | null>
-    } | null
-    currentQuestionIndex?: number | null
-    currentState: GameSessionState
-    gameCode: number
-    isAdvancedMode: boolean
-    imageUrl?: string | null
-    description?: string | null
-    title?: string | null
-    currentTimer?: number | null
-    questions?: {
-        items: Array<AWSQuestion | null>
-    } | null
-    createdAt: string
-    updatedAt: string
-}
-
-type AWSTeam = {
-    id: string
-    name: string
-    teamMembers?: {
-        items: Array<AWSTeamMember | null>
-    } | null
-    score: number
-    selectedAvatarIndex: number
-    createdAt: string
-    updatedAt?: string
-    gameSessionTeamsId?: string | null
-    teamQuestionId?: string | null
-    teamQuestionGameSessionId?: string | null
-}
-
-type AWSQuestion = {
-    id: number
-    text: string
-    choices?: string | null
-    imageUrl?: string | null
-    instructions?: string | null
-    standard?: string | null
-    cluster?: string | null
-    domain?: string | null
-    grade?: string | null
-    gameSessionId: string
-    order: number
-}
-
-type AWSTeamMember = {
-    id: string
-    isFacilitator?: boolean | null
-    answers?: {
-        items: Array<ITeamAnswer> | null
-    } | null
-    deviceId?: string | null
-    createdAt?: string | null
-    updatedAt?: string | null
-    teamTeamMembersId?: string | null
-}
-
-type AWSTeamAnswer = {
-    id: string
-    questionId?: number | null
-    isChosen: boolean
-    isTrickAnswer: boolean
-    text?: string | null
-    createdAt?: string
-    updatedAt?: string
-    teamMemberAnswersId?: string | null
-    confidenceLevel: ConfidenceLevel
-}
-
-export class GameSessionParser {
-    static gameSessionFromSubscription(
-        subscription: OnUpdateGameSessionSubscription
-    ): IGameSession {
-        const updateGameSession = subscription.onUpdateGameSession
-        if (isNullOrUndefined(updateGameSession)) {
-            throw new Error("subscription.onUpdateGameSession can't be null.")
+  // Private methods
+  private subscribeGraphQL<T>(subscription: any, callback: (value: T) => void) {
+    //@ts-ignore
+    return API.graphql(subscription).subscribe({
+      next: (response: SubscriptionValue<T>) => {
+        if (!isNullOrUndefined(response.value.errors)) {
+          console.error(response.value.errors);
         }
-        //@ts-ignore
-        return this.gameSessionFromAWSGameSession(updateGameSession)
-    }
+        callback(response.value.data);
+      },
+      error: (error: any) => console.warn(error),
+    });
+  }
 
-    static gameSessionFromMutation(mutation: UpdateGameSessionMutation) {
-        const updateGameSession = mutation.updateGameSession
-        if (isNullOrUndefined(updateGameSession)) {
-            throw new Error("mutation.updateGameSession can't be null.")
-        }
-        //@ts-ignore
-        return this.gameSessionFromAWSGameSession(updateGameSession)
-    }
+  private async callGraphQL<T>(
+    query: any,
+    options?: GraphQLOptions
+  ): Promise<GraphQLResult<T>> {
+    return (await API.graphql(
+      graphqlOperation(query, options)
+    )) as GraphQLResult<T>;
+  }
 
-    static gameSessionFromAWSGameSession(
-        awsGameSession: AWSGameSession
-    ): IGameSession {
-        const {
-            id,
-            gameId,
-            startTime,
-            phaseOneTime,
-            phaseTwoTime,
-            teams,
-            currentQuestionIndex,
-            currentState,
-            gameCode,
-            questions,
-            currentTimer,
-            updatedAt,
-            createdAt,
-            title,
-            isAdvancedMode,
-        } = awsGameSession || {}
-        if (
-            isNullOrUndefined(id) ||
-            isNullOrUndefined(currentState) ||
-            isNullOrUndefined(gameCode) ||
-            isNullOrUndefined(gameId) ||
-            isNullOrUndefined(phaseOneTime) ||
-            isNullOrUndefined(phaseTwoTime) ||
-            isNullOrUndefined(questions) ||
-            isNullOrUndefined(questions.items) ||
-            isNullOrUndefined(updatedAt) ||
-            isNullOrUndefined(createdAt) ||
-            isNullOrUndefined(isAdvancedMode)
-        ) {
-            throw new Error(
-                "GameSession has null field for the attributes that are not nullable"
-            )
-        }
+  private mapUpdateGameSessionMutation(
+    updateGameSession: UpdateGameSessionMutation
+  ): IGameSession {
+    return GameSessionParser.gameSessionFromMutation(updateGameSession);
+  }
 
-        const gameSession: IGameSession = {
-            id,
-            gameId,
-            startTime,
-            phaseOneTime,
-            phaseTwoTime,
-            teams: GameSessionParser.mapTeams(teams),
-            currentQuestionIndex,
-            currentState,
-            gameCode,
-            currentTimer,
-            questions: GameSessionParser.mapQuestions(questions.items),
-            isAdvancedMode,
-            updatedAt,
-            createdAt,
-            title,
-        }
-        return gameSession
-    }
+  private mapOnGameSessionUpdatedByIdSubscription(
+    subscription: OnGameSessionUpdatedByIdSubscription
+  ): IGameSession {
+    return GameSessionParser.gameSessionFromSubscriptionById(subscription);
+  }
 
-    static gameSessionFromSubscriptionById(
-        subscription: OnGameSessionUpdatedByIdSubscription
-    ): IGameSession {
-        const updateGameSession = subscription.onGameSessionUpdatedById
-        if (isNullOrUndefined(updateGameSession)) {
-            throw new Error("subscription.onUpdateGameSession can't be null.")
-        }
-        //@ts-ignore
-        return this.gameSessionFromAWSGameSession(updateGameSession)
-    }
+  private mapOnCreateTeamSubscription(
+    subscription: OnCreateTeamSubscription
+  ): ITeam {
+    return TeamParser.teamFromCreateTeamSubscription(subscription);
+  }
 
-    static mapTeams(
-        awsTeams: { items: (AWSTeam | null)[] } | null | undefined
-    ): Array<ITeam> {
-        if (isNullOrUndefined(awsTeams) || isNullOrUndefined(awsTeams.items)) {
-            return []
-        }
-        return awsTeams.items.map((awsTeam) => {
-            if (isNullOrUndefined(awsTeam)) {
-                throw new Error("Team can't be null in the backend.")
-            }
+  private mapOnDeleteTeamSubscription(
+    subscription: OnDeleteTeamSubscription
+  ): ITeam {
+    return TeamParser.teamFromDeleteTeamSubscription(subscription);
+  }
 
-            const team: ITeam = {
-                id: awsTeam.id,
-                name: awsTeam.name,
-                teamQuestionId: awsTeam.teamQuestionId,
-                score: awsTeam.score,
-                selectedAvatarIndex: awsTeam.selectedAvatarIndex,
-                createdAt: awsTeam.createdAt,
-                updatedAt: awsTeam.updatedAt,
-                gameSessionTeamsId: awsTeam.gameSessionTeamsId,
-                teamQuestionGameSessionId: awsTeam.teamQuestionGameSessionId,
-                teamMembers: TeamMemberParser.mapTeamMembers(
-                    awsTeam.teamMembers?.items
-                ),
-            }
-            return team
-        })
-    }
+  private mapOnUpdateTeamMemberSubscription(
+    subscription: OnUpdateTeamMemberSubscription
+  ): ITeamMember {
+    return TeamMemberParser.teamMemberFromTeamMemberSubscription(subscription);
+  }
 
-    private static parseServerArray<T>(input: any | T[]): Array<T> {
-        if (input instanceof Array) {
-            return input as T[]
-        } else if (typeof input === "string") {
-            return JSON.parse(input as string)
-        }
-        return []
-    }
-
-    private static mapQuestions(
-        awsQuestions: Array<AWSQuestion | null>
-    ): Array<IQuestion> {
-        return awsQuestions
-            .map((awsQuestion) => {
-                if (isNullOrUndefined(awsQuestion)) {
-                    throw new Error("Question cannot be null.")
-                }
-                const question: IQuestion = {
-                    id: awsQuestion.id,
-                    text: awsQuestion.text,
-                    choices: isNullOrUndefined(awsQuestion.choices)
-                        ? []
-                        : this.parseServerArray<IChoice>(awsQuestion.choices),
-                    imageUrl: awsQuestion.imageUrl,
-                    instructions: isNullOrUndefined(awsQuestion.instructions)
-                        ? []
-                        : this.parseServerArray<string>(
-                            awsQuestion.instructions
-                        ),
-                    standard: awsQuestion.standard,
-                    cluster: awsQuestion.cluster,
-                    domain: awsQuestion.domain,
-                    grade: awsQuestion.grade,
-                    gameSessionId: awsQuestion.gameSessionId,
-                    order: awsQuestion.order,
-                }
-                return question
-            })
-            .sort((lhs, rhs) => {
-                return lhs.order - rhs.order
-            })
-    }
-}
-
-class TeamParser {
-    static teamFromCreateTeamSubscription(
-        subscription: OnCreateTeamSubscription
-    ): ITeam {
-        const createTeam = subscription.onCreateTeam
-        if (isNullOrUndefined(createTeam)) {
-            throw new Error(
-                "subscription.teamFromCreateTeamSubscription can't be null."
-            )
-        }
-        //@ts-ignore
-        return this.teamFromAWSTeam(createTeam)
-    }
-
-    static teamFromDeleteTeamSubscription(
-        subscription: OnDeleteTeamSubscription
-    ): ITeam {
-        const deleteTeam = subscription.onDeleteTeam
-        if (isNullOrUndefined(deleteTeam)) {
-            throw new Error(
-                "subscription.teamFromDeleteTeamSubscription can't be null."
-            )
-        }
-        //@ts-ignore
-        return this.teamFromAWSTeam(deleteTeam)
-    }
-
-    static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
-        const {
-            id,
-            name,
-            teamMembers,
-            score,
-            selectedAvatarIndex,
-            createdAt,
-            updatedAt,
-            gameSessionTeamsId,
-            teamQuestionId,
-            teamQuestionGameSessionId,
-        } = awsTeam || {}
-
-        if (isNullOrUndefined(id)) {
-            throw new Error(
-                "Team has null field for the attributes that are not nullable"
-            )
-        }
-
-        const team: ITeam = {
-            id,
-            name,
-            teamMembers: TeamMemberParser.mapTeamMembers(teamMembers?.items),
-            score,
-            selectedAvatarIndex,
-            createdAt,
-            updatedAt,
-            gameSessionTeamsId,
-            teamQuestionId,
-            teamQuestionGameSessionId,
-        }
-        return team
-    }
-}
-
-class TeamMemberParser {
-    static teamMemberFromTeamMemberSubscription(
-        subscription: OnUpdateTeamMemberSubscription
-    ): ITeamMember {
-        const updateTeamMember = subscription.onUpdateTeamMember
-        if (isNullOrUndefined(updateTeamMember)) {
-            throw new Error("subscription.onUpdateGameSession can't be null.")
-        }
-        //@ts-ignore
-        return this.teamMemberFromAWSTeamMember(updateTeamMember)
-    }
-
-    static mapTeamMembers(
-        awsTeamMembers: Array<AWSTeamMember | null> | null | undefined
-    ): Array<ITeamMember> {
-        if (isNullOrUndefined(awsTeamMembers)) {
-            return []
-        }
-
-        return awsTeamMembers.map((awsTeamMember) => {
-            if (isNullOrUndefined(awsTeamMember)) {
-                throw new Error("Team can't be null in the backend.")
-            }
-            return this.teamMemberFromAWSTeamMember(awsTeamMember)
-        })
-    }
-
-    static teamMemberFromAWSTeamMember(
-        awsTeamMember: AWSTeamMember
-    ): ITeamMember {
-        const {
-            id,
-            isFacilitator,
-            answers,
-            deviceId,
-            createdAt,
-            updatedAt,
-            teamTeamMembersId,
-        } = awsTeamMember || {}
-
-        if (isNullOrUndefined(id) || isNullOrUndefined(teamTeamMembersId)) {
-            throw new Error(
-                "Team member has null field for the attributes that are not nullable"
-            )
-        }
-
-        const teamMember: ITeamMember = {
-            id,
-            isFacilitator,
-            answers: TeamAnswerParser.mapTeamAnswers(answers?.items),
-            deviceId,
-            createdAt,
-            updatedAt,
-            teamTeamMembersId,
-        }
-        return teamMember
-    }
-}
-
-class TeamAnswerParser {
-    static teamAnswerFromTeamAnswerSubscription(
-        subscription: OnCreateTeamAnswerSubscription
-    ): ITeamAnswer {
-        const createTeamAnswer = subscription.onCreateTeamAnswer
-        if (isNullOrUndefined(onCreateTeamAnswer)) {
-            throw new Error("subscription.onCreateTeamAnswer can't be null.")
-        }
-        //@ts-ignore
-        return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
-    }
-
-    static mapTeamAnswers(
-        awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined
-    ): Array<ITeamAnswer> {
-        if (isNullOrUndefined(awsTeamAnswers)) {
-            return []
-        }
-
-        return awsTeamAnswers.map((awsTeamAnswer) => {
-            if (isNullOrUndefined(awsTeamAnswer)) {
-                throw new Error("Team can't be null in the backend.")
-            }
-            return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
-        })
-    }
-
-    static teamAnswerFromAWSTeamAnswer(
-        awsTeamAnswer: AWSTeamAnswer
-    ): ITeamAnswer {
-        const {
-            id,
-            questionId,
-            isChosen,
-            isTrickAnswer,
-            text,
-            createdAt,
-            updatedAt,
-            teamMemberAnswersId,
-            confidenceLevel
-        } = awsTeamAnswer || {}
-
-        if (isNullOrUndefined(id) ||
-            isNullOrUndefined(teamMemberAnswersId) ||
-            isNullOrUndefined(questionId) ||
-            isNullOrUndefined(text)) {
-            throw new Error(
-                "Team answer has null field for the attributes that are not nullable"
-            )
-        }
-
-        const teamAnswer: ITeamAnswer = {
-            id,
-            questionId,
-            isChosen,
-            isTrickAnswer,
-            text,
-            createdAt,
-            updatedAt,
-            teamMemberAnswersId,
-            confidenceLevel
-        }
-        return teamAnswer
-    }
+  private mapOnCreateTeamAnswerSubscription(
+    subscription: OnCreateTeamAnswerSubscription
+  ): ITeamAnswer {
+    return TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(subscription);
+  }
 }
