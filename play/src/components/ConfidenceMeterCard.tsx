@@ -9,12 +9,12 @@ import {
   FormControl,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined } from '@righton/networking';
+import { ConfidenceLevel, isNullOrUndefined } from '@righton/networking';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface ConfidenceMeterCardProps {
   selectedOption: number | null;
-  handleSelectOption: (option: number) => void;
+  handleSelectOption: (index: number, confidence: ConfidenceLevel) => void;
   isSelected: boolean;
   isSmallDevice: boolean;
   timeOfLastSelect: number | null;
@@ -32,11 +32,11 @@ export default function ConfidenceMeterCard({
   const theme = useTheme();
   const { t } = useTranslation();
   const confidenceOptionArray = [
-    t('gameinprogress.chooseanswer.confidenceoption1'),
-    t('gameinprogress.chooseanswer.confidenceoption2'),
-    t('gameinprogress.chooseanswer.confidenceoption3'),
-    t('gameinprogress.chooseanswer.confidenceoption4'),
-    t('gameinprogress.chooseanswer.confidenceoption5'),
+    { text: t('gameinprogress.chooseanswer.confidenceoption1'), value: ConfidenceLevel.NOT_AT_ALL },
+    { text: t('gameinprogress.chooseanswer.confidenceoption2'), value: ConfidenceLevel.KINDA },
+    { text: t('gameinprogress.chooseanswer.confidenceoption3'), value: ConfidenceLevel.QUITE },
+    { text: t('gameinprogress.chooseanswer.confidenceoption4'), value: ConfidenceLevel.VERY },
+    { text: t('gameinprogress.chooseanswer.confidenceoption5'), value: ConfidenceLevel.TOTALLY }
   ];
 
   const confidenceHeader = (
@@ -117,8 +117,9 @@ export default function ConfidenceMeterCard({
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const currentTime = new Date().getTime() / 1000;
     if (isNullOrUndefined(timeOfLastSelect) || (currentTime - timeOfLastSelect) > 5) {
+      const idx = parseInt((event.target as HTMLInputElement).value, 10);
       setTimeOfLastSelect(currentTime);
-      handleSelectOption(parseInt((event.target as HTMLInputElement).value, 10));
+      handleSelectOption(idx, confidenceOptionArray[idx].value);
     }
   };
 
@@ -136,7 +137,7 @@ export default function ConfidenceMeterCard({
           marginY: `${theme.sizing.mediumPadding}px`,
         }}
       >
-        {confidenceOptionArray.map((option, index) => responseOption(option, index))}
+        {confidenceOptionArray.map((option, index) => responseOption(option.text, index))}
       </RadioGroup>
     </FormControl>
   );

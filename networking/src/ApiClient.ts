@@ -326,11 +326,13 @@ export class ApiClient implements IApiClient {
 
     async updateTeamAnswer(
         teamAnswerId: string,
-        isChosen: boolean | null = null
+        isChosen: boolean | null = null,
+        confidenceLevel: ConfidenceLevel
     ): Promise<ITeamAnswer> {
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
             isChosen,
+            confidenceLevel
         }
         const variables: UpdateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
@@ -347,7 +349,7 @@ export class ApiClient implements IApiClient {
     }
 
     async updateTeam(
-      teamInput: UpdateTeamInput
+        teamInput: UpdateTeamInput
     ): Promise<ITeam> {
         const input: UpdateTeamInput = teamInput
         const variables: UpdateTeamMutationVariables = { input }

@@ -8,6 +8,7 @@ import {
   ITeamAnswer,
   IQuestion,
   ModelHelper,
+  ConfidenceLevel
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -144,6 +145,7 @@ export default function GameInProgress({
     number | null
   >(null);
   const [timeOfLastConfidenceSelect, setTimeOfLastConfidenceSelect] = useState<number | null>(null);
+  const [teamAnswerId, setTeamAnswerId] = useState<string>(''); // this will be changed later -Drew
 
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
@@ -152,13 +154,14 @@ export default function GameInProgress({
 
   const handleSubmitAnswer = async (answerText: string) => {
     try {
-      await apiClient.addTeamAnswer(
+      const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
         answerText,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
+      setTeamAnswerId(response.id);
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
       setDisplaySubmitted(true);
     } catch {
@@ -175,9 +178,15 @@ export default function GameInProgress({
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
 
-  const handleSelectConfidence = (index: number) => {
-    setSelectedConfidenceOption(index);
-    setIsConfidenceSelected(true);
+  const handleSelectConfidence = async (index: number, confidence: ConfidenceLevel) => {
+    try {
+      await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
+      setSelectedConfidenceOption(index);
+      setIsConfidenceSelected(true);
+    }
+    catch {
+      setIsError(true);
+    }
   };
 
   return (
