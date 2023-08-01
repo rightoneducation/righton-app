@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React, { useState, useCallback } from 'react';
+import { Typography } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
 import { makeStyles } from '@material-ui/core';
 import CustomTick from './CustomTick';
@@ -7,6 +7,7 @@ import CustomTick from './CustomTick';
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
+    width: '100%',
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
@@ -72,6 +73,13 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
   };
 
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const graphRef = useCallback((node) => {
+    if (node !== null) {
+      setBoundingRect(node.getBoundingClientRect());
+    }
+  }, []);
+
   const customTheme = {
     axis: {
       style: {
@@ -85,8 +93,8 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     dependentAxis: {
       style: {
         axis: { stroke: 'transparent' },
-        grid: { stroke: 'rgba(255, 255, 255, 0.5)', strokeWidth: 0.5 },
-        tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400' },
+        grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 1 },
+        tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400', fontSize: '12px' },
       },
     },
     bar: {
@@ -100,25 +108,25 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
           fontFamily: 'Rubik',
           fontWeight: '400',
-          textAnchor: 'end'
+          textAnchor: 'end',
+          fontSize: '12px'
         },
       },
     },
   };
 
-  //datum.answerCount !== 0 
-  //({ datum, index }) => (datum.answerCount !== 0  ? <VictoryLabel dx={-20} /> : <VictoryLabel dx={20} /> )
   return (
-    <Grid item xs={12} className={classes.container}>
+    <div className={classes.container} ref={graphRef}>
       <div className={classes.titleContainer}>
         <Typography className={classes.title}>
           Number of players
         </Typography>
       </div>
       <VictoryChart
-        domainPadding={20}
-        containerComponent={<VictoryContainer />}
+        domainPadding={17}
+        //containerComponent={<VictoryContainer />}
         theme={customTheme}
+        width={boundingRect.width}
       >
         <VictoryAxis
           standalone={false}
@@ -150,7 +158,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           horizontal
           cornerRadius={{ topLeft: 4, topRight: 4 }}
           labels={({ datum }) => `${datum.answerCount}`}
-          barWidth={({ datum }) =>  datum.answerCount !== 0 ? 15 : 30} 
+          barWidth={({ datum }) =>  datum.answerCount !== 0 ? 18 : 30} 
           labelComponent={
             <VictoryLabel dx={({ datum }) =>  datum.answerCount > 0 ? -2 : 10} />
           }
@@ -174,7 +182,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           </VictoryPortal>
         )}
       </VictoryChart>
-    </Grid>
+    </div>
   );
 };
 

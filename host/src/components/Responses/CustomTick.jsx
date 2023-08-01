@@ -16,6 +16,7 @@ const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, 
                 fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
                 fontFamily: 'Poppins',
                 fontWeight: '800',
+                fontSize: '16px'
             }} />
         </g>
     );
