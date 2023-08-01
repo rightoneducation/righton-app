@@ -46,7 +46,7 @@ export default function ChooseAnswer({
   handleSelectConfidence,
   isConfidenceSelected,
   timeOfLastConfidenceSelect,
-  setTimeOfLastConfidenceSelect
+  setTimeOfLastConfidenceSelect,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -81,7 +81,7 @@ export default function ChooseAnswer({
     </>
   );
 
-  const onSubmitDisplay = (
+  const onSubmitDisplay =
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
       <Fade in={displaySubmitted} timeout={500}>
         <Box>
@@ -94,18 +94,20 @@ export default function ChooseAnswer({
             setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
           />
         </Box>
-      </Fade>) : <Typography
+      </Fade>
+    ) : (
+      <Typography
         sx={{
           fontWeight: 700,
           marginTop: `${theme.sizing.largePadding}px`,
           marginX: `${theme.sizing.largePadding}px`,
           fontSize: `${theme.typography.h4.fontSize}px`,
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
-      {t('gameinprogress.chooseanswer.answerthankyou1')}
-    </Typography>
-  )
+        {t('gameinprogress.chooseanswer.answerthankyou1')}
+      </Typography>
+    );
 
   const answerContents = (
     <>
@@ -128,9 +130,7 @@ export default function ChooseAnswer({
           selectedAnswer={selectedAnswer}
           handleSelectAnswer={handleSelectAnswer}
         />
-        {displaySubmitted ?
-          onSubmitDisplay
-          : null}
+        {displaySubmitted ? onSubmitDisplay : null}
         {isSubmitted ? (
           <Typography
             sx={{
@@ -138,7 +138,7 @@ export default function ChooseAnswer({
               marginTop: `${theme.sizing.largePadding}px`,
               marginX: `${theme.sizing.largePadding}px`,
               fontSize: `${theme.typography.h4.fontSize}px`,
-              textAlign: 'center'
+              textAlign: 'center',
             }}
           >
             {t('gameinprogress.chooseanswer.answerthankyou2')}
@@ -165,7 +165,7 @@ export default function ChooseAnswer({
               bulletClass: 'swiper-pagination-bullet',
               bulletActiveClass: 'swiper-pagination-bullet-active',
               clickable: true,
-              renderBullet(index: any, className: any) {
+              renderBullet(index, className) {
                 return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
               },
             }}

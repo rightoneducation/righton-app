@@ -117,8 +117,9 @@ export default function ErrorModal({
           }}
         >
           {errorType === ErrorType.CONNECT
-            ? `${t('error.connect.button1')} ${retry && retry > 0 ? `(${retry})` : ''
-            }`
+            ? `${t('error.connect.button1')} ${
+                retry && retry > 0 ? `(${retry})` : ''
+              }`
             : t('error.connect.button1')}
         </IntroButtonStyled>
         {errorType === ErrorType.CONNECT && lowerButton}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
   Typography,
@@ -27,16 +27,31 @@ export default function ConfidenceMeterCard({
   isSelected,
   isSmallDevice,
   timeOfLastSelect,
-  setTimeOfLastSelect
+  setTimeOfLastSelect,
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const confidenceOptionArray = [
-    { text: t('gameinprogress.chooseanswer.confidenceoption1'), value: ConfidenceLevel.NOT_AT_ALL },
-    { text: t('gameinprogress.chooseanswer.confidenceoption2'), value: ConfidenceLevel.KINDA },
-    { text: t('gameinprogress.chooseanswer.confidenceoption3'), value: ConfidenceLevel.QUITE },
-    { text: t('gameinprogress.chooseanswer.confidenceoption4'), value: ConfidenceLevel.VERY },
-    { text: t('gameinprogress.chooseanswer.confidenceoption5'), value: ConfidenceLevel.TOTALLY }
+    {
+      text: t('gameinprogress.chooseanswer.confidenceoption1'),
+      value: ConfidenceLevel.NOT_AT_ALL,
+    },
+    {
+      text: t('gameinprogress.chooseanswer.confidenceoption2'),
+      value: ConfidenceLevel.KINDA,
+    },
+    {
+      text: t('gameinprogress.chooseanswer.confidenceoption3'),
+      value: ConfidenceLevel.QUITE,
+    },
+    {
+      text: t('gameinprogress.chooseanswer.confidenceoption4'),
+      value: ConfidenceLevel.VERY,
+    },
+    {
+      text: t('gameinprogress.chooseanswer.confidenceoption5'),
+      value: ConfidenceLevel.TOTALLY,
+    },
   ];
 
   const confidenceHeader = (
@@ -74,7 +89,7 @@ export default function ConfidenceMeterCard({
         sx={{
           textAlign: 'center',
           alignItems: 'center',
-          marginX: `${theme.sizing.extraSmallPadding}px`
+          marginX: `${theme.sizing.extraSmallPadding}px`,
         }}
       >
         <FormControlLabel
@@ -82,7 +97,7 @@ export default function ConfidenceMeterCard({
           value={index}
           control={
             <Radio
-              size={isSmallDevice ? "small" : "medium"}
+              size={isSmallDevice ? 'small' : 'medium'}
               sx={{
                 '&.Mui-checked': {
                   color: `${theme.palette.primary.blue}`,
@@ -109,14 +124,19 @@ export default function ConfidenceMeterCard({
         variant="body1"
         sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}
       >
-        {isSelected ? t('gameinprogress.chooseanswer.submittedconfidenceresponse') : t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
+        {isSelected
+          ? t('gameinprogress.chooseanswer.submittedconfidenceresponse')
+          : t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
       </Typography>
     </Box>
   );
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const currentTime = new Date().getTime() / 1000;
-    if (isNullOrUndefined(timeOfLastSelect) || (currentTime - timeOfLastSelect) > 5) {
+    if (
+      isNullOrUndefined(timeOfLastSelect) ||
+      currentTime - timeOfLastSelect > 5
+    ) {
       const idx = parseInt((event.target as HTMLInputElement).value, 10);
       setTimeOfLastSelect(currentTime);
       handleSelectOption(idx, confidenceOptionArray[idx].value);
@@ -137,7 +157,9 @@ export default function ConfidenceMeterCard({
           marginY: `${theme.sizing.mediumPadding}px`,
         }}
       >
-        {confidenceOptionArray.map((option, index) => responseOption(option.text, index))}
+        {confidenceOptionArray.map((option, index) =>
+          responseOption(option.text, index)
+        )}
       </RadioGroup>
     </FormControl>
   );
@@ -145,13 +167,15 @@ export default function ConfidenceMeterCard({
   return (
     <BodyCardStyled
       sx={{
-        marginTop: `${theme.sizing.smallPadding}px`
+        marginTop: `${theme.sizing.smallPadding}px`,
       }}
     >
       {confidenceHeader}
       {chooseConfidenceText}
       {responseOptions}
-      {!isNullOrUndefined(timeOfLastSelect) || isSelected ? sendingResponseText : null}
+      {!isNullOrUndefined(timeOfLastSelect) || isSelected
+        ? sendingResponseText
+        : null}
     </BodyCardStyled>
   );
 }

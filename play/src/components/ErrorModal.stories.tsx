@@ -13,9 +13,7 @@ export default {
   component: ErrorModal,
 } as Meta<typeof ErrorModal>;
 
-const Template: StoryFn<typeof ErrorModal> = function ErrorModalTemplate(
-  args
-) {
+const Template: StoryFn<typeof ErrorModal> = function ErrorModalTemplate(args) {
   return (
     <BrowserRouter>
       <ThemeProvider theme={Theme}>

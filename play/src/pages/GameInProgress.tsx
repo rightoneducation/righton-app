@@ -9,7 +9,7 @@ import {
   IQuestion,
   ModelHelper,
   ConfidenceLevel,
-  isNullOrUndefined
+  isNullOrUndefined,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -22,7 +22,10 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import { checkForSubmittedAnswerOnRejoin, checkForSelectedConfidenceOnRejoin } from '../lib/HelperFunctions';
+import {
+  checkForSubmittedAnswerOnRejoin,
+  checkForSelectedConfidenceOnRejoin,
+} from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel } from '../lib/PlayModels';
 
@@ -138,9 +141,15 @@ export default function GameInProgress({
     );
     return rejoinSubmittedAnswer;
   });
-  const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(!isNullOrUndefined(selectSubmitAnswer.selectedAnswerIndex));
-  const currentAnswer = teamAnswers?.find(answer => answer?.questionId === currentQuestion.id);
-  const [teamAnswerId, setTeamAnswerId] = useState<string>(!isNullOrUndefined(currentAnswer) ? currentAnswer?.id : ''); // This will be moved later (work in progress - Drew)
+  const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
+    !isNullOrUndefined(selectSubmitAnswer.selectedAnswerIndex)
+  );
+  const currentAnswer = teamAnswers?.find(
+    (answer) => answer?.questionId === currentQuestion.id
+  );
+  const [teamAnswerId, setTeamAnswerId] = useState<string>(
+    !isNullOrUndefined(currentAnswer) ? currentAnswer?.id : ''
+  ); // This will be moved later (work in progress - Drew)
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceIndex: number | null;
@@ -185,7 +194,11 @@ export default function GameInProgress({
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
-      setSelectConfidence({ timeOfLastSelect: null, selectedConfidenceIndex: null, isSelected: false });
+      setSelectConfidence({
+        timeOfLastSelect: null,
+        selectedConfidenceIndex: null,
+        isSelected: false,
+      });
     }
   };
 
@@ -194,20 +207,26 @@ export default function GameInProgress({
   };
 
   const setTimeOfLastConfidenceSelect = (time: number | null) => {
-    setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }))
-  }
+    setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }));
+  };
 
-  const handleSelectConfidence = async (index: number, confidence: ConfidenceLevel) => {
+  const handleSelectConfidence = async (
+    index: number,
+    confidence: ConfidenceLevel
+  ) => {
     try {
-      // since subscription.isLoading does not get changed when user selects answer, 
-      // set isSelected to false when user selects or reselects confidence so 
-      // that the loading message can display while we wait for apiClient. Then 
+      // since subscription.isLoading does not update when user selects answer,
+      // set isSelected to false when user selects or reselects confidence so
+      // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
-      setSelectConfidence((prev) => ({ ...prev, selectedConfidenceIndex: index, isSelected: true }));
-    }
-    catch {
+      setSelectConfidence((prev) => ({
+        ...prev,
+        selectedConfidenceIndex: index,
+        isSelected: true,
+      }));
+    } catch {
       setIsConfidenceError(true);
     }
   };
@@ -247,7 +266,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
