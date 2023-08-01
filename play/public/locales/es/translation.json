@@ -121,6 +121,7 @@
     },
     "game": {
       "answer": "Hubo un error al enviar su respuesta. Inténtalo de nuevo.",
+      "confidence": "Hubo un error al enviar tu respuesta. Inténtalo de nuevo.",
       "score": "Hubo un error al actualizar tu puntaje. Inténtalo de nuevo."
     }
   }

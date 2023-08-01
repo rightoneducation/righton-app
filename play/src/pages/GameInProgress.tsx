@@ -8,7 +8,8 @@ import {
   ITeamAnswer,
   IQuestion,
   ModelHelper,
-  ConfidenceLevel
+  ConfidenceLevel,
+  isNullOrUndefined
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -21,7 +22,7 @@ import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyle
 import ChooseAnswer from './gameinprogress/ChooseAnswer';
 import DiscussAnswer from './gameinprogress/DiscussAnswer';
 import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterStackContainerStyled';
-import { checkForSubmittedAnswerOnRejoin } from '../lib/HelperFunctions';
+import { checkForSubmittedAnswerOnRejoin, checkForSelectedConfidenceOnRejoin } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel } from '../lib/PlayModels';
 
@@ -66,8 +67,8 @@ export default function GameInProgress({
   localModel,
 }: GameInProgressProps) {
   const theme = useTheme();
-  const [isError, setIsError] = useState(false);
-  const [displaySubmitted, setDisplaySubmitted] = useState(false);
+  const [isAnswerError, setIsAnswerError] = useState(false);
+  const [isConfidenceError, setIsConfidenceError] = useState(false);
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -124,7 +125,6 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [teamAnswerId, setTeamAnswerId] = useState<string>(''); // This will be moved later (work in progress - Drew)
   const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{
     selectedAnswerIndex: number | null;
     isSubmitted: boolean;
@@ -138,12 +138,24 @@ export default function GameInProgress({
     );
     return rejoinSubmittedAnswer;
   });
-
-  // TODO: handle case where player is rejoining
-  const [isConfidenceSelected, setIsConfidenceSelected] =
-    useState<boolean>(false);
-  const [selectedConfidenceOption, setSelectedConfidenceOption] = useState<number | null>(null);
-  const [timeOfLastConfidenceSelect, setTimeOfLastConfidenceSelect] = useState<number | null>(null);
+  const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(!isNullOrUndefined(selectSubmitAnswer.selectedAnswerIndex));
+  // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
+  const [selectConfidence, setSelectConfidence] = useState<{
+    selectedConfidenceIndex: number | null;
+    isSelected: boolean;
+    timeOfLastSelect: number | null;
+  }>(() => {
+    let rejoinSelectedConfidence = null;
+    rejoinSelectedConfidence = checkForSelectedConfidenceOnRejoin(
+      hasRejoined,
+      teamAnswers,
+      currentQuestion,
+      currentState
+    );
+    return rejoinSelectedConfidence;
+  });
+  const currentAnswer = teamAnswers?.find(answer => answer?.questionId === currentQuestion.id);
+  const [teamAnswerId, setTeamAnswerId] = useState<string>(!isNullOrUndefined(currentAnswer) ? currentAnswer?.id : ''); // This will be moved later (work in progress - Drew)
 
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
@@ -163,26 +175,36 @@ export default function GameInProgress({
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
       setDisplaySubmitted(true);
     } catch {
-      setIsError(true);
+      setIsAnswerError(true);
     }
   };
 
   const handleRetry = () => {
-    setIsError(false);
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
+    if (isAnswerError) {
+      setIsAnswerError(false);
+      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
+    }
+    if (isConfidenceError) {
+      setIsConfidenceError(false);
+      setSelectConfidence({ timeOfLastSelect: null, selectedConfidenceIndex: null, isSelected: false });
+    }
   };
 
   const handleSelectAnswer = (index: number) => {
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
 
+  const setTimeOfLastConfidenceSelect = (time: number | null) => {
+    setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }))
+  }
+
   const handleSelectConfidence = async (index: number, confidence: ConfidenceLevel) => {
     try {
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
-      setSelectedConfidenceOption(index);
-      setIsConfidenceSelected(true);
-    } catch {
-      setIsError(true);
+      setSelectConfidence((prev) => ({ ...prev, selectedConfidenceIndex: index, isSelected: true }))
+    }
+    catch {
+      setIsConfidenceError(true);
     }
   };
 
@@ -193,8 +215,14 @@ export default function GameInProgress({
       justifyContent="space-between"
     >
       <ErrorModal
-        isModalOpen={isError}
+        isModalOpen={isAnswerError}
         errorType={ErrorType.ANSWER}
+        errorText=""
+        handleRetry={handleRetry}
+      />
+      <ErrorModal
+        isModalOpen={isConfidenceError}
+        errorType={ErrorType.CONFIDENCE}
         errorText=""
         handleRetry={handleRetry}
       />
@@ -228,9 +256,9 @@ export default function GameInProgress({
             selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
             handleSelectConfidence={handleSelectConfidence}
-            isConfidenceSelected={isConfidenceSelected}
-            selectedConfidenceOption={selectedConfidenceOption}
-            timeOfLastConfidenceSelect={timeOfLastConfidenceSelect}
+            isConfidenceSelected={selectConfidence.isSelected}
+            selectedConfidenceOption={selectConfidence.selectedConfidenceIndex}
+            timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
           />
         ) : (

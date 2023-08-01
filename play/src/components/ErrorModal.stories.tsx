@@ -17,13 +17,13 @@ const Template: StoryFn<typeof ErrorModal> = function ErrorModalTemplate(
   args
 ) {
   return (
-      <BrowserRouter>
-        <ThemeProvider theme={Theme}>
-          <I18nextProvider i18n={i18n} defaultNS="translation">
-           <ErrorModal {...args} />
-          </I18nextProvider>
-        </ThemeProvider>
-      </BrowserRouter>
+    <BrowserRouter>
+      <ThemeProvider theme={Theme}>
+        <I18nextProvider i18n={i18n} defaultNS="translation">
+          <ErrorModal {...args} />
+        </I18nextProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 };
 
@@ -55,6 +55,14 @@ export const AnswerError = Template.bind({});
 AnswerError.args = {
   isModalOpen: true,
   errorType: ErrorType.ANSWER,
+  retry: 2,
+  handleRetry,
+};
+
+export const ConfidenceError = Template.bind({});
+AnswerError.args = {
+  isModalOpen: true,
+  errorType: ErrorType.CONFIDENCE,
   retry: 2,
   handleRetry,
 };
