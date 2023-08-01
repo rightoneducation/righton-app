@@ -199,8 +199,13 @@ export default function GameInProgress({
 
   const handleSelectConfidence = async (index: number, confidence: ConfidenceLevel) => {
     try {
+      // since subscription.isLoading does not get changed when user selects answer, 
+      // set isSelected to false when user selects or reselects confidence so 
+      // that the loading message can display while we wait for apiClient. Then 
+      // after await, set isSelected to true again
+      setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
-      setSelectConfidence((prev) => ({ ...prev, selectedConfidenceIndex: index, isSelected: true }))
+      setSelectConfidence((prev) => ({ ...prev, selectedConfidenceIndex: index, isSelected: true }));
     }
     catch {
       setIsConfidenceError(true);

@@ -82,7 +82,8 @@
       "confidenceoption3": "Bastante",
       "confidenceoption4": "Muy",
       "confidenceoption5": "Totalmente",
-      "sendingconfidenceresponse": "Enviando tu respuesta..."
+      "sendingconfidenceresponse": "Enviando tu respuesta...",
+      "submittedconfidenceresponse": "Your response has been submitted."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",

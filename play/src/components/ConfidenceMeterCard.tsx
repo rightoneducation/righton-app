@@ -109,7 +109,7 @@ export default function ConfidenceMeterCard({
         variant="body1"
         sx={{ color: `${theme.palette.primary.darkBlue}`, opacity: '0.5' }}
       >
-        {t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
+        {isSelected ? t('gameinprogress.chooseanswer.submittedconfidenceresponse') : t('gameinprogress.chooseanswer.sendingconfidenceresponse')}
       </Typography>
     </Box>
   );
@@ -151,7 +151,7 @@ export default function ConfidenceMeterCard({
       {confidenceHeader}
       {chooseConfidenceText}
       {responseOptions}
-      {isSelected ? sendingResponseText : null}
+      {!isNullOrUndefined(timeOfLastSelect) || isSelected ? sendingResponseText : null}
     </BodyCardStyled>
   );
 }
