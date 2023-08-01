@@ -90,15 +90,13 @@ export const checkForSubmittedAnswerOnRejoin = (
 /**
  * on rejoining game, this checks if the player has already selected a confidence level
  * @param hasRejoined - if a player is rejoining
- * @param answers - the answers submitted by the player previously
- * @param currentQuestion - the current question being answered
+ * @param currentAnswer - the player's answer to the current question 
  * @param currentState - the current state of the game session
  * @returns - the index of the confidence the player has submitted, null if they haven't selected a confidence, boolean to track submission
  */
 export const checkForSelectedConfidenceOnRejoin = (
   hasRejoined: boolean,
-  answers: (ITeamAnswer | null)[] | null | undefined,
-  currentQuestion: IQuestion,
+  currentAnswer: ITeamAnswer | null | undefined,
   currentState: GameSessionState
 ): { selectedConfidenceIndex: number | null; isSelected: boolean; timeOfLastSelect: number | null; } => {
   let selectedConfidenceIndex = null;
@@ -119,12 +117,9 @@ export const checkForSelectedConfidenceOnRejoin = (
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
   ) {
-    if (!isNullOrUndefined(answers)) {
-      const currentAnswer = answers?.find(answer => answer?.questionId === currentQuestion.id);
-      if (!isNullOrUndefined(currentAnswer)) {
-        isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
-        selectedConfidenceIndex = confidenceOptions.indexOf(currentAnswer.confidenceLevel);
-      }
+    if (!isNullOrUndefined(currentAnswer)) {
+      isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
+      selectedConfidenceIndex = confidenceOptions.indexOf(currentAnswer.confidenceLevel);
     }
   }
   return { selectedConfidenceIndex, isSelected, timeOfLastSelect };

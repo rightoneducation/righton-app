@@ -139,6 +139,8 @@ export default function GameInProgress({
     return rejoinSubmittedAnswer;
   });
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(!isNullOrUndefined(selectSubmitAnswer.selectedAnswerIndex));
+  const currentAnswer = teamAnswers?.find(answer => answer?.questionId === currentQuestion.id);
+  const [teamAnswerId, setTeamAnswerId] = useState<string>(!isNullOrUndefined(currentAnswer) ? currentAnswer?.id : ''); // This will be moved later (work in progress - Drew)
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceIndex: number | null;
@@ -148,14 +150,11 @@ export default function GameInProgress({
     let rejoinSelectedConfidence = null;
     rejoinSelectedConfidence = checkForSelectedConfidenceOnRejoin(
       hasRejoined,
-      teamAnswers,
-      currentQuestion,
+      currentAnswer,
       currentState
     );
     return rejoinSelectedConfidence;
   });
-  const currentAnswer = teamAnswers?.find(answer => answer?.questionId === currentQuestion.id);
-  const [teamAnswerId, setTeamAnswerId] = useState<string>(!isNullOrUndefined(currentAnswer) ? currentAnswer?.id : ''); // This will be moved later (work in progress - Drew)
 
   const handleTimerIsFinished = () => {
     setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
