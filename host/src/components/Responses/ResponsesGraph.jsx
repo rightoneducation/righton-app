@@ -19,6 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
+
 const SelectedBar = ({ x, y, width, height }) => {
   const padding = 5;
   const selectedWidth = width + padding * 2;
@@ -38,13 +39,12 @@ const SelectedBar = ({ x, y, width, height }) => {
     />
   );
 };
-
 const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
   const classes = useStyles();
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
 
   const reversedResponses = [
-    { label: "-", count: numPlayers - totalAnswers },
+    { label: "–", count: numPlayers - totalAnswers },
     ...studentResponses,
   ].reverse();
 
@@ -100,7 +100,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
           fontFamily: 'Rubik',
           fontWeight: '400',
-          padding: 10,
+          textAnchor: 'end'
         },
       },
     },
@@ -152,7 +152,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           labels={({ datum }) => `${datum.answerCount}`}
           barWidth={({ datum }) =>  datum.answerCount !== 0 ? 15 : 30} 
           labelComponent={
-            <VictoryLabel dx={({ datum }) =>  datum.answerCount !== 0 ? -20 : 3}/>
+            <VictoryLabel dx={({ datum }) =>  datum.answerCount > 0 ? -2 : 10} />
           }
           events={[
             {
