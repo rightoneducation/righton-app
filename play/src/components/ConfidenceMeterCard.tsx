@@ -31,7 +31,12 @@ export default function ConfidenceMeterCard({
 }: ConfidenceMeterCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const confidenceOptionArray = [
+  interface IConfidenceOption {
+    text: string
+    value: ConfidenceLevel
+  }
+
+  const confidenceOptionArray: IConfidenceOption[] = [
     {
       text: t('gameinprogress.chooseanswer.confidenceoption1'),
       value: ConfidenceLevel.NOT_AT_ALL,
