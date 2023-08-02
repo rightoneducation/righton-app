@@ -100,13 +100,13 @@ export const checkForSelectedConfidenceOnRejoin = (
 ): {
   selectedConfidenceIndex: number | null;
   isSelected: boolean;
-  timeOfLastSelect: number | null;
+  timeOfLastSelect: number;
 } => {
   let selectedConfidenceIndex = null;
   let isSelected = false;
   // here, since we do not store time of last select in the backend (5 seconds would be negligible on refresh),
   // we set the timeOfLastSelect to null to re-initialize the value instead of populating it with the previous value
-  const timeOfLastSelect = null;
+  const timeOfLastSelect = 0;
   // adding dictionary to account for string casting for material UI components
   const confidenceOptions = [
     ConfidenceLevel.NOT_AT_ALL,

@@ -17,8 +17,8 @@ interface ConfidenceMeterCardProps {
   handleSelectOption: (index: number, confidence: ConfidenceLevel) => void;
   isSelected: boolean;
   isSmallDevice: boolean;
-  timeOfLastSelect: number | null;
-  setTimeOfLastSelect: (time: number | null) => void;
+  timeOfLastSelect: number;
+  setTimeOfLastSelect: (time: number) => void;
 }
 
 export default function ConfidenceMeterCard({
@@ -132,13 +132,13 @@ export default function ConfidenceMeterCard({
   );
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const currentTime = new Date().getTime() / 1000;
+    const currentEpochTimeInSeconds = new Date().getTime() / 1000;
     if (
       isNullOrUndefined(timeOfLastSelect) ||
-      currentTime - timeOfLastSelect > 5
+      currentEpochTimeInSeconds - timeOfLastSelect > 5
     ) {
       const idx = parseInt((event.target as HTMLInputElement).value, 10);
-      setTimeOfLastSelect(currentTime);
+      setTimeOfLastSelect(currentEpochTimeInSeconds);
       handleSelectOption(idx, confidenceOptionArray[idx].value);
     }
   };

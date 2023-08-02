@@ -27,8 +27,8 @@ interface ChooseAnswerProps {
   selectedConfidenceOption: number | null;
   handleSelectConfidence: (option: number, confidence: ConfidenceLevel) => void;
   isConfidenceSelected: boolean;
-  timeOfLastConfidenceSelect: number | null;
-  setTimeOfLastConfidenceSelect: (time: number | null) => void;
+  timeOfLastConfidenceSelect: number;
+  setTimeOfLastConfidenceSelect: (time: number) => void;
 }
 
 export default function ChooseAnswer({

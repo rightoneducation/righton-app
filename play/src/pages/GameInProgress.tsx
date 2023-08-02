@@ -154,7 +154,7 @@ export default function GameInProgress({
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceIndex: number | null;
     isSelected: boolean;
-    timeOfLastSelect: number | null;
+    timeOfLastSelect: number;
   }>(() => {
     let rejoinSelectedConfidence = null;
     rejoinSelectedConfidence = checkForSelectedConfidenceOnRejoin(
@@ -195,7 +195,7 @@ export default function GameInProgress({
     if (isConfidenceError) {
       setIsConfidenceError(false);
       setSelectConfidence({
-        timeOfLastSelect: null,
+        timeOfLastSelect: 0,
         selectedConfidenceIndex: null,
         isSelected: false,
       });
@@ -206,7 +206,7 @@ export default function GameInProgress({
     setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
   };
 
-  const setTimeOfLastConfidenceSelect = (time: number | null) => {
+  const setTimeOfLastConfidenceSelect = (time: number) => {
     setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }));
   };
 
@@ -266,7 +266,7 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
