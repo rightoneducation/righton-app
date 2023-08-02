@@ -148,7 +148,7 @@ export default function GameInProgress({
     (answer) => answer?.questionId === currentQuestion.id
   );
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
-    !isNullOrUndefined(currentAnswer) ? currentAnswer.id : ''
+    currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
