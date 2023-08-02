@@ -37,6 +37,17 @@ export default class GameAPIClient
     return GameParser.gameFromAWSGame(result.getGame);
   }
 
+  async createGame(createGameInput: CreateGameInput): Promise<IGame> {
+    let variables: CreateGameMutationVariables = {
+      input: createGameInput,
+    };
+    let result = await this.callGraphQLThrowOnError<CreateGameMutation>(
+      createGame,
+      variables
+    );
+    return GameParser.gameFromAWSGame(result.createGame);
+  }
+
   async updateGame(updateGameInput: UpdateGameInput): Promise<IGame> {
     let variables: UpdateGameMutationVariables = {
       input: updateGameInput,
