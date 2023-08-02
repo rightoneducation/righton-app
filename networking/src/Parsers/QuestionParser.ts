@@ -55,6 +55,7 @@ export default abstract class QuestionParser {
     }
     return {
       id: awsQuestion.id,
+      gameId: awsQuestion.gameId,
       text: awsQuestion.text,
       choices: isNullOrUndefined(awsQuestion.choices)
         ? []
