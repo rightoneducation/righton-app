@@ -114,7 +114,7 @@ export default class GameAPIClient
     let input: DeleteGameInput = { id };
     let variables: DeleteGameMutationVariables = { input };
     let result = await this.callGraphQLThrowOnError<DeleteGameMutation>(
-      this.deleteGame,
+      deleteGame,
       variables
     );
     return GameParser.gameFromAWSGame(result.deleteGame);
