@@ -1,10 +1,9 @@
 import { GraphQLResult, GRAPHQL_AUTH_MODE } from "@aws-amplify/api";
 import awsconfig from "../../aws-exports";
+import localawsconfig from "../../aws-exports-local";
 import { Amplify, API, graphqlOperation } from "aws-amplify";
 import { isNullOrUndefined } from "../../IApiClient";
 import { Environment } from "../IBaseAPIClient";
-
-Amplify.configure(awsconfig);
 
 export enum HTTPMethod {
   Post = "POST",
@@ -31,9 +30,11 @@ export abstract class BaseAPIClient {
     this.env = env;
     switch (env) {
       case Environment.Local:
-        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
+        Amplify.configure(localawsconfig);
+        this.endpoint = ``;
         break;
       case Environment.Staging:
+        Amplify.configure(awsconfig);
         this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`;
         break;
     }

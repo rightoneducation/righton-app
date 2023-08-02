@@ -24,3 +24,5 @@ amplifytools.xcconfig
 #amplify-do-not-edit-end
 
 amplify/mock-api-resources
+aws-exports.*
+aws-exports-local.*
