@@ -8,6 +8,7 @@ import {
   ITeam,
   ITeamAnswer,
   ITeamMember,
+  isNullOrUndefined,
 } from "@righton/networking";
 import { useEffect, useRef, useState } from "react";
 
@@ -385,12 +386,6 @@ function App() {
       </Button>
     </div>
   );
-}
-
-function isNullOrUndefined<T>(
-  value: T | null | undefined
-): value is null | undefined {
-  return value === null || value === undefined;
 }
 
 export default App;
