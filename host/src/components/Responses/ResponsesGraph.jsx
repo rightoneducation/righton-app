@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
 import { makeStyles } from '@material-ui/core';
@@ -73,17 +73,10 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
   };
 
-  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
-  const graphRef = useCallback((node) => {
-    if (node !== null) {
-      setBoundingRect(node.getBoundingClientRect());
-    }
-  }, []);
-
   const customTheme = {
     axis: {
       style: {
-        axis: { stroke: 'rgba(255, 255, 255, 0.5)' },
+        axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
         grid: { stroke: 'transparent' },
         tickLabels: {
           padding: 20
@@ -93,7 +86,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     dependentAxis: {
       style: {
         axis: { stroke: 'transparent' },
-        grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 1 },
+        grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
         tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400', fontSize: '12px' },
       },
     },
@@ -116,17 +109,18 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   };
 
   return (
-    <div className={classes.container} ref={graphRef}>
+    <div className={classes.container} >
       <div className={classes.titleContainer}>
         <Typography className={classes.title}>
           Number of players
         </Typography>
       </div>
       <VictoryChart
-        domainPadding={17}
-        //containerComponent={<VictoryContainer />}
+        domainPadding={20}
+        containerComponent={<VictoryContainer />}
         theme={customTheme}
-        width={boundingRect.width}
+        width={650}
+        height={310}
       >
         <VictoryAxis
           standalone={false}
