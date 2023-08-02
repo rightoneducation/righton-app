@@ -31,9 +31,10 @@ export default class GameAPIClient
 
   async getGame(id: string): Promise<IGame> {
     const variables: GetGameQueryVariables = { id };
-    let result = await this.callGraphQLThrowOnError<GetGameQuery>(getGame, {
-      variables,
-    });
+    let result = await this.callGraphQLThrowOnError<GetGameQuery>(
+      getGame,
+      variables as GraphQLOptions
+    );
     return GameParser.gameFromAWSGame(result.getGame);
   }
 
