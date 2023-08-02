@@ -8,7 +8,7 @@ import {
 } from "../../GraphQLAPI";
 import { IGameQuestion } from "../../Models";
 import QuestionParser from "../../Parsers/QuestionParser";
-import { deleteGameQuestion } from "../../graphql";
+import { createGameQuestion, deleteGameQuestion } from "../../graphql";
 import { BaseAPIClient } from "./BaseAPIClient";
 import IGameQuestionAPIClient from "../IGameQuestionAPIClient";
 
@@ -17,10 +17,10 @@ export default class GameQuestionAPIClient
   implements IGameQuestionAPIClient
 {
   async createGameQuestion(
-    createGameQuestion: CreateGameQuestionInput
+    createGameQuestionInput: CreateGameQuestionInput
   ): Promise<IGameQuestion> {
     let input: CreateGameQuestionMutationVariables = {
-      input: createGameQuestion,
+      input: createGameQuestionInput,
     };
     let result = await this.callGraphQLThrowOnError<CreateGameQuestionMutation>(
       createGameQuestion,
