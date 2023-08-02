@@ -55,9 +55,7 @@ export default class GameAPIClient
     };
     let result = await this.callGraphQLThrowOnError<UpdateGameMutation>(
       updateGame,
-      {
-        variables,
-      }
+      variables
     );
     return GameParser.gameFromAWSGame(result.updateGame);
   }
