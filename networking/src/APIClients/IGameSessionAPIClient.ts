@@ -1,7 +1,7 @@
 import { IGameSession } from "../Models";
 import { UpdateGameSessionInput } from "../GraphQLAPI";
 
-export default interface IGameSessionAPIClient {
+export interface IGameSessionAPIClient {
   createGameSession(
     gameId: number,
     isAdvancedMode: Boolean

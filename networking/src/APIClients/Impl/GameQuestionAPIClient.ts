@@ -10,9 +10,9 @@ import { IGameQuestion } from "../../Models";
 import QuestionParser from "../../Parsers/QuestionParser";
 import { createGameQuestion, deleteGameQuestion } from "../../graphql";
 import { BaseAPIClient } from "./BaseAPIClient";
-import IGameQuestionAPIClient from "../IGameQuestionAPIClient";
+import { IGameQuestionAPIClient } from "../IGameQuestionAPIClient";
 
-export default class GameQuestionAPIClient
+export class GameQuestionAPIClient
   extends BaseAPIClient
   implements IGameQuestionAPIClient
 {

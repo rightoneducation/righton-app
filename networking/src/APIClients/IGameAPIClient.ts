@@ -2,7 +2,7 @@ import { CreateGameInput, UpdateGameInput } from "./../GraphQLAPI";
 import { IGame } from "../Models";
 import { BaseAPIClient } from "./Impl/BaseAPIClient";
 
-export default interface IGameAPIClient extends BaseAPIClient {
+export interface IGameAPIClient extends BaseAPIClient {
   listGames(): Promise<Array<IGame>>;
 
   getGame(id: string): Promise<IGame>;

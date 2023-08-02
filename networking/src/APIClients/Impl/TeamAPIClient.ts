@@ -19,12 +19,9 @@ import {
   updateTeam,
 } from "../../graphql";
 import { isNullOrUndefined } from "../../IApiClient";
-import ITeamAPIClient from "../ITeamAPIClient";
+import { ITeamAPIClient } from "../ITeamAPIClient";
 
-export default class TeamAPIClient
-  extends BaseAPIClient
-  implements ITeamAPIClient
-{
+export class TeamAPIClient extends BaseAPIClient implements ITeamAPIClient {
   async getTeam(id: string): Promise<ITeam> {
     let result = (await API.graphql(
       graphqlOperation(this.getTeam, { id })

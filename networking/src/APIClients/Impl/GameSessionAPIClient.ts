@@ -15,9 +15,9 @@ import {
   UpdateGameSessionMutationVariables,
 } from "../../GraphQLAPI";
 import { isNullOrUndefined } from "../../IApiClient";
-import IGameSessionAPIClient from "../IGameSessionAPIClient";
+import { IGameSessionAPIClient } from "../IGameSessionAPIClient";
 
-export default class GameSessionAPIClient
+export class GameSessionAPIClient
   extends BaseAPIClient
   implements IGameSessionAPIClient
 {

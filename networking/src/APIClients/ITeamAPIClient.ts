@@ -1,7 +1,7 @@
 import { ITeam } from "../Models";
 import { UpdateTeamInput } from "../GraphQLAPI";
 
-export default interface ITeamAPIClient {
+export interface ITeamAPIClient {
   getTeam(id: string): Promise<ITeam>;
 
   subscribeCreateTeam(

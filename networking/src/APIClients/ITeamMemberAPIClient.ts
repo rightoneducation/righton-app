@@ -1,6 +1,6 @@
 import { ITeamMember } from "../Models";
 
-export default interface ITeamMemberAPIClient {
+export interface ITeamMemberAPIClient {
   addTeamMemberToTeam(
     teamId: string,
     isFacilitator: boolean,

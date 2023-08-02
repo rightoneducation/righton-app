@@ -12,18 +12,21 @@ import {
   UpdateGameMutationVariables,
 } from "../../GraphQLAPI";
 import { IGame, IGameQuestion } from "../../Models";
-import { BaseAPIClient } from "./BaseAPIClient";
-import { createGame, getGame, listGames, updateGame } from "../../graphql";
+import { BaseAPIClient, GraphQLOptions } from "./BaseAPIClient";
+import {
+  createGame,
+  deleteGame,
+  getGame,
+  listGames,
+  updateGame,
+} from "../../graphql";
 import { GameParser } from "../../Parsers";
 import { GetGameQuery, ListGamesQuery } from "../../GraphQLAPI";
 import { isNullOrUndefined } from "../../IApiClient";
-import GameQuestionAPIClient from "./GameQuestionAPIClient";
-import IGameAPIClient from "../IGameAPIClient";
+import { GameQuestionAPIClient } from "./GameQuestionAPIClient";
+import { IGameAPIClient } from "../IGameAPIClient";
 
-export default class GameAPIClient
-  extends BaseAPIClient
-  implements IGameAPIClient
-{
+export class GameAPIClient extends BaseAPIClient implements IGameAPIClient {
   async listGames(): Promise<Array<IGame>> {
     let result = await this.callGraphQLThrowOnError<ListGamesQuery>(listGames);
     return GameParser.gamesFromAWSGames(result);

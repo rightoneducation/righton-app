@@ -17,9 +17,9 @@ import {
   updateTeamAnswer,
 } from "../../graphql";
 import { BaseAPIClient } from "./BaseAPIClient";
-import ITeamAnswerAPIClient from "../ITeamAnswerAPIClient";
+import { ITeamAnswerAPIClient } from "../ITeamAnswerAPIClient";
 
-export default class TeamAnswerAPIClient
+export class TeamAnswerAPIClient
   extends BaseAPIClient
   implements ITeamAnswerAPIClient
 {

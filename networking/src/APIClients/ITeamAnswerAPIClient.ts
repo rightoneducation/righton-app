@@ -1,6 +1,6 @@
 import { ITeamAnswer } from "../Models";
 
-export default interface ITeamAnswerAPIClient {
+export interface ITeamAnswerAPIClient {
   subscribeCreateTeamAnswer(
     id: string,
     callback: (result: ITeamAnswer) => void

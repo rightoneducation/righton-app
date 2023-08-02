@@ -4,7 +4,7 @@ import {
 } from "../GraphQLAPI";
 import { IGameQuestion } from "../Models";
 
-export default interface IGameQuestionAPIClient {
+export interface IGameQuestionAPIClient {
   createGameQuestion(
     createGameQuestion: CreateGameQuestionInput
   ): Promise<IGameQuestion>;

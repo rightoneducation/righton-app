@@ -10,7 +10,7 @@ import { TeamMemberParser } from "../../Parsers";
 import { createTeamMember, onUpdateTeamMember } from "../../graphql";
 import { BaseAPIClient } from "./BaseAPIClient";
 
-export default class TeamMemberAPIClient extends BaseAPIClient {
+export class TeamMemberAPIClient extends BaseAPIClient {
   async addTeamMemberToTeam(
     teamId: string,
     isFacilitator: boolean = false,
