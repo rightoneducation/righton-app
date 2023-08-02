@@ -1,115 +1,122 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-
-const AnswerSelectorDefault = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'isSubmitted',
-})<AnswerSelectorProps>(({ isSubmitted, theme }) => ({
-  
-}));
-
-const AnswerSelectorCorrect = styled(AnswerSelectorDefault)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.correctColor}`,
-  backgroundColor: `${theme.palette.primary.correctColor}`,
-}));
-
-const AnswerSelectorSelected = styled(AnswerSelectorDefault, {
-  shouldForwardProp: (prop) => prop !== 'isSubmitted',
-})(({ isSubmitted, theme }) => ({
-  border: isSubmitted
-    ? `1px solid ${theme.palette.primary.blue}`
-    : `2px solid ${theme.palette.primary.blue}`,
-  backgroundColor: isSubmitted
-    ? `${theme.palette.primary.lightGrey}`
-    : `${theme.palette.primary.main}`,
-}));
-
+import { Typography } from '@mui/material';
+import { makeStyles, Button, Box } from "@material-ui/core";
 
 export default function MistakeSelector({
   mistakeText,
-  mistakeSelectorType
+  mistakePercent,
+  isTop3Mode
 }) {
-  const theme = useTheme();
-  const letterCode = 'A'.charCodeAt(0) + index;
-  const selectedMistake = [
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <circle cx="8" cy="8" r="8" fill="white"/>
-    </svg>
+  const classes = useStyles();
+  const [isSelected, setIsSelected] = React.useState(false);
+  const circleIndicator = [
+    <>
+      {((isTop3Mode && isSelected) || !isTop3Mode) 
+        ?
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="16" 
+            height="16" 
+            viewBox="0 0 16 16" 
+            fill="none" 
+          >
+            {isSelected
+              ? <circle cx="8" cy="8" r="8" fill="white"/>
+              : (!isTop3Mode ? <circle cx="8.00391" cy="8" r="7.5" stroke="#B1BACB"/> : null)
+            }
+          </svg>
+        : null
+      }
+    </>
   ];
   const buttonContents = (
     <>
       <Typography
         variant="body2"
         sx={{
-          paddingLeft: `8px`,
-          paddingRight: `32px`,
+          paddingLeft: (isSelected && !isTop3Mode) ? `7px` : '8px',
+          paddingRight: (isSelected && !isTop3Mode) ? `31px` : '32px',
+          opacity: isSelected ? 1 : 0.5,
+          textAlign: 'left',
         }}
       >
         {mistakeText}
       </Typography>
-      { isSelected
-        ? selectedMistake
-        : null 
-      }
+      <Box style={{ display: 'flex', justifyContent: 'center' }}>
+        <Typography
+          variant="body2"
+          sx={{
+            paddingRight: (isSelected && !isTop3Mode) ? `23px` : `24px`,
+            opacity: 0.5,
+          }}
+        >
+          {mistakePercent}
+        </Typography>
+        <Box className={classes.selectIndicatorContainer} sx={{right: (isSelected && !isTop3Mode) ? `14px` : `16px`}} >
+          {circleIndicator} 
+        </Box>
+      </Box>
     </>
   );
-  switch (mistakeSelectorType) {
-    case TOP3:
+  switch (isTop3Mode) {
+    case true:
     default:
       return (
         <Button
-          onClick={() => handleSelectAnswer(index)}
-          disabled
+          onClick={() => setIsSelected(!isSelected)}
           variant="text"
-          isSubmitted={isSubmitted}
-          className={classes.top3MistakeSelector}
+          className={isSelected ? classes.top3MistakeSelectorSelected : classes.top3MistakeSelector}
         >
           {buttonContents}
         </Button>
       );
-    case MANUAL:
+    case false:
       return (
         <Button
-          onClick={() => handleSelectAnswer(index)}
-          disabled={isSubmitted}
+          onClick={() => setIsSelected(!isSelected)}
           variant="text"
-          isSubmitted={isSubmitted}
-          className={classes.manualMistakeSelector}
+          className={isSelected ? classes.manualMistakeSelectorSelected : classes.manualMistakeSelector}
         >
           {buttonContents}
         </Button>
       );
   }
 }
-const top3MistakeSelector = {
+
+const mistakeSelectorBase = {
   boxSizing: 'border-box',
   width: '100%',
   minHeight: '42px',
   borderRadius: '22px',
   display: 'flex',
-  justifyContent: 'flex-start',
+  justifyContent: 'space-between',
   alignItems: 'center',
   textTransform: 'none',
-  border: `1px solid ${theme.palette.primary.darkGrey}`,
-  backgroundColor: isSubmitted
-    ? `${theme.palette.primary.lightGrey}`
-    : `${theme.palette.primary.main}`,
-};
-const useStyles = makeStyles(theme => ({
-  top3MistakeSelector,
-  manualMistakeSelector: {
-    ...top3MistakeSelector,
-    boxSizing: 'border-box',
-    width: '100%',
-    minHeight: '42px',
-    borderRadius: '22px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    textTransform: 'none',
-    border: `1px solid ${theme.palette.primary.darkGrey}`,
-    backgroundColor: isSubmitted
-      ? `${theme.palette.primary.lightGrey}`
-      : `${theme.palette.primary.main}`,
+  color: 'white',
+}
+
+const useStyles = makeStyles(() => ({
+  top3MistakeSelectorSelected: {
+    ...mistakeSelectorBase,
+    backgroundColor: `rgba(255, 255, 255, 0.10)`
   },
+  top3MistakeSelector: {
+    ...mistakeSelectorBase,
+    backgroundColor: `rgba(255, 255, 255, 0.05)`
+
+  },
+  manualMistakeSelectorSelected: {
+    ...mistakeSelectorBase,
+    border: `2px solid white`,
+  },
+  manualMistakeSelector: {
+    ...mistakeSelectorBase,
+    border: `1px solid white`,
+  },
+  selectIndicatorContainer: {
+    position: 'relative',
+    width: `16px`,
+    height: `16px`,
+    paddingTop: '2px',
+  }
 }));

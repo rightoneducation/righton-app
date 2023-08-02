@@ -28,7 +28,6 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
   }
   return (
     <Grid className={classes.choices}>
-    {console.log(totalAnswers)}
       <Card
         className={correct ? classes.rightAnswer : classes.wrongAnswer}
         onClick={() => setExpanded(!expanded)}

@@ -5,34 +5,38 @@ import {
   Typography,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
+  Box
 } from "@material-ui/core";
 import MistakeSelector from "./MistakeSelector";
 
 export default function GameAnswers() {
   const classes = useStyles();
-  const MistakeSelectorType = { // TODO: conver to enum when upgrading
-    TOP3,
-    MANUAL
-  };
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
   const mistakesPlaceholder = [
-    "4x^4 - x^3 + 7x^2 - 6x",
-    "2x^4 + 6x^2 - 3x",
-    "No Idea",
-    "x^2 - 4x - 12",
-    "4x^4 - x^3 + 4x^2 - 3x",
-    "2x^4 + 12x^2 - 9x"
+    {answer: "4x^4 - x^3 + 7x^2 - 6x", percent: '44%'},
+    {answer: "2x^4 + 6x^2 - 3x", percent: '12%'},
+    {answer: "No Idea", percent: '8%'},
+    {answer: "x^2 - 4x - 12", percent : '13%'},
+    {answer: "4x^4 - x^3 + 4x^2 - 3x", percent: '16%'},
+    {answer: "2x^4 + 12x^2 - 9x", percent: '7%'},
   ];
-
+  const [isTop3Mode, setIsTop3Mode] = React.useState(true);
+  const handleModeChange = (event) => {
+    if (event.target.value === 'A') {
+      setIsTop3Mode(true);
+    } else {
+      setIsTop3Mode(false);
+    }
+  };
   return(
     <Paper className={classes.background} elevation={10}>
         <Typography className={classes.title}>{title}</Typography>
         <Typography className={classes.subtitle}>{subtitle}</Typography>
-        <RadioGroup defaultValue="A">
+        <RadioGroup defaultValue="A" onChange={handleModeChange}>
           <FormControlLabel 
             className={classes.radioLabel} 
             value="A" 
@@ -46,14 +50,16 @@ export default function GameAnswers() {
             label={radioButtonText2} 
           />
         </RadioGroup>
-        {mistakesPlaceholder.forEach((mistake, index) => {
-          return <MistakeSelector key={index} mistakeText={mistake} MistakeSelectorType={MistakeSelectorType} />
-        })}
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box'}}>
+          {mistakesPlaceholder.map((mistake, index) => {
+            return <MistakeSelector key={index} mistakeText={mistake.answer} mistakePercent={mistake.percent} isTop3Mode={isTop3Mode} />
+          })}
+        </Box>
     </Paper>
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(({
   background: {
     display: 'flex',
     flexDirection: 'column',
