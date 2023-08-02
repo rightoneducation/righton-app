@@ -152,7 +152,7 @@ export default function GameInProgress({
   ); // This will be moved later (work in progress - Drew)
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
-    selectedConfidenceIndex: number | null;
+    selectedConfidenceOption: string;
     isSelected: boolean;
     timeOfLastSelect: number;
   }>(() => {
@@ -196,7 +196,7 @@ export default function GameInProgress({
       setIsConfidenceError(false);
       setSelectConfidence({
         timeOfLastSelect: 0,
-        selectedConfidenceIndex: null,
+        selectedConfidenceOption: ConfidenceLevel.NOT_RATED,
         isSelected: false,
       });
     }
@@ -211,7 +211,6 @@ export default function GameInProgress({
   };
 
   const handleSelectConfidence = async (
-    index: number,
     confidence: ConfidenceLevel
   ) => {
     try {
@@ -223,7 +222,7 @@ export default function GameInProgress({
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
-        selectedConfidenceIndex: index,
+        selectedConfidenceOption: confidence,
         isSelected: true,
       }));
     } catch {
@@ -280,7 +279,7 @@ export default function GameInProgress({
             handleSelectAnswer={handleSelectAnswer}
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={selectConfidence.isSelected}
-            selectedConfidenceOption={selectConfidence.selectedConfidenceIndex}
+            selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
           />

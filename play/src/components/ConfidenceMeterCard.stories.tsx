@@ -2,6 +2,7 @@ import React from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
+import { ConfidenceLevel } from '@righton/networking';
 import ConfidenceMeterCard from './ConfidenceMeterCard';
 import Theme from '../lib/Theme';
 import i18n from '../i18n.mock';
@@ -22,12 +23,12 @@ const Template: StoryFn<typeof ConfidenceMeterCard> =
     );
   };
 
-const handleSelectOption = (option: number) => {};
+const handleSelectOption = (option: ConfidenceLevel) => { };
 
 // no input i.e. no selected option without sending response text
 export const noSelection = Template.bind({});
 noSelection.args = {
-  selectedOption: null,
+  selectedOption: ConfidenceLevel.NOT_RATED,
   isSelected: false,
   handleSelectOption,
 };
@@ -35,35 +36,35 @@ noSelection.args = {
 // different inputs with sending response text
 export const notAtAll = Template.bind({});
 notAtAll.args = {
-  selectedOption: 0,
+  selectedOption: ConfidenceLevel.NOT_AT_ALL,
   isSelected: true,
   handleSelectOption,
 };
 
 export const kinda = Template.bind({});
 kinda.args = {
-  selectedOption: 1,
+  selectedOption: ConfidenceLevel.KINDA,
   isSelected: true,
   handleSelectOption,
 };
 
 export const quite = Template.bind({});
 quite.args = {
-  selectedOption: 2,
+  selectedOption: ConfidenceLevel.QUITE,
   isSelected: true,
   handleSelectOption,
 };
 
 export const very = Template.bind({});
 very.args = {
-  selectedOption: 3,
+  selectedOption: ConfidenceLevel.VERY,
   isSelected: true,
   handleSelectOption,
 };
 
 export const totally = Template.bind({});
 totally.args = {
-  selectedOption: 4,
+  selectedOption: ConfidenceLevel.TOTALLY,
   isSelected: true,
   handleSelectOption,
 };

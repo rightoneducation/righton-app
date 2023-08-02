@@ -13,8 +13,8 @@ import { ConfidenceLevel, isNullOrUndefined } from '@righton/networking';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface ConfidenceMeterCardProps {
-  selectedOption: number | null;
-  handleSelectOption: (index: number, confidence: ConfidenceLevel) => void;
+  selectedOption: string;
+  handleSelectOption: (confidence: ConfidenceLevel) => void;
   isSelected: boolean;
   isSmallDevice: boolean;
   timeOfLastSelect: number;
@@ -32,8 +32,8 @@ export default function ConfidenceMeterCard({
   const theme = useTheme();
   const { t } = useTranslation();
   interface IConfidenceOption {
-    text: string
-    value: ConfidenceLevel
+    text: string;
+    value: ConfidenceLevel;
   }
 
   const confidenceOptionArray: IConfidenceOption[] = [
@@ -87,7 +87,8 @@ export default function ConfidenceMeterCard({
       </Typography>
     </Box>
   );
-  const responseOption = (text: string, index: number) => {
+
+  const responseOption = (option: IConfidenceOption) => {
     return (
       <Box
         maxWidth={`${theme.sizing.extraLargePadding}px`}
@@ -98,8 +99,8 @@ export default function ConfidenceMeterCard({
         }}
       >
         <FormControlLabel
-          key={index}
-          value={index}
+          key={option.value}
+          value={option.value}
           control={
             <Radio
               size={isSmallDevice ? 'small' : 'medium'}
@@ -110,7 +111,7 @@ export default function ConfidenceMeterCard({
               }}
             />
           }
-          label={text}
+          label={option.text}
           labelPlacement="bottom"
           sx={{ marginX: '0' }}
         />
@@ -142,9 +143,12 @@ export default function ConfidenceMeterCard({
       isNullOrUndefined(timeOfLastSelect) ||
       currentEpochTimeInSeconds - timeOfLastSelect > 5
     ) {
-      const idx = parseInt((event.target as HTMLInputElement).value, 10);
+      const confidence =
+        confidenceOptionArray.find(
+          (option) => option.value === event.target.value
+        )?.value ?? ConfidenceLevel.NOT_RATED;
       setTimeOfLastSelect(currentEpochTimeInSeconds);
-      handleSelectOption(idx, confidenceOptionArray[idx].value);
+      handleSelectOption(confidence);
     }
   };
 
@@ -162,9 +166,7 @@ export default function ConfidenceMeterCard({
           marginY: `${theme.sizing.mediumPadding}px`,
         }}
       >
-        {confidenceOptionArray.map((option, index) =>
-          responseOption(option.text, index)
-        )}
+        {confidenceOptionArray.map((option) => responseOption(option))}
       </RadioGroup>
     </FormControl>
   );

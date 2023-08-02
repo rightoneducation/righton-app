@@ -24,8 +24,8 @@ interface ChooseAnswerProps {
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
-  selectedConfidenceOption: number | null;
-  handleSelectConfidence: (option: number, confidence: ConfidenceLevel) => void;
+  selectedConfidenceOption: string;
+  handleSelectConfidence: (confidence: ConfidenceLevel) => void;
   isConfidenceSelected: boolean;
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
