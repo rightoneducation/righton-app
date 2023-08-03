@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Typography } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
 import { makeStyles } from '@material-ui/core';
+import { debounce } from 'lodash';
 import CustomTick from './CustomTick';
 
 const useStyles = makeStyles({
@@ -148,6 +149,8 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           theme={customTheme}
           width={boundingRect.width}
           height={300}
+        //width={650}
+        //height={290}
         >
           <VictoryAxis
             standalone={false}
@@ -196,7 +199,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             <VictoryPortal>
               <SelectedBar
                 x={selectedBarInfo.x - 50}
-                y={selectedBarInfo.y}
+                y={selectedBarInfo.y-3}
                 width={selectedBarInfo.width + 50}
                 height={selectedBarInfo.height}
               />
