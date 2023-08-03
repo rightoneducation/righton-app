@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
+import ConfidenceResponseCard from "../components/ConfidenceResponseCard";
 import HeaderGame from "../components/HeaderGame";
 import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
@@ -177,6 +178,7 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
+        <ConfidenceResponseCard></ConfidenceResponseCard>
         <GameAnswers questions={questions} questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
