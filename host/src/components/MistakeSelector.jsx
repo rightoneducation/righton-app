@@ -34,8 +34,8 @@ export default function MistakeSelector({
       <Typography
         variant="body2"
         sx={{
-          paddingLeft: (isSelected && !isTop3Mode) ? `7px` : '8px',
-          paddingRight: (isSelected && !isTop3Mode) ? `31px` : '32px',
+          paddingLeft:   '8px',
+          paddingRight: '32px',
           opacity: isSelected ? 1 : 0.5,
           textAlign: 'left',
         }}
@@ -46,13 +46,13 @@ export default function MistakeSelector({
         <Typography
           variant="body2"
           sx={{
-            paddingRight: (isSelected && !isTop3Mode) ? `23px` : `24px`,
+            paddingRight: `24px`,
             opacity: 0.5,
           }}
         >
           {mistakePercent}
         </Typography>
-        <Box className={classes.selectIndicatorContainer} sx={{right: (isSelected && !isTop3Mode) ? `14px` : `16px`}} >
+        <Box className={classes.selectIndicatorContainer} sx={{right:  `16px`}} >
           {circleIndicator} 
         </Box>
       </Box>
@@ -63,8 +63,10 @@ export default function MistakeSelector({
     default:
       return (
         <Button
+          key={isSelected ? 'selected' : 'unselected'} 
           onClick={() => setIsSelected(!isSelected)}
           variant="text"
+          disableRipple
           className={isSelected ? classes.top3MistakeSelectorSelected : classes.top3MistakeSelector}
         >
           {buttonContents}
@@ -73,11 +75,13 @@ export default function MistakeSelector({
     case false:
       return (
         <Button
+          key={isSelected ? 'selected' : 'unselected'} 
           onClick={() => setIsSelected(!isSelected)}
           variant="text"
+          disableRipple
           className={isSelected ? classes.manualMistakeSelectorSelected : classes.manualMistakeSelector}
         >
-          {buttonContents}
+         {buttonContents}
         </Button>
       );
   }
@@ -98,20 +102,32 @@ const mistakeSelectorBase = {
 const useStyles = makeStyles(() => ({
   top3MistakeSelectorSelected: {
     ...mistakeSelectorBase,
-    backgroundColor: `rgba(255, 255, 255, 0.10)`
+    backgroundColor: `rgba(255, 255, 255, 0.10)`,
+    "&.MuiButtonBase-root:hover": {
+      backgroundColor: `rgba(255, 255, 255, 0.10)`
+    }
   },
   top3MistakeSelector: {
     ...mistakeSelectorBase,
-    backgroundColor: `rgba(255, 255, 255, 0.05)`
+    backgroundColor: `rgba(255, 255, 255, 0.05)`,
+    "&.MuiButtonBase-root:hover": {
+      backgroundColor: `rgba(255, 255, 255, 0.05)`
+    }
 
   },
   manualMistakeSelectorSelected: {
     ...mistakeSelectorBase,
-    border: `2px solid white`,
+    outline: `2px solid white`,
+    "&.MuiButtonBase-root:hover": {
+      backgroundColor: `transparent`
+    }
   },
   manualMistakeSelector: {
     ...mistakeSelectorBase,
-    border: `1px solid white`,
+    outline: `1px solid white`,
+    "&.MuiButtonBase-root:hover": {
+      backgroundColor: `transparent`
+    }
   },
   selectIndicatorContainer: {
     position: 'relative',

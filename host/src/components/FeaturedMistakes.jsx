@@ -50,9 +50,9 @@ export default function GameAnswers() {
             label={radioButtonText2} 
           />
         </RadioGroup>
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box'}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
           {mistakesPlaceholder.map((mistake, index) => {
-            return <MistakeSelector key={index} mistakeText={mistake.answer} mistakePercent={mistake.percent} isTop3Mode={isTop3Mode} />
+            return <MistakeSelector key={index} mistakeText={mistake.answer} mistakePercent={mistake.percent} isTop3Mode={isTop3Mode} style={{width:'100%'}} />
           })}
         </Box>
     </Paper>

@@ -4,6 +4,7 @@ import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
+import FeaturedMistakes from "../components/FeaturedMistakes";
 
 export default function StartGame({
   teams = [],
@@ -18,18 +19,7 @@ export default function StartGame({
 
   return (
     <div className={classes.background}>
-      <div>
-        <HostHeader gameCode={gameCode} currentState={currentState} />
-        <GameCard questions={questions} title={title} />
-        <div className={classes.gameMode}>Basic Mode</div>
-        <CurrentStudents teams={teams} />
-      </div>
-      <FooterStartGame
-        teamsLength={(teams ? teams.length : 0)}
-        gameSessionId={gameSessionId}
-        currentState={currentState}
-        handleStartGame={handleStartGame}
-      />
+        <FeaturedMistakes />
     </div>
   );
 }
