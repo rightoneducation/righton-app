@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Typography } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
 import { makeStyles } from '@material-ui/core';
@@ -8,6 +8,7 @@ const useStyles = makeStyles({
   container: {
     textAlign: 'center',
     width: '100%',
+    height: '100%',
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
@@ -15,9 +16,10 @@ const useStyles = makeStyles({
     fontSize: '17px',
   },
   titleContainer: {
-    marginBottom: '-5%',
-    marginTop: '5%',
+    marginTop: '3%',
   },
+  graphContainer: {
+  }
 });
 
 
@@ -40,6 +42,7 @@ const SelectedBar = ({ x, y, width, height }) => {
     />
   );
 };
+
 const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
   const classes = useStyles();
   const [selectedBarInfo, setSelectedBarInfo] = useState(null);
@@ -72,6 +75,29 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     const tickInterval = Math.ceil(maxAnswerCount / tickCount);
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
   };
+
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const graphRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const node = graphRef.current;
+      if (node) {
+        const { width } = node.getBoundingClientRect();
+        setBoundingRect((prevRect) => ({
+          ...prevRect,
+          width,
+        }));
+      }
+    };
+
+    handleResize(); 
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const customTheme = {
     axis: {
@@ -115,67 +141,69 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           Number of players
         </Typography>
       </div>
-      <VictoryChart
-        domainPadding={20}
-        containerComponent={<VictoryContainer />}
-        theme={customTheme}
-        width={650}
-        height={310}
-      >
-        <VictoryAxis
-          standalone={false}
-          tickLabelComponent={<CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
-        />
-        {numPlayers < 5 && (
+      <div ref={graphRef} className={classes.graphContainer}>
+        <VictoryChart
+          domainPadding={15}
+          containerComponent={<VictoryContainer />}
+          theme={customTheme}
+          width={boundingRect.width}
+          height={300}
+        >
           <VictoryAxis
-            dependentAxis
-            crossAxis={false}
             standalone={false}
-            orientation="top"
-            tickValues={[0]}
+            tickLabelComponent={<CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
           />
-        )}
-        {numPlayers >= 5 && (
-          <VictoryAxis
-            dependentAxis
-            crossAxis={false}
-            standalone={false}
-            orientation="top"
-            tickValues={calculateRoundedTicks()}
-            tickFormat={tick => Math.round(tick)}
-          />
-        )}
-        <VictoryBar
-          data={data}
-          y="answerCount"
-          x="answerChoice"
-          horizontal
-          cornerRadius={{ topLeft: 4, topRight: 4 }}
-          labels={({ datum }) => `${datum.answerCount}`}
-          barWidth={({ datum }) =>  datum.answerCount !== 0 ? 18 : 30} 
-          labelComponent={
-            <VictoryLabel dx={({ datum }) =>  datum.answerCount > 0 ? -2 : 10} />
-          }
-          events={[
-            {
-              target: 'data',
-              eventHandlers: {
-                onClick: handleSelectBar,
-              },
-            },
-          ]}
-        />
-        {selectedBarInfo && (
-          <VictoryPortal>
-            <SelectedBar
-              x={selectedBarInfo.x - 50}
-              y={selectedBarInfo.y}
-              width={selectedBarInfo.width + 50}
-              height={selectedBarInfo.height}
+          {numPlayers < 5 && (
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              standalone={false}
+              orientation="top"
+              tickValues={[0]}
             />
-          </VictoryPortal>
-        )}
-      </VictoryChart>
+          )}
+          {numPlayers >= 5 && (
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              standalone={false}
+              orientation="top"
+              tickValues={calculateRoundedTicks()}
+              tickFormat={tick => Math.round(tick)}
+            />
+          )}
+          <VictoryBar
+            data={data}
+            y="answerCount"
+            x="answerChoice"
+            horizontal
+            cornerRadius={{ topLeft: 4, topRight: 4 }}
+            labels={({ datum }) => `${datum.answerCount}`}
+            barWidth={({ datum }) => datum.answerCount !== 0 ? 18 : 27}
+            labelComponent={
+              <VictoryLabel dx={({ datum }) => datum.answerCount > 0 ? -2 : 10} />
+            }
+            events={[
+              {
+                target: 'data',
+                eventHandlers: {
+                  onClick: handleSelectBar,
+                },
+              },
+            ]}
+          />
+          {selectedBarInfo && (
+            <VictoryPortal>
+              <SelectedBar
+                x={selectedBarInfo.x - 50}
+                y={selectedBarInfo.y}
+                width={selectedBarInfo.width + 50}
+                height={selectedBarInfo.height}
+              />
+            </VictoryPortal>
+          )}
+        </VictoryChart>
+      </div>
     </div>
   );
 };
