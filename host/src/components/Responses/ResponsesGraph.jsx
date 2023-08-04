@@ -70,12 +70,15 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     }
   };
 
+  const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
+
   const calculateRoundedTicks = () => {
     const maxAnswerCount = Math.max(...data.map(({ answerCount }) => answerCount));
-    const tickCount = Math.min(maxAnswerCount, 4);
-    const tickInterval = Math.ceil(maxAnswerCount / tickCount);
+    const tickInterval = 5;
+    const tickCount = Math.ceil(maxAnswerCount / tickInterval);
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
   };
+
 
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
@@ -92,7 +95,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       }
     };
 
-    handleResize(); 
+    handleResize();
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -156,7 +159,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             standalone={false}
             tickLabelComponent={<CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
           />
-          {numPlayers < 5 && (
+          {largestAnswerCount < 5 && (
             <VictoryAxis
               dependentAxis
               crossAxis={false}
@@ -165,7 +168,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
               tickValues={[0]}
             />
           )}
-          {numPlayers >= 5 && (
+          {largestAnswerCount >= 5 && (
             <VictoryAxis
               dependentAxis
               crossAxis={false}
@@ -199,7 +202,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             <VictoryPortal>
               <SelectedBar
                 x={selectedBarInfo.x - 50}
-                y={selectedBarInfo.y-3}
+                y={selectedBarInfo.y - 3}
                 width={selectedBarInfo.width + 50}
                 height={selectedBarInfo.height}
               />
