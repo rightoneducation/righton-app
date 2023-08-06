@@ -32,7 +32,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "flex-start",
     alignSelf: "stretch",
-    margin: "12px"
+    margin: "12px",
+    maxWidth: "332px"
   },
   responseCard: {
     display: "flex",
