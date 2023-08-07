@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { 
   Paper,
@@ -16,21 +16,40 @@ export default function GameAnswers() {
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
-  const mistakesPlaceholder = [
-    {answer: "4x^4 - x^3 + 7x^2 - 6x", percent: '44%'},
-    {answer: "2x^4 + 6x^2 - 3x", percent: '12%'},
-    {answer: "No Idea", percent: '8%'},
-    {answer: "x^2 - 4x - 12", percent : '13%'},
-    {answer: "4x^4 - x^3 + 4x^2 - 3x", percent: '16%'},
-    {answer: "2x^4 + 12x^2 - 9x", percent: '7%'},
-  ];
-  const [isTop3Mode, setIsTop3Mode] = React.useState(true);
+  const [sortedMistakesPlaceholder, setSortedMistakesPlaceholder] = useState([
+    {answer: "4x^4 - x^3 + 7x^2 - 6x", percent: '44%', isSelected: true},
+    {answer: "2x^4 + 6x^2 - 3x", percent: '16%', isSelected: true},
+    {answer: "No Idea", percent: '13%', isSelected: true},
+    {answer: "x^2 - 4x - 12", percent : '12%', isSelected: false},
+    {answer: "4x^4 - x^3 + 4x^2 - 3x", percent: '8%', isSelected: false},
+    {answer: "2x^4 + 12x^2 - 9x", percent: '7%', isSelected: false},
+  ]);
+  const [isTop3Mode, setIsTop3Mode] = useState(true);
+  const resetMistakesToTop3 = () => {
+    const resetMistakes = sortedMistakesPlaceholder.map((mistake, index) => {
+      if (index < 3){
+        return {...mistake, isSelected: true};
+      }
+      return {...mistake, isSelected: false};
+    })
+    setSortedMistakesPlaceholder(resetMistakes);
+  };
+  
   const handleModeChange = (event) => {
     if (event.target.value === 'A') {
+      resetMistakesToTop3();
       setIsTop3Mode(true);
     } else {
       setIsTop3Mode(false);
     }
+  };
+
+  const handleSelectMistake = (index) => {
+    setSortedMistakesPlaceholder((prev) => {
+      const newMistakes = [...prev];
+      newMistakes[index].isSelected = !newMistakes[index].isSelected;
+      return newMistakes;
+    })
   };
   return(
     <Paper className={classes.background} elevation={10}>
@@ -51,8 +70,17 @@ export default function GameAnswers() {
           />
         </RadioGroup>
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
-          {mistakesPlaceholder.map((mistake, index) => {
-            return <MistakeSelector key={index} mistakeText={mistake.answer} mistakePercent={mistake.percent} isTop3Mode={isTop3Mode} style={{width:'100%'}} />
+          {sortedMistakesPlaceholder.map((mistake, index) => {
+            return <MistakeSelector 
+              key={index} 
+              mistakeText={mistake.answer} 
+              mistakePercent={mistake.percent} 
+              isTop3Mode={isTop3Mode} 
+              isSelected={mistake.isSelected} 
+              mistakeIndex={index}
+              handleSelectMistake={handleSelectMistake} 
+              style={{width:'100%'}}  
+            />
           })}
         </Box>
     </Paper>

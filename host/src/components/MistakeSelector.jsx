@@ -5,10 +5,12 @@ import { makeStyles, Button, Box } from "@material-ui/core";
 export default function MistakeSelector({
   mistakeText,
   mistakePercent,
-  isTop3Mode
+  mistakeIndex,
+  isTop3Mode,
+  isSelected,
+  handleSelectMistake,
 }) {
   const classes = useStyles();
-  const [isSelected, setIsSelected] = React.useState(false);
   const circleIndicator = [
     <>
       {((isTop3Mode && isSelected) || !isTop3Mode) 
@@ -64,9 +66,9 @@ export default function MistakeSelector({
       return (
         <Button
           key={isSelected ? 'selected' : 'unselected'} 
-          onClick={() => setIsSelected(!isSelected)}
           variant="text"
           disableRipple
+          disabled
           className={isSelected ? classes.top3MistakeSelectorSelected : classes.top3MistakeSelector}
         >
           {buttonContents}
@@ -76,7 +78,7 @@ export default function MistakeSelector({
       return (
         <Button
           key={isSelected ? 'selected' : 'unselected'} 
-          onClick={() => setIsSelected(!isSelected)}
+          onClick={() => handleSelectMistake(mistakeIndex)}
           variant="text"
           disableRipple
           className={isSelected ? classes.manualMistakeSelectorSelected : classes.manualMistakeSelector}
@@ -97,6 +99,9 @@ const mistakeSelectorBase = {
   alignItems: 'center',
   textTransform: 'none',
   color: 'white',
+  "&:disabled": {
+    color: 'white',
+  }
 }
 
 const useStyles = makeStyles(() => ({
