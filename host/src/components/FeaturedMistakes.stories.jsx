@@ -1,5 +1,6 @@
 import React from "react";
 import FeaturedMistakes from "./FeaturedMistakes";
+import "../index.css";
 
 export default {
   title: "FeaturedMistakes",
