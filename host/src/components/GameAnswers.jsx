@@ -35,6 +35,8 @@ export default function GameAnswers({ questions, questionChoices, currentQuestio
   const data = Object.keys(answersByQuestion).map((index) => ({
     count: answersByQuestion[index],
     label: letterDictionary[index].replace('. ', ''),
+     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+     answer: questionChoices[index].text,
   }));
 
 

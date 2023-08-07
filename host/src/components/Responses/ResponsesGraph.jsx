@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, makeStyles } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
-import { makeStyles } from '@material-ui/core';
 import { debounce } from 'lodash';
 import CustomTick from './CustomTick';
+import CustomLabel from './CustomLabel';
+import CustomBar from './CustomBar';
 
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
     width: '100%',
-    height: '100%',
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
@@ -19,56 +19,52 @@ const useStyles = makeStyles({
   titleContainer: {
     marginTop: '3%',
   },
-  graphContainer: {
-  }
+  tooltip: {}
 });
 
-
-const SelectedBar = ({ x, y, width, height }) => {
-  const padding = 5;
-  const selectedWidth = width + padding * 2;
-  const selectedHeight = height + padding * 2;
-
-  return (
-    <rect
-      x={x - padding}
-      y={y - padding}
-      width={selectedWidth}
-      height={selectedHeight}
-      fill="rgba(255, 255, 255, 0.25)"
-      stroke="transparent"
-      strokeWidth={3}
-      rx={8}
-      ry={8}
-    />
-  );
-};
-
 const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
-  const classes = useStyles();
-  const [selectedBarInfo, setSelectedBarInfo] = useState(null);
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const graphRef = useRef(null);
+  const barThickness = 18;
+  const barThicknessZero = 27;
+  const smallPadding = 8;
+  const noResponseLabel = '–';
+  // victory applies a default of 50px to the VictoryChart component
+  // we intentionally set this so that we can reference it programmatically throughout the chart
+  const defaultVictoryPadding = 50;
 
+  const [selectedBarIndex, setSelectedBarIndex] = useState(null);
+
+  useEffect(() => {
+    const node = graphRef.current;
+    if (node) {
+      const updateRect = debounce(() => {
+        setBoundingRect(node.getBoundingClientRect());
+      });
+      updateRect();
+      window.addEventListener('resize', updateRect);
+
+      return () => {
+        updateRect.cancel();
+        window.removeEventListener('resize', updateRect);
+      };
+    }
+  }, []);
+
+  const classes = useStyles();
   const reversedResponses = [
-    { label: "–", count: numPlayers - totalAnswers },
+    { label: noResponseLabel, count: numPlayers - totalAnswers, answer: 'No response' },
     ...studentResponses,
   ].reverse();
 
-  const data = reversedResponses.map(({ label, count }) => ({
+  
+  const data = reversedResponses.map(({ label, count, answer }) => ({
     answerChoice: label,
     answerCount: count,
+    answerText: answer,
   }));
-
+  
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-
-  const handleSelectBar = (event) => {
-    const barElement = event.target;
-    const { x, y, width, height } = barElement.getBBox();
-    if (selectedBarInfo && selectedBarInfo.x === x && selectedBarInfo.y === y && selectedBarInfo.width === width && selectedBarInfo.height === height) {
-      setSelectedBarInfo(null);
-    } else {
-      setSelectedBarInfo({ x, y, width, height });
-    }
-  };
 
   const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
 
@@ -78,10 +74,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     const tickCount = Math.ceil(maxAnswerCount / tickInterval);
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
   };
-
-
-  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
-  const graphRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -102,6 +94,8 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+
 
   const customTheme = {
     axis: {
@@ -126,6 +120,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
           stroke: '#FFF',
           strokeWidth: 1,
+          margin: 300,
         },
         labels: {
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
@@ -139,25 +134,25 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   };
 
   return (
-    <div className={classes.container} >
+    <div className={classes.container}>
       <div className={classes.titleContainer}>
         <Typography className={classes.title}>
           Number of players
         </Typography>
       </div>
-      <div ref={graphRef} className={classes.graphContainer}>
+      <div ref={graphRef} >
         <VictoryChart
-          domainPadding={15}
+          domainPadding={37}
+          padding={defaultVictoryPadding}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}
-          height={300}
-        //width={650}
-        //height={290}
+          height={410}
         >
           <VictoryAxis
             standalone={false}
-            tickLabelComponent={<CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+            tickLabelComponent={
+            <CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
@@ -183,31 +178,21 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             y="answerCount"
             x="answerChoice"
             horizontal
+            standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             labels={({ datum }) => `${datum.answerCount}`}
-            barWidth={({ datum }) => datum.answerCount !== 0 ? 18 : 27}
+            barWidth={({ datum }) =>  datum.answerCount !== 0 ? barThickness : barThicknessZero} 
+            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width-(defaultVictoryPadding+15)} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex}/>}
             labelComponent={
-              <VictoryLabel dx={({ datum }) => datum.answerCount > 0 ? -2 : 10} />
+                <CustomLabel 
+                  barThickness={barThickness} 
+                  smallPadding={smallPadding} 
+                  defaultVictoryPadding={defaultVictoryPadding} 
+                  questionChoices={questionChoices}
+                  noResponseLabel={noResponseLabel}
+                  />
             }
-            events={[
-              {
-                target: 'data',
-                eventHandlers: {
-                  onClick: handleSelectBar,
-                },
-              },
-            ]}
           />
-          {selectedBarInfo && (
-            <VictoryPortal>
-              <SelectedBar
-                x={selectedBarInfo.x - 50}
-                y={selectedBarInfo.y - 3}
-                width={selectedBarInfo.width + 50}
-                height={selectedBarInfo.height}
-              />
-            </VictoryPortal>
-          )}
         </VictoryChart>
       </div>
     </div>
