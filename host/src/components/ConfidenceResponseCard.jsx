@@ -20,6 +20,9 @@ export default function GameAnswersDropdown({ }) {
           Players are asked how sure they are of their answer for this question.
         </Typography>
         <ConfidenceResponseGraph></ConfidenceResponseGraph>
+        <Typography className={classes.hintText}>
+          Tap on a response to see more details.
+        </Typography>
       </Card>
     </Grid>
   );
@@ -64,4 +67,15 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400,
     lineHeight: "normal"
   },
+  hintText: {
+    color: "#FFF",
+    textAlign: "center",
+    fontFamily: "Poppins",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: "normal",
+    opacity: 0.6,
+    alignSelf: "stretch",
+  }
 }));
