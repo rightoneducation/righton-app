@@ -182,7 +182,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             labels={({ datum }) => `${datum.answerCount}`}
             barWidth={({ datum }) =>  datum.answerCount !== 0 ? barThickness : barThicknessZero} 
-            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width-(defaultVictoryPadding+15)} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex}/>}
+            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width-(defaultVictoryPadding+30)} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex}/>}
             labelComponent={
                 <CustomLabel 
                   barThickness={barThickness} 
