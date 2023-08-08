@@ -25,12 +25,28 @@ const NewPointsAnimation = styled('div')({
   position: 'absolute',
   zIndex: 2,
   '@keyframes newScoreUp': {
-    '0%': { transform: 'translateY(-110%) rotate(0deg) scale(1.0)' },
-    '10%': { opacity: 1, transform: 'translateY(-110%) rotate(0deg) scale(1.2)' },
-    '15%, 25%': { opacity: 1, transform: 'translateY(-110%) rotate(-12deg) scale(1.2)' },
-    '20%, 30%': { opacity: 1, transform: 'translateY(-110%) rotate(12deg) scale(1.2)' },
-    '40%': { opacity: 1, transform: 'translateY(-110%) rotate(0deg) scale(1.0)' },
-    '100%': { transform: 'translateY(0)' },
+    '0%': { 
+      transform: 'translateY(-110%) rotate(0deg) scale(1.0)' 
+    },
+    '10%': { 
+      opacity: 1, 
+      transform: 'translateY(-110%) rotate(0deg) scale(1.2)' 
+    },
+    '15%, 25%': { 
+      opacity: 1, 
+      transform: 'translateY(-110%) rotate(-12deg) scale(1.2)' 
+    },
+    '20%, 30%': { 
+      opacity: 1, 
+      transform: 'translateY(-110%) rotate(12deg) scale(1.2)' 
+    },
+    '40%': { 
+      opacity: 1, 
+      transform: 'translateY(-110%) rotate(0deg) scale(1.0)' 
+    },
+    '100%': { 
+      transform: 'translateY(0)' 
+    },
   },
 });
 
