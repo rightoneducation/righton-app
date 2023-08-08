@@ -20,23 +20,16 @@ const NewPointsPill = styled(ScorePill)(({ theme }) => ({
 }));
 
 const NewPointsAnimation = styled('div')({
-  animation: `newScoreUp 1000ms cubic-bezier(0.4, 0, 0.2, 1)`,
+  animation: `newScoreUp 3000ms cubic-bezier(0.4, 0, 0.2, 1)`,
   opacity: 0,
   position: 'absolute',
   zIndex: 2,
   '@keyframes newScoreUp': {
-    '0%': {
-      opacity: 0,
-      transform: 'translateY(-110%)',
-    },
-    '50%': {
-      opacity: 1,
-      transform: 'translateY(-110%)',
-    },
-    '100%': {
-      opacity: 1,
-      transform: 'translateY(0)',
-    },
+    '10%': { opacity: 1, transform: 'translateY(-110%) scale(1.2)' },
+    '15%, 25%': { opacity: 1, transform: 'translateY(-110%) rotate(-12deg) scale(1.2)' },
+    '20%, 30%': { opacity: 1, transform: 'translateY(-110%) rotate(12deg) scale(1.2)' },
+    '40%': { opacity: 1, transform: 'translateY(-110%) rotate(6deg) scale(1.2)' },
+    '100%': { transform: 'translateY(0)' },
   },
 });
 
