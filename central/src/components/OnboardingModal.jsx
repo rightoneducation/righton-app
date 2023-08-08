@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles} from '@material-ui/core';
 import Modal from 'react-modal';
-import OnboardingLogo from '../images/OnboardingLogo.svg';
+import OnboardingLogo from '../images/OnboardingLogo.png';
 import OnboardingPickAGame from '../images/OnboardingPickAGame.png';
 import OnboardingShareYourGame from '../images/OnboardingShareYourGame.png';
 import OnboardingPlayOnAnyDevice from '../images/OnboardingPlayOnAnyDevice.png';
@@ -15,9 +15,13 @@ import 'swiper/css/pagination';
 
 
 export default function GameModal({ modalOpen, showModalGetApp, handleModalClose}) {
+  const smallBreakPoint = 569;
+  const mediumBreakPoint = 991;
+  const isTablet = useMediaQuery({ query: `(min-width: ${smallBreakPoint}px) and (max-width: ${mediumBreakPoint}px)` });
+  const isMobile = useMediaQuery({query: `(max-width: ${smallBreakPoint}px)`});
   const classes = useStyles();
-  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
-
+    console.log(isMobile);
+    console.log(isTablet);
    return (
     <div>
       <Modal 
@@ -32,7 +36,7 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
               margin: 'auto',
               maxWidth: '800px',
               minWidth: '260px',
-              maxHeight: '670px',
+           
               border: 'none',
              },
              overlay: {
@@ -49,13 +53,13 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
             shouldCloseOnOverlayClick={true}
             appElement={document.getElementById('root') || undefined}
            >
-          <div style={{minWidth:0, minHeight: 0, overflow: 'hidden'}} >
-            <Swiper initialSlide={(showModalGetApp ? 1 : 0)} navigation={(isMobile ? false: true)} pagination={{clickable:true}} modules={[Navigation, Pagination]} spaceBetween={8} className={classes.swiper} > 
+          <div style={{minWidth:0, minHeight: '610x', overflow: 'hidden'}} >
+            <Swiper initialSlide={(showModalGetApp ? 1 : 0)} navigation={((isMobile || isTablet) ? false: true)} pagination={{clickable:true}} modules={[Navigation, Pagination]} spaceBetween={8} className={classes.swiper} > 
                 <SwiperSlide className={classes.slide}>
-                 <div style={{display:'flex', flexDirection: 'column', alignItems: 'space-between', gap: 10}}>
+                 <div style={{height: '100%', display:'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 10}}>
                     <div className={classes.modalHead}> Welcome to RightOn! </div>
-                    <div>
-                      <img src={OnboardingLogo} alt='Logo' className={classes.logo} />
+                    <div className={classes.imageContainer} style={{height: isMobile ? '30vh' : (isTablet ? '40vh' :'50vh')}}>
+                      <img src={OnboardingLogo} alt='Logo' className={classes.screenshots} />
                     </div>
                     <div>
                     <div className={classes.modalBodyBreak}> Inspire learning by embracing mistakes!</div>
@@ -66,20 +70,20 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
                   </div>
                 </SwiperSlide>
                 <SwiperSlide className={classes.slide}>
-                  <div style={{display:'flex', flexDirection: 'column', alignItems: 'space-between', gap: 10}}>
+                <div style={{height: '100%', display:'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 10}}>
                     <div className={classes.modalHead}> Pick a Game </div>
-                    <div>
-                      <img src={OnboardingPickAGame} alt='Pick A Game' className={classes.screenshots} />
+                    <div className={classes.imageContainer} style={{height: isMobile ? '30vh' : (isTablet ? '40vh' :'50vh')}}>
+                       <img src={OnboardingPickAGame} alt='Pick A Game' className={classes.screenshots} />
                     </div>
                     <div className={classes.modalBodyBreak}> After the game list has loaded, {`\n`} pick a game. </div>
                     <div className={classes.modalBody}> Each game can have one or more questions. </div> 
                   </div>
                 </SwiperSlide>
                 <SwiperSlide className={classes.slide}>
-                  <div style={{display:'flex', flexDirection: 'column', alignItems: 'space-between', gap: 10}}>
+                <div style={{height: '100%', display:'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 10}}>
                     <div className={classes.modalHead}> Launch and Share Your Game </div>
-                    <div>
-                      <img src={OnboardingShareYourGame} alt='Launch and Share Your Game' className={classes.screenshots} />
+                    <div className={classes.imageContainer} style={{height: isMobile ? '30vh' : (isTablet ? '40vh' :'50vh')}}>
+                     <img src={OnboardingShareYourGame} alt='Pick A Game' className={classes.screenshots} />
                     </div>
                     <div className={classes.modalBodyBreak}> When you've selected a game, press the
                     <div className={classes.modalBodyBold}> Launch Game </div> button to launch a game session. </div> 
@@ -87,9 +91,9 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
                   </div>
                 </SwiperSlide>
                 <SwiperSlide className={classes.slide}>
-                  <div style={{display:'flex', flexDirection: 'column', alignItems: 'space-between', gap: 10}}>
+                <div style={{height: '100%', display:'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 10}}>
                     <div className={classes.modalHead}> Play On Any Device </div>
-                    <div>
+                    <div className={classes.imageContainer} style={{height: isMobile ? '30vh' : (isTablet ? '40vh' :'50vh')}}>
                      <img src={OnboardingPlayOnAnyDevice} alt='Play On Any Device' className={classes.screenshots} />
                     </div>
                     <div className={classes.modalBodyBreak}> Students can join your game session through any browser by going to the link below:</div>
@@ -97,9 +101,9 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
                   </div>
                 </SwiperSlide>
                 <SwiperSlide className={classes.slide}>
-                  <div style={{display:'flex', flexDirection: 'column', alignItems: 'space-between', gap: 10}}>
+                <div style={{height: '100%', display:'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 10}}>
                     <div className={classes.modalHead}> Join the Game </div>
-                    <div>
+                    <div className={classes.imageContainer} style={{height: isMobile ? '30vh' : (isTablet ? '40vh' :'50vh')}}>
                       <img src={OnboardingJoinTheGame} alt='Join the Game' className={classes.screenshots} />
                     </div>
                     <div className={classes.modalBodyBreak}> Once students enter the Game Code, {'\n'} you're all ready to go! </div>
@@ -113,12 +117,27 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   logo: {
     height: '35vh',
   },
+  imageContainer: {
+    position: 'relative',
+    height: '100%',
+    width: 'auto',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   screenshots: {
-    height: '23vh',
+    minWidth: '260px',
+    maxWidth: '650px',
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    objectPosition: 'center',
   },
   qrCode: {
     height: '20vh',
@@ -133,16 +152,8 @@ const useStyles = makeStyles(theme => ({
   },
   slide: {
     textAlign: 'center',
-    margin: 'auto',
-    minHeight: '100%',
-  },
-  imageContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    gap: '20px',
+    margin: '0',
+    height: '100%',
   },
   modalHead: {
     fontSize: '30px',
@@ -150,6 +161,7 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Karla',
     color: '#FFF',
     lineHeight: '30px',
+    height: '60px',
     paddingBottom: '5px',
   },
   modalBody: {
@@ -216,4 +228,4 @@ const useStyles = makeStyles(theme => ({
   mySwiper: {
     swiperPaginationColor: '#FFF',
   },
-}));
+});
