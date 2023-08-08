@@ -20,8 +20,6 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
   const isTablet = useMediaQuery({ query: `(min-width: ${smallBreakPoint}px) and (max-width: ${mediumBreakPoint}px)` });
   const isMobile = useMediaQuery({query: `(max-width: ${smallBreakPoint}px)`});
   const classes = useStyles();
-    console.log(isMobile);
-    console.log(isTablet);
    return (
     <div>
       <Modal 
