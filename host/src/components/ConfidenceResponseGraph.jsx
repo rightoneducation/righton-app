@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Typography, Box } from '@material-ui/core';
 import { VictoryChart, VictoryStack, VictoryBar, VictoryLabel, VictoryAxis, VictoryLegend, Rect } from 'victory';
 import { makeStyles } from '@material-ui/core';
+import Legend from "../components/ConfidenceResponseLegend";
+import CustomBar from "../components/CustomBar";
 
 const useStyles = makeStyles({
   container: {
@@ -10,7 +12,6 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "stretch",
-    height: 400
   },
   labels: {
     color: 'rgba(255, 255, 255, 1)',
@@ -19,10 +20,6 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "stretch"
-  },
-  legend: {
-    display: "flex",
-    justifyContent: "center"
   }
 });
 const classes = useStyles;
@@ -57,71 +54,32 @@ const ResponsesGraph = () => {
     }
   }
 
-  const legend =
-    <div className={classes.legend} style={{
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: "16px"
-    }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        marginRight: "12px",
-        alignItems: "center"
-      }}>
-        <svg width={40} height={15}>
-          <rect width={40} height={15}
-            style={{
-              fill: "#FFF",
-              stroke: "#FFF",
-              strokeWidth: 2
-            }}
-          />
-        </svg>
+  const SelectedBar = ({ x, y, width, height }) => {
+    const padding = 5;
+    const selectedWidth = width + padding * 2;
+    const selectedHeight = height + padding * 2;
+    console.log('sup');
+    return (
+      <rect
+        x={x - padding}
+        y={y - padding}
+        width={selectedWidth}
+        height={selectedHeight}
+        fill="rgba(255, 255, 255, 0.25)"
+        stroke="transparent"
+        strokeWidth={3}
+        rx={8}
+        ry={8}
+      />
+    );
+  };
 
-        <Typography
-          className={classes.labels}
-          style={{
-            color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
-            opacity: 0.4,
-            paddingLeft: 5
-          }}>
-          Correct
-        </Typography>
-      </div>
-
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        marginRight: "12px",
-        alignItems: "center"
-      }}>
-        <svg width={40} height={15}>
-          <rect width={40} height={15}
-            style={{
-              fill: "transparent",
-              stroke: "#FFF",
-              strokeWidth: 2
-            }}
-          />
-        </svg>
-
-        <Typography
-          className={classes.labels}
-          style={{
-            color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
-            opacity: 0.4,
-            paddingLeft: 5
-          }}>
-          Incorrect
-        </Typography>
-      </div>
-    </div>
-
+  const [selectedBarIndex, setSelectedBarIndex] = useState(null);
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const barThickness = 18;
+  const barThicknessZero = 30;
+  const smallPadding = 8;
+  const defaultVictoryPadding = 50;
 
   const correctResponders = [
     { x: "Not\nrated", y: 2 },
@@ -139,6 +97,7 @@ const ResponsesGraph = () => {
     { x: "Very", y: 4 },
     { x: "Totally", y: 2 }
   ];
+
   return (
     <div className={classes.container}>
       <div style={{
@@ -159,6 +118,7 @@ const ResponsesGraph = () => {
       </div>
       <VictoryChart theme={customThemeGraph} height={200}>
         <VictoryStack
+          standalone={false}
           labelComponent={
             <VictoryLabel
               className={classes.labels}
@@ -170,19 +130,25 @@ const ResponsesGraph = () => {
           }
         >
           <VictoryBar
+            name="incorrect"
             data={incorrectResponders}
             cornerRadius={({ index }) => correctResponders[index].y === 0 ? 5 : 0}
+            labels={({ datum, index }) => correctResponders[index].y + incorrectResponders[index].y}
+            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width - defaultVictoryPadding} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
           />
           <VictoryBar
+            name="correct"
             data={correctResponders}
             cornerRadius={5}
-            labels={({ datum, index }) => datum.y + incorrectResponders[index].y}
+            labels={({ datum, index }) => correctResponders[index].y + incorrectResponders[index].y}
+            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width - defaultVictoryPadding} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
           />
           <VictoryAxis
             tickValues={correctResponders.map(datum => datum.x)}
           />
         </VictoryStack>
       </VictoryChart>
+
       <div style={{
         display: 'flex',
         justifyContent: 'center'
@@ -197,7 +163,7 @@ const ResponsesGraph = () => {
           Confidence
         </Typography>
       </div>
-      {legend}
+      <Legend></Legend>
     </div>
   );
 };
