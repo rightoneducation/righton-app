@@ -14,34 +14,42 @@ export default function GameAnswersDropdown({ }) {
   const option = "Quite";
 
   return (
+
     <Grid className={classes.cardContainer}>
-      <Card className={classes.responseCard}>
-        <Typography className={classes.headerText}>
-          Confidence
-        </Typography>
-        <Typography className={classes.infoText}>
-          Players are asked how sure they are of their answer for this question.
-        </Typography>
+
+      <Typography className={classes.headerText}>
+        Confidence
+      </Typography>
+      <Typography className={classes.infoText}>
+        Players are asked how sure they are of their answer for this question.
+      </Typography>
+      <Grid className={classes.graphContainer}>
         <ConfidenceResponseGraph></ConfidenceResponseGraph>
-        {!selectedResponse ?
-          <Typography className={classes.hintText}>
-            Tap on a response to see more details.
-          </Typography> :
-          <Grid className={classes.responsesContainer}>
-            <Typography className={classes.answerOptionText}>
-              Showing players who answered:
-            </Typography>
-            <Typography className={classes.responseHeader}>{option} Confident</Typography>
-            <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
-            <ConfidenceResponseDropdown></ConfidenceResponseDropdown>
-          </Grid>
-        }
-      </Card>
+      </Grid>
+      {!selectedResponse ?
+        <Typography className={classes.hintText}>
+          Tap on a response to see more details.
+        </Typography> :
+        <Grid className={classes.responsesContainer}>
+          <Typography className={classes.answerOptionText}>
+            Showing players who answered:
+          </Typography>
+          <Typography className={classes.responseHeader}>{option} Confident</Typography>
+          <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
+          <ConfidenceResponseDropdown></ConfidenceResponseDropdown>
+        </Grid>
+      }
+
     </Grid>
+
   );
 }
 
 const useStyles = makeStyles(theme => ({
+  centerContent: {
+    display: "flex",
+    justifyContent: "center",
+  },
   cardContainer: {
     display: "flex",
     padding: "16px 12px",
@@ -49,7 +57,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: "flex-start",
     alignSelf: "stretch",
     margin: "12px",
-    maxWidth: "350px"
+    maxWidth: "700px",
+    justifyContent: "center",
   },
   responseCard: {
     display: "flex",
@@ -79,6 +88,13 @@ const useStyles = makeStyles(theme => ({
     fontStyle: "normal",
     fontWeight: 400,
     lineHeight: "normal"
+  },
+  graphContainer: {
+    display: "flex",
+    padding: "5px 4px",
+    flexDirection: "column",
+    alignItems: "center",
+    alignSelf: "stretch"
   },
   hintText: {
     color: "#FFF",
