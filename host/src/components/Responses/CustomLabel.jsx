@@ -2,16 +2,16 @@ import React from 'react';
 import { VictoryLabel } from 'victory';
 
 const CustomLabel = (props) => {
-  const { x, y, datum, barThickness, smallPadding, defaultVictoryPadding, noResponseLabel } = props;
+  const { x, y, datum, barThickness,labelOffset, xSmallPadding, mediumLargePadding, defaultVictoryPadding, noResponseLabel } = props;
   return (
       <g>
         {datum.answerCount !== 0 && 
           <VictoryLabel 
             {...props}
-            x={defaultVictoryPadding + 4} 
-            y={y - 3}
+            x={defaultVictoryPadding + xSmallPadding} 
+            y={y - labelOffset}
             dx={0}
-            dy={(-barThickness/2) - smallPadding/2}
+            dy={(-barThickness/2) - xSmallPadding}
             textAnchor="start"
             verticalAnchor="end"
             text={`${datum.answerText}`}
@@ -23,7 +23,7 @@ const CustomLabel = (props) => {
         }
         <VictoryLabel 
           {...props}
-          x={x > 70 ? x-3 : x+20 }
+          x={x > 70 ? x - labelOffset : x + mediumLargePadding }
           y={y}
           textAnchor="end"
           verticalAnchor="middle"

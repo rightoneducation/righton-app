@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
-import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
+import { VictoryChart, VictoryAxis, VictoryBar, VictoryContainer } from 'victory';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
@@ -18,7 +18,6 @@ const useStyles = makeStyles({
   titleContainer: {
     marginTop: '3%',
   },
-  tooltip: {}
 });
 
 const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
@@ -26,7 +25,13 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   const graphRef = useRef(null);
   const barThickness = 18;
   const barThicknessZero = 27;
+  const xSmallPadding = 4;
   const smallPadding = 8;
+  const mediumPadding = 16;
+  const mediumLargePadding = 20;
+  const largePadding = 24;
+  const extraLargePadding = 32;
+  const labelOffset = 3;
   const noResponseLabel = '–';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
@@ -40,13 +45,13 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
     ...studentResponses,
   ].reverse();
 
-  
+
   const data = reversedResponses.map(({ label, count, answer }) => ({
     answerChoice: label,
     answerCount: count,
     answerText: answer,
   }));
-  
+
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
 
   const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
@@ -86,7 +91,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
         axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
         grid: { stroke: 'transparent' },
         tickLabels: {
-          padding: 20
+          padding: mediumLargePadding
         },
       },
     },
@@ -125,17 +130,17 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       </div>
       <div ref={graphRef} >
         <VictoryChart
-          domainPadding={37}
+          domainPadding={36}
           padding={defaultVictoryPadding}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}
-          height={410}
+          height={400}
         >
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
-            <CustomTick reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+              <CustomTick largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
@@ -164,16 +169,18 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             labels={({ datum }) => `${datum.answerCount}`}
-            barWidth={({ datum }) =>  datum.answerCount !== 0 ? barThickness : barThicknessZero} 
-            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width-(defaultVictoryPadding+30)} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex}/>}
+            barWidth={({ datum }) => datum.answerCount !== 0 ? barThickness : barThicknessZero}
+            dataComponent={<CustomBar xSmallPadding={xSmallPadding} mediumPadding={mediumPadding} selectedWidth={boundingRect.width - (defaultVictoryPadding + extraLargePadding)} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
             labelComponent={
-                <CustomLabel 
-                  barThickness={barThickness} 
-                  smallPadding={smallPadding} 
-                  defaultVictoryPadding={defaultVictoryPadding} 
-                  questionChoices={questionChoices}
-                  noResponseLabel={noResponseLabel}
-                  />
+              <CustomLabel
+                labelOffset={labelOffset}
+                barThickness={barThickness}
+                xSmallPadding={xSmallPadding}
+                mediumLargePadding={mediumLargePadding}
+                defaultVictoryPadding={defaultVictoryPadding}
+                questionChoices={questionChoices}
+                noResponseLabel={noResponseLabel}
+              />
             }
           />
         </VictoryChart>

@@ -3,7 +3,7 @@ import { VictoryLabel } from 'victory';
 import check from '../../images/Pickedcheck.svg';
 import { Tooltip } from '@material-ui/core';
 
-const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, statePosition }) => {
+const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, statePosition, largePadding }) => {
     const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
     const fillTick = statePosition === 6 && showCustomTick;
 
@@ -13,7 +13,7 @@ const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, 
     return (
         <g>
             {showCustomTick && (
-                <foreignObject x={x - 25} y={y - 9.5} width={16} height={18}>
+                <foreignObject x={x - largePadding} y={y - largePadding/2.5} width={16} height={18}>
                     <Tooltip title="This is the correct answer" placement="top">
                         <img src={check} alt="correct answer" />
                     </Tooltip>
