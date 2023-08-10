@@ -132,32 +132,43 @@ export default function GameInProgress({
     return [];
   };
 
-  const getResponsesByQuestion = (teamsArray, questions, currentQuestionIndex) => {
-    let currentQuestionId = questions[currentQuestionIndex];
-    // console.log(questions[currentQuestionIndex].choices);
-    // let responses = 
+  // returns a dictionary of confidence levels with corresponding player answer 
+  // data array (player name, answer letter, answer correctness)
+  // assigned to the confidence key they selected
+  const getResponsesByQuestion = (teamsArray, currentQuestion) => {
+    const currentQuestionId = currentQuestion.id;
+    const choices = currentQuestion.choices;
+    // was unsure if it is possible for teachers to create games with more than 
+    // 4 answer choices so added letters beyond D for precaution
+    const lettersIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    let confidenceResponses = {
+      [ConfidenceLevel.NOT_RATED]: new Array(),
+      [ConfidenceLevel.NOT_AT_ALL]: new Array(),
+      [ConfidenceLevel.KINDA]: new Array(),
+      [ConfidenceLevel.QUITE]: new Array(),
+      [ConfidenceLevel.VERY]: new Array(),
+      [ConfidenceLevel.TOTALLY]: new Array()
+    }
+
     teamsArray.forEach(team => {
       team.teamMembers && team.teamMembers.forEach(teamMember => {
         teamMember.answers && teamMember.answers.forEach(answer => {
           if (answer.questionId === currentQuestionId) {
             if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-              // console.log(questions[currentQuestionIndex].choices);
+              const selectedChoice = choices.find(choice => choice.text === answer.text);
+              const isResponseCorrect = selectedChoice.isAnswer;
+              const responseLetter = lettersIndex[choices.indexOf(selectedChoice)];
+              const responseConfidence = answer.confidenceLevel;
+              const playerName = team.name;
+              confidenceResponses[responseConfidence].push({ name: playerName, answerChoice: responseLetter, correct: isResponseCorrect });
             }
           }
         })
       })
     })
-    // console.log(responses);
-    let confidenceResponse = {
-      [ConfidenceLevel.NOT_RATED]: [],
-      [ConfidenceLevel.NOT_AT_ALL]: [],
-      [ConfidenceLevel.KINDA]: [],
-      [ConfidenceLevel.QUITE]: [],
-      [ConfidenceLevel.VERY]: [],
-      [ConfidenceLevel.TOTALLY]: []
-    }
+    return confidenceResponses;
   }
-  getResponsesByQuestion(teamsArray, questions, currentQuestionIndex);
+
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
@@ -204,7 +215,7 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <ConfidenceResponseCard></ConfidenceResponseCard>
+        <ConfidenceResponseCard responses={getResponsesByQuestion(teamsArray, questions[currentQuestionIndex])} />
         <GameAnswers questions={questions} questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />

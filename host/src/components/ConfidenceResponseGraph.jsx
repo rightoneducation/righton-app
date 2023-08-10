@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import { debounce } from 'lodash';
 import Legend from "../components/ConfidenceResponseLegend";
 import CustomBar from "../components/CustomBar";
+import { ConfidenceLevel } from '@righton/networking';
 
 const useStyles = makeStyles({
   container: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
 const classes = useStyles;
 
 
-const ResponsesGraph = () => {
+const ResponsesGraph = ({ responses, selectedBarValue, setSelectedBarValue }) => {
   const correctColor = "#FFF";
   const incorrectColor = "transparent";
   const customThemeGraph = {
@@ -75,10 +76,9 @@ const ResponsesGraph = () => {
     );
   };
 
-  const [selectedBarIndex, setSelectedBarIndex] = useState(null);
   const barThickness = 55;
   const barThicknessZero = 30;
-  const smallPadding = 8;
+  const smallPadding = 12;
   const defaultVictoryPadding = 24;
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
@@ -97,21 +97,26 @@ const ResponsesGraph = () => {
       };
     }
   }, []);
+
+  const getNumRespondants = (confidence, correct) => {
+    return responses[confidence].filter(response => response.correct === correct).length;
+  }
+
   const correctResponders = [
-    { x: "Not\nrated", y: 2 },
-    { x: "Not at\nall", y: 0 },
-    { x: "Kinda", y: 0 },
-    { x: "Quite", y: 2 },
-    { x: "Very", y: 6 },
-    { x: "Totally", y: 0 }
+    { x: "Not\nrated", y: getNumRespondants(ConfidenceLevel.NOT_RATED, true), value: ConfidenceLevel.NOT_RATED },
+    { x: "Not at\nall", y: getNumRespondants(ConfidenceLevel.NOT_AT_ALL, true), value: ConfidenceLevel.NOT_AT_ALL },
+    { x: "Kinda", y: getNumRespondants(ConfidenceLevel.KINDA, true), value: ConfidenceLevel.KINDA },
+    { x: "Quite", y: getNumRespondants(ConfidenceLevel.QUITE, true), value: ConfidenceLevel.QUITE },
+    { x: "Very", y: getNumRespondants(ConfidenceLevel.VERY, true), value: ConfidenceLevel.VERY },
+    { x: "Totally", y: getNumRespondants(ConfidenceLevel.TOTALLY, true), value: ConfidenceLevel.TOTALLY }
   ];
   const incorrectResponders = [
-    { x: "Not\nrated", y: 2 },
-    { x: "Not at\nall", y: 0 },
-    { x: "Kinda", y: 2 },
-    { x: "Quite", y: 4 },
-    { x: "Very", y: 4 },
-    { x: "Totally", y: 2 }
+    { x: "Not\nrated", y: getNumRespondants(ConfidenceLevel.NOT_RATED, false), value: ConfidenceLevel.NOT_RATED },
+    { x: "Not at\nall", y: getNumRespondants(ConfidenceLevel.NOT_AT_ALL, false), value: ConfidenceLevel.NOT_AT_ALL },
+    { x: "Kinda", y: getNumRespondants(ConfidenceLevel.KINDA, false), value: ConfidenceLevel.KINDA },
+    { x: "Quite", y: getNumRespondants(ConfidenceLevel.QUITE, false), value: ConfidenceLevel.QUITE },
+    { x: "Very", y: getNumRespondants(ConfidenceLevel.VERY, false), value: ConfidenceLevel.VERY },
+    { x: "Totally", y: getNumRespondants(ConfidenceLevel.TOTALLY, false), value: ConfidenceLevel.TOTALLY }
   ];
 
   return (
@@ -158,7 +163,7 @@ const ResponsesGraph = () => {
               data={correctResponders}
               cornerRadius={5}
               labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
-              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height + defaultVictoryPadding} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
+              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height + defaultVictoryPadding} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue} />}
             />
             <VictoryAxis
               tickValues={correctResponders.map(datum => datum.x)}

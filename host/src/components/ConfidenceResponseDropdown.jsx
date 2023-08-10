@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import check from '../images/correctAnswerCheck.png';
 
-export default function ConfidenceResponseDropdown({ }) {
+export default function ConfidenceResponseDropdown({ responses }) {
   const useStyles = makeStyles(theme => ({
     container: {
       display: "flex",
@@ -54,6 +54,8 @@ export default function ConfidenceResponseDropdown({ }) {
     }
   }));
   const classes = useStyles();
+
+  // TODO: delete this later
   const optionResponses = [
     { name: 'Alex Williams', answer: 'C', correct: true },
     { name: 'Alessandro DeLuca-Smith', answer: 'C', correct: true },
@@ -67,13 +69,14 @@ export default function ConfidenceResponseDropdown({ }) {
     { name: 'Zander Lee', answer: 'A', correct: false }
   ];
 
-  const playerResponse = ({ name, answer, correct }) => {
+  // TODO: sort the response array by answer correctness + popularity
+  const playerResponse = ({ name, answerChoice, correct }) => {
     return (
       <Card className={classes.playerCard}>
         <Typography className={classes.nameText}>{name}</Typography>
         <Grid className={classes.answerDataContainer}>
           {correct && <img src={check} className={classes.check} />}
-          <Typography className={classes.answerText}>{answer}</Typography>
+          <Typography className={classes.answerText}>{answerChoice}</Typography>
         </Grid>
       </Card>
     );
@@ -81,7 +84,7 @@ export default function ConfidenceResponseDropdown({ }) {
 
   return (
     <Grid className={classes.container}>
-      {optionResponses.map((playerData) => playerResponse(playerData))}
+      {responses.map((playerData) => playerResponse(playerData))}
     </Grid>
   );
 };

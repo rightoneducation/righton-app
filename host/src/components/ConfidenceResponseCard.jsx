@@ -7,16 +7,32 @@ import {
 } from "@material-ui/core";
 import ConfidenceResponseGraph from "../components/ConfidenceResponseGraph";
 import ConfidenceResponseDropdown from "./ConfidenceResponseDropdown";
+import { ConfidenceLevel, isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswersDropdown({ }) {
+export default function GameAnswersDropdown({ responses }) {
   const classes = useStyles();
-  const [selectedResponse, setSelectedResponse] = useState(true);
-  const option = "Quite";
+  const [selectedBarValue, setSelectedBarValue] = useState(null);
 
+  const headerTranslation = (option) => {
+    switch (option) {
+      case ConfidenceLevel.NOT_RATED:
+        // TODO: (DESIGN COORD) should confirm with design what this message should be
+        return "No response";
+      case ConfidenceLevel.NOT_AT_ALL:
+        return "Not at all confident";
+      case ConfidenceLevel.KINDA:
+        return "Kinda confident";
+      case ConfidenceLevel.QUITE:
+        return "Quite confident";
+      case ConfidenceLevel.VERY:
+        return "Very confident";
+      case ConfidenceLevel.TOTALLY:
+        return "Totally confident";
+    }
+  }
+  // TODO: (DESIGN COORD) What should be displayed when there are 0 players who chose the selected response?
   return (
-
     <Grid className={classes.cardContainer}>
-
       <Typography className={classes.headerText}>
         Confidence
       </Typography>
@@ -24,9 +40,9 @@ export default function GameAnswersDropdown({ }) {
         Players are asked how sure they are of their answer for this question.
       </Typography>
       <Grid className={classes.graphContainer}>
-        <ConfidenceResponseGraph></ConfidenceResponseGraph>
+        <ConfidenceResponseGraph responses={responses} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue}></ConfidenceResponseGraph>
       </Grid>
-      {!selectedResponse ?
+      {isNullOrUndefined(selectedBarValue) ?
         <Typography className={classes.hintText}>
           Tap on a response to see more details.
         </Typography> :
@@ -34,12 +50,11 @@ export default function GameAnswersDropdown({ }) {
           <Typography className={classes.answerOptionText}>
             Showing players who answered:
           </Typography>
-          <Typography className={classes.responseHeader}>{option} Confident</Typography>
+          <Typography className={classes.responseHeader}>{headerTranslation(selectedBarValue)}</Typography>
           <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
-          <ConfidenceResponseDropdown></ConfidenceResponseDropdown>
+          <ConfidenceResponseDropdown responses={responses[selectedBarValue]}></ConfidenceResponseDropdown>
         </Grid>
       }
-
     </Grid>
 
   );
