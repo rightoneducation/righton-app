@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryContainer, VictoryPortal } from 'victory';
-import { debounce } from 'lodash';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
@@ -34,22 +33,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   const defaultVictoryPadding = 50;
 
   const [selectedBarIndex, setSelectedBarIndex] = useState(null);
-
-  useEffect(() => {
-    const node = graphRef.current;
-    if (node) {
-      const updateRect = debounce(() => {
-        setBoundingRect(node.getBoundingClientRect());
-      });
-      updateRect();
-      window.addEventListener('resize', updateRect);
-
-      return () => {
-        updateRect.cancel();
-        window.removeEventListener('resize', updateRect);
-      };
-    }
-  }, []);
 
   const classes = useStyles();
   const reversedResponses = [

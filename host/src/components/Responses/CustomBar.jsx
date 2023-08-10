@@ -29,6 +29,7 @@ const CustomBar = (props) => {
               rx={8}
               ry={8}
               onClick={() => setSelectedBarIndex(index)}
+              style={{cursor: 'pointer'}}
             />
         }
     </g>

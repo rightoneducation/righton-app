@@ -3,7 +3,6 @@ import { VictoryLabel } from 'victory';
 
 const CustomLabel = (props) => {
   const { x, y, datum, barThickness, smallPadding, defaultVictoryPadding, noResponseLabel } = props;
-  console.log("x"+x);
   return (
       <g>
         {datum.answerCount !== 0 && 
@@ -24,14 +23,14 @@ const CustomLabel = (props) => {
         }
         <VictoryLabel 
           {...props}
-          x={x >= 70 ? x-4 : x+10 }
+          x={x > 70 ? x-3 : x+20 }
           y={y}
           textAnchor="end"
           verticalAnchor="middle"
           text={ datum.answerCount > 0 ? `${datum.answerCount}` : ''}
           style={{
             fontSize: 15,
-            fill: datum.answerCount === 0 || datum.answerChoice === noResponseLabel ? '#FFF' : '#384466',
+            fill: datum.answerCount === 0 || datum.answerChoice === noResponseLabel || x <= 70 ? '#FFF' : '#384466',
           }} 
         />
    </g>
