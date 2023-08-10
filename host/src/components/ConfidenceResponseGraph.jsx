@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Box } from '@material-ui/core';
 import { VictoryChart, VictoryStack, VictoryBar, VictoryLabel, VictoryAxis, VictoryLegend, Rect } from 'victory';
 import { makeStyles } from '@material-ui/core';
+import { debounce } from 'lodash';
 import Legend from "../components/ConfidenceResponseLegend";
 import CustomBar from "../components/CustomBar";
 
@@ -75,12 +76,27 @@ const ResponsesGraph = () => {
   };
 
   const [selectedBarIndex, setSelectedBarIndex] = useState(null);
-  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
-  const barThickness = 18;
+  const barThickness = 55;
   const barThicknessZero = 30;
   const smallPadding = 8;
-  const defaultVictoryPadding = 50;
+  const defaultVictoryPadding = 24;
+  const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
+  const graphRef = useRef(null);
+  useEffect(() => {
+    const node = graphRef.current;
+    if (node) {
+      const updateRect = debounce(() => {
+        setBoundingRect(node.getBoundingClientRect());
+      });
+      updateRect();
+      window.addEventListener('resize', updateRect);
 
+      return () => {
+        updateRect.cancel();
+        window.removeEventListener('resize', updateRect);
+      };
+    }
+  }, []);
   const correctResponders = [
     { x: "Not\nrated", y: 2 },
     { x: "Not at\nall", y: 0 },
@@ -116,39 +132,40 @@ const ResponsesGraph = () => {
           Number of players
         </Typography>
       </div>
-      <VictoryChart theme={customThemeGraph} height={200}>
-        <VictoryStack
-          standalone={false}
-          labelComponent={
-            <VictoryLabel
-              className={classes.labels}
-              style={{
-                fill: '#FFF',
-                fontSize: 18,
-              }}
+      <div ref={graphRef} >
+        <VictoryChart theme={customThemeGraph} height={200}>
+          <VictoryStack
+            standalone={false}
+            labelComponent={
+              <VictoryLabel
+                className={classes.labels}
+                style={{
+                  fill: '#FFF',
+                  fontSize: 18,
+                }}
+              />
+            }
+          >
+            <VictoryBar
+              name="incorrect"
+              data={incorrectResponders}
+              cornerRadius={({ index }) => correctResponders[index].y === 0 ? 5 : 0}
+              labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
+            // dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height - defaultVictoryPadding - 60} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
             />
-          }
-        >
-          <VictoryBar
-            name="incorrect"
-            data={incorrectResponders}
-            cornerRadius={({ index }) => correctResponders[index].y === 0 ? 5 : 0}
-            labels={({ datum, index }) => correctResponders[index].y + incorrectResponders[index].y}
-            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width - defaultVictoryPadding} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
-          />
-          <VictoryBar
-            name="correct"
-            data={correctResponders}
-            cornerRadius={5}
-            labels={({ datum, index }) => correctResponders[index].y + incorrectResponders[index].y}
-            dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={boundingRect.width - defaultVictoryPadding} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
-          />
-          <VictoryAxis
-            tickValues={correctResponders.map(datum => datum.x)}
-          />
-        </VictoryStack>
-      </VictoryChart>
-
+            <VictoryBar
+              name="correct"
+              data={correctResponders}
+              cornerRadius={5}
+              labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
+              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height + defaultVictoryPadding} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
+            />
+            <VictoryAxis
+              tickValues={correctResponders.map(datum => datum.x)}
+            />
+          </VictoryStack>
+        </VictoryChart>
+      </div>
       <div style={{
         display: 'flex',
         justifyContent: 'center'

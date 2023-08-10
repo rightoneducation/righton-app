@@ -13,24 +13,24 @@ const useStyles = makeStyles((selectedBarIndex, index) => ({
 
 
 const CustomBar = (props) => {
-  const { x, y, smallPadding, selectedWidth, selectedHeight, datum, index, selectedBarIndex, setSelectedBarIndex } = props;
-  const offset = 14;
+  const { x, y, smallPadding, selectedWidth, selectedHeight, index, selectedBarIndex, setSelectedBarIndex } = props;
+  const offset = selectedWidth / 2;
   const classes = useStyles();
   const testfun = (index) => {
-    console.log("THIS IS A TEST")
+    console.log("BAR TEST");
     setSelectedBarIndex(index)
   }
-  console.log(props);
+
   return (
     <g style={{ pointerEvents: 'bounding-box' }}>
       <Bar {...props} />
 
       <rect
         className={classes.highlight}
-        x={18}
+        x={x - offset}
         y={y - smallPadding - offset / 2}
         width={selectedWidth}
-        height={selectedHeight + offset}
+        height={selectedHeight}
         fill={selectedBarIndex === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
         stroke="transparent"
         rx={8}

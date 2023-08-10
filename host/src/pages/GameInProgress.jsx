@@ -8,7 +8,7 @@ import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import { isNullOrUndefined, GameSessionState } from "@righton/networking";
+import { isNullOrUndefined, GameSessionState, ConfidenceLevel } from "@righton/networking";
 
 
 export default function GameInProgress({
@@ -57,7 +57,8 @@ export default function GameInProgress({
     8: "Go to Next Question",
     9: "Proceed to RightOn Central"
   };
-
+  // console.log(questions[currentQuestionIndex].id);
+  // console.log(teamsArray.map((team) => !isNullOrUndefined(team.teamMembers) ? team.teamMembers[0].answers.find(answer => answer.questionId === questions[currentQuestionIndex].id) : 'null'));
   const nextStateFunc = (currentState) => {
     let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
     return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
@@ -131,6 +132,32 @@ export default function GameInProgress({
     return [];
   };
 
+  const getResponsesByQuestion = (teamsArray, questions, currentQuestionIndex) => {
+    let currentQuestionId = questions[currentQuestionIndex];
+    // console.log(questions[currentQuestionIndex].choices);
+    // let responses = 
+    teamsArray.forEach(team => {
+      team.teamMembers && team.teamMembers.forEach(teamMember => {
+        teamMember.answers && teamMember.answers.forEach(answer => {
+          if (answer.questionId === currentQuestionId) {
+            if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+              // console.log(questions[currentQuestionIndex].choices);
+            }
+          }
+        })
+      })
+    })
+    // console.log(responses);
+    let confidenceResponse = {
+      [ConfidenceLevel.NOT_RATED]: [],
+      [ConfidenceLevel.NOT_AT_ALL]: [],
+      [ConfidenceLevel.KINDA]: [],
+      [ConfidenceLevel.QUITE]: [],
+      [ConfidenceLevel.VERY]: [],
+      [ConfidenceLevel.TOTALLY]: []
+    }
+  }
+  getResponsesByQuestion(teamsArray, questions, currentQuestionIndex);
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
@@ -155,7 +182,6 @@ export default function GameInProgress({
     }
     return footerButtonTextDictionary[statePosition];
   };
-
 
   return (
     <div className={classes.background}>
