@@ -101,7 +101,7 @@ export default function AnswerSelector({
             isSubmitted || answerStatus === AnswerState.CORRECT ? 0.5 : 1,
         }}
       >
-        {`${String.fromCharCode(letterCode)}`}
+        {String.fromCharCode(letterCode)}
       </Typography>
       <Typography
         variant="body2"

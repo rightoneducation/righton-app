@@ -65,10 +65,11 @@ export default function Leaderboard({
   }, [containerRef.current?.clientHeight, subContainerHeight]); // updates whenever the container is resized
 
   const { current: avatarNumbers } = useRef<number[]>(
-    teams
+    sortedTeams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        teams.map((team) =>
-          team === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+        sortedTeams.map((sortedTeam) =>{
+            return sortedTeam === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+          }
         )
       : // if teams is invalid, then return empty array
         []
