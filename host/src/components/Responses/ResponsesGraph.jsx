@@ -30,7 +30,9 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   const mediumPadding = 16;
   const mediumLargePadding = 20;
   const largePadding = 24;
-  const extraLargePadding = 32;
+  const xLargePadding = 32;
+  const xxLargePadding = 40;
+  const xxxLargePadding = 48;
   const labelOffset = 3;
   const noResponseLabel = '–';
   // victory applies a default of 50px to the VictoryChart component
@@ -170,7 +172,17 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             cornerRadius={{ topLeft: 4, topRight: 4 }}
             labels={({ datum }) => `${datum.answerCount}`}
             barWidth={({ datum }) => datum.answerCount !== 0 ? barThickness : barThicknessZero}
-            dataComponent={<CustomBar xSmallPadding={xSmallPadding} mediumPadding={mediumPadding} selectedWidth={boundingRect.width - (defaultVictoryPadding + extraLargePadding)} selectedHeight={18} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
+            dataComponent={
+              <CustomBar
+                xSmallPadding={xSmallPadding}
+                mediumPadding={mediumPadding}
+                xxxLargePadding={xxxLargePadding}
+                selectedWidth={boundingRect.width - (defaultVictoryPadding + xxLargePadding * 2)}
+                selectedHeight={18}
+                selectedBarIndex={selectedBarIndex}
+                setSelectedBarIndex={setSelectedBarIndex}
+              />
+            }
             labelComponent={
               <CustomLabel
                 labelOffset={labelOffset}

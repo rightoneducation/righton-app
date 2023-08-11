@@ -7,33 +7,37 @@ const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, 
     const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
     const fillTick = statePosition === 6 && showCustomTick;
 
-    const isFirstLabel = index === 0;
-    const isFirstLabelTooltip = isFirstLabel ? "Players who have not responded" : null;
+    const isNoResponse = index === reversedResponses.length - 1;
+
+    const commonStyle = {
+      fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
+      fontFamily: 'Poppins',
+      fontWeight: '800',
+      fontSize: '16px',
+    };
 
     return (
+      <g>
+        {showCustomTick && (
+          <foreignObject x={x - largePadding} y={y - largePadding / 2.5} width={16} height={18}>
+            <Tooltip title="This is the correct answer" placement="top">
+              <span>
+                <img src={check} alt="correct answer" />
+              </span>
+            </Tooltip>
+          </foreignObject>
+        )}
         <g>
-            {showCustomTick && (
-                <foreignObject x={x - largePadding} y={y - largePadding/2.5} width={16} height={18}>
-                    <Tooltip title="This is the correct answer" placement="top">
-                        <img src={check} alt="correct answer" />
-                    </Tooltip>
-                </foreignObject>
-            )}
-            <VictoryLabel x={x} y={y} text={text} style={{
-                fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
-                fontFamily: 'Poppins',
-                fontWeight: '800',
-                fontSize: '16px'
-            }}>
-                {isFirstLabel && (
-                    <Tooltip title={isFirstLabelTooltip} placement="top">
-                        <span>{text}</span>
-                    </Tooltip>
-                )}
-            </VictoryLabel>
+          {isNoResponse ? (
+            <Tooltip title="Players who have not responded" placement="top" >
+              <VictoryLabel x={x} y={y} text={text} style={commonStyle} />
+            </Tooltip>
+          ) : (
+            <VictoryLabel x={x} y={y} text={text} style={commonStyle} />
+          )}
         </g>
+      </g>
     );
 };
 
 export default CustomTick;
-
