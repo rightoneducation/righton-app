@@ -24,7 +24,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
-  const barThicknessZero = 27;
+  const barThicknessZero = 26;
   const xSmallPadding = 4;
   const smallPadding = 8;
   const mediumPadding = 16;
@@ -142,7 +142,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
-              <CustomTick largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+              <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
