@@ -29,19 +29,17 @@ const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, 
           </Tooltip>
         </foreignObject>
       )}
-      <g>
         {isNoResponse ? (
-          <foreignObject x={x-1} y={y - mediumPadding} width={16} height={18}>
-            <Tooltip title="Players who have not responded" placement="top" >
+          <foreignObject x={x-1} y={y - mediumPadding} width={16} height={32}>
+            <Tooltip title="Players who have not responded" placement="top">
               <span>
-                <img src={noResponse} alt="no response" />
+                <img src={noResponse} alt="no response"/>
               </span>
             </Tooltip>
           </foreignObject>
         ) : (
           <VictoryLabel x={x} y={y} text={text} style={commonStyle} />
         )}
-      </g>
     </g>
   );
 };
