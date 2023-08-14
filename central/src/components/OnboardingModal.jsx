@@ -15,8 +15,14 @@ import 'swiper/css/pagination';
 
 export default function GameModal({ modalOpen, showModalGetApp, handleModalClose}) {
   const smallBreakPoint = 569;
-  const isRotate = useMediaQuery({query: `(max-height: 500px)`});
+  const isRotate = useMediaQuery({query: `(max-height: ${smallBreakPoint}px)`});
   const isMobile = useMediaQuery({query: `(max-width: ${smallBreakPoint}px)`});
+  const slideHieght = isMobile 
+    ? '400px' 
+    : ( isRotate 
+      ? 'calc(100dvh - 150px)'
+      : '473px'
+  )
   const titleHeight = isMobile  ? '68px' : '54px';
   const imageContainerWidth = isMobile ? '260px' : '500px';
   const imageContainerHeight = isMobile ? '213px' : '300px';
@@ -85,6 +91,7 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
   const footerContents = (
     <div className={classes.modalFooterContainer} style={{
       width: imageContainerWidth,
+      bottom: isRotate ? 0 : 20,
     }}>
       <div className="swiper-custom-pagination" style={{
         display: 'flex',
@@ -114,7 +121,7 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
   }
 
    return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className={classes.container}>
       <Modal 
            isOpen={modalOpen}
            contentLabel='Game Modal'
@@ -127,9 +134,16 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
               margin: 'auto',
               maxWidth: isMobile ? '500px' : '800px',
               minWidth: '260px',
-              height: isRotate ? 'calc(100% - 150px)' : '473px',
+              height: slideHieght,
               border: 'none',
-              padding: 0
+              padding: 0,
+              touchAction: 'pan-x', // Prevents swipe from scrolling page
+              '&::-webkit-scrollbar': {
+                // Chrome and Safari
+                display: 'none',
+              },
+              scrollbarWidth: 'none', // Firefox
+              '-ms-overflow-style': 'none', // IE and Edge
              },
              overlay: {
                 minHeight: '100vh',
@@ -140,6 +154,7 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
                 padding: 0,
                 backgroundColor: 'rgba(0, 0, 0, 0.80)',
                 zIndex:2,
+              
             }}}
             onRequestClose={() => handleModalClose(false)}
             shouldCloseOnOverlayClick={true}
@@ -169,6 +184,18 @@ export default function GameModal({ modalOpen, showModalGetApp, handleModalClose
 }
 
 const useStyles = makeStyles({
+  container: {
+    display: 'flex', 
+    flexDirection: 'column', 
+    height: '100%',
+    touchAction: 'pan-x', // Prevents swipe from scrolling page
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
+  },
   imageContainer: {
     position: 'relative',
     overflow: 'hidden',
@@ -237,9 +264,9 @@ const useStyles = makeStyles({
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    bottom: 20,
     zIndex: 3,
-    gap: 10
+    gap: 10,
+    touchAction: 'none' 
   },
   modalClose: {
     fontSize: '14px',
