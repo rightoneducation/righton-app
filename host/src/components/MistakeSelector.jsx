@@ -8,6 +8,7 @@ export default function MistakeSelector({
   mistakeIndex,
   isTop3Mode,
   isSelected,
+  selectedCount,
   handleSelectMistake,
 }) {
   const classes = useStyles();
@@ -81,6 +82,7 @@ export default function MistakeSelector({
           onClick={() => handleSelectMistake(mistakeIndex)}
           variant="text"
           disableRipple
+          disabled={!isSelected && selectedCount >= 3}
           className={isSelected ? classes.manualMistakeSelectorSelected : classes.manualMistakeSelector}
         >
          {buttonContents}

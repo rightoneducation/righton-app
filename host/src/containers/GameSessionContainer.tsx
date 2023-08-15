@@ -11,6 +11,7 @@ import {
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
+import answerMatchAndSort from "../lib/utils/answerMatchAndSort"
 import { isCompositeComponent } from "react-dom/test-utils";
 import { responsiveFontSizes } from "@material-ui/core";
 import { AMPLIFY_SYMBOL } from "@aws-amplify/pubsub/lib-esm/Providers/constants";
@@ -25,6 +26,7 @@ const GameSessionContainer = () => {
   const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStore'));
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
+  let sortedAnswers = [];
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
@@ -90,6 +92,7 @@ const GameSessionContainer = () => {
           team.teamMembers && team.teamMembers.forEach(teamMember => {
             if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
               teamMember.answers.push(teamAnswerResponse);
+              //teamAnswers = answerMatchAndSort(teamAnswerResponse, sortedAnswers);
           });
         });
         return newState;

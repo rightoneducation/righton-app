@@ -24,6 +24,7 @@ export default function GameAnswers() {
     {answer: "4x^4 - x^3 + 4x^2 - 3x", percent: '8%', isSelected: false},
     {answer: "2x^4 + 12x^2 - 9x", percent: '7%', isSelected: false},
   ]);
+  const selectedCount = sortedMistakesPlaceholder.filter((mistake) => mistake.isSelected).length;
   const [isTop3Mode, setIsTop3Mode] = useState(true);
   const resetMistakesToTop3 = () => {
     const resetMistakes = sortedMistakesPlaceholder.map((mistake, index) => {
@@ -34,7 +35,7 @@ export default function GameAnswers() {
     })
     setSortedMistakesPlaceholder(resetMistakes);
   };
-  
+
   const handleModeChange = (event) => {
     if (event.target.value === 'A') {
       resetMistakesToTop3();
@@ -76,8 +77,9 @@ export default function GameAnswers() {
               mistakeText={mistake.answer} 
               mistakePercent={mistake.percent} 
               isTop3Mode={isTop3Mode} 
-              isSelected={mistake.isSelected} 
+              isSelected={mistake.isSelected}
               mistakeIndex={index}
+              selectedCount={selectedCount}
               handleSelectMistake={handleSelectMistake} 
               style={{width:'100%'}}  
             />
