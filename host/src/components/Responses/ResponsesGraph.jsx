@@ -4,6 +4,7 @@ import { VictoryChart, VictoryAxis, VictoryBar, VictoryContainer } from 'victory
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
+import SelectedAnswer from './SelectedAnswer';
 
 const useStyles = makeStyles({
   container: {
@@ -17,6 +18,10 @@ const useStyles = makeStyles({
   },
   titleContainer: {
     marginTop: '3%',
+  },
+  answerContainer: {
+    display: "flex",
+    justifyContent: "center",
   },
 });
 
@@ -196,6 +201,14 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             }
           />
         </VictoryChart>
+      </div>
+      <div className={classes.answerContainer}>
+        <SelectedAnswer
+          data={data}
+          selectedBarIndex={selectedBarIndex}
+          correctChoiceIndex={correctChoiceIndex}
+          reversedResponses={reversedResponses}
+        />
       </div>
     </div>
   );
