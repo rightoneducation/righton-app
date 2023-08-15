@@ -6,8 +6,9 @@ import {
   Card
 } from "@material-ui/core";
 import check from '../images/correctAnswerCheck.png';
+import ResponsesGraph from "./ConfidenceResponseGraph";
 
-export default function ConfidenceResponseDropdown({ responses }) {
+export default function ConfidenceResponseDropdown({ responses, orderedAnswers }) {
   const useStyles = makeStyles(theme => ({
     container: {
       display: "flex",
@@ -69,7 +70,27 @@ export default function ConfidenceResponseDropdown({ responses }) {
     { name: 'Zander Lee', answer: 'A', correct: false }
   ];
 
-  // TODO: sort the response array by answer correctness + popularity
+  const test = [
+    { name: 'Alex W', answer: 'C', correct: false },
+    { name: 'Alessandro DeLuca-Smith', answer: 'A', correct: true },
+    { name: 'Jackson Cameron', answer: 'B', correct: false },
+    { name: 'Jeremiah Tanaka', answer: 'C', correct: false },
+    { name: 'Kyle Bradshaw', answer: 'B', correct: false },
+    { name: 'Jeremiah Tanaka', answer: 'C', correct: false },
+    { name: 'Kyle Bradshaw', answer: 'C', correct: false },
+  ]
+
+  // TODO: optimize
+  const sortResponses = () => {
+    const letters = { 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0 };
+    responses.forEach(response => {
+      letters[response.answer] += 1;
+    })
+    responses.sort((a, b) => letters[b.answer] - letters[a.answer]);
+    responses.sort((a, b) => b.correct - a.correct);
+    return responses;
+  }
+
   const playerResponse = ({ name, answerChoice, correct }) => {
     return (
       <Card className={classes.playerCard}>
@@ -84,7 +105,7 @@ export default function ConfidenceResponseDropdown({ responses }) {
 
   return (
     <Grid className={classes.container}>
-      {responses.map((playerData) => playerResponse(playerData))}
+      {sortResponses().map((playerData) => playerResponse(playerData))}
     </Grid>
   );
 };

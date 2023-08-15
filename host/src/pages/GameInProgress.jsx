@@ -132,6 +132,7 @@ export default function GameInProgress({
     return [];
   };
 
+  console.log(getAnswersByQuestion(getQuestionChoices(questions, currentQuestionIndex), teamsArray, currentQuestionIndex));
   // returns a dictionary of confidence levels with corresponding player answer 
   // data array (player name, answer letter, answer correctness)
   // assigned to the confidence key they selected
@@ -215,7 +216,7 @@ export default function GameInProgress({
           gameTimer={gameTimer}
         />
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <ConfidenceResponseCard responses={getResponsesByQuestion(teamsArray, questions[currentQuestionIndex])} />
+        <ConfidenceResponseCard responses={getResponsesByQuestion(teamsArray, questions[currentQuestionIndex])} orderedAnswers={getAnswersByQuestion(getQuestionChoices(questions, currentQuestionIndex), teamsArray, currentQuestionIndex)} />
         <GameAnswers questions={questions} questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />

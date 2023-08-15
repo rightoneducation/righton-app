@@ -9,7 +9,7 @@ import ConfidenceResponseGraph from "../components/ConfidenceResponseGraph";
 import ConfidenceResponseDropdown from "./ConfidenceResponseDropdown";
 import { ConfidenceLevel, isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswersDropdown({ responses }) {
+export default function ConfidenceResponseCard({ responses, orderedAnswers }) {
   const classes = useStyles();
   const [selectedBarValue, setSelectedBarValue] = useState(null);
 
@@ -52,7 +52,7 @@ export default function GameAnswersDropdown({ responses }) {
           </Typography>
           <Typography className={classes.responseHeader}>{headerTranslation(selectedBarValue)}</Typography>
           <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
-          <ConfidenceResponseDropdown responses={responses[selectedBarValue]}></ConfidenceResponseDropdown>
+          <ConfidenceResponseDropdown responses={responses[selectedBarValue]} orderedAnswers={orderedAnswers}></ConfidenceResponseDropdown>
         </Grid>
       }
     </Grid>
