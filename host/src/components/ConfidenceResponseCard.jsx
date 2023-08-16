@@ -16,8 +16,7 @@ export default function ConfidenceResponseCard({ responses, orderedAnswers }) {
   const headerTranslation = (option) => {
     switch (option) {
       case ConfidenceLevel.NOT_RATED:
-        // TODO: (DESIGN COORD) should confirm with design what this message should be
-        return "No response";
+        return "Not rated";
       case ConfidenceLevel.NOT_AT_ALL:
         return "Not at all confident";
       case ConfidenceLevel.KINDA:
@@ -30,33 +29,32 @@ export default function ConfidenceResponseCard({ responses, orderedAnswers }) {
         return "Totally confident";
     }
   }
-  // TODO: (DESIGN COORD) What should be displayed when there are 0 players who chose the selected response?
-  return (
-    <Grid className={classes.cardContainer}>
-      <Typography className={classes.headerText}>
-        Confidence
-      </Typography>
-      <Typography className={classes.infoText}>
-        Players are asked how sure they are of their answer for this question.
-      </Typography>
-      <Grid className={classes.graphContainer}>
-        <ConfidenceResponseGraph responses={responses} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue}></ConfidenceResponseGraph>
-      </Grid>
-      {isNullOrUndefined(selectedBarValue) ?
-        <Typography className={classes.hintText}>
-          Tap on a response to see more details.
-        </Typography> :
-        <Grid className={classes.responsesContainer}>
-          <Typography className={classes.answerOptionText}>
-            Showing players who answered:
-          </Typography>
-          <Typography className={classes.responseHeader}>{headerTranslation(selectedBarValue)}</Typography>
-          <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
-          <ConfidenceResponseDropdown responses={responses[selectedBarValue]} orderedAnswers={orderedAnswers}></ConfidenceResponseDropdown>
-        </Grid>
-      }
-    </Grid>
 
+  return (
+    <Grid className={classes.centerContent}>
+      <Grid className={classes.cardContainer}>
+        <Typography className={classes.headerText}>
+          Confidence
+        </Typography>
+        <Typography className={classes.infoText}>
+          Players are asked how sure they are of their answer for this question.
+        </Typography>
+        <Grid className={classes.graphContainer}>
+          <ConfidenceResponseGraph responses={responses} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue}></ConfidenceResponseGraph>
+        </Grid>
+        {isNullOrUndefined(selectedBarValue) ?
+          <Typography className={classes.hintText}>
+            Tap on a response to see more details.
+          </Typography> :
+          <Grid className={classes.responsesContainer}>
+            {responses[selectedBarValue].length === 0 ? <Typography className={classes.answerOptionText}>No players picked this option</Typography> : <><Typography className={classes.answerOptionText}>Showing players who answered</Typography>
+              <Typography className={classes.responseHeader}>{headerTranslation(selectedBarValue)}</Typography>
+              <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
+              <ConfidenceResponseDropdown responses={responses[selectedBarValue]} orderedAnswers={orderedAnswers}></ConfidenceResponseDropdown></>}
+          </Grid>
+        }
+      </Grid>
+    </Grid>
   );
 }
 

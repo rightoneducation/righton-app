@@ -10,10 +10,11 @@ const useStyles = makeStyles((selectedBarValue, index) => ({
   }
 }));
 
-// TODO: adjust height/y of highlight
 const CustomBar = (props) => {
   const { x, y, smallPadding, selectedWidth, selectedHeight, datum, index, selectedBarValue, setSelectedBarValue } = props;
   const offset = selectedWidth / 2;
+  const graphTitleOffset = 28;
+  const bottomLabelHeight = 15;
   const classes = useStyles();
   return (
     <g style={{ pointerEvents: 'bounding-box' }}>
@@ -21,9 +22,9 @@ const CustomBar = (props) => {
       <rect
         className={classes.highlight}
         x={x - offset}
-        y={y - smallPadding - offset / 2}
+        y={graphTitleOffset}
         width={selectedWidth}
-        height={selectedHeight}
+        height={selectedHeight + bottomLabelHeight}
         fill={selectedBarValue === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
         stroke="transparent"
         rx={8}

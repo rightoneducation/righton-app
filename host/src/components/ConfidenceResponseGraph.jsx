@@ -138,7 +138,7 @@ const ResponsesGraph = ({ responses, selectedBarValue, setSelectedBarValue }) =>
         </Typography>
       </div>
       <div ref={graphRef} >
-        <VictoryChart theme={customThemeGraph} height={200}>
+        <VictoryChart theme={customThemeGraph} height={200} style={{ overflow: 'visible' }}>
           <VictoryStack
             standalone={false}
             labelComponent={
@@ -156,14 +156,13 @@ const ResponsesGraph = ({ responses, selectedBarValue, setSelectedBarValue }) =>
               data={incorrectResponders}
               cornerRadius={({ index }) => correctResponders[index].y === 0 ? 5 : 0}
               labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
-            // dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height - defaultVictoryPadding - 60} selectedBarIndex={selectedBarIndex} setSelectedBarIndex={setSelectedBarIndex} />}
             />
             <VictoryBar
               name="correct"
               data={correctResponders}
               cornerRadius={5}
               labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
-              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height + defaultVictoryPadding} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue} />}
+              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue} />}
             />
             <VictoryAxis
               tickValues={correctResponders.map(datum => datum.x)}
