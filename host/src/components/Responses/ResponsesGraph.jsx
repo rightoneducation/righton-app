@@ -208,6 +208,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           selectedBarIndex={selectedBarIndex}
           correctChoiceIndex={correctChoiceIndex}
           reversedResponses={reversedResponses}
+          numPlayers={numPlayers}
         />
       </div>
     </div>

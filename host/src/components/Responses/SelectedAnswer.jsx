@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import check from '../../images/Pickedcheck.svg';
 import { Tooltip } from '@material-ui/core';
+import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
 const useStyles = makeStyles({
     text: {
@@ -42,6 +43,7 @@ const SelectedAnswer = (props) => {
         selectedBarIndex,
         correctChoiceIndex,
         reversedResponses,
+        numPlayers
     } = props;
 
     const classes = useStyles();
@@ -91,11 +93,16 @@ const SelectedAnswer = (props) => {
                         {showCustomTick && (
                             <Tooltip title="This is the correct answer" placement="top" >
                                 <span style={checkIconStyle}>
-                                    <img src={check} alt="correct answer" />
+                                    <img src={check} alt="correct answer"/>
                                 </span>
                             </Tooltip>
                         )}
                     </div>
+                    <PlayersSelectedAnswer
+                        data={data}
+                        selectedBarIndex={selectedBarIndex}
+                        numPlayers={numPlayers}
+                    />
                 </div>
             )}
         </div>
