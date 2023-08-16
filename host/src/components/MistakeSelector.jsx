@@ -1,6 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import { makeStyles, Button, Box } from "@material-ui/core";
+import { makeStyles, Button, Box, Typography } from "@material-ui/core";
 
 export default function MistakeSelector({
   mistakeText,
@@ -35,7 +34,7 @@ export default function MistakeSelector({
   const buttonContents = (
     <>
       <Typography
-        variant="body2"
+        className={classes.fontVarientBody2}
         sx={{
           paddingLeft:   '8px',
           paddingRight: '32px',
@@ -47,7 +46,7 @@ export default function MistakeSelector({
       </Typography>
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <Typography
-          variant="body2"
+          className={classes.fontVarientBody2}
           sx={{
             paddingRight: `24px`,
             opacity: 0.5,
@@ -141,5 +140,12 @@ const useStyles = makeStyles(() => ({
     width: `16px`,
     height: `16px`,
     paddingTop: '2px',
+  },
+  fontVarientBody2: {
+    fontWeight: '400',
+    fontSize: '18px',
+    lineHeight: '22px',
+    textAlign: 'left',
+    color: '#FFF',
   }
 }));
