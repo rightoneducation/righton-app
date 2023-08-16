@@ -26,6 +26,14 @@ const useStyles = makeStyles({
         fontWeight: '400',
         lineHeight: '22px',
     },
+    titleText:{
+        color: '#FFF',
+        textAlign: 'left',
+        fontFamily: 'Rubik',
+        fontSize: '14px',
+        fontWeight: '400',
+        paddingBottom: '10px',
+    }
 });
 
 const SelectedAnswer = (props) => {
@@ -59,12 +67,12 @@ const SelectedAnswer = (props) => {
 
     const checkIconStyle = {
         position: 'absolute',
-        top: '50%', 
-        right: '16px', 
+        top: '50%',
+        right: '16px',
         transform: 'translateY(-50%)',
         display: 'flex',
-        alignItems: 'center', 
-      };
+        alignItems: 'center',
+    };
 
     return (
         <div>
@@ -73,16 +81,21 @@ const SelectedAnswer = (props) => {
                     Tap on a response to see more details.
                 </Typography>
             ) : (
-                <div style={rectangleStyle}>
-                    <div className={classes.choiceContainer}>{data[selectedBarIndex].answerChoice}</div>
-                    <div className={classes.textContainer}>{data[selectedBarIndex].answerText}</div>
-                    {showCustomTick && (
-                        <Tooltip title="This is the correct answer" placement="top" >
-                        <span style={checkIconStyle}>
-                          <img src={check} alt="correct answer" />
-                        </span>
-                      </Tooltip>
-                    )}
+                <div>
+                    <Typography className={classes.titleText}>
+                    Showing players who answered:
+                    </Typography>
+                    <div style={rectangleStyle}>
+                        <div className={classes.choiceContainer}>{data[selectedBarIndex].answerChoice}</div>
+                        <div className={classes.textContainer}>{data[selectedBarIndex].answerText}</div>
+                        {showCustomTick && (
+                            <Tooltip title="This is the correct answer" placement="top" >
+                                <span style={checkIconStyle}>
+                                    <img src={check} alt="correct answer" />
+                                </span>
+                            </Tooltip>
+                        )}
+                    </div>
                 </div>
             )}
         </div>
