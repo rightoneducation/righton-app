@@ -12,14 +12,14 @@ import ReactQuill from 'react-quill';
 import katex from "katex";
 import './ReactQuill.css';
 import "katex/dist/katex.min.css";
-import { AnswerObject, AnswerType, StorageKey, LocalModel } from '../../lib/HostModels';
+import { ClientAnswerObject, AnswerType, StorageKey, LocalModel } from '../../lib/HostModels';
 import { fetchLocalData } from '../../lib/HelperFunctions';
 
 window.katex = katex;
 
 interface OpenAnswerCardProps {
-  answerObject: AnswerObject;
-  handleSubmitAnswer: (result: AnswerObject) => void;
+  answerObject: ClientAnswerObject;
+  handleSubmitAnswer: (result: ClientAnswerObject) => void;
 }
 
 export default function OpenAnswerCard({
@@ -38,7 +38,7 @@ export default function OpenAnswerCard({
 
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
-  const insertQuillDelta = (inputAnswer: AnswerObject) => {
+  const insertQuillDelta = (inputAnswer: ClientAnswerObject) => {
     const quillDelta: any = [];
 
     // inputAnswer.answerTexts.forEach((input, index) => {
@@ -57,11 +57,10 @@ export default function OpenAnswerCard({
     const rawTexts: string[] = [];
     const normalizedTexts: string[] = [];
     const format: AnswerType[] = [];
-
     currentContents.forEach((op: any) => {
       if(op.insert.formula) {
         rawTexts.push(op.insert.formula); 
-        normalizedTexts.push(op.inset.formula);
+        normalizedTexts.push(op.insert.formula);
         format.push(AnswerType.FORMULA);
       } else {
         const normalizeText = op.insert.replace(/(\r\n|\n|\r)/gm, "");

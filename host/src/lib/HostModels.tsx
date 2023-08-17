@@ -14,7 +14,7 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
-  presubmitAnswer: AnswerObject | null;
+  presubmitAnswer: ClientAnswerObject | null;
 }
 
 /**
@@ -29,16 +29,16 @@ export enum AnswerType {
   NULL
 }
 
-export interface AnswerObject {
+export interface ClientAnswerObject {
   rawTexts: string[];
   normalizedTexts: string[];
   answerTypes: AnswerType[];
   multiChoiceAnswerIndex?: number | null;
 }
 
-export interface MistakeObject {
+export interface SubmittedAnswerObject {
   rawInput: string,
-  normalizedInput: string,
+  normalizedInput: string[],
   inputType: InputType,
   percent: number,
   count: number,
@@ -46,7 +46,7 @@ export interface MistakeObject {
 }
 
 export enum InputType {
-  TEXT,
+  STRING,
   NUMBER,
   FORMULA,
 }

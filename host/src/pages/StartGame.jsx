@@ -6,7 +6,7 @@ import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
 import FeaturedMistakes from "../components/FeaturedMistakes";
 import OpenAnswerCard from "../components/openanswercard/OpenAnswerCard";
-import { parseAnswerToMistake, answerMatchAndSort } from "../lib/HelperFunctions";
+import { parseAnswerToMistake, answerMatchAndSort, packageSubmittedAnswer } from "../lib/HelperFunctions";
 
 export default function StartGame({
   teams = [],
@@ -22,7 +22,13 @@ export default function StartGame({
   const [newAnswer, setNewAnswer] = useState("");
   // this would actually be happening under the createTeamAnswer subscription
   const handleSubmitAnswer = (answer) => {
-    const newMistake = parseAnswerToMistake(answer);
+    // Location: Play - HandleSubmitAnswer
+    const newMistake = packageSubmittedAnswer(answer);
+    console.log(newMistake);
+    // CreateTeamAnswer(newAnswer);
+
+
+    // Location: Host - From CreateTeamAnswer subscription
     const newSortedMistakes = answerMatchAndSort(newMistake, sortedMistakes);
     setSortedMistakes(newSortedMistakes);
     setNewAnswer(answer);

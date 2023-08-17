@@ -1,8 +1,10 @@
 import {
   isNullOrUndefined,
 } from '@righton/networking';
+import { evaluate } from 'mathjs';
+import nlp from 'compromise';
 // import * as DOMPurify from 'dompurify';
-import {  StorageKey, MistakeObject, InputType, AnswerObject } from './HostModels';
+import {  StorageKey, SubmittedAnswerObject, InputType, ClientAnswerObject, AnswerType } from './HostModels';
 
 /**
  * validates localModel retrieved from local storage
@@ -51,15 +53,54 @@ export const fetchLocalData = () => {
   return localModel;
 };
 
+const isAnswerMatch = (newAnswer: SubmittedAnswerObject, existingAnswer: SubmittedAnswerObject) => { 
+  if (existingAnswer.inputType === InputType.NUMBER && newAnswer.inputType === InputType.NUMBER) {
+    // if new mistake has just one number, use a for loop
+    if (newAnswer.normalizedInput.length === 0) {
+      for (let i = 0; i < existingAnswer.normalizedInput.length; i++) {
+        if (existingAnswer.normalizedInput[i] === newAnswer.normalizedInput[0]) 
+          return true;
+      }
+    } else {
+      // if new mistake has more than one number, use a set because it's faster
+      let set1 = new Set(newAnswer.normalizedInput);
+      for (let i = 0; i < existingAnswer.normalizedInput.length; i++) {
+        if (set1.has(existingAnswer.normalizedInput[i])) 
+          return true;
+      }
+    }
+  };
+  if (existingAnswer.inputType === InputType.FORMULA && newAnswer.inputType === InputType.FORMULA) {
+    // if new mistake has a formula, evaluate it to catch lowest common denominators etc
+    try {
+      const answerExpression = evaluate(newAnswer.normalizedInput);
+      const inputExpression = evaluate(existingAnswer.normalizedInput);
+      if (answerExpression === inputExpression) {
+       return true;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if (existingAnswer.inputType === InputType.STRING && newAnswer.inputType === InputType.STRING) {
+    // if new mistake is a string, simple comparison
+    if (newAnswer.normalizedInput === existingAnswer.normalizedInput) 
+      return true;
+  };
+
+  return false;
+}
+
 export const answerMatchAndSort =(
-  newAnswer: MistakeObject,
-  sortedAnswers: MistakeObject[],
+  newAnswer: SubmittedAnswerObject,
+  sortedAnswers: SubmittedAnswerObject[],
 ) => {
   const totalAnswers = sortedAnswers.reduce((acc, curr) => curr.count + acc, 0);
   let isMatch = false;
 
+  // adjust percentages and check for match
   sortedAnswers.forEach((answer, index) => {
-    if (answer.normalizedInput === newAnswer.normalizedInput) {
+    if (isAnswerMatch(newAnswer, answer)) {
       sortedAnswers[index].count += 1;
       isMatch = true;
     } 
@@ -69,27 +110,52 @@ export const answerMatchAndSort =(
     newAnswer.percent = Math.round((newAnswer.count / (totalAnswers + 1)) * 100);
     sortedAnswers.push({...newAnswer, count: 1});
   }
-
-  sortedAnswers.sort((a, b) => b.count - a.count);
+  // sorts by percentage
+  sortedAnswers.sort((a, b) => b.percent - a.percent);
 
   return sortedAnswers;
 };
 
-export const parseAnswerToMistake = (
-  answerInput: AnswerObject,
-): MistakeObject => {
-  const rawInput = answerInput.rawTexts.reduce((acc, curr) => `${acc}${curr.replace(/\n/g, "")}`, "");
-  const normalizedInput = answerInput.normalizedTexts.reduce((acc, curr) =>`${acc}${curr.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "")}`, "");
-  const inputType = InputType.TEXT;
-  const percent = 0;
-  const count = 1;
-  const isSelected = false;
+export const packageSubmittedAnswer = (
+  answerInput: ClientAnswerObject,
+): SubmittedAnswerObject => {
+  // raw input:
+  // replaces \n with spaces maintains everything else
+  const rawInputFirstPass = answerInput.rawTexts.reduce((acc, curr) => `${acc}${curr.replace(/\n/g, " ")}`, "");
+  const rawInput = rawInputFirstPass.slice(0, rawInputFirstPass.length-1);
+  // normalized input: 
+  // default values for normalized answer object:
+  let normalizedInput = [];
+  let inputType = InputType.STRING;
+
+  // 1. if there is a formula, assume that is the player's answer
+  //    remove empty spaces or new lines and set it to normalized answer
+  const formulaIndex = answerInput.answerTypes.findIndex((type)  => type === AnswerType.FORMULA);
+  if (formulaIndex !== -1){
+     normalizedInput.push(answerInput.normalizedTexts[formulaIndex].replace(/(\r\n|\n|\r|" ")/gm, ""));
+     inputType = InputType.FORMULA;
+  } else {
+
+    // 2. if there is no formula, scan string for numbers
+    //    if numbers found, extract numbers and set it to normalized answer
+    const detectedNumbers = nlp(rawInput).numbers().json();
+    if (detectedNumbers.length > 0) {
+       detectedNumbers.forEach((number: number) => normalizedInput.push(number))
+      inputType = InputType.NUMBER;
+    } else {
+
+      // 3. if there is no formula and no numbers
+      //    set normalized input to lower case and remove spaces
+      normalizedInput.push(rawInput.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, ""));
+    }
+  }
+
   return {
     rawInput: rawInput,
     normalizedInput: normalizedInput, 
     inputType: inputType, 
-    percent: percent, 
-    count: count,
-    isSelected: isSelected,
-  } as MistakeObject;
+    percent: 0, 
+    count: 1,
+    isSelected: false,
+  } as SubmittedAnswerObject;
 };
