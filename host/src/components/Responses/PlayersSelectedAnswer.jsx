@@ -27,7 +27,7 @@ const useStyles = makeStyles({
         fontWeight: '700',
         paddingTop: '16px',
     },
-    nameText:{
+    nameText: {
         textAlign: 'left',
         fontFamily: 'Rubik',
         fontSize: '14px',
@@ -66,7 +66,7 @@ const PlayersSelectedAnswer = (props) => {
 
 
     const answerCount = data[selectedBarIndex].answerCount;
-    const percentage = ((answerCount / numPlayers) * 100).toFixed(2);
+    const percentage = (answerCount / numPlayers) * 100;
 
     // Filter the teamsPickedChoices array based on the answerText
     const selectedBarAnswerText = data[selectedBarIndex].answerText;
@@ -92,7 +92,7 @@ const PlayersSelectedAnswer = (props) => {
                         {answerCount}
                     </Typography>
                     <Typography className={classes.percentageText}>
-                        ({percentage}%)
+                        ({Math.round(percentage)}%)
                     </Typography>
                 </div>
             </div>
