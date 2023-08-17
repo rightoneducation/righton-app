@@ -1,5 +1,6 @@
 import React from 'react';
-import { makeStyles, Button, Box, Typography } from "@material-ui/core";
+import { Typography } from '@mui/material';
+import { makeStyles, Button, Box } from "@material-ui/core";
 
 export default function MistakeSelector({
   mistakeText,
@@ -52,7 +53,7 @@ export default function MistakeSelector({
             opacity: 0.5,
           }}
         >
-          {mistakePercent}
+          {mistakePercent}%
         </Typography>
         <Box className={classes.selectIndicatorContainer} sx={{right:  `16px`}} >
           {circleIndicator} 

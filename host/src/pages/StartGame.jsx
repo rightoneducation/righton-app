@@ -6,6 +6,7 @@ import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
 import FeaturedMistakes from "../components/FeaturedMistakes";
 import OpenAnswerCard from "../components/openanswercard/OpenAnswerCard";
+import { parseAnswerToMistake, answerMatchAndSort } from "../lib/HelperFunctions";
 
 export default function StartGame({
   teams = [],
@@ -17,15 +18,20 @@ export default function StartGame({
   handleStartGame
 }) {
   const classes = useStyles();
-  const [sortedAnswers, setSortedAnswers] = useState([]);
+  const [sortedMistakes, setSortedMistakes] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
+  // this would actually be happening under the createTeamAnswer subscription
   const handleSubmitAnswer = (answer) => {
+    const newMistake = parseAnswerToMistake(answer);
+    const newSortedMistakes = answerMatchAndSort(newMistake, sortedMistakes);
+    setSortedMistakes(newSortedMistakes);
     setNewAnswer(answer);
   }
+ 
   return (
     <div className={classes.background}>
         <OpenAnswerCard answerObject={newAnswer} handleSubmitAnswer={handleSubmitAnswer}/>
-        <FeaturedMistakes />
+        <FeaturedMistakes sortedMistakes={sortedMistakes} setSortedMistakes={setSortedMistakes}/>
     </div>
   );
 }

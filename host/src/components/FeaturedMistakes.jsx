@@ -8,32 +8,32 @@ import {
   Radio,
   Box
 } from "@material-ui/core";
+import {
+  isNullOrUndefined,
+} from '@righton/networking';
 import MistakeSelector from "./MistakeSelector";
 
-export default function GameAnswers() {
+export default function GameAnswers({
+  sortedMistakes,
+  setSortedMistakes
+}) {
   const classes = useStyles();
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
-  const [sortedMistakesPlaceholder, setSortedMistakesPlaceholder] = useState([
-    {answer: "4x^4 - x^3 + 7x^2 - 6x", percent: '44%', isSelected: true},
-    {answer: "2x^4 + 6x^2 - 3x", percent: '16%', isSelected: true},
-    {answer: "No Idea", percent: '13%', isSelected: true},
-    {answer: "x^2 - 4x - 12", percent : '12%', isSelected: false},
-    {answer: "4x^4 - x^3 + 4x^2 - 3x", percent: '8%', isSelected: false},
-    {answer: "2x^4 + 12x^2 - 9x", percent: '7%', isSelected: false},
-  ]);
-  const selectedCount = sortedMistakesPlaceholder.filter((mistake) => mistake.isSelected).length;
+  const selectedCount = sortedMistakes ? sortedMistakes.filter((mistake) => mistake.isSelected).length : 0;
   const [isTop3Mode, setIsTop3Mode] = useState(true);
   const resetMistakesToTop3 = () => {
-    const resetMistakes = sortedMistakesPlaceholder.map((mistake, index) => {
-      if (index < 3){
-        return {...mistake, isSelected: true};
-      }
-      return {...mistake, isSelected: false};
-    })
-    setSortedMistakesPlaceholder(resetMistakes);
+    if (sortedMistakes) {
+      const resetMistakes = sortedMistakes.map((mistake, index) => {
+        if (index < 3){
+          return {...mistake, isSelected: true};
+        }
+        return {...mistake, isSelected: false};
+      })
+      setSortedMistakes(resetMistakes);
+   }
   };
 
   const handleModeChange = (event) => {
@@ -46,7 +46,7 @@ export default function GameAnswers() {
   };
 
   const handleSelectMistake = (index) => {
-    setSortedMistakesPlaceholder((prev) => {
+    setSortedMistakes((prev) => {
       const newMistakes = [...prev];
       newMistakes[index].isSelected = !newMistakes[index].isSelected;
       return newMistakes;
@@ -71,19 +71,20 @@ export default function GameAnswers() {
           />
         </RadioGroup>
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
-          {sortedMistakesPlaceholder.map((mistake, index) => {
+          {sortedMistakes ? sortedMistakes.map((mistake, index) => {
             return <MistakeSelector 
               key={index} 
-              mistakeText={mistake.answer} 
+              mistakeText={mistake.rawInput} 
               mistakePercent={mistake.percent} 
               isTop3Mode={isTop3Mode} 
-              isSelected={mistake.isSelected}
+              isSelected={isTop3Mode && index < 3 ? true : mistake.isSelected}
               mistakeIndex={index}
               selectedCount={selectedCount}
               handleSelectMistake={handleSelectMistake} 
               style={{width:'100%'}}  
             />
-          })}
+          }):
+          null}
         </Box>
     </Paper>
   );

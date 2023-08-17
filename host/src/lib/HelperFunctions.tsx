@@ -2,7 +2,7 @@ import {
   isNullOrUndefined,
 } from '@righton/networking';
 // import * as DOMPurify from 'dompurify';
-import {  StorageKey, HostAnswerObject, SortedAnswerObject, InputType } from './HostModels';
+import {  StorageKey, MistakeObject, InputType, AnswerObject } from './HostModels';
 
 /**
  * validates localModel retrieved from local storage
@@ -52,21 +52,44 @@ export const fetchLocalData = () => {
 };
 
 export const answerMatchAndSort =(
-  sortedAnswers: SortedAnswerObject[],
-  newAnswer: HostAnswerObject,
+  newAnswer: MistakeObject,
+  sortedAnswers: MistakeObject[],
 ) => {
+  const totalAnswers = sortedAnswers.reduce((acc, curr) => curr.count + acc, 0);
+  let isMatch = false;
 
-  // step two: if numeric, check the input for numbers that match the answer
-  switch (newAnswer.inputType){
-    default: {
-      sortedAnswers.find((answer, index) => {
-        if (answer.normalizedInput === newAnswer.normalizedInput)
-          sortedAnswers[index].count += 1;
-          sortedAnswers.sort((a, b) => b.count - a.count);
-          return sortedAnswers;
-      });
-      sortedAnswers.push({...newAnswer, count: 1});
-      return sortedAnswers;
+  sortedAnswers.forEach((answer, index) => {
+    if (answer.normalizedInput === newAnswer.normalizedInput) {
+      sortedAnswers[index].count += 1;
+      isMatch = true;
     } 
+    answer.percent = Math.round((answer.count / (totalAnswers + 1)) * 100);
+  });
+  if (!isMatch){
+    newAnswer.percent = Math.round((newAnswer.count / (totalAnswers + 1)) * 100);
+    sortedAnswers.push({...newAnswer, count: 1});
   }
+
+  sortedAnswers.sort((a, b) => b.count - a.count);
+
+  return sortedAnswers;
+};
+
+export const parseAnswerToMistake = (
+  answerInput: AnswerObject,
+): MistakeObject => {
+  const rawInput = answerInput.rawTexts.reduce((acc, curr) => `${acc}${curr.replace(/\n/g, "")}`, "");
+  const normalizedInput = answerInput.normalizedTexts.reduce((acc, curr) =>`${acc}${curr.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "")}`, "");
+  const inputType = InputType.TEXT;
+  const percent = 0;
+  const count = 1;
+  const isSelected = false;
+  return {
+    rawInput: rawInput,
+    normalizedInput: normalizedInput, 
+    inputType: inputType, 
+    percent: percent, 
+    count: count,
+    isSelected: isSelected,
+  } as MistakeObject;
 };

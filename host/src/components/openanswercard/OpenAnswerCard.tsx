@@ -54,23 +54,26 @@ export default function OpenAnswerCard({
   const [editorContents, setEditorContents] = useState<any>(() => insertQuillDelta(answerObject));
 
   const extractQuillDelta = (currentContents: any) => {
-    const text: string[] = [];
+    const rawTexts: string[] = [];
+    const normalizedTexts: string[] = [];
     const format: AnswerType[] = [];
 
     currentContents.forEach((op: any) => {
       if(op.insert.formula) {
-        text.push(op.insert.formula); 
+        rawTexts.push(op.insert.formula); 
+        normalizedTexts.push(op.inset.formula);
         format.push(AnswerType.FORMULA);
       } else {
         const normalizeText = op.insert.replace(/(\r\n|\n|\r)/gm, "");
         if (normalizeText !== " ") {
-          text.push(normalizeText.toLowerCase());
+          rawTexts.push(op.insert);
+          normalizedTexts.push(normalizeText.toLowerCase());
           format.push(AnswerType.TEXT);
         }
       }
     });
     
-    return {answerTexts: text, answerTypes: format};
+    return {rawTexts: rawTexts, normalizedTexts: normalizedTexts, answerTypes: format};
   };
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
@@ -103,7 +106,7 @@ export default function OpenAnswerCard({
             modules={modules}
             formats={formats}
             bounds={`[data-text-editor="name"]`}
-            style={{width:'100%', backgroundColor: '#FFF', borderRadius:'4px'}}
+            style={{width:'300px', backgroundColor: '#FFF', borderRadius:'4px'}}
           />
             <Button 
             style={{width: '100%', backgroundColor: '#6082B6', color: '#000', borderRadius: '4px', boxShadow: '2px 5px 5px #D3D3D3'}}
@@ -127,7 +130,8 @@ const useStyles = makeStyles(({
     backgroundColor: '#FFF', 
     boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.40)',
     gap:16,
-    margin: '5%' // will be removed when upgraded 
+    margin: '5%', // will be removed when upgraded 
+    width: '300px'
   },
   title: {
     fontSize: '24px',

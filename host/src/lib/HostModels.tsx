@@ -30,19 +30,19 @@ export enum AnswerType {
 }
 
 export interface AnswerObject {
-  answerTexts: string[];
+  rawTexts: string[];
+  normalizedTexts: string[];
   answerTypes: AnswerType[];
   multiChoiceAnswerIndex?: number | null;
 }
 
-export interface HostAnswerObject {
+export interface MistakeObject {
   rawInput: string,
   normalizedInput: string,
-  inputType: InputType
-}
-
-export interface SortedAnswerObject extends HostAnswerObject {
-  count: number
+  inputType: InputType,
+  percent: number,
+  count: number,
+  isSelected: boolean,
 }
 
 export enum InputType {
