@@ -8,6 +8,7 @@ import {
   Radio,
   Box
 } from "@material-ui/core";
+import { v4 as uuidv4 } from 'uuid';
 import {
   isNullOrUndefined,
 } from '@righton/networking';
@@ -62,18 +63,20 @@ export default function GameAnswers({
             value="A" 
             control={<Radio className={classes.radioButton} />} 
             label={radioButtonText1} 
+            key={uuidv4()}
           />
           <FormControlLabel 
             className={classes.radioLabel} 
             value="B" 
             control={<Radio className={classes.radioButton} />} 
             label={radioButtonText2} 
+            key={uuidv4()}
           />
         </RadioGroup>
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
           {sortedMistakes ? sortedMistakes.map((mistake, index) => {
             return <MistakeSelector 
-              key={index} 
+              key={uuidv4()}
               mistakeText={mistake.rawInput} 
               mistakePercent={mistake.percent} 
               isTop3Mode={isTop3Mode} 

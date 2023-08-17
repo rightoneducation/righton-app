@@ -72,9 +72,11 @@ const isAnswerMatch = (newAnswer: SubmittedAnswerObject, existingAnswer: Submitt
   };
   if (existingAnswer.inputType === InputType.FORMULA && newAnswer.inputType === InputType.FORMULA) {
     // if new mistake has a formula, evaluate it to catch lowest common denominators etc
+    if (existingAnswer.normalizedInput[0] === newAnswer.normalizedInput[0]) 
+      return true;
     try {
-      const answerExpression = evaluate(newAnswer.normalizedInput);
-      const inputExpression = evaluate(existingAnswer.normalizedInput);
+      const answerExpression = evaluate(newAnswer.normalizedInput[0]);
+      const inputExpression = evaluate(existingAnswer.normalizedInput[0]);
       if (answerExpression === inputExpression) {
        return true;
       }
@@ -84,7 +86,7 @@ const isAnswerMatch = (newAnswer: SubmittedAnswerObject, existingAnswer: Submitt
   };
   if (existingAnswer.inputType === InputType.STRING && newAnswer.inputType === InputType.STRING) {
     // if new mistake is a string, simple comparison
-    if (newAnswer.normalizedInput === existingAnswer.normalizedInput) 
+    if (newAnswer.normalizedInput[0] === existingAnswer.normalizedInput[0]) 
       return true;
   };
 
@@ -121,8 +123,7 @@ export const packageSubmittedAnswer = (
 ): SubmittedAnswerObject => {
   // raw input:
   // replaces \n with spaces maintains everything else
-  const rawInputFirstPass = answerInput.rawTexts.reduce((acc, curr) => `${acc}${curr.replace(/\n/g, " ")}`, "");
-  const rawInput = rawInputFirstPass.slice(0, rawInputFirstPass.length-1);
+  const rawInput = answerInput.rawTexts.reduce((acc, curr) => `${acc}${curr.replace(/\n/g, " ")}`, "");
   // normalized input: 
   // default values for normalized answer object:
   let normalizedInput = [];
@@ -137,9 +138,12 @@ export const packageSubmittedAnswer = (
   } else {
 
     // 2. if there is no formula, scan string for numbers
-    //    if numbers found, extract numbers and set it to normalized answer
+    //    special characters, math operators outside of formula blow up our number parser and should just be treated as strings
+    //    if just numbers found, extract numbers and set it to normalized answer
+    const specialChars = /[`$%*()\/]/;
+    const specialCharsCheck = specialChars.test(rawInput);
     const detectedNumbers = nlp(rawInput).numbers().json();
-    if (detectedNumbers.length > 0) {
+    if (!specialCharsCheck && detectedNumbers.length > 0) {
        detectedNumbers.forEach((number: number) => normalizedInput.push(number))
       inputType = InputType.NUMBER;
     } else {
