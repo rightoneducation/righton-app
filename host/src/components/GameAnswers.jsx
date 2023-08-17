@@ -5,7 +5,7 @@ import GameAnswersDropdown from "./GameAnswersDropdown";
 import Responses from "./Responses/Responses";
 import { isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswers({ questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
+export default function GameAnswers({ teamsPickedChoices, questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
   const letterDictionary = {
     0:'A. ',
     1:'B. ',
@@ -38,8 +38,7 @@ export default function GameAnswers({ questions, questionChoices, currentQuestio
      // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
      answer: questionChoices[index].text,
   }));
-
-
+  
   return (
     <Grid className={classes.background}>
       <Responses
@@ -48,6 +47,7 @@ export default function GameAnswers({ questions, questionChoices, currentQuestio
           totalAnswers={totalAnswers}
           questionChoices={questionChoices}
           statePosition={statePosition}
+          teamsPickedChoices={teamsPickedChoices}
         />
       <Grid container className={classes.centerContent}>
         <Grid container>

@@ -31,6 +31,14 @@ differentAnswers.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 1,
+  teamsPickedChoices: [
+    [
+      { teamName: 'Alex Williams', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+      { teamName: 'Jackson Cameron', choiceText: '2x^4 + 6x^2 − 3x' },
+      { teamName: 'Kyle Bradshaw', choiceText: 'x^2 − 4x − 12' },
+      { teamName: 'Vanessa Martinez', choiceText: 'x^9 + 3x -15' },
+    ],
+  ],
 };
 
 export const sameAnswer = Template.bind({});
@@ -52,6 +60,7 @@ sameAnswer.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 6,
+  
 };
 
 export const oneAnswer = Template.bind({});

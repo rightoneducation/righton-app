@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition }) => {
+const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices }) => {
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
@@ -209,6 +209,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           correctChoiceIndex={correctChoiceIndex}
           reversedResponses={reversedResponses}
           numPlayers={numPlayers}
+          teamsPickedChoices={teamsPickedChoices}
         />
       </div>
     </div>

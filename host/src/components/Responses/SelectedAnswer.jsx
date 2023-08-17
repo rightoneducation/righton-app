@@ -43,7 +43,8 @@ const SelectedAnswer = (props) => {
         selectedBarIndex,
         correctChoiceIndex,
         reversedResponses,
-        numPlayers
+        numPlayers,
+        teamsPickedChoices
     } = props;
 
     const classes = useStyles();
@@ -102,6 +103,7 @@ const SelectedAnswer = (props) => {
                         data={data}
                         selectedBarIndex={selectedBarIndex}
                         numPlayers={numPlayers}
+                        teamsPickedChoices={teamsPickedChoices}
                     />
                 </div>
             )}

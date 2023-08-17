@@ -31,6 +31,7 @@ export default function GameInProgress({
   let choices;
   let answerArray;
   let totalAnswers;
+  let teamsPickedChoices;
   let [modalOpen, setModalOpen] = useState(false);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
 
@@ -98,6 +99,38 @@ export default function GameInProgress({
     }
     return questions[currentQuestionIndex].choices;
   };
+
+const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
+  const teamsPickedChoices = [];
+
+  teamsArray.forEach(team => {
+    const teamPickedChoices = [];
+    
+    team.teamMembers && team.teamMembers.forEach(teamMember => {
+      teamMember.answers && teamMember.answers.forEach(answer => {
+        if (answer.questionId === questions[currentQuestionIndex].id) {
+          if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
+            choices && choices.forEach(choice => {
+              if (answer.text === choice.text) {
+                teamPickedChoices.push({
+                  teamName: team.name,
+                  choiceText: choice.text
+                });
+              }
+            });
+          }
+        }
+      });
+    });
+
+    if (teamPickedChoices.length > 0) {
+      teamsPickedChoices.push(teamPickedChoices);
+    }
+  });
+
+  return teamsPickedChoices;
+};
+
 
   // returns an array ordered to match the order of answer choices, containing the total number of each answer
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => {
@@ -188,6 +221,8 @@ export default function GameInProgress({
           totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
           numPlayers={teams ? teams.length : 0}
           statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
+          teamsPickedChoices = {teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, choices)}
+
         />
       </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
