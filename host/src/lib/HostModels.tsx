@@ -38,7 +38,7 @@ export interface ClientAnswerObject {
 
 export interface SubmittedAnswerObject {
   rawInput: string,
-  normalizedInput: string[],
+  normalizedInput: string[] | number[],
   inputType: InputType,
   percent: number,
   count: number,

@@ -5,6 +5,7 @@ import { evaluate } from 'mathjs';
 import nlp from 'compromise';
 // import * as DOMPurify from 'dompurify';
 import {  StorageKey, SubmittedAnswerObject, InputType, ClientAnswerObject, AnswerType } from './HostModels';
+import { parse } from '@babel/core';
 
 /**
  * validates localModel retrieved from local storage
@@ -55,28 +56,20 @@ export const fetchLocalData = () => {
 
 const isAnswerMatch = (newAnswer: SubmittedAnswerObject, existingAnswer: SubmittedAnswerObject) => { 
   if (existingAnswer.inputType === InputType.NUMBER && newAnswer.inputType === InputType.NUMBER) {
-    // if new mistake has just one number, use a for loop
-    if (newAnswer.normalizedInput.length === 0) {
+      // using a set here because it's faster than nested for loops
+      let set1 = new Set<number>(newAnswer.normalizedInput as number[]);
       for (let i = 0; i < existingAnswer.normalizedInput.length; i++) {
-        if (existingAnswer.normalizedInput[i] === newAnswer.normalizedInput[0]) 
+        if (set1.has(existingAnswer.normalizedInput[i] as number)) 
           return true;
       }
-    } else {
-      // if new mistake has more than one number, use a set because it's faster
-      let set1 = new Set(newAnswer.normalizedInput);
-      for (let i = 0; i < existingAnswer.normalizedInput.length; i++) {
-        if (set1.has(existingAnswer.normalizedInput[i])) 
-          return true;
-      }
-    }
   };
   if (existingAnswer.inputType === InputType.FORMULA && newAnswer.inputType === InputType.FORMULA) {
     // if new mistake has a formula, evaluate it to catch lowest common denominators etc
     if (existingAnswer.normalizedInput[0] === newAnswer.normalizedInput[0]) 
       return true;
     try {
-      const answerExpression = evaluate(newAnswer.normalizedInput[0]);
-      const inputExpression = evaluate(existingAnswer.normalizedInput[0]);
+      const answerExpression = evaluate(newAnswer.normalizedInput[0] as string);
+      const inputExpression = evaluate(existingAnswer.normalizedInput[0] as string);
       if (answerExpression === inputExpression) {
        return true;
       }
@@ -143,8 +136,9 @@ export const packageSubmittedAnswer = (
     const specialChars = /[`$%*()\/]/;
     const specialCharsCheck = specialChars.test(rawInput);
     const detectedNumbers = nlp(rawInput).numbers().json();
+
     if (!specialCharsCheck && detectedNumbers.length > 0) {
-       detectedNumbers.forEach((number: number) => normalizedInput.push(number))
+       detectedNumbers.forEach((number: any) => normalizedInput.push(parseFloat(number.number.num)))
       inputType = InputType.NUMBER;
     } else {
 

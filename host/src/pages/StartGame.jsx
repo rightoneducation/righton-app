@@ -24,7 +24,6 @@ export default function StartGame({
   const handleSubmitAnswer = (answer) => {
     // Location: Play - HandleSubmitAnswer
     const newMistake = packageSubmittedAnswer(answer);
-    console.log(newMistake);
     // CreateTeamAnswer(newAnswer);
 
 
