@@ -4,9 +4,10 @@ import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
-import FeaturedMistakes from "../components/FeaturedMistakes";
+import PlayerThinking from "../components/PlayerThinking";
 import OpenAnswerCard from "../components/openanswercard/OpenAnswerCard";
 import { parseAnswerToMistake, answerMatchAndSort, packageSubmittedAnswer } from "../lib/HelperFunctions";
+import { removeStopwords, eng, fra } from 'stopword';
 
 export default function StartGame({
   teams = [],
@@ -20,6 +21,24 @@ export default function StartGame({
   const classes = useStyles();
   const [sortedMistakes, setSortedMistakes] = useState([]);
   const [newAnswer, setNewAnswer] = useState("");
+  const [commonWords, setCommonWords] = useState([]);
+  const [topWords, setTopWords] = useState([]);
+
+  const findTopWords = (newAnswer) => {
+    const words = newAnswer.rawInput.split(" ").filter((word) => word !== "");
+    const strippedWords = removeStopwords(words);
+    const existingWords = [...commonWords];
+    const newWords = existingWords.concat(strippedWords);
+    const frequency = newWords.reduce((acc, item) => {
+      acc[item] = (acc[item] || 0) + 1;
+      return acc;
+    }, {});
+
+    const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,3);
+    setCommonWords(newWords);
+    return sortedByFrequency;
+  };
+
   // this would actually be happening under the createTeamAnswer subscription
   const handleSubmitAnswer = (answer) => {
     // Location: Play - HandleSubmitAnswer
@@ -29,6 +48,7 @@ export default function StartGame({
 
     // Location: Host - From CreateTeamAnswer subscription
     const newSortedMistakes = answerMatchAndSort(newMistake, sortedMistakes);
+    setTopWords(findTopWords(newMistake));
     setSortedMistakes(newSortedMistakes);
     setNewAnswer(answer);
   }
@@ -36,7 +56,7 @@ export default function StartGame({
   return (
     <div className={classes.background}>
         <OpenAnswerCard answerObject={newAnswer} handleSubmitAnswer={handleSubmitAnswer}/>
-        <FeaturedMistakes sortedMistakes={sortedMistakes} setSortedMistakes={setSortedMistakes}/>
+        <PlayerThinking topWords={topWords} sortedMistakes={sortedMistakes} setSortedMistakes={setSortedMistakes}/>
     </div>
   );
 }
