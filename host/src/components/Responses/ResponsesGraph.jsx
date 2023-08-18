@@ -59,7 +59,7 @@ const ResponsesGraph = ({ inputArray }) => {
     const tickCount = Math.ceil(maxAnswerCount / tickInterval);
     return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
   };
-
+  const largestAnswerCount = Math.max(...data.map(response => response.count));
   useEffect(() => {
     const handleResize = () => {
       const node = graphRef.current;
@@ -102,17 +102,18 @@ const ResponsesGraph = ({ inputArray }) => {
     bar: {
       style: {
         data: {
-          fill: ({ datum, index }) => (index === 0 ? 'transparent' : '#FFF'),
+          fill: ({ datum, index }) => ('#FFF'),
           stroke: '#FFF',
           strokeWidth: 1,
           margin: 300,
+         
         },
         labels: {
-          fill: ({ datum, index }) => (index === 0 || datum.answerCount === 0 ? '#FFF' : '#384466'),
+          fill: ({ datum, index }) => ( datum.count === 0 ? '#FFF' : '#384466'),
           fontFamily: 'Rubik',
           fontWeight: '400',
           textAnchor: 'end',
-          fontSize: '12px'
+          fontSize: '12px',
         },
       },
     },
@@ -127,17 +128,18 @@ const ResponsesGraph = ({ inputArray }) => {
       </div>
       <div ref={graphRef} >
         <VictoryChart
-          domainPadding={36}
+          domainPadding={{x: [0, 36], y: [0, 0]}}
           padding={defaultVictoryPadding}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}
-          height={400}
+          height={300}
         >
           <VictoryAxis
             standalone={false}
+            tickValues={['']}
           />
-          {/* {largestAnswerCount < 5 && (
+          {largestAnswerCount < 5 && (
             <VictoryAxis
               dependentAxis
               crossAxis={false}
@@ -155,11 +157,11 @@ const ResponsesGraph = ({ inputArray }) => {
               tickValues={calculateRoundedTicks()}
               tickFormat={tick => Math.round(tick)}
             />
-          )} */}
+          )}
           <VictoryBar
             data={data}
-            y="answerCount"
-            x="answerChoice"
+            y="count"
+            x="word"
             horizontal
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}

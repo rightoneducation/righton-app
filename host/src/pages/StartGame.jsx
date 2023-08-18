@@ -34,7 +34,7 @@ export default function StartGame({
       return acc;
     }, {});
 
-    const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,3);
+    const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,4);
     setCommonWords(newWords);
     return sortedByFrequency;
   };

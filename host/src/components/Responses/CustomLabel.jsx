@@ -5,7 +5,7 @@ const CustomLabel = (props) => {
   const { x, y, datum, barThickness,labelOffset, xSmallPadding, mediumLargePadding, defaultVictoryPadding } = props;
   return (
       <g>
-        {datum.answerCount !== 0 && 
+        {datum.count !== 0 && 
           <VictoryLabel 
             {...props}
             x={defaultVictoryPadding + xSmallPadding} 
@@ -27,10 +27,10 @@ const CustomLabel = (props) => {
           y={y}
           textAnchor="end"
           verticalAnchor="middle"
-          text={ datum.count > 0 ? `${datum.word}` : ''}
+          text={ datum.count > 0 ? `${datum.count}` : ''}
           style={{
             fontSize: 15,
-            fill: datum.count === 0 || x <= 70 ? '#FFF' : '#384466',
+            fill:  x <= 70 ? '#FFF' : '#384466',
           }} 
         />
    </g>

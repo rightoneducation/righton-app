@@ -12,7 +12,6 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   isNullOrUndefined,
 } from '@righton/networking';
-import CommonWords from "./CommonWords";
 import MistakeSelector from "./MistakeSelector";
 import ResponsesGraph from "./Responses/ResponsesGraph";
 
@@ -39,7 +38,6 @@ export default function GameAnswers({
         <Typography className={classes.title}>{title}</Typography>
         <Typography className={classes.subtitle}>{subtitle}</Typography>
         <ResponsesGraph inputArray={topWords} />
-        <CommonWords topWords={topWords}/>
     </Paper>
   );
 };

@@ -16,7 +16,7 @@ const CustomBar = (props) => {
   return (
       <g  style={{pointerEvents: 'bounding-box'}}>
         <Bar {...props} />
-        {datum.answerCount > 0 && 
+        {datum.count > 0 && 
           <rect
               className={classes.highlight}
               x={xxxLargePadding}
