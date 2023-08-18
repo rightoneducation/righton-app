@@ -100,16 +100,19 @@ export default function GameInProgress({
     return questions[currentQuestionIndex].choices;
   };
 
+//returns an array of which team names picked which question choices
 const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
   const teamsPickedChoices = [];
 
   teamsArray.forEach(team => {
     const teamPickedChoices = [];
+    let isNoResponse = true;
     
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
         if (answer.questionId === questions[currentQuestionIndex].id) {
           if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
+            isNoResponse = false;
             choices && choices.forEach(choice => {
               if (answer.text === choice.text) {
                 teamPickedChoices.push({
@@ -123,13 +126,20 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
       });
     });
 
-    if (teamPickedChoices.length > 0) {
-      teamsPickedChoices.push(teamPickedChoices);
+    if (teamPickedChoices.length > 0 || isNoResponse) {
+      teamsPickedChoices.push(...teamPickedChoices);
+      if (isNoResponse) {
+        teamsPickedChoices.push({
+          teamName: team.name,
+          choiceText: 'No response'
+        });
+      }
     }
   });
 
   return teamsPickedChoices;
 };
+
 
 
   // returns an array ordered to match the order of answer choices, containing the total number of each answer

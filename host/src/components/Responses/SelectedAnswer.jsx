@@ -44,7 +44,7 @@ const SelectedAnswer = (props) => {
         correctChoiceIndex,
         reversedResponses,
         numPlayers,
-        teamsPickedChoices
+        teamsPickedChoices,
     } = props;
 
     const classes = useStyles();

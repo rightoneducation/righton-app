@@ -46,7 +46,7 @@ const useStyles = makeStyles({
 });
 
 const PlayersSelectedAnswer = (props) => {
-    const { data, selectedBarIndex, numPlayers, teamsPickedChoices, defaultVictoryPadding } = props;
+    const { data, selectedBarIndex, numPlayers, teamsPickedChoices } = props;
 
     const classes = useStyles();
 
@@ -68,18 +68,10 @@ const PlayersSelectedAnswer = (props) => {
     const answerCount = data[selectedBarIndex].answerCount;
     const percentage = (answerCount / numPlayers) * 100;
 
-    // Filter the teamsPickedChoices array based on the answerText
     const selectedBarAnswerText = data[selectedBarIndex].answerText;
     const teamsWithSelectedAnswer = teamsPickedChoices.filter(teamChoices =>
-        teamChoices.some(choice => choice.choiceText === selectedBarAnswerText)
+        teamChoices.choiceText === selectedBarAnswerText
     );
-    //console.log(teamsPickedChoices);
-    //console.log(teamsWithSelectedAnswer);
-
-    // // Console log the team names
-    // teamsWithSelectedAnswer.forEach(teamChoices => {
-    //     console.log(`Team: ${teamChoices[0].teamName}`);
-    // });
 
     return (
         <div>
@@ -96,10 +88,10 @@ const PlayersSelectedAnswer = (props) => {
                     </Typography>
                 </div>
             </div>
-            {teamsWithSelectedAnswer.map((teamChoices, index) => (
+            {teamsWithSelectedAnswer.map((teamChoice, index) => (
                 <div key={index} style={rectangleStyle}>
                     <Typography className={classes.nameText}>
-                        {teamChoices[0].teamName}
+                        {teamChoice.teamName}
                     </Typography>
                 </div>
             ))}

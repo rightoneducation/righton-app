@@ -10,6 +10,7 @@ export default {
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
 
+
 const Template = args => <ResponsesGraph {...args} />;
 
 export const differentAnswers = Template.bind({});
@@ -32,13 +33,11 @@ differentAnswers.args = {
   ],
   statePosition: 1,
   teamsPickedChoices: [
-    [
-      { teamName: 'Alex Williams', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
-      { teamName: 'Jackson Cameron', choiceText: '2x^4 + 6x^2 − 3x' },
-      { teamName: 'Kyle Bradshaw', choiceText: 'x^2 − 4x − 12' },
-      { teamName: 'Vanessa Martinez', choiceText: 'x^9 + 3x -15' },
-    ],
-  ],
+    { teamName: 'Team A', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Team B', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Team C', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+  // ... Other arrays for different answers
+],
 };
 
 export const sameAnswer = Template.bind({});
