@@ -33,10 +33,64 @@ differentAnswers.args = {
   ],
   statePosition: 1,
   teamsPickedChoices: [
-    { teamName: 'Team A', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
-    { teamName: 'Team B', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
-    { teamName: 'Team C', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
-  // ... Other arrays for different answers
+    { teamName: 'Alex Williams', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Jackson Cameron', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Jeremiah Tanaka', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Kyle Bradshaw', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Shana Quintero', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Vanessa Martinez', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Xiomara Jimenez', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+    { teamName: 'Zander Lee', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
+
+    { teamName: 'Alex Williams', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Jackson Cameron', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Jeremiah Tanaka', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Kyle Bradshaw', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Shana Quintero', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Vanessa Martinez', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Xiomara Jimenez', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Zander Lee', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Alex Williams', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Jackson Cameron', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Jeremiah Tanaka', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Kyle Bradshaw', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Shana Quintero', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Vanessa Martinez', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Xiomara Jimenez', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Zander Lee', choiceText: '2x^4 + 6x^2 − 3x' },
+
+    { teamName: 'Alex Williams', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Jackson Cameron', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Jeremiah Tanaka', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Kyle Bradshaw', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Shana Quintero', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Vanessa Martinez', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Xiomara Jimenez', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Zander Lee', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Alex Williams', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Jackson Cameron', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Jeremiah Tanaka', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Kyle Bradshaw', choiceText: 'x^2 − 4x − 12' },
+
+    { teamName: 'Alex Williams', choiceText: 'No response' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'No response' },
+    { teamName: 'Jackson Cameron', choiceText: 'No response' },
+    { teamName: 'Jeremiah Tanaka', choiceText: 'No response' },
+    { teamName: 'Kyle Bradshaw', choiceText: 'No response' },
+    { teamName: 'Shana Quintero', choiceText: 'No response' },
+    { teamName: 'Vanessa Martinez', choiceText: 'No response' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: 'No response' },
+    { teamName: 'Xiomara Jimenez', choiceText: 'No response' },
+    { teamName: 'Zander Lee', choiceText: 'No response' },
 ],
 };
 
@@ -59,7 +113,18 @@ sameAnswer.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 6,
-  
+  teamsPickedChoices: [
+    { teamName: 'Alex Williams', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Jackson Cameron', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Jeremiah Tanaka', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Kyle Bradshaw', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Shana Quintero', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Vanessa Martinez', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Xiomara Jimenez', choiceText: 'x^2 − 4x − 12' },
+    { teamName: 'Zander Lee', choiceText: 'x^2 − 4x − 12' },
+  ]
 };
 
 export const oneAnswer = Template.bind({});
@@ -81,6 +146,9 @@ oneAnswer.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 6,
+  teamsPickedChoices: [
+    { teamName: 'Alex Williams', choiceText: 'x^9 + 3x -15' },
+  ]
 };
 
 export const noAnswer = Template.bind({});
@@ -102,6 +170,18 @@ noAnswer.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 6,
+  teamsPickedChoices: [
+    { teamName: 'Alex Williams', choiceText: 'No response' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'No response' },
+    { teamName: 'Jackson Cameron', choiceText: 'No response' },
+    { teamName: 'Jeremiah Tanaka', choiceText: 'No response' },
+    { teamName: 'Kyle Bradshaw', choiceText: 'No response' },
+    { teamName: 'Shana Quintero', choiceText: 'No response' },
+    { teamName: 'Vanessa Martinez', choiceText: 'No response' },
+    { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: 'No response' },
+    { teamName: 'Xiomara Jimenez', choiceText: 'No response' },
+    { teamName: 'Zander Lee', choiceText: 'No response' },
+  ]
 };
 
 export const lessThanFivePlayers = Template.bind({});
@@ -123,6 +203,13 @@ lessThanFivePlayers.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 6,
+  teamsPickedChoices:[
+    { teamName: 'Alex Williams', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Jackson Cameron', choiceText: '2x^4 + 6x^2 − 3x' },
+
+    { teamName: 'Alex Williams', choiceText: 'x^2 − 4x − 12' },
+  ]
 };
 
 export const fivePlayers = Template.bind({});
@@ -144,4 +231,13 @@ fivePlayers.args = {
     { isAnswer: false, text: 'D' },
   ],
   statePosition: 6,
+  teamsPickedChoices:[
+    { teamName: 'Alex Williams', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: '2x^4 + 6x^2 − 3x' },
+    { teamName: 'Jackson Cameron', choiceText: '2x^4 + 6x^2 − 3x' },
+
+    { teamName: 'Alex Williams', choiceText: 'x^2 − 4x − 12' },
+
+    { teamName: 'Alex Williams', choiceText: 'x^9 + 3x -15' },
+  ]
 };
