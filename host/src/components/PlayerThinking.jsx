@@ -14,6 +14,7 @@ import {
 } from '@righton/networking';
 import CommonWords from "./CommonWords";
 import MistakeSelector from "./MistakeSelector";
+import ResponsesGraph from "./Responses/ResponsesGraph";
 
 export default function GameAnswers({
   topWords,
@@ -37,22 +38,7 @@ export default function GameAnswers({
     <Paper className={classes.background} elevation={10}>
         <Typography className={classes.title}>{title}</Typography>
         <Typography className={classes.subtitle}>{subtitle}</Typography>
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
-          {sortedMistakes ? sortedMistakes.map((mistake, index) => {
-            return <MistakeSelector 
-              key={uuidv4()}
-              mistakeText={mistake.rawInput} 
-              mistakePercent={mistake.percent} 
-              isTop3Mode={isTop3Mode} 
-              isSelected={isTop3Mode && index < 3 ? true : mistake.isSelected}
-              mistakeIndex={index}
-              selectedCount={selectedCount}
-              handleSelectMistake={handleSelectMistake} 
-              style={{width:'100%'}}  
-            />
-          }):
-          null}
-        </Box>
+        <ResponsesGraph inputArray={topWords} />
         <CommonWords topWords={topWords}/>
     </Paper>
   );
