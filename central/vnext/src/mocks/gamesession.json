@@ -1,0 +1,111 @@
+{
+  "gameCode": 2225,
+  "gameId": 926,
+  "isAdvanced": false,
+  "title": "Updated new game",
+  "currentState": "INITIAL_INTRO",
+  "phaseOneTime": 300,
+  "phaseTwoTime": 300,
+  "startTime": null,
+  "createdAt": "2022-05-24T15:54:05Z",
+  "currentQuestionId": 1,
+  "description": "",
+  "id": "732f47ab-0f9a-4dad-880e-b5cf2ad8e812",
+  "imageUrl": "",
+  "updatedAt": "2022-05-24T15:54:05.568Z",
+  "questions": {
+    "items": [
+      {
+        "id": 1,
+        "question": "How many degrees are in the interior angles of a stop sign?",
+        "rightAnswer": "360",
+        "wrongAnswer1": "8",
+        "wrongAnswer2": "720",
+        "wrongAnswer3": "1080"
+      },
+      {
+        "id": 2,
+        "question": "question2",
+        "rightAnswer": "1",
+        "wrongAnswer1": "2",
+        "wrongAnswer2": "3",
+        "wrongAnswer3": "4"
+      },
+      {
+        "id": 3,
+        "question": "question3",
+        "rightAnswer": "1",
+        "wrongAnswer1": "2",
+        "wrongAnswer2": "3",
+        "wrongAnswer3": "4"
+      }
+    ]
+  },
+  "teams": {
+    "items": [
+      {
+        "name": "Eric",
+        "id": "teamEric",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberEric",
+              "deviceId": "223344",
+              "answers": {
+                "items": [
+                  {
+                    "id": "990088",
+                    "teamMemberAnswersId": "teamMemberEric",
+                    "isChosen": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Lucah",
+        "id": "teamLucah",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberLucah",
+              "deviceId": "4321",
+              "answers": {
+                "items": [
+                  {
+                    "id": "009988",
+                    "teamMemberAnswersId": "teamMemberLucah",
+                    "isChosen": false
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Zach",
+        "id": "teamZach",
+        "teamMembers": {
+          "items": [
+            {
+              "id": "teamMemberZach",
+              "deviceId": "1234",
+              "answers": {
+                "items": [
+                  {
+                    "id": "889900",
+                    "teamMemberAnswersId": "teamMemberZach",
+                    "isChosen": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

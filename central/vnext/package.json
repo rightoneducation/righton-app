@@ -1,0 +1,88 @@
+{
+  "name": "righton-central",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@material-ui/core": "^4.9.9",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.48",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.5",
+    "@types/jest": "^29.5.3",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/uuid": "^9.0.2",
+    "babel-loader": "9.1.3",
+    "classnames": "^2.3.2",
+    "glob-parent": "^6.0.2",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.28",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-modal": "^3.16.1",
+    "react-responsive": "^9.0.2",
+    "react-router-dom": "^6.15.0",
+    "react-scripts": "^5.0.1",
+    "swiper": "^10.2.0",
+    "trim": "^1.0.1",
+    "trim-newlines": "^5.0.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/eslint-parser": "^7.22.10",
+    "@testing-library/jest-dom": "^6.0.1",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/node": "^20.5.1",
+    "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "^8.47.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard-with-typescript": "^37.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "file-system-cache": "2.4.4",
+    "prettier": "^3.0.2",
+    "react-dev-utils": "^12.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2"
+  },
+  "scripts": {
+    "start": "yarn --cwd ../networking build && DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "build": "yarn --cwd ../networking build && react-scripts build",
+    "test": "yarn --cwd ../networking build && react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "resolutions": {
+    "react-refresh": "^0.12.0"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "main": "index.js"
+}
