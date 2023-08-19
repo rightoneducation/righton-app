@@ -1,18 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Modal from 'react-modal';
+import OnboardingLogo from '../images/OnboardingLogo.svg';
+import OnboardingPickAGame from '../images/OnboardingPickAGame.png';
+import OnboardingShareYourGame from '../images/OnboardingShareYourGame.png';
+import OnboardingPlayOnAnyDevice from '../images/OnboardingPlayOnAnyDevice.png';
+import OnboardingJoinTheGame from '../images/OnboardingJoinTheGame.png';
 import { useMediaQuery } from 'react-responsive';
 import { Pagination, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import OnboardingLogo from '../images/OnboardingLogo.svg';
-import OnboardingLogin from '../images/OnboardingLogin.png';
-import OnboardingTestFlight from '../images/OnboardingTestFlight.png';
-import OnboardingGooglePlay from '../images/OnboardingGooglePlay.png';
-import OnboardingPickAGame from '../images/OnboardingPickAGame.png';
-import OnboardingLaunchGame1 from '../images/OnboardingLaunchGame1.png';
-import OnboardingLaunchGame2 from '../images/OnboardingLaunchGame2.png';
-import OnboardingShareGameCode1 from '../images/OnboardingShareGameCode1.png';
-import OnboardingShareGameCode2 from '../images/OnboardingShareGameCode2.png';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -23,7 +19,7 @@ export default function GameModal({
   handleModalClose,
 }) {
   const classes = useStyles();
-  const isMobile = useMediaQuery({ query: '(max-width: 760px)' });
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   return (
     <div>
@@ -38,6 +34,7 @@ export default function GameModal({
             backgroundColor: 'rgba(0, 0, 0,  0)',
             margin: 'auto',
             maxWidth: '800px',
+            minWidth: '260px',
             maxHeight: '670px',
             border: 'none',
           },
@@ -53,188 +50,179 @@ export default function GameModal({
           },
         }}
         onRequestClose={() => handleModalClose(false)}
-        shouldCloseOnOverlayClick
+        shouldCloseOnOverlayClick={true}
         appElement={document.getElementById('root') || undefined}
       >
         <div style={{ minWidth: 0, minHeight: 0, overflow: 'hidden' }}>
           <Swiper
             initialSlide={showModalGetApp ? 1 : 0}
-            navigation={!isMobile}
+            navigation={isMobile ? false : true}
             pagination={{ clickable: true }}
             modules={[Navigation, Pagination]}
             spaceBetween={8}
             className={classes.swiper}
           >
             <SwiperSlide className={classes.slide}>
-              <div className={classes.modalHead}> Welcome to RightOn! </div>
-              <img src={OnboardingLogo} alt="Logo" className={classes.logo} />
-              <div className={classes.modalBody}>
-                {' '}
-                Inspire learning by embracing mistakes!
-                <div className={classes.modalBodyBold}>
-                  {' '}
-                  To learn how to start a game, swipe to the left.
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'space-between',
+                  gap: 10,
+                }}
+              >
+                <div className={classes.modalHead}> Welcome to RightOn! </div>
+                <div>
+                  <img
+                    src={OnboardingLogo}
+                    alt="Logo"
+                    className={classes.logo}
+                  />
                 </div>
-              </div>
-              <div className={classes.modalBody}>
-                {' '}
-                For more information about us visit
-                {'\n'}
-                <a
-                  href="https://www.rightoneducation.com"
-                  className={classes.modalBodyLink}
-                >
-                  {' '}
-                  https://www.rightoneducation.com.{' '}
-                </a>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide className={classes.slide}>
-              <div className={classes.modalHead}> Get the RightOn! App</div>
-              <img
-                src={OnboardingLogin}
-                alt="Login"
-                className={classes.screenshots}
-              />
-              <div className={classes.modalBody}>
-                {' '}
-                Your students will need to download the RightOn! app on their
-                phones or Chromebooks.{' '}
-              </div>
-              <div className={classes.imageContainer}>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
-                  <a href="https://testflight.apple.com/join/0FwryrId">
+                <div>
+                  <div className={classes.modalBodyBreak}>
                     {' '}
-                    <img
-                      src={OnboardingTestFlight}
-                      alt="Apple TestFlight"
-                      style={{ height: '6vh' }}
-                    />{' '}
-                  </a>
+                    Inspire learning by embracing mistakes!
+                  </div>
+                  <div className={classes.modalBody}>
+                    <div className={classes.modalBodyBold}>
+                      {' '}
+                      To learn how to start a game, {'\n'}
+                    </div>{' '}
+                    swipe to the left.{' '}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
-                  <a href="https://play.google.com/store/apps/details?id=com.rightonnew">
-                    <img
-                      src={OnboardingGooglePlay}
-                      alt="Google Play"
-                      style={{ height: '6vh' }}
-                    />{' '}
-                  </a>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide className={classes.slide}>
-              <div className={classes.modalHead}> Pick a Game </div>
-              <img
-                src={OnboardingPickAGame}
-                alt="Pick A Game"
-                className={classes.screenshots}
-              />
-              <div className={classes.modalBody}>
-                {' '}
-                After the game list has loaded, select a game.{' '}
-              </div>
-              <div className={classes.modalBody}>
-                {' '}
-                During this initial beta,
-                <span className={classes.modalBodyBold}>
+                <div className={classes.modalBody}>
                   {' '}
-                  only the first question{' '}
-                </span>{' '}
-                from a game will be played{' '}
+                  For more information about us visit {'\n'}
+                  <a
+                    href="https://www.rightoneducation.com"
+                    className={classes.modalBodyLink}
+                  >
+                    {' '}
+                    https://www.rightoneducation.com{' '}
+                  </a>{' '}
+                </div>
               </div>
             </SwiperSlide>
             <SwiperSlide className={classes.slide}>
-              <div className={classes.modalHead}> Launch Your Game </div>
-              <div className={classes.imageContainer}>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'space-between',
+                  gap: 10,
+                }}
+              >
+                <div className={classes.modalHead}> Pick a Game </div>
+                <div>
                   <img
-                    src={OnboardingLaunchGame1}
-                    alt="Launch Game 1"
+                    src={OnboardingPickAGame}
+                    alt="Pick A Game"
                     className={classes.screenshots}
                   />
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
-                  <img
-                    src={OnboardingLaunchGame2}
-                    alt="Launch Game 2"
-                    className={classes.screenshots}
-                  />
-                </div>
-              </div>
-              <div className={classes.modalBody}>
-                {' '}
-                When you've selected a game, press the
-                <span className={classes.modalBodyBold}>
+                <div className={classes.modalBodyBreak}>
                   {' '}
-                  Launch Game{' '}
-                </span>{' '}
-                button to launch a game session.{' '}
+                  After the game list has loaded, {`\n`} pick a game.{' '}
+                </div>
+                <div className={classes.modalBody}>
+                  {' '}
+                  Each game can have one or more questions.{' '}
+                </div>
               </div>
             </SwiperSlide>
             <SwiperSlide className={classes.slide}>
-              <div className={classes.modalHead}> Share Game Code </div>
-              <div className={classes.imageContainer}>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'space-between',
+                  gap: 10,
+                }}
+              >
+                <div className={classes.modalHead}>
+                  {' '}
+                  Launch and Share Your Game{' '}
+                </div>
+                <div>
                   <img
-                    src={OnboardingShareGameCode1}
-                    alt="Share Game Code 1"
+                    src={OnboardingShareYourGame}
+                    alt="Launch and Share Your Game"
                     className={classes.screenshots}
                   />
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
+                <div className={classes.modalBodyBreak}>
+                  {' '}
+                  When you've selected a game, press the
+                  <div className={classes.modalBodyBold}>
+                    {' '}
+                    Launch Game{' '}
+                  </div>{' '}
+                  button to launch a game session.{' '}
+                </div>
+                <div className={classes.modalBodyBreak}>
+                  {' '}
+                  After the game is launched, the Game Code will be displayed at
+                  the top of the screen.{' '}
+                </div>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide className={classes.slide}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'space-between',
+                  gap: 10,
+                }}
+              >
+                <div className={classes.modalHead}> Play On Any Device </div>
+                <div>
                   <img
-                    src={OnboardingShareGameCode2}
-                    alt="Share Game Code 2"
+                    src={OnboardingPlayOnAnyDevice}
+                    alt="Play On Any Device"
                     className={classes.screenshots}
                   />
                 </div>
+                <div className={classes.modalBodyBreak}>
+                  {' '}
+                  Students can join your game session through any browser by
+                  going to the link below:
+                </div>
+                <div>
+                  <a
+                    href="https://play.rightoneducation.com"
+                    className={classes.modalBodyLink}
+                  >
+                    {' '}
+                    https://play.rightoneducation.com{' '}
+                  </a>{' '}
+                </div>
               </div>
-              <div className={classes.modalBody}>
-                {' '}
-                After the game is launched, the Game Code will be displayed at
-                the top of the screen.{' '}
-              </div>
-              <div className={classes.modalBody}>
-                {' '}
-                Once students enter this code on the app, you're all ready to
-                go!{' '}
+            </SwiperSlide>
+            <SwiperSlide className={classes.slide}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'space-between',
+                  gap: 10,
+                }}
+              >
+                <div className={classes.modalHead}> Join the Game </div>
+                <div>
+                  <img
+                    src={OnboardingJoinTheGame}
+                    alt="Join the Game"
+                    className={classes.screenshots}
+                  />
+                </div>
+                <div className={classes.modalBodyBreak}>
+                  {' '}
+                  Once students enter the Game Code, {'\n'} you're all ready to
+                  go!{' '}
+                </div>
               </div>
             </SwiperSlide>
           </Swiper>
@@ -303,11 +291,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     marginBottom: '10px',
   },
-  modalBodyLink: {
+  modalBodyBreak: {
     fontSize: '14px',
     fontFamily: 'Poppins',
     color: '#FFF',
+    lineHeight: '25px',
+    maxWidth: '400px',
+    margin: 'auto',
+    marginTop: '10px',
+    marginBottom: '10px',
+    whiteSpace: 'pre-line',
+  },
+  modalBodyLink: {
+    fontSize: '14px',
+    fontFamily: 'Poppins',
+    color: '#159EFA',
     lineHeight: '18px',
+    fontWeight: 700,
     textDecoration: 'underline',
     whiteSpace: 'pre-line',
   },
@@ -318,6 +318,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#FFF',
     lineHeight: '18px',
     whiteSpace: 'pre-line',
+    display: 'inline',
   },
   modalClose: {
     fontSize: '14px',
