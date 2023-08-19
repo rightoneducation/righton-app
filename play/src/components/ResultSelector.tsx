@@ -92,7 +92,7 @@ export default function ResultSelector({
             opacity: 0.5,
           }}
         >
-          {`${String.fromCharCode(letterCode)}`}
+          {String.fromCharCode(letterCode)}
         </Typography>
         <Typography
           variant="body2"
