@@ -9,11 +9,11 @@ import {
 import { IGameQuestion } from "../../Models";
 import QuestionParser from "../../Parsers/QuestionParser";
 import { createGameQuestion, deleteGameQuestion } from "../../graphql";
-import { BaseAPIClient } from "./BaseAPIClient";
 import { IGameQuestionAPIClient } from "../IGameQuestionAPIClient";
+import { BaseGraphQLAPIClient } from "./BaseGraphQLAPIClient";
 
 export class GameQuestionAPIClient
-  extends BaseAPIClient
+  extends BaseGraphQLAPIClient
   implements IGameQuestionAPIClient
 {
   async createGameQuestion(
@@ -31,12 +31,10 @@ export class GameQuestionAPIClient
     );
   }
 
-  async deleteQuestion(
-    deleteGameQuestionInput: DeleteGameQuestionInput
-  ): Promise<IGameQuestion> {
-    let variables: DeleteGameQuestionMutationVariables = {
-      input: deleteGameQuestionInput,
-    };
+  async deleteQuestion(id: string): Promise<IGameQuestion> {
+    let input: DeleteGameQuestionInput = { id };
+    let variables: DeleteGameQuestionMutationVariables = { input };
+
     let result = await this.callGraphQLThrowOnError<DeleteGameQuestionMutation>(
       deleteGameQuestion,
       variables

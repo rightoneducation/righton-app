@@ -4,7 +4,7 @@ import { AWSTeam } from "./AWSTeam";
 
 export type AWSGameSession = {
   id: string;
-  gameId: number;
+  gameId: string;
   startTime?: string | null;
   phaseOneTime: number;
   phaseTwoTime: number;

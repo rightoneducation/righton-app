@@ -48,14 +48,13 @@ export default abstract class QuestionParser {
   }
 
   static gameQuestionFromAWSGameQuestion(
-    awsQuestion: AWSGameQuestion | null | undefined
+    awsQuestion?: AWSGameQuestion | null
   ): IGameQuestion {
     if (isNullOrUndefined(awsQuestion)) {
       throw new Error("Question cannot be null.");
     }
     return {
       id: awsQuestion.id,
-      gameId: awsQuestion.gameId,
       text: awsQuestion.text,
       choices: isNullOrUndefined(awsQuestion.choices)
         ? []

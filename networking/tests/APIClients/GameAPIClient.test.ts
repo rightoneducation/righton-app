@@ -1,4 +1,9 @@
-import { Environment, IGameAPIClient, GameAPIClient } from "../../src";
+import {
+  Environment,
+  IGameAPIClient,
+  GameAPIClient,
+  IGameQuestion,
+} from "../../src";
 import { describe } from "node:test";
 import { expect, test } from "@jest/globals";
 import { randomUUID } from "node:crypto";
@@ -6,6 +11,19 @@ import { randomUUID } from "node:crypto";
 describe("Testing GameAPIClient", async () => {
   let gameAPIClient: IGameAPIClient = new GameAPIClient(Environment.Local);
   let gameId = randomUUID();
+  let questions: IGameQuestion[] = [
+    {
+      id: randomUUID(),
+      text: "question1",
+      choices: [],
+      imageUrl: "imageUrl",
+      instructions: [],
+      cluster: "cluster",
+      domain: "domain",
+      grade: "grade",
+      standard: "standard",
+    },
+  ];
   test("create game", async () => {
     let game = await gameAPIClient.createGame({
       id: gameId,
@@ -14,13 +32,14 @@ describe("Testing GameAPIClient", async () => {
       phaseOneTime: 10,
       phaseTwoTime: 10,
       imageUrl: "test",
+      questions: JSON.stringify(questions),
     });
     expect(game.id).not.toBeNull();
   });
 
   test("update game", async () => {
     let updatedTitle = "updatedTitle";
-    let game = await gameAPIClient.updateGame({
+    let game = await gameAPIClient.updateGameByUpdateGameInput({
       id: gameId,
       title: updatedTitle,
     });
@@ -30,6 +49,8 @@ describe("Testing GameAPIClient", async () => {
   test("get game", async () => {
     let game = await gameAPIClient.getGame(gameId);
     expect(game.id).toEqual(gameId);
+    expect(game.questions.length).toEqual(1);
+    expect(game.questions[0].id).toEqual(questions[0].id);
   });
 
   test("list games", async () => {

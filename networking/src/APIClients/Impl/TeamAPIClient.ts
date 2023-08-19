@@ -1,11 +1,11 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { BaseAPIClient } from "./BaseAPIClient";
 import { TeamParser } from "../../Parsers";
-import { AWSTeam, ITeam } from "../../Models";
+import { ITeam } from "../../Models";
 import {
   CreateTeamInput,
   CreateTeamMutation,
   CreateTeamMutationVariables,
+  GetTeamQuery,
+  GetTeamQueryVariables,
   OnCreateTeamSubscription,
   OnDeleteTeamSubscription,
   UpdateTeamInput,
@@ -14,21 +14,28 @@ import {
 } from "../../GraphQLAPI";
 import {
   createTeam,
+  getTeam,
   onCreateTeam,
   onDeleteTeam,
   updateTeam,
 } from "../../graphql";
-import { isNullOrUndefined } from "../../IApiClient";
 import { ITeamAPIClient } from "../ITeamAPIClient";
+import { BaseGraphQLAPIClient } from "./BaseGraphQLAPIClient";
 
-export class TeamAPIClient extends BaseAPIClient implements ITeamAPIClient {
+export class TeamAPIClient
+  extends BaseGraphQLAPIClient
+  implements ITeamAPIClient
+{
   async getTeam(id: string): Promise<ITeam> {
-    let result = (await API.graphql(
-      graphqlOperation(this.getTeam, { id })
-    )) as {
-      data: any;
+    let input: GetTeamQueryVariables = {
+      id,
     };
-    return TeamParser.teamFromAWSTeam(result.data.getTeam);
+    let result = await this.callGraphQLThrowOnError<GetTeamQuery>(
+      getTeam,
+      input
+    );
+
+    return TeamParser.teamFromAWSTeam(result.getTeam);
   }
 
   subscribeCreateTeam(id: string, callback: (result: ITeam) => void) {
@@ -40,7 +47,7 @@ export class TeamAPIClient extends BaseAPIClient implements ITeamAPIClient {
         },
       },
       (value: OnCreateTeamSubscription) => {
-        let team = this.mapOnCreateTeamSubscription(value);
+        let team = TeamParser.teamFromCreateTeamSubscription(value);
         callback(team);
       }
     );
@@ -49,17 +56,11 @@ export class TeamAPIClient extends BaseAPIClient implements ITeamAPIClient {
   async updateTeam(teamInput: UpdateTeamInput): Promise<ITeam> {
     const input: UpdateTeamInput = teamInput;
     const variables: UpdateTeamMutationVariables = { input };
-    const team = await this.callGraphQL<UpdateTeamMutation>(
+    const team = await this.callGraphQLThrowOnError<UpdateTeamMutation>(
       updateTeam,
       variables
     );
-    if (
-      isNullOrUndefined(team.data) ||
-      isNullOrUndefined(team.data.updateTeam)
-    ) {
-      throw new Error(`Failed to update team`);
-    }
-    return team.data.updateTeam as ITeam;
+    return team.updateTeam as ITeam;
   }
 
   subscribeDeleteTeam(id: string, callback: (result: ITeam) => void) {
@@ -71,7 +72,7 @@ export class TeamAPIClient extends BaseAPIClient implements ITeamAPIClient {
         },
       },
       (value: OnDeleteTeamSubscription) => {
-        let team = this.mapOnDeleteTeamSubscription(value);
+        let team = TeamParser.teamFromDeleteTeamSubscription(value);
         callback(team);
       }
     );
@@ -91,28 +92,10 @@ export class TeamAPIClient extends BaseAPIClient implements ITeamAPIClient {
       teamQuestionGameSessionId: gameSessionId,
     };
     const variables: CreateTeamMutationVariables = { input };
-    const team = await this.callGraphQL<CreateTeamMutation>(
+    const team = await this.callGraphQLThrowOnError<CreateTeamMutation>(
       createTeam,
       variables
     );
-    if (
-      isNullOrUndefined(team.data) ||
-      isNullOrUndefined(team.data.createTeam)
-    ) {
-      throw new Error(`Failed to create team`);
-    }
-    return TeamParser.teamFromAWSTeam(team.data.createTeam as AWSTeam);
-  }
-
-  private mapOnCreateTeamSubscription(
-    subscription: OnCreateTeamSubscription
-  ): ITeam {
-    return TeamParser.teamFromCreateTeamSubscription(subscription);
-  }
-
-  private mapOnDeleteTeamSubscription(
-    subscription: OnDeleteTeamSubscription
-  ): ITeam {
-    return TeamParser.teamFromDeleteTeamSubscription(subscription);
+    return TeamParser.teamFromAWSTeam(team.createTeam);
   }
 }

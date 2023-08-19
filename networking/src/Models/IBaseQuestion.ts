@@ -8,7 +8,6 @@ export interface IBaseQuestion {
   cluster?: string | null;
   domain?: string | null;
   grade?: string | null;
-  gameSessionId: string;
 }
 
 export interface IChoice {

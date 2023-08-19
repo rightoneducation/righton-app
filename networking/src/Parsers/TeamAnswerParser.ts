@@ -31,8 +31,12 @@ export class TeamAnswerParser {
   }
 
   static teamAnswerFromAWSTeamAnswer(
-    awsTeamAnswer: AWSTeamAnswer
+    awsTeamAnswer?: AWSTeamAnswer | null
   ): ITeamAnswer {
+    if (isNullOrUndefined(awsTeamAnswer)) {
+      throw new Error("awsTeamAnswer can't be null in the backend.");
+    }
+
     const {
       id,
       questionId,

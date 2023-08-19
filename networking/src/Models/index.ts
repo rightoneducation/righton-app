@@ -8,4 +8,5 @@ export * from './IQuestion';
 export * from './ITeam';
 export * from './ITeamAnswer';
 export * from './ITeamMember';
+export * from './IUser';
 export * from './AWS';

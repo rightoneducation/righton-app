@@ -37,7 +37,7 @@ export interface IApiClient {
 }
 
 export function isNullOrUndefined<T>(
-  value: T | null | undefined
+  value?: T | null
 ): value is null | undefined {
   return value === null || typeof value === "undefined";
 }

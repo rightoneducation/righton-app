@@ -16,7 +16,7 @@ export abstract class GameParser {
     });
   }
 
-  static gameFromAWSGame(awsGame: AWSGame | null | undefined): IGame {
+  static gameFromAWSGame(awsGame?: AWSGame | null): IGame {
     if (isNullOrUndefined(awsGame) || isNullOrUndefined(awsGame.title)) {
       throw new Error("awsGame can't be null.");
     }
@@ -28,7 +28,7 @@ export abstract class GameParser {
       phaseOneTime,
       phaseTwoTime,
       imageUrl,
-      questions,
+      questions: questionsString,
       updatedAt,
       createdAt,
     } = awsGame;
@@ -40,9 +40,11 @@ export abstract class GameParser {
       phaseOneTime,
       phaseTwoTime,
       imageUrl,
-      questions: QuestionParser.questionsFromAWSGameQuestions(questions?.items),
-      updatedAt,
-      createdAt,
+      questions: QuestionParser.questionsFromAWSGameQuestions(
+        JSON.parse(questionsString || "[]")
+      ),
+      updatedAt: Date.parse(updatedAt),
+      createdAt: Date.parse(createdAt),
     };
   }
 }

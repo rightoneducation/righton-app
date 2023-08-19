@@ -8,7 +8,6 @@ import {
   UpdateTeamAnswerMutation,
   UpdateTeamAnswerMutationVariables,
 } from "../../GraphQLAPI";
-import { isNullOrUndefined } from "../../IApiClient";
 import { ITeamAnswer } from "../../Models";
 import { TeamAnswerParser } from "../../Parsers";
 import {
@@ -16,11 +15,11 @@ import {
   onCreateTeamAnswer,
   updateTeamAnswer,
 } from "../../graphql";
-import { BaseAPIClient } from "./BaseAPIClient";
 import { ITeamAnswerAPIClient } from "../ITeamAnswerAPIClient";
+import { BaseGraphQLAPIClient } from "./BaseGraphQLAPIClient";
 
 export class TeamAnswerAPIClient
-  extends BaseAPIClient
+  extends BaseGraphQLAPIClient
   implements ITeamAnswerAPIClient
 {
   subscribeCreateTeamAnswer(
@@ -35,7 +34,8 @@ export class TeamAnswerAPIClient
         },
       },
       (value: OnCreateTeamAnswerSubscription) => {
-        let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value);
+        let teamAnswer =
+          TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(value);
         callback(teamAnswer);
       }
     );
@@ -57,17 +57,14 @@ export class TeamAnswerAPIClient
       confidenceLevel: ConfidenceLevel.NOT_RATED,
     };
     const variables: CreateTeamAnswerMutationVariables = { input };
-    const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
+    const answer = await this.callGraphQLThrowOnError<CreateTeamAnswerMutation>(
       createTeamAnswer,
       variables
     );
-    if (
-      isNullOrUndefined(answer.data) ||
-      isNullOrUndefined(answer.data.createTeamAnswer)
-    ) {
-      throw new Error(`Failed to create team answer`);
-    }
-    return answer.data.createTeamAnswer as ITeamAnswer;
+
+    return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(
+      answer.createTeamAnswer
+    );
   }
 
   async updateTeamAnswer(
@@ -79,22 +76,13 @@ export class TeamAnswerAPIClient
       isChosen,
     };
     const variables: UpdateTeamAnswerMutationVariables = { input };
-    const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
+    const answer = await this.callGraphQLThrowOnError<UpdateTeamAnswerMutation>(
       updateTeamAnswer,
       variables
     );
-    if (
-      isNullOrUndefined(answer.data) ||
-      isNullOrUndefined(answer.data.updateTeamAnswer)
-    ) {
-      throw new Error(`Failed to update team answer`);
-    }
-    return answer.data.updateTeamAnswer as ITeamAnswer;
-  }
 
-  private mapOnCreateTeamAnswerSubscription(
-    subscription: OnCreateTeamAnswerSubscription
-  ): ITeamAnswer {
-    return TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(subscription);
+    return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(
+      answer.updateTeamAnswer
+    );
   }
 }

@@ -1,15 +1,16 @@
 import { CreateGameInput, UpdateGameInput } from "./../GraphQLAPI";
 import { IGame } from "../Models";
-import { BaseAPIClient } from "./Impl/BaseAPIClient";
 
-export interface IGameAPIClient extends BaseAPIClient {
+export interface IGameAPIClient {
   listGames(): Promise<Array<IGame>>;
 
   getGame(id: string): Promise<IGame>;
 
   createGame(createGameInput: CreateGameInput): Promise<IGame>;
 
-  updateGame(updateGameInput: UpdateGameInput): Promise<IGame>;
+  updateGameByUpdateGameInput(updateGameInput: UpdateGameInput): Promise<IGame>;
+
+  updateGameByGame(game: IGame): Promise<IGame>;
 
   clone(game: IGame): Promise<IGame>;
 

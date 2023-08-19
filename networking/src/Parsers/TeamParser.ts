@@ -33,7 +33,11 @@ export class TeamParser {
     return this.teamFromAWSTeam(deleteTeam);
   }
 
-  static teamFromAWSTeam(awsTeam: AWSTeam): ITeam {
+  static teamFromAWSTeam(awsTeam?: AWSTeam | null): ITeam {
+    if (isNullOrUndefined(awsTeam)) {
+      throw new Error("awsTeam can't be null in the backend.");
+    }
+
     const {
       id,
       name,

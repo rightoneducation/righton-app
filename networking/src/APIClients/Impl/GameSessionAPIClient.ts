@@ -1,7 +1,11 @@
+import {
+  GetGameSessionQuery,
+  GetGameSessionQueryVariables,
+} from "./../../GraphQLAPI";
 import { API, graphqlOperation } from "aws-amplify";
 import { IGameSession } from "../../Models";
 import { GameSessionParser } from "../../Parsers";
-import { BaseAPIClient, HTTPMethod } from "./BaseAPIClient";
+import { HTTPMethod } from "./BaseAPIClient";
 import {
   gameSessionByCode,
   getGameSession,
@@ -16,9 +20,10 @@ import {
 } from "../../GraphQLAPI";
 import { isNullOrUndefined } from "../../IApiClient";
 import { IGameSessionAPIClient } from "../IGameSessionAPIClient";
+import { BaseGraphQLAPIClient } from "./BaseGraphQLAPIClient";
 
 export class GameSessionAPIClient
-  extends BaseAPIClient
+  extends BaseGraphQLAPIClient
   implements IGameSessionAPIClient
 {
   createGameSession(
@@ -49,11 +54,14 @@ export class GameSessionAPIClient
   }
 
   async getGameSession(id: string): Promise<IGameSession> {
-    let result = (await API.graphql(
-      graphqlOperation(getGameSession, { id })
-    )) as { data: any };
+    let input: GetGameSessionQueryVariables = {
+      id,
+    };
+    let result = await this.callGraphQLThrowOnError<GetGameSessionQuery>(
+      graphqlOperation(getGameSession, input)
+    );
     return GameSessionParser.gameSessionFromAWSGameSession(
-      result.data.getGameSession
+      result.getGameSession
     );
   }
 

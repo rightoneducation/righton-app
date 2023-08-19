@@ -12,13 +12,13 @@ interface GameCommonFields {
 }
 
 type Game implements GameCommonFields @model(subscriptions: null) {
-  id: ID!
+  id: ID! @primaryKey
   phaseOneTime: Int
   phaseTwoTime: Int
   title: String
   description: String
   imageUrl: String
-  questions: [GameQuestion] @hasMany(indexName: "byGame", fields: ["id"])
+  questions: AWSJSON! # array of type GameQuestion
 }
 
 interface QuestionCommonFields {
@@ -33,21 +33,20 @@ interface QuestionCommonFields {
 }
 
 type GameQuestion implements QuestionCommonFields @model(subscriptions: null) {
-  id: ID! @primaryKey(sortKeyFields: ["gameId"])
+  id: ID! @primaryKey
   text: String!
-  choices: AWSJSON!
+  choices: AWSJSON! @default(value: "[]")
   imageUrl: String
   instructions: AWSJSON
   cluster: String
   domain: String
   grade: String
   standard: String
-  gameId: ID! @index(name: "byGame", sortKeyFields: ["id"])
 }
 
 type GameSession implements GameCommonFields @model {
   id: ID!
-  gameId: Int!
+  gameId: ID!
   startTime: AWSDateTime
   phaseOneTime: Int!
   phaseTwoTime: Int!
@@ -80,7 +79,7 @@ enum GameSessionState {
 
 type Question implements QuestionCommonFields
   @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
+  id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON!
   imageUrl: String

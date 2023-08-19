@@ -30,8 +30,12 @@ export class GameSessionParser {
   }
 
   static gameSessionFromAWSGameSession(
-    awsGameSession: AWSGameSession
+    awsGameSession: AWSGameSession | undefined | null
   ): IGameSession {
+    if (isNullOrUndefined(awsGameSession)) {
+      throw new Error("awsGameSession can't be null.");
+    }
+
     const {
       id,
       gameId,

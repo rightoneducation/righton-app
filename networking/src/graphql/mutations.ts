@@ -14,25 +14,7 @@ export const createGame = /* GraphQL */ `
       title
       description
       imageUrl
-      questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          cluster
-          domain
-          grade
-          standard
-          gameId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      questions
       createdAt
       updatedAt
       __typename
@@ -51,25 +33,7 @@ export const updateGame = /* GraphQL */ `
       title
       description
       imageUrl
-      questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          cluster
-          domain
-          grade
-          standard
-          gameId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      questions
       createdAt
       updatedAt
       __typename
@@ -88,25 +52,7 @@ export const deleteGame = /* GraphQL */ `
       title
       description
       imageUrl
-      questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          cluster
-          domain
-          grade
-          standard
-          gameId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      questions
       createdAt
       updatedAt
       __typename
@@ -128,7 +74,6 @@ export const createGameQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      gameId
       createdAt
       updatedAt
       __typename
@@ -150,7 +95,6 @@ export const updateGameQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      gameId
       createdAt
       updatedAt
       __typename
@@ -172,7 +116,6 @@ export const deleteGameQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      gameId
       createdAt
       updatedAt
       __typename

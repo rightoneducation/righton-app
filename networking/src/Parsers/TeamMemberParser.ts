@@ -16,7 +16,7 @@ export class TeamMemberParser {
   }
 
   static mapTeamMembers(
-    awsTeamMembers: Array<AWSTeamMember | null> | null | undefined
+    awsTeamMembers?: Array<AWSTeamMember | null> | null
   ): Array<ITeamMember> {
     if (isNullOrUndefined(awsTeamMembers)) {
       return [];
@@ -31,8 +31,12 @@ export class TeamMemberParser {
   }
 
   static teamMemberFromAWSTeamMember(
-    awsTeamMember: AWSTeamMember
+    awsTeamMember?: AWSTeamMember | null
   ): ITeamMember {
+    if (isNullOrUndefined(awsTeamMember)) {
+      throw new Error("awsTeamMember can't be null in the backend.");
+    }
+
     const {
       id,
       isFacilitator,

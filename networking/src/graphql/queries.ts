@@ -11,25 +11,7 @@ export const getGame = /* GraphQL */ `
       title
       description
       imageUrl
-      questions {
-        items {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          cluster
-          domain
-          grade
-          standard
-          gameId
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      questions
       createdAt
       updatedAt
       __typename
@@ -38,11 +20,19 @@ export const getGame = /* GraphQL */ `
 `;
 export const listGames = /* GraphQL */ `
   query ListGames(
+    $id: ID
     $filter: ModelGameFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listGames(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listGames(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
         id
         phaseOneTime
@@ -50,25 +40,7 @@ export const listGames = /* GraphQL */ `
         title
         description
         imageUrl
-        questions {
-          items {
-            id
-            text
-            choices
-            imageUrl
-            instructions
-            cluster
-            domain
-            grade
-            standard
-            gameId
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
+        questions
         createdAt
         updatedAt
         __typename
@@ -79,8 +51,8 @@ export const listGames = /* GraphQL */ `
   }
 `;
 export const getGameQuestion = /* GraphQL */ `
-  query GetGameQuestion($id: ID!, $gameId: ID!) {
-    getGameQuestion(id: $id, gameId: $gameId) {
+  query GetGameQuestion($id: ID!) {
+    getGameQuestion(id: $id) {
       id
       text
       choices
@@ -90,7 +62,6 @@ export const getGameQuestion = /* GraphQL */ `
       domain
       grade
       standard
-      gameId
       createdAt
       updatedAt
       __typename
@@ -100,7 +71,6 @@ export const getGameQuestion = /* GraphQL */ `
 export const listGameQuestions = /* GraphQL */ `
   query ListGameQuestions(
     $id: ID
-    $gameId: ModelIDKeyConditionInput
     $filter: ModelGameQuestionFilterInput
     $limit: Int
     $nextToken: String
@@ -108,7 +78,6 @@ export const listGameQuestions = /* GraphQL */ `
   ) {
     listGameQuestions(
       id: $id
-      gameId: $gameId
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -124,7 +93,6 @@ export const listGameQuestions = /* GraphQL */ `
         domain
         grade
         standard
-        gameId
         createdAt
         updatedAt
         __typename
@@ -343,7 +311,7 @@ export const listGameSessions = /* GraphQL */ `
   }
 `;
 export const getQuestion = /* GraphQL */ `
-  query GetQuestion($id: Int!, $order: Int!, $gameSessionId: ID!) {
+  query GetQuestion($id: ID!, $order: Int!, $gameSessionId: ID!) {
     getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
       id
       text
@@ -362,7 +330,7 @@ export const getQuestion = /* GraphQL */ `
 `;
 export const listQuestions = /* GraphQL */ `
   query ListQuestions(
-    $id: Int
+    $id: ID
     $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
     $filter: ModelQuestionFilterInput
     $limit: Int

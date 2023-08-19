@@ -4,13 +4,12 @@ import {
   CreateTeamMemberMutationVariables,
   OnUpdateTeamMemberSubscription,
 } from "../../GraphQLAPI";
-import { isNullOrUndefined } from "../../IApiClient";
-import { AWSTeamMember, ITeamMember } from "../../Models";
+import { ITeamMember } from "../../Models";
 import { TeamMemberParser } from "../../Parsers";
 import { createTeamMember, onUpdateTeamMember } from "../../graphql";
-import { BaseAPIClient } from "./BaseAPIClient";
+import { BaseGraphQLAPIClient } from "./BaseGraphQLAPIClient";
 
-export class TeamMemberAPIClient extends BaseAPIClient {
+export class TeamMemberAPIClient extends BaseGraphQLAPIClient {
   async addTeamMemberToTeam(
     teamId: string,
     isFacilitator: boolean = false,
@@ -22,18 +21,12 @@ export class TeamMemberAPIClient extends BaseAPIClient {
       teamTeamMembersId: teamId,
     };
     const variables: CreateTeamMemberMutationVariables = { input };
-    const member = await this.callGraphQL<CreateTeamMemberMutation>(
+    const member = await this.callGraphQLThrowOnError<CreateTeamMemberMutation>(
       createTeamMember,
       variables
     );
-    if (
-      isNullOrUndefined(member.data) ||
-      isNullOrUndefined(member.data.createTeamMember)
-    ) {
-      throw new Error(`Failed to create team member`);
-    }
     return TeamMemberParser.teamMemberFromAWSTeamMember(
-      member.data.createTeamMember as AWSTeamMember
+      member.createTeamMember
     );
   }
 

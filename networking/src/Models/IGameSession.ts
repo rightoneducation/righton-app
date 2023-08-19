@@ -4,7 +4,7 @@ import { ITeam } from "./ITeam";
 
 export interface IGameSession {
   id: string;
-  gameId: number;
+  gameId: string;
   startTime?: string | null;
   phaseOneTime: number;
   phaseTwoTime: number;
