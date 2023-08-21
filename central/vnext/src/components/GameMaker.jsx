@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from '@righton/networking';
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Route,
   useNavigate,
@@ -86,7 +86,7 @@ export default function GameMaker({
     }
 
     console.error('Game not found', gameId);
-    return null;
+    return newGame;
   });
 
   const [phaseOne, setPhaseOne] = useState(() => {
@@ -110,7 +110,6 @@ export default function GameMaker({
   const location = useLocation();
   const { question } = location.state || {};
 
-  console.log(question?.id);
   useEffect(() => {
     if (!isNullOrUndefined(question)) {
       gameDetails.questions = [...gameDetails.questions, question];
