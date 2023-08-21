@@ -37,11 +37,12 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start',
     alignItems:'center',
-    maring: 'auto',
+    margin: 'auto',
+    maxWidth: '700px'
   },
   playerNum: {
     fontSize: '16px',
-    width: '300px',
+    width: '700px',
     textAlign: 'left',
     color: 'white',
     fontFamily: 'Poppins',

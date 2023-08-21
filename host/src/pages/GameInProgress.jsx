@@ -209,9 +209,14 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           backgroundImage: `url(${CheckMark})`,
           backgroundRepeat: "no-repeat",
           backgroundPositionX: "10px",
-          backgroundPositionY: "-300px"
+          backgroundPositionY: "-300px",
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
         }}
-      >
+      />
         <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
@@ -220,21 +225,24 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           headerGameCurrentTime={headerGameCurrentTime}
           totalRoundTime={(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime)}
           gameTimer={gameTimer}
+          style={{width: '100%'}}
         />
-        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        
-        <GameAnswers
-          questions={questions}
-          questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
-          currentQuestionIndex={currentQuestionIndex}
-          answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
-          totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
-          numPlayers={teams ? teams.length : 0}
-          statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
-          teamsPickedChoices = {teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, choices)}
-
-        />
-      </div>
+        <div className={classes.frame}>
+          <div className={classes.contentContainer}>
+            <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
+            
+            <GameAnswers
+              questions={questions}
+              questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
+              currentQuestionIndex={currentQuestionIndex}
+              answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
+              totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
+              numPlayers={teams ? teams.length : 0}
+              statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
+              teamsPickedChoices = {teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, choices)}
+            />
+          </div>
+        </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame
         numPlayers={teams ? teams.length : 0} //need # for answer bar
@@ -258,7 +266,8 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
-    justifyContent: "space-between",
+    alignItems: 'center',
+    justifyContent: "center",
     background: "linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)"
   },
   number: {
@@ -297,5 +306,8 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     marginLeft: "5%",
     marginRight: "5%"
+  },
+  contentContainer: {
+    maxWidth: '500px'
   }
 }));

@@ -51,6 +51,7 @@ export default function Timer({
         }}
         value={(headerGameCurrentTime/totalRoundTime) * 100}
         variant={"determinate"}
+        style={{width: 'calc(100% - 50px'}}
       />
 
       <p style={{ display: "inline-block", color: "white" }}>

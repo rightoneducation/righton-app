@@ -6,9 +6,12 @@ import Timer from "./Timer";
 
 const useStyles = makeStyles(() => ({
   div: {
-    paddingLeft: "10px",
+    paddingLeft: "50px",
+    paddingRight: '50px',
     paddingTop: "10px",
-    minHeight: "16vh"
+    minHeight: "16vh",
+    width: '100%',
+    maxWidth: '700px',
   },
   title: {
     fontWeight: 700,
@@ -77,11 +80,9 @@ export default function HeaderGame({
         count={totalQuestions}
         page={currentQuestion+1}
       /> 
-
       <Typography className={classes.title}>
         Question {currentQuestion+1} of {totalQuestions}
       </Typography>
-
       <Typography className={classes.phases}>
         {label[statePosition]} 
       </Typography>

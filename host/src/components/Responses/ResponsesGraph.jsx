@@ -9,7 +9,7 @@ import SelectedAnswer from './SelectedAnswer';
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
-    width: '100%',
+    width: '100%'
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
@@ -115,7 +115,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
           stroke: '#FFF',
           strokeWidth: 1,
-          margin: 300,
         },
         labels: {
           fill: ({ datum, index }) => (index === reversedResponses.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
@@ -137,7 +136,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       </div>
       <div ref={graphRef} >
         <VictoryChart
-          domainPadding={36}
+          domainPadding={{x: 36, y: 0}}
           padding={defaultVictoryPadding}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
@@ -180,9 +179,10 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             dataComponent={
               <CustomBar
                 xSmallPadding={xSmallPadding}
+                smallPadding={smallPadding}
                 mediumPadding={mediumPadding}
-                xxxLargePadding={xxxLargePadding}
-                selectedWidth={boundingRect.width - (defaultVictoryPadding + xxLargePadding * 2)}
+                defaultVictoryPadding={defaultVictoryPadding}
+                selectedWidth={boundingRect.width - defaultVictoryPadding*2}
                 selectedHeight={18}
                 selectedBarIndex={selectedBarIndex}
                 setSelectedBarIndex={setSelectedBarIndex}
