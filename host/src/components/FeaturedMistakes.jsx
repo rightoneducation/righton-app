@@ -80,7 +80,7 @@ export default function GameAnswers({
               mistakeText={mistake.rawInput} 
               mistakePercent={mistake.percent} 
               isTop3Mode={isTop3Mode} 
-              isSelected={isTop3Mode && index < 3 ? true : mistake.isSelected}
+              isSelected={!isTop3Mode ? mistake.isSelected : (index < 3 ? true : false)}
               mistakeIndex={index}
               selectedCount={selectedCount}
               handleSelectMistake={handleSelectMistake} 
