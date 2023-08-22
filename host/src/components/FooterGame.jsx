@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
 import ModuleNavigator from "./ModuleNavigator";
 
-export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  gameTimer, footerButtonText, handleFooterOnClick}) {
+export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  gameTimer, footerButtonText, handleFooterOnClick, selectedValue, handleUpClick, handleDownClick, handleSelectedChange}) {
  const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
@@ -19,7 +19,7 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
         </Button>
         {gameTimer && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
         {gameTimer && <div className={classes.playerNum}>Players who have answered</div>}
-        <ModuleNavigator />
+        <ModuleNavigator selectedValue={selectedValue} handleUpClick={handleUpClick} handleDownClick={handleDownClick} handleSelectedChange={handleSelectedChange} />
         </div>
     </BottomNavigation>
   );

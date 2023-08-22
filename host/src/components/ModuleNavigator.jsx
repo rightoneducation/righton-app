@@ -3,33 +3,21 @@ import { makeStyles, Select, MenuItem, Button, Box } from "@material-ui/core";
 import UpArrowIcon from '../images/UpArrowIcon.svg'
 import DownArrowIcon from '../images/DownArrowIcon.svg'
 
-export default function ModuleNavigator() {
+export default function ModuleNavigator({selectedValue, handleUpClick, handleDownClick, handleSelectedChange}) {
   const classes = useStyles();
-  const [selectedValue, setSelectedValue] = useState(0);
   const selectedDictionary = {
     0: 'Question Card',
     1: 'Real-time Responses',
     2: 'Answer Explanations'
   }
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  const handleUpClick = () => {
-    setSelectedValue(selectedValue > 0 ? selectedValue - 1 : 0);
-  };
-
-  const handleDownClick = () => {
-    setSelectedValue(selectedValue < 1 ? selectedValue + 1 : 2);
-  };
-
+ 
   return (
     <div className={classes.container}>
       <Select
         value={selectedValue}
         displayEmpty
         disableUnderline
-        onChange={handleChange}
+        onChange={handleSelectedChange}
         className={classes.dropdown}
         MenuProps={{ 
           classes: { paper: classes.select },   
