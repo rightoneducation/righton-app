@@ -65,7 +65,8 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
 const useStyles = makeStyles(theme => ({
   choices: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    width: '100%'
   },
   rightAnswer: {
     background: "rgba(255, 255, 255, 0.2)",

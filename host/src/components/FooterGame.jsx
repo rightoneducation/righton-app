@@ -2,12 +2,14 @@ import React from "react";
 import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
+import ModuleNavigator from "./ModuleNavigator";
 
 export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  gameTimer, footerButtonText, handleFooterOnClick}) {
  const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
+    
       <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={footerButtonText === "End Answering" ? classes.EndAnsweringButton : classes.nextPhaseButton}
@@ -17,6 +19,7 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
         </Button>
         {gameTimer && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
         {gameTimer && <div className={classes.playerNum}>Players who have answered</div>}
+        <ModuleNavigator />
         </div>
     </BottomNavigation>
   );
@@ -28,8 +31,8 @@ const useStyles = makeStyles(theme => ({
     bottom: '0',
     width: '100%',
     height: '80px',
-    paddingTop: '80px',
-    paddingBottom: '50px',
+    paddingTop: '16px',
+    paddingBottom: '80px',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
@@ -38,11 +41,15 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-start',
     alignItems:'center',
     margin: 'auto',
-    maxWidth: '700px'
+    width: '100%',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    boxSizing: 'border-box',
+    maxWidth: '700px',
   },
   playerNum: {
     fontSize: '16px',
-    width: '700px',
+    width: '100%',
     textAlign: 'left',
     color: 'white',
     fontFamily: 'Poppins',

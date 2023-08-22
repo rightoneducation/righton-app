@@ -137,11 +137,11 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       <div ref={graphRef} >
         <VictoryChart
           domainPadding={{x: 36, y: 0}}
-          padding={defaultVictoryPadding}
+          padding={{top: defaultVictoryPadding, bottom: defaultVictoryPadding, left: defaultVictoryPadding, right: smallPadding}}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}
-          height={400}
+          height={300}
         >
           <VictoryAxis
             standalone={false}
@@ -179,7 +179,6 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
             dataComponent={
               <CustomBar
                 xSmallPadding={xSmallPadding}
-                smallPadding={smallPadding}
                 mediumPadding={mediumPadding}
                 defaultVictoryPadding={defaultVictoryPadding}
                 selectedWidth={boundingRect.width - defaultVictoryPadding*2}

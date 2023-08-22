@@ -51,7 +51,7 @@ export default function GameAnswers({ teamsPickedChoices, questions, questionCho
         />
       <Grid container className={classes.centerContent}>
         <Grid container>
-          <Typography className={classes.titleStyle}>Answer Explainations</Typography>
+          <Typography className={classes.titleStyle}>Answer Explanations</Typography>
         </Grid>
       </Grid>
       {(questionChoices) ?

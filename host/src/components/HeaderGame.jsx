@@ -6,12 +6,11 @@ import Timer from "./Timer";
 
 const useStyles = makeStyles(() => ({
   div: {
-    paddingLeft: "50px",
-    paddingRight: '50px',
-    paddingTop: "10px",
+    padding: "16px",
     minHeight: "16vh",
+    boxSizing: 'border-box',
     width: '100%',
-    maxWidth: '700px',
+    maxWidth: '700px'
   },
   title: {
     fontWeight: 700,

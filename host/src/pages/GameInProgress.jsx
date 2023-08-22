@@ -225,23 +225,19 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           headerGameCurrentTime={headerGameCurrentTime}
           totalRoundTime={(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime)}
           gameTimer={gameTimer}
-          style={{width: '100%'}}
         />
-        <div className={classes.frame}>
-          <div className={classes.contentContainer}>
-            <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-            
-            <GameAnswers
-              questions={questions}
-              questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
-              currentQuestionIndex={currentQuestionIndex}
-              answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
-              totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
-              numPlayers={teams ? teams.length : 0}
-              statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
-              teamsPickedChoices = {teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, choices)}
-            />
-          </div>
+        <div className={classes.contentContainer}>
+          <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
+          <GameAnswers
+            questions={questions}
+            questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
+            currentQuestionIndex={currentQuestionIndex}
+            answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
+            totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
+            numPlayers={teams ? teams.length : 0}
+            statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
+            teamsPickedChoices = {teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, choices)}
+          />
         </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame

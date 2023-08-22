@@ -11,17 +11,17 @@ const useStyles = makeStyles((selectedBarIndex, index) => ({
 }));
 
 const CustomBar = (props) => {
-  const {x, y, xSmallPadding, smallPadding, mediumPadding, defaultVictoryPadding, selectedWidth, selectedHeight, datum, index, selectedBarIndex, setSelectedBarIndex} = props;
+  const {x, y, xSmallPadding, mediumPadding, defaultVictoryPadding, selectedWidth, selectedHeight, datum, index, selectedBarIndex, setSelectedBarIndex} = props;
   const classes = useStyles();
   return (
       <g  style={{pointerEvents: 'bounding-box'}}>
-        <Bar {...props} />
+        <Bar {...props}/>
         {datum.answerCount > 0 && 
           <rect
               className={classes.highlight}
-              x={defaultVictoryPadding}
+              x={defaultVictoryPadding - xSmallPadding}
               y={y-mediumPadding}
-              width={selectedWidth + smallPadding}
+              width={selectedWidth + defaultVictoryPadding}
               height={selectedHeight + mediumPadding - (xSmallPadding/2)}
               fill={selectedBarIndex === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
               stroke="transparent"
