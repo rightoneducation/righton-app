@@ -51,6 +51,8 @@ type AWSQuestion = {
   grade?: string | null
   gameSessionId: string
   order: number
+  isHintEnabled: boolean
+  isConfidenceEnabled: boolean
 }
 
 type AWSTeamMember = {

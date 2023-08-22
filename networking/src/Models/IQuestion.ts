@@ -10,6 +10,8 @@ export interface IQuestion {
     grade?: string | null
     gameSessionId: string
     order: number
+    isHintEnabled: boolean
+    isConfidenceEnabled: boolean
 }
 
 export interface IChoice {
