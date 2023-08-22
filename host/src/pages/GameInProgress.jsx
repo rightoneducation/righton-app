@@ -7,6 +7,7 @@ import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
+import Responses from "../components/Responses/Responses";
 import { isNullOrUndefined, GameSessionState } from "@righton/networking";
 
 
@@ -27,11 +28,8 @@ export default function GameInProgress({
 }) {
 
   const classes = useStyles();
-  let statePosition;
   let choices;
   let answerArray;
-  let totalAnswers;
-  let teamsPickedChoices;
   let [modalOpen, setModalOpen] = useState(false);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
 
@@ -144,7 +142,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
 
   // returns an array ordered to match the order of answer choices, containing the total number of each answer
   const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => {
-    if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
+    if (teamsArray.length !== 0 && choices && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
       let choicesTextArray = [choices.length];
       let answersArray = new Array(choices.length).fill(0);
       let currentQuestionId = questions[currentQuestionIndex].id;
@@ -172,6 +170,31 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
     }
     return [];
   };
+
+  const letterDictionary = {
+    0:'A. ',
+    1:'B. ',
+    2:'C. ',
+    3:'D. ',
+    4:'E. ',
+    5:'F. ',
+    6:'G. ',
+    7:'H. ',
+    8:'I. '
+  }
+  const numPlayers = teams ? teams.length : 0;
+  const totalAnswers = getTotalAnswers(answerArray);
+  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
+  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices);
+  const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex);
+  const data = Object.keys(answersByQuestion).map((index) => ({
+    count: answersByQuestion[index],
+    label: letterDictionary[index].replace('. ', ''),
+     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+     answer: questionChoices[index].text,
+  }));
+
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
@@ -221,27 +244,35 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
           currentQuestion={currentQuestionIndex}
-          statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
+          statePosition={statePosition}
           headerGameCurrentTime={headerGameCurrentTime}
           totalRoundTime={(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime)}
           gameTimer={gameTimer}
         />
         <div className={classes.contentContainer}>
           <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
+          <Responses
+            studentResponses={data}
+            numPlayers={numPlayers}
+            totalAnswers={totalAnswers}
+            questionChoices={questionChoices}
+            statePosition={statePosition}
+            teamsPickedChoices={teamsPickedChoices}
+          />
           <GameAnswers
             questions={questions}
-            questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
+            questionChoices={questionChoices}
             currentQuestionIndex={currentQuestionIndex}
-            answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}
-            totalAnswers={totalAnswers = getTotalAnswers(answerArray)}
-            numPlayers={teams ? teams.length : 0}
-            statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
-            teamsPickedChoices = {teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, choices)}
+            answersByQuestion={answersByQuestion}
+            totalAnswers={totalAnswers}
+            numPlayers={numPlayers}
+            statePosition={statePosition}
+            teamsPickedChoices = {teamsPickedChoices}
           />
         </div>
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame
-        numPlayers={teams ? teams.length : 0} //need # for answer bar
+        numPlayers={numPlayers} //need # for answer bar
         totalAnswers={totalAnswers} //number of answers 
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}

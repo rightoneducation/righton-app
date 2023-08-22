@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
-import Responses from "./Responses/Responses";
 import { isNullOrUndefined } from "@righton/networking";
 
 export default function GameAnswers({ teamsPickedChoices, questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
@@ -41,14 +40,6 @@ export default function GameAnswers({ teamsPickedChoices, questions, questionCho
   
   return (
     <Grid className={classes.background}>
-      <Responses
-          studentResponses={data}
-          numPlayers={numPlayers}
-          totalAnswers={totalAnswers}
-          questionChoices={questionChoices}
-          statePosition={statePosition}
-          teamsPickedChoices={teamsPickedChoices}
-        />
       <Grid container className={classes.centerContent}>
         <Grid container>
           <Typography className={classes.titleStyle}>Answer Explanations</Typography>

@@ -7,8 +7,9 @@ export default function ModuleNavigator() {
   const classes = useStyles();
   const [selectedValue, setSelectedValue] = useState(0);
   const selectedDictionary = {
-    0: 'Real-time Responses',
-    1: 'Answer Explanations'
+    0: 'Question Card',
+    1: 'Real-time Responses',
+    2: 'Answer Explanations'
   }
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -19,7 +20,7 @@ export default function ModuleNavigator() {
   };
 
   const handleDownClick = () => {
-    setSelectedValue(selectedValue < 1 ? selectedValue + 1 : 1);
+    setSelectedValue(selectedValue < 1 ? selectedValue + 1 : 2);
   };
 
   return (
@@ -46,8 +47,9 @@ export default function ModuleNavigator() {
           return <span className={classes.selectedItem}>{selectedDictionary[selectedValue]}</span>;
         }}
       >
-        <MenuItem value={0} className={classes.menuItem}>Real-time Responses</MenuItem>
-        <MenuItem value={1} className={classes.menuItem}>Answer Explanations</MenuItem>
+        <MenuItem value={0} className={classes.menuItem}>Question Card</MenuItem>
+        <MenuItem value={1} className={classes.menuItem}>Real-time Responses</MenuItem>
+        <MenuItem value={2} className={classes.menuItem}>Answer Explanations</MenuItem>
       </Select>
       <Box className={classes.buttonContainer}>
         <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleUpClick}/>
