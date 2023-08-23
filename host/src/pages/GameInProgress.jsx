@@ -239,7 +239,6 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
 
   const handleUpClick = () => {
     const newValue = selectedValue > 0 ? selectedValue - 1 : 0;
-    console.log(selectedDictionary[newValue]);
     selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
     setSelectedValue(newValue);
   };
@@ -277,10 +276,10 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           gameTimer={gameTimer}
         />
         <div className={classes.contentContainer}>
-          <div id="questioncard-scrollbox" ref={questionCardRef} className={classes.scrollbox}>
+          <div id="questioncard-scrollbox" ref={questionCardRef}>
             <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
           </div>
-          <div id="responses-scrollbox" ref={responsesRef} className={classes.scrollbox}>
+          <div id="responses-scrollbox" ref={responsesRef}>
             <Responses
               studentResponses={data}
               numPlayers={numPlayers}
@@ -290,7 +289,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
               teamsPickedChoices={teamsPickedChoices}
             />
           </div>
-          <div id="gameanswers-scrollbox" ref={gameAnswersRef} className={classes.scrollbox}>
+          <div id="gameanswers-scrollbox" ref={gameAnswersRef}>
             <GameAnswers
               questions={questions}
               questionChoices={questionChoices}
@@ -391,8 +390,4 @@ const useStyles = makeStyles(theme => ({
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none', // IE and Edge
   },
-  scrollbox:{
-    scrollMarginTop: '180px',
-    scrollSnapMarginTop: '180px',
-  }
 }));
