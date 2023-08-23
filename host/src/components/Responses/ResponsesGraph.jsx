@@ -15,6 +15,7 @@ const useStyles = makeStyles({
     color: 'rgba(255, 255, 255, 0.5)',
     fontFamily: 'Rubik',
     fontSize: '17px',
+    paddingBottom: '16px'
   },
   titleContainer: {
     marginTop: '3%',
@@ -137,7 +138,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       <div ref={graphRef} >
         <VictoryChart
           domainPadding={{x: 36, y: 0}}
-          padding={{top: defaultVictoryPadding, bottom: defaultVictoryPadding, left: defaultVictoryPadding, right: smallPadding}}
+          padding={{top: mediumPadding, bottom: smallPadding, left: defaultVictoryPadding, right: smallPadding}}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}

@@ -9,8 +9,7 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
    return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
-    
-      <Button 
+        <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={footerButtonText === "End Answering" ? classes.EndAnsweringButton : classes.nextPhaseButton}
           onClick={() =>  handleFooterOnClick(numPlayers, totalAnswers)}
@@ -19,8 +18,13 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
         </Button>
         {gameTimer && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
         {gameTimer && <div className={classes.playerNum}>Players who have answered</div>}
-        <ModuleNavigator selectedValue={selectedValue} handleUpClick={handleUpClick} handleDownClick={handleDownClick} handleSelectedChange={handleSelectedChange} />
-        </div>
+        <ModuleNavigator 
+          selectedValue={selectedValue} 
+          handleUpClick={handleUpClick} 
+          handleDownClick={handleDownClick} 
+          handleSelectedChange={handleSelectedChange} 
+        />
+      </div>
     </BottomNavigation>
   );
 }
@@ -30,9 +34,9 @@ const useStyles = makeStyles(theme => ({
     position: 'sticky',
     bottom: '0',
     width: '100%',
-    height: '80px',
+    height: '150px',
+    paddingBottom: '40px',
     paddingTop: '16px',
-    paddingBottom: '80px',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
@@ -46,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     paddingRight: '16px',
     boxSizing: 'border-box',
     maxWidth: '700px',
+    gap: '16px'
   },
   playerNum: {
     fontSize: '16px',
