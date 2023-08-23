@@ -18,6 +18,7 @@ export default function ModuleNavigator({selectedValue, handleUpClick, handleDow
         displayEmpty
         disableUnderline
         onChange={handleSelectedChange}
+       
         className={classes.dropdown}
         MenuProps={{ 
           classes: { paper: classes.select },   
@@ -58,10 +59,11 @@ const useStyles = makeStyles(theme => ({
   dropdown: {
    width: '100%',
    background: 'rgba(255, 255, 255, 0.2)',
-   borderRadius: '100px'
+   borderRadius: '100px',
   },
   select: {
     background: 'rgba(61, 81, 122, 1)',
+    transitionDuration: 0,
   },
   selectedItem: {
     paddingLeft: '16px',

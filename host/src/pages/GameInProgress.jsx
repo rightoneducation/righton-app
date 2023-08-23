@@ -200,17 +200,16 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
-    gameAnswersRef.current.scrollIntoView({ behavior: 'smooth' });
-    // let nextState = nextStateFunc(currentState);
-    // if (nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS) { // if teacher is ending early, pop modal
-    //   if (totalAnswers < numPlayers && gameTimerZero === false)
-    //     setModalOpen(true);
-    //   else
-    //     handleUpdateGameSession({ currentState: nextState });
-    // }
-    // else {
-    //   handleUpdateGameSession({ currentState: nextState });
-    // }
+    let nextState = nextStateFunc(currentState);
+    if (nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS) { // if teacher is ending early, pop modal
+      if (totalAnswers < numPlayers && gameTimerZero === false)
+        setModalOpen(true);
+      else
+        handleUpdateGameSession({ currentState: nextState });
+    }
+    else {
+      handleUpdateGameSession({ currentState: nextState });
+    }
   };
 
   // used to determine which button text to show based on the dictionary above and whether all players have answered
@@ -232,13 +231,15 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
     2: gameAnswersRef
   }
   const handleSelectedChange = (event) => {
-    console.log('sup');
-    questionCardRef.current.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      selectedDictionary[event.target.value].current.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
     setSelectedValue(event.target.value);
   };
 
   const handleUpClick = () => {
     const newValue = selectedValue > 0 ? selectedValue - 1 : 0;
+    console.log(selectedDictionary[newValue]);
     selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
     setSelectedValue(newValue);
   };
@@ -265,6 +266,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           height: '100%',
         }}
       />
+      <div id="bodycontainer" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }} >
         <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
@@ -275,10 +277,10 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
           gameTimer={gameTimer}
         />
         <div className={classes.contentContainer}>
-          <div id="questioncard-scrollbox" ref={questionCardRef}>
+          <div id="questioncard-scrollbox" ref={questionCardRef} className={classes.scrollbox}>
             <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
           </div>
-          <div id="questioncard-scrollbox" ref={responsesRef}>
+          <div id="responses-scrollbox" ref={responsesRef} className={classes.scrollbox}>
             <Responses
               studentResponses={data}
               numPlayers={numPlayers}
@@ -288,7 +290,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
               teamsPickedChoices={teamsPickedChoices}
             />
           </div>
-          <div id="questioncard-scrollbox" ref={gameAnswersRef}>
+          <div id="gameanswers-scrollbox" ref={gameAnswersRef} className={classes.scrollbox}>
             <GameAnswers
               questions={questions}
               questionChoices={questionChoices}
@@ -300,7 +302,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
               teamsPickedChoices = {teamsPickedChoices}
             />
           </div>
-        </div>
+        </div>      
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame
         numPlayers={numPlayers} //need # for answer bar
@@ -315,6 +317,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
         handleDownClick={handleDownClick}
         handleSelectedChange={handleSelectedChange}
       />
+       </div>
     </div>
   );
 }
@@ -323,6 +326,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
 
 const useStyles = makeStyles(theme => ({
   background: {
+    position: 'fixed',
     height: "100%",
     width: "100%",
     display: "flex",
@@ -370,6 +374,25 @@ const useStyles = makeStyles(theme => ({
     marginRight: "5%"
   },
   contentContainer: {
-    maxWidth: '500px'
+    position: 'relative',
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100vw',
+    border: 'none',
+    overflowY: 'auto',
+    maxWidth: '500px',
+    touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
+  },
+  scrollbox:{
+    scrollMarginTop: '180px',
+    scrollSnapMarginTop: '180px',
   }
 }));
