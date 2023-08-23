@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
     //height: "100vh",
     width: "100%",
     background: 'transparent',
+    paddingBottom: '32px'
   },
   answerTitle: {
     fontWeight: 500,
