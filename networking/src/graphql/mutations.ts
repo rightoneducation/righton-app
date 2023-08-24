@@ -28,6 +28,8 @@ export const createGameSession = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
@@ -93,6 +95,8 @@ export const createGameSession = /* GraphQL */ `
           domain
           grade
           order
+          isHintEnabled
+          isConfidenceEnabled
           gameSessionId
           __typename
         }
@@ -131,6 +135,8 @@ export const updateGameSession = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
@@ -196,6 +202,8 @@ export const updateGameSession = /* GraphQL */ `
           domain
           grade
           order
+          isHintEnabled
+          isConfidenceEnabled
           gameSessionId
           __typename
         }
@@ -234,6 +242,8 @@ export const deleteGameSession = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
@@ -299,6 +309,8 @@ export const deleteGameSession = /* GraphQL */ `
           domain
           grade
           order
+          isHintEnabled
+          isConfidenceEnabled
           gameSessionId
           __typename
         }
@@ -327,6 +339,8 @@ export const createQuestion = /* GraphQL */ `
       domain
       grade
       order
+      isHintEnabled
+      isConfidenceEnabled
       gameSessionId
       __typename
     }
@@ -348,6 +362,8 @@ export const updateQuestion = /* GraphQL */ `
       domain
       grade
       order
+      isHintEnabled
+      isConfidenceEnabled
       gameSessionId
       __typename
     }
@@ -369,6 +385,8 @@ export const deleteQuestion = /* GraphQL */ `
       domain
       grade
       order
+      isHintEnabled
+      isConfidenceEnabled
       gameSessionId
       __typename
     }
@@ -393,6 +411,8 @@ export const createTeam = /* GraphQL */ `
         domain
         grade
         order
+        isHintEnabled
+        isConfidenceEnabled
         gameSessionId
         __typename
       }
@@ -456,6 +476,8 @@ export const updateTeam = /* GraphQL */ `
         domain
         grade
         order
+        isHintEnabled
+        isConfidenceEnabled
         gameSessionId
         __typename
       }
@@ -519,6 +541,8 @@ export const deleteTeam = /* GraphQL */ `
         domain
         grade
         order
+        isHintEnabled
+        isConfidenceEnabled
         gameSessionId
         __typename
       }

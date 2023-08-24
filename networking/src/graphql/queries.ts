@@ -25,6 +25,8 @@ export const getGameSession = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
@@ -90,6 +92,8 @@ export const getGameSession = /* GraphQL */ `
           domain
           grade
           order
+          isHintEnabled
+          isConfidenceEnabled
           gameSessionId
           __typename
         }
@@ -130,6 +134,8 @@ export const listGameSessions = /* GraphQL */ `
               domain
               grade
               order
+              isHintEnabled
+              isConfidenceEnabled
               gameSessionId
               __typename
             }
@@ -195,6 +201,8 @@ export const listGameSessions = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
@@ -223,6 +231,8 @@ export const getQuestion = /* GraphQL */ `
       domain
       grade
       order
+      isHintEnabled
+      isConfidenceEnabled
       gameSessionId
       __typename
     }
@@ -256,6 +266,8 @@ export const listQuestions = /* GraphQL */ `
         domain
         grade
         order
+        isHintEnabled
+        isConfidenceEnabled
         gameSessionId
         __typename
       }
@@ -280,6 +292,8 @@ export const getTeam = /* GraphQL */ `
         domain
         grade
         order
+        isHintEnabled
+        isConfidenceEnabled
         gameSessionId
         __typename
       }
@@ -345,6 +359,8 @@ export const listTeams = /* GraphQL */ `
           domain
           grade
           order
+          isHintEnabled
+          isConfidenceEnabled
           gameSessionId
           __typename
         }
@@ -534,6 +550,8 @@ export const gameSessionByState = /* GraphQL */ `
               domain
               grade
               order
+              isHintEnabled
+              isConfidenceEnabled
               gameSessionId
               __typename
             }
@@ -599,6 +617,8 @@ export const gameSessionByState = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
@@ -650,6 +670,8 @@ export const gameSessionByCode = /* GraphQL */ `
               domain
               grade
               order
+              isHintEnabled
+              isConfidenceEnabled
               gameSessionId
               __typename
             }
@@ -715,6 +737,8 @@ export const gameSessionByCode = /* GraphQL */ `
             domain
             grade
             order
+            isHintEnabled
+            isConfidenceEnabled
             gameSessionId
             __typename
           }
