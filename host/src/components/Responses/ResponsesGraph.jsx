@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices, graphClickInfo, setGraphClickInfo, data }) => {
+const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices, graphClickInfo, setGraphClickInfo}) => {
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
@@ -48,7 +48,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   const classes = useStyles();
   const reversedResponses = [
     { label: noResponseLabel, count: numPlayers - totalAnswers, answer: 'No response' },
-    ...studentResponses,
+    ...data,
   ].reverse();
 
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;

@@ -49,7 +49,7 @@ export default function GameInProgressContentSwitch ({
           </div>
           <div id="responses-scrollbox" ref={responsesRef}>
             <Responses
-              studentResponses={data}
+              data={data}
               numPlayers={numPlayers}
               totalAnswers={totalAnswers}
               questionChoices={questionChoices}
@@ -57,7 +57,6 @@ export default function GameInProgressContentSwitch ({
               teamsPickedChoices={teamsPickedChoices}
               graphClickInfo={graphClickInfo}
               setGraphClickInfo={setGraphClickInfo}
-              data={data}
             />
           </div>
           <div id="gameanswers-scrollbox" ref={gameAnswersRef}>
