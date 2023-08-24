@@ -74,7 +74,7 @@ const useStyles = makeStyles({
     }
 });
 const PlayersSelectedAnswer = (props) => {
-    const { data, selectedBarIndex, numPlayers, teamsPickedChoices, statePosition } = props;
+    const { data, graphClickInfo, numPlayers, teamsPickedChoices, statePosition } = props;
 
     const classes = useStyles(props);
 
@@ -93,10 +93,10 @@ const PlayersSelectedAnswer = (props) => {
     };
 
 
-    const answerCount = data[selectedBarIndex].answerCount;
+    const answerCount = data[graphClickInfo.selectedIndex].answerCount;
     const percentage = (answerCount / numPlayers) * 100;
 
-    const selectedBarAnswerText = data[selectedBarIndex].answerText;
+    const selectedBarAnswerText = data[graphClickInfo.selectedIndex].answerText;
     const teamsWithSelectedAnswer = teamsPickedChoices.filter(teamChoices =>
         teamChoices.choiceText === selectedBarAnswerText
     );

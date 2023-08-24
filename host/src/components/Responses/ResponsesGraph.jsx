@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices }) => {
+const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices, graphClickInfo, setGraphClickInfo, data }) => {
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
@@ -45,20 +45,11 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
 
-  const [selectedBarIndex, setSelectedBarIndex] = useState(null);
-
   const classes = useStyles();
   const reversedResponses = [
     { label: noResponseLabel, count: numPlayers - totalAnswers, answer: 'No response' },
     ...studentResponses,
   ].reverse();
-
-
-  const data = reversedResponses.map(({ label, count, answer }) => ({
-    answerChoice: label,
-    answerCount: count,
-    answerText: answer,
-  }));
 
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
 
@@ -184,8 +175,8 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
                 defaultVictoryPadding={defaultVictoryPadding}
                 selectedWidth={boundingRect.width - defaultVictoryPadding*2}
                 selectedHeight={18}
-                selectedBarIndex={selectedBarIndex}
-                setSelectedBarIndex={setSelectedBarIndex}
+                graphClickInfo={graphClickInfo}
+                setGraphClickInfo={setGraphClickInfo}
               />
             }
             labelComponent={
@@ -205,7 +196,7 @@ const ResponsesGraph = ({ studentResponses, numPlayers, totalAnswers, questionCh
       <div className={classes.answerContainer}>
         <SelectedAnswer
           data={data}
-          selectedBarIndex={selectedBarIndex}
+          graphClickInfo={graphClickInfo}
           correctChoiceIndex={correctChoiceIndex}
           reversedResponses={reversedResponses}
           numPlayers={numPlayers}

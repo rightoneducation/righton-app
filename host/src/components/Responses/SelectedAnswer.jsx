@@ -40,17 +40,16 @@ const useStyles = makeStyles({
 const SelectedAnswer = (props) => {
     const {
         data,
-        selectedBarIndex,
         correctChoiceIndex,
-        reversedResponses,
         numPlayers,
         teamsPickedChoices,
-        statePosition
+        statePosition,
+        graphClickInfo
     } = props;
 
     const classes = useStyles();
 
-    const showCustomTick = selectedBarIndex === reversedResponses.length - 1 - correctChoiceIndex;
+    const showCustomTick = graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
 
 
     const rectWidth = 336;
@@ -80,7 +79,7 @@ const SelectedAnswer = (props) => {
 
     return (
         <div>
-            {selectedBarIndex === null ? (
+            {graphClickInfo.selectedIndex === null ? (
                 <Typography className={classes.text}>
                     Tap on a response to see more details.
                 </Typography>
@@ -90,8 +89,8 @@ const SelectedAnswer = (props) => {
                     Showing players who answered:
                     </Typography>
                     <div style={rectangleStyle}>
-                        <div className={classes.choiceContainer}>{data[selectedBarIndex].answerChoice}</div>
-                        <div className={classes.textContainer}>{data[selectedBarIndex].answerText}</div>
+                        <div className={classes.choiceContainer}>{data[graphClickInfo.selectedIndex].answerChoice}</div>
+                        <div className={classes.textContainer}>{data[graphClickInfo.selectedIndex].answerText}</div>
                         {showCustomTick && (
                             <Tooltip title="This is the correct answer" placement="top" >
                                 <span style={checkIconStyle}>
@@ -102,7 +101,7 @@ const SelectedAnswer = (props) => {
                     </div>
                     <PlayersSelectedAnswer
                         data={data}
-                        selectedBarIndex={selectedBarIndex}
+                        graphClickInfo={graphClickInfo}
                         numPlayers={numPlayers}
                         teamsPickedChoices={teamsPickedChoices}
                         statePosition={statePosition}

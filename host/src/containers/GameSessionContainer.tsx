@@ -201,7 +201,7 @@ const GameSessionContainer = () => {
   if (!gameSession) {
     return null;
   };
-
+  console.log(teamsArray);
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
