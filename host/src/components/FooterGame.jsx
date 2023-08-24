@@ -16,8 +16,10 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
         >
            {footerButtonText}
         </Button>
-        {gameTimer && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
-        {gameTimer && <div className={classes.playerNum}>Players who have answered</div>}
+        {<div style={{opacity: gameTimer ? 1 : 0.4, width: '100%'}}>
+          <div className={classes.playerNum}>Players who have answered</div>
+          <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers}/>
+        </div>}
         <ModuleNavigator 
           selectedValue={selectedValue} 
           handleUpClick={handleUpClick} 

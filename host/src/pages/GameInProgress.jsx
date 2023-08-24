@@ -31,7 +31,6 @@ export default function GameInProgress({
   const questionCardRef = React.useRef(null);
   const responsesRef = React.useRef(null);
   const gameAnswersRef = React.useRef(null);
-  let answerArray;
   let [modalOpen, setModalOpen] = useState(false);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
 
@@ -99,7 +98,6 @@ export default function GameInProgress({
     }
     return questions[currentQuestionIndex].choices;
   };
-
 //returns an array of which team names picked which question choices
 const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
   const teamsPickedChoices = [];
@@ -185,9 +183,10 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
     8:'I. '
   }
   const numPlayers = teams ? teams.length : 0;
+  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const answerArray = getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex);
   const totalAnswers = getTotalAnswers(answerArray);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices);
   const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex);
   const data = Object.keys(answersByQuestion).map((index) => ({
