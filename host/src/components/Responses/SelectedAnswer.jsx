@@ -76,7 +76,6 @@ const SelectedAnswer = (props) => {
         display: 'flex',
         alignItems: 'center',
     };
-
     return (
         <div>
             {graphClickInfo.selectedIndex === null ? (

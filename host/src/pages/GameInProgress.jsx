@@ -27,7 +27,6 @@ export default function GameInProgress({
   isLoadModalOpen,
   setIsLoadModalOpen,
 }) {
-  console.log(teamsArray);
   const classes = useStyles();
   const questionCardRef = React.useRef(null);
   const responsesRef = React.useRef(null);
@@ -138,7 +137,6 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
 
   return teamsPickedChoices;
 };
-console.log(teamsArray);
 
 
   // returns an array ordered to match the order of answer choices, containing the total number of each answer
@@ -191,22 +189,17 @@ console.log(teamsArray);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices);
   const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex);
-  console.log("Current Question Index");
-  console.log(currentQuestionIndex);
-  console.log("Teams Array");
-  console.log(teamsArray);
-  console.log(teams);
-  console.log("questionChoices");
-  console.log(questionChoices);
-  const data = Object.keys(answersByQuestion).map((index) => ({
+  const noResponseLabel = '–';
+
+  const data =[
+    { answerChoice: noResponseLabel, answerCount: numPlayers - totalAnswers, answerText: 'No response' },
+    ...Object.keys(answersByQuestion).map((index) => ({
     answerCount: answersByQuestion[index],
     answerChoice: letterDictionary[index].replace('. ', ''),
      // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
      answerText: questionChoices[index].text,
-  }));
-  /*
-  * 
-  */
+    }))].reverse();
+
   const [graphClickInfo, setGraphClickInfo] = useState({graph: null, selectedIndex: null});
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
@@ -304,33 +297,6 @@ console.log(teamsArray);
             setGraphClickInfo={setGraphClickInfo}
             correctChoiceIndex={correctChoiceIndex}
           />
-          {/* <div id="questioncard-scrollbox" ref={questionCardRef}>
-            <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-          </div>
-          <div id="responses-scrollbox" ref={responsesRef}>
-            <Responses
-              studentResponses={data}
-              numPlayers={numPlayers}
-              totalAnswers={totalAnswers}
-              questionChoices={questionChoices}
-              statePosition={statePosition}
-              teamsPickedChoices={teamsPickedChoices}
-              graphClickInfo={graphClickInfo}
-              setGraphClickInfo={setGraphClickInfo}
-            />
-          </div>
-          <div id="gameanswers-scrollbox" ref={gameAnswersRef}>
-            <GameAnswers
-              questions={questions}
-              questionChoices={questionChoices}
-              currentQuestionIndex={currentQuestionIndex}
-              answersByQuestion={answersByQuestion}
-              totalAnswers={totalAnswers}
-              numPlayers={numPlayers}
-              statePosition={statePosition}
-              teamsPickedChoices = {teamsPickedChoices}
-            />
-          </div> */}
         </div>      
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame
@@ -345,6 +311,8 @@ console.log(teamsArray);
         handleUpClick={handleUpClick}
         handleDownClick={handleDownClick}
         handleSelectedChange={handleSelectedChange}
+        graphClickInfo={graphClickInfo}
+        setGraphClickInfo={setGraphClickInfo}
       />
        </div>
     </div>

@@ -2,48 +2,57 @@ import React, { useState } from "react";
 import { makeStyles, Select, MenuItem, Button, Box } from "@material-ui/core";
 import UpArrowIcon from '../images/UpArrowIcon.svg'
 import DownArrowIcon from '../images/DownArrowIcon.svg'
+import LeftArrowIcon from '../images/LeftArrowIcon.svg'
 
-export default function ModuleNavigator({selectedValue, handleUpClick, handleDownClick, handleSelectedChange}) {
+export default function ModuleNavigator({selectedValue, handleUpClick, handleDownClick, handleSelectedChange, graphClickInfo, setGraphClickInfo}) {
   const classes = useStyles();
   const selectedDictionary = {
     0: 'Question Card',
     1: 'Real-time Responses',
     2: 'Answer Explanations'
   }
- 
+  
   return (
     <div className={classes.container}>
-      <Select
-        value={selectedValue}
-        displayEmpty
-        disableUnderline
-        onChange={handleSelectedChange}
-       
-        className={classes.dropdown}
-        MenuProps={{ 
-          classes: { paper: classes.select },   
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "left",
-          },
-          transformOrigin: {
-            vertical: "top",
-            horizontal: "left"
-          },
-          getContentAnchorEl: null 
-        }}
-        renderValue={(value) => {
-          return <span className={classes.selectedItem}>{selectedDictionary[selectedValue]}</span>;
-        }}
-      >
-        <MenuItem value={0} className={classes.menuItem}>Question Card</MenuItem>
-        <MenuItem value={1} className={classes.menuItem}>Real-time Responses</MenuItem>
-        <MenuItem value={2} className={classes.menuItem}>Answer Explanations</MenuItem>
-      </Select>
-      <Box className={classes.buttonContainer}>
-        <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleUpClick}/>
-        <Button className={classes.button} startIcon={<img src={DownArrowIcon}></img>} onClick={handleDownClick}/>
+      { graphClickInfo.graph === null ? 
+      <>
+        <Select
+          value={selectedValue}
+          displayEmpty
+          disableUnderline
+          onChange={handleSelectedChange}
+        
+          className={classes.dropdown}
+          MenuProps={{ 
+            classes: { paper: classes.select },   
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "left",
+            },
+            transformOrigin: {
+              vertical: "top",
+              horizontal: "left"
+            },
+            getContentAnchorEl: null 
+          }}
+          renderValue={(value) => {
+            return <span className={classes.selectedItem}>{selectedDictionary[selectedValue]}</span>;
+          }}
+        >
+          <MenuItem value={0} className={classes.menuItem}>Question Card</MenuItem>
+          <MenuItem value={1} className={classes.menuItem}>Real-time Responses</MenuItem>
+          <MenuItem value={2} className={classes.menuItem}>Answer Explanations</MenuItem>
+        </Select>
+        <Box className={classes.buttonContainer}>
+          <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleUpClick}/>
+          <Button className={classes.button} startIcon={<img src={DownArrowIcon}></img>} onClick={handleDownClick}/>
+        </Box>
+      </>
+      : 
+      <Box className={classes.backButtonContainer}>
+          <Button className={classes.backButton} startIcon={<img src={LeftArrowIcon} style={{paddingRight: '16px'}}></img>} onClick={() => setGraphClickInfo({graph: null, index: null})}> Question Overview </Button>
       </Box>
+      }
     </div>
   );
 }
@@ -89,6 +98,23 @@ const useStyles = makeStyles(theme => ({
     marginRight: 0,
     marginLeft: 0
   }
-
+  },
+  backButtonContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-start',
+  },
+  backButton: {
+    height: '32px',
+    background: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: '100px',
+    minWidth: '32px',
+   padding: '16px',
+   textTransform: 'none',
+   color: 'white',
+   "& .MuiButton-startIcon": {
+    marginRight: 0,
+    marginLeft: 0
+  }
   }
 }));

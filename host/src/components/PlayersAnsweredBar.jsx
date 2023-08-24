@@ -55,6 +55,7 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
     fontFamily: 'Helvetica',
     fontWeight: 'bold',
+    margin: 'auto'
   },
   barContainer: {
     position: 'relative',

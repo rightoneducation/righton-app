@@ -46,10 +46,6 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
   const defaultVictoryPadding = 50;
 
   const classes = useStyles();
-  const reversedResponses = [
-    { label: noResponseLabel, count: numPlayers - totalAnswers, answer: 'No response' },
-    ...data,
-  ].reverse();
 
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
 
@@ -104,12 +100,12 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
     bar: {
       style: {
         data: {
-          fill: ({ datum, index }) => (index === reversedResponses.length - 1 ? 'transparent' : '#FFF'),
+          fill: ({ datum, index }) => (index === data.length - 1 ? 'transparent' : '#FFF'),
           stroke: '#FFF',
           strokeWidth: 1,
         },
         labels: {
-          fill: ({ datum, index }) => (index === reversedResponses.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
+          fill: ({ datum, index }) => (index === data.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
           fontFamily: 'Rubik',
           fontWeight: '400',
           textAnchor: 'end',
@@ -138,7 +134,7 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
-              <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+              <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} data={data} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
@@ -192,17 +188,6 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
             }
           />
         </VictoryChart>
-      </div>
-      <div className={classes.answerContainer}>
-        <SelectedAnswer
-          data={data}
-          graphClickInfo={graphClickInfo}
-          correctChoiceIndex={correctChoiceIndex}
-          reversedResponses={reversedResponses}
-          numPlayers={numPlayers}
-          teamsPickedChoices={teamsPickedChoices}
-          statePosition={statePosition}
-        />
       </div>
     </div>
   );

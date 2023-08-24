@@ -21,25 +21,8 @@ export default function GameInProgressContentSwitch ({
     graphClickInfo,
     setGraphClickInfo,
     correctChoiceIndex
-    // input enum 
   }) {
-    const classes = useStyles();
-    /* 
-    * conditions:
-    * 1/default: render content
-    * 2/any graph clicked
-    * 
-    * will need to send event up with right object for clicking 
-    * isGraphClicked
-    * whichGraphClicked (1,2,3,null)
-    * whichIndexClicked (0 1, 2 3) <- have to be in parent unfortunately so footer can see them
-    * probably going to have to move the stuff from the responses up into this component so that it can be conditionally rendered in separate location
-    * that should be able to be here I think
-    */
-  // switch
-  // case :
-  // return ();
-  console.log(graphClickInfo);
+  const classes = useStyles();
   return (
     <>
       {graphClickInfo.graph === null ? (

@@ -13,8 +13,6 @@ const useStyles = makeStyles(() => ({
 const CustomBar = (props) => {
   const {x, y, xSmallPadding, mediumPadding, defaultVictoryPadding, selectedWidth, selectedHeight, datum, index, graphClickInfo, setGraphClickInfo} = props;
   const classes = useStyles();
-  console.log(graphClickInfo);
-  console.log(graphClickInfo.selectedIndex);
   return (
       <g  style={{pointerEvents: 'bounding-box'}}>
         <Bar {...props}/>

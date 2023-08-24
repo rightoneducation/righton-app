@@ -100,8 +100,7 @@ const PlayersSelectedAnswer = (props) => {
     const teamsWithSelectedAnswer = teamsPickedChoices.filter(teamChoices =>
         teamChoices.choiceText === selectedBarAnswerText
     );
-    
-    console.log(statePosition);
+
     return (
         <div>
             <div className={classes.textContainer}>
