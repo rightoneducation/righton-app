@@ -114,7 +114,11 @@ export default function GameInProgress({
   const [selectedNavValue, setSelectedNavValue] = useState(0);
   const selectedDictionary = {
     0: questionCardRef,
-    1: gameAnswersRef
+    1: responsesRef,
+    2: gameAnswersRef,
+    3: confidenceRef,
+    4: playerThinkingRef,
+    5: popularMistakesRef
   }
   const handleSelectedNavChange = (event) => {
     setTimeout(() => {
@@ -130,7 +134,7 @@ export default function GameInProgress({
   };
 
   const handleNavDownClick = () => {
-    const newValue = selectedNavValue < 1 ? selectedNavValue + 1 : 1;
+    const newValue = selectedNavValue < 1 ? selectedNavValue + 1 : 2;
     selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
     setSelectedNavValue(newValue);
   };

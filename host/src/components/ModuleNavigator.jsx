@@ -49,7 +49,8 @@ export default function ModuleNavigator({
           }}
         >
           <MenuItem value={0} className={classes.menuItem}>Question Card</MenuItem>
-          <MenuItem value={1} className={classes.menuItem}>Answer Explanations</MenuItem>
+          <MenuItem value={1} className={classes.menuItem}>Real-time Responses</MenuItem>
+          <MenuItem value={2} className={classes.menuItem}>Answer Explanations</MenuItem>
         </Select>
         <Box className={classes.buttonContainer}>
           <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleNavUpClick}/>
@@ -58,14 +59,7 @@ export default function ModuleNavigator({
       </>
       : 
       <Box className={classes.backButtonContainer}>
-          <Button 
-            className={classes.backButton} 
-            startIcon={<img src={LeftArrowIcon} 
-            style={{paddingRight: '16px'}}></img>} 
-            onClick={() => setGraphClickInfo({graph: null, index: null})}
-          > 
-            Question Overview 
-          </Button>
+          <Button className={classes.backButton} startIcon={<img src={LeftArrowIcon} style={{paddingRight: '16px'}}></img>} onClick={() => setGraphClickInfo({graph: null, index: null})}> Question Overview </Button>
       </Box>
       }
     </div>
