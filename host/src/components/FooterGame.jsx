@@ -4,7 +4,22 @@ import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
 import ModuleNavigator from "./ModuleNavigator";
 
-export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  gameTimer, footerButtonText, handleFooterOnClick, selectedValue, handleUpClick, handleDownClick, handleSelectedChange, graphClickInfo, setGraphClickInfo}) {
+export default function FooterGame({
+  numPlayers, 
+  totalAnswers, 
+  phaseOneTime, 
+  phaseTwoTime,  
+  gameTimer, 
+  footerButtonText, 
+  handleFooterOnClick, 
+  selectedNavValue, 
+  handleNavUpClick, 
+  handleNavDownClick, 
+  handleSelectedNavChange, 
+  graphClickInfo, 
+  setGraphClickInfo,
+  showFooterButtonOnly
+}) {
  const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
@@ -16,18 +31,22 @@ export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phas
         >
            {footerButtonText}
         </Button>
-        {<div style={{opacity: gameTimer ? 1 : 0.4, width: '100%'}}>
-          <div className={classes.playerNum}>Players who have answered</div>
-          <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers}/>
-        </div>}
-        <ModuleNavigator 
-          selectedValue={selectedValue} 
-          handleUpClick={handleUpClick} 
-          handleDownClick={handleDownClick} 
-          handleSelectedChange={handleSelectedChange}
-          graphClickInfo={graphClickInfo}
-          setGraphClickInfo={setGraphClickInfo} 
-        />
+        { !showFooterButtonOnly && 
+          <>
+            <div style={{opacity: gameTimer ? 1 : 0.4, width: '100%'}}>
+              <div className={classes.playerNum}>Players who have answered</div>
+              <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers}/>
+            </div>
+            <ModuleNavigator 
+              selectedNavValue={selectedNavValue} 
+              handleNavUpClick={handleNavUpClick} 
+              handleNavDownClick={handleNavDownClick} 
+              handleSelectedNavChange={handleSelectedNavChange}
+              graphClickInfo={graphClickInfo}
+              setGraphClickInfo={setGraphClickInfo} 
+            />
+          </>
+        }
       </div>
     </BottomNavigation>
   );
@@ -48,7 +67,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start',
     alignItems:'center',
-    margin: 'auto',
     width: '100%',
     paddingLeft: '16px',
     paddingRight: '16px',

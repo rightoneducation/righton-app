@@ -4,29 +4,15 @@ import { VictoryChart, VictoryAxis, VictoryBar, VictoryContainer } from 'victory
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
-import SelectedAnswer from './SelectedAnswer';
 
-const useStyles = makeStyles({
-  container: {
-    textAlign: 'center',
-    width: '100%'
-  },
-  title: {
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontFamily: 'Rubik',
-    fontSize: '17px',
-    paddingBottom: '16px'
-  },
-  titleContainer: {
-    marginTop: '3%',
-  },
-  answerContainer: {
-    display: "flex",
-    justifyContent: "center",
-  },
-});
-
-const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices, graphClickInfo, setGraphClickInfo}) => {
+export default function ResponsesGraph ({ 
+  data, 
+  questionChoices, 
+  statePosition, 
+  graphClickInfo, 
+  setGraphClickInfo 
+}) {
+  const classes = useStyles();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
@@ -36,21 +22,14 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
   const mediumPadding = 16;
   const mediumLargePadding = 20;
   const largePadding = 24;
-  const xLargePadding = 32;
-  const xxLargePadding = 40;
-  const xxxLargePadding = 48;
   const labelOffset = 3;
   const noResponseLabel = '–';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
-
-  const classes = useStyles();
-
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-
   const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
-
+  
   const calculateRoundedTicks = () => {
     const maxAnswerCount = Math.max(...data.map(({ answerCount }) => answerCount));
     const tickInterval = 5;
@@ -78,8 +57,7 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
     };
   }, []);
 
-
-
+  // theme to eventually be wrapped into a mui theme when host is upgraded to mui v5
   const customTheme = {
     axis: {
       style: {
@@ -134,7 +112,14 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
-              <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} data={data} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+              <CustomTick 
+                mediumPadding={mediumPadding} 
+                largePadding={largePadding} 
+                data={data} 
+                correctChoiceIndex={correctChoiceIndex} 
+                statePosition={statePosition} 
+              />
+            }
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
@@ -193,4 +178,22 @@ const ResponsesGraph = ({ data, numPlayers, totalAnswers, questionChoices, state
   );
 };
 
-export default ResponsesGraph;
+const useStyles = makeStyles({
+  container: {
+    textAlign: 'center',
+    width: '100%'
+  },
+  title: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontFamily: 'Rubik',
+    fontSize: '17px',
+    paddingBottom: '16px'
+  },
+  titleContainer: {
+    marginTop: '3%',
+  },
+  answerContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+});

@@ -4,19 +4,26 @@ import check from '../../images/Pickedcheck.svg';
 import noResponse from '../../images/noResponse.svg'
 import { Tooltip } from '@material-ui/core';
 
-const CustomTick = ({ x, y, index, text, data, correctChoiceIndex, statePosition, mediumPadding, largePadding }) => {
+export default function CustomTick ({ 
+  x, 
+  y, 
+  index,
+  text, 
+  data, 
+  correctChoiceIndex, 
+  statePosition, 
+  mediumPadding, 
+  largePadding 
+}) {
   const showCustomTick = index === data.length - 1 - correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
-
   const isNoResponse = index === data.length - 1;
-
   const commonStyle = {
     fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
     fontFamily: 'Poppins',
     fontWeight: '800',
     fontSize: '16px',
   };
-
 
   return (
     <g>
@@ -43,5 +50,3 @@ const CustomTick = ({ x, y, index, text, data, correctChoiceIndex, statePosition
     </g>
   );
 };
-
-export default CustomTick;

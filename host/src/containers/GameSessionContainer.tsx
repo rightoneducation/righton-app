@@ -209,12 +209,12 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen}/>;
+      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false}/>;
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
     case GameSessionState.PHASE_2_RESULTS:
-      return <StudentViews {...gameSession} gameTimer={gameTimer} handleUpdateGameSession={handleUpdateGameSession} />;
+      return <StudentViews {...gameSession} gameTimer={gameTimer} handleUpdateGameSession={handleUpdateGameSession} showFooterButtonOnly={true}/>;
 
 
     case GameSessionState.FINAL_RESULTS:

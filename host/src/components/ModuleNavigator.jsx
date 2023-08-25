@@ -4,23 +4,33 @@ import UpArrowIcon from '../images/UpArrowIcon.svg'
 import DownArrowIcon from '../images/DownArrowIcon.svg'
 import LeftArrowIcon from '../images/LeftArrowIcon.svg'
 
-export default function ModuleNavigator({selectedValue, handleUpClick, handleDownClick, handleSelectedChange, graphClickInfo, setGraphClickInfo}) {
+export default function ModuleNavigator({
+  selectedNavValue, 
+  handleNavUpClick, 
+  handleNavDownClick, 
+  handleSelectedNavChange, 
+  graphClickInfo, 
+  setGraphClickInfo
+}) {
   const classes = useStyles();
+  // TODO: make this an enum when we upgrade host to typescript
   const selectedDictionary = {
     0: 'Question Card',
     1: 'Real-time Responses',
-    2: 'Answer Explanations'
+    2: 'Answer Explanations',
+    3: 'Confidence Level',
+    4: 'Player Thinking',
+    5: 'Popular Mistakes'
   }
-  
   return (
     <div className={classes.container}>
-      { graphClickInfo.graph === null ? 
+      { graphClickInfo && graphClickInfo.graph === null ? 
       <>
         <Select
-          value={selectedValue}
+          value={selectedNavValue}
           displayEmpty
           disableUnderline
-          onChange={handleSelectedChange}
+          onChange={handleSelectedNavChange}
         
           className={classes.dropdown}
           MenuProps={{ 
@@ -36,7 +46,7 @@ export default function ModuleNavigator({selectedValue, handleUpClick, handleDow
             getContentAnchorEl: null 
           }}
           renderValue={(value) => {
-            return <span className={classes.selectedItem}>{selectedDictionary[selectedValue]}</span>;
+            return <span className={classes.selectedItem}>{selectedDictionary[selectedNavValue]}</span>;
           }}
         >
           <MenuItem value={0} className={classes.menuItem}>Question Card</MenuItem>
@@ -44,8 +54,8 @@ export default function ModuleNavigator({selectedValue, handleUpClick, handleDow
           <MenuItem value={2} className={classes.menuItem}>Answer Explanations</MenuItem>
         </Select>
         <Box className={classes.buttonContainer}>
-          <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleUpClick}/>
-          <Button className={classes.button} startIcon={<img src={DownArrowIcon}></img>} onClick={handleDownClick}/>
+          <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleNavUpClick}/>
+          <Button className={classes.button} startIcon={<img src={DownArrowIcon}></img>} onClick={handleNavDownClick}/>
         </Box>
       </>
       : 

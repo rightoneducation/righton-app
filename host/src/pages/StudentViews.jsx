@@ -15,7 +15,8 @@ export default function StudentViews({
   phaseOneTime,
   phaseTwoTime,
   gameTimer,
-  handleUpdateGameSession
+  handleUpdateGameSession,
+  showFooterButtonOnly
 }) {
   
   let statePosition;
@@ -103,6 +104,7 @@ export default function StudentViews({
               footerButtonText={isLastGameScreen ? "View Final Results" : footerButtonTextDictionary[statePosition]} 
               handleUpdateGameSession={handleUpdateGameSession}
               handleFooterOnClick =  {handleFooterOnClick} 
+              showFooterButtonOnly={showFooterButtonOnly}
             />
           </div>
        

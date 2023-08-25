@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
-import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import Responses from "../components/Responses/Responses";
-import { isNullOrUndefined, GameSessionState } from "@righton/networking";
+import { GameSessionState } from "@righton/networking";
 import GameInProgressContentSwitch from "../components/GameInProgressContentSwitch";
-
+import { getTotalAnswers, getQuestionChoices, getAnswersByQuestion, getTeamByQuestion } from "../lib/HelperFunctions";
 
 export default function GameInProgress({
   teams,
@@ -26,27 +23,17 @@ export default function GameInProgress({
   gameTimerZero,
   isLoadModalOpen,
   setIsLoadModalOpen,
+  showFooterButtonOnly
 }) {
   const classes = useStyles();
+  // refs for scrolling of components via module navigator
   const questionCardRef = React.useRef(null);
   const responsesRef = React.useRef(null);
   const gameAnswersRef = React.useRef(null);
-  let [modalOpen, setModalOpen] = useState(false);
+  const confidenceRef = React.useRef(null);
+  const playerThinkingRef = React.useRef(null);
+  const popularMistakesRef = React.useRef(null);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
-
-    //0-not started
-    //1-teams joining
-    //2-choose correct answer
-    //3-phase_1_discuss
-    //4-phase_1_results
-    //5-phase_2_start
-    //6-choose_trickiest_answer
-    //7_phase_2_discuss
-    //8-phase_2_results
-    //9-final_results
-    //10-finished
-
-    //put this in gameinprogress
     2: "Continue",
     3: "Go to Results",
     4: "Go to Phase 2",
@@ -56,7 +43,27 @@ export default function GameInProgress({
     8: "Go to Next Question",
     9: "Proceed to RightOn Central"
   };
+  const numPlayers = teams ? teams.length : 0;
+  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState);
+  const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  const totalAnswers = getTotalAnswers(answersByQuestion);
+  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
+  const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices, questions, currentState);
+  const noResponseLabel = '–';
+  // data object used in Victory graph for real-time responses
+  const data =[
+    { answerChoice: noResponseLabel, answerCount: numPlayers - totalAnswers, answerText: 'No response' },
+    ...Object.keys(answersByQuestion).map((key, index) => ({
+    answerCount: answersByQuestion[index],
+    answerChoice: String.fromCharCode(65 + index),
+     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+     answerText: questionChoices[index].text,
+    }))].reverse();
 
+  // handles if a graph is clicked, noting which graph and which bar on that graph
+  const [graphClickInfo, setGraphClickInfo] = useState({graph: null, selectedIndex: null});
+  let [modalOpen, setModalOpen] = useState(false);
   const nextStateFunc = (currentState) => {
     let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
     return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
@@ -77,130 +84,6 @@ export default function GameInProgress({
   const handleStartGameModalTimerFinished = () => {
     setIsLoadModalOpen(false);
   };
-
-
-  // finds all answers for current question using isChosen, for use in footer progress bar
-  const getTotalAnswers = (answerArray) => {
-    let count = 0;
-    if (answerArray) {
-      answerArray.forEach(answerCount => {
-        count = count + answerCount;
-      });
-      return count;
-    }
-    return count;
-  };
-
-  // returns the choices object for an individual question
-  const getQuestionChoices = (questions, currentQuestionIndex) => {
-    if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
-      return null;
-    }
-    return questions[currentQuestionIndex].choices;
-  };
-//returns an array of which team names picked which question choices
-const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
-  const teamsPickedChoices = [];
-
-  teamsArray.forEach(team => {
-    const teamPickedChoices = [];
-    let isNoResponse = true;
-    
-    team.teamMembers && team.teamMembers.forEach(teamMember => {
-      teamMember.answers && teamMember.answers.forEach(answer => {
-        if (answer.questionId === questions[currentQuestionIndex].id) {
-          if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
-            isNoResponse = false;
-            choices && choices.forEach(choice => {
-              if (answer.text === choice.text) {
-                teamPickedChoices.push({
-                  teamName: team.name,
-                  choiceText: choice.text
-                });
-              }
-            });
-          }
-        }
-      });
-    });
-
-    if (teamPickedChoices.length > 0 || isNoResponse) {
-      teamsPickedChoices.push(...teamPickedChoices);
-      if (isNoResponse) {
-        teamsPickedChoices.push({
-          teamName: team.name,
-          choiceText: 'No response'
-        });
-      }
-    }
-  });
-
-  return teamsPickedChoices;
-};
-
-
-  // returns an array ordered to match the order of answer choices, containing the total number of each answer
-  const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => {
-    if (teamsArray.length !== 0 && choices && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
-      let choicesTextArray = [choices.length];
-      let answersArray = new Array(choices.length).fill(0);
-      let currentQuestionId = questions[currentQuestionIndex].id;
-      choices && choices.forEach((choice, index) => {
-        choicesTextArray[index] = choice.text;
-      });
-
-      teamsArray.forEach(team => {
-        team.teamMembers && team.teamMembers.forEach(teamMember => {
-          teamMember.answers && teamMember.answers.forEach(answer => {
-            if (answer.questionId === currentQuestionId) {
-              if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
-                choices && choices.forEach(choice => {
-                  if (answer.text === choice.text) {
-                    answersArray[choicesTextArray.indexOf(choice.text)] += 1;
-                  }
-                })
-              }
-            }
-          })
-        })
-
-      });
-      return answersArray;
-    }
-    return [];
-  };
-
-  const letterDictionary = {
-    0:'A. ',
-    1:'B. ',
-    2:'C. ',
-    3:'D. ',
-    4:'E. ',
-    5:'F. ',
-    6:'G. ',
-    7:'H. ',
-    8:'I. '
-  }
-  const numPlayers = teams ? teams.length : 0;
-  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
-  const answerArray = getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex);
-  const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-  const totalAnswers = getTotalAnswers(answerArray);
-  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-  const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices);
-  const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex);
-  const noResponseLabel = '–';
-
-  const data =[
-    { answerChoice: noResponseLabel, answerCount: numPlayers - totalAnswers, answerText: 'No response' },
-    ...Object.keys(answersByQuestion).map((index) => ({
-    answerCount: answersByQuestion[index],
-    answerChoice: letterDictionary[index].replace('. ', ''),
-     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
-     answerText: questionChoices[index].text,
-    }))].reverse();
-
-  const [graphClickInfo, setGraphClickInfo] = useState({graph: null, selectedIndex: null});
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
@@ -227,30 +110,33 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
     return footerButtonTextDictionary[statePosition];
   };
 
-  // module navigator stuff
-  const [selectedValue, setSelectedValue] = useState(0);
+  // module navigator variables and event handlers
+  const [selectedNavValue, setSelectedNavValue] = useState(0);
   const selectedDictionary = {
     0: questionCardRef,
     1: responsesRef,
-    2: gameAnswersRef
+    2: gameAnswersRef,
+    3: confidenceRef,
+    4: playerThinkingRef,
+    5: popularMistakesRef
   }
-  const handleSelectedChange = (event) => {
+  const handleSelectedNavChange = (event) => {
     setTimeout(() => {
       selectedDictionary[event.target.value].current.scrollIntoView({ behavior: 'smooth' });
     }, 0);
-    setSelectedValue(event.target.value);
+    setSelectedNavValue(event.target.value);
   };
 
-  const handleUpClick = () => {
-    const newValue = selectedValue > 0 ? selectedValue - 1 : 0;
+  const handleNavUpClick = () => {
+    const newValue = selectedNavValue > 0 ? selectedNavValue - 1 : 0;
     selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
-    setSelectedValue(newValue);
+    setSelectedNavValue(newValue);
   };
 
-  const handleDownClick = () => {
-    const newValue = selectedValue < 1 ? selectedValue + 1 : 2;
+  const handleNavDownClick = () => {
+    const newValue = selectedNavValue < 1 ? selectedNavValue + 1 : 2;
     selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
-    setSelectedValue(newValue);
+    setSelectedNavValue(newValue);
   };
 
   return (
@@ -307,19 +193,18 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
         gameTimer={gameTimer} //flag GameInProgress vs StudentView
         footerButtonText={getFooterText(teams ? teams.length : 0, totalAnswers, statePosition)} // provides index of current state for use in footer dictionary
         handleFooterOnClick={handleFooterOnClick} //handler for button
-        selectedValue={selectedValue}
-        handleUpClick={handleUpClick}
-        handleDownClick={handleDownClick}
-        handleSelectedChange={handleSelectedChange}
+        selectedNavValue={selectedNavValue}
+        handleNavUpClick={handleNavUpClick}
+        handleNavDownClick={handleNavDownClick}
+        handleSelectedNavChange={handleSelectedNavChange}
         graphClickInfo={graphClickInfo}
         setGraphClickInfo={setGraphClickInfo}
+        showFooterButtonOnly={showFooterButtonOnly}
       />
        </div>
     </div>
   );
 }
-
-
 
 const useStyles = makeStyles(theme => ({
   background: {

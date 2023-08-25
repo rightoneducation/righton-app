@@ -2,16 +2,20 @@ import React from 'react';
 import { Bar } from 'victory';
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
-  highlight: {
-    '&:hover': {
-      fill: 'rgba(255, 255, 255, 0.2)' ,
-    }
-  }
-}));
-
-const CustomBar = (props) => {
-  const {x, y, xSmallPadding, mediumPadding, defaultVictoryPadding, selectedWidth, selectedHeight, datum, index, graphClickInfo, setGraphClickInfo} = props;
+export default function CustomBar (props) {
+  const {
+    x, 
+    y, 
+    xSmallPadding, 
+    mediumPadding, 
+    defaultVictoryPadding, 
+    selectedWidth, 
+    selectedHeight, 
+    datum, 
+    index, 
+    graphClickInfo, 
+    setGraphClickInfo
+  } = props;
   const classes = useStyles();
   return (
       <g  style={{pointerEvents: 'bounding-box'}}>
@@ -35,4 +39,10 @@ const CustomBar = (props) => {
     );
 };
 
-export default CustomBar;
+const useStyles = makeStyles(() => ({
+  highlight: {
+    '&:hover': {
+      fill: 'rgba(255, 255, 255, 0.2)' ,
+    }
+  }
+}));

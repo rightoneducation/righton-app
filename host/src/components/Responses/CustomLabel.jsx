@@ -1,8 +1,18 @@
 import React from 'react';
 import { VictoryLabel } from 'victory';
 
-const CustomLabel = (props) => {
-  const { x, y, datum, barThickness,labelOffset, xSmallPadding, mediumLargePadding, defaultVictoryPadding, noResponseLabel } = props;
+export default function CustomLabel (props) {
+  const { 
+    x, 
+    y, 
+    datum, 
+    barThickness,
+    labelOffset, 
+    xSmallPadding, 
+    mediumLargePadding, 
+    defaultVictoryPadding, 
+    noResponseLabel 
+  } = props;
   return (
       <g>
         {datum.answerCount !== 0 && 
@@ -36,5 +46,3 @@ const CustomLabel = (props) => {
    </g>
     );
 };
-
-export default CustomLabel;

@@ -4,40 +4,7 @@ import check from '../../images/Pickedcheck.svg';
 import { Tooltip } from '@material-ui/core';
 import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
-const useStyles = makeStyles({
-    text: {
-        color: 'rgba(255, 255, 255, 0.6)',
-        textAlign: 'center',
-        fontFamily: 'Rubik',
-        fontSize: '14px',
-        fontWeight: '400',
-    },
-    choiceContainer: {
-        color: 'rgba(255, 255, 255, 0.5)',
-        fontFamily: 'Poppins',
-        fontSize: '16px',
-        fontWeight: '800',
-        lineHeight: '20px',
-        paddingRight: '8px',
-    },
-    textContainer: {
-        color: '#FFF',
-        fontFamily: 'Rubik',
-        fontSize: '18px',
-        fontWeight: '400',
-        lineHeight: '22px',
-    },
-    titleText:{
-        color: '#FFF',
-        textAlign: 'left',
-        fontFamily: 'Rubik',
-        fontSize: '14px',
-        fontWeight: '400',
-        paddingBottom: '10px',
-    }
-});
-
-const SelectedAnswer = (props) => {
+export default function SelectedAnswer (props)  {
     const {
         data,
         correctChoiceIndex,
@@ -46,15 +13,10 @@ const SelectedAnswer = (props) => {
         statePosition,
         graphClickInfo
     } = props;
-
     const classes = useStyles();
-
     const showCustomTick = graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
-
-
     const rectWidth = 336;
     const rectHeight = 24;
-
     const rectangleStyle = {
         width: rectWidth,
         height: rectHeight,
@@ -111,4 +73,36 @@ const SelectedAnswer = (props) => {
     );
 };
 
-export default SelectedAnswer;
+const useStyles = makeStyles({
+    text: {
+        color: 'rgba(255, 255, 255, 0.6)',
+        textAlign: 'center',
+        fontFamily: 'Rubik',
+        fontSize: '14px',
+        fontWeight: '400',
+    },
+    choiceContainer: {
+        color: 'rgba(255, 255, 255, 0.5)',
+        fontFamily: 'Poppins',
+        fontSize: '16px',
+        fontWeight: '800',
+        lineHeight: '20px',
+        paddingRight: '8px',
+    },
+    textContainer: {
+        color: '#FFF',
+        fontFamily: 'Rubik',
+        fontSize: '18px',
+        fontWeight: '400',
+        lineHeight: '22px',
+    },
+    titleText:{
+        color: '#FFF',
+        textAlign: 'left',
+        fontFamily: 'Rubik',
+        fontSize: '14px',
+        fontWeight: '400',
+        paddingBottom: '10px',
+    }
+});
+
