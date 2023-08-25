@@ -16,11 +16,10 @@ export default function ModuleNavigator({
   // TODO: make this an enum when we upgrade host to typescript
   const selectedDictionary = {
     0: 'Question Card',
-    1: 'Real-time Responses',
-    2: 'Answer Explanations',
-    3: 'Confidence Level',
-    4: 'Player Thinking',
-    5: 'Popular Mistakes'
+    1: 'Answer Explanations',
+    2: 'Confidence Level',
+    3: 'Player Thinking',
+    4: 'Popular Mistakes'
   }
   return (
     <div className={classes.container}>
