@@ -99,7 +99,6 @@ export default function ResponsesGraph ({
           Number of players
         </Typography>
       </div>
-      <div style={{width: boundingRect.width, height: '100px', background: 'white'}} />
       <div ref={graphRef} >
         {data.length > 1 && 
           <VictoryChart

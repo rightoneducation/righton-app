@@ -264,7 +264,6 @@ const useStyles = makeStyles(theme => ({
     width: '100vw',
     border: 'none',
     overflowY: 'auto',
-    maxWidth: '500px',
     touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
     '&::-webkit-scrollbar': {
       // Chrome and Safari
@@ -272,5 +271,7 @@ const useStyles = makeStyles(theme => ({
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none', // IE and Edge
+    padding: '24px',
+    boxSizing: 'border-box'
   },
 }));

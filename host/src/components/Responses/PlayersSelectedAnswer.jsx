@@ -137,6 +137,6 @@ const useStyles = makeStyles({
         padding: '10px 16px',
         borderRadius: '8px',
         marginBottom: '8px',
-        maxWidth: '500px'
+        maxWidth: '500px',
     }
 });

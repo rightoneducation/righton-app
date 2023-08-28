@@ -30,7 +30,7 @@ export default function GameInProgressContentSwitch ({
           <div id="questioncard-scrollbox" ref={questionCardRef}>
             <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
           </div>
-          <div id="responses-scrollbox" ref={responsesRef}>
+          <div id="responses-scrollbox" ref={responsesRef} className={classes.contentContainer}>
             <Responses
               data={data}
               numPlayers={numPlayers}
@@ -42,7 +42,7 @@ export default function GameInProgressContentSwitch ({
               setGraphClickInfo={setGraphClickInfo}
             />
           </div>
-          <div id="gameanswers-scrollbox" ref={gameAnswersRef}>
+          <div id="gameanswers-scrollbox" ref={gameAnswersRef} className={classes.contentContainer}>
             <GameAnswers
               questions={questions}
               questionChoices={questionChoices}
@@ -56,7 +56,7 @@ export default function GameInProgressContentSwitch ({
           </div>
         </>
       ) : (
-        <div className={classes.answerContainer}>
+        <div className={classes.contentContainer}>
            <Responses
               data={data}
               numPlayers={numPlayers}
@@ -82,9 +82,11 @@ export default function GameInProgressContentSwitch ({
 };
 
 const useStyles = makeStyles({
-  answerContainer: {
+  contentContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    width: '100%',
+    maxWidth: "500px",
   },
 });
