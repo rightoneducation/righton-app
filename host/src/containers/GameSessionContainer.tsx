@@ -25,6 +25,7 @@ const GameSessionContainer = () => {
   const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStore'));
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
+  const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
@@ -144,6 +145,11 @@ const GameSessionContainer = () => {
     }
   }, [gameTimer, gameTimerZero]);
 
+  // handles confidence switch changes on StartGame
+  const handleConfidenceSwitchChange = (event) => {
+    setIsConfidenceEnabled(event.target.checked);
+  };
+
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
@@ -170,7 +176,7 @@ const GameSessionContainer = () => {
     }
     setGameTimerZero(false);
   };
-
+  // TODO: we're going to need to add an update game session question here to flip the isconfidence
   const handleStartGame = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
@@ -182,7 +188,7 @@ const GameSessionContainer = () => {
           setHeaderGameCurrentTime(gameSession.phaseOneTime);
           checkGameTimer(response);
           setGameSession(response);
-
+          console.log(response);
           const teamDataRequests = response.teams.map(team => {
             return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
           });
@@ -204,7 +210,7 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />;
+      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} />;
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
