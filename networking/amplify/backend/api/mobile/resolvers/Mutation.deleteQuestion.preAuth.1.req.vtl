@@ -1,0 +1,11 @@
+## [Start] Merge default values and inputs. **
+#set( $mergedValues = $util.defaultIfNull($ctx.stash.defaultValues, {}) )
+$util.qr($mergedValues.putAll($util.defaultIfNull($ctx.args.input, {})))
+## [End] Merge default values and inputs. **
+## [Start] Set the primary key. **
+$util.qr($ctx.stash.metadata.put("modelObjectKey", {
+  "id": $util.dynamodb.toDynamoDB($mergedValues.id),
+  "order#gameSessionId": $util.dynamodb.toDynamoDB("${mergedValues.order}#${mergedValues.gameSessionId}")
+}))
+## [End] Set the primary key. **
+{}
