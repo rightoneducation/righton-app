@@ -99,6 +99,7 @@ export default function ResponsesGraph ({
           Number of players
         </Typography>
       </div>
+      <div style={{width: boundingRect.width, height: '100px', background: 'white'}} />
       <div ref={graphRef} >
         {data.length > 1 && 
           <VictoryChart
@@ -186,7 +187,8 @@ export default function ResponsesGraph ({
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
-    width: '100%'
+    width: '100%',
+    maxWidth: '500px'
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',

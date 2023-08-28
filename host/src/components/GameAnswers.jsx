@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
 import { isNullOrUndefined } from "@righton/networking";
 
@@ -39,18 +39,14 @@ export default function GameAnswers({ teamsPickedChoices, questions, questionCho
   }));
   
   return (
-    <Grid className={classes.background}>
-      <Grid container className={classes.centerContent}>
-        <Grid container>
-          <Typography className={classes.titleStyle}>Answer Explanations</Typography>
-        </Grid>
-      </Grid>
+    <Box className={classes.background}>
+      <Typography className={classes.titleStyle}>Answer Explanations</Typography>
       {(questionChoices) ?
         questionChoices.map((choice, index) => {
           return (<GameAnswersDropdown key={index} answer={choice.text} explanation={!choice.isAnswer ? choice.reason : answerExplanation} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} pos={index} letterDictionary={letterDictionary} />)
         })
         : null}
-    </Grid>
+    </Box>
   );
 }
 
@@ -76,6 +72,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: "700",
     lineHeight: "normal",
     textTransform: "none",
+    textAlign: "left",
+    paddingBottom: '8px'
   },
   centerContent: {
     display: "flex",

@@ -1,29 +1,10 @@
 import React from 'react';
 import {
-  Grid,
+  Box,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import ResponsesGraph from './ResponsesGraph';
-
-const useStyles = makeStyles({
-  titleStyle: {
-    color: "var(--teacher-element-foreground, #FFF)",
-    fontFamily: "Poppins",
-    fontSize: "24px",
-    fontStyle: "normal",
-    fontWeight: "700",
-    lineHeight: "normal",
-    textTransform: "none",
-  },
-  centerContent: {
-    display: "flex",
-    justifyContent: "center",
-    width: '95%',
-    margin: 'auto',
-    padding: "20px 40px",
-  },
-});
 
 export default function Responses({ 
   data, 
@@ -38,8 +19,7 @@ export default function Responses({
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.centerContent}>
-      <Grid container className={classes.titleContainer}>
+    <Box className={classes.centerContent}>
         <Typography className={classes.titleStyle}>Real-time Responses</Typography>
         <ResponsesGraph 
           data={data} 
@@ -51,7 +31,26 @@ export default function Responses({
           graphClickInfo={graphClickInfo} 
           setGraphClickInfo={setGraphClickInfo}
         />
-      </Grid>
-    </Grid>
+    </Box>
   );
 }
+
+const useStyles = makeStyles({
+  centerContent: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    width: '100%',
+    maxWidth: "500px"
+  },
+  titleStyle: {
+    color: "var(--teacher-element-foreground, #FFF)",
+    fontFamily: "Poppins",
+    fontSize: "24px",
+    fontStyle: "normal",
+    fontWeight: "700",
+    lineHeight: "normal",
+    textTransform: "none",
+    textAlign: "left",
+  },
+});

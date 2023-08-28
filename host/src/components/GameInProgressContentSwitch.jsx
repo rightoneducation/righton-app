@@ -57,6 +57,16 @@ export default function GameInProgressContentSwitch ({
         </>
       ) : (
         <div className={classes.answerContainer}>
+           <Responses
+              data={data}
+              numPlayers={numPlayers}
+              totalAnswers={totalAnswers}
+              questionChoices={questionChoices}
+              statePosition={statePosition}
+              teamsPickedChoices={teamsPickedChoices}
+              graphClickInfo={graphClickInfo}
+              setGraphClickInfo={setGraphClickInfo}
+            />
           <SelectedAnswer
             data={data}
             graphClickInfo={graphClickInfo}
@@ -74,6 +84,7 @@ export default function GameInProgressContentSwitch ({
 const useStyles = makeStyles({
   answerContainer: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
   },
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import { VictoryLabel } from 'victory';
 import check from '../../images/Pickedcheck.svg';
 import noResponse from '../../images/noResponse.svg'
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, makeStyles } from '@material-ui/core';
 
 export default function CustomTick ({ 
   x, 
@@ -15,6 +15,7 @@ export default function CustomTick ({
   mediumPadding, 
   largePadding 
 }) {
+  const classes = useStyles();
   const showCustomTick = index === data.length - 1 - correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
   const isNoResponse = index === data.length - 1;
@@ -29,7 +30,7 @@ export default function CustomTick ({
     <g>
       {showCustomTick && (
         <foreignObject x={x - largePadding} y={y - largePadding / 2.5} width={16} height={18}>
-          <Tooltip title="This is the correct answer" placement="top" >
+          <Tooltip title={<div className={classes.tooltip}>This is the {'\n'} correct answer</div>} placement="bottom" arrow  >
             <span>
               <img src={check} alt="correct answer" />
             </span>
@@ -38,7 +39,7 @@ export default function CustomTick ({
       )}
         {isNoResponse ? (
           <foreignObject x={x-1} y={y - mediumPadding} width={16} height={32}>
-            <Tooltip title="Players who have not responded" placement="top">
+            <Tooltip title={<div className={classes.tooltip}>Players who {'\n'} have not responded </div>} placement="bottom" arrow >
               <span>
                 <img src={noResponse} alt="no response"/>
               </span>
@@ -50,3 +51,10 @@ export default function CustomTick ({
     </g>
   );
 };
+
+const useStyles = makeStyles({
+  tooltip:{
+      whiteSpace: 'pre-line',
+      textAlign: 'center'
+  }
+});

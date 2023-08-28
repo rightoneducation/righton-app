@@ -15,29 +15,6 @@ export default function SelectedAnswer (props)  {
     } = props;
     const classes = useStyles();
     const showCustomTick = graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
-    const rectWidth = 336;
-    const rectHeight = 24;
-    const rectangleStyle = {
-        width: rectWidth,
-        height: rectHeight,
-        display: 'flex',
-        alignItems: 'center',
-        color: 'white',
-        fontSize: '16px',
-        padding: '10px 16px',
-        borderRadius: '22px',
-        border: '1px solid #B1BACB',
-        position: 'relative',
-    };
-
-    const checkIconStyle = {
-        position: 'absolute',
-        top: '50%',
-        right: '16px',
-        transform: 'translateY(-50%)',
-        display: 'flex',
-        alignItems: 'center',
-    };
     return (
         <div>
             {graphClickInfo.selectedIndex === null ? (
@@ -45,16 +22,16 @@ export default function SelectedAnswer (props)  {
                     Tap on a response to see more details.
                 </Typography>
             ) : (
-                <div>
+                <div style={{width: '100%'}}>
                     <Typography className={classes.titleText}>
                     Showing players who answered:
                     </Typography>
-                    <div style={rectangleStyle}>
+                    <div className={classes.rectStyle}>
                         <div className={classes.choiceContainer}>{data[graphClickInfo.selectedIndex].answerChoice}</div>
                         <div className={classes.textContainer}>{data[graphClickInfo.selectedIndex].answerText}</div>
                         {showCustomTick && (
-                            <Tooltip title="This is the correct answer" placement="top" >
-                                <span style={checkIconStyle}>
+                            <Tooltip title={<div className={classes.tooltip}>This is the {'\n'} correct answer</div>} placement="bottom" arrow >
+                                <span className={classes.checkIconStyle}>
                                     <img src={check} alt="correct answer"/>
                                 </span>
                             </Tooltip>
@@ -103,6 +80,32 @@ const useStyles = makeStyles({
         fontSize: '14px',
         fontWeight: '400',
         paddingBottom: '10px',
+    },
+    tooltip:{
+        whiteSpace: 'pre-line',
+        textAlign: 'center'
+    },
+    rectStyle: {
+        width: '100%',
+        height: '40px',
+        display: 'flex',
+        alignItems: 'center',
+        color: 'white',
+        fontSize: '16px',
+        padding: '10px',
+        borderRadius: '22px',
+        border: '1px solid #B1BACB',
+        position: 'relative',
+        maxWidth: '500px',
+        boxSizing: 'border-box'
+    },
+    checkIconStyle: {
+        position: 'absolute',
+        top: '50%',
+        right: '16px',
+        transform: 'translateY(-50%)',
+        display: 'flex',
+        alignItems: 'center',
     }
 });
 

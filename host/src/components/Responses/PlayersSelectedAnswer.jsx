@@ -5,20 +5,6 @@ export default function PlayersSelectedAnswer (props) {
     const { data, graphClickInfo, numPlayers, teamsPickedChoices, statePosition } = props;
 
     const classes = useStyles(props);
-
-    const rectWidth = 336;
-    const rectHeight = 24;
-
-    const rectangleStyle = {
-        width: rectWidth,
-        height: rectHeight,
-        color: 'white',
-        backgroundColor: '#063772',
-        fontSize: '16px',
-        padding: '10px 16px',
-        borderRadius: '8px',
-        marginBottom: '8px'
-    };
     const answerCount = data[graphClickInfo.selectedIndex].answerCount;
     const percentage = (answerCount / numPlayers) * 100;
 
@@ -60,7 +46,7 @@ export default function PlayersSelectedAnswer (props) {
                 </div>
             )}
             {teamsWithSelectedAnswer.map((teamChoice, index) => (
-                <div key={index} style={rectangleStyle}>
+                <div key={index} className={classes.rectStyle}>
                     <Typography className={classes.nameText}>
                         {teamChoice.teamName}
                     </Typography>
@@ -141,5 +127,16 @@ const useStyles = makeStyles({
         display: 'flex',
         alignItems: 'center',
         marginTop:'-20px'
+    },
+    rectStyle: {
+        width: '100%',
+        height: '24px',
+        color: 'white',
+        backgroundColor: '#063772',
+        fontSize: '16px',
+        padding: '10px 16px',
+        borderRadius: '8px',
+        marginBottom: '8px',
+        maxWidth: '500px'
     }
 });

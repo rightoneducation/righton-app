@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Grid,
   Typography,
   Card,
   CardContent,
@@ -17,7 +16,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
   const [expanded, setExpanded] = useState(false);
   
   return (
-    <Grid className={classes.choices}>
+    <Box className={classes.choices}>
       <Card
         className={correct ? classes.rightAnswer : classes.wrongAnswer}
         onClick={() => setExpanded(!expanded)}
@@ -58,7 +57,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
           </Box>
         </CardContent>
       </Card>
-    </Grid>
+    </Box>
   );
 }
 
@@ -71,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   rightAnswer: {
     background: "rgba(255, 255, 255, 0.2)",
     borderRadius: "12px",
-    width: "90%",
+    width: "100%",
     boxShadow: "none",
     marginBottom: "8px",
     display: "flex",
@@ -80,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   wrongAnswer: {
     background: "transparent",
     borderRadius: "12px",
-    width: "90%",
+    width: "100%",
     border: "2px solid rgba(255, 255, 255, 0.2)",
     boxShadow: "none",
     marginBottom: "8px",
