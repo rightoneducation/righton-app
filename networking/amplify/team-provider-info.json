@@ -14,6 +14,14 @@
     "categories": {
       "api": {
         "mobile": {}
+      },
+      "auth": {
+        "mobile0a6d6e96": {
+          "userPoolId": "us-east-1_cC3q3fBKW",
+          "userPoolName": "RightOn Central",
+          "webClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff",
+          "nativeClientId": "1qi0l2sm7hr82ou1mqsv4tc1ff"
+        }
       }
     }
   }
