@@ -4,6 +4,7 @@ import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
+import EnableConfidenceCard from "../components/EnableConfidenceCard";
 
 export default function StartGame({
   teams = [],
@@ -12,15 +13,21 @@ export default function StartGame({
   gameSessionId,
   gameCode,
   currentState,
-  handleStartGame
+  handleStartGame,
+  isConfidenceEnabled,
+  handleConfidenceSwitchChange
 }) {
   const classes = useStyles();
 
   return (
     <div className={classes.background}>
-      <div>
+      <div className={classes.upperContainer}>
         <HostHeader gameCode={gameCode} currentState={currentState} />
         <GameCard questions={questions} title={title} />
+        <EnableConfidenceCard 
+         isConfidenceEnabled={isConfidenceEnabled} 
+         handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+        />
         <div className={classes.gameMode}>Basic Mode</div>
         <CurrentStudents teams={teams} />
       </div>
@@ -43,7 +50,13 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     background: "linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)"
   },
-
+  upperContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    gap: '24px'
+  },
   gameMode: {
     textAlign: "center",
     fontWeight: "bold",
