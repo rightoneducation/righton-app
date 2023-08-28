@@ -49,7 +49,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     width: '100%',
     margin: 'auto',
-    padding: "20px 40px",
+    maxWidth: '500px',
+    paddingBottom: '24px',
+    boxSizing: 'border-box'
   },
   expandButton: {
     display: "flex",
