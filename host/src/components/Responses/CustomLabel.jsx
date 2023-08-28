@@ -37,7 +37,7 @@ export default function CustomLabel (props) {
           y={y}
           textAnchor="end"
           verticalAnchor="middle"
-          text={ datum.answerCount > 0 ? `${datum.answerCount}` : ''}
+          text={ datum.answerCount > 0 ? `${Math.ceil(datum.answerCount)}` : ''}
           style={{
             fontSize: 15,
             fill: datum.answerCount === 0 || datum.answerChoice === noResponseLabel || x <= 70 ? '#FFF' : '#384466',

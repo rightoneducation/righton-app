@@ -92,7 +92,6 @@ export default function ResponsesGraph ({
       },
     },
   };
-
   return (
     <div className={classes.container}>
       <div className={classes.titleContainer}>
@@ -101,78 +100,84 @@ export default function ResponsesGraph ({
         </Typography>
       </div>
       <div ref={graphRef} >
-        <VictoryChart
-          domainPadding={{x: 36, y: 0}}
-          padding={{top: mediumPadding, bottom: smallPadding, left: defaultVictoryPadding, right: smallPadding}}
-          containerComponent={<VictoryContainer />}
-          theme={customTheme}
-          width={boundingRect.width}
-          height={300}
-        >
-          <VictoryAxis
-            standalone={false}
-            tickLabelComponent={
-              <CustomTick 
-                mediumPadding={mediumPadding} 
-                largePadding={largePadding} 
-                data={data} 
-                correctChoiceIndex={correctChoiceIndex} 
-                statePosition={statePosition} 
-              />
-            }
-          />
-          {largestAnswerCount < 5 && (
+        {data.length > 1 && 
+          <VictoryChart
+            domainPadding={{x: 36, y: 0}}
+            padding={{top: mediumPadding, bottom: smallPadding, left: defaultVictoryPadding, right: smallPadding}}
+            containerComponent={<VictoryContainer />}
+            theme={customTheme}
+            width={boundingRect.width}
+            height={300}
+          >
             <VictoryAxis
-              dependentAxis
-              crossAxis={false}
               standalone={false}
-              orientation="top"
-              tickValues={[0]}
+              tickLabelComponent={
+                <CustomTick 
+                  mediumPadding={mediumPadding} 
+                  largePadding={largePadding} 
+                  data={data} 
+                  correctChoiceIndex={correctChoiceIndex} 
+                  statePosition={statePosition} 
+                />
+              }
             />
-          )}
-          {largestAnswerCount >= 5 && (
-            <VictoryAxis
-              dependentAxis
-              crossAxis={false}
+            {largestAnswerCount < 5 && (
+              <VictoryAxis
+                dependentAxis
+                crossAxis={false}
+                standalone={false}
+                orientation="top"
+                tickValues={[0]}
+              />
+            )}
+            {largestAnswerCount >= 5 && (
+              <VictoryAxis
+                dependentAxis
+                crossAxis={false}
+                standalone={false}
+                orientation="top"
+                tickValues={calculateRoundedTicks()}
+                tickFormat={tick => Math.round(tick)}
+              />
+            )}
+            <VictoryBar
+              data={data}
+              y="answerCount"
+              x="answerChoice"
+              horizontal
               standalone={false}
-              orientation="top"
-              tickValues={calculateRoundedTicks()}
-              tickFormat={tick => Math.round(tick)}
+              cornerRadius={{ topLeft: 4, topRight: 4 }}
+              labels={({ datum }) => `${datum.answerCount}`}
+              barWidth={({ datum }) => datum.answerCount !== 0 ? barThickness : barThicknessZero}
+              animate={{
+                onLoad: { duration: 200 },
+                duration: 200,
+              }}
+              dataComponent={
+                <CustomBar
+                  xSmallPadding={xSmallPadding}
+                  mediumPadding={mediumPadding}
+                  defaultVictoryPadding={defaultVictoryPadding}
+                  selectedWidth={boundingRect.width - defaultVictoryPadding*2}
+                  selectedHeight={18}
+                  graphClickInfo={graphClickInfo}
+                  setGraphClickInfo={setGraphClickInfo}
+                />
+              }
+              labelComponent={
+                <CustomLabel
+                  labelOffset={labelOffset}
+                  barThickness={barThickness}
+                  xSmallPadding={xSmallPadding}
+                  mediumLargePadding={mediumLargePadding}
+                  defaultVictoryPadding={defaultVictoryPadding}
+                  questionChoices={questionChoices}
+                  noResponseLabel={noResponseLabel}
+                />
+              }
             />
-          )}
-          <VictoryBar
-            data={data}
-            y="answerCount"
-            x="answerChoice"
-            horizontal
-            standalone={false}
-            cornerRadius={{ topLeft: 4, topRight: 4 }}
-            labels={({ datum }) => `${datum.answerCount}`}
-            barWidth={({ datum }) => datum.answerCount !== 0 ? barThickness : barThicknessZero}
-            dataComponent={
-              <CustomBar
-                xSmallPadding={xSmallPadding}
-                mediumPadding={mediumPadding}
-                defaultVictoryPadding={defaultVictoryPadding}
-                selectedWidth={boundingRect.width - defaultVictoryPadding*2}
-                selectedHeight={18}
-                graphClickInfo={graphClickInfo}
-                setGraphClickInfo={setGraphClickInfo}
-              />
-            }
-            labelComponent={
-              <CustomLabel
-                labelOffset={labelOffset}
-                barThickness={barThickness}
-                xSmallPadding={xSmallPadding}
-                mediumLargePadding={mediumLargePadding}
-                defaultVictoryPadding={defaultVictoryPadding}
-                questionChoices={questionChoices}
-                noResponseLabel={noResponseLabel}
-              />
-            }
-          />
-        </VictoryChart>
+          </VictoryChart>
+        }
       </div>
     </div>
   );
