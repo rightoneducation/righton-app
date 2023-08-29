@@ -176,12 +176,21 @@ const GameSessionContainer = () => {
     }
     setGameTimerZero(false);
   };
-  // TODO: we're going to need to add an update game session question here to flip the isconfidence
+  // TODO: ensure updatequestion occurs after the updateGameSession
   const handleStartGame = () => {
+
+
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
     if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 };
+      if (isConfidenceEnabled === true ){
+        apiClient.updateQuestion({ gameSessionId: gameSessionId, id: gameSession.questions[0].id, order: 0, isConfidenceEnabled: isConfidenceEnabled })
+          .then(response => {
+            console.log(response);
+          });
+      }
+
+      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: gameSession?.currentQuestionIndex };
       apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
         .then(response => {
           localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);

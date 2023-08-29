@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles, BottomNavigation, Paper } from "@material-ui/core";
 
-const FooterStartGame = ({ handleStartGame, teamsLength }) => {
+const FooterStartGame = ({ handleStartGame, teamsLength, currentQuestionIndex }) => {
   const classes = useStyles();
   
   return (
@@ -11,7 +11,7 @@ const FooterStartGame = ({ handleStartGame, teamsLength }) => {
       <Button
          disabled = {teamsLength <= 0 ? true: false} 
         className={classes.startGameButton} onClick={() => handleStartGame()}>
-        Start Game
+        {currentQuestionIndex === null ? "Start Game" : "Next Question"}
       </Button>
       </div>
     </BottomNavigation>

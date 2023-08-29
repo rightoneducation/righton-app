@@ -63,7 +63,7 @@ export default function StudentViews({
   // determines next state for use by footer
   const nextStateFunc = currentState => {
     if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
-      return GameSessionState.CHOOSE_CORRECT_ANSWER;
+      return GameSessionState.TEAMS_JOINING;
     } else {
       let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
       return GameSessionState[Object.keys(GameSessionState)[currentIndex+1]];
