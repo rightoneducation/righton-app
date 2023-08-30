@@ -8,7 +8,8 @@ export default function ResponsesGraph ({
   const classes = useStyles();
 
   return (
-    <Paper className={classes.container}>
+    // <Paper className={classes.container}>
+    <>
       <div className={classes.titleContainer}>
         <Typography className={classes.title}>
           Confidence
@@ -21,22 +22,24 @@ export default function ResponsesGraph ({
         </Typography>
  
       </div>
-    </Paper>
+    </>
+    // </Paper>
   );
 };
 
 const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: '24px',
-    padding: `16px`,
-    backgroundColor: '#1D448A',
-    width: "311px", // hardcoded to match GameCard width
-    gap: '16px',
-    boxSizing: 'border-box'
-  },
+  // container: {
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  //   borderRadius: '24px',
+  //   padding: `16px`,
+  //   backgroundColor: '#1D448A',
+  //   width: "311px", // hardcoded to match GameCard width
+  //   gap: '16px',
+  //   boxSizing: 'border-box',
+  //   elevation: 0
+  // },
   title: {
     color: "#FFF",
     fontFamily: "Poppins",

@@ -4,10 +4,11 @@ import HostHeader from "../components/HostHeader";
 import GameCard from "../components/GameCard";
 import CurrentStudents from "../components/CurrentStudents";
 import FooterStartGame from "../components/FooterStartGame";
-import EnableConfidenceCard from "../components/EnableConfidenceCard";
+import QuestionSettingsCard from "../components/QuestionSettingsCard";
 
 export default function StartGame({
   teams = [],
+  currentQuestionIndex,
   questions,
   title = "",
   gameSessionId,
@@ -18,22 +19,30 @@ export default function StartGame({
   handleConfidenceSwitchChange
 }) {
   const classes = useStyles();
-
+  console.log(currentState);
+  console.log(currentQuestionIndex);
   return (
     <div className={classes.background}>
       <div className={classes.upperContainer}>
-        <HostHeader gameCode={gameCode} currentState={currentState} />
+        <HostHeader gameCode={gameCode} currentState={currentState} currentQuestionIndex={currentQuestionIndex}/>
         <GameCard questions={questions} title={title} />
-        <EnableConfidenceCard 
+        <QuestionSettingsCard
+         currentQuestionIndex={currentQuestionIndex}
          isConfidenceEnabled={isConfidenceEnabled} 
          handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+         questions={questions}
         />
-        <div className={classes.gameMode}>Basic Mode</div>
-        <CurrentStudents teams={teams} />
+        { currentQuestionIndex === null ? 
+          <>
+            <div className={classes.gameMode}>Basic Mode</div>
+            <CurrentStudents teams={teams} />
+          </>
+        : null }
       </div>
       <FooterStartGame
         teamsLength={(teams ? teams.length : 0)}
         gameSessionId={gameSessionId}
+        currentQuestionIndex={currentQuestionIndex}
         currentState={currentState}
         handleStartGame={handleStartGame}
       />
