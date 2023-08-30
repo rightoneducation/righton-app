@@ -190,7 +190,7 @@ const GameSessionContainer = () => {
           });
       }
 
-      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: gameSession?.currentQuestionIndex };
+      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: gameSession.currentQuestionIndex ? gameSession.currentQuestionIndex : 0};
       apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
         .then(response => {
           localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
