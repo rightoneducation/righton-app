@@ -23,8 +23,12 @@ export default function GameInProgress({
   gameTimerZero,
   isLoadModalOpen,
   setIsLoadModalOpen,
-  showFooterButtonOnly
+  showFooterButtonOnly,
+  isConfidenceEnabled,
+  handleConfidenceSwitchChange,
+  handleBeginQuestion
 }) {
+
   const classes = useStyles();
   // refs for scrolling of components via module navigator
   const questionCardRef = React.useRef(null);
@@ -34,6 +38,7 @@ export default function GameInProgress({
   const playerThinkingRef = React.useRef(null);
   const popularMistakesRef = React.useRef(null);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
+    1: "Begin Question",
     2: "Continue",
     3: "Go to Results",
     4: "Go to Phase 2",
@@ -51,6 +56,7 @@ export default function GameInProgress({
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices, questions, currentState);
   const noResponseLabel = '–';
+
   // data object used in Victory graph for real-time responses
   const data =[
     { answerChoice: noResponseLabel, answerCount: numPlayers - totalAnswers, answerText: 'No response' },
@@ -87,6 +93,8 @@ export default function GameInProgress({
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
+    if (currentState === GameSessionState.TEAMS_JOINING)
+      handleBeginQuestion();
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS) { // if teacher is ending early, pop modal
       if (totalAnswers < numPlayers && gameTimerZero === false)
@@ -114,7 +122,11 @@ export default function GameInProgress({
   const [selectedNavValue, setSelectedNavValue] = useState(0);
   const selectedDictionary = {
     0: questionCardRef,
-    1: gameAnswersRef
+    1: responsesRef,
+    2: gameAnswersRef,
+    3: confidenceRef,
+    4: playerThinkingRef,
+    5: popularMistakesRef
   }
   const handleSelectedNavChange = (event) => {
     setTimeout(() => {
@@ -130,7 +142,7 @@ export default function GameInProgress({
   };
 
   const handleNavDownClick = () => {
-    const newValue = selectedNavValue < 1 ? selectedNavValue + 1 : 1;
+    const newValue = selectedNavValue < 1 ? selectedNavValue + 1 : 2;
     selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
     setSelectedNavValue(newValue);
   };
@@ -155,7 +167,7 @@ export default function GameInProgress({
         <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
-          currentQuestion={currentQuestionIndex}
+          currentQuestionIndex={currentQuestionIndex}
           statePosition={statePosition}
           headerGameCurrentTime={headerGameCurrentTime}
           totalRoundTime={(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime)}
@@ -178,6 +190,9 @@ export default function GameInProgress({
             graphClickInfo={graphClickInfo}
             setGraphClickInfo={setGraphClickInfo}
             correctChoiceIndex={correctChoiceIndex}
+            currentState={currentState}
+            isConfidenceEnabled={isConfidenceEnabled}
+            handleConfidenceSwitchChange={handleConfidenceSwitchChange}
           />
         </div>      
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
@@ -260,7 +275,6 @@ const useStyles = makeStyles(theme => ({
     width: '100vw',
     border: 'none',
     overflowY: 'auto',
-    maxWidth: '500px',
     touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
     '&::-webkit-scrollbar': {
       // Chrome and Safari
@@ -268,5 +282,7 @@ const useStyles = makeStyles(theme => ({
     },
     scrollbarWidth: 'none', // Firefox
     '-ms-overflow-style': 'none', // IE and Edge
+    padding: '24px',
+    boxSizing: 'border-box'
   },
 }));

@@ -18,7 +18,7 @@ export default function StudentViews({
   handleUpdateGameSession,
   showFooterButtonOnly
 }) {
-  
+
   let statePosition;
   let isLastQuestion = ((currentQuestionIndex+1) === (questions ? questions.length : 0));
 
@@ -88,7 +88,7 @@ export default function StudentViews({
           <HeaderGame
             totalQuestions={questions ? questions.length : 0}
             currentState={currentState}
-            currentQuestion={currentQuestionIndex}
+            currentQuestionIndex={currentQuestionIndex}
             phaseOneTime={phaseOneTime}
             phaseTwoTime={phaseTwoTime}
             statePosition = {statePosition = Object.keys(GameSessionState).indexOf(currentState)}
