@@ -1,5 +1,7 @@
 import React from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
+import { ModelHelper } from '@righton/networking';
+
 const useStyles = makeStyles({
     titleText: {
         color: '#FFF',
@@ -74,7 +76,7 @@ const useStyles = makeStyles({
     }
 });
 const PlayersSelectedAnswer = (props) => {
-    const { data, selectedBarIndex, numPlayers, teamsPickedChoices, statePosition } = props;
+    const { questions, teams, data, selectedBarIndex, numPlayers, teamsPickedChoices, statePosition } = props;
 
     const classes = useStyles(props);
 
@@ -101,7 +103,11 @@ const PlayersSelectedAnswer = (props) => {
         teamChoices.choiceText === selectedBarAnswerText
     );
     
-    console.log(statePosition);
+    const percentageFromPhaseOne = ModelHelper.calculateBasicModeWrongAnswerScore(teams, selectedBarAnswerText, questions[0].id);
+    const countOfPlayers = (percentageFromPhaseOne / 100) * numPlayers;
+
+    teamsWithSelectedAnswer.sort((a, b) => a.teamName.localeCompare(b.teamName));
+
     return (
         <div>
             <div className={classes.textContainer}>
@@ -110,12 +116,12 @@ const PlayersSelectedAnswer = (props) => {
                 </Typography>
                 <div className={classes.numberContainer}>
                     <Typography className={classes.countText}>
-                         {/* count from stateposition === 6 saved and displayed here for stateposition === 6 */}
-                        {answerCount}
+                        {(statePosition === 2 && answerCount)}
+                        {(statePosition === 6 && Math.round(countOfPlayers))}
                     </Typography>
                     <Typography className={classes.percentageText}>
-                        {/* percentage from  stateposition === 6saved and displayed here for stateposition === 6 */}
-                        ({Math.round(percentage)}%)
+                        {statePosition === 2 && `(${Math.round(percentage)}%)`}
+                        {statePosition === 6 && `(${percentageFromPhaseOne}%)`}
                     </Typography>
                 </div>
             </div>

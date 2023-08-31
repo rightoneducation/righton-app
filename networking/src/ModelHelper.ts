@@ -76,13 +76,13 @@ export abstract class ModelHelper {
         return trickAnswer ?? null
     }
 
-    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, answerText: string, questionId: number): number {
-        if (isNullOrUndefined(gameSession.teams)) {
+    static calculateBasicModeWrongAnswerScore(teams: ITeam[] | undefined, answerText: string, questionId: number): number {
+        if (isNullOrUndefined(teams)) {
             throw new Error("'teams' can't be null")
         }
 
         // Calculate how many teams have chosen the same answer as the passed team.
-        const totalNoChosenAnswer = gameSession.teams.reduce((previousVal: number, team: ITeam) => {
+        const totalNoChosenAnswer = teams.reduce((previousVal: number, team: ITeam) => {
             if (isNullOrUndefined(team.teamMembers) ||
                 team.teamMembers.length !== 1) {
                 console.error(`No team member available for ${team.name}`)
@@ -107,7 +107,7 @@ export abstract class ModelHelper {
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
         }, 0)
 
-        return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
+        return Math.round(totalNoChosenAnswer / teams.length * 100)
     }
 
     static calculateBasicModeScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam) {
@@ -128,7 +128,7 @@ export abstract class ModelHelper {
         let submittedTrickAnswer = answers.find(answer => answer?.isTrickAnswer && answer.questionId === currentQuestion.id)
 
         if (submittedTrickAnswer){
-          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession.teams, submittedTrickAnswer.text ?? '', currentQuestion.id)
         }
         else if (answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
           return this.correctAnswerScore

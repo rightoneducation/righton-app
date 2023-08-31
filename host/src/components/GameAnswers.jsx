@@ -3,9 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
 import Responses from "./Responses/Responses";
-import { isNullOrUndefined } from "@righton/networking";
+import { getTeamAnswer, isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswers({ teamsPickedChoices, questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
+export default function GameAnswers({ teams, teamsPickedChoices, questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
   const letterDictionary = {
     0:'A. ',
     1:'B. ',
@@ -42,6 +42,8 @@ export default function GameAnswers({ teamsPickedChoices, questions, questionCho
   return (
     <Grid className={classes.background}>
       <Responses
+          questions={questions}
+          teams={teams}
           studentResponses={data}
           numPlayers={numPlayers}
           totalAnswers={totalAnswers}

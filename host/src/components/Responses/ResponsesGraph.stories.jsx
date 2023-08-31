@@ -24,14 +24,14 @@ differentAnswers.args = {
   ],
   numPlayers: 55,
   totalAnswers: 45,
-  currentState: 'CHOOSE_CORRECT_ANSWER',
+  statePo: 'CHOOSE_CORRECT_ANSWER',
   questionChoices: [
     { isAnswer: false, text: 'A' },
     { isAnswer: true, text: 'B' },
     { isAnswer: false, text: 'C' },
     { isAnswer: false, text: 'D' },
   ],
-  statePosition: 1,
+  statePosition: 2,
   teamsPickedChoices: [
     { teamName: 'Alex Williams', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
     { teamName: 'Alessandro DeLuca-Smith', choiceText: '4x^4 − x^3 + 7x^2 − 6x' },
@@ -171,16 +171,16 @@ noAnswer.args = {
   ],
   statePosition: 6,
   teamsPickedChoices: [
-    { teamName: 'Alex Williams', choiceText: 'No response' },
-    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'No response' },
-    { teamName: 'Jackson Cameron', choiceText: 'No response' },
-    { teamName: 'Jeremiah Tanaka', choiceText: 'No response' },
-    { teamName: 'Kyle Bradshaw', choiceText: 'No response' },
     { teamName: 'Shana Quintero', choiceText: 'No response' },
     { teamName: 'Vanessa Martinez', choiceText: 'No response' },
     { teamName: 'Vanessa Montenegro-Rodriguez', choiceText: 'No response' },
     { teamName: 'Xiomara Jimenez', choiceText: 'No response' },
     { teamName: 'Zander Lee', choiceText: 'No response' },
+    { teamName: 'Alex Williams', choiceText: 'No response' },
+    { teamName: 'Alessandro DeLuca-Smith', choiceText: 'No response' },
+    { teamName: 'Jackson Cameron', choiceText: 'No response' },
+    { teamName: 'Jeremiah Tanaka', choiceText: 'No response' },
+    { teamName: 'Kyle Bradshaw', choiceText: 'No response' },
   ]
 };
 

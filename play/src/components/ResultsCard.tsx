@@ -52,7 +52,7 @@ export default function CardResults({
                 currentState === GameSessionState.PHASE_1_RESULTS
                   ? ''
                   : `${ModelHelper.calculateBasicModeWrongAnswerScore(
-                      gameSession,
+                      gameSession.teams,
                       answer.text,
                       currentQuestionId
                     )}%`

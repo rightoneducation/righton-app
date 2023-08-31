@@ -7,7 +7,7 @@ import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import { isNullOrUndefined, GameSessionState } from "@righton/networking";
+import { isNullOrUndefined, GameSessionState, getGameSession } from "@righton/networking";
 
 
 export default function GameInProgress({
@@ -197,9 +197,6 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
     }
     return footerButtonTextDictionary[statePosition];
   };
-
-
-  
   
   return (
     <div className={classes.background}>
@@ -208,7 +205,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
         style={{
           backgroundImage: `url(${CheckMark})`,
           backgroundRepeat: "no-repeat",
-          backgroundPositionX: "10px",
+          backgroundPositionX: "10px",       
           backgroundPositionY: "-300px"
         }}
       >
@@ -225,6 +222,7 @@ const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices) => {
         
         <GameAnswers
           questions={questions}
+          teams={teams}
           questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)}
           currentQuestionIndex={currentQuestionIndex}
           answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)}

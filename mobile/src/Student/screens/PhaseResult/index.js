@@ -51,7 +51,7 @@ const PhaseResult = ({ gameSession, team, teamAvatar, setTeamInfo, isRejoin }) =
             text={`${alphabets[index]}. ${item.text}`}
             mode={(phaseNo === 1) ? getPhase1AnswerMode(item.text) : getPhase2AnswerMode(item.text)}
             isUserChoice={item.text === selectedAnswer?.text}
-            percentage={(phaseNo === 1) ? "" : `${ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, item.text, currentQuestion.id)}%`}
+            percentage={(phaseNo === 1) ? "" : `${ModelHelper.calculateBasicModeWrongAnswerScore(gameSession.teams, item.text, currentQuestion.id)}%`}
           />
         }
 

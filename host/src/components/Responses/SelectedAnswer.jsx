@@ -39,6 +39,8 @@ const useStyles = makeStyles({
 
 const SelectedAnswer = (props) => {
     const {
+        questions,
+        teams,
         data,
         selectedBarIndex,
         correctChoiceIndex,
@@ -101,6 +103,8 @@ const SelectedAnswer = (props) => {
                         )}
                     </div>
                     <PlayersSelectedAnswer
+                        questions={questions}
+                        teams={teams}
                         data={data}
                         selectedBarIndex={selectedBarIndex}
                         numPlayers={numPlayers}

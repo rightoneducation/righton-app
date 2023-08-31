@@ -52,7 +52,7 @@ describe("Testing ModelHelper", () => {
         const question = gameSession.questions[0]
 
         question.choices!.forEach((choice) => {
-            const score = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, choice.text, question.id)
+            const score = ModelHelper.calculateBasicModeWrongAnswerScore(gameSession.teams, choice.text, question.id)
             expect(score).toEqual(25)
         })
     })
