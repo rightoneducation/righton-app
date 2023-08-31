@@ -25,7 +25,7 @@ export default function GameLoadModal({ handleStartGameModalTimerFinished, modal
               justifyContent: "center",
               alignItems: "center",
               border: '0',
-              background: 'linear-gradient(#483a82 0%, #7962c4 30%,  #483a82 100%)',
+              background: "linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)"
              }
             }}
             appElement={document.getElementById('root') || undefined}
