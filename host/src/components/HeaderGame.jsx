@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import Pagination from "./Pagination";
+import { Pagination } from "@material-ui/lab";
 import Timer from "./Timer";
 
 const useStyles = makeStyles(() => ({
@@ -50,7 +50,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const label = {
-    1 : "Preparing Question",
     2 : "Phase 1 of 2 - Choose Correct Answer",
     3 : "Phase 1 of 2 - Answer Explanation",
     4 : "Phase 1 of 2 - Results",
@@ -63,30 +62,33 @@ const label = {
 
 export default function HeaderGame({
   totalQuestions,
-  currentQuestionIndex,
+  currentQuestion,
   statePosition,
   headerGameCurrentTime,
   totalRoundTime,
   gameTimer
 }) {
   const classes = useStyles();
-  console.log(gameTimer);
+
   return (
     <div className={classes.div}>
       <Pagination
-        totalQuestions={totalQuestions}
-        currentQuestionIndex={currentQuestionIndex}
-        statePosition={statePosition}
+        hideNextButton
+        hidePrevButton
+        variant="outlined"
+        shape="rounded"
+        classes={{ ul: classes.ul }}
+        count={totalQuestions}
+        page={currentQuestion+1}
       /> 
       <Typography className={classes.title}>
-        Question {currentQuestionIndex+1} of {totalQuestions}
+        Question {currentQuestion+1} of {totalQuestions}
       </Typography>
       <Typography className={classes.phases}>
         {label[statePosition]} 
       </Typography>
-      <div style={{opacity: gameTimer? '1' : '0.4'}}>
-       <Timer headerGameCurrentTime={gameTimer ? headerGameCurrentTime: 0} totalRoundTime={totalRoundTime} />
-      </div>
+      {gameTimer && <Timer headerGameCurrentTime={headerGameCurrentTime} totalRoundTime={totalRoundTime} />} 
+     
     </div>
   );
 }

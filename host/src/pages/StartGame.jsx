@@ -15,13 +15,23 @@ export default function StartGame({
   gameCode,
   currentState,
   handleStartGame,
+  isConfidenceEnabled,
+  handleConfidenceSwitchChange
 }) {
   const classes = useStyles();
+  console.log(currentState);
+  console.log(currentQuestionIndex);
   return (
     <div className={classes.background}>
       <div className={classes.upperContainer}>
         <HostHeader gameCode={gameCode} currentState={currentState} currentQuestionIndex={currentQuestionIndex}/>
         <GameCard questions={questions} title={title} />
+        <QuestionSettingsCard
+         currentQuestionIndex={currentQuestionIndex}
+         isConfidenceEnabled={isConfidenceEnabled} 
+         handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+         questions={questions}
+        />
         { currentQuestionIndex === null ? 
           <>
             <div className={classes.gameMode}>Basic Mode</div>

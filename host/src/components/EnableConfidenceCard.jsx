@@ -1,14 +1,15 @@
 import React from 'react';
-import { Typography, makeStyles, Switch, Box } from '@material-ui/core';
+import { Typography, makeStyles, Switch, Paper } from '@material-ui/core';
 
-export default function EnableConfidenceCard ({ 
+export default function ResponsesGraph ({ 
   isConfidenceEnabled,
   handleConfidenceSwitchChange
 }) {
   const classes = useStyles();
 
   return (
-    <Box className={classes.container}>
+    // <Paper className={classes.container}>
+    <>
       <div className={classes.titleContainer}>
         <Typography className={classes.title}>
           Confidence
@@ -19,24 +20,26 @@ export default function EnableConfidenceCard ({
         <Typography className={classes.text}>
           You may allow players to indicate how sure they are of their answer.
         </Typography>
+ 
       </div>
-   </Box>
+    </>
+    // </Paper>
   );
 };
 
 const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: '24px',
-    //padding: `16px`,
-    backgroundColor: 'rgba(0,0,0,0)', // this will be converted to Paper with background color for host 2.0
-    width: "100%", // hardcoded to match GameCard width
-    gap: '16px',
-    boxSizing: 'border-box',
-    elevation: 0
-  },
+  // container: {
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  //   borderRadius: '24px',
+  //   padding: `16px`,
+  //   backgroundColor: '#1D448A',
+  //   width: "311px", // hardcoded to match GameCard width
+  //   gap: '16px',
+  //   boxSizing: 'border-box',
+  //   elevation: 0
+  // },
   title: {
     color: "#FFF",
     fontFamily: "Poppins",
