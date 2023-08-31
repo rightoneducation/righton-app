@@ -1,9 +1,11 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box } from '@material-ui/core';
+import { GameSessionState } from "@righton/networking";
 import QuestionCard from "../components/QuestionCard";
 import Responses from "../components/Responses/Responses";
 import GameAnswers from "../components/GameAnswers";
 import SelectedAnswer from "../components/Responses/SelectedAnswer";
+import EnableConfidenceCard from "../components/EnableConfidenceCard";
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
@@ -14,16 +16,16 @@ export default function GameInProgressContentSwitch ({
     numPlayers, 
     statePosition, 
     teamsPickedChoices, 
-    data, 
     questionCardRef, 
-    responsesRef, 
     gameAnswersRef,
-    graphClickInfo,
-    setGraphClickInfo,
-    correctChoiceIndex
+    correctChoiceIndex,
+    currentState,
+    isConfidenceEnabled,
+    handleConfidenceSwitchChange,
   }) {
   const classes = useStyles();
-  return (
+
+  const gameplayComponents = [
     <>
       {graphClickInfo.graph === null ? (
         <>
@@ -78,7 +80,22 @@ export default function GameInProgressContentSwitch ({
         </div>
       )}
     </>
-  );
+  ];
+
+  const questionCofigurationComponents = [
+    <Box className={classes.configContainer}>
+      <div id="questioncard-scrollbox" ref={questionCardRef}>
+        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
+      </div>
+      <EnableConfidenceCard 
+        isConfidenceEnabled={isConfidenceEnabled} 
+        handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+      />
+      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
+    </Box>
+  ];
+
+  return currentState !== GameSessionState.TEAMS_JOINING ? gameplayComponents : questionCofigurationComponents;
 };
 
 const useStyles = makeStyles({
@@ -89,4 +106,10 @@ const useStyles = makeStyles({
     width: '100%',
     maxWidth: "500px",
   },
+  configContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: '24px'
+  }
 });
