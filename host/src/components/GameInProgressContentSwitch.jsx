@@ -9,7 +9,11 @@ import EnableConfidenceCard from "../components/EnableConfidenceCard";
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
-    questionChoices, 
+    questionChoices,
+    data,
+    graphClickInfo,
+    responsesRef,
+    setGraphClickInfo, 
     currentQuestionIndex, 
     answersByQuestion, 
     totalAnswers, 
