@@ -5,20 +5,29 @@ import DownArrowIcon from '../images/DownArrowIcon.svg'
 import LeftArrowIcon from '../images/LeftArrowIcon.svg'
 
 export default function ModuleNavigator({
-  selectedNavValue, 
-  handleNavUpClick, 
-  handleNavDownClick, 
-  handleSelectedNavChange, 
   graphClickInfo, 
-  setGraphClickInfo
+  setGraphClickInfo,
+  navDictionary
 }) {
   const classes = useStyles();
-  // TODO: make this an enum when we upgrade host to typescript
-  const selectedDictionary = {
-    0: 'Question Card',
-    1: 'Real-time Responses',
-    2: 'Answer Explanations',
-  }
+  const [selectedNavValue, setSelectedNavValue] = useState(0);
+  const handleSelectedNavChange = (event) => {
+    setTimeout(() => {
+      navDictionary[event.target.value].ref.current.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
+    setSelectedNavValue(event.target.value);
+  };
+  const handleNavUpClick = () => {
+    const newValue = selectedNavValue > 0 ? selectedNavValue - 1 : 0;
+    navDictionary[newValue].ref.current.scrollIntoView({ behavior: 'smooth' });
+    setSelectedNavValue(newValue);
+  };
+  const handleNavDownClick = () => {
+    const newValue = selectedNavValue < navDictionary.length-1 ? selectedNavValue + 1 : navDictionary.length-1;
+    navDictionary[newValue].ref.current.scrollIntoView({ behavior: 'smooth' });
+    setSelectedNavValue(newValue);
+  };
+
   return (
     <div className={classes.container}>
       { graphClickInfo && graphClickInfo.graph === null ? 
@@ -43,12 +52,13 @@ export default function ModuleNavigator({
             getContentAnchorEl: null 
           }}
           renderValue={(value) => {
-            return <span className={classes.selectedItem}>{selectedDictionary[selectedNavValue]}</span>;
+            return <span className={classes.selectedItem}>{navDictionary[selectedNavValue].text}</span>;
           }}
         >
-          <MenuItem value={0} className={classes.menuItem}>Question Card</MenuItem>
-          <MenuItem value={1} className={classes.menuItem}>Real-time Responses</MenuItem>
-          <MenuItem value={2} className={classes.menuItem}>Answer Explanations</MenuItem>
+          { navDictionary.map((item, index) => {
+            return <MenuItem value={index} className={classes.menuItem}>{item.text}</MenuItem>
+            })
+          }
         </Select>
         <Box className={classes.buttonContainer}>
           <Button className={classes.button} startIcon={<img src={UpArrowIcon}></img>} onClick={handleNavUpClick}/>
