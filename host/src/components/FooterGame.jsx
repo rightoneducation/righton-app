@@ -12,13 +12,10 @@ export default function FooterGame({
   gameTimer, 
   footerButtonText, 
   handleFooterOnClick, 
-  selectedNavValue, 
-  handleNavUpClick, 
-  handleNavDownClick, 
-  handleSelectedNavChange, 
   graphClickInfo, 
   setGraphClickInfo,
-  showFooterButtonOnly
+  showFooterButtonOnly,
+  navDictionary
 }) {
  const classes = useStyles();
    return (
@@ -38,12 +35,9 @@ export default function FooterGame({
               <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers}/>
             </div>
             <ModuleNavigator 
-              selectedNavValue={selectedNavValue} 
-              handleNavUpClick={handleNavUpClick} 
-              handleNavDownClick={handleNavDownClick} 
-              handleSelectedNavChange={handleSelectedNavChange}
               graphClickInfo={graphClickInfo}
-              setGraphClickInfo={setGraphClickInfo} 
+              setGraphClickInfo={setGraphClickInfo}
+              navDictionary={navDictionary}
             />
           </>
         }

@@ -16,6 +16,7 @@ export default function GameInProgressContentSwitch ({
     teamsPickedChoices, 
     questionCardRef, 
     gameAnswersRef,
+    confidenceCardRef,
     correctChoiceIndex,
     currentState,
     isConfidenceEnabled,
@@ -47,10 +48,12 @@ export default function GameInProgressContentSwitch ({
       <div id="questioncard-scrollbox" ref={questionCardRef}>
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
       </div>
-      <EnableConfidenceCard 
-        isConfidenceEnabled={isConfidenceEnabled} 
-        handleConfidenceSwitchChange={handleConfidenceSwitchChange}
-      />
+      <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
+        <EnableConfidenceCard 
+          isConfidenceEnabled={isConfidenceEnabled} 
+          handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+        />
+      </div>
       <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
     </Box>
   ];

@@ -118,34 +118,15 @@ export default function GameInProgress({
     return footerButtonTextDictionary[statePosition];
   };
 
-  // module navigator variables and event handlers
-  const [selectedNavValue, setSelectedNavValue] = useState(0);
-  const selectedDictionary = {
-    0: questionCardRef,
-    1: responsesRef,
-    2: gameAnswersRef,
-    3: confidenceRef,
-    4: playerThinkingRef,
-    5: popularMistakesRef
-  }
-  const handleSelectedNavChange = (event) => {
-    setTimeout(() => {
-      selectedDictionary[event.target.value].current.scrollIntoView({ behavior: 'smooth' });
-    }, 0);
-    setSelectedNavValue(event.target.value);
-  };
-
-  const handleNavUpClick = () => {
-    const newValue = selectedNavValue > 0 ? selectedNavValue - 1 : 0;
-    selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
-    setSelectedNavValue(newValue);
-  };
-
-  const handleNavDownClick = () => {
-    const newValue = selectedNavValue < 1 ? selectedNavValue + 1 : 2;
-    selectedDictionary[newValue].current.scrollIntoView({ behavior: 'smooth' });
-    setSelectedNavValue(newValue);
-  };
+  // module navigator dictionaries for different game states
+  const questionConfigNavDictionary = [
+    { ref: questionCardRef, text: 'Question Card' },
+    { ref: confidenceRef, text: 'Confidence Settings' },
+  ]
+  const gameplayNavDictionary = [
+    { ref: questionCardRef, text: 'Question Card' },
+    { ref: gameAnswersRef, text: 'Answer Explanations' },
+ ];
 
   return (
     <div className={classes.background}>
@@ -187,6 +168,7 @@ export default function GameInProgress({
             questionCardRef={questionCardRef}
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
+            confidenceCardRef={confidenceRef}
             graphClickInfo={graphClickInfo}
             setGraphClickInfo={setGraphClickInfo}
             correctChoiceIndex={correctChoiceIndex}
@@ -204,13 +186,10 @@ export default function GameInProgress({
         gameTimer={gameTimer} //flag GameInProgress vs StudentView
         footerButtonText={getFooterText(teams ? teams.length : 0, totalAnswers, statePosition)} // provides index of current state for use in footer dictionary
         handleFooterOnClick={handleFooterOnClick} //handler for button
-        selectedNavValue={selectedNavValue}
-        handleNavUpClick={handleNavUpClick}
-        handleNavDownClick={handleNavDownClick}
-        handleSelectedNavChange={handleSelectedNavChange}
         graphClickInfo={graphClickInfo}
         setGraphClickInfo={setGraphClickInfo}
         showFooterButtonOnly={showFooterButtonOnly}
+        navDictionary={statePosition < 2 ? questionConfigNavDictionary : gameplayNavDictionary}
       />
        </div>
     </div>
