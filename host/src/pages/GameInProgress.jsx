@@ -122,11 +122,11 @@ export default function GameInProgress({
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
     { ref: confidenceRef, text: 'Confidence Settings' },
-  ]
+  ];
   const gameplayNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
     { ref: gameAnswersRef, text: 'Answer Explanations' },
- ];
+  ];
 
   return (
     <div className={classes.background}>
