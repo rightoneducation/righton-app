@@ -49,7 +49,7 @@ export default function GameInProgress({
     9: "Proceed to RightOn Central"
   };
   const numPlayers = teams ? teams.length : 0;
-  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const questionChoices = getQuestionChoices(questions, currentQuestionIndex ? currentQuestionIndex : 0);
   const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState);
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const totalAnswers = getTotalAnswers(answersByQuestion);

@@ -84,7 +84,7 @@ export default function StudentViews({
 
   return (
     <div className={classes.background}>      
-        <div style={{height: "100%", width: "100%", display: "flex", minHeight: "100vh", flexDirection: "column", justifyContent: "space-between"}}>
+        <div style={{height: "100%", width: "100%", display: "flex", minHeight: "100vh", flexDirection: "column", justifyContent: "space-between", alignItems: 'center'}}>
           <HeaderGame
             totalQuestions={questions ? questions.length : 0}
             currentState={currentState}
@@ -115,9 +115,13 @@ export default function StudentViews({
 
 const useStyles = makeStyles(theme => ({
   background: {
+    position: 'fixed',
     height: "100%",
     width: "100%",
     minHeight: "100vh",
+    flexDirection: "column",
+    alignItems: 'center',
+    justifyContent: "center",
     background: `url(${CheckMark}) no-repeat 10px -300px, linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)`
   },
   number: {
