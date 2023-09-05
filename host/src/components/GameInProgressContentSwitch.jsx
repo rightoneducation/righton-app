@@ -117,6 +117,7 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    gap: '24px'
+    gap: '24px',
+    width: '100%',
   }
 });

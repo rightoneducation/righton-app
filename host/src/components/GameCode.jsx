@@ -2,18 +2,12 @@ import React from "react";
 import { makeStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 
-const GameCode = ({ gameCode, currentQuestionIndex }) => {
+const GameCode = ({ gameCode }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.gameCodeCard}>
-      { currentQuestionIndex === null ? 
-      <>
         <p className={classes.p}>Game Code: </p>
         <Grid className={classes.gameCodeText}>{gameCode}</Grid>
-      </>
-      : 
-       <p className={classes.p}>Game In Progress </p>
-      }
     </Grid>
   );
 };

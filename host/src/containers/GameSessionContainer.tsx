@@ -30,6 +30,7 @@ const GameSessionContainer = () => {
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then(response => {
       setGameSession(response); // set initial gameSession state
+      gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
       checkGameTimer(response); // checks if the timer needs to start
 
       // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
@@ -50,7 +51,6 @@ const GameSessionContainer = () => {
       if (gameSession && gameSession.currentState !== response.currentState) {
         checkGameTimer(response);
       }
-
       setGameSession({ ...gameSession, ...response });
     });
 
@@ -145,12 +145,21 @@ const GameSessionContainer = () => {
   // handles confidence switch changes on Question Config
   const handleConfidenceSwitchChange = (event) => {
     setIsConfidenceEnabled(event.target.checked);
+    const gameSessionId = gameSession?.id;
+    const questionId = gameSession.questions[gameSession.currentQuestionIndex].id;
+    const order = gameSession.questions[gameSession.currentQuestionIndex].order;
+
+    apiClient.updateQuestion({ id: questionId, gameSessionId: gameSessionId, order: order, isConfidenceEnabled: event.target.checked })
+      .then(response => {
+        apiClient.getGameSession(response.gameSessionId).then(response => {
+          setGameSession(response);
+        });
+      });
   };
 
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
-
         if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
           setHeaderGameCurrentTime(response.phaseOneTime);
         }
@@ -159,8 +168,6 @@ const GameSessionContainer = () => {
 
         setGameSession(response);
         checkGameTimer(response);
-
-
       });
   };
 
@@ -173,9 +180,8 @@ const GameSessionContainer = () => {
     }
     setGameTimerZero(false);
   };
-
   const handleStartGame = () => {
-    setGameSession((prev) =>  ({...prev, currentQuestionIndex: 0}));
+    handleUpdateGameSession({ currentQuestionIndex : 0});
     setIsGameStarted(true);
   };
 
@@ -221,7 +227,7 @@ const GameSessionContainer = () => {
       return ( !isGameStarted ?
           <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />
         : 
-          <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} handleBeginQuestion={handleBeginQuestion}/>
+          <GameInProgress {...gameSession} currentQuestionIndex={0} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} handleBeginQuestion={handleBeginQuestion}/>
       );
     }
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

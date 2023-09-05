@@ -28,7 +28,6 @@ export default function GameInProgress({
   handleConfidenceSwitchChange,
   handleBeginQuestion
 }) {
-
   const classes = useStyles();
   // refs for scrolling of components via module navigator
   const questionCardRef = React.useRef(null);
@@ -49,7 +48,7 @@ export default function GameInProgress({
     9: "Proceed to RightOn Central"
   };
   const numPlayers = teams ? teams.length : 0;
-  const questionChoices = getQuestionChoices(questions, currentQuestionIndex ? currentQuestionIndex : 0);
+  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState);
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const totalAnswers = getTotalAnswers(answersByQuestion);
