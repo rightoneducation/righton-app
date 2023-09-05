@@ -22,7 +22,6 @@ const GameSessionContainer = () => {
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
-  const [isGameStarted, setIsGameStarted] = useState(false);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
@@ -182,7 +181,6 @@ const GameSessionContainer = () => {
   };
   const handleStartGame = () => {
     handleUpdateGameSession({ currentQuestionIndex : 0});
-    setIsGameStarted(true);
   };
 
   // TODO: ensure updatequestion occurs after the updateGameSession
@@ -197,7 +195,7 @@ const GameSessionContainer = () => {
           });
       }
 
-      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: gameSession.currentQuestionIndex};
+      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER };
       apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
         .then(response => {
           localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
@@ -224,10 +222,10 @@ const GameSessionContainer = () => {
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
     case GameSessionState.TEAMS_JOINING: {
-      return ( !isGameStarted ?
+      return ( gameSession.currentQuestionIndex === null ?
           <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />
         : 
-          <GameInProgress {...gameSession} currentQuestionIndex={0} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} handleBeginQuestion={handleBeginQuestion}/>
+          <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} handleBeginQuestion={handleBeginQuestion}/>
       );
     }
     case GameSessionState.CHOOSE_CORRECT_ANSWER:

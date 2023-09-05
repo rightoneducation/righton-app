@@ -11,7 +11,7 @@ const FooterStartGame = ({ handleStartGame, teamsLength, currentQuestionIndex })
       <Button
          disabled = {teamsLength <= 0 ? true: false} 
         className={classes.startGameButton} onClick={() => handleStartGame()}>
-        {currentQuestionIndex === null ? "Start Game" : "Next Question"}
+         Start Game
       </Button>
       </div>
     </BottomNavigation>

@@ -22,12 +22,8 @@ export default function StartGame({
       <div className={classes.upperContainer}>
         <HostHeader gameCode={gameCode} currentState={currentState} currentQuestionIndex={currentQuestionIndex}/>
         <GameCard questions={questions} title={title} />
-        { currentQuestionIndex === null ? 
-          <>
-            <div className={classes.gameMode}>Basic Mode</div>
-            <CurrentStudents teams={teams} />
-          </>
-        : null }
+        <div className={classes.gameMode}>Basic Mode</div>
+        <CurrentStudents teams={teams} />
       </div>
       <FooterStartGame
         teamsLength={(teams ? teams.length : 0)}
