@@ -154,6 +154,7 @@ const GameSessionContainer = () => {
           setGameSession(response);
         });
       });
+    
   };
 
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
@@ -232,7 +233,7 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false}/>;
+      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled}/>;
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:

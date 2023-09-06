@@ -3,9 +3,11 @@ import { makeStyles, Box } from '@material-ui/core';
 import { GameSessionState } from "@righton/networking";
 import QuestionCard from "../components/QuestionCard";
 import Responses from "../components/Responses/Responses";
+import ConfidenceResponseCard from "./ConfidenceResponseCard";
 import GameAnswers from "../components/GameAnswers";
 import SelectedAnswer from "../components/Responses/SelectedAnswer";
 import EnableConfidenceCard from "../components/EnableConfidenceCard";
+import { getQuestionChoices, getAnswersByQuestion, getConfidencesByQuestion } from "../lib/HelperFunctions";
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
@@ -27,6 +29,7 @@ export default function GameInProgressContentSwitch ({
     currentState,
     isConfidenceEnabled,
     handleConfidenceSwitchChange,
+    teamsArray
   }) {
   const classes = useStyles();
 
@@ -49,6 +52,15 @@ export default function GameInProgressContentSwitch ({
               setGraphClickInfo={setGraphClickInfo}
             />
           </div>
+          { isConfidenceEnabled ? 
+            <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
+               <ConfidenceResponseCard 
+                responses={getConfidencesByQuestion(teamsArray, questions[currentQuestionIndex])} 
+                orderedAnswers={getAnswersByQuestion(getQuestionChoices(questions, currentQuestionIndex), teamsArray, currentQuestionIndex)} 
+                currentState={currentState}
+               />
+            </div> : null
+          }
           <div id="gameanswers-scrollbox" ref={gameAnswersRef} className={classes.contentContainer}>
             <GameAnswers
               questions={questions}
