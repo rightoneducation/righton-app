@@ -277,6 +277,7 @@ export default function GameInProgress({
             currentState={currentState}
             selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
+            isConfidenceEnabled={currentQuestion.isConfidenceEnabled}
             handleSelectConfidence={handleSelectConfidence}
             isConfidenceSelected={selectConfidence.isSelected}
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}

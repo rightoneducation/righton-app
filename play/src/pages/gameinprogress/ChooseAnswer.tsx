@@ -24,6 +24,7 @@ interface ChooseAnswerProps {
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
+  isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
   handleSelectConfidence: (confidence: ConfidenceLevel) => void;
   isConfidenceSelected: boolean;
@@ -42,6 +43,7 @@ export default function ChooseAnswer({
   currentState,
   selectedAnswer,
   handleSelectAnswer,
+  isConfidenceEnabled,
   selectedConfidenceOption,
   handleSelectConfidence,
   isConfidenceSelected,
@@ -82,7 +84,7 @@ export default function ChooseAnswer({
   );
 
   const onSubmitDisplay =
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && isConfidenceEnabled ? (
       <Fade in={displaySubmitted} timeout={500}>
         <Box>
           <ConfidenceMeterCard
