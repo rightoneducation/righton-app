@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import FooterGame from "../components/FooterGame";
+import ConfidenceResponseCard from "../components/ConfidenceResponseCard";
 import HeaderGame from "../components/HeaderGame";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import { GameSessionState } from "@righton/networking";
+import { GameSessionState, isNullOrUndefined, ConfidenceLevel } from "@righton/networking";
 import GameInProgressContentSwitch from "../components/GameInProgressContentSwitch";
 import { getTotalAnswers, getQuestionChoices, getAnswersByQuestion, getTeamByQuestion } from "../lib/HelperFunctions";
 
@@ -90,6 +91,96 @@ export default function GameInProgress({
     setIsLoadModalOpen(false);
   };
 
+//***************** 
+  // finds all answers for current question using isChosen, for use in footer progress bar
+  const getTotalAnswers = (answerArray) => {
+    let count = 0;
+    if (answerArray) {
+      answerArray.forEach(answerCount => {
+        count = count + answerCount;
+      });
+      return count;
+    }
+    return count;
+  };
+
+  // returns the choices object for an individual question
+  const getQuestionChoices = (questions, currentQuestionIndex) => {
+    if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
+      return null;
+    }
+    return questions[currentQuestionIndex].choices;
+  };
+
+  // returns an array ordered to match the order of answer choices, containing the total number of each answer
+  const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => {
+    if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
+      let choicesTextArray = [choices.length];
+      let answersArray = new Array(choices.length).fill(0);
+      let currentQuestionId = questions[currentQuestionIndex].id;
+      choices && choices.forEach((choice, index) => {
+        choicesTextArray[index] = choice.text;
+      });
+
+      teamsArray.forEach(team => {
+        team.teamMembers && team.teamMembers.forEach(teamMember => {
+          teamMember.answers && teamMember.answers.forEach(answer => {
+            if (answer.questionId === currentQuestionId) {
+              if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
+                choices && choices.forEach(choice => {
+                  if (answer.text === choice.text) {
+                    answersArray[choicesTextArray.indexOf(choice.text)] += 1;
+                  }
+                })
+              }
+            }
+          })
+        })
+
+      });
+      return answersArray;
+    }
+    return [];
+  };
+
+  console.log(getAnswersByQuestion(getQuestionChoices(questions, currentQuestionIndex), teamsArray, currentQuestionIndex));
+  // returns a dictionary of confidence levels with corresponding player answer 
+  // data array (player name, answer letter, answer correctness)
+  // assigned to the confidence key they selected
+  const getResponsesByQuestion = (teamsArray, currentQuestion) => {
+    const currentQuestionId = currentQuestion.id;
+    const choices = currentQuestion.choices;
+    // was unsure if it is possible for teachers to create games with more than 
+    // 4 answer choices so added letters beyond D for precaution
+    const lettersIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    let confidenceResponses = {
+      [ConfidenceLevel.NOT_RATED]: new Array(),
+      [ConfidenceLevel.NOT_AT_ALL]: new Array(),
+      [ConfidenceLevel.KINDA]: new Array(),
+      [ConfidenceLevel.QUITE]: new Array(),
+      [ConfidenceLevel.VERY]: new Array(),
+      [ConfidenceLevel.TOTALLY]: new Array()
+    }
+
+    teamsArray.forEach(team => {
+      team.teamMembers && team.teamMembers.forEach(teamMember => {
+        teamMember.answers && teamMember.answers.forEach(answer => {
+          if (answer.questionId === currentQuestionId) {
+            if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+              const selectedChoice = choices.find(choice => choice.text === answer.text);
+              const isResponseCorrect = selectedChoice.isAnswer;
+              const responseLetter = lettersIndex[choices.indexOf(selectedChoice)];
+              const responseConfidence = answer.confidenceLevel;
+              const playerName = team.name;
+              confidenceResponses[responseConfidence].push({ name: playerName, answerChoice: responseLetter, correct: isResponseCorrect });
+            }
+          }
+        })
+      })
+    })
+    return confidenceResponses;
+  }
+  // ***//////
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     if (currentState === GameSessionState.TEAMS_JOINING)
