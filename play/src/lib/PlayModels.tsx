@@ -100,12 +100,14 @@ export enum TimerMode {
  * @enum ErrorType
  * @param {string} CONNECT - error connecting to game session
  * @param {string} ANSWER - error submitting answer
+ * @param {string} CONFIDENCE - error selecting confidence
  * @param {string} SCORE - error submitting score
  * @param {string} JOIN - error joining game
  */
 export enum ErrorType {
   CONNECT,
   ANSWER,
+  CONFIDENCE,
   SCORE,
   JOIN,
 }
