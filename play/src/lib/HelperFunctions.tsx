@@ -4,6 +4,7 @@ import {
   ITeam,
   GameSessionState,
   isNullOrUndefined,
+  ConfidenceLevel,
 } from '@righton/networking';
 import { InputPlaceholder, StorageKey } from './PlayModels';
 
@@ -83,6 +84,41 @@ export const checkForSubmittedAnswerOnRejoin = (
     }
   }
   return { selectedAnswerIndex, isSubmitted };
+};
+
+/**
+ * on rejoining game, this checks if the player has already selected a confidence level
+ * @param hasRejoined - if a player is rejoining
+ * @param currentAnswer - the player's answer to the current question
+ * @param currentState - the current state of the game session
+ * @returns - the index of the confidence the player has submitted, null if they haven't selected a confidence, boolean to track submission
+ */
+export const checkForSelectedConfidenceOnRejoin = (
+  hasRejoined: boolean,
+  currentAnswer: ITeamAnswer | null | undefined,
+  currentState: GameSessionState
+): {
+  selectedConfidenceOption: string;
+  isSelected: boolean;
+  timeOfLastSelect: number;
+} => {
+  let selectedConfidenceOption = ConfidenceLevel.NOT_RATED;
+  let isSelected = false;
+  // here, since we do not store time of last select in the backend (5 seconds would be negligible on refresh),
+  // we set the timeOfLastSelect to null to re-initialize the value instead of populating it with the previous value
+  const timeOfLastSelect = 0;
+  // adding dictionary to account for string casting for material UI components
+  if (
+    hasRejoined &&
+    (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+  ) {
+    if (!isNullOrUndefined(currentAnswer)) {
+      isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
+      selectedConfidenceOption = currentAnswer.confidenceLevel;
+    }
+  }
+  return { selectedConfidenceOption, isSelected, timeOfLastSelect };
 };
 
 /**
