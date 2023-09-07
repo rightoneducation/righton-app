@@ -17,11 +17,9 @@ const useStyles = makeStyles({
     textTransform: "none",
   },
   centerContent: {
-    display: "flex",
-    justifyContent: "center",
-    width: '95%',
-    margin: 'auto',
-    padding: "20px 40px",
+    maxWidth: "500px",
+    margin: "0 auto", 
+    width: "100%"
   },
 });
 
@@ -29,11 +27,9 @@ export default function Responses({ questions, teams, studentResponses, numPlaye
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.centerContent}>
-      <Grid container className={classes.titleContainer}>
+    <Grid className={classes.centerContent}>
         <Typography className={classes.titleStyle}>Real-time Responses</Typography>
         <ResponsesGraph questions={questions} teams={teams} studentResponses={studentResponses} numPlayers={numPlayers} totalAnswers={totalAnswers} questionChoices={questionChoices} statePosition={statePosition} teamsPickedChoices={teamsPickedChoices}/>
-      </Grid>
     </Grid>
   );
 }

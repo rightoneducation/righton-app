@@ -63,7 +63,7 @@ const useStyles = makeStyles({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingBottom: '8px'
+        paddingBottom: '8px',
     },
     numberContainer: {
         display: 'flex',
@@ -72,28 +72,22 @@ const useStyles = makeStyles({
     phaseTwoNumberContainer: {
         display: 'flex',
         alignItems: 'center',
-        marginTop:'-20px'
-    }
-});
-const PlayersSelectedAnswer = (props) => {
-    const { questions, teams, data, selectedBarIndex, numPlayers, teamsPickedChoices, statePosition } = props;
-
-    const classes = useStyles(props);
-
-    const rectWidth = 336;
-    const rectHeight = 24;
-
-    const rectangleStyle = {
-        width: rectWidth,
-        height: rectHeight,
+        marginTop: '-20px'
+    },
+    rectangleStyle: {
+        height: '24px',
         color: 'white',
         backgroundColor: '#063772',
         fontSize: '16px',
         padding: '10px 16px',
         borderRadius: '8px',
         marginBottom: '8px'
-    };
+    },
+});
+const PlayersSelectedAnswer = (props) => {
+    const { questions, teams, data, selectedBarIndex, numPlayers, teamsPickedChoices, statePosition } = props;
 
+    const classes = useStyles(props);
 
     const answerCount = data[selectedBarIndex].answerCount;
     const percentage = (answerCount / numPlayers) * 100;
@@ -102,33 +96,42 @@ const PlayersSelectedAnswer = (props) => {
     const teamsWithSelectedAnswer = teamsPickedChoices.filter(teamChoices =>
         teamChoices.choiceText === selectedBarAnswerText
     );
-    
+
     const percentageFromPhaseOne = ModelHelper.calculateBasicModeWrongAnswerScore(teams, selectedBarAnswerText, questions[0].id);
     const countOfPlayers = (percentageFromPhaseOne / 100) * numPlayers;
 
     teamsWithSelectedAnswer.sort((a, b) => a.teamName.localeCompare(b.teamName));
 
+    const isNoResponseBar = selectedBarAnswerText === 'No response';
+
+
     return (
         <div>
             <div className={classes.textContainer}>
                 <Typography className={classes.titleText}>
-                    Players who picked this answer
+                    {(isNoResponseBar ? 'Players who have not responded' : 'Players who picked this answer')}
                 </Typography>
                 <div className={classes.numberContainer}>
                     <Typography className={classes.countText}>
-                        {(statePosition === 2 && answerCount)}
-                        {(statePosition === 6 && Math.round(countOfPlayers))}
+                        {statePosition === 2 || (statePosition === 6 && isNoResponseBar)
+                            ? answerCount
+                            : statePosition === 6 && !isNoResponseBar
+                                ? Math.round(countOfPlayers)
+                                : null}
                     </Typography>
                     <Typography className={classes.percentageText}>
-                        {statePosition === 2 && `(${Math.round(percentage)}%)`}
-                        {statePosition === 6 && `(${percentageFromPhaseOne}%)`}
+                        {statePosition === 2 || (statePosition === 6 && isNoResponseBar)
+                            ? `(${Math.round(percentage)}%)`
+                            : statePosition === 6 && !isNoResponseBar
+                                ? `(${percentageFromPhaseOne}%)`
+                                : ''}
                     </Typography>
                 </div>
             </div>
-            {(statePosition === 6) && (
+            {(statePosition === 6 && selectedBarAnswerText !== 'No response') && (
                 <div className={classes.textContainer}>
                     <Typography className={classes.phaseTwoTitleText}>
-                        Players who think this is the trickest<br/> answer
+                        Players who think this is the trickest<br /> answer
                     </Typography>
                     <div className={classes.phaseTwoNumberContainer}>
                         <Typography className={classes.phaseTwoCountText}>
@@ -141,7 +144,7 @@ const PlayersSelectedAnswer = (props) => {
                 </div>
             )}
             {teamsWithSelectedAnswer.map((teamChoice, index) => (
-                <div key={index} style={rectangleStyle}>
+                <div key={index} className={classes.rectangleStyle}>
                     <Typography className={classes.nameText}>
                         {teamChoice.teamName}
                     </Typography>
