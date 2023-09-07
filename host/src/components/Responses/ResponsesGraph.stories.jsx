@@ -1,17 +1,17 @@
 import React from 'react';
 import { GameSessionParser } from '@righton/networking';
 import MockGameSession from '../../mock/MockGameSession.json'
-import ResponsesGraph from './ResponsesGraph';
+import Responses from './Responses';
 
 export default {
-  title: 'ResponsesGraph',
-  component: ResponsesGraph,
+  title: 'Responses',
+  component: Responses,
 };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
 
 
-const Template = args => <ResponsesGraph {...args} />;
+const Template = args => <Responses {...args} />;
 
 export const differentAnswers = Template.bind({});
 differentAnswers.args = {

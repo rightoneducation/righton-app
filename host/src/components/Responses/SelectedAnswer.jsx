@@ -6,13 +6,8 @@ import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
 const useStyles = makeStyles((theme) => ({
   parentContainer: {
-    // width: '100%',
-    // display: 'flex',
-    // justifyContent: 'center',
   },
   rectangleContainer: {
-    // width: '100%',
-    // maxWidth: '500px',
   },
   rectangleStyle: {
     height: '24px',

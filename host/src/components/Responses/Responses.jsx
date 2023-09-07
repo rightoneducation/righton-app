@@ -19,7 +19,8 @@ const useStyles = makeStyles({
   centerContent: {
     maxWidth: "500px",
     margin: "0 auto", 
-    width: "100%"
+    paddingLeft: "24px",
+    paddingRight: "24px"
   },
 });
 

@@ -9,8 +9,6 @@ import SelectedAnswer from './SelectedAnswer';
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
-    // width: '100%',
-    // maxWidth: '500px',
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
@@ -21,8 +19,6 @@ const useStyles = makeStyles({
     marginTop: '3%',
   },
   answerContainer: {
-    // display: "flex",
-    // justifyContent: "center",
   },
 });
 
