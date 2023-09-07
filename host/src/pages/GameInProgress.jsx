@@ -27,16 +27,15 @@ export default function GameInProgress({
   showFooterButtonOnly,
   isConfidenceEnabled,
   handleConfidenceSwitchChange,
-  handleBeginQuestion
+  handleBeginQuestion,
+  navDictionary,
+  assembleNavDictionary,
+  questionCardRef,
+  responsesRef,
+  gameAnswersRef,
+  confidenceCardRef,
 }) {
   const classes = useStyles();
-  // refs for scrolling of components via module navigator
-  const questionCardRef = React.useRef(null);
-  const responsesRef = React.useRef(null);
-  const gameAnswersRef = React.useRef(null);
-  const confidenceRef = React.useRef(null);
-  const playerThinkingRef = React.useRef(null);
-  const popularMistakesRef = React.useRef(null);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
     1: "Begin Question",
     2: "Continue",
@@ -56,18 +55,6 @@ export default function GameInProgress({
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices, questions, currentState);
   const noResponseLabel = '–';
-  
-  // module navigator dictionaries for different game states
-  const questionConfigNavDictionary = [
-    { ref: questionCardRef, text: 'Question Card' },
-    { ref: confidenceRef, text: 'Confidence Settings' },
-  ];
-  const gameplayNavDictionary = [
-    { ref: questionCardRef, text: 'Question Card' },
-    { ref: responsesRef, text: 'Real-time Responses'},
-    { ref: gameAnswersRef, text: 'Answer Explanations' },
-  ];
-  const [navDictionary, setNavDictionary] = useState(questionConfigNavDictionary);
 
   // data object used in Victory graph for real-time responses
   const data =[
@@ -103,29 +90,24 @@ export default function GameInProgress({
     setIsLoadModalOpen(false);
   };
 
-  // assembles fields for module navigator in footer
-  const assembleNavDictionary = (isConfidenceEnabled) => {
-    if (isConfidenceEnabled)
-      gameplayNavDictionary.splice(2, 0, { ref: confidenceRef, text: 'Player Confidence' });
-    setNavDictionary(gameplayNavDictionary);
-  }
-
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
-    if (currentState === GameSessionState.TEAMS_JOINING){
-      assembleNavDictionary(isConfidenceEnabled);
-      handleBeginQuestion();
-    }
-    if (currentState === GameSessionState.PHASE_2_DISCUSS)
-      setNavDictionary(questionConfigNavDictionary);
     let nextState = nextStateFunc(currentState);
+    if (nextState === GameSessionState.TEAMS_JOINING)
+      assembleNavDictionary(isConfidenceEnabled, nextState);
+    if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER){
+      assembleNavDictionary(isConfidenceEnabled, nextState);
+      handleBeginQuestion();
+      return;
+    }
     if (nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS) { // if teacher is ending early, pop modal
-      if (totalAnswers < numPlayers && gameTimerZero === false)
+      if (totalAnswers < numPlayers && gameTimerZero === false){
         setModalOpen(true);
+        return;
+      }
     }
-    else {
-      handleUpdateGameSession({ currentState: nextState });
-    }
+    handleUpdateGameSession({ currentState: nextState });
+
   };
 
   // used to determine which button text to show based on the dictionary above and whether all players have answered
@@ -138,7 +120,6 @@ export default function GameInProgress({
     }
     return footerButtonTextDictionary[statePosition];
   };
-
   return (
     <div className={classes.background}>
       <GameLoadModal handleStartGameModalTimerFinished={handleStartGameModalTimerFinished} modalOpen={isLoadModalOpen} />
@@ -179,7 +160,7 @@ export default function GameInProgress({
             questionCardRef={questionCardRef}
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
-            confidenceCardRef={confidenceRef}
+            confidenceCardRef={confidenceCardRef}
             graphClickInfo={graphClickInfo}
             setGraphClickInfo={setGraphClickInfo}
             correctChoiceIndex={correctChoiceIndex}

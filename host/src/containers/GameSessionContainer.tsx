@@ -7,12 +7,21 @@ import {
   ApiClient,
   Environment,
   GameSessionState,
-  IGameSession
+  IGameSession,
+  isNullOrUndefined
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
+import { set } from "lodash";
 
 const GameSessionContainer = () => {
+  // refs for scrolling of components via module navigator
+  const questionCardRef = React.useRef(null);
+  const responsesRef = React.useRef(null);
+  const gameAnswersRef = React.useRef(null);
+  const confidenceCardRef = React.useRef(null);
+  const playerThinkingRef = React.useRef(null);
+  const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -22,6 +31,29 @@ const GameSessionContainer = () => {
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
+  
+  // module navigator dictionaries for different game states
+  const questionConfigNavDictionary = [
+    { ref: questionCardRef, text: 'Question Card' },
+    { ref: confidenceCardRef, text: 'Confidence Settings' },
+  ];
+  const gameplayNavDictionary = [
+    { ref: questionCardRef, text: 'Question Card' },
+    { ref: responsesRef, text: 'Real-time Responses'},
+    { ref: gameAnswersRef, text: 'Answer Explanations' },
+  ];
+  const [navDictionary, setNavDictionary] = useState(questionConfigNavDictionary);
+  // assembles fields for module navigator in footer
+  const assembleNavDictionary = (isConfidenceEnabled, state) => {
+    if (state === GameSessionState.TEAMS_JOINING){
+      setNavDictionary(questionConfigNavDictionary);
+      return;
+    }
+    let newDictionary = [...gameplayNavDictionary];
+    if (isConfidenceEnabled)
+      newDictionary.splice(2, 0, { ref: confidenceCardRef, text: 'Player Confidence' });
+    setNavDictionary(newDictionary);
+  }
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
@@ -31,7 +63,10 @@ const GameSessionContainer = () => {
       setGameSession(response); // set initial gameSession state
       gameSessionId = response.id; // set gameSessionId to the response id (in case it was a new gameSession)
       checkGameTimer(response); // checks if the timer needs to start
-
+      if (!isNullOrUndefined(response) && !isNullOrUndefined(response.currentQuestionIndex) && !isNullOrUndefined(response.questions[response.currentQuestionIndex])){
+        setIsConfidenceEnabled(response.questions[response.currentQuestionIndex].isConfidenceEnabled);
+        assembleNavDictionary(response.questions[response.currentQuestionIndex].isConfidenceEnabled, response.currentState);
+      }
       // the below sets up the teamsArray - this is necessary as it allows us to view the answers fields (at an inaccessible depth with the gameSessionObject)
       const teamDataRequests = response.teams.map(team => {
         return apiClient.getTeam(team.id); // got to call the get the teams from the APi so we can see the answers
@@ -226,14 +261,49 @@ const GameSessionContainer = () => {
       return ( gameSession.currentQuestionIndex === null ?
           <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />
         : 
-          <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} handleBeginQuestion={handleBeginQuestion}/>
+          <GameInProgress 
+            {...gameSession} 
+            teamsArray={teamsArray} 
+            handleUpdateGameSession={handleUpdateGameSession} 
+            headerGameCurrentTime={headerGameCurrentTime} 
+            gameTimer={gameTimer} 
+            gameTimerZero={gameTimerZero} 
+            isLoadModalOpen={isLoadModalOpen} 
+            setIsLoadModalOpen={setIsLoadModalOpen} 
+            showFooterButtonOnly={false} 
+            isConfidenceEnabled={isConfidenceEnabled} 
+            handleConfidenceSwitchChange={handleConfidenceSwitchChange} 
+            handleBeginQuestion={handleBeginQuestion} 
+            navDictionary={navDictionary} 
+            questionCardRef={questionCardRef}
+            responsesRef={responsesRef}
+            gameAnswersRef={gameAnswersRef}
+            confidenceCardRef={confidenceCardRef}
+            assembleNavDictionary={assembleNavDictionary}
+          />
       );
     }
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled}/>;
+      return <GameInProgress 
+              {...gameSession} 
+              teamsArray={teamsArray} 
+              handleUpdateGameSession={handleUpdateGameSession} 
+              headerGameCurrentTime={headerGameCurrentTime} 
+              gameTimer={gameTimer} gameTimerZero={gameTimerZero} 
+              isLoadModalOpen={isLoadModalOpen} 
+              setIsLoadModalOpen={setIsLoadModalOpen} 
+              showFooterButtonOnly={false} 
+              isConfidenceEnabled={isConfidenceEnabled} 
+              navDictionary={navDictionary} 
+              questionCardRef={questionCardRef}
+              responsesRef={responsesRef}
+              gameAnswersRef={gameAnswersRef}
+              confidenceCardRef={confidenceCardRef}
+              assembleNavDictionary={assembleNavDictionary}
+            />;
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
