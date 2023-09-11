@@ -145,6 +145,9 @@ const GameSessionContainer = () => {
         });
         return newState;
       });
+      
+      
+      
     });
 
     // @ts-ignore
@@ -153,6 +156,7 @@ const GameSessionContainer = () => {
       createTeamSubscription.unsubscribe();
       deleteTeamSubscription.unsubscribe();
       createTeamAnswerSubscription.unsubscribe();
+      updateTeamAnswerSubscription.unsubscribe();
     }
 
   }, []);

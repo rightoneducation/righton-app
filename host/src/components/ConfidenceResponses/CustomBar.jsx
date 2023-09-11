@@ -11,11 +11,12 @@ const useStyles = makeStyles((selectedBarValue, index) => ({
 }));
 
 const CustomBar = (props) => {
-  const { x, y, smallPadding, selectedWidth, selectedHeight, datum, index, selectedBarValue, setSelectedBarValue } = props;
+  const { x, y, smallPadding, selectedWidth, selectedHeight, datum, index, graphClickInfo, setGraphClickInfo } = props;
   const offset = selectedWidth / 2;
   const graphTitleOffset = 28;
   const bottomLabelHeight = 15;
   const classes = useStyles();
+  console.log(selectedHeight);
   return (
     <g style={{ pointerEvents: 'bounding-box' }}>
       <Bar {...props} />
@@ -24,12 +25,13 @@ const CustomBar = (props) => {
         x={x - offset}
         y={graphTitleOffset}
         width={selectedWidth}
-        height={selectedHeight + bottomLabelHeight}
-        fill={selectedBarValue === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
+        height={selectedHeight - graphTitleOffset}
+        fill={graphClickInfo.selectedIndex && graphClickInfo.selectedIndex === index && graphClickInfo.graph === 'confidence' ? "rgba(255, 255, 255, 0.2)" : "transparent"}
         stroke="transparent"
         rx={8}
         ry={8}
-        onClick={() => setSelectedBarValue(datum.value)}
+        onClick={() => setGraphClickInfo({graph: 'confidence', selectedIndex: index})}
+        style={{cursor: 'pointer'}}
       />
     </g>
   );

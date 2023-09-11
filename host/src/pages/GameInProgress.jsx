@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import FooterGame from "../components/FooterGame";
-import ConfidenceResponseCard from "../components/ConfidenceResponseCard";
+import ConfidenceResponseCard from "../components/ConfidenceResponses/ConfidenceResponseCard";
 import HeaderGame from "../components/HeaderGame";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";

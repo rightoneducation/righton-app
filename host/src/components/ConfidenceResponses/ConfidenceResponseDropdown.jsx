@@ -5,7 +5,7 @@ import {
   Typography,
   Card
 } from "@material-ui/core";
-import check from '../images/correctAnswerCheck.png';
+import check from '../../images/correctAnswerCheck.png';
 import ResponsesGraph from "./ConfidenceResponseGraph";
 
 export default function ConfidenceResponseDropdown({ responses, orderedAnswers }) {

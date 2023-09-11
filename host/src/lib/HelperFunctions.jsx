@@ -125,14 +125,7 @@ export const getConfidencesByQuestion = (teamsArray, currentQuestion, currentSta
     // was unsure if it is possible for teachers to create games with more than 
     // 4 answer choices so added letters beyond D for precaution
     const lettersIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-    let confidenceResponses = {
-      [ConfidenceLevel.NOT_RATED]: new Array(),
-      [ConfidenceLevel.NOT_AT_ALL]: new Array(),
-      [ConfidenceLevel.KINDA]: new Array(),
-      [ConfidenceLevel.QUITE]: new Array(),
-      [ConfidenceLevel.VERY]: new Array(),
-      [ConfidenceLevel.TOTALLY]: new Array()
-    }
+    let confidenceResponses = [];
     teamsArray.forEach(team => {
       team.teamMembers && team.teamMembers.forEach(teamMember => {
         teamMember.answers && teamMember.answers.forEach(answer => {

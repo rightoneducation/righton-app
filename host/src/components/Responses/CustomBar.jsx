@@ -27,7 +27,7 @@ export default function CustomBar (props) {
               y={y-mediumPadding}
               width={selectedWidth + defaultVictoryPadding}
               height={selectedHeight + mediumPadding - (xSmallPadding/2)}
-              fill={graphClickInfo.selectedIndex && graphClickInfo.selectedIndex === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
+              fill={graphClickInfo.selectedIndex && graphClickInfo.selectedIndex === index && graphClickInfo.graph === 'realtime' ? "rgba(255, 255, 255, 0.2)" : "transparent"}
               stroke="transparent"
               rx={8}
               ry={8}

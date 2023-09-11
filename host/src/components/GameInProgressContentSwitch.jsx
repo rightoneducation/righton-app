@@ -1,12 +1,13 @@
 import React from "react";
-import { makeStyles, Box } from '@material-ui/core';
-import { GameSessionState } from "@righton/networking";
+import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
+import { GameSessionState, ConfidenceLevel } from "@righton/networking";
 import QuestionCard from "../components/QuestionCard";
 import Responses from "../components/Responses/Responses";
-import ConfidenceResponseCard from "./ConfidenceResponseCard";
+import ConfidenceResponseCard from "./ConfidenceResponses/ConfidenceResponseCard";
 import GameAnswers from "../components/GameAnswers";
 import SelectedAnswer from "../components/Responses/SelectedAnswer";
 import EnableConfidenceCard from "../components/EnableConfidenceCard";
+import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
 import { getQuestionChoices, getAnswersByQuestion, getConfidencesByQuestion } from "../lib/HelperFunctions";
 
 export default function GameInProgressContentSwitch ({ 
@@ -32,7 +33,27 @@ export default function GameInProgressContentSwitch ({
     teamsArray
   }) {
   const classes = useStyles();
-
+  const responses = getConfidencesByQuestion(teamsArray, questions[currentQuestionIndex], currentState);
+  const headerTranslation = (option) => {
+    switch (option) {
+      case ConfidenceLevel.NOT_RATED:
+        return "Not rated";
+      case ConfidenceLevel.NOT_AT_ALL:
+        return "Not at all confident";
+      case ConfidenceLevel.KINDA:
+        return "Kinda confident";
+      case ConfidenceLevel.QUITE:
+        return "Quite confident";
+      case ConfidenceLevel.VERY:
+        return "Very confident";
+      case ConfidenceLevel.TOTALLY:
+        return "Totally confident";
+    }
+  };
+  console.log(responses);
+  console.log(graphClickInfo);
+  console.log(responses[0]);
+  console.log(data);
   const gameplayComponents = [
     <>
       {graphClickInfo.graph === null ? (
@@ -56,8 +77,9 @@ export default function GameInProgressContentSwitch ({
             <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
                <ConfidenceResponseCard 
                 responses={getConfidencesByQuestion(teamsArray, questions[currentQuestionIndex], currentState)} 
-                orderedAnswers={getAnswersByQuestion(getQuestionChoices(questions, currentQuestionIndex), teamsArray, currentQuestionIndex)} 
-                currentState={currentState}
+                orderedAnswers={answersByQuestion}
+                graphClickInfo={graphClickInfo}
+                setGraphClickInfo={setGraphClickInfo}
                />
             </div> : null
           }
@@ -76,24 +98,44 @@ export default function GameInProgressContentSwitch ({
         </>
       ) : (
         <div className={classes.contentContainer}>
-           <Responses
-              data={data}
-              numPlayers={numPlayers}
-              totalAnswers={totalAnswers}
-              questionChoices={questionChoices}
-              statePosition={statePosition}
-              teamsPickedChoices={teamsPickedChoices}
-              graphClickInfo={graphClickInfo}
-              setGraphClickInfo={setGraphClickInfo}
-            />
-          <SelectedAnswer
-            data={data}
-            graphClickInfo={graphClickInfo}
-            correctChoiceIndex={correctChoiceIndex}
-            numPlayers={numPlayers}
-            teamsPickedChoices={teamsPickedChoices}
-            statePosition={statePosition}
-          />
+          { graphClickInfo.graph==='realtime' ? 
+            <>
+              <Responses
+                data={data}
+                numPlayers={numPlayers}
+                totalAnswers={totalAnswers}
+                questionChoices={questionChoices}
+                statePosition={statePosition}
+                teamsPickedChoices={teamsPickedChoices}
+                graphClickInfo={graphClickInfo}
+                setGraphClickInfo={setGraphClickInfo}
+              />
+              <SelectedAnswer
+                data={data}
+                graphClickInfo={graphClickInfo}
+                correctChoiceIndex={correctChoiceIndex}
+                numPlayers={numPlayers}
+                teamsPickedChoices={teamsPickedChoices}
+                statePosition={statePosition}
+              />
+            </>
+            : 
+            <>
+              <ConfidenceResponseCard 
+                responses={responses} 
+                orderedAnswers={answersByQuestion}
+                graphClickInfo={graphClickInfo}
+                setGraphClickInfo={setGraphClickInfo}
+              /> 
+              <Grid className={classes.responsesContainer}>
+                {responses[graphClickInfo.selectedIndex].length === 0 ? <Typography className={classes.answerOptionText}>No players picked this option</Typography> : <><Typography className={classes.answerOptionText}>Showing players who answered</Typography>
+                  <Typography className={classes.responseHeader}>{headerTranslation(graphClickInfo.selectedIndex)}</Typography>
+                  <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
+                  <ConfidenceResponseDropdown responses={responses[graphClickInfo.selectedIndex]} orderedAnswers={answersByQuestion}></ConfidenceResponseDropdown></>}
+              </Grid>
+            </>
+           }
+       
         </div>
       )}
     </>

@@ -5,30 +5,15 @@ import {
   Typography,
   Card
 } from "@material-ui/core";
-import ConfidenceResponseGraph from "../components/ConfidenceResponseGraph";
+import ConfidenceResponseGraph from "./ConfidenceResponseGraph";
 import ConfidenceResponseDropdown from "./ConfidenceResponseDropdown";
 import { ConfidenceLevel, isNullOrUndefined } from "@righton/networking";
 
-export default function ConfidenceResponseCard({ responses, orderedAnswers }) {
+export default function ConfidenceResponseCard({ responses, orderedAnswers, graphClickInfo, setGraphClickInfo }) {
   const classes = useStyles();
   const [selectedBarValue, setSelectedBarValue] = useState(null);
 
-  const headerTranslation = (option) => {
-    switch (option) {
-      case ConfidenceLevel.NOT_RATED:
-        return "Not rated";
-      case ConfidenceLevel.NOT_AT_ALL:
-        return "Not at all confident";
-      case ConfidenceLevel.KINDA:
-        return "Kinda confident";
-      case ConfidenceLevel.QUITE:
-        return "Quite confident";
-      case ConfidenceLevel.VERY:
-        return "Very confident";
-      case ConfidenceLevel.TOTALLY:
-        return "Totally confident";
-    }
-  }
+ 
 
   return (
     <Grid className={classes.centerContent}>
@@ -40,18 +25,13 @@ export default function ConfidenceResponseCard({ responses, orderedAnswers }) {
           Players are asked how sure they are of their answer for this question.
         </Typography>
         <Grid className={classes.graphContainer}>
-          <ConfidenceResponseGraph responses={responses} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue}></ConfidenceResponseGraph>
+          <ConfidenceResponseGraph responses={responses} graphClickInfo={graphClickInfo} setGraphClickInfo={setGraphClickInfo}></ConfidenceResponseGraph>
         </Grid>
         {isNullOrUndefined(selectedBarValue) ?
           <Typography className={classes.hintText}>
             Tap on a response to see more details.
-          </Typography> :
-          <Grid className={classes.responsesContainer}>
-            {responses[selectedBarValue].length === 0 ? <Typography className={classes.answerOptionText}>No players picked this option</Typography> : <><Typography className={classes.answerOptionText}>Showing players who answered</Typography>
-              <Typography className={classes.responseHeader}>{headerTranslation(selectedBarValue)}</Typography>
-              <Grid className={classes.answerHeaderContainer}><Typography className={classes.answerHeader}>Answer</Typography></Grid>
-              <ConfidenceResponseDropdown responses={responses[selectedBarValue]} orderedAnswers={orderedAnswers}></ConfidenceResponseDropdown></>}
-          </Grid>
+          </Typography> 
+          : null
         }
       </Grid>
     </Grid>

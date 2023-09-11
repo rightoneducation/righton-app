@@ -3,8 +3,8 @@ import { Typography, Box } from '@material-ui/core';
 import { VictoryChart, VictoryStack, VictoryBar, VictoryLabel, VictoryAxis, VictoryLegend, Rect } from 'victory';
 import { makeStyles } from '@material-ui/core';
 import { debounce } from 'lodash';
-import Legend from "../components/ConfidenceResponseLegend";
-import CustomBar from "../components/CustomBar";
+import Legend from "./ConfidenceResponseLegend";
+import CustomBar from "./CustomBar";
 import { ConfidenceLevel } from '@righton/networking';
 
 const useStyles = makeStyles({
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 const classes = useStyles;
 
 
-const ResponsesGraph = ({ responses, selectedBarValue, setSelectedBarValue }) => {
+const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
   const correctColor = "#FFF";
   const incorrectColor = "transparent";
   const customThemeGraph = {
@@ -162,7 +162,7 @@ const ResponsesGraph = ({ responses, selectedBarValue, setSelectedBarValue }) =>
               data={correctResponders}
               cornerRadius={5}
               labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
-              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height} selectedBarValue={selectedBarValue} setSelectedBarValue={setSelectedBarValue} />}
+              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height} graphClickInfo={graphClickInfo} setGraphClickInfo={setGraphClickInfo} />}
             />
             <VictoryAxis
               tickValues={correctResponders.map(datum => datum.x)}
