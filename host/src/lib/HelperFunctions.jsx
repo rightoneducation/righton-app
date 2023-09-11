@@ -133,7 +133,6 @@ export const getConfidencesByQuestion = (teamsArray, currentQuestion, currentSta
       [ConfidenceLevel.VERY]: new Array(),
       [ConfidenceLevel.TOTALLY]: new Array()
     }
-
     teamsArray.forEach(team => {
       team.teamMembers && team.teamMembers.forEach(teamMember => {
         teamMember.answers && teamMember.answers.forEach(answer => {

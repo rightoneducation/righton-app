@@ -128,6 +128,25 @@ const GameSessionContainer = () => {
       });
     });
 
+    // set up subscription for teams confidence answering (update to created team answer)
+    let updateTeamAnswerSubscription: any | null = null;
+    updateTeamAnswerSubscription = apiClient.subscribeUpdateTeamAnswer(gameSessionId, teamAnswerResponse => {
+      setTeamsArray((prevState) => {
+        let newState = JSON.parse(JSON.stringify(prevState));
+        newState.forEach(team => {
+          team.teamMembers && team.teamMembers.forEach(teamMember => {
+            if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
+              teamMember.answers.forEach(answer => {
+                if (answer.id === teamAnswerResponse.id)
+                  answer.confidenceLevel = teamAnswerResponse.confidenceLevel;
+              });
+            };
+          });
+        });
+        return newState;
+      });
+    });
+
     // @ts-ignore
     return () => {
       gameSessionSubscription?.unsubscribe();

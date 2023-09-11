@@ -52,10 +52,10 @@ export default function GameInProgressContentSwitch ({
               setGraphClickInfo={setGraphClickInfo}
             />
           </div>
-          { isConfidenceEnabled ? 
+          { isConfidenceEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 
             <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
                <ConfidenceResponseCard 
-                responses={getConfidencesByQuestion(teamsArray, questions[currentQuestionIndex])} 
+                responses={getConfidencesByQuestion(teamsArray, questions[currentQuestionIndex], currentState)} 
                 orderedAnswers={getAnswersByQuestion(getQuestionChoices(questions, currentQuestionIndex), teamsArray, currentQuestionIndex)} 
                 currentState={currentState}
                />
