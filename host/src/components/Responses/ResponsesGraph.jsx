@@ -23,6 +23,8 @@ const useStyles = makeStyles({
 });
 
 const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalAnswers, questionChoices, statePosition, teamsPickedChoices }) => {
+  const isOpenEnded = true;
+
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
   const barThickness = 18;
@@ -134,17 +136,19 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
       </div>
       <div ref={graphRef} >
         <VictoryChart
-          domainPadding={36}
-          padding={defaultVictoryPadding}
+          // domainPadding={!isOpenEnded ? 36 : 46}
+          domainPadding={0}
+          padding={!isOpenEnded ? {defaultVictoryPadding} : {top: defaultVictoryPadding, bottom: defaultVictoryPadding, left: smallPadding, right: smallPadding}}
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}
-          height={400}
+          height={!isOpenEnded ? 400 : 390}
         >
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
               <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+              domain={[1,6]}
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
@@ -179,7 +183,7 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
                 xSmallPadding={xSmallPadding}
                 mediumPadding={mediumPadding}
                 xxxLargePadding={xxxLargePadding}
-                selectedWidth={boundingRect.width - (defaultVictoryPadding + xxLargePadding * 2)}
+                selectedWidth={isOpenEnded ? boundingRect.width : boundingRect.width - (defaultVictoryPadding + xxLargePadding * 2)}
                 selectedHeight={18}
                 selectedBarIndex={selectedBarIndex}
                 setSelectedBarIndex={setSelectedBarIndex}
@@ -194,6 +198,8 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
                 defaultVictoryPadding={defaultVictoryPadding}
                 questionChoices={questionChoices}
                 noResponseLabel={noResponseLabel}
+                reversedResponses={reversedResponses}
+                correctChoiceIndex={correctChoiceIndex}
               />
             }
           />

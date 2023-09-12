@@ -9,20 +9,22 @@ const useStyles = makeStyles((selectedBarIndex, index) => ({
     }
   }
 }));
+const isOpenEnded = true;
 
 const CustomBar = (props) => {
   const {x, y, xSmallPadding, mediumPadding, xxxLargePadding, selectedWidth, selectedHeight, datum, index, selectedBarIndex, setSelectedBarIndex} = props;
   const classes = useStyles();
+  
   return (
       <g  style={{pointerEvents: 'bounding-box'}}>
         <Bar {...props} />
         {datum.answerCount > 0 && 
           <rect
               className={classes.highlight}
-              x={xxxLargePadding}
-              y={y-mediumPadding}
+              x={isOpenEnded ? 0 : xxxLargePadding}
+              y={isOpenEnded ? y-40 : y-mediumPadding}
               width={selectedWidth}
-              height={selectedHeight+mediumPadding-(xSmallPadding/2)}
+              height={isOpenEnded ? 56 : selectedHeight+mediumPadding-(xSmallPadding/2)}
               fill={selectedBarIndex === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
               stroke="transparent"
               rx={8}
