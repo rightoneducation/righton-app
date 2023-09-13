@@ -14,7 +14,7 @@ export default function CustomBar (props) {
     datum, 
     index, 
     graphClickInfo, 
-    setGraphClickInfo
+    handleGraphClick
   } = props;
   const classes = useStyles();
   return (
@@ -31,7 +31,7 @@ export default function CustomBar (props) {
               stroke="transparent"
               rx={8}
               ry={8}
-              onClick={() => setGraphClickInfo({graph: 'realtime', selectedIndex: index})}
+              onClick={() => handleGraphClick({graph: 'realtime', selectedIndex: index})}
               style={{cursor: 'pointer'}}
             />
         }

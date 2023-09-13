@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import { debounce } from 'lodash';
 import Legend from "./ConfidenceResponseLegend";
 import CustomBar from "./CustomBar";
-import { ConfidenceLevel } from '@righton/networking';
+import { ConfidenceLevel, ConfidenceLevelLabels, isNullOrUndefined } from '@righton/networking';
 
 const useStyles = makeStyles({
   container: {
@@ -27,7 +27,11 @@ const useStyles = makeStyles({
 const classes = useStyles;
 
 
-const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
+const ConfidenceResponsesGraph = ({  
+  confidenceData,
+  graphClickInfo, 
+  handleGraphClick,
+}) => {
   const correctColor = "#FFF";
   const incorrectColor = "transparent";
   const customThemeGraph = {
@@ -56,26 +60,6 @@ const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
     }
   }
 
-  const SelectedBar = ({ x, y, width, height }) => {
-    const padding = 5;
-    const selectedWidth = width + padding * 2;
-    const selectedHeight = height + padding * 2;
-    console.log('sup');
-    return (
-      <rect
-        x={x - padding}
-        y={y - padding}
-        width={selectedWidth}
-        height={selectedHeight}
-        fill="rgba(255, 255, 255, 0.25)"
-        stroke="transparent"
-        strokeWidth={3}
-        rx={8}
-        ry={8}
-      />
-    );
-  };
-
   const barThickness = 55;
   const barThicknessZero = 30;
   const smallPadding = 12;
@@ -97,27 +81,13 @@ const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
       };
     }
   }, []);
+  const correctResponders =  Object.keys(ConfidenceLevel).map((key, index) => {
+    return {x: ConfidenceLevelLabels[key], y: confidenceData[index].correct};
+  });
 
-  const getNumRespondants = (confidence, correct) => {
-    return responses[confidence].filter(response => response.correct === correct).length;
-  }
-
-  const correctResponders = [
-    { x: "Not\nrated", y: getNumRespondants(ConfidenceLevel.NOT_RATED, true), value: ConfidenceLevel.NOT_RATED },
-    { x: "Not at\nall", y: getNumRespondants(ConfidenceLevel.NOT_AT_ALL, true), value: ConfidenceLevel.NOT_AT_ALL },
-    { x: "Kinda", y: getNumRespondants(ConfidenceLevel.KINDA, true), value: ConfidenceLevel.KINDA },
-    { x: "Quite", y: getNumRespondants(ConfidenceLevel.QUITE, true), value: ConfidenceLevel.QUITE },
-    { x: "Very", y: getNumRespondants(ConfidenceLevel.VERY, true), value: ConfidenceLevel.VERY },
-    { x: "Totally", y: getNumRespondants(ConfidenceLevel.TOTALLY, true), value: ConfidenceLevel.TOTALLY }
-  ];
-  const incorrectResponders = [
-    { x: "Not\nrated", y: getNumRespondants(ConfidenceLevel.NOT_RATED, false), value: ConfidenceLevel.NOT_RATED },
-    { x: "Not at\nall", y: getNumRespondants(ConfidenceLevel.NOT_AT_ALL, false), value: ConfidenceLevel.NOT_AT_ALL },
-    { x: "Kinda", y: getNumRespondants(ConfidenceLevel.KINDA, false), value: ConfidenceLevel.KINDA },
-    { x: "Quite", y: getNumRespondants(ConfidenceLevel.QUITE, false), value: ConfidenceLevel.QUITE },
-    { x: "Very", y: getNumRespondants(ConfidenceLevel.VERY, false), value: ConfidenceLevel.VERY },
-    { x: "Totally", y: getNumRespondants(ConfidenceLevel.TOTALLY, false), value: ConfidenceLevel.TOTALLY }
-  ];
+  const incorrectResponders =  Object.keys(ConfidenceLevel).map((key, index) => {
+    return {x: ConfidenceLevelLabels[key], y: confidenceData[index].incorrect};
+  });
 
   return (
     <div className={classes.container}>
@@ -138,7 +108,7 @@ const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
         </Typography>
       </div>
       <div ref={graphRef} >
-        <VictoryChart theme={customThemeGraph} height={200} style={{ overflow: 'visible' }}>
+        <VictoryChart theme={customThemeGraph} height={200}>
           <VictoryStack
             standalone={false}
             labelComponent={
@@ -156,13 +126,14 @@ const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
               data={incorrectResponders}
               cornerRadius={({ index }) => correctResponders[index].y === 0 ? 5 : 0}
               labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
+              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={200} graphClickInfo={graphClickInfo} handleGraphClick={handleGraphClick} />}
             />
             <VictoryBar
               name="correct"
               data={correctResponders}
               cornerRadius={5}
               labels={({ index }) => correctResponders[index].y + incorrectResponders[index].y}
-              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={boundingRect.height} graphClickInfo={graphClickInfo} setGraphClickInfo={setGraphClickInfo} />}
+              dataComponent={<CustomBar smallPadding={smallPadding} selectedWidth={barThickness + smallPadding} selectedHeight={200} graphClickInfo={graphClickInfo} handleGraphClick={handleGraphClick} />}
             />
             <VictoryAxis
               tickValues={correctResponders.map(datum => datum.x)}
@@ -189,4 +160,4 @@ const ResponsesGraph = ({ responses, graphClickInfo, setGraphClickInfo }) => {
   );
 };
 
-export default ResponsesGraph;
+export default ConfidenceResponsesGraph;

@@ -10,7 +10,7 @@ export default function ResponsesGraph ({
   questionChoices, 
   statePosition, 
   graphClickInfo, 
-  setGraphClickInfo 
+  handleGraphClick
 }) {
   const classes = useStyles();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
@@ -161,7 +161,7 @@ export default function ResponsesGraph ({
                   selectedWidth={boundingRect.width - defaultVictoryPadding*2}
                   selectedHeight={18}
                   graphClickInfo={graphClickInfo}
-                  setGraphClickInfo={setGraphClickInfo}
+                  handleGraphClick={handleGraphClick}
                 />
               }
               labelComponent={

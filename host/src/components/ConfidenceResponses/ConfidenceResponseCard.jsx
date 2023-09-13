@@ -1,57 +1,53 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  Box,
   Grid,
   Typography,
-  Card
 } from "@material-ui/core";
 import ConfidenceResponseGraph from "./ConfidenceResponseGraph";
-import ConfidenceResponseDropdown from "./ConfidenceResponseDropdown";
-import { ConfidenceLevel, isNullOrUndefined } from "@righton/networking";
+import { isNullOrUndefined } from "@righton/networking";
 
-export default function ConfidenceResponseCard({ responses, orderedAnswers, graphClickInfo, setGraphClickInfo }) {
+export default function ConfidenceResponseCard({ 
+  confidenceData, 
+  graphClickInfo, 
+  handleGraphClick,
+}) {
   const classes = useStyles();
   const [selectedBarValue, setSelectedBarValue] = useState(null);
 
- 
-
   return (
-    <Grid className={classes.centerContent}>
-      <Grid className={classes.cardContainer}>
-        <Typography className={classes.headerText}>
-          Confidence
-        </Typography>
-        <Typography className={classes.infoText}>
-          Players are asked how sure they are of their answer for this question.
-        </Typography>
-        <Grid className={classes.graphContainer}>
-          <ConfidenceResponseGraph responses={responses} graphClickInfo={graphClickInfo} setGraphClickInfo={setGraphClickInfo}></ConfidenceResponseGraph>
-        </Grid>
-        {isNullOrUndefined(selectedBarValue) ?
-          <Typography className={classes.hintText}>
-            Tap on a response to see more details.
-          </Typography> 
-          : null
-        }
+    <Box className={classes.centerContent}>
+      <Typography className={classes.headerText}>
+        Confidence
+      </Typography>
+      <Typography className={classes.infoText}>
+        Players are asked how sure they are of their answer for this question.
+      </Typography>
+      <Grid className={classes.graphContainer}>
+        <ConfidenceResponseGraph 
+          confidenceData={confidenceData}
+          graphClickInfo={graphClickInfo} 
+          handleGraphClick={handleGraphClick}
+        />
       </Grid>
-    </Grid>
+      {isNullOrUndefined(selectedBarValue) ?
+        <Typography className={classes.hintText}>
+          Tap on a response to see more details.
+        </Typography> 
+        : null
+      }
+    </Box>
   );
 }
 
 const useStyles = makeStyles(theme => ({
   centerContent: {
     display: "flex",
-    justifyContent: "center",
-  },
-  cardContainer: {
-    display: "flex",
-    padding: "16px 12px",
     flexDirection: "column",
-    alignItems: "flex-start",
-    alignSelf: "stretch",
-    margin: "12px",
-    maxWidth: "700px",
     justifyContent: "center",
+    width: '100%',
+    maxWidth: "500px"
   },
   responseCard: {
     display: "flex",

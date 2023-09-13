@@ -217,7 +217,16 @@ export enum ConfidenceLevel {
   KINDA = "KINDA",
   QUITE = "QUITE",
   VERY = "VERY",
-  TOTALLY = "TOTALLY",
+  TOTALLY = "TOTALLY"
+}
+
+export enum ConfidenceLevelLabels {
+  NOT_RATED = "Not\nRated",
+  NOT_AT_ALL = "Not At\nAll",
+  KINDA = "Kinda",
+  QUITE = "Quite",
+  VERY = "Very",
+  TOTALLY = "Totally"
 }
 
 

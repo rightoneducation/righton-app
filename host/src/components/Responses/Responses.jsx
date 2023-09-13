@@ -14,7 +14,7 @@ export default function Responses({
   statePosition, 
   teamsPickedChoices, 
   graphClickInfo, 
-  setGraphClickInfo 
+  handleGraphClick
 }) {
   const classes = useStyles();
 
@@ -29,7 +29,7 @@ export default function Responses({
           statePosition={statePosition} 
           teamsPickedChoices={teamsPickedChoices} 
           graphClickInfo={graphClickInfo} 
-          setGraphClickInfo={setGraphClickInfo}
+          handleGraphClick={handleGraphClick}
         />
     </Box>
   );

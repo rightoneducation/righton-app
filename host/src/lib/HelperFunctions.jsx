@@ -82,8 +82,29 @@ export const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices, que
 * @param {array} teamsArray - array of teams
 * @param {number} currentQuestionIndex - index of current question
 * @returns {array} answersArray - ordered array of total number of each answer
+* confidenceArray interface:
+* confidenceArray {
+*   confidence: ConfidenceLevel,
+*   correct: number,
+*   incorrect: number,
+*   players: [{
+*     name: string,
+*     answer: string,
+*     isCorrect: boolean
+*   }]
+* }
 */
 export const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex, questions, currentState) => {
+  // create this to use as an index reference for the confidence levels to avoid find/findIndex
+  const confidenceLevelsArray = Object.values(ConfidenceLevel);
+  let confidenceArray = Object.keys(ConfidenceLevel).map((key) => {
+    return {
+      confidence: ConfidenceLevel[key], 
+      correct: 0, 
+      incorrect: 0, 
+      players: []
+    };
+  });
   if (teamsArray.length !== 0 && questions && choices && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
     let choicesTextArray = [choices.length];
     let answersArray = new Array(choices.length).fill(0);
@@ -91,7 +112,6 @@ export const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex, 
     choices && choices.forEach((choice, index) => {
       choicesTextArray[index] = choice.text;
     });
-
     teamsArray.forEach(team => {
       team.teamMembers && team.teamMembers.forEach(teamMember => {
         teamMember.answers && teamMember.answers.forEach(answer => {
@@ -100,6 +120,15 @@ export const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex, 
               choices && choices.forEach(choice => {
                 if (answer.text === choice.text) {
                   answersArray[choicesTextArray.indexOf(choice.text)] += 1;
+                  const index = confidenceLevelsArray.indexOf(answer.confidenceLevel);
+                  if (choice.isAnswer){
+                    confidenceArray[index].correct += 1;
+                    confidenceArray[index].players.push({ name: team.name, answer: choice.text, isCorrect: true});
+                  }
+                  else {
+                    confidenceArray[index].incorrect += 1;
+                    confidenceArray[index].players.push({ name: team.name, answer: choice.text, isCorrect: false});
+                  }
                 }
               })
             }
@@ -108,39 +137,7 @@ export const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex, 
       })
 
     });
-    return answersArray;
+    return {answersArray, confidenceArray};
   }
-  return [];
+  return {answersArray: [], confidenceArray};
 };
-
-/*
-* returns a dictionary of confidence levels with corresponding player answer
-* @param {array} teamsArray - array of teams
-* @param {number} currentQuestionIndex - index of current question
-* @returns {object - {player name, answerletter, answer correctness}} confidenceResponses - dictionary of confidence levels with corresponding player answer
-*/
-export const getConfidencesByQuestion = (teamsArray, currentQuestion, currentState) => {
-    const currentQuestionId = currentQuestion.id;
-    const choices = currentQuestion.choices;
-    // was unsure if it is possible for teachers to create games with more than 
-    // 4 answer choices so added letters beyond D for precaution
-    const lettersIndex = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-    let confidenceResponses = [];
-    teamsArray.forEach(team => {
-      team.teamMembers && team.teamMembers.forEach(teamMember => {
-        teamMember.answers && teamMember.answers.forEach(answer => {
-          if (answer.questionId === currentQuestionId) {
-            if (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-              const selectedChoice = choices.find(choice => choice.text === answer.text);
-              const isResponseCorrect = selectedChoice.isAnswer;
-              const responseLetter = lettersIndex[choices.indexOf(selectedChoice)];
-              const responseConfidence = answer.confidenceLevel;
-              const playerName = team.name;
-              confidenceResponses[responseConfidence].push({ name: playerName, answerChoice: responseLetter, correct: isResponseCorrect });
-            }
-          }
-        })
-      })
-    })
-    return confidenceResponses;
-  }

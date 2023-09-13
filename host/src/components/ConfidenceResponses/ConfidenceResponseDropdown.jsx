@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -6,9 +6,8 @@ import {
   Card
 } from "@material-ui/core";
 import check from '../../images/correctAnswerCheck.png';
-import ResponsesGraph from "./ConfidenceResponseGraph";
 
-export default function ConfidenceResponseDropdown({ responses, orderedAnswers }) {
+export default function ConfidenceResponseDropdown({ graphClickInfo, responses }) {
   const useStyles = makeStyles(theme => ({
     container: {
       display: "flex",
@@ -17,6 +16,28 @@ export default function ConfidenceResponseDropdown({ responses, orderedAnswers }
       alignItems: "flexEnd",
       gap: "7px",
       alignSelf: "stretch"
+    },
+    headerText: {
+      color: '#FFF',
+      textAlign: 'left',
+      fontFamily: 'Rubik',
+      fontSize: '14px',
+      fontWeight: '400',
+    },
+    confidenceLevelText: {
+      color: '#FFF',
+      textAlign: 'left',
+      fontFamily: 'Rubik',
+      fontSize: '16px',
+      fontWeight: '700',
+      paddingTop: '8px',
+    },
+    answerLabelText: {
+      color: 'rgba(255,255,255,0.4)',
+      textAlign: 'right',
+      fontFamily: 'Rubik',
+      fontSize: '12px',
+      fontWeight: '400',
     },
     playerCard: {
       display: "flex",
@@ -55,31 +76,14 @@ export default function ConfidenceResponseDropdown({ responses, orderedAnswers }
     }
   }));
   const classes = useStyles();
-
-  // TODO: delete this later
-  const optionResponses = [
-    { name: 'Alex Williams', answer: 'C', correct: true },
-    { name: 'Alessandro DeLuca-Smith', answer: 'C', correct: true },
-    { name: 'Jackson Cameron', answer: 'C', correct: true },
-    { name: 'Jeremiah Tanaka', answer: 'C', correct: true },
-    { name: 'Kyle Bradshaw', answer: 'C', correct: true },
-    { name: 'Shana Quintero', answer: 'C', correct: true },
-    { name: 'Vanessa Martinez', answer: 'D', correct: false },
-    { name: 'Vanessa Montenegro-Rodriguez', answer: 'D', correct: false },
-    { name: 'Xiomara Jimenez', answer: 'B', correct: false },
-    { name: 'Zander Lee', answer: 'A', correct: false }
-  ];
-
-  const test = [
-    { name: 'Alex W', answer: 'C', correct: false },
-    { name: 'Alessandro DeLuca-Smith', answer: 'A', correct: true },
-    { name: 'Jackson Cameron', answer: 'B', correct: false },
-    { name: 'Jeremiah Tanaka', answer: 'C', correct: false },
-    { name: 'Kyle Bradshaw', answer: 'B', correct: false },
-    { name: 'Jeremiah Tanaka', answer: 'C', correct: false },
-    { name: 'Kyle Bradshaw', answer: 'C', correct: false },
-  ]
-
+  const ConfidenceLevelDictionary = {
+    0: "Not Rated",
+    1: "Not At All Confident",
+    2: "Kinda Confident",
+    3: "Quite Confident",
+    4: "Very Confident",
+    5: "Totally Confident"
+  }
   // TODO: optimize
   const sortResponses = () => {
     const letters = { 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0 };
@@ -90,22 +94,31 @@ export default function ConfidenceResponseDropdown({ responses, orderedAnswers }
     responses.sort((a, b) => b.correct - a.correct);
     return responses;
   }
-
-  const playerResponse = ({ name, answerChoice, correct }) => {
+  const playerResponse = ({ name, answer, isCorrect }) => {
     return (
       <Card className={classes.playerCard}>
         <Typography className={classes.nameText}>{name}</Typography>
         <Grid className={classes.answerDataContainer}>
-          {correct && <img src={check} className={classes.check} />}
-          <Typography className={classes.answerText}>{answerChoice}</Typography>
+          {isCorrect && <img src={check} className={classes.check} />}
+          <Typography className={classes.answerText}>{answer}</Typography>
         </Grid>
       </Card>
     );
   }
 
   return (
-    <Grid className={classes.container}>
-      {sortResponses().map((playerData) => playerResponse(playerData))}
-    </Grid>
+    <>
+    { responses.length === 0 
+      ? <Typography className={classes.headerText}>No players picked this option</Typography> 
+      : <>
+          <Typography className={classes.headerText}>Showing players who answered</Typography>
+          <Typography className={classes.confidenceLevelText}>{ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}</Typography>
+          <Typography className={classes.answerLabelText}>Answer</Typography>
+          <Grid className={classes.container}>
+            {sortResponses().map((playerData) => playerResponse(playerData))}
+          </Grid>
+        </>
+    }
+    </>
   );
 };

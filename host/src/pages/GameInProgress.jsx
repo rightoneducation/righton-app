@@ -6,7 +6,7 @@ import HeaderGame from "../components/HeaderGame";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import { GameSessionState, isNullOrUndefined, ConfidenceLevel } from "@righton/networking";
+import { GameSessionState } from "@righton/networking";
 import GameInProgressContentSwitch from "../components/GameInProgressContentSwitch";
 import { getTotalAnswers, getQuestionChoices, getAnswersByQuestion, getTeamByQuestion } from "../lib/HelperFunctions";
 
@@ -51,7 +51,7 @@ export default function GameInProgress({
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
   const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState);
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-  const totalAnswers = getTotalAnswers(answersByQuestion);
+  const totalAnswers = getTotalAnswers(answersByQuestion.answersArray);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices, questions, currentState);
   const noResponseLabel = '–';
@@ -59,15 +59,29 @@ export default function GameInProgress({
   // data object used in Victory graph for real-time responses
   const data =[
     { answerChoice: noResponseLabel, answerCount: numPlayers - totalAnswers, answerText: 'No response' },
-    ...Object.keys(answersByQuestion).map((key, index) => ({
-    answerCount: answersByQuestion[index],
+    ...Object.keys(answersByQuestion.answersArray).map((key, index) => ({
+    answerCount: answersByQuestion.answersArray[index],
     answerChoice: String.fromCharCode(65 + index),
      // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
      answerText: questionChoices[index].text,
     }))].reverse();
 
+  // data object used in Victory graph for confidence responses
+  const confidenceData = answersByQuestion.confidenceArray;
+
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({graph: null, selectedIndex: null});
+
+  const handleGraphClick = ({graph, selectedIndex}) => {
+    setGraphClickInfo({graph, selectedIndex});
+    setTimeout(() => {
+      if (graph === 'realtime')
+        responsesRef.current.scrollIntoView({ behavior: 'smooth' })
+      else
+        confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
+  };
+
   let [modalOpen, setModalOpen] = useState(false);
   const nextStateFunc = (currentState) => {
     let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
@@ -151,18 +165,19 @@ export default function GameInProgress({
             questions={questions} 
             questionChoices={questionChoices}
             currentQuestionIndex={currentQuestionIndex}
-            answersByQuestion={answersByQuestion}
+            answersByQuestion={answersByQuestion.answersArray}
             totalAnswers={totalAnswers}
             numPlayers={numPlayers}
             statePosition={statePosition}
             teamsPickedChoices = {teamsPickedChoices}
             data={data}
+            confidenceData={confidenceData}
             questionCardRef={questionCardRef}
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
             confidenceCardRef={confidenceCardRef}
             graphClickInfo={graphClickInfo}
-            setGraphClickInfo={setGraphClickInfo}
+            handleGraphClick={handleGraphClick}
             correctChoiceIndex={correctChoiceIndex}
             currentState={currentState}
             isConfidenceEnabled={isConfidenceEnabled}
