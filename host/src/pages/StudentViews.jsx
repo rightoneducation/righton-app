@@ -7,6 +7,7 @@ import { GameSessionState } from "@righton/networking";
 import SVP1Results from '../images/SVP1Results.svg';
 import SVP2Start from '../images/SVP2Start.svg';
 import SVP2Results from '../images/SVP2Results.svg';
+import { set } from "lodash";
 
 export default function StudentViews({
   questions,
@@ -16,7 +17,9 @@ export default function StudentViews({
   phaseTwoTime,
   gameTimer,
   handleUpdateGameSession,
-  showFooterButtonOnly
+  showFooterButtonOnly,
+  setIsConfidenceEnabled,
+  assembleNavDictionary
 }) {
 
   let statePosition;
@@ -75,11 +78,14 @@ export default function StudentViews({
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = () => { 
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS){ // if they are on the last page a\nd need to advance to the next question
-      handleUpdateGameSession({currentState: nextStateFunc(currentState), currentQuestionIndex: currentQuestionIndex+1}) 
+      setIsConfidenceEnabled(false);
+      assembleNavDictionary(false, GameSessionState.TEAMS_JOINING);
+      handleUpdateGameSession({currentState: nextStateFunc(currentState), currentQuestionIndex: currentQuestionIndex+1});
+      return;
     }
-    else { 
-      handleUpdateGameSession({currentState: nextStateFunc(currentState)}) 
-    }
+    if (currentState === GameSessionState.PHASE_1_RESULTS)
+      assembleNavDictionary(false, currentState);
+    handleUpdateGameSession({currentState: nextStateFunc(currentState)});     
   }
 
   return (

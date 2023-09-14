@@ -107,13 +107,13 @@ export default function GameInProgress({
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
-    if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, nextState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER){
       assembleNavDictionary(isConfidenceEnabled, nextState);
       handleBeginQuestion();
       return;
     }
+    if (nextState === GameSessionState.TEAMS_JOINING)
+      assembleNavDictionary(isConfidenceEnabled, nextState);
     if (nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS) { // if teacher is ending early, pop modal
       if (totalAnswers < numPlayers && gameTimerZero === false){
         setModalOpen(true);

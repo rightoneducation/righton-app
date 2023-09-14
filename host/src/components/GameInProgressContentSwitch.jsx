@@ -29,7 +29,6 @@ export default function GameInProgressContentSwitch ({
     currentState,
     isConfidenceEnabled,
     handleConfidenceSwitchChange,
-    teamsArray,
     confidenceData
   }) {
   const classes = useStyles();
@@ -53,9 +52,9 @@ export default function GameInProgressContentSwitch ({
               handleGraphClick={handleGraphClick}
             />
           </div>
-          { isConfidenceEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? 
+          { isConfidenceEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS)  ? 
             <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
-               <ConfidenceResponseCard 
+              <ConfidenceResponseCard 
                 confidenceData={confidenceData}
                 orderedAnswers={answersByQuestion}
                 graphClickInfo={graphClickInfo}

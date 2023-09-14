@@ -12,7 +12,6 @@ import {
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
-import { set } from "lodash";
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -145,9 +144,6 @@ const GameSessionContainer = () => {
         });
         return newState;
       });
-      
-      
-      
     });
 
     // @ts-ignore
@@ -188,16 +184,17 @@ const GameSessionContainer = () => {
   }, [gameTimer, gameTimerZero, headerGameCurrentTime]);
 
   // update gameSession currentTimer every 3 seconds with time from headerGame Timer 
-  useEffect(() => {
-    if (gameTimer && !gameTimerZero) {
-      let refreshIntervalId = setInterval(() => {
-        let newUpdates = { currentTimer: (localStorage.getItem('currentGameTimeStore') >= 0 ? localStorage.getItem('currentGameTimeStore') : 0) };
-        //removing this until we smooth out mobile, want to avoid clogging mobile with more gameSessionUpdates than necessary.
-        //apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
-      }, 3000);
-      return () => clearInterval(refreshIntervalId);
-    }
-  }, [gameTimer, gameTimerZero]);
+  //removing this until we smooth out mobile, want to avoid clogging mobile with more gameSessionUpdates than necessary.
+  // useEffect(() => {
+  //   if (gameTimer && !gameTimerZero) {
+  //     let refreshIntervalId = setInterval(() => {
+  //       let newUpdates = { currentTimer: (localStorage.getItem('currentGameTimeStore') >= 0 ? localStorage.getItem('currentGameTimeStore') : 0) };
+  //    
+  //       //apiClient.updateGameSession({ id: gameSessionId, ...newUpdates });
+  //     }, 3000);
+  //     return () => clearInterval(refreshIntervalId);
+  //   }
+  // }, [gameTimer, gameTimerZero]);
 
   // handles confidence switch changes on Question Config
   const handleConfidenceSwitchChange = (event) => {
@@ -331,7 +328,14 @@ const GameSessionContainer = () => {
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
     case GameSessionState.PHASE_2_RESULTS:
-      return <StudentViews {...gameSession} gameTimer={gameTimer} handleUpdateGameSession={handleUpdateGameSession} showFooterButtonOnly={true}/>;
+      return <StudentViews 
+        {...gameSession} 
+        gameTimer={gameTimer} 
+        handleUpdateGameSession={handleUpdateGameSession} 
+        showFooterButtonOnly={true} 
+        setIsConfidenceEnabled={setIsConfidenceEnabled}
+        assembleNavDictionary={assembleNavDictionary}
+      />;
 
 
     case GameSessionState.FINAL_RESULTS:

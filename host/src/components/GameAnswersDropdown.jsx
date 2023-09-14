@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
-export default function GameAnswersDropdown({ answer, explanation, correct, numQuestionAnswers, totalAnswers, pos, letterDictionary }) {
+export default function GameAnswersDropdown({ answer, explanation, correct, numQuestionAnswers, totalAnswers, pos }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   
@@ -24,7 +24,7 @@ export default function GameAnswersDropdown({ answer, explanation, correct, numQ
         <Box className={classes.answerBox}>
           <CardContent className={classes.cardContent}>
             <Box className={correct ? classes.answerBoxRight : classes.answerBoxWrong}>
-              <Typography className={classes.answerText}>{letterDictionary[pos] + answer}</Typography>
+              <Typography className={classes.answerText}>{`${String.fromCharCode(65+pos)} ${answer}`}</Typography>
               <IconButton
                 size="small"
                 className={expanded ? classes.expanded : classes.expand}

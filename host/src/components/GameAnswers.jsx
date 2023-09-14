@@ -4,20 +4,9 @@ import { Box, Typography } from "@material-ui/core";
 import GameAnswersDropdown from "./GameAnswersDropdown";
 import { isNullOrUndefined } from "@righton/networking";
 
-export default function GameAnswers({ teamsPickedChoices, questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers, numPlayers, statePosition}) {
-  const letterDictionary = {
-    0:'A. ',
-    1:'B. ',
-    2:'C. ',
-    3:'D. ',
-    4:'E. ',
-    5:'F. ',
-    6:'G. ',
-    7:'H. ',
-    8:'I. '
-  }
+export default function GameAnswers({ questions, questionChoices, currentQuestionIndex, answersByQuestion, totalAnswers }) {
   const classes = useStyles();
-  let instructions = "";
+  let instructions = ""; 
   // returns the correct answer explanation for an individual question
   const getAnswerExplanation = (questions, currentQuestionIndex) => {
     if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].instructions)) {
@@ -28,22 +17,24 @@ export default function GameAnswers({ teamsPickedChoices, questions, questionCho
     });
     return instructions;
   };
-
   const answerExplanation = getAnswerExplanation(questions, currentQuestionIndex);
-
-  const data = Object.keys(answersByQuestion).map((index) => ({
-    count: answersByQuestion[index],
-    label: letterDictionary[index].replace('. ', ''),
-     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
-     answer: questionChoices[index].text,
-  }));
   
   return (
     <Box className={classes.background}>
       <Typography className={classes.titleStyle}>Answer Explanations</Typography>
       {(questionChoices) ?
         questionChoices.map((choice, index) => {
-          return (<GameAnswersDropdown key={index} answer={choice.text} explanation={!choice.isAnswer ? choice.reason : answerExplanation} correct={choice.isAnswer} numQuestionAnswers={answersByQuestion[index]} totalAnswers={totalAnswers} pos={index} letterDictionary={letterDictionary} />)
+          return (
+            <GameAnswersDropdown 
+              key={index} 
+              answer={choice.text} 
+              explanation={!choice.isAnswer ? choice.reason : answerExplanation} 
+              correct={choice.isAnswer} 
+              numQuestionAnswers={answersByQuestion[index]} 
+              totalAnswers={totalAnswers} 
+              pos={index} 
+            />
+          )
         })
         : null}
     </Box>
