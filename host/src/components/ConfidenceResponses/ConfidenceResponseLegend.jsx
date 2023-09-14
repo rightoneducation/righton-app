@@ -1,19 +1,9 @@
-import React, { useState } from 'react';
-import { Typography, Box } from '@material-ui/core';
-import { VictoryChart, VictoryStack, VictoryBar, VictoryLabel, VictoryAxis, VictoryLegend, Rect } from 'victory';
+import React from 'react';
+import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-const Legend = () => {
-  const correctColor = "#FFF";
-  const incorrectColor = "transparent";
-
-  const useStyles = makeStyles({
-    legend: {
-      display: "flex",
-      justifyContent: "center"
-    }
-  });
-  const classes = useStyles;
+export default function Legend () {
+  const classes = useStyles();
 
   return (
     <div className={classes.legend} style={{
@@ -82,4 +72,9 @@ const Legend = () => {
   );
 };
 
-export default Legend;
+const useStyles = makeStyles({
+  legend: {
+    display: "flex",
+    justifyContent: "center"
+  }
+});

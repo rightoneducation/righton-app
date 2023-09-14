@@ -7,74 +7,10 @@ import {
 } from "@material-ui/core";
 import check from '../../images/correctAnswerCheck.png';
 
-export default function ConfidenceResponseDropdown({ graphClickInfo, responses }) {
-  const useStyles = makeStyles(theme => ({
-    container: {
-      display: "flex",
-      paddingBottom: "16px",
-      flexDirection: "column",
-      alignItems: "flexEnd",
-      gap: "7px",
-      alignSelf: "stretch"
-    },
-    headerText: {
-      color: '#FFF',
-      textAlign: 'left',
-      fontFamily: 'Rubik',
-      fontSize: '14px',
-      fontWeight: '400',
-    },
-    confidenceLevelText: {
-      color: '#FFF',
-      textAlign: 'left',
-      fontFamily: 'Rubik',
-      fontSize: '16px',
-      fontWeight: '700',
-      paddingTop: '8px',
-    },
-    answerLabelText: {
-      color: 'rgba(255,255,255,0.4)',
-      textAlign: 'right',
-      fontFamily: 'Rubik',
-      fontSize: '12px',
-      fontWeight: '400',
-    },
-    playerCard: {
-      display: "flex",
-      padding: "8px 12px",
-      alignItems: "center",
-      justifyContent: "space-between",
-      gap: "10px",
-      alignSelf: "stretch",
-      borderRadius: "8px",
-      background: "#063772"
-    },
-    nameText: {
-      overflow: "hidden",
-      color: "#FFF",
-      textOverflow: "ellipsis",
-      fontFamily: "Poppins",
-      fontSize: "14px",
-      fontStyle: "normal",
-      fontWeight: 400,
-      lineHeight: "normal"
-    },
-    answerDataContainer: {
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-      justifyContent: "center"
-    },
-    answerText: {
-      fontSize: "16px",
-      color: "#FFF",
-      fontWeight: 800
-    },
-    check: {
-      width: 18,
-      height: 24
-    }
-  }));
+export default function ConfidenceResponseDropdown({ 
+  graphClickInfo, 
+  responses 
+}) {
   const classes = useStyles();
   const ConfidenceLevelDictionary = {
     0: "Not Rated",
@@ -122,3 +58,71 @@ export default function ConfidenceResponseDropdown({ graphClickInfo, responses }
     </>
   );
 };
+
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: "flex",
+    paddingBottom: "16px",
+    flexDirection: "column",
+    alignItems: "flexEnd",
+    gap: "7px",
+    alignSelf: "stretch"
+  },
+  headerText: {
+    color: '#FFF',
+    textAlign: 'left',
+    fontFamily: 'Rubik',
+    fontSize: '14px',
+    fontWeight: '400',
+  },
+  confidenceLevelText: {
+    color: '#FFF',
+    textAlign: 'left',
+    fontFamily: 'Rubik',
+    fontSize: '16px',
+    fontWeight: '700',
+    paddingTop: '8px',
+  },
+  answerLabelText: {
+    color: 'rgba(255,255,255,0.4)',
+    textAlign: 'right',
+    fontFamily: 'Rubik',
+    fontSize: '12px',
+    fontWeight: '400',
+  },
+  playerCard: {
+    display: "flex",
+    padding: "8px 12px",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "10px",
+    alignSelf: "stretch",
+    borderRadius: "8px",
+    background: "#063772"
+  },
+  nameText: {
+    overflow: "hidden",
+    color: "#FFF",
+    textOverflow: "ellipsis",
+    fontFamily: "Poppins",
+    fontSize: "14px",
+    fontStyle: "normal",
+    fontWeight: 400,
+    lineHeight: "normal"
+  },
+  answerDataContainer: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    justifyContent: "center"
+  },
+  answerText: {
+    fontSize: "16px",
+    color: "#FFF",
+    fontWeight: 800
+  },
+  check: {
+    width: 18,
+    height: 24
+  }
+}));

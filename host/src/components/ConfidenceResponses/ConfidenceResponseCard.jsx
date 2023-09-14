@@ -95,43 +95,5 @@ const useStyles = makeStyles(theme => ({
     lineHeight: "normal",
     opacity: 0.6,
     alignSelf: "stretch"
-  },
-  answerOptionText: {
-    color: "#FFF",
-    fontFamily: "Poppins",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "normal"
-  },
-  responseHeader: {
-    color: "#FFF",
-    fontFamily: "Poppins",
-    fontSize: "16px",
-    fontStyle: "normal",
-    fontWeight: 700,
-    lineHeight: "normal"
-  },
-  responsesContainer: {
-    display: "flex",
-    padding: "16px 0px",
-    flexDirection: "column",
-    alignItems: "flexEnd",
-    gap: "7px",
-    alignSelf: "stretch"
-  },
-  answerHeaderContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-end"
-  },
-  answerHeader: {
-    color: "#FFF",
-    fontFamily: "Poppins",
-    fontSize: "12px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "normal",
-    opacity: 0.4,
   }
 }));

@@ -1,37 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Box } from '@material-ui/core';
-import { VictoryChart, VictoryStack, VictoryBar, VictoryLabel, VictoryAxis, VictoryLegend, Rect } from 'victory';
+import { Typography } from '@material-ui/core';
+import { VictoryChart, VictoryStack, VictoryBar, VictoryLabel, VictoryAxis } from 'victory';
 import { makeStyles } from '@material-ui/core';
 import { debounce } from 'lodash';
 import Legend from "./ConfidenceResponseLegend";
 import CustomBar from "./CustomBar";
-import { ConfidenceLevel, ConfidenceLevelLabels, isNullOrUndefined } from '@righton/networking';
+import { ConfidenceLevel, ConfidenceLevelLabels } from '@righton/networking';
 
-const useStyles = makeStyles({
-  container: {
-    display: "flex",
-    padding: "5px 4px",
-    flexDirection: "column",
-    alignItems: "center",
-    alignSelf: "stretch",
-  },
-  labels: {
-    color: 'rgba(255, 255, 255, 1)',
-    fontFamily: 'Rubik',
-    fontSize: 12,
-    flexDirection: "column",
-    alignItems: "center",
-    alignSelf: "stretch"
-  }
-});
-const classes = useStyles;
-
-
-const ConfidenceResponsesGraph = ({  
+export default function ConfidenceResponsesGraph ({  
   confidenceData,
   graphClickInfo, 
   handleGraphClick,
-}) => {
+}) {
+  const classes = useStyles();
   const correctColor = "#FFF";
   const incorrectColor = "transparent";
   const customThemeGraph = {
@@ -160,4 +141,20 @@ const ConfidenceResponsesGraph = ({
   );
 };
 
-export default ConfidenceResponsesGraph;
+const useStyles = makeStyles({
+  container: {
+    display: "flex",
+    padding: "5px 4px",
+    flexDirection: "column",
+    alignItems: "center",
+    alignSelf: "stretch",
+  },
+  labels: {
+    color: 'rgba(255, 255, 255, 1)',
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    flexDirection: "column",
+    alignItems: "center",
+    alignSelf: "stretch"
+  }
+});
