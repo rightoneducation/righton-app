@@ -15,18 +15,36 @@ export default function EnableShortAnswerCard ({
         </Typography>
       </div>
       <div className={classes.buttonContainer}>
-        <ButtonGroup disableElevation 
+        <ButtonGroup
+          disableRipple
+          disableElevation 
           variant="contained" 
           color="primary"
           className={classes.buttonGroup}
         >
-          <Button className={classes.button}> MULTIPLE CHOICE </Button>
-          <Button className={classes.button}> SHORT ANSWER </Button>
+          <Button 
+            disableRipple
+            variant={isShortAnswerEnabled ? 'outlined' : 'contained'} 
+            className={ classes.button} 
+            onClick={() => handleShortAnswerChange(false)}
+          > 
+            MULTIPLE CHOICE 
+          </Button>
+          <Button 
+            disableRipple
+            variant={isShortAnswerEnabled ? 'contained' : 'outlined'} 
+            className={classes.button} 
+            onClick={() => handleShortAnswerChange(true)}
+          >
+            SHORT ANSWER
+          </Button>
         </ButtonGroup>
       </div>
       <div className={classes.answerContainer}>
         <Typography className={classes.text}>
-          Players will be asked to pick from a list of possible answers.
+          {isShortAnswerEnabled ? 
+              `Players will be asked to provide a short answer.`
+            : `Players will be asked to pick from a list of possible answers.`}
         </Typography>
       </div>
    </Box>
@@ -68,10 +86,36 @@ const useStyles = makeStyles({
     display: 'flex', 
     justifyContents: 'center', 
     alignItems: 'center', 
-    width: '100%'
+    width: '100%',
   },
   button: {
-    width: '300px',
+    backgroundColor: '#4994EC',
+    color: 'white',
+    width: '50%',
+    maxWidth: '300px',
+    "&.MuiButton-contained": {
+      backgroundColor: '#4994EC',
+      border: 0,
+      "&:hover":{
+        backgroundColor: '#4994EC'
+      },
+      "&.Mui-focusVisible, &:active, &:focus": {
+        outlineColor: '#4994EC',
+        borderColor: '#4994EC',
+      },
+    },
+    "&.MuiButton-outlined": {
+      backgroundColor: 'transparent',
+      borderColor: '#4994EC',
+      border: '1px solid',
+      "&:hover":{
+        backgroundColor: 'rgba(73,148,236,0.2)'
+      },
+      "&.Mui-focusVisible, &:active, &:focus": {
+        outlineColor: '#4994EC',
+        borderColor: '#4994EC',
+      },
+    },
   },
   text: {
     color: '#FFF',

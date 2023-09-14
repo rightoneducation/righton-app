@@ -127,14 +127,14 @@ export default function GameInProgressContentSwitch ({
       <div id="questioncard-scrollbox" ref={questionCardRef}>
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
       </div>
-      <div id="responses-scrollbox" ref={responsesRef} >
+      <div id="responses-scrollbox" ref={responsesRef} style={{width:'100%'}}>
         <EnableShortAnswerCard 
           isShortAnswerEnabled={isShortAnswerEnabled} 
           handleShortAnswerChange={handleShortAnswerChange}
         />
       </div>
       <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
-      <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
+      <div id="confidencecard-scrollbox" ref={confidenceCardRef} style={{width:'100%'}}>
         <EnableConfidenceCard 
           isConfidenceEnabled={isConfidenceEnabled} 
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
@@ -161,5 +161,6 @@ const useStyles = makeStyles({
     justifyContent: "center",
     gap: '24px',
     width: '100%',
+    maxWidth: "500px"
   }
 });
