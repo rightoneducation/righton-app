@@ -1,13 +1,14 @@
 import React from "react";
 import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import { GameSessionState, ConfidenceLevel } from "@righton/networking";
-import QuestionCard from "../components/QuestionCard";
-import Responses from "../components/Responses/Responses";
+import QuestionCard from "./QuestionCard";
+import Responses from "./Responses/Responses";
 import ConfidenceResponseCard from "./ConfidenceResponses/ConfidenceResponseCard";
-import GameAnswers from "../components/GameAnswers";
-import SelectedAnswer from "../components/Responses/SelectedAnswer";
-import EnableConfidenceCard from "../components/EnableConfidenceCard";
+import GameAnswers from "./GameAnswers";
+import SelectedAnswer from "./Responses/SelectedAnswer";
+import EnableConfidenceCard from "./EnableConfidenceCard";
 import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
+import EnableShortAnswerCard from "./EnableShortAnswerCard";
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
@@ -30,7 +31,9 @@ export default function GameInProgressContentSwitch ({
     isConfidenceEnabled,
     handleConfidenceSwitchChange,
     teamsArray,
-    confidenceData
+    confidenceData,
+    isShortAnswerEnabled,
+    handleShortAnswerChange
   }) {
   const classes = useStyles();
   
@@ -124,6 +127,13 @@ export default function GameInProgressContentSwitch ({
       <div id="questioncard-scrollbox" ref={questionCardRef}>
         <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
       </div>
+      <div id="responses-scrollbox" ref={responsesRef} >
+        <EnableShortAnswerCard 
+          isShortAnswerEnabled={isShortAnswerEnabled} 
+          handleShortAnswerChange={handleShortAnswerChange}
+        />
+      </div>
+      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
       <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
         <EnableConfidenceCard 
           isConfidenceEnabled={isConfidenceEnabled} 

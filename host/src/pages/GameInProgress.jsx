@@ -55,6 +55,7 @@ export default function GameInProgress({
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices, questions, currentState);
   const noResponseLabel = '–';
+  const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
 
   // data object used in Victory graph for real-time responses
   const data =[
@@ -102,6 +103,10 @@ export default function GameInProgress({
   // handles the countdown modal closing once the countdown is finished
   const handleStartGameModalTimerFinished = () => {
     setIsLoadModalOpen(false);
+  };
+
+  const handleShortAnswerChange = () => {
+    setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
@@ -183,6 +188,8 @@ export default function GameInProgress({
             isConfidenceEnabled={isConfidenceEnabled}
             handleConfidenceSwitchChange={handleConfidenceSwitchChange}
             teamsArray={teamsArray}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            handleShortAnswerChange={handleShortAnswerChange}
           />
         </div>      
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
