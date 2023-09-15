@@ -3,9 +3,11 @@ import { Typography, makeStyles } from '@material-ui/core';
 
 export default function PlayersSelectedAnswer (props) {
     const { data, graphClickInfo, numPlayers, teamsPickedChoices, statePosition } = props;
+
     const classes = useStyles(props);
     const answerCount = data[graphClickInfo.selectedIndex].answerCount;
     const percentage = (answerCount / numPlayers) * 100;
+    
     const selectedBarAnswerText = data[graphClickInfo.selectedIndex].answerText;
     const teamsWithSelectedAnswer = teamsPickedChoices.filter(teamChoices =>
         teamChoices.choiceText === selectedBarAnswerText
