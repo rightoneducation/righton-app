@@ -7,7 +7,7 @@ export default function PlayersSelectedAnswer (props) {
     const classes = useStyles(props);
     const answerCount = data[graphClickInfo.selectedIndex].answerCount;
     const percentage = (answerCount / numPlayers) * 100;
-    
+
     const selectedBarAnswerText = data[graphClickInfo.selectedIndex].answerText;
     const teamsWithSelectedAnswer = teamsPickedChoices.filter(teamChoices =>
         teamChoices.choiceText === selectedBarAnswerText
