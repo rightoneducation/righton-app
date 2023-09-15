@@ -1,63 +1,62 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { LinearProgress } from "@material-ui/core";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { LinearProgress } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   blueButton: {
-    marginLeft: "10px",
-    marginTop: "10px",
-    display: "inline",
-    background: "linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)",
-    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-    borderRadius: "67.5px",
-    textTransform: "none",
-    fontSize: "17px",
+    marginLeft: '10px',
+    marginTop: '10px',
+    display: 'inline',
+    background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    borderRadius: '67.5px',
+    textTransform: 'none',
+    fontSize: '17px',
     fontWeight: 500,
-    color: "white",
-    marginBottom: "20px",
-    "&:disabled": {
-      background: "rgba(255, 255, 255, 0.5)",
+    color: 'white',
+    marginBottom: '20px',
+    '&:disabled': {
+      background: 'rgba(255, 255, 255, 0.5)',
       opacity: 0.5,
-      cursor: "not-allowed",
+      cursor: 'not-allowed',
     },
   },
   timerBar: {
-    borderRadius: "40px",
-    display: "inline-block",
-    marginRight: "10px",
-    width: "50%",
-    height: '6px'
+    borderRadius: '40px',
+    display: 'inline-block',
+    marginRight: '10px',
+    width: '50%',
+    height: '6px',
   },
   colorPrimary: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   barColorPrimary: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
 }));
 
-export default function Timer({
-  headerGameCurrentTime,
-  totalRoundTime,
-}) {
+export default function Timer({ headerGameCurrentTime, totalRoundTime }) {
   const classes = useStyles();
 
   return (
-    <div style={{display: 'flex', alignItems: 'center'}}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <LinearProgress
         classes={{
           root: classes.timerBar,
           colorPrimary: classes.colorPrimary,
           barColorPrimary: classes.barColorPrimary,
         }}
-        value={(headerGameCurrentTime/totalRoundTime) * 100}
-        variant={"determinate"}
-        style={{width: 'calc(100% - 50px'}}
+        value={(headerGameCurrentTime / totalRoundTime) * 100}
+        variant={'determinate'}
+        style={{ width: 'calc(100% - 50px' }}
       />
 
-      <p style={{ display: "inline-block", color: "white" }}>
+      <p style={{ display: 'inline-block', color: 'white' }}>
         {Math.floor(headerGameCurrentTime / 60)}:
-        {headerGameCurrentTime % 60 < 10 ? `0${headerGameCurrentTime % 60}` : `${headerGameCurrentTime % 60}`}
+        {headerGameCurrentTime % 60 < 10
+          ? `0${headerGameCurrentTime % 60}`
+          : `${headerGameCurrentTime % 60}`}
       </p>
 
       {/* <IconButton

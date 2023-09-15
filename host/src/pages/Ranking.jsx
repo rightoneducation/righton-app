@@ -1,14 +1,14 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core";
-import PlayerScores from "../components/RankingsScores";
-import HeaderRanking from "../components/HeaderRanking";
-import FooterRanking from "../components/FooterRanking";
+import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import PlayerScores from '../components/RankingsScores';
+import HeaderRanking from '../components/HeaderRanking';
+import FooterRanking from '../components/FooterRanking';
 
 export default function Ranking({
   teams,
   gameSessionId,
   currentState,
-  handleUpdateGameSession
+  handleUpdateGameSession,
 }) {
   const classes = useStyles();
   const players = { teams }.teams;
@@ -22,32 +22,33 @@ export default function Ranking({
       <FooterRanking
         gameSessionId={gameSessionId}
         currentState={currentState}
-        handleUpdateGameSession={handleUpdateGameSession} />
+        handleUpdateGameSession={handleUpdateGameSession}
+      />
     </div>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   background: {
-    height: "100vh",
-    width: "100%",
-    minHeight: "100vh",
-    background: "linear-gradient(bottom,#02215F,#0D68B1)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    overflowY: "scroll",
-    overflowX: "hidden"
+    height: '100vh',
+    width: '100%',
+    minHeight: '100vh',
+    background: 'linear-gradient(bottom,#02215F,#0D68B1)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
   },
   content: {
-    width: "85%",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    padding: "0px"
+    width: '85%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    padding: '0px',
   },
   scores: {
-    overflow: "scroll",
-  }
+    overflow: 'scroll',
+  },
 }));

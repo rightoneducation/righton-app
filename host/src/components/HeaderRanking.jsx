@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core";
+import React from 'react';
+import { makeStyles } from '@material-ui/core';
 
 export default function HeaderRanking() {
   const classes = useStyles();
@@ -16,23 +16,22 @@ export default function HeaderRanking() {
 }
 
 const useStyles = makeStyles(() => ({
-
   results: {
-    paddingTop: "5%",
+    paddingTop: '5%',
     fontFamily: 'Poppins',
-    fontStyle: "normal",
-    fontWeight: "700",
-    fontSize: "36px",
-    lineHeight: "54px",
-    color: "#FFFFFF"
+    fontStyle: 'normal',
+    fontWeight: '700',
+    fontSize: '36px',
+    lineHeight: '54px',
+    color: '#FFFFFF',
   },
   leader: {
-    marginBottom: "5%",
+    marginBottom: '5%',
     fontFamily: 'Poppins',
-    fontStyle: "normal",
-    fontWeight: "400",
-    fontSize: "16px",
-    lineHeight: "24px",
-    color: "#FFFFFF"
-  }
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '16px',
+    lineHeight: '24px',
+    color: '#FFFFFF',
+  },
 }));

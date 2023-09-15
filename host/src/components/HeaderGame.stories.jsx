@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react';
 import { GameSessionParser } from '@righton/networking';
-import HeaderGame from "./HeaderGame";
-import MockGameSession from "../mock/MockGameSession.json";
+import HeaderGame from './HeaderGame';
+import MockGameSession from '../mock/MockGameSession.json';
 
 export default {
-  title: "HeaderGame",
+  title: 'HeaderGame',
   component: HeaderGame,
-  argTypes: { handleSkipToResults: { action: "handleSkipToResults" } }
+  argTypes: { handleSkipToResults: { action: 'handleSkipToResults' } },
 };
-const gameSession = GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
-const Template = args => <HeaderGame {...args} />;
+const gameSession =
+  GameSessionParser.gameSessionFromAWSGameSession(MockGameSession);
+const Template = (args) => <HeaderGame {...args} />;
 
 export const PhaseOne = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
@@ -67,5 +68,5 @@ SecondQuestion.args = {
   totalQuestions: 3,
   headerGameCurrentTime: 100,
   totalRoundTime: 300,
-  gameTimer: true
+  gameTimer: true,
 };
