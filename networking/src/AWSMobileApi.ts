@@ -220,16 +220,6 @@ export enum ConfidenceLevel {
   TOTALLY = "TOTALLY"
 }
 
-export enum ConfidenceLevelLabels {
-  NOT_RATED = "Not\nRated",
-  NOT_AT_ALL = "Not At\nAll",
-  KINDA = "Kinda",
-  QUITE = "Quite",
-  VERY = "Very",
-  TOTALLY = "Totally"
-}
-
-
 export type ModelQuestionConnection = {
   __typename: "ModelQuestionConnection",
   items:  Array<Question | null >,

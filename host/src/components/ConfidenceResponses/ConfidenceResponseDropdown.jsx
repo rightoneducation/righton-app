@@ -12,6 +12,7 @@ export default function ConfidenceResponseDropdown({
   selectedConfidenceData 
 }) {
   const classes = useStyles();
+   // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsegraph
   const ConfidenceLevelDictionary = {
     0: "Not Rated",
     1: "Not At All Confident",

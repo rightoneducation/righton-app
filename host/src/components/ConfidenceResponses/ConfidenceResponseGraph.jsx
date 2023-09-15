@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import { debounce } from 'lodash';
 import Legend from "./ConfidenceResponseLegend";
 import CustomBar from "./CustomBar";
-import { ConfidenceLevel, ConfidenceLevelLabels } from '@righton/networking';
+import { ConfidenceLevel } from '@righton/networking';
 
 export default function ConfidenceResponsesGraph ({  
   confidenceData,
@@ -63,9 +63,18 @@ export default function ConfidenceResponsesGraph ({
   // parse the confidenceData to be used by Victory
   const correctResponders = [];
   const incorrectResponders = [];
+  // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsedropdown
+  const ConfidenceLevelDictionary = {
+    0: "Not\nRated",
+    1: "Not At\nAll",
+    2: "Kinda",
+    3: "Quite",
+    4: "Very",
+    5: "Totally"
+  };
   Object.keys(ConfidenceLevel).map((key, index) => {
-    correctResponders.push({x: ConfidenceLevelLabels[key], y: confidenceData[index].correct});
-    incorrectResponders.push({x: ConfidenceLevelLabels[key], y: confidenceData[index].incorrect});
+    correctResponders.push({x: ConfidenceLevelDictionary[index], y: confidenceData[index].correct});
+    incorrectResponders.push({x: ConfidenceLevelDictionary[index], y: confidenceData[index].incorrect});
   });
 
   return (
