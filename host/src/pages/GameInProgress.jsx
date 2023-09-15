@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { makeStyles } from "@material-ui/core";
 import FooterGame from "../components/FooterGame";
 import ConfidenceResponseCard from "../components/ConfidenceResponses/ConfidenceResponseCard";
@@ -49,7 +49,11 @@ export default function GameInProgress({
   };
   const numPlayers = teams ? teams.length : 0;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
-  const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState);
+  // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
+  const answersByQuestion = useMemo(() => 
+    getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState), 
+    [questionChoices, teamsArray, currentQuestionIndex, questions, currentState]
+  );
   const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const totalAnswers = getTotalAnswers(answersByQuestion.answersArray);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
