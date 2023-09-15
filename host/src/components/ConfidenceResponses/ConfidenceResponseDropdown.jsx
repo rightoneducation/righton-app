@@ -9,7 +9,7 @@ import check from '../../images/correctAnswerCheck.png';
 
 export default function ConfidenceResponseDropdown({ 
   graphClickInfo, 
-  responses 
+  selectedConfidenceData 
 }) {
   const classes = useStyles();
   const ConfidenceLevelDictionary = {
@@ -19,16 +19,6 @@ export default function ConfidenceResponseDropdown({
     3: "Quite Confident",
     4: "Very Confident",
     5: "Totally Confident"
-  }
-  // TODO: optimize
-  const sortResponses = () => {
-    const letters = { 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0 };
-    responses.forEach(response => {
-      letters[response.answer] += 1;
-    })
-    responses.sort((a, b) => letters[b.answer] - letters[a.answer]);
-    responses.sort((a, b) => b.correct - a.correct);
-    return responses;
   }
   const playerResponse = ({ name, answer, isCorrect }) => {
     return (
@@ -40,18 +30,47 @@ export default function ConfidenceResponseDropdown({
         </Grid>
       </Card>
     );
-  }
+  };
+  // sorts players based on the Figma criteria:
+  // correct players sorted alphabetically
+  // incorrect players sorted first by answer frequency, then alphabetically
+  const sortPlayers = (selectedConfidenceData) => {
+    const correctPlayers = [];
+    const incorrectPlayers = [];
+    const answerFrequency = {};
+    selectedConfidenceData.players.map((playerData) => {
+      // split players into correct and incorrect so .sort is limited to these subsets
+      if (playerData.isCorrect) {
+        correctPlayers.push(playerData);
+      } else {
+        incorrectPlayers.push(playerData);
+        // if incorrect, also store the frequency of the answer for sorting later
+        answerFrequency[playerData.answer] = (answerFrequency[playerData.answer] || 0) + 1;
+      };
+    });
+    // sort correct alphabeticall
+    correctPlayers.sort((a, b) => a.name.localeCompare(b.name));
+    incorrectPlayers.sort((a, b) => {
+      // sort incorrect by answer frequency, then alphabetically
+      const freqDifference = answerFrequency[b.answer] - answerFrequency[a.answer];
+      return freqDifference !== 0 ? freqDifference : a.name.localeCompare(b.name);
+    });
+    return { correct: correctPlayers, incorrect: incorrectPlayers };
+  };
+  // return both and then render them in the correct order
+  const sortedPlayers = sortPlayers(selectedConfidenceData);
 
   return (
     <>
-    { responses.length === 0 
+    { selectedConfidenceData.length === 0 
       ? <Typography className={classes.headerText}>No players picked this option</Typography> 
       : <>
           <Typography className={classes.headerText}>Showing players who answered</Typography>
           <Typography className={classes.confidenceLevelText}>{ConfidenceLevelDictionary[graphClickInfo.selectedIndex]}</Typography>
           <Typography className={classes.answerLabelText}>Answer</Typography>
           <Grid className={classes.container}>
-            {sortResponses().map((playerData) => playerResponse(playerData))}
+            {sortedPlayers.correct.map((playerData) => playerResponse(playerData))}
+            {sortedPlayers.incorrect.map((playerData) => playerResponse(playerData))}
           </Grid>
         </>
     }

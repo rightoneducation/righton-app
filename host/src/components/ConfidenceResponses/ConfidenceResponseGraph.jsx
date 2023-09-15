@@ -15,6 +15,8 @@ export default function ConfidenceResponsesGraph ({
   const classes = useStyles();
   const correctColor = "#FFF";
   const incorrectColor = "transparent";
+  const barThickness = 55;
+  const smallPadding = 12;
   const customThemeGraph = {
     axis: {
       style: {
@@ -40,13 +42,9 @@ export default function ConfidenceResponsesGraph ({
       barWidth: 55
     }
   }
-
-  const barThickness = 55;
-  const barThicknessZero = 30;
-  const smallPadding = 12;
-  const defaultVictoryPadding = 24;
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef(null);
+  // this is req'd to handle the resizing of the graph container so that Victory can render the svgs 
   useEffect(() => {
     const node = graphRef.current;
     if (node) {
@@ -62,12 +60,12 @@ export default function ConfidenceResponsesGraph ({
       };
     }
   }, []);
-  const correctResponders =  Object.keys(ConfidenceLevel).map((key, index) => {
-    return {x: ConfidenceLevelLabels[key], y: confidenceData[index].correct};
-  });
-
-  const incorrectResponders =  Object.keys(ConfidenceLevel).map((key, index) => {
-    return {x: ConfidenceLevelLabels[key], y: confidenceData[index].incorrect};
+  // parse the confidenceData to be used by Victory
+  const correctResponders = [];
+  const incorrectResponders = [];
+  Object.keys(ConfidenceLevel).map((key, index) => {
+    correctResponders.push({x: ConfidenceLevelLabels[key], y: confidenceData[index].correct});
+    incorrectResponders.push({x: ConfidenceLevelLabels[key], y: confidenceData[index].incorrect});
   });
 
   return (
@@ -136,7 +134,7 @@ export default function ConfidenceResponsesGraph ({
           Confidence
         </Typography>
       </div>
-      <Legend></Legend>
+      <Legend/>
     </div>
   );
 };

@@ -32,7 +32,6 @@ export default function GameInProgressContentSwitch ({
     confidenceData
   }) {
   const classes = useStyles();
-  
   const gameplayComponents = [
     <>
       {graphClickInfo.graph === null ? (
@@ -108,7 +107,7 @@ export default function GameInProgressContentSwitch ({
               /> 
                <ConfidenceResponseDropdown 
                 graphClickInfo={graphClickInfo}
-                responses={confidenceData[graphClickInfo.selectedIndex].players} 
+                selectedConfidenceData={confidenceData[graphClickInfo.selectedIndex]} 
               />
             </div>
            }
