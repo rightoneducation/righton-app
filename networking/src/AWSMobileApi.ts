@@ -220,6 +220,7 @@ export enum ConfidenceLevel {
   TOTALLY = "TOTALLY",
 }
 
+
 export type ModelQuestionConnection = {
   __typename: "ModelQuestionConnection",
   items:  Array<Question | null >,
