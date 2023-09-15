@@ -217,7 +217,7 @@ export enum ConfidenceLevel {
   KINDA = "KINDA",
   QUITE = "QUITE",
   VERY = "VERY",
-  TOTALLY = "TOTALLY"
+  TOTALLY = "TOTALLY",
 }
 
 export type ModelQuestionConnection = {
