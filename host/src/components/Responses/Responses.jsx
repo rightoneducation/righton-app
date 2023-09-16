@@ -29,7 +29,7 @@ export default function Responses({ questions, teams, studentResponses, numPlaye
 
   return (
     <Grid className={classes.centerContent}>
-        <Typography className={classes.titleStyle}>Real-time Responses</Typography>
+        <Typography className={classes.titleStyle}>Responses</Typography>
         <ResponsesGraph questions={questions} teams={teams} studentResponses={studentResponses} numPlayers={numPlayers} totalAnswers={totalAnswers} questionChoices={questionChoices} statePosition={statePosition} teamsPickedChoices={teamsPickedChoices}/>
     </Grid>
   );

@@ -21,7 +21,7 @@ const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, 
 
   return (
     <g>
-      {!isOpenEnded && (
+      {isOpenEnded && (
         <>
           {showCustomTick && (
             <foreignObject x={x - largePadding} y={y - largePadding / 2.5} width={16} height={18}>

@@ -5,13 +5,13 @@ import check from '../../images/Pickedcheck.svg';
 const isOpenEnded = true;
 
 const CustomLabel = (props) => {
-  const { x, y, datum, barThickness, labelOffset, xSmallPadding, mediumLargePadding, defaultVictoryPadding, noResponseLabel, index, reversedResponses, correctChoiceIndex } = props;
+  const { statePosition, x, y, datum, barThickness, labelOffset, xSmallPadding, mediumLargePadding, defaultVictoryPadding, noResponseLabel, index, reversedResponses, correctChoiceIndex } = props;
   const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
   return (
     <g>
       {datum.answerCount !== 0 &&
         <>
-          {showCustomTick && (
+          {(showCustomTick && isOpenEnded && statePosition < 6) && (
             <foreignObject x={10} y={y-32} width={16} height={18}>
               <span>
               <img src={check} alt="correct answer"/>
@@ -21,10 +21,16 @@ const CustomLabel = (props) => {
           <VictoryLabel
             {...props}
             x={
-              isOpenEnded && showCustomTick ? 32 :
-              isOpenEnded ? 10 :
-              defaultVictoryPadding + xSmallPadding
-            }            
+              isOpenEnded
+                ? showCustomTick
+                  ? statePosition < 6
+                    ? 32
+                    : defaultVictoryPadding + xSmallPadding
+                  : statePosition < 6
+                  ? 10
+                  : defaultVictoryPadding + xSmallPadding
+                : defaultVictoryPadding + xSmallPadding
+            }                      
             y={y - labelOffset}
             dx={0}
             dy={(-barThickness / 2) - xSmallPadding}

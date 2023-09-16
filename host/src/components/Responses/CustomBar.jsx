@@ -15,6 +15,19 @@ const CustomBar = (props) => {
   const {x, y, xSmallPadding, mediumPadding, xxxLargePadding, selectedWidth, selectedHeight, datum, index, selectedBarIndex, setSelectedBarIndex} = props;
   const classes = useStyles();
   
+  const isSelected = selectedBarIndex === index;
+
+  // Toggle the selected state when the bar is clicked
+  const toggleSelection = () => {
+    if (isSelected) {
+      // If the bar is already selected, deselect it
+      setSelectedBarIndex(null);
+    } else {
+      // If the bar is not selected, select it
+      setSelectedBarIndex(index);
+    }
+  };
+
   return (
       <g  style={{pointerEvents: 'bounding-box'}}>
         <Bar {...props} />
@@ -29,7 +42,7 @@ const CustomBar = (props) => {
               stroke="transparent"
               rx={8}
               ry={8}
-              onClick={() => setSelectedBarIndex(index)}
+              onClick={toggleSelection}
               style={{cursor: 'pointer'}}
             />
         }

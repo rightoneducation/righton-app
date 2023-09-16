@@ -77,6 +77,8 @@ const SelectedAnswer = (props) => {
 
   const showCustomTick = selectedBarIndex === reversedResponses.length - 1 - correctChoiceIndex;
 
+  const isOpenEnded = true;
+
   return (
     <div className={classes.parentContainer}>
       {selectedBarIndex === null ? (
@@ -89,7 +91,7 @@ const SelectedAnswer = (props) => {
             Showing players who answered:
           </Typography>
           <div className={classes.rectangleStyle}>
-            <div className={classes.choiceContainer}>{data[selectedBarIndex].answerChoice}</div>
+            <div className={classes.choiceContainer}>{statePosition < 6 && isOpenEnded ? null : data[selectedBarIndex].answerChoice}</div>
             <div className={classes.textContainer}>{data[selectedBarIndex].answerText}</div>
             {showCustomTick && (
               <Tooltip title="This is the correct answer" placement="top">

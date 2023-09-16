@@ -138,7 +138,15 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
         <VictoryChart
           // domainPadding={!isOpenEnded ? 36 : 46}
           domainPadding={0}
-          padding={!isOpenEnded ? {defaultVictoryPadding} : {top: defaultVictoryPadding, bottom: defaultVictoryPadding, left: smallPadding, right: smallPadding}}
+          padding={
+            !isOpenEnded
+              ? { defaultVictoryPadding }
+              : (statePosition < 6)
+              ? { top: defaultVictoryPadding, bottom: defaultVictoryPadding, left: smallPadding, right: smallPadding }
+              : statePosition >= 6
+              ? { top: defaultVictoryPadding, bottom: defaultVictoryPadding, left: defaultVictoryPadding, right: smallPadding }
+              : { defaultVictoryPadding }
+          }          
           containerComponent={<VictoryContainer />}
           theme={customTheme}
           width={boundingRect.width}
@@ -148,7 +156,7 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
             standalone={false}
             tickLabelComponent={
               <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
-              domain={[1,6]}
+            domain={[1, 6]}
           />
           {largestAnswerCount < 5 && (
             <VictoryAxis
@@ -191,6 +199,7 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
             }
             labelComponent={
               <CustomLabel
+                statePosition={statePosition}
                 labelOffset={labelOffset}
                 barThickness={barThickness}
                 xSmallPadding={xSmallPadding}
