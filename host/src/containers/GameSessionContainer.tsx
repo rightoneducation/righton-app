@@ -32,7 +32,7 @@ const GameSessionContainer = () => {
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
-
+  const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -235,6 +235,10 @@ const GameSessionContainer = () => {
     setIsConfidenceEnabled(event.target.checked);
   };
 
+  const handleShortAnswerChange = (event) => {
+    setIsShortAnswerEnabled(!isShortAnswerEnabled);
+  };
+
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient
       .updateGameSession({ id: gameSessionId, ...newUpdates })
@@ -281,6 +285,7 @@ const GameSessionContainer = () => {
           id: gameSession.questions[0].id,
           order: 0,
           isConfidenceEnabled: isConfidenceEnabled,
+          // isShortAnswerEnabled: isShortAnswerEnabled, <- add when backend update cleared w/ Mani
         })
         .then((response) => {
           if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
@@ -349,6 +354,8 @@ const GameSessionContainer = () => {
           showFooterButtonOnly={false}
           isConfidenceEnabled={isConfidenceEnabled}
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          handleShortAnswerChange={handleShortAnswerChange}
           handleBeginQuestion={handleBeginQuestion}
           navDictionary={navDictionary}
           questionCardRef={questionCardRef}
@@ -375,6 +382,7 @@ const GameSessionContainer = () => {
           setIsLoadModalOpen={setIsLoadModalOpen}
           showFooterButtonOnly={false}
           isConfidenceEnabled={isConfidenceEnabled}
+          isShortAnswerEnabled={isShortAnswerEnabled}
           navDictionary={navDictionary}
           questionCardRef={questionCardRef}
           responsesRef={responsesRef}

@@ -32,6 +32,8 @@ export default function GameInProgress({
   showFooterButtonOnly,
   isConfidenceEnabled,
   handleConfidenceSwitchChange,
+  isShortAnswerEnabled,
+  handleShortAnswerChange,
   handleBeginQuestion,
   navDictionary,
   assembleNavDictionary,
@@ -85,7 +87,6 @@ export default function GameInProgress({
     currentState,
   );
   const noResponseLabel = '–';
-  const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
 
   // data object used in Victory graph for real-time responses
   const data = [
@@ -140,10 +141,6 @@ export default function GameInProgress({
   // handles the countdown modal closing once the countdown is finished
   const handleStartGameModalTimerFinished = () => {
     setIsLoadModalOpen(false);
-  };
-
-  const handleShortAnswerChange = () => {
-    setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
