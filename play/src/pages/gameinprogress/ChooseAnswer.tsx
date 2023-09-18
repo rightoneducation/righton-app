@@ -60,33 +60,21 @@ export default function ChooseAnswer({
   const { t } = useTranslation();
 
   const questionContents = (
-    <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.chooseanswer.questioncolumn')}
-      </Typography>
-      <ScrollBoxStyled>
-        <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-        {isSmallDevice ? (
-          <Typography
-            variant="body1"
-            sx={{
-              textAlign: 'center',
-              marginTop: `${theme.sizing.largePadding}px`,
-              opacity: 0.5,
-            }}
-          >
-            {t('gameinprogress.general.swipealert')}
-          </Typography>
-        ) : null}
-      </ScrollBoxStyled>
-    </>
+    <ScrollBoxStyled>
+      <QuestionCard questionText={questionText} imageUrl={questionUrl} />
+      {isSmallDevice ? (
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: 'center',
+            marginTop: `${theme.sizing.largePadding}px`,
+            opacity: 0.5,
+          }}
+        >
+          {t('gameinprogress.general.swipealert')}
+        </Typography>
+      ) : null}
+    </ScrollBoxStyled>
   );
 
   const onSubmitDisplay =
@@ -118,56 +106,45 @@ export default function ChooseAnswer({
     );
 
   const answerContents = (
-    <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: '16px',
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.chooseanswer.answercolumn')}
-      </Typography>
-      <ScrollBoxStyled>
-      {!isShortAnswerEnabled ? 
-          <AnswerCard
-            answers={answerChoices}
-            isSubmitted={answerObject.isSubmitted}
-            handleSubmitAnswer={handleSubmitAnswer}
-            currentState={currentState}
-            selectedAnswer={answerObject.multiChoiceAnswerIndex ?? null}
-            handleSelectAnswer={handleSelectAnswer}
-          />
-          :
-          <OpenAnswerCard
-            answerObject={answerObject}
-            isSubmitted={answerObject.isSubmitted}
-            handleSubmitAnswer={handleSubmitAnswer}
-          />
-        }
-        {displaySubmitted ? onSubmitDisplay : null}
-        {isSubmitted ? (
-          <Typography
-            sx={{
-              fontWeight: 700,
-              marginTop: `${theme.sizing.largePadding}px`,
-              marginX: `${theme.sizing.largePadding}px`,
-              fontSize: `${theme.typography.h4.fontSize}px`,
-              textAlign: 'center',
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou2')}
-          </Typography>
-        ) : null}
-      </ScrollBoxStyled>
-    </>
+    <ScrollBoxStyled>
+    {!isShortAnswerEnabled ? 
+        <AnswerCard
+          answers={answerChoices}
+          isSubmitted={answerObject.isSubmitted}
+          handleSubmitAnswer={handleSubmitAnswer}
+          currentState={currentState}
+          selectedAnswer={answerObject.multiChoiceAnswerIndex ?? null}
+          handleSelectAnswer={handleSelectAnswer}
+        />
+        :
+        <OpenAnswerCard
+          answerObject={answerObject}
+          isSubmitted={answerObject.isSubmitted}
+          handleSubmitAnswer={handleSubmitAnswer}
+        />
+      }
+      {displaySubmitted ? onSubmitDisplay : null}
+      {isSubmitted ? (
+        <Typography
+          sx={{
+            fontWeight: 700,
+            marginTop: `${theme.sizing.largePadding}px`,
+            marginX: `${theme.sizing.largePadding}px`,
+            fontSize: `${theme.typography.h4.fontSize}px`,
+            textAlign: 'center',
+          }}
+        >
+          {t('gameinprogress.chooseanswer.answerthankyou2')}
+        </Typography>
+      ) : null}
+    </ScrollBoxStyled>
   );
 
   return (
     <BodyContentAreaDoubleColumnStyled
       container
       spacing={isSmallDevice ? 0 : 2}
+      style={{paddingTop: '16px'}}
     >
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         {isSmallDevice ? (

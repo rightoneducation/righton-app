@@ -56,7 +56,6 @@ export const checkForSubmittedAnswerOnRejoin = (
   }[],
   currentState: GameSessionState
 ): AnswerObject => {
-  const mockAnswer = {answerTexts: ['asdfsadf','\\sqrt(1/2 + 3/4)','asdfasdfsa'], answerTypes: [AnswerType.TEXT, AnswerType.FORMULA, AnswerType.TEXT], isSubmitted: false } as AnswerObject;
   let returnedAnswer: AnswerObject = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
   if (
     hasRejoined &&
@@ -71,7 +70,7 @@ export const checkForSubmittedAnswerOnRejoin = (
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel)); 
     }
     else 
-      returnedAnswer = mockAnswer;
+      returnedAnswer = {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: 0, isSubmitted: false};
   }
   return returnedAnswer;
 };

@@ -134,13 +134,14 @@ export default function GameInProgress({
   const [answerObject, setAnswerObject] = useState<AnswerObject>(() => {
     let rejoinSubmittedAnswer = null;
     rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+    localModel,
     hasRejoined,
     teamAnswers,
     answerChoices,
     currentState
   );
-    return rejoinSubmittedAnswer;}
-  );
+  return rejoinSubmittedAnswer;}
+);
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(answerObject.multiChoiceAnswerIndex)
   );
@@ -294,6 +295,7 @@ export default function GameInProgress({
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
+            answerObject={answerObject}
           />
         ) : (
           <DiscussAnswer

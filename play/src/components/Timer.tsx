@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
+import { fetchLocalData } from '../lib/HelperFunctions';
 import { LocalModel, StorageKey } from '../lib/PlayModels';
 
 const TimerContainer = styled(Container)(({ theme }) => ({

@@ -81,20 +81,23 @@ export default function OpenAnswerCard({
       presubmitAnswer: extractQuillDelta(currentAnswer),
     };
     window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    console.log(storageObject);
+    console.log(window.localStorage.getItem(StorageKey));
     setEditorContents(currentAnswer);
   }
 
   const handleRetrieveAnswer = (currentContents: any) => {
     const answer = extractQuillDelta(currentContents);
     answer.isSubmitted = true;
+  
     handleSubmitAnswer(answer);
   };
-
+  console.log(window.localStorage.getItem(StorageKey));
   return (
     <BodyCardStyled elevation={10} >
       <BodyCardContainerStyled spacing={2}>
         <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
-           Enter your answer
+          {t('gameinprogress.chooseanswer.openanswercard')}
          </Typography> 
         <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%', gap: '20px'}}>
           <ReactQuill
@@ -102,7 +105,7 @@ export default function OpenAnswerCard({
             readOnly={isSubmitted}
             value={editorContents}
             onChange={handleEditorContentsChange}
-            placeholder="Enter your answer here..."
+            placeholder={t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''}
             modules={modules}
             formats={formats}
             bounds={`[data-text-editor="name"]`}

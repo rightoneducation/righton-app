@@ -95,13 +95,14 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 }
 
 export function LocalModelLoader(): LocalModel {
-  const localModel = fetchLocalData();
-  if (localModel && !localModel.hasRejoined) {
-    const updatedModelForNextReload = { ...localModel, hasRejoined: true };
-    window.localStorage.setItem(
-      StorageKey,
-      JSON.stringify(updatedModelForNextReload)
-    );
-  }
+  console.log(window.localStorage.getItem(StorageKey));
+  const localModel = JSON.parse(window.localStorage.getItem(StorageKey) ?? '{}');
+  // if (localModel && !localModel.hasRejoined) {
+  //   const updatedModelForNextReload = { ...localModel, hasRejoined: true };
+  //   window.localStorage.setItem(
+  //     StorageKey,
+  //     JSON.stringify(updatedModelForNextReload)
+  //   );
+  // }
   return localModel;
 }
