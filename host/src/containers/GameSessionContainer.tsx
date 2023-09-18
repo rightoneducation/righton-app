@@ -199,17 +199,6 @@ const GameSessionContainer = () => {
   // handles confidence switch changes on Question Config
   const handleConfidenceSwitchChange = (event) => {
     setIsConfidenceEnabled(event.target.checked);
-    const gameSessionId = gameSession?.id;
-    const questionId = gameSession.questions[gameSession.currentQuestionIndex].id;
-    const order = gameSession.questions[gameSession.currentQuestionIndex].order;
-
-    apiClient.updateQuestion({ id: questionId, gameSessionId: gameSessionId, order: order, isConfidenceEnabled: event.target.checked })
-      .then(response => {
-        apiClient.getGameSession(response.gameSessionId).then(response => {
-          setGameSession(response);
-        });
-      });
-    
   };
 
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
@@ -243,33 +232,40 @@ const GameSessionContainer = () => {
   const handleBeginQuestion = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
+    const gameSessionId = gameSession?.id;
+    const questionId = gameSession.questions[gameSession.currentQuestionIndex].id;
+    const order = gameSession.questions[gameSession.currentQuestionIndex].order;
     if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-      if (isConfidenceEnabled === true ){
         apiClient.updateQuestion({ gameSessionId: gameSessionId, id: gameSession.questions[0].id, order: 0, isConfidenceEnabled: isConfidenceEnabled })
           .then(response => {
-            console.log(response);
-          });
-      }
-
-      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER };
-      apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
-        .then(response => {
-          localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
-          setHeaderGameCurrentTime(gameSession.phaseOneTime);
-          checkGameTimer(response);
-          setGameSession(response);
-          const teamDataRequests = response.teams.map(team => {
-            return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
-          });
-
-          Promise.all(teamDataRequests)
-            .then(responses => {
-              setTeamsArray(responses);
-            })
-            .catch(reason => console.log(reason));
-        });
-      setIsTimerActive(true);
-      setIsLoadModalOpen(true);
+            if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
+              apiClient.updateQuestion({ gameSessionId: gameSessionId, id: questionId, order: order, isConfidenceEnabled: isConfidenceEnabled })
+                .then(response => {
+                  let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER };
+                  apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+                    .then(response => {
+                      console.log(response);
+                      localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
+                      setHeaderGameCurrentTime(gameSession.phaseOneTime);
+                      checkGameTimer(response);
+                      setGameSession(response);
+                      const teamDataRequests = response.teams.map(team => {
+                        return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+                      });
+            
+                      Promise.all(teamDataRequests)
+                        .then(responses => {
+                          setTeamsArray(responses);
+                        })
+                        .catch(reason => console.log(reason));
+                    });
+                  setIsTimerActive(true);
+                  setIsLoadModalOpen(true);
+                }
+              );
+          }
+        }
+      );
     }
   };
   if (!gameSession) {
