@@ -151,8 +151,7 @@ export default function GameInProgressContentSwitch({
           height: '1px',
           backgroundColor: 'rgba(255,255,255,0.2)',
         }}
-      >
-      </div>
+      ></div>
     </Box>,
   ];
 
