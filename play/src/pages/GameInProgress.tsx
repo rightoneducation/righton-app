@@ -25,9 +25,10 @@ import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterSta
 import {
   checkForSubmittedAnswerOnRejoin,
   checkForSelectedConfidenceOnRejoin,
+  fetchLocalData,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, AnswerObject } from '../lib/PlayModels';
+import { ErrorType, LocalModel, AnswerObject, StorageKey } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;

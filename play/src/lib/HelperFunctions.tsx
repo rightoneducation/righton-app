@@ -6,7 +6,7 @@ import {
   isNullOrUndefined,
   ConfidenceLevel,
 } from '@righton/networking';
-import { InputPlaceholder, StorageKey } from './PlayModels';
+import { InputPlaceholder, StorageKey, LocalModel, AnswerObject, AnswerType } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -45,6 +45,7 @@ export const isGameCodeValid = (gameCode: string) => {
  * @returns - the index of the answer the player has submitted, null if they haven't submitted an answer and boolean to track submission
  */
 export const checkForSubmittedAnswerOnRejoin = (
+  localModel: LocalModel,
   hasRejoined: boolean,
   answers: (ITeamAnswer | null)[] | null | undefined,
   answerChoices: {
@@ -54,36 +55,25 @@ export const checkForSubmittedAnswerOnRejoin = (
     reason: string;
   }[],
   currentState: GameSessionState
-): { selectedAnswerIndex: number | null; isSubmitted: boolean } => {
-  let selectedAnswerIndex = null;
-  let isSubmitted = false;
-
+): AnswerObject => {
+  const mockAnswer = {answerTexts: ['asdfsadf','\\sqrt(1/2 + 3/4)','asdfasdfsa'], answerTypes: [AnswerType.TEXT, AnswerType.FORMULA, AnswerType.TEXT], isSubmitted: false } as AnswerObject;
+  let returnedAnswer: AnswerObject = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
   ) {
-    if (!isNullOrUndefined(answers)) {
-      answers.forEach((answer) => {
-        if (answer) {
-          answerChoices.forEach((answerChoice, index) => {
-            if (answerChoice.text === answer.text) {
-              if (
-                (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
-                  answer.isChosen) ||
-                (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
-                  answer.isTrickAnswer)
-              ) {
-                selectedAnswerIndex = index;
-                isSubmitted = true;
-              }
-            }
-          });
-        }
-      });
+    if (localModel.presubmitAnswer !== null) {
+      // set answer to presubmitAnswer
+      returnedAnswer = localModel.presubmitAnswer;
+      // remove presubmitAnswer from local storage
+      localModel.presubmitAnswer = null; // eslint-disable-line no-param-reassign
+      window.localStorage.setItem(StorageKey, JSON.stringify(localModel)); 
     }
+    else 
+      returnedAnswer = mockAnswer;
   }
-  return { selectedAnswerIndex, isSubmitted };
+  return returnedAnswer;
 };
 
 /**
