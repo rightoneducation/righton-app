@@ -37,11 +37,14 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
   const xLargePadding = 32;
   const xxLargePadding = 40;
   const xxxLargePadding = 48;
+  const xxxxLargePadding = 56;
   const labelOffset = 3;
   const noResponseLabel = '–';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
+
+  const customBarSelectedWidth = isOpenEnded ? boundingRect.width : boundingRect.width - (defaultVictoryPadding + xxLargePadding * 2);
 
   const [selectedBarIndex, setSelectedBarIndex] = useState(null);
 
@@ -155,7 +158,15 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
           <VictoryAxis
             standalone={false}
             tickLabelComponent={
-              <CustomTick mediumPadding={mediumPadding} largePadding={largePadding} reversedResponses={reversedResponses} correctChoiceIndex={correctChoiceIndex} statePosition={statePosition} />}
+              <CustomTick 
+                mediumPadding={mediumPadding} 
+                largePadding={largePadding} 
+                reversedResponses={reversedResponses} 
+                correctChoiceIndex={correctChoiceIndex} 
+                statePosition={statePosition} 
+                isOpenEnded={isOpenEnded}
+              />
+            }
             domain={[1, 6]}
           />
           {largestAnswerCount < 5 && (
@@ -188,10 +199,13 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
             barWidth={({ datum }) => datum.answerCount !== 0 ? barThickness : barThicknessZero}
             dataComponent={
               <CustomBar
+                isOpenEnded={isOpenEnded}
                 xSmallPadding={xSmallPadding}
                 mediumPadding={mediumPadding}
+                xxLargePadding={xxLargePadding}
                 xxxLargePadding={xxxLargePadding}
-                selectedWidth={isOpenEnded ? boundingRect.width : boundingRect.width - (defaultVictoryPadding + xxLargePadding * 2)}
+                xxxxLargePadding={xxxxLargePadding}
+                selectedWidth={customBarSelectedWidth}
                 selectedHeight={18}
                 selectedBarIndex={selectedBarIndex}
                 setSelectedBarIndex={setSelectedBarIndex}
@@ -199,11 +213,13 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
             }
             labelComponent={
               <CustomLabel
+                isOpenEnded={isOpenEnded}
                 statePosition={statePosition}
                 labelOffset={labelOffset}
                 barThickness={barThickness}
                 xSmallPadding={xSmallPadding}
                 mediumLargePadding={mediumLargePadding}
+                xLargePadding={xLargePadding}
                 defaultVictoryPadding={defaultVictoryPadding}
                 questionChoices={questionChoices}
                 noResponseLabel={noResponseLabel}
@@ -216,6 +232,7 @@ const ResponsesGraph = ({ questions, teams, studentResponses, numPlayers, totalA
       </div>
       <div className={classes.answerContainer}>
         <SelectedAnswer
+          isOpenEnded={isOpenEnded}
           questions={questions}
           teams={teams}
           data={data}

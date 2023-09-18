@@ -71,13 +71,12 @@ const SelectedAnswer = (props) => {
     numPlayers,
     teamsPickedChoices,
     statePosition,
+    isOpenEnded
   } = props;
 
   const classes = useStyles();
 
   const showCustomTick = selectedBarIndex === reversedResponses.length - 1 - correctChoiceIndex;
-
-  const isOpenEnded = true;
 
   return (
     <div className={classes.parentContainer}>

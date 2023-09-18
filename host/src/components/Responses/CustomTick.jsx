@@ -4,7 +4,7 @@ import check from '../../images/Pickedcheck.svg';
 import noResponse from '../../images/noResponse.svg'
 import { Tooltip } from '@material-ui/core';
 
-const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, statePosition, mediumPadding, largePadding }) => {
+const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, statePosition, mediumPadding, largePadding, isOpenEnded }) => {
   const showCustomTick = index === reversedResponses.length - 1 - correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
 
@@ -16,8 +16,6 @@ const CustomTick = ({ x, y, index, text, reversedResponses, correctChoiceIndex, 
     fontWeight: '800',
     fontSize: '16px',
   };
-
-  const isOpenEnded = true;
 
   return (
     <g>

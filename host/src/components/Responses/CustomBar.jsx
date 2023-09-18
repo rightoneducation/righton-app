@@ -9,21 +9,32 @@ const useStyles = makeStyles((selectedBarIndex, index) => ({
     }
   }
 }));
-const isOpenEnded = true;
 
 const CustomBar = (props) => {
-  const {x, y, xSmallPadding, mediumPadding, xxxLargePadding, selectedWidth, selectedHeight, datum, index, selectedBarIndex, setSelectedBarIndex} = props;
+  const {
+    x, 
+    y, 
+    xSmallPadding,
+    mediumPadding, 
+    xxxLargePadding, 
+    selectedWidth, 
+    selectedHeight, 
+    datum, 
+    index, 
+    selectedBarIndex, 
+    setSelectedBarIndex, 
+    isOpenEnded,
+    xxLargePadding,
+    xxxxLargePadding
+  } = props;
   const classes = useStyles();
   
   const isSelected = selectedBarIndex === index;
 
-  // Toggle the selected state when the bar is clicked
   const toggleSelection = () => {
     if (isSelected) {
-      // If the bar is already selected, deselect it
       setSelectedBarIndex(null);
     } else {
-      // If the bar is not selected, select it
       setSelectedBarIndex(index);
     }
   };
@@ -35,9 +46,9 @@ const CustomBar = (props) => {
           <rect
               className={classes.highlight}
               x={isOpenEnded ? 0 : xxxLargePadding}
-              y={isOpenEnded ? y-40 : y-mediumPadding}
+              y={isOpenEnded ? y-xxLargePadding : y-mediumPadding}
               width={selectedWidth}
-              height={isOpenEnded ? 56 : selectedHeight+mediumPadding-(xSmallPadding/2)}
+              height={isOpenEnded ? xxxxLargePadding : selectedHeight+mediumPadding-(xSmallPadding/2)}
               fill={selectedBarIndex === index ? "rgba(255, 255, 255, 0.2)" : "transparent"}
               stroke="transparent"
               rx={8}
