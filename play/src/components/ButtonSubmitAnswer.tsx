@@ -5,13 +5,14 @@ import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
 } from '../lib/styledcomponents/GamePlayButtonStyled';
+import { AnswerObject } from '../lib/PlayModels';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
-  selectedAnswer: number | null;
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  handleSubmitAnswer: (answer: string) => void;
+  selectedAnswer?: number | null;
+  answers?: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  handleSubmitAnswer: (answer: AnswerObject) => void;
 }
 
 export default function ButtonSubmitAnswer({
@@ -37,7 +38,7 @@ export default function ButtonSubmitAnswer({
       data-testid="answer-button-enabled"
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        handleSubmitAnswer(answerText ?? '');
+        handleSubmitAnswer({answerTexts: [answerText ?? ''], answerTypes: [0], isSubmitted});
       }}
     >
       {buttonContents}

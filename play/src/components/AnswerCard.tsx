@@ -8,11 +8,12 @@ import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
+import { AnswerObject } from '../lib/PlayModels';
 
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  handleSubmitAnswer: (answerText: AnswerObject ) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (index: number) => void;

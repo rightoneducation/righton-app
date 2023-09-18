@@ -8,8 +8,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
+import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+import { AnswerObject } from '../../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -20,7 +22,7 @@ interface ChooseAnswerProps {
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  handleSubmitAnswer: (answer: AnswerObject) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
@@ -30,6 +32,8 @@ interface ChooseAnswerProps {
   isConfidenceSelected: boolean;
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
+  isShortAnswerEnabled: boolean;
+  answerObject: AnswerObject;
 }
 
 export default function ChooseAnswer({
@@ -49,6 +53,8 @@ export default function ChooseAnswer({
   isConfidenceSelected,
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
+  isShortAnswerEnabled,
+  answerObject
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -124,14 +130,22 @@ export default function ChooseAnswer({
         {t('gameinprogress.chooseanswer.answercolumn')}
       </Typography>
       <ScrollBoxStyled>
-        <AnswerCard
-          answers={answerChoices}
-          isSubmitted={isSubmitted}
-          handleSubmitAnswer={handleSubmitAnswer}
-          currentState={currentState}
-          selectedAnswer={selectedAnswer}
-          handleSelectAnswer={handleSelectAnswer}
-        />
+      {!isShortAnswerEnabled ? 
+          <AnswerCard
+            answers={answerChoices}
+            isSubmitted={answerObject.isSubmitted}
+            handleSubmitAnswer={handleSubmitAnswer}
+            currentState={currentState}
+            selectedAnswer={answerObject.multiChoiceAnswerIndex ?? null}
+            handleSelectAnswer={handleSelectAnswer}
+          />
+          :
+          <OpenAnswerCard
+            answerObject={answerObject}
+            isSubmitted={answerObject.isSubmitted}
+            handleSubmitAnswer={handleSubmitAnswer}
+          />
+        }
         {displaySubmitted ? onSubmitDisplay : null}
         {isSubmitted ? (
           <Typography

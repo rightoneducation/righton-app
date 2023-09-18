@@ -27,7 +27,7 @@ import {
   checkForSelectedConfidenceOnRejoin,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel } from '../lib/PlayModels';
+import { ErrorType, LocalModel, AnswerObject } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -125,6 +125,8 @@ export default function GameInProgress({
       : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
+  const isShortAnswerEnabled = true; // currentQuestion?.isShortAnswerEnabled; <- TODO: uncomment when backend is updated
+
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
@@ -170,17 +172,17 @@ export default function GameInProgress({
     setTimerIsPaused(true);
   };
 
-  const handleSubmitAnswer = async (answerText: string) => {
+  const handleSubmitAnswer = async (answer: AnswerObject) => {
     try {
-      const response = await apiClient.addTeamAnswer(
-        teamMemberId,
-        currentQuestion.id,
-        answerText,
-        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      );
-      setTeamAnswerId(response.id);
-      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+      // const response = await apiClient.addTeamAnswer(
+      //   teamMemberId,
+      //   currentQuestion.id,
+      //   answerText,
+      //   currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+      //   currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      // );
+      // setTeamAnswerId(response.id);
+      setSelectSubmitAnswer(answer);
       setDisplaySubmitted(true);
     } catch {
       setIsAnswerError(true);
@@ -283,6 +285,7 @@ export default function GameInProgress({
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
+            isShortAnswerEnabled={isShortAnswerEnabled}
           />
         ) : (
           <DiscussAnswer
