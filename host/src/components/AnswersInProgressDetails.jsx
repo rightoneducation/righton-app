@@ -1,7 +1,7 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid } from "@material-ui/core";
-import HostAnswerDropdown from "./AnswersInProgress";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+import HostAnswerDropdown from './AnswersInProgress';
 
 export default function AnswersInProgressDetails({ questions }) {
   const classes = useStyles();
@@ -11,16 +11,21 @@ export default function AnswersInProgressDetails({ questions }) {
 
   return (
     <Grid className={classes.background}>
-      {choices.map((answer, index) =>
-        <HostAnswerDropdown key={index} answer={answer.text} explanation={answer.reason} correct={answer.isAnswer} />
-      )}
+      {choices.map((answer, index) => (
+        <HostAnswerDropdown
+          key={index}
+          answer={answer.text}
+          explanation={answer.reason}
+          correct={answer.isAnswer}
+        />
+      ))}
     </Grid>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   background: {
-    width: "100%",
+    width: '100%',
     background: 'transparent',
   },
   answerTitle: {
@@ -29,5 +34,5 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     fontSize: '24px',
     marginBottom: '10px',
-  }
+  },
 }));
