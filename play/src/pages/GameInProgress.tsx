@@ -130,21 +130,18 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{
-    selectedAnswerIndex: number | null;
-    isSubmitted: boolean;
-  }>(() => {
+  const [answerObject, setAnswerObject] = useState<AnswerObject>(() => {
     let rejoinSubmittedAnswer = null;
     rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
-      hasRejoined,
-      teamAnswers,
-      answerChoices,
-      currentState
-    );
-    return rejoinSubmittedAnswer;
-  });
+    hasRejoined,
+    teamAnswers,
+    answerChoices,
+    currentState
+  );
+    return rejoinSubmittedAnswer;}
+  );
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
-    !isNullOrUndefined(selectSubmitAnswer.selectedAnswerIndex)
+    !isNullOrUndefined(answerObject.multiChoiceAnswerIndex)
   );
   const currentAnswer = teamAnswers?.find(
     (answer) => answer?.questionId === currentQuestion.id
@@ -152,6 +149,12 @@ export default function GameInProgress({
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
+
+  const handleTimerIsFinished = () => {
+    setAnswerObject((prev) => ({ ...prev, isSubmitted: true }));
+    setTimerIsPaused(true);
+  };
+
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceOption: string;
@@ -167,22 +170,21 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  const handleTimerIsFinished = () => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
-    setTimerIsPaused(true);
-  };
 
-  const handleSubmitAnswer = async (answer: AnswerObject) => {
+  const handleSubmitAnswer = async (result: AnswerObject) => {
     try {
-      // const response = await apiClient.addTeamAnswer(
+      // TODO: update backend to accept new answer object
+      // await apiClient.addTeamAnswer(
       //   teamMemberId,
       //   currentQuestion.id,
-      //   answerText,
+      //   result.answerTexts,
+      //   result.answerTypes,
       //   currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
       //   currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       // );
-      // setTeamAnswerId(response.id);
-      setSelectSubmitAnswer(answer);
+      console.log("Answer:");
+      console.log(result);
+      setAnswerObject(result);
       setDisplaySubmitted(true);
     } catch {
       setIsAnswerError(true);
@@ -192,7 +194,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
-      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
+      setAnswerObject((prev) => ({ ...prev, isSubmitted: false }));
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
@@ -205,7 +207,12 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
+    const storageObject: LocalModel = {
+      ...fetchLocalData(),
+      presubmitAnswer: {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: index, isSubmitted: false} as AnswerObject,
+    };
+    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    setAnswerObject((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
 
   const setTimeOfLastConfidenceSelect = (time: number) => {
@@ -273,11 +280,11 @@ export default function GameInProgress({
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={selectSubmitAnswer.isSubmitted}
+            isSubmitted={answerObject.isSubmitted}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
+            selectedAnswer={answerObject.multiChoiceAnswerIndex || null}
             handleSelectAnswer={handleSelectAnswer}
             isConfidenceEnabled={currentQuestion.isConfidenceEnabled}
             handleSelectConfidence={handleSelectConfidence}
