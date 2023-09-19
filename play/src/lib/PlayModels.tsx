@@ -128,7 +128,10 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
-  presubmitAnswer: AnswerObject | null;
+}
+
+export interface LocalModelAnswer {
+  presubmitAnswer: AnswerObject;
 }
 
 interface MonsterMap {
@@ -187,6 +190,12 @@ export enum InputPlaceholder {
  *  string key for storage of game data in users local storage
  */
 export const StorageKey = 'rightOn';
+
+/**
+ * string for storage of answer data in users local storage
+ * kept separate from StorageKey so that timer and answer updates don't conflict
+ */
+export const StorageKeyAnswer = 'rightOnAnswer';
 
 export enum AnswerType {
   MULTICHOICE,

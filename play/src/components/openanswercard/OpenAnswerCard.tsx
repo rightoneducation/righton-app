@@ -8,8 +8,7 @@ import ReactQuill from 'react-quill';
 import katex from "katex";
 import './ReactQuill.css';
 import "katex/dist/katex.min.css";
-import { AnswerObject, AnswerType, StorageKey, LocalModel } from '../../lib/PlayModels';
-import { fetchLocalData } from '../../lib/HelperFunctions';
+import { AnswerObject, AnswerType, StorageKeyAnswer, LocalModel } from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
@@ -73,26 +72,20 @@ export default function OpenAnswerCard({
     
     return {answerTexts: text, answerTypes: format, isSubmitted};
   };
+
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
-    const currentAnswer = editor.getContents();
-    const storageObject: LocalModel = {
-      ...fetchLocalData(),
-      presubmitAnswer: extractQuillDelta(currentAnswer),
-    };
-    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-    console.log(storageObject);
-    console.log(window.localStorage.getItem(StorageKey));
+    const currentAnswer = extractQuillDelta(editor.getContents()) as AnswerObject;
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: currentAnswer}));
     setEditorContents(currentAnswer);
-  }
+  };
 
   const handleRetrieveAnswer = (currentContents: any) => {
     const answer = extractQuillDelta(currentContents);
     answer.isSubmitted = true;
-  
     handleSubmitAnswer(answer);
   };
-  console.log(window.localStorage.getItem(StorageKey));
+
   return (
     <BodyCardStyled elevation={10} >
       <BodyCardContainerStyled spacing={2}>

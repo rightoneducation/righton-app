@@ -11,7 +11,7 @@ import AnswerCard from '../../components/AnswerCard';
 import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import { AnswerObject } from '../../lib/PlayModels';
+import { AnswerObject, LocalModel } from '../../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -34,6 +34,7 @@ interface ChooseAnswerProps {
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
   answerObject: AnswerObject;
+  localModel: LocalModel;
 }
 
 export default function ChooseAnswer({

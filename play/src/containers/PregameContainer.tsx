@@ -13,7 +13,7 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, LocalModel, StorageKey } from '../lib/PlayModels';
+import { PregameState, LocalModel, StorageKey, StorageKeyAnswer, AnswerObject } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
@@ -136,11 +136,15 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
           hasRejoined: false,
-          currentTimer: gameSession.phaseOneTime,
-          presubmitAnswer: null
+          currentTimer: gameSession.phaseOneTime
         };
-
+        const storageObjectAnswer: AnswerObject = {
+          answerTexts: [],
+          answerTypes: [],
+          isSubmitted: false
+        };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+        window.localStorage.setItem(StorageKey, JSON.stringify(storageObjectAnswer));
         navigate(`/game`);
       }
     } catch (error) {

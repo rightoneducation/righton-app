@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import Timer from './Timer';
-import { LocalModel } from '../lib/PlayModels';
+import { LocalModel, AnswerObject } from '../lib/PlayModels';
 
 const HeaderContainer = styled('div')({
   width: '100%',
@@ -23,6 +23,7 @@ interface HeaderContentProps {
   isCorrect: boolean;
   isIncorrect: boolean;
   localModel?: LocalModel;
+  answerObject?: AnswerObject;
 }
 
 export default function HeaderContent({
@@ -35,6 +36,7 @@ export default function HeaderContent({
   isCorrect,
   isIncorrect,
   localModel,
+  answerObject,
 }: HeaderContentProps) {
   const { t } = useTranslation();
   const stateMap = {
@@ -87,6 +89,7 @@ export default function HeaderContent({
           isPaused={isPaused}
           handleTimerIsFinished={handleTimerIsFinished}
           localModel={localModel}
+          answerObject={answerObject ?? {answerTexts: [], answerTypes: [], isSubmitted: false}}
         />
       ) : null}
     </HeaderContainer>

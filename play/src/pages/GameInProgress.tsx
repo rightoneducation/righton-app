@@ -28,7 +28,7 @@ import {
   fetchLocalData,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, AnswerObject, StorageKey } from '../lib/PlayModels';
+import { ErrorType, LocalModel, AnswerObject, StorageKeyAnswer } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -209,11 +209,15 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    const storageObject: LocalModel = {
-      ...fetchLocalData(),
-      presubmitAnswer: {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: index, isSubmitted: false} as AnswerObject,
-    };
-    window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({ 
+        presubmitAnswer: {
+          answerTexts: [], 
+          answerTypes: [], 
+          multiChoiceAnswerIndex: index, 
+          isSubmitted: false
+        } as AnswerObject,
+      })
+    );
     setAnswerObject((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
 
@@ -270,6 +274,7 @@ export default function GameInProgress({
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
           localModel={localModel}
+          answerObject={answerObject}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
@@ -296,6 +301,7 @@ export default function GameInProgress({
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerObject={answerObject}
+            localModel={localModel}
           />
         ) : (
           <DiscussAnswer

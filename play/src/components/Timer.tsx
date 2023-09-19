@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { fetchLocalData } from '../lib/HelperFunctions';
-import { LocalModel, StorageKey } from '../lib/PlayModels';
+import { AnswerObject, LocalModel, StorageKey } from '../lib/PlayModels';
 
 const TimerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -40,6 +40,7 @@ interface TimerProps {
   isFinished: boolean;
   handleTimerIsFinished: () => void;
   localModel: LocalModel;
+  answerObject: AnswerObject;
 }
 
 export default function Timer({
@@ -49,6 +50,7 @@ export default function Timer({
   isFinished,
   handleTimerIsFinished,
   localModel,
+  answerObject
 }: TimerProps) {
   const [currentTimeMilli, setCurrentTimeMilli] = useState(currentTimer * 1000); // millisecond updates to smooth out progress bar
   const currentTime = Math.trunc(currentTimeMilli / 1000);
@@ -96,7 +98,7 @@ export default function Timer({
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
-  }, [currentTime, localModel]);
+  }, [currentTime, localModel, answerObject]);
 
   // useEffect to start off timer
   useEffect(() => {
