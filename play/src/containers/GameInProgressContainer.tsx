@@ -96,9 +96,11 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
 }
 
 export function LocalModelLoader(): LocalModel {
-  console.log(window.localStorage.getItem(StorageKey));
-  console.log(window.localStorage.getItem(StorageKeyAnswer));
-  const localModel = JSON.parse(window.localStorage.getItem(StorageKey) ?? '{}');
+  // localModelBase and localModelAnswer are stored separately so that
+  // changes to the timer and changes to the short answer response pad don't conflict
+  const localModelBase = JSON.parse(window.localStorage.getItem(StorageKey) ?? '{}');
+  const localModelAnswer = JSON.parse(window.localStorage.getItem(StorageKeyAnswer) ?? '{}');
+  const localModel = { ...localModelBase, ...localModelAnswer };
   if (localModel && !localModel.hasRejoined) {
     const updatedModelForNextReload = { ...localModel, hasRejoined: true };
     window.localStorage.setItem(

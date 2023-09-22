@@ -75,8 +75,8 @@ export default function OpenAnswerCard({
 
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
-    const currentAnswer = extractQuillDelta(editor.getContents()) as AnswerObject;
-    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: currentAnswer}));
+    const currentAnswer = editor.getContents();
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: extractQuillDelta(currentAnswer)}));
     setEditorContents(currentAnswer);
   };
 

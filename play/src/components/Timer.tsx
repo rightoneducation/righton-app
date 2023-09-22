@@ -98,7 +98,7 @@ export default function Timer({
       return `${min}:${secStr}`;
     };
     return getTimerString(currentTime);
-  }, [currentTime, localModel, answerObject]);
+  }, [currentTime, localModel]);
 
   // useEffect to start off timer
   useEffect(() => {

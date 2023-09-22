@@ -142,6 +142,7 @@ export default function GameInProgress({
   );
   return rejoinSubmittedAnswer;}
 );
+console.log(answerObject);
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(answerObject.multiChoiceAnswerIndex)
   );

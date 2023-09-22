@@ -126,6 +126,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       if (gameSession) {
         const teamInfo = await addTeamToGame();
         if (!teamInfo) {
+          console.log('sup2');
           setIsAPIError(true);
           return;
         }
@@ -136,15 +137,10 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           teamMemberId: teamInfo.teamMemberId,
           selectedAvatar,
           hasRejoined: false,
-          currentTimer: gameSession.phaseOneTime
-        };
-        const storageObjectAnswer: AnswerObject = {
-          answerTexts: [],
-          answerTypes: [],
-          isSubmitted: false
+          currentTimer: gameSession.phaseOneTime,
+          presubmitAnswer: null
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
-        window.localStorage.setItem(StorageKey, JSON.stringify(storageObjectAnswer));
         navigate(`/game`);
       }
     } catch (error) {

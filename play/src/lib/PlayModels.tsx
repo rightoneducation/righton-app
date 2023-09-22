@@ -128,6 +128,7 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
+  presubmitAnswer: AnswerObject | null;
 }
 
 export interface LocalModelAnswer {
