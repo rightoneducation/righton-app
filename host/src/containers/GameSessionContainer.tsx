@@ -301,7 +301,6 @@ const GameSessionContainer = () => {
             apiClient
               .updateGameSession({ id: gameSessionId, ...newUpdates })
               .then((response) => {
-                console.log(response);
                 localStorage.setItem(
                   'currentGameTimeStore',
                   gameSession.phaseOneTime,
