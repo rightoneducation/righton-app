@@ -8,7 +8,8 @@ export default function ConfidenceResponseDropdown({
   selectedConfidenceData,
 }) {
   const classes = useStyles();
-  // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsegraph
+   // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsegraph
+   // see: https://github.com/rightoneducation/righton-app/issues/806
   const ConfidenceLevelDictionary = {
     0: 'Not Rated',
     1: 'Not At All Confident',
@@ -35,7 +36,7 @@ export default function ConfidenceResponseDropdown({
     const correctPlayers = [];
     const incorrectPlayers = [];
     const answerFrequency = {};
-    selectedConfidenceData.players.map((playerData) => {
+    selectedConfidenceData.players.forEach((playerData) => {
       // split players into correct and incorrect so .sort is limited to these subsets
       if (playerData.isCorrect) {
         correctPlayers.push(playerData);
@@ -46,7 +47,7 @@ export default function ConfidenceResponseDropdown({
           (answerFrequency[playerData.answer] || 0) + 1;
       }
     });
-    // sort correct alphabeticall
+    // sort correct alphabetically
     correctPlayers.sort((a, b) => a.name.localeCompare(b.name));
     incorrectPlayers.sort((a, b) => {
       // sort incorrect by answer frequency, then alphabetically

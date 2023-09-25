@@ -860,10 +860,9 @@ class TeamAnswerParser {
         subscription: OnCreateTeamAnswerSubscription
     ): ITeamAnswer {
         const createTeamAnswer = subscription.onCreateTeamAnswer
-        if (isNullOrUndefined(onCreateTeamAnswer)) {
+        if (isNullOrUndefined(createTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
         }
-        //@ts-ignore
         return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
     }
 
@@ -871,10 +870,9 @@ class TeamAnswerParser {
         subscription: OnUpdateTeamAnswerSubscription
     ): ITeamAnswer {
         const updateTeamAnswer = subscription.onUpdateTeamAnswer
-        if (isNullOrUndefined(onCreateTeamAnswer)) {
+        if (isNullOrUndefined(updateTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
         }
-        //@ts-ignore
         return this.teamAnswerFromAWSTeamAnswer(updateTeamAnswer)
     }
 
