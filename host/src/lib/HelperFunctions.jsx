@@ -121,7 +121,7 @@ export const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex, 
                 if (answer.text === choice.text) {
                   answersArray[choicesTextArray.indexOf(choice.text)] += 1;
                   const index = confidenceLevelsArray.indexOf(answer.confidenceLevel);
-                  if (choice.isAnswer){
+                  if (choice.isAnswer) {
                     confidenceArray[index].correct += 1;
                     confidenceArray[index].players.push({ name: team.name, answer: choice.text, isCorrect: true});
                   }

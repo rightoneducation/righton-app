@@ -232,41 +232,44 @@ const GameSessionContainer = () => {
   const handleBeginQuestion = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
-    const gameSessionId = gameSession?.id;
-    const questionId = gameSession.questions[gameSession.currentQuestionIndex].id;
-    const order = gameSession.questions[gameSession.currentQuestionIndex].order;
-    if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-        apiClient.updateQuestion({ gameSessionId: gameSessionId, id: gameSession.questions[0].id, order: 0, isConfidenceEnabled: isConfidenceEnabled })
-          .then(response => {
-            if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-              apiClient.updateQuestion({ gameSessionId: gameSessionId, id: questionId, order: order, isConfidenceEnabled: isConfidenceEnabled })
+    if (isNullOrUndefined(gameSession))
+      return;
+    const gameSessionId = gameSession.id;
+    const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
+    const questionId = currentQuestion.id;
+    const order = currentQuestion.order;
+    if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
+      return;
+    apiClient.updateQuestion({ gameSessionId: gameSessionId, id: gameSession.questions[0].id, order: 0, isConfidenceEnabled: isConfidenceEnabled })
+      .then(response => {
+        if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
+          apiClient.updateQuestion({ gameSessionId: gameSessionId, id: questionId, order: order, isConfidenceEnabled: isConfidenceEnabled })
+            .then(response => {
+              let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER };
+              apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
                 .then(response => {
-                  let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER };
-                  apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
-                    .then(response => {
-                      console.log(response);
-                      localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
-                      setHeaderGameCurrentTime(gameSession.phaseOneTime);
-                      checkGameTimer(response);
-                      setGameSession(response);
-                      const teamDataRequests = response.teams.map(team => {
-                        return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
-                      });
-            
-                      Promise.all(teamDataRequests)
-                        .then(responses => {
-                          setTeamsArray(responses);
-                        })
-                        .catch(reason => console.log(reason));
-                    });
-                  setIsTimerActive(true);
-                  setIsLoadModalOpen(true);
-                }
-              );
-          }
-        }
-      );
+                  console.log(response);
+                  localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
+                  setHeaderGameCurrentTime(gameSession.phaseOneTime);
+                  checkGameTimer(response);
+                  setGameSession(response);
+                  const teamDataRequests = response.teams.map(team => {
+                    return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+                  });
+        
+                  Promise.all(teamDataRequests)
+                    .then(responses => {
+                      setTeamsArray(responses);
+                    })
+                    .catch(reason => console.error(reason));
+                });
+              setIsTimerActive(true);
+              setIsLoadModalOpen(true);
+            }
+          );
+      }
     }
+  );
   };
   if (!gameSession) {
     return null;
