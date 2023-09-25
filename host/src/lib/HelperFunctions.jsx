@@ -22,6 +22,32 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
   return questions[currentQuestionIndex].choices;
 };
 
+export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
+  let results = [];
+
+  teamsArray.forEach(team => {
+    team.teamMembers && team.teamMembers.forEach(teamMember => {
+      teamMember.answers && teamMember.answers.forEach(answer => {
+        if (answer.questionId === currentQuestionId) {
+          const isGameInPhaseOne = (
+            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+            currentState === GameSessionState.PHASE_1_DISCUSS
+          ) && answer.isChosen;
+          const isGameInPhaseTwo = (
+            currentState === GameSessionState.PHASE_2_DISCUSS ||
+            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+          ) && answer.isTrickAnswer;
+          if (isGameInPhaseOne || isGameInPhaseTwo) {
+            results.push({team, answer});
+          }
+        }
+      });
+    });
+  });
+
+  return results;
+};
+
 
 /*
 * returns an array of which team names picked which question choices
@@ -32,50 +58,30 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
 */
 export const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices, questions, currentState) => {
   const teamsPickedChoices = [];
-
-  teamsArray.forEach(team => {
-    const teamPickedChoices = [];
+  const currentQuestionId = questions[currentQuestionIndex].id;
+  const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
+  answers.forEach(({team, answer}) => {
     let isNoResponse = true;
-    const isGameInPhaseOne = (
-        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-        currentState === GameSessionState.PHASE_1_DISCUSS
-      ) && answer.isChosen;
-    const isGameInPhaseTwo = (
-        currentState === GameSessionState.PHASE_2_DISCUSS ||
-        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-      ) && answer.isTrickAnswer;
-
-    team.teamMembers && team.teamMembers.forEach(teamMember => {
-      teamMember.answers && teamMember.answers.forEach(answer => {
-        if (answer.questionId === questions[currentQuestionIndex].id) {
-          if (isGameInPhaseOne || isGameInPhaseTwo) {
-            isNoResponse = false;
-            choices && choices.forEach(choice => {
-              if (answer.text === choice.text) {
-                teamPickedChoices.push({
-                  teamName: team.name,
-                  choiceText: choice.text
-                });
-              }
-            });
-          }
-        }
-      });
-    });
-
-    if (teamPickedChoices.length > 0 || isNoResponse) {
-      teamsPickedChoices.push(...teamPickedChoices);
-      if (isNoResponse) {
+    choices && choices.forEach(choice => {
+      if (answer.text === choice.text){
+        isNoResponse = false;
         teamsPickedChoices.push({
           teamName: team.name,
-          choiceText: 'No response'
+          choiceText: choice.text
         });
       }
+    });
+
+    if (isNoResponse) {
+      teamsPickedChoices.push({
+        teamName: team.name,
+        choiceText: 'No response'
+      });
     }
   });
-
   return teamsPickedChoices;
 };
+
 
 /*
 * returns an array ordered to match the order of answer choices, containing the total number of each answer
@@ -86,28 +92,17 @@ export const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices, que
 */
 export const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex, questions, currentState) => {
   if (teamsArray.length !== 0 && questions && choices && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
-    let choicesTextArray = [choices.length];
+    let choicesTextArray = choices.map(choice => choice.text);
     let answersArray = new Array(choices.length).fill(0);
     let currentQuestionId = questions[currentQuestionIndex].id;
-    choices && choices.forEach((choice, index) => {
-      choicesTextArray[index] = choice.text;
-    });
+    const answers = extractAnswers(teamsArray, currentQuestionId, currentState);
 
-    teamsArray.forEach(team => {
-      team.teamMembers && team.teamMembers.forEach(teamMember => {
-        teamMember.answers && teamMember.answers.forEach(answer => {
-          if (answer.questionId === currentQuestionId) {
-            if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
-              choices && choices.forEach(choice => {
-                if (answer.text === choice.text) {
-                  answersArray[choicesTextArray.indexOf(choice.text)] += 1;
-                }
-              })
-            }
-          }
-        })
-      })
-
+    answers.forEach(({ answer }) => {
+      choices && choices.forEach(choice => {
+        if (answer.text === choice.text) {
+          answersArray[choicesTextArray.indexOf(choice.text)] += 1;
+        }
+      });
     });
     return answersArray;
   }
