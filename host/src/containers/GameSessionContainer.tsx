@@ -274,21 +274,21 @@ const GameSessionContainer = () => {
   const handleBeginQuestion = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state
     console.log(gameSession.currentState);
-  if (isNullOrUndefined(gameSession))
-    return;
-  const gameSessionId = gameSession.id;
-  const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
-  const questionId = currentQuestion.id;
-  const order = currentQuestion.order;
-  if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
-    return;
-  apiClient
-    .updateQuestion({
-      gameSessionId: gameSessionId,
-      id: questionId,
-      order: order,
-      isConfidenceEnabled: isConfidenceEnabled,
-    })
+    if (isNullOrUndefined(gameSession))
+      return;
+    const gameSessionId = gameSession.id;
+    const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
+    const questionId = currentQuestion.id;
+    const order = currentQuestion.order;
+    if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
+      return;
+    apiClient
+      .updateQuestion({
+        gameSessionId: gameSessionId,
+        id: questionId,
+        order: order,
+        isConfidenceEnabled: isConfidenceEnabled,
+      })
       .then((response) => {
         let newUpdates = {
           currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
@@ -316,7 +316,7 @@ const GameSessionContainer = () => {
         setIsTimerActive(true);
         setIsLoadModalOpen(true);
       });
-    };
+  };
   if (!gameSession) {
     return null;
   }
