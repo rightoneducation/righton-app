@@ -9,14 +9,7 @@ import {
  * @returns {number} count - number of answers for current question
  */
 export const getTotalAnswers = (answerArray) => {
-  let count = 0;
-  if (answerArray) {
-    answerArray.forEach((answerCount) => {
-      count += answerCount;
-    });
-    return count;
-  }
-  return count;
+  return answerArray ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) : 0;
 };
 
 /*
