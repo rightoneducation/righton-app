@@ -5,14 +5,7 @@ import { isNullOrUndefined, GameSessionState } from "@righton/networking";
 * @returns {number} count - number of answers for current question
 */
 export const getTotalAnswers = (answerArray) => {
-  let count = 0;
-  if (answerArray) {
-    answerArray.forEach(answerCount => {
-      count = count + answerCount;
-    });
-    return count;
-  }
-  return count;
+  return (answerArray || []).length;
 };
 
 
@@ -43,11 +36,19 @@ export const getTeamByQuestion = (teamsArray, currentQuestionIndex, choices, que
   teamsArray.forEach(team => {
     const teamPickedChoices = [];
     let isNoResponse = true;
-    
+    const isGameInPhaseOne = (
+        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+        currentState === GameSessionState.PHASE_1_DISCUSS
+      ) && answer.isChosen;
+    const isGameInPhaseTwo = (
+        currentState === GameSessionState.PHASE_2_DISCUSS ||
+        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+      ) && answer.isTrickAnswer;
+
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
         if (answer.questionId === questions[currentQuestionIndex].id) {
-          if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
+          if (isGameInPhaseOne || isGameInPhaseTwo) {
             isNoResponse = false;
             choices && choices.forEach(choice => {
               if (answer.text === choice.text) {
