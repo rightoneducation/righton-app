@@ -9,7 +9,14 @@ import {
  * @returns {number} count - number of answers for current question
  */
 export const getTotalAnswers = (answerArray) => {
-  return (answerArray || []).length;
+  let count = 0;
+  if (answerArray) {
+    answerArray.forEach((answerCount) => {
+      count =+ answerCount;
+    });
+    return count;
+  }
+  return count;
 };
 
 /*
@@ -151,7 +158,7 @@ export const getAnswersByQuestion = (
     const answers = extractAnswers(teamsArray, currentQuestionId, currentState);
 
 
-    answers.forEach(({ answer }) => {
+    answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
         if (answer.text === choice.text) {
           answersArray[
