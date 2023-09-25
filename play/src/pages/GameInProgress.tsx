@@ -305,7 +305,6 @@ export default function GameInProgress({
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerObject={answerObject}
-            localModel={localModel}
           />
         ) : (
           <DiscussAnswer

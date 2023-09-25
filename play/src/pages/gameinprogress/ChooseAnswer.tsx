@@ -34,7 +34,6 @@ interface ChooseAnswerProps {
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
   answerObject: AnswerObject;
-  localModel: LocalModel;
 }
 
 export default function ChooseAnswer({
