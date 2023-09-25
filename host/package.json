@@ -18,7 +18,7 @@
     "lodash": "^4.17.21",
     "nth-check": "^2.1.1",
     "postcss": "^8.2.0",
-    "prettier": "^1.19.1",
+    "prettier": "3.0.3",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-modal": "^3.15.1",
@@ -56,6 +56,7 @@
     "start": "yarn --cwd ../networking build && react-scripts start",
     "build": "yarn --cwd ../networking build && react-scripts build",
     "test": "yarn --cwd ../networking build && react-scripts test",
+    "format": "prettier --write .",
     "eject": "react-scripts eject",
     "storybook": "storybook dev -p 6006 -s public",
     "build-storybook": "storybook build -s public",
@@ -72,5 +73,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }
