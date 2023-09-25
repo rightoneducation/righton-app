@@ -12,7 +12,7 @@ export const getTotalAnswers = (answerArray) => {
   let count = 0;
   if (answerArray) {
     answerArray.forEach((answerCount) => {
-      count =+ answerCount;
+      count += answerCount;
     });
     return count;
   }
@@ -109,7 +109,6 @@ export const getTeamByQuestion = (
   return teamsPickedChoices;
 };
 
-
 /*
  * returns an array ordered to match the order of answer choices, containing the total number of each answer
  * @param {array} choices - array of choices for current question
@@ -155,8 +154,7 @@ export const getAnswersByQuestion = (
     let choicesTextArray = choices.map(choice => choice.text);
     let answersArray = new Array(choices.length).fill(0);
     let currentQuestionId = questions[currentQuestionIndex].id;
-    const answers = extractAnswers(teamsArray, currentQuestionId, currentState);
-
+    const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
 
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {

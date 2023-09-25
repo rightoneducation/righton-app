@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core';
 import FooterGame from '../components/FooterGame';
-import ConfidenceResponseCard from '../components/ConfidenceResponses/ConfidenceResponseCard';
 import HeaderGame from '../components/HeaderGame';
 import CheckMark from '../images/Union.png';
 import GameModal from '../components/GameModal';
@@ -85,7 +84,6 @@ export default function GameInProgress({
     currentState,
   );
   const noResponseLabel = '–';
-
   // data object used in Victory graph for real-time responses
   const data = [
     {
