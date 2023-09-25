@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
-import {
-  createTheme,
-  ThemeProvider,
-} from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import GameSessionContainer from './containers/GameSessionContainer';
 import CreateNewGameSession from './containers/CreateNewGameSession';
 
@@ -28,17 +21,17 @@ const theme = createTheme({
 const RedirectToCentralIfMissing = () => {
   window.location.href = 'http://central.rightoneducation.com/';
   return null;
-}
+};
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <Route path="/host/:gameSessionId" >
+          <Route path="/host/:gameSessionId">
             <GameSessionContainer />
           </Route>
-          <Route path="/new/:gameId" >
+          <Route path="/new/:gameId">
             <CreateNewGameSession />
           </Route>
           <Route>

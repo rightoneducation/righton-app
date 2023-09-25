@@ -12,6 +12,7 @@ import {
     CreateTeamMutationVariables,
     GameSessionState,
     OnCreateTeamAnswerSubscription,
+    OnUpdateTeamAnswerSubscription,
     OnCreateTeamSubscription,
     OnDeleteTeamSubscription,
     OnGameSessionUpdatedByIdSubscription,
@@ -38,7 +39,8 @@ import {
     onCreateTeamAnswer,
     onDeleteTeam,
     onGameSessionUpdatedById,
-    onUpdateTeamMember
+    onUpdateTeamMember,
+    onUpdateTeamAnswer
 } from "./graphql"
 import {
     createTeam,
@@ -229,6 +231,24 @@ export class ApiClient implements IApiClient {
             },
             (value: OnCreateTeamAnswerSubscription) => {
                 let teamAnswer = this.mapOnCreateTeamAnswerSubscription(value)
+                callback(teamAnswer)
+            }
+        )
+    }
+
+    subscribeUpdateTeamAnswer(
+        id: string,
+        callback: (result: ITeamAnswer) => void
+    ) {
+        return this.subscribeGraphQL<OnUpdateTeamAnswerSubscription>(
+            {
+                query: onUpdateTeamAnswer,
+                variables: {
+                    id: id,
+                },
+            },
+            (value: OnUpdateTeamAnswerSubscription) => {
+                let teamAnswer = this.mapOnUpdateTeamAnswerSubscription(value)
                 callback(teamAnswer)
             }
         )
@@ -455,7 +475,15 @@ export class ApiClient implements IApiClient {
     private mapOnCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
     ): ITeamAnswer {
-        return TeamAnswerParser.teamAnswerFromTeamAnswerSubscription(
+        return TeamAnswerParser.teamAnswerFromCreateTeamAnswerSubscription(
+            subscription
+        )
+    }
+
+    private mapOnUpdateTeamAnswerSubscription(
+        subscription: OnUpdateTeamAnswerSubscription
+    ): ITeamAnswer {
+        return TeamAnswerParser.teamAnswerFromUpdateTeamAnswerSubscription(
             subscription
         )
     }
@@ -828,15 +856,24 @@ class TeamMemberParser {
 }
 
 class TeamAnswerParser {
-    static teamAnswerFromTeamAnswerSubscription(
+    static teamAnswerFromCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
     ): ITeamAnswer {
         const createTeamAnswer = subscription.onCreateTeamAnswer
-        if (isNullOrUndefined(onCreateTeamAnswer)) {
+        if (isNullOrUndefined(createTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
         }
-        //@ts-ignore
         return this.teamAnswerFromAWSTeamAnswer(createTeamAnswer)
+    }
+
+    static teamAnswerFromUpdateTeamAnswerSubscription(
+        subscription: OnUpdateTeamAnswerSubscription
+    ): ITeamAnswer {
+        const updateTeamAnswer = subscription.onUpdateTeamAnswer
+        if (isNullOrUndefined(updateTeamAnswer)) {
+            throw new Error("subscription.onCreateTeamAnswer can't be null.")
+        }
+        return this.teamAnswerFromAWSTeamAnswer(updateTeamAnswer)
     }
 
     static mapTeamAnswers(

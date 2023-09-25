@@ -1,10 +1,11 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default function PlayersAnsweredBar({ numPlayers, totalAnswers }) {
   const classes = useStyles();
-  const progressPercent = (numPlayers !== 0 ? (totalAnswers / numPlayers) * 100 : 0);
+  const progressPercent =
+    numPlayers !== 0 ? (totalAnswers / numPlayers) * 100 : 0;
 
   return (
     <div className={classes.bargroup}>
@@ -13,27 +14,26 @@ export default function PlayersAnsweredBar({ numPlayers, totalAnswers }) {
           variant="determinate"
           classes={{
             colorPrimary: classes.colorPrimary,
-            barColorPrimary: classes.barColorPrimary
+            barColorPrimary: classes.barColorPrimary,
           }}
           className={classes.progressBar}
           value={progressPercent}
         ></LinearProgress>
         <div
           style={{
-            position: "absolute",
-            top: "0",
-            left: "0",
+            position: 'absolute',
+            top: '0',
+            left: '0',
             width: `${progressPercent - 2}%`,
-            textAlign: "right",
-            fontFamily: "Helvetica",
-            fontSize: "12px",
-            fontWeight: "bold",
-            zIndex: "1",
-            lineHeight: "18px"
+            textAlign: 'right',
+            fontFamily: 'Helvetica',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            zIndex: '1',
+            lineHeight: '18px',
           }}
         >
-          {" "}
-          {totalAnswers}{" "}
+          {totalAnswers}
         </div>
       </div>
       <div className={classes.totalPlayers}>{numPlayers}</div>
@@ -41,13 +41,13 @@ export default function PlayersAnsweredBar({ numPlayers, totalAnswers }) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   bargroup: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     gap: '10px',
-    width: '100%'
+    width: '100%',
   },
   totalPlayers: {
     fontSize: '12px',
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
     fontFamily: 'Helvetica',
     fontWeight: 'bold',
-    margin: 'auto'
+    margin: 'auto',
   },
   barContainer: {
     position: 'relative',

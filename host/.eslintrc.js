@@ -1,16 +1,15 @@
 module.exports = {
-  extends: "react-app",
+  extends: 'react-app',
   overrides: [
     {
-      files: [
-        "**/*.stories.*"
-      ],
+      files: ['**/*.stories.*'],
       rules: {
-        "import/no-anonymous-default-export": "off"
+        'import/no-anonymous-default-export': 'off',
       },
-      parser: "@babel/eslint-parser",
+      parser: '@babel/eslint-parser',
       parserOptions: {
         requireConfigFile: false,
       },
-    }]
+    },
+  ],
 };

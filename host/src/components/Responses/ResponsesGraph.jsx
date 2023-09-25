@@ -1,16 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
-import { VictoryChart, VictoryAxis, VictoryBar, VictoryContainer } from 'victory';
+import {
+  VictoryChart,
+  VictoryAxis,
+  VictoryBar,
+  VictoryContainer,
+} from 'victory';
 import CustomTick from './CustomTick';
 import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
 
-export default function ResponsesGraph ({ 
-  data, 
-  questionChoices, 
-  statePosition, 
-  graphClickInfo, 
-  setGraphClickInfo 
+export default function ResponsesGraph({
+  data,
+  questionChoices,
+  statePosition,
+  graphClickInfo,
+  handleGraphClick,
 }) {
   const classes = useStyles();
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
@@ -27,14 +32,22 @@ export default function ResponsesGraph ({
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
-  const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-  const largestAnswerCount = Math.max(...data.map(response => response.answerCount));
-  
+  const correctChoiceIndex =
+    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  const largestAnswerCount = Math.max(
+    ...data.map((response) => response.answerCount),
+  );
+
   const calculateRoundedTicks = () => {
-    const maxAnswerCount = Math.max(...data.map(({ answerCount }) => answerCount));
+    const maxAnswerCount = Math.max(
+      ...data.map(({ answerCount }) => answerCount),
+    );
     const tickInterval = 5;
     const tickCount = Math.ceil(maxAnswerCount / tickInterval);
-    return Array.from({ length: tickCount + 1 }, (_, index) => index * tickInterval);
+    return Array.from(
+      { length: tickCount + 1 },
+      (_, index) => index * tickInterval,
+    );
   };
 
   useEffect(() => {
@@ -64,7 +77,7 @@ export default function ResponsesGraph ({
         axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
         grid: { stroke: 'transparent' },
         tickLabels: {
-          padding: mediumLargePadding
+          padding: mediumLargePadding,
         },
       },
     },
@@ -72,22 +85,31 @@ export default function ResponsesGraph ({
       style: {
         axis: { stroke: 'transparent' },
         grid: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
-        tickLabels: { fill: 'rgba(255, 255, 255, 0.5)', fontFamily: 'Rubik', fontWeight: '400', fontSize: '12px' },
+        tickLabels: {
+          fill: 'rgba(255, 255, 255, 0.5)',
+          fontFamily: 'Rubik',
+          fontWeight: '400',
+          fontSize: '12px',
+        },
       },
     },
     bar: {
       style: {
         data: {
-          fill: ({ datum, index }) => (index === data.length - 1 ? 'transparent' : '#FFF'),
+          fill: ({ datum, index }) =>
+            index === data.length - 1 ? 'transparent' : '#FFF',
           stroke: '#FFF',
           strokeWidth: 1,
         },
         labels: {
-          fill: ({ datum, index }) => (index === data.length - 1 || datum.answerCount === 0 ? '#FFF' : '#384466'),
+          fill: ({ datum, index }) =>
+            index === data.length - 1 || datum.answerCount === 0
+              ? '#FFF'
+              : '#384466',
           fontFamily: 'Rubik',
           fontWeight: '400',
           textAnchor: 'end',
-          fontSize: '12px'
+          fontSize: '12px',
         },
       },
     },
@@ -95,15 +117,18 @@ export default function ResponsesGraph ({
   return (
     <div className={classes.container}>
       <div className={classes.titleContainer}>
-        <Typography className={classes.title}>
-          Number of players
-        </Typography>
+        <Typography className={classes.title}>Number of players</Typography>
       </div>
-      <div ref={graphRef} >
-        {data.length > 1 && 
+      <div ref={graphRef}>
+        {data.length > 1 && (
           <VictoryChart
-            domainPadding={{x: 36, y: 0}}
-            padding={{top: mediumPadding, bottom: smallPadding, left: defaultVictoryPadding, right: smallPadding}}
+            domainPadding={{ x: 36, y: 0 }}
+            padding={{
+              top: mediumPadding,
+              bottom: smallPadding,
+              left: defaultVictoryPadding,
+              right: smallPadding,
+            }}
             containerComponent={<VictoryContainer />}
             theme={customTheme}
             width={boundingRect.width}
@@ -112,12 +137,12 @@ export default function ResponsesGraph ({
             <VictoryAxis
               standalone={false}
               tickLabelComponent={
-                <CustomTick 
-                  mediumPadding={mediumPadding} 
-                  largePadding={largePadding} 
-                  data={data} 
-                  correctChoiceIndex={correctChoiceIndex} 
-                  statePosition={statePosition} 
+                <CustomTick
+                  mediumPadding={mediumPadding}
+                  largePadding={largePadding}
+                  data={data}
+                  correctChoiceIndex={correctChoiceIndex}
+                  statePosition={statePosition}
                 />
               }
             />
@@ -137,7 +162,7 @@ export default function ResponsesGraph ({
                 standalone={false}
                 orientation="top"
                 tickValues={calculateRoundedTicks()}
-                tickFormat={tick => Math.round(tick)}
+                tickFormat={(tick) => Math.round(tick)}
               />
             )}
             <VictoryBar
@@ -148,7 +173,9 @@ export default function ResponsesGraph ({
               standalone={false}
               cornerRadius={{ topLeft: 4, topRight: 4 }}
               labels={({ datum }) => `${datum.answerCount}`}
-              barWidth={({ datum }) => datum.answerCount !== 0 ? barThickness : barThicknessZero}
+              barWidth={({ datum }) =>
+                datum.answerCount !== 0 ? barThickness : barThicknessZero
+              }
               animate={{
                 onLoad: { duration: 200 },
                 duration: 200,
@@ -158,10 +185,10 @@ export default function ResponsesGraph ({
                   xSmallPadding={xSmallPadding}
                   mediumPadding={mediumPadding}
                   defaultVictoryPadding={defaultVictoryPadding}
-                  selectedWidth={boundingRect.width - defaultVictoryPadding*2}
+                  selectedWidth={boundingRect.width - defaultVictoryPadding * 2}
                   selectedHeight={18}
                   graphClickInfo={graphClickInfo}
-                  setGraphClickInfo={setGraphClickInfo}
+                  handleGraphClick={handleGraphClick}
                 />
               }
               labelComponent={
@@ -177,29 +204,29 @@ export default function ResponsesGraph ({
               }
             />
           </VictoryChart>
-        }
+        )}
       </div>
     </div>
   );
-};
+}
 
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
     width: '100%',
-    maxWidth: '500px'
+    maxWidth: '500px',
   },
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
     fontFamily: 'Rubik',
     fontSize: '17px',
-    paddingBottom: '16px'
+    paddingBottom: '16px',
   },
   titleContainer: {
     marginTop: '3%',
   },
   answerContainer: {
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center',
   },
 });
