@@ -9,9 +9,10 @@ import {
  * @returns {number} count - number of answers for current question
  */
 export const getTotalAnswers = (answerArray) => {
-  return answerArray ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) : 0;
+  return answerArray 
+    ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+    : 0;
 };
-
 /*
  * returns the choices object for an individual question
  * @param {array} questions - array of questions
