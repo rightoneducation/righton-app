@@ -80,12 +80,14 @@ export enum FinalResultsState {
  * @param {string} LOADING - loading state
  * @param {string} READY - waiting for teacher state
  * @param {string} REJOIN - if player is rejoining state
+ * @param {string} PREQUESTION - game between questions state
  */
 export enum LobbyMode {
   ERROR,
   LOADING,
   READY,
   REJOIN,
+  PREQUESTION
 }
 
 export enum TimerMode {

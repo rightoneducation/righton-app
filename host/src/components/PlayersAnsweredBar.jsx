@@ -47,18 +47,19 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     gap: '10px',
-    marginBottom: '20px'
+    width: '100%'
   },
   totalPlayers: {
     fontSize: '12px',
-    lineHeight: '18px',
+    lineHeight: '12px',
     color: 'white',
     fontFamily: 'Helvetica',
     fontWeight: 'bold',
+    margin: 'auto'
   },
   barContainer: {
     position: 'relative',
-    width: '291px'
+    width: '100%',
   },
   progressBar: {
     position: 'relative',

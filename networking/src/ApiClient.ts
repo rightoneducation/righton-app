@@ -19,7 +19,16 @@ import {
     OnUpdateTeamMemberSubscription,
     UpdateGameSessionInput,
     UpdateGameSessionMutation,
-    UpdateGameSessionMutationVariables, UpdateTeamAnswerInput, UpdateTeamInput, UpdateTeamAnswerMutation, UpdateTeamAnswerMutationVariables, UpdateTeamMutation, UpdateTeamMutationVariables
+    UpdateGameSessionMutationVariables, 
+    UpdateTeamAnswerInput, 
+    UpdateTeamInput,
+    UpdateTeamAnswerMutation, 
+    UpdateTeamAnswerMutationVariables, 
+    UpdateTeamMutation, 
+    UpdateTeamMutationVariables,
+    UpdateQuestionInput,
+    UpdateQuestionMutation,
+    UpdateQuestionMutationVariables
 } from "./AWSMobileApi"
 import {
     gameSessionByCode,
@@ -37,7 +46,8 @@ import {
     createTeamMember,
     updateGameSession,
     updateTeamAnswer,
-    updateTeam
+    updateTeam,
+    updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
@@ -366,6 +376,23 @@ export class ApiClient implements IApiClient {
         return team.data.updateTeam as ITeam
     }
 
+    async updateQuestion(
+        questionInput: UpdateQuestionInput    
+    ): Promise<IQuestion> {
+        const input: UpdateQuestionInput = questionInput
+        const variables: UpdateQuestionMutationVariables = { input }
+        const question = await this.callGraphQL<UpdateQuestionMutation>(
+            updateQuestion,
+            variables
+        )
+        if (
+            isNullOrUndefined(question.data) ||
+            isNullOrUndefined(question.data.updateQuestion)
+        ) {
+            throw new Error(`Failed to update question`)
+        }
+        return question.data.updateQuestion as IQuestion
+    }
 
     // Private methods
     private subscribeGraphQL<T>(

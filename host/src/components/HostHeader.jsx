@@ -4,14 +4,14 @@ import { makeStyles } from "@material-ui/core";
 import ModeToggle from "./ModeToggle";
 import ClearIcon from "@material-ui/icons/Clear";
 
-const HostHeader = ({ gameCode }) => {
+const HostHeader = ({ gameCode, currentQuestionIndex }) => {
   const classes = useStyles();
   return (
     <div className={classes.headerContainer}>
       {/*<ModeToggle /> removing per integration test #1*/}
       <div>
         {/*<ClearIcon className={classes.clearIconGameCode} /> removing per integration test #1*/}
-        <GameCode gameCode={gameCode} />
+        <GameCode gameCode={gameCode} currentQuestionIndex={currentQuestionIndex}/>
       </div>
     </div>
   );

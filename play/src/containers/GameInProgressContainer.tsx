@@ -71,6 +71,14 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     }
     // if loading, display loading message on bottom of How to Play page
     if (subscription.isLoading) return <Lobby mode={LobbyMode.LOADING} />;
+    if (subscription.gameSession?.currentQuestionIndex != null) 
+      return <Lobby 
+        mode={LobbyMode.PREQUESTION} 
+        teams={subscription.gameSession.teams} 
+        currentState={subscription.gameSession.currentState}  
+        teamAvatar={localModel.selectedAvatar}
+        teamId={localModel.teamId}
+      />;
     // if waiting for teacher, display waiting message on How to Play page
     return <Lobby mode={LobbyMode.READY} />;
   }

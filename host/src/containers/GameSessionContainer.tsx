@@ -11,10 +11,6 @@ import {
 } from "@righton/networking";
 import GameInProgress from "../pages/GameInProgress";
 import Ranking from "../pages/Ranking";
-import { isCompositeComponent } from "react-dom/test-utils";
-import { responsiveFontSizes } from "@material-ui/core";
-import { AMPLIFY_SYMBOL } from "@aws-amplify/pubsub/lib-esm/Providers/constants";
-import { ContactsOutlined } from "@material-ui/icons";
 
 const GameSessionContainer = () => {
   const [gameSession, setGameSession] = useState<IGameSession | null>();
@@ -25,6 +21,8 @@ const GameSessionContainer = () => {
   const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(localStorage.getItem('currentGameTimeStore'));
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
+  const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
+  const [isGameStarted, setIsGameStarted] = useState(false);
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
 
@@ -144,6 +142,11 @@ const GameSessionContainer = () => {
     }
   }, [gameTimer, gameTimerZero]);
 
+  // handles confidence switch changes on Question Config
+  const handleConfidenceSwitchChange = (event) => {
+    setIsConfidenceEnabled(event.target.checked);
+  };
+
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
       .then(response => {
@@ -172,17 +175,29 @@ const GameSessionContainer = () => {
   };
 
   const handleStartGame = () => {
+    setGameSession((prev) =>  ({...prev, currentQuestionIndex: 0}));
+    setIsGameStarted(true);
+  };
+
+  // TODO: ensure updatequestion occurs after the updateGameSession
+  const handleBeginQuestion = () => {
     // I'm keeping this console.log in until we figure out NOT_STARTED so we can tell there's been a change in state 
     console.log(gameSession.currentState);
     if (gameSession.currentState === GameSessionState.TEAMS_JOINING) {
-      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0 };
+      if (isConfidenceEnabled === true ){
+        apiClient.updateQuestion({ gameSessionId: gameSessionId, id: gameSession.questions[0].id, order: 0, isConfidenceEnabled: isConfidenceEnabled })
+          .then(response => {
+            console.log(response);
+          });
+      }
+
+      let newUpdates = { currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: gameSession.currentQuestionIndex};
       apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
         .then(response => {
           localStorage.setItem('currentGameTimeStore', gameSession.phaseOneTime);
           setHeaderGameCurrentTime(gameSession.phaseOneTime);
           checkGameTimer(response);
           setGameSession(response);
-
           const teamDataRequests = response.teams.map(team => {
             return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
           });
@@ -197,25 +212,28 @@ const GameSessionContainer = () => {
       setIsLoadModalOpen(true);
     }
   };
-
   if (!gameSession) {
     return null;
   };
-
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
-    case GameSessionState.TEAMS_JOINING:
-      return <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />;
+    case GameSessionState.TEAMS_JOINING: {
+      return ( !isGameStarted ?
+          <StartGame {...gameSession} gameSessionId={gameSession.id} isTimerActive={isTimerActive} handleStartGame={handleStartGame} />
+        : 
+          <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false} isConfidenceEnabled={isConfidenceEnabled} handleConfidenceSwitchChange={handleConfidenceSwitchChange} handleBeginQuestion={handleBeginQuestion}/>
+      );
+    }
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
     case GameSessionState.PHASE_1_DISCUSS:
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
     case GameSessionState.PHASE_2_DISCUSS:
-      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen}/>;
+      return <GameInProgress {...gameSession} teamsArray={teamsArray} handleUpdateGameSession={handleUpdateGameSession} headerGameCurrentTime={headerGameCurrentTime} gameTimer={gameTimer} gameTimerZero={gameTimerZero} isLoadModalOpen={isLoadModalOpen} setIsLoadModalOpen={setIsLoadModalOpen} showFooterButtonOnly={false}/>;
 
     case GameSessionState.PHASE_1_RESULTS:
     case GameSessionState.PHASE_2_START:
     case GameSessionState.PHASE_2_RESULTS:
-      return <StudentViews {...gameSession} gameTimer={gameTimer} handleUpdateGameSession={handleUpdateGameSession} />;
+      return <StudentViews {...gameSession} gameTimer={gameTimer} handleUpdateGameSession={handleUpdateGameSession} showFooterButtonOnly={true}/>;
 
 
     case GameSessionState.FINAL_RESULTS:

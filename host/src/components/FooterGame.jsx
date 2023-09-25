@@ -2,22 +2,46 @@ import React from "react";
 import { makeStyles, BottomNavigation } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import PlayersAnsweredBar from "./PlayersAnsweredBar";
+import ModuleNavigator from "./ModuleNavigator";
 
-export default function FooterGame({numPlayers, totalAnswers, phaseOneTime, phaseTwoTime,  gameTimer, footerButtonText, handleFooterOnClick}) {
+export default function FooterGame({
+  numPlayers, 
+  totalAnswers, 
+  phaseOneTime, 
+  phaseTwoTime,  
+  gameTimer, 
+  footerButtonText, 
+  handleFooterOnClick, 
+  graphClickInfo, 
+  setGraphClickInfo,
+  showFooterButtonOnly,
+  navDictionary
+}) {
  const classes = useStyles();
    return (
     <BottomNavigation className={classes.footer}>
       <div className={classes.footerContainer}> {/*layout reversed below so hiding of bar doesn't blow up formatting*/}
-      <Button 
+        <Button 
           disabled = {phaseOneTime < 0 ? true : false || phaseTwoTime < 0 ? true : false}
           className={footerButtonText === "End Answering" ? classes.EndAnsweringButton : classes.nextPhaseButton}
           onClick={() =>  handleFooterOnClick(numPlayers, totalAnswers)}
         >
            {footerButtonText}
         </Button>
-        {gameTimer && <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers} />} {/*# of answers bar is turned on w/ GameInProgress */}
-        {gameTimer && <div className={classes.playerNum}>Players who have answered</div>}
-        </div>
+        { !showFooterButtonOnly && 
+          <>
+            <div style={{opacity: gameTimer ? 1 : 0.4, width: '100%'}}>
+              <div className={classes.playerNum}>Players who have answered</div>
+              <PlayersAnsweredBar numPlayers={numPlayers} totalAnswers={totalAnswers}/>
+            </div>
+            <ModuleNavigator 
+              graphClickInfo={graphClickInfo}
+              setGraphClickInfo={setGraphClickInfo}
+              navDictionary={navDictionary}
+            />
+          </>
+        }
+      </div>
     </BottomNavigation>
   );
 }
@@ -27,9 +51,9 @@ const useStyles = makeStyles(theme => ({
     position: 'sticky',
     bottom: '0',
     width: '100%',
-    height: '80px',
-    paddingTop: '80px',
-    paddingBottom: '50px',
+    height: '150px',
+    paddingBottom: '40px',
+    paddingTop: '16px',
     background: 'linear-gradient(196.21deg, #03295A 0%, #02215F 73.62%)',
   },
   footerContainer: {
@@ -37,11 +61,16 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start',
     alignItems:'center',
-    maring: 'auto',
+    width: '100%',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    boxSizing: 'border-box',
+    maxWidth: '700px',
+    gap: '16px'
   },
   playerNum: {
     fontSize: '16px',
-    width: '300px',
+    width: '100%',
     textAlign: 'left',
     color: 'white',
     fontFamily: 'Poppins',

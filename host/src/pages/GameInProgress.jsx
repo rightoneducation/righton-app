@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
-import QuestionCard from "../components/QuestionCard";
 import FooterGame from "../components/FooterGame";
 import HeaderGame from "../components/HeaderGame";
-import GameAnswers from "../components/GameAnswers";
 import CheckMark from "../images/Union.png";
 import GameModal from "../components/GameModal";
 import GameLoadModal from "../components/GameLoadModal";
-import { isNullOrUndefined, GameSessionState } from "@righton/networking";
-
+import { GameSessionState } from "@righton/networking";
+import GameInProgressContentSwitch from "../components/GameInProgressContentSwitch";
+import { getTotalAnswers, getQuestionChoices, getAnswersByQuestion, getTeamByQuestion } from "../lib/HelperFunctions";
 
 export default function GameInProgress({
   teams,
@@ -24,29 +23,22 @@ export default function GameInProgress({
   gameTimerZero,
   isLoadModalOpen,
   setIsLoadModalOpen,
+  showFooterButtonOnly,
+  isConfidenceEnabled,
+  handleConfidenceSwitchChange,
+  handleBeginQuestion
 }) {
 
   const classes = useStyles();
-  let statePosition;
-  let choices;
-  let answerArray;
-  let totalAnswers;
-  let [modalOpen, setModalOpen] = useState(false);
+  // refs for scrolling of components via module navigator
+  const questionCardRef = React.useRef(null);
+  const responsesRef = React.useRef(null);
+  const gameAnswersRef = React.useRef(null);
+  const confidenceRef = React.useRef(null);
+  const playerThinkingRef = React.useRef(null);
+  const popularMistakesRef = React.useRef(null);
   const footerButtonTextDictionary = { //dictionary used to assign button text based on the next state 
-
-    //0-not started
-    //1-teams joining
-    //2-choose correct answer
-    //3-phase_1_discuss
-    //4-phase_1_results
-    //5-phase_2_start
-    //6-choose_trickiest_answer
-    //7_phase_2_discuss
-    //8-phase_2_results
-    //9-final_results
-    //10-finished
-
-    //put this in gameinprogress
+    1: "Begin Question",
     2: "Continue",
     3: "Go to Results",
     4: "Go to Phase 2",
@@ -56,7 +48,28 @@ export default function GameInProgress({
     8: "Go to Next Question",
     9: "Proceed to RightOn Central"
   };
+  const numPlayers = teams ? teams.length : 0;
+  const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const answersByQuestion =  getAnswersByQuestion(questionChoices, teamsArray, currentQuestionIndex, questions, currentState);
+  const correctChoiceIndex = questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  const totalAnswers = getTotalAnswers(answersByQuestion);
+  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
+  const teamsPickedChoices = getTeamByQuestion(teamsArray, currentQuestionIndex, questionChoices, questions, currentState);
+  const noResponseLabel = '–';
 
+  // data object used in Victory graph for real-time responses
+  const data =[
+    { answerChoice: noResponseLabel, answerCount: numPlayers - totalAnswers, answerText: 'No response' },
+    ...Object.keys(answersByQuestion).map((key, index) => ({
+    answerCount: answersByQuestion[index],
+    answerChoice: String.fromCharCode(65 + index),
+     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+     answerText: questionChoices[index].text,
+    }))].reverse();
+
+  // handles if a graph is clicked, noting which graph and which bar on that graph
+  const [graphClickInfo, setGraphClickInfo] = useState({graph: null, selectedIndex: null});
+  let [modalOpen, setModalOpen] = useState(false);
   const nextStateFunc = (currentState) => {
     let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
     return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
@@ -78,60 +91,10 @@ export default function GameInProgress({
     setIsLoadModalOpen(false);
   };
 
-
-  // finds all answers for current question using isChosen, for use in footer progress bar
-  const getTotalAnswers = (answerArray) => {
-    let count = 0;
-    if (answerArray) {
-      answerArray.forEach(answerCount => {
-        count = count + answerCount;
-      });
-      return count;
-    }
-    return count;
-  };
-
-  // returns the choices object for an individual question
-  const getQuestionChoices = (questions, currentQuestionIndex) => {
-    if (isNullOrUndefined(questions) || questions.length <= currentQuestionIndex || isNullOrUndefined(questions[currentQuestionIndex].choices)) {
-      return null;
-    }
-    return questions[currentQuestionIndex].choices;
-  };
-
-  // returns an array ordered to match the order of answer choices, containing the total number of each answer
-  const getAnswersByQuestion = (choices, teamsArray, currentQuestionIndex) => {
-    if (teamsArray.length !== 0 && Object.keys(teamsArray[0]).length !== 0 && Object.getPrototypeOf(teamsArray[0]) === Object.prototype) {
-      let choicesTextArray = [choices.length];
-      let answersArray = new Array(choices.length).fill(0);
-      let currentQuestionId = questions[currentQuestionIndex].id;
-      choices && choices.forEach((choice, index) => {
-        choicesTextArray[index] = choice.text;
-      });
-
-      teamsArray.forEach(team => {
-        team.teamMembers && team.teamMembers.forEach(teamMember => {
-          teamMember.answers && teamMember.answers.forEach(answer => {
-            if (answer.questionId === currentQuestionId) {
-              if (((currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS) && answer.isChosen) || ((currentState === GameSessionState.PHASE_2_DISCUSS || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) && answer.isTrickAnswer)) {
-                choices && choices.forEach(choice => {
-                  if (answer.text === choice.text) {
-                    answersArray[choicesTextArray.indexOf(choice.text)] += 1;
-                  }
-                })
-              }
-            }
-          })
-        })
-
-      });
-      return answersArray;
-    }
-    return [];
-  };
-
   // button needs to handle: 1. teacher answering early to pop modal 2.return to choose_correct_answer and add 1 to currentquestionindex 3. advance state to next state
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
+    if (currentState === GameSessionState.TEAMS_JOINING)
+      handleBeginQuestion();
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.PHASE_1_DISCUSS || nextState === GameSessionState.PHASE_2_DISCUSS) { // if teacher is ending early, pop modal
       if (totalAnswers < numPlayers && gameTimerZero === false)
@@ -155,6 +118,15 @@ export default function GameInProgress({
     return footerButtonTextDictionary[statePosition];
   };
 
+  // module navigator dictionaries for different game states
+  const questionConfigNavDictionary = [
+    { ref: questionCardRef, text: 'Question Card' },
+    { ref: confidenceRef, text: 'Confidence Settings' },
+  ];
+  const gameplayNavDictionary = [
+    { ref: questionCardRef, text: 'Question Card' },
+    { ref: gameAnswersRef, text: 'Answer Explanations' },
+  ];
 
   return (
     <div className={classes.background}>
@@ -164,45 +136,76 @@ export default function GameInProgress({
           backgroundImage: `url(${CheckMark})`,
           backgroundRepeat: "no-repeat",
           backgroundPositionX: "10px",
-          backgroundPositionY: "-300px"
+          backgroundPositionY: "-300px",
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
         }}
-      >
+      />
+      <div id="bodycontainer" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center' }} >
         <HeaderGame
           totalQuestions={questions ? questions.length : 0}
           currentState={currentState}
-          currentQuestion={currentQuestionIndex}
-          statePosition={statePosition = Object.keys(GameSessionState).indexOf(currentState)}
+          currentQuestionIndex={currentQuestionIndex}
+          statePosition={statePosition}
           headerGameCurrentTime={headerGameCurrentTime}
           totalRoundTime={(currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? phaseOneTime : phaseTwoTime)}
           gameTimer={gameTimer}
         />
-        <QuestionCard question={questions[currentQuestionIndex].text} image={questions[currentQuestionIndex].imageUrl} />
-        <GameAnswers questions={questions} questionChoices={choices = getQuestionChoices(questions, currentQuestionIndex)} currentQuestionIndex={currentQuestionIndex} answersByQuestion={answerArray = getAnswersByQuestion(choices, teamsArray, currentQuestionIndex)} totalAnswers={totalAnswers = getTotalAnswers(answerArray)} />
-      </div>
+        <div className={classes.contentContainer}>
+          <GameInProgressContentSwitch 
+            questions={questions} 
+            questionChoices={questionChoices}
+            currentQuestionIndex={currentQuestionIndex}
+            answersByQuestion={answersByQuestion}
+            totalAnswers={totalAnswers}
+            numPlayers={numPlayers}
+            statePosition={statePosition}
+            teamsPickedChoices = {teamsPickedChoices}
+            data={data}
+            questionCardRef={questionCardRef}
+            responsesRef={responsesRef}
+            gameAnswersRef={gameAnswersRef}
+            confidenceCardRef={confidenceRef}
+            graphClickInfo={graphClickInfo}
+            setGraphClickInfo={setGraphClickInfo}
+            correctChoiceIndex={correctChoiceIndex}
+            currentState={currentState}
+            isConfidenceEnabled={isConfidenceEnabled}
+            handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+          />
+        </div>      
       <GameModal handleModalButtonOnClick={handleModalButtonOnClick} handleModalClose={handleModalClose} modalOpen={modalOpen} />
       <FooterGame
-        numPlayers={teams ? teams.length : 0} //need # for answer bar
+        numPlayers={numPlayers} //need # for answer bar
         totalAnswers={totalAnswers} //number of answers 
         phaseOneTime={phaseOneTime}
         phaseTwoTime={phaseTwoTime}
         gameTimer={gameTimer} //flag GameInProgress vs StudentView
         footerButtonText={getFooterText(teams ? teams.length : 0, totalAnswers, statePosition)} // provides index of current state for use in footer dictionary
         handleFooterOnClick={handleFooterOnClick} //handler for button
+        graphClickInfo={graphClickInfo}
+        setGraphClickInfo={setGraphClickInfo}
+        showFooterButtonOnly={showFooterButtonOnly}
+        navDictionary={statePosition < 2 ? questionConfigNavDictionary : gameplayNavDictionary}
       />
+       </div>
     </div>
   );
 }
 
-
-
 const useStyles = makeStyles(theme => ({
   background: {
+    position: 'fixed',
     height: "100%",
     width: "100%",
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column",
-    justifyContent: "space-between",
+    alignItems: 'center',
+    justifyContent: "center",
     background: "linear-gradient(196.21deg, #0D68B1 0%, #02215F 73.62%)"
   },
   number: {
@@ -241,5 +244,24 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     marginLeft: "5%",
     marginRight: "5%"
-  }
+  },
+  contentContainer: {
+    position: 'relative',
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100vw',
+    border: 'none',
+    overflowY: 'auto',
+    touchAction: 'pan-y', // this constrains the touch controls to only vertical scrolling so it doesn't mess with the swiper X direction swipe
+    '&::-webkit-scrollbar': {
+      // Chrome and Safari
+      display: 'none',
+    },
+    scrollbarWidth: 'none', // Firefox
+    '-ms-overflow-style': 'none', // IE and Edge
+    padding: '24px',
+    boxSizing: 'border-box'
+  },
 }));

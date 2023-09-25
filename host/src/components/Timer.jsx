@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     display: "inline-block",
     marginRight: "10px",
     width: "50%",
+    height: '6px'
   },
   colorPrimary: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -42,7 +43,7 @@ export default function Timer({
   const classes = useStyles();
 
   return (
-    <div>
+    <div style={{display: 'flex', alignItems: 'center'}}>
       <LinearProgress
         classes={{
           root: classes.timerBar,
@@ -51,6 +52,7 @@ export default function Timer({
         }}
         value={(headerGameCurrentTime/totalRoundTime) * 100}
         variant={"determinate"}
+        style={{width: 'calc(100% - 50px'}}
       />
 
       <p style={{ display: "inline-block", color: "white" }}>

@@ -15,9 +15,10 @@ export default function StudentViews({
   phaseOneTime,
   phaseTwoTime,
   gameTimer,
-  handleUpdateGameSession
+  handleUpdateGameSession,
+  showFooterButtonOnly
 }) {
-  
+
   let statePosition;
   let isLastQuestion = ((currentQuestionIndex+1) === (questions ? questions.length : 0));
 
@@ -62,7 +63,7 @@ export default function StudentViews({
   // determines next state for use by footer
   const nextStateFunc = currentState => {
     if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
-      return GameSessionState.CHOOSE_CORRECT_ANSWER;
+      return GameSessionState.TEAMS_JOINING;
     } else {
       let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
       return GameSessionState[Object.keys(GameSessionState)[currentIndex+1]];
@@ -87,7 +88,7 @@ export default function StudentViews({
           <HeaderGame
             totalQuestions={questions ? questions.length : 0}
             currentState={currentState}
-            currentQuestion={currentQuestionIndex}
+            currentQuestionIndex={currentQuestionIndex}
             phaseOneTime={phaseOneTime}
             phaseTwoTime={phaseTwoTime}
             statePosition = {statePosition = Object.keys(GameSessionState).indexOf(currentState)}
@@ -103,6 +104,7 @@ export default function StudentViews({
               footerButtonText={isLastGameScreen ? "View Final Results" : footerButtonTextDictionary[statePosition]} 
               handleUpdateGameSession={handleUpdateGameSession}
               handleFooterOnClick =  {handleFooterOnClick} 
+              showFooterButtonOnly={showFooterButtonOnly}
             />
           </div>
        
