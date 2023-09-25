@@ -22,6 +22,14 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
   return questions[currentQuestionIndex].choices;
 };
 
+/*
+* returns team and answer data for each answer
+* for use in getTeamByQuestion and getAnswersByQuestion, below
+* @param {array} teamsArray - array of teams
+* @param {number} currentState - current state of game
+* @param {number} currentQuestionId - id of current question
+* @returns {array} results - array of objects containing corresponding team and answer data
+*/
 export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
   let results = [];
 
