@@ -32,6 +32,7 @@ export default function ErrorModal({
   const upperTextMap = {
     [ErrorType.CONNECT]: t('error.connect.title1'),
     [ErrorType.ANSWER]: t('error.game.answer'),
+    [ErrorType.CONFIDENCE]: t('error.game.confidence'),
     [ErrorType.SCORE]: t('error.game.score'),
     [ErrorType.JOIN]: t('error.connect.join'),
   };

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core';
 
 export default function LoadingIndicator({
   theme,
   radius,
   timerStartInSecond,
   handleStartGameModalTimerFinished,
-  gameCreate
+  gameCreate,
 }) {
   const classes = useStyles();
   const { cos, sin, PI } = Math;
   const tau = 2 * PI;
   const multiply = ([a, b, c, d], x, y) => [a * x + b * y, c * x + d * y];
-  const rotate = x => [cos(x), -sin(x), sin(x), cos(x)];
+  const rotate = (x) => [cos(x), -sin(x), sin(x), cos(x)];
   const add = ([a1, a2], b1, b2) => [a1 + b1, a2 + b2];
   const ellipse = (cx, cy, rx, ry, t1, delta, theta) => {
     /* [
@@ -27,7 +27,11 @@ export default function LoadingIndicator({
     ] */
     delta = delta % tau;
     const rotMatrix = rotate(theta);
-    const [sX, sY] = add(multiply(rotMatrix, rx * cos(t1), ry * sin(t1)), cx, cy);
+    const [sX, sY] = add(
+      multiply(rotMatrix, rx * cos(t1), ry * sin(t1)),
+      cx,
+      cy,
+    );
     const [eX, eY] = add(
       multiply(rotMatrix, rx * cos(t1 + delta), ry * sin(t1 + delta)),
       cx,
@@ -35,9 +39,21 @@ export default function LoadingIndicator({
     );
     const fA = delta > PI ? 1 : 0;
     const fS = delta > 0 ? 1 : 0;
-    const path = ['M', sX, sY, 'A', rx, ry, (theta / tau) * 360, fA, fS, eX, eY];
+    const path = [
+      'M',
+      sX,
+      sY,
+      'A',
+      rx,
+      ry,
+      (theta / tau) * 360,
+      fA,
+      fS,
+      eX,
+      eY,
+    ];
     return path.join(' ');
-  }
+  };
 
   const Segments = (x, y, r, colors) => {
     let rx = r;
@@ -51,14 +67,19 @@ export default function LoadingIndicator({
     const offset = space + phase;
     const sweepAngle = evenly - space * 2;
     return colors.map((color, i) => (
-      <path key={color} stroke={color} d={ellipse(x, y, rx, ry, t1, sweepAngle, i * evenly + offset)} />
+      <path
+        key={color}
+        stroke={color}
+        d={ellipse(x, y, rx, ry, t1, sweepAngle, i * evenly + offset)}
+      />
     ));
-  }
-
+  };
 
   const [colors, setColors] = useState(theme);
-  const [remainingSecondsInMilliSeconds, setRemainingSecondsInMilliSeconds] = useState(timerStartInSecond * 1000);
-  const [remainingTimeInSecond, setRemainingTimeInSecond] = useState(timerStartInSecond);
+  const [remainingSecondsInMilliSeconds, setRemainingSecondsInMilliSeconds] =
+    useState(timerStartInSecond * 1000);
+  const [remainingTimeInSecond, setRemainingTimeInSecond] =
+    useState(timerStartInSecond);
   const [timerFinished, setTimerFinished] = useState(false);
 
   let timeInterval = 100;
@@ -66,18 +87,23 @@ export default function LoadingIndicator({
   useEffect(() => {
     let refreshIntervalId = setInterval(() => {
       if (!timerFinished) {
-        const c = colors.slice(colors.length - 1).concat(colors.slice(0, colors.length - 1));
+        const c = colors
+          .slice(colors.length - 1)
+          .concat(colors.slice(0, colors.length - 1));
         setColors(c);
 
-        setRemainingSecondsInMilliSeconds(remainingSecondsInMilliSeconds - timeInterval);
-        setRemainingTimeInSecond(Math.ceil(remainingSecondsInMilliSeconds / 1000));
+        setRemainingSecondsInMilliSeconds(
+          remainingSecondsInMilliSeconds - timeInterval,
+        );
+        setRemainingTimeInSecond(
+          Math.ceil(remainingSecondsInMilliSeconds / 1000),
+        );
       }
     }, timeInterval);
 
     if (timerFinished) {
       return;
-    }
-    else if (remainingTimeInSecond <= 0) {
+    } else if (remainingTimeInSecond <= 0) {
       handleStartGameModalTimerFinished();
       setTimerFinished(true);
       clearInterval(refreshIntervalId);
@@ -85,26 +111,32 @@ export default function LoadingIndicator({
     }
     return () => {
       clearInterval(refreshIntervalId);
-    }
-
+    };
   });
 
   return (
     <div className={classes.container}>
-      <svg width={radius * 2} height={radius * 2} strokeWidth={7} viewBox={'0 0 42 42'}>
+      <svg
+        width={radius * 2}
+        height={radius * 2}
+        strokeWidth={7}
+        viewBox={'0 0 42 42'}
+      >
         {Segments(21, 21, 15.91549430918954, colors)}
       </svg>
-      <div className={classes.text}> {!gameCreate ? remainingTimeInSecond : null} </div>
+      <div className={classes.text}>
+        {!gameCreate ? remainingTimeInSecond : null}
+      </div>
     </div>
-  )
+  );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    opacity: 1
+    opacity: 1,
   },
   text: {
     textAlign: 'center',
@@ -112,6 +144,6 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     fontFamily: 'Karla',
     fontWeight: 'bold',
-    fontSize: '108px'
-  }
+    fontSize: '108px',
+  },
 }));
