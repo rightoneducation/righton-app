@@ -142,7 +142,7 @@ export default function GameInProgress({
   );
   return rejoinSubmittedAnswer;}
 );
-console.log(answerObject);
+
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
     !isNullOrUndefined(answerObject.multiChoiceAnswerIndex)
   );
@@ -235,13 +235,17 @@ console.log(answerObject);
       // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
+      console.log("1");
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
+      console.log("2");
       setSelectConfidence((prev) => ({
         ...prev,
         selectedConfidenceOption: confidence,
         isSelected: true,
       }));
-    } catch {
+      console.log("3");
+    } catch (e) {
+      console.log(e);
       setIsConfidenceError(true);
     }
   };
@@ -275,7 +279,6 @@ console.log(answerObject);
           isFinished={false}
           handleTimerIsFinished={handleTimerIsFinished}
           localModel={localModel}
-          answerObject={answerObject}
         />
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
