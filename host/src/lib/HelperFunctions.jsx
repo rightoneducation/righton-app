@@ -151,7 +151,7 @@ export const getAnswersByQuestion = (
     const answers = extractAnswers(teamsArray, currentQuestionId, currentState);
 
 
-    answers.forEach(({ answer }) => {
+    answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
         if (answer.text === choice.text) {
           answersArray[
