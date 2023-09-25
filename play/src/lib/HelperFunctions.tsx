@@ -100,12 +100,11 @@ export const checkForSelectedConfidenceOnRejoin = (
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) &&
+    !isNullOrUndefined(currentAnswer)
   ) {
-    if (!isNullOrUndefined(currentAnswer)) {
       isSelected = currentAnswer.confidenceLevel !== ConfidenceLevel.NOT_RATED;
       selectedConfidenceOption = currentAnswer.confidenceLevel;
-    }
   }
   return { selectedConfidenceOption, isSelected, timeOfLastSelect };
 };
