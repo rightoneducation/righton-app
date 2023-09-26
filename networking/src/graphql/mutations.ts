@@ -30,7 +30,7 @@ export const createGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortanswerEnabled
+            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -99,7 +99,7 @@ export const createGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
-          isShortanswerEnabled
+          isShortAnswerEnabled
           gameSessionId
           __typename
         }
@@ -140,7 +140,7 @@ export const updateGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortanswerEnabled
+            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -209,7 +209,7 @@ export const updateGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
-          isShortanswerEnabled
+          isShortAnswerEnabled
           gameSessionId
           __typename
         }
@@ -250,7 +250,7 @@ export const deleteGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortanswerEnabled
+            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -319,7 +319,7 @@ export const deleteGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
-          isShortanswerEnabled
+          isShortAnswerEnabled
           gameSessionId
           __typename
         }
@@ -350,7 +350,7 @@ export const createQuestion = /* GraphQL */ `
       order
       isHintEnabled
       isConfidenceEnabled
-      isShortanswerEnabled
+      isShortAnswerEnabled
       gameSessionId
       __typename
     }
@@ -374,7 +374,7 @@ export const updateQuestion = /* GraphQL */ `
       order
       isHintEnabled
       isConfidenceEnabled
-      isShortanswerEnabled
+      isShortAnswerEnabled
       gameSessionId
       __typename
     }
@@ -398,7 +398,7 @@ export const deleteQuestion = /* GraphQL */ `
       order
       isHintEnabled
       isConfidenceEnabled
-      isShortanswerEnabled
+      isShortAnswerEnabled
       gameSessionId
       __typename
     }
@@ -425,7 +425,7 @@ export const createTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
-        isShortanswerEnabled
+        isShortAnswerEnabled
         gameSessionId
         __typename
       }
@@ -492,7 +492,7 @@ export const updateTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
-        isShortanswerEnabled
+        isShortAnswerEnabled
         gameSessionId
         __typename
       }
@@ -559,7 +559,7 @@ export const deleteTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
-        isShortanswerEnabled
+        isShortAnswerEnabled
         gameSessionId
         __typename
       }

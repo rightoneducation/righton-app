@@ -332,7 +332,7 @@ export class ApiClient implements IApiClient {
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-        const tempAnswerContent = ''; // this is to prevent breaking the current deployment of play/host and will be removed in subsequent PRs
+        const tempAnswerContent = ''; // this is to prevent breaking the current play/host and will be removed in subsequent PRs
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
