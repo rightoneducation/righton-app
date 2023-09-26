@@ -27,6 +27,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -40,6 +41,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -94,6 +96,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortanswerEnabled
           gameSessionId
           __typename
         }
@@ -117,6 +120,7 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -153,6 +157,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -166,6 +171,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -215,6 +221,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -228,6 +235,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -286,6 +294,7 @@ export const onCreateGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -299,6 +308,7 @@ export const onCreateGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -353,6 +363,7 @@ export const onCreateGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortanswerEnabled
           gameSessionId
           __typename
         }
@@ -392,6 +403,7 @@ export const onUpdateGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -405,6 +417,7 @@ export const onUpdateGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -459,6 +472,7 @@ export const onUpdateGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortanswerEnabled
           gameSessionId
           __typename
         }
@@ -498,6 +512,7 @@ export const onDeleteGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -511,6 +526,7 @@ export const onDeleteGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -565,6 +581,7 @@ export const onDeleteGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortanswerEnabled
           gameSessionId
           __typename
         }
@@ -595,6 +612,7 @@ export const onCreateTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -608,6 +626,7 @@ export const onCreateTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -657,6 +676,7 @@ export const onUpdateTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -670,6 +690,7 @@ export const onUpdateTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -719,6 +740,7 @@ export const onDeleteTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -732,6 +754,7 @@ export const onDeleteTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -776,6 +799,7 @@ export const onCreateTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -807,6 +831,7 @@ export const onUpdateTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -838,6 +863,7 @@ export const onDeleteTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -865,6 +891,7 @@ export const onCreateTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt
@@ -883,6 +910,7 @@ export const onUpdateTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt
@@ -901,6 +929,7 @@ export const onDeleteTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt

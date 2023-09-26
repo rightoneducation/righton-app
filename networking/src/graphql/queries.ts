@@ -27,6 +27,7 @@ export const getGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -40,6 +41,7 @@ export const getGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -94,6 +96,7 @@ export const getGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortanswerEnabled
           gameSessionId
           __typename
         }
@@ -136,6 +139,7 @@ export const listGameSessions = /* GraphQL */ `
               order
               isHintEnabled
               isConfidenceEnabled
+              isShortanswerEnabled
               gameSessionId
               __typename
             }
@@ -149,6 +153,7 @@ export const listGameSessions = /* GraphQL */ `
                     questionId
                     isChosen
                     text
+                    answerContents
                     isTrickAnswer
                     confidenceLevel
                     createdAt
@@ -203,6 +208,7 @@ export const listGameSessions = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -233,6 +239,7 @@ export const getQuestion = /* GraphQL */ `
       order
       isHintEnabled
       isConfidenceEnabled
+      isShortanswerEnabled
       gameSessionId
       __typename
     }
@@ -268,6 +275,7 @@ export const listQuestions = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -294,6 +302,7 @@ export const getTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortanswerEnabled
         gameSessionId
         __typename
       }
@@ -307,6 +316,7 @@ export const getTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -361,6 +371,7 @@ export const listTeams = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortanswerEnabled
           gameSessionId
           __typename
         }
@@ -374,6 +385,7 @@ export const listTeams = /* GraphQL */ `
                 questionId
                 isChosen
                 text
+                answerContents
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -419,6 +431,7 @@ export const getTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -453,6 +466,7 @@ export const listTeamMembers = /* GraphQL */ `
             questionId
             isChosen
             text
+            answerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -481,6 +495,7 @@ export const getTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt
@@ -502,6 +517,7 @@ export const listTeamAnswers = /* GraphQL */ `
         questionId
         isChosen
         text
+        answerContents
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -552,6 +568,7 @@ export const gameSessionByState = /* GraphQL */ `
               order
               isHintEnabled
               isConfidenceEnabled
+              isShortanswerEnabled
               gameSessionId
               __typename
             }
@@ -565,6 +582,7 @@ export const gameSessionByState = /* GraphQL */ `
                     questionId
                     isChosen
                     text
+                    answerContents
                     isTrickAnswer
                     confidenceLevel
                     createdAt
@@ -619,6 +637,7 @@ export const gameSessionByState = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
@@ -672,6 +691,7 @@ export const gameSessionByCode = /* GraphQL */ `
               order
               isHintEnabled
               isConfidenceEnabled
+              isShortanswerEnabled
               gameSessionId
               __typename
             }
@@ -685,6 +705,7 @@ export const gameSessionByCode = /* GraphQL */ `
                     questionId
                     isChosen
                     text
+                    answerContents
                     isTrickAnswer
                     confidenceLevel
                     createdAt
@@ -739,6 +760,7 @@ export const gameSessionByCode = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortanswerEnabled
             gameSessionId
             __typename
           }
