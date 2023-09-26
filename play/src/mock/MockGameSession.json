@@ -36,6 +36,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad8663956b",
                     "text": "90%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -47,6 +48,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad8663956b",
                     "text": "70%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -58,6 +60,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad8663956b",
                     "text": "72%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -69,6 +72,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad8663956b",
                     "text": "50%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -80,6 +84,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad8663956b",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -91,6 +96,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad8663956b",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
                     "confidenceLevel": "NOT_RATED"
                   }
@@ -121,6 +127,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "90%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -132,6 +139,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "70%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -143,6 +151,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "72%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -154,6 +163,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "50%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -165,6 +175,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -176,6 +187,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
                     "confidenceLevel": "NOT_RATED"
                   }
@@ -206,6 +218,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "90%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -217,6 +230,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "70%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -228,6 +242,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "72%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -239,6 +254,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "50%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -250,6 +266,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -261,6 +278,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
                     "confidenceLevel": "NOT_RATED"
                   }
@@ -291,6 +309,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "90%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -302,6 +321,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "70%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -313,6 +333,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "72%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -324,6 +345,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "50%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -335,6 +357,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -346,6 +369,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
                     "confidenceLevel": "NOT_RATED"
                   }
@@ -376,6 +400,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "90%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -387,6 +412,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "70%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -398,6 +424,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "72%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -409,6 +436,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "50%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -420,6 +448,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -431,6 +460,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
                     "confidenceLevel": "NOT_RATED"
                   }
@@ -461,6 +491,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "90%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:24.160Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -472,6 +503,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "70%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:39.668Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -483,6 +515,7 @@
                     "questionId": 4786,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "72%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:14.624Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -494,6 +527,7 @@
                     "questionId": 4790,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "50%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:29.282Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -505,6 +539,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:16:04.347Z",
                     "confidenceLevel": "NOT_RATED"
                   },
@@ -516,6 +551,7 @@
                     "questionId": 4789,
                     "teamMemberAnswersId": "2e5c0366-7565-4b71-a191-42ad86sdfasdfasd",
                     "text": "54%",
+                    "answerContents": "",
                     "updatedAt": "2023-03-07T17:15:51.121Z",
                     "confidenceLevel": "NOT_RATED"
                   }
@@ -543,7 +579,8 @@
         "standard": "3",
         "text": "A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week. A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the headphones this week?",
         "isHintEnabled": false,
-        "isConfidenceEnabled": false
+        "isConfidenceEnabled": false,
+        "isShortAnswerEnabled": false
       },
       {
         "choices": "[{\"reason\":\"\",\"text\":\"46%\",\"isAnswer\":true},{\"reason\":\"Students may have added the discounts, 10% + 40% = 50%, rather than considering that the 40% discount is applied to last week’s discounted price.\",\"text\":\"50%\",\"isAnswer\":false},{\"reason\":\"Students may have correctly calculated the amount paid (0.54P), but did not note that the question asks for the total percentage discount, which is P - 0.54P = 0.46P, or a 46% discount.\",\"text\":\"54%\",\"isAnswer\":false},{\"reason\":\"Students may have considered 40% off of the 10% discounted price to mean 40% of 10%, which would yield (0.40)(0.10) = 0.04 or 4%.\\nIf they interpreted ’additional’ as adding the discounts, then 10% + 4% = 14%.\",\"text\":\"14%\",\"isAnswer\":false}]",
@@ -558,7 +595,8 @@
         "standard": "3",
         "text": "A pair of shoes were 10% off last week. This week, there’s an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the shoes this week?",
         "isHintEnabled": false,
-        "isConfidenceEnabled": false
+        "isConfidenceEnabled": false,
+        "isShortAnswerEnabled": false
       },
       {
         "choices": "[{\"reason\":\"The students may have considered 50% off of the 20% discounted price to mean 50% of 20%, which would yield (0.2)(0.5) = 0.10 or 10%. If they interpreted ’additionally’ as adding the discounts, then 10% + 20% = 30%\",\"text\":\"30%\",\"isAnswer\":false},{\"reason\":\"The students may have added the discounts, 20% + 50% = 70% rather than considering the 50% discount off of the discounted price.\",\"text\":\"70%\",\"isAnswer\":false},{\"reason\":\"The students may have thought that the highest of the two discounts was the total discount. For example, the maximum of 20% and 50% is 50%, so they may have thought the total discount would be 50%.\",\"text\":\"50%\",\"isAnswer\":false},{\"reason\":\"\",\"text\":\"60%\",\"isAnswer\":true}]",
@@ -573,7 +611,8 @@
         "standard": "3",
         "text": "A pair of jeans were 20% off last week. This week, there’s an additional sale, and you can get an extra 50% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the jeans this week?",
         "isHintEnabled": false,
-        "isConfidenceEnabled": false
+        "isConfidenceEnabled": false,
+        "isShortAnswerEnabled": false
       }
     ]
   }

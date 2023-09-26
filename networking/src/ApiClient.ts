@@ -332,11 +332,13 @@ export class ApiClient implements IApiClient {
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
+        const tempAnswerContent = ''; // this is to prevent breaking the current play/host and will be removed in subsequent PRs
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
-            text,
+            text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            answerContents: tempAnswerContent, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -562,6 +564,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
+    answerContents?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -900,6 +903,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -909,7 +913,8 @@ class TeamAnswerParser {
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
-            isNullOrUndefined(text)) {
+            isNullOrUndefined(text) ||
+            isNullOrUndefined(answerContents)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
@@ -921,6 +926,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
