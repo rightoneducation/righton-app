@@ -564,6 +564,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
+    answerContents?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -902,6 +903,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -911,7 +913,8 @@ class TeamAnswerParser {
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
-            isNullOrUndefined(text)) {
+            isNullOrUndefined(text) ||
+            isNullOrUndefined(answerContents)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
@@ -923,6 +926,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
