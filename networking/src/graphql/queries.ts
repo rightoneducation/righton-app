@@ -27,7 +27,6 @@ export const getGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -96,7 +95,6 @@ export const getGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
-          isShortAnswerEnabled
           gameSessionId
           __typename
         }
@@ -139,7 +137,6 @@ export const listGameSessions = /* GraphQL */ `
               order
               isHintEnabled
               isConfidenceEnabled
-              isShortAnswerEnabled
               gameSessionId
               __typename
             }
@@ -208,7 +205,6 @@ export const listGameSessions = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -239,7 +235,6 @@ export const getQuestion = /* GraphQL */ `
       order
       isHintEnabled
       isConfidenceEnabled
-      isShortAnswerEnabled
       gameSessionId
       __typename
     }
@@ -275,7 +270,6 @@ export const listQuestions = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
-        isShortAnswerEnabled
         gameSessionId
         __typename
       }
@@ -302,7 +296,6 @@ export const getTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
-        isShortAnswerEnabled
         gameSessionId
         __typename
       }
@@ -371,7 +364,6 @@ export const listTeams = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
-          isShortAnswerEnabled
           gameSessionId
           __typename
         }
@@ -568,7 +560,6 @@ export const gameSessionByState = /* GraphQL */ `
               order
               isHintEnabled
               isConfidenceEnabled
-              isShortAnswerEnabled
               gameSessionId
               __typename
             }
@@ -637,7 +628,6 @@ export const gameSessionByState = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -691,7 +681,6 @@ export const gameSessionByCode = /* GraphQL */ `
               order
               isHintEnabled
               isConfidenceEnabled
-              isShortAnswerEnabled
               gameSessionId
               __typename
             }
@@ -760,7 +749,6 @@ export const gameSessionByCode = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
-            isShortAnswerEnabled
             gameSessionId
             __typename
           }

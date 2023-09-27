@@ -329,16 +329,16 @@ export class ApiClient implements IApiClient {
         teamMemberId: string,
         questionId: number,
         text: string,
+        answerContents: string,
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-        const tempAnswerContent = ''; // this is to prevent breaking the current play/host and will be removed in subsequent PRs
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            answerContents: tempAnswerContent, 
+            answerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -654,6 +654,7 @@ export class GameSessionParser {
         subscription: OnGameSessionUpdatedByIdSubscription
     ): IGameSession {
         const updateGameSession = subscription.onGameSessionUpdatedById
+        console.log(updateGameSession);
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }

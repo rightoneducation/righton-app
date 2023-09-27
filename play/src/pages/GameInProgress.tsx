@@ -176,9 +176,14 @@ export default function GameInProgress({
         teamMemberId,
         currentQuestion.id,
         answerText,
+        '{}',
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
+      const responseGame = await apiClient.getGameSession(
+        localModel.gameSessionId
+      );
+      console.log(responseGame);
       setTeamAnswerId(response.id);
       setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
       setDisplaySubmitted(true);

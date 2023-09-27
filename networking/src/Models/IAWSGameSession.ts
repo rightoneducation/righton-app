@@ -73,6 +73,7 @@ type AWSTeamAnswer = {
   isChosen: boolean
   isTrickAnswer: boolean
   text?: string | null
+  answerContents?: string | null
   createdAt?: string
   updatedAt?: string
   teamMemberAnswersId?: string | null

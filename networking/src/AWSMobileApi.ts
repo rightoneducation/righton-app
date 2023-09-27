@@ -172,7 +172,6 @@ export type Question = {
   order: number,
   isHintEnabled: boolean,
   isConfidenceEnabled: boolean,
-  isShortAnswerEnabled: boolean,
   gameSessionId: string,
 };
 
@@ -262,7 +261,6 @@ export type CreateQuestionInput = {
   order: number,
   isHintEnabled: boolean,
   isConfidenceEnabled: boolean,
-  isShortAnswerEnabled: boolean,
   gameSessionId: string,
 };
 
@@ -277,7 +275,6 @@ export type ModelQuestionConditionInput = {
   grade?: ModelStringInput | null,
   isHintEnabled?: ModelBooleanInput | null,
   isConfidenceEnabled?: ModelBooleanInput | null,
-  isShortAnswerEnabled?: ModelBooleanInput | null,
   and?: Array< ModelQuestionConditionInput | null > | null,
   or?: Array< ModelQuestionConditionInput | null > | null,
   not?: ModelQuestionConditionInput | null,
@@ -296,7 +293,6 @@ export type UpdateQuestionInput = {
   order: number,
   isHintEnabled?: boolean | null,
   isConfidenceEnabled?: boolean | null,
-  isShortAnswerEnabled?: boolean | null,
   gameSessionId: string,
 };
 
@@ -485,7 +481,6 @@ export type ModelQuestionFilterInput = {
   order?: ModelIntInput | null,
   isHintEnabled?: ModelBooleanInput | null,
   isConfidenceEnabled?: ModelBooleanInput | null,
-  isShortAnswerEnabled?: ModelBooleanInput | null,
   gameSessionId?: ModelIDInput | null,
   and?: Array< ModelQuestionFilterInput | null > | null,
   or?: Array< ModelQuestionFilterInput | null > | null,
@@ -663,7 +658,6 @@ export type CreateGameSessionMutation = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -731,7 +725,6 @@ export type CreateGameSessionMutation = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -774,7 +767,6 @@ export type UpdateGameSessionMutation = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -842,7 +834,6 @@ export type UpdateGameSessionMutation = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -885,7 +876,6 @@ export type DeleteGameSessionMutation = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -953,7 +943,6 @@ export type DeleteGameSessionMutation = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -983,7 +972,6 @@ export type CreateQuestionMutation = {
     order: number,
     isHintEnabled: boolean,
     isConfidenceEnabled: boolean,
-    isShortAnswerEnabled: boolean,
     gameSessionId: string,
   } | null,
 };
@@ -1008,7 +996,6 @@ export type UpdateQuestionMutation = {
     order: number,
     isHintEnabled: boolean,
     isConfidenceEnabled: boolean,
-    isShortAnswerEnabled: boolean,
     gameSessionId: string,
   } | null,
 };
@@ -1033,7 +1020,6 @@ export type DeleteQuestionMutation = {
     order: number,
     isHintEnabled: boolean,
     isConfidenceEnabled: boolean,
-    isShortAnswerEnabled: boolean,
     gameSessionId: string,
   } | null,
 };
@@ -1062,7 +1048,6 @@ export type CreateTeamMutation = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -1130,7 +1115,6 @@ export type UpdateTeamMutation = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -1198,7 +1182,6 @@ export type DeleteTeamMutation = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -1439,7 +1422,6 @@ export type GetGameSessionQuery = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -1507,7 +1489,6 @@ export type GetGameSessionQuery = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -1553,7 +1534,6 @@ export type ListGameSessionsQuery = {
             order: number,
             isHintEnabled: boolean,
             isConfidenceEnabled: boolean,
-            isShortAnswerEnabled: boolean,
             gameSessionId: string,
           } | null,
           teamMembers?:  {
@@ -1621,7 +1601,6 @@ export type ListGameSessionsQuery = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null >,
         nextToken?: string | null,
@@ -1654,7 +1633,6 @@ export type GetQuestionQuery = {
     order: number,
     isHintEnabled: boolean,
     isConfidenceEnabled: boolean,
-    isShortAnswerEnabled: boolean,
     gameSessionId: string,
   } | null,
 };
@@ -1685,7 +1663,6 @@ export type ListQuestionsQuery = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null >,
     nextToken?: string | null,
@@ -1715,7 +1692,6 @@ export type GetTeamQuery = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -1786,7 +1762,6 @@ export type ListTeamsQuery = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null,
       teamMembers?:  {
@@ -1988,7 +1963,6 @@ export type GameSessionByStateQuery = {
             order: number,
             isHintEnabled: boolean,
             isConfidenceEnabled: boolean,
-            isShortAnswerEnabled: boolean,
             gameSessionId: string,
           } | null,
           teamMembers?:  {
@@ -2056,7 +2030,6 @@ export type GameSessionByStateQuery = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null >,
         nextToken?: string | null,
@@ -2106,7 +2079,6 @@ export type GameSessionByCodeQuery = {
             order: number,
             isHintEnabled: boolean,
             isConfidenceEnabled: boolean,
-            isShortAnswerEnabled: boolean,
             gameSessionId: string,
           } | null,
           teamMembers?:  {
@@ -2174,7 +2146,6 @@ export type GameSessionByCodeQuery = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null >,
         nextToken?: string | null,
@@ -2218,7 +2189,6 @@ export type OnGameSessionUpdatedByIdSubscription = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -2286,7 +2256,6 @@ export type OnGameSessionUpdatedByIdSubscription = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -2352,7 +2321,6 @@ export type OnTeamCreateByGameSessionIdSubscription = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -2419,7 +2387,6 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -2495,7 +2462,6 @@ export type OnCreateGameSessionSubscription = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -2563,7 +2529,6 @@ export type OnCreateGameSessionSubscription = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -2605,7 +2570,6 @@ export type OnUpdateGameSessionSubscription = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -2673,7 +2637,6 @@ export type OnUpdateGameSessionSubscription = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -2715,7 +2678,6 @@ export type OnDeleteGameSessionSubscription = {
           order: number,
           isHintEnabled: boolean,
           isConfidenceEnabled: boolean,
-          isShortAnswerEnabled: boolean,
           gameSessionId: string,
         } | null,
         teamMembers?:  {
@@ -2783,7 +2745,6 @@ export type OnDeleteGameSessionSubscription = {
         order: number,
         isHintEnabled: boolean,
         isConfidenceEnabled: boolean,
-        isShortAnswerEnabled: boolean,
         gameSessionId: string,
       } | null >,
       nextToken?: string | null,
@@ -2816,7 +2777,6 @@ export type OnCreateTeamSubscription = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -2883,7 +2843,6 @@ export type OnUpdateTeamSubscription = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {
@@ -2950,7 +2909,6 @@ export type OnDeleteTeamSubscription = {
       order: number,
       isHintEnabled: boolean,
       isConfidenceEnabled: boolean,
-      isShortAnswerEnabled: boolean,
       gameSessionId: string,
     } | null,
     teamMembers?:  {

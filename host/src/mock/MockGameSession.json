@@ -579,7 +579,6 @@
         "standard": "3",
         "isHintEnabled": false,
         "isConfidenceEnabled": false,
-        "isShortAnswerEnabled": false,
         "text": "A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week. A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week.A pair of headphones were 30% off last week. This week, there’s an additional sale, and you can get an extra 60% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the headphones this week?"
       },
       {
@@ -595,7 +594,6 @@
         "standard": "3",
         "isHintEnabled": false,
         "isConfidenceEnabled": false,
-        "isShortAnswerEnabled": false,
         "text": "A pair of shoes were 10% off last week. This week, there’s an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the shoes this week?"
       },
       {
@@ -611,7 +609,6 @@
         "standard": "3",
         "isHintEnabled": false,
         "isConfidenceEnabled": false,
-        "isShortAnswerEnabled": false,
         "text": "A pair of jeans were 20% off last week. This week, there’s an additional sale, and you can get an extra 50% off the already discounted price from last week. What is the total percentage discount that you’d get if you buy the jeans this week?"
       }
     ]

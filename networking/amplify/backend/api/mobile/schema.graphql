@@ -49,7 +49,6 @@ type Question @model(subscriptions: null, timestamps: null) {
   order: Int!
   isHintEnabled: Boolean! @default(value: "false")
   isConfidenceEnabled: Boolean! @default(value: "false")
-  isShortAnswerEnabled: Boolean! @default(value: "false")
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
 }
 
