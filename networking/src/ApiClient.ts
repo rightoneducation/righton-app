@@ -337,8 +337,8 @@ export class ApiClient implements IApiClient {
             questionId,
             isChosen,
             isTrickAnswer,
-            text,
-            answerContents,
+            text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            answerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
