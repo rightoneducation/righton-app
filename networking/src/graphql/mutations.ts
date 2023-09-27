@@ -43,6 +43,7 @@ export const createGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -150,6 +151,7 @@ export const updateGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -257,6 +259,7 @@ export const deleteGameSession = /* GraphQL */ `
                   questionId
                   isChosen
                   text
+                  answerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -426,6 +429,7 @@ export const createTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -491,6 +495,7 @@ export const updateTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -556,6 +561,7 @@ export const deleteTeam = /* GraphQL */ `
               questionId
               isChosen
               text
+              answerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -601,6 +607,7 @@ export const createTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -633,6 +640,7 @@ export const updateTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -665,6 +673,7 @@ export const deleteTeamMember = /* GraphQL */ `
           questionId
           isChosen
           text
+          answerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -693,6 +702,7 @@ export const createTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt
@@ -712,6 +722,7 @@ export const updateTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt
@@ -731,6 +742,7 @@ export const deleteTeamAnswer = /* GraphQL */ `
       questionId
       isChosen
       text
+      answerContents
       isTrickAnswer
       confidenceLevel
       createdAt

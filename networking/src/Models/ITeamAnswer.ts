@@ -5,6 +5,7 @@ export interface ITeamAnswer {
     questionId: number
     isChosen: boolean
     text: string
+    answerContents: string
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
