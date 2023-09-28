@@ -129,7 +129,13 @@ export default function ResponsesGraph({
               left: defaultVictoryPadding,
               right: smallPadding,
             }}
-            containerComponent={<VictoryContainer />}
+            containerComponent={
+              <VictoryContainer 
+                style={{
+                touchAction: "auto"
+                }}
+              />
+            }
             theme={customTheme}
             width={boundingRect.width}
             height={300}
