@@ -2,9 +2,128 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getGameSession = /* GraphQL */ `
-  query GetGameSession($id: ID!) {
-    getGameSession(id: $id) {
+import * as APITypes from "../AWSMobileApi";
+type GeneratedQuery<InputType, OutputType> = string & {
+  __generatedQueryInput: InputType;
+  __generatedQueryOutput: OutputType;
+};
+
+export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
+  getGameSession(id: $id) {
+    id
+    gameId
+    startTime
+    phaseOneTime
+    phaseTwoTime
+    teams {
+      items {
+        id
+        name
+        question {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isHintEnabled
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          gameSessionId
+          __typename
+        }
+        teamMembers {
+          items {
+            id
+            isFacilitator
+            answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                answerContents
+                isTrickAnswer
+                confidenceLevel
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            deviceId
+            createdAt
+            updatedAt
+            teamTeamMembersId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        score
+        selectedAvatarIndex
+        createdAt
+        updatedAt
+        gameSessionTeamsId
+        teamQuestionId
+        teamQuestionOrder
+        teamQuestionGameSessionId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    currentQuestionIndex
+    currentState
+    gameCode
+    isAdvancedMode
+    imageUrl
+    description
+    title
+    currentTimer
+    questions {
+      items {
+        id
+        text
+        choices
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        isHintEnabled
+        isConfidenceEnabled
+        isShortAnswerEnabled
+        gameSessionId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetGameSessionQueryVariables,
+  APITypes.GetGameSessionQuery
+>;
+export const listGameSessions = /* GraphQL */ `query ListGameSessions(
+  $filter: ModelGameSessionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
       id
       gameId
       startTime
@@ -27,6 +146,7 @@ export const getGameSession = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortAnswerEnabled
             gameSessionId
             __typename
           }
@@ -95,6 +215,7 @@ export const getGameSession = /* GraphQL */ `
           order
           isHintEnabled
           isConfidenceEnabled
+          isShortAnswerEnabled
           gameSessionId
           __typename
         }
@@ -105,124 +226,54 @@ export const getGameSession = /* GraphQL */ `
       updatedAt
       __typename
     }
+    nextToken
+    __typename
   }
-`;
-export const listGameSessions = /* GraphQL */ `
-  query ListGameSessions(
-    $filter: ModelGameSessionFilterInput
-    $limit: Int
-    $nextToken: String
+}
+` as GeneratedQuery<
+  APITypes.ListGameSessionsQueryVariables,
+  APITypes.ListGameSessionsQuery
+>;
+export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: Int!, $gameSessionId: ID!) {
+  getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
+    id
+    text
+    choices
+    imageUrl
+    instructions
+    standard
+    cluster
+    domain
+    grade
+    order
+    isHintEnabled
+    isConfidenceEnabled
+    isShortAnswerEnabled
+    gameSessionId
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetQuestionQueryVariables,
+  APITypes.GetQuestionQuery
+>;
+export const listQuestions = /* GraphQL */ `query ListQuestions(
+  $id: Int
+  $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
+  $filter: ModelQuestionFilterInput
+  $limit: Int
+  $nextToken: String
+  $sortDirection: ModelSortDirection
+) {
+  listQuestions(
+    id: $id
+    orderGameSessionId: $orderGameSessionId
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    sortDirection: $sortDirection
   ) {
-    listGameSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        gameId
-        startTime
-        phaseOneTime
-        phaseTwoTime
-        teams {
-          items {
-            id
-            name
-            question {
-              id
-              text
-              choices
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              isHintEnabled
-              isConfidenceEnabled
-              gameSessionId
-              __typename
-            }
-            teamMembers {
-              items {
-                id
-                isFacilitator
-                answers {
-                  items {
-                    id
-                    questionId
-                    isChosen
-                    text
-                    answerContents
-                    isTrickAnswer
-                    confidenceLevel
-                    createdAt
-                    updatedAt
-                    teamMemberAnswersId
-                    __typename
-                  }
-                  nextToken
-                  __typename
-                }
-                deviceId
-                createdAt
-                updatedAt
-                teamTeamMembersId
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            score
-            selectedAvatarIndex
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        currentQuestionIndex
-        currentState
-        gameCode
-        isAdvancedMode
-        imageUrl
-        description
-        title
-        currentTimer
-        questions {
-          items {
-            id
-            text
-            choices
-            imageUrl
-            instructions
-            standard
-            cluster
-            domain
-            grade
-            order
-            isHintEnabled
-            isConfidenceEnabled
-            gameSessionId
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getQuestion = /* GraphQL */ `
-  query GetQuestion($id: Int!, $order: Int!, $gameSessionId: ID!) {
-    getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
+    items {
       id
       text
       choices
@@ -235,52 +286,88 @@ export const getQuestion = /* GraphQL */ `
       order
       isHintEnabled
       isConfidenceEnabled
+      isShortAnswerEnabled
       gameSessionId
       __typename
     }
+    nextToken
+    __typename
   }
-`;
-export const listQuestions = /* GraphQL */ `
-  query ListQuestions(
-    $id: Int
-    $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
-    $filter: ModelQuestionFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listQuestions(
-      id: $id
-      orderGameSessionId: $orderGameSessionId
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+}
+` as GeneratedQuery<
+  APITypes.ListQuestionsQueryVariables,
+  APITypes.ListQuestionsQuery
+>;
+export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
+  getTeam(id: $id) {
+    id
+    name
+    question {
+      id
+      text
+      choices
+      imageUrl
+      instructions
+      standard
+      cluster
+      domain
+      grade
+      order
+      isHintEnabled
+      isConfidenceEnabled
+      isShortAnswerEnabled
+      gameSessionId
+      __typename
+    }
+    teamMembers {
       items {
         id
-        text
-        choices
-        imageUrl
-        instructions
-        standard
-        cluster
-        domain
-        grade
-        order
-        isHintEnabled
-        isConfidenceEnabled
-        gameSessionId
+        isFacilitator
+        answers {
+          items {
+            id
+            questionId
+            isChosen
+            text
+            answerContents
+            isTrickAnswer
+            confidenceLevel
+            createdAt
+            updatedAt
+            teamMemberAnswersId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        deviceId
+        createdAt
+        updatedAt
+        teamTeamMembersId
         __typename
       }
       nextToken
       __typename
     }
+    score
+    selectedAvatarIndex
+    createdAt
+    updatedAt
+    gameSessionTeamsId
+    teamQuestionId
+    teamQuestionOrder
+    teamQuestionGameSessionId
+    __typename
   }
-`;
-export const getTeam = /* GraphQL */ `
-  query GetTeam($id: ID!) {
-    getTeam(id: $id) {
+}
+` as GeneratedQuery<APITypes.GetTeamQueryVariables, APITypes.GetTeamQuery>;
+export const listTeams = /* GraphQL */ `query ListTeams(
+  $filter: ModelTeamFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
       id
       name
       question {
@@ -296,6 +383,7 @@ export const getTeam = /* GraphQL */ `
         order
         isHintEnabled
         isConfidenceEnabled
+        isShortAnswerEnabled
         gameSessionId
         __typename
       }
@@ -339,82 +427,50 @@ export const getTeam = /* GraphQL */ `
       teamQuestionGameSessionId
       __typename
     }
+    nextToken
+    __typename
   }
-`;
-export const listTeams = /* GraphQL */ `
-  query ListTeams(
-    $filter: ModelTeamFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
+}
+` as GeneratedQuery<APITypes.ListTeamsQueryVariables, APITypes.ListTeamsQuery>;
+export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
+  getTeamMember(id: $id) {
+    id
+    isFacilitator
+    answers {
       items {
         id
-        name
-        question {
-          id
-          text
-          choices
-          imageUrl
-          instructions
-          standard
-          cluster
-          domain
-          grade
-          order
-          isHintEnabled
-          isConfidenceEnabled
-          gameSessionId
-          __typename
-        }
-        teamMembers {
-          items {
-            id
-            isFacilitator
-            answers {
-              items {
-                id
-                questionId
-                isChosen
-                text
-                answerContents
-                isTrickAnswer
-                confidenceLevel
-                createdAt
-                updatedAt
-                teamMemberAnswersId
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            deviceId
-            createdAt
-            updatedAt
-            teamTeamMembersId
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        score
-        selectedAvatarIndex
+        questionId
+        isChosen
+        text
+        answerContents
+        isTrickAnswer
+        confidenceLevel
         createdAt
         updatedAt
-        gameSessionTeamsId
-        teamQuestionId
-        teamQuestionOrder
-        teamQuestionGameSessionId
+        teamMemberAnswersId
         __typename
       }
       nextToken
       __typename
     }
+    deviceId
+    createdAt
+    updatedAt
+    teamTeamMembersId
+    __typename
   }
-`;
-export const getTeamMember = /* GraphQL */ `
-  query GetTeamMember($id: ID!) {
-    getTeamMember(id: $id) {
+}
+` as GeneratedQuery<
+  APITypes.GetTeamMemberQueryVariables,
+  APITypes.GetTeamMemberQuery
+>;
+export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
+  $filter: ModelTeamMemberFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTeamMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
       id
       isFacilitator
       answers {
@@ -440,49 +496,40 @@ export const getTeamMember = /* GraphQL */ `
       teamTeamMembersId
       __typename
     }
+    nextToken
+    __typename
   }
-`;
-export const listTeamMembers = /* GraphQL */ `
-  query ListTeamMembers(
-    $filter: ModelTeamMemberFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTeamMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        isFacilitator
-        answers {
-          items {
-            id
-            questionId
-            isChosen
-            text
-            answerContents
-            isTrickAnswer
-            confidenceLevel
-            createdAt
-            updatedAt
-            teamMemberAnswersId
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        deviceId
-        createdAt
-        updatedAt
-        teamTeamMembersId
-        __typename
-      }
-      nextToken
-      __typename
-    }
+}
+` as GeneratedQuery<
+  APITypes.ListTeamMembersQueryVariables,
+  APITypes.ListTeamMembersQuery
+>;
+export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
+  getTeamAnswer(id: $id) {
+    id
+    questionId
+    isChosen
+    text
+    answerContents
+    isTrickAnswer
+    confidenceLevel
+    createdAt
+    updatedAt
+    teamMemberAnswersId
+    __typename
   }
-`;
-export const getTeamAnswer = /* GraphQL */ `
-  query GetTeamAnswer($id: ID!) {
-    getTeamAnswer(id: $id) {
+}
+` as GeneratedQuery<
+  APITypes.GetTeamAnswerQueryVariables,
+  APITypes.GetTeamAnswerQuery
+>;
+export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
+  $filter: ModelTeamAnswerFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
       id
       questionId
       isChosen
@@ -495,127 +542,39 @@ export const getTeamAnswer = /* GraphQL */ `
       teamMemberAnswersId
       __typename
     }
+    nextToken
+    __typename
   }
-`;
-export const listTeamAnswers = /* GraphQL */ `
-  query ListTeamAnswers(
-    $filter: ModelTeamAnswerFilterInput
-    $limit: Int
-    $nextToken: String
+}
+` as GeneratedQuery<
+  APITypes.ListTeamAnswersQueryVariables,
+  APITypes.ListTeamAnswersQuery
+>;
+export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
+  $currentState: GameSessionState!
+  $sortDirection: ModelSortDirection
+  $filter: ModelGameSessionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  gameSessionByState(
+    currentState: $currentState
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
   ) {
-    listTeamAnswers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        questionId
-        isChosen
-        text
-        answerContents
-        isTrickAnswer
-        confidenceLevel
-        createdAt
-        updatedAt
-        teamMemberAnswersId
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const gameSessionByState = /* GraphQL */ `
-  query GameSessionByState(
-    $currentState: GameSessionState!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGameSessionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    gameSessionByState(
-      currentState: $currentState
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        gameId
-        startTime
-        phaseOneTime
-        phaseTwoTime
-        teams {
-          items {
-            id
-            name
-            question {
-              id
-              text
-              choices
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              isHintEnabled
-              isConfidenceEnabled
-              gameSessionId
-              __typename
-            }
-            teamMembers {
-              items {
-                id
-                isFacilitator
-                answers {
-                  items {
-                    id
-                    questionId
-                    isChosen
-                    text
-                    answerContents
-                    isTrickAnswer
-                    confidenceLevel
-                    createdAt
-                    updatedAt
-                    teamMemberAnswersId
-                    __typename
-                  }
-                  nextToken
-                  __typename
-                }
-                deviceId
-                createdAt
-                updatedAt
-                teamTeamMembersId
-                __typename
-              }
-              nextToken
-              __typename
-            }
-            score
-            selectedAvatarIndex
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        currentQuestionIndex
-        currentState
-        gameCode
-        isAdvancedMode
-        imageUrl
-        description
-        title
-        currentTimer
-        questions {
-          items {
+    items {
+      id
+      gameId
+      startTime
+      phaseOneTime
+      phaseTwoTime
+      teams {
+        items {
+          id
+          name
+          question {
             id
             text
             choices
@@ -628,115 +587,119 @@ export const gameSessionByState = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortAnswerEnabled
             gameSessionId
             __typename
           }
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const gameSessionByCode = /* GraphQL */ `
-  query GameSessionByCode(
-    $gameCode: Int!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGameSessionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    gameSessionByCode(
-      gameCode: $gameCode
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        gameId
-        startTime
-        phaseOneTime
-        phaseTwoTime
-        teams {
-          items {
-            id
-            name
-            question {
+          teamMembers {
+            items {
               id
-              text
-              choices
-              imageUrl
-              instructions
-              standard
-              cluster
-              domain
-              grade
-              order
-              isHintEnabled
-              isConfidenceEnabled
-              gameSessionId
-              __typename
-            }
-            teamMembers {
-              items {
-                id
-                isFacilitator
-                answers {
-                  items {
-                    id
-                    questionId
-                    isChosen
-                    text
-                    answerContents
-                    isTrickAnswer
-                    confidenceLevel
-                    createdAt
-                    updatedAt
-                    teamMemberAnswersId
-                    __typename
-                  }
-                  nextToken
+              isFacilitator
+              answers {
+                items {
+                  id
+                  questionId
+                  isChosen
+                  text
+                  answerContents
+                  isTrickAnswer
+                  confidenceLevel
+                  createdAt
+                  updatedAt
+                  teamMemberAnswersId
                   __typename
                 }
-                deviceId
-                createdAt
-                updatedAt
-                teamTeamMembersId
+                nextToken
                 __typename
               }
-              nextToken
+              deviceId
+              createdAt
+              updatedAt
+              teamTeamMembersId
               __typename
             }
-            score
-            selectedAvatarIndex
-            createdAt
-            updatedAt
-            gameSessionTeamsId
-            teamQuestionId
-            teamQuestionOrder
-            teamQuestionGameSessionId
+            nextToken
             __typename
           }
-          nextToken
+          score
+          selectedAvatarIndex
+          createdAt
+          updatedAt
+          gameSessionTeamsId
+          teamQuestionId
+          teamQuestionOrder
+          teamQuestionGameSessionId
           __typename
         }
-        currentQuestionIndex
-        currentState
-        gameCode
-        isAdvancedMode
-        imageUrl
-        description
-        title
-        currentTimer
-        questions {
-          items {
+        nextToken
+        __typename
+      }
+      currentQuestionIndex
+      currentState
+      gameCode
+      isAdvancedMode
+      imageUrl
+      description
+      title
+      currentTimer
+      questions {
+        items {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isHintEnabled
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          gameSessionId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GameSessionByStateQueryVariables,
+  APITypes.GameSessionByStateQuery
+>;
+export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
+  $gameCode: Int!
+  $sortDirection: ModelSortDirection
+  $filter: ModelGameSessionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  gameSessionByCode(
+    gameCode: $gameCode
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      gameId
+      startTime
+      phaseOneTime
+      phaseTwoTime
+      teams {
+        items {
+          id
+          name
+          question {
             id
             text
             choices
@@ -749,18 +712,91 @@ export const gameSessionByCode = /* GraphQL */ `
             order
             isHintEnabled
             isConfidenceEnabled
+            isShortAnswerEnabled
             gameSessionId
             __typename
           }
-          nextToken
+          teamMembers {
+            items {
+              id
+              isFacilitator
+              answers {
+                items {
+                  id
+                  questionId
+                  isChosen
+                  text
+                  answerContents
+                  isTrickAnswer
+                  confidenceLevel
+                  createdAt
+                  updatedAt
+                  teamMemberAnswersId
+                  __typename
+                }
+                nextToken
+                __typename
+              }
+              deviceId
+              createdAt
+              updatedAt
+              teamTeamMembersId
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          score
+          selectedAvatarIndex
+          createdAt
+          updatedAt
+          gameSessionTeamsId
+          teamQuestionId
+          teamQuestionOrder
+          teamQuestionGameSessionId
           __typename
         }
-        createdAt
-        updatedAt
+        nextToken
         __typename
       }
-      nextToken
+      currentQuestionIndex
+      currentState
+      gameCode
+      isAdvancedMode
+      imageUrl
+      description
+      title
+      currentTimer
+      questions {
+        items {
+          id
+          text
+          choices
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isHintEnabled
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          gameSessionId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
+    nextToken
+    __typename
   }
-`;
+}
+` as GeneratedQuery<
+  APITypes.GameSessionByCodeQueryVariables,
+  APITypes.GameSessionByCodeQuery
+>;
