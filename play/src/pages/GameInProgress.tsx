@@ -126,7 +126,7 @@ export default function GameInProgress({
       : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
-  const isShortAnswerEnabled = true; // currentQuestion?.isShortAnswerEnabled; <- TODO: uncomment when backend is updated
+  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
 
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
@@ -152,7 +152,6 @@ export default function GameInProgress({
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
-
   const handleTimerIsFinished = () => {
     setAnswerObject((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
@@ -187,6 +186,7 @@ export default function GameInProgress({
       const responseGame = await apiClient.getGameSession(
         localModel.gameSessionId
       );
+      setTeamAnswerId(response.id);
       setAnswerObject(result);
       setDisplaySubmitted(true);
     } catch {
@@ -235,15 +235,12 @@ export default function GameInProgress({
       // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
-      console.log("1");
       await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
-      console.log("2");
       setSelectConfidence((prev) => ({
         ...prev,
         selectedConfidenceOption: confidence,
         isSelected: true,
       }));
-      console.log("3");
     } catch (e) {
       console.log(e);
       setIsConfidenceError(true);
