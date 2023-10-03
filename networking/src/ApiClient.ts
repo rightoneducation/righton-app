@@ -329,6 +329,7 @@ export class ApiClient implements IApiClient {
         teamMemberId: string,
         questionId: number,
         text: string,
+        answerContents: string,
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
@@ -336,7 +337,8 @@ export class ApiClient implements IApiClient {
             questionId,
             isChosen,
             isTrickAnswer,
-            text,
+            text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            answerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -542,6 +544,7 @@ type AWSQuestion = {
     order: number
     isHintEnabled: boolean
     isConfidenceEnabled: boolean
+    isShortAnswerEnabled: boolean
 }
 
 type AWSTeamMember = {
@@ -562,6 +565,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
+    answerContents?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -651,6 +655,7 @@ export class GameSessionParser {
         subscription: OnGameSessionUpdatedByIdSubscription
     ): IGameSession {
         const updateGameSession = subscription.onGameSessionUpdatedById
+        console.log(updateGameSession);
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
@@ -724,6 +729,7 @@ export class GameSessionParser {
                     order: awsQuestion.order,
                     isHintEnabled: awsQuestion.isHintEnabled,
                     isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
+                    isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
                 }
                 return question
             })
@@ -900,6 +906,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -909,7 +916,8 @@ class TeamAnswerParser {
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
-            isNullOrUndefined(text)) {
+            isNullOrUndefined(text) ||
+            isNullOrUndefined(answerContents)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
@@ -921,6 +929,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,

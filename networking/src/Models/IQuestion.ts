@@ -12,6 +12,7 @@ export interface IQuestion {
     order: number
     isHintEnabled: boolean
     isConfidenceEnabled: boolean
+    isShortAnswerEnabled: boolean
 }
 
 export interface IChoice {

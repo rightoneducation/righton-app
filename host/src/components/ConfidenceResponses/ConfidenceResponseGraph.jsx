@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Typography } from '@material-ui/core';
 import {
   VictoryChart,
+  VictoryContainer,
   VictoryStack,
   VictoryBar,
   VictoryLabel,
@@ -111,7 +112,17 @@ export default function ConfidenceResponsesGraph({
         </Typography>
       </div>
       <div ref={graphRef}>
-        <VictoryChart theme={customThemeGraph} height={200}>
+        <VictoryChart 
+          theme={customThemeGraph} 
+          height={200}
+          containerComponent={
+            <VictoryContainer 
+              style={{
+              touchAction: "auto"
+              }}
+            />
+          }
+        >
           <VictoryStack
             standalone={false}
             labelComponent={

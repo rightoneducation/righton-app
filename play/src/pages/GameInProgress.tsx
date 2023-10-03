@@ -176,17 +176,17 @@ export default function GameInProgress({
 
   const handleSubmitAnswer = async (result: AnswerObject) => {
     try {
-      // TODO: update backend to accept new answer object
-      // await apiClient.addTeamAnswer(
-      //   teamMemberId,
-      //   currentQuestion.id,
-      //   result.answerTexts,
-      //   result.answerTypes,
-      //   currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-      //   currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      // );
-      console.log("Answer:");
-      console.log(result);
+      const response = await apiClient.addTeamAnswer(
+        teamMemberId,
+        currentQuestion.id,
+        result.answerTexts[0],
+        JSON.stringify(answerObject),
+        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
+        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
+      );
+      const responseGame = await apiClient.getGameSession(
+        localModel.gameSessionId
+      );
       setAnswerObject(result);
       setDisplaySubmitted(true);
     } catch {

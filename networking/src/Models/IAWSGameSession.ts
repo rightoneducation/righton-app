@@ -53,6 +53,7 @@ type AWSQuestion = {
   order: number
   isHintEnabled: boolean
   isConfidenceEnabled: boolean
+  isShortAnswerEnabled: boolean
 }
 
 type AWSTeamMember = {
@@ -73,6 +74,7 @@ type AWSTeamAnswer = {
   isChosen: boolean
   isTrickAnswer: boolean
   text?: string | null
+  answerContents?: string | null
   createdAt?: string
   updatedAt?: string
   teamMemberAnswersId?: string | null
