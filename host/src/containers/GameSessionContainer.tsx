@@ -74,9 +74,6 @@ const GameSessionContainer = () => {
         !isNullOrUndefined(response.currentQuestionIndex) &&
         !isNullOrUndefined(response.questions[response.currentQuestionIndex])
       ) {
-        setIsConfidenceEnabled(
-          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
-        );
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -103,6 +100,10 @@ const GameSessionContainer = () => {
           checkGameTimer(response);
         }
         setGameSession({ ...gameSession, ...response });
+        setIsConfidenceEnabled(
+          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+        );
+        setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
       },
     );
 
@@ -288,6 +289,7 @@ const GameSessionContainer = () => {
         id: questionId,
         order: order,
         isConfidenceEnabled: isConfidenceEnabled,
+        isShortAnswerEnabled: isShortAnswerEnabled
       })
       .then((response) => {
         let newUpdates = {
