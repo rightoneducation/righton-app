@@ -46,7 +46,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
                 questionId
                 isChosen
                 text
-                answerContents
+                awsAnswerContents
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -160,7 +160,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
                   questionId
                   isChosen
                   text
-                  answerContents
+                  awsAnswerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -329,7 +329,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
             questionId
             isChosen
             text
-            answerContents
+            awsAnswerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -397,7 +397,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
               questionId
               isChosen
               text
-              answerContents
+              awsAnswerContents
               isTrickAnswer
               confidenceLevel
               createdAt
@@ -442,7 +442,7 @@ export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
         questionId
         isChosen
         text
-        answerContents
+        awsAnswerContents
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -479,7 +479,7 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
           questionId
           isChosen
           text
-          answerContents
+          awsAnswerContents
           isTrickAnswer
           confidenceLevel
           createdAt
@@ -510,7 +510,7 @@ export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
     questionId
     isChosen
     text
-    answerContents
+    awsAnswerContents
     isTrickAnswer
     confidenceLevel
     createdAt
@@ -534,7 +534,7 @@ export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
       questionId
       isChosen
       text
-      answerContents
+      awsAnswerContents
       isTrickAnswer
       confidenceLevel
       createdAt
@@ -601,7 +601,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
                   questionId
                   isChosen
                   text
-                  answerContents
+                  awsAnswerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
@@ -726,7 +726,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
                   questionId
                   isChosen
                   text
-                  answerContents
+                  awsAnswerContents
                   isTrickAnswer
                   confidenceLevel
                   createdAt
