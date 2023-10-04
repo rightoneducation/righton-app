@@ -333,13 +333,12 @@ export class ApiClient implements IApiClient {
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-        const awsAnswerContents = JSON.stringify(answerContents)
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContents, 
+            answerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -354,7 +353,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as ITeamAnswer
+        return answer.data.createTeamAnswer as ITeamAnswer
     }
 
     async updateTeamAnswer(
@@ -378,7 +377,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as ITeamAnswer
+        return answer.data.updateTeamAnswer as ITeamAnswer
     }
 
     async updateTeam(
@@ -566,7 +565,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
-    awsAnswerContents?: string | null
+    answerContents?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -907,7 +906,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
-            awsAnswerContents,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -918,7 +917,7 @@ class TeamAnswerParser {
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
             isNullOrUndefined(text) ||
-            isNullOrUndefined(awsAnswerContents)) {
+            isNullOrUndefined(answerContents)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
@@ -930,7 +929,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
-            answerContents: awsAnswerContents,
+            answerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,

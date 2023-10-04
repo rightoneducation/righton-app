@@ -83,7 +83,7 @@ type TeamAnswer @model {
   questionId: Int!
   isChosen: Boolean!
   text: String!
-  awsAnswerContents: AWSJSON!
+  answerContents: AWSJSON!
   isTrickAnswer: Boolean!
   confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
 }

@@ -46,7 +46,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                answerContents
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -127,7 +127,7 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `subscription OnTeamMemb
         questionId
         isChosen
         text
-        awsAnswerContents
+        answerContents
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -180,7 +180,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
             questionId
             isChosen
             text
-            awsAnswerContents
+            answerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -246,7 +246,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
             questionId
             isChosen
             text
-            awsAnswerContents
+            answerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -321,7 +321,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                answerContents
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -432,7 +432,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                answerContents
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -543,7 +543,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                answerContents
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -645,7 +645,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
             questionId
             isChosen
             text
-            awsAnswerContents
+            answerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -711,7 +711,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
             questionId
             isChosen
             text
-            awsAnswerContents
+            answerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -777,7 +777,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
             questionId
             isChosen
             text
-            awsAnswerContents
+            answerContents
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -824,7 +824,7 @@ export const onCreateTeamMember = /* GraphQL */ `subscription OnCreateTeamMember
         questionId
         isChosen
         text
-        awsAnswerContents
+        answerContents
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -858,7 +858,7 @@ export const onUpdateTeamMember = /* GraphQL */ `subscription OnUpdateTeamMember
         questionId
         isChosen
         text
-        awsAnswerContents
+        answerContents
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -892,7 +892,7 @@ export const onDeleteTeamMember = /* GraphQL */ `subscription OnDeleteTeamMember
         questionId
         isChosen
         text
-        awsAnswerContents
+        answerContents
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -922,7 +922,7 @@ export const onCreateTeamAnswer = /* GraphQL */ `subscription OnCreateTeamAnswer
     questionId
     isChosen
     text
-    awsAnswerContents
+    answerContents
     isTrickAnswer
     confidenceLevel
     createdAt
@@ -943,7 +943,7 @@ export const onUpdateTeamAnswer = /* GraphQL */ `subscription OnUpdateTeamAnswer
     questionId
     isChosen
     text
-    awsAnswerContents
+    answerContents
     isTrickAnswer
     confidenceLevel
     createdAt
@@ -964,7 +964,7 @@ export const onDeleteTeamAnswer = /* GraphQL */ `subscription OnDeleteTeamAnswer
     questionId
     isChosen
     text
-    awsAnswerContents
+    answerContents
     isTrickAnswer
     confidenceLevel
     createdAt
