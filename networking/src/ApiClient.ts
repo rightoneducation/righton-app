@@ -55,6 +55,7 @@ import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
 import { IGameSession } from "./Models/IGameSession"
 import { ITeam } from "./Models/ITeam"
+import { IAnswerContent } from "./Models/IAnswerContent"
 
 Amplify.configure(awsconfig)
 
@@ -329,16 +330,18 @@ export class ApiClient implements IApiClient {
         teamMemberId: string,
         questionId: number,
         text: string,
-        answerContents: string,
+        answerContents: IAnswerContent,
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
+
+        const awsAnswerContents = JSON.stringify(answerContents);
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            answerContents, 
+            awsAnswerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -353,7 +356,8 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team answer`)
         }
-        return answer.data.createTeamAnswer as ITeamAnswer
+        const parsedTeamAnswer = TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer as AWSTeamAnswer);
+        return parsedTeamAnswer as ITeamAnswer
     }
 
     async updateTeamAnswer(
@@ -377,7 +381,8 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team answer`)
         }
-        return answer.data.updateTeamAnswer as ITeamAnswer
+        const parsedTeamAnswer = TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer as AWSTeamAnswer);
+        return parsedTeamAnswer as ITeamAnswer
     }
 
     async updateTeam(
@@ -565,7 +570,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
-    answerContents?: string | null
+    awsAnswerContents?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -896,7 +901,24 @@ class TeamAnswerParser {
             return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
         })
     }
-
+    static answerContentFromAWSAnswerContent(
+        awsAnswerContent: string
+    ): IAnswerContent {
+        let parsedAnswerContent;
+        try {
+            parsedAnswerContent = JSON.parse(awsAnswerContent);
+            if (isNullOrUndefined(parsedAnswerContent.answerTexts) ||
+            isNullOrUndefined(parsedAnswerContent.answerTypes) ||
+            isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
+                throw new Error(
+                    "Team answer has null field for the attributes that are not nullable"
+                )
+            }
+        } catch (e) {
+            throw new Error("Failed to parse answer content")
+        }
+        return parsedAnswerContent as IAnswerContent;
+    }   
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): ITeamAnswer {
@@ -906,23 +928,25 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
-            answerContents,
+            awsAnswerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
             confidenceLevel
         } = awsTeamAnswer || {}
-
+        
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
             isNullOrUndefined(text) ||
-            isNullOrUndefined(answerContents)) {
+            isNullOrUndefined(awsAnswerContents)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-
+        // aws answer content is a stringified json object, parse it below into an IAnswerContent object
+        const answerContents = this.answerContentFromAWSAnswerContent(awsAnswerContents);
+     
         const teamAnswer: ITeamAnswer = {
             id,
             questionId,
