@@ -331,13 +331,13 @@ export class ApiClient implements IApiClient {
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-        const awsAnswerContents = JSON.stringify(answerContents);
+        const awsAnswerContents = JSON.stringify(answerContents)
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            answerContents: awsAnswerContents, 
+            awsAnswerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -353,8 +353,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team answer`)
         }
-        const parsedTeamAnswer = TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer as AWSTeamAnswer);
-        return parsedTeamAnswer as ITeamAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as ITeamAnswer
     }
 
     async updateTeamAnswer(
@@ -378,8 +377,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team answer`)
         }
-        const parsedTeamAnswer = TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer as AWSTeamAnswer);
-        return parsedTeamAnswer as ITeamAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as ITeamAnswer
     }
 
     async updateTeam(
