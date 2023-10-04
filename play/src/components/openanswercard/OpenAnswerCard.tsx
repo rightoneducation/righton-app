@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
-import { isNullOrUndefined } from '@righton/networking';
+import { isNullOrUndefined, IAnswerContent } from '@righton/networking';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import katex from "katex";
 import './ReactQuill.css';
 import "katex/dist/katex.min.css";
-import { AnswerObject, AnswerType, StorageKeyAnswer, LocalModel } from '../../lib/PlayModels';
+import { AnswerType, StorageKeyAnswer, LocalModel } from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
@@ -16,13 +16,13 @@ import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
 window.katex = katex;
 
 interface OpenAnswerCardProps {
-  answerObject: AnswerObject;
+  answerContent: IAnswerContent;
   isSubmitted: boolean;
-  handleSubmitAnswer: (result: AnswerObject) => void;
+  handleSubmitAnswer: (result: IAnswerContent) => void;
 }
 
 export default function OpenAnswerCard({
-  answerObject,
+  answerContent,
   isSubmitted,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
@@ -39,7 +39,7 @@ export default function OpenAnswerCard({
 
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
-  const insertQuillDelta = (inputAnswer: AnswerObject) => {
+  const insertQuillDelta = (inputAnswer: IAnswerContent) => {
     const quillDelta: any = [];
     inputAnswer.answerTexts.forEach((input, index) => {
       if (inputAnswer.answerTypes[index] === AnswerType.FORMULA) {
@@ -51,7 +51,7 @@ export default function OpenAnswerCard({
     return quillDelta;
   };
 
-  const [editorContents, setEditorContents] = useState<any>(() => insertQuillDelta(answerObject));
+  const [editorContents, setEditorContents] = useState<any>(() => insertQuillDelta(answerContent));
 
   const extractQuillDelta = (currentContents: any) => {
     const text: string[] = [];
@@ -83,6 +83,7 @@ export default function OpenAnswerCard({
   const handleRetrieveAnswer = (currentContents: any) => {
     const answer = extractQuillDelta(currentContents);
     answer.isSubmitted = true;
+    console.log(answer);
     handleSubmitAnswer(answer);
   };
 

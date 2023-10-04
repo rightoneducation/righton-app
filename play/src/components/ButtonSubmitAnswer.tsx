@@ -1,18 +1,18 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { IAnswerContent } from '@righton/networking';
 import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
 } from '../lib/styledcomponents/GamePlayButtonStyled';
-import { AnswerObject } from '../lib/PlayModels';
 
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
   selectedAnswer?: number | null;
   answers?: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  handleSubmitAnswer: (answer: AnswerObject) => void;
+  handleSubmitAnswer: (answer: IAnswerContent) => void;
 }
 
 export default function ButtonSubmitAnswer({

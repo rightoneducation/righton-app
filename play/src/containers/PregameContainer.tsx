@@ -13,7 +13,7 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, LocalModel, StorageKey, StorageKeyAnswer, AnswerObject } from '../lib/PlayModels';
+import { PregameState, LocalModel, StorageKey, StorageKeyAnswer } from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {

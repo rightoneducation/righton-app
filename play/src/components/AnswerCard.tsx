@@ -2,17 +2,17 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined, GameSessionState } from '@righton/networking';
+import { isNullOrUndefined, GameSessionState, IAnswerContent } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
-import { AnswerState, AnswerObject } from '../lib/PlayModels';
+import { AnswerState } from '../lib/PlayModels';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: AnswerObject ) => void;
+  handleSubmitAnswer: (answerText: IAnswerContent ) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (index: number) => void;

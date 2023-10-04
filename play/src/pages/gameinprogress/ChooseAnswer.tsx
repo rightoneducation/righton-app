@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, GameSessionState } from '@righton/networking';
+import { ConfidenceLevel, GameSessionState, IAnswerContent } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -11,7 +11,6 @@ import AnswerCard from '../../components/AnswerCard';
 import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import { AnswerObject, LocalModel } from '../../lib/PlayModels';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -22,7 +21,7 @@ interface ChooseAnswerProps {
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answer: AnswerObject) => void;
+  handleSubmitAnswer: (answer: IAnswerContent) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
@@ -33,7 +32,7 @@ interface ChooseAnswerProps {
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
-  answerObject: AnswerObject;
+  answerContent: IAnswerContent;
 }
 
 export default function ChooseAnswer({
@@ -54,7 +53,7 @@ export default function ChooseAnswer({
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
-  answerObject
+  answerContent
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -110,16 +109,16 @@ export default function ChooseAnswer({
     {!isShortAnswerEnabled ? 
         <AnswerCard
           answers={answerChoices}
-          isSubmitted={answerObject.isSubmitted}
+          isSubmitted={answerContent.isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
-          selectedAnswer={answerObject.multiChoiceAnswerIndex ?? null}
+          selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
           handleSelectAnswer={handleSelectAnswer}
         />
         :
         <OpenAnswerCard
-          answerObject={answerObject}
-          isSubmitted={answerObject.isSubmitted}
+          answerContent={answerContent}
+          isSubmitted={answerContent.isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
         />
       }

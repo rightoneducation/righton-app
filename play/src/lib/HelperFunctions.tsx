@@ -5,8 +5,9 @@ import {
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
+  IAnswerContent
 } from '@righton/networking';
-import { InputPlaceholder, StorageKey, LocalModel, AnswerObject, AnswerType, StorageKeyAnswer } from './PlayModels';
+import { InputPlaceholder, StorageKey, LocalModel, AnswerType, StorageKeyAnswer } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -55,8 +56,8 @@ export const checkForSubmittedAnswerOnRejoin = (
     reason: string;
   }[],
   currentState: GameSessionState
-): AnswerObject => {
-  let returnedAnswer: AnswerObject = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
+): IAnswerContent => {
+  let returnedAnswer: IAnswerContent = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||

@@ -1,3 +1,4 @@
+import { IAnswerContent } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -128,11 +129,11 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
-  presubmitAnswer: AnswerObject | null;
+  presubmitAnswer: IAnswerContent | null;
 }
 
 export interface LocalModelAnswer {
-  presubmitAnswer: AnswerObject;
+  presubmitAnswer: IAnswerContent;
 }
 
 interface MonsterMap {
@@ -203,11 +204,4 @@ export enum AnswerType {
   TEXT,
   FORMULA,
   NULL
-}
-
-export interface AnswerObject {
-  answerTexts: string[];
-  answerTypes: AnswerType[];
-  multiChoiceAnswerIndex?: number | null;
-  isSubmitted: boolean;
 }

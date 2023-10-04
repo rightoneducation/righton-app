@@ -10,6 +10,7 @@ import {
   ModelHelper,
   ConfidenceLevel,
   isNullOrUndefined,
+  IAnswerContent
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -28,7 +29,7 @@ import {
   fetchLocalData,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, AnswerObject, StorageKeyAnswer } from '../lib/PlayModels';
+import { ErrorType, LocalModel, StorageKeyAnswer } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -131,7 +132,7 @@ export default function GameInProgress({
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [answerObject, setAnswerObject] = useState<AnswerObject>(() => {
+  const [answerContent, setAnswerContent] = useState<IAnswerContent>(() => {
     let rejoinSubmittedAnswer = null;
     rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
     localModel,
@@ -144,7 +145,7 @@ export default function GameInProgress({
 );
 
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
-    !isNullOrUndefined(answerObject.multiChoiceAnswerIndex)
+    !isNullOrUndefined(answerContent.multiChoiceAnswerIndex)
   );
   const currentAnswer = teamAnswers?.find(
     (answer) => answer?.questionId === currentQuestion.id
@@ -153,7 +154,7 @@ export default function GameInProgress({
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
   const handleTimerIsFinished = () => {
-    setAnswerObject((prev) => ({ ...prev, isSubmitted: true }));
+    setAnswerContent((prev) => ({ ...prev, isSubmitted: true }));
     setTimerIsPaused(true);
   };
 
@@ -172,14 +173,21 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-
-  const handleSubmitAnswer = async (result: AnswerObject) => {
+  //   addTeamAnswer(
+  // teamMemberId: string, 
+  // questionId: number, 
+  // text: string, 
+  // answerContents: IAnswerContent, 
+  // isChosen?: boolean, 
+  // isTrickAnswer?: boolean)
+  const handleSubmitAnswer = async (result: IAnswerContent) => {
     try {
+      console.log(result);
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
         result.answerTexts[0],
-        JSON.stringify(answerObject),
+        result,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
@@ -187,17 +195,18 @@ export default function GameInProgress({
         localModel.gameSessionId
       );
       setTeamAnswerId(response.id);
-      setAnswerObject(result);
+      setAnswerContent(result);
       setDisplaySubmitted(true);
-    } catch {
+    } catch (e) {
       setIsAnswerError(true);
+      console.log(e);
     }
   };
 
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
-      setAnswerObject((prev) => ({ ...prev, isSubmitted: false }));
+      setAnswerContent((prev) => ({ ...prev, isSubmitted: false }));
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
@@ -216,10 +225,10 @@ export default function GameInProgress({
           answerTypes: [], 
           multiChoiceAnswerIndex: index, 
           isSubmitted: false
-        } as AnswerObject,
+        } as IAnswerContent,
       })
     );
-    setAnswerObject((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
+    setAnswerContent((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
 
   const setTimeOfLastConfidenceSelect = (time: number) => {
@@ -288,11 +297,11 @@ export default function GameInProgress({
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={answerObject.isSubmitted}
+            isSubmitted={answerContent.isSubmitted}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={answerObject.multiChoiceAnswerIndex || null}
+            selectedAnswer={answerContent.multiChoiceAnswerIndex || null}
             handleSelectAnswer={handleSelectAnswer}
             isConfidenceEnabled={currentQuestion.isConfidenceEnabled}
             handleSelectConfidence={handleSelectConfidence}
@@ -301,7 +310,7 @@ export default function GameInProgress({
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
-            answerObject={answerObject}
+            answerContent={answerContent}
           />
         ) : (
           <DiscussAnswer
