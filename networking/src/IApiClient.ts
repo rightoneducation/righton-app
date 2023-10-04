@@ -1,8 +1,6 @@
 import { UpdateGameSessionInput } from './AWSMobileApi'
-import { ITeamAnswer, ITeamMember } from './Models'
+import { ITeamAnswer, ITeamMember, ITeam, IAnswerContent } from './Models'
 import { IGameSession } from './Models/IGameSession'
-import { ITeam } from './Models/ITeam'
-import { IAnswerContent } from './Models/IAnswerContent'
 
 export interface IApiClient {
     createGameSession(gameId: number, isAdvancedMode: Boolean): Promise<IGameSession>

@@ -52,10 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
-import { IGameSession } from "./Models/IGameSession"
-import { ITeam } from "./Models/ITeam"
-import { IAnswerContent } from "./Models/IAnswerContent"
+import { IChoice, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, IAnswerContent } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -334,14 +331,13 @@ export class ApiClient implements IApiClient {
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-
         const awsAnswerContents = JSON.stringify(answerContents);
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContents, 
+            answerContents: awsAnswerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -350,6 +346,7 @@ export class ApiClient implements IApiClient {
             createTeamAnswer,
             variables
         )
+        console.log(answer);
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -934,7 +931,7 @@ class TeamAnswerParser {
             teamMemberAnswersId,
             confidenceLevel
         } = awsTeamAnswer || {}
-        
+        console.log(awsTeamAnswer);
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||

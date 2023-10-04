@@ -393,7 +393,7 @@ export type CreateTeamAnswerInput = {
   questionId: number,
   isChosen: boolean,
   text: string,
-  awsAnswerContents: string,
+  answerContents: string,
   isTrickAnswer: boolean,
   confidenceLevel: ConfidenceLevel,
   teamMemberAnswersId?: string | null,
