@@ -1,13 +1,18 @@
 enum AnswerType {
   MULTICHOICE,
   TEXT,
+  NUMBER,
   FORMULA,
   NULL
 }
-
+export interface IAnswerText {
+  rawText: string;
+  normText?: string;
+  type: AnswerType;
+}
 export interface IAnswerContent {
-  answerTexts: string[];
-  answerTypes: AnswerType[];
+  answers: [IAnswerText];
+  percent?: number;
   multiChoiceAnswerIndex?: number | null;
   isSubmitted: boolean;
 }
