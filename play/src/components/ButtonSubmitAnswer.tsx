@@ -28,8 +28,7 @@ export default function ButtonSubmitAnswer({
     : t('gameinprogress.button.submit');
   const buttonContents = (
     <Typography sx={{ textTransform: 'none' }} variant="button">
-      {' '}
-      {buttonText}{' '}
+      {buttonText}
     </Typography>
   );
 
@@ -38,7 +37,19 @@ export default function ButtonSubmitAnswer({
       data-testid="answer-button-enabled"
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        handleSubmitAnswer({answerTexts: [answerText ?? ''], answerTypes: [0], isSubmitted});
+        const answer = {
+          answers: [
+            {
+              rawText: answerText ?? '',
+              normText: answerText ?? '',
+              type: 0,
+            },
+          ],
+          multiChoiceAnswerIndex: selectedAnswer,
+          isSubmitted: true, 
+        } as IAnswerContent;
+
+        handleSubmitAnswer(answer);
       }}
     >
       {buttonContents}

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
-import { isNullOrUndefined, IAnswerContent } from '@righton/networking';
+import { isNullOrUndefined, IAnswerContent, IAnswerText } from '@righton/networking';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import katex from "katex";
@@ -41,11 +41,12 @@ export default function OpenAnswerCard({
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
   const insertQuillDelta = (inputAnswer: IAnswerContent) => {
     const quillDelta: any = [];
-    inputAnswer.answerTexts.forEach((input, index) => {
-      if (inputAnswer.answerTypes[index] === AnswerType.FORMULA) {
-        quillDelta.push({ insert: { formula: input } });
+
+    inputAnswer.answers.forEach((answer) => {
+      if (answer.type === AnswerType.FORMULA) {
+        quillDelta.push({ insert: { formula: answer.rawText } });
       } else {
-        quillDelta.push({ insert: input });
+        quillDelta.push({ insert: answer.rawText });
       }
     });
     return quillDelta;
@@ -53,24 +54,27 @@ export default function OpenAnswerCard({
 
   const [editorContents, setEditorContents] = useState<any>(() => insertQuillDelta(answerContent));
 
-  const extractQuillDelta = (currentContents: any) => {
-    const text: string[] = [];
-    const format: AnswerType[] = [];
+  // this function is run onChange of the quill editor
+  // it is designed to only pull the data that is req'd to reproduce it on reload
+  // full normalization will be performed only on submitting answer
+  const extractQuillDelta = (currentContents: any): IAnswerContent => {
+    const answer: IAnswerText[] = [];
 
     currentContents.forEach((op: any) => {
       if(op.insert.formula) {
-        text.push(op.insert.formula); 
-        format.push(AnswerType.FORMULA);
+        answer.push( {
+          rawText: op.insert.formula, 
+          type: AnswerType.FORMULA
+        });
       } else {
-        const normalizeText = op.insert.replace(/(\r\n|\n|\r)/gm, "");
-        if (normalizeText !== " ") {
-          text.push(normalizeText.toLowerCase());
-          format.push(AnswerType.TEXT);
-        }
+        answer.push( {
+          rawText: op.insert, 
+          type: AnswerType.TEXT
+        });
       }
     });
     
-    return {answerTexts: text, answerTypes: format, isSubmitted};
+    return {answers: answer, isSubmitted} as IAnswerContent;
   };
 
   // ReactQuill onChange expects four parameters
@@ -78,13 +82,52 @@ export default function OpenAnswerCard({
     const currentAnswer = editor.getContents();
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: extractQuillDelta(currentAnswer)}));
     setEditorContents(currentAnswer);
+    console.log(currentAnswer);
+  };
+
+  // this is the normalization function that is run on submitted answer
+  // it formats the data to allow for equality matching on the host side
+  const handleNormalizeAnswer = (currentContents: IAnswerContent) => {
+  
+   //TODO: remove html tags
+    currentContents.answers.map(answer => {
+      // rawText:
+      // replaces \n with spaces maintains everything else
+      answer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
+
+      //normText:
+      if (answer.type === AnswerType.FORMULA) {
+        // removes all spaces
+        answer.normText = `${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`;
+      } else {
+        // 2. if there is no formula, scan string for numbers
+        //    special characters, math operators outside of formula blow up our number parser and should just be treated as strings
+        //    if just numbers found, extract numbers and set it to normalized answer
+        const specialChars = /[`$%*()\/]/;
+        const specialCharsCheck = specialChars.test(answer.rawText);
+        const detectedNumbers = nlp(answer.rawText).numbers().json();
+
+        if (!specialCharsCheck && detectedNumbers.length > 0) {
+          answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
+          answer.normText = detectedNumbers.reduce((number: any) => parseFloat(number.number.num));
+          answer.type = AnswerType.NUMBER;
+        } else {
+          // 3. if there is no formula and no numbers
+          //    set normalized input to lower case and remove spaces
+          answer.normText = answer.rawText.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "");
+        }
+      }
+    });
+   
+    return currentContents as IAnswerContent;
   };
 
   const handleRetrieveAnswer = (currentContents: any) => {
     const answer = extractQuillDelta(currentContents);
     answer.isSubmitted = true;
-    console.log(answer);
-    handleSubmitAnswer(answer);
+    const normalizedAnswer = handleNormalizeAnswer(currentContents);
+    console.log(normalizedAnswer);
+    // handleSubmitAnswer(answer);
   };
 
   return (

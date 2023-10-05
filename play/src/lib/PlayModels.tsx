@@ -202,6 +202,7 @@ export const StorageKeyAnswer = 'rightOnAnswer';
 export enum AnswerType {
   MULTICHOICE,
   TEXT,
+  NUMBER,
   FORMULA,
   NULL
 }

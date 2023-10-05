@@ -133,15 +133,15 @@ export default function GameInProgress({
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
   const [answerContent, setAnswerContent] = useState<IAnswerContent>(() => {
-    let rejoinSubmittedAnswer = null;
-    rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+    const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
     localModel,
     hasRejoined,
     teamAnswers,
     answerChoices,
     currentState
   );
-  return rejoinSubmittedAnswer;}
+  return rejoinSubmittedAnswer;
+  }
 );
 
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
@@ -186,7 +186,7 @@ export default function GameInProgress({
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
-        result.answerTexts[0],
+        result.answers[0].rawText,
         result,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
@@ -221,8 +221,11 @@ export default function GameInProgress({
   const handleSelectAnswer = (index: number) => {
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({ 
         presubmitAnswer: {
-          answerTexts: [], 
-          answerTypes: [], 
+          answers: [{
+            rawText: '',
+            normText: '',
+            type: 0,
+          }],  
           multiChoiceAnswerIndex: index, 
           isSubmitted: false
         } as IAnswerContent,

@@ -57,7 +57,15 @@ export const checkForSubmittedAnswerOnRejoin = (
   }[],
   currentState: GameSessionState
 ): IAnswerContent => {
-  let returnedAnswer: IAnswerContent = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
+  let returnedAnswer: IAnswerContent = {
+    answers: [{
+      rawText: '',
+      normText: '',
+      type: AnswerType.TEXT,
+    }],
+    multiChoiceAnswerIndex: null,
+    isSubmitted: false,
+  }; 
   if (
     hasRejoined &&
     (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
@@ -70,10 +78,8 @@ export const checkForSubmittedAnswerOnRejoin = (
       localModel.presubmitAnswer = null; // eslint-disable-line no-param-reassign
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel)); 
     }
-    else 
-      returnedAnswer = {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: 0, isSubmitted: false};
   }
-  return returnedAnswer;
+  return returnedAnswer as IAnswerContent;
 };
 
 /**
