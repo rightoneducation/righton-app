@@ -27,5 +27,39 @@
       "service": "Cognito",
       "serviceType": "imported"
     }
+  },
+  "parameters": {
+    "AMPLIFY_auth_mobile0a6d6e96_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile0a6d6e96"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobile0a6d6e96_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile0a6d6e96"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobile0a6d6e96_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile0a6d6e96"
+        }
+      ]
+    },
+    "AMPLIFY_auth_mobile0a6d6e96_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "mobile0a6d6e96"
+        }
+      ]
+    }
   }
 }
