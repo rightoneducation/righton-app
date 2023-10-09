@@ -4,18 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import { isNullOrUndefined, IAnswerContent, IAnswerText } from '@righton/networking';
 import { evaluate } from 'mathjs';
-import nlp from 'compromise';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import katex from "katex";
 import './ReactQuill.css';
 import "katex/dist/katex.min.css";
+import { handleNormalizeAnswers } from '../../lib/HelperFunctions';
 import { AnswerType, StorageKeyAnswer, LocalModel } from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
-
-
 
 window.katex = katex;
 
@@ -87,45 +85,6 @@ export default function OpenAnswerCard({
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: extractQuillDelta(currentAnswer)}));
     setEditorContents(currentAnswer);
    // console.log(currentAnswer);
-  };
-
-  // this is the normalization function that is run on submitted answer
-  // it formats the data to allow for equality matching on the host side
-  const handleNormalizeAnswers = (currentContents: IAnswerText[]): IAnswerText[] => {
-   // TODO: remove html tags
-    // console.log(currentContents);
-    const normalizedAnswers = currentContents.map((answer) => {
-      const normalizedAnswer: IAnswerText = {rawText: '', normText: [], type: AnswerType.TEXT};
-      // rawText:
-      // replaces \n with spaces maintains everything else
-      normalizedAnswer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
-      // normText:
-      if (answer.type === AnswerType.FORMULA) {
-        // removes all spaces
-        normalizedAnswer.normText?.push(`${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`);
-      } else {
-        // 2. if there is no formula, scan string for numbers
-        //    special characters, math operators outside of formula blow up our number parser and should just be treated as strings
-        //    if just numbers found, extract numbers and set it to normalized answer
-        console.log(nlp('-3').numbers().json());
-        // eslint-disable-next-line prefer-regex-literals
-        const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~] `, 'gm');
-        const detectedNumbers = nlp(answer.rawText).numbers().json();
-        console.log(detectedNumbers);
-        if (detectedNumbers.length > 0) {
-          // answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
-          // detectedNumbers.forEach((number: any) => normalizedAnswer.normText?.push(parseFloat(number.number.num)))
-          normalizedAnswer.type = AnswerType.NUMBER;
-        } else {
-          // 3. if there is no formula and no numbers
-          //    set normalized input to lower case and remove spaces
-          normalizedAnswer.normText?.push(answer.rawText.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, ""));
-        }
-      }
-      return normalizedAnswer;
-    });
-
-    return normalizedAnswers as IAnswerText[];
   };
 
   const handleRetrieveAnswer = (currentContents: any) => {

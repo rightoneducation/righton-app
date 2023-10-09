@@ -5,8 +5,10 @@ import {
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
-  IAnswerContent
+  IAnswerContent,
+  IAnswerText
 } from '@righton/networking';
+import nlp from 'compromise';
 import { InputPlaceholder, StorageKey, LocalModel, AnswerType, StorageKeyAnswer } from './PlayModels';
 
 /**
@@ -204,4 +206,76 @@ export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
     lastScore = sortedTeams[i].score;
   }
   return ret as ITeam[];
+};
+
+/**
+* function checks if input is a number
+* used in normalizeAnswers to parse short answer responses
+* @param num - the input to be checked
+* @returns - true if the input is a number, false otherwise
+* @see normalizeAnswers
+*/ 
+const isNumeric = (num: any) => (
+  typeof(num) === 'number' || 
+  typeof(num) === "string" && 
+  num.trim() !== ''
+) && !isNaN(num as number); // eslint-disable-line no-restricted-globals
+
+/**
+ * This function is run on submit of an answer and normalizes the contents of the Quill editor 
+ * so that it can be compared to the answer choices on the host side
+ * 
+ * for more information see: 
+ * @param currentContents: IAnswerText[]
+ * @returns normalizedAnswers: IAnswerText[]
+ */
+export const handleNormalizeAnswers = (currentContents: IAnswerText[]): IAnswerText[] => {
+  // used later in the map for removing special characters
+  const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `, 'gm');
+
+  const normalizedAnswers = currentContents.map((answer) => {
+    const normalizedAnswer: IAnswerText = {rawText: '', normText: [], type: AnswerType.TEXT};
+    // replaces \n with spaces maintains everything else
+    normalizedAnswer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
+
+    if (answer.type === AnswerType.FORMULA) {
+      // removes all spaces
+      normalizedAnswer.normText?.push(`${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`);
+    } else {
+      // 2. if there is no formula, check if the user has entered a number
+      if (isNumeric(answer.rawText) === true) {
+        normalizedAnswer.normText?.push(answer.rawText);
+        normalizedAnswer.type = AnswerType.NUMBER;
+        return normalizedAnswer;
+      }
+
+      // 3. answer is a string. 
+      //  we will produce a naive normalization of the string, attempting to extract numeric answers and then
+      //  reducing case and removing characters
+
+      // this extracts numeric values from a string and adds them to the normalized text array.
+      // it then removes those numbers from the string
+      const extractedNumbers = normalizedAnswer.rawText.match(/-?\d+(\.\d+)?/g)?.map(Number);
+      const numbersRemoved = normalizedAnswer.rawText.replace(/-?\d+(\.\d+)?/g, '');
+      if (extractedNumbers) {
+        normalizedAnswer.normText?.push(...extractedNumbers);
+        normalizedAnswer.type = AnswerType.NUMBER;
+      }
+
+      // this attempts to extract any written numbers (ex. fifty five) after removing any special characters 
+      // eslint-disable-next-line prefer-regex-literals
+      const detectedNumbers = nlp(numbersRemoved.replace(specialCharsRegex, "")).numbers().json();
+      if (detectedNumbers.length > 0) {
+        // answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
+        detectedNumbers.forEach((number: any) => normalizedAnswer.normText?.push(parseFloat(number.number.num)))
+        normalizedAnswer.type = AnswerType.NUMBER;
+      } 
+      // 4. any remaining content is grabbed together 
+      //    set normalized input to lower case and remove spaces
+      normalizedAnswer.normText?.push(numbersRemoved.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "").trim());
+    }
+    return normalizedAnswer;
+  });
+
+  return normalizedAnswers;
 };
