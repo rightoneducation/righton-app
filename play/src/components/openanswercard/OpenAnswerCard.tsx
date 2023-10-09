@@ -93,33 +93,33 @@ export default function OpenAnswerCard({
   // it formats the data to allow for equality matching on the host side
   const handleNormalizeAnswers = (currentContents: IAnswerText[]): IAnswerText[] => {
    // TODO: remove html tags
-
+    // console.log(currentContents);
     const normalizedAnswers = currentContents.map((answer) => {
-      const normalizedAnswer: IAnswerText = {rawText: '', normText: '', type: AnswerType.TEXT};
+      const normalizedAnswer: IAnswerText = {rawText: '', normText: [], type: AnswerType.TEXT};
       // rawText:
       // replaces \n with spaces maintains everything else
       normalizedAnswer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
       // normText:
       if (answer.type === AnswerType.FORMULA) {
         // removes all spaces
-        normalizedAnswer.normText = `${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`;
+        normalizedAnswer.normText?.push(`${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`);
       } else {
         // 2. if there is no formula, scan string for numbers
         //    special characters, math operators outside of formula blow up our number parser and should just be treated as strings
         //    if just numbers found, extract numbers and set it to normalized answer
-        const specialChars = /[`$%*()]/;
-        const specialCharsCheck = specialChars.test(answer.rawText);
+        console.log(nlp('-3').numbers().json());
+        // eslint-disable-next-line prefer-regex-literals
+        const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~] `, 'gm');
         const detectedNumbers = nlp(answer.rawText).numbers().json();
-
-        if (!specialCharsCheck && detectedNumbers.length > 0) {
-          console.log(detectedNumbers);
+        console.log(detectedNumbers);
+        if (detectedNumbers.length > 0) {
           // answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
-          normalizedAnswer.normText = detectedNumbers.reduce((number: any) => parseFloat(number.number.num));
+          // detectedNumbers.forEach((number: any) => normalizedAnswer.normText?.push(parseFloat(number.number.num)))
           normalizedAnswer.type = AnswerType.NUMBER;
         } else {
           // 3. if there is no formula and no numbers
           //    set normalized input to lower case and remove spaces
-          normalizedAnswer.normText = answer.rawText.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "");
+          normalizedAnswer.normText?.push(answer.rawText.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, ""));
         }
       }
       return normalizedAnswer;

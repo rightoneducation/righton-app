@@ -223,7 +223,7 @@ export default function GameInProgress({
         presubmitAnswer: {
           answers: [{
             rawText: '',
-            normText: '',
+            normText: [''],
             type: 0,
           }],  
           multiChoiceAnswerIndex: index, 

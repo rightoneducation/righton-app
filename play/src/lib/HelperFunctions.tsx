@@ -60,7 +60,7 @@ export const checkForSubmittedAnswerOnRejoin = (
   let returnedAnswer: IAnswerContent = {
     answers: [{
       rawText: '',
-      normText: '',
+      normText: [''],
       type: AnswerType.TEXT,
     }],
     multiChoiceAnswerIndex: null,

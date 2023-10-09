@@ -41,7 +41,7 @@ export default function ButtonSubmitAnswer({
           answers: [
             {
               rawText: answerText ?? '',
-              normText: answerText ?? '',
+              normText: [answerText ?? ''],
               type: 0,
             },
           ],
