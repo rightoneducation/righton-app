@@ -3,6 +3,8 @@ import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import { isNullOrUndefined, IAnswerContent, IAnswerText } from '@righton/networking';
+import { evaluate } from 'mathjs';
+import nlp from 'compromise';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import katex from "katex";
@@ -12,6 +14,8 @@ import { AnswerType, StorageKeyAnswer, LocalModel } from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
+
+
 
 window.katex = katex;
 
@@ -82,51 +86,56 @@ export default function OpenAnswerCard({
     const currentAnswer = editor.getContents();
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: extractQuillDelta(currentAnswer)}));
     setEditorContents(currentAnswer);
-    console.log(currentAnswer);
+   // console.log(currentAnswer);
   };
 
   // this is the normalization function that is run on submitted answer
   // it formats the data to allow for equality matching on the host side
-  const handleNormalizeAnswer = (currentContents: IAnswerContent) => {
-  
-   //TODO: remove html tags
-    currentContents.answers.map(answer => {
+  const handleNormalizeAnswers = (currentContents: IAnswerText[]): IAnswerText[] => {
+   // TODO: remove html tags
+
+    const normalizedAnswers = currentContents.map((answer) => {
+      const normalizedAnswer: IAnswerText = {rawText: '', normText: '', type: AnswerType.TEXT};
       // rawText:
       // replaces \n with spaces maintains everything else
-      answer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
-
-      //normText:
+      normalizedAnswer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
+      // normText:
       if (answer.type === AnswerType.FORMULA) {
         // removes all spaces
-        answer.normText = `${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`;
+        normalizedAnswer.normText = `${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`;
       } else {
         // 2. if there is no formula, scan string for numbers
         //    special characters, math operators outside of formula blow up our number parser and should just be treated as strings
         //    if just numbers found, extract numbers and set it to normalized answer
-        const specialChars = /[`$%*()\/]/;
+        const specialChars = /[`$%*()]/;
         const specialCharsCheck = specialChars.test(answer.rawText);
         const detectedNumbers = nlp(answer.rawText).numbers().json();
 
         if (!specialCharsCheck && detectedNumbers.length > 0) {
-          answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
-          answer.normText = detectedNumbers.reduce((number: any) => parseFloat(number.number.num));
-          answer.type = AnswerType.NUMBER;
+          console.log(detectedNumbers);
+          // answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
+          normalizedAnswer.normText = detectedNumbers.reduce((number: any) => parseFloat(number.number.num));
+          normalizedAnswer.type = AnswerType.NUMBER;
         } else {
           // 3. if there is no formula and no numbers
           //    set normalized input to lower case and remove spaces
-          answer.normText = answer.rawText.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "");
+          normalizedAnswer.normText = answer.rawText.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "");
         }
       }
+      return normalizedAnswer;
     });
-   
-    return currentContents as IAnswerContent;
+
+    return normalizedAnswers as IAnswerText[];
   };
 
   const handleRetrieveAnswer = (currentContents: any) => {
-    const answer = extractQuillDelta(currentContents);
-    answer.isSubmitted = true;
-    const normalizedAnswer = handleNormalizeAnswer(currentContents);
-    console.log(normalizedAnswer);
+    const extractedAnswer = extractQuillDelta(currentContents);
+    const normalizedAnswers = handleNormalizeAnswers(extractedAnswer.answers);
+    const submitAnswer: IAnswerContent = {
+      answers: normalizedAnswers, 
+      isSubmitted: true
+    };
+    console.log(submitAnswer);
     // handleSubmitAnswer(answer);
   };
 
