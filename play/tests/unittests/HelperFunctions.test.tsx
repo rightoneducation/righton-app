@@ -48,7 +48,17 @@ describe('HelperFunctions', () => {
         reason: 'reason',
       },
     ];
-
+    let localModel = {
+      currentTime: 0,
+      currentQuestionIndex: 0,
+      teamId: '1232123',
+      teamMemberId: '123123',
+      selectedAvatar: 0,
+      hasRejoined: true,
+      currentTimer: 0,
+      presubmitAnswer: null,
+      gameSessionId: '12121'
+    };
     const teamAnswers = [];
     teamAnswers.push(createTeamAnswerMock(questionId, true, false, '60%'));
     teamAnswers.push(createTeamAnswerMock(questionId, false, true, '30%'));
@@ -56,21 +66,23 @@ describe('HelperFunctions', () => {
     // expects a rejoined answer that corresponds to the current game answer to return true
     expect(
       checkForSubmittedAnswerOnRejoin(
+        {...localModel, hasRejoined: true},
         true,
         teamAnswers,
         answerChoices,
         GameSessionState.CHOOSE_CORRECT_ANSWER
       )
-    ).toEqual({ selectedAnswerIndex: 0, isSubmitted: true });
+    ).toEqual({answerTexts:[], answerTypes: [], isSubmitted: false , multiChoiceAnswerIndex: 0, selectedAnswerIndex: 0});
     // wrong phase
     expect(
       checkForSubmittedAnswerOnRejoin(
+        localModel,
         true,
         teamAnswers,
         answerChoices,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER
       )
-    ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
+    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
     // already submitted trickiest answer
     answerChoices = [
       {
@@ -82,48 +94,53 @@ describe('HelperFunctions', () => {
     ];
     expect(
       checkForSubmittedAnswerOnRejoin(
+        localModel,
         true,
         teamAnswers,
         answerChoices,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER
       )
-    ).toEqual({ selectedAnswerIndex: 0, isSubmitted: true });
+    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: 0, isSubmitted: false, multiChoiceAnswerIndex: 0 });
     // wrong phase
     expect(
       checkForSubmittedAnswerOnRejoin(
+        localModel,
         true,
         teamAnswers,
         answerChoices,
         GameSessionState.PHASE_2_DISCUSS
       )
-    ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
+    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
     // no answers submitted
     expect(
       checkForSubmittedAnswerOnRejoin(
+        localModel,
         true,
         null,
         answerChoices,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER
       )
-    ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
+    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
     // no rejoin
     expect(
       checkForSubmittedAnswerOnRejoin(
+        localModel,
         false,
         teamAnswers,
         answerChoices,
         GameSessionState.CHOOSE_CORRECT_ANSWER
       )
-    ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
+    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
     // no rejoin
     expect(
       checkForSubmittedAnswerOnRejoin(
+        localModel,
         false,
         teamAnswers,
         answerChoices,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER
       )
-    ).toEqual({ selectedAnswerIndex: null, isSubmitted: false });
+    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
   });
 
   it('tests if a local model is fully populated and no older than 120min', () => {

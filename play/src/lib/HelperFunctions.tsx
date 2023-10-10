@@ -38,6 +38,7 @@ export const isGameCodeValid = (gameCode: string) => {
 
 /**
  * on rejoining game, this checks if the player has already submitted an answer
+ * @param localModel - the localModel retrieved from local storage
  * @param hasRejoined - if a player is rejoining
  * @param answers - the answers submitted by the player previously
  * @param answerChoices - the answer choices for the question on the backend
