@@ -83,13 +83,40 @@ export class ApiClient implements IApiClient {
     private endpoint: string
 
     constructor(env: Environment) {
-        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
+        this.endpoint = `https://gz27qangzl.execute-api.us-east-1.amazonaws.com/${env}/createGameSessionTest`
     }
 
     createGameSession(
         gameId: number,
         isAdvancedMode: Boolean
     ): Promise<IGameSession> {
+        let gameSession;
+        console.log(gameId);
+        console.log(isAdvancedMode);
+        gameSession = fetch(this.endpoint, {
+            method: HTTPMethod.Post,
+            headers: {
+                "content-type": "application/json",
+                connection: "keep-alive",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({
+                gameId: gameId,
+                isAdvancedMode: isAdvancedMode,
+            }),
+        })
+            .then((response) => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json()
+            })
+            .then((response) => {
+                console.log(response);
+                return GameSessionParser.gameSessionFromAWSGameSession(response)
+            })
+            console.log(gameSession);
         return fetch(this.endpoint, {
             method: HTTPMethod.Post,
             headers: {
