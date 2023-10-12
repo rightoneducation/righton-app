@@ -346,7 +346,6 @@ export class ApiClient implements IApiClient {
             createTeamAnswer,
             variables
         )
-        console.log(answer);
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -902,8 +901,7 @@ class TeamAnswerParser {
         let parsedAnswerContent;
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent);
-            if (isNullOrUndefined(parsedAnswerContent.answerTexts) ||
-            isNullOrUndefined(parsedAnswerContent.answerTypes) ||
+            if (isNullOrUndefined(parsedAnswerContent.answers) ||
             isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
                 throw new Error(
                     "Team answer has null field for the attributes that are not nullable"
@@ -929,7 +927,6 @@ class TeamAnswerParser {
             teamMemberAnswersId,
             confidenceLevel
         } = awsTeamAnswer || {}
-        console.log(awsTeamAnswer);
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||

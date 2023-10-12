@@ -174,9 +174,8 @@ export default function GameInProgress({
 
 
   const handleSubmitAnswer = async (result: IAnswerContent) => {
-    const answer = {...result, isSubmitted: true, state: currentState};
+    const answer = {...result, isSubmitted: true};
     try {
-      console.log(result);
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,

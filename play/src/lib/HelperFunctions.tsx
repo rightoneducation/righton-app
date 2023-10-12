@@ -226,6 +226,7 @@ const isNumeric = (num: any) => (
  */
 export const handleNormalizeAnswers = (currentContents: IAnswerText[]): IAnswerText[] => {
   // used later in the map for removing special characters
+  // eslint-disable-next-line prefer-regex-literals
   const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `, 'gm');
 
   const normalizedAnswers = currentContents.map((answer) => {
