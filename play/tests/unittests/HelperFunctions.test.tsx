@@ -90,6 +90,15 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: false, multiChoiceAnswerIndex: null, currentState: null, currentQuestionIndex: null });
+    // wrong question
+    expect(
+      checkForSubmittedAnswerOnRejoin(
+        {...localModel, answer: localAnswer},
+        true,
+        GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+        1
+      )
+    ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: false, multiChoiceAnswerIndex: null, currentState: null, currentQuestionIndex: null });
     // already submitted trickiest answer
     localAnswer = 
       {

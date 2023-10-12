@@ -133,19 +133,19 @@ describe('GameInProgressContainer', () => {
     expect(screen.getByText(howToPlayDescription)).toBeInTheDocument();
   });
 
-  // it('should render the GameSessionSwitch page (pregame countdown)', async () => {
-  //   const gameSession = await apiClient.createGameSession(1111, false);
-  //   expect(gameSession).toBeDefined();
-  //   gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
-  //   // Mock the hook's return value
-  //   (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
-  //     isLoading: false,
-  //     error: null,
-  //     gameSession,
-  //     hasRejoined: false,
-  //   }));
-  //   renderWithThemeRouterTranslation(<RouterProvider router={router} />);
-  //   // expects the pregame countdown to start
-  //   expect(screen.getByTestId('pregame-countdown')).toBeInTheDocument();
-  // });
+  it('should render the GameSessionSwitch page (pregame countdown)', async () => {
+    const gameSession = await apiClient.createGameSession(1111, false);
+    expect(gameSession).toBeDefined();
+    gameSession.currentState = GameSessionState.CHOOSE_CORRECT_ANSWER;
+    // Mock the hook's return value
+    (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({
+      isLoading: false,
+      error: null,
+      gameSession,
+      hasRejoined: false,
+    }));
+    renderWithThemeRouterTranslation(<RouterProvider router={router} />);
+    // expects the pregame countdown to start
+    expect(screen.getByTestId('pregame-countdown')).toBeInTheDocument();
+  });
 });
