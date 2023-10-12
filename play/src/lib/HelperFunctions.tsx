@@ -39,6 +39,7 @@ export const isGameCodeValid = (gameCode: string) => {
 
 /**
  * on rejoining game, this checks if the player has already submitted an answer
+ * @param localModel - the localModel retrieved from local storage
  * @param hasRejoined - if a player is rejoining
  * @param answers - the answers submitted by the player previously
  * @param answerChoices - the answer choices for the question on the backend
@@ -48,30 +49,20 @@ export const isGameCodeValid = (gameCode: string) => {
 export const checkForSubmittedAnswerOnRejoin = (
   localModel: LocalModel,
   hasRejoined: boolean,
-  answers: (ITeamAnswer | null)[] | null | undefined,
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-    reason: string;
-  }[],
-  currentState: GameSessionState
+  currentState: GameSessionState,
+  currentQuestionIndex: number
 ): IAnswerContent => {
-  let returnedAnswer: IAnswerContent = {answerTexts:[], answerTypes:[], isSubmitted: false} ; 
+  let returnedAnswer: IAnswerContent = {answerTexts:[], answerTypes:[], multiChoiceAnswerIndex: null, isSubmitted: false, currentState: null, currentQuestionIndex: null } ; 
   if (
-    hasRejoined &&
-    (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-      currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+    hasRejoined
   ) {
-    if (localModel.presubmitAnswer !== null) {
-      // set answer to presubmitAnswer
-      returnedAnswer = localModel.presubmitAnswer;
-      // remove presubmitAnswer from local storage
-      localModel.presubmitAnswer = null; // eslint-disable-line no-param-reassign
+    if (localModel.answer !== null && localModel.answer.currentState === currentState && localModel.answer.currentQuestionIndex === currentQuestionIndex) {
+      // set answer to localAnswer
+      returnedAnswer = localModel.answer;
+      // remove localAnswer from local storage
+      localModel.answer = null; // eslint-disable-line no-param-reassign
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel)); 
     }
-    else 
-      returnedAnswer = {answerTexts: [], answerTypes: [], multiChoiceAnswerIndex: 0, isSubmitted: false};
   }
   return returnedAnswer;
 };
@@ -144,8 +135,7 @@ export const validateLocalModel = (localModelBase: string | null, localModelAnsw
   }
   if (!isNullOrUndefined(localModelAnswer) && localModelAnswer !== '') {
     const parsedLocalModelAnswer = JSON.parse(localModelAnswer);
-    parsedLocalModel.preSubmitAnswer = parsedLocalModelAnswer;
-    console.log('sup');
+    parsedLocalModel.localAnswer = parsedLocalModelAnswer;
   }
   // passes validated localModel to GameInProgressContainer
   return parsedLocalModel;

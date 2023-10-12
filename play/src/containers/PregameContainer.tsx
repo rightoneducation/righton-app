@@ -138,7 +138,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           selectedAvatar,
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
-          presubmitAnswer: null
+          answer: null
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);

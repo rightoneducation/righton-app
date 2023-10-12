@@ -33,6 +33,7 @@ interface ChooseAnswerProps {
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
   answerContent: IAnswerContent;
+  currentQuestionIndex: number;
 }
 
 export default function ChooseAnswer({
@@ -53,7 +54,8 @@ export default function ChooseAnswer({
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
-  answerContent
+  answerContent,
+  currentQuestionIndex
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -112,6 +114,7 @@ export default function ChooseAnswer({
           isSubmitted={answerContent.isSubmitted}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
           selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
           handleSelectAnswer={handleSelectAnswer}
         />
@@ -119,6 +122,8 @@ export default function ChooseAnswer({
         <OpenAnswerCard
           answerContent={answerContent}
           isSubmitted={answerContent.isSubmitted}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
         />
       }
