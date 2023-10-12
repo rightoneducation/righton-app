@@ -40,14 +40,14 @@ describe('HelperFunctions', () => {
 
   it('tests that on rejoining in different phases, duplicated behaviour isnt held over', () => {
     const questionId = randomInt(1000, 9999);
-    let answerChoices = [
-      {
-        id: questionId.toString(),
-        text: '60%',
-        isCorrectAnswer: true,
-        reason: 'reason',
-      },
-    ];
+    let localAnswer = {
+      answerTexts: [],
+      answerTypes: [],
+      multiChoiceAnswerIndex: 0,
+      isSubmitted: true,
+      currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
+      currentQuestionIndex: 0,
+    };
     let localModel = {
       currentTime: 0,
       currentQuestionIndex: 0,
@@ -56,9 +56,18 @@ describe('HelperFunctions', () => {
       selectedAvatar: 0,
       hasRejoined: true,
       currentTimer: 0,
-      presubmitAnswer: null,
-      gameSessionId: '12121'
+      gameSessionId: '12121',
+      answer: localAnswer
     };
+    const localStorageMock = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      clear: jest.fn(),
+      removeItem: jest.fn(),
+    };
+    
+    (global as any).localStorage = localStorageMock;
+    (global.localStorage as jest.Mocked<typeof localStorage>).setItem = jest.fn();
     const teamAnswers = [];
     teamAnswers.push(createTeamAnswerMock(questionId, true, false, '60%'));
     teamAnswers.push(createTeamAnswerMock(questionId, false, true, '30%'));
@@ -66,95 +75,103 @@ describe('HelperFunctions', () => {
     // expects a rejoined answer that corresponds to the current game answer to return true
     expect(
       checkForSubmittedAnswerOnRejoin(
-        {...localModel, hasRejoined: true},
+        {...localModel, answer: localAnswer},
         true,
-        teamAnswers,
-        answerChoices,
-        GameSessionState.CHOOSE_CORRECT_ANSWER
+        GameSessionState.CHOOSE_CORRECT_ANSWER,
+        0
       )
-    ).toEqual({answerTexts:[], answerTypes: [], isSubmitted: false , multiChoiceAnswerIndex: 0, selectedAnswerIndex: 0});
+    ).toEqual({answerTexts: [], answerTypes: [], isSubmitted: true, multiChoiceAnswerIndex: 0, currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, currentQuestionIndex: 0});
     // wrong phase
     expect(
       checkForSubmittedAnswerOnRejoin(
-        localModel,
+        {...localModel, answer: localAnswer},
         true,
-        teamAnswers,
-        answerChoices,
-        GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+        0
       )
-    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
+    ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: false, multiChoiceAnswerIndex: null, currentState: null, currentQuestionIndex: null });
     // already submitted trickiest answer
-    answerChoices = [
+    localAnswer = 
       {
-        id: questionId.toString(),
-        text: '30%',
-        isCorrectAnswer: false,
-        reason: 'reason',
-      },
-    ];
+        answerTexts: [],
+        answerTypes: [],
+        isSubmitted: true,
+        multiChoiceAnswerIndex: 0,
+        currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+        currentQuestionIndex: 0
+      };
     expect(
       checkForSubmittedAnswerOnRejoin(
-        localModel,
+        {...localModel, answer: localAnswer},
         true,
-        teamAnswers,
-        answerChoices,
-        GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+        0
       )
-    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: 0, isSubmitted: false, multiChoiceAnswerIndex: 0 });
+    ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: true, multiChoiceAnswerIndex: 0, currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER, currentQuestionIndex: 0 });
     // wrong phase
     expect(
       checkForSubmittedAnswerOnRejoin(
         localModel,
         true,
-        teamAnswers,
-        answerChoices,
-        GameSessionState.PHASE_2_DISCUSS
+        GameSessionState.PHASE_2_DISCUSS,
+        0
       )
-    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
+    ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: false, multiChoiceAnswerIndex: null, currentState: null, currentQuestionIndex: null });
     // no answers submitted
+    localAnswer = 
+    {
+      answerTexts: [],
+      answerTypes: [],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: 0, // should be null
+      currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+      currentQuestionIndex: 0
+    };
     expect(
       checkForSubmittedAnswerOnRejoin(
         localModel,
         true,
-        null,
-        answerChoices,
-        GameSessionState.CHOOSE_TRICKIEST_ANSWER
+        GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+        0
       )
-    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
+    ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: false, multiChoiceAnswerIndex: null, currentState: null, currentQuestionIndex: null });
     // no rejoin
     expect(
       checkForSubmittedAnswerOnRejoin(
         localModel,
         false,
-        teamAnswers,
-        answerChoices,
-        GameSessionState.CHOOSE_CORRECT_ANSWER
+        GameSessionState.CHOOSE_CORRECT_ANSWER,
+        0
       )
-    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
-    // no rejoin
-    expect(
-      checkForSubmittedAnswerOnRejoin(
-        localModel,
-        false,
-        teamAnswers,
-        answerChoices,
-        GameSessionState.CHOOSE_TRICKIEST_ANSWER
-      )
-    ).toEqual({ answerTexts:[], answerTypes: [], selectedAnswerIndex: null, isSubmitted: false, multiChoiceAnswerIndex: 0 });
+    ).toEqual({ answerTexts:[], answerTypes: [], isSubmitted: false, multiChoiceAnswerIndex: null, currentState: null, currentQuestionIndex: null });
   });
 
   it('tests if a local model is fully populated and no older than 120min', () => {
     const localModel = JSON.stringify(localModelLoaderMock());
+    const localModelAnswer = JSON.stringify(
+      {
+        answerTexts: [],
+        answerTypes: [],
+        isSubmitted: false,
+        multiChoiceAnswerIndex: 0, // should be null
+        currentState: null,
+        currentQuestionIndex: 0
+      }
+    )
     const parsedModel = JSON.parse(localModel);
+    const parsedAnswer = JSON.parse(localModelAnswer);
+    parsedModel.localAnswer = parsedAnswer;
     // expects fully populated localModel data with time elapsed < 120 minutes, all else is invalid
-    expect(validateLocalModel(localModel)).toStrictEqual(parsedModel);
-    expect(validateLocalModel('')).toBe(null);
-    expect(validateLocalModel(null)).toBe(null);
+    expect(validateLocalModel(localModel, localModelAnswer)).toStrictEqual(parsedModel);
+    expect(validateLocalModel('', localModelAnswer)).toBe(null);
+    expect(validateLocalModel(null, localModelAnswer)).toBe(null);
     // replaces each key with null and expects validation to fail
     Object.keys(parsedModel).forEach((key: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       const testModel = JSON.parse(JSON.stringify(parsedModel));
       testModel[key] = null;
-      expect(validateLocalModel(JSON.stringify(testModel))).toBe(null);
+      const testModelAnswer = JSON.parse(JSON.stringify(parsedAnswer));
+      parsedModel[key] = null;
+      expect(validateLocalModel(JSON.stringify(testModel), testModelAnswer)).toBe(null);
     });
   });
 

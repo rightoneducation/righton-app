@@ -136,9 +136,8 @@ export default function GameInProgress({
     rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
     localModel,
     hasRejoined,
-    teamAnswers,
-    answerChoices,
-    currentState
+    currentState,
+    currentQuestionIndex ?? 0
   );
   return rejoinSubmittedAnswer;}
 );
@@ -174,20 +173,19 @@ export default function GameInProgress({
 
 
   const handleSubmitAnswer = async (result: AnswerObject) => {
+    const answer = {...result, isSubmitted: true, state: currentState};
     try {
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
         result.answerTexts[0],
-        JSON.stringify(answerObject),
+        JSON.stringify(answer),
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
-      const responseGame = await apiClient.getGameSession(
-        localModel.gameSessionId
-      );
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({answer}));
       setTeamAnswerId(response.id);
-      setAnswerObject(result);
+      setAnswerObject(answer);
       setDisplaySubmitted(true);
     } catch {
       setIsAnswerError(true);
@@ -210,14 +208,14 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({ 
-        presubmitAnswer: {
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({answer: { 
           answerTexts: [], 
           answerTypes: [], 
           multiChoiceAnswerIndex: index, 
-          isSubmitted: false
-        } as AnswerObject,
-      })
+          isSubmitted: false,
+          currentState,
+          currentQuestionIndex: currentQuestionIndex ?? 0
+      } as AnswerObject})
     );
     setAnswerObject((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
@@ -302,6 +300,7 @@ export default function GameInProgress({
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerObject={answerObject}
+            currentQuestionIndex={currentQuestionIndex ?? 0}
           />
         ) : (
           <DiscussAnswer

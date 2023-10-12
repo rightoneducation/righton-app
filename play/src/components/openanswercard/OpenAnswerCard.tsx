@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
-import { isNullOrUndefined } from '@righton/networking';
+import { isNullOrUndefined, GameSessionState } from '@righton/networking';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import katex from "katex";
@@ -18,12 +18,16 @@ window.katex = katex;
 interface OpenAnswerCardProps {
   answerObject: AnswerObject;
   isSubmitted: boolean;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
   handleSubmitAnswer: (result: AnswerObject) => void;
 }
 
 export default function OpenAnswerCard({
   answerObject,
   isSubmitted,
+  currentState,
+  currentQuestionIndex,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
   const theme = useTheme();
@@ -76,14 +80,18 @@ export default function OpenAnswerCard({
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
     const currentAnswer = editor.getContents();
-    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: extractQuillDelta(currentAnswer)}));
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(extractQuillDelta(currentAnswer)));
     setEditorContents(currentAnswer);
   };
 
   const handleRetrieveAnswer = (currentContents: any) => {
     const answer = extractQuillDelta(currentContents);
-    answer.isSubmitted = true;
-    handleSubmitAnswer(answer);
+    const packagedAnswer = {
+      ...answer,
+      currentState,
+      currentQuestionIndex,
+    } as AnswerObject;
+    handleSubmitAnswer(packagedAnswer);
   };
 
   return (
@@ -107,6 +115,8 @@ export default function OpenAnswerCard({
           <ButtonSubmitAnswer
             isSelected={!isNullOrUndefined(editorContents) && editorContents !== ''}
             isSubmitted={isSubmitted}
+            currentState={currentState}
+            currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() => handleRetrieveAnswer(editorContents)}
           />
         </Box>
