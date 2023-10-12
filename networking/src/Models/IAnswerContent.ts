@@ -1,3 +1,4 @@
+import { GameSessionState } from "../AWSMobileApi";
 enum AnswerType {
   MULTICHOICE,
   TEXT,
@@ -10,4 +11,6 @@ export interface IAnswerContent {
   answerTypes: AnswerType[];
   multiChoiceAnswerIndex?: number | null;
   isSubmitted: boolean;
+  currentState: GameSessionState | null;
+  currentQuestionIndex: number | null;
 }

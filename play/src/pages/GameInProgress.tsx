@@ -181,7 +181,7 @@ export default function GameInProgress({
         teamMemberId,
         currentQuestion.id,
         result.answerTexts[0],
-        JSON.stringify(answer),
+        answer,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
