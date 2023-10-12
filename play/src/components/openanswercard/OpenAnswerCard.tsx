@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
-import { isNullOrUndefined, IAnswerContent, IAnswerText } from '@righton/networking';
+import { isNullOrUndefined, IAnswerContent, IAnswerText, GameSessionState } from '@righton/networking';
 import { evaluate } from 'mathjs';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
@@ -20,12 +20,16 @@ window.katex = katex;
 interface OpenAnswerCardProps {
   answerContent: IAnswerContent;
   isSubmitted: boolean;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
   handleSubmitAnswer: (result: IAnswerContent) => void;
 }
 
 export default function OpenAnswerCard({
   answerContent,
   isSubmitted,
+  currentState,
+  currentQuestionIndex,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
   const theme = useTheme();
@@ -82,7 +86,7 @@ export default function OpenAnswerCard({
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
     const currentAnswer = editor.getContents();
-    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({presubmitAnswer: extractQuillDelta(currentAnswer)}));
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(extractQuillDelta(currentAnswer)));
     setEditorContents(currentAnswer);
    // console.log(currentAnswer);
   };
@@ -90,12 +94,12 @@ export default function OpenAnswerCard({
   const handleRetrieveAnswer = (currentContents: any) => {
     const extractedAnswer = extractQuillDelta(currentContents);
     const normalizedAnswers = handleNormalizeAnswers(extractedAnswer.answers);
-    const submitAnswer: IAnswerContent = {
-      answers: normalizedAnswers, 
-      isSubmitted: true
-    };
-    console.log(submitAnswer);
-    // handleSubmitAnswer(answer);
+    const packagedAnswer: IAnswerContent = {
+      answers: normalizedAnswers,
+      currentState,
+      currentQuestionIndex,
+    } as IAnswerContent;
+    // handleSubmitAnswer(packagedAnswer);
   };
 
   return (
@@ -119,6 +123,8 @@ export default function OpenAnswerCard({
           <ButtonSubmitAnswer
             isSelected={!isNullOrUndefined(editorContents) && editorContents !== ''}
             isSubmitted={isSubmitted}
+            currentState={currentState}
+            currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() => handleRetrieveAnswer(editorContents)}
           />
         </Box>

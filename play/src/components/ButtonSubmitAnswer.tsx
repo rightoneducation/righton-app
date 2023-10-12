@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { IAnswerContent } from '@righton/networking';
+import { IAnswerContent, GameSessionState, IAnswerText } from '@righton/networking';
 import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
@@ -12,6 +12,8 @@ interface ButtonSubmitAnswerProps {
   isSubmitted: boolean;
   selectedAnswer?: number | null;
   answers?: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
   handleSubmitAnswer: (answer: IAnswerContent) => void;
 }
 
@@ -20,6 +22,8 @@ export default function ButtonSubmitAnswer({
   isSubmitted,
   selectedAnswer,
   answers,
+  currentState,
+  currentQuestionIndex,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
@@ -31,7 +35,6 @@ export default function ButtonSubmitAnswer({
       {buttonText}
     </Typography>
   );
-
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
@@ -43,10 +46,12 @@ export default function ButtonSubmitAnswer({
               rawText: answerText ?? '',
               normText: [answerText ?? ''],
               type: 0,
-            },
+            } as IAnswerText,
           ],
           multiChoiceAnswerIndex: selectedAnswer,
           isSubmitted: true, 
+          currentState,
+          currentQuestionIndex
         } as IAnswerContent;
 
         handleSubmitAnswer(answer);

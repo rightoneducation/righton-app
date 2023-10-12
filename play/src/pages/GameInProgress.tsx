@@ -136,9 +136,8 @@ export default function GameInProgress({
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
     localModel,
     hasRejoined,
-    teamAnswers,
-    answerChoices,
-    currentState
+    currentState,
+    currentQuestionIndex ?? 0
   );
   return rejoinSubmittedAnswer;
   }
@@ -173,29 +172,22 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  //   addTeamAnswer(
-  // teamMemberId: string, 
-  // questionId: number, 
-  // text: string, 
-  // answerContents: IAnswerContent, 
-  // isChosen?: boolean, 
-  // isTrickAnswer?: boolean)
+
   const handleSubmitAnswer = async (result: IAnswerContent) => {
+    const answer = {...result, isSubmitted: true, state: currentState};
     try {
       console.log(result);
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
         result.answers[0].rawText,
-        result,
+        answer,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
-      const responseGame = await apiClient.getGameSession(
-        localModel.gameSessionId
-      );
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({answer}));
       setTeamAnswerId(response.id);
-      setAnswerContent(result);
+      setAnswerContent(answer);
       setDisplaySubmitted(true);
     } catch (e) {
       setIsAnswerError(true);
@@ -220,16 +212,17 @@ export default function GameInProgress({
 
   const handleSelectAnswer = (index: number) => {
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({ 
-        presubmitAnswer: {
+        answer: {
           answers: [{
             rawText: '',
             normText: [''],
             type: 0,
           }],  
           multiChoiceAnswerIndex: index, 
-          isSubmitted: false
-        } as IAnswerContent,
-      })
+          isSubmitted: false,
+          currentState,
+          currentQuestionIndex: currentQuestionIndex ?? 0
+      } as IAnswerContent})
     );
     setAnswerContent((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
@@ -314,6 +307,7 @@ export default function GameInProgress({
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerContent={answerContent}
+            currentQuestionIndex={currentQuestionIndex ?? 0}
           />
         ) : (
           <DiscussAnswer

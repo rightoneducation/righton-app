@@ -14,6 +14,7 @@ interface AnswerCardProps {
   isSubmitted: boolean;
   handleSubmitAnswer: (answerText: IAnswerContent ) => void;
   currentState: GameSessionState;
+  currentQuestionIndex: number;
   selectedAnswer: number | null;
   handleSelectAnswer: (index: number) => void;
 }
@@ -23,6 +24,7 @@ export default function AnswerCard({
   isSubmitted,
   handleSubmitAnswer,
   currentState,
+  currentQuestionIndex,
   selectedAnswer,
   handleSelectAnswer,
 }: AnswerCardProps) {
@@ -97,6 +99,8 @@ export default function AnswerCard({
           isSubmitted={isSubmitted}
           selectedAnswer={selectedAnswer}
           answers={answers}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
           isSelected={!isNullOrUndefined(selectedAnswer)}
         />

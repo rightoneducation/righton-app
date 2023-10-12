@@ -72,7 +72,7 @@ export function GameInProgressContainer(props: GameInProgressContainerProps) {
     }
     // if loading, display loading message on bottom of How to Play page
     if (subscription.isLoading) return <Lobby mode={LobbyMode.LOADING} />;
-    if (subscription.gameSession?.currentQuestionIndex != null) 
+    if (subscription.gameSession?.currentQuestionIndex != null && subscription.gameSession?.currentQuestionIndex > 0)  
       return <Lobby 
         mode={LobbyMode.PREQUESTION} 
         teams={subscription.gameSession.teams} 
