@@ -108,5 +108,6 @@ export function LocalModelLoader(): LocalModel {
       JSON.stringify(updatedModelForNextReload)
     );
   }
+  console.log(localModel);
   return localModel;
 }

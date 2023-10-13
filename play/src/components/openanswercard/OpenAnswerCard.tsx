@@ -47,7 +47,7 @@ export default function OpenAnswerCard({
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
   const insertQuillDelta = (inputAnswer: IAnswerContent) => {
     const quillDelta: any = [];
-
+    console.log(inputAnswer);
     inputAnswer.answers.forEach((answer) => {
       if (answer.type === AnswerType.FORMULA) {
         quillDelta.push({ insert: { formula: answer.rawText } });
@@ -86,8 +86,12 @@ export default function OpenAnswerCard({
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
     const currentAnswer = editor.getContents();
-    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(extractQuillDelta(currentAnswer)));
     setEditorContents(currentAnswer);
+    const extractedAnswer = extractQuillDelta(currentAnswer);
+    extractedAnswer.currentState = currentState;
+    extractedAnswer.currentQuestionIndex = currentQuestionIndex;
+    console.log(extractedAnswer);
+    window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(extractedAnswer));
    // console.log(currentAnswer);
   };
 
@@ -99,7 +103,8 @@ export default function OpenAnswerCard({
       currentState,
       currentQuestionIndex,
     } as IAnswerContent;
-    // handleSubmitAnswer(packagedAnswer);
+    console.log(packagedAnswer);
+    handleSubmitAnswer(packagedAnswer);
   };
 
   return (

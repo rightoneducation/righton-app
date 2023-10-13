@@ -167,6 +167,7 @@ export const fetchLocalData = () => {
     window.localStorage.removeItem(StorageKey);
     window.localStorage.removeItem(StorageKeyAnswer);
   }
+  console.log(localModel);
   return localModel;
 };
 

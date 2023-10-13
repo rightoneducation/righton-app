@@ -132,10 +132,6 @@ export interface LocalModel {
   answer: IAnswerContent | null;
 }
 
-export interface LocalModelAnswer {
-  presubmitAnswer: IAnswerContent;
-}
-
 interface MonsterMap {
   [key: number]: {
     icon: string;
