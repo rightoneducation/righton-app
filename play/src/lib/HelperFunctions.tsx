@@ -208,11 +208,10 @@ export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
 };
 
 // full normalization will be performed only on submitting answer
-const getAnswerFromDelta = (currentContents: any): INormAnswer[] => {
+export const getAnswerFromDelta = (currentContents: any): INormAnswer[] => {
   const answer: INormAnswer[] = [];
-
   currentContents.forEach((op: any) => {
-    if(op.insert.formula) {
+    if(op.insert?.formula) {
       answer.push( {
         raw: op.insert.formula,
         norm: [{ 
@@ -242,7 +241,7 @@ const getAnswerFromDelta = (currentContents: any): INormAnswer[] => {
 * @returns - true if the input is a number, false otherwise
 * @see normalizeAnswers
 */ 
-const isNumeric = (num: any) => (
+export const isNumeric = (num: any) => (
   typeof(num) === 'number' || 
   typeof(num) === "string" && 
   num.trim() !== ''
@@ -274,17 +273,17 @@ export const handleNormalizeAnswers = (currentContents: any): INormAnswer[] => {
           norm.push({ value: raw.replace(/(\r\n|\n|\r|" ")/gm, ""), type: AnswerType.FORMULA });
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
-          norm.push({value: raw, type: AnswerType.NUMBER});
+          norm.push({value: Number(raw), type: AnswerType.NUMBER});
         } else {
           // 3. answer is a string
           //  we will produce a naive normalization of the string, attempting to extract numeric answers and then
           //  reducing case and removing characters
-          console.log('sup');
+
           // this extracts numeric values from a string and adds them to the normalized text array.
           // it then removes those numbers from the string
           const extractedNumbers = raw.match(/-?\d+(\.\d+)?/g)?.map(Number);
           if (extractedNumbers) {
-            norm.push(...extractedNumbers.map(value => ({ value, type: AnswerType.NUMBER })));
+            norm.push(...extractedNumbers.map(value => ({ value: Number(value), type: AnswerType.NUMBER })));
           }
           const numbersRemoved = raw.replace(/-?\d+(\.\d+)?/g, '');
 
@@ -292,7 +291,7 @@ export const handleNormalizeAnswers = (currentContents: any): INormAnswer[] => {
           // eslint-disable-next-line prefer-regex-literals
           const detectedNumbers = nlp(numbersRemoved.replace(specialCharsRegex, "")).numbers().json();
           if (detectedNumbers.length > 0) {
-            norm.push(...detectedNumbers.map((num: any) => ({ value: num.number.num, type: AnswerType.NUMBER })));
+            norm.push(...detectedNumbers.map((num: any) => ({ value: Number(num.number.num), type: AnswerType.NUMBER })));
           }
           // 4. any remaining content remaining is just a plain string 
           //    set normalized input to lower case and remove spaces

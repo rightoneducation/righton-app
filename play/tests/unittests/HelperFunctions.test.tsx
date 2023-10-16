@@ -6,6 +6,9 @@ import {
   checkForSubmittedAnswerOnRejoin,
   validateLocalModel,
   teamSorter,
+  getAnswerFromDelta,
+  isNumeric,
+  handleNormalizeAnswers
 } from '../../src/lib/HelperFunctions';
 import i18n from '../../src/i18n.mock';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
@@ -41,13 +44,14 @@ describe('HelperFunctions', () => {
   it('tests that on rejoining in different phases, duplicated behaviour isnt held over', () => {
     const questionId = randomInt(1000, 9999);
     let localAnswer = {
-      answers: [
-        {
-          rawText: '',
-          normText: [''],
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
           type: 0,
-        },
-      ],
+        }],
+      }],
       multiChoiceAnswerIndex: 0,
       isSubmitted: true,
       currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
@@ -86,10 +90,13 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 0,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 0,
+        }],
       }],
       isSubmitted: true, 
       multiChoiceAnswerIndex: 0, 
@@ -105,11 +112,14 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({ 
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 1,
-      }], 
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 1,
+        }],
+      }],
       isSubmitted: false, 
       multiChoiceAnswerIndex: null, 
       currentState: null, 
@@ -124,10 +134,13 @@ describe('HelperFunctions', () => {
         1
       )
     ).toEqual({
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 1,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 1,
+        }],
       }],
       isSubmitted: false, 
       multiChoiceAnswerIndex: null, 
@@ -137,10 +150,13 @@ describe('HelperFunctions', () => {
     // already submitted trickiest answer
     localAnswer = 
       {
-        answers: [{
-          rawText: '',
-          normText: [''],
-          type: 0,
+        rawAnswer: '',
+        normAnswer: [{
+          raw: '',
+          norm: [{
+            value: '',
+            type: 1,
+          }],
         }],
         isSubmitted: true,
         multiChoiceAnswerIndex: 0,
@@ -155,10 +171,13 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 0,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 1,
+        }],
       }],
       isSubmitted: true, 
       multiChoiceAnswerIndex: 0, 
@@ -174,10 +193,13 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 1,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 1,
+        }],
       }],
       isSubmitted: false, 
       multiChoiceAnswerIndex: null, 
@@ -187,10 +209,13 @@ describe('HelperFunctions', () => {
     // no answers submitted
     localAnswer = 
     {
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 0,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 0,
+        }],
       }],
       isSubmitted: false,
       multiChoiceAnswerIndex: 0, // should be null
@@ -205,10 +230,13 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({ 
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 1,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 1,
+        }],
       }],
       isSubmitted: false, 
       multiChoiceAnswerIndex: null, 
@@ -224,10 +252,13 @@ describe('HelperFunctions', () => {
         0
       )
     ).toEqual({ 
-      answers: [{
-        rawText: '',
-        normText: [''],
-        type: 1,
+      rawAnswer: '',
+      normAnswer: [{
+        raw: '',
+        norm: [{
+          value: '',
+          type: 1,
+        }],
       }],
       isSubmitted: false, 
       multiChoiceAnswerIndex: null, 
@@ -240,10 +271,13 @@ describe('HelperFunctions', () => {
     const localModel = JSON.stringify(localModelLoaderMock());
     const localModelAnswer = JSON.stringify(
       {
-        answers: [{
-          rawText: '',
-          normText: [''],
-          type: 0,
+        rawAnswer: '',
+        normAnswer: [{
+          raw: '',
+          norm: [{
+            value: '',
+            type: 1,
+          }],
         }],
         isSubmitted: false,
         multiChoiceAnswerIndex: 0, // should be null
@@ -314,4 +348,74 @@ describe('HelperFunctions', () => {
   });
 
   // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out for separate testing
+
+  it('tests that it receives open answer contents from quill delta', async () => {
+    const inputString =  [{insert: 'test'}];
+    const expectedString = [{
+      raw: 'test',
+      norm: [{value: 'test', type: 1}],
+    }];
+    expect(getAnswerFromDelta(inputString)).toEqual(expectedString);
+    const inputFormula =  [{insert: { formula: 'e=mc^2'}}];
+    const expectedFormula = [{
+      raw: 'e=mc^2',
+      norm: [{value: 'e=mc^2', type: 3}],
+    }];
+    expect(getAnswerFromDelta(inputFormula)).toEqual(expectedFormula);
+    const inputLinebreak =  [{insert: ' \n'}];
+    const expectedLinebreak: any = [];
+    expect(getAnswerFromDelta(inputLinebreak)).toEqual(expectedLinebreak);
+  });
+
+  it('tests that an input consists exclusively of numbers', async ()=> {
+    expect(isNumeric('-0.5')).toBe(true);
+    expect(isNumeric('-2')).toBe(true);
+    expect(isNumeric('1234')).toBe(true);
+    expect(isNumeric('1234a')).toBe(false);
+    expect(isNumeric('')).toBe(false);
+    expect(isNumeric('a')).toBe(false);
+    expect(isNumeric('fifty')).toBe(false);
+  });
+
+  it('tests that a quill delta is normalized so that it can be easily parsed on host', async () =>{
+    const inputNumber =  [{insert: '12'}];
+    const expectedNumber = [{
+      raw: '12',
+      norm: [{value: 12, type: 2}],
+    }];
+    expect(handleNormalizeAnswers(inputNumber)).toEqual(expectedNumber);
+    const inputFormula =  [{insert: {formula: 'e=mc^2'}}];
+    const expectedFormula = [{
+      raw: 'e=mc^2',
+      norm: [{value: 'e=mc^2', type: 3}],
+    }];
+    expect(handleNormalizeAnswers(inputFormula)).toEqual(expectedFormula);
+    const inputStringWithNumbers =  [{insert: 'the answer is 12'}];
+    const expectedStringWithNumbers = [{
+      raw: 'the answer is 12',
+      norm: [{value: 12, type: 2}, {value: 'the answer is', type: 1}],
+    }];
+    expect(handleNormalizeAnswers(inputStringWithNumbers)).toEqual(expectedStringWithNumbers);
+    const inputKitchenSink =  [{insert: 'the answer is 12'}, {insert: {formula: 'e=mc^2'}}, {insert: 'the answer is sixty five 12 14.5 -3'}];
+    const expectedKitchenSink = [
+      {
+        raw: 'the answer is 12',
+        norm: [{value: 12, type: 2}, {value: 'the answer is', type: 1}],
+      },
+      {
+        raw: 'e=mc^2',
+        norm: [{value: 'e=mc^2', type: 3}],
+      },
+      {
+        raw: 'the answer is sixty five 12 14.5 -3',
+        norm: [
+          {value: 12, type: 2}, 
+          {value: 14.5, type: 2},
+          {value: -3, type: 2},
+          {value: 65, type: 2},
+          {value: 'the answer is sixty five', type: 1}],
+      },      
+    ];
+    expect(handleNormalizeAnswers(inputKitchenSink)).toEqual(expectedKitchenSink);
+  })
 });

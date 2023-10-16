@@ -126,7 +126,6 @@ export function PregameContainer({ apiClient }: PregameFinished) {
       if (gameSession) {
         const teamInfo = await addTeamToGame();
         if (!teamInfo) {
-          console.log('sup2');
           setIsAPIError(true);
           return;
         }

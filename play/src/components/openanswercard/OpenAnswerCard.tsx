@@ -54,6 +54,7 @@ export default function OpenAnswerCard({
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
     const currentAnswer = editor.getContents();
+    console.log(currentAnswer);
     const extractedAnswer: ITeamAnswerContent = {
       rawAnswer: currentAnswer,
       currentState,
@@ -64,7 +65,6 @@ export default function OpenAnswerCard({
   };
 
   const handleNormalizeAnswerOnSubmit = (currentContents: any) => {
-    console.log('sup');
     const normalizedAnswers =  handleNormalizeAnswers(currentContents);
     const packagedAnswer: ITeamAnswerContent = {
       normAnswer: normalizedAnswers,
