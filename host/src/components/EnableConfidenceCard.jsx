@@ -15,7 +15,6 @@ export default function EnableConfidenceCard({
           className={classes.switch}
           checked={isConfidenceEnabled}
           onChange={handleConfidenceSwitchChange}
-          // color="default"
         />
       </div>
       <div className={classes.answerContainer}>
@@ -77,7 +76,7 @@ const useStyles = makeStyles({
       color: '#FFFFFF',
     },
     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-      backgroundColor: '#3874CB',
+      backgroundColor: '#111111',
     },
   },
 });
