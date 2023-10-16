@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
-import { isNullOrUndefined, IAnswerContent, IAnswerText, GameSessionState } from '@righton/networking';
+import { isNullOrUndefined, ITeamAnswerContent, INormAnswer, GameSessionState } from '@righton/networking';
 import { evaluate } from 'mathjs';
 import * as DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
@@ -18,11 +18,11 @@ import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
 window.katex = katex;
 
 interface OpenAnswerCardProps {
-  answerContent: IAnswerContent;
+  answerContent: ITeamAnswerContent;
   isSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitAnswer: (result: IAnswerContent) => void;
+  handleSubmitAnswer: (result: ITeamAnswerContent) => void;
 }
 
 export default function OpenAnswerCard({
@@ -45,64 +45,32 @@ export default function OpenAnswerCard({
 
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
-  const insertQuillDelta = (inputAnswer: IAnswerContent) => {
-    const quillDelta: any = [];
-    console.log(inputAnswer);
-    inputAnswer.answers.forEach((answer) => {
-      if (answer.type === AnswerType.FORMULA) {
-        quillDelta.push({ insert: { formula: answer.rawText } });
-      } else {
-        quillDelta.push({ insert: answer.rawText });
-      }
-    });
-    return quillDelta;
+  const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
+    return inputAnswer.rawAnswer ?? [];
   };
 
   const [editorContents, setEditorContents] = useState<any>(() => insertQuillDelta(answerContent));
 
-  // this function is run onChange of the quill editor
-  // it is designed to only pull the data that is req'd to reproduce it on reload
-  // full normalization will be performed only on submitting answer
-  const extractQuillDelta = (currentContents: any): IAnswerContent => {
-    const answer: IAnswerText[] = [];
-
-    currentContents.forEach((op: any) => {
-      if(op.insert.formula) {
-        answer.push( {
-          rawText: op.insert.formula, 
-          type: AnswerType.FORMULA
-        });
-      } else {
-        answer.push( {
-          rawText: op.insert, 
-          type: AnswerType.TEXT
-        });
-      }
-    });
-    
-    return {answers: answer, isSubmitted} as IAnswerContent;
-  };
-
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
     const currentAnswer = editor.getContents();
-    setEditorContents(currentAnswer);
-    const extractedAnswer = extractQuillDelta(currentAnswer);
-    extractedAnswer.currentState = currentState;
-    extractedAnswer.currentQuestionIndex = currentQuestionIndex;
-    console.log(extractedAnswer);
+    const extractedAnswer: ITeamAnswerContent = {
+      rawAnswer: currentAnswer,
+      currentState,
+      currentQuestionIndex
+    };
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(extractedAnswer));
-   // console.log(currentAnswer);
+    setEditorContents(currentAnswer);
   };
 
-  const handleRetrieveAnswer = (currentContents: any) => {
-    const extractedAnswer = extractQuillDelta(currentContents);
-    const normalizedAnswers = handleNormalizeAnswers(extractedAnswer.answers);
-    const packagedAnswer: IAnswerContent = {
-      answers: normalizedAnswers,
+  const handleNormalizeAnswerOnSubmit = (currentContents: any) => {
+    console.log('sup');
+    const normalizedAnswers =  handleNormalizeAnswers(currentContents);
+    const packagedAnswer: ITeamAnswerContent = {
+      normAnswer: normalizedAnswers,
       currentState,
       currentQuestionIndex,
-    } as IAnswerContent;
+    } as ITeamAnswerContent;
     console.log(packagedAnswer);
     handleSubmitAnswer(packagedAnswer);
   };
@@ -130,7 +98,7 @@ export default function OpenAnswerCard({
             isSubmitted={isSubmitted}
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
-            handleSubmitAnswer={() => handleRetrieveAnswer(editorContents)}
+            handleSubmitAnswer={() => handleNormalizeAnswerOnSubmit(editorContents)}
           />
         </Box>
       </BodyCardContainerStyled>

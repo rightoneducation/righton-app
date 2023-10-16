@@ -100,7 +100,7 @@ export function LocalModelLoader(): LocalModel {
   // changes to the timer and changes to the short answer response pad don't conflict
   const localModelBase = JSON.parse(window.localStorage.getItem(StorageKey) ?? '{}');
   const localModelAnswer = JSON.parse(window.localStorage.getItem(StorageKeyAnswer) ?? '{}');
-  const localModel = { ...localModelBase, ...localModelAnswer };
+  const localModel = { ...localModelBase, answer: localModelAnswer };
   if (localModel && !localModel.hasRejoined) {
     const updatedModelForNextReload = { ...localModel, hasRejoined: true };
     window.localStorage.setItem(

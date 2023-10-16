@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined, GameSessionState, IAnswerContent } from '@righton/networking';
+import { isNullOrUndefined, GameSessionState, ITeamAnswerContent } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { AnswerState } from '../lib/PlayModels';
@@ -12,7 +12,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 interface AnswerCardProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: IAnswerContent ) => void;
+  handleSubmitAnswer: (answerText: ITeamAnswerContent ) => void;
   currentState: GameSessionState;
   currentQuestionIndex: number;
   selectedAnswer: number | null;

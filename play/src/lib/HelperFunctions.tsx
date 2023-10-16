@@ -5,8 +5,9 @@ import {
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
-  IAnswerContent,
-  IAnswerText
+  ITeamAnswerContent,
+  INormAnswer,
+  INormAnswerSubObj
 } from '@righton/networking';
 import nlp from 'compromise';
 import { InputPlaceholder, StorageKey, LocalModel, AnswerType, StorageKeyAnswer } from './PlayModels';
@@ -53,12 +54,15 @@ export const checkForSubmittedAnswerOnRejoin = (
   hasRejoined: boolean,
   currentState: GameSessionState,
   currentQuestionIndex: number
-): IAnswerContent => {
-  let returnedAnswer: IAnswerContent = {
-    answers: [{
-      rawText: '',
-      normText: [''],
-      type: AnswerType.TEXT,
+): ITeamAnswerContent => {
+  let returnedAnswer: ITeamAnswerContent = {
+    rawAnswer: '',
+    normAnswer: [{
+      raw: '',
+      norm: [{
+        value: '',
+        type: AnswerType.TEXT
+      }]
     }],
     multiChoiceAnswerIndex: null,
     isSubmitted: false,
@@ -71,13 +75,12 @@ export const checkForSubmittedAnswerOnRejoin = (
     if (localModel.answer !== null && localModel.answer.currentState === currentState && localModel.answer.currentQuestionIndex === currentQuestionIndex) {
       // set answer to localAnswer
       returnedAnswer = localModel.answer;
-      console.log(returnedAnswer);
       // remove localAnswer from local storage
       localModel.answer = null; // eslint-disable-line no-param-reassign
       window.localStorage.setItem(StorageKey, JSON.stringify(localModel)); 
     }
   }
-  return returnedAnswer as IAnswerContent;
+  return returnedAnswer as ITeamAnswerContent;
 };
 
 /**
@@ -204,6 +207,34 @@ export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
   return ret as ITeam[];
 };
 
+// full normalization will be performed only on submitting answer
+const getAnswerFromDelta = (currentContents: any): INormAnswer[] => {
+  const answer: INormAnswer[] = [];
+
+  currentContents.forEach((op: any) => {
+    if(op.insert.formula) {
+      answer.push( {
+        raw: op.insert.formula,
+        norm: [{ 
+          value: op.insert.formula,
+          type: AnswerType.FORMULA
+        }], 
+      });
+      return;
+    }
+    if(op.insert !== ' \n') { // skips space and linebreak quill adds at the end of a formula
+      answer.push( {
+        raw: op.insert, 
+        norm: [{
+          value: op.insert,
+          type: AnswerType.TEXT
+        }],
+      });
+    }
+  });
+  return answer as INormAnswer[];
+};
+
 /**
 * function checks if input is a number
 * used in normalizeAnswers to parse short answer responses
@@ -225,54 +256,51 @@ const isNumeric = (num: any) => (
  * @param currentContents: IAnswerText[]
  * @returns normalizedAnswers: IAnswerText[]
  */
-export const handleNormalizeAnswers = (currentContents: IAnswerText[]): IAnswerText[] => {
+export const handleNormalizeAnswers = (currentContents: any): INormAnswer[] => {
   // used later in the map for removing special characters
   // eslint-disable-next-line prefer-regex-literals
   const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `, 'gm');
+  const extractedAnswer = getAnswerFromDelta(currentContents);
+  const normalizedAnswer = extractedAnswer.map((answer) => {
+    // replaces \n with spaces, maintain everything else
+    const raw = `${answer.raw.replace(/\n/g, " ")}`;
+    const norm: INormAnswerSubObj[] = [];
 
-  const normalizedAnswers = currentContents.map((answer) => {
-    const normalizedAnswer: IAnswerText = {rawText: '', normText: [], type: AnswerType.TEXT};
-    // replaces \n with spaces maintains everything else
-    normalizedAnswer.rawText = `${answer.rawText.replace(/\n/g, " ")}`;
+    if (answer.norm){
+      answer.norm.forEach((subAnswer) => {
+        if (subAnswer.type === AnswerType.FORMULA) {
+          // 1. answer is a formula
+          // removes all spaces
+          norm.push({ value: raw.replace(/(\r\n|\n|\r|" ")/gm, ""), type: AnswerType.FORMULA });
+        } else if (isNumeric(raw) === true) {
+          // 2. answer is a number, exclusively
+          norm.push({value: raw, type: AnswerType.NUMBER});
+        } else {
+          // 3. answer is a string
+          //  we will produce a naive normalization of the string, attempting to extract numeric answers and then
+          //  reducing case and removing characters
+          console.log('sup');
+          // this extracts numeric values from a string and adds them to the normalized text array.
+          // it then removes those numbers from the string
+          const extractedNumbers = raw.match(/-?\d+(\.\d+)?/g)?.map(Number);
+          if (extractedNumbers) {
+            norm.push(...extractedNumbers.map(value => ({ value, type: AnswerType.NUMBER })));
+          }
+          const numbersRemoved = raw.replace(/-?\d+(\.\d+)?/g, '');
 
-    if (answer.type === AnswerType.FORMULA) {
-      // removes all spaces
-      normalizedAnswer.normText?.push(`${answer.rawText.replace(/(\r\n|\n|\r|" ")/gm, "")}`);
-    } else {
-      // 2. if there is no formula, check if the user has entered a number
-      if (isNumeric(answer.rawText) === true) {
-        normalizedAnswer.normText?.push(answer.rawText);
-        normalizedAnswer.type = AnswerType.NUMBER;
-        return normalizedAnswer;
-      }
-
-      // 3. answer is a string. 
-      //  we will produce a naive normalization of the string, attempting to extract numeric answers and then
-      //  reducing case and removing characters
-
-      // this extracts numeric values from a string and adds them to the normalized text array.
-      // it then removes those numbers from the string
-      const extractedNumbers = normalizedAnswer.rawText.match(/-?\d+(\.\d+)?/g)?.map(Number);
-      const numbersRemoved = normalizedAnswer.rawText.replace(/-?\d+(\.\d+)?/g, '');
-      if (extractedNumbers) {
-        normalizedAnswer.normText?.push(...extractedNumbers);
-        normalizedAnswer.type = AnswerType.NUMBER;
-      }
-
-      // this attempts to extract any written numbers (ex. fifty five) after removing any special characters 
-      // eslint-disable-next-line prefer-regex-literals
-      const detectedNumbers = nlp(numbersRemoved.replace(specialCharsRegex, "")).numbers().json();
-      if (detectedNumbers.length > 0) {
-        // answer.normText = answer.rawText.reduce((acc: number, curr: string) => `${acc}${curr.replace(/\n/g, "")}`, "");
-        detectedNumbers.forEach((number: any) => normalizedAnswer.normText?.push(parseFloat(number.number.num)))
-        normalizedAnswer.type = AnswerType.NUMBER;
-      } 
-      // 4. any remaining content is grabbed together 
-      //    set normalized input to lower case and remove spaces
-      normalizedAnswer.normText?.push(numbersRemoved.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "").trim());
+          // this attempts to extract any written numbers (ex. fifty five) after removing any special characters 
+          // eslint-disable-next-line prefer-regex-literals
+          const detectedNumbers = nlp(numbersRemoved.replace(specialCharsRegex, "")).numbers().json();
+          if (detectedNumbers.length > 0) {
+            norm.push(...detectedNumbers.map((num: any) => ({ value: num.number.num, type: AnswerType.NUMBER })));
+          }
+          // 4. any remaining content remaining is just a plain string 
+          //    set normalized input to lower case and remove spaces
+          norm.push({value: numbersRemoved.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "").trim(), type: AnswerType.TEXT});
+        } 
+      });
     }
-    return normalizedAnswer;
+    return {raw, norm};
   });
-
-  return normalizedAnswers;
+  return normalizedAnswer;
 };

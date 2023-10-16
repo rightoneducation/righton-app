@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, IAnswerContent } from "./Models"
+import { IChoice, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -327,17 +327,17 @@ export class ApiClient implements IApiClient {
         teamMemberId: string,
         questionId: number,
         text: string,
-        answerContents: IAnswerContent,
+        answerContent: ITeamAnswerContent,
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-        const awsAnswerContents = JSON.stringify(answerContents)
+        const awsAnswerContent = JSON.stringify(answerContent)
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContents, 
+            awsAnswerContent, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
@@ -564,7 +564,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
-    awsAnswerContents?: string | null
+    awsAnswerContent?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -897,11 +897,11 @@ class TeamAnswerParser {
     }
     static answerContentFromAWSAnswerContent(
         awsAnswerContent: string
-    ): IAnswerContent {
+    ): ITeamAnswerContent {
         let parsedAnswerContent;
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent);
-            if (isNullOrUndefined(parsedAnswerContent.answers) ||
+            if (isNullOrUndefined(parsedAnswerContent.subanswers) ||
             isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
                 throw new Error(
                     "Team answer has null field for the attributes that are not nullable"
@@ -910,7 +910,7 @@ class TeamAnswerParser {
         } catch (e) {
             throw new Error("Failed to parse answer content")
         }
-        return parsedAnswerContent as IAnswerContent;
+        return parsedAnswerContent as ITeamAnswerContent;
     }   
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
@@ -921,7 +921,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
-            awsAnswerContents,
+            awsAnswerContent,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -931,13 +931,13 @@ class TeamAnswerParser {
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
             isNullOrUndefined(text) ||
-            isNullOrUndefined(awsAnswerContents)) {
+            isNullOrUndefined(awsAnswerContent)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-        // aws answer content is a stringified json object, parse it below into an IAnswerContent object
-        const answerContents = this.answerContentFromAWSAnswerContent(awsAnswerContents);
+        // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
+        const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
      
         const teamAnswer: ITeamAnswer = {
             id,
@@ -945,7 +945,7 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
-            answerContents,
+            answerContent,
             createdAt,
             updatedAt,
             teamMemberAnswersId,

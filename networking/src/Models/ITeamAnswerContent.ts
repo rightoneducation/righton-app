@@ -6,16 +6,23 @@ enum AnswerType {
   FORMULA,
   NULL
 }
-export interface IAnswerText {
-  rawText: string;
-  normText?: (string | number)[];
+
+export interface INormAnswerSubObj {
+  value: string | number;
   type: AnswerType;
 }
-export interface IAnswerContent {
-  answers: IAnswerText[];
+
+export interface INormAnswer {
+  raw: string;
+  norm?: INormAnswerSubObj[];
+}
+
+export interface ITeamAnswerContent {
+  rawAnswer: string | number; 
+  normAnswer?: INormAnswer[];
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
-  isSubmitted: boolean;
+  isSubmitted?: boolean;
   currentState: GameSessionState | null;
   currentQuestionIndex: number | null;
 }

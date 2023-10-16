@@ -10,7 +10,7 @@ import {
   ModelHelper,
   ConfidenceLevel,
   isNullOrUndefined,
-  IAnswerContent
+  ITeamAnswerContent,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -29,7 +29,7 @@ import {
   fetchLocalData,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, StorageKeyAnswer } from '../lib/PlayModels';
+import { ErrorType, LocalModel, StorageKeyAnswer, AnswerType } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -127,12 +127,12 @@ export default function GameInProgress({
       : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
-  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
+  const isShortAnswerEnabled = true; // currentQuestion?.isShortAnswerEnabled;
 
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [answerContent, setAnswerContent] = useState<IAnswerContent>(() => {
+  const [answerContent, setAnswerContent] = useState<ITeamAnswerContent>(() => {
     const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
     localModel,
     hasRejoined,
@@ -173,13 +173,13 @@ export default function GameInProgress({
   });
 
 
-  const handleSubmitAnswer = async (result: IAnswerContent) => {
+  const handleSubmitAnswer = async (result: ITeamAnswerContent) => {
     const answer = {...result, isSubmitted: true};
     try {
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
-        result.answers[0].rawText,
+        JSON.stringify(result.rawAnswer),
         answer,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
@@ -211,18 +211,13 @@ export default function GameInProgress({
 
   const handleSelectAnswer = (index: number) => {
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({ 
-        answer: {
-          answers: [{
-            rawText: '',
-            normText: [''],
-            type: 0,
-          }],  
-          multiChoiceAnswerIndex: index, 
-          isSubmitted: false,
-          currentState,
-          currentQuestionIndex: currentQuestionIndex ?? 0
-      } as IAnswerContent})
-    );
+        rawAnswer: index,
+        multiChoiceAnswerIndex: index, 
+        isSubmitted: false,
+        currentState,
+        currentQuestionIndex: currentQuestionIndex ?? 0
+      } as ITeamAnswerContent
+    ));
     setAnswerContent((prev) => ({ ...prev, multiChoiceAnswerIndex: index })); 
   };
 
@@ -292,7 +287,7 @@ export default function GameInProgress({
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={answerContent.isSubmitted}
+            isSubmitted={answerContent.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}

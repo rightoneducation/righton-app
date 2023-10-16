@@ -1,4 +1,4 @@
-import { IAnswerContent, GameSessionState } from '@righton/networking';
+import { ITeamAnswerContent, GameSessionState } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -129,7 +129,7 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
-  answer: IAnswerContent | null;
+  answer: ITeamAnswerContent | null;
 }
 
 interface MonsterMap {
@@ -201,13 +201,4 @@ export enum AnswerType {
   NUMBER,
   FORMULA,
   NULL
-}
-
-export interface AnswerObject {
-  answerTexts: string[];
-  answerTypes: AnswerType[];
-  multiChoiceAnswerIndex?: number | null;
-  isSubmitted: boolean;
-  currentState: GameSessionState | null;
-  currentQuestionIndex: number | null;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, GameSessionState, IAnswerContent } from '@righton/networking';
+import { ConfidenceLevel, GameSessionState, ITeamAnswerContent } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -21,7 +21,7 @@ interface ChooseAnswerProps {
   answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answer: IAnswerContent) => void;
+  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
   currentState: GameSessionState;
   selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
@@ -32,7 +32,7 @@ interface ChooseAnswerProps {
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
   isShortAnswerEnabled: boolean;
-  answerContent: IAnswerContent;
+  answerContent: ITeamAnswerContent;
   currentQuestionIndex: number;
 }
 
@@ -111,7 +111,7 @@ export default function ChooseAnswer({
     {!isShortAnswerEnabled ? 
         <AnswerCard
           answers={answerChoices}
-          isSubmitted={answerContent.isSubmitted}
+          isSubmitted={answerContent.isSubmitted ?? false}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
@@ -121,7 +121,7 @@ export default function ChooseAnswer({
         :
         <OpenAnswerCard
           answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted}
+          isSubmitted={answerContent.isSubmitted ?? false}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
