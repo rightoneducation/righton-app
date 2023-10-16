@@ -15,6 +15,7 @@ export default function EnableConfidenceCard({
           className={classes.switch}
           checked={isConfidenceEnabled}
           onChange={handleConfidenceSwitchChange}
+          // color="default"
         />
       </div>
       <div className={classes.answerContainer}>
@@ -66,8 +67,14 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   switch: {
+    '& .MuiSwitch-switchBase': {
+      color: "#C0C0C0"
+    },
+    '& .MuiSwitch-track': {
+      backgroundColor: "#EAEAEA",
+    },
     '& .MuiSwitch-switchBase.Mui-checked': {
-      color: '#3874CB',
+      color: '#FFFFFF',
     },
     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
       backgroundColor: '#3874CB',
