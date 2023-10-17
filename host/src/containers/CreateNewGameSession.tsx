@@ -7,13 +7,10 @@ import { makeStyles } from '@material-ui/core';
 const CreateNewGameSession = () => {
   const apiClient = new ApiClient(Environment.Testing);
   const classes = useStyles();
-  console.log('sup');
-  console.log(apiClient);
   let { gameId } = useParams<{ gameId: string }>();
 
   useEffect(() => {
     apiClient.createGameSession(Number(gameId), false).then((response) => {
-      
       apiClient
         .updateGameSession({
           id: response.id,
@@ -23,7 +20,7 @@ const CreateNewGameSession = () => {
           window.location.replace(`/host/${response.id}`);
         });
     });
-  });
+  }, []);
 
   return (
     <div className={classes.container}>
