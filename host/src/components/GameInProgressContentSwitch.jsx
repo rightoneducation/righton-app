@@ -59,6 +59,7 @@ export default function GameInProgressContentSwitch ({
               statePosition={statePosition}
               teamsPickedChoices={teamsPickedChoices}
               graphClickInfo={graphClickInfo}
+              isShortAnswerEnabled={isShortAnswerEnabled}
               handleGraphClick={handleGraphClick}
             />
           </div>

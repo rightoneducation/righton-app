@@ -145,6 +145,7 @@ const GameSessionContainer = () => {
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
+        console.log(teamAnswerResponse);
         setTeamsArray((prevState) => {
           let newState = JSON.parse(JSON.stringify(prevState));
           newState.forEach((team) => {
