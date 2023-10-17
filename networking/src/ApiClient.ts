@@ -343,10 +343,12 @@ export class ApiClient implements IApiClient {
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
+        
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
             createTeamAnswer,
             variables
         )
+        console.log(answer);
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -902,7 +904,7 @@ class TeamAnswerParser {
         let parsedAnswerContent;
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent);
-            if (isNullOrUndefined(parsedAnswerContent.subanswers) ||
+            if (isNullOrUndefined(parsedAnswerContent) ||
             isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
                 throw new Error(
                     "Team answer has null field for the attributes that are not nullable"
