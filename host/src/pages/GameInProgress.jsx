@@ -31,8 +31,6 @@ export default function GameInProgress({
   showFooterButtonOnly,
   isConfidenceEnabled,
   handleConfidenceSwitchChange,
-  isShortAnswerEnabled,
-  handleShortAnswerChange,
   handleBeginQuestion,
   navDictionary,
   assembleNavDictionary,
@@ -239,8 +237,6 @@ export default function GameInProgress({
             isConfidenceEnabled={isConfidenceEnabled}
             handleConfidenceSwitchChange={handleConfidenceSwitchChange}
             teamsArray={teamsArray}
-            isShortAnswerEnabled={isShortAnswerEnabled}
-            handleShortAnswerChange={handleShortAnswerChange}
           />
         </div>
         <GameModal
