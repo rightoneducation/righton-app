@@ -1,36 +1,40 @@
 import React from 'react';
 import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
-import { GameSessionState, ConfidenceLevel } from '@righton/networking';
-import QuestionCard from '../components/QuestionCard';
-import Responses from '../components/Responses/Responses';
-import ConfidenceResponseCard from './ConfidenceResponses/ConfidenceResponseCard';
-import GameAnswers from '../components/GameAnswers';
-import SelectedAnswer from '../components/Responses/SelectedAnswer';
-import EnableConfidenceCard from '../components/EnableConfidenceCard';
-import ConfidenceResponseDropdown from './ConfidenceResponses/ConfidenceResponseDropdown';
+import { GameSessionState, ConfidenceLevel } from "@righton/networking";
+import QuestionCard from "./QuestionCard";
+import Responses from "./Responses/Responses";
+import ConfidenceResponseCard from "./ConfidenceResponses/ConfidenceResponseCard";
+import GameAnswers from "./GameAnswers";
+import SelectedAnswer from "./Responses/SelectedAnswer";
+import EnableConfidenceCard from "./EnableConfidenceCard";
+import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
+import EnableShortAnswerCard from "./EnableShortAnswerCard";
 
-export default function GameInProgressContentSwitch({
-  questions,
-  questionChoices,
-  data,
-  graphClickInfo,
-  responsesRef,
-  handleGraphClick,
-  currentQuestionIndex,
-  answersByQuestion,
-  totalAnswers,
-  numPlayers,
-  statePosition,
-  teamsPickedChoices,
-  questionCardRef,
-  gameAnswersRef,
-  confidenceCardRef,
-  correctChoiceIndex,
-  currentState,
-  isConfidenceEnabled,
-  handleConfidenceSwitchChange,
-  confidenceData,
-}) {
+export default function GameInProgressContentSwitch ({ 
+    questions, 
+    questionChoices,
+    data,
+    graphClickInfo,
+    responsesRef,
+    handleGraphClick,
+    currentQuestionIndex, 
+    answersByQuestion, 
+    totalAnswers, 
+    numPlayers, 
+    statePosition, 
+    teamsPickedChoices, 
+    questionCardRef, 
+    gameAnswersRef,
+    confidenceCardRef,
+    correctChoiceIndex,
+    currentState,
+    isConfidenceEnabled,
+    handleConfidenceSwitchChange,
+    teamsArray,
+    confidenceData,
+    isShortAnswerEnabled,
+    handleShortAnswerChange
+  }) {
   const classes = useStyles();
   const gameplayComponents = [
     <>
@@ -139,9 +143,16 @@ export default function GameInProgressContentSwitch({
           image={questions[currentQuestionIndex].imageUrl}
         />
       </div>
-      <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
-        <EnableConfidenceCard
-          isConfidenceEnabled={isConfidenceEnabled}
+      <div id="responses-scrollbox" ref={responsesRef} style={{width:'100%'}}>
+        <EnableShortAnswerCard 
+          isShortAnswerEnabled={isShortAnswerEnabled} 
+          handleShortAnswerChange={handleShortAnswerChange}
+        />
+      </div>
+      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
+      <div id="confidencecard-scrollbox" ref={confidenceCardRef} style={{width:'100%'}}>
+        <EnableConfidenceCard 
+          isConfidenceEnabled={isConfidenceEnabled} 
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
         />
       </div>
@@ -174,5 +185,6 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     gap: '24px',
     width: '100%',
-  },
+    maxWidth: "500px"
+  }
 });
