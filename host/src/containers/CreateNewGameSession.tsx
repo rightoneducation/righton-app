@@ -5,9 +5,8 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { makeStyles } from '@material-ui/core';
 
 const CreateNewGameSession = () => {
-  const apiClient = new ApiClient(Environment.Staging);
+  const apiClient = new ApiClient(Environment.Testing);
   const classes = useStyles();
-
   let { gameId } = useParams<{ gameId: string }>();
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const CreateNewGameSession = () => {
           window.location.replace(`/host/${response.id}`);
         });
     });
-  });
+  }, []);
 
   return (
     <div className={classes.container}>

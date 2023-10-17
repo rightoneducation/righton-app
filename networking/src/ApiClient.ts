@@ -60,6 +60,7 @@ Amplify.configure(awsconfig)
 
 export enum Environment {
     Staging = "staging",
+    Testing = "testing"
 }
 
 enum HTTPMethod {
