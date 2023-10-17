@@ -60,6 +60,7 @@ Amplify.configure(awsconfig)
 
 export enum Environment {
     Staging = "staging",
+    Testing = "testing"
 }
 
 enum HTTPMethod {
@@ -83,7 +84,7 @@ export class ApiClient implements IApiClient {
     private endpoint: string
 
     constructor(env: Environment) {
-        this.endpoint = `https://gz27qangzl.execute-api.us-east-1.amazonaws.com/${env}/createGameSessionTest`
+        this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
     }
 
     createGameSession(
