@@ -12,6 +12,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
+import { buildShortAnswerResponses } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -33,6 +34,7 @@ const GameSessionContainer = () => {
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
+  const [shortAnswerResponses, setShortanswerResponse] = useState([]);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -146,6 +148,7 @@ const GameSessionContainer = () => {
       gameSessionId,
       (teamAnswerResponse) => {
         console.log(teamAnswerResponse);
+        console.log(buildShortAnswerResponses(gameSession.choices, teamAnswerResponse));
         setTeamsArray((prevState) => {
           let newState = JSON.parse(JSON.stringify(prevState));
           newState.forEach((team) => {
@@ -155,6 +158,7 @@ const GameSessionContainer = () => {
                   teamMember.answers.push(teamAnswerResponse);
               });
           });
+          console.log(newState);
           return newState;
         });
       },

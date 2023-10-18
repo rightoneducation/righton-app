@@ -182,3 +182,28 @@ export const getAnswersByQuestion = (
   }
   return { answersArray: [], confidenceArray };
 };
+
+export const isNumeric = (num) => (
+  typeof(num) === 'number' || 
+  typeof(num) === "string" && 
+  num.trim() !== ''
+) && !isNaN(num); // eslint-disable-line no-restricted-globals
+
+export const buildShortAnswerResponses = (choices, newAnswer) => {
+  const correctChoice = choices.find(choice => choice.isAnswer).text;
+  const isAnswerNumeric = isNumeric(correctChoice);
+  let isPlayerCorrect = false;
+  newAnswer.answerContent.normAnswer.forEach((answer) => {
+    answer.norm.forEach((norm) => {
+      if (isAnswerNumeric && norm.type === 1 && norm.value === correctChoice){
+          isPlayerCorrect = true;
+      } else if (!isAnswerNumeric && norm.type === 0 && norm.value === correctChoice) {
+          isPlayerCorrect = true;
+      }
+    });
+  });
+      
+  if (!isPlayerCorrect){
+    choices.add(newAnswer.answerContent.rawAnswer);
+  }
+};
