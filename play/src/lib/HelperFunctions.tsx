@@ -56,6 +56,7 @@ export const checkForSubmittedAnswerOnRejoin = (
   currentQuestionIndex: number
 ): ITeamAnswerContent => {
   let returnedAnswer: ITeamAnswerContent = {
+    delta: '',
     rawAnswer: '',
     normAnswer: [{
       raw: '',
@@ -255,14 +256,16 @@ export const isNumeric = (num: any) => (
  * @param currentContents: IAnswerText[]
  * @returns normalizedAnswers: IAnswerText[]
  */
-export const handleNormalizeAnswers = (currentContents: any): INormAnswer[] => {
+export const handleNormalizeAnswers = (currentContents: any)  => {
   // used later in the map for removing special characters
   // eslint-disable-next-line prefer-regex-literals
   const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `, 'gm');
   const extractedAnswer = getAnswerFromDelta(currentContents);
+  const rawArray: string[] = [];
   const normalizedAnswer = extractedAnswer.map((answer) => {
     // replaces \n with spaces, maintain everything else
     const raw = `${answer.raw.replace(/\n/g, " ")}`;
+    rawArray.push(raw);
     const norm: INormAnswerSubObj[] = [];
 
     if (answer.norm){
@@ -301,5 +304,6 @@ export const handleNormalizeAnswers = (currentContents: any): INormAnswer[] => {
     }
     return {raw, norm};
   });
-  return normalizedAnswer;
+  const rawAnswer = rawArray.join('').trim();
+  return {normalizedAnswer, rawAnswer};
 };

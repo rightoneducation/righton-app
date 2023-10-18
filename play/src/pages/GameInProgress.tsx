@@ -184,7 +184,7 @@ export default function GameInProgress({
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({answer}));
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id);
       setAnswerContent(answer);
       setDisplaySubmitted(true);
@@ -211,7 +211,6 @@ export default function GameInProgress({
 
   const handleSelectAnswer = (index: number) => {
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify({ 
-        rawAnswer: index,
         multiChoiceAnswerIndex: index, 
         isSubmitted: false,
         currentState,

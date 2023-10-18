@@ -18,7 +18,8 @@ export interface INormAnswer {
 }
 
 export interface ITeamAnswerContent {
-  rawAnswer: string | number; 
+  delta?: string;
+  rawAnswer?: string; 
   normAnswer?: INormAnswer[];
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
