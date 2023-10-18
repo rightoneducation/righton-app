@@ -42,11 +42,10 @@ export default function OpenAnswerCard({
   const formats = [
     'formula'
   ];
-
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
   const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
-    return inputAnswer.rawAnswer ?? [];
+    return inputAnswer.delta ?? [];
   };
 
   const [editorContents, setEditorContents] = useState<any>(() => insertQuillDelta(answerContent));
@@ -55,9 +54,10 @@ export default function OpenAnswerCard({
   const handleEditorContentsChange = (content: any, delta: any, source: any, editor: any) => {
     const currentAnswer = editor.getContents();
     const extractedAnswer: ITeamAnswerContent = {
-      rawAnswer: currentAnswer,
+      delta: currentAnswer,
       currentState,
-      currentQuestionIndex
+      currentQuestionIndex,
+      isSubmitted: answerContent.isSubmitted,
     };
     window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(extractedAnswer));
     setEditorContents(currentAnswer);
@@ -66,8 +66,9 @@ export default function OpenAnswerCard({
   const handleNormalizeAnswerOnSubmit = (currentContents: any) => {
     const normalizedAnswers =  handleNormalizeAnswers(currentContents);
     const packagedAnswer: ITeamAnswerContent = {
-      rawAnswer: currentContents,
-      normAnswer: normalizedAnswers,
+      delta: currentContents,
+      rawAnswer: normalizedAnswers.rawAnswer,
+      normAnswer: normalizedAnswers.normalizedAnswer,
       currentState,
       currentQuestionIndex,
     } as ITeamAnswerContent;
