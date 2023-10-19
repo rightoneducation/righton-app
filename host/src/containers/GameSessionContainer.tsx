@@ -12,7 +12,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { buildShortAnswerResponses } from '../lib/HelperFunctions';
+import { buildShortAnswerResponses, getQuestionChoices } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -34,7 +34,7 @@ const GameSessionContainer = () => {
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
-  const [shortAnswerResponses, setShortanswerResponse] = useState([]);
+  const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -147,19 +147,29 @@ const GameSessionContainer = () => {
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
-        console.log(teamAnswerResponse);
-        console.log(buildShortAnswerResponses(gameSession.choices, teamAnswerResponse));
-        setTeamsArray((prevState) => {
-          let newState = JSON.parse(JSON.stringify(prevState));
-          newState.forEach((team) => {
-            team.teamMembers &&
-              team.teamMembers.forEach((teamMember) => {
-                if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
-                  teamMember.answers.push(teamAnswerResponse);
-              });
+        let choices = '';
+        apiClient.getGameSession(gameSessionId).then((response) => {
+          console.log(response);
+          choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
+  
+          console.log(shortAnswerResponses);
+          setShortAnswerResponses((prev) => [
+            ...prev,
+            buildShortAnswerResponses(choices, teamAnswerResponse)
+          ]);
+
+          setTeamsArray((prevState) => {
+            let newState = JSON.parse(JSON.stringify(prevState));
+            newState.forEach((team) => {
+              team.teamMembers &&
+                team.teamMembers.forEach((teamMember) => {
+                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
+                    teamMember.answers.push(teamAnswerResponse);
+                });
+            });
+            console.log(newState);
+            return newState;
           });
-          console.log(newState);
-          return newState;
         });
       },
     );
@@ -286,6 +296,8 @@ const GameSessionContainer = () => {
     const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
     const questionId = currentQuestion.id;
     const order = currentQuestion.order;
+    
+
     if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
       return;
     apiClient

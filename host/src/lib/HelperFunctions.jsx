@@ -3,6 +3,7 @@ import {
   GameSessionState,
   ConfidenceLevel,
 } from '@righton/networking';
+import { parse, evaluate } from 'mathjs';
 /*
  * counts all answers for current question using isChosen, for use in footer progress bar
  * @param {array} answerArray - array of answers for current question
@@ -149,8 +150,6 @@ export const getAnswersByQuestion = (
     let answersArray = new Array(choices.length).fill(0);
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
-    console.log(answers);
-    console.log(choices);
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
         if (answer.text === choice.text) {
@@ -183,27 +182,57 @@ export const getAnswersByQuestion = (
   return { answersArray: [], confidenceArray };
 };
 
-export const isNumeric = (num) => (
-  typeof(num) === 'number' || 
-  typeof(num) === "string" && 
-  num.trim() !== ''
-) && !isNaN(num); // eslint-disable-line no-restricted-globals
+export const determineAnswerType = (answer) => {
+  // check if answer is numeric
+  if (
+    typeof(answer) === 'number' || 
+    typeof(answer) === "string" && 
+    answer.trim() !== ''
+    && !isNaN(answer)
+  ) 
+    return 2; 
+  // check if answer is an expression
+  try {
+    // if mathjs can parse the answer, it's an expression
+    parse(answer)
+    return 1;
+  } catch {
+    // if the parse fails, the answer is a string
+    return 0;
+  }
+};
+
+export const checkEquality = (normValue, correctAnswer, correctAnswerType) => {
+  switch (correctAnswerType){
+    case 0: // string
+    default: 
+      return normValue.includes(correctAnswer);
+    case 1: // expression
+      return evaluate(normValue) === evaluate(correctAnswer);
+    case 2: // number
+      return normValue === Number(correctAnswer);
+  }
+};
 
 export const buildShortAnswerResponses = (choices, newAnswer) => {
-  const correctChoice = choices.find(choice => choice.isAnswer).text;
-  const isAnswerNumeric = isNumeric(correctChoice);
+  const correctAnswer = choices.find(choice => choice.isAnswer).text;
+  const correctAnswerType = determineAnswerType(correctAnswer);
+
+  const responses = [];
   let isPlayerCorrect = false;
   newAnswer.answerContent.normAnswer.forEach((answer) => {
     answer.norm.forEach((norm) => {
-      if (isAnswerNumeric && norm.type === 1 && norm.value === correctChoice){
+      if (norm.type === correctAnswerType && 
+        checkEquality(norm.value, correctAnswer, correctAnswerType)) {
           isPlayerCorrect = true;
-      } else if (!isAnswerNumeric && norm.type === 0 && norm.value === correctChoice) {
-          isPlayerCorrect = true;
+          responses.push(norm.value);
       }
     });
   });
       
   if (!isPlayerCorrect){
-    choices.add(newAnswer.answerContent.rawAnswer);
+    responses.push(newAnswer.answerContent.rawAnswer);
   }
+  console.log(responses);
+  return responses;
 };
