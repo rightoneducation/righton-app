@@ -6,8 +6,8 @@ import {
   isNullOrUndefined,
   ConfidenceLevel,
   ITeamAnswerContent,
+  IExtractedAnswer,
   INormAnswer,
-  INormAnswerSubObj
 } from '@righton/networking';
 import nlp from 'compromise';
 import { InputPlaceholder, StorageKey, LocalModel, AnswerType, StorageKeyAnswer } from './PlayModels';
@@ -59,11 +59,8 @@ export const checkForSubmittedAnswerOnRejoin = (
     delta: '',
     rawAnswer: '',
     normAnswer: [{
-      raw: '',
-      norm: [{
-        value: '',
-        type: AnswerType.TEXT
-      }]
+      value: '',
+      type: AnswerType.TEXT
     }],
     multiChoiceAnswerIndex: null,
     isSubmitted: false,
@@ -209,30 +206,24 @@ export const teamSorter = (inputTeams: ITeam[], totalTeams: number) => {
 };
 
 // full normalization will be performed only on submitting answer
-export const getAnswerFromDelta = (currentContents: any): INormAnswer[] => {
-  const answer: INormAnswer[] = [];
+export const getAnswerFromDelta = (currentContents: any): IExtractedAnswer[] => {
+  const answer: IExtractedAnswer[] = [];
   currentContents.forEach((op: any) => {
     if(op.insert?.formula) {
       answer.push( {
-        raw: op.insert.formula,
-        norm: [{ 
-          value: op.insert.formula,
-          type: AnswerType.FORMULA
-        }], 
+        value: op.insert.formula,
+        type: AnswerType.FORMULA
       });
       return;
     }
     if(op.insert !== ' \n') { // skips space and linebreak quill adds at the end of a formula
       answer.push( {
-        raw: op.insert, 
-        norm: [{
-          value: op.insert,
-          type: AnswerType.TEXT
-        }],
+        value: op.insert, 
+        type: AnswerType.TEXT,
       });
     }
   });
-  return answer as INormAnswer[];
+  return answer as IExtractedAnswer[];
 };
 
 /**
@@ -262,18 +253,18 @@ export const handleNormalizeAnswers = (currentContents: any)  => {
   const specialCharsRegex = new RegExp(`[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `, 'gm');
   const extractedAnswer = getAnswerFromDelta(currentContents);
   const rawArray: string[] = [];
-  const normalizedAnswer = extractedAnswer.map((answer) => {
-    // replaces \n with spaces, maintain everything else
-    const raw = `${answer.raw.replace(/\n/g, " ")}`;
-    rawArray.push(raw);
-    const norm: INormAnswerSubObj[] = [];
 
-    if (answer.norm){
-      answer.norm.forEach((subAnswer) => {
-        if (subAnswer.type === AnswerType.FORMULA) {
+  const normalizedAnswer: INormAnswer[] = extractedAnswer.reduce<INormAnswer[]>((acc: INormAnswer[], answer) => {
+    // replaces \n with spaces, maintain everything else
+    const raw = `${answer.value.replace(/\n/g, " ")}`;
+    rawArray.push(raw);
+    const norm: INormAnswer[] = [];
+
+    if (answer){
+        if (answer.type === AnswerType.FORMULA) {
           // 1. answer is a formula
           // removes all spaces
-          norm.push({ value: raw.replace(/(\r\n|\n|\r|" ")/gm, ""), type: AnswerType.FORMULA });
+          norm.push({value: raw.replace(/(\r\n|\n|\r|" ")/gm, ""), type: AnswerType.FORMULA });
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
           norm.push({value: Number(raw), type: AnswerType.NUMBER});
@@ -299,11 +290,10 @@ export const handleNormalizeAnswers = (currentContents: any)  => {
           // 4. any remaining content remaining is just a plain string 
           //    set normalized input to lower case and remove spaces
           norm.push({value: numbersRemoved.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "").trim(), type: AnswerType.TEXT});
-        } 
-      });
+        }
     }
-    return {raw, norm};
-  });
+    return acc.concat(norm);
+  }, []);
   const rawAnswer = rawArray.join('').trim();
   return {normalizedAnswer, rawAnswer};
 };

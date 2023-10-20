@@ -72,6 +72,7 @@ export default function OpenAnswerCard({
       currentState,
       currentQuestionIndex,
     } as ITeamAnswerContent;
+    console.log(packagedAnswer);
     handleSubmitAnswer(packagedAnswer);
   };
 

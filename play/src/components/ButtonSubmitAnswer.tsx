@@ -42,14 +42,10 @@ export default function ButtonSubmitAnswer({
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
         const answer = {
           rawAnswer: answerText ?? '',
-          normAnswer: [
-            {
-              raw: answerText ?? '',
-              norm: [{ 
-                value: answerText ?? '',
-                type: 0
-              }]
-            } as INormAnswer,
+          normAnswer: [{
+            value: answerText ?? '',
+            type: 0
+          } as INormAnswer,
           ],
           multiChoiceAnswerIndex: selectedAnswer,
           isSubmitted: true, 
