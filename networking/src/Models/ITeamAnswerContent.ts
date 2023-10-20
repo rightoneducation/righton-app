@@ -7,14 +7,13 @@ enum AnswerType {
   NULL
 }
 
-export interface INormAnswerSubObj {
-  value: string | number;
+export interface IExtractedAnswer {
+  value: string;
   type: AnswerType;
 }
-
 export interface INormAnswer {
-  raw: string;
-  norm?: INormAnswerSubObj[];
+  value: string | number;
+  type: AnswerType;
 }
 
 export interface ITeamAnswerContent {
