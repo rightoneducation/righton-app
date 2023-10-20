@@ -40,6 +40,7 @@ export default function GameInProgress({
   responsesRef,
   gameAnswersRef,
   confidenceCardRef,
+  shortAnswerResponses
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {

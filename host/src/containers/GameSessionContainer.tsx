@@ -24,6 +24,7 @@ const GameSessionContainer = () => {
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
+  const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
@@ -34,7 +35,6 @@ const GameSessionContainer = () => {
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
-  const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -141,7 +141,7 @@ const GameSessionContainer = () => {
         }
       },
     );
-
+      
     // set up subscription for teams answering
     let createTeamAnswerSubscription: any | null = null;
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
@@ -149,14 +149,14 @@ const GameSessionContainer = () => {
       (teamAnswerResponse) => {
         let choices = '';
         apiClient.getGameSession(gameSessionId).then((response) => {
-          console.log(response);
           choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
   
-          console.log(shortAnswerResponses);
-          setShortAnswerResponses((prev) => [
-            ...prev,
-            buildShortAnswerResponses(choices, teamAnswerResponse)
-          ]);
+          // this needs to update so that it's just the new answers.
+          // after that we can pass the shortanswerespones as a data object
+          // also need to update short answer responses for better formatting for data object
+          setShortAnswerResponses((prev) => {
+            return buildShortAnswerResponses(prev, choices, teamAnswerResponse)
+          });
 
           setTeamsArray((prevState) => {
             let newState = JSON.parse(JSON.stringify(prevState));
@@ -371,6 +371,7 @@ const GameSessionContainer = () => {
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
           assembleNavDictionary={assembleNavDictionary}
+          shortAnswerResponses={shortAnswerResponses}
         />
       );
     }
@@ -397,6 +398,7 @@ const GameSessionContainer = () => {
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
           assembleNavDictionary={assembleNavDictionary}
+          shortAnswerResponses={shortAnswerResponses}
         />
       );
 

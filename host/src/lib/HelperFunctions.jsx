@@ -202,7 +202,7 @@ export const determineAnswerType = (answer) => {
   }
 };
 
-export const checkEquality = (normValue, correctAnswer, correctAnswerType) => {
+export const checkEqualityWithCorrectAnswer = (normValue, correctAnswer, correctAnswerType) => {
   switch (correctAnswerType){
     case 0: // string
     default: 
@@ -214,25 +214,62 @@ export const checkEquality = (normValue, correctAnswer, correctAnswerType) => {
   }
 };
 
-export const buildShortAnswerResponses = (choices, newAnswer) => {
-  const correctAnswer = choices.find(choice => choice.isAnswer).text;
-  const correctAnswerType = determineAnswerType(correctAnswer);
-
-  const responses = [];
-  let isPlayerCorrect = false;
-  newAnswer.answerContent.normAnswer.forEach((answer) => {
-    answer.norm.forEach((norm) => {
-      if (norm.type === correctAnswerType && 
-        checkEquality(norm.value, correctAnswer, correctAnswerType)) {
-          isPlayerCorrect = true;
-          responses.push(norm.value);
+export const checkEqualityWithOtherAnswers = (normValue, normType, otherAnswer) => {
+  for (let i = 0; i < otherAnswer.answerContent.normAnswer.length; i++) {
+    const answer = otherAnswer.answerContent.normAnswer[i];
+    for (let y = 0; y < answer.norm.length; y++) {
+      const norm = answer.norm[y];
+      if (normType === norm[y].type && checkEqualityWithCorrectAnswer(normValue, norm[y].value, normType)) {
+        return true;
       }
+    };
+  };
+  return false;
+}
+
+export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) => {
+  if (prevShortAnswer.length === 0) {
+    const correctAnswer = choices.find(choice => choice.isAnswer).text;
+    const correctAnswerType = determineAnswerType(correctAnswer);
+
+    prevShortAnswer.push({
+      text: correctAnswer,
+      answer: 'correct',
+      type: correctAnswerType,
+      count: 0,
     });
-  });
-      
-  if (!isPlayerCorrect){
-    responses.push(newAnswer.answerContent.rawAnswer);
   }
-  console.log(responses);
-  return responses;
+
+  let isExistingAnswer = false;
+  outerloop: 
+  for (let i = 0; i < newAnswer.answerContent.normAnswer.length; i++) {
+    const answer = newAnswer.answerContent.normAnswer[i];
+    for (let y = 0; y < answer.norm.length; y++) {
+      const norm = answer.norm[y];
+      if (checkEqualityWithCorrectAnswer(norm.value, prevShortAnswer[0].text, prevShortAnswer[0].type)) {
+        isExistingAnswer = true;
+        prevShortAnswer[0].count += 1;
+        break outerloop;
+      } else {
+        if ( prevShortAnswer.length > 1){
+          for (let z = 1; z < prevShortAnswer.length-1; z++) {
+            if (checkEqualityWithOtherAnswers(norm.value, norm.type, prevShortAnswer[z].answer)) {
+              isExistingAnswer = true;
+              prevShortAnswer[z].count += 1;
+              break outerloop;
+            }
+          }
+        }
+      }
+    };
+  };
+      
+  if (!isExistingAnswer){
+    prevShortAnswer.push({
+      text: newAnswer.answerContent.rawAnswer,
+      answer: newAnswer,
+      count: 1,
+    });
+  }
+  return prevShortAnswer;
 };
