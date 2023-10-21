@@ -38,7 +38,7 @@
     "mime-type": "^4.0.0",
     "path": "^0.12.7",
     "react": "17.0.2",
-    "react-devtools": "^4.25.0",
+    "react-devtools": "^4.28.4",
     "react-dom": "17.0.2",
     "react-native": "0.65.1",
     "react-native-autogrow-textinput": "^5.4.0",
