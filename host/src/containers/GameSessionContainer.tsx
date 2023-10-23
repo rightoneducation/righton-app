@@ -150,7 +150,7 @@ const GameSessionContainer = () => {
         let choices = '';
         apiClient.getGameSession(gameSessionId).then((response) => {
           choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
-  
+          
           // this needs to update so that it's just the new answers.
           // after that we can pass the shortanswerespones as a data object
           // also need to update short answer responses for better formatting for data object

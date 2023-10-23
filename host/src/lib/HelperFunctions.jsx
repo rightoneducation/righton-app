@@ -14,6 +14,12 @@ export const getTotalAnswers = (answerArray) => {
     ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
     : 0;
 };
+
+export const getTotalShortAnswers = (shortAnswerArray) => {
+  return (shortAnswerArray | shortAnswerArray.length > 0)
+    ? shortAnswerArray.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0)
+    : 0;
+};
 /*
  * returns the choices object for an individual question
  * @param {array} questions - array of questions
@@ -152,7 +158,7 @@ export const getAnswersByQuestion = (
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
-        if (answer.text === choice.text) {
+        if (answer.answerContent.rawAnswer === choice.text) {
           answersArray[
             choicesTextArray.indexOf(choice.text)
           ] += 1;
@@ -202,27 +208,25 @@ export const determineAnswerType = (answer) => {
   }
 };
 
-export const checkEqualityWithCorrectAnswer = (normValue, correctAnswer, correctAnswerType) => {
-  switch (correctAnswerType){
+export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnswerType) => {
+  console.log(normValue, prevAnswerValue, prevAnswerType);
+  switch (prevAnswerType){
     case 0: // string
     default: 
-      return normValue.includes(correctAnswer);
+      return normValue.includes(prevAnswerValue);
     case 1: // expression
-      return evaluate(normValue) === evaluate(correctAnswer);
+      return evaluate(normValue) === evaluate(prevAnswerValue);
     case 2: // number
-      return normValue === Number(correctAnswer);
+      return normValue === Number(prevAnswerValue);
   }
 };
 
-export const checkEqualityWithOtherAnswers = (normValue, normType, otherAnswer) => {
-  for (let i = 0; i < otherAnswer.answerContent.normAnswer.length; i++) {
-    const answer = otherAnswer.answerContent.normAnswer[i];
-    for (let y = 0; y < answer.norm.length; y++) {
-      const norm = answer.norm[y];
-      if (normType === norm[y].type && checkEqualityWithCorrectAnswer(normValue, norm[y].value, normType)) {
+export const checkEqualityWithOtherAnswers = (normValue, normType, prevAnswer) => {
+  // loop through each of the normalized answers in each of the previous answers
+  for (let i = 0; i < prevAnswer.normAnswer.length; i++) {
+      if (normType === prevAnswer.normAnswer[i].type && checkEqualityWithPrevAnswer(normValue, prevAnswer.normAnswer[i].value, prevAnswer.normAnswer[i].type)) {
         return true;
       }
-    };
   };
   return false;
 }
@@ -233,43 +237,37 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
     const correctAnswerType = determineAnswerType(correctAnswer);
 
     prevShortAnswer.push({
-      text: correctAnswer,
-      answer: 'correct',
-      type: correctAnswerType,
+      value: correctAnswer,
+      normAnswer: [{
+        value: correctAnswer,
+        type: correctAnswerType,
+      }],
       count: 0,
     });
   }
-
   let isExistingAnswer = false;
-  outerloop: 
+  console.log(newAnswer);
+  outerloop:
+  // for each normalized answer in the newly submitted answer
   for (let i = 0; i < newAnswer.answerContent.normAnswer.length; i++) {
     const answer = newAnswer.answerContent.normAnswer[i];
-    for (let y = 0; y < answer.norm.length; y++) {
-      const norm = answer.norm[y];
-      if (checkEqualityWithCorrectAnswer(norm.value, prevShortAnswer[0].text, prevShortAnswer[0].type)) {
+    // for each answer in the previous short answer array 
+    for (let y = 0; y < prevShortAnswer.length; y++) {
+      if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
-        prevShortAnswer[0].count += 1;
+        prevShortAnswer[y].count += 1;
         break outerloop;
-      } else {
-        if ( prevShortAnswer.length > 1){
-          for (let z = 1; z < prevShortAnswer.length-1; z++) {
-            if (checkEqualityWithOtherAnswers(norm.value, norm.type, prevShortAnswer[z].answer)) {
-              isExistingAnswer = true;
-              prevShortAnswer[z].count += 1;
-              break outerloop;
-            }
-          }
-        }
       }
     };
   };
       
   if (!isExistingAnswer){
     prevShortAnswer.push({
-      text: newAnswer.answerContent.rawAnswer,
-      answer: newAnswer,
+      value: newAnswer.answerContent.rawAnswer,
+      normAnswer: newAnswer.answerContent.normAnswer,
       count: 1,
     });
   }
+  console.log(prevShortAnswer);
   return prevShortAnswer;
 };

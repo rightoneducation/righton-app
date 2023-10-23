@@ -12,14 +12,15 @@ export default function CustomLabel(props) {
     mediumLargePadding,
     defaultVictoryPadding,
     noResponseLabel,
+    isShortAnswerEnabled,
   } = props;
   return (
     <g>
-      {datum.answerCount !== 0 && (
+      {datum.answerCount !== 0 && isShortAnswerEnabled && (
         <VictoryLabel
           {...props}
-          x={defaultVictoryPadding + xSmallPadding}
-          y={y - labelOffset}
+          x={ defaultVictoryPadding + xSmallPadding }
+          y={y- labelOffset}
           dx={0}
           dy={-barThickness / 2 - xSmallPadding}
           textAnchor="start"

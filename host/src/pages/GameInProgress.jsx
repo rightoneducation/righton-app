@@ -9,6 +9,7 @@ import { GameSessionState } from '@righton/networking';
 import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
 import {
   getTotalAnswers,
+  getTotalShortAnswers,
   getQuestionChoices,
   getAnswersByQuestion,
   getTeamByQuestion,
@@ -77,7 +78,7 @@ export default function GameInProgress({
   );
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-  const totalAnswers = getTotalAnswers(answersByQuestion.answersArray);
+  const totalAnswers = isShortAnswerEnabled ? getTotalShortAnswers(shortAnswerResponses) : getTotalAnswers(answersByQuestion.answersArray);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(
     teamsArray,
@@ -94,14 +95,23 @@ export default function GameInProgress({
       answerCount: numPlayers - totalAnswers,
       answerText: 'No response',
     },
-    ...Object.keys(answersByQuestion.answersArray).map((key, index) => ({
-      answerCount: answersByQuestion.answersArray[index],
-      answerChoice: String.fromCharCode(65 + index),
-      // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
-      answerText: questionChoices[index].text,
-    })),
+    ...(
+      isShortAnswerEnabled ? shortAnswerResponses
+      .filter(answer => answer.count > 0)
+      .map((answer, index) => ({ 
+        answerChoice: String.fromCharCode(65 + index),
+        answerCount: answer.count,
+        answerText: answer.value,
+    }))
+  :
+   Object.keys(answersByQuestion.answersArray).map((key, index) => ({
+    answerCount: answersByQuestion.answersArray[index],
+    answerChoice: String.fromCharCode(65 + index),
+    // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+    answerText: questionChoices[index].text,
+  }))),
   ].reverse();
-
+  console.log(data);
   // data object used in Victory graph for confidence responses
   const confidenceData = answersByQuestion.confidenceArray;
 

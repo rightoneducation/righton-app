@@ -30,8 +30,6 @@ export default function ResponsesGraph({
   const largePadding = 24;
   const labelOffset = 3;
   const noResponseLabel = '–';
-
-  const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width : boundingRect.width - (defaultVictoryPadding + largePadding * 2);
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
@@ -123,99 +121,98 @@ export default function ResponsesGraph({
         <Typography className={classes.title}>Number of players</Typography>
       </div>
       <div ref={graphRef}>
-        {data.length > 1 && (
-          <VictoryChart
-            domainPadding={{ x: 36, y: 0 }}
-            padding={{
-              top: mediumPadding,
-              bottom: smallPadding,
-              left: (isShortAnswerEnabled && statePosition < 6) ? smallPadding : defaultVictoryPadding,
-              right: smallPadding,
-            }}
-            containerComponent={
-              <VictoryContainer 
-                style={{
-                touchAction: "auto"
-                }}
+        <VictoryChart
+          domainPadding={{ x: 36, y: 0 }}
+          padding={{
+            top: mediumPadding,
+            bottom: smallPadding,
+            left: (isShortAnswerEnabled && statePosition < 6) ? smallPadding : defaultVictoryPadding,
+            right: smallPadding,
+          }}
+          containerComponent={
+            <VictoryContainer 
+              style={{
+              touchAction: "auto"
+              }}
+            />
+          }
+          theme={customTheme}
+          width={boundingRect.width}
+          height={data.length * 60}
+        >
+          <VictoryAxis
+            standalone={false}
+            tickLabelComponent={
+              <CustomTick
+                mediumPadding={mediumPadding}
+                largePadding={largePadding}
+                data={data}
+                correctChoiceIndex={correctChoiceIndex}
+                statePosition={statePosition}
+                isShortAnswerEnabled={isShortAnswerEnabled}
               />
             }
-            theme={customTheme}
-            width={boundingRect.width}
-            height={300}
-          >
+            
+          />
+          {largestAnswerCount < 5 && (
             <VictoryAxis
+              dependentAxis
+              crossAxis={false}
               standalone={false}
-              tickLabelComponent={
-                <CustomTick
-                  mediumPadding={mediumPadding}
-                  largePadding={largePadding}
-                  data={data}
-                  correctChoiceIndex={correctChoiceIndex}
-                  statePosition={statePosition}
-                  isShortAnswerEnabled={isShortAnswerEnabled}
-                />
-              }
-              domain={[1,6]}
+              orientation="top"
+              tickValues={[0]}
             />
-            {largestAnswerCount < 5 && (
-              <VictoryAxis
-                dependentAxis
-                crossAxis={false}
-                standalone={false}
-                orientation="top"
-                tickValues={[0]}
-              />
-            )}
-            {largestAnswerCount >= 5 && (
-              <VictoryAxis
-                dependentAxis
-                crossAxis={false}
-                standalone={false}
-                orientation="top"
-                tickValues={calculateRoundedTicks()}
-                tickFormat={(tick) => Math.round(tick)}
-              />
-            )}
-            <VictoryBar
-              data={data}
-              y="answerCount"
-              x="answerChoice"
-              horizontal
+          )}
+          {largestAnswerCount >= 5 && (
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
               standalone={false}
-              cornerRadius={{ topLeft: 4, topRight: 4 }}
-              labels={({ datum }) => `${datum.answerCount}`}
-              barWidth={({ datum }) =>
-                datum.answerCount !== 0 ? barThickness : barThicknessZero
-              }
-              animate={{
-                onLoad: { duration: 200 },
-                duration: 200,
-              }}
-              dataComponent={
-                <CustomBar
-                  xSmallPadding={xSmallPadding}
-                  mediumPadding={mediumPadding}
-                  defaultVictoryPadding={defaultVictoryPadding}
-                  selectedWidth={boundingRect.width - defaultVictoryPadding * 2}
-                  selectedHeight={18}
-                  graphClickInfo={graphClickInfo}
-                  handleGraphClick={handleGraphClick}
-                />
-              }
-              labelComponent={
-                <CustomLabel
-                  labelOffset={labelOffset}
-                  barThickness={barThickness}
-                  xSmallPadding={xSmallPadding}
-                  mediumLargePadding={mediumLargePadding}
-                  defaultVictoryPadding={defaultVictoryPadding}
-                  questionChoices={questionChoices}
-                  noResponseLabel={noResponseLabel}
-                />
-              }
+              orientation="top"
+              tickValues={calculateRoundedTicks()}
+              tickFormat={(tick) => Math.round(tick)}
             />
-          </VictoryChart>
-        )}
+          )}
+          <VictoryBar
+            data={data}
+            y="answerCount"
+            x="answerChoice"
+            horizontal
+            standalone={false}
+            cornerRadius={{ topLeft: 4, topRight: 4 }}
+            labels={({ datum }) => `${datum.answerCount}`}
+            barWidth={({ datum }) =>
+              datum.answerCount !== 0 ? barThickness : barThicknessZero
+            }
+            animate={{
+              onLoad: { duration: 200 },
+              duration: 200,
+            }}
+            dataComponent={
+              <CustomBar
+                xSmallPadding={xSmallPadding}
+                mediumPadding={mediumPadding}
+                defaultVictoryPadding={defaultVictoryPadding}
+                selectedWidth={boundingRect.width - defaultVictoryPadding * 2}
+                selectedHeight={18}
+                graphClickInfo={graphClickInfo}
+                handleGraphClick={handleGraphClick}
+              />
+            }
+            labelComponent={
+              <CustomLabel
+                labelOffset={labelOffset}
+                barThickness={barThickness}
+                xSmallPadding={xSmallPadding}
+                mediumLargePadding={mediumLargePadding}
+                defaultVictoryPadding={defaultVictoryPadding}
+                questionChoices={questionChoices}
+                noResponseLabel={noResponseLabel}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+              />
+            }
+          />
+        </VictoryChart>
       </div>
     </div>
   );
