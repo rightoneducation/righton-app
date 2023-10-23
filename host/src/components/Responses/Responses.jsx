@@ -9,7 +9,6 @@ export default function Responses({
   totalAnswers,
   questionChoices,
   statePosition,
-  teamsPickedChoices,
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
@@ -27,7 +26,6 @@ export default function Responses({
         totalAnswers={totalAnswers}
         questionChoices={questionChoices}
         statePosition={statePosition}
-        teamsPickedChoices={teamsPickedChoices}
         graphClickInfo={graphClickInfo}
         isShortAnswerEnabled={isShortAnswerEnabled}
         handleGraphClick={handleGraphClick}

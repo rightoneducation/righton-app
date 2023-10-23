@@ -6,18 +6,14 @@ export default function PlayersSelectedAnswer(props) {
     data,
     graphClickInfo,
     numPlayers,
-    teamsPickedChoices,
-    statePosition,
+    statePosition
   } = props;
-
   const classes = useStyles(props);
   const answerCount = data[graphClickInfo.selectedIndex].answerCount;
   const percentage = (answerCount / numPlayers) * 100;
 
   const selectedBarAnswerText = data[graphClickInfo.selectedIndex].answerText;
-  const teamsWithSelectedAnswer = teamsPickedChoices.filter(
-    (teamChoices) => teamChoices.choiceText === selectedBarAnswerText,
-  );
+  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].answerTeams;
 
   return (
     <div>
@@ -55,7 +51,7 @@ export default function PlayersSelectedAnswer(props) {
       {teamsWithSelectedAnswer.map((teamChoice, index) => (
         <div key={index} className={classes.rectStyle}>
           <Typography className={classes.nameText}>
-            {teamChoice.teamName}
+            {teamChoice}
           </Typography>
         </div>
       ))}
@@ -137,7 +133,7 @@ const useStyles = makeStyles({
   },
   rectStyle: {
     width: '100%',
-    height: '24px',
+    height: '40px',
     color: 'white',
     backgroundColor: '#063772',
     fontSize: '16px',
@@ -145,5 +141,6 @@ const useStyles = makeStyles({
     borderRadius: '8px',
     marginBottom: '8px',
     maxWidth: '500px',
+    boxSizing: 'border-box'
   },
 });

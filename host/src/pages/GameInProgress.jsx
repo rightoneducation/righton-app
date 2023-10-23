@@ -13,6 +13,7 @@ import {
   getQuestionChoices,
   getAnswersByQuestion,
   getTeamByQuestion,
+  getTeamByQuestionShortAnswer
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -79,15 +80,8 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const totalAnswers = isShortAnswerEnabled ? getTotalShortAnswers(shortAnswerResponses) : getTotalAnswers(answersByQuestion.answersArray);
-  console.log(totalAnswers);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-  const teamsPickedChoices = getTeamByQuestion(
-    teamsArray,
-    currentQuestionIndex,
-    questionChoices,
-    questions,
-    currentState,
-  );
+
   const noResponseLabel = '–';
   // data object used in Victory graph for real-time responses
   const data = [
@@ -98,13 +92,15 @@ export default function GameInProgress({
         answerChoice: String.fromCharCode(65 + index),
         answerCount: answer.count,
         answerText: answer.value,
+        answerTeams: answer.teams
     }))
   :
    Object.keys(answersByQuestion.answersArray).map((key, index) => ({
-    answerCount: answersByQuestion.answersArray[index],
+    answerCount: answersByQuestion.answersArray[index].count,
     answerChoice: String.fromCharCode(65 + index),
     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
     answerText: questionChoices[index].text,
+    answerTeams: answersByQuestion.answersArray[index].teams
   }))),
   {
     answerChoice: noResponseLabel,
@@ -112,7 +108,7 @@ export default function GameInProgress({
     answerText: 'No response',
   },
   ].reverse();
-  // console.log(data);
+  console.log(data);
   // data object used in Victory graph for confidence responses
   const confidenceData = answersByQuestion.confidenceArray;
 
@@ -237,7 +233,6 @@ export default function GameInProgress({
             totalAnswers={totalAnswers}
             numPlayers={numPlayers}
             statePosition={statePosition}
-            teamsPickedChoices={teamsPickedChoices}
             data={data}
             confidenceData={confidenceData}
             questionCardRef={questionCardRef}

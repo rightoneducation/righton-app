@@ -28,11 +28,15 @@ export default function ResponsesGraph({
   const mediumPadding = 16;
   const mediumLargePadding = 20;
   const largePadding = 24;
+  const xxLargePadding = 40;
   const labelOffset = 3;
   const noResponseLabel = '–';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
+
+  const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - defaultVictoryPadding : boundingRect.width - (defaultVictoryPadding + largePadding * 2);
+
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const largestAnswerCount = Math.max(
@@ -115,7 +119,7 @@ export default function ResponsesGraph({
       },
     },
   };
-  // console.log(data.length);
+  console.log(data);
   return (
     <div className={classes.container}>
       <div className={classes.titleContainer}>
@@ -195,10 +199,11 @@ export default function ResponsesGraph({
                 xSmallPadding={xSmallPadding}
                 mediumPadding={mediumPadding}
                 defaultVictoryPadding={defaultVictoryPadding}
-                selectedWidth={boundingRect.width - defaultVictoryPadding * 2}
+                selectedWidth={customBarSelectedWidth}
                 selectedHeight={18}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
+                isShortAnswerEnabled={isShortAnswerEnabled}
               />
             }
             labelComponent={

@@ -12,7 +12,7 @@ import { parse, evaluate } from 'mathjs';
  */
 export const getTotalAnswers = (answerArray) => {
   return answerArray 
-    ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+    ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0)
     : 0;
 };
 
@@ -73,45 +73,6 @@ export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
 };
 
 /*
- * returns an array of which team names picked which question choices
- * @param {array} teamsArray - array of teams
- * @param {number} currentQuestionIndex - index of current question
- * @param {array} choices - array of choices for current question
- * @returns {array} teamsPickedChoices - array of objects containing corresponding team names and choice texts
- */
-export const getTeamByQuestion = (
-  teamsArray,
-  currentQuestionIndex,
-  choices,
-  questions,
-  currentState,
-) => {
-  const teamsPickedChoices = [];
-  const currentQuestionId = questions[currentQuestionIndex].id;
-  const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
-  answers.forEach(({team, answer}) => {
-    let isNoResponse = true;
-    choices && choices.forEach(choice => {
-      if (answer.text === choice.text){
-        isNoResponse = false;
-        teamsPickedChoices.push({
-          teamName: team.name,
-          choiceText: choice.text
-        });
-      }
-    });
-
-    if (isNoResponse) {
-      teamsPickedChoices.push({
-        teamName: team.name,
-        choiceText: 'No response'
-      });
-    }
-  });
-  return teamsPickedChoices;
-};
-
-/*
  * returns an array ordered to match the order of answer choices, containing the total number of each answer
  * @param {array} choices - array of choices for current question
  * @param {array} teamsArray - array of teams
@@ -154,7 +115,7 @@ export const getAnswersByQuestion = (
     Object.getPrototypeOf(teamsArray[0]) === Object.prototype
   ) {
     let choicesTextArray = choices.map(choice => choice.text);
-    let answersArray = new Array(choices.length).fill(0);
+    let answersArray = Array.from({length: choices.length}, ()=> ({ count: 0, teams: [] }));
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
     answers.forEach(({ team, answer }) => {
@@ -162,7 +123,8 @@ export const getAnswersByQuestion = (
         if (answer.answerContent.rawAnswer === choice.text) {
           answersArray[
             choicesTextArray.indexOf(choice.text)
-          ] += 1;
+          ].count += 1;
+          answersArray[choicesTextArray.indexOf(choice.text)].teams.push(team.name);
           const index = confidenceLevelsArray.indexOf(
             answer.confidenceLevel,
           );
@@ -237,7 +199,7 @@ export const checkEqualityWithOtherAnswers = (normValue, normType, prevAnswer) =
   return false;
 }
 
-export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) => {
+export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName) => {
   if (prevShortAnswer.length === 0) {
     const correctAnswer = choices.find(choice => choice.isAnswer).text;
     const correctAnswerType = determineAnswerType(correctAnswer);
@@ -251,6 +213,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
       count: 0,
     });
   }
+
   let isExistingAnswer = false;
   outerloop:
   // for each normalized answer in the newly submitted answer
@@ -261,6 +224,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
       if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;
+        prevShortAnswer[y].teams.push(newAnswerTeamName);
         break outerloop;
       }
     };
@@ -271,6 +235,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
       value: newAnswer.answerContent.rawAnswer,
       normAnswer: newAnswer.answerContent.normAnswer,
       count: 1,
+      teams: [newAnswerTeamName]
     });
   }
   return prevShortAnswer;

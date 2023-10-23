@@ -93,7 +93,6 @@ const GameSessionContainer = () => {
       Promise.all(teamDataRequests)
         .then((responses) => {
           setTeamsArray(responses);
-          console.log(responses);
         })
         .catch((reason) => console.log(reason));
     });
@@ -155,24 +154,21 @@ const GameSessionContainer = () => {
         let choices = '';
         apiClient.getGameSession(gameSessionId).then((response) => {
           choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
-          
-          // this needs to update so that it's just the new answers.
-          // after that we can pass the shortanswerespones as a data object
-          // also need to update short answer responses for better formatting for data object
-          setShortAnswerResponses((prev) => {
-            return buildShortAnswerResponses(prev, choices, teamAnswerResponse)
-          });
-
+          let teamName = '';
           setTeamsArray((prevState) => {
             let newState = JSON.parse(JSON.stringify(prevState));
             newState.forEach((team) => {
               team.teamMembers &&
                 team.teamMembers.forEach((teamMember) => {
-                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
+                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId){
                     teamMember.answers.push(teamAnswerResponse);
+                    teamName=team.name;
+                  }
                 });
             });
-            console.log(newState);
+            setShortAnswerResponses((prev) => {
+              return buildShortAnswerResponses(prev, choices, teamAnswerResponse, teamName)
+            });
             return newState;
           });
         });

@@ -22,7 +22,6 @@ export default function GameInProgressContentSwitch ({
     totalAnswers, 
     numPlayers, 
     statePosition, 
-    teamsPickedChoices, 
     questionCardRef, 
     gameAnswersRef,
     confidenceCardRef,
@@ -57,7 +56,6 @@ export default function GameInProgressContentSwitch ({
               totalAnswers={totalAnswers}
               questionChoices={questionChoices}
               statePosition={statePosition}
-              teamsPickedChoices={teamsPickedChoices}
               graphClickInfo={graphClickInfo}
               isShortAnswerEnabled={isShortAnswerEnabled}
               handleGraphClick={handleGraphClick}
@@ -88,7 +86,6 @@ export default function GameInProgressContentSwitch ({
               totalAnswers={totalAnswers}
               numPlayers={numPlayers}
               statePosition={statePosition}
-              teamsPickedChoices={teamsPickedChoices}
             />
           </div>
         </>
@@ -102,17 +99,17 @@ export default function GameInProgressContentSwitch ({
                 totalAnswers={totalAnswers}
                 questionChoices={questionChoices}
                 statePosition={statePosition}
-                teamsPickedChoices={teamsPickedChoices}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
+                isShortAnswerEnabled={isShortAnswerEnabled}
               />
               <SelectedAnswer
                 data={data}
                 graphClickInfo={graphClickInfo}
                 correctChoiceIndex={correctChoiceIndex}
                 numPlayers={numPlayers}
-                teamsPickedChoices={teamsPickedChoices}
                 statePosition={statePosition}
+                isShortAnswerEnabled={isShortAnswerEnabled}
               />
             </div>
           ) : (
