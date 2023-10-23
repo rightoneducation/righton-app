@@ -115,12 +115,14 @@ export default function ResponsesGraph({
       },
     },
   };
+  // console.log(data.length);
   return (
     <div className={classes.container}>
       <div className={classes.titleContainer}>
         <Typography className={classes.title}>Number of players</Typography>
       </div>
       <div ref={graphRef}>
+        {data.length > 1 && (
         <VictoryChart
           domainPadding={{ x: 36, y: 0 }}
           padding={{
@@ -213,6 +215,7 @@ export default function ResponsesGraph({
             }
           />
         </VictoryChart>
+        )}
       </div>
     </div>
   );

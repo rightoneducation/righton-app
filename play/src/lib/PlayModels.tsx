@@ -194,11 +194,3 @@ export const StorageKey = 'rightOn';
  * kept separate from StorageKey so that timer and answer updates don't conflict
  */
 export const StorageKeyAnswer = 'rightOnAnswer';
-
-export enum AnswerType {
-  MULTICHOICE,
-  TEXT,
-  NUMBER,
-  FORMULA,
-  NULL
-}

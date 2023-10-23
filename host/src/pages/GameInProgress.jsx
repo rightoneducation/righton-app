@@ -111,7 +111,7 @@ export default function GameInProgress({
     answerText: questionChoices[index].text,
   }))),
   ].reverse();
-  console.log(data);
+  // console.log(data);
   // data object used in Victory graph for confidence responses
   const confidenceData = answersByQuestion.confidenceArray;
 

@@ -1,9 +1,9 @@
 import { GameSessionState } from "../AWSMobileApi";
-enum AnswerType {
+export enum AnswerType {
   MULTICHOICE,
-  TEXT,
+  STRING,
   NUMBER,
-  FORMULA,
+  EXPRESSION,
   NULL
 }
 

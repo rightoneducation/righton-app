@@ -2,6 +2,7 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
+  AnswerType,
 } from '@righton/networking';
 import { parse, evaluate } from 'mathjs';
 /*
@@ -196,27 +197,33 @@ export const determineAnswerType = (answer) => {
     answer.trim() !== ''
     && !isNaN(answer)
   ) 
-    return 2; 
+    return AnswerType.NUMBER; 
   // check if answer is an expression
   try {
-    // if mathjs can parse the answer, it's an expression
-    parse(answer)
-    return 1;
+    // if the answer contains mathematical operators and mathjs can parse the answer, it's an expression
+    const expRegex = /[+\-*/^().]/;
+    if (expRegex.test(answer) && parse(answer))
+      return AnswerType.EXPRESSION;
+    return AnswerType.STRING;
   } catch {
     // if the parse fails, the answer is a string
-    return 0;
+    return AnswerType.STRING;
   }
 };
 
 export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnswerType) => {
   console.log(normValue, prevAnswerValue, prevAnswerType);
   switch (prevAnswerType){
-    case 0: // string
+    case AnswerType.STRING: // string
     default: 
       return normValue.includes(prevAnswerValue);
-    case 1: // expression
-      return evaluate(normValue) === evaluate(prevAnswerValue);
-    case 2: // number
+    case AnswerType.EXPRESSION: // expression
+      try { 
+        return evaluate(normValue) === evaluate(prevAnswerValue);
+      } catch {
+        return false;
+      }
+    case AnswerType.NUMBER: // number
       return normValue === Number(prevAnswerValue);
   }
 };
@@ -253,6 +260,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
     const answer = newAnswer.answerContent.normAnswer[i];
     // for each answer in the previous short answer array 
     for (let y = 0; y < prevShortAnswer.length; y++) {
+      console.log(prevShortAnswer[y]);
       if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;

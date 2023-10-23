@@ -29,7 +29,7 @@ import {
   fetchLocalData,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, StorageKeyAnswer, AnswerType } from '../lib/PlayModels';
+import { ErrorType, LocalModel, StorageKeyAnswer } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -127,7 +127,7 @@ export default function GameInProgress({
       : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
-  const isShortAnswerEnabled = true; // currentQuestion?.isShortAnswerEnabled;
+  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
 
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
