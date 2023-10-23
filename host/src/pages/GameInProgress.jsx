@@ -79,6 +79,7 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const totalAnswers = isShortAnswerEnabled ? getTotalShortAnswers(shortAnswerResponses) : getTotalAnswers(answersByQuestion.answersArray);
+  console.log(totalAnswers);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const teamsPickedChoices = getTeamByQuestion(
     teamsArray,
@@ -90,11 +91,6 @@ export default function GameInProgress({
   const noResponseLabel = '–';
   // data object used in Victory graph for real-time responses
   const data = [
-    {
-      answerChoice: noResponseLabel,
-      answerCount: numPlayers - totalAnswers,
-      answerText: 'No response',
-    },
     ...(
       isShortAnswerEnabled ? shortAnswerResponses
       .filter(answer => answer.count > 0)
@@ -110,6 +106,11 @@ export default function GameInProgress({
     // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
     answerText: questionChoices[index].text,
   }))),
+  {
+    answerChoice: noResponseLabel,
+    answerCount: numPlayers - totalAnswers,
+    answerText: 'No response',
+  },
   ].reverse();
   // console.log(data);
   // data object used in Victory graph for confidence responses

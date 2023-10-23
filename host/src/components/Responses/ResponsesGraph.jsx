@@ -98,13 +98,13 @@ export default function ResponsesGraph({
       style: {
         data: {
           fill: ({ datum, index }) =>
-            index === data.length - 1 ? 'transparent' : '#FFF',
+            index === 0 ? 'transparent' : '#FFF',
           stroke: '#FFF',
           strokeWidth: 1,
         },
         labels: {
           fill: ({ datum, index }) =>
-            index === data.length - 1 || datum.answerCount === 0
+            index === 0 || datum.answerCount === 0
               ? '#FFF'
               : '#384466',
           fontFamily: 'Rubik',
@@ -122,7 +122,7 @@ export default function ResponsesGraph({
         <Typography className={classes.title}>Number of players</Typography>
       </div>
       <div ref={graphRef}>
-        {data.length > 1 && (
+        {(isShortAnswerEnabled ? data.length >= 1 : data.length > 1) && (
         <VictoryChart
           domainPadding={{ x: 36, y: 0 }}
           padding={{
@@ -140,7 +140,7 @@ export default function ResponsesGraph({
           }
           theme={customTheme}
           width={boundingRect.width}
-          height={data.length * 60}
+          height={data.length * 65}
         >
           <VictoryAxis
             standalone={false}

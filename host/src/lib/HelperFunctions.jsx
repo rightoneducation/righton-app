@@ -212,7 +212,6 @@ export const determineAnswerType = (answer) => {
 };
 
 export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnswerType) => {
-  console.log(normValue, prevAnswerValue, prevAnswerType);
   switch (prevAnswerType){
     case AnswerType.STRING: // string
     default: 
@@ -253,14 +252,12 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
     });
   }
   let isExistingAnswer = false;
-  console.log(newAnswer);
   outerloop:
   // for each normalized answer in the newly submitted answer
   for (let i = 0; i < newAnswer.answerContent.normAnswer.length; i++) {
     const answer = newAnswer.answerContent.normAnswer[i];
     // for each answer in the previous short answer array 
     for (let y = 0; y < prevShortAnswer.length; y++) {
-      console.log(prevShortAnswer[y]);
       if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;
@@ -276,6 +273,5 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer) =
       count: 1,
     });
   }
-  console.log(prevShortAnswer);
   return prevShortAnswer;
 };

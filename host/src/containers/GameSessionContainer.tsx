@@ -76,6 +76,10 @@ const GameSessionContainer = () => {
         !isNullOrUndefined(response.currentQuestionIndex) &&
         !isNullOrUndefined(response.questions[response.currentQuestionIndex])
       ) {
+        setIsConfidenceEnabled(
+          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+        );
+        setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -89,6 +93,7 @@ const GameSessionContainer = () => {
       Promise.all(teamDataRequests)
         .then((responses) => {
           setTeamsArray(responses);
+          console.log(responses);
         })
         .catch((reason) => console.log(reason));
     });

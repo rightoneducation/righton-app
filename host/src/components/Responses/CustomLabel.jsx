@@ -19,7 +19,7 @@ export default function CustomLabel(props) {
       {datum.answerCount !== 0 && isShortAnswerEnabled && (
         <VictoryLabel
           {...props}
-          x={ defaultVictoryPadding + xSmallPadding }
+          x={isShortAnswerEnabled ? mediumLargePadding : defaultVictoryPadding + xSmallPadding }
           y={y- labelOffset}
           dx={0}
           dy={-barThickness / 2 - xSmallPadding}
