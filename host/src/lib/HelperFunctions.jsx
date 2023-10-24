@@ -11,16 +11,12 @@ import { parse, evaluate } from 'mathjs';
  * @returns {number} count - number of answers for current question
  */
 export const getTotalAnswers = (answerArray) => {
+  console.log(answerArray);
   return answerArray 
     ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0)
     : 0;
 };
 
-export const getTotalShortAnswers = (shortAnswerArray) => {
-  return (shortAnswerArray | shortAnswerArray.length > 0)
-    ? shortAnswerArray.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0)
-    : 0;
-};
 /*
  * returns the choices object for an individual question
  * @param {array} questions - array of questions
@@ -46,7 +42,7 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
 * @param {number} currentQuestionId - id of current question
 * @returns {array} results - array of objects containing corresponding team and answer data
 */
-export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
+export const extractAnswers =  (teamsArray, currentState, currentQuestionId) => {
   let results = [];
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
@@ -70,6 +66,16 @@ export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
   return results;
 };
 
+const createBlankConfidenceArray = () => { 
+  return Object.keys(ConfidenceLevel).map((key) => {
+    return {
+      confidence: ConfidenceLevel[key],
+      correct: 0,
+      incorrect: 0,
+      players: [],
+    };
+  });
+};
 /*
  * returns an array ordered to match the order of answer choices, containing the total number of each answer
  * @param {array} choices - array of choices for current question
@@ -88,7 +94,7 @@ export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
  *   }]
  * }
  */
-export const getAnswersByQuestion = (
+export const getMultiChoiceAnswers = (
   choices,
   teamsArray,
   currentQuestionIndex,
@@ -98,14 +104,7 @@ export const getAnswersByQuestion = (
 ) => {
   // create this to use as an index reference for the confidence levels to avoid find/findIndex
   const confidenceLevelsArray = Object.values(ConfidenceLevel);
-  let confidenceArray = Object.keys(ConfidenceLevel).map((key) => {
-    return {
-      confidence: ConfidenceLevel[key],
-      correct: 0,
-      incorrect: 0,
-      players: [],
-    };
-  });
+  let confidenceArray = createBlankConfidenceArray();
   if (
     teamsArray.length !== 0 &&
     questions &&
@@ -150,6 +149,39 @@ export const getAnswersByQuestion = (
     });
     return { answersArray, confidenceArray };
   }
+  return { answersArray: [], confidenceArray };
+};
+
+export const getShortAnswers = (shortAnswerResponses) => {
+  // create this to use as an index reference for the confidence levels to avoid find/findIndex
+  const confidenceLevelsArray = Object.values(ConfidenceLevel);
+  let confidenceArray = createBlankConfidenceArray();
+  if (shortAnswerResponses && shortAnswerResponses.length > 0) {
+    shortAnswerResponses.forEach((answer) => {
+      if (answer.teams){
+        answer.teams.forEach((team) => {
+          console.log(team);
+          const index = confidenceLevelsArray.indexOf(team.confidence);
+          if (answer.isCorrect) {
+            confidenceArray[index].correct += 1;
+            confidenceArray[index].players.push({
+              name: team.team,
+              answer: answer.value,
+              isCorrect: true,
+            });
+          } else {
+            confidenceArray[index].incorrect += 1;
+            confidenceArray[index].players.push({
+              name: team.team,
+              answer: answer.value,
+              isCorrect: false,
+            });
+          }
+        });
+      }
+    });
+    return { answersArray: shortAnswerResponses, confidenceArray};
+  };
   return { answersArray: [], confidenceArray };
 };
 
@@ -228,7 +260,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;
-        prevShortAnswer[y].teams.push(newAnswerTeamName);
+        prevShortAnswer[y].teams.push({team: newAnswerTeamName, confidence: newAnswer.confidenceLevel});
         break outerloop;
       }
     };
@@ -240,7 +272,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       normAnswer: newAnswer.answerContent.normAnswer,
       isCorrect: false,
       count: 1,
-      teams: [newAnswerTeamName]
+      teams: [{team: newAnswerTeamName, confidence: newAnswer.confidenceLevel}]
     });
   }
   return prevShortAnswer;
@@ -248,46 +280,40 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
 
 
 export const buildVictoryDataObject = ( 
-  isShortAnswerEnabled, 
-  noResponseLabel, 
-  numPlayers,
-  totalAnswers, 
-  shortAnswerResponses, 
-  answersByQuestion, 
-  questionChoices
+  answers, 
+  questionChoices,
+  noResponseObject
   ) => {
-  const noResponseObject = {
-    answerChoice: noResponseLabel,
-    answerCount: numPlayers - totalAnswers,
-    answerText: 'No response',
-    answerCorrect: false,
-  };
-  
-  if (isShortAnswerEnabled) {
+
+  if (!isNullOrUndefined(answers.answersArray)){
     return [
       noResponseObject,
-      ...shortAnswerResponses
-        .filter(answer => answer.count > 0)
-        .map((answer, index) => ({ 
-          answerChoice: String.fromCharCode(65 + index),
-          answerCount: answer.count,
-          answerText: answer.value,
-          answerTeams: answer.teams,
-          answerCorrect: answer.isCorrect
-      }))
-    ]
-  };
-  if (!isNullOrUndefined(answersByQuestion.answersArray)){
-    return [
-      noResponseObject,
-      ...Object.keys(answersByQuestion.answersArray).map((key, index) => ({
-        answerCount: answersByQuestion.answersArray[index].count,
+      ...Object.keys(answers.answersArray).map((key, index) => ({
+        answerCount: answers.answersArray[index].count,
         answerChoice: String.fromCharCode(65 + index),
         answerText: questionChoices[index].text,
-        answerTeams: answersByQuestion.answersArray[index].teams,
-        answerCorrect: answersByQuestion.answersArray[index].isCorrect
+        answerTeams: answers.answersArray[index].teams,
+        answerCorrect: answers.answersArray[index].isCorrect
       })).reverse(),
     ];
   }
   return [];
 }
+
+export const buildVictoryDataObjectShortAnswer = (
+  shortAnswerResponses, 
+  noResponseObject
+) => {
+  return [
+    noResponseObject,
+    ...shortAnswerResponses
+      .filter(answer => answer.count > 0)
+      .map((answer, index) => ({ 
+        answerChoice: String.fromCharCode(65 + index),
+        answerCount: answer.count,
+        answerText: answer.value,
+        answerTeams: answer.teams,
+        answerCorrect: answer.isCorrect
+    }))
+  ]
+};

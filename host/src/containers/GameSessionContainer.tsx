@@ -24,6 +24,10 @@ const GameSessionContainer = () => {
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
+  // we're going to set this default condition to a query to the question object
+  // we're going to update the question object after the shortanswerresponses object is updated in the create team answer subscription
+  // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
+  // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -180,6 +184,7 @@ const GameSessionContainer = () => {
     updateTeamAnswerSubscription = apiClient.subscribeUpdateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
+        let teamName = '';
         setTeamsArray((prevState) => {
           let newState = JSON.parse(JSON.stringify(prevState));
           newState.forEach((team) => {
@@ -190,11 +195,23 @@ const GameSessionContainer = () => {
                     if (answer.id === teamAnswerResponse.id)
                       answer.confidenceLevel =
                         teamAnswerResponse.confidenceLevel;
+                      teamName = team.name;
                   });
                 }
               });
           });
           return newState;
+        });
+        setShortAnswerResponses((existingAnswers) => {
+          let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
+          newShortAnswers.forEach((answer) => {
+            answer.teams.forEach((answerTeam) => {
+              if (answerTeam.team === teamName) {
+                answerTeam.confidence = teamAnswerResponse.confidenceLevel;   
+              }
+            })
+          });
+          return newShortAnswers;
         });
       },
     );

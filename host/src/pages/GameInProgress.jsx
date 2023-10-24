@@ -9,10 +9,11 @@ import { GameSessionState } from '@righton/networking';
 import GameInProgressContentSwitch from '../components/GameInProgressContentSwitch';
 import {
   getTotalAnswers,
-  getTotalShortAnswers,
   getQuestionChoices,
-  getAnswersByQuestion,
-  buildVictoryDataObject
+  getShortAnswers,
+  getMultiChoiceAnswers,
+  buildVictoryDataObject,
+  buildVictoryDataObjectShortAnswer
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -61,70 +62,56 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
-  const answersByQuestion = useMemo(
+  const answers = useMemo(
     () =>
-      getAnswersByQuestion(
-        questionChoices,
-        teamsArray,
-        currentQuestionIndex,
-        questions,
-        currentState,
-        correctChoiceIndex
+    (isShortAnswerEnabled 
+      ? getShortAnswers(
+          shortAnswerResponses
+        )
+      : getMultiChoiceAnswers(
+          questionChoices,
+          teamsArray,
+          currentQuestionIndex,
+          questions,
+          currentState,
+          correctChoiceIndex,
+        )
       ),
     [
+      shortAnswerResponses,
       questionChoices,
       teamsArray,
       currentQuestionIndex,
       questions,
       currentState,
+      correctChoiceIndex
     ],
   );
-  const totalAnswers = isShortAnswerEnabled ? getTotalShortAnswers(shortAnswerResponses) : getTotalAnswers(answersByQuestion.answersArray);
+  const totalAnswers = getTotalAnswers(answers.answersArray);
+
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   const noResponseLabel = '–';
+  const noResponseObject = {
+    answerChoice: noResponseLabel,
+    answerCount: numPlayers - totalAnswers,
+    answerText: 'No response',
+    answerCorrect: false,
+  };
   // data object used in Victory graph for real-time responses
-  const data = buildVictoryDataObject(
-    isShortAnswerEnabled,
-    noResponseLabel, 
-    numPlayers, 
-    totalAnswers, 
-    shortAnswerResponses, 
-    answersByQuestion, 
-    questionChoices,
-    correctChoiceIndex
-  );
+  const data = isShortAnswerEnabled 
+    ? buildVictoryDataObjectShortAnswer(
+        shortAnswerResponses, 
+        noResponseObject
+      ) 
+    : buildVictoryDataObject(
+        answers, 
+        questionChoices,
+        noResponseObject
+      );
   
-  
-  // [
-  //   {
-  //     answerChoice: noResponseLabel,
-  //     answerCount: numPlayers - totalAnswers,
-  //     answerText: 'No response',
-  //   },
-  //   ...(
-  //     isShortAnswerEnabled ? shortAnswerResponses
-  //     .filter(answer => answer.count > 0)
-  //     .map((answer, index) => ({ 
-  //       answerChoice: String.fromCharCode(65 + index),
-  //       answerCount: answer.count,
-  //       answerText: answer.value,
-  //       answerTeams: answer.teams,
-  //       answerCorrect: answer.isCorrect
-  //   }))
-  // :
-  //  Object.keys(answersByQuestion.answersArray).map((key, index) => ({
-  //   answerCount: answersByQuestion.answersArray[index].count,
-  //   answerChoice: String.fromCharCode(65 + index),
-  //   // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
-  //   answerText: questionChoices[index].text,
-  //   answerTeams: answersByQuestion.answersArray[index].teams
-  // })))
-  // ];
-
-  // const dataMultiChoice = data.reverse();
-
   // data object used in Victory graph for confidence responses
-  const confidenceData = answersByQuestion.confidenceArray;
+  const confidenceData = answers.confidenceArray;
+  // console.log(confidenceData);
 
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
@@ -243,7 +230,7 @@ export default function GameInProgress({
             questions={questions}
             questionChoices={questionChoices}
             currentQuestionIndex={currentQuestionIndex}
-            answersByQuestion={answersByQuestion.answersArray}
+            answers={answers.answersArray}
             totalAnswers={totalAnswers}
             numPlayers={numPlayers}
             statePosition={statePosition}

@@ -18,7 +18,7 @@ export default function GameInProgressContentSwitch ({
     responsesRef,
     handleGraphClick,
     currentQuestionIndex, 
-    answersByQuestion, 
+    answers, 
     totalAnswers, 
     numPlayers, 
     statePosition, 
@@ -67,7 +67,7 @@ export default function GameInProgressContentSwitch ({
             <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
               <ConfidenceResponseCard
                 confidenceData={confidenceData}
-                orderedAnswers={answersByQuestion}
+                orderedAnswers={answers}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
               />
@@ -82,7 +82,7 @@ export default function GameInProgressContentSwitch ({
               questions={questions}
               questionChoices={questionChoices}
               currentQuestionIndex={currentQuestionIndex}
-              answersByQuestion={answersByQuestion}
+              answers={answers}
               totalAnswers={totalAnswers}
               numPlayers={numPlayers}
               statePosition={statePosition}
@@ -116,7 +116,7 @@ export default function GameInProgressContentSwitch ({
             <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
               <ConfidenceResponseCard
                 confidenceData={confidenceData}
-                orderedAnswers={answersByQuestion}
+                orderedAnswers={answers}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
               />
