@@ -11,7 +11,6 @@ import { parse, evaluate } from 'mathjs';
  * @returns {number} count - number of answers for current question
  */
 export const getTotalAnswers = (answerArray) => {
-  console.log(answerArray);
   return answerArray 
     ? answerArray.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0)
     : 0;

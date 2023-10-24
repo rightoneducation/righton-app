@@ -96,6 +96,23 @@ const GameSessionContainer = () => {
 
       Promise.all(teamDataRequests)
         .then((responses) => {
+          // if shortAnswer is enabled we need to rebuild the shortAnswerResponses object on refresh
+          if (response.questions[response.currentQuestionIndex].isShortAnswerEnabled === true) {
+            responses.forEach((team) => {
+              team.teamMembers && team.teamMembers.forEach((teamMember) => {
+                teamMember.answers && teamMember.answers.forEach((answer) => {
+                  if (answer.questionId === response.questions[response.currentQuestionIndex].id 
+                    && (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) 
+                    || (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && answer.isTrickAnswer)
+                  ) {
+                    setShortAnswerResponses((prev) => {
+                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
+                    });
+                  }
+                });
+              });
+            });
+          }
           setTeamsArray(responses);
         })
         .catch((reason) => console.log(reason));
