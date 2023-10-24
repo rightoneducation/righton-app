@@ -48,7 +48,6 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
 */
 export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
   let results = [];
-
   teamsArray.forEach(team => {
     team.teamMembers && team.teamMembers.forEach(teamMember => {
       teamMember.answers && teamMember.answers.forEach(answer => {
@@ -68,7 +67,6 @@ export const extractAnswers = (teamsArray, currentState, currentQuestionId) => {
       });
     });
   });
-
   return results;
 };
 
@@ -96,6 +94,7 @@ export const getAnswersByQuestion = (
   currentQuestionIndex,
   questions,
   currentState,
+  correctChoiceIndex
 ) => {
   // create this to use as an index reference for the confidence levels to avoid find/findIndex
   const confidenceLevelsArray = Object.values(ConfidenceLevel);
@@ -115,16 +114,12 @@ export const getAnswersByQuestion = (
     Object.getPrototypeOf(teamsArray[0]) === Object.prototype
   ) {
     let choicesTextArray = choices.map(choice => choice.text);
-    let answersArray = Array.from({length: choices.length}, ()=> ({ count: 0, teams: [] }));
+    let answersArray = Array.from({length: choices.length}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex-1 ? true : false }));
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
         if (answer.answerContent.rawAnswer === choice.text) {
-          answersArray[
-            choicesTextArray.indexOf(choice.text)
-          ].count += 1;
-          answersArray[choicesTextArray.indexOf(choice.text)].teams.push(team.name);
           const index = confidenceLevelsArray.indexOf(
             answer.confidenceLevel,
           );
@@ -135,6 +130,9 @@ export const getAnswersByQuestion = (
               answer: choice.text,
               isCorrect: true,
             });
+            answersArray[
+              choicesTextArray.indexOf(choice.text)
+            ].isCorrect = true;
           } else {
             confidenceArray[index].incorrect += 1;
             confidenceArray[index].players.push({
@@ -143,6 +141,10 @@ export const getAnswersByQuestion = (
               isCorrect: false,
             });
           }
+          answersArray[
+            choicesTextArray.indexOf(choice.text)
+          ].count += 1;
+          answersArray[choicesTextArray.indexOf(choice.text)].teams.push(team.name);
         }
       });
     });
@@ -206,11 +208,13 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
 
     prevShortAnswer.push({
       value: correctAnswer,
+      isCorrect: true,
       normAnswer: [{
         value: correctAnswer,
         type: correctAnswerType,
       }],
       count: 0,
+      teams: [],
     });
   }
 
@@ -234,9 +238,56 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
     prevShortAnswer.push({
       value: newAnswer.answerContent.rawAnswer,
       normAnswer: newAnswer.answerContent.normAnswer,
+      isCorrect: false,
       count: 1,
       teams: [newAnswerTeamName]
     });
   }
   return prevShortAnswer;
 };
+
+
+export const buildVictoryDataObject = ( 
+  isShortAnswerEnabled, 
+  noResponseLabel, 
+  numPlayers,
+  totalAnswers, 
+  shortAnswerResponses, 
+  answersByQuestion, 
+  questionChoices
+  ) => {
+  const noResponseObject = {
+    answerChoice: noResponseLabel,
+    answerCount: numPlayers - totalAnswers,
+    answerText: 'No response',
+    answerCorrect: false,
+  };
+  
+  if (isShortAnswerEnabled) {
+    return [
+      noResponseObject,
+      ...shortAnswerResponses
+        .filter(answer => answer.count > 0)
+        .map((answer, index) => ({ 
+          answerChoice: String.fromCharCode(65 + index),
+          answerCount: answer.count,
+          answerText: answer.value,
+          answerTeams: answer.teams,
+          answerCorrect: answer.isCorrect
+      }))
+    ]
+  };
+  if (!isNullOrUndefined(answersByQuestion.answersArray)){
+    return [
+      noResponseObject,
+      ...Object.keys(answersByQuestion.answersArray).map((key, index) => ({
+        answerCount: answersByQuestion.answersArray[index].count,
+        answerChoice: String.fromCharCode(65 + index),
+        answerText: questionChoices[index].text,
+        answerTeams: answersByQuestion.answersArray[index].teams,
+        answerCorrect: answersByQuestion.answersArray[index].isCorrect
+      })).reverse(),
+    ];
+  }
+  return [];
+}

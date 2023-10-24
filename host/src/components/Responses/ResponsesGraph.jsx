@@ -28,6 +28,7 @@ export default function ResponsesGraph({
   const mediumPadding = 16;
   const mediumLargePadding = 20;
   const largePadding = 24;
+  const xLargePadding = 32;
   const xxLargePadding = 40;
   const labelOffset = 3;
   const noResponseLabel = '–';
@@ -36,9 +37,8 @@ export default function ResponsesGraph({
   const defaultVictoryPadding = 50;
 
   const customBarSelectedWidth = isShortAnswerEnabled ? boundingRect.width - defaultVictoryPadding : boundingRect.width - (defaultVictoryPadding + largePadding * 2);
-
   const correctChoiceIndex =
-    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+    data.findIndex((element) => element.answerCorrect);
   const largestAnswerCount = Math.max(
     ...data.map((response) => response.answerCount),
   );
@@ -119,7 +119,6 @@ export default function ResponsesGraph({
       },
     },
   };
-  console.log(data);
   return (
     <div className={classes.container}>
       <div className={classes.titleContainer}>
@@ -211,6 +210,7 @@ export default function ResponsesGraph({
                 labelOffset={labelOffset}
                 barThickness={barThickness}
                 xSmallPadding={xSmallPadding}
+                xLargePadding={xLargePadding}
                 mediumLargePadding={mediumLargePadding}
                 defaultVictoryPadding={defaultVictoryPadding}
                 questionChoices={questionChoices}

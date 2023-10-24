@@ -12,8 +12,7 @@ import {
   getTotalShortAnswers,
   getQuestionChoices,
   getAnswersByQuestion,
-  getTeamByQuestion,
-  getTeamByQuestionShortAnswer
+  buildVictoryDataObject
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -59,6 +58,8 @@ export default function GameInProgress({
   };
   const numPlayers = teams ? teams.length : 0;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const correctChoiceIndex =
+    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answersByQuestion = useMemo(
     () =>
@@ -68,6 +69,7 @@ export default function GameInProgress({
         currentQuestionIndex,
         questions,
         currentState,
+        correctChoiceIndex
       ),
     [
       questionChoices,
@@ -77,38 +79,50 @@ export default function GameInProgress({
       currentState,
     ],
   );
-  const correctChoiceIndex =
-    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const totalAnswers = isShortAnswerEnabled ? getTotalShortAnswers(shortAnswerResponses) : getTotalAnswers(answersByQuestion.answersArray);
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-
   const noResponseLabel = '–';
   // data object used in Victory graph for real-time responses
-  const data = [
-    ...(
-      isShortAnswerEnabled ? shortAnswerResponses
-      .filter(answer => answer.count > 0)
-      .map((answer, index) => ({ 
-        answerChoice: String.fromCharCode(65 + index),
-        answerCount: answer.count,
-        answerText: answer.value,
-        answerTeams: answer.teams
-    }))
-  :
-   Object.keys(answersByQuestion.answersArray).map((key, index) => ({
-    answerCount: answersByQuestion.answersArray[index].count,
-    answerChoice: String.fromCharCode(65 + index),
-    // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
-    answerText: questionChoices[index].text,
-    answerTeams: answersByQuestion.answersArray[index].teams
-  }))),
-  {
-    answerChoice: noResponseLabel,
-    answerCount: numPlayers - totalAnswers,
-    answerText: 'No response',
-  },
-  ].reverse();
-  console.log(data);
+  const data = buildVictoryDataObject(
+    isShortAnswerEnabled,
+    noResponseLabel, 
+    numPlayers, 
+    totalAnswers, 
+    shortAnswerResponses, 
+    answersByQuestion, 
+    questionChoices,
+    correctChoiceIndex
+  );
+  
+  
+  // [
+  //   {
+  //     answerChoice: noResponseLabel,
+  //     answerCount: numPlayers - totalAnswers,
+  //     answerText: 'No response',
+  //   },
+  //   ...(
+  //     isShortAnswerEnabled ? shortAnswerResponses
+  //     .filter(answer => answer.count > 0)
+  //     .map((answer, index) => ({ 
+  //       answerChoice: String.fromCharCode(65 + index),
+  //       answerCount: answer.count,
+  //       answerText: answer.value,
+  //       answerTeams: answer.teams,
+  //       answerCorrect: answer.isCorrect
+  //   }))
+  // :
+  //  Object.keys(answersByQuestion.answersArray).map((key, index) => ({
+  //   answerCount: answersByQuestion.answersArray[index].count,
+  //   answerChoice: String.fromCharCode(65 + index),
+  //   // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+  //   answerText: questionChoices[index].text,
+  //   answerTeams: answersByQuestion.answersArray[index].teams
+  // })))
+  // ];
+
+  // const dataMultiChoice = data.reverse();
+
   // data object used in Victory graph for confidence responses
   const confidenceData = answersByQuestion.confidenceArray;
 
