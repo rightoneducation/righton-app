@@ -719,8 +719,8 @@ export class GameSessionParser {
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
                     responses: isNullOrUndefined(awsQuestion.responses)
-                        ? []
-                        : this.parseServerArray<IResponse>(awsQuestion.responses),
+                         ? []
+                         : this.parseServerArray<IResponse>(awsQuestion.responses),
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []

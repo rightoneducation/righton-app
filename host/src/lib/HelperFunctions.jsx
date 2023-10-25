@@ -159,7 +159,6 @@ export const getShortAnswers = (shortAnswerResponses) => {
     shortAnswerResponses.forEach((answer) => {
       if (answer.teams){
         answer.teams.forEach((team) => {
-          console.log(team);
           const index = confidenceLevelsArray.indexOf(team.confidence);
           if (answer.isCorrect) {
             confidenceArray[index].correct += 1;
