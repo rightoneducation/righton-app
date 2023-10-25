@@ -84,6 +84,7 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -187,9 +188,17 @@ const GameSessionContainer = () => {
                   }
                 });
             });
-            setShortAnswerResponses((prev) => {
-              return buildShortAnswerResponses(prev, choices, teamAnswerResponse, teamName)
-            });
+            const responses = buildShortAnswerResponses(shortAnswerResponses, choices, teamAnswerResponse, teamName);
+            apiClient
+              .updateQuestion({
+                gameSessionId: response.id, 
+                id: response.questions[response.currentQuestionIndex].id,
+                order: response.questions[response.currentQuestionIndex].order,
+                responses: JSON.stringify(responses),
+            })
+            setShortAnswerResponses(responses);
+
+
             return newState;
           });
         });
@@ -290,20 +299,31 @@ const GameSessionContainer = () => {
     setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
-  const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
-    apiClient
-      .updateGameSession({ id: gameSessionId, ...newUpdates })
-      .then((response) => {
-        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-          setHeaderGameCurrentTime(response.phaseOneTime);
-        } else if (
-          response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-        )
-          setHeaderGameCurrentTime(response.phaseTwoTime);
-
-        setGameSession(response);
-        checkGameTimer(response);
-      });
+  const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
+    // this will update the response object with confidence values
+    if (
+      isShortAnswerEnabled 
+      && isConfidenceEnabled 
+      && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+    ){
+      await apiClient
+        .updateQuestion({
+          gameSessionId, 
+          id: gameSession.questions[gameSession.currentQuestionIndex].id,
+          order: gameSession.questions[gameSession.currentQuestionIndex].order,
+          responses: JSON.stringify(shortAnswerResponses),
+        });
+    }
+    
+    const response = await apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+    if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+      setHeaderGameCurrentTime(response.phaseOneTime);
+    } else if (
+      response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    )
+    setHeaderGameCurrentTime(response.phaseTwoTime);
+    setGameSession(response);
+    checkGameTimer(response);
   };
 
   const checkGameTimer = (gameSession) => {
