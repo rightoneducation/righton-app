@@ -177,6 +177,7 @@ const GameSessionContainer = () => {
         apiClient.getGameSession(gameSessionId).then((response) => {
           choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
           let teamName = '';
+          let teamId = '';
           setTeamsArray((prevState) => {
             let newState = JSON.parse(JSON.stringify(prevState));
             newState.forEach((team) => {
@@ -185,10 +186,11 @@ const GameSessionContainer = () => {
                   if (teamMember.id === teamAnswerResponse.teamMemberAnswersId){
                     teamMember.answers.push(teamAnswerResponse);
                     teamName=team.name;
+                    teamId=team.id;
                   }
                 });
             });
-            const responses = buildShortAnswerResponses(shortAnswerResponses, choices, teamAnswerResponse, teamName);
+            const responses = buildShortAnswerResponses(shortAnswerResponses, choices, teamAnswerResponse, teamName, teamId);
             apiClient
               .updateQuestion({
                 gameSessionId: response.id, 

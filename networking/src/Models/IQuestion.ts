@@ -34,5 +34,6 @@ export interface IResponse {
 
 export interface IResponseTeam {
     team: string
+    id: string
     confidence: ConfidenceLevel
 }
