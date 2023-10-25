@@ -52,6 +52,7 @@ interface GameInProgressProps {
   hasRejoined: boolean;
   currentTimer: number;
   localModel: LocalModel;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function GameInProgress({
@@ -70,6 +71,7 @@ export default function GameInProgress({
   hasRejoined,
   currentTimer,
   localModel,
+  isShortAnswerEnabled
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -127,7 +129,6 @@ export default function GameInProgress({
       : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
-  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
 
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer

@@ -45,12 +45,14 @@ export default function GameSessionSwitch({
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
   const answerChoices =
+  // *** if isShortAnswerEnabled and currentState == CHOOSE_CORRECT_ANSWER, then use responses instead of choices here
     currentQuestion?.choices?.map((choice: IChoice) => ({
       id: uuidv4(),
       text: choice.text,
       isCorrectAnswer: choice.isAnswer,
       reason: choice.reason ?? '',
     })) ?? [];
+  const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
@@ -68,6 +70,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -85,6 +88,7 @@ export default function GameSessionSwitch({
           hasRejoined={hasRejoined}
           currentTimer={currentTimer}
           localModel={localModel}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:
@@ -100,6 +104,7 @@ export default function GameSessionSwitch({
           answerChoices={answerChoices}
           score={score}
           hasRejoined={hasRejoined}
+          isShortAnswerEnabled={isShortAnswerEnabled}
         />
       );
     case GameSessionState.PHASE_2_START:

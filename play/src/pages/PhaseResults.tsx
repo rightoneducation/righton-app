@@ -36,6 +36,7 @@ interface PhaseResultsProps {
   }[];
   score: number;
   hasRejoined: boolean;
+  isShortAnswerEnabled: boolean;
 }
 
 /**
@@ -66,6 +67,7 @@ export default function PhaseResults({
   answerChoices,
   score,
   hasRejoined,
+  isShortAnswerEnabled
 }: PhaseResultsProps) {
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
@@ -101,7 +103,8 @@ export default function PhaseResults({
       calcNewScore = ModelHelper.calculateBasicModeScoreForQuestion(
         gameSession,
         currentQuestion,
-        currentTeam! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        isShortAnswerEnabled
       );
     }
     updateTeamScore(teamId, calcNewScore);
