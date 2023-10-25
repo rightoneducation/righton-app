@@ -3,6 +3,7 @@ import {
   ApiClient,
   IChoice,
   IGameSession,
+  IResponse,
   GameSessionState,
 } from '@righton/networking';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,15 +45,20 @@ export default function GameSessionSwitch({
   // this prevents a player from rejoining into the first screen and continually getting the pregame countdown
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
-  const answerChoices =
-  // *** if isShortAnswerEnabled and currentState == CHOOSE_CORRECT_ANSWER, then use responses instead of choices here
-    currentQuestion?.choices?.map((choice: IChoice) => ({
-      id: uuidv4(),
-      text: choice.text,
-      isCorrectAnswer: choice.isAnswer,
-      reason: choice.reason ?? '',
-    })) ?? [];
   const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
+  const answerChoices = ((isShortAnswerEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER)
+      ? currentQuestion?.responses?.map((response: IResponse) => ({
+        id: uuidv4(),
+        text: response.value,
+        isAnswer: response.isCorrect,
+      }) as IChoice)
+      : currentQuestion?.choices?.map((choice: IChoice) => ({
+        id: uuidv4(),
+        text: choice.text,
+        isAnswer: choice.isAnswer,
+        reason: choice.reason ?? '',
+      } as IChoice))) ?? [];
+ 
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
