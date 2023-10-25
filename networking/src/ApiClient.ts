@@ -536,6 +536,7 @@ type AWSQuestion = {
     id: number
     text: string
     choices?: string | null
+    responses?: string | null
     imageUrl?: string | null
     instructions?: string | null
     standard?: string | null
@@ -717,6 +718,7 @@ export class GameSessionParser {
                     choices: isNullOrUndefined(awsQuestion.choices)
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
+                    responses: [],
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []
