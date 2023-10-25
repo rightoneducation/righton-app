@@ -258,7 +258,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;
-        prevShortAnswer[y].teams.push({team: newAnswerTeamName, confidence: newAnswer.confidenceLevel});
+        prevShortAnswer[y].teams.push({team: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
         break outerloop;
       }
     };
