@@ -231,7 +231,7 @@ export const checkEqualityWithOtherAnswers = (normValue, normType, prevAnswer) =
   return false;
 }
 
-export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName) => {
+export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
   if (prevShortAnswer.length === 0) {
     const correctAnswer = choices.find(choice => choice.isAnswer).text;
     const correctAnswerType = determineAnswerType(correctAnswer);
