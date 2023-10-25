@@ -187,9 +187,12 @@ const GameSessionContainer = () => {
                   }
                 });
             });
-            setShortAnswerResponses((prev) => {
-              return buildShortAnswerResponses(prev, choices, teamAnswerResponse, teamName)
-            });
+            const responses = buildShortAnswerResponses(shortAnswerResponses, choices, teamAnswerResponse, teamName);
+            console.log(response);
+            apiClient.updateQuestion({gameSessionId: response.id, order: response.question[response.currentQuestionIndex].order, id: response.questions[response.currentQuestionIndex].id, shortAnswerResponses: responses,});
+            setShortAnswerResponses(responses);
+
+
             return newState;
           });
         });
