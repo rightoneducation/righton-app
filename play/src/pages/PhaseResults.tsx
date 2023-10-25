@@ -4,6 +4,8 @@ import {
   GameSessionState,
   IGameSession,
   ITeam,
+  IChoice,
+  IResponse,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -29,11 +31,7 @@ interface PhaseResultsProps {
   currentQuestionIndex?: number | null;
   teamId: string;
   gameSession: IGameSession;
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-  }[];
+  answerChoices: IChoice[];
   score: number;
   hasRejoined: boolean;
   isShortAnswerEnabled: boolean;

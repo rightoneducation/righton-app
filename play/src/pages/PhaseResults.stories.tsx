@@ -47,7 +47,7 @@ const answerChoices = gameSession.questions[0].choices!.map(  // eslint-disable-
   (choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,
-    isCorrectAnswer: choice.isAnswer,
+    isAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
   })
 );

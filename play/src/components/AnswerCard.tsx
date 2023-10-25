@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined, GameSessionState, ITeamAnswerContent } from '@righton/networking';
+import { isNullOrUndefined, GameSessionState, ITeamAnswerContent, IChoice } from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { AnswerState } from '../lib/PlayModels';
@@ -10,7 +10,7 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface AnswerCardProps {
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  answers: IChoice[] | undefined;
   isSubmitted: boolean;
   handleSubmitAnswer: (answerText: ITeamAnswerContent ) => void;
   currentState: GameSessionState;
@@ -65,12 +65,12 @@ export default function AnswerCard({
     </Box>
   );
   const getAnswerStatus = (
-    answer: { text: string; isCorrectAnswer: boolean },
+    answer: { text: string; isAnswer: boolean },
     index: number
   ) => {
     if (selectedAnswer === index) return AnswerState.SELECTED;
     if (
-      answer.isCorrectAnswer &&
+      answer.isAnswer &&
       currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
     )
       return AnswerState.CORRECT;

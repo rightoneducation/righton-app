@@ -19,6 +19,7 @@ export interface IQuestion {
 }
 
 export interface IChoice {
+    id?: string
     text: string
     reason?: string
     isAnswer: boolean

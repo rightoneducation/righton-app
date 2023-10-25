@@ -2,7 +2,7 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, GameSessionState, ITeamAnswerContent } from '@righton/networking';
+import { ConfidenceLevel, GameSessionState, ITeamAnswerContent, IChoice } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -18,7 +18,7 @@ interface ChooseAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
   handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
@@ -108,7 +108,15 @@ export default function ChooseAnswer({
 
   const answerContents = (
     <ScrollBoxStyled>
-    {!isShortAnswerEnabled ? 
+    {(isShortAnswerEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) ?
+        <OpenAnswerCard
+          answerContent={answerContent}
+          isSubmitted={answerContent.isSubmitted ?? false}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
+          handleSubmitAnswer={handleSubmitAnswer}
+        />
+       : 
         <AnswerCard
           answers={answerChoices}
           isSubmitted={answerContent.isSubmitted ?? false}
@@ -117,14 +125,6 @@ export default function ChooseAnswer({
           currentQuestionIndex={currentQuestionIndex}
           selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
           handleSelectAnswer={handleSelectAnswer}
-        />
-        :
-        <OpenAnswerCard
-          answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          handleSubmitAnswer={handleSubmitAnswer}
         />
       }
       {displaySubmitted ? onSubmitDisplay : null}

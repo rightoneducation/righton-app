@@ -11,6 +11,8 @@ import {
   ConfidenceLevel,
   isNullOrUndefined,
   ITeamAnswerContent,
+  IChoice,
+  IResponse
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -43,12 +45,7 @@ interface GameInProgressProps {
   currentQuestionIndex?: number | null;
   teamId: string;
   score: number;
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-    reason: string;
-  }[];
+  answerChoices: IChoice[];
   hasRejoined: boolean;
   currentTimer: number;
   localModel: LocalModel;
@@ -313,6 +310,7 @@ export default function GameInProgress({
             currentState={currentState}
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             currentQuestion={currentQuestion}
+            isShortAnswerEnabled={isShortAnswerEnabled}
           />
         )}
       </BodyStackContainerStyled>

@@ -6,6 +6,7 @@ import {
   ModelHelper,
   ITeam,
   IQuestion,
+  IChoice
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -26,13 +27,12 @@ interface DiscussAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices:
-    | { text: string; isCorrectAnswer: boolean; reason: string }[]
-    | undefined;
+  answerChoices: IChoice[] | undefined;
   instructions: string[];
   currentState: GameSessionState;
   currentTeam: ITeam;
   currentQuestion: IQuestion;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function DiscussAnswer({
@@ -44,19 +44,26 @@ export default function DiscussAnswer({
   currentState,
   currentTeam,
   currentQuestion,
+  isShortAnswerEnabled
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const correctAnswer = answerChoices?.find((answer) => answer.isCorrectAnswer);
+  const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
   const correctIndex = answerChoices?.findIndex(
-    (answer) => answer.isCorrectAnswer
+    (answer) => answer.isAnswer
   );
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
     currentState
   );
-  const isPlayerCorrect = correctAnswer?.text === selectedAnswer?.text;
+  const isPlayerCorrect = isShortAnswerEnabled 
+    ? ModelHelper.isShortAnswerResponseCorrect(currentQuestion.responses ?? [], currentTeam) 
+    : correctAnswer?.text === selectedAnswer?.text;
+
+  console.log(isPlayerCorrect);
+  console.log(currentQuestion.responses);
+  console.log( ModelHelper.isShortAnswerResponseCorrect(currentQuestion.responses ?? [], currentTeam) );
   const questionCorrectAnswerContents = (
     <>
       <Typography
@@ -117,7 +124,7 @@ export default function DiscussAnswer({
         <Stack spacing={2}>
           {answerChoices?.map(
             (answer, index) =>
-              !answer.isCorrectAnswer && (
+              !answer.isAnswer && (
                 <DiscussAnswerCard
                   isPlayerCorrect={isPlayerCorrect}
                   instructions={instructions}

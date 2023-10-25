@@ -270,7 +270,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       normAnswer: newAnswer.answerContent.normAnswer,
       isCorrect: false,
       count: 1,
-      teams: [{team: newAnswerTeamName, confidence: newAnswer.confidenceLevel}]
+      teams: [{team: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });
   }
   return prevShortAnswer;
