@@ -102,8 +102,8 @@ const GameSessionContainer = () => {
               team.teamMembers && team.teamMembers.forEach((teamMember) => {
                 teamMember.answers && teamMember.answers.forEach((answer) => {
                   if (answer.questionId === response.questions[response.currentQuestionIndex].id 
-                    && (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) 
-                    || (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && answer.isTrickAnswer)
+                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS) 
+                    && answer.isChosen) 
                   ) {
                     setShortAnswerResponses((prev) => {
                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)

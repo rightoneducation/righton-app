@@ -61,9 +61,6 @@ export default function DiscussAnswer({
     ? ModelHelper.isShortAnswerResponseCorrect(currentQuestion.responses ?? [], currentTeam) 
     : correctAnswer?.text === selectedAnswer?.text;
 
-  console.log(isPlayerCorrect);
-  console.log(currentQuestion.responses);
-  console.log( ModelHelper.isShortAnswerResponseCorrect(currentQuestion.responses ?? [], currentTeam) );
   const questionCorrectAnswerContents = (
     <>
       <Typography
