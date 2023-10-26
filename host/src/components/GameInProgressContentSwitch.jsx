@@ -34,7 +34,9 @@ export default function GameInProgressContentSwitch ({
     teamsArray,
     confidenceData,
     isShortAnswerEnabled,
-    handleShortAnswerChange
+    handleShortAnswerChange,
+    shortAnswerResponses,
+    handleOnSelectMistake,
   }) {
   const classes = useStyles();
   const gameplayComponents = [
@@ -79,7 +81,11 @@ export default function GameInProgressContentSwitch ({
           (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
             currentState === GameSessionState.PHASE_1_DISCUSS) ? (
             <div id="featuredmistakes-scrollbox" ref={featuredMistakesRef}>
-              <FeaturedMistakes />
+              <FeaturedMistakes 
+                shortAnswerResponses={shortAnswerResponses} 
+                totalAnswers={totalAnswers}
+                handleOnSelectMistake={handleOnSelectMistake}
+              />
             </div>
           ) : null}
           <div

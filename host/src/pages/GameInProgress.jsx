@@ -43,7 +43,8 @@ export default function GameInProgress({
   gameAnswersRef,
   confidenceCardRef,
   featuredMistakesRef,
-  shortAnswerResponses
+  shortAnswerResponses,
+  handleOnSelectMistake
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -112,7 +113,6 @@ export default function GameInProgress({
       );
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
-  // console.log(confidenceData);
 
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
@@ -251,6 +251,8 @@ export default function GameInProgress({
             teamsArray={teamsArray}
             isShortAnswerEnabled={isShortAnswerEnabled}
             handleShortAnswerChange={handleShortAnswerChange}
+            shortAnswerResponses={shortAnswerResponses}
+            handleOnSelectMistake={handleOnSelectMistake}
           />
         </div>
         <GameModal

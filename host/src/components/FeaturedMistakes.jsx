@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { 
   Paper,
@@ -10,29 +10,53 @@ import {
 } from "@material-ui/core";
 import MistakeSelector from "./MistakeSelector";
 
-export default function GameAnswers() {
+export default function FeaturedMistakes({
+  shortAnswerResponses,
+  totalAnswers,
+  handleOnSelectMistake,
+}) {
   const classes = useStyles();
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
   const radioButtonText1 = "Use the top 3 answers by popularity";
   const radioButtonText2 = "Manually pick the options";
-  const [sortedMistakesPlaceholder, setSortedMistakesPlaceholder] = useState([
-    {answer: "4x^4 - x^3 + 7x^2 - 6x", percent: '44%', isSelected: true},
-    {answer: "2x^4 + 6x^2 - 3x", percent: '16%', isSelected: true},
-    {answer: "No Idea", percent: '13%', isSelected: true},
-    {answer: "x^2 - 4x - 12", percent : '12%', isSelected: false},
-    {answer: "4x^4 - x^3 + 4x^2 - 3x", percent: '8%', isSelected: false},
-    {answer: "2x^4 + 12x^2 - 9x", percent: '7%', isSelected: false},
-  ]);
   const [isTop3Mode, setIsTop3Mode] = useState(true);
+  const [selectedMistakes, setSelectedMistakes] = useState([]);
+  const sortMistakes = (shortAnswerResponses, totalAnswers) => {
+    const extractedMistakes = shortAnswerResponses.reduce((acc, shortAnswerResponse) => {
+      if (!shortAnswerResponse.isCorrect){
+        acc.push({
+          answer: shortAnswerResponse.value, 
+          percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
+          isSelected: false
+        });
+      };
+      return acc;
+    }, []);
+    let sortedMistakes = [];
+    if (extractedMistakes.length > 0) {
+      sortedMistakes = extractedMistakes.sort((a, b) => {
+        return b.percent - a.percent;
+      });
+      if (isTop3Mode) {
+        for (let i = 0; i < Math.min(sortedMistakes.length, 3); i++){
+          sortedMistakes[i].isSelected = true;
+          handleOnSelectMistake(sortedMistakes[i].answer, true);
+        }
+      }
+    }
+    return sortedMistakes ?? [];
+  };
+  const [sortedMistakes, setSortedMistakes] = useState([]);
   const resetMistakesToTop3 = () => {
-    const resetMistakes = sortedMistakesPlaceholder.map((mistake, index) => {
+    const resetMistakes = sortedMistakes.map((mistake, index) => {
       if (index < 3){
+        handleOnSelectMistake(mistake.answer, true);
         return {...mistake, isSelected: true};
       }
       return {...mistake, isSelected: false};
     })
-    setSortedMistakesPlaceholder(resetMistakes);
+    setSortedMistakes(resetMistakes);
   };
 
   const handleModeChange = (event) => {
@@ -45,12 +69,18 @@ export default function GameAnswers() {
   };
 
   const handleSelectMistake = (index) => {
-    setSortedMistakesPlaceholder((prev) => {
+    handleOnSelectMistake(sortedMistakes[index].answer, false);
+    setSortedMistakes((prev) => {
       const newMistakes = [...prev];
       newMistakes[index].isSelected = !newMistakes[index].isSelected;
       return newMistakes;
-    })
+    });
   };
+
+  useEffect(() => {
+    setSortedMistakes(sortMistakes(shortAnswerResponses, totalAnswers));
+  }, [shortAnswerResponses, totalAnswers]);
+
   return(
     <Paper className={classes.background} elevation={0}>
         <Typography className={classes.title}>{title}</Typography>
@@ -69,20 +99,28 @@ export default function GameAnswers() {
             label={radioButtonText2} 
           />
         </RadioGroup>
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
-          {sortedMistakesPlaceholder.map((mistake, index) => {
-            return <MistakeSelector 
-              key={index} 
-              mistakeText={mistake.answer} 
-              mistakePercent={mistake.percent} 
-              isTop3Mode={isTop3Mode} 
-              isSelected={mistake.isSelected} 
-              mistakeIndex={index}
-              handleSelectMistake={handleSelectMistake} 
-              style={{width:'100%'}}  
-            />
-          })}
-        </Box>
+        {sortedMistakes.length > 0 
+          ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
+            {sortedMistakes.map((mistake, index) => {
+                return <MistakeSelector 
+                  key={index} 
+                  mistakeText={mistake.answer} 
+                  mistakePercent={mistake.percent} 
+                  isTop3Mode={isTop3Mode} 
+                  isSelected={mistake.isSelected} 
+                  mistakeIndex={index}
+                  handleSelectMistake={handleSelectMistake} 
+                  style={{width:'100%'}}  
+                />
+              })}
+            </Box>
+          : <Box sx={{width: '100%'}}>
+              <Typography className={classes.subtitle} style={{fontStyle: 'italic', textAlign: 'center'}}>
+                Student responses will appear here
+              </Typography>
+            </Box>
+        }
+      
     </Paper>
   );
 };

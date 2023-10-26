@@ -254,6 +254,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
     prevShortAnswer.push({
       value: correctAnswer,
       isCorrect: true,
+      isSelectedMistake: false,
       normAnswer: [{
         value: correctAnswer,
         type: correctAnswerType,
@@ -284,6 +285,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       value: newAnswer.answerContent.rawAnswer,
       normAnswer: newAnswer.answerContent.normAnswer,
       isCorrect: false,
+      isSelectedMistake: false,
       count: 1,
       teams: [{team: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });

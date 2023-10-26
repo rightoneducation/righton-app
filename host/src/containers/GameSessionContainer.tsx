@@ -30,6 +30,7 @@ const GameSessionContainer = () => {
   // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
   // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
+  const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
@@ -309,6 +310,17 @@ const GameSessionContainer = () => {
     setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
+  const handleOnSelectMistake = (value, isTop3) => {
+    setSelectedMistakes((prev) => {
+      if (prev.includes(value)) {
+        if (isTop3 === false)
+          return prev.filter(mistake => mistake !== value);
+        return prev;
+      } else {
+        return [...prev, value];
+      }
+    });
+  }
   const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
     // this will update the response object with confidence values
     if (
@@ -316,12 +328,17 @@ const GameSessionContainer = () => {
       && isConfidenceEnabled 
       && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
     ){
+      const finalResultsContainer = shortAnswerResponses.map((answer) => ({
+        ...answer,
+        isSelectedMistake: selectedMistakes.includes(answer.value),
+        })
+      );
       await apiClient
         .updateQuestion({
           gameSessionId, 
           id: gameSession.questions[gameSession.currentQuestionIndex].id,
           order: gameSession.questions[gameSession.currentQuestionIndex].order,
-          responses: JSON.stringify(shortAnswerResponses),
+          responses: JSON.stringify(finalResultsContainer),
         });
     }
     
@@ -438,6 +455,7 @@ const GameSessionContainer = () => {
           featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
+          handleOnSelectMistake={handleOnSelectMistake}
         />
       );
     }
@@ -466,6 +484,7 @@ const GameSessionContainer = () => {
           featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
+          handleOnSelectMistake={handleOnSelectMistake}
         />
       );
 

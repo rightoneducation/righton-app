@@ -51,7 +51,7 @@ export default function MistakeSelector({
             opacity: 0.5,
           }}
         >
-          {mistakePercent}
+          {mistakePercent}%
         </Typography>
         <Box className={classes.selectIndicatorContainer} style={{right:  `16px`}} >
           {circleIndicator} 

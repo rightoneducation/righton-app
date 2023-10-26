@@ -29,6 +29,7 @@ export interface IResponse {
     value: string
     normAnswer: string | number
     isCorrect: boolean
+    isSelectedMistake: boolean
     count: number
     teams: Array<IResponseTeam>
 }
