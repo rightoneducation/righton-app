@@ -20,6 +20,7 @@ const GameSessionContainer = () => {
   const responsesRef = React.useRef(null);
   const gameAnswersRef = React.useRef(null);
   const confidenceCardRef = React.useRef(null);
+  const featuredMistakesRef = React.useRef(null);
   const playerThinkingRef = React.useRef(null);
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
@@ -63,6 +64,11 @@ const GameSessionContainer = () => {
       newDictionary.splice(2, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
+      });
+    if (isShortAnswerEnabled)
+      newDictionary.splice(3, 0, {
+        ref: featuredMistakesRef,
+        text: 'Featured Mistakes',
       });
     setNavDictionary(newDictionary);
   };
@@ -429,6 +435,7 @@ const GameSessionContainer = () => {
           responsesRef={responsesRef}
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
+          featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
         />
@@ -456,6 +463,7 @@ const GameSessionContainer = () => {
           responsesRef={responsesRef}
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
+          featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
         />

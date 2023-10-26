@@ -42,6 +42,7 @@ export default function GameInProgress({
   responsesRef,
   gameAnswersRef,
   confidenceCardRef,
+  featuredMistakesRef,
   shortAnswerResponses
 }) {
   const classes = useStyles();
@@ -240,6 +241,7 @@ export default function GameInProgress({
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
             confidenceCardRef={confidenceCardRef}
+            featuredMistakesRef={featuredMistakesRef}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
             correctChoiceIndex={correctChoiceIndex}
