@@ -98,7 +98,7 @@ export default function GameInProgress({
     answerCorrect: false,
   };
   // data object used in Victory graph for real-time responses
-  const data = isShortAnswerEnabled 
+  const data = (isShortAnswerEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS))
     ? buildVictoryDataObjectShortAnswer(
         shortAnswerResponses, 
         noResponseObject
@@ -108,7 +108,6 @@ export default function GameInProgress({
         questionChoices,
         noResponseObject
       );
-  
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
   // console.log(confidenceData);

@@ -183,6 +183,21 @@ export const getShortAnswers = (shortAnswerResponses) => {
   return { answersArray: [], confidenceArray };
 };
 
+export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
+  let teamName = '';
+  let teamId = '';
+  teamsArray.forEach((team) => {
+    team.teamMembers &&
+      team.teamMembers.forEach((teamMember) => {
+        if (teamMember.id === teamMemberAnswersId){
+          teamName=team.name;
+          teamId=team.id;
+        }
+      });
+  });
+  return {teamName, teamId};
+};
+
 export const determineAnswerType = (answer) => {
   // check if answer is numeric
   if (

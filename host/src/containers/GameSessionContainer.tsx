@@ -12,7 +12,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { buildShortAnswerResponses, getQuestionChoices } from '../lib/HelperFunctions';
+import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -84,7 +84,6 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
-        setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -107,8 +106,8 @@ const GameSessionContainer = () => {
                     || (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && answer.isTrickAnswer)
                   ) {
                     setShortAnswerResponses((prev) => {
-                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
-                    });
+                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
+                   });
                   }
                 });
               });
@@ -173,37 +172,40 @@ const GameSessionContainer = () => {
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
-        let choices = '';
-        apiClient.getGameSession(gameSessionId).then((response) => {
-          choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
-          let teamName = '';
-          let teamId = '';
+        // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
+        apiClient.getGameSession(gameSessionId).then((gameSession) => {
+          let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
+          // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
           setTeamsArray((prevState) => {
-            let newState = JSON.parse(JSON.stringify(prevState));
-            newState.forEach((team) => {
-              team.teamMembers &&
-                team.teamMembers.forEach((teamMember) => {
-                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId){
+            const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
+            const newState = JSON.parse(JSON.stringify(prevState));
+            newState.map((team) => {
+              if (team.id === teamId) {
+                team.teamMembers.map((teamMember) => {
+                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                     teamMember.answers.push(teamAnswerResponse);
-                    teamName=team.name;
-                    teamId=team.id;
                   }
                 });
-            });
-            const responses = buildShortAnswerResponses(shortAnswerResponses, choices, teamAnswerResponse, teamName, teamId);
-            apiClient
-              .updateQuestion({
-                gameSessionId: response.id, 
-                id: response.questions[response.currentQuestionIndex].id,
-                order: response.questions[response.currentQuestionIndex].order,
-                responses: JSON.stringify(responses),
+              }
             })
-            setShortAnswerResponses(responses);
-
-
+            if (gameSession.questions[gameSession.currentQuestionIndex].isShortAnswerEnabled && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+              // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
+              // if we did this outside of the setTeamsArray function we would be using stale state values
+              setShortAnswerResponses((prevShortAnswerState) => {
+                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, teamAnswerResponse, teamName, teamId);
+                apiClient
+                  .updateQuestion({
+                    gameSessionId: gameSession.id, 
+                    id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                    order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                    responses: JSON.stringify(newShortAnswerState),
+                });
+                return newShortAnswerState;
+              });
+            }
             return newState;
           });
-        });
+       });
       },
     );
 
@@ -239,6 +241,7 @@ const GameSessionContainer = () => {
               }
             })
           });
+          console.log(newShortAnswers);
           return newShortAnswers;
         });
       },
