@@ -11,6 +11,7 @@ import {
   getTotalAnswers,
   getQuestionChoices,
   getShortAnswers,
+  getShortAnswersPhaseTwo,
   getMultiChoiceAnswers,
   buildVictoryDataObject,
   buildVictoryDataObjectShortAnswer
@@ -64,13 +65,23 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
+  console.log(isShortAnswerEnabled);
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
     () =>
-    (isShortAnswerEnabled && statePosition < 6
-      ? getShortAnswers(
-          shortAnswerResponses
-        )
+    (isShortAnswerEnabled
+      ? ( statePosition < 6 
+          ? getShortAnswers(
+              shortAnswerResponses
+            )
+          : getShortAnswersPhaseTwo(
+              shortAnswerResponses,
+              teamsArray, 
+              currentState, 
+              questions,
+              currentQuestionIndex
+            )
+        ) 
       : getMultiChoiceAnswers(
           questionChoices,
           teamsArray,
@@ -91,7 +102,6 @@ export default function GameInProgress({
     ],
   );
   const totalAnswers = getTotalAnswers(answers.answersArray);
-
 
   const noResponseLabel = '–';
   const noResponseObject = {

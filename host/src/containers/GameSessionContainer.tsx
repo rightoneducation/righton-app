@@ -138,6 +138,7 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
 

@@ -183,6 +183,33 @@ export const getShortAnswers = (shortAnswerResponses) => {
   return { answersArray: [], confidenceArray };
 };
 
+export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, currentState, questions, currentQuestionIndex) => {
+  if (shortAnswerResponses && shortAnswerResponses.length > 0) {
+    let currentQuestionId = questions[currentQuestionIndex].id;
+    const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
+    const choices = shortAnswerResponses.reduce((acc, answer) => {
+      if (answer.isSelectedMistake || answer.isCorrect) {
+        acc.push(answer);
+      }
+      return acc; 
+    }, []);
+    const correctChoiceIndex = choices.findIndex(choice => choice.isCorrect);
+    let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
+    answers.forEach(({team, answer}) => {
+      console.log(answer);
+      choices.forEach((choice, index) => {
+        console.log(choice);
+        if (answer.answerContent.rawAnswer === choice.value) {
+          answersArray[index].count += 1;
+          answersArray[index].teams.push(team.name);
+        }
+      }); 
+    });
+    return { answersArray };
+  };
+  return { answersArray: [] };
+};
+
 export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   let teamName = '';
   let teamId = '';
@@ -332,3 +359,25 @@ export const buildVictoryDataObjectShortAnswer = (
     }))
   ]
 };
+
+export const buildVictoryDataObjectShortAnswerPhaseTwo = ( 
+  shortAnswerResponses, 
+  answers,
+  questionChoices,
+  noResponseObject
+  ) => {
+
+  if (!isNullOrUndefined(answers.answersArray)){
+    return [
+      noResponseObject,
+      ...Object.keys(answers.answersArray).map((key, index) => ({
+        answerCount: answers.answersArray[index].count,
+        answerChoice: String.fromCharCode(65 + index),
+        answerText: questionChoices[index].text,
+        answerTeams: answers.answersArray[index].teams,
+        answerCorrect: answers.answersArray[index].isCorrect
+      })).reverse(),
+    ];
+  }
+  return [];
+}

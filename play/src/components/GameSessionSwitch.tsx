@@ -64,8 +64,6 @@ export default function GameSessionSwitch({
         isAnswer: choice.isAnswer,
         reason: choice.reason ?? '',
       } as IChoice))) ?? [];
-  console.log("sup");
- console.log(answerChoices);
 
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
