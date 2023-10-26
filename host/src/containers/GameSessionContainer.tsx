@@ -241,7 +241,6 @@ const GameSessionContainer = () => {
               }
             })
           });
-          console.log(newShortAnswers);
           return newShortAnswers;
         });
       },
