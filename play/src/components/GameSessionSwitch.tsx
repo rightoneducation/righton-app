@@ -46,9 +46,8 @@ export default function GameSessionSwitch({
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
   const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
-  const answerChoices = ((isShortAnswerEnabled && currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER)
+  const answerChoices = ((isShortAnswerEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER))
       ? currentQuestion?.responses?.reduce((acc: IChoice[], response: IResponse) => {
-        console.log(response);
           if (response.isCorrect || response.isSelectedMistake){
             acc.push({
               id: uuidv4(),
@@ -64,7 +63,6 @@ export default function GameSessionSwitch({
         isAnswer: choice.isAnswer,
         reason: choice.reason ?? '',
       } as IChoice))) ?? [];
-
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (

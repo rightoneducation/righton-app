@@ -13,6 +13,7 @@ import {
   getShortAnswers,
   getShortAnswersPhaseTwo,
   getMultiChoiceAnswers,
+  getNoResponseTeams,
   buildVictoryDataObject,
   buildVictoryDataObjectShortAnswer
 } from '../lib/HelperFunctions';
@@ -65,7 +66,7 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-  console.log(isShortAnswerEnabled);
+
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
     () =>
@@ -102,13 +103,14 @@ export default function GameInProgress({
     ],
   );
   const totalAnswers = getTotalAnswers(answers.answersArray);
-
+  const noResponseTeams = getNoResponseTeams(teams, answers.answersArray);
   const noResponseLabel = '–';
   const noResponseObject = {
     answerChoice: noResponseLabel,
     answerCount: numPlayers - totalAnswers,
     answerText: 'No response',
     answerCorrect: false,
+    answerTeams: noResponseTeams,
   };
   // data object used in Victory graph for real-time responses
   const data = (isShortAnswerEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS))
@@ -123,7 +125,7 @@ export default function GameInProgress({
       );
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
-
+  console.log(data);
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
     graph: null,

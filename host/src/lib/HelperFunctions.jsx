@@ -33,6 +33,16 @@ export const getQuestionChoices = (questions, currentQuestionIndex) => {
   return questions[currentQuestionIndex].choices;
 };
 
+export const getNoResponseTeams = (teams, answers) => {
+  const allTeamNames = teams.map(team => team.name);
+  const answeredTeamNames = answers.reduce((acc, item) => {
+    const teams =item.teams.map(t => t.name);
+    return acc.concat(teams);
+  }, []);
+  const teamsWithoutResponses = allTeamNames.filter(teamName => !answeredTeamNames.includes(teamName)).map(teamName => ({name: teamName}));
+  return teamsWithoutResponses;
+};
+
 /*
 * returns team and answer data for each answer
 * for use in getTeamByQuestion and getAnswersByQuestion, below
@@ -142,7 +152,7 @@ export const getMultiChoiceAnswers = (
           answersArray[
             choicesTextArray.indexOf(choice.text)
           ].count += 1;
-          answersArray[choicesTextArray.indexOf(choice.text)].teams.push(team.name);
+          answersArray[choicesTextArray.indexOf(choice.text)].teams.push({name: team.name});
         }
       });
     });
@@ -163,14 +173,14 @@ export const getShortAnswers = (shortAnswerResponses) => {
           if (answer.isCorrect) {
             confidenceArray[index].correct += 1;
             confidenceArray[index].players.push({
-              name: team.team,
+              name: team.name,
               answer: answer.value,
               isCorrect: true,
             });
           } else {
             confidenceArray[index].incorrect += 1;
             confidenceArray[index].players.push({
-              name: team.team,
+              name: team.name,
               answer: answer.value,
               isCorrect: false,
             });
@@ -196,12 +206,10 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
     const correctChoiceIndex = choices.findIndex(choice => choice.isCorrect);
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
-      console.log(answer);
       choices.forEach((choice, index) => {
-        console.log(choice);
         if (answer.answerContent.rawAnswer === choice.value) {
           answersArray[index].count += 1;
-          answersArray[index].teams.push(team.name);
+          answersArray[index].teams.push({name: team.name});
         }
       }); 
     });
@@ -301,7 +309,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;
-        prevShortAnswer[y].teams.push({team: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
+        prevShortAnswer[y].teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
         break outerloop;
       }
     };
@@ -314,12 +322,11 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       isCorrect: false,
       isSelectedMistake: false,
       count: 1,
-      teams: [{team: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
+      teams: [{name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });
   }
   return prevShortAnswer;
 };
-
 
 export const buildVictoryDataObject = ( 
   answers, 

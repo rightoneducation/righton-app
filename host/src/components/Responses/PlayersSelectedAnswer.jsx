@@ -12,11 +12,8 @@ export default function PlayersSelectedAnswer(props) {
   const classes = useStyles(props);
   const answerCount = data[graphClickInfo.selectedIndex].answerCount;
   const percentage = (answerCount / numPlayers) * 100;
-  console.log(data);
   const selectedBarAnswerText = data[graphClickInfo.selectedIndex].answerText;
-  const teamsWithSelectedAnswer = isShortAnswerEnabled 
-    ? data[graphClickInfo.selectedIndex].answerTeams.map((team) => team.team)
-    : data[graphClickInfo.selectedIndex].answerTeams;
+  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].answerTeams.map((team) => team.name);
 
   return (
     <div>
