@@ -305,7 +305,7 @@ export default function GameInProgress({
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
-            answerChoices={answerChoices}
+            answerChoices={answerChoices} 
             instructions={instructions ?? ['']}
             currentState={currentState}
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion

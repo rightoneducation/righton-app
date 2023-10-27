@@ -6,7 +6,8 @@ import {
   ModelHelper,
   ITeam,
   IQuestion,
-  IChoice
+  IChoice,
+  IResponse
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -48,6 +49,7 @@ export default function DiscussAnswer({
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  console.log(answerChoices);
   const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
   const correctIndex = answerChoices?.findIndex(
     (answer) => answer.isAnswer
@@ -124,7 +126,7 @@ export default function DiscussAnswer({
               !answer.isAnswer && (
                 <DiscussAnswerCard
                   isPlayerCorrect={isPlayerCorrect}
-                  instructions={instructions}
+                  instructions={instructions ?? ''}
                   answerStatus={
                     answer.text === selectedAnswer?.text
                       ? AnswerState.SELECTED
@@ -132,7 +134,7 @@ export default function DiscussAnswer({
                   }
                   answerText={answer.text}
                   answerIndex={index}
-                  answerReason={answer.reason}
+                  answerReason={answer.reason ?? ''}
                   currentState={currentState}
                   key={uuidv4()}
                 />
