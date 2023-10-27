@@ -13,9 +13,7 @@ export default {
   component: HowToPlay,
 } as Meta<typeof HowToPlay>;
 
-const Template: StoryFn<typeof HowToPlay> = function AnswerCardTemplate(
-  args
-) {
+const Template: StoryFn<typeof HowToPlay> = function AnswerCardTemplate(args) {
   return (
     <BrowserRouter>
       <ThemeProvider theme={Theme}>

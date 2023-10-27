@@ -5,7 +5,6 @@ import {
   IGameSession,
   ITeam,
   IChoice,
-  IResponse,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -65,7 +64,7 @@ export default function PhaseResults({
   answerChoices,
   score,
   hasRejoined,
-  isShortAnswerEnabled
+  isShortAnswerEnabled,
 }: PhaseResultsProps) {
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
