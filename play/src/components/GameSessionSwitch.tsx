@@ -50,13 +50,20 @@ export default function GameSessionSwitch({
     (isShortAnswerEnabled
       ? currentQuestion?.responses?.reduce(
           (acc: IChoice[], response: IResponse) => {
-            console.log(response);
-
+            const shouldAddResponse = 
+              (currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER && 
+              currentState !== GameSessionState.PHASE_1_DISCUSS && 
+              currentState !== GameSessionState.PHASE_1_RESULTS) 
+                ? (response.isSelectedMistake || response.isCorrect) 
+                : true;
+          
+            if (shouldAddResponse) {
               acc.push({
                 id: uuidv4(),
                 text: response.value,
                 isAnswer: response.isCorrect,
               } as IChoice);
+            }
             
             return acc;
           },
@@ -71,8 +78,7 @@ export default function GameSessionSwitch({
               reason: choice.reason ?? '',
             } as IChoice)
         )) ?? [];
-  console.log(isShortAnswerEnabled);          
-  console.log(answerChoices);
+
   switch (currentState) {
     case GameSessionState.CHOOSE_CORRECT_ANSWER:
       return isGameFirstStarting ? (

@@ -370,19 +370,17 @@ export const buildVictoryDataObjectShortAnswer = (
 export const buildVictoryDataObjectShortAnswerPhaseTwo = ( 
   shortAnswerResponses, 
   answers,
-  questionChoices,
   noResponseObject
   ) => {
-
-  if (!isNullOrUndefined(answers.answersArray)){
+  if (!isNullOrUndefined(answers.answersArray && shortAnswerResponses)){
     return [
       noResponseObject,
       ...Object.keys(answers.answersArray).map((key, index) => ({
         answerCount: answers.answersArray[index].count,
         answerChoice: String.fromCharCode(65 + index),
-        answerText: questionChoices[index].text,
-        answerTeams: answers.answersArray[index].teams,
-        answerCorrect: answers.answersArray[index].isCorrect
+        answerText: shortAnswerResponses[index].value,
+        answerTeams: shortAnswerResponses[index].teams,
+        answerCorrect: shortAnswerResponses[index].isCorrect
       })).reverse(),
     ];
   }

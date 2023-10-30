@@ -44,6 +44,7 @@ const GameSessionContainer = () => {
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
+    { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
   ];
   const gameplayNavDictionary = [
@@ -323,10 +324,10 @@ const GameSessionContainer = () => {
     });
   }
   const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
-    // this will update the response object with confidence values
+    // this will update the response object with confidence and selected mistakes values
     if (
-      isShortAnswerEnabled 
-      && isConfidenceEnabled 
+      (isShortAnswerEnabled 
+      || isConfidenceEnabled) 
       && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
     ){
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({

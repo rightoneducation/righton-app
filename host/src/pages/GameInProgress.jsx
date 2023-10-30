@@ -15,7 +15,8 @@ import {
   getMultiChoiceAnswers,
   getNoResponseTeams,
   buildVictoryDataObject,
-  buildVictoryDataObjectShortAnswer
+  buildVictoryDataObjectShortAnswer,
+  buildVictoryDataObjectShortAnswerPhaseTwo
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -113,11 +114,19 @@ export default function GameInProgress({
     answerTeams: noResponseTeams,
   };
   // data object used in Victory graph for real-time responses
-  const data = (isShortAnswerEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS))
-    ? buildVictoryDataObjectShortAnswer(
-        shortAnswerResponses, 
-        noResponseObject
-      ) 
+  const data = (isShortAnswerEnabled )
+    ? ( statePosition < 6 
+      ? buildVictoryDataObjectShortAnswer(
+          shortAnswerResponses, 
+          noResponseObject
+        ) 
+        : 
+        buildVictoryDataObjectShortAnswerPhaseTwo(
+          shortAnswerResponses,
+          answers, 
+          noResponseObject
+        )
+      )
     : buildVictoryDataObject(
         answers, 
         questionChoices,
@@ -125,7 +134,6 @@ export default function GameInProgress({
       );
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
-  console.log(data);
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
     graph: null,
