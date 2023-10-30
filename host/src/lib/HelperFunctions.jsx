@@ -206,12 +206,13 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
     const correctChoiceIndex = choices.findIndex(choice => choice.isCorrect);
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
-      choices.forEach((choice, index) => {
-        if (answer.answerContent.rawAnswer === choice.value) {
-          answersArray[index].count += 1;
-          answersArray[index].teams.push({name: team.name});
+      for (let i = 0; i < choices.length; i++){ 
+        if (answer.answerContent.rawAnswer === choices[i].value) {
+          answersArray[i].count += 1;
+          answersArray[i].teams.push({name: team.name});
+          break;
         }
-      }); 
+      }; 
     });
     return { answersArray };
   };
@@ -271,10 +272,20 @@ export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnsw
   }
 };
 
-export const checkEqualityWithOtherAnswers = (normValue, normType, prevAnswer) => {
+export const checkEqualityWithOtherAnswers = (rawAnswer, normValue, normType, prevAnswer) => {
   // loop through each of the normalized answers in each of the previous answers
+  console.log(normValue, normType, prevAnswer);
   for (let i = 0; i < prevAnswer.normAnswer.length; i++) {
       if (normType === prevAnswer.normAnswer[i].type && checkEqualityWithPrevAnswer(normValue, prevAnswer.normAnswer[i].value, prevAnswer.normAnswer[i].type)) {
+        return true;
+      }
+      // last ditch check on expressions in case there is a basic match that the type check in the previous conditional misses
+      if ((normType === AnswerType.EXPRESSION || prevAnswer.normAnswer[i].type === AnswerType.EXPRESSION) 
+        && (normValue.toString() === prevAnswer.normAnswer[i].value.toString())) {
+          return true;
+      }
+      // last ditch raw answer checks (5% === 5% enter as an expression, for instance)
+      if (rawAnswer === prevAnswer.value) {
         return true;
       }
   };
@@ -298,7 +309,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       teams: [],
     });
   }
-
+  const rawAnswer = newAnswer.answerContent.rawAnswer;
   let isExistingAnswer = false;
   outerloop:
   // for each normalized answer in the newly submitted answer
@@ -306,7 +317,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
     const answer = newAnswer.answerContent.normAnswer[i];
     // for each answer in the previous short answer array 
     for (let y = 0; y < prevShortAnswer.length; y++) {
-      if (checkEqualityWithOtherAnswers(answer.value, answer.type, prevShortAnswer[y])) {
+      if (checkEqualityWithOtherAnswers(rawAnswer, answer.value, answer.type, prevShortAnswer[y])) {
         isExistingAnswer = true;
         prevShortAnswer[y].count += 1;
         prevShortAnswer[y].teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
@@ -317,7 +328,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       
   if (!isExistingAnswer){
     prevShortAnswer.push({
-      value: newAnswer.answerContent.rawAnswer,
+      value: rawAnswer,
       normAnswer: newAnswer.answerContent.normAnswer,
       isCorrect: false,
       isSelectedMistake: false,

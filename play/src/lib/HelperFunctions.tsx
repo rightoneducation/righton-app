@@ -296,8 +296,10 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
           //  reducing case and removing characters
 
           // this extracts numeric values from a string and adds them to the normalized text array.
+          // cuts special characters first so 5% and 50% don't match based on % (when numbers are removed)
           // it then removes those numbers from the string
-          const extractedNumbers = raw.match(/-?\d+(\.\d+)?/g)?.map(Number);
+          const specialCharRemoved = raw.replace(specialCharsRegex, '');
+          const extractedNumbers = specialCharRemoved.match(/-?\d+(\.\d+)?/g)?.map(Number);
           if (extractedNumbers) {
             norm.push(
               ...extractedNumbers.map((value) => ({
@@ -306,7 +308,7 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
               }))
             );
           }
-          const numbersRemoved = raw.replace(/-?\d+(\.\d+)?/g, '');
+          const numbersRemoved = specialCharRemoved.replace(/-?\d+(\.\d+)?/g, '');
 
           // this attempts to extract any written numbers (ex. fifty five) after removing any special characters
           // eslint-disable-next-line prefer-regex-literals
@@ -325,6 +327,8 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
           }
           // 4. any remaining content remaining is just a plain string
           //    set normalized input to lower case and remove spaces
+
+        if (numbersRemoved !== '') {
           norm.push({
             value: numbersRemoved
               .toLowerCase()
@@ -332,6 +336,7 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
               .trim(),
             type: AnswerType.STRING,
           });
+        }
         }
       }
       return acc.concat(norm);
