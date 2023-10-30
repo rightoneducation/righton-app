@@ -161,6 +161,11 @@ export const getMultiChoiceAnswers = (
   return { answersArray: [], confidenceArray };
 };
 
+/**
+ * function to get short answer responses for use in victory charts
+ * @param {IResponse []} shortAnswerResponses 
+ * @returns {answersArray: IResponse[], confidenceArray: IConfidenceLevel[]}
+ */
 export const getShortAnswers = (shortAnswerResponses) => {
   // create this to use as an index reference for the confidence levels to avoid find/findIndex
   const confidenceLevelsArray = Object.values(ConfidenceLevel);
@@ -193,6 +198,16 @@ export const getShortAnswers = (shortAnswerResponses) => {
   return { answersArray: [], confidenceArray };
 };
 
+/**
+ * the answers object in phase 2 needs to be different than in phase 1 (As it represents only answers selected via featured mistakes)
+ * this functions creates a similar object to above with that consideration made
+ * @param {IResponse []} shortAnswerResponses
+ * @param {ITeam []} teamsArray
+ * @param {GameSessionState} currentState
+ * @param {IQuestion []} questions
+ * @param {number} currentQuestionIndex
+ * @returns {answersArray: IResponse[]}
+ */
 export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, currentState, questions, currentQuestionIndex) => {
   if (shortAnswerResponses && shortAnswerResponses.length > 0) {
     let currentQuestionId = questions[currentQuestionIndex].id;
@@ -219,6 +234,12 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
   return { answersArray: [] };
 };
 
+/**
+ * returns team info to be used when receiving team answers from createteamanswers
+ * @param {ITeam[]} teamsArray 
+ * @param {string} teamMemberAnswersId 
+ * @returns {teamName: string, teamId: string}
+ */
 export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   let teamName = '';
   let teamId = '';
@@ -234,6 +255,13 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   return {teamName, teamId};
 };
 
+/**
+ * We currently do not have the teacher select the type of answer for a correct answer. 
+ * Therefore, this function determines the type of answer for the correct answer so it can be used in type-based comparisons
+ * later on in the game.
+ * @param {any} answer 
+ * @returns {AnswerType}
+ */
 export const determineAnswerType = (answer) => {
   // check if answer is numeric
   if (
@@ -256,6 +284,14 @@ export const determineAnswerType = (answer) => {
   }
 };
 
+/**
+ * This provides the equality check for each normalized answer, taking the type of answer to organize the comparison
+ * for more info see: https://github.com/rightoneducation/righton-app/wiki/Short-Answer-Response-%E2%80%90-Equality-Checks
+ * @param {any} normValue 
+ * @param {any} prevAnswerValue 
+ * @param {AnswerType} prevAnswerType 
+ * @returns {boolean}
+ */
 export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnswerType) => {
   switch (prevAnswerType){
     case AnswerType.STRING: // string
@@ -272,6 +308,16 @@ export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnsw
   }
 };
 
+
+/**
+ * this function takes a received normalized answer and loops through all normalized answers in the immediate previous answer to check for equality
+ * for more info see: https://github.com/rightoneducation/righton-app/wiki/Short-Answer-Response-%E2%80%90-Equality-Checks
+ * @param {string} rawAnswer
+ * @param {any} normValue
+ * @param {AnswerType} normType
+ * @param {IResponse[]} prevAnswer
+ * @returns {boolean}
+ */
 export const checkEqualityWithOtherAnswers = (rawAnswer, normValue, normType, prevAnswer) => {
   // loop through each of the normalized answers in each of the previous answers
   console.log(normValue, normType, prevAnswer);
@@ -292,6 +338,15 @@ export const checkEqualityWithOtherAnswers = (rawAnswer, normValue, normType, pr
   return false;
 }
 
+/**
+ * This function creates the short answer responses object that will be stored in the question object, via equality checks
+ * @param {IResponse} prevShortAnswer 
+ * @param {IChoice[]} choices 
+ * @param {any}} newAnswer 
+ * @param {any} newAnswerTeamName 
+ * @param {string} teamId 
+ * @returns {IResponse[]}
+ */
 export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
   if (prevShortAnswer.length === 0) {
     const correctAnswer = choices.find(choice => choice.isAnswer).text;
@@ -339,6 +394,12 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   return prevShortAnswer;
 };
 
+/**
+ * The below functions build out data objects for the Victory charts. There are three types each category require different data objects
+ * Multiple choice charts require just the multiple choice answers for the axis and the data received
+ * Short answer phase one charts require no information until answers are added to it, building out the axis and the data as answers are received
+ * Short answer phase two charts require previous, selected short answers as the axis and then build out the data as the answers are received
+ */
 export const buildVictoryDataObject = ( 
   answers, 
   questionChoices,

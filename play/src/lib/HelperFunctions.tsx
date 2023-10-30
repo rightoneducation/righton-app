@@ -257,8 +257,8 @@ export const isNumeric = (num: any) => // eslint-disable-line @typescript-eslint
 /**
  * This function is run on submit of an answer and normalizes the contents of the Quill editor
  * so that it can be compared to the answer choices on the host side
- *
- * for more information see:
+ * 
+ * for more information see: https://github.com/rightoneducation/righton-app/wiki/Short-Answer-Responses-%E2%80%90-Answer-Normalization
  * @param currentContents: IAnswerText[]
  * @returns normalizedAnswers: IAnswerText[]
  */
