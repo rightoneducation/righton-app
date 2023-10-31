@@ -320,7 +320,6 @@ export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnsw
  */
 export const checkEqualityWithOtherAnswers = (rawAnswer, normValue, normType, prevAnswer) => {
   // loop through each of the normalized answers in each of the previous answers
-  console.log(normValue, normType, prevAnswer);
   for (let i = 0; i < prevAnswer.normAnswer.length; i++) {
       if (normType === prevAnswer.normAnswer[i].type && checkEqualityWithPrevAnswer(normValue, prevAnswer.normAnswer[i].value, prevAnswer.normAnswer[i].type)) {
         return true;
@@ -405,14 +404,14 @@ export const buildVictoryDataObject = (
   questionChoices,
   noResponseObject
   ) => {
-
   if (!isNullOrUndefined(answers.answersArray)){
     return [
       noResponseObject,
-      ...Object.keys(answers.answersArray).map((key, index) => ({
+      ...Object.keys(answers.answersArray).map((key, index) => (
+        {
         answerCount: answers.answersArray[index].count,
         answerChoice: String.fromCharCode(65 + index),
-        answerText: questionChoices[index].text,
+        answerText:  isNullOrUndefined(questionChoices[index]) ? '' : questionChoices[index].text,
         answerTeams: answers.answersArray[index].teams,
         answerCorrect: answers.answersArray[index].isCorrect
       })).reverse(),
