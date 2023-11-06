@@ -286,7 +286,6 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
           normalizedAnswer[AnswerType.EXPRESSION].push(
             raw.replace(/(\r\n|\n|\r|\s|" ")/gm, ''),
           );
-          console.log(normalizedAnswer[AnswerType.EXPRESSION]);
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
           normalizedAnswer[AnswerType.NUMBER].push(Number(raw));
@@ -345,6 +344,5 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
     normalizedAnswer[AnswerType.NUMBER] = [];
   }
   const rawAnswer = rawArray.join('').trim();
-  console.log(rawAnswer);
   return { normalizedAnswer, rawAnswer };
 };
