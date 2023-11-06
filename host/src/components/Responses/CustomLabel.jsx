@@ -16,7 +16,6 @@ export default function CustomLabel(props) {
     noResponseLabel,
     isShortAnswerEnabled,
   } = props;
-
   // done to prevent embedding a nested ternary in the render function
   const labelPadding = useCallback(() => {
     if (isShortAnswerEnabled){
@@ -25,7 +24,7 @@ export default function CustomLabel(props) {
       return mediumLargePadding;
     }
     return defaultVictoryPadding + xSmallPadding;
-  }, [isShortAnswerEnabled, datum.answerCorrect, mediumLargePadding, defaultVictoryPadding, xSmallPadding]);
+  }, [isShortAnswerEnabled, datum.answerCorrect, mediumLargePadding, defaultVictoryPadding, xSmallPadding]); 
 
   return (
     <g>
@@ -46,7 +45,7 @@ export default function CustomLabel(props) {
             dy={-barThickness / 2 - xSmallPadding}
             textAnchor="start"
             verticalAnchor="end"
-            text={({ datum }) => `${(datum.answerText).toString()}`}
+            text={datum.answerText}
             style={{
               fontSize: 15,
               fill: 'white',

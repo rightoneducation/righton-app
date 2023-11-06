@@ -293,12 +293,13 @@ export const determineAnswerType = (answer) => {
  * @param {IResponse[]} prevAnswer
  * @returns {boolean}
  */
-export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAnswer,  prevAnswer) => {
+export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAnswer,  prevAnswer, correctAnswerRegex) => {
   // convert to set to optimize the equality check between two arrays
   // this prevents having to use two nested for/foreach loops etc
   const prevAnswerSet = new Set(prevAnswer);
   return (
     normAnswer.some(item => prevAnswerSet.has(item)) 
+    || (Number(normAnswerType) === AnswerType.STRING && correctAnswerRegex.test(normAnswer))
     || (rawAnswer === prevAnswer.value) 
   );
 }
@@ -313,8 +314,9 @@ export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAns
  * @returns {IResponse[]}
  */
 export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
+  let correctAnswer = choices.find(choice => choice.isAnswer).text;
+  const correctAnswerRegEx = new RegExp(`\\b${correctAnswer.toLowerCase()}\\b`, 'g');
   if (prevShortAnswer.length === 0) {
-    let correctAnswer = choices.find(choice => choice.isAnswer).text;
     const correctAnswerType = determineAnswerType(correctAnswer);
     if (correctAnswerType === AnswerType.EXPRESSION) {
       try {
@@ -324,8 +326,10 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       }
     } else if (correctAnswerType === AnswerType.NUMBER) {
       correctAnswer = Number(correctAnswer);
+    } else {
+      correctAnswer = correctAnswer.toLowerCase();
     }
-
+   
     prevShortAnswer.push({
       value: correctAnswer,
       isCorrect: true,
@@ -339,7 +343,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   }
   const rawAnswer = newAnswer.answerContent.rawAnswer;
   let isExistingAnswer = false;
-
+ 
   // if the answer is an expression, evaluate it and store the result
   // this prevents doing this every time we check equality with prev answers
   if (newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION]){
@@ -360,14 +364,14 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
         // check equality based on the type of answer
         if (isExistingAnswer === false 
           && prevAnswer.normAnswer[key] 
-          && checkEqualityWithOtherAnswers(rawAnswer, key, value, prevAnswer.normAnswer[key])) {
+          && checkEqualityWithOtherAnswers(rawAnswer, key, value, prevAnswer.normAnswer[key], correctAnswerRegEx)) {
           isExistingAnswer = true;
           prevAnswer.count += 1;
           prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
         }
     });
   });
-      
+
   if (!isExistingAnswer){
     prevShortAnswer.push({
       value: rawAnswer,
@@ -378,6 +382,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
       teams: [{name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel}]
     });
   }
+  console.log(prevShortAnswer);
   return prevShortAnswer;
 };
 
@@ -419,7 +424,7 @@ export const buildVictoryDataObjectShortAnswer = (
       .map((answer, index) => ({ 
         answerChoice: String.fromCharCode(65 + index),
         answerCount: answer.count,
-        answerText: answer.value,
+        answerText: answer.value.toString(),
         answerTeams: answer.teams,
         answerCorrect: answer.isCorrect
     }))

@@ -337,7 +337,7 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
       return normalizedAnswer;
     }
   );
-  // if a student enters multiple answers, we will treat those answers as a single string
+  // if a student enters multiple numeric answers, we will treat those answers as a single string
   // this prevents them from being awarded points as well as matching other students single number answers
   if (normalizedAnswer[AnswerType.NUMBER].length > 1){
     normalizedAnswer[AnswerType.STRING].push(normalizedAnswer[AnswerType.NUMBER].toString());
