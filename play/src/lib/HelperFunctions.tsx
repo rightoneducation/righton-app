@@ -265,7 +265,7 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
   // used later in the map for removing special characters
   // eslint-disable-next-line prefer-regex-literals
   const specialCharsRegex = new RegExp(
-    `[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `,
+    `[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-]`,
     'gm'
   );
   const extractedAnswer = getAnswerFromDelta(currentContents);
@@ -276,7 +276,6 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
     [AnswerType.EXPRESSION]: []
   };
   extractedAnswer.forEach((answer) => {
-    console.log(answer);
       // replaces \n with spaces, maintain everything else
       const raw = `${answer.value.replace(/\n/g, ' ')}`;
       rawArray.push(raw);
@@ -338,7 +337,12 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
       return normalizedAnswer;
     }
   );
-  console.log(normalizedAnswer);
+  // if a student enters multiple answers, we will treat those answers as a single string
+  // this prevents them from being awarded points as well as matching other students single number answers
+  if (normalizedAnswer[AnswerType.NUMBER].length > 1){
+    normalizedAnswer[AnswerType.STRING].push(normalizedAnswer[AnswerType.NUMBER].toString());
+    normalizedAnswer[AnswerType.NUMBER] = [];
+  }
   const rawAnswer = rawArray.join('').trim();
   return { normalizedAnswer, rawAnswer };
 };
