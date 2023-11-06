@@ -280,12 +280,13 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
       const raw = `${answer.value.replace(/\n/g, ' ')}`;
       rawArray.push(raw);
       if (answer) {
-        if (answer.type === AnswerType.EXPRESSION) {
+        if (Number(answer.type) === AnswerType.EXPRESSION) {
           // 1. answer is a formula
           // removes all spaces
           normalizedAnswer[AnswerType.EXPRESSION].push(
-            raw.replace(/(\r\n|\n|\r|" ")/gm, ''),
+            raw.replace(/(\r\n|\n|\r|\s|" ")/gm, ''),
           );
+          console.log(normalizedAnswer[AnswerType.EXPRESSION]);
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
           normalizedAnswer[AnswerType.NUMBER].push(Number(raw));
@@ -344,5 +345,6 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
     normalizedAnswer[AnswerType.NUMBER] = [];
   }
   const rawAnswer = rawArray.join('').trim();
+  console.log(rawAnswer);
   return { normalizedAnswer, rawAnswer };
 };

@@ -4,7 +4,8 @@ import {
   ConfidenceLevel,
   AnswerType,
 } from '@righton/networking';
-import { parse, evaluate } from 'mathjs';
+import { parse, symbolicEqual } from 'mathjs';
+
 /*
  * counts all answers for current question using isChosen, for use in footer progress bar
  * @param {array} answerArray - array of answers for current question
@@ -265,8 +266,8 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
 export const determineAnswerType = (answer) => {
   // check if answer is numeric
   if (
-    typeof(answer) === 'number' || 
-    typeof(answer) === "string" && 
+    (typeof(answer) === 'number' || 
+    typeof(answer) === "string") && 
     answer.trim() !== ''
     && !isNaN(answer)
   ) 
@@ -284,6 +285,26 @@ export const determineAnswerType = (answer) => {
   }
 };
 
+export const checkExpressionEquality = (normAnswer,  prevAnswer) => {
+  let isSymbolicallyEqual = false;
+  for (let normItem of normAnswer) {
+    for (let prevItem of prevAnswer) {
+      try {
+        if (symbolicEqual(normItem, prevItem) || normItem.toString() === prevItem.toString()) {
+          isSymbolicallyEqual = true;
+          break; // Break out of the inner loop
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (isSymbolicallyEqual) {
+      break; // Break out of the outer loop if a match has been found
+    }
+  }
+  return isSymbolicallyEqual;
+}
+
 /**
  * this function takes a received normalized answer and loops through all normalized answers in the immediate previous answer to check for equality
  * for more info see: https://github.com/rightoneducation/righton-app/wiki/Short-Answer-Response-%E2%80%90-Equality-Checks
@@ -297,8 +318,11 @@ export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAns
   // convert to set to optimize the equality check between two arrays
   // this prevents having to use two nested for/foreach loops etc
   const prevAnswerSet = new Set(prevAnswer);
-  return (
-    normAnswer.some(item => prevAnswerSet.has(item)) 
+  // expression equality requires a bit more work, as we have to use mathjs to check for symbolic equality
+  if (Number(normAnswerType) === AnswerType.EXPRESSION) {
+    return checkExpressionEquality(normAnswer, prevAnswerSet);
+  }
+  return ( normAnswer.some(item => prevAnswerSet.has(item)) 
     || (Number(normAnswerType) === AnswerType.STRING && correctAnswerRegex.test(normAnswer))
     || (rawAnswer === prevAnswer.value) 
   );
@@ -318,13 +342,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   const correctAnswerRegEx = new RegExp(`\\b${correctAnswer.toLowerCase()}\\b`, 'g');
   if (prevShortAnswer.length === 0) {
     const correctAnswerType = determineAnswerType(correctAnswer);
-    if (correctAnswerType === AnswerType.EXPRESSION) {
-      try {
-        correctAnswer = evaluate(correctAnswer);
-      } catch (e) {
-        console.error(e);
-      }
-    } else if (correctAnswerType === AnswerType.NUMBER) {
+    if (correctAnswerType === AnswerType.NUMBER) {
       correctAnswer = Number(correctAnswer);
     } else {
       correctAnswer = correctAnswer.toLowerCase();
@@ -343,19 +361,6 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   }
   const rawAnswer = newAnswer.answerContent.rawAnswer;
   let isExistingAnswer = false;
- 
-  // if the answer is an expression, evaluate it and store the result
-  // this prevents doing this every time we check equality with prev answers
-  if (newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION]){
-    newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION] = newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION].map((exp) => {
-      try {
-        return evaluate(exp);
-      } catch (e) {
-        console.error(e);
-        return exp;
-      }
-    });
-  };
 
   // for each answer type in the newly submitted answer
   Object.entries(newAnswer.answerContent.normAnswer).forEach(([key, value])=>{
