@@ -284,7 +284,12 @@ export const determineAnswerType = (answer) => {
     return AnswerType.STRING;
   }
 };
-
+/**
+ * this function is called to check symbolic equality between two expressions
+ * @param {any} normAnswer - the array of mathematical expressions that comprise the answer that has been submitted by the student 
+ * @param {any} prevAnswer - the array of mathematical expressions that are contained in the previous answer
+ * @returns {boolean} - true/false if there is a match
+ */
 export const checkExpressionEquality = (normAnswer,  prevAnswer) => {
   let isSymbolicallyEqual = false;
   for (let normItem of normAnswer) {
