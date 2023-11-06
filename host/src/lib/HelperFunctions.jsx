@@ -292,8 +292,8 @@ export const determineAnswerType = (answer) => {
  * @param {AnswerType} prevAnswerType 
  * @returns {boolean}
  */
-export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnswerType) => {
-  switch (prevAnswerType){
+export const checkEqualityWithPrevAnswer = (normAnswerType, normValue, prevAnswerValue) => {
+  switch (normAnswerType){
     case AnswerType.STRING: // string
     default: 
       return normValue.includes(prevAnswerValue);
@@ -318,23 +318,46 @@ export const checkEqualityWithPrevAnswer = (normValue, prevAnswerValue, prevAnsw
  * @param {IResponse[]} prevAnswer
  * @returns {boolean}
  */
-export const checkEqualityWithOtherAnswers = (rawAnswer, normValue, normType, prevAnswer) => {
-  // loop through each of the normalized answers in each of the previous answers
-  for (let i = 0; i < prevAnswer.normAnswer.length; i++) {
-      if (normType === prevAnswer.normAnswer[i].type && checkEqualityWithPrevAnswer(normValue, prevAnswer.normAnswer[i].value, prevAnswer.normAnswer[i].type)) {
-        return true;
-      }
-      // last ditch check on expressions in case there is a basic match that the type check in the previous conditional misses
-      if ((normType === AnswerType.EXPRESSION || prevAnswer.normAnswer[i].type === AnswerType.EXPRESSION) 
-        && (normValue.toString() === prevAnswer.normAnswer[i].value.toString())) {
-          return true;
-      }
-      // last ditch raw answer checks (5% === 5% enter as an expression, for instance)
-      if (rawAnswer === prevAnswer.value) {
-        return true;
-      }
+export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAnswer,  prevAnswer) => {
+   // if student enters multiple numeric answers, they will not get points
+   if (normAnswerType === AnswerType.NUMBER && normAnswer.length > 1) {
+    return false;
   };
-  return false;
+
+  // convert to set to optimize the equality check between two arrays
+  // this prevents having to use two nested for/foreach loops etc
+  const prevAnswerSet = new Set(prevAnswer);
+  console.log(normAnswer);
+  console.log(prevAnswer);
+  console.log(prevAnswerSet);
+  return (
+    normAnswer.some(item => prevAnswerSet.has(item)) 
+    || (rawAnswer === prevAnswer.value) 
+  );
+
+  // if (!isMatch) {
+  
+  // };
+  // return isMatch;
+
+  // // we have two arrays, so we need to loop through both to check for equality
+  // for (let i = 0; i < normAnswer.length; i++) {
+  //   for (let y = 0; y < prevAnswer.length; y++) {
+  //       if (checkEqualityWithPrevAnswer(normAnswerType, normAnswer[i], prevAnswer[y])) {
+  //         return true; 
+  //       }
+  //     // last ditch check on expressions in case there is a basic match that the type check in the previous conditional misses
+  //     if ((normType === AnswerType.EXPRESSION || prevAnswer.normAnswer[i].type === AnswerType.EXPRESSION) 
+  //       && (normValue.toString() === prevAnswer.normAnswer[i].value.toString())) {
+  //         return true;
+  //     }
+  //     // last ditch raw answer checks (5% === 5% enter as an expression, for instance)
+  //     if (rawAnswer === prevAnswer.value) {
+  //       return true;
+  //     }
+  //   };
+  // };
+  // return false;
 }
 
 /**
@@ -348,37 +371,62 @@ export const checkEqualityWithOtherAnswers = (rawAnswer, normValue, normType, pr
  */
 export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
   if (prevShortAnswer.length === 0) {
-    const correctAnswer = choices.find(choice => choice.isAnswer).text;
+    let correctAnswer = choices.find(choice => choice.isAnswer).text;
     const correctAnswerType = determineAnswerType(correctAnswer);
+    if (correctAnswerType === AnswerType.EXPRESSION) {
+      try {
+        correctAnswer = evaluate(correctAnswer);
+      } catch (e) {
+        console.error(e);
+      }
+    } else if (correctAnswerType === AnswerType.NUMBER) {
+      correctAnswer = Number(correctAnswer);
+    }
 
     prevShortAnswer.push({
       value: correctAnswer,
       isCorrect: true,
       isSelectedMistake: false,
-      normAnswer: [{
-        value: correctAnswer,
-        type: correctAnswerType,
-      }],
+      normAnswer: {
+        [correctAnswerType]: [correctAnswer]
+      },
       count: 0,
       teams: [],
     });
   }
   const rawAnswer = newAnswer.answerContent.rawAnswer;
   let isExistingAnswer = false;
-  outerloop:
-  // for each normalized answer in the newly submitted answer
-  for (let i = 0; i < newAnswer.answerContent.normAnswer.length; i++) {
-    const answer = newAnswer.answerContent.normAnswer[i];
-    // for each answer in the previous short answer array 
-    for (let y = 0; y < prevShortAnswer.length; y++) {
-      if (checkEqualityWithOtherAnswers(rawAnswer, answer.value, answer.type, prevShortAnswer[y])) {
-        isExistingAnswer = true;
-        prevShortAnswer[y].count += 1;
-        prevShortAnswer[y].teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
-        break outerloop;
+
+  // if the answer is an expression, evaluate it and store the result
+  // this prevents do this every time we check equality with prev answers
+  if (newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION]){
+    newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION] = newAnswer.answerContent.normAnswer[AnswerType.EXPRESSION].map((exp) => {
+      try {
+        return evaluate(exp);
+      } catch (e) {
+        console.error(e);
+        return exp;
       }
-    };
+    });
   };
+
+  // for each answer type in the newly submitted answer
+  Object.entries(newAnswer.answerContent.normAnswer).forEach(([key, value])=>{
+    // only run check if matching answer has not already been found
+    if (isExistingAnswer === false){
+      // for each answer in the previous short answer array 
+      prevShortAnswer.forEach((prevAnswer) => {
+        // check equality based on the type of answer
+        console.log(prevAnswer);
+        console.log(prevAnswer.normAnswer[key])
+        if (prevAnswer.normAnswer[key] && checkEqualityWithOtherAnswers(rawAnswer, key, value, prevAnswer.normAnswer[key])) {
+          isExistingAnswer = true;
+          prevAnswer.count += 1;
+          prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
+        }
+      });
+    };
+  });
       
   if (!isExistingAnswer){
     prevShortAnswer.push({

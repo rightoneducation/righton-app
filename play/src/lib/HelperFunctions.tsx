@@ -64,12 +64,11 @@ export const checkForSubmittedAnswerOnRejoin = (
   let returnedAnswer: ITeamAnswerContent = {
     delta: '',
     rawAnswer: '',
-    normAnswer: [
-      {
-        value: '',
-        type: AnswerType.EXPRESSION,
-      },
-    ],
+    normAnswer: {
+      [AnswerType.NUMBER]: [], 
+      [AnswerType.STRING]: [], 
+      [AnswerType.EXPRESSION]: []
+    },
     multiChoiceAnswerIndex: null,
     isSubmitted: false,
     currentState: null,
@@ -271,25 +270,26 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
   );
   const extractedAnswer = getAnswerFromDelta(currentContents);
   const rawArray: string[] = [];
-
-  const normalizedAnswer: INormAnswer[] = extractedAnswer.reduce<INormAnswer[]>(
-    (acc: INormAnswer[], answer) => {
+  const normalizedAnswer: INormAnswer = {
+    [AnswerType.NUMBER]: [], 
+    [AnswerType.STRING]: [], 
+    [AnswerType.EXPRESSION]: []
+  };
+  extractedAnswer.forEach((answer) => {
+    console.log(answer);
       // replaces \n with spaces, maintain everything else
       const raw = `${answer.value.replace(/\n/g, ' ')}`;
       rawArray.push(raw);
-      const norm: INormAnswer[] = [];
-
       if (answer) {
         if (answer.type === AnswerType.EXPRESSION) {
           // 1. answer is a formula
           // removes all spaces
-          norm.push({
-            value: raw.replace(/(\r\n|\n|\r|" ")/gm, ''),
-            type: AnswerType.EXPRESSION,
-          });
+          normalizedAnswer[AnswerType.EXPRESSION].push(
+            raw.replace(/(\r\n|\n|\r|" ")/gm, ''),
+          );
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
-          norm.push({ value: Number(raw), type: AnswerType.NUMBER });
+          normalizedAnswer[AnswerType.NUMBER].push(Number(raw));
         } else {
           // 3. answer is a string
           //  we will produce a naive normalization of the string, attempting to extract numeric answers and then
@@ -301,11 +301,9 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
           const specialCharRemoved = raw.replace(specialCharsRegex, '');
           const extractedNumbers = specialCharRemoved.match(/-?\d+(\.\d+)?/g)?.map(Number);
           if (extractedNumbers) {
-            norm.push(
-              ...extractedNumbers.map((value) => ({
-                value: Number(value),
-                type: AnswerType.NUMBER,
-              }))
+            normalizedAnswer[AnswerType.NUMBER].push(
+              ...extractedNumbers.map((value) => (value
+              ))
             );
           }
           const numbersRemoved = specialCharRemoved.replace(/-?\d+(\.\d+)?/g, '');
@@ -318,31 +316,29 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
             .numbers()
             .json();
           if (detectedNumbers.length > 0) {
-            norm.push(
-              ...detectedNumbers.map((num: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
-                value: Number(num.number.num),
-                type: AnswerType.NUMBER,
-              }))
+            normalizedAnswer[AnswerType.NUMBER].push(
+              ...detectedNumbers.map((num: any) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
+                Number(num.number.num)
+               ))
             );
           }
           // 4. any remaining content remaining is just a plain string
           //    set normalized input to lower case and remove spaces
 
         if (numbersRemoved !== '') {
-          norm.push({
-            value: numbersRemoved
+          normalizedAnswer[AnswerType.STRING].push(
+            numbersRemoved
               .toLowerCase()
               .replace(/(\r\n|\n|\r|" ")/gm, '')
-              .trim(),
-            type: AnswerType.STRING,
-          });
+              .trim()
+          );
         }
         }
       }
-      return acc.concat(norm);
-    },
-    []
+      return normalizedAnswer;
+    }
   );
+  console.log(normalizedAnswer);
   const rawAnswer = rawArray.join('').trim();
   return { normalizedAnswer, rawAnswer };
 };
