@@ -179,7 +179,6 @@ export default function GameInProgress({
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
-      console.log(answer);
       setTeamAnswerId(response.id);
       setAnswerContent(answer);
       setDisplaySubmitted(true);
