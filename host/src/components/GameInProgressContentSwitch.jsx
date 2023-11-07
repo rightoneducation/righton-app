@@ -7,6 +7,7 @@ import ConfidenceResponseCard from "./ConfidenceResponses/ConfidenceResponseCard
 import GameAnswers from "./GameAnswers";
 import SelectedAnswer from "./Responses/SelectedAnswer";
 import EnableConfidenceCard from "./EnableConfidenceCard";
+import EnableSurfacingThinking from "./EnableSurfacingThinking";
 import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
 import EnableShortAnswerCard from "./EnableShortAnswerCard";
 import FeaturedMistakes from "./FeaturedMistakes";
@@ -37,6 +38,9 @@ export default function GameInProgressContentSwitch ({
     handleShortAnswerChange,
     shortAnswerResponses,
     handleOnSelectMistake,
+    isSurfacingThinkingEnabled,
+    handleSurfacingThinkingChange,
+    surfacingThinkingRef
   }) {
   const classes = useStyles();
   const gameplayComponents = [
@@ -167,6 +171,12 @@ export default function GameInProgressContentSwitch ({
         <EnableConfidenceCard 
           isConfidenceEnabled={isConfidenceEnabled} 
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+        />
+      </div>
+      <div id="surfacingthinkingcard-scrollbox" ref={surfacingThinkingRef} style={{width:'100%'}}>
+        <EnableSurfacingThinking
+          isSurfacingThinkingEnabled={isSurfacingThinkingEnabled} 
+          handleSurfacingThinkingChange={handleSurfacingThinkingChange}
         />
       </div>
       <div
