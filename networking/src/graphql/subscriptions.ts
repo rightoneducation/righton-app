@@ -23,6 +23,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -30,9 +31,9 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -92,6 +93,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -99,9 +101,9 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -157,6 +159,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -164,9 +167,9 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -223,6 +226,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -230,9 +234,9 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -298,6 +302,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -305,9 +310,9 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -367,6 +372,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -374,9 +380,9 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -409,6 +415,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -416,9 +423,9 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -478,6 +485,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -485,9 +493,9 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -520,6 +528,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -527,9 +536,9 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -589,6 +598,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -596,9 +606,9 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -622,6 +632,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -629,9 +640,9 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -688,6 +699,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -695,9 +707,9 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -754,6 +766,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -761,9 +774,9 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }

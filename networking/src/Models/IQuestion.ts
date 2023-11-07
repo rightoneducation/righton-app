@@ -2,6 +2,7 @@ export interface IQuestion {
     id: number
     text: string
     choices?: Array<IChoice> | null
+    responses?: Array<string> | null
     imageUrl?: string | null
     instructions?: Array<string> | null
     standard?: string | null
@@ -10,9 +11,9 @@ export interface IQuestion {
     grade?: string | null
     gameSessionId: string
     order: number
-    isHintEnabled: boolean
     isConfidenceEnabled: boolean
     isShortAnswerEnabled: boolean
+    isSurfacingThinkingEnabled: boolean
 }
 
 export interface IChoice {
