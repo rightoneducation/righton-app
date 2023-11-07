@@ -34,9 +34,9 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -104,9 +104,9 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -148,9 +148,9 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -218,9 +218,9 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -262,9 +262,9 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -332,9 +332,9 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -366,9 +366,9 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isSurfacingThinkingEnabled
     gameSessionId
     __typename
   }
@@ -393,9 +393,9 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isSurfacingThinkingEnabled
     gameSessionId
     __typename
   }
@@ -420,9 +420,9 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isSurfacingThinkingEnabled
     gameSessionId
     __typename
   }
@@ -450,9 +450,9 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -520,9 +520,9 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -590,9 +590,9 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
