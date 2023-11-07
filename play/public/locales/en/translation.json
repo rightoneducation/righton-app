@@ -85,7 +85,13 @@
       "questioncard": "Question",
       "answercard": "Choose the correct answer",
       "openanswercard": "Enter your answer",
-      "openanswercardplaceholder": "Enter your answer here..."
+      "openanswercardplaceholder": "Enter your answer here...",
+      "surfacingthinkingtext1": "What is a",
+      "surfacingthinkingtext2": "hint",
+      "surfacingthinkingtext3": "you would give to someone who picked this mistake, to",
+      "surfacingthinkingtext4": "help clarify their misunderstanding?",
+      "surfacingthinkingcard": "Share your thinking",
+      "surfacingthinkingplaceholder": "A useful word or phrase to help another player..."
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",

@@ -17,6 +17,7 @@ import AnswerCard from '../../components/AnswerCard';
 import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
+import SurfacingThinkingCard from '../../components/surfacingthinkingcard/SurfacingThinkingCard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -83,7 +84,7 @@ export default function ChooseAnswer({
 
   const onSubmitDisplay =
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
-    isConfidenceEnabled ? (
+    (isConfidenceEnabled && 
       <Fade in={displaySubmitted} timeout={500}>
         <Box>
           <ConfidenceMeterCard
@@ -96,7 +97,7 @@ export default function ChooseAnswer({
           />
         </Box>
       </Fade>
-    ) : (
+    );(
       <Typography
         sx={{
           fontWeight: 700,
@@ -133,6 +134,14 @@ export default function ChooseAnswer({
       )}
       {displaySubmitted ? onSubmitDisplay : null}
       {isSubmitted ? (
+        <>
+          <SurfacingThinkingCard
+          answerContent={answerContent}
+          isSubmitted={answerContent.isSubmitted ?? false}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
+          handleSubmitAnswer={handleSubmitAnswer}
+          />
         <Typography
           sx={{
             fontWeight: 700,
@@ -144,6 +153,7 @@ export default function ChooseAnswer({
         >
           {t('gameinprogress.chooseanswer.answerthankyou2')}
         </Typography>
+        </>
       ) : null}
     </ScrollBoxStyled>
   );
