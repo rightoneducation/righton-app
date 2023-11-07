@@ -166,26 +166,20 @@ export default function GameInProgressContentSwitch ({
           handleShortAnswerChange={handleShortAnswerChange}
         />
       </div>
-      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
+      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}/>
       <div id="confidencecard-scrollbox" ref={confidenceCardRef} style={{width:'100%'}}>
         <EnableConfidenceCard 
           isConfidenceEnabled={isConfidenceEnabled} 
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
         />
       </div>
+      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}/>
       <div id="surfacingthinkingcard-scrollbox" ref={surfacingThinkingRef} style={{width:'100%'}}>
         <EnableSurfacingThinking
           isSurfacingThinkingEnabled={isSurfacingThinkingEnabled} 
           handleSurfacingThinkingChange={handleSurfacingThinkingChange}
         />
       </div>
-      <div
-        style={{
-          width: '100%',
-          height: '1px',
-          backgroundColor: 'rgba(255,255,255,0.2)',
-        }}
-      ></div>
     </Box>,
   ];
 

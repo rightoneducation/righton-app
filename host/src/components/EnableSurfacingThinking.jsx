@@ -6,11 +6,10 @@ export default function EnableSurfacingThinking({
   handleSurfacingThinkingChange,
 }) {
   const classes = useStyles();
-
   return (
     <Box className={classes.container}>
       <div className={classes.titleContainer}>
-        <Typography className={classes.title}>Confidence</Typography>
+        <Typography className={classes.title}>Player Thinking</Typography>
         <Switch
           className={classes.switch}
           checked={isSurfacingThinkingEnabled}
@@ -19,7 +18,7 @@ export default function EnableSurfacingThinking({
       </div>
       <div className={classes.answerContainer}>
         <Typography className={classes.text}>
-          You may allow players to indicate how sure they are of their answer.
+         Players are asked to provide a hint to help others who made the selected mistake.
         </Typography>
       </div>
     </Box>
