@@ -535,6 +535,7 @@ type AWSQuestion = {
     id: number
     text: string
     choices?: string | null
+    responses?: string | null
     imageUrl?: string | null
     instructions?: string | null
     standard?: string | null
@@ -543,9 +544,9 @@ type AWSQuestion = {
     grade?: string | null
     gameSessionId: string
     order: number
-    isHintEnabled: boolean
     isConfidenceEnabled: boolean
     isShortAnswerEnabled: boolean
+    isSurfacingThinkingEnabled: boolean
 }
 
 type AWSTeamMember = {
@@ -716,6 +717,7 @@ export class GameSessionParser {
                     choices: isNullOrUndefined(awsQuestion.choices)
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
+                    responses: [],
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []
@@ -728,9 +730,9 @@ export class GameSessionParser {
                     grade: awsQuestion.grade,
                     gameSessionId: awsQuestion.gameSessionId,
                     order: awsQuestion.order,
-                    isHintEnabled: awsQuestion.isHintEnabled,
                     isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
                     isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
+                    isSurfacingThinkingEnabled: awsQuestion.isSurfacingThinkingEnabled
                 }
                 return question
             })

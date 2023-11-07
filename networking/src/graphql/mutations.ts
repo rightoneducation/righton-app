@@ -26,6 +26,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -33,9 +34,9 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -95,6 +96,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -102,9 +104,9 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -138,6 +140,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -145,9 +148,9 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -207,6 +210,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -214,9 +218,9 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -250,6 +254,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -257,9 +262,9 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isSurfacingThinkingEnabled
           gameSessionId
           __typename
         }
@@ -319,6 +324,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -326,9 +332,9 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isSurfacingThinkingEnabled
         gameSessionId
         __typename
       }
@@ -352,6 +358,7 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     id
     text
     choices
+    responses
     imageUrl
     instructions
     standard
@@ -359,9 +366,9 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isSurfacingThinkingEnabled
     gameSessionId
     __typename
   }
@@ -378,6 +385,7 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     id
     text
     choices
+    responses
     imageUrl
     instructions
     standard
@@ -385,9 +393,9 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isSurfacingThinkingEnabled
     gameSessionId
     __typename
   }
@@ -404,6 +412,7 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     id
     text
     choices
+    responses
     imageUrl
     instructions
     standard
@@ -411,9 +420,9 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isSurfacingThinkingEnabled
     gameSessionId
     __typename
   }
@@ -433,6 +442,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -440,9 +450,9 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -502,6 +512,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -509,9 +520,9 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
@@ -571,6 +582,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -578,9 +590,9 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isSurfacingThinkingEnabled
       gameSessionId
       __typename
     }
