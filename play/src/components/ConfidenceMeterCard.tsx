@@ -70,7 +70,7 @@ export default function ConfidenceMeterCard({
       }}
     >
       <Typography
-        variant="h2"
+        variant="subtitle1"
         sx={{ color: `${theme.palette.primary.darkBlue}` }}
       >
         {t('gameinprogress.chooseanswer.confidenceheader')}

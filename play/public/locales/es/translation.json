@@ -86,12 +86,9 @@
       "answercard": "Elige la respuesta correcta",
       "openanswercard": "Introduce tu respuesta",
       "openanswercardplaceholder": "Ingresa tu respuesta aquí...",
-      "surfacingthinkingtext1": "¿Qué",
-      "surfacingthinkingtext2": "pista",
-      "surfacingthinkingtext3": "le darías a alguien que haya cometido este error",
-      "surfacingthinkingtext4": "para ayudar a aclarar su malentendido?",
-      "surfacingthinkingcard": "Comparte tu pensamiento",
-      "surfacingthinkingplaceholder": "Una palabra o frase útil para ayudar a otro jugador..."
+      "surfacingthinkingtext": "¿Podrías darle una pista a alguien que haya cometido este error?",
+      "surfacingthinkingcard": "Dar una pista (opcional)",
+      "surfacingthinkingplaceholder": "Introduce tu explicación..."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",

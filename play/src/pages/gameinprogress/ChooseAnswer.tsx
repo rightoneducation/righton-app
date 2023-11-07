@@ -84,34 +84,50 @@ export default function ChooseAnswer({
     </ScrollBoxStyled>
   );
 
-  const onSubmitDisplay =
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
-    (isConfidenceEnabled && 
-      <Fade in={displaySubmitted} timeout={500}>
-        <Box>
-          <ConfidenceMeterCard
-            selectedOption={selectedConfidenceOption}
-            handleSelectOption={handleSelectConfidence}
-            isSelected={isConfidenceSelected}
-            isSmallDevice={isSmallDevice}
-            timeOfLastSelect={timeOfLastConfidenceSelect}
-            setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
-          />
-        </Box>
-      </Fade>
-    );(
-      <Typography
-        sx={{
-          fontWeight: 700,
-          marginTop: `${theme.sizing.largePadding}px`,
-          marginX: `${theme.sizing.largePadding}px`,
-          fontSize: `${theme.typography.h4.fontSize}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.chooseanswer.answerthankyou1')}
-      </Typography>
-    );
+  const onSubmitDisplay = (
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
+      <>
+        {isConfidenceEnabled && (
+          <Fade in={displaySubmitted} timeout={500}>
+            <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+              <ConfidenceMeterCard
+                selectedOption={selectedConfidenceOption}
+                handleSelectOption={handleSelectConfidence}
+                isSelected={isConfidenceSelected}
+                isSmallDevice={isSmallDevice}
+                timeOfLastSelect={timeOfLastConfidenceSelect}
+                setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+              />
+            </Box>
+          </Fade>
+        )}
+        {isSurfacingThinkingEnabled && (
+          <Fade in={displaySubmitted} timeout={500}>
+            <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+              <SurfacingThinkingCard
+                answerContent={answerContent}
+                isSubmitted={answerContent.isSubmitted ?? false}
+                currentState={currentState}
+                currentQuestionIndex={currentQuestionIndex}
+                handleSubmitAnswer={handleSubmitAnswer}
+              />
+            </Box>
+          </Fade>
+        )}
+        <Typography
+          sx={{
+            fontWeight: 700,
+            marginTop: `${theme.sizing.largePadding}px`,
+            marginX: `${theme.sizing.largePadding}px`,
+            fontSize: `${theme.typography.h4.fontSize}px`,
+            textAlign: 'center',
+          }}
+        >
+          {t('gameinprogress.chooseanswer.answerthankyou1')}
+        </Typography>
+      </>
+    )
+  );
   const answerContents = (
     <ScrollBoxStyled>
       {isShortAnswerEnabled &&
@@ -136,28 +152,17 @@ export default function ChooseAnswer({
       )}
       {displaySubmitted ? onSubmitDisplay : null}
       {isSubmitted ? (
-        <>
-          {isSurfacingThinkingEnabled &&
-            <SurfacingThinkingCard
-              answerContent={answerContent}
-              isSubmitted={answerContent.isSubmitted ?? false}
-              currentState={currentState}
-              currentQuestionIndex={currentQuestionIndex}
-              handleSubmitAnswer={handleSubmitAnswer}
-            /> 
-          }
-          <Typography
-            sx={{
-              fontWeight: 700,
-              marginTop: `${theme.sizing.largePadding}px`,
-              marginX: `${theme.sizing.largePadding}px`,
-              fontSize: `${theme.typography.h4.fontSize}px`,
-              textAlign: 'center',
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou2')}
-          </Typography>
-        </>
+        <Typography
+          sx={{
+            fontWeight: 700,
+            marginTop: `${theme.sizing.largePadding}px`,
+            marginX: `${theme.sizing.largePadding}px`,
+            fontSize: `${theme.typography.h4.fontSize}px`,
+            textAlign: 'center',
+          }}
+        >
+          {t('gameinprogress.chooseanswer.answerthankyou2')}
+        </Typography>
       ) : null}
     </ScrollBoxStyled>
   );

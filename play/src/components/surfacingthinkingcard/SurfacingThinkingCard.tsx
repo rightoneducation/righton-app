@@ -37,9 +37,9 @@ export default function SurfacingThinkingCard({
   const theme = useTheme();
   const { t } = useTranslation();
   const modules = {
-    toolbar: [['formula']],
+    toolbar: false,
   };
-  const formats = ['formula'];
+  const formats = [''];
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
   const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
@@ -85,7 +85,7 @@ export default function SurfacingThinkingCard({
 
   return (
     <BodyCardStyled elevation={10}>
-      <BodyCardContainerStyled spacing={2}>
+      <BodyCardContainerStyled >
         <Typography
           variant="subtitle1"
           sx={{ width: '100%', textAlign: 'left' }}
@@ -102,25 +102,15 @@ export default function SurfacingThinkingCard({
             gap: '20px',
           }}
         >
-          <Typography
-            variant="body1"
-            sx={{ width: '100%', textAlign: 'left' }}
-          >
-            {t('gameinprogress.chooseanswer.surfacingthinkingtext1')}
+          <Box style={{width: '100%'}}>
             <Typography
-            variant="body1"
-            sx={{ width: '100%', textAlign: 'left', fontWeight: 700 }}
-          >
-            {t('gameinprogress.chooseanswer.surfacingthinkingtext2')}
+              variant="body1"
+              display="inline"
+              sx={{ textAlign: 'left' }}
+            >
+              {t('gameinprogress.chooseanswer.surfacingthinkingtext')}
             </Typography>
-            {t('gameinprogress.chooseanswer.surfacingthinkingtext3')}
-            <Typography
-            variant="body1"
-            sx={{ width: '100%', textAlign: 'left' }}
-          >
-            {t('gameinprogress.chooseanswer.surfacingthinkingtext4')}
-            </Typography>
-          </Typography>
+          </Box>
           <ReactQuill
             className="swiper-no-swiping"
             theme="snow"
@@ -128,13 +118,14 @@ export default function SurfacingThinkingCard({
             value={editorContents}
             onChange={handleEditorContentsChange}
             placeholder={
-              t('gameinprogress.chooseanswer.surfacingthinkingcardplaceholder') ?? ''
+              t('gameinprogress.chooseanswer.surfacingthinkingplaceholder') ?? ''
             }
             modules={modules}
             formats={formats}
             bounds={`[data-text-editor="name"]`}
             style={{
               width: '100%',
+              height: '188px',
               backgroundColor: !isSubmitted
                 ? ''
                 : `${theme.palette.primary.lightGrey}`,
