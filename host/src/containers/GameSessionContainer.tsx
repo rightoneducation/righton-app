@@ -21,7 +21,7 @@ const GameSessionContainer = () => {
   const gameAnswersRef = React.useRef(null);
   const confidenceCardRef = React.useRef(null);
   const featuredMistakesRef = React.useRef(null);
-  const playerThinkingRef = React.useRef(null);
+  const surfacingThinkingRef = React.useRef(null);
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
@@ -41,11 +41,13 @@ const GameSessionContainer = () => {
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
+  const [isSurfacingThinkingEnabled, setIsSurfacingThinkingEnabled] = useState(true);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
     { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
+    { ref: surfacingThinkingRef, text: 'Surfacing Thinking Settings' },
   ];
   const gameplayNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -92,6 +94,9 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        setIsSurfacingThinkingEnabled(
+          response.questions[response.currentQuestionIndex].isSurfacingThinkingEnabled,
+        );
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -139,6 +144,7 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        setIsSurfacingThinkingEnabled(response.questions[response.currentQuestionIndex].isSurfacingThinkingEnabled);
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
@@ -312,6 +318,10 @@ const GameSessionContainer = () => {
     setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
+  const handleSurfacingThinkingChange = (event) => {
+    setIsSurfacingThinkingEnabled(!isSurfacingThinkingEnabled);
+  };
+
   const handleOnSelectMistake = (value, isTop3) => {
     setSelectedMistakes((prev) => {
       if (prev.includes(value)) {
@@ -390,7 +400,8 @@ const GameSessionContainer = () => {
         id: questionId,
         order: order,
         isConfidenceEnabled: isConfidenceEnabled,
-        isShortAnswerEnabled: isShortAnswerEnabled
+        isShortAnswerEnabled: isShortAnswerEnabled,
+        isSurfacingThinkingEnabled: isSurfacingThinkingEnabled
       })
       .then((response) => {
         let newUpdates = {
@@ -458,6 +469,9 @@ const GameSessionContainer = () => {
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
           handleOnSelectMistake={handleOnSelectMistake}
+          isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
+          handleSurfacingThinkingChange={handleSurfacingThinkingChange}
+          surfacingThinkingRef={surfacingThinkingRef}
         />
       );
     }
@@ -487,6 +501,9 @@ const GameSessionContainer = () => {
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
           handleOnSelectMistake={handleOnSelectMistake}
+          isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
+          handleSurfacingThinkingChange={handleSurfacingThinkingChange}
+          surfacingThinkingRef={surfacingThinkingRef}
         />
       );
 
