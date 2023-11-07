@@ -48,9 +48,9 @@ type Question @model(subscriptions: null, timestamps: null) {
   domain: String
   grade: String
   order: Int!
-  isConfidenceEnabled: Boolean! @default(value: "false")
+  isHintEnabled: Boolean! @default(value: "false")
+  isConfidenceEnabled: Boolean! @default(value: "true")
   isShortAnswerEnabled: Boolean! @default(value: "false")
-  isSurfacingThinkingEnabled: Boolean! @default(value: "true")
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
 }
 

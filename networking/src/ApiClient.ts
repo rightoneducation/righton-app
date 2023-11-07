@@ -545,9 +545,9 @@ type AWSQuestion = {
     grade?: string | null
     gameSessionId: string
     order: number
+    isHintEnabled: boolean
     isConfidenceEnabled: boolean
     isShortAnswerEnabled: boolean
-    isSurfacingThinkingEnabled: boolean
 }
 
 type AWSTeamMember = {
@@ -731,9 +731,9 @@ export class GameSessionParser {
                     grade: awsQuestion.grade,
                     gameSessionId: awsQuestion.gameSessionId,
                     order: awsQuestion.order,
+                    isHintEnabled: awsQuestion.isHintEnabled,
                     isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
                     isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
-                    isSurfacingThinkingEnabled: awsQuestion.isSurfacingThinkingEnabled
                 }
                 return question
             })
