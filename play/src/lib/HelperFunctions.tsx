@@ -265,7 +265,7 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
   // used later in the map for removing special characters
   // eslint-disable-next-line prefer-regex-literals
   const specialCharsRegex = new RegExp(
-    `[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-]`,
+    `[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,<>\\/?~-]`,
     'gm'
   );
   const extractedAnswer = getAnswerFromDelta(currentContents);
@@ -298,7 +298,7 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
           // cuts special characters first so 5% and 50% don't match based on % (when numbers are removed)
           // it then removes those numbers from the string
           const specialCharRemoved = raw.replace(specialCharsRegex, '');
-          const extractedNumbers = specialCharRemoved.match(/-?\d+(\.\d+)?/g)?.map(Number);
+          const extractedNumbers = specialCharRemoved.match(/-?\d+(\.\d+)?|\.\d+/g)?.map(Number);
           if (extractedNumbers) {
             normalizedAnswer[AnswerType.NUMBER].push(
               ...extractedNumbers.map((value) => (value
