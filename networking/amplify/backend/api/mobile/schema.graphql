@@ -40,7 +40,6 @@ type Question @model(subscriptions: null, timestamps: null) {
   id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
-  responses: AWSJSON
   imageUrl: String
   instructions: AWSJSON
   standard: String
