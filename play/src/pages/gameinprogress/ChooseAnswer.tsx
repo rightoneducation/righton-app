@@ -40,6 +40,7 @@ interface ChooseAnswerProps {
   isShortAnswerEnabled: boolean;
   answerContent: ITeamAnswerContent;
   currentQuestionIndex: number;
+  isSurfacingThinkingEnabled: boolean;
 }
 
 export default function ChooseAnswer({
@@ -61,6 +62,7 @@ export default function ChooseAnswer({
   isShortAnswerEnabled,
   answerContent,
   currentQuestionIndex,
+  isSurfacingThinkingEnabled
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -135,24 +137,26 @@ export default function ChooseAnswer({
       {displaySubmitted ? onSubmitDisplay : null}
       {isSubmitted ? (
         <>
-          <SurfacingThinkingCard
-          answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          handleSubmitAnswer={handleSubmitAnswer}
-          />
-        <Typography
-          sx={{
-            fontWeight: 700,
-            marginTop: `${theme.sizing.largePadding}px`,
-            marginX: `${theme.sizing.largePadding}px`,
-            fontSize: `${theme.typography.h4.fontSize}px`,
-            textAlign: 'center',
-          }}
-        >
-          {t('gameinprogress.chooseanswer.answerthankyou2')}
-        </Typography>
+          {isSurfacingThinkingEnabled &&
+            <SurfacingThinkingCard
+              answerContent={answerContent}
+              isSubmitted={answerContent.isSubmitted ?? false}
+              currentState={currentState}
+              currentQuestionIndex={currentQuestionIndex}
+              handleSubmitAnswer={handleSubmitAnswer}
+            /> 
+          }
+          <Typography
+            sx={{
+              fontWeight: 700,
+              marginTop: `${theme.sizing.largePadding}px`,
+              marginX: `${theme.sizing.largePadding}px`,
+              fontSize: `${theme.typography.h4.fontSize}px`,
+              textAlign: 'center',
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
         </>
       ) : null}
     </ScrollBoxStyled>

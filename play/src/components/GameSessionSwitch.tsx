@@ -46,6 +46,7 @@ export default function GameSessionSwitch({
   // placed into a separate variable for readability in the switch statement
   const isGameFirstStarting = isPregameCountdown && !hasRejoined;
   const isShortAnswerEnabled = currentQuestion?.isShortAnswerEnabled;
+  const isSurfacingThinkingEnabled = currentQuestion?.isSurfacingThinkingEnabled;
   const answerChoices =
     (isShortAnswerEnabled
       ? currentQuestion?.responses?.reduce(
@@ -96,6 +97,7 @@ export default function GameSessionSwitch({
           currentTimer={currentTimer}
           localModel={localModel}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
         />
       );
     case GameSessionState.CHOOSE_TRICKIEST_ANSWER:
@@ -114,6 +116,7 @@ export default function GameSessionSwitch({
           currentTimer={currentTimer}
           localModel={localModel}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
         />
       );
     case GameSessionState.PHASE_1_RESULTS:

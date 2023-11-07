@@ -48,6 +48,7 @@ interface GameInProgressProps {
   currentTimer: number;
   localModel: LocalModel;
   isShortAnswerEnabled: boolean;
+  isSurfacingThinkingEnabled: boolean;
 }
 
 export default function GameInProgress({
@@ -67,6 +68,7 @@ export default function GameInProgress({
   currentTimer,
   localModel,
   isShortAnswerEnabled,
+  isSurfacingThinkingEnabled
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -292,6 +294,7 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerContent={answerContent}
             currentQuestionIndex={currentQuestionIndex ?? 0}
+            isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
           />
         ) : (
           <DiscussAnswer
