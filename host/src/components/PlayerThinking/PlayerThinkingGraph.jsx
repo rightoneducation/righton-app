@@ -12,7 +12,6 @@ import CustomBar from './CustomBar';
 export default function PlayerThinkingGraph({
   data,
   questionChoices,
-  statePosition,
   graphClickInfo,
   handleGraphClick,
 }) {
@@ -35,8 +34,6 @@ export default function PlayerThinkingGraph({
   const defaultVictoryPadding = 50;
 
   const customBarSelectedWidth = boundingRect.width - defaultVictoryPadding;
-  const correctChoiceIndex =
-    data.findIndex((element) => element.answerCorrect);
   const largestAnswerCount = Math.max(
     ...data.map((response) => response.answerCount),
   );
