@@ -33,7 +33,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -103,7 +103,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -149,7 +149,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             order
             isConfidenceEnabled
             isShortAnswerEnabled
-            isSurfacingThinkingEnabled
+            isHintEnabled
             gameSessionId
             __typename
           }
@@ -219,7 +219,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -253,7 +253,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     order
     isConfidenceEnabled
     isShortAnswerEnabled
-    isSurfacingThinkingEnabled
+    isHintEnabled
     gameSessionId
     __typename
   }
@@ -292,7 +292,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -322,7 +322,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -391,7 +391,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -596,7 +596,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             order
             isConfidenceEnabled
             isShortAnswerEnabled
-            isSurfacingThinkingEnabled
+            isHintEnabled
             gameSessionId
             __typename
           }
@@ -666,7 +666,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -723,7 +723,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             order
             isConfidenceEnabled
             isShortAnswerEnabled
-            isSurfacingThinkingEnabled
+            isHintEnabled
             gameSessionId
             __typename
           }
@@ -793,7 +793,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }

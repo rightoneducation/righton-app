@@ -13,7 +13,7 @@ export interface IQuestion {
     order: number
     isConfidenceEnabled: boolean
     isShortAnswerEnabled: boolean
-    isSurfacingThinkingEnabled: boolean
+    isHintEnabled: boolean
 }
 
 export interface IChoice {
