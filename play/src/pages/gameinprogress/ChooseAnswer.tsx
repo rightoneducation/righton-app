@@ -129,7 +129,8 @@ export default function ChooseAnswer({
      
       {isSubmitted ? (
         <>
-          {isConfidenceEnabled && (
+          {isConfidenceEnabled &&
+            currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
               <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
                 <ConfidenceMeterCard
