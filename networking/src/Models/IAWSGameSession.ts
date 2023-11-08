@@ -53,7 +53,7 @@ type AWSQuestion = {
   order: number
   isConfidenceEnabled: boolean
   isShortAnswerEnabled: boolean
-  isSurfacingThinkingEnabled: boolean
+  isHintEnabled: boolean
 }
 
 type AWSTeamMember = {

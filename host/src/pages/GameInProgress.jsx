@@ -48,9 +48,9 @@ export default function GameInProgress({
   featuredMistakesRef,
   shortAnswerResponses,
   handleOnSelectMistake,
-  isSurfacingThinkingEnabled,
-  handleSurfacingThinkingChange,
-  surfacingThinkingRef
+  isHintEnabled,
+  handleHintChange,
+  HintRef
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -276,9 +276,9 @@ export default function GameInProgress({
             handleShortAnswerChange={handleShortAnswerChange}
             shortAnswerResponses={shortAnswerResponses}
             handleOnSelectMistake={handleOnSelectMistake}
-            isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
-            handleSurfacingThinkingChange={handleSurfacingThinkingChange}
-            surfacingThinkingRef={surfacingThinkingRef}
+            isHintEnabled={isHintEnabled}
+            handleHintChange={handleHintChange}
+            HintRef={HintRef}
           />
         </div>
         <GameModal
