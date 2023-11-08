@@ -21,7 +21,7 @@ const GameSessionContainer = () => {
   const gameAnswersRef = React.useRef(null);
   const confidenceCardRef = React.useRef(null);
   const featuredMistakesRef = React.useRef(null);
-  const HintRef = React.useRef(null);
+  const hintRef = React.useRef(null);
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
@@ -47,7 +47,7 @@ const GameSessionContainer = () => {
     { ref: questionCardRef, text: 'Question Card' },
     { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
-    { ref: HintRef, text: 'Surfacing Thinking Settings' },
+    { ref: hintRef, text: 'Surfacing Thinking Settings' },
   ];
   const gameplayNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -471,7 +471,7 @@ const GameSessionContainer = () => {
           handleOnSelectMistake={handleOnSelectMistake}
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
-          HintRef={HintRef}
+          hintRef={hintRef}
         />
       );
     }
@@ -503,7 +503,7 @@ const GameSessionContainer = () => {
           handleOnSelectMistake={handleOnSelectMistake}
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
-          HintRef={HintRef}
+          hintRef={hintRef}
         />
       );
 

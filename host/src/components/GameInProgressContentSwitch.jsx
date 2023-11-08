@@ -11,6 +11,7 @@ import EnableHint from "./EnableHintCard";
 import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
 import EnableShortAnswerCard from "./EnableShortAnswerCard";
 import FeaturedMistakes from "./FeaturedMistakes";
+import PlayerThinking from './PlayerThinking/PlayerThinking';
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
@@ -40,7 +41,7 @@ export default function GameInProgressContentSwitch ({
     handleOnSelectMistake,
     isHintEnabled,
     handleHintChange,
-    HintRef
+    hintRef
   }) {
   const classes = useStyles();
   const gameplayComponents = [
@@ -89,6 +90,25 @@ export default function GameInProgressContentSwitch ({
                 shortAnswerResponses={shortAnswerResponses} 
                 totalAnswers={totalAnswers}
                 handleOnSelectMistake={handleOnSelectMistake}
+              />
+            </div>
+          ) : null}
+          {isHintEnabled &&
+           (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
+            currentState === GameSessionState.PHASE_2_DISCUSS) ? (
+            <div
+              id="hint-scrollbox"
+              ref={hintRef}
+              className={classes.contentContainer}
+            >
+              <PlayerThinking
+                questions={questions}
+                questionChoices={questionChoices}
+                currentQuestionIndex={currentQuestionIndex}
+                answers={answers}
+                totalAnswers={totalAnswers}
+                numPlayers={numPlayers}
+                statePosition={statePosition}
               />
             </div>
           ) : null}
@@ -174,7 +194,7 @@ export default function GameInProgressContentSwitch ({
         />
       </div>
       <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}/>
-      <div id="Hintcard-scrollbox" ref={HintRef} style={{width:'100%'}}>
+      <div id="Hintcard-scrollbox" ref={hintRef} style={{width:'100%'}}>
         <EnableHint
           isHintEnabled={isHintEnabled} 
           handleHintChange={handleHintChange}
