@@ -104,6 +104,7 @@
     },
     "button": {
       "submit": "Enviar Respuesta",
+      "submitSurfacingThinking": "Enviar Explicación",
       "submitted": "Enviada"
     }
   },

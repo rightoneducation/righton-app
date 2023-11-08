@@ -1,4 +1,4 @@
-import React, { useState, RefObject } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
@@ -127,6 +127,7 @@ export default function OpenAnswerCard({
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
             isSubmitted={isSubmitted}
+            isSurfacingThinking={false}
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>

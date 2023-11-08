@@ -12,4 +12,6 @@ export interface ITeamAnswer {
     teamMemberAnswersId?: string | null
     isTrickAnswer: boolean
     confidenceLevel: ConfidenceLevel
+    hint?: string;
+    hintDelta?: string;
 }

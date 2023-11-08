@@ -21,18 +21,18 @@ window.katex = katex;
 
 interface SurfacingThinkingProps {
   answerContent: ITeamAnswerContent;
-  isSubmitted: boolean;
+  isSurfacingThinkingSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitAnswer: (result: ITeamAnswerContent) => void;
+  handleSubmitSurfacingThinking: (result: ITeamAnswerContent) => void;
 }
 
 export default function SurfacingThinkingCard({
   answerContent,
-  isSubmitted,
+  isSurfacingThinkingSubmitted,
   currentState,
   currentQuestionIndex,
-  handleSubmitAnswer,
+  handleSubmitSurfacingThinking,
 }: SurfacingThinkingProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -80,7 +80,7 @@ export default function SurfacingThinkingCard({
       currentState,
       currentQuestionIndex,
     } as ITeamAnswerContent;
-    handleSubmitAnswer(packagedAnswer);
+    handleSubmitSurfacingThinking(packagedAnswer);
   };
 
   return (
@@ -114,7 +114,7 @@ export default function SurfacingThinkingCard({
           <ReactQuill
             className="swiper-no-swiping"
             theme="snow"
-            readOnly={isSubmitted}
+            readOnly={isSurfacingThinkingSubmitted}
             value={editorContents}
             onChange={handleEditorContentsChange}
             placeholder={
@@ -126,7 +126,7 @@ export default function SurfacingThinkingCard({
             style={{
               width: '100%',
               height: '188px',
-              backgroundColor: !isSubmitted
+              backgroundColor: !isSurfacingThinkingSubmitted
                 ? ''
                 : `${theme.palette.primary.lightGrey}`,
               borderRadius: '4px',
@@ -136,7 +136,8 @@ export default function SurfacingThinkingCard({
             isSelected={
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
-            isSubmitted={isSubmitted}
+            isSubmitted={isSurfacingThinkingSubmitted}
+            isSurfacingThinking
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>

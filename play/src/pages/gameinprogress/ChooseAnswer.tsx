@@ -6,8 +6,7 @@ import {
   ConfidenceLevel,
   GameSessionState,
   ITeamAnswerContent,
-  IChoice,
-  IResponse
+  IChoice
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -41,6 +40,8 @@ interface ChooseAnswerProps {
   answerContent: ITeamAnswerContent;
   currentQuestionIndex: number;
   isSurfacingThinkingEnabled: boolean;
+  isSurfacingThinkingSubmitted: boolean;
+  handleSubmitSurfacingThinking: (result: ITeamAnswerContent) => void;
 }
 
 export default function ChooseAnswer({
@@ -62,7 +63,9 @@ export default function ChooseAnswer({
   isShortAnswerEnabled,
   answerContent,
   currentQuestionIndex,
-  isSurfacingThinkingEnabled
+  isSurfacingThinkingEnabled,
+  isSurfacingThinkingSubmitted,
+  handleSubmitSurfacingThinking
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -106,10 +109,10 @@ export default function ChooseAnswer({
             <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
               <SurfacingThinkingCard
                 answerContent={answerContent}
-                isSubmitted={answerContent.isSubmitted ?? false}
                 currentState={currentState}
                 currentQuestionIndex={currentQuestionIndex}
-                handleSubmitAnswer={handleSubmitAnswer}
+                isSurfacingThinkingSubmitted={isSurfacingThinkingSubmitted}
+                handleSubmitSurfacingThinking={handleSubmitSurfacingThinking}
               />
             </Box>
           </Fade>

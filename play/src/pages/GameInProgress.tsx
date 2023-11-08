@@ -73,6 +73,7 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
+  const [isSurfacingThinkingSubmitted, setIsSurfacingThinkingSubmitted] = useState(false);
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -189,6 +190,9 @@ export default function GameInProgress({
     }
   };
 
+  const handleSubmitSurfacingThinking = async () => {
+    setIsSurfacingThinkingSubmitted(true);
+  };
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
@@ -295,6 +299,8 @@ export default function GameInProgress({
             answerContent={answerContent}
             currentQuestionIndex={currentQuestionIndex ?? 0}
             isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
+            isSurfacingThinkingSubmitted={isSurfacingThinkingSubmitted}
+            handleSubmitSurfacingThinking={handleSubmitSurfacingThinking}
           />
         ) : (
           <DiscussAnswer

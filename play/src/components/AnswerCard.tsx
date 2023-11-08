@@ -102,6 +102,7 @@ export default function AnswerCard({
         </Stack>
         <ButtonSubmitAnswer
           isSubmitted={isSubmitted}
+          isSurfacingThinking={false}
           selectedAnswer={selectedAnswer}
           answers={answers}
           currentState={currentState}
