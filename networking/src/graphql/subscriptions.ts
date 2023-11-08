@@ -32,7 +32,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -101,7 +101,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -166,7 +166,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -232,7 +232,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -307,7 +307,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -376,7 +376,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -418,7 +418,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -487,7 +487,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -529,7 +529,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -598,7 +598,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -631,7 +631,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -697,7 +697,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -763,7 +763,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }

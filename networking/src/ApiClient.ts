@@ -546,7 +546,7 @@ type AWSQuestion = {
     order: number
     isConfidenceEnabled: boolean
     isShortAnswerEnabled: boolean
-    isSurfacingThinkingEnabled: boolean
+    isHintEnabled: boolean
 }
 
 type AWSTeamMember = {
@@ -732,7 +732,7 @@ export class GameSessionParser {
                     order: awsQuestion.order,
                     isConfidenceEnabled: awsQuestion.isConfidenceEnabled,
                     isShortAnswerEnabled: awsQuestion.isShortAnswerEnabled,
-                    isSurfacingThinkingEnabled: awsQuestion.isSurfacingThinkingEnabled
+                    isHintEnabled: awsQuestion.isHintEnabled
                 }
                 return question
             })
