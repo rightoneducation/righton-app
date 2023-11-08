@@ -127,7 +127,7 @@ export default function OpenAnswerCard({
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
             isSubmitted={isSubmitted}
-            isSurfacingThinking={false}
+            isHint={false}
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>

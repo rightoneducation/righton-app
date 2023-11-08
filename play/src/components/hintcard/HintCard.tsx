@@ -19,21 +19,21 @@ import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
 
 window.katex = katex;
 
-interface SurfacingThinkingProps {
+interface HintProps {
   answerContent: ITeamAnswerContent;
-  isSurfacingThinkingSubmitted: boolean;
+  isHintSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitSurfacingThinking: (result: ITeamAnswerContent) => void;
+  handleSubmitHint: (result: ITeamAnswerContent) => void;
 }
 
-export default function SurfacingThinkingCard({
+export default function HintCard({
   answerContent,
-  isSurfacingThinkingSubmitted,
+  isHintSubmitted,
   currentState,
   currentQuestionIndex,
-  handleSubmitSurfacingThinking,
-}: SurfacingThinkingProps) {
+  handleSubmitHint,
+}: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const modules = {
@@ -80,7 +80,7 @@ export default function SurfacingThinkingCard({
       currentState,
       currentQuestionIndex,
     } as ITeamAnswerContent;
-    handleSubmitSurfacingThinking(packagedAnswer);
+    handleSubmitHint(packagedAnswer);
   };
 
   return (
@@ -90,7 +90,7 @@ export default function SurfacingThinkingCard({
           variant="subtitle1"
           sx={{ width: '100%', textAlign: 'left' }}
         >
-          {t('gameinprogress.chooseanswer.surfacingthinkingcard')}
+          {t('gameinprogress.chooseanswer.Hintcard')}
         </Typography>
         <Box
           style={{
@@ -108,17 +108,17 @@ export default function SurfacingThinkingCard({
               display="inline"
               sx={{ textAlign: 'left' }}
             >
-              {t('gameinprogress.chooseanswer.surfacingthinkingtext')}
+              {t('gameinprogress.chooseanswer.Hinttext')}
             </Typography>
           </Box>
           <ReactQuill
             className="swiper-no-swiping"
             theme="snow"
-            readOnly={isSurfacingThinkingSubmitted}
+            readOnly={isHintSubmitted}
             value={editorContents}
             onChange={handleEditorContentsChange}
             placeholder={
-              t('gameinprogress.chooseanswer.surfacingthinkingplaceholder') ?? ''
+              t('gameinprogress.chooseanswer.Hintplaceholder') ?? ''
             }
             modules={modules}
             formats={formats}
@@ -126,7 +126,7 @@ export default function SurfacingThinkingCard({
             style={{
               width: '100%',
               height: '188px',
-              backgroundColor: !isSurfacingThinkingSubmitted
+              backgroundColor: !isHintSubmitted
                 ? ''
                 : `${theme.palette.primary.lightGrey}`,
               borderRadius: '4px',
@@ -136,8 +136,8 @@ export default function SurfacingThinkingCard({
             isSelected={
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
-            isSubmitted={isSurfacingThinkingSubmitted}
-            isSurfacingThinking
+            isSubmitted={isHintSubmitted}
+            isHint
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>

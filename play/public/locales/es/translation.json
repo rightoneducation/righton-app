@@ -86,9 +86,9 @@
       "answercard": "Elige la respuesta correcta",
       "openanswercard": "Introduce tu respuesta",
       "openanswercardplaceholder": "Ingresa tu respuesta aquí...",
-      "surfacingthinkingtext": "¿Podrías darle una pista a alguien que haya cometido este error?",
-      "surfacingthinkingcard": "Dar una pista (opcional)",
-      "surfacingthinkingplaceholder": "Introduce tu explicación..."
+      "Hinttext": "¿Podrías darle una pista a alguien que haya cometido este error?",
+      "Hintcard": "Dar una pista (opcional)",
+      "Hintplaceholder": "Introduce tu explicación..."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
@@ -104,7 +104,7 @@
     },
     "button": {
       "submit": "Enviar Respuesta",
-      "submitSurfacingThinking": "Enviar Explicación",
+      "submitHint": "Enviar Explicación",
       "submitted": "Enviada"
     }
   },

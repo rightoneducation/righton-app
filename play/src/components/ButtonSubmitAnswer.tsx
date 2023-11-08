@@ -16,7 +16,7 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
-  isSurfacingThinking: boolean;
+  isHint: boolean;
   selectedAnswer?: number | null;
   answers?: IChoice[] | undefined;
   currentState: GameSessionState;
@@ -27,7 +27,7 @@ interface ButtonSubmitAnswerProps {
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
-  isSurfacingThinking,
+  isHint,
   selectedAnswer,
   answers,
   currentState,
@@ -37,8 +37,8 @@ export default function ButtonSubmitAnswer({
   const { t } = useTranslation();
   const buttonText = isSubmitted // eslint-disable-line no-nested-ternary
     ? t('gameinprogress.button.submitted')
-    : (isSurfacingThinking 
-      ? t('gameinprogress.button.submitSurfacingThinking') 
+    : (isHint 
+      ? t('gameinprogress.button.submitHint') 
       : t('gameinprogress.button.submit'));
   const buttonContents = (
     <Typography sx={{ textTransform: 'none' }} variant="button">

@@ -48,7 +48,7 @@ interface GameInProgressProps {
   currentTimer: number;
   localModel: LocalModel;
   isShortAnswerEnabled: boolean;
-  isSurfacingThinkingEnabled: boolean;
+  isHintEnabled: boolean;
 }
 
 export default function GameInProgress({
@@ -68,12 +68,12 @@ export default function GameInProgress({
   currentTimer,
   localModel,
   isShortAnswerEnabled,
-  isSurfacingThinkingEnabled
+  isHintEnabled
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
-  const [isSurfacingThinkingSubmitted, setIsSurfacingThinkingSubmitted] = useState(false);
+  const [isHintSubmitted, setIsHintSubmitted] = useState(false);
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -190,8 +190,8 @@ export default function GameInProgress({
     }
   };
 
-  const handleSubmitSurfacingThinking = async () => {
-    setIsSurfacingThinkingSubmitted(true);
+  const handleSubmitHint = async () => {
+    setIsHintSubmitted(true);
   };
   const handleRetry = () => {
     if (isAnswerError) {
@@ -298,9 +298,9 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerContent={answerContent}
             currentQuestionIndex={currentQuestionIndex ?? 0}
-            isSurfacingThinkingEnabled={isSurfacingThinkingEnabled}
-            isSurfacingThinkingSubmitted={isSurfacingThinkingSubmitted}
-            handleSubmitSurfacingThinking={handleSubmitSurfacingThinking}
+            isHintEnabled={isHintEnabled}
+            isHintSubmitted={isHintSubmitted}
+            handleSubmitHint={handleSubmitHint}
           />
         ) : (
           <DiscussAnswer

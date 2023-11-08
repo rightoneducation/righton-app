@@ -86,9 +86,9 @@
       "answercard": "Choose the correct answer",
       "openanswercard": "Enter your answer",
       "openanswercardplaceholder": "Enter your answer here...",
-      "surfacingthinkingtext": "Could you give a hint to someone who has made this mistake?",
-      "surfacingthinkingcard": "Give a hint (optional)",
-      "surfacingthinkingplaceholder": "Enter your explanation..."
+      "Hinttext": "Could you give a hint to someone who has made this mistake?",
+      "Hintcard": "Give a hint (optional)",
+      "Hintplaceholder": "Enter your explanation..."
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
@@ -104,7 +104,7 @@
     },
     "button": {
       "submit": "Submit Answer",
-      "submitSurfacingThinking": "Submit Explanation",
+      "submitHint": "Submit Explanation",
       "submitted": "Submitted"
     }
   },

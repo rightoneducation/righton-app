@@ -16,7 +16,7 @@ import AnswerCard from '../../components/AnswerCard';
 import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import SurfacingThinkingCard from '../../components/surfacingthinkingcard/SurfacingThinkingCard';
+import HintCard from '../../components/hintcard/HintCard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -39,9 +39,9 @@ interface ChooseAnswerProps {
   isShortAnswerEnabled: boolean;
   answerContent: ITeamAnswerContent;
   currentQuestionIndex: number;
-  isSurfacingThinkingEnabled: boolean;
-  isSurfacingThinkingSubmitted: boolean;
-  handleSubmitSurfacingThinking: (result: ITeamAnswerContent) => void;
+  isHintEnabled: boolean;
+  isHintSubmitted: boolean;
+  handleSubmitHint: (result: ITeamAnswerContent) => void;
 }
 
 export default function ChooseAnswer({
@@ -63,9 +63,9 @@ export default function ChooseAnswer({
   isShortAnswerEnabled,
   answerContent,
   currentQuestionIndex,
-  isSurfacingThinkingEnabled,
-  isSurfacingThinkingSubmitted,
-  handleSubmitSurfacingThinking
+  isHintEnabled,
+  isHintSubmitted,
+  handleSubmitHint
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -104,15 +104,15 @@ export default function ChooseAnswer({
             </Box>
           </Fade>
         )}
-        {isSurfacingThinkingEnabled && (
+        {isHintEnabled && (
           <Fade in={displaySubmitted} timeout={500}>
             <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
-              <SurfacingThinkingCard
+              <HintCard
                 answerContent={answerContent}
                 currentState={currentState}
                 currentQuestionIndex={currentQuestionIndex}
-                isSurfacingThinkingSubmitted={isSurfacingThinkingSubmitted}
-                handleSubmitSurfacingThinking={handleSubmitSurfacingThinking}
+                isHintSubmitted={isHintSubmitted}
+                handleSubmitHint={handleSubmitHint}
               />
             </Box>
           </Fade>
