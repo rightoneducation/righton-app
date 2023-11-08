@@ -89,10 +89,6 @@ export default function ChooseAnswer({
       ) : null}
     </ScrollBoxStyled>
   );
-  console.log(isConfidenceEnabled, isHintEnabled);
-  console.log(currentState);
-  console.log(isSubmitted);
-  console.log(displaySubmitted);
   const onSubmitDisplay = (
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
       <Typography
@@ -147,7 +143,8 @@ export default function ChooseAnswer({
               </Box>
             </Fade>
           )}
-          {isHintEnabled && (
+          {isHintEnabled &&
+            currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && (
             <Fade in={isSubmitted} timeout={500}>
               <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
                 <HintCard
