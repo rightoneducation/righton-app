@@ -50,6 +50,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -166,6 +167,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
                   awsAnswerContent
                   isTrickAnswer
                   confidenceLevel
+                  awsHint
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -339,6 +341,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -408,6 +411,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
               awsAnswerContent
               isTrickAnswer
               confidenceLevel
+              awsHint
               createdAt
               updatedAt
               teamMemberAnswersId
@@ -453,6 +457,7 @@ export const getTeamMember = /* GraphQL */ `query GetTeamMember($id: ID!) {
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -490,6 +495,7 @@ export const listTeamMembers = /* GraphQL */ `query ListTeamMembers(
           awsAnswerContent
           isTrickAnswer
           confidenceLevel
+          awsHint
           createdAt
           updatedAt
           teamMemberAnswersId
@@ -521,6 +527,7 @@ export const getTeamAnswer = /* GraphQL */ `query GetTeamAnswer($id: ID!) {
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -545,6 +552,7 @@ export const listTeamAnswers = /* GraphQL */ `query ListTeamAnswers(
       awsAnswerContent
       isTrickAnswer
       confidenceLevel
+      awsHint
       createdAt
       updatedAt
       teamMemberAnswersId
@@ -613,6 +621,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
                   awsAnswerContent
                   isTrickAnswer
                   confidenceLevel
+                  awsHint
                   createdAt
                   updatedAt
                   teamMemberAnswersId
@@ -740,6 +749,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
                   awsAnswerContent
                   isTrickAnswer
                   confidenceLevel
+                  awsHint
                   createdAt
                   updatedAt
                   teamMemberAnswersId
