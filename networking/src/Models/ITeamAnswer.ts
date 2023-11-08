@@ -1,6 +1,12 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
 import { ITeamAnswerContent } from "./ITeamAnswerContent";
 
+export interface ITeamAnswerHint {
+    delta: string;
+    text: string;
+    isHintSubmitted: boolean;
+}
+
 export interface ITeamAnswer {
     id: string,
     questionId: number
@@ -12,6 +18,5 @@ export interface ITeamAnswer {
     teamMemberAnswersId?: string | null
     isTrickAnswer: boolean
     confidenceLevel: ConfidenceLevel
-    hint?: string;
-    hintDelta?: string;
+    hint?: ITeamAnswerHint | null
 }

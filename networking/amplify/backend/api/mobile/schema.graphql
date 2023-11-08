@@ -87,6 +87,7 @@ type TeamAnswer @model {
   awsAnswerContent: AWSJSON!
   isTrickAnswer: Boolean!
   confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
+  awsHint: AWSJSON
 }
 
 type Subscription {

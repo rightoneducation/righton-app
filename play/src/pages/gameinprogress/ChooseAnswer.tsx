@@ -6,6 +6,7 @@ import {
   ConfidenceLevel,
   GameSessionState,
   ITeamAnswerContent,
+  ITeamAnswerHint,
   IChoice
 } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -13,10 +14,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
-import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
+import OpenAnswerCard from '../../components/textinputcards/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
-import HintCard from '../../components/hintcard/HintCard';
+import HintCard from '../../components/textinputcards/HintCard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -41,7 +42,8 @@ interface ChooseAnswerProps {
   currentQuestionIndex: number;
   isHintEnabled: boolean;
   isHintSubmitted: boolean;
-  handleSubmitHint: (result: ITeamAnswerContent) => void;
+  handleSubmitHint: (result: ITeamAnswerHint) => void;
+  answerHint: ITeamAnswerHint;
 }
 
 export default function ChooseAnswer({
@@ -65,7 +67,8 @@ export default function ChooseAnswer({
   currentQuestionIndex,
   isHintEnabled,
   isHintSubmitted,
-  handleSubmitHint
+  handleSubmitHint,
+  answerHint,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -86,49 +89,23 @@ export default function ChooseAnswer({
       ) : null}
     </ScrollBoxStyled>
   );
-
+  console.log(isConfidenceEnabled, isHintEnabled);
+  console.log(currentState);
+  console.log(isSubmitted);
+  console.log(displaySubmitted);
   const onSubmitDisplay = (
     currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && (
-      <>
-        {isConfidenceEnabled && (
-          <Fade in={displaySubmitted} timeout={500}>
-            <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
-              <ConfidenceMeterCard
-                selectedOption={selectedConfidenceOption}
-                handleSelectOption={handleSelectConfidence}
-                isSelected={isConfidenceSelected}
-                isSmallDevice={isSmallDevice}
-                timeOfLastSelect={timeOfLastConfidenceSelect}
-                setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
-              />
-            </Box>
-          </Fade>
-        )}
-        {isHintEnabled && (
-          <Fade in={displaySubmitted} timeout={500}>
-            <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
-              <HintCard
-                answerContent={answerContent}
-                currentState={currentState}
-                currentQuestionIndex={currentQuestionIndex}
-                isHintSubmitted={isHintSubmitted}
-                handleSubmitHint={handleSubmitHint}
-              />
-            </Box>
-          </Fade>
-        )}
-        <Typography
-          sx={{
-            fontWeight: 700,
-            marginTop: `${theme.sizing.largePadding}px`,
-            marginX: `${theme.sizing.largePadding}px`,
-            fontSize: `${theme.typography.h4.fontSize}px`,
-            textAlign: 'center',
-          }}
-        >
-          {t('gameinprogress.chooseanswer.answerthankyou1')}
-        </Typography>
-      </>
+      <Typography
+        sx={{
+          fontWeight: 700,
+          marginTop: `${theme.sizing.largePadding}px`,
+          marginX: `${theme.sizing.largePadding}px`,
+          fontSize: `${theme.typography.h4.fontSize}px`,
+          textAlign: 'center',
+        }}
+      >
+        {t('gameinprogress.chooseanswer.answerthankyou1')}
+      </Typography>
     )
   );
   const answerContents = (
@@ -155,17 +132,46 @@ export default function ChooseAnswer({
       )}
       {displaySubmitted ? onSubmitDisplay : null}
       {isSubmitted ? (
-        <Typography
-          sx={{
-            fontWeight: 700,
-            marginTop: `${theme.sizing.largePadding}px`,
-            marginX: `${theme.sizing.largePadding}px`,
-            fontSize: `${theme.typography.h4.fontSize}px`,
-            textAlign: 'center',
-          }}
-        >
-          {t('gameinprogress.chooseanswer.answerthankyou2')}
-        </Typography>
+        <>
+          {isConfidenceEnabled && (
+            <Fade in={isSubmitted} timeout={500}>
+              <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+                <ConfidenceMeterCard
+                  selectedOption={selectedConfidenceOption}
+                  handleSelectOption={handleSelectConfidence}
+                  isSelected={isConfidenceSelected}
+                  isSmallDevice={isSmallDevice}
+                  timeOfLastSelect={timeOfLastConfidenceSelect}
+                  setTimeOfLastSelect={setTimeOfLastConfidenceSelect}
+                />
+              </Box>
+            </Fade>
+          )}
+          {isHintEnabled && (
+            <Fade in={isSubmitted} timeout={500}>
+              <Box style={{ marginTop: `${theme.sizing.smallPadding}px` }}>
+                <HintCard
+                  answerHint={answerHint}
+                  currentState={currentState}
+                  currentQuestionIndex={currentQuestionIndex}
+                  isHintSubmitted={isHintSubmitted}
+                  handleSubmitHint={handleSubmitHint}
+                />
+              </Box>
+            </Fade>
+          )}
+          <Typography
+            sx={{
+              fontWeight: 700,
+              marginTop: `${theme.sizing.largePadding}px`,
+              marginX: `${theme.sizing.largePadding}px`,
+              fontSize: `${theme.typography.h4.fontSize}px`,
+              textAlign: 'center',
+            }}
+          >
+            {t('gameinprogress.chooseanswer.answerthankyou2')}
+          </Typography>
+        </>
       ) : null}
     </ScrollBoxStyled>
   );

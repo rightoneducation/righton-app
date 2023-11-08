@@ -5,14 +5,14 @@ import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
   ITeamAnswerContent,
+  ITeamAnswerHint,
   GameSessionState,
 } from '@righton/networking';
 import ReactQuill from 'react-quill';
 import katex from 'katex';
 import './ReactQuill.css';
 import 'katex/dist/katex.min.css';
-import { handleNormalizeAnswers } from '../../lib/HelperFunctions';
-import { StorageKeyAnswer } from '../../lib/PlayModels';
+import { StorageKeyHint } from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
@@ -20,15 +20,15 @@ import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
 window.katex = katex;
 
 interface HintProps {
-  answerContent: ITeamAnswerContent;
+  answerHint: ITeamAnswerHint;
   isHintSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
-  handleSubmitHint: (result: ITeamAnswerContent) => void;
+  handleSubmitHint: (result: ITeamAnswerHint) => void;
 }
 
 export default function HintCard({
-  answerContent,
+  answerHint,
   isHintSubmitted,
   currentState,
   currentQuestionIndex,
@@ -42,14 +42,14 @@ export default function HintCard({
   const formats = [''];
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
-  const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
-    return inputAnswer.delta ?? [];
+  const insertQuillDelta = (inputHint: ITeamAnswerHint) => {
+    return inputHint.delta ?? [];
   };
 
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
-    insertQuillDelta(answerContent)
+    insertQuillDelta(answerHint)
   );
-
+  const [editorObject, setEditorObject] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (
     content: any, // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -58,28 +58,28 @@ export default function HintCard({
     editor: any // eslint-disable-line @typescript-eslint/no-explicit-any
   ) => {
     const currentAnswer = editor.getContents();
-    const extractedAnswer: ITeamAnswerContent = {
-      delta: currentAnswer,
-      currentState,
-      currentQuestionIndex,
-      isSubmitted: answerContent.isSubmitted,
+    const extractedAnswer: ITeamAnswerHint = {
+      delta: editor.getContents(),
+      text: editor.getText(),
+      isHintSubmitted: false
     };
     window.localStorage.setItem(
-      StorageKeyAnswer,
+      StorageKeyHint,
       JSON.stringify(extractedAnswer)
     );
+    setEditorObject(editor);
     setEditorContents(currentAnswer);
   };
 
-  const handleNormalizeAnswerOnSubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    const normalizedAnswers = handleNormalizeAnswers(currentContents);
-    const packagedAnswer: ITeamAnswerContent = {
-      delta: currentContents,
-      rawAnswer: normalizedAnswers.rawAnswer,
-      normAnswer: normalizedAnswers.normalizedAnswer,
-      currentState,
-      currentQuestionIndex,
-    } as ITeamAnswerContent;
+  const handleNormalizeAnswerOnSubmit = () => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const packagedAnswer: ITeamAnswerHint = {
+      delta: editorObject.getContents(),
+      text: editorObject.getText()
+        .toLowerCase()
+        .replace(/(\r\n|\n|\r|" ")/gm, '')
+        .trim(),
+      isHintSubmitted: true
+    } as ITeamAnswerHint;
     handleSubmitHint(packagedAnswer);
   };
 
@@ -140,9 +140,7 @@ export default function HintCard({
             isHint
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
-            handleSubmitAnswer={() =>
-              handleNormalizeAnswerOnSubmit(editorContents)
-            }
+            handleSubmitAnswer={handleNormalizeAnswerOnSubmit}
           />
         </Box>
       </BodyCardContainerStyled>

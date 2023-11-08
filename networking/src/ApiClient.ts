@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
+import { IChoice, IResponse, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, ITeamAnswerHint } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -356,17 +356,9 @@ export class ApiClient implements IApiClient {
         }
         return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as ITeamAnswer
     }
-
-    async updateTeamAnswer(
-        teamAnswerId: string,
-        isChosen: boolean | null = null,
-        confidenceLevel: ConfidenceLevel
+    async updateTeamAnswerBase(
+        input: UpdateTeamAnswerInput
     ): Promise<ITeamAnswer> {
-        const input: UpdateTeamAnswerInput = {
-            id: teamAnswerId,
-            isChosen,
-            confidenceLevel
-        }
         const variables: UpdateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
             updateTeamAnswer,
@@ -380,7 +372,31 @@ export class ApiClient implements IApiClient {
         }
         return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as ITeamAnswer
     }
-
+    async updateTeamAnswerConfidence(
+        teamAnswerId: string,
+        isChosen: boolean | null = null,
+        confidenceLevel?: ConfidenceLevel
+    ): Promise<ITeamAnswer> {
+        const input: UpdateTeamAnswerInput = {
+            id: teamAnswerId,
+            isChosen,
+            confidenceLevel
+        }
+       return this.updateTeamAnswerBase(input);
+    }
+    async updateTeamAnswerHint(
+        teamAnswerId: string,
+        isChosen: boolean | null = null,
+        hint: ITeamAnswerHint
+    ): Promise<ITeamAnswer> {
+        const awsHint = JSON.stringify(hint)
+        const input: UpdateTeamAnswerInput = {
+            id: teamAnswerId,
+            isChosen,
+            awsHint
+        }
+        return this.updateTeamAnswerBase(input);
+    }
     async updateTeam(
         teamInput: UpdateTeamInput
     ): Promise<ITeam> {
@@ -572,6 +588,7 @@ type AWSTeamAnswer = {
     updatedAt?: string
     teamMemberAnswersId?: string | null
     confidenceLevel: ConfidenceLevel
+    awsHint?: string | null
 }
 
 export class GameSessionParser {
@@ -903,7 +920,7 @@ class TeamAnswerParser {
     static answerContentFromAWSAnswerContent(
         awsAnswerContent: string
     ): ITeamAnswerContent {
-        let parsedAnswerContent;
+        let parsedAnswerContent
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent);
             if (isNullOrUndefined(parsedAnswerContent) ||
@@ -917,6 +934,18 @@ class TeamAnswerParser {
         }
         return parsedAnswerContent as ITeamAnswerContent;
     }   
+    static hintfromAWSHint(
+        awsHint: string | null | undefined
+    ): ITeamAnswerHint {
+        let parsedHint
+        try {
+            if (!isNullOrUndefined(awsHint))
+                parsedHint = JSON.parse(awsHint);
+        } catch (e) {
+            throw new Error("Failed to parse hint")
+        }
+        return parsedHint as ITeamAnswerHint;
+    }
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): ITeamAnswer {
@@ -930,7 +959,8 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
-            confidenceLevel
+            confidenceLevel,
+            awsHint
         } = awsTeamAnswer || {}
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
@@ -943,7 +973,7 @@ class TeamAnswerParser {
         }
         // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
-     
+        const hint = this.hintfromAWSHint(awsHint);
         const teamAnswer: ITeamAnswer = {
             id,
             questionId,
@@ -954,7 +984,8 @@ class TeamAnswerParser {
             createdAt,
             updatedAt,
             teamMemberAnswersId,
-            confidenceLevel
+            confidenceLevel,
+            hint
         }
         return teamAnswer
     }
