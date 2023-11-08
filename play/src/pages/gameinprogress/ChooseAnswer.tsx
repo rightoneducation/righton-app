@@ -126,7 +126,7 @@ export default function ChooseAnswer({
           handleSelectAnswer={handleSelectAnswer}
         />
       )}
-      {displaySubmitted ? onSubmitDisplay : null}
+     
       {isSubmitted ? (
         <>
           {isConfidenceEnabled && (
@@ -157,6 +157,7 @@ export default function ChooseAnswer({
               </Box>
             </Fade>
           )}
+           {displaySubmitted ? onSubmitDisplay : null}
           <Typography
             sx={{
               fontWeight: 700,
