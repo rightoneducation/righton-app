@@ -36,7 +36,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -106,7 +106,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -150,7 +150,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -220,7 +220,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -264,7 +264,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           order
           isConfidenceEnabled
           isShortAnswerEnabled
-          isSurfacingThinkingEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -334,7 +334,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         order
         isConfidenceEnabled
         isShortAnswerEnabled
-        isSurfacingThinkingEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -368,7 +368,7 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     order
     isConfidenceEnabled
     isShortAnswerEnabled
-    isSurfacingThinkingEnabled
+    isHintEnabled
     gameSessionId
     __typename
   }
@@ -395,7 +395,7 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     order
     isConfidenceEnabled
     isShortAnswerEnabled
-    isSurfacingThinkingEnabled
+    isHintEnabled
     gameSessionId
     __typename
   }
@@ -422,7 +422,7 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     order
     isConfidenceEnabled
     isShortAnswerEnabled
-    isSurfacingThinkingEnabled
+    isHintEnabled
     gameSessionId
     __typename
   }
@@ -452,7 +452,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -522,7 +522,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -592,7 +592,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       order
       isConfidenceEnabled
       isShortAnswerEnabled
-      isSurfacingThinkingEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
