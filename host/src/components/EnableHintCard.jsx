@@ -1,9 +1,9 @@
 import React from 'react';
 import { Typography, makeStyles, Switch, Box } from '@material-ui/core';
 
-export default function EnableSurfacingThinking({
-  isSurfacingThinkingEnabled,
-  handleSurfacingThinkingChange,
+export default function EnableHintCard({
+  isHintEnabled,
+  handleHintChange,
 }) {
   const classes = useStyles();
   return (
@@ -12,8 +12,8 @@ export default function EnableSurfacingThinking({
         <Typography className={classes.title}>Player Thinking</Typography>
         <Switch
           className={classes.switch}
-          checked={isSurfacingThinkingEnabled}
-          onChange={handleSurfacingThinkingChange}
+          checked={isHintEnabled}
+          onChange={handleHintChange}
         />
       </div>
       <div className={classes.answerContainer}>

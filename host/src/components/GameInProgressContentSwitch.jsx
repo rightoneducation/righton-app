@@ -7,7 +7,7 @@ import ConfidenceResponseCard from "./ConfidenceResponses/ConfidenceResponseCard
 import GameAnswers from "./GameAnswers";
 import SelectedAnswer from "./Responses/SelectedAnswer";
 import EnableConfidenceCard from "./EnableConfidenceCard";
-import EnableSurfacingThinking from "./EnableSurfacingThinking";
+import EnableHint from "./EnableHintCard";
 import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
 import EnableShortAnswerCard from "./EnableShortAnswerCard";
 import FeaturedMistakes from "./FeaturedMistakes";
@@ -38,9 +38,9 @@ export default function GameInProgressContentSwitch ({
     handleShortAnswerChange,
     shortAnswerResponses,
     handleOnSelectMistake,
-    isSurfacingThinkingEnabled,
-    handleSurfacingThinkingChange,
-    surfacingThinkingRef
+    isHintEnabled,
+    handleHintChange,
+    HintRef
   }) {
   const classes = useStyles();
   const gameplayComponents = [
@@ -174,10 +174,10 @@ export default function GameInProgressContentSwitch ({
         />
       </div>
       <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}/>
-      <div id="surfacingthinkingcard-scrollbox" ref={surfacingThinkingRef} style={{width:'100%'}}>
-        <EnableSurfacingThinking
-          isSurfacingThinkingEnabled={isSurfacingThinkingEnabled} 
-          handleSurfacingThinkingChange={handleSurfacingThinkingChange}
+      <div id="Hintcard-scrollbox" ref={HintRef} style={{width:'100%'}}>
+        <EnableHint
+          isHintEnabled={isHintEnabled} 
+          handleHintChange={handleHintChange}
         />
       </div>
     </Box>,
