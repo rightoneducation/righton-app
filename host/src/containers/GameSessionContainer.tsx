@@ -12,7 +12,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
+import { buildHints, buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -30,6 +30,7 @@ const GameSessionContainer = () => {
   // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
   // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
+  const [hints, setHints] = useState([]);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -64,7 +65,7 @@ const GameSessionContainer = () => {
       return;
     }
     let newDictionary = [...gameplayNavDictionary];
-    const insertIndex = 2;
+    let insertIndex = 2;
     if (isConfidenceEnabled){
       newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
@@ -243,16 +244,24 @@ const GameSessionContainer = () => {
       (teamAnswerResponse) => {
         let teamName = '';
         setTeamsArray((prevState) => {
+          const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
           let newState = JSON.parse(JSON.stringify(prevState));
+          console.log(newState);
           newState.forEach((team) => {
             team.teamMembers &&
               team.teamMembers.forEach((teamMember) => {
                 if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                   teamMember.answers.forEach((answer) => {
-                    if (answer.id === teamAnswerResponse.id)
-                      answer.confidenceLevel =
-                        teamAnswerResponse.confidenceLevel;
-                      teamName = team.name;
+                    if (answer.id === teamAnswerResponse.id){
+                      answer.confidenceLevel = teamAnswerResponse.confidenceLevel;
+                      if (teamAnswerResponse.hint){
+                        answer.hint = teamAnswerResponse.hint;
+                        setHints((prevHints) => {
+                          let newHints = buildHints(prevHints, teamAnswerResponse.hint, teamName, teamId);
+                          return newHints;
+                        });
+                      }
+                    }
                   });
                 }
               });

@@ -5,6 +5,7 @@ import {
   AnswerType,
 } from '@righton/networking';
 import { parse, symbolicEqual } from 'mathjs';
+import { removeStopwords, eng, fra } from 'stopword';
 
 /*
  * counts all answers for current question using isChosen, for use in footer progress bar
@@ -394,6 +395,74 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   }
   return prevShortAnswer;
 };
+
+// we are going to break down the new hint by constituent words, strip out the stop words, and then compare with the previous words
+export const buildHints = (prevHints, newHint, teamName, teamId) => {
+  prevHints = [
+    {
+      hint: 'circle'
+    },
+    {
+      hint: 'square'
+    },
+    {
+      hint: 'triangele'
+    }
+  ]
+  const words = newHint.text.split(" ").filter((word) => word !== "");
+  const strippedWords = removeStopwords(words);
+  const existingWords = prevHints.map(hint => hint.hint);
+  const newWords = existingWords.concat(strippedWords);
+  const frequency = newWords.reduce((acc, item) => {
+    acc[item] = (acc[item] || 0) + 1;
+    return acc;
+  }, {});
+
+  const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,3);
+  console.log(words);
+  console.log(strippedWords);
+  console.log(newWords);
+  console.log(frequency);
+  console.log(sortedByFrequency);
+
+  // let newHints = {
+  //   hint: string
+  //   teams: [{name: teamName, id: teamId}]
+  // };
+
+  // should divide by three
+  // divide by seven
+  // add by four
+  // subtract by six
+
+  // divide 
+  // should
+
+  
+
+
+
+  return {};
+};
+
+// const [commonWords, setCommonWords] = useState([]);
+// const [topWords, setTopWords] = useState([]);
+
+// const findTopWords = (newAnswer) => {
+//   const words = newAnswer.rawInput.split(" ").filter((word) => word !== "");
+//   const strippedWords = removeStopwords(words);
+//   const existingWords = [...commonWords];
+//   const newWords = existingWords.concat(strippedWords);
+//   const frequency = newWords.reduce((acc, item) => {
+//     acc[item] = (acc[item] || 0) + 1;
+//     return acc;
+//   }, {});
+
+//   const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,3);
+//   setCommonWords(newWords);
+//   return sortedByFrequency;
+// };
+
 
 /**
  * The below functions build out data objects for the Victory charts. There are three types each category require different data objects
