@@ -58,22 +58,33 @@ const GameSessionContainer = () => {
     questionConfigNavDictionary,
   );
   // assembles fields for module navigator in footer
-  const assembleNavDictionary = (isConfidenceEnabled, state) => {
+  const assembleNavDictionary = (isConfidenceEnabled, isHintEnabled, state) => {
     if (state === GameSessionState.TEAMS_JOINING) {
       setNavDictionary(questionConfigNavDictionary);
       return;
     }
     let newDictionary = [...gameplayNavDictionary];
-    if (isConfidenceEnabled)
-      newDictionary.splice(2, 0, {
+    const insertIndex = 2;
+    if (isConfidenceEnabled){
+      newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
       });
-    if (isShortAnswerEnabled)
-      newDictionary.splice(3, 0, {
+      insertIndex++;
+    }
+    if (isShortAnswerEnabled){
+      newDictionary.splice(insertIndex, 0, {
         ref: featuredMistakesRef,
         text: 'Featured Mistakes',
       });
+      insertIndex++;
+    }
+    if (isHintEnabled && (state === GameSessionState.CHOOSE_TRICKIEST_ANSWER || state === GameSessionState.PHASE_2_DISCUSS)){
+      newDictionary.splice(insertIndex, 0, {
+        ref: hintRef,
+        text: 'Player Thinking',
+      });
+    }
     setNavDictionary(newDictionary);
   };
 
@@ -99,6 +110,7 @@ const GameSessionContainer = () => {
         );
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          response.questions[response.currentQuestionIndex].isHintEnabled,
           response.currentState,
         );
       }

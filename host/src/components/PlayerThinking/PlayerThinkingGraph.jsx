@@ -28,22 +28,21 @@ export default function PlayerThinkingGraph({
   const xLargePadding = 32;
   const xxLargePadding = 40;
   const labelOffset = 3;
-  const noResponseLabel = '–';
+  const noResponseLabel = 'No Response';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
   const defaultVictoryPadding = 50;
-
   const customBarSelectedWidth = boundingRect.width - defaultVictoryPadding;
-  const largestAnswerCount = Math.max(
-    ...data.map((response) => response.answerCount),
+  const largestHintCount = Math.max(
+    ...data.map((response) => response.hintCount),
   );
 
   const calculateRoundedTicks = () => {
-    const maxAnswerCount = Math.max(
-      ...data.map(({ answerCount }) => answerCount),
+    const maxhintCount = Math.max(
+      ...data.map(({ hintCount }) => hintCount),
     );
     const tickInterval = 5;
-    const tickCount = Math.ceil(maxAnswerCount / tickInterval);
+    const tickCount = Math.ceil(maxhintCount / tickInterval);
     return Array.from(
       { length: tickCount + 1 },
       (_, index) => index * tickInterval,
@@ -103,7 +102,7 @@ export default function PlayerThinkingGraph({
         },
         labels: {
           fill: ({ datum, index }) =>
-            index === 0 || datum.answerCount === 0
+            index === 0 || datum.hintCount === 0
               ? '#FFF'
               : '#384466',
           fontFamily: 'Rubik',
@@ -117,7 +116,7 @@ export default function PlayerThinkingGraph({
   return (
     <div className={classes.container}>
       <div className={classes.titleContainer}>
-        <Typography className={classes.title}>Number of players</Typography>
+        <Typography className={classes.title}>Responses aggregated by common phrases</Typography>
       </div>
       <div ref={graphRef}>
         {data.length >= 1  && (
@@ -143,7 +142,7 @@ export default function PlayerThinkingGraph({
           <VictoryAxis
             standalone={false}
           />
-          {largestAnswerCount < 5 && (
+          {largestHintCount < 5 && (
             <VictoryAxis
               dependentAxis
               crossAxis={false}
@@ -152,7 +151,7 @@ export default function PlayerThinkingGraph({
               tickValues={[0]}
             />
           )}
-          {largestAnswerCount >= 5 && (
+          {largestHintCount >= 5 && (
             <VictoryAxis
               dependentAxis
               crossAxis={false}
@@ -164,14 +163,14 @@ export default function PlayerThinkingGraph({
           )}
           <VictoryBar
             data={data}
-            y="answerCount"
-            x="answerChoice"
+            y="hintCount"
+            x="hintText"
             horizontal
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
-            labels={({ datum }) => `${datum.answerCount}`}
+            labels={({ datum }) => `${datum.hintCount}`}
             barWidth={({ datum }) =>
-              datum.answerCount !== 0 ? barThickness : barThicknessZero
+              datum.hintCount !== 0 ? barThickness : barThicknessZero
             }
             animate={{
               onLoad: { duration: 200 },
@@ -217,14 +216,10 @@ const useStyles = makeStyles({
   title: {
     color: 'rgba(255, 255, 255, 0.5)',
     fontFamily: 'Rubik',
-    fontSize: '17px',
-    paddingBottom: '16px',
+    fontSize: '12px',
+    paddingBottom: '12px',
   },
   titleContainer: {
     marginTop: '3%',
-  },
-  answerContainer: {
-    display: 'flex',
-    justifyContent: 'center',
   },
 });

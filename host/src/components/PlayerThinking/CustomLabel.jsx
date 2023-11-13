@@ -15,7 +15,7 @@ export default function CustomLabel(props) {
 
   return (
     <g>
-      {datum.answerCount !== 0 && (
+      {datum.hintCount !== 0 && (
         <VictoryLabel
           {...props}
           x={mediumLargePadding}
@@ -24,7 +24,7 @@ export default function CustomLabel(props) {
           dy={-barThickness / 2 - xSmallPadding}
           textAnchor="start"
           verticalAnchor="end"
-          text={datum.answerText}
+          text={datum.hintText}
           style={{
             fontSize: 15,
             fill: 'white',
@@ -37,12 +37,12 @@ export default function CustomLabel(props) {
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
-        text={datum.answerCount > 0 ? `${Math.ceil(datum.answerCount)}` : ''}
+        text={datum.hintCount > 0 ? `${Math.ceil(datum.hintCount)}` : ''}
         style={{
           fontSize: 15,
           fill:
-            datum.answerCount === 0 ||
-            datum.answerChoice === noResponseLabel ||
+            datum.hintCount === 0 ||
+            datum.hintText === noResponseLabel ||
             x <= 70
               ? '#FFF'
               : '#384466',

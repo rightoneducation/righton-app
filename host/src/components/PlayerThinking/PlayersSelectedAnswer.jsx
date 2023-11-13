@@ -5,24 +5,23 @@ export default function PlayersSelectedAnswer(props) {
   const {
     data,
     graphClickInfo,
-    numPlayers,
-    statePosition
+    numPlayers
   } = props;
   const classes = useStyles(props);
-  const answerCount = data[graphClickInfo.selectedIndex].answerCount;
-  const percentage = (answerCount / numPlayers) * 100;
-  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].answerTeams.map((team) => team.name);
+  const hintCount = data[graphClickInfo.selectedIndex].hintCount;
+  const percentage = (hintCount / numPlayers) * 100;
+  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].hintTeams.map((team) => team);
 
   return (
     <div>
       <div className={classes.textContainer}>
         <Typography className={classes.titleText}>
-          Players who picked this answer
+          Players who submitted this hint:
         </Typography>
         <div className={classes.numberContainer}>
           <Typography className={classes.countText}>
             {/* count from stateposition === 6 saved and displayed here for stateposition === 6 */}
-            {answerCount}
+            {hintCount}
           </Typography>
           <Typography className={classes.percentageText}>
             {/* percentage from  stateposition === 6saved and displayed here for stateposition === 6 */}
@@ -30,22 +29,6 @@ export default function PlayersSelectedAnswer(props) {
           </Typography>
         </div>
       </div>
-      {statePosition === 6 && (
-        <div className={classes.textContainer}>
-          <Typography className={classes.phaseTwoTitleText}>
-            Players who think this is the trickest
-            <br /> answer
-          </Typography>
-          <div className={classes.phaseTwoNumberContainer}>
-            <Typography className={classes.phaseTwoCountText}>
-              {answerCount}
-            </Typography>
-            <Typography className={classes.phaseTwoPercentageText}>
-              ({Math.round(percentage)}%)
-            </Typography>
-          </div>
-        </div>
-      )}
       {teamsWithSelectedAnswer.map((teamChoice, index) => (
         <div key={index} className={classes.rectStyle}>
           <Typography className={classes.nameText}>

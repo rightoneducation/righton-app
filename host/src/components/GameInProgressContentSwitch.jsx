@@ -12,6 +12,7 @@ import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponse
 import EnableShortAnswerCard from "./EnableShortAnswerCard";
 import FeaturedMistakes from "./FeaturedMistakes";
 import PlayerThinking from './PlayerThinking/PlayerThinking';
+import PlayerThinkingSelectedAnswer from './PlayerThinking/PlayerThinkingSelectedAnswer';
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
@@ -44,8 +45,87 @@ export default function GameInProgressContentSwitch ({
     hintRef
   }) {
   const classes = useStyles();
+  const hintData = [{hintText: 'No Response', hintCount: 12, hintTeams: ['team one']}, {hintText: "this is a test", hintCount: 3, hintTeams: ['team two']}, {hintText: "this is also a test", hintCount: 5, hintTeams: ['team 3']}];
+  const graphClickRenderSwitch = (graphClickInfo) => {
+    switch (graphClickInfo.graph){
+      case ('realtime'):
+        return (
+          <div 
+            id="responses-scrollbox" 
+            ref={responsesRef}     
+            className={classes.contentContainer}
+          >
+            <Responses
+              data={data}
+              numPlayers={numPlayers}
+              totalAnswers={totalAnswers}
+              questionChoices={questionChoices}
+              statePosition={statePosition}
+              graphClickInfo={graphClickInfo}
+              handleGraphClick={handleGraphClick}
+              isShortAnswerEnabled={isShortAnswerEnabled}
+            />
+            <SelectedAnswer
+              data={data}
+              graphClickInfo={graphClickInfo}
+              correctChoiceIndex={correctChoiceIndex}
+              numPlayers={numPlayers}
+              statePosition={statePosition}
+              isShortAnswerEnabled={isShortAnswerEnabled}
+            />
+          </div>
+        );
+      case ('confidence'):
+        return (
+          <div 
+            id="confidencecard-scrollbox" 
+            ref={confidenceCardRef}
+            className={classes.contentContainer}
+          >
+            <ConfidenceResponseCard
+              confidenceData={confidenceData}
+              orderedAnswers={answers}
+              graphClickInfo={graphClickInfo}
+              handleGraphClick={handleGraphClick}
+            />
+            <ConfidenceResponseDropdown
+              graphClickInfo={graphClickInfo}
+              selectedConfidenceData={
+                confidenceData[graphClickInfo.selectedIndex]
+              }
+            />
+          </div>
+        );
+      case ('hint'):
+        return (
+          <div 
+            id="hint-scrollbox" 
+            ref={hintRef}
+            className={classes.contentContainer}
+          >
+            <PlayerThinking
+              data={hintData}
+              questions={questions}
+              questionChoices={questionChoices}
+              currentQuestionIndex={currentQuestionIndex}
+              answers={answers}
+              totalAnswers={totalAnswers}
+              numPlayers={numPlayers}
+              statePosition={statePosition}
+              graphClickInfo={graphClickInfo}
+              handleGraphClick={handleGraphClick}
+            />
+            <PlayerThinkingSelectedAnswer
+              data={hintData}
+              graphClickInfo={graphClickInfo}
+              numPlayers={numPlayers}
+            />
+          </div>
+        );
+    }
+  }
   const gameplayComponents = [
-    <>
+    <Box className={classes.configContainer}>
       {graphClickInfo.graph === null ? (
         <>
           <div id="questioncard-scrollbox" ref={questionCardRef}>
@@ -102,6 +182,7 @@ export default function GameInProgressContentSwitch ({
               className={classes.contentContainer}
             >
               <PlayerThinking
+                data={hintData}
                 questions={questions}
                 questionChoices={questionChoices}
                 currentQuestionIndex={currentQuestionIndex}
@@ -109,6 +190,8 @@ export default function GameInProgressContentSwitch ({
                 totalAnswers={totalAnswers}
                 numPlayers={numPlayers}
                 statePosition={statePosition}
+                graphClickInfo={graphClickInfo}
+                handleGraphClick={handleGraphClick}
               />
             </div>
           ) : null}
@@ -129,50 +212,13 @@ export default function GameInProgressContentSwitch ({
           </div>
         </>
       ) : (
-        <div className={classes.contentContainer}>
-          {graphClickInfo.graph === 'realtime' ? (
-            <div id="responses-scrollbox" ref={responsesRef}>
-              <Responses
-                data={data}
-                numPlayers={numPlayers}
-                totalAnswers={totalAnswers}
-                questionChoices={questionChoices}
-                statePosition={statePosition}
-                graphClickInfo={graphClickInfo}
-                handleGraphClick={handleGraphClick}
-                isShortAnswerEnabled={isShortAnswerEnabled}
-              />
-              <SelectedAnswer
-                data={data}
-                graphClickInfo={graphClickInfo}
-                correctChoiceIndex={correctChoiceIndex}
-                numPlayers={numPlayers}
-                statePosition={statePosition}
-                isShortAnswerEnabled={isShortAnswerEnabled}
-              />
-            </div>
-          ) : (
-            <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
-              <ConfidenceResponseCard
-                confidenceData={confidenceData}
-                orderedAnswers={answers}
-                graphClickInfo={graphClickInfo}
-                handleGraphClick={handleGraphClick}
-              />
-              <ConfidenceResponseDropdown
-                graphClickInfo={graphClickInfo}
-                selectedConfidenceData={
-                  confidenceData[graphClickInfo.selectedIndex]
-                }
-              />
-            </div>
-          )}
-        </div>
-      )}
-    </>,
+        graphClickRenderSwitch(graphClickInfo)
+      )
+    };
+    </Box>,
   ];
 
-  const questionCofigurationComponents = [
+  const questionConfigurationComponents = [
     <Box className={classes.configContainer}>
       <div id="questioncard-scrollbox" ref={questionCardRef}>
         <QuestionCard
@@ -205,7 +251,7 @@ export default function GameInProgressContentSwitch ({
 
   return currentState !== GameSessionState.TEAMS_JOINING
     ? gameplayComponents
-    : questionCofigurationComponents;
+    : questionConfigurationComponents;
 }
 
 const useStyles = makeStyles({

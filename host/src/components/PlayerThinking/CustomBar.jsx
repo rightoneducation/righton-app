@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar } from 'victory';
 import { makeStyles } from '@material-ui/core';
+import { isNullOrUndefined } from '@righton/networking';
 
 export default function CustomBar(props) {
   const {
@@ -19,7 +20,7 @@ export default function CustomBar(props) {
   return (
     <g style={{ pointerEvents: 'bounding-box' }}>
       <Bar {...props} />
-      {datum.answerCount > 0 && (
+      {datum.hintCount > 0 && (
         <rect
           className={classes.highlight}
           x={0}
@@ -29,7 +30,7 @@ export default function CustomBar(props) {
           fill={
             graphClickInfo.selectedIndex &&
             graphClickInfo.selectedIndex === index &&
-            graphClickInfo.graph === 'realtime'
+            graphClickInfo.graph === 'hint'
               ? 'rgba(255, 255, 255, 0.2)'
               : 'transparent'
           }
@@ -37,7 +38,7 @@ export default function CustomBar(props) {
           rx={8}
           ry={8}
           onClick={() =>
-            handleGraphClick({ graph: 'realtime', selectedIndex: index })
+            handleGraphClick({ graph: 'hint', selectedIndex: index })
           }
           style={{ cursor: 'pointer' }}
         />

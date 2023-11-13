@@ -4,59 +4,32 @@ import check from '../../images/Pickedcheck.svg';
 import { Tooltip } from '@material-ui/core';
 import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
-export default function SelectedAnswer(props) {
+export default function PlayerThinkingSelectedAnswer(props) {
   const {
     data,
-    correctChoiceIndex,
     numPlayers,
     statePosition,
     graphClickInfo
   } = props;
   const classes = useStyles();
-  const showCustomTick =
-    graphClickInfo.selectedIndex === data.length - 1 - correctChoiceIndex;
   return (
     <div>
-      {graphClickInfo.selectedIndex === null ? (
-        <Typography className={classes.text}>
-          Tap on a response to see more details.
+      <div style={{ width: '100%' }}>
+        <Typography className={classes.titleText}>
+          Showing players who submitted this hint:
         </Typography>
-      ) : (
-        <div style={{ width: '100%' }}>
-          <Typography className={classes.titleText}>
-            Showing players who answered:
-          </Typography>
-          <div className={classes.rectStyle}>
-            <div className={classes.choiceContainer}>
-              {data[graphClickInfo.selectedIndex].answerChoice}
-            </div>
-            <div className={classes.textContainer}>
-              {data[graphClickInfo.selectedIndex].answerText}
-            </div>
-            {showCustomTick && (
-              <Tooltip
-                title={
-                  <div className={classes.tooltip}>
-                    This is the {'\n'} correct answer
-                  </div>
-                }
-                placement="bottom"
-                arrow
-              >
-                <span className={classes.checkIconStyle}>
-                  <img src={check} alt="correct answer" />
-                </span>
-              </Tooltip>
-            )}
+        <div className={classes.rectStyle}>
+          <div className={classes.textContainer}>
+            {data[graphClickInfo.selectedIndex].hintText}
           </div>
-          <PlayersSelectedAnswer
-            data={data}
-            graphClickInfo={graphClickInfo}
-            numPlayers={numPlayers}
-            statePosition={statePosition}
-          />
         </div>
-      )}
+        <PlayersSelectedAnswer
+          data={data}
+          graphClickInfo={graphClickInfo}
+          numPlayers={numPlayers}
+          statePosition={statePosition}
+        />
+      </div>
     </div>
   );
 }

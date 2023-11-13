@@ -14,11 +14,13 @@ export default function PlayerThinking({
   handleGraphClick,
 }) {
   const classes = useStyles();
-
   return (
     <Box className={classes.centerContent}>
       <Typography className={classes.titleStyle}>
-        Responses
+        Player Thinking
+      </Typography>
+      <Typography className={classes.infoText}>
+        Players are asked how sure they are of their answer for this question.
       </Typography>
       <PlayerThinkingGraph
         data={data}
@@ -30,6 +32,11 @@ export default function PlayerThinking({
         isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
         handleGraphClick={handleGraphClick}
       />
+      {graphClickInfo.graph === null ? (
+        <Typography className={classes.subText}>
+          Tap on a response to see more details.
+        </Typography>
+      ) : null}
     </Box>
   );
 }
@@ -51,5 +58,22 @@ const useStyles = makeStyles({
     lineHeight: 'normal',
     textTransform: 'none',
     textAlign: 'left',
+  },
+  infoText: {
+    color: '#FFF',
+    alignSelf: 'stretch',
+    textAlign: 'center',
+    fontFamily: 'Poppins',
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 'normal',
+  },
+  subText: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    textAlign: 'center',
+    fontFamily: 'Rubik',
+    fontSize: '14px',
+    fontWeight: '400',
   },
 });

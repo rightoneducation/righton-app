@@ -148,7 +148,10 @@ export default function GameInProgress({
     setTimeout(() => {
       if (graph === 'realtime')
         responsesRef.current.scrollIntoView({ behavior: 'smooth' });
-      else confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else if (graph === 'confidence')
+        confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else 
+        hintRef.current.scrollIntoView({ behavior: 'smooth' });
     }, 0);
   };
 
@@ -178,12 +181,12 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
     if (
       nextState === GameSessionState.PHASE_1_DISCUSS ||
       nextState === GameSessionState.PHASE_2_DISCUSS
