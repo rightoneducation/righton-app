@@ -42,10 +42,11 @@ export default function GameInProgressContentSwitch ({
     handleOnSelectMistake,
     isHintEnabled,
     handleHintChange,
-    hintRef
+    hintRef,
+    hintData
   }) {
   const classes = useStyles();
-  const hintData = [{hintText: 'No Response', hintCount: 12, hintTeams: ['team one']}, {hintText: "this is a test", hintCount: 3, hintTeams: ['team two']}, {hintText: "this is also a test", hintCount: 5, hintTeams: ['team 3']}];
+ // const hintData = [{hintText: 'No Response', hintCount: 12, hintTeams: ['team one']}, {hintText: "this is a test", hintCount: 3, hintTeams: ['team two']}, {hintText: "this is also a test", hintCount: 5, hintTeams: ['team 3']}];
   const graphClickRenderSwitch = (graphClickInfo) => {
     switch (graphClickInfo.graph){
       case ('realtime'):

@@ -104,7 +104,7 @@ export const checkForSubmittedHintOnRejoin = (
 ): ITeamAnswerHint => {
   let returnedHint: ITeamAnswerHint = {
     delta: '',
-    text: '',
+    rawHint: '',
     isHintSubmitted: false,
   };
   if (hasRejoined) {

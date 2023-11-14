@@ -38,11 +38,11 @@ export default function PlayerThinkingGraph({
   );
 
   const calculateRoundedTicks = () => {
-    const maxhintCount = Math.max(
+    const maxHintCount = Math.max(
       ...data.map(({ hintCount }) => hintCount),
     );
     const tickInterval = 5;
-    const tickCount = Math.ceil(maxhintCount / tickInterval);
+    const tickCount = Math.ceil(maxHintCount / tickInterval);
     return Array.from(
       { length: tickCount + 1 },
       (_, index) => index * tickInterval,
@@ -95,14 +95,12 @@ export default function PlayerThinkingGraph({
     bar: {
       style: {
         data: {
-          fill: ({ datum, index }) =>
-            index === 0 ? 'transparent' : '#FFF',
+          fill: '#FFF',
           stroke: '#FFF',
           strokeWidth: 1,
         },
         labels: {
-          fill: ({ datum, index }) =>
-            index === 0 || datum.hintCount === 0
+          fill: ({ datum, index }) => datum.hintCount === 0
               ? '#FFF'
               : '#384466',
           fontFamily: 'Rubik',
@@ -164,7 +162,7 @@ export default function PlayerThinkingGraph({
           <VictoryBar
             data={data}
             y="hintCount"
-            x="hintText"
+            x="matchingWord"
             horizontal
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}

@@ -10,7 +10,7 @@ export default function PlayersSelectedAnswer(props) {
   const classes = useStyles(props);
   const hintCount = data[graphClickInfo.selectedIndex].hintCount;
   const percentage = (hintCount / numPlayers) * 100;
-  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].hintTeams.map((team) => team);
+  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].teamsMatched.map((team) => team);
 
   return (
     <div>

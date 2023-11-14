@@ -7,6 +7,7 @@ import {
   GameSessionState,
   ITeamAnswerContent,
   ITeamAnswerHint,
+  ITeam,
   IChoice
 } from '@righton/networking';
 import { Pagination } from 'swiper';
@@ -44,6 +45,7 @@ interface ChooseAnswerProps {
   isHintSubmitted: boolean;
   handleSubmitHint: (result: ITeamAnswerHint) => void;
   answerHint: ITeamAnswerHint;
+  currentTeam: ITeam | null;
 }
 
 export default function ChooseAnswer({
@@ -69,6 +71,7 @@ export default function ChooseAnswer({
   isHintSubmitted,
   handleSubmitHint,
   answerHint,
+  currentTeam
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -154,6 +157,7 @@ export default function ChooseAnswer({
                   currentQuestionIndex={currentQuestionIndex}
                   isHintSubmitted={isHintSubmitted}
                   handleSubmitHint={handleSubmitHint}
+                  currentTeam={currentTeam ?? null}
                 />
               </Box>
             </Fade>

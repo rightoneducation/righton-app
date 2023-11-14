@@ -3,7 +3,9 @@ import { ITeamAnswerContent } from "./ITeamAnswerContent";
 
 export interface ITeamAnswerHint {
     delta: string;
-    text: string;
+    rawHint: string;
+    normHint?: string[];
+    teamName: string;
     isHintSubmitted: boolean;
 }
 

@@ -30,7 +30,7 @@ const GameSessionContainer = () => {
   // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
   // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
-  const [hints, setHints] = useState([]);
+  const [hints, setHints] = useState({prevSubmittedHints: [], finalArray: []});
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -90,7 +90,6 @@ const GameSessionContainer = () => {
   };
 
   let { gameSessionId } = useParams<{ gameSessionId: string }>();
-
   // initial query for gameSessions and teams
   useEffect(() => {
     apiClient.getGameSession(gameSessionId).then((response) => {
@@ -244,9 +243,7 @@ const GameSessionContainer = () => {
       (teamAnswerResponse) => {
         let teamName = '';
         setTeamsArray((prevState) => {
-          const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
           let newState = JSON.parse(JSON.stringify(prevState));
-          console.log(newState);
           newState.forEach((team) => {
             team.teamMembers &&
               team.teamMembers.forEach((teamMember) => {
@@ -256,10 +253,6 @@ const GameSessionContainer = () => {
                       answer.confidenceLevel = teamAnswerResponse.confidenceLevel;
                       if (teamAnswerResponse.hint){
                         answer.hint = teamAnswerResponse.hint;
-                        setHints((prevHints) => {
-                          let newHints = buildHints(prevHints, teamAnswerResponse.hint, teamName, teamId);
-                          return newHints;
-                        });
                       }
                     }
                   });
@@ -268,6 +261,9 @@ const GameSessionContainer = () => {
           });
           return newState;
         });
+        setHints((prevHints) => 
+          buildHints(prevHints.prevSubmittedHints, teamAnswerResponse.hint) 
+        );
         setShortAnswerResponses((existingAnswers) => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
           newShortAnswers.forEach((answer) => {
@@ -493,6 +489,7 @@ const GameSessionContainer = () => {
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
           hintRef={hintRef}
+          hints={hints}
         />
       );
     }
@@ -525,6 +522,7 @@ const GameSessionContainer = () => {
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
           hintRef={hintRef}
+          hints={hints}
         />
       );
 

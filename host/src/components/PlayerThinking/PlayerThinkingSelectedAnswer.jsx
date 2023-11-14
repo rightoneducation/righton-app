@@ -20,7 +20,7 @@ export default function PlayerThinkingSelectedAnswer(props) {
         </Typography>
         <div className={classes.rectStyle}>
           <div className={classes.textContainer}>
-            {data[graphClickInfo.selectedIndex].hintText}
+            {data[graphClickInfo.selectedIndex].matchingWord}
           </div>
         </div>
         <PlayersSelectedAnswer

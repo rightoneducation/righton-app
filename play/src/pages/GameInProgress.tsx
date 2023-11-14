@@ -320,6 +320,7 @@ export default function GameInProgress({
             isHintEnabled={isHintEnabled}
             isHintSubmitted={answerHint.isHintSubmitted ?? false}
             handleSubmitHint={handleSubmitHint}
+            currentTeam={currentTeam ?? null}
           />
         ) : (
           <DiscussAnswer

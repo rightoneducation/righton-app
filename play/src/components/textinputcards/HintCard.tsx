@@ -5,9 +5,11 @@ import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
   ITeamAnswerContent,
+  ITeam,
   ITeamAnswerHint,
   GameSessionState,
 } from '@righton/networking';
+import { removeStopwords, eng, fra } from 'stopword';
 import ReactQuill from 'react-quill';
 import katex from 'katex';
 import './ReactQuill.css';
@@ -25,6 +27,7 @@ interface HintProps {
   currentState: GameSessionState;
   currentQuestionIndex: number;
   handleSubmitHint: (result: ITeamAnswerHint) => void;
+  currentTeam: ITeam | null;
 }
 
 export default function HintCard({
@@ -33,6 +36,7 @@ export default function HintCard({
   currentState,
   currentQuestionIndex,
   handleSubmitHint,
+  currentTeam
 }: HintProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -60,7 +64,7 @@ export default function HintCard({
     const currentAnswer = editor.getContents();
     const extractedAnswer: ITeamAnswerHint = {
       delta: editor.getContents(),
-      text: editor.getText(),
+      rawHint: editor.getText(),
       isHintSubmitted: false
     };
     window.localStorage.setItem(
@@ -72,12 +76,17 @@ export default function HintCard({
   };
 
   const handleNormalizeAnswerOnSubmit = () => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const hintArray = editorObject.getText().replace(/(\r\n|\n|\r|" ")/gm, '').split(" ").filter((word: string) => word !== "");
+    const normHint = removeStopwords(hintArray);
+
     const packagedAnswer: ITeamAnswerHint = {
       delta: editorObject.getContents(),
-      text: editorObject.getText()
+      rawHint: editorObject.getText()
         .toLowerCase()
         .replace(/(\r\n|\n|\r|" ")/gm, '')
         .trim(),
+      normHint,
+      teamName: currentTeam?.name ?? '',
       isHintSubmitted: true
     } as ITeamAnswerHint;
     handleSubmitHint(packagedAnswer);

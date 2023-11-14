@@ -397,72 +397,40 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
 };
 
 // we are going to break down the new hint by constituent words, strip out the stop words, and then compare with the previous words
-export const buildHints = (prevHints, newHint, teamName, teamId) => {
-  prevHints = [
-    {
-      hint: 'circle'
-    },
-    {
-      hint: 'square'
-    },
-    {
-      hint: 'triangele'
-    }
-  ]
-  const words = newHint.text.split(" ").filter((word) => word !== "");
-  const strippedWords = removeStopwords(words);
-  const existingWords = prevHints.map(hint => hint.hint);
-  const newWords = existingWords.concat(strippedWords);
-  const frequency = newWords.reduce((acc, item) => {
-    acc[item] = (acc[item] || 0) + 1;
-    return acc;
-  }, {});
-
-  const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,3);
-  console.log(words);
-  console.log(strippedWords);
-  console.log(newWords);
-  console.log(frequency);
-  console.log(sortedByFrequency);
-
-  // let newHints = {
-  //   hint: string
-  //   teams: [{name: teamName, id: teamId}]
-  // };
-
-  // should divide by three
-  // divide by seven
-  // add by four
-  // subtract by six
-
-  // divide 
-  // should
-
+export const buildHints = (prevSubmittedHints, newHint) => {
+  let finalArray = [];
+  let matchMap = {};
+  // Convert newHint.normHint to a set
+  const newHintSet = new Set(newHint.normHint);
+  // if this isn't the first hint received, iterate over previous hints 
+  // to find a match
+  if (!isNullOrUndefined(prevSubmittedHints) && prevSubmittedHints.length > 0) {
+    prevSubmittedHints.forEach(hint => {
+      hint.normHint.forEach(word => {
+        if (newHintSet.has(word)) {
+          if (!matchMap[word]) {
+            matchMap[word] = new Set();
+          }
+          matchMap[word].add(hint.teamName);
+          matchMap[word].add(newHint.teamName);
+        }
+      });
+      return hint;
+    });
+    // Convert the matchMap to the desired finalArray structure
+    finalArray = Object.keys(matchMap).map(matchingWord => ({
+      matchingWord,
+      teamsMatched: Array.from(matchMap[matchingWord]),
+      hintCount: matchMap[matchingWord].size,
+    }));
+    finalArray.sort((a, b) => a.hintCount - b.hintCount);
+  }
+  // Push the new hint into prevSubmittedHints
+  prevSubmittedHints.push(newHint);
   
-
-
-
-  return {};
+  // Return the prevSubmittedHints (with newHint added) and the finalArray
+  return { prevSubmittedHints, finalArray };
 };
-
-// const [commonWords, setCommonWords] = useState([]);
-// const [topWords, setTopWords] = useState([]);
-
-// const findTopWords = (newAnswer) => {
-//   const words = newAnswer.rawInput.split(" ").filter((word) => word !== "");
-//   const strippedWords = removeStopwords(words);
-//   const existingWords = [...commonWords];
-//   const newWords = existingWords.concat(strippedWords);
-//   const frequency = newWords.reduce((acc, item) => {
-//     acc[item] = (acc[item] || 0) + 1;
-//     return acc;
-//   }, {});
-
-//   const sortedByFrequency = Object.entries(frequency).sort((a, b) => b[1] - a[1]).slice(0,3);
-//   setCommonWords(newWords);
-//   return sortedByFrequency;
-// };
-
 
 /**
  * The below functions build out data objects for the Victory charts. There are three types each category require different data objects

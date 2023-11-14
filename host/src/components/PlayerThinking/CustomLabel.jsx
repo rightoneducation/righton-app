@@ -24,7 +24,7 @@ export default function CustomLabel(props) {
           dy={-barThickness / 2 - xSmallPadding}
           textAnchor="start"
           verticalAnchor="end"
-          text={datum.hintText}
+          text={datum.matchingWord}
           style={{
             fontSize: 15,
             fill: 'white',
@@ -42,7 +42,7 @@ export default function CustomLabel(props) {
           fontSize: 15,
           fill:
             datum.hintCount === 0 ||
-            datum.hintText === noResponseLabel ||
+            datum.matchingWord === noResponseLabel ||
             x <= 70
               ? '#FFF'
               : '#384466',

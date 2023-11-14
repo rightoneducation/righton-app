@@ -50,7 +50,8 @@ export default function GameInProgress({
   handleOnSelectMistake,
   isHintEnabled,
   handleHintChange,
-  hintRef
+  hintRef,
+  hints
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -137,6 +138,9 @@ export default function GameInProgress({
       );
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
+
+  const hintData = hints?.finalArray ?? [];
+  
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
     graph: null,
@@ -282,6 +286,7 @@ export default function GameInProgress({
             isHintEnabled={isHintEnabled}
             handleHintChange={handleHintChange}
             hintRef={hintRef}
+            hintData={hintData}
           />
         </div>
         <GameModal
