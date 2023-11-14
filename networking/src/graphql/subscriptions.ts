@@ -24,6 +24,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -95,6 +96,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         text
         choices
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -162,6 +164,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -230,6 +233,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -307,6 +311,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -378,6 +383,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         text
         choices
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -421,6 +427,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -492,6 +499,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         text
         choices
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -535,6 +543,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -606,6 +615,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         text
         choices
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -640,6 +650,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -708,6 +719,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -776,6 +788,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard

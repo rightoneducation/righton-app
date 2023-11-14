@@ -24,6 +24,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -95,6 +96,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         text
         choices
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -141,6 +143,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             text
             choices
             responses
+            hints
             imageUrl
             instructions
             standard
@@ -212,6 +215,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -246,6 +250,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     text
     choices
     responses
+    hints
     imageUrl
     instructions
     standard
@@ -285,6 +290,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -315,6 +321,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       text
       choices
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -385,6 +392,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         text
         choices
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -595,6 +603,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             text
             choices
             responses
+            hints
             imageUrl
             instructions
             standard
@@ -666,6 +675,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -723,6 +733,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             text
             choices
             responses
+            hints
             imageUrl
             instructions
             standard
@@ -794,6 +805,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           text
           choices
           responses
+          hints
           imageUrl
           instructions
           standard

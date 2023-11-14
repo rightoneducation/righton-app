@@ -1,11 +1,13 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
 import { INormAnswer } from "./ITeamAnswerContent";
+import { ITeamAnswerHint } from "./ITeamAnswer";
 
 export interface IQuestion {
     id: number
     text: string
     choices?: Array<IChoice> | null
     responses?: Array<IResponse> | null
+    hints?: IHints | null
     imageUrl?: string | null
     instructions?: Array<string> | null
     standard?: string | null
@@ -39,4 +41,13 @@ export interface IResponseTeam {
     team: string
     id: string
     confidence: ConfidenceLevel
+}
+
+export interface IHints {
+    prevSubmittedHints: Array<ITeamAnswerHint>,
+    finalArray: {
+        matchingWord: string,
+        teamsMatched: string[],
+        hintCount: number
+    }
 }

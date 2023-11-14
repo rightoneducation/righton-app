@@ -65,6 +65,7 @@ export default function HintCard({
     const extractedAnswer: ITeamAnswerHint = {
       delta: editor.getContents(),
       rawHint: editor.getText(),
+      teamName: currentTeam?.name ?? '',
       isHintSubmitted: false
     };
     window.localStorage.setItem(

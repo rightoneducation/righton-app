@@ -108,6 +108,9 @@ const GameSessionContainer = () => {
         setIsHintEnabled(
           response.questions[response.currentQuestionIndex].isHintEnabled,
         );
+        if (!isNullOrUndefined(response.questions[response.currentQuestionIndex].hints)) {
+          setHints(response.questions[response.currentQuestionIndex].hints);
+        };
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.questions[response.currentQuestionIndex].isHintEnabled,
@@ -261,9 +264,22 @@ const GameSessionContainer = () => {
           });
           return newState;
         });
-        setHints((prevHints) => 
-          buildHints(prevHints.prevSubmittedHints, teamAnswerResponse.hint) 
-        );
+        if (!isNullOrUndefined(teamAnswerResponse.hint)) {
+          setHints((prevHints) => {
+              const newHints = buildHints(prevHints.prevSubmittedHints, teamAnswerResponse.hint) 
+              apiClient.getGameSession(gameSessionId).then((gameSession) => {
+                apiClient
+                  .updateQuestion({
+                    gameSessionId: gameSession.id, 
+                    id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                    order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                    hints: JSON.stringify(newHints),
+                });
+              });
+              return newHints;
+            }
+          );
+        }
         setShortAnswerResponses((existingAnswers) => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
           newShortAnswers.forEach((answer) => {

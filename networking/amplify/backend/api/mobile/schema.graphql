@@ -41,6 +41,7 @@ type Question @model(subscriptions: null, timestamps: null) {
   text: String!
   choices: AWSJSON
   responses: AWSJSON
+  hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
   standard: String
