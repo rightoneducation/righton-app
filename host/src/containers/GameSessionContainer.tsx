@@ -34,7 +34,7 @@ const GameSessionContainer = () => {
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
-  const apiClient = new ApiClient(Environment.Staging);
+  const apiClient = new ApiClient(Environment.Developing);
   const [headerGameCurrentTime, setHeaderGameCurrentTime] = React.useState(
     localStorage.getItem('currentGameTimeStore'),
   );

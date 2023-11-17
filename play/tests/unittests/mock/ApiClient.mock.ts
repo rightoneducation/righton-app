@@ -7,7 +7,7 @@ import {
   IQuestion,
 } from '@righton/networking';
 
-const apiClient = new ApiClient(Environment.Staging);
+const apiClient = new ApiClient(Environment.Developing);
 
 const createQuestion = () => {
   return {
