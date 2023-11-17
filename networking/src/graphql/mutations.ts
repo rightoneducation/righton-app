@@ -8,6 +8,855 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
+  $input: CreateGameTemplateInput!
+  $condition: ModelGameTemplateConditionInput
+) {
+  createGameTemplate(input: $input, condition: $condition) {
+    id
+    title
+    owner
+    version
+    description
+    numberOfQuestions
+    createdAt
+    questionTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          numberOfQuestions
+          createdAt
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          explanation
+          correctAnswer
+          incorrectAnswer
+          createdAt
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateGameTemplateMutationVariables,
+  APITypes.CreateGameTemplateMutation
+>;
+export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
+  $input: UpdateGameTemplateInput!
+  $condition: ModelGameTemplateConditionInput
+) {
+  updateGameTemplate(input: $input, condition: $condition) {
+    id
+    title
+    owner
+    version
+    description
+    numberOfQuestions
+    createdAt
+    questionTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          numberOfQuestions
+          createdAt
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          explanation
+          correctAnswer
+          incorrectAnswer
+          createdAt
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateGameTemplateMutationVariables,
+  APITypes.UpdateGameTemplateMutation
+>;
+export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
+  $input: DeleteGameTemplateInput!
+  $condition: ModelGameTemplateConditionInput
+) {
+  deleteGameTemplate(input: $input, condition: $condition) {
+    id
+    title
+    owner
+    version
+    description
+    numberOfQuestions
+    createdAt
+    questionTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          numberOfQuestions
+          createdAt
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          explanation
+          correctAnswer
+          incorrectAnswer
+          createdAt
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteGameTemplateMutationVariables,
+  APITypes.DeleteGameTemplateMutation
+>;
+export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemplate(
+  $input: CreateQuestionTemplateInput!
+  $condition: ModelQuestionTemplateConditionInput
+) {
+  createQuestionTemplate(input: $input, condition: $condition) {
+    id
+    title
+    owner
+    version
+    explanation
+    correctAnswer
+    incorrectAnswer
+    createdAt
+    gameTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          numberOfQuestions
+          createdAt
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          explanation
+          correctAnswer
+          incorrectAnswer
+          createdAt
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateQuestionTemplateMutationVariables,
+  APITypes.CreateQuestionTemplateMutation
+>;
+export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemplate(
+  $input: UpdateQuestionTemplateInput!
+  $condition: ModelQuestionTemplateConditionInput
+) {
+  updateQuestionTemplate(input: $input, condition: $condition) {
+    id
+    title
+    owner
+    version
+    explanation
+    correctAnswer
+    incorrectAnswer
+    createdAt
+    gameTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          numberOfQuestions
+          createdAt
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          explanation
+          correctAnswer
+          incorrectAnswer
+          createdAt
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateQuestionTemplateMutationVariables,
+  APITypes.UpdateQuestionTemplateMutation
+>;
+export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemplate(
+  $input: DeleteQuestionTemplateInput!
+  $condition: ModelQuestionTemplateConditionInput
+) {
+  deleteQuestionTemplate(input: $input, condition: $condition) {
+    id
+    title
+    owner
+    version
+    explanation
+    correctAnswer
+    incorrectAnswer
+    createdAt
+    gameTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          numberOfQuestions
+          createdAt
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          explanation
+          correctAnswer
+          incorrectAnswer
+          createdAt
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                numberOfQuestions
+                createdAt
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                explanation
+                correctAnswer
+                incorrectAnswer
+                createdAt
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteQuestionTemplateMutationVariables,
+  APITypes.DeleteQuestionTemplateMutation
+>;
 export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
   $input: CreateGameSessionInput!
   $condition: ModelGameSessionConditionInput
@@ -811,4 +1660,754 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
 ` as GeneratedMutation<
   APITypes.DeleteTeamAnswerMutationVariables,
   APITypes.DeleteTeamAnswerMutation
+>;
+export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
+  $input: CreateGameQuestionsInput!
+  $condition: ModelGameQuestionsConditionInput
+) {
+  createGameQuestions(input: $input, condition: $condition) {
+    id
+    gameTemplateID
+    questionTemplateID
+    gameTemplate {
+      id
+      title
+      owner
+      version
+      description
+      numberOfQuestions
+      createdAt
+      questionTemplates {
+        items {
+          id
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
+            id
+            title
+            owner
+            version
+            description
+            numberOfQuestions
+            createdAt
+            questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          questionTemplate {
+            id
+            title
+            owner
+            version
+            explanation
+            correctAnswer
+            incorrectAnswer
+            createdAt
+            gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+    questionTemplate {
+      id
+      title
+      owner
+      version
+      explanation
+      correctAnswer
+      incorrectAnswer
+      createdAt
+      gameTemplates {
+        items {
+          id
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
+            id
+            title
+            owner
+            version
+            description
+            numberOfQuestions
+            createdAt
+            questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          questionTemplate {
+            id
+            title
+            owner
+            version
+            explanation
+            correctAnswer
+            incorrectAnswer
+            createdAt
+            gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateGameQuestionsMutationVariables,
+  APITypes.CreateGameQuestionsMutation
+>;
+export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
+  $input: UpdateGameQuestionsInput!
+  $condition: ModelGameQuestionsConditionInput
+) {
+  updateGameQuestions(input: $input, condition: $condition) {
+    id
+    gameTemplateID
+    questionTemplateID
+    gameTemplate {
+      id
+      title
+      owner
+      version
+      description
+      numberOfQuestions
+      createdAt
+      questionTemplates {
+        items {
+          id
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
+            id
+            title
+            owner
+            version
+            description
+            numberOfQuestions
+            createdAt
+            questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          questionTemplate {
+            id
+            title
+            owner
+            version
+            explanation
+            correctAnswer
+            incorrectAnswer
+            createdAt
+            gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+    questionTemplate {
+      id
+      title
+      owner
+      version
+      explanation
+      correctAnswer
+      incorrectAnswer
+      createdAt
+      gameTemplates {
+        items {
+          id
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
+            id
+            title
+            owner
+            version
+            description
+            numberOfQuestions
+            createdAt
+            questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          questionTemplate {
+            id
+            title
+            owner
+            version
+            explanation
+            correctAnswer
+            incorrectAnswer
+            createdAt
+            gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateGameQuestionsMutationVariables,
+  APITypes.UpdateGameQuestionsMutation
+>;
+export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
+  $input: DeleteGameQuestionsInput!
+  $condition: ModelGameQuestionsConditionInput
+) {
+  deleteGameQuestions(input: $input, condition: $condition) {
+    id
+    gameTemplateID
+    questionTemplateID
+    gameTemplate {
+      id
+      title
+      owner
+      version
+      description
+      numberOfQuestions
+      createdAt
+      questionTemplates {
+        items {
+          id
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
+            id
+            title
+            owner
+            version
+            description
+            numberOfQuestions
+            createdAt
+            questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          questionTemplate {
+            id
+            title
+            owner
+            version
+            explanation
+            correctAnswer
+            incorrectAnswer
+            createdAt
+            gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+    questionTemplate {
+      id
+      title
+      owner
+      version
+      explanation
+      correctAnswer
+      incorrectAnswer
+      createdAt
+      gameTemplates {
+        items {
+          id
+          gameTemplateID
+          questionTemplateID
+          gameTemplate {
+            id
+            title
+            owner
+            version
+            description
+            numberOfQuestions
+            createdAt
+            questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          questionTemplate {
+            id
+            title
+            owner
+            version
+            explanation
+            correctAnswer
+            incorrectAnswer
+            createdAt
+            gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  numberOfQuestions
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  explanation
+                  correctAnswer
+                  incorrectAnswer
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            updatedAt
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteGameQuestionsMutationVariables,
+  APITypes.DeleteGameQuestionsMutation
 >;

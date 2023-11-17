@@ -3,6 +3,51 @@
 input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
+
+type GameTemplate @model {
+  id: ID!
+  title: String
+  owner: String @index(
+      name: "gameTemplatesByOwner"
+      queryField: "gameTemplatesByOwner"
+      sortKeyFields: ["createdAt"]
+    )
+  version: Int
+  description: String
+  numberOfQuestions: Int
+  createdAt: AWSDateTime
+  questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
+}
+
+input GameTemplateInput {
+  title: String
+  owner: String
+  version: Int
+  description: String
+}
+
+type QuestionTemplate @model {
+  id: ID!
+  title: String
+  owner: String
+  version: Int
+  explanation: String
+  correctAnswer: String
+  incorrectAnswer: String
+  createdAt: AWSDateTime
+  gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
+}
+
+input QuestionTemplateInput {
+  title: String
+  owner: String
+  version: Int
+  explanation: String
+  correctAnswer: String
+  incorrectAnswer: String
+}
+
+
 type GameSession @model {
   id: ID!
   gameId: Int!
