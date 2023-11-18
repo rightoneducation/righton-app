@@ -286,7 +286,7 @@ export default function GameInProgress({
             isHintEnabled={isHintEnabled}
             handleHintChange={handleHintChange}
             hintRef={hintRef}
-            hintData={hintData}
+            hints={hints}
           />
         </div>
         <GameModal

@@ -17,10 +17,11 @@ export default function CustomBar(props) {
     handleGraphClick
   } = props;
   const classes = useStyles();
+  console.log(datum);
   return (
     <g style={{ pointerEvents: 'bounding-box' }}>
       <Bar {...props} />
-      {datum.hintCount > 0 && (
+      {datum.teams.length === 0 && (
         <rect
           className={classes.highlight}
           x={0}

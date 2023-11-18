@@ -12,10 +12,10 @@ export default function CustomLabel(props) {
     mediumLargePadding,
     noResponseLabel
   } = props;
-
+  console.log(datum)
   return (
     <g>
-      {datum.hintCount !== 0 && (
+      {datum.teams.length !== 0 && (
         <VictoryLabel
           {...props}
           x={mediumLargePadding}
@@ -24,7 +24,7 @@ export default function CustomLabel(props) {
           dy={-barThickness / 2 - xSmallPadding}
           textAnchor="start"
           verticalAnchor="end"
-          text={datum.matchingWord}
+          text={datum.themeText}
           style={{
             fontSize: 15,
             fill: 'white',
@@ -37,12 +37,12 @@ export default function CustomLabel(props) {
         y={y}
         textAnchor="end"
         verticalAnchor="middle"
-        text={datum.hintCount > 0 ? `${Math.ceil(datum.hintCount)}` : ''}
+        text={datum.teams.length > 0 ? `${Math.ceil(datum.teams.length)}` : ''}
         style={{
           fontSize: 15,
           fill:
-            datum.hintCount === 0 ||
-            datum.matchingWord === noResponseLabel ||
+            datum.teams.length === 0 ||
+            datum.themeText === noResponseLabel ||
             x <= 70
               ? '#FFF'
               : '#384466',

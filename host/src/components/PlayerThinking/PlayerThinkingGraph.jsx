@@ -10,7 +10,6 @@ import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
 
 export default function PlayerThinkingGraph({
-  data,
   questionChoices,
   graphClickInfo,
   handleGraphClick,
@@ -31,15 +30,41 @@ export default function PlayerThinkingGraph({
   const noResponseLabel = 'No Response';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
+  console.log("data");
+  const data = [
+    {
+        "themeText": "adding angles",
+        "teams": [
+            "a",
+            "c",
+            "d"
+        ]
+    },
+    {
+        "themeText": "multiplying dimensions",
+        "teams": [
+            "b"
+        ]
+    },
+    {
+        "themeText": "unclear or unsure",
+        "teams": [
+            "c"
+        ]
+    }
+  ];
+  console.log(data);
+  console.log(data.length);
+  console.log(data.map((response) => response.teams.length));
   const defaultVictoryPadding = 50;
   const customBarSelectedWidth = boundingRect.width - defaultVictoryPadding;
   const largestHintCount = Math.max(
-    ...data.map((response) => response.hintCount),
+    ...data.map((response) => response.teams.length),
   );
-
+    console.log(largestHintCount);
   const calculateRoundedTicks = () => {
     const maxHintCount = Math.max(
-      ...data.map(({ hintCount }) => hintCount),
+      ...data.map((response) => response.teams.length),
     );
     const tickInterval = 5;
     const tickCount = Math.ceil(maxHintCount / tickInterval);
@@ -100,7 +125,7 @@ export default function PlayerThinkingGraph({
           strokeWidth: 1,
         },
         labels: {
-          fill: ({ datum, index }) => datum.hintCount === 0
+          fill: ({ datum, index }) => datum.team.length === 0
               ? '#FFF'
               : '#384466',
           fontFamily: 'Rubik',
@@ -161,14 +186,14 @@ export default function PlayerThinkingGraph({
           )}
           <VictoryBar
             data={data}
-            y="hintCount"
-            x="matchingWord"
+            y="teams.length"
+            x="themeText"
             horizontal
             standalone={false}
             cornerRadius={{ topLeft: 4, topRight: 4 }}
-            labels={({ datum }) => `${datum.hintCount}`}
+            labels={({ datum }) => `${datum.teams.length}`}
             barWidth={({ datum }) =>
-              datum.hintCount !== 0 ? barThickness : barThicknessZero
+              datum.teams.length !== 0 ? barThickness : barThicknessZero
             }
             animate={{
               onLoad: { duration: 200 },

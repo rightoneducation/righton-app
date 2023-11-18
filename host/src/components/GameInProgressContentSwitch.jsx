@@ -43,7 +43,7 @@ export default function GameInProgressContentSwitch ({
     isHintEnabled,
     handleHintChange,
     hintRef,
-    hintData
+    hints
   }) {
   const classes = useStyles();
  // const hintData = [{hintText: 'No Response', hintCount: 12, hintTeams: ['team one']}, {hintText: "this is a test", hintCount: 3, hintTeams: ['team two']}, {hintText: "this is also a test", hintCount: 5, hintTeams: ['team 3']}];
@@ -105,7 +105,7 @@ export default function GameInProgressContentSwitch ({
             className={classes.contentContainer}
           >
             <PlayerThinking
-              data={hintData}
+              hints={hints}
               questions={questions}
               questionChoices={questionChoices}
               currentQuestionIndex={currentQuestionIndex}
@@ -117,7 +117,7 @@ export default function GameInProgressContentSwitch ({
               handleGraphClick={handleGraphClick}
             />
             <PlayerThinkingSelectedAnswer
-              data={hintData}
+              data={hints}
               graphClickInfo={graphClickInfo}
               numPlayers={numPlayers}
             />
@@ -183,7 +183,7 @@ export default function GameInProgressContentSwitch ({
               className={classes.contentContainer}
             >
               <PlayerThinking
-                data={hintData}
+                hints={hints}
                 questions={questions}
                 questionChoices={questionChoices}
                 currentQuestionIndex={currentQuestionIndex}
