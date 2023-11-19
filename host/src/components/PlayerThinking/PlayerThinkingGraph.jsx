@@ -10,6 +10,7 @@ import CustomLabel from './CustomLabel';
 import CustomBar from './CustomBar';
 
 export default function PlayerThinkingGraph({
+  data,
   questionChoices,
   graphClickInfo,
   handleGraphClick,
@@ -30,38 +31,12 @@ export default function PlayerThinkingGraph({
   const noResponseLabel = 'No Response';
   // victory applies a default of 50px to the VictoryChart component
   // we intentionally set this so that we can reference it programmatically throughout the chart
-  console.log("data");
-  const data = [
-    {
-        "themeText": "adding angles",
-        "teams": [
-            "a",
-            "c",
-            "d"
-        ]
-    },
-    {
-        "themeText": "multiplying dimensions",
-        "teams": [
-            "b"
-        ]
-    },
-    {
-        "themeText": "unclear or unsure",
-        "teams": [
-            "c"
-        ]
-    }
-  ];
-  console.log(data);
-  console.log(data.length);
-  console.log(data.map((response) => response.teams.length));
+  
   const defaultVictoryPadding = 50;
   const customBarSelectedWidth = boundingRect.width - defaultVictoryPadding;
   const largestHintCount = Math.max(
     ...data.map((response) => response.teams.length),
   );
-    console.log(largestHintCount);
   const calculateRoundedTicks = () => {
     const maxHintCount = Math.max(
       ...data.map((response) => response.teams.length),

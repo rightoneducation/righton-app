@@ -6,15 +6,30 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Box
+  Box,
+  Button
 } from "@material-ui/core";
+import { isNullOrUndefined } from "@righton/networking";
 import MistakeSelector from "./MistakeSelector";
 
 export default function FeaturedMistakes({
   shortAnswerResponses,
   totalAnswers,
   handleOnSelectMistake,
+  handleProcessAnswersClick,
+  handleModelChange,
+  numPlayers,
+  gptAnswers,
+  gptModel
 }) {
+  const numSubmissions = shortAnswerResponses.map((response) => response.teams).reduce((acc, response) => {
+    return acc + response.length;
+  }, 0);
+  const submittedAnswers = shortAnswerResponses
+    .map((response) => { 
+     return {answer: response.value, team: response.teams}
+    })
+    .filter((response) => response.team.length > 0);
   const classes = useStyles();
   const title = "Featured Mistakes";
   const subtitle = "Selected responses will be presented to players as options for popular incorrect answers.";
@@ -69,12 +84,7 @@ export default function FeaturedMistakes({
   };
 
   const handleSelectMistake = (index) => {
-    handleOnSelectMistake(sortedMistakes[index].answer, false);
-    setSortedMistakes((prev) => {
-      const newMistakes = [...prev];
-      newMistakes[index].isSelected = !newMistakes[index].isSelected;
-      return newMistakes;
-    });
+    handleOnSelectMistake(gptAnswers[index].answer, false);
   };
 
   useEffect(() => {
@@ -82,7 +92,21 @@ export default function FeaturedMistakes({
   }, [shortAnswerResponses, totalAnswers]);
   return(
     <Paper className={classes.background} elevation={0}>
-        <Typography className={classes.title}>{title}</Typography>
+       <Box style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Typography className={classes.title}>{title}</Typography>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            row
+            value={gptModel}
+            onChange={() => handleModelChange()}
+          >
+            <FormControlLabel value="gpt-3.5-turbo" control={<Radio
+            color="default"
+            />} label="GPT-3.5" />
+            <FormControlLabel value="gpt-4" control={<Radio color="default" />} label="GPT-4" />
+          </RadioGroup>
+        </Box>
         <Typography className={classes.subtitle}>{subtitle}</Typography>
         <RadioGroup defaultValue="A" onChange={handleModeChange}>
           <FormControlLabel 
@@ -98,25 +122,31 @@ export default function FeaturedMistakes({
             label={radioButtonText2} 
           />
         </RadioGroup>
-        {sortedMistakes.length > 0 
+        {!isNullOrUndefined(gptAnswers)  
           ? <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: 10, width: '100%'}}>
-            {sortedMistakes.map((mistake, index) => {
+            {gptAnswers.map((answer, index) => {
                 return <MistakeSelector 
                   key={index} 
-                  mistakeText={mistake.answer} 
-                  mistakePercent={mistake.percent} 
+                  mistakeText={answer.answerText} 
+                  mistakePercent={`${(answer.teamsCount/numPlayers)*100}`} 
                   isTop3Mode={isTop3Mode} 
-                  isSelected={mistake.isSelected} 
+                  isSelected={answer.isSelected} 
                   mistakeIndex={index}
                   handleSelectMistake={handleSelectMistake} 
                   style={{width:'100%'}}  
                 />
               })}
             </Box>
-          : <Box sx={{width: '100%'}}>
+          : <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%'}}>
               <Typography className={classes.subtitle} style={{fontStyle: 'italic', textAlign: 'center'}}>
-                Student responses will appear here
+                {numSubmissions} / {numPlayers} have responded
               </Typography>
+              <Button
+                className={classes.button}
+                onClick={() => handleProcessAnswersClick(submittedAnswers)}
+               >
+                Process Answers
+              </Button>
             </Box>
         }
       
@@ -129,9 +159,10 @@ const useStyles = makeStyles(({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    borderRadius: '24px',
-    padding: `16px`,
-    backgroundColor: 'rgba(0,0,0,0)', 
+    borderRadius: 34,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 24,
+    boxSizing: 'border-box',
     // boxShadow: '0px 8px 16px -4px rgba(92, 118, 145, 0.40)',
     gap:16,
   },
@@ -141,7 +172,6 @@ const useStyles = makeStyles(({
     textAlign: 'left',
     fontSize: '24px',
     fontWeight: 700,
-    width: '100%'
   },
   subtitle: {
     color: '#FFFFFF',
@@ -158,5 +188,18 @@ const useStyles = makeStyles(({
   },
   radioLabel: {
     color: '#FFFFFF',
-  }
+  },
+  button: {
+    border: '4px solid #159EFA',
+    background: 'linear-gradient(#159EFA 100%,#19BCFB 100%)',
+    borderRadius: '34px',
+    width: '200px',
+    height: '24px',
+    color: 'white',
+    fontSize: '15px',
+    bottom: '0',
+    fontWeight: '700',
+    lineHeight: '30px',
+    textTransform: 'none',
+  },
 }));

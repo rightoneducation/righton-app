@@ -43,7 +43,13 @@ export default function GameInProgressContentSwitch ({
     isHintEnabled,
     handleHintChange,
     hintRef,
-    hints
+    hints,
+    gptHints,
+    gptModel,
+    handleProcessHintsClick,
+    handleModelChange,
+    gptAnswers,
+    handleProcessAnswersClick
   }) {
   const classes = useStyles();
  // const hintData = [{hintText: 'No Response', hintCount: 12, hintTeams: ['team one']}, {hintText: "this is a test", hintCount: 3, hintTeams: ['team two']}, {hintText: "this is also a test", hintCount: 5, hintTeams: ['team 3']}];
@@ -106,6 +112,8 @@ export default function GameInProgressContentSwitch ({
           >
             <PlayerThinking
               hints={hints}
+              gptHints={gptHints}
+              gptModel={gptModel}
               questions={questions}
               questionChoices={questionChoices}
               currentQuestionIndex={currentQuestionIndex}
@@ -115,9 +123,11 @@ export default function GameInProgressContentSwitch ({
               statePosition={statePosition}
               graphClickInfo={graphClickInfo}
               handleGraphClick={handleGraphClick}
+              handleProcessHintsClick={handleProcessHintsClick}
+              handleModelChange={handleModelChange}
             />
             <PlayerThinkingSelectedAnswer
-              data={hints}
+              gptHints={gptHints}
               graphClickInfo={graphClickInfo}
               numPlayers={numPlayers}
             />
@@ -171,6 +181,11 @@ export default function GameInProgressContentSwitch ({
                 shortAnswerResponses={shortAnswerResponses} 
                 totalAnswers={totalAnswers}
                 handleOnSelectMistake={handleOnSelectMistake}
+                handleProcessAnswersClick={handleProcessAnswersClick}
+                handleModelChange={handleModelChange}
+                numPlayers={numPlayers}
+                gptAnswers={gptAnswers}
+                gptModel={gptModel}
               />
             </div>
           ) : null}
@@ -184,6 +199,8 @@ export default function GameInProgressContentSwitch ({
             >
               <PlayerThinking
                 hints={hints}
+                gptHints={gptHints}
+                gptModel={gptModel}
                 questions={questions}
                 questionChoices={questionChoices}
                 currentQuestionIndex={currentQuestionIndex}
@@ -193,6 +210,8 @@ export default function GameInProgressContentSwitch ({
                 statePosition={statePosition}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
+                handleProcessHintsClick={handleProcessHintsClick}
+                handleModelChange={handleModelChange}
               />
             </div>
           ) : null}

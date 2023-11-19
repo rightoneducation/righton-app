@@ -6,12 +6,13 @@ import PlayersSelectedAnswer from './PlayersSelectedAnswer';
 
 export default function PlayerThinkingSelectedAnswer(props) {
   const {
-    data,
+    gptHints,
     numPlayers,
     statePosition,
     graphClickInfo
   } = props;
   const classes = useStyles();
+
   return (
     <div>
       <div style={{ width: '100%' }}>
@@ -20,11 +21,11 @@ export default function PlayerThinkingSelectedAnswer(props) {
         </Typography>
         <div className={classes.rectStyle}>
           <div className={classes.textContainer}>
-            {data[graphClickInfo.selectedIndex].matchingWord}
+            {gptHints[graphClickInfo.selectedIndex].themeText}
           </div>
         </div>
         <PlayersSelectedAnswer
-          data={data}
+          gptHints={gptHints}
           graphClickInfo={graphClickInfo}
           numPlayers={numPlayers}
           statePosition={statePosition}

@@ -12,7 +12,6 @@ export default function CustomLabel(props) {
     mediumLargePadding,
     noResponseLabel
   } = props;
-  console.log(datum)
   return (
     <g>
       {datum.teams.length !== 0 && (

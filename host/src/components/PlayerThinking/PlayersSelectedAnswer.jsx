@@ -3,14 +3,14 @@ import { Typography, makeStyles } from '@material-ui/core';
 
 export default function PlayersSelectedAnswer(props) {
   const {
-    data,
+    gptHints,
     graphClickInfo,
     numPlayers
   } = props;
   const classes = useStyles(props);
-  const hintCount = data[graphClickInfo.selectedIndex].hintCount;
+  const hintCount = gptHints[graphClickInfo.selectedIndex].teamCount;
   const percentage = (hintCount / numPlayers) * 100;
-  const teamsWithSelectedAnswer = data[graphClickInfo.selectedIndex].teamsMatched.map((team) => team);
+  const teamsWithSelectedAnswer = gptHints[graphClickInfo.selectedIndex].teams.map((team) => team);
 
   return (
     <div>

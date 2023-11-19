@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core';
+import OpenAI from 'openai';
 import FooterGame from '../components/FooterGame';
 import HeaderGame from '../components/HeaderGame';
 import CheckMark from '../images/Union.png';
@@ -54,6 +55,7 @@ export default function GameInProgress({
   hints
 }) {
   const classes = useStyles();
+  const openai = new OpenAI({apiKey: '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', dangerouslyAllowBrowser: true});
   const footerButtonTextDictionary = {
     //dictionary used to assign button text based on the next state
     1: 'Begin Question',
@@ -157,6 +159,77 @@ export default function GameInProgress({
       else 
         hintRef.current.scrollIntoView({ behavior: 'smooth' });
     }, 0);
+  };
+
+  const [gptHints, setGptHints] = React.useState(null);
+  const handleProcessHintsClick = async (hints) => {
+    let messages = [{
+      role: "system",
+      content: "You are a helpful assistant designed to output JSON. Respond with a JSON object following this structure: [ { themeText: the theme or category that you've found, teams: [the names of the teams whose responses fall into this category], teamCount: the number of teams in the teams array } ]"
+    }];
+  
+    const formattedHints = hints?.prevSubmittedHints.map((hint) => `Team ${hint.teamName}: "${hint.rawHint}"`).join("\n");
+    messages.push({
+      role: "user",
+      content: `
+        Please analyze the following student responses from a class and identify any common themes or categories they can be grouped into:
+        ${formattedHints}
+        Categorize these responses into distinct themes or patterns you identify. Include the number of responses that fall into each category as well as the associated team names.
+      `
+    });
+    try {
+      console.log(gptModel);
+      const completion = await openai.chat.completions.create({
+        model: gptModel, 
+        messages: messages,
+      });
+      setGptHints(JSON.parse(completion.choices[0].message.content));
+      console.log(completion);
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+
+  const [gptAnswers, setGptAnswers] = React.useState(null);
+  const handleProcessAnswersClick = async (answers) => {
+    console.log(answers);
+    let messages = [{
+      role: "system",
+      content: "You are a helpful assistant designed to output JSON. Analyze the input data and categorize the answers into groups based on their similarity. Output exclusively a JSON object following this structure: [ { answerText: 'Grouped answer text', teams: ['Array of teams that selected this answer'], teamsCount: 'Number of teams in the teams array' } ]."
+    }];
+  
+    messages.push({
+      role: "user",
+      content: `
+      Please analyze the following array of student answers. Each object contains 'answerText' defining the submitted answer, and 'teams' noting who submitted them. Group equivalent answers together, and include the number of teams that have selected each grouped answer. Respond with only a JSON object as instructed.
+      ${JSON.stringify(answers)}
+      `
+    });
+    try {
+      console.log(gptModel);
+      const completion = await openai.chat.completions.create({
+        model: gptModel, 
+        messages: messages,
+      });
+      console.log(completion);
+      const outputAnswers = JSON.parse(completion.choices[0].message.content).map((answer) => {return {...answer, isSelected: false}});
+      setGptAnswers(outputAnswers);
+      console.log(outputAnswers);
+      console.log(JSON.parse(completion.choices[0].message.content));
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+ const [gptModel, setGptModel] = React.useState('gpt-3.5-turbo');
+ const handleModelChange = (event) => {
+    if (gptModel === 'gpt-3.5-turbo')
+      setGptModel('gpt-4');
+    else
+      setGptModel('gpt-3.5-turbo');
   };
 
   let [modalOpen, setModalOpen] = useState(false);
@@ -287,6 +360,12 @@ export default function GameInProgress({
             handleHintChange={handleHintChange}
             hintRef={hintRef}
             hints={hints}
+            gptHints={gptHints}
+            gptModel={gptModel}
+            handleProcessHintsClick={handleProcessHintsClick}
+            handleModelChange={handleModelChange}
+            gptAnswers={gptAnswers}
+            handleProcessAnswersClick={handleProcessAnswersClick}
           />
         </div>
         <GameModal
