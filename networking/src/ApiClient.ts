@@ -38,6 +38,8 @@ import {
     UpdateQuestionMutationVariables,
 } from "./AWSMobileApi"
 import {
+    listGameTemplates,
+    listQuestionTemplates,
     gameSessionByCode,
     getGameSession,
     getTeam,
@@ -103,7 +105,7 @@ export class ApiClient implements IApiClient {
         phaseOneTime: number,
         phaseTwoTime: number,
         imageUrl: string
-    ): Promise<IGameTemplate> {
+    ): Promise<IGameTemplate | null> {
         const input: CreateGameTemplateInput = {
            id,
            title,
@@ -129,11 +131,22 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create game template.`)
         }
-        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate
+        console.log(gameTemplate);
+        return null; // GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate
     }
 
-
-    
+    async listGameTemplates(nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+        let result = (await API.graphql(
+            graphqlOperation(listGameTemplates, {limit: 5, nextToken })
+        )) as { data: any }
+        const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
+            return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
+        });
+        const parsedNextToken = result.data.listGameTemplates.nextToken;
+        
+        return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+    }
+  
     async createQuestionTemplate(
         id: string,
         title: string,
@@ -146,7 +159,7 @@ export class ApiClient implements IApiClient {
         grade: string,
         standard: string,
         imageUrl: string,
-    ): Promise<IQuestionTemplate> {
+    ): Promise<IQuestionTemplate | null> {
         const input: CreateQuestionTemplateInput = {
            id,
            title,
@@ -171,7 +184,19 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create question template.`)
         }
-        return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
+        return null; //QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
+    }
+
+    async listQuestionTemplates(nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+        let result = (await API.graphql(
+            graphqlOperation(listQuestionTemplates, {limit: 5, nextToken })
+        )) as { data: any }
+        const parsedQuestionTemplates = result.data.listQuestionTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
+            return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate) as IQuestionTemplate
+        });
+        const parsedNextToken = result.data.listQuestionTemplates.nextToken;
+        
+        return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
     }
 
 
@@ -587,9 +612,6 @@ export class ApiClient implements IApiClient {
     }
 }
 
-
-
-
 type AWSGameTemplate = {
     id: string,
     title: string,
@@ -603,6 +625,7 @@ type AWSGameTemplate = {
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
     imageUrl?: string | null | undefined,
+    questionTemplates?: IQuestionTemplate[] | null | undefined,
     createdAt?: string | null | undefined,
     updatedAt?: string | null
 }
@@ -619,6 +642,7 @@ type AWSQuestionTemplate = {
     grade?: string | null | undefined,
     standard?: string | null | undefined,
     imageUrl?: string | null | undefined,
+    gameTemplates?: IGameTemplate[] | null | undefined,
     createdAt?: string | null | undefined,
     updatedAt?: string | null
 }
@@ -722,6 +746,7 @@ class GameTemplateParser {
             phaseOneTime,
             phaseTwoTime,
             imageUrl,
+            questionTemplates,
             createdAt,
             updatedAt
         } = awsGameTemplate || {}
@@ -758,6 +783,7 @@ class GameTemplateParser {
             phaseOneTime,
             phaseTwoTime,
             imageUrl,
+            questionTemplates,
             createdAt,
             updatedAt
         }
@@ -781,6 +807,7 @@ class QuestionTemplateParser {
             grade,
             standard,
             imageUrl,
+            gameTemplates,
             createdAt,
             updatedAt
         } = awsQuestionTemplate || {}
@@ -815,6 +842,7 @@ class QuestionTemplateParser {
             grade,
             standard,
             imageUrl,
+            gameTemplates,
             createdAt,
             updatedAt
         }

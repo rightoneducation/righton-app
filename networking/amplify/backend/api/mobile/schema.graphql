@@ -4,7 +4,7 @@ input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
 
-type GameTemplate @model {
+type GameTemplate @model(queries: { get: null }){
   id: ID!
   title: String!
   owner: String! @index(

@@ -13,7 +13,7 @@ projects:
         codeGenTarget: typescript
         generatedFileName: src/AWSMobileApi.ts
         docsFilePath: src/graphql
-        maxDepth: 8
+        maxDepth: 7
 extensions:
   amplify:
     version: 3

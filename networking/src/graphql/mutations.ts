@@ -61,10 +61,6 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -81,10 +77,6 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -130,10 +122,6 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -150,10 +138,6 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -238,10 +222,6 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -258,10 +238,6 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -307,10 +283,6 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -327,10 +299,6 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -415,10 +383,6 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -435,10 +399,6 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -484,10 +444,6 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -504,10 +460,6 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -591,10 +543,6 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -611,10 +559,6 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -660,10 +604,6 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -680,10 +620,6 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -767,10 +703,6 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -787,10 +719,6 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -836,10 +764,6 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -856,10 +780,6 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -943,10 +863,6 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -963,10 +879,6 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1012,10 +924,6 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1032,10 +940,6 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1915,39 +1819,6 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1976,39 +1847,6 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2066,39 +1904,6 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2127,39 +1932,6 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2235,39 +2007,6 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2296,39 +2035,6 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2386,39 +2092,6 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2447,39 +2120,6 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2555,39 +2195,6 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2616,39 +2223,6 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2706,39 +2280,6 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2767,39 +2308,6 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename

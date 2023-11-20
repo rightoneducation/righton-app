@@ -1,3 +1,4 @@
+import { IGameTemplate } from "./IGameTemplate";
 export interface IQuestionTemplate {
   id: string,
   title?: string | null,
@@ -10,6 +11,7 @@ export interface IQuestionTemplate {
   grade?: string | null | undefined,
   standard?: string | null | undefined,
   imageUrl?: string | null | undefined,
+  gameTemplates?: IGameTemplate[] | null | undefined,
   createdAt?: string | null | undefined,
   updatedAt?: string | null
 }

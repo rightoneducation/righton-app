@@ -1,3 +1,5 @@
+import { IQuestionTemplate } from './IQuestionTemplate';
+
 export interface IGameTemplate {
   id: string,
   title: string,
@@ -11,6 +13,7 @@ export interface IGameTemplate {
   phaseOneTime?: number | null | undefined,
   phaseTwoTime?: number | null | undefined,
   imageUrl?: string | null | undefined,
+  questionTemplates?: IQuestionTemplate[] | null | undefined,
   createdAt?: string | null | undefined,
   updatedAt?: string | null
 }

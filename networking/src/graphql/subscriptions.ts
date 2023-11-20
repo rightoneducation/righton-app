@@ -337,10 +337,6 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -357,10 +353,6 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -406,10 +398,6 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -426,10 +414,6 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -513,10 +497,6 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -533,10 +513,6 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -582,10 +558,6 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -602,10 +574,6 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -689,10 +657,6 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -709,10 +673,6 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -758,10 +718,6 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -778,10 +734,6 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -864,10 +816,6 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -884,10 +832,6 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -933,10 +877,6 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -953,10 +893,6 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1039,10 +975,6 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1059,10 +991,6 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1108,10 +1036,6 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1128,10 +1052,6 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1214,10 +1134,6 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1234,10 +1150,6 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1283,10 +1195,6 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 phaseOneTime
                 phaseTwoTime
                 imageUrl
-                questionTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -1303,10 +1211,6 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 grade
                 standard
                 imageUrl
-                gameTemplates {
-                  nextToken
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2086,39 +1990,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2147,39 +2018,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2237,39 +2075,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2298,39 +2103,6 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2405,39 +2177,6 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2466,39 +2205,6 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2556,39 +2262,6 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2617,39 +2290,6 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2724,39 +2364,6 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2785,39 +2392,6 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2875,39 +2449,6 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
@@ -2936,39 +2477,6 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                 id
                 gameTemplateID
                 questionTemplateID
-                gameTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  description
-                  domain
-                  cluster
-                  grade
-                  standard
-                  phaseOneTime
-                  phaseTwoTime
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
-                questionTemplate {
-                  id
-                  title
-                  owner
-                  version
-                  choices
-                  instructions
-                  domain
-                  cluster
-                  grade
-                  standard
-                  imageUrl
-                  createdAt
-                  updatedAt
-                  __typename
-                }
                 createdAt
                 updatedAt
                 __typename
