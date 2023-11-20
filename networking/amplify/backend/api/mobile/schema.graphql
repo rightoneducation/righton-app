@@ -6,17 +6,23 @@ input AMPLIFY {
 
 type GameTemplate @model {
   id: ID!
-  title: String
-  owner: String @index(
+  title: String!
+  owner: String! @index(
       name: "gameTemplatesByOwner"
       queryField: "gameTemplatesByOwner"
       sortKeyFields: ["createdAt"]
     )
-  version: Int
-  description: String
-  numberOfQuestions: Int
-  createdAt: AWSDateTime
+  version: Int!
+  description: String!
+  cluster: String
+  domain: String
+  standard: String
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
 
 input GameTemplateInput {

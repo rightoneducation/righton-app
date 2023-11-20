@@ -15,8 +15,12 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     owner
     version
     description
-    numberOfQuestions
-    createdAt
+    cluster
+    domain
+    standard
+    phaseOneTime
+    phaseTwoTime
+    imageUrl
     questionTemplates {
       items {
         id
@@ -28,8 +32,12 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
           owner
           version
           description
-          numberOfQuestions
-          createdAt
+          cluster
+          domain
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
           questionTemplates {
             items {
               id
@@ -41,12 +49,17 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 owner
                 version
                 description
-                numberOfQuestions
-                createdAt
+                cluster
+                domain
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
                 questionTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -73,6 +86,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -96,12 +110,17 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 owner
                 version
                 description
-                numberOfQuestions
-                createdAt
+                cluster
+                domain
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
                 questionTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -138,6 +157,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
       nextToken
       __typename
     }
+    createdAt
     updatedAt
     __typename
   }
@@ -158,8 +178,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
       owner
       version
       description
-      numberOfQuestions
-      createdAt
+      cluster
+      domain
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questionTemplates {
         items {
           id
@@ -171,8 +195,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             owner
             version
             description
-            numberOfQuestions
-            createdAt
+            cluster
+            domain
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
             questionTemplates {
               items {
                 id
@@ -184,7 +212,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -208,6 +241,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -231,7 +265,12 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -265,6 +304,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }
@@ -297,8 +337,12 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
           owner
           version
           description
-          numberOfQuestions
-          createdAt
+          cluster
+          domain
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
           questionTemplates {
             items {
               id
@@ -310,12 +354,17 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 owner
                 version
                 description
-                numberOfQuestions
-                createdAt
+                cluster
+                domain
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
                 questionTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -342,6 +391,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -365,12 +415,17 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 owner
                 version
                 description
-                numberOfQuestions
-                createdAt
+                cluster
+                domain
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
                 questionTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -441,8 +496,12 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
             owner
             version
             description
-            numberOfQuestions
-            createdAt
+            cluster
+            domain
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
             questionTemplates {
               items {
                 id
@@ -454,7 +513,12 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -478,6 +542,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -501,7 +566,12 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1107,8 +1177,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
       owner
       version
       description
-      numberOfQuestions
-      createdAt
+      cluster
+      domain
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questionTemplates {
         items {
           id
@@ -1120,8 +1194,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             owner
             version
             description
-            numberOfQuestions
-            createdAt
+            cluster
+            domain
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
             questionTemplates {
               items {
                 id
@@ -1133,7 +1211,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1157,6 +1240,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -1180,7 +1264,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1214,6 +1303,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }
@@ -1237,8 +1327,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             owner
             version
             description
-            numberOfQuestions
-            createdAt
+            cluster
+            domain
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
             questionTemplates {
               items {
                 id
@@ -1250,7 +1344,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1274,6 +1373,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -1297,7 +1397,12 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1359,8 +1464,12 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
         owner
         version
         description
-        numberOfQuestions
-        createdAt
+        cluster
+        domain
+        standard
+        phaseOneTime
+        phaseTwoTime
+        imageUrl
         questionTemplates {
           items {
             id
@@ -1372,8 +1481,12 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               owner
               version
               description
-              numberOfQuestions
-              createdAt
+              cluster
+              domain
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
               questionTemplates {
                 items {
                   id
@@ -1386,6 +1499,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
+              createdAt
               updatedAt
               __typename
             }
@@ -1420,6 +1534,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
           nextToken
           __typename
         }
+        createdAt
         updatedAt
         __typename
       }
@@ -1443,8 +1558,12 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               owner
               version
               description
-              numberOfQuestions
-              createdAt
+              cluster
+              domain
+              standard
+              phaseOneTime
+              phaseTwoTime
+              imageUrl
               questionTemplates {
                 items {
                   id
@@ -1457,6 +1576,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
+              createdAt
               updatedAt
               __typename
             }
@@ -1528,8 +1648,12 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
       owner
       version
       description
-      numberOfQuestions
-      createdAt
+      cluster
+      domain
+      standard
+      phaseOneTime
+      phaseTwoTime
+      imageUrl
       questionTemplates {
         items {
           id
@@ -1541,8 +1665,12 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
             owner
             version
             description
-            numberOfQuestions
-            createdAt
+            cluster
+            domain
+            standard
+            phaseOneTime
+            phaseTwoTime
+            imageUrl
             questionTemplates {
               items {
                 id
@@ -1554,7 +1682,12 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1578,6 +1711,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -1601,7 +1735,12 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   owner
                   version
                   description
-                  numberOfQuestions
+                  cluster
+                  domain
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1635,6 +1774,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }

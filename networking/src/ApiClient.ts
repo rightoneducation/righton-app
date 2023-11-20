@@ -3,6 +3,7 @@ import { Amplify, API, graphqlOperation } from "aws-amplify"
 import awsconfig from "./aws-exports"
 import {
     ConfidenceLevel,
+    CreateGameTemplateInput,
     CreateTeamAnswerInput, CreateTeamAnswerMutation,
     CreateTeamAnswerMutationVariables, CreateTeamInput,
     CreateTeamMemberInput,
@@ -29,7 +30,9 @@ import {
     UpdateTeamMutationVariables,
     UpdateQuestionInput,
     UpdateQuestionMutation,
-    UpdateQuestionMutationVariables
+    UpdateQuestionMutationVariables,
+    CreateGameTemplateMutationVariables,
+    CreateGameTemplateMutation
 } from "./AWSMobileApi"
 import {
     gameSessionByCode,
@@ -43,6 +46,7 @@ import {
     onUpdateTeamAnswer
 } from "./graphql"
 import {
+    createGameTemplate,
     createTeam,
     createTeamAnswer,
     createTeamMember,
@@ -52,7 +56,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
+import { IGameTemplate, IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
 import { IGameSession } from "./Models/IGameSession"
 import { ITeam } from "./Models/ITeam"
 
@@ -81,6 +85,50 @@ interface SubscriptionValue<T> {
 }
 
 export class ApiClient implements IApiClient {
+
+    async createGameTemplate(
+        id: string,
+        title: string,
+        owner: string,
+        version: number,
+        description: string,
+        cluster: string,
+        domain: string,
+        standard: string,
+        phaseOneTime: number,
+        phaseTwoTime: number,
+        imageUrl: string
+    ): Promise<IGameTemplate> {
+        const input: CreateGameTemplateInput = {
+           id,
+           title,
+           owner,
+           version,
+           description,
+           cluster,
+           domain,
+           standard,
+           phaseOneTime,
+           phaseTwoTime,
+           imageUrl
+        }
+        const variables: CreateGameTemplateMutationVariables = { input }
+        const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
+            createGameTemplate,
+            variables
+        )
+        if (
+            isNullOrUndefined(gameTemplate.data) ||
+            isNullOrUndefined(gameTemplate.data.createGameTemplate)
+        ) {
+            throw new Error(`Failed to create game template.`)
+        }
+        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate
+    }
+
+
+
+
     private endpoint: string
 
     constructor(env: Environment) {
@@ -493,6 +541,25 @@ export class ApiClient implements IApiClient {
     }
 }
 
+
+
+
+type AWSGameTemplate = {
+    id: string,
+    title: string,
+    owner: string,
+    version: number,
+    description: string,
+    cluster?: string | null | undefined,
+    domain?: string | null | undefined,
+    standard?: string | null | undefined,
+    phaseOneTime?: number | null | undefined,
+    phaseTwoTime?: number | null | undefined,
+    imageUrl?: string | null | undefined,
+    createdAt?: string | null | undefined,
+    updatedAt?: string | null
+}
+
 type AWSGameSession = {
     id: string
     gameId: number
@@ -573,6 +640,63 @@ type AWSTeamAnswer = {
     updatedAt?: string
     teamMemberAnswersId?: string | null
     confidenceLevel: ConfidenceLevel
+}
+// ~~~~~~~~~GAMETEMPLATE~~~~~~~~~~~~~~
+class GameTemplateParser {
+    static gameTemplateFromAWSGameTemplate(
+        awsGameTemplate: AWSGameTemplate
+    ): IGameTemplate {
+        const {
+            id,
+            title,
+            owner,
+            version,
+            description,
+            cluster,
+            domain,
+            standard,
+            phaseOneTime,
+            phaseTwoTime,
+            imageUrl,
+            createdAt,
+            updatedAt
+        } = awsGameTemplate || {}
+
+        if (isNullOrUndefined(id) ||
+            isNullOrUndefined(title) ||
+            isNullOrUndefined(owner) ||
+            isNullOrUndefined(version) ||
+            isNullOrUndefined(description) ||
+            isNullOrUndefined(cluster) ||
+            isNullOrUndefined(domain) ||
+            isNullOrUndefined(standard) ||
+            isNullOrUndefined(phaseOneTime) ||
+            isNullOrUndefined(phaseTwoTime) ||
+            isNullOrUndefined(imageUrl) ||
+            isNullOrUndefined(createdAt) ||
+            isNullOrUndefined(updatedAt)) {
+            throw new Error(
+                "Game Template has null field for the attributes that are not nullable"
+            )
+        }
+
+        const gameTemplate: IGameTemplate = {
+            id,
+            title,
+            owner,
+            version,
+            description,
+            cluster,
+            domain,
+            standard,
+            phaseOneTime,
+            phaseTwoTime,
+            imageUrl,
+            createdAt,
+            updatedAt
+        }
+        return gameTemplate
+    }
 }
 
 export class GameSessionParser {
