@@ -4,6 +4,11 @@ import awsconfig from "./aws-exports"
 import {
     ConfidenceLevel,
     CreateGameTemplateInput,
+    CreateGameTemplateMutationVariables,
+    CreateGameTemplateMutation,
+    CreateQuestionTemplateInput,
+    CreateQuestionTemplateMutationVariables,
+    CreateQuestionTemplateMutation,
     CreateTeamAnswerInput, CreateTeamAnswerMutation,
     CreateTeamAnswerMutationVariables, CreateTeamInput,
     CreateTeamMemberInput,
@@ -31,8 +36,6 @@ import {
     UpdateQuestionInput,
     UpdateQuestionMutation,
     UpdateQuestionMutationVariables,
-    CreateGameTemplateMutationVariables,
-    CreateGameTemplateMutation
 } from "./AWSMobileApi"
 import {
     gameSessionByCode,
@@ -47,6 +50,7 @@ import {
 } from "./graphql"
 import {
     createGameTemplate,
+    createQuestionTemplate,
     createTeam,
     createTeamAnswer,
     createTeamMember,
@@ -56,7 +60,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IGameTemplate, IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
+import { IGameTemplate, IQuestionTemplate, IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
 import { IGameSession } from "./Models/IGameSession"
 import { ITeam } from "./Models/ITeam"
 
@@ -92,8 +96,9 @@ export class ApiClient implements IApiClient {
         owner: string,
         version: number,
         description: string,
-        cluster: string,
         domain: string,
+        cluster: string,
+        grade: string,
         standard: string,
         phaseOneTime: number,
         phaseTwoTime: number,
@@ -105,8 +110,9 @@ export class ApiClient implements IApiClient {
            owner,
            version,
            description,
-           cluster,
            domain,
+           cluster,
+           grade,
            standard,
            phaseOneTime,
            phaseTwoTime,
@@ -127,6 +133,46 @@ export class ApiClient implements IApiClient {
     }
 
 
+    
+    async createQuestionTemplate(
+        id: string,
+        title: string,
+        owner: string,
+        version: number,
+        choices: string,
+        instructions: string,
+        domain: string,
+        cluster: string,
+        grade: string,
+        standard: string,
+        imageUrl: string,
+    ): Promise<IQuestionTemplate> {
+        const input: CreateQuestionTemplateInput = {
+           id,
+           title,
+           owner,
+           version,
+           choices,
+           instructions,
+           domain,
+           cluster,
+           grade,
+           standard,
+           imageUrl
+        }
+        const variables: CreateQuestionTemplateMutationVariables = { input }
+        const questionTemplate = await this.callGraphQL<CreateQuestionTemplateMutation>(
+            createQuestionTemplate,
+            variables
+        )
+        if (
+            isNullOrUndefined(questionTemplate.data) ||
+            isNullOrUndefined(questionTemplate.data.createQuestionTemplate)
+        ) {
+            throw new Error(`Failed to create question template.`)
+        }
+        return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
+    }
 
 
     private endpoint: string
@@ -550,11 +596,28 @@ type AWSGameTemplate = {
     owner: string,
     version: number,
     description: string,
-    cluster?: string | null | undefined,
     domain?: string | null | undefined,
+    cluster?: string | null | undefined,
+    grade?: string | null | undefined,
     standard?: string | null | undefined,
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
+    imageUrl?: string | null | undefined,
+    createdAt?: string | null | undefined,
+    updatedAt?: string | null
+}
+
+type AWSQuestionTemplate = {
+    id: string,
+    title?: string | null,
+    owner?: string | null,
+    version?: number | null,
+    choices?: string | null,
+    instructions?: string | null,
+    domain?: string | null | undefined,
+    cluster?: string | null | undefined,
+    grade?: string | null | undefined,
+    standard?: string | null | undefined,
     imageUrl?: string | null | undefined,
     createdAt?: string | null | undefined,
     updatedAt?: string | null
@@ -652,8 +715,9 @@ class GameTemplateParser {
             owner,
             version,
             description,
-            cluster,
             domain,
+            cluster,
+            grade,
             standard,
             phaseOneTime,
             phaseTwoTime,
@@ -667,8 +731,9 @@ class GameTemplateParser {
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
             isNullOrUndefined(description) ||
-            isNullOrUndefined(cluster) ||
             isNullOrUndefined(domain) ||
+            isNullOrUndefined(cluster) ||
+            isNullOrUndefined(grade) ||
             isNullOrUndefined(standard) ||
             isNullOrUndefined(phaseOneTime) ||
             isNullOrUndefined(phaseTwoTime) ||
@@ -686,8 +751,9 @@ class GameTemplateParser {
             owner,
             version,
             description,
-            cluster,
             domain,
+            cluster,
+            grade,
             standard,
             phaseOneTime,
             phaseTwoTime,
@@ -696,6 +762,63 @@ class GameTemplateParser {
             updatedAt
         }
         return gameTemplate
+    }
+}
+
+class QuestionTemplateParser {
+    static questionTemplateFromAWSQuestionTemplate(
+        awsQuestionTemplate: AWSQuestionTemplate
+    ): IQuestionTemplate {
+        const {
+            id,
+            title,
+            owner,
+            version,
+            choices,
+            instructions,
+            domain,
+            cluster,
+            grade,
+            standard,
+            imageUrl,
+            createdAt,
+            updatedAt
+        } = awsQuestionTemplate || {}
+
+        if (isNullOrUndefined(id) ||
+            isNullOrUndefined(title) ||
+            isNullOrUndefined(owner) ||
+            isNullOrUndefined(version) ||
+            isNullOrUndefined(choices) ||
+            isNullOrUndefined(instructions) ||
+            isNullOrUndefined(domain) ||
+            isNullOrUndefined(cluster) ||
+            isNullOrUndefined(grade) ||
+            isNullOrUndefined(standard) ||
+            isNullOrUndefined(imageUrl) ||
+            isNullOrUndefined(createdAt) ||
+            isNullOrUndefined(updatedAt)) {
+            throw new Error(
+                "Question Template has null field for the attributes that are not nullable"
+            )
+        }
+
+        const questionTemplate: IQuestionTemplate = {
+            id,
+            title,
+            owner,
+            version,
+            choices,
+            instructions,
+            domain,
+            cluster,
+            grade,
+            standard,
+            imageUrl,
+            createdAt,
+            updatedAt
+        }
+        return questionTemplate
     }
 }
 

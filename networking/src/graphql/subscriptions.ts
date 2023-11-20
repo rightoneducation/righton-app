@@ -294,8 +294,9 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
     owner
     version
     description
-    cluster
     domain
+    cluster
+    grade
     standard
     phaseOneTime
     phaseTwoTime
@@ -311,8 +312,9 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -328,8 +330,9 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -347,14 +350,18 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -374,10 +381,13 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -389,8 +399,9 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -408,14 +419,18 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -426,6 +441,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -454,8 +470,9 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
     owner
     version
     description
-    cluster
     domain
+    cluster
+    grade
     standard
     phaseOneTime
     phaseTwoTime
@@ -471,8 +488,9 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -488,8 +506,9 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -507,14 +526,18 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -534,10 +557,13 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -549,8 +575,9 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -568,14 +595,18 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -586,6 +617,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -614,8 +646,9 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
     owner
     version
     description
-    cluster
     domain
+    cluster
+    grade
     standard
     phaseOneTime
     phaseTwoTime
@@ -631,8 +664,9 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -648,8 +682,9 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -667,14 +702,18 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -694,10 +733,13 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -709,8 +751,9 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -728,14 +771,18 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -746,6 +793,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -773,10 +821,13 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
     title
     owner
     version
-    explanation
-    correctAnswer
-    incorrectAnswer
-    createdAt
+    choices
+    instructions
+    domain
+    cluster
+    grade
+    standard
+    imageUrl
     gameTemplates {
       items {
         id
@@ -788,8 +839,9 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -805,8 +857,9 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -824,14 +877,18 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -851,10 +908,13 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -866,8 +926,9 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -885,14 +946,18 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -903,6 +968,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -913,6 +979,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
       nextToken
       __typename
     }
+    createdAt
     updatedAt
     __typename
   }
@@ -929,10 +996,13 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
     title
     owner
     version
-    explanation
-    correctAnswer
-    incorrectAnswer
-    createdAt
+    choices
+    instructions
+    domain
+    cluster
+    grade
+    standard
+    imageUrl
     gameTemplates {
       items {
         id
@@ -944,8 +1014,9 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -961,8 +1032,9 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -980,14 +1052,18 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -1007,10 +1083,13 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -1022,8 +1101,9 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1041,14 +1121,18 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -1059,6 +1143,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -1069,6 +1154,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
       nextToken
       __typename
     }
+    createdAt
     updatedAt
     __typename
   }
@@ -1085,10 +1171,13 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
     title
     owner
     version
-    explanation
-    correctAnswer
-    incorrectAnswer
-    createdAt
+    choices
+    instructions
+    domain
+    cluster
+    grade
+    standard
+    imageUrl
     gameTemplates {
       items {
         id
@@ -1100,8 +1189,9 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -1117,8 +1207,9 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1136,14 +1227,18 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -1163,10 +1258,13 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -1178,8 +1276,9 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -1197,14 +1296,18 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -1215,6 +1318,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -1225,6 +1329,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
       nextToken
       __typename
     }
+    createdAt
     updatedAt
     __typename
   }
@@ -1951,8 +2056,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       owner
       version
       description
-      cluster
       domain
+      cluster
+      grade
       standard
       phaseOneTime
       phaseTwoTime
@@ -1968,8 +2074,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -1985,8 +2092,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2000,9 +2108,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2023,10 +2135,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -2038,8 +2153,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2053,9 +2169,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2067,6 +2187,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -2086,10 +2207,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       title
       owner
       version
-      explanation
-      correctAnswer
-      incorrectAnswer
-      createdAt
+      choices
+      instructions
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
       gameTemplates {
         items {
           id
@@ -2101,8 +2225,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -2118,8 +2243,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2133,9 +2259,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2156,10 +2286,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -2171,8 +2304,9 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2186,9 +2320,13 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2200,6 +2338,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -2210,6 +2349,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }
@@ -2235,8 +2375,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       owner
       version
       description
-      cluster
       domain
+      cluster
+      grade
       standard
       phaseOneTime
       phaseTwoTime
@@ -2252,8 +2393,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -2269,8 +2411,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2284,9 +2427,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2307,10 +2454,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -2322,8 +2472,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2337,9 +2488,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2351,6 +2506,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -2370,10 +2526,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       title
       owner
       version
-      explanation
-      correctAnswer
-      incorrectAnswer
-      createdAt
+      choices
+      instructions
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
       gameTemplates {
         items {
           id
@@ -2385,8 +2544,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -2402,8 +2562,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2417,9 +2578,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2440,10 +2605,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -2455,8 +2623,9 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2470,9 +2639,13 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2484,6 +2657,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -2494,6 +2668,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }
@@ -2519,8 +2694,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       owner
       version
       description
-      cluster
       domain
+      cluster
+      grade
       standard
       phaseOneTime
       phaseTwoTime
@@ -2536,8 +2712,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -2553,8 +2730,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2568,9 +2746,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2591,10 +2773,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -2606,8 +2791,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2621,9 +2807,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2635,6 +2825,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -2654,10 +2845,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       title
       owner
       version
-      explanation
-      correctAnswer
-      incorrectAnswer
-      createdAt
+      choices
+      instructions
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
       gameTemplates {
         items {
           id
@@ -2669,8 +2863,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -2686,8 +2881,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2701,9 +2897,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2724,10 +2924,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -2739,8 +2942,9 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -2754,9 +2958,13 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -2768,6 +2976,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -2778,6 +2987,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }

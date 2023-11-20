@@ -1,15 +1,14 @@
-export interface IGameTemplate {
+export interface IQuestionTemplate {
   id: string,
-  title: string,
-  owner: string,
-  version: number,
-  description: string,
+  title?: string | null,
+  owner?: string | null,
+  version?: number | null,
+  choices?: string | null,
+  instructions?: string | null,
   domain?: string | null | undefined,
   cluster?: string | null | undefined,
   grade?: string | null | undefined,
   standard?: string | null | undefined,
-  phaseOneTime?: number | null | undefined,
-  phaseTwoTime?: number | null | undefined,
   imageUrl?: string | null | undefined,
   createdAt?: string | null | undefined,
   updatedAt?: string | null

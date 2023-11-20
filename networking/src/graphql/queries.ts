@@ -15,8 +15,9 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     owner
     version
     description
-    cluster
     domain
+    cluster
+    grade
     standard
     phaseOneTime
     phaseTwoTime
@@ -32,8 +33,9 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -49,8 +51,9 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -68,14 +71,18 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -95,10 +102,13 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -110,8 +120,9 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -129,14 +140,18 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -147,6 +162,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -178,8 +194,9 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
       owner
       version
       description
-      cluster
       domain
+      cluster
+      grade
       standard
       phaseOneTime
       phaseTwoTime
@@ -195,8 +212,9 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -212,8 +230,9 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -227,9 +246,13 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -250,10 +273,13 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -265,8 +291,9 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -280,9 +307,13 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -294,6 +325,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -322,10 +354,13 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
     title
     owner
     version
-    explanation
-    correctAnswer
-    incorrectAnswer
-    createdAt
+    choices
+    instructions
+    domain
+    cluster
+    grade
+    standard
+    imageUrl
     gameTemplates {
       items {
         id
@@ -337,8 +372,9 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
           owner
           version
           description
-          cluster
           domain
+          cluster
+          grade
           standard
           phaseOneTime
           phaseTwoTime
@@ -354,8 +390,9 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -373,14 +410,18 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -400,10 +441,13 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
           title
           owner
           version
-          explanation
-          correctAnswer
-          incorrectAnswer
-          createdAt
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
           gameTemplates {
             items {
               id
@@ -415,8 +459,9 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 owner
                 version
                 description
-                cluster
                 domain
+                cluster
+                grade
                 standard
                 phaseOneTime
                 phaseTwoTime
@@ -434,14 +479,18 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 title
                 owner
                 version
-                explanation
-                correctAnswer
-                incorrectAnswer
-                createdAt
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
                 gameTemplates {
                   nextToken
                   __typename
                 }
+                createdAt
                 updatedAt
                 __typename
               }
@@ -452,6 +501,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
             nextToken
             __typename
           }
+          createdAt
           updatedAt
           __typename
         }
@@ -462,6 +512,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
       nextToken
       __typename
     }
+    createdAt
     updatedAt
     __typename
   }
@@ -481,10 +532,13 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
       title
       owner
       version
-      explanation
-      correctAnswer
-      incorrectAnswer
-      createdAt
+      choices
+      instructions
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
       gameTemplates {
         items {
           id
@@ -496,8 +550,9 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -513,8 +568,9 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -528,9 +584,13 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -551,10 +611,13 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -566,8 +629,9 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -581,9 +645,13 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -595,6 +663,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -605,6 +674,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }
@@ -1177,8 +1247,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
       owner
       version
       description
-      cluster
       domain
+      cluster
+      grade
       standard
       phaseOneTime
       phaseTwoTime
@@ -1194,8 +1265,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -1211,8 +1283,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1226,9 +1299,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1249,10 +1326,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -1264,8 +1344,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1279,9 +1360,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1293,6 +1378,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -1312,10 +1398,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
       title
       owner
       version
-      explanation
-      correctAnswer
-      incorrectAnswer
-      createdAt
+      choices
+      instructions
+      domain
+      cluster
+      grade
+      standard
+      imageUrl
       gameTemplates {
         items {
           id
@@ -1327,8 +1416,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -1344,8 +1434,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1359,9 +1450,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1382,10 +1477,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -1397,8 +1495,9 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1412,9 +1511,13 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1426,6 +1529,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }
@@ -1436,6 +1540,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
         nextToken
         __typename
       }
+      createdAt
       updatedAt
       __typename
     }
@@ -1464,8 +1569,9 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
         owner
         version
         description
-        cluster
         domain
+        cluster
+        grade
         standard
         phaseOneTime
         phaseTwoTime
@@ -1481,8 +1587,9 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               owner
               version
               description
-              cluster
               domain
+              cluster
+              grade
               standard
               phaseOneTime
               phaseTwoTime
@@ -1508,10 +1615,13 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               title
               owner
               version
-              explanation
-              correctAnswer
-              incorrectAnswer
-              createdAt
+              choices
+              instructions
+              domain
+              cluster
+              grade
+              standard
+              imageUrl
               gameTemplates {
                 items {
                   id
@@ -1524,6 +1634,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
+              createdAt
               updatedAt
               __typename
             }
@@ -1543,10 +1654,13 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
         title
         owner
         version
-        explanation
-        correctAnswer
-        incorrectAnswer
-        createdAt
+        choices
+        instructions
+        domain
+        cluster
+        grade
+        standard
+        imageUrl
         gameTemplates {
           items {
             id
@@ -1558,8 +1672,9 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               owner
               version
               description
-              cluster
               domain
+              cluster
+              grade
               standard
               phaseOneTime
               phaseTwoTime
@@ -1585,10 +1700,13 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               title
               owner
               version
-              explanation
-              correctAnswer
-              incorrectAnswer
-              createdAt
+              choices
+              instructions
+              domain
+              cluster
+              grade
+              standard
+              imageUrl
               gameTemplates {
                 items {
                   id
@@ -1601,6 +1719,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
                 nextToken
                 __typename
               }
+              createdAt
               updatedAt
               __typename
             }
@@ -1611,6 +1730,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
           nextToken
           __typename
         }
+        createdAt
         updatedAt
         __typename
       }
@@ -1648,8 +1768,9 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
       owner
       version
       description
-      cluster
       domain
+      cluster
+      grade
       standard
       phaseOneTime
       phaseTwoTime
@@ -1665,8 +1786,9 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
             owner
             version
             description
-            cluster
             domain
+            cluster
+            grade
             standard
             phaseOneTime
             phaseTwoTime
@@ -1682,8 +1804,9 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1697,9 +1820,13 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1720,10 +1847,13 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
             title
             owner
             version
-            explanation
-            correctAnswer
-            incorrectAnswer
-            createdAt
+            choices
+            instructions
+            domain
+            cluster
+            grade
+            standard
+            imageUrl
             gameTemplates {
               items {
                 id
@@ -1735,8 +1865,9 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   owner
                   version
                   description
-                  cluster
                   domain
+                  cluster
+                  grade
                   standard
                   phaseOneTime
                   phaseTwoTime
@@ -1750,9 +1881,13 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   title
                   owner
                   version
-                  explanation
-                  correctAnswer
-                  incorrectAnswer
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
                   createdAt
                   updatedAt
                   __typename
@@ -1764,6 +1899,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
               nextToken
               __typename
             }
+            createdAt
             updatedAt
             __typename
           }

@@ -20,8 +20,9 @@ function App() {
         "Owner: Michel Foucault",
         0,
         "Description of the game",
+        "E",
+        "E",
         "5",
-        "EE",
         "A",
         120,
         120,
@@ -32,7 +33,28 @@ function App() {
     } catch (e) {
       console.log(e);
     }
+  }
 
+  const handleCreateQuestion = async () => {
+    try {
+      const questionTemplate = await apiClient.createQuestionTemplate(
+        uuidv4(),
+        "First Question",
+        "Owner: Michel Foucault",
+        0,
+        "Choices: A, B, C, D",
+        "Choose the correct answer",
+        "E",
+        "E",
+        "5",
+        "A",
+        "https://www.google.com",
+      );
+      console.log(questionTemplate);
+      return questionTemplate;
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <>
@@ -53,7 +75,7 @@ function App() {
           </IntroButtonStyled>
           <IntroButtonStyled
           onClick={() => {
-            console.log('sup');
+            handleCreateQuestion();
           }}
           style={{
             background: `linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)`,
