@@ -55,7 +55,7 @@ export default function GameInProgress({
   hints
 }) {
   const classes = useStyles();
-  const openai = new OpenAI({apiKey: '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', dangerouslyAllowBrowser: true});
+  const openai = new OpenAI({apiKey: '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', dangerouslyAllowBrowser: true});
   const footerButtonTextDictionary = {
     //dictionary used to assign button text based on the next state
     1: 'Begin Question',
