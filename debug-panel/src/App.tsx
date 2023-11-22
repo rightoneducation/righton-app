@@ -23,7 +23,7 @@ function App() {
   const [teamAnswer, setTeamAnswer] = useState<ITeamAnswer | null>();
 
   const [apiClient, _] = useState<IApiClient>(
-    new ApiClient(Environment.Staging)
+    new ApiClient(Environment.Developing)
   );
   const gameSessionSubscription = useRef<any | null>(null);
 

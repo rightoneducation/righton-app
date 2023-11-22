@@ -40,6 +40,7 @@ type Question @model(subscriptions: null, timestamps: null) {
   id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
+  responses: AWSJSON
   imageUrl: String
   instructions: AWSJSON
   standard: String
@@ -47,9 +48,9 @@ type Question @model(subscriptions: null, timestamps: null) {
   domain: String
   grade: String
   order: Int!
-  isHintEnabled: Boolean! @default(value: "false")
-  isConfidenceEnabled: Boolean! @default(value: "true")
+  isConfidenceEnabled: Boolean! @default(value: "false")
   isShortAnswerEnabled: Boolean! @default(value: "false")
+  isHintEnabled: Boolean! @default(value: "true")
   gameSessionId: ID! @index(name: "byGameSession", sortKeyFields: ["id"])
 }
 
