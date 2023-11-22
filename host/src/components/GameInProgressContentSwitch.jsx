@@ -9,6 +9,7 @@ import SelectedAnswer from "./Responses/SelectedAnswer";
 import EnableConfidenceCard from "./EnableConfidenceCard";
 import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
 import EnableShortAnswerCard from "./EnableShortAnswerCard";
+import FeaturedMistakes from "./FeaturedMistakes";
 
 export default function GameInProgressContentSwitch ({ 
     questions, 
@@ -25,6 +26,7 @@ export default function GameInProgressContentSwitch ({
     questionCardRef, 
     gameAnswersRef,
     confidenceCardRef,
+    featuredMistakesRef,
     correctChoiceIndex,
     currentState,
     isConfidenceEnabled,
@@ -32,7 +34,9 @@ export default function GameInProgressContentSwitch ({
     teamsArray,
     confidenceData,
     isShortAnswerEnabled,
-    handleShortAnswerChange
+    handleShortAnswerChange,
+    shortAnswerResponses,
+    handleOnSelectMistake,
   }) {
   const classes = useStyles();
   const gameplayComponents = [
@@ -70,6 +74,17 @@ export default function GameInProgressContentSwitch ({
                 orderedAnswers={answers}
                 graphClickInfo={graphClickInfo}
                 handleGraphClick={handleGraphClick}
+              />
+            </div>
+          ) : null}
+          {isShortAnswerEnabled && 
+          (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+            currentState === GameSessionState.PHASE_1_DISCUSS) ? (
+            <div id="featuredmistakes-scrollbox" ref={featuredMistakesRef}>
+              <FeaturedMistakes 
+                shortAnswerResponses={shortAnswerResponses} 
+                totalAnswers={totalAnswers}
+                handleOnSelectMistake={handleOnSelectMistake}
               />
             </div>
           ) : null}

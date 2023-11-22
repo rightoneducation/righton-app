@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
+import { IChoice, IResponse, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -348,7 +348,6 @@ export class ApiClient implements IApiClient {
             createTeamAnswer,
             variables
         )
-        console.log(answer);
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -658,7 +657,6 @@ export class GameSessionParser {
         subscription: OnGameSessionUpdatedByIdSubscription
     ): IGameSession {
         const updateGameSession = subscription.onGameSessionUpdatedById
-        console.log(updateGameSession);
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
@@ -718,7 +716,9 @@ export class GameSessionParser {
                     choices: isNullOrUndefined(awsQuestion.choices)
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
-                    responses: [],
+                    responses: isNullOrUndefined(awsQuestion.responses)
+                         ? []
+                         : this.parseServerArray<IResponse>(awsQuestion.responses),
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []

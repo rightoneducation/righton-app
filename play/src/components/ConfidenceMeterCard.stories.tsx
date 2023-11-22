@@ -23,7 +23,7 @@ const Template: StoryFn<typeof ConfidenceMeterCard> =
     );
   };
 
-const handleSelectOption = (option: ConfidenceLevel) => { };
+const handleSelectOption = () => {};
 
 // no input i.e. no selected option without sending response text
 export const noSelection = Template.bind({});

@@ -1,4 +1,4 @@
-import { ITeamAnswerContent, GameSessionState } from '@righton/networking';
+import { ITeamAnswerContent } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -88,7 +88,7 @@ export enum LobbyMode {
   LOADING,
   READY,
   REJOIN,
-  PREQUESTION
+  PREQUESTION,
 }
 
 export enum TimerMode {

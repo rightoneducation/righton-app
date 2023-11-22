@@ -12,7 +12,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { buildShortAnswerResponses, getQuestionChoices } from '../lib/HelperFunctions';
+import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -20,6 +20,7 @@ const GameSessionContainer = () => {
   const responsesRef = React.useRef(null);
   const gameAnswersRef = React.useRef(null);
   const confidenceCardRef = React.useRef(null);
+  const featuredMistakesRef = React.useRef(null);
   const playerThinkingRef = React.useRef(null);
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
@@ -29,6 +30,7 @@ const GameSessionContainer = () => {
   // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
   // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
+  const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
@@ -42,6 +44,7 @@ const GameSessionContainer = () => {
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
+    { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
   ];
   const gameplayNavDictionary = [
@@ -63,6 +66,11 @@ const GameSessionContainer = () => {
       newDictionary.splice(2, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
+      });
+    if (isShortAnswerEnabled)
+      newDictionary.splice(3, 0, {
+        ref: featuredMistakesRef,
+        text: 'Featured Mistakes',
       });
     setNavDictionary(newDictionary);
   };
@@ -102,12 +110,12 @@ const GameSessionContainer = () => {
               team.teamMembers && team.teamMembers.forEach((teamMember) => {
                 teamMember.answers && teamMember.answers.forEach((answer) => {
                   if (answer.questionId === response.questions[response.currentQuestionIndex].id 
-                    && (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) 
-                    || (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && answer.isTrickAnswer)
+                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS) 
+                    && answer.isChosen) 
                   ) {
                     setShortAnswerResponses((prev) => {
-                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
-                    });
+                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
+                   });
                   }
                 });
               });
@@ -131,6 +139,7 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
       },
     );
 
@@ -172,27 +181,40 @@ const GameSessionContainer = () => {
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
-        let choices = '';
-        apiClient.getGameSession(gameSessionId).then((response) => {
-          choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
-          let teamName = '';
+        // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
+        apiClient.getGameSession(gameSessionId).then((gameSession) => {
+          let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
+          // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
           setTeamsArray((prevState) => {
-            let newState = JSON.parse(JSON.stringify(prevState));
-            newState.forEach((team) => {
-              team.teamMembers &&
-                team.teamMembers.forEach((teamMember) => {
-                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId){
+            const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
+            const newState = JSON.parse(JSON.stringify(prevState));
+            newState.map((team) => {
+              if (team.id === teamId) {
+                team.teamMembers.map((teamMember) => {
+                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                     teamMember.answers.push(teamAnswerResponse);
-                    teamName=team.name;
                   }
                 });
-            });
-            setShortAnswerResponses((prev) => {
-              return buildShortAnswerResponses(prev, choices, teamAnswerResponse, teamName)
-            });
+              }
+            })
+            if (gameSession.questions[gameSession.currentQuestionIndex].isShortAnswerEnabled && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+              // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
+              // if we did this outside of the setTeamsArray function we would be using stale state values
+              setShortAnswerResponses((prevShortAnswerState) => {
+                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, teamAnswerResponse, teamName, teamId);
+                apiClient
+                  .updateQuestion({
+                    gameSessionId: gameSession.id, 
+                    id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                    order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                    responses: JSON.stringify(newShortAnswerState),
+                });
+                return newShortAnswerState;
+              });
+            }
             return newState;
           });
-        });
+       });
       },
     );
 
@@ -290,20 +312,47 @@ const GameSessionContainer = () => {
     setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
-  const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
-    apiClient
-      .updateGameSession({ id: gameSessionId, ...newUpdates })
-      .then((response) => {
-        if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-          setHeaderGameCurrentTime(response.phaseOneTime);
-        } else if (
-          response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
-        )
-          setHeaderGameCurrentTime(response.phaseTwoTime);
-
-        setGameSession(response);
-        checkGameTimer(response);
-      });
+  const handleOnSelectMistake = (value, isTop3) => {
+    setSelectedMistakes((prev) => {
+      if (prev.includes(value)) {
+        if (isTop3 === false)
+          return prev.filter(mistake => mistake !== value);
+        return prev;
+      } else {
+        return [...prev, value];
+      }
+    });
+  }
+  const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
+    // this will update the response object with confidence and selected mistakes values
+    if (
+      (isShortAnswerEnabled 
+      || isConfidenceEnabled) 
+      && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
+    ){
+      const finalResultsContainer = shortAnswerResponses.map((answer) => ({
+        ...answer,
+        isSelectedMistake: selectedMistakes.includes(answer.value),
+        })
+      );
+      await apiClient
+        .updateQuestion({
+          gameSessionId, 
+          id: gameSession.questions[gameSession.currentQuestionIndex].id,
+          order: gameSession.questions[gameSession.currentQuestionIndex].order,
+          responses: JSON.stringify(finalResultsContainer),
+        });
+    }
+    
+    const response = await apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
+    if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
+      setHeaderGameCurrentTime(response.phaseOneTime);
+    } else if (
+      response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+    )
+    setHeaderGameCurrentTime(response.phaseTwoTime);
+    setGameSession(response);
+    checkGameTimer(response);
   };
 
   const checkGameTimer = (gameSession) => {
@@ -405,8 +454,10 @@ const GameSessionContainer = () => {
           responsesRef={responsesRef}
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
+          featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
+          handleOnSelectMistake={handleOnSelectMistake}
         />
       );
     }
@@ -432,8 +483,10 @@ const GameSessionContainer = () => {
           responsesRef={responsesRef}
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
+          featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
+          handleOnSelectMistake={handleOnSelectMistake}
         />
       );
 
