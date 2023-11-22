@@ -3,11 +3,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
-import {
-  RouterProvider,
-  createMemoryRouter,
-  useLoaderData,
-} from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { GameSessionState } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
@@ -22,11 +18,6 @@ ReactModal.setAppElement('body');
 jest.mock('../../src/hooks/useFetchAndSubscribeGameSession', () => ({
   __esModule: true,
   default: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useLoaderData: jest.fn(() => localModelLoaderMock),
 }));
 
 // mock for mediaQueries from: https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
@@ -72,10 +63,6 @@ const howToPlayDescription = i18n.t('howtoplay.description');
 // tests that the gameinprogresscontainer renders the correct components
 // based on the received subscription object from the useFetchAndSubscribeGameSession hook
 describe('GameInProgressContainer', () => {
-  beforeEach(() => {
-    const mockData = localModelLoaderMock();
-    (useLoaderData as jest.Mock).mockReturnValue(mockData);
-  });
   it('should render error modal', async () => {
     // Mock the hook's return value
     (useFetchAndSubscribeGameSession as jest.Mock).mockImplementation(() => ({

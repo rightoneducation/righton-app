@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useTranslation } from 'react-i18next';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
@@ -15,21 +14,13 @@ export default function QuestionCard({
   imageUrl,
 }: QuestionCardProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled>
-        <Typography
-          variant="subtitle1"
-          sx={{ width: '100%', textAlign: 'left' }}
-        >
-          {t('gameinprogress.chooseanswer.questioncard')}
-        </Typography>
         <img
           style={{
             width: '75%',
             height: 'auto',
-            paddingTop: `${theme.sizing.smallPadding}px`,
             paddingBottom: `${theme.sizing.smallPadding}px`,
           }}
           src={imageUrl}

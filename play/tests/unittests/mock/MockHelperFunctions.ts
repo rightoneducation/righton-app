@@ -57,17 +57,6 @@ export const createTeamAnswerMock = (
   } as ITeamAnswer;
 };
 
-export const localModelAnswerMock = () => {
-  return {
-    answerTexts: [],
-    answerTypes: [],
-    multiChoiceAnswerIndex: null,
-    isSubmitted: true,
-    currentState: null,
-    currentQuestionIndex: null,
-  };
-};
-
 export const localModelLoaderMock = () => {
   const currentTime = new Date().getTime() / 60000;
   return {
@@ -78,7 +67,6 @@ export const localModelLoaderMock = () => {
     selectedAvatar: 0,
     hasRejoined: false,
     currentTimer: currentTime - 100,
-    answer: localModelAnswerMock(),
   } as LocalModel;
 };
 
@@ -108,7 +96,7 @@ export const createValidGameSession = async (numberOfTeams: number) => {
     expect(gameSession).toHaveProperty('teams');
     gameSession.teams.forEach((team) => {
       expect(team).toHaveProperty('teamMembers');
-      team.teamMembers!.forEach((teamMember) => {  // eslint-disable-line @typescript-eslint/no-non-null-assertion
+      team.teamMembers!.forEach((teamMember) => { // eslint-disable-line @typescript-eslint/no-non-null-assertion
         expect(teamMember).toHaveProperty('answers');
       });
     });

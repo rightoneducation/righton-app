@@ -68,11 +68,10 @@ export default function Leaderboard({
   const { current: avatarNumbers } = useRef<number[]>(
     sortedTeams
       ? // iterates through the team array, if the current element is currentTeam then it uses the team avatar, otherwise generate a random number
-        sortedTeams.map((sortedTeam) => {
-          return sortedTeam === currentTeam
-            ? teamAvatar
-            : Math.floor(Math.random() * 6);
-        })
+        sortedTeams.map((sortedTeam) =>{
+            return sortedTeam === currentTeam ? teamAvatar : Math.floor(Math.random() * 6)
+          }
+        )
       : // if teams is invalid, then return empty array
         []
   );

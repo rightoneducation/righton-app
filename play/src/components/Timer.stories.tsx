@@ -15,7 +15,7 @@ const Template: StoryFn<typeof Timer> = function TimerTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>
       <I18nextProvider i18n={i18n}>
-        <Timer {...args} />
+       <Timer {...args} />
       </I18nextProvider>
     </ThemeProvider>
   );

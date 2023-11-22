@@ -6,7 +6,6 @@ import {
   ModelHelper,
   ITeam,
   IQuestion,
-  IChoice,
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -27,12 +26,13 @@ interface DiscussAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: IChoice[] | undefined;
+  answerChoices:
+    | { text: string; isCorrectAnswer: boolean; reason: string }[]
+    | undefined;
   instructions: string[];
   currentState: GameSessionState;
   currentTeam: ITeam;
   currentQuestion: IQuestion;
-  isShortAnswerEnabled: boolean;
 }
 
 export default function DiscussAnswer({
@@ -44,24 +44,19 @@ export default function DiscussAnswer({
   currentState,
   currentTeam,
   currentQuestion,
-  isShortAnswerEnabled,
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
-  const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
+  const correctAnswer = answerChoices?.find((answer) => answer.isCorrectAnswer);
+  const correctIndex = answerChoices?.findIndex(
+    (answer) => answer.isCorrectAnswer
+  );
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
     currentState
   );
-  const isPlayerCorrect = isShortAnswerEnabled
-    ? ModelHelper.isShortAnswerResponseCorrect(
-        currentQuestion.responses ?? [],
-        currentTeam
-      )
-    : correctAnswer?.text === selectedAnswer?.text;
-
+  const isPlayerCorrect = correctAnswer?.text === selectedAnswer?.text;
   const questionCorrectAnswerContents = (
     <>
       <Typography
@@ -122,10 +117,10 @@ export default function DiscussAnswer({
         <Stack spacing={2}>
           {answerChoices?.map(
             (answer, index) =>
-              !answer.isAnswer && (
+              !answer.isCorrectAnswer && (
                 <DiscussAnswerCard
                   isPlayerCorrect={isPlayerCorrect}
-                  instructions={instructions ?? ''}
+                  instructions={instructions}
                   answerStatus={
                     answer.text === selectedAnswer?.text
                       ? AnswerState.SELECTED
@@ -133,7 +128,7 @@ export default function DiscussAnswer({
                   }
                   answerText={answer.text}
                   answerIndex={index}
-                  answerReason={answer.reason ?? ''}
+                  answerReason={answer.reason}
                   currentState={currentState}
                   key={uuidv4()}
                 />

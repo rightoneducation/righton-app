@@ -12,19 +12,18 @@ export default {
   component: RejoinModal,
 } as Meta<typeof RejoinModal>;
 
-const Template: StoryFn<typeof RejoinModal> = function RejoinModalTemplate(
-  args
-) {
-  return (
-    <BrowserRouter>
-      <ThemeProvider theme={Theme}>
-        <I18nextProvider i18n={i18n} defaultNS="translation">
-          <RejoinModal {...args} />
-        </I18nextProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  );
-};
+const Template: StoryFn<typeof RejoinModal> =
+  function RejoinModalTemplate(args) {
+    return (
+      <BrowserRouter>
+        <ThemeProvider theme={Theme}>
+          <I18nextProvider i18n={i18n} defaultNS="translation">
+            <RejoinModal {...args} />
+          </I18nextProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    );
+  };
 
 export const Default = Template.bind({});
 Default.args = {

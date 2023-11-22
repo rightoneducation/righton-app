@@ -52,7 +52,9 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
+import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
+import { IGameSession } from "./Models/IGameSession"
+import { ITeam } from "./Models/ITeam"
 
 Amplify.configure(awsconfig)
 
@@ -329,22 +331,21 @@ export class ApiClient implements IApiClient {
         teamMemberId: string,
         questionId: number,
         text: string,
-        answerContent: ITeamAnswerContent,
+        answerContents: string,
         isChosen: boolean = false,
         isTrickAnswer: boolean = false
     ): Promise<ITeamAnswer> {
-        const awsAnswerContent = JSON.stringify(answerContent)
+        const awsAnswerContents = JSON.stringify(answerContents)
         const input: CreateTeamAnswerInput = {
             questionId,
             isChosen,
             isTrickAnswer,
             text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContent, 
+            awsAnswerContents, 
             teamMemberAnswersId: teamMemberId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
-        
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
             createTeamAnswer,
             variables
@@ -568,7 +569,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
-    awsAnswerContent?: string | null
+    awsAnswerContents?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -658,6 +659,7 @@ export class GameSessionParser {
         subscription: OnGameSessionUpdatedByIdSubscription
     ): IGameSession {
         const updateGameSession = subscription.onGameSessionUpdatedById
+        console.log(updateGameSession);
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
@@ -717,9 +719,7 @@ export class GameSessionParser {
                     choices: isNullOrUndefined(awsQuestion.choices)
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
-                    responses: isNullOrUndefined(awsQuestion.responses)
-                         ? []
-                         : this.parseServerArray<IResponse>(awsQuestion.responses),
+                    responses: [],
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []
@@ -901,23 +901,7 @@ class TeamAnswerParser {
             return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
         })
     }
-    static answerContentFromAWSAnswerContent(
-        awsAnswerContent: string
-    ): ITeamAnswerContent {
-        let parsedAnswerContent;
-        try {
-            parsedAnswerContent = JSON.parse(awsAnswerContent);
-            if (isNullOrUndefined(parsedAnswerContent) ||
-            isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
-                throw new Error(
-                    "Team answer has null field for the attributes that are not nullable"
-                )
-            }
-        } catch (e) {
-            throw new Error("Failed to parse answer content")
-        }
-        return parsedAnswerContent as ITeamAnswerContent;
-    }   
+
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): ITeamAnswer {
@@ -927,31 +911,30 @@ class TeamAnswerParser {
             isChosen,
             isTrickAnswer,
             text,
-            awsAnswerContent,
+            awsAnswerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
             confidenceLevel
         } = awsTeamAnswer || {}
+
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
             isNullOrUndefined(text) ||
-            isNullOrUndefined(awsAnswerContent)) {
+            isNullOrUndefined(awsAnswerContents)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-        // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
-        const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
-     
+
         const teamAnswer: ITeamAnswer = {
             id,
             questionId,
             isChosen,
             isTrickAnswer,
             text,
-            answerContent,
+            answerContents: awsAnswerContents,
             createdAt,
             updatedAt,
             teamMemberAnswersId,

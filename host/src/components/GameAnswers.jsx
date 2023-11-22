@@ -8,7 +8,7 @@ export default function GameAnswers({
   questions,
   questionChoices,
   currentQuestionIndex,
-  answers,
+  answersByQuestion,
   totalAnswers,
 }) {
   const classes = useStyles();
@@ -47,7 +47,7 @@ export default function GameAnswers({
                   !choice.isAnswer ? choice.reason : answerExplanation
                 }
                 correct={choice.isAnswer}
-                numQuestionAnswers={answers ? answers[index] : 0}
+                numQuestionAnswers={answersByQuestion[index]}
                 totalAnswers={totalAnswers}
                 pos={index}
               />

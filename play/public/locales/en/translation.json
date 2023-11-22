@@ -66,10 +66,12 @@
       "swipealert": "Swipe left to answer the question."
     },
     "chooseanswer": {
+      "questioncolumn": "Question",
+      "answercolumn": "Answer",
       "answerthankyou1": "Thank you for submitting!",
       "answerthankyou2": "Waiting for your teacher to advance to the next section.",
-      "correcttext1": "Which do you think is the",
-      "correcttext2": "correct answer?",
+      "correcttext1": "Choose the",
+      "correcttext2": "correct answer",
       "incorrecttext1": "What do you think the most popular",
       "incorrecttext2": "incorrect answer",
       "incorrecttext3": "is among your class?",
@@ -81,11 +83,7 @@
       "confidenceoption4": "Very",
       "confidenceoption5": "Totally",
       "sendingconfidenceresponse": "Sending your response...",
-      "submittedconfidenceresponse": "Your response has been submitted.",
-      "questioncard": "Question",
-      "answercard": "Choose the correct answer",
-      "openanswercard": "Enter your answer",
-      "openanswercardplaceholder": "Enter your answer here..."
+      "submittedconfidenceresponse": "Your response has been submitted."
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",

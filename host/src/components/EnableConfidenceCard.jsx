@@ -66,17 +66,11 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   switch: {
-    '& .MuiSwitch-switchBase': {
-      color: "#C0C0C0"
-    },
-    '& .MuiSwitch-track': {
-      backgroundColor: "#EAEAEA",
-    },
     '& .MuiSwitch-switchBase.Mui-checked': {
-      color: '#FFFFFF',
+      color: '#3874CB',
     },
     '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-      backgroundColor: '#111111',
+      backgroundColor: '#3874CB',
     },
   },
 });

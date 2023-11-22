@@ -28,27 +28,26 @@ export default {
   ],
 } as Meta<typeof PhaseResults>;
 
-const Template: StoryFn<typeof PhaseResults> = function PhaseResultsTemplate(
-  args
-) {
-  return (
-    <ThemeProvider theme={Theme}>
-      <I18nextProvider i18n={i18n}>
-        <PhaseResults {...args} />
-      </I18nextProvider>
-    </ThemeProvider>
-  );
-};
+const Template: StoryFn<typeof PhaseResults> =
+  function PhaseResultsTemplate(args) {
+    return (
+      <ThemeProvider theme={Theme}>
+        <I18nextProvider i18n={i18n}>
+          <PhaseResults {...args} />
+        </I18nextProvider>
+      </ThemeProvider>
+    );
+  };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession
 ) as IGameSession;
 
-const answerChoices = gameSession.questions[0].choices!.map( // eslint-disable-line @typescript-eslint/no-non-null-assertion
+const answerChoices = gameSession.questions[0].choices!.map(  // eslint-disable-line @typescript-eslint/no-non-null-assertion
   (choice: IChoice) => ({
     id: uuidv4(),
     text: choice.text,
-    isAnswer: choice.isAnswer,
+    isCorrectAnswer: choice.isAnswer,
     reason: choice.reason ?? '',
   })
 );
