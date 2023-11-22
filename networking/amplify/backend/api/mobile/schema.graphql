@@ -4,8 +4,12 @@ input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
 
-type GameTemplate @model{
-  id: ID!
+type Mutation {
+  customCreateGameTemplate(id: String!, title: String!, owner: String!, version: String!, description: String!): GameTemplate
+}
+
+type GameTemplate @model(queries: null, mutations: null, subscriptions: null){
+  id: String!
   title: String!
   owner: String! @index(
       name: "gameTemplatesByOwner"

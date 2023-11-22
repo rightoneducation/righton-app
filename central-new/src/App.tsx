@@ -105,12 +105,22 @@ function App() {
       handleGetQuestionTemplates(nextToken);
   };
 
-  const handleAddQuestionToGame = async (gameTemplateId: string, questionTemplateId: string) => {
+  const handleAddQuestionClick = async (gameTemplateId: string, questionTemplateId: string) => {
+    try {
+      const questionTemplate = await apiClient.createGameQuestions(
+        uuidv4(),
+        '18f8b797-3d68-4b25-b77d-e3500391122b',
+        '09e81481-8d2c-4ccf-8cc9-4eb127ab47bf',
+      );
+      return questionTemplate;
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <Box style={{width: '100%', height: '100%', display: 'flex', alignItems: 'flex-start'}}>
       <Sidebar handleButtonClick={handleButtonClick}/>
-      <PageContentSwitch pageType={page} gameTemplates={gameTemplates} questionTemplates={questionTemplates} nextToken={nextToken} handleNextPageClick={handleNextPageClick}/>
+      <PageContentSwitch pageType={page} gameTemplates={gameTemplates} questionTemplates={questionTemplates} nextToken={nextToken} handleNextPageClick={handleNextPageClick} handleAddQuestionClick={handleAddQuestionClick}/>
     </Box>
   );
 }

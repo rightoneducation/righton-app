@@ -28,6 +28,7 @@ export default function Sidebar({
        <SidebarButton buttonType={SidebarButtons.GLOBAL_QUESTIONS} handleButtonClick={handleButtonClick}/>
        <SidebarButton buttonType={SidebarButtons.CREATE_GLOBAL_GAME} handleButtonClick={handleButtonClick}/>
        <SidebarButton buttonType={SidebarButtons.CREATE_GLOBAL_QUESTION} handleButtonClick={handleButtonClick}/>
+       <SidebarButton buttonType={SidebarButtons.ADD_QUESTION_TO_GAME} handleButtonClick={handleButtonClick}/>
       </Box>
     </SidebarStyled>
   );

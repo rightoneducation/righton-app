@@ -16,6 +16,7 @@ interface PageContentSwitchProps {
   questionTemplates: IQuestionTemplate[] | null;
   nextToken: string | null;
   handleNextPageClick: (nextToken: string | null) => void;
+  handleAddQuestionClick: (questionTemplateId: string, gameTemplateId: string) => void;
 }
 
 function PageContentSwitch({
@@ -23,9 +24,13 @@ function PageContentSwitch({
   gameTemplates,
   questionTemplates,
   nextToken,
-  handleNextPageClick
+  handleNextPageClick,
+  handleAddQuestionClick
 }:PageContentSwitchProps) {
-
+  const [questionTemplateId, setQuestionTemplateId] = useState<string>("");
+  const [gameTemplateId, setGameTemplateId] = useState<string>("");
+  console.log(gameTemplates);
+  console.log(questionTemplates);
   switch(pageType){
     case SidebarButtons.GLOBAL_GAMES:
     default:
@@ -34,12 +39,12 @@ function PageContentSwitch({
           <PageContent>
             {gameTemplates?.map((gameTemplate) => (
               <li key={gameTemplate.id} style={{padding: 16}}>
-                {gameTemplate.title}
-                {/* {gameTemplate.questions?.map((question) => (
+                {JSON.stringify(gameTemplate)}
+                {gameTemplate.questionTemplates?.map((question) => (
                   <li key={question.id} style={{padding: 16}}>
-                    {question.title} 
+                    {JSON.stringify(question)} 
                   </li>
-                ))} */}
+                ))}
               </li>
             )
             )}
@@ -76,6 +81,24 @@ function PageContentSwitch({
             )}
           </PageContent>
         </>
+      )
+    case SidebarButtons.ADD_QUESTION_TO_GAME:
+      return (
+        <PageContent>
+          <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <Box style={{display: 'flex', padding: 16, gap: 16 }}>
+              <Typography style={{color: '#2D2D2D'}}>
+                  Question ID:
+              </Typography>
+              <input type="text" value={questionTemplateId} onChange={(event) => setQuestionTemplateId(event.target.value)} /> 
+              <Typography style={{color: '#2D2D2D'}}>
+                  Game ID:
+              </Typography>
+              <input type="text" value={gameTemplateId} onChange={(event) => setGameTemplateId(event.target.value)} /> 
+            </Box>
+            <Button type="button" onClick={()=>handleAddQuestionClick(questionTemplateId, gameTemplateId)}>Add Question</Button>
+          </Box>
+        </PageContent>
       )
   }
 }

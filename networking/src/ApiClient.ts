@@ -9,6 +9,9 @@ import {
     CreateQuestionTemplateInput,
     CreateQuestionTemplateMutationVariables,
     CreateQuestionTemplateMutation,
+    CreateGameQuestionsInput,
+    CreateGameQuestionsMutationVariables,
+    CreateGameQuestionsMutation,
     CreateTeamAnswerInput, CreateTeamAnswerMutation,
     CreateTeamAnswerMutationVariables, CreateTeamInput,
     CreateTeamMemberInput,
@@ -53,6 +56,7 @@ import {
 import {
     createGameTemplate,
     createQuestionTemplate,
+    createGameQuestions,
     createTeam,
     createTeamAnswer,
     createTeamMember,
@@ -63,6 +67,7 @@ import {
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { IGameTemplate, IQuestionTemplate, IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
+import { IModelGameQuestionConnection } from "./Models/IModelGameQuestionConnection"
 import { IGameSession } from "./Models/IGameSession"
 import { ITeam } from "./Models/ITeam"
 
@@ -132,8 +137,8 @@ export class ApiClient implements IApiClient {
             throw new Error(`Failed to create game template.`)
         }
         console.log(gameTemplate);
-        return null; // GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate
-    }
+        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate;
+    } 
 
     async listGameTemplates(nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
         let result = (await API.graphql(
@@ -142,9 +147,9 @@ export class ApiClient implements IApiClient {
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
-        const parsedNextToken = result.data.listGameTemplates.nextToken;
-        
-        return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+        // const parsedNextToken = result.data.listGameTemplates.nextToken;
+        console.log(parsedGameTemplates);
+        return null; //{ gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
   
     async createQuestionTemplate(
@@ -199,6 +204,48 @@ export class ApiClient implements IApiClient {
         return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
     }
 
+    async createGameQuestions(
+        id: string,
+        gameTemplateID: string,
+        questionTemplateID: string,
+    ): Promise<IGameTemplate | null> {
+        const input: CreateGameQuestionsInput = {
+           id,
+           gameTemplateID,
+           questionTemplateID,
+        }
+        const variables: CreateGameQuestionsMutationVariables = { input }
+        console.log(variables);
+        try {
+            const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
+                createGameQuestions,
+                variables
+            )
+            console.log('sup');
+            if (
+                isNullOrUndefined(gameQuestions.data) ||
+                isNullOrUndefined(gameQuestions.data.createGameQuestions)
+            ) {
+                throw new Error(`Failed to create game template.`)
+            }
+            console.log(gameQuestions);
+        } catch (e) {
+            console.log(e);
+        } 
+        return null; // GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate
+    }
+
+    async listGameQuestion(nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+        let result = (await API.graphql(
+            graphqlOperation(listGameTemplates, {limit: 5, nextToken })
+        )) as { data: any }
+        const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
+            return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
+        });
+        const parsedNextToken = result.data.listGameTemplates.nextToken;
+        
+        return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+    }
 
     private endpoint: string
 
@@ -625,7 +672,7 @@ type AWSGameTemplate = {
     phaseOneTime?: number | null | undefined,
     phaseTwoTime?: number | null | undefined,
     imageUrl?: string | null | undefined,
-    questionTemplates?: IQuestionTemplate[] | null | undefined,
+    questionTemplates?: IModelGameQuestionConnection | null,
     createdAt?: string | null | undefined,
     updatedAt?: string | null
 }
@@ -733,6 +780,8 @@ class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
         awsGameTemplate: AWSGameTemplate
     ): IGameTemplate {
+        let questionTemplates: IQuestionTemplate[] = awsGameTemplate.questionTemplates?.items?.filter((questionTemplate: AWSQuestionTemplate | null) => !isNullOrUndefined(questionTemplate)) || [];
+
         const {
             id,
             title,
@@ -746,7 +795,6 @@ class GameTemplateParser {
             phaseOneTime,
             phaseTwoTime,
             imageUrl,
-            questionTemplates,
             createdAt,
             updatedAt
         } = awsGameTemplate || {}
