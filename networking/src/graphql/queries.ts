@@ -23,6 +23,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -30,9 +31,9 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -92,6 +93,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -99,9 +101,9 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -137,6 +139,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             id
             text
             choices
+            responses
             imageUrl
             instructions
             standard
@@ -144,9 +147,9 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             domain
             grade
             order
-            isHintEnabled
             isConfidenceEnabled
             isShortAnswerEnabled
+            isHintEnabled
             gameSessionId
             __typename
           }
@@ -206,6 +209,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -213,9 +217,9 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -239,6 +243,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     id
     text
     choices
+    responses
     imageUrl
     instructions
     standard
@@ -246,9 +251,9 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     domain
     grade
     order
-    isHintEnabled
     isConfidenceEnabled
     isShortAnswerEnabled
+    isHintEnabled
     gameSessionId
     __typename
   }
@@ -277,6 +282,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -284,9 +290,9 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -306,6 +312,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       id
       text
       choices
+      responses
       imageUrl
       instructions
       standard
@@ -313,9 +320,9 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       domain
       grade
       order
-      isHintEnabled
       isConfidenceEnabled
       isShortAnswerEnabled
+      isHintEnabled
       gameSessionId
       __typename
     }
@@ -374,6 +381,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         id
         text
         choices
+        responses
         imageUrl
         instructions
         standard
@@ -381,9 +389,9 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         domain
         grade
         order
-        isHintEnabled
         isConfidenceEnabled
         isShortAnswerEnabled
+        isHintEnabled
         gameSessionId
         __typename
       }
@@ -578,6 +586,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             id
             text
             choices
+            responses
             imageUrl
             instructions
             standard
@@ -585,9 +594,9 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             domain
             grade
             order
-            isHintEnabled
             isConfidenceEnabled
             isShortAnswerEnabled
+            isHintEnabled
             gameSessionId
             __typename
           }
@@ -647,6 +656,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -654,9 +664,9 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }
@@ -703,6 +713,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             id
             text
             choices
+            responses
             imageUrl
             instructions
             standard
@@ -710,9 +721,9 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             domain
             grade
             order
-            isHintEnabled
             isConfidenceEnabled
             isShortAnswerEnabled
+            isHintEnabled
             gameSessionId
             __typename
           }
@@ -772,6 +783,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           id
           text
           choices
+          responses
           imageUrl
           instructions
           standard
@@ -779,9 +791,9 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           domain
           grade
           order
-          isHintEnabled
           isConfidenceEnabled
           isShortAnswerEnabled
+          isHintEnabled
           gameSessionId
           __typename
         }

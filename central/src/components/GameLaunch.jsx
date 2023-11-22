@@ -183,7 +183,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
   const questions = game?.questions || [];
   const questionCount = game?.questions?.length || 0;
 
-  const LAUNCH_GAME_URL = `http://host.rightoneducation.com/new/${game.id}`;
+  const LAUNCH_GAME_URL = `http://test-host.rightoneducation.com/new/${game.id}`;
 
   return (
     <>

@@ -19,7 +19,7 @@ const theme = createTheme({
 });
 
 const RedirectToCentralIfMissing = () => {
-  window.location.href = 'http://central.rightoneducation.com/';
+  window.location.href = 'http://test-central.rightoneducation.com/';
   return null;
 };
 
