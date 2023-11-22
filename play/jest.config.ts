@@ -4,7 +4,7 @@ import path from 'path';
 const networkingPath = path.resolve(__dirname, '../networking/lib/src');
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  testEnvironment: 'jsdom', 
+  testEnvironment: 'jsdom',
   setupFiles: ['whatwg-fetch'],
   roots: ['<rootDir>'],
   testRegex: '((\\.| /)(test|spec))\\.(jsx?|tsx?)$',

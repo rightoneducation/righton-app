@@ -11,16 +11,17 @@ export default {
   component: FooterContent,
 } as Meta<typeof FooterContent>;
 
-const Template: StoryFn<typeof FooterContent> =
-  function FooterContentTemplate(args) {
-    return (
-      <ThemeProvider theme={Theme}>
-        <I18nextProvider i18n={i18n}>
-          <FooterContent {...args} />
-        </I18nextProvider>
-      </ThemeProvider>
-    );
-  };
+const Template: StoryFn<typeof FooterContent> = function FooterContentTemplate(
+  args
+) {
+  return (
+    <ThemeProvider theme={Theme}>
+      <I18nextProvider i18n={i18n}>
+        <FooterContent {...args} />
+      </I18nextProvider>
+    </ThemeProvider>
+  );
+};
 
 export const Team0 = Template.bind({});
 Team0.args = {

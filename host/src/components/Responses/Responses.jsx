@@ -27,7 +27,7 @@ export default function Responses({
         questionChoices={questionChoices}
         statePosition={statePosition}
         graphClickInfo={graphClickInfo}
-        isShortAnswerEnabled={isShortAnswerEnabled}
+        isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
         handleGraphClick={handleGraphClick}
       />
     </Box>

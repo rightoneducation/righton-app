@@ -2,7 +2,13 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, GameSessionState, ITeamAnswerContent } from '@righton/networking';
+import {
+  ConfidenceLevel,
+  GameSessionState,
+  ITeamAnswerContent,
+  IChoice,
+  IResponse
+} from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
@@ -18,12 +24,11 @@ interface ChooseAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
   handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
   currentState: GameSessionState;
-  selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
   isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
@@ -45,7 +50,6 @@ export default function ChooseAnswer({
   displaySubmitted,
   handleSubmitAnswer,
   currentState,
-  selectedAnswer,
   handleSelectAnswer,
   isConfidenceEnabled,
   selectedConfidenceOption,
@@ -55,11 +59,10 @@ export default function ChooseAnswer({
   setTimeOfLastConfidenceSelect,
   isShortAnswerEnabled,
   answerContent,
-  currentQuestionIndex
+  currentQuestionIndex,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-
   const questionContents = (
     <ScrollBoxStyled>
       <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -79,7 +82,8 @@ export default function ChooseAnswer({
   );
 
   const onSubmitDisplay =
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && isConfidenceEnabled ? (
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
+    isConfidenceEnabled ? (
       <Fade in={displaySubmitted} timeout={500}>
         <Box>
           <ConfidenceMeterCard
@@ -105,10 +109,18 @@ export default function ChooseAnswer({
         {t('gameinprogress.chooseanswer.answerthankyou1')}
       </Typography>
     );
-
   const answerContents = (
     <ScrollBoxStyled>
-    {!isShortAnswerEnabled ? 
+      {isShortAnswerEnabled &&
+      currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+        <OpenAnswerCard
+          answerContent={answerContent}
+          isSubmitted={answerContent.isSubmitted ?? false}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
+          handleSubmitAnswer={handleSubmitAnswer}
+        />
+      ) : (
         <AnswerCard
           answers={answerChoices}
           isSubmitted={answerContent.isSubmitted ?? false}
@@ -118,15 +130,7 @@ export default function ChooseAnswer({
           selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
           handleSelectAnswer={handleSelectAnswer}
         />
-        :
-        <OpenAnswerCard
-          answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
-          currentState={currentState}
-          currentQuestionIndex={currentQuestionIndex}
-          handleSubmitAnswer={handleSubmitAnswer}
-        />
-      }
+      )}
       {displaySubmitted ? onSubmitDisplay : null}
       {isSubmitted ? (
         <Typography
@@ -148,7 +152,7 @@ export default function ChooseAnswer({
     <BodyContentAreaDoubleColumnStyled
       container
       spacing={isSmallDevice ? 0 : 2}
-      style={{paddingTop: '16px'}}
+      style={{ paddingTop: '16px' }}
     >
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         {isSmallDevice ? (

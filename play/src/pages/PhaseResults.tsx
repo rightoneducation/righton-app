@@ -4,6 +4,7 @@ import {
   GameSessionState,
   IGameSession,
   ITeam,
+  IChoice,
   ModelHelper,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
@@ -29,11 +30,7 @@ interface PhaseResultsProps {
   currentQuestionIndex?: number | null;
   teamId: string;
   gameSession: IGameSession;
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-  }[];
+  answerChoices: IChoice[];
   score: number;
   hasRejoined: boolean;
   isShortAnswerEnabled: boolean;
@@ -67,7 +64,7 @@ export default function PhaseResults({
   answerChoices,
   score,
   hasRejoined,
-  isShortAnswerEnabled
+  isShortAnswerEnabled,
 }: PhaseResultsProps) {
   // isError consists of two values:
   // error: boolean - whether or not an error has occurred, used to display error modal
