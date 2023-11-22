@@ -8,7 +8,7 @@ import {
   teamSorter,
   getAnswerFromDelta,
   isNumeric,
-  handleNormalizeAnswers
+  handleNormalizeAnswers,
 } from '../../src/lib/HelperFunctions';
 import i18n from '../../src/i18n.mock';
 import { InputPlaceholder } from '../../src/lib/PlayModels';
@@ -45,19 +45,18 @@ describe('HelperFunctions', () => {
     const questionId = randomInt(1000, 9999);
     let localAnswer = {
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      normAnswer: [
+        {
           value: '',
           type: 0,
-        }],
-      }],
+        },
+      ],
       multiChoiceAnswerIndex: 0,
       isSubmitted: true,
       currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
       currentQuestionIndex: 0,
     };
-    let localModel = {
+    const localModel = {
       currentTime: 0,
       currentQuestionIndex: 0,
       teamId: '1232123',
@@ -66,7 +65,7 @@ describe('HelperFunctions', () => {
       hasRejoined: true,
       currentTimer: 0,
       gameSessionId: '12121',
-      answer: localAnswer
+      answer: localAnswer,
     };
     const localStorageMock = {
       getItem: jest.fn(),
@@ -74,9 +73,10 @@ describe('HelperFunctions', () => {
       clear: jest.fn(),
       removeItem: jest.fn(),
     };
-    
-    (global as any).localStorage = localStorageMock;
-    (global.localStorage as jest.Mocked<typeof localStorage>).setItem = jest.fn();
+
+    (global as any).localStorage = localStorageMock; // eslint-disable-line @typescript-eslint/no-explicit-any
+    (global.localStorage as jest.Mocked<typeof localStorage>).setItem =
+      jest.fn();
     const teamAnswers = [];
     teamAnswers.push(createTeamAnswerMock(questionId, true, false, '60%'));
     teamAnswers.push(createTeamAnswerMock(questionId, false, true, '30%'));
@@ -84,105 +84,101 @@ describe('HelperFunctions', () => {
     // expects a rejoined answer that corresponds to the current game answer to return true
     expect(
       checkForSubmittedAnswerOnRejoin(
-        {...localModel, answer: localAnswer},
+        { ...localModel, answer: localAnswer },
         true,
         GameSessionState.CHOOSE_CORRECT_ANSWER,
         0
       )
     ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      normAnswer: [
+        {
           value: '',
           type: 0,
-        }],
-      }],
-      isSubmitted: true, 
-      multiChoiceAnswerIndex: 0, 
-      currentState: GameSessionState.CHOOSE_CORRECT_ANSWER, 
-      currentQuestionIndex: 0
+        },
+      ],
+      isSubmitted: true,
+      multiChoiceAnswerIndex: 0,
+      currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
+      currentQuestionIndex: 0,
     });
     // wrong phase
     expect(
       checkForSubmittedAnswerOnRejoin(
-        {...localModel, answer: localAnswer},
+        { ...localModel, answer: localAnswer },
         true,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER,
         0
       )
-    ).toEqual({ 
+    ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      delta: '',
+      normAnswer: [
+        {
           value: '',
-          type: 1,
-        }],
-      }],
-      isSubmitted: false, 
-      multiChoiceAnswerIndex: null, 
-      currentState: null, 
-      currentQuestionIndex: null 
+          type: 3,
+        },
+      ],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: null,
+      currentState: null,
+      currentQuestionIndex: null,
     });
     // wrong question
     expect(
       checkForSubmittedAnswerOnRejoin(
-        {...localModel, answer: localAnswer},
+        { ...localModel, answer: localAnswer },
         true,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER,
         1
       )
     ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      delta: '',
+      normAnswer: [
+        {
           value: '',
-          type: 1,
-        }],
-      }],
-      isSubmitted: false, 
-      multiChoiceAnswerIndex: null, 
-      currentState: null, 
-      currentQuestionIndex: null
+          type: 3,
+    },
+      ],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: null,
+      currentState: null,
+      currentQuestionIndex: null,
     });
     // already submitted trickiest answer
-    localAnswer = 
-      {
-        rawAnswer: '',
-        normAnswer: [{
-          raw: '',
-          norm: [{
-            value: '',
-            type: 1,
-          }],
-        }],
-        isSubmitted: true,
-        multiChoiceAnswerIndex: 0,
-        currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
-        currentQuestionIndex: 0
-      };
+    localAnswer = {
+      rawAnswer: '',
+      normAnswer: [
+        {
+          value: '',
+          type: 1,
+        },
+      ],
+      isSubmitted: true,
+      multiChoiceAnswerIndex: 0,
+      currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+      currentQuestionIndex: 0,
+    };
     expect(
       checkForSubmittedAnswerOnRejoin(
-        {...localModel, answer: localAnswer},
+        { ...localModel, answer: localAnswer },
         true,
         GameSessionState.CHOOSE_TRICKIEST_ANSWER,
         0
       )
     ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      normAnswer: [
+        {
           value: '',
           type: 1,
-        }],
-      }],
-      isSubmitted: true, 
-      multiChoiceAnswerIndex: 0, 
-      currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER, 
-      currentQuestionIndex: 0 
+        },
+      ],
+      isSubmitted: true,
+      multiChoiceAnswerIndex: 0,
+      currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
+      currentQuestionIndex: 0,
     });
     // wrong phase
     expect(
@@ -194,33 +190,31 @@ describe('HelperFunctions', () => {
       )
     ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      delta: '',
+      normAnswer: [
+        {
           value: '',
-          type: 1,
-        }],
-      }],
-      isSubmitted: false, 
-      multiChoiceAnswerIndex: null, 
-      currentState: null, 
-      currentQuestionIndex: null 
+          type: 3,
+        },
+      ],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: null,
+      currentState: null,
+      currentQuestionIndex: null,
     });
     // no answers submitted
-    localAnswer = 
-    {
+    localAnswer = {
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      normAnswer: [
+        {
           value: '',
           type: 0,
-        }],
-      }],
+        },
+      ],
       isSubmitted: false,
       multiChoiceAnswerIndex: 0, // should be null
       currentState: GameSessionState.CHOOSE_TRICKIEST_ANSWER,
-      currentQuestionIndex: 0
+      currentQuestionIndex: 0,
     };
     expect(
       checkForSubmittedAnswerOnRejoin(
@@ -229,19 +223,19 @@ describe('HelperFunctions', () => {
         GameSessionState.CHOOSE_TRICKIEST_ANSWER,
         0
       )
-    ).toEqual({ 
+    ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      delta: '',
+      normAnswer: [
+        {
           value: '',
-          type: 1,
-        }],
-      }],
-      isSubmitted: false, 
-      multiChoiceAnswerIndex: null, 
+          type: 3,
+        },
+      ],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: null,
       currentState: null,
-      currentQuestionIndex: null 
+      currentQuestionIndex: null,
     });
     // no rejoin
     expect(
@@ -251,54 +245,55 @@ describe('HelperFunctions', () => {
         GameSessionState.CHOOSE_CORRECT_ANSWER,
         0
       )
-    ).toEqual({ 
+    ).toEqual({
       rawAnswer: '',
-      normAnswer: [{
-        raw: '',
-        norm: [{
+      delta: '',
+      normAnswer: [
+        {
           value: '',
-          type: 1,
-        }],
-      }],
-      isSubmitted: false, 
-      multiChoiceAnswerIndex: null, 
-      currentState: null, 
-      currentQuestionIndex: null 
+          type: 3,
+        },
+      ],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: null,
+      currentState: null,
+      currentQuestionIndex: null,
     });
   });
 
   it('tests if a local model is fully populated and no older than 120min', () => {
     const localModel = JSON.stringify(localModelLoaderMock());
-    const localModelAnswer = JSON.stringify(
-      {
-        rawAnswer: '',
-        normAnswer: [{
-          raw: '',
-          norm: [{
-            value: '',
-            type: 1,
-          }],
-        }],
-        isSubmitted: false,
-        multiChoiceAnswerIndex: 0, // should be null
-        currentState: null,
-        currentQuestionIndex: 0
-      }
-    )
+    const localModelAnswer = JSON.stringify({
+      rawAnswer: '',
+      normAnswer: [
+        {
+          value: '',
+          type: 1,
+        },
+      ],
+      isSubmitted: false,
+      multiChoiceAnswerIndex: 0, // should be null
+      currentState: null,
+      currentQuestionIndex: 0,
+    });
     const parsedModel = JSON.parse(localModel);
     const parsedAnswer = JSON.parse(localModelAnswer);
     parsedModel.localAnswer = parsedAnswer;
     // expects fully populated localModel data with time elapsed < 120 minutes, all else is invalid
-    expect(validateLocalModel(localModel, localModelAnswer)).toStrictEqual(parsedModel);
+    expect(validateLocalModel(localModel, localModelAnswer)).toStrictEqual(
+      parsedModel
+    );
     expect(validateLocalModel('', localModelAnswer)).toBe(null);
     expect(validateLocalModel(null, localModelAnswer)).toBe(null);
-    // replaces each key with null and expects validation to fail
+    // replaces each key with null and expects validation to fail 
     Object.keys(parsedModel).forEach((key: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
       const testModel = JSON.parse(JSON.stringify(parsedModel));
       testModel[key] = null;
       const testModelAnswer = JSON.parse(JSON.stringify(parsedAnswer));
       parsedModel[key] = null;
-      expect(validateLocalModel(JSON.stringify(testModel), testModelAnswer)).toBe(null);
+      expect(
+        validateLocalModel(JSON.stringify(testModel), testModelAnswer)
+      ).toBe(null);
     });
   });
 
@@ -350,24 +345,28 @@ describe('HelperFunctions', () => {
   // fetchLocalData function is just wrapper for window.localStorage.getItem. validation logic has been broken out for separate testing
 
   it('tests that it receives open answer contents from quill delta', async () => {
-    const inputString =  [{insert: 'test'}];
-    const expectedString = [{
-      raw: 'test',
-      norm: [{value: 'test', type: 1}],
-    }];
+    const inputString = [{ insert: 'test' }];
+    const expectedString = [
+      {
+        value: 'test', 
+        type: 1,
+      },
+    ];
     expect(getAnswerFromDelta(inputString)).toEqual(expectedString);
-    const inputFormula =  [{insert: { formula: 'e=mc^2'}}];
-    const expectedFormula = [{
-      raw: 'e=mc^2',
-      norm: [{value: 'e=mc^2', type: 3}],
-    }];
+    const inputFormula = [{ insert: { formula: 'e=mc^2' } }];
+    const expectedFormula = [
+      {
+       value: 'e=mc^2', 
+       type: 3,
+      },
+    ];
     expect(getAnswerFromDelta(inputFormula)).toEqual(expectedFormula);
-    const inputLinebreak =  [{insert: ' \n'}];
-    const expectedLinebreak: any = [];
+    const inputLinebreak = [{ insert: ' \n' }];
+    const expectedLinebreak: any = []; // eslint-disable-line @typescript-eslint/no-explicit-any
     expect(getAnswerFromDelta(inputLinebreak)).toEqual(expectedLinebreak);
   });
 
-  it('tests that an input consists exclusively of numbers', async ()=> {
+  it('tests that an input consists exclusively of numbers', async () => {
     expect(isNumeric('-0.5')).toBe(true);
     expect(isNumeric('-2')).toBe(true);
     expect(isNumeric('1234')).toBe(true);
@@ -377,45 +376,58 @@ describe('HelperFunctions', () => {
     expect(isNumeric('fifty')).toBe(false);
   });
 
-  it('tests that a quill delta is normalized so that it can be easily parsed on host', async () =>{
-    const inputNumber =  [{insert: '12'}];
-    const expectedNumber = [{
-      raw: '12',
-      norm: [{value: 12, type: 2}],
-    }];
+  it('tests that a quill delta is normalized so that it can be easily parsed on host', async () => {
+    const inputNumber = [{ insert: '12' }];
+    const expectedNumber = {
+      rawAnswer: '12',
+      normalizedAnswer: [
+        {
+          value: 12, 
+          type: 2,
+        },
+    ]};
     expect(handleNormalizeAnswers(inputNumber)).toEqual(expectedNumber);
-    const inputFormula =  [{insert: {formula: 'e=mc^2'}}];
-    const expectedFormula = [{
-      raw: 'e=mc^2',
-      norm: [{value: 'e=mc^2', type: 3}],
-    }];
+    const inputFormula = [{ insert: { formula: 'e=mc^2' } }];
+    const expectedFormula = {
+      rawAnswer: 'e=mc^2',
+      normalizedAnswer: [
+        {
+          value: 'e=mc^2', 
+          type: 3,
+        },
+    ]};
     expect(handleNormalizeAnswers(inputFormula)).toEqual(expectedFormula);
-    const inputStringWithNumbers =  [{insert: 'the answer is 12'}];
-    const expectedStringWithNumbers = [{
-      raw: 'the answer is 12',
-      norm: [{value: 12, type: 2}, {value: 'the answer is', type: 1}],
-    }];
-    expect(handleNormalizeAnswers(inputStringWithNumbers)).toEqual(expectedStringWithNumbers);
-    const inputKitchenSink =  [{insert: 'the answer is 12'}, {insert: {formula: 'e=mc^2'}}, {insert: 'the answer is sixty five 12 14.5 -3'}];
-    const expectedKitchenSink = [
-      {
-        raw: 'the answer is 12',
-        norm: [{value: 12, type: 2}, {value: 'the answer is', type: 1}],
-      },
-      {
-        raw: 'e=mc^2',
-        norm: [{value: 'e=mc^2', type: 3}],
-      },
-      {
-        raw: 'the answer is sixty five 12 14.5 -3',
-        norm: [
-          {value: 12, type: 2}, 
-          {value: 14.5, type: 2},
-          {value: -3, type: 2},
-          {value: 65, type: 2},
-          {value: 'the answer is sixty five', type: 1}],
-      },      
+    const inputStringWithNumbers = [{ insert: 'the answer is 12' }];
+    const expectedStringWithNumbers = {
+      rawAnswer: 'the answer is 12',
+      normalizedAnswer: [
+          { value: 12, type: 2 },
+          { value: 'the answer is', type: 1 },
+      ]
+    };
+    expect(handleNormalizeAnswers(inputStringWithNumbers)).toEqual(
+      expectedStringWithNumbers
+    );
+    const inputKitchenSink = [
+      { insert: 'the answer is 12' },
+      { insert: { formula: 'e=mc^2' } },
+      { insert: 'the answer is sixty five 12 14.5 -3' },
     ];
-    expect(handleNormalizeAnswers(inputKitchenSink)).toEqual(expectedKitchenSink);
-  })
+    const expectedKitchenSink = {
+        rawAnswer: 'the answer is 12e=mc^2the answer is sixty five 12 14.5 -3',
+        normalizedAnswer: [
+          { value: 12, type: 2 },
+          { value: 'the answer is', type: 1 },
+          { value: 'e=mc^2', type: 3 },
+          { value: 12, type: 2 },
+          { value: 14.5, type: 2 },
+          { value: -3, type: 2 },
+          { value: 65, type: 2 },
+          { value: 'the answer is sixty five', type: 1 },
+        ],
+      };
+    expect(handleNormalizeAnswers(inputKitchenSink)).toEqual(
+      expectedKitchenSink
+    );
+  });
 });

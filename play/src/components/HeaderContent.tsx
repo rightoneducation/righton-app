@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { GameSessionState } from '@righton/networking';
 import Timer from './Timer';
-import { LocalModel} from '../lib/PlayModels';
+import { LocalModel } from '../lib/PlayModels';
 
 const HeaderContainer = styled('div')({
   width: '100%',

@@ -348,7 +348,6 @@ export class ApiClient implements IApiClient {
             createTeamAnswer,
             variables
         )
-        console.log(answer);
         if (
             isNullOrUndefined(answer.data) ||
             isNullOrUndefined(answer.data.createTeamAnswer)
@@ -658,7 +657,6 @@ export class GameSessionParser {
         subscription: OnGameSessionUpdatedByIdSubscription
     ): IGameSession {
         const updateGameSession = subscription.onGameSessionUpdatedById
-        console.log(updateGameSession);
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
