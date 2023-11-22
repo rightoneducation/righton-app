@@ -3,7 +3,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { I18nextProvider } from 'react-i18next';
-import { RouterProvider, createMemoryRouter, useLoaderData } from 'react-router-dom';
+import {
+  RouterProvider,
+  createMemoryRouter,
+  useLoaderData,
+} from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { GameSessionState } from '@righton/networking';
 import Theme from '../../src/lib/Theme';
@@ -12,7 +16,6 @@ import apiClient from './mock/ApiClient.mock';
 import { GameInProgressContainer } from '../../src/containers/GameInProgressContainer';
 import useFetchAndSubscribeGameSession from '../../src/hooks/useFetchAndSubscribeGameSession';
 import { localModelLoaderMock } from './mock/MockHelperFunctions';
-import { BodyContentAreaPhaseResultsStyled } from '../../src/lib/styledcomponents/layout/BodyContentAreasStyled';
 
 ReactModal.setAppElement('body');
 // mock for useFetchAndSubscribeGameSession hook
@@ -47,8 +50,7 @@ const routes = [
     path: '/game',
     element: <GameInProgressContainer apiClient={apiClient} />,
     loader: () => localModelLoaderMock,
-    
-  }
+  },
 ];
 const router = createMemoryRouter(routes, {
   initialEntries: ['/game'], // start the history at a specific location

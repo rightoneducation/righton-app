@@ -1,4 +1,5 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
+import { INormAnswer } from "./ITeamAnswerContent";
 
 export interface IQuestion {
     id: number
@@ -19,6 +20,7 @@ export interface IQuestion {
 }
 
 export interface IChoice {
+    id?: string
     text: string
     reason?: string
     isAnswer: boolean
@@ -26,8 +28,9 @@ export interface IChoice {
 
 export interface IResponse {
     value: string
-    normAnswer: string | number
+    normAnswer: INormAnswer[];
     isCorrect: boolean
+    isSelectedMistake: boolean
     count: number
     teams: Array<IResponseTeam>
 }

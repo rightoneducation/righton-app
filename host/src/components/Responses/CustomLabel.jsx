@@ -46,7 +46,7 @@ export default function CustomLabel(props) {
             dy={-barThickness / 2 - xSmallPadding}
             textAnchor="start"
             verticalAnchor="end"
-            text={`${(datum.answerText).toString()}`}
+            text={datum.answerText}
             style={{
               fontSize: 15,
               fill: 'white',

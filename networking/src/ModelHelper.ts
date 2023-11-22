@@ -1,6 +1,6 @@
 import { isNullOrUndefined } from "./IApiClient"
 import { IGameSession, ITeam, ITeamAnswer } from "./Models"
-import { IChoice, IQuestion } from './Models/IQuestion'
+import { IChoice, IQuestion, IResponse } from './Models/IQuestion'
 import { ITeamMember } from './Models/ITeamMember'
 import { GameSessionState } from './AWSMobileApi'
 
@@ -109,14 +109,19 @@ export abstract class ModelHelper {
 
         return Math.round(totalNoChosenAnswer / gameSession.teams.length * 100)
     }
-
-    static calculateBasicModeScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam) {
+    static isShortAnswerResponseCorrect(shortAnswerResponses: IResponse[], team: ITeam){
+        return (shortAnswerResponses.some(response => 
+            response.isCorrect 
+            && response.teams.some(teamAnswer => teamAnswer.id === team.id)
+        ))
+    }
+    static calculateBasicModeScoreForQuestion(gameSession: IGameSession, question: IQuestion, team: ITeam, isShortAnswerEnabled: boolean) {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length === 0) {
             console.error("No team member exists for the specified team")
             throw new Error("No team member exists for the specified team")
         }
-
+        
         const answers = this.getBasicTeamMemberAnswersToQuestionId(team, question.id)
         if (isNullOrUndefined(answers) ||
             answers.length === 0) {
@@ -129,13 +134,19 @@ export abstract class ModelHelper {
 
         if (submittedTrickAnswer){
           return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+        } else {
+            if (!isShortAnswerEnabled && answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
+                return this.correctAnswerScore
+            } else {
+                const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses
+                if (isNullOrUndefined(teamResponses))
+                    return 0
+                if (ModelHelper.isShortAnswerResponseCorrect(teamResponses, team))
+                    return this.correctAnswerScore 
+            }
+            return 0;
         }
-        else if (answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
-          return this.correctAnswerScore
-        }
-        else{
-          return 0
-        }
+   
     }
 
     static findTeamInGameSession(gameSession: IGameSession, teamId: string): ITeam | null {

@@ -13,7 +13,11 @@ import SplashScreen from '../pages/pregame/SplashScreen';
 import EnterGameCode from '../pages/pregame/EnterGameCode';
 import EnterPlayerName from '../pages/pregame/EnterPlayerName';
 import SelectAvatar from '../pages/pregame/SelectAvatar';
-import { PregameState, LocalModel, StorageKey, StorageKeyAnswer } from '../lib/PlayModels';
+import {
+  PregameState,
+  LocalModel,
+  StorageKey,
+} from '../lib/PlayModels';
 import { isGameCodeValid, fetchLocalData } from '../lib/HelperFunctions';
 
 interface PregameFinished {
@@ -137,7 +141,7 @@ export function PregameContainer({ apiClient }: PregameFinished) {
           selectedAvatar,
           hasRejoined: false,
           currentTimer: gameSession.phaseOneTime,
-          answer: null
+          answer: null,
         };
         window.localStorage.setItem(StorageKey, JSON.stringify(storageObject));
         navigate(`/game`);
