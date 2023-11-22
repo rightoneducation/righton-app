@@ -12,6 +12,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
+import { buildShortAnswerResponses, getQuestionChoices } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -23,6 +24,11 @@ const GameSessionContainer = () => {
   const popularMistakesRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
+  // we're going to set this default condition to a query to the question object
+  // we're going to update the question object after the shortanswerresponses object is updated in the create team answer subscription
+  // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
+  // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
+  const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const apiClient = new ApiClient(Environment.Staging);
@@ -32,7 +38,7 @@ const GameSessionContainer = () => {
   const [gameTimer, setGameTimer] = useState(false);
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
-
+  const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -77,6 +83,7 @@ const GameSessionContainer = () => {
         setIsConfidenceEnabled(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
+        setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -89,6 +96,23 @@ const GameSessionContainer = () => {
 
       Promise.all(teamDataRequests)
         .then((responses) => {
+          // if shortAnswer is enabled we need to rebuild the shortAnswerResponses object on refresh
+          if (response.questions[response.currentQuestionIndex].isShortAnswerEnabled === true) {
+            responses.forEach((team) => {
+              team.teamMembers && team.teamMembers.forEach((teamMember) => {
+                teamMember.answers && teamMember.answers.forEach((answer) => {
+                  if (answer.questionId === response.questions[response.currentQuestionIndex].id 
+                    && (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && answer.isChosen) 
+                    || (response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && answer.isTrickAnswer)
+                  ) {
+                    setShortAnswerResponses((prev) => {
+                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
+                    });
+                  }
+                });
+              });
+            });
+          }
           setTeamsArray(responses);
         })
         .catch((reason) => console.log(reason));
@@ -103,6 +127,10 @@ const GameSessionContainer = () => {
           checkGameTimer(response);
         }
         setGameSession({ ...gameSession, ...response });
+        setIsConfidenceEnabled(
+          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+        );
+        setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
       },
     );
 
@@ -138,22 +166,32 @@ const GameSessionContainer = () => {
         }
       },
     );
-
+      
     // set up subscription for teams answering
     let createTeamAnswerSubscription: any | null = null;
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
-        setTeamsArray((prevState) => {
-          let newState = JSON.parse(JSON.stringify(prevState));
-          newState.forEach((team) => {
-            team.teamMembers &&
-              team.teamMembers.forEach((teamMember) => {
-                if (teamMember.id === teamAnswerResponse.teamMemberAnswersId)
-                  teamMember.answers.push(teamAnswerResponse);
-              });
+        let choices = '';
+        apiClient.getGameSession(gameSessionId).then((response) => {
+          choices = getQuestionChoices(response.questions, response.currentQuestionIndex);
+          let teamName = '';
+          setTeamsArray((prevState) => {
+            let newState = JSON.parse(JSON.stringify(prevState));
+            newState.forEach((team) => {
+              team.teamMembers &&
+                team.teamMembers.forEach((teamMember) => {
+                  if (teamMember.id === teamAnswerResponse.teamMemberAnswersId){
+                    teamMember.answers.push(teamAnswerResponse);
+                    teamName=team.name;
+                  }
+                });
+            });
+            setShortAnswerResponses((prev) => {
+              return buildShortAnswerResponses(prev, choices, teamAnswerResponse, teamName)
+            });
+            return newState;
           });
-          return newState;
         });
       },
     );
@@ -163,6 +201,7 @@ const GameSessionContainer = () => {
     updateTeamAnswerSubscription = apiClient.subscribeUpdateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
+        let teamName = '';
         setTeamsArray((prevState) => {
           let newState = JSON.parse(JSON.stringify(prevState));
           newState.forEach((team) => {
@@ -173,11 +212,23 @@ const GameSessionContainer = () => {
                     if (answer.id === teamAnswerResponse.id)
                       answer.confidenceLevel =
                         teamAnswerResponse.confidenceLevel;
+                      teamName = team.name;
                   });
                 }
               });
           });
           return newState;
+        });
+        setShortAnswerResponses((existingAnswers) => {
+          let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
+          newShortAnswers.forEach((answer) => {
+            answer.teams.forEach((answerTeam) => {
+              if (answerTeam.team === teamName) {
+                answerTeam.confidence = teamAnswerResponse.confidenceLevel;   
+              }
+            })
+          });
+          return newShortAnswers;
         });
       },
     );
@@ -235,6 +286,10 @@ const GameSessionContainer = () => {
     setIsConfidenceEnabled(event.target.checked);
   };
 
+  const handleShortAnswerChange = (event) => {
+    setIsShortAnswerEnabled(!isShortAnswerEnabled);
+  };
+
   const handleUpdateGameSession = (newUpdates: Partial<IGameSession>) => {
     apiClient
       .updateGameSession({ id: gameSessionId, ...newUpdates })
@@ -276,6 +331,8 @@ const GameSessionContainer = () => {
     const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
     const questionId = currentQuestion.id;
     const order = currentQuestion.order;
+    
+
     if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
       return;
     apiClient
@@ -284,6 +341,7 @@ const GameSessionContainer = () => {
         id: questionId,
         order: order,
         isConfidenceEnabled: isConfidenceEnabled,
+        isShortAnswerEnabled: isShortAnswerEnabled
       })
       .then((response) => {
         let newUpdates = {
@@ -339,6 +397,8 @@ const GameSessionContainer = () => {
           showFooterButtonOnly={false}
           isConfidenceEnabled={isConfidenceEnabled}
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          handleShortAnswerChange={handleShortAnswerChange}
           handleBeginQuestion={handleBeginQuestion}
           navDictionary={navDictionary}
           questionCardRef={questionCardRef}
@@ -346,6 +406,7 @@ const GameSessionContainer = () => {
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
           assembleNavDictionary={assembleNavDictionary}
+          shortAnswerResponses={shortAnswerResponses}
         />
       );
     }
@@ -365,12 +426,14 @@ const GameSessionContainer = () => {
           setIsLoadModalOpen={setIsLoadModalOpen}
           showFooterButtonOnly={false}
           isConfidenceEnabled={isConfidenceEnabled}
+          isShortAnswerEnabled={isShortAnswerEnabled}
           navDictionary={navDictionary}
           questionCardRef={questionCardRef}
           responsesRef={responsesRef}
           gameAnswersRef={gameAnswersRef}
           confidenceCardRef={confidenceCardRef}
           assembleNavDictionary={assembleNavDictionary}
+          shortAnswerResponses={shortAnswerResponses}
         />
       );
 

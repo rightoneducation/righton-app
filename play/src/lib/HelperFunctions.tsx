@@ -8,9 +8,10 @@ import {
   ITeamAnswerContent,
   IExtractedAnswer,
   INormAnswer,
+  AnswerType,
 } from '@righton/networking';
 import nlp from 'compromise';
-import { InputPlaceholder, StorageKey, LocalModel, AnswerType, StorageKeyAnswer } from './PlayModels';
+import { InputPlaceholder, StorageKey, LocalModel, StorageKeyAnswer } from './PlayModels';
 
 /**
  * check if name entered isn't empty or the default value
@@ -60,7 +61,7 @@ export const checkForSubmittedAnswerOnRejoin = (
     rawAnswer: '',
     normAnswer: [{
       value: '',
-      type: AnswerType.TEXT
+      type: AnswerType.EXPRESSION
     }],
     multiChoiceAnswerIndex: null,
     isSubmitted: false,
@@ -212,14 +213,14 @@ export const getAnswerFromDelta = (currentContents: any): IExtractedAnswer[] => 
     if(op.insert?.formula) {
       answer.push( {
         value: op.insert.formula,
-        type: AnswerType.FORMULA
+        type: AnswerType.EXPRESSION
       });
       return;
     }
     if(op.insert !== ' \n') { // skips space and linebreak quill adds at the end of a formula
       answer.push( {
         value: op.insert, 
-        type: AnswerType.TEXT,
+        type: AnswerType.STRING,
       });
     }
   });
@@ -261,10 +262,10 @@ export const handleNormalizeAnswers = (currentContents: any)  => {
     const norm: INormAnswer[] = [];
 
     if (answer){
-        if (answer.type === AnswerType.FORMULA) {
+        if (answer.type === AnswerType.EXPRESSION) {
           // 1. answer is a formula
           // removes all spaces
-          norm.push({value: raw.replace(/(\r\n|\n|\r|" ")/gm, ""), type: AnswerType.FORMULA });
+          norm.push({value: raw.replace(/(\r\n|\n|\r|" ")/gm, ""), type: AnswerType.EXPRESSION });
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
           norm.push({value: Number(raw), type: AnswerType.NUMBER});
@@ -289,7 +290,7 @@ export const handleNormalizeAnswers = (currentContents: any)  => {
           }
           // 4. any remaining content remaining is just a plain string 
           //    set normalized input to lower case and remove spaces
-          norm.push({value: numbersRemoved.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "").trim(), type: AnswerType.TEXT});
+          norm.push({value: numbersRemoved.toLowerCase().replace(/(\r\n|\n|\r|" ")/gm, "").trim(), type: AnswerType.STRING});
         }
     }
     return acc.concat(norm);

@@ -1,20 +1,19 @@
 import { GameSessionState } from "../AWSMobileApi";
-enum AnswerType {
+export enum AnswerType {
   MULTICHOICE,
-  TEXT,
+  STRING,
   NUMBER,
-  FORMULA,
+  EXPRESSION,
   NULL
 }
 
-export interface INormAnswerSubObj {
-  value: string | number;
+export interface IExtractedAnswer {
+  value: string;
   type: AnswerType;
 }
-
 export interface INormAnswer {
-  raw: string;
-  norm?: INormAnswerSubObj[];
+  value: string | number;
+  type: AnswerType;
 }
 
 export interface ITeamAnswerContent {
