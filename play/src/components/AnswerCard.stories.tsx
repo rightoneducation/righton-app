@@ -12,9 +12,7 @@ export default {
   component: AnswerCard,
 } as Meta<typeof AnswerCard>;
 
-const Template: StoryFn<typeof AnswerCard> = function AnswerCardTemplate(
-  args
-) {
+const Template: StoryFn<typeof AnswerCard> = function AnswerCardTemplate(args) {
   return (
     <ThemeProvider theme={Theme}>
       <I18nextProvider i18n={i18n}>

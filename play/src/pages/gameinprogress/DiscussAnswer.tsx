@@ -6,7 +6,7 @@ import {
   ModelHelper,
   ITeam,
   IQuestion,
-  IChoice
+  IChoice,
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -44,21 +44,22 @@ export default function DiscussAnswer({
   currentState,
   currentTeam,
   currentQuestion,
-  isShortAnswerEnabled
+  isShortAnswerEnabled,
 }: DiscussAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const correctAnswer = answerChoices?.find((answer) => answer.isAnswer);
-  const correctIndex = answerChoices?.findIndex(
-    (answer) => answer.isAnswer
-  );
+  const correctIndex = answerChoices?.findIndex((answer) => answer.isAnswer);
   const selectedAnswer = ModelHelper.getSelectedAnswer(
     currentTeam!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     currentQuestion,
     currentState
   );
-  const isPlayerCorrect = isShortAnswerEnabled 
-    ? ModelHelper.isShortAnswerResponseCorrect(currentQuestion.responses ?? [], currentTeam) 
+  const isPlayerCorrect = isShortAnswerEnabled
+    ? ModelHelper.isShortAnswerResponseCorrect(
+        currentQuestion.responses ?? [],
+        currentTeam
+      )
     : correctAnswer?.text === selectedAnswer?.text;
 
   const questionCorrectAnswerContents = (
@@ -124,7 +125,7 @@ export default function DiscussAnswer({
               !answer.isAnswer && (
                 <DiscussAnswerCard
                   isPlayerCorrect={isPlayerCorrect}
-                  instructions={instructions}
+                  instructions={instructions ?? ''}
                   answerStatus={
                     answer.text === selectedAnswer?.text
                       ? AnswerState.SELECTED
@@ -132,7 +133,7 @@ export default function DiscussAnswer({
                   }
                   answerText={answer.text}
                   answerIndex={index}
-                  answerReason={answer.reason}
+                  answerReason={answer.reason ?? ''}
                   currentState={currentState}
                   key={uuidv4()}
                 />

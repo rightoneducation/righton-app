@@ -2,7 +2,12 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Stack, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isNullOrUndefined, GameSessionState, ITeamAnswerContent, IChoice } from '@righton/networking';
+import {
+  isNullOrUndefined,
+  GameSessionState,
+  ITeamAnswerContent,
+  IChoice,
+} from '@righton/networking';
 import AnswerSelector from './AnswerSelector';
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 import { AnswerState } from '../lib/PlayModels';
@@ -12,7 +17,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 interface AnswerCardProps {
   answers: IChoice[] | undefined;
   isSubmitted: boolean;
-  handleSubmitAnswer: (answerText: ITeamAnswerContent ) => void;
+  handleSubmitAnswer: (answerText: ITeamAnswerContent) => void;
   currentState: GameSessionState;
   currentQuestionIndex: number;
   selectedAnswer: number | null;
@@ -31,10 +36,10 @@ export default function AnswerCard({
   const theme = useTheme();
   const { t } = useTranslation();
   const correctText = (
-    <Box display="inline" style={{width: '100%'}}>
+    <Box display="inline" style={{ width: '100%' }}>
       <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'left' }}>
         {t('gameinprogress.chooseanswer.answercard')}
-      </Typography> 
+      </Typography>
       <Typography variant="h4" display="inline">
         {t('gameinprogress.chooseanswer.correcttext1')}
       </Typography>

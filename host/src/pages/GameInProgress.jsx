@@ -11,9 +11,12 @@ import {
   getTotalAnswers,
   getQuestionChoices,
   getShortAnswers,
+  getShortAnswersPhaseTwo,
   getMultiChoiceAnswers,
+  getNoResponseTeams,
   buildVictoryDataObject,
-  buildVictoryDataObjectShortAnswer
+  buildVictoryDataObjectShortAnswer,
+  buildVictoryDataObjectShortAnswerPhaseTwo
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -42,7 +45,9 @@ export default function GameInProgress({
   responsesRef,
   gameAnswersRef,
   confidenceCardRef,
-  shortAnswerResponses
+  featuredMistakesRef,
+  shortAnswerResponses,
+  handleOnSelectMistake
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -62,13 +67,23 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
+
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
     () =>
-    (isShortAnswerEnabled && statePosition < 6
-      ? getShortAnswers(
-          shortAnswerResponses
-        )
+    (isShortAnswerEnabled
+      ? ( statePosition < 6 
+          ? getShortAnswers(
+              shortAnswerResponses
+            )
+          : getShortAnswersPhaseTwo(
+              shortAnswerResponses,
+              teamsArray, 
+              currentState, 
+              questions,
+              currentQuestionIndex
+            )
+        ) 
       : getMultiChoiceAnswers(
           questionChoices,
           teamsArray,
@@ -89,21 +104,29 @@ export default function GameInProgress({
     ],
   );
   const totalAnswers = getTotalAnswers(answers.answersArray);
-
-
+  const noResponseTeams = getNoResponseTeams(teams, answers.answersArray);
   const noResponseLabel = '–';
   const noResponseObject = {
     answerChoice: noResponseLabel,
     answerCount: numPlayers - totalAnswers,
     answerText: 'No response',
     answerCorrect: false,
+    answerTeams: noResponseTeams,
   };
   // data object used in Victory graph for real-time responses
-  const data = (isShortAnswerEnabled && (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || currentState === GameSessionState.PHASE_1_DISCUSS))
-    ? buildVictoryDataObjectShortAnswer(
-        shortAnswerResponses, 
-        noResponseObject
-      ) 
+  const data = (isShortAnswerEnabled )
+    ? ( statePosition < 6 
+      ? buildVictoryDataObjectShortAnswer(
+          shortAnswerResponses, 
+          noResponseObject
+        ) 
+        : 
+        buildVictoryDataObjectShortAnswerPhaseTwo(
+          shortAnswerResponses,
+          answers, 
+          noResponseObject
+        )
+      )
     : buildVictoryDataObject(
         answers, 
         questionChoices,
@@ -111,8 +134,6 @@ export default function GameInProgress({
       );
   // data object used in Victory graph for confidence responses
   const confidenceData = answers.confidenceArray;
-  // console.log(confidenceData);
-
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
     graph: null,
@@ -240,6 +261,7 @@ export default function GameInProgress({
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
             confidenceCardRef={confidenceCardRef}
+            featuredMistakesRef={featuredMistakesRef}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
             correctChoiceIndex={correctChoiceIndex}
@@ -249,6 +271,8 @@ export default function GameInProgress({
             teamsArray={teamsArray}
             isShortAnswerEnabled={isShortAnswerEnabled}
             handleShortAnswerChange={handleShortAnswerChange}
+            shortAnswerResponses={shortAnswerResponses}
+            handleOnSelectMistake={handleOnSelectMistake}
           />
         </div>
         <GameModal

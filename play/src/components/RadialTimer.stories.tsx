@@ -11,16 +11,17 @@ export default {
   component: RadialTimer,
 } as Meta<typeof RadialTimer>;
 
-const Template: StoryFn<typeof RadialTimer> =
-  function RadialTimerTemplate(args) {
-    return (
-      <ThemeProvider theme={Theme}>
-        <I18nextProvider i18n={i18n}>
-          <RadialTimer {...args} />
-        </I18nextProvider>
-      </ThemeProvider>
-    );
-  };
+const Template: StoryFn<typeof RadialTimer> = function RadialTimerTemplate(
+  args
+) {
+  return (
+    <ThemeProvider theme={Theme}>
+      <I18nextProvider i18n={i18n}>
+        <RadialTimer {...args} />
+      </I18nextProvider>
+    </ThemeProvider>
+  );
+};
 
 const countdownColor = 'rgba(225, 65, 107';
 
