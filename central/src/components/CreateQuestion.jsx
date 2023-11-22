@@ -16,6 +16,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const history = useHistory();
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
+  const [answerType, setAnswerType] = useState('number');
+  const [answerPrecision, setAnswerPrecision] = useState('ones');
 
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
@@ -129,6 +131,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
+    questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
 
     let newQuestion;
     if (questionToSend.id) {
@@ -185,6 +188,10 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
                 handleRemoveInstruction={handleRemoveInstruction}
                 addInstruction={addInstruction}
                 instructions={question?.instructions}
+                answerType={answerType}
+                setAnswerType={setAnswerType}
+                answerPrecision={answerPrecision}
+                setAnswerPrecision={setAnswerPrecision}
               />
             ))}
           </Grid>

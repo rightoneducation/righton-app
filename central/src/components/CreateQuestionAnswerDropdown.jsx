@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Typography, Card, CardContent, Collapse, Button, IconButton, TextField, List, ListItem } from "@material-ui/core";
+import { Grid, Typography, Card, CardContent, Collapse, Button, IconButton, TextField, List, ListItem, Box, RadioGroup, Radio, FormControlLabel } from "@material-ui/core";
 import { ExpandMore, Add } from '@material-ui/icons';
 
 export default function QuestionFormAnswerDropdown({
@@ -12,9 +12,14 @@ export default function QuestionFormAnswerDropdown({
   handleRemoveInstruction,
   onStepChangeMaker,
   instructions,
+  answerType,
+  setAnswerType,
+  answerPrecision,
+  setAnswerPrecision
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
+
 
   // instructions can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
   // TODO: clean up how we are handling instructions for more consistency
@@ -31,23 +36,84 @@ export default function QuestionFormAnswerDropdown({
   return (
     <Grid item xs={12}>
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>
-        <CardContent style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography className={classes.answer}>{index === 0 ? 'Correct answer:' : `Wrong Answer ${index}:`}</Typography>
-          <TextField
-            size="small"
-            style={{ width: 600, margin: 0 }}
-            id={`choice${index + 1}`}
-            value={choice.text}
-            onChange={onChoiceTextChangeMaker(index)}
-            label="Type Answer Here"
-            variant="outlined"
-            required
-          />
-          <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
-            <ExpandMore fontSize='large' />
-          </IconButton>
-        </CardContent>
-
+        <Box className={classes.correctCardBox}>
+          <CardContent style={{ display: 'flex', justifyContent: 'space-between', padding: 0 }}>
+            <Box style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 16 }}>
+              <Typography className={classes.answer}>{index === 0 ? 'Correct Answer:' : `Wrong Answer ${index}:`}</Typography>
+              <TextField
+                size="small"
+                style={{ width: 600, margin: 0, position: 'relative', left: 16 }}
+                id={`choice${index + 1}`}
+                value={choice.text}
+                onChange={onChoiceTextChangeMaker(index)}
+                label="Type Answer Here"
+                variant="outlined"
+                required
+              />
+            </Box>
+            <IconButton size='small' className={expanded ? classes.expanded : classes.expand} onClick={() => setExpanded(!expanded)}>
+              <ExpandMore fontSize='large' />
+            </IconButton>
+          </CardContent>
+          { index === 0 ? 
+            <>
+              <Box className={classes.answerTypeBox}> 
+                <Typography className={classes.answerType}>{"Answer Type: "}</Typography>
+                <RadioGroup value={answerType} row onChange={(event) => setAnswerType(event.target.value)}>
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'text'}
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Text'} 
+                  />
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'number'}
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Number'} 
+                  />
+                    <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'expresssion'}
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Mathematical Expression'} 
+                  />
+                </RadioGroup>
+              </Box>
+              {answerType === 'number' ?
+              <Box className={classes.answerTypeBox}> 
+                <Typography className={classes.answerType}>{"Decimal Places: "}</Typography>
+                <RadioGroup value={answerPrecision} row onChange={(event) => setAnswerPrecision(event.target.value)}>
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'ones'} 
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Ones (0)'} 
+                  />
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'tenths'} 
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Tenths (0.1)'} 
+                  />
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'hundredths'} 
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Hundredths (0.01)'}
+                  />
+                  <FormControlLabel 
+                    className={classes.radioLabel} 
+                    value={'thousandths'}
+                    control={<Radio className={classes.radioButton} />} 
+                    label={'Thousandths (0.001)'}
+                  />
+                </RadioGroup>
+              </Box>
+              : null}
+            </>
+          : null} 
+        </Box>
         <Collapse in={expanded}>
           <CardContent>
             <Typography className={classes.explanationTitle}>Explanation</Typography>
@@ -108,10 +174,30 @@ const useStyles = makeStyles(theme => ({
     border: '5px solid #4DED66',
     marginBottom: '20px',
   },
+  correctCardBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 16
+  },
+  answerTypeBox: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    gap: 32,
+  },
   answer: {
     fontWeight: 500,
     color: '#384466',
     fontSize: '18px',
+    width: '160px'
+  },
+  answerType: {
+    fontWeight: 500,
+    color: '#384466',
+    fontSize: '18px',
+    width: '160px',
+    padding: '7px 0'
   },
   expand: {
     float: 'right',
@@ -151,5 +237,14 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 50,
     color: 'white',
     fontSize: 17,
+  },  
+  radioButton: {
+    color: 'rgba(0, 0, 0, 0.50)',
+    '&.Mui-checked': {
+      color: 'rgba(0, 0, 0, 0.80)',
+    },
   },
+  radioLabel: {
+    color: 'rgba(0, 0, 0, 0.50)',
+  }
 }));
