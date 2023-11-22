@@ -12,14 +12,15 @@ export interface IExtractedAnswer {
   type: AnswerType;
 }
 export interface INormAnswer {
-  value: string | number;
-  type: AnswerType;
+    [AnswerType.NUMBER]: number[];
+    [AnswerType.STRING]: string[];
+    [AnswerType.EXPRESSION]: string[];
 }
 
 export interface ITeamAnswerContent {
   delta?: string;
   rawAnswer?: string; 
-  normAnswer?: INormAnswer[];
+  normAnswer?: INormAnswer;
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
   isSubmitted?: boolean;
