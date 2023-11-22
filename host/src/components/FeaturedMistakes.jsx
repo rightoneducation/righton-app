@@ -28,7 +28,7 @@ export default function FeaturedMistakes({
         acc.push({
           answer: shortAnswerResponse.value, 
           percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
-          isSelected: false
+          isSelected: shortAnswerResponse.isSelectedMistake ?? false
         });
       };
       return acc;
@@ -80,7 +80,6 @@ export default function FeaturedMistakes({
   useEffect(() => {
     setSortedMistakes(sortMistakes(shortAnswerResponses, totalAnswers));
   }, [shortAnswerResponses, totalAnswers]);
-
   return(
     <Paper className={classes.background} elevation={0}>
         <Typography className={classes.title}>{title}</Typography>

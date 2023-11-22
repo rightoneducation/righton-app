@@ -7,6 +7,7 @@ import {
   GameSessionState,
   ITeamAnswerContent,
   IChoice,
+  IResponse
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -62,7 +63,6 @@ export default function ChooseAnswer({
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-
   const questionContents = (
     <ScrollBoxStyled>
       <QuestionCard questionText={questionText} imageUrl={questionUrl} />
@@ -109,7 +109,6 @@ export default function ChooseAnswer({
         {t('gameinprogress.chooseanswer.answerthankyou1')}
       </Typography>
     );
-
   const answerContents = (
     <ScrollBoxStyled>
       {isShortAnswerEnabled &&

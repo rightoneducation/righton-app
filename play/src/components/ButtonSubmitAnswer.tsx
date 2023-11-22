@@ -6,6 +6,7 @@ import {
   GameSessionState,
   INormAnswer,
   IChoice,
+  AnswerType
 } from '@righton/networking';
 import {
   GamePlayButtonStyled,
@@ -47,12 +48,12 @@ export default function ButtonSubmitAnswer({
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
         const answer = {
           rawAnswer: answerText ?? '',
-          normAnswer: [
+          normAnswer: 
             {
-              value: answerText ?? '',
-              type: 0,
+              [AnswerType.NUMBER]: [],
+              [AnswerType.STRING]: [],
+              [AnswerType.EXPRESSION]: [],
             } as INormAnswer,
-          ],
           multiChoiceAnswerIndex: selectedAnswer,
           isSubmitted: true,
           currentState,

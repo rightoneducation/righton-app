@@ -64,12 +64,11 @@ export const checkForSubmittedAnswerOnRejoin = (
   let returnedAnswer: ITeamAnswerContent = {
     delta: '',
     rawAnswer: '',
-    normAnswer: [
-      {
-        value: '',
-        type: AnswerType.EXPRESSION,
-      },
-    ],
+    normAnswer: {
+      [AnswerType.NUMBER]: [], 
+      [AnswerType.STRING]: [], 
+      [AnswerType.EXPRESSION]: []
+    },
     multiChoiceAnswerIndex: null,
     isSubmitted: false,
     currentState: null,
@@ -257,8 +256,8 @@ export const isNumeric = (num: any) => // eslint-disable-line @typescript-eslint
 /**
  * This function is run on submit of an answer and normalizes the contents of the Quill editor
  * so that it can be compared to the answer choices on the host side
- *
- * for more information see:
+ * 
+ * for more information see: https://github.com/rightoneducation/righton-app/wiki/Short-Answer-Responses-%E2%80%90-Answer-Normalization
  * @param currentContents: IAnswerText[]
  * @returns normalizedAnswers: IAnswerText[]
  */
@@ -266,47 +265,47 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
   // used later in the map for removing special characters
   // eslint-disable-next-line prefer-regex-literals
   const specialCharsRegex = new RegExp(
-    `[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,.<>\\/?~-] `,
+    `[!@#$%^&*()_\\+=\\[\\]{};:'"\\\\|,<>\\/?~-]`,
     'gm'
   );
   const extractedAnswer = getAnswerFromDelta(currentContents);
   const rawArray: string[] = [];
-
-  const normalizedAnswer: INormAnswer[] = extractedAnswer.reduce<INormAnswer[]>(
-    (acc: INormAnswer[], answer) => {
+  const normalizedAnswer: INormAnswer = {
+    [AnswerType.NUMBER]: [], 
+    [AnswerType.STRING]: [], 
+    [AnswerType.EXPRESSION]: []
+  };
+  extractedAnswer.forEach((answer) => {
       // replaces \n with spaces, maintain everything else
       const raw = `${answer.value.replace(/\n/g, ' ')}`;
       rawArray.push(raw);
-      const norm: INormAnswer[] = [];
-
       if (answer) {
-        if (answer.type === AnswerType.EXPRESSION) {
+        if (Number(answer.type) === AnswerType.EXPRESSION) {
           // 1. answer is a formula
           // removes all spaces
-          norm.push({
-            value: raw.replace(/(\r\n|\n|\r|" ")/gm, ''),
-            type: AnswerType.EXPRESSION,
-          });
+          normalizedAnswer[AnswerType.EXPRESSION].push(
+            raw.replace(/(\r\n|\n|\r|\s|" ")/gm, ''),
+          );
         } else if (isNumeric(raw) === true) {
           // 2. answer is a number, exclusively
-          norm.push({ value: Number(raw), type: AnswerType.NUMBER });
+          normalizedAnswer[AnswerType.NUMBER].push(Number(raw));
         } else {
           // 3. answer is a string
           //  we will produce a naive normalization of the string, attempting to extract numeric answers and then
           //  reducing case and removing characters
 
           // this extracts numeric values from a string and adds them to the normalized text array.
+          // cuts special characters first so 5% and 50% don't match based on % (when numbers are removed)
           // it then removes those numbers from the string
-          const extractedNumbers = raw.match(/-?\d+(\.\d+)?/g)?.map(Number);
+          const specialCharRemoved = raw.replace(specialCharsRegex, '');
+          const extractedNumbers = specialCharRemoved.match(/-?\d+(\.\d+)?|\.\d+/g)?.map(Number);
           if (extractedNumbers) {
-            norm.push(
-              ...extractedNumbers.map((value) => ({
-                value: Number(value),
-                type: AnswerType.NUMBER,
-              }))
+            normalizedAnswer[AnswerType.NUMBER].push(
+              ...extractedNumbers.map((value) => (value
+              ))
             );
           }
-          const numbersRemoved = raw.replace(/-?\d+(\.\d+)?/g, '');
+          const numbersRemoved = specialCharRemoved.replace(/-?\d+(\.\d+)?/g, '');
 
           // this attempts to extract any written numbers (ex. fifty five) after removing any special characters
           // eslint-disable-next-line prefer-regex-literals
@@ -316,28 +315,34 @@ export const handleNormalizeAnswers = (currentContents: any) => { // eslint-disa
             .numbers()
             .json();
           if (detectedNumbers.length > 0) {
-            norm.push(
-              ...detectedNumbers.map((num: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
-                value: Number(num.number.num),
-                type: AnswerType.NUMBER,
-              }))
+            normalizedAnswer[AnswerType.NUMBER].push(
+              ...detectedNumbers.map((num: any) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
+                Number(num.number.num)
+               ))
             );
           }
           // 4. any remaining content remaining is just a plain string
           //    set normalized input to lower case and remove spaces
-          norm.push({
-            value: numbersRemoved
+
+        if (numbersRemoved !== '') {
+          normalizedAnswer[AnswerType.STRING].push(
+            numbersRemoved
               .toLowerCase()
               .replace(/(\r\n|\n|\r|" ")/gm, '')
-              .trim(),
-            type: AnswerType.STRING,
-          });
+              .trim()
+          );
+        }
         }
       }
-      return acc.concat(norm);
-    },
-    []
+      return normalizedAnswer;
+    }
   );
+  // if a student enters multiple numeric answers, we will treat those answers as a single string
+  // this prevents them from being awarded points as well as matching other students single number answers
+  if (normalizedAnswer[AnswerType.NUMBER].length > 1){
+    normalizedAnswer[AnswerType.STRING].push(normalizedAnswer[AnswerType.NUMBER].toString());
+    normalizedAnswer[AnswerType.NUMBER] = [];
+  }
   const rawAnswer = rawArray.join('').trim();
   return { normalizedAnswer, rawAnswer };
 };
