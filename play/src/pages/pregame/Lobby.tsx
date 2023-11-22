@@ -17,20 +17,14 @@ interface LobbyProps {
   teamId?: string;
 }
 
-export default function Lobby({
-  mode,
-  teams,
-  currentState,
-  teamAvatar,
-  teamId,
-}: LobbyProps) {
+export default function Lobby({ mode, teams, currentState, teamAvatar, teamId }: LobbyProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  switch (mode) {
-    case LobbyMode.REJOIN:
-      return (
-        <BackgroundContainerStyled>
-          <Box
+  switch(mode){
+  case(LobbyMode.REJOIN):
+    return (
+      <BackgroundContainerStyled>
+         <Box
             data-testid="lobby-rejoin"
             sx={{
               height: '100%',
@@ -59,16 +53,11 @@ export default function Lobby({
             />
           </Box>
         </BackgroundContainerStyled>
-      );
-    case LobbyMode.PREQUESTION:
+    );
+    case(LobbyMode.PREQUESTION):
       return (
-        <Leaderboard
-          teams={teams}
-          currentState={currentState!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamAvatar={teamAvatar!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          teamId={teamId!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        />
-      );
+        <Leaderboard teams={teams} currentState={currentState!} teamAvatar={teamAvatar!} teamId={teamId!}/>
+      )
     default:
       return (
         <BackgroundContainerStyled>

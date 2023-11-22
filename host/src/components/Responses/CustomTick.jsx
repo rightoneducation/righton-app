@@ -16,9 +16,9 @@ export default function CustomTick({
   largePadding,
 }) {
   const classes = useStyles();
-  const showCustomTick = index ===  correctChoiceIndex;
+  const showCustomTick = index === data.length - 1 - correctChoiceIndex;
   const fillTick = statePosition === 6 && showCustomTick;
-  const isNoResponse = index === 0;
+  const isNoResponse = index === data.length - 1;
   const commonStyle = {
     fill: fillTick ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.5)',
     fontFamily: 'Poppins',

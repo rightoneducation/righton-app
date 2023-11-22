@@ -66,9 +66,11 @@
       "swipealert": "Desliza el dedo hacia la izquierda para responder a la pregunta."
     },
     "chooseanswer": {
+      "questioncolumn": "Pregunta",
+      "answercolumn": "Respuesta",
       "answerthankyou1": "¡Gracias por enviar!",
       "answerthankyou2": "Esperando a que tu profesor avance a la siguiente sección.",
-      "correcttext1": "¿Cuál crees que es la",
+      "correcttext1": "Elegir el",
       "correcttext2": "respuesta correcta",
       "incorrecttext1": "¿Cuál crees que es la",
       "incorrecttext2": "respuesta incorrecta",
@@ -81,11 +83,7 @@
       "confidenceoption4": "Muy",
       "confidenceoption5": "Totalmente",
       "sendingconfidenceresponse": "Enviando tu respuesta...",
-      "submittedconfidenceresponse": "Your response has been submitted.",
-      "questioncard": "Pregunta",
-      "answercard": "Elige la respuesta correcta",
-      "openanswercard": "Introduce tu respuesta",
-      "openanswercardplaceholder": "Ingresa tu respuesta aquí..."
+      "submittedconfidenceresponse": "Your response has been submitted."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",

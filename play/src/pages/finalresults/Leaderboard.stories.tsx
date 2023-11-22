@@ -17,17 +17,16 @@ export default {
   component: Leaderboard,
 } as Meta<typeof Leaderboard>;
 
-const Template: StoryFn<typeof Leaderboard> = function LeaderboardTemplate(
-  args
-) {
-  return (
-    <ThemeProvider theme={Theme}>
-      <I18nextProvider i18n={i18n}>
-        <Leaderboard {...args} />
-      </I18nextProvider>
-    </ThemeProvider>
-  );
-};
+const Template: StoryFn<typeof Leaderboard> =
+  function LeaderboardTemplate(args) {
+    return (
+      <ThemeProvider theme={Theme}>
+        <I18nextProvider i18n={i18n}>
+          <Leaderboard {...args} />
+        </I18nextProvider>
+      </ThemeProvider>
+    );
+  };
 
 const gameSession = GameSessionParser.gameSessionFromAWSGameSession(
   MockGameSession as IAWSGameSession

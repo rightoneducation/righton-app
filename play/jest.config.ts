@@ -4,7 +4,7 @@ import path from 'path';
 const networkingPath = path.resolve(__dirname, '../networking/lib/src');
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
   setupFiles: ['whatwg-fetch'],
   roots: ['<rootDir>'],
   testRegex: '((\\.| /)(test|spec))\\.(jsx?|tsx?)$',
@@ -26,8 +26,8 @@ const config: Config.InitialOptions = {
     ],
   },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@aws-sdk|uuid|swiper|ssr-window|katex))',
-    '<rootDir>/../networking/node_modules/(?!(@aws-sdk|uuid|katex))',
+    '<rootDir>/node_modules/(?!(@aws-sdk|uuid|swiper|ssr-window))',
+    '<rootDir>/../networking/node_modules/(?!(@aws-sdk|uuid))',
   ],
   watchman: false,
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],

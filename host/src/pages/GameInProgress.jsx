@@ -10,13 +10,8 @@ import GameInProgressContentSwitch from '../components/GameInProgressContentSwit
 import {
   getTotalAnswers,
   getQuestionChoices,
-  getShortAnswers,
-  getShortAnswersPhaseTwo,
-  getMultiChoiceAnswers,
-  getNoResponseTeams,
-  buildVictoryDataObject,
-  buildVictoryDataObjectShortAnswer,
-  buildVictoryDataObjectShortAnswerPhaseTwo
+  getAnswersByQuestion,
+  getTeamByQuestion,
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -36,8 +31,6 @@ export default function GameInProgress({
   showFooterButtonOnly,
   isConfidenceEnabled,
   handleConfidenceSwitchChange,
-  isShortAnswerEnabled,
-  handleShortAnswerChange,
   handleBeginQuestion,
   navDictionary,
   assembleNavDictionary,
@@ -45,9 +38,6 @@ export default function GameInProgress({
   responsesRef,
   gameAnswersRef,
   confidenceCardRef,
-  featuredMistakesRef,
-  shortAnswerResponses,
-  handleOnSelectMistake
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -64,76 +54,54 @@ export default function GameInProgress({
   };
   const numPlayers = teams ? teams.length : 0;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
-  const correctChoiceIndex =
-    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
-  const answers = useMemo(
+  const answersByQuestion = useMemo(
     () =>
-    (isShortAnswerEnabled
-      ? ( statePosition < 6 
-          ? getShortAnswers(
-              shortAnswerResponses
-            )
-          : getShortAnswersPhaseTwo(
-              shortAnswerResponses,
-              teamsArray, 
-              currentState, 
-              questions,
-              currentQuestionIndex
-            )
-        ) 
-      : getMultiChoiceAnswers(
-          questionChoices,
-          teamsArray,
-          currentQuestionIndex,
-          questions,
-          currentState,
-          correctChoiceIndex,
-        )
+      getAnswersByQuestion(
+        questionChoices,
+        teamsArray,
+        currentQuestionIndex,
+        questions,
+        currentState,
       ),
     [
-      shortAnswerResponses,
       questionChoices,
       teamsArray,
       currentQuestionIndex,
       questions,
       currentState,
-      correctChoiceIndex
     ],
   );
-  const totalAnswers = getTotalAnswers(answers.answersArray);
-  const noResponseTeams = getNoResponseTeams(teams, answers.answersArray);
+  const correctChoiceIndex =
+    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  const totalAnswers = getTotalAnswers(answersByQuestion.answersArray);
+  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
+  const teamsPickedChoices = getTeamByQuestion(
+    teamsArray,
+    currentQuestionIndex,
+    questionChoices,
+    questions,
+    currentState,
+  );
   const noResponseLabel = '–';
-  const noResponseObject = {
-    answerChoice: noResponseLabel,
-    answerCount: numPlayers - totalAnswers,
-    answerText: 'No response',
-    answerCorrect: false,
-    answerTeams: noResponseTeams,
-  };
   // data object used in Victory graph for real-time responses
-  const data = (isShortAnswerEnabled )
-    ? ( statePosition < 6 
-      ? buildVictoryDataObjectShortAnswer(
-          shortAnswerResponses, 
-          noResponseObject
-        ) 
-        : 
-        buildVictoryDataObjectShortAnswerPhaseTwo(
-          shortAnswerResponses,
-          answers, 
-          noResponseObject
-        )
-      )
-    : buildVictoryDataObject(
-        answers, 
-        questionChoices,
-        noResponseObject
-      );
+  const data = [
+    {
+      answerChoice: noResponseLabel,
+      answerCount: numPlayers - totalAnswers,
+      answerText: 'No response',
+    },
+    ...Object.keys(answersByQuestion.answersArray).map((key, index) => ({
+      answerCount: answersByQuestion.answersArray[index],
+      answerChoice: String.fromCharCode(65 + index),
+      // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
+      answerText: questionChoices[index].text,
+    })),
+  ].reverse();
+
   // data object used in Victory graph for confidence responses
-  const confidenceData = answers.confidenceArray;
+  const confidenceData = answersByQuestion.confidenceArray;
+
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
     graph: null,
@@ -251,17 +219,17 @@ export default function GameInProgress({
             questions={questions}
             questionChoices={questionChoices}
             currentQuestionIndex={currentQuestionIndex}
-            answers={answers.answersArray}
+            answersByQuestion={answersByQuestion.answersArray}
             totalAnswers={totalAnswers}
             numPlayers={numPlayers}
             statePosition={statePosition}
+            teamsPickedChoices={teamsPickedChoices}
             data={data}
             confidenceData={confidenceData}
             questionCardRef={questionCardRef}
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
             confidenceCardRef={confidenceCardRef}
-            featuredMistakesRef={featuredMistakesRef}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
             correctChoiceIndex={correctChoiceIndex}
@@ -269,10 +237,6 @@ export default function GameInProgress({
             isConfidenceEnabled={isConfidenceEnabled}
             handleConfidenceSwitchChange={handleConfidenceSwitchChange}
             teamsArray={teamsArray}
-            isShortAnswerEnabled={isShortAnswerEnabled}
-            handleShortAnswerChange={handleShortAnswerChange}
-            shortAnswerResponses={shortAnswerResponses}
-            handleOnSelectMistake={handleOnSelectMistake}
           />
         </div>
         <GameModal
