@@ -10,6 +10,8 @@ import {
   ModelHelper,
   ConfidenceLevel,
   isNullOrUndefined,
+  ITeamAnswerContent,
+  IChoice,
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -27,7 +29,7 @@ import {
   checkForSelectedConfidenceOnRejoin,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel } from '../lib/PlayModels';
+import { ErrorType, LocalModel, StorageKeyAnswer } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -41,15 +43,11 @@ interface GameInProgressProps {
   currentQuestionIndex?: number | null;
   teamId: string;
   score: number;
-  answerChoices: {
-    id: string;
-    text: string;
-    isCorrectAnswer: boolean;
-    reason: string;
-  }[];
+  answerChoices: IChoice[];
   hasRejoined: boolean;
   currentTimer: number;
   localModel: LocalModel;
+  isShortAnswerEnabled: boolean;
 }
 
 export default function GameInProgress({
@@ -68,6 +66,7 @@ export default function GameInProgress({
   hasRejoined,
   currentTimer,
   localModel,
+  isShortAnswerEnabled,
 }: GameInProgressProps) {
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
@@ -125,24 +124,22 @@ export default function GameInProgress({
       : phaseTwoTime;
   const questionUrl = currentQuestion?.imageUrl;
   const instructions = currentQuestion?.instructions;
+
   const [timerIsPaused, setTimerIsPaused] = useState<boolean>(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   // state for whether a player is selecting an answer and if they submitted that answer
   // initialized through a check on hasRejoined to prevent double answers on rejoin
-  const [selectSubmitAnswer, setSelectSubmitAnswer] = useState<{
-    selectedAnswerIndex: number | null;
-    isSubmitted: boolean;
-  }>(() => {
-    let rejoinSubmittedAnswer = null;
-    rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+  const [answerContent, setAnswerContent] = useState<ITeamAnswerContent>(() => {
+    const rejoinSubmittedAnswer = checkForSubmittedAnswerOnRejoin(
+      localModel,
       hasRejoined,
-      teamAnswers,
-      answerChoices,
-      currentState
+      currentState,
+      currentQuestionIndex ?? 0
     );
     return rejoinSubmittedAnswer;
   });
+
   const [displaySubmitted, setDisplaySubmitted] = useState<boolean>(
-    !isNullOrUndefined(selectSubmitAnswer.selectedAnswerIndex)
+    !isNullOrUndefined(answerContent.multiChoiceAnswerIndex)
   );
   const currentAnswer = teamAnswers?.find(
     (answer) => answer?.questionId === currentQuestion.id
@@ -150,6 +147,11 @@ export default function GameInProgress({
   const [teamAnswerId, setTeamAnswerId] = useState<string>(
     currentAnswer?.id ?? ''
   ); // This will be moved later (work in progress - Drew)
+  const handleTimerIsFinished = () => {
+    setAnswerContent((prev) => ({ ...prev, isSubmitted: true }));
+    setTimerIsPaused(true);
+  };
+
   // Initialized through a check on hasRejoined to repopulate conifdence related fields accordingly
   const [selectConfidence, setSelectConfidence] = useState<{
     selectedConfidenceOption: string;
@@ -165,29 +167,22 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  const handleTimerIsFinished = () => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
-    setTimerIsPaused(true);
-  };
-
-  const handleSubmitAnswer = async (answerText: string) => {
+  const handleSubmitAnswer = async (result: ITeamAnswerContent) => {
+    const answer = { ...result, isSubmitted: true };
     try {
       const response = await apiClient.addTeamAnswer(
         teamMemberId,
         currentQuestion.id,
-        answerText,
-        '{}',
+        JSON.stringify(result.rawAnswer),
+        answer,
         currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
         currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
       );
-      const responseGame = await apiClient.getGameSession(
-        localModel.gameSessionId
-      );
-      console.log(responseGame);
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
       setTeamAnswerId(response.id);
-      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: true }));
+      setAnswerContent(answer);
       setDisplaySubmitted(true);
-    } catch {
+    } catch (e) {
       setIsAnswerError(true);
     }
   };
@@ -195,7 +190,7 @@ export default function GameInProgress({
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
-      setSelectSubmitAnswer((prev) => ({ ...prev, isSubmitted: false }));
+      setAnswerContent((prev) => ({ ...prev, isSubmitted: false }));
     }
     if (isConfidenceError) {
       setIsConfidenceError(false);
@@ -208,16 +203,23 @@ export default function GameInProgress({
   };
 
   const handleSelectAnswer = (index: number) => {
-    setSelectSubmitAnswer((prev) => ({ ...prev, selectedAnswerIndex: index }));
+    window.localStorage.setItem(
+      StorageKeyAnswer,
+      JSON.stringify({
+        multiChoiceAnswerIndex: index,
+        isSubmitted: false,
+        currentState,
+        currentQuestionIndex: currentQuestionIndex ?? 0,
+      } as ITeamAnswerContent)
+    );
+    setAnswerContent((prev) => ({ ...prev, multiChoiceAnswerIndex: index }));
   };
 
   const setTimeOfLastConfidenceSelect = (time: number) => {
     setSelectConfidence((prev) => ({ ...prev, timeOfLastSelect: time }));
   };
 
-  const handleSelectConfidence = async (
-    confidence: ConfidenceLevel
-  ) => {
+  const handleSelectConfidence = async (confidence: ConfidenceLevel) => {
     try {
       // since subscription.isLoading does not update when user selects answer,
       // set isSelected to false when user selects or reselects confidence so
@@ -230,7 +232,7 @@ export default function GameInProgress({
         selectedConfidenceOption: confidence,
         isSelected: true,
       }));
-    } catch {
+    } catch (e) {
       setIsConfidenceError(true);
     }
   };
@@ -270,17 +272,16 @@ export default function GameInProgress({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         {currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-          currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+        currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
           <ChooseAnswer
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
             answerChoices={answerChoices}
-            isSubmitted={selectSubmitAnswer.isSubmitted}
+            isSubmitted={answerContent.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}
             handleSubmitAnswer={handleSubmitAnswer}
             currentState={currentState}
-            selectedAnswer={selectSubmitAnswer.selectedAnswerIndex}
             handleSelectAnswer={handleSelectAnswer}
             isConfidenceEnabled={currentQuestion.isConfidenceEnabled}
             handleSelectConfidence={handleSelectConfidence}
@@ -288,6 +289,9 @@ export default function GameInProgress({
             selectedConfidenceOption={selectConfidence.selectedConfidenceOption}
             timeOfLastConfidenceSelect={selectConfidence.timeOfLastSelect}
             setTimeOfLastConfidenceSelect={setTimeOfLastConfidenceSelect}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            answerContent={answerContent}
+            currentQuestionIndex={currentQuestionIndex ?? 0}
           />
         ) : (
           <DiscussAnswer
@@ -299,6 +303,7 @@ export default function GameInProgress({
             currentState={currentState}
             currentTeam={currentTeam!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             currentQuestion={currentQuestion}
+            isShortAnswerEnabled={isShortAnswerEnabled}
           />
         )}
       </BodyStackContainerStyled>

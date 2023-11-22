@@ -1,3 +1,4 @@
+import { ITeamAnswerContent } from '@righton/networking';
 import Icon0 from '../img/MonsterIcon0.svg';
 import Icon1 from '../img/MonsterIcon1.svg';
 import Icon2 from '../img/MonsterIcon2.svg';
@@ -87,7 +88,7 @@ export enum LobbyMode {
   LOADING,
   READY,
   REJOIN,
-  PREQUESTION
+  PREQUESTION,
 }
 
 export enum TimerMode {
@@ -128,6 +129,7 @@ export interface LocalModel {
   selectedAvatar: number;
   hasRejoined: boolean;
   currentTimer: number;
+  answer: ITeamAnswerContent | null;
 }
 
 interface MonsterMap {
@@ -186,3 +188,9 @@ export enum InputPlaceholder {
  *  string key for storage of game data in users local storage
  */
 export const StorageKey = 'rightOn';
+
+/**
+ * string for storage of answer data in users local storage
+ * kept separate from StorageKey so that timer and answer updates don't conflict
+ */
+export const StorageKeyAnswer = 'rightOnAnswer';
