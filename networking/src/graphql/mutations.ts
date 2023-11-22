@@ -50,7 +50,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -164,7 +164,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -278,7 +278,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
                 questionId
                 isChosen
                 text
-                awsAnswerContents
+                awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
                 createdAt
@@ -466,7 +466,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
             questionId
             isChosen
             text
-            awsAnswerContents
+            awsAnswerContent
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -536,7 +536,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
             questionId
             isChosen
             text
-            awsAnswerContents
+            awsAnswerContent
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -606,7 +606,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
             questionId
             isChosen
             text
-            awsAnswerContents
+            awsAnswerContent
             isTrickAnswer
             confidenceLevel
             createdAt
@@ -654,7 +654,7 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
         questionId
         isChosen
         text
-        awsAnswerContents
+        awsAnswerContent
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -689,7 +689,7 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
         questionId
         isChosen
         text
-        awsAnswerContents
+        awsAnswerContent
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -724,7 +724,7 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
         questionId
         isChosen
         text
-        awsAnswerContents
+        awsAnswerContent
         isTrickAnswer
         confidenceLevel
         createdAt
@@ -755,7 +755,7 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
     questionId
     isChosen
     text
-    awsAnswerContents
+    awsAnswerContent
     isTrickAnswer
     confidenceLevel
     createdAt
@@ -777,7 +777,7 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
     questionId
     isChosen
     text
-    awsAnswerContents
+    awsAnswerContent
     isTrickAnswer
     confidenceLevel
     createdAt
@@ -799,7 +799,7 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
     questionId
     isChosen
     text
-    awsAnswerContents
+    awsAnswerContent
     isTrickAnswer
     confidenceLevel
     createdAt

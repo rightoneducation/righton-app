@@ -5,6 +5,7 @@ import {
   GameSessionState,
   IGameSession,
   ITeamAnswer,
+  IChoice,
   ModelHelper,
 } from '@righton/networking';
 import ResultSelector from './ResultSelector';
@@ -13,7 +14,7 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 
 interface CardResultsProps {
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  answers: IChoice[];
   selectedAnswer: ITeamAnswer | null;
   currentState: GameSessionState;
   currentQuestionId: number;
@@ -28,11 +29,11 @@ export default function CardResults({
   gameSession,
 }: CardResultsProps) {
   // determines what type of answer result to display
-  const answerType = (answer: { text: string; isCorrectAnswer: boolean }) => {
-    if (answer?.isCorrectAnswer && answer?.text === selectedAnswer?.text)
+  const answerType = (answer: { text: string; isAnswer: boolean }) => {
+    if (answer?.isAnswer && answer?.text === selectedAnswer?.text)
       return AnswerState.PLAYER_SELECTED_CORRECT;
     if (answer?.text === selectedAnswer?.text) return AnswerState.SELECTED;
-    if (answer?.isCorrectAnswer) return AnswerState.CORRECT;
+    if (answer?.isAnswer) return AnswerState.CORRECT;
     return AnswerState.DEFAULT;
   };
 
