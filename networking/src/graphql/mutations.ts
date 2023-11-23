@@ -26,6 +26,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
@@ -95,6 +96,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         id
         text
         choices
+        answerSettings
         imageUrl
         instructions
         standard
@@ -138,6 +140,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
@@ -207,6 +210,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         id
         text
         choices
+        answerSettings
         imageUrl
         instructions
         standard
@@ -250,6 +254,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
@@ -319,6 +324,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         id
         text
         choices
+        answerSettings
         imageUrl
         instructions
         standard
@@ -352,6 +358,7 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     id
     text
     choices
+    answerSettings
     imageUrl
     instructions
     standard
@@ -378,6 +385,7 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     id
     text
     choices
+    answerSettings
     imageUrl
     instructions
     standard
@@ -404,6 +412,7 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     id
     text
     choices
+    answerSettings
     imageUrl
     instructions
     standard
@@ -433,6 +442,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       id
       text
       choices
+      answerSettings
       imageUrl
       instructions
       standard
@@ -502,6 +512,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       id
       text
       choices
+      answerSettings
       imageUrl
       instructions
       standard
@@ -571,6 +582,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       id
       text
       choices
+      answerSettings
       imageUrl
       instructions
       standard
