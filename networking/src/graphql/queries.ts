@@ -23,6 +23,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
@@ -92,6 +93,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         id
         text
         choices
+        answerSettings
         imageUrl
         instructions
         standard
@@ -137,6 +139,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             id
             text
             choices
+            answerSettings
             imageUrl
             instructions
             standard
@@ -206,6 +209,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
@@ -239,6 +243,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     id
     text
     choices
+    answerSettings
     imageUrl
     instructions
     standard
@@ -277,6 +282,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       id
       text
       choices
+      answerSettings
       imageUrl
       instructions
       standard
@@ -306,6 +312,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       id
       text
       choices
+      answerSettings
       imageUrl
       instructions
       standard
@@ -374,6 +381,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         id
         text
         choices
+        answerSettings
         imageUrl
         instructions
         standard
@@ -578,6 +586,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             id
             text
             choices
+            answerSettings
             imageUrl
             instructions
             standard
@@ -647,6 +656,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
@@ -703,6 +713,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             id
             text
             choices
+            answerSettings
             imageUrl
             instructions
             standard
@@ -772,6 +783,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           id
           text
           choices
+          answerSettings
           imageUrl
           instructions
           standard
