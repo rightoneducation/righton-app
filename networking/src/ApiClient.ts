@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
+import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -536,6 +536,7 @@ type AWSQuestion = {
     id: number
     text: string
     choices?: string | null
+    answerSettings?: string | null
     responses?: string | null
     imageUrl?: string | null
     instructions?: string | null
@@ -717,6 +718,9 @@ export class GameSessionParser {
                     choices: isNullOrUndefined(awsQuestion.choices)
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
+                    answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
+                        ? null
+                        : JSON.parse(awsQuestion.answerSettings) as IAnswerSettings,
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),
