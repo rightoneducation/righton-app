@@ -302,7 +302,8 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   if (prevShortAnswer.length === 0) { 
     let correctAnswer = choices.find(choice => choice.isAnswer).text;
     prevShortAnswer.push({
-      value: [correctAnswer],
+      rawAnswer: [correctAnswer],
+      normAnswer: [correctAnswer],
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,
@@ -312,7 +313,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   let isExistingAnswer = false;  
   // check the new answer against the previously submitted answers and the correct answer
   prevShortAnswer.forEach((prevAnswer) => {
-    if(newAnswer.isEqualTo(prevAnswer.value)){
+    if(newAnswer.isEqualTo(prevAnswer.normAnswer)){
       isExistingAnswer = true;
       prevAnswer.count += 1;
       prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
@@ -321,7 +322,8 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   // if there was no match above, add the new answer to the array of previous answers
   if (!isExistingAnswer){
     prevShortAnswer.push({
-      value: newAnswer.answerContent.normAnswer,
+      rawAnswer: newAnswer.answerContent.rawAnswer,
+      normAnswer: newAnswer.answerContent.normAnswer,
       isCorrect: false,
       isSelectedMistake: false,
       count: 1,
@@ -369,7 +371,7 @@ export const buildVictoryDataObjectShortAnswer = (
       .map((answer, index) => ({ 
         answerChoice: String.fromCharCode(65 + index),
         answerCount: answer.count,
-        answerText: answer.value.toString(),
+        answerText: answer.rawAnswer.toString(),
         answerTeams: answer.teams,
         answerCorrect: answer.isCorrect
     }))

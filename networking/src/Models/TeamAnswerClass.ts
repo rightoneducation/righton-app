@@ -78,17 +78,20 @@ function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerTy
     const currentItem = currentContents.ops[i].insert;
     switch (answerType) {
       case AnswerType.NUMBER:
-        if (!currentItem?.formula && isNumeric(currentItem)) {
+        if (!currentItem?.formula) {
           // if it's a number, check for percentages and convert to decimal
-          const percentagesRegex = /\d+(\.\d+)?%/g;
+          const percentagesRegex = /(\d+(\.\d+)?)%/g;
           const extractPercents = currentItem.match(percentagesRegex);
-          const percentages = extractPercents ? parseFloat(extractPercents[1]) / 100 : null
-          if (!isNullOrUndefined(percentages))
-             normAnswers.push(percentages);
+          const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
+          if (!isNullOrUndefined(percentages) && !isNullOrUndefined(percentages)){
+            rawAnswers.push(extractPercents[0]); 
+            normAnswers.push(percentages);
+            break;
+          }
           // then remove spaces and push
           const normItem = Number(currentItem.trim());
-          if (!isNullOrUndefined(normItem) && !isNullOrUndefined(normItem)) {
-            rawAnswers.push(currentItem);
+          if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
+            rawAnswers.push(normItem);
             normAnswers.push(normItem);
           }
         }
@@ -97,8 +100,8 @@ function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerTy
         if (!currentItem?.formula && !isNumeric(currentItem)) {
           // if it's a string, pull out any numbers and remove spaces
           const normItem = currentItem.toLowerCase().replace(/[\d\r\n]+/g, '').trim();
-          if (!isNullOrUndefined(normItem) && !isNullOrUndefined(normItem)) {
-            rawAnswers.push(currentItem);
+          if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
+            rawAnswers.push(normItem);
             normAnswers.push(normItem);
           }
         }
@@ -107,8 +110,8 @@ function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerTy
         if (currentItem?.formula) {
           // if it's a formula, remove spaces
           const normItem = currentItem.formula.replace(/(\r\n|\n|\r|\s|" ")/gm, '').trim();
-          if (!isNullOrUndefined(normItem) && !isNullOrUndefined(normItem)) {
-            rawAnswers.push(currentItem);
+          if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
+            rawAnswers.push(normItem);
             normAnswers.push(normItem);
           }
         }
@@ -125,7 +128,6 @@ export class NumberAnswer extends BaseAnswer<number> {
 
   normalize(): NumberAnswer {
     const extractedAnswers = extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.NUMBER);
-    console.log(extractedAnswers);
     const answer = new NumberAnswer({
       ...this,
       answerContent: {
