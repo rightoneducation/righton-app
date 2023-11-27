@@ -293,6 +293,11 @@ export const createCorrectAnswerObject = (questions, currentQuestionIndex) => {
  * @returns {IResponse[]}
  */
 export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
+  // if the answer is empty, skip and return the previous answer
+  // an empty answer could mean that a user was able to submit an answer of the wrong type
+  if (newAnswer.answerContent.normAnswer.length === 0) {
+    return prevShortAnswer;
+  }
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
     let correctAnswer = choices.find(choice => choice.isAnswer).text;
@@ -305,8 +310,6 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
     });
   }
   let isExistingAnswer = false;  
-  console.log(newAnswer);
-  console.log('sup');
   // check the new answer against the previously submitted answers and the correct answer
   prevShortAnswer.forEach((prevAnswer) => {
     if(newAnswer.isEqualTo(prevAnswer.value)){

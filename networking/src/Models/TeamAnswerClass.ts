@@ -1,5 +1,6 @@
 import { symbolicEqual } from 'mathjs';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
+import { isNullOrUndefined } from '../IApiClient';
 
 export enum AnswerType {
   NUMBER = 'number',
@@ -82,27 +83,34 @@ function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerTy
           const percentagesRegex = /\d+(\.\d+)?%/g;
           const extractPercents = currentItem.match(percentagesRegex);
           const percentages = extractPercents ? parseFloat(extractPercents[1]) / 100 : null
-          normAnswers.push(percentages);
+          if (!isNullOrUndefined(percentages))
+             normAnswers.push(percentages);
           // then remove spaces and push
           const normItem = Number(currentItem.trim());
-          rawAnswers.push(currentItem);
-          normAnswers.push(normItem);
+          if (!isNullOrUndefined(normItem) && !isNullOrUndefined(normItem)) {
+            rawAnswers.push(currentItem);
+            normAnswers.push(normItem);
+          }
         }
         break;
       case AnswerType.STRING:
         if (!currentItem?.formula && !isNumeric(currentItem)) {
           // if it's a string, pull out any numbers and remove spaces
           const normItem = currentItem.toLowerCase().replace(/[\d\r\n]+/g, '').trim();
-          rawAnswers.push(currentItem);
-          normAnswers.push(normItem);
+          if (!isNullOrUndefined(normItem) && !isNullOrUndefined(normItem)) {
+            rawAnswers.push(currentItem);
+            normAnswers.push(normItem);
+          }
         }
         break;
       case AnswerType.EXPRESSION:
         if (currentItem?.formula) {
           // if it's a formula, remove spaces
           const normItem = currentItem.formula.replace(/(\r\n|\n|\r|\s|" ")/gm, '').trim();
-          rawAnswers.push(currentItem);
-          normAnswers.push(normItem);
+          if (!isNullOrUndefined(normItem) && !isNullOrUndefined(normItem)) {
+            rawAnswers.push(currentItem);
+            normAnswers.push(normItem);
+          }
         }
         break;
     }
@@ -117,6 +125,7 @@ export class NumberAnswer extends BaseAnswer<number> {
 
   normalize(): NumberAnswer {
     const extractedAnswers = extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.NUMBER);
+    console.log(extractedAnswers);
     const answer = new NumberAnswer({
       ...this,
       answerContent: {
