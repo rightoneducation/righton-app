@@ -27,6 +27,7 @@ interface OpenAnswerCardProps {
   answerContent: ITeamAnswerContent;
   answerSettings: IAnswerSettings | null;
   isSubmitted: boolean;
+  isShortAnswerEnabled: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
   handleSubmitAnswer: (result: ITeamAnswerContent) => void;
@@ -36,6 +37,7 @@ export default function OpenAnswerCard({
   answerContent,
   answerSettings,
   isSubmitted,
+  isShortAnswerEnabled,
   currentState,
   currentQuestionIndex,
   handleSubmitAnswer,
@@ -69,6 +71,7 @@ export default function OpenAnswerCard({
       delta: currentAnswer,
       currentState,
       currentQuestionIndex,
+      isShortAnswerEnabled,
       isSubmitted: answerContent.isSubmitted,
     };
     window.localStorage.setItem(
@@ -132,6 +135,7 @@ export default function OpenAnswerCard({
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
             isSubmitted={isSubmitted}
+            isShortAnswerEnabled={isShortAnswerEnabled}
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>

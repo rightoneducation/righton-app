@@ -57,7 +57,8 @@ export const checkForSubmittedAnswerOnRejoin = (
   localModel: LocalModel,
   hasRejoined: boolean,
   currentState: GameSessionState,
-  currentQuestionIndex: number
+  currentQuestionIndex: number,
+  isShortAnswerEnabled: boolean,
 ): ITeamAnswerContent => {
   let returnedAnswer: ITeamAnswerContent = {
     delta: '',
@@ -67,6 +68,7 @@ export const checkForSubmittedAnswerOnRejoin = (
     isSubmitted: false,
     currentState: null,
     currentQuestionIndex: null,
+    isShortAnswerEnabled,
   };
   if (hasRejoined) {
     if (

@@ -15,6 +15,7 @@ export interface ITeamAnswerContent {
   answerType?: AnswerType;
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
+  isShortAnswerEnabled: boolean;
   isSubmitted?: boolean;
   currentState: GameSessionState | null;
   currentQuestionIndex: number | null;
@@ -123,13 +124,24 @@ function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerTy
   return {rawAnswers, normAnswers};
 }
 
+interface normalizeProps {
+  isShortAnswerEnabled: boolean;
+}
+
 export class NumberAnswer extends BaseAnswer<number> {
   constructor(config: IBaseAnswerConfig<number>) {
     super(config); // Pass the config to the BaseAnswer constructor
   }
+ 
 
-  normalize(): NumberAnswer {
-    const extractedAnswers = extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.NUMBER);
+  normalize({
+    isShortAnswerEnabled 
+  } :normalizeProps): NumberAnswer {
+
+    const extractedAnswers = isShortAnswerEnabled ? 
+      extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.NUMBER)
+      : {rawAnswers: this.answerContent.rawAnswer, normAnswers: this.answerContent.rawAnswer} ;
+
     const answer = new NumberAnswer({
       ...this,
       answerContent: {
@@ -155,8 +167,13 @@ export class StringAnswer extends BaseAnswer<string> {
     super(config); // Pass the config to the BaseAnswer constructor
   }
 
-  normalize(): StringAnswer {
-    const extractedAnswers = extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.STRING);
+  normalize({
+    isShortAnswerEnabled
+  }: normalizeProps): StringAnswer {
+    const extractedAnswers = isShortAnswerEnabled ? 
+      extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.STRING)
+      : {rawAnswers: this.answerContent.rawAnswer, normAnswers: this.answerContent.rawAnswer} ;
+
     const answer = new StringAnswer({
       ...this,
       answerContent: {
@@ -183,8 +200,12 @@ export class ExpressionAnswer extends BaseAnswer<string> {
     super(config); // Pass the config to the BaseAnswer constructor
   }
 
-  normalize(): ExpressionAnswer {
-    const extractedAnswers = extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.EXPRESSION);
+  normalize({
+    isShortAnswerEnabled
+  }: normalizeProps): ExpressionAnswer {
+    const extractedAnswers = isShortAnswerEnabled ? 
+      extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.EXPRESSION)
+      : {rawAnswers: this.answerContent.rawAnswer, normAnswers: this.answerContent.rawAnswer};
     const answer = new ExpressionAnswer({
       ...this,
       answerContent: {

@@ -138,7 +138,8 @@ export default function GameInProgress({
       localModel,
       hasRejoined,
       currentState,
-      currentQuestionIndex ?? 0
+      currentQuestionIndex ?? 0,
+      isShortAnswerEnabled
     );
     return rejoinSubmittedAnswer;
   });
@@ -176,11 +177,11 @@ export default function GameInProgress({
   const handleSubmitAnswer = async (packagedAnswer: ITeamAnswerContent) => {
     const answerConfigBase = {
       questionId: currentQuestion.id,
-      isChosen: false,
+      isChosen: currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && !isShortAnswerEnabled,
       teamMemberAnswersId: teamMemberId,
       text: '',
       answerContent: packagedAnswer,
-      isTrickAnswer: false,
+      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !isShortAnswerEnabled,
       confidenceLevel: ConfidenceLevel.NOT_RATED
     };
     let rawAnswer;
@@ -193,7 +194,7 @@ export default function GameInProgress({
           value: ''
         }
         rawAnswer = new StringAnswer(answerConfig);
-        normAnswer = rawAnswer.normalize();
+        normAnswer = rawAnswer.normalize({isShortAnswerEnabled});
         break;
       }
       case (AnswerType.EXPRESSION): {
@@ -202,7 +203,7 @@ export default function GameInProgress({
           value: ''
         }
         rawAnswer = new ExpressionAnswer(answerConfig);
-        normAnswer = rawAnswer.normalize();
+        normAnswer = rawAnswer.normalize({isShortAnswerEnabled});
         break;
       }
       case (AnswerType.NUMBER):
@@ -212,7 +213,7 @@ export default function GameInProgress({
           value: 0
         }
         rawAnswer = new NumberAnswer(answerConfig);
-        normAnswer = rawAnswer.normalize();
+        normAnswer = rawAnswer.normalize({isShortAnswerEnabled});
         break;
       }
     }

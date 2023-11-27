@@ -185,6 +185,7 @@ const GameSessionContainer = () => {
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
+        console.log(teamAnswerResponse);
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
         apiClient.getGameSession(gameSessionId).then((gameSession) => {
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
