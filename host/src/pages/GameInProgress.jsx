@@ -67,7 +67,7 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-  
+
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
     () =>
