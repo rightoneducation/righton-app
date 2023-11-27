@@ -128,7 +128,6 @@ export const getMultiChoiceAnswers = (
     let answersArray = Array.from({length: choices.length}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex-1 ? true : false }));
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
-    console.log(answers)
     answers.forEach(({ team, answer }) => {
       choices.forEach((choice) => {
         if (answer.answerContent.rawAnswer === choice.text) {
@@ -160,7 +159,6 @@ export const getMultiChoiceAnswers = (
         }
       });
     });
-    console.log(answersArray);
     return { answersArray, confidenceArray };
   }
   return { answersArray: [], confidenceArray };

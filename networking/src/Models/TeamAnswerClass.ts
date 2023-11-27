@@ -71,7 +71,6 @@ function isNumeric (num: any){ // eslint-disable-line @typescript-eslint/no-expl
     !isNaN(num as number); // eslint-disable-line no-restricted-globals
 }
 
-
 function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerType) {
   const rawAnswers = [];
   const normAnswers = [];
@@ -132,7 +131,6 @@ export class NumberAnswer extends BaseAnswer<number> {
   constructor(config: IBaseAnswerConfig<number>) {
     super(config); // Pass the config to the BaseAnswer constructor
   }
- 
 
   normalize({
     isShortAnswerEnabled 

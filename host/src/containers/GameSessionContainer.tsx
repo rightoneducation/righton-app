@@ -185,7 +185,6 @@ const GameSessionContainer = () => {
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
       gameSessionId,
       (teamAnswerResponse) => {
-        console.log(teamAnswerResponse);
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
         apiClient.getGameSession(gameSessionId).then((gameSession) => {
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
@@ -208,7 +207,6 @@ const GameSessionContainer = () => {
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
                 const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, teamAnswerResponse, teamName, teamId);
-                console.log(newShortAnswerState);
                 apiClient
                   .updateQuestion({
                     gameSessionId: gameSession.id, 
