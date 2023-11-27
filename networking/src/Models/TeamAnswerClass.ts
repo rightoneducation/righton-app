@@ -88,7 +88,6 @@ function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerTy
             normAnswers.push(percentages);
             break;
           }
-      
           // then remove commas and spaces and push
           const noCommas = currentItem.replace(/,/g, '');
           const normItem = Number(noCommas.trim());
