@@ -141,7 +141,6 @@ export class StringAnswer extends BaseAnswer<string> {
 
   normalize(): StringAnswer {
     const extractedAnswers = extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.STRING);
-    console.log("sup");
     const answer = new StringAnswer({
       ...this,
       answerContent: {
