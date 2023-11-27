@@ -48,12 +48,7 @@ export default function ButtonSubmitAnswer({
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
         const answer = {
           rawAnswer: answerText ?? '',
-          normAnswer: 
-            {
-              [AnswerType.NUMBER]: [],
-              [AnswerType.STRING]: [],
-              [AnswerType.EXPRESSION]: [],
-            } as INormAnswer,
+          normAnswer: [],
           multiChoiceAnswerIndex: selectedAnswer,
           isSubmitted: true,
           currentState,

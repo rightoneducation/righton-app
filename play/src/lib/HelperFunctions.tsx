@@ -7,13 +7,8 @@ import {
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
-  ITeamAnswerContent,
-  IExtractedAnswer,
-  INormAnswer,
-  AnswerType,
-
+  ITeamAnswerContent
 } from '@righton/networking';
-import nlp from 'compromise';
 import {
   InputPlaceholder,
   StorageKey,
@@ -67,11 +62,7 @@ export const checkForSubmittedAnswerOnRejoin = (
   let returnedAnswer: ITeamAnswerContent = {
     delta: '',
     rawAnswer: '',
-    normAnswer: {
-      [AnswerType.NUMBER]: [], 
-      [AnswerType.STRING]: [], 
-      [AnswerType.EXPRESSION]: []
-    },
+    normAnswer: [],
     multiChoiceAnswerIndex: null,
     isSubmitted: false,
     currentState: null,

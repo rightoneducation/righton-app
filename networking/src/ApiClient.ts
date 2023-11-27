@@ -628,7 +628,6 @@ export class GameSessionParser {
                 "GameSession has null field for the attributes that are not nullable"
             )
         }
-
         const gameSession: IGameSession = {
             id,
             gameId,
@@ -714,7 +713,7 @@ export class GameSessionParser {
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
                     answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
                         ? null
-                        : JSON.parse(awsQuestion.answerSettings) as IAnswerSettings,
+                        : JSON.parse(JSON.stringify(awsQuestion.answerSettings)) as IAnswerSettings,
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),

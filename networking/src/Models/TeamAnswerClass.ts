@@ -1,4 +1,4 @@
-import { INormAnswer } from './ITeamAnswerContent';
+import { symbolicEqual } from 'mathjs';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
 
 export enum AnswerType {
@@ -10,7 +10,7 @@ export enum AnswerType {
 export interface ITeamAnswerContent {
   delta?: string;
   rawAnswer?: string; 
-  normAnswer?: INormAnswer;
+  normAnswer?: (string | number)[] | null;
   answerType?: AnswerType;
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
@@ -129,9 +129,12 @@ export class NumberAnswer extends BaseAnswer<number> {
     return answer;
   }
 
-  // isEqualTo(answer: NumberAnswer): Boolean {
-  //   return true;
-  // }
+  isEqualTo(otherAnswers: number[]): Boolean {
+    if (this.answerContent.normAnswer && this.answerContent.normAnswer.some((answer) => otherAnswers.includes(answer as number))) {
+      return true;
+    }
+    return false;
+  }
 }
 
 export class StringAnswer extends BaseAnswer<string> {
@@ -153,9 +156,13 @@ export class StringAnswer extends BaseAnswer<string> {
     return answer;
   }
 
-  // isEqualTo(answer: StringAnswer): Boolean {
-  //   return true;
-  // }
+  isEqualTo(otherAnswers: string[]): Boolean {
+    const otherAnswersSet = new Set(otherAnswers);
+    if (this.answerContent.normAnswer && this.answerContent.normAnswer.some((answer) => otherAnswersSet.has(answer as string))) {
+      return true;
+    }
+    return false;
+  }
 }
 
 export class ExpressionAnswer extends BaseAnswer<string> {
@@ -177,7 +184,24 @@ export class ExpressionAnswer extends BaseAnswer<string> {
     return answer;
   }
 
-  // isEqualTo(answer: ExpressionAnswer): Boolean {
-  //   return true;
-  // }
+  isEqualTo(otherAnswers: string[]): Boolean {
+    // will use symbolicEqual from mathjs to compare expressions
+    // https://mathjs.org/docs/reference/functions/symbolicEqual.html
+    if (this.answerContent.normAnswer) {
+      for (let i =0; i < this.answerContent.normAnswer.length; i++) {
+        for (let y = 0; y < otherAnswers.length; y++) {
+          try {
+            if (symbolicEqual(this.answerContent.normAnswer[i].toString(), otherAnswers[y]) 
+              || this.answerContent.normAnswer[i].toString() === otherAnswers[y].toString()
+            ) {
+              return true;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+    }
+   return false;
+  }
 }
