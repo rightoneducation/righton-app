@@ -1,11 +1,5 @@
-import { GameSessionState } from "../AWSMobileApi";
-export enum AnswerType {
-  MULTICHOICE,
-  STRING,
-  NUMBER,
-  EXPRESSION,
-  NULL
-}
+//import { GameSessionState } from "../AWSMobileApi";
+import { AnswerType } from "./TeamAnswerClass";
 
 export interface IExtractedAnswer {
   value: string;
@@ -17,13 +11,13 @@ export interface INormAnswer {
     [AnswerType.EXPRESSION]: string[];
 }
 
-export interface ITeamAnswerContent {
-  delta?: string;
-  rawAnswer?: string; 
-  normAnswer?: INormAnswer;
-  percent?: number;
-  multiChoiceAnswerIndex?: number | null;
-  isSubmitted?: boolean;
-  currentState: GameSessionState | null;
-  currentQuestionIndex: number | null;
-}
+// export interface ITeamAnswerContent {
+//   delta?: string;
+//   rawAnswer?: string; 
+//   normAnswer?: INormAnswer;
+//   percent?: number;
+//   multiChoiceAnswerIndex?: number | null;
+//   isSubmitted?: boolean;
+//   currentState: GameSessionState | null;
+//   currentQuestionIndex: number | null;
+// }

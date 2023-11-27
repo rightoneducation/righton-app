@@ -12,6 +12,11 @@ import {
   isNullOrUndefined,
   ITeamAnswerContent,
   IChoice,
+  NumberAnswer,
+  StringAnswer,
+  ExpressionAnswer,
+  AnswerType,
+  IBaseAnswerConfig
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -74,7 +79,7 @@ export default function GameInProgress({
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
-  let teamAnswers: (ITeamAnswer | null)[] | null | undefined;
+  let teamAnswers: (NumberAnswer | StringAnswer | ExpressionAnswer | null)[] | null | undefined;
   if (currentTeam != null) {
     teamAnswers = ModelHelper.getBasicTeamMemberAnswersToQuestionId(
       // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -167,22 +172,59 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  const handleSubmitAnswer = async (result: ITeamAnswerContent) => {
-    const answer = { ...result, isSubmitted: true };
+  // contents is the quill pad contents and rece
+  const handleSubmitAnswer = async (packagedAnswer: ITeamAnswerContent) => {
+    const answerConfigBase = {
+      questionId: currentQuestion.id,
+      isChosen: false,
+      teamMemberAnswersId: teamMemberId,
+      text: '',
+      answerContent: packagedAnswer,
+      isTrickAnswer: false,
+      confidenceLevel: ConfidenceLevel.NOT_RATED
+    };
+    let rawAnswer;
+    let normAnswer;
+    const currentQuestionType = currentQuestion.answerSettings?.answerType;
+    switch (currentQuestionType) {
+      case (AnswerType.STRING): {
+        const answerConfig: IBaseAnswerConfig<string> = {
+          ...answerConfigBase,
+          value: ''
+        }
+        rawAnswer = new StringAnswer(answerConfig);
+        normAnswer = rawAnswer.normalize();
+        break;
+      }
+      case (AnswerType.EXPRESSION): {
+        const answerConfig: IBaseAnswerConfig<string> = {
+          ...answerConfigBase,
+          value: ''
+        }
+        rawAnswer = new ExpressionAnswer(answerConfig);
+        normAnswer = rawAnswer.normalize();
+        break;
+      }
+      case (AnswerType.NUMBER):
+      default: {
+        const answerConfig: IBaseAnswerConfig<number> = {
+          ...answerConfigBase,
+          value: 0
+        }
+        rawAnswer = new NumberAnswer(answerConfig);
+        normAnswer = rawAnswer.normalize();
+        break;
+      }
+    }
+
     try {
-      const response = await apiClient.addTeamAnswer(
-        teamMemberId,
-        currentQuestion.id,
-        JSON.stringify(result.rawAnswer),
-        answer,
-        currentState === GameSessionState.CHOOSE_CORRECT_ANSWER,
-        currentState !== GameSessionState.CHOOSE_CORRECT_ANSWER
-      );
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer));
+      const response = await apiClient.addTeamAnswer(normAnswer);
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(normAnswer.answerContent));
       setTeamAnswerId(response.id);
-      setAnswerContent(answer);
+      setAnswerContent(normAnswer?.answerContent as ITeamAnswerContent);
       setDisplaySubmitted(true);
     } catch (e) {
+      console.log(e)
       setIsAnswerError(true);
     }
   };
@@ -277,6 +319,7 @@ export default function GameInProgress({
             isSmallDevice={isSmallDevice}
             questionText={questionText}
             questionUrl={questionUrl ?? ''}
+            answerSettings = {currentQuestion.answerSettings ?? null}
             answerChoices={answerChoices}
             isSubmitted={answerContent.isSubmitted ?? false}
             displaySubmitted={displaySubmitted}

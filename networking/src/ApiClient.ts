@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent } from "./Models"
+import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -220,7 +220,7 @@ export class ApiClient implements IApiClient {
 
     subscribeCreateTeamAnswer(
         id: string,
-        callback: (result: ITeamAnswer) => void
+        callback: (result: NumberAnswer | StringAnswer | ExpressionAnswer ) => void
     ) {
         return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
             {
@@ -238,7 +238,7 @@ export class ApiClient implements IApiClient {
 
     subscribeUpdateTeamAnswer(
         id: string,
-        callback: (result: ITeamAnswer) => void
+        callback: (result: NumberAnswer | StringAnswer | ExpressionAnswer ) => void
     ) {
         return this.subscribeGraphQL<OnUpdateTeamAnswerSubscription>(
             {
@@ -326,21 +326,15 @@ export class ApiClient implements IApiClient {
     }
 
     async addTeamAnswer(
-        teamMemberId: string,
-        questionId: number,
-        text: string,
-        answerContent: ITeamAnswerContent,
-        isChosen: boolean = false,
-        isTrickAnswer: boolean = false
+        inputAnswer: NumberAnswer | StringAnswer | ExpressionAnswer
     ): Promise<ITeamAnswer> {
-        const awsAnswerContent = JSON.stringify(answerContent)
         const input: CreateTeamAnswerInput = {
-            questionId,
-            isChosen,
-            isTrickAnswer,
-            text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContent, 
-            teamMemberAnswersId: teamMemberId,
+            questionId: inputAnswer.questionId,
+            isChosen: inputAnswer.isChosen,
+            isTrickAnswer: inputAnswer.isTrickAnswer,
+            text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            awsAnswerContent: JSON.stringify(inputAnswer.answerContent), 
+            teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
@@ -478,7 +472,7 @@ export class ApiClient implements IApiClient {
 
     private mapOnCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         return TeamAnswerParser.teamAnswerFromCreateTeamAnswerSubscription(
             subscription
         )
@@ -486,7 +480,7 @@ export class ApiClient implements IApiClient {
 
     private mapOnUpdateTeamAnswerSubscription(
         subscription: OnUpdateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         return TeamAnswerParser.teamAnswerFromUpdateTeamAnswerSubscription(
             subscription
         )
@@ -873,7 +867,7 @@ class TeamMemberParser {
 class TeamAnswerParser {
     static teamAnswerFromCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const createTeamAnswer = subscription.onCreateTeamAnswer
         if (isNullOrUndefined(createTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
@@ -883,7 +877,7 @@ class TeamAnswerParser {
 
     static teamAnswerFromUpdateTeamAnswerSubscription(
         subscription: OnUpdateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const updateTeamAnswer = subscription.onUpdateTeamAnswer
         if (isNullOrUndefined(updateTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
@@ -893,7 +887,7 @@ class TeamAnswerParser {
 
     static mapTeamAnswers(
         awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined
-    ): Array<ITeamAnswer> {
+    ): Array<NumberAnswer | StringAnswer | ExpressionAnswer> {
         if (isNullOrUndefined(awsTeamAnswers)) {
             return []
         }
@@ -918,13 +912,14 @@ class TeamAnswerParser {
                 )
             }
         } catch (e) {
+            console.log(e)
             throw new Error("Failed to parse answer content")
         }
         return parsedAnswerContent as ITeamAnswerContent;
     }   
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const {
             id,
             questionId,
@@ -948,8 +943,8 @@ class TeamAnswerParser {
         }
         // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
-     
-        const teamAnswer: ITeamAnswer = {
+        let teamAnswer;
+        const answerConfigBase = {
             id,
             questionId,
             isChosen,
@@ -960,7 +955,35 @@ class TeamAnswerParser {
             updatedAt,
             teamMemberAnswersId,
             confidenceLevel
+          };
+        switch (answerContent.answerType) {
+            case(AnswerType.NUMBER):
+            default: {
+                const answerConfig = {
+                    ...answerConfigBase,
+                    value: 0
+                }
+                teamAnswer = new NumberAnswer(answerConfig);
+                break;
+            }
+            case(AnswerType.STRING): {
+                const answerConfig = {
+                    ...answerConfigBase,
+                    value: ''
+                }
+                teamAnswer = new StringAnswer(answerConfig);
+                break;
+            }
+            case(AnswerType.EXPRESSION): {
+                const answerConfig = {
+                    ...answerConfigBase,
+                    value: ''
+                }
+                teamAnswer = new ExpressionAnswer(answerConfig);
+                break;
+            }
         }
+        
         return teamAnswer
     }
 }
