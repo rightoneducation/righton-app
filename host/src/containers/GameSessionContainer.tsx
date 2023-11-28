@@ -179,6 +179,7 @@ const GameSessionContainer = () => {
         }
       },
     );
+    
     // set up subscription for teams answering
     let createTeamAnswerSubscription: any | null = null;
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
