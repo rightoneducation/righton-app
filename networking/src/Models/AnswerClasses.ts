@@ -24,7 +24,7 @@ export interface ITeamAnswerContent {
 
 export interface ICorrectAnswerContent {
   rawAnswer: string;
-  normAnswer?: string[];
+  normAnswer?: (string | number)[];
   answerType: AnswerType;
 }
 
@@ -132,9 +132,11 @@ function normalizeAnswers(currentItem: any, answerType: AnswerType) {
       }
       break;
     case AnswerType.EXPRESSION:
-      if (currentItem?.formula) {
-        // if it's a formula, remove spaces
-        const normItem = currentItem.formula.replace(/(\r\n|\n|\r|\s|" ")/gm, '').trim();
+      if (currentItem) {
+        // if it's an expression, use parse and toString to extract expression trees and compare
+        // anything more complex than this will require a custom parser (and is probably not worth it)
+        // https://mathjs.org/docs/expressions/parsing.html
+        const normItem = parse(currentItem.toString()).toString();
         if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
           rawAnswers.push(normItem);
           normAnswers.push(normItem);
@@ -257,8 +259,9 @@ export class ExpressionAnswer extends TeamAnswer<string> {
     super(config); // Pass the config to the TeamAnswer constructor
 
     const extractedAnswers = this.answerContent.isShortAnswerEnabled ? extractFromDelta(this.answerContent.delta) : this.answerContent.rawAnswer;
+    console.log(extractedAnswers);
     const normalizedAnswers = normalizeAnswers(extractedAnswers, AnswerType.EXPRESSION);
-
+    console.log(normalizedAnswers);
     this.answerContent = {
       ...this.answerContent,
       rawAnswer: normalizedAnswers.rawAnswers,
@@ -269,9 +272,6 @@ export class ExpressionAnswer extends TeamAnswer<string> {
   }
 
   isEqualTo(otherAnswers: string[]): Boolean {
-    // will use parse and toString to extract expression trees and compare
-    // anything more complex than this will require a custom parser (and is probably not worth it)
-    // https://mathjs.org/docs/expressions/parsing.html
     if (this.answerContent.normAnswer) {
       for (let i =0; i < this.answerContent.normAnswer.length; i++) {
         for (let y = 0; y < otherAnswers.length; y++) {
