@@ -697,6 +697,13 @@ export class GameSessionParser {
         return []
     }
 
+    private static parseAnswerType<t>(input: any | t): t {
+        if (typeof input === "string") {
+            return JSON.parse(input as string)
+        }
+        return input
+    }
+
     private static mapQuestions(
         awsQuestions: Array<AWSQuestion | null>
     ): Array<IQuestion> {
@@ -713,7 +720,7 @@ export class GameSessionParser {
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
                     answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
                         ? null
-                        : JSON.parse(JSON.stringify(awsQuestion.answerSettings)) as IAnswerSettings,
+                        : this.parseAnswerType<IAnswerSettings>(awsQuestion.answerSettings),
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),

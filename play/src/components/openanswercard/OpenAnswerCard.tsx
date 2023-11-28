@@ -86,6 +86,7 @@ export default function OpenAnswerCard({
       delta: currentContents,
       currentState,
       currentQuestionIndex,
+      isShortAnswerEnabled,
       isSubmitted: true,
     } as ITeamAnswerContent;
     handleSubmitAnswer(packagedAnswer);

@@ -258,26 +258,26 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   return {teamName, teamId};
 };
 
-/**
- * Create an new NumberAnswer, StringAnswer, or ExpressionAnswer object for the correct answer
- * based on the teacher's supplied answer type for the correct answer
- * @
- */
-export const createCorrectAnswerObject = (questions, currentQuestionIndex) => {
-  let choices = getQuestionChoices(questions, currentQuestionIndex);
-  const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
-  const answerType = questions[currentQuestionIndex].answerSettings.answerType;
+
+export const createCorrectAnswer = (correctAnswerValue, answerType) => {
+  const answerConfigBase = {
+    answerContent: {
+      rawAnswer:  correctAnswerValue,
+      normAnswer: correctAnswerValue,
+      answerType,
+    },
+  };
   let correctAnswer;
   switch (answerType){
     case (AnswerType.NUMBER):
     default:
-      correctAnswer = new NumberAnswer(correctAnswerValue);
+      correctAnswer = new NumberAnswer(answerConfigBase);
       break;
     case(AnswerType.STRING):
-      correctAnswer = new StringAnswer(correctAnswerValue);
+      correctAnswer = new StringAnswer(answerConfigBase);
       break;
     case(AnswerType.EXPRESSION):
-      correctAnswer = new ExpressionAnswer(correctAnswerValue);
+      correctAnswer = new ExpressionAnswer(answerConfigBase);
       break;
   }
   return correctAnswer;
@@ -300,10 +300,11 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   }
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
-    let correctAnswer = choices.find(choice => choice.isAnswer).text;
+    const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
+    const correctAnswer = createCorrectAnswer(correctAnswerValue, newAnswer.answerContent.answerType);
     prevShortAnswer.push({
-      rawAnswer: [correctAnswer],
-      normAnswer: [correctAnswer],
+      rawAnswer: correctAnswer.answerContent.rawAnswer,
+      normAnswer: correctAnswer.answerContent.normAnswer,
       isCorrect: true,
       isSelectedMistake: false,
       count: 0,

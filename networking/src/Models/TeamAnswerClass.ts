@@ -1,4 +1,5 @@
-import { symbolicEqual } from 'mathjs';
+import { parse } from 'mathjs';
+import { removeStopwords, eng } from 'stopword';
 import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
 import { isNullOrUndefined } from '../IApiClient';
 
@@ -15,13 +16,25 @@ export interface ITeamAnswerContent {
   answerType?: AnswerType;
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
-  isShortAnswerEnabled: boolean;
   isSubmitted?: boolean;
+  isShortAnswerEnabled: boolean;
   currentState: GameSessionState | null;
   currentQuestionIndex: number | null;
 }
 
+export interface ICorrectAnswerContent {
+  rawAnswer: string;
+  normAnswer?: string[];
+  answerType: AnswerType;
+}
+
 export interface IBaseAnswerConfig<T> {
+  id?: string;
+  answerContent: ITeamAnswerContent | ICorrectAnswerContent;
+  value: T;
+}
+
+export interface ITeamAnswerConfig<T> {
   id?: string;
   questionId: number;
   isChosen: boolean;
@@ -37,6 +50,18 @@ export interface IBaseAnswerConfig<T> {
 
 abstract class BaseAnswer<T> {
   id?: string;
+  answerContent: ITeamAnswerContent | ICorrectAnswerContent;
+  value: T;
+  constructor(config: IBaseAnswerConfig<T>) 
+  {
+    this.id = config.id,
+    this.answerContent = config.answerContent,
+    this.value = config.value
+  }
+}
+
+abstract class TeamAnswer<T> extends BaseAnswer<T> {
+  id?: string;
   questionId: number;
   teamMemberAnswersId: string;
   isChosen: boolean;
@@ -47,8 +72,9 @@ abstract class BaseAnswer<T> {
   createdAt?: string;
   updatedAt?: string;
   value: T;
-  constructor(config: IBaseAnswerConfig<T>) 
+  constructor(config: ITeamAnswerConfig<T>) 
     {
+      super(config);
       this.id = config.id,
       this.questionId = config.questionId,
       this.teamMemberAnswersId = config.teamMemberAnswersId,
@@ -62,8 +88,7 @@ abstract class BaseAnswer<T> {
       this.value = config.value
   }
 
-  abstract normalize(answerContent: ITeamAnswerContent): BaseAnswer<T>;
-  // abstract isEqualTo(answer: BaseAnswer<T>): Boolean
+  abstract isEqualTo(otherAnswers: T[]): Boolean;
 }
 
 function isNumeric (num: any){ // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -71,84 +96,129 @@ function isNumeric (num: any){ // eslint-disable-line @typescript-eslint/no-expl
     !isNaN(num as number); // eslint-disable-line no-restricted-globals
 }
 
-function extractAndNormalizeFromDelta(currentContents: any, answerType: AnswerType) {
+function normalizeAnswers(currentItem: any, answerType: AnswerType) {
   const rawAnswers = [];
   const normAnswers = [];
-  for (let i = 0; i < currentContents.ops.length; i++) {
-    const currentItem = currentContents.ops[i].insert;
-    switch (answerType) {
-      case AnswerType.NUMBER:
-        if (!currentItem?.formula) {
-          // if it's a number, check for percentages and convert to decimal
-          const percentagesRegex = /(\d+(\.\d+)?)%/g;
-          const extractPercents = currentItem.match(percentagesRegex);
-          const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
-          if (!isNullOrUndefined(percentages) && !isNullOrUndefined(percentages)){
-            rawAnswers.push(extractPercents[0]); 
-            normAnswers.push(percentages);
-            break;
-          }
-          // then remove commas and spaces and push
-          const noCommas = currentItem.replace(/,/g, '');
-          const normItem = Number(noCommas.trim());
-          if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
-            rawAnswers.push(normItem);
-            normAnswers.push(normItem);
-          }
+  switch (answerType) {
+    case AnswerType.NUMBER:
+      if (!currentItem?.formula) {
+        // if it's a number, check for percentages and convert to decimal
+        const percentagesRegex = /(\d+(\.\d+)?)%/g;
+        const extractPercents = currentItem.match(percentagesRegex);
+        const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
+        if (!isNullOrUndefined(percentages) && !isNullOrUndefined(percentages)){
+          rawAnswers.push(extractPercents[0]); 
+          normAnswers.push(percentages);
+          break;
         }
-        break;
-      case AnswerType.STRING:
-        if (!currentItem?.formula && !isNumeric(currentItem)) {
-          // if it's a string, pull out any numbers and remove spaces
-          const normItem = currentItem.toLowerCase().replace(/[\d\r\n]+/g, '').trim();
-          if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
-            rawAnswers.push(normItem);
-            normAnswers.push(normItem);
-          }
+        // then remove commas and spaces and push
+        const noCommas = currentItem.replace(/,/g, '');
+        const normItem = Number(noCommas.trim());
+        if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
+          rawAnswers.push(normItem);
+          normAnswers.push(normItem);
         }
-        break;
-      case AnswerType.EXPRESSION:
-        if (currentItem?.formula) {
-          // if it's a formula, remove spaces
-          const normItem = currentItem.formula.replace(/(\r\n|\n|\r|\s|" ")/gm, '').trim();
-          if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
-            rawAnswers.push(normItem);
-            normAnswers.push(normItem);
-          }
+      }
+      break;
+    case AnswerType.STRING:
+      if (!currentItem?.formula && !isNumeric(currentItem)) {
+        // if it's a string, pull out any numbers and remove spaces, and remove stopwords
+        const normArray = currentItem.toLowerCase().replace(/[\d\r\n]+/g, '').trim().split(' ');
+        const normNoStopwords = removeStopwords(normArray, eng).join(' ');
+        if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normNoStopwords)) {
+          rawAnswers.push(normNoStopwords);
+          normAnswers.push(normNoStopwords);
         }
-        break;
-    }
+      }
+      break;
+    case AnswerType.EXPRESSION:
+      if (currentItem?.formula) {
+        // if it's a formula, remove spaces
+        const normItem = currentItem.formula.replace(/(\r\n|\n|\r|\s|" ")/gm, '').trim();
+        if (!isNullOrUndefined(currentItem) && !isNullOrUndefined(normItem)) {
+          rawAnswers.push(normItem);
+          normAnswers.push(normItem);
+        }
+      }
+      break;
   }
-  return {rawAnswers, normAnswers};
+  const joinedRawAnswers = rawAnswers.join(' ');
+  return { rawAnswers: joinedRawAnswers, normAnswers};
+};
+
+function extractFromDelta(currentContents: any) {
+ return currentContents.ops.map((item: any) => {
+    if (!isNullOrUndefined(item.insert)) {
+      if (!isNullOrUndefined(item.insert.formula)) {
+        return item.insert.formula;
+      } else {
+        return item.insert;
+      }
+    }
+  }).join(' ');
 }
 
-interface normalizeProps {
-  isShortAnswerEnabled: boolean;
-}
-
-export class NumberAnswer extends BaseAnswer<number> {
+export class CorrectNumberAnswer extends BaseAnswer<number> {
   constructor(config: IBaseAnswerConfig<number>) {
     super(config); // Pass the config to the BaseAnswer constructor
+
+    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
+
+    this.answerContent = {
+      ...this.answerContent,
+      rawAnswer: normalizedAnswers.rawAnswers,
+      normAnswer: normalizedAnswers.normAnswers,
+      answerType: AnswerType.NUMBER
+    };
+    return this;
   }
+}
 
-  normalize({
-    isShortAnswerEnabled 
-  } :normalizeProps): NumberAnswer {
+export class CorrectStringAnswer extends BaseAnswer<string> {
+  constructor(config: IBaseAnswerConfig<string>) {
+    super(config); // Pass the config to the BaseAnswer constructor
 
-    const extractedAnswers = isShortAnswerEnabled ? 
-      extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.NUMBER)
-      : {rawAnswers: this.answerContent.rawAnswer, normAnswers: this.answerContent.rawAnswer} ;
+    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
 
-    const answer = new NumberAnswer({
-      ...this,
-      answerContent: {
-        ...this.answerContent,
-        rawAnswer: extractedAnswers.rawAnswers,
-        normAnswer: extractedAnswers.normAnswers,
-        answerType: AnswerType.NUMBER
-      }
-    });
-    return answer;
+    this.answerContent = {
+      ...this.answerContent,
+      rawAnswer: normalizedAnswers.rawAnswers,
+      normAnswer: normalizedAnswers.normAnswers,
+      answerType: AnswerType.STRING
+    };
+    return this;
+  }
+}
+
+export class CorrectExpressionAnswer extends BaseAnswer<string> {
+  constructor(config: IBaseAnswerConfig<string>) {
+    super(config); // Pass the config to the BaseAnswer constructor
+
+    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);
+
+    this.answerContent = {
+      ...this.answerContent,
+      rawAnswer: normalizedAnswers.rawAnswers,
+      normAnswer: normalizedAnswers.normAnswers,
+      answerType: AnswerType.EXPRESSION
+    };
+    return this;
+  }
+}
+
+export class NumberAnswer extends TeamAnswer<number> {
+  constructor(config: ITeamAnswerConfig<number>) {
+    super(config); // Pass the config to the TeamAnswer constructor
+    const extractedAnswers = this.answerContent.isShortAnswerEnabled ? extractFromDelta(this.answerContent.delta) : this.answerContent.rawAnswer;
+    const normalizedAnswers = normalizeAnswers(extractedAnswers, AnswerType.NUMBER);
+    
+    this.answerContent = {
+      ...this.answerContent,
+      rawAnswer: normalizedAnswers.rawAnswers,
+      normAnswer: normalizedAnswers.normAnswers,
+      answerType: AnswerType.NUMBER
+    };
+    return this;
   }
 
   isEqualTo(otherAnswers: number[]): Boolean {
@@ -159,28 +229,18 @@ export class NumberAnswer extends BaseAnswer<number> {
   }
 }
 
-export class StringAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-  }
-
-  normalize({
-    isShortAnswerEnabled
-  }: normalizeProps): StringAnswer {
-    const extractedAnswers = isShortAnswerEnabled ? 
-      extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.STRING)
-      : {rawAnswers: this.answerContent.rawAnswer, normAnswers: this.answerContent.rawAnswer} ;
-
-    const answer = new StringAnswer({
-      ...this,
-      answerContent: {
-        ...this.answerContent,
-        rawAnswer: extractedAnswers.rawAnswers,
-        normAnswer: extractedAnswers.normAnswers,
-        answerType: AnswerType.STRING
-      }
-    });
-    return answer;
+export class StringAnswer extends TeamAnswer<string> {
+  constructor(config: ITeamAnswerConfig<string>) {
+    super(config); // Pass the config to the TeamAnswer constructor
+    const extractedAnswers = this.answerContent.isShortAnswerEnabled ? extractFromDelta(this.answerContent.delta) : this.answerContent.rawAnswer;
+    const normalizedAnswers = normalizeAnswers(extractedAnswers, AnswerType.STRING);
+    this.answerContent = {
+      ...this.answerContent,
+      rawAnswer: normalizedAnswers.rawAnswers,
+      normAnswer: normalizedAnswers.normAnswers,
+      answerType: AnswerType.STRING
+    };
+    return this;
   }
 
   isEqualTo(otherAnswers: string[]): Boolean {
@@ -192,41 +252,34 @@ export class StringAnswer extends BaseAnswer<string> {
   }
 }
 
-export class ExpressionAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-  }
+export class ExpressionAnswer extends TeamAnswer<string> {
+  constructor(config: ITeamAnswerConfig<string>) {
+    super(config); // Pass the config to the TeamAnswer constructor
 
-  normalize({
-    isShortAnswerEnabled
-  }: normalizeProps): ExpressionAnswer {
-    const extractedAnswers = isShortAnswerEnabled ? 
-      extractAndNormalizeFromDelta(this.answerContent.delta, AnswerType.EXPRESSION)
-      : {rawAnswers: this.answerContent.rawAnswer, normAnswers: this.answerContent.rawAnswer};
-    const answer = new ExpressionAnswer({
-      ...this,
-      answerContent: {
-        ...this.answerContent,
-        rawAnswer: extractedAnswers.rawAnswers,
-        normAnswer: extractedAnswers.normAnswers,
-        answerType: AnswerType.EXPRESSION
-      }
-    });
-    return answer;
+    const extractedAnswers = this.answerContent.isShortAnswerEnabled ? extractFromDelta(this.answerContent.delta) : this.answerContent.rawAnswer;
+    const normalizedAnswers = normalizeAnswers(extractedAnswers, AnswerType.EXPRESSION);
+
+    this.answerContent = {
+      ...this.answerContent,
+      rawAnswer: normalizedAnswers.rawAnswers,
+      normAnswer: normalizedAnswers.normAnswers,
+      answerType: AnswerType.EXPRESSION
+    };
+    return this;
   }
 
   isEqualTo(otherAnswers: string[]): Boolean {
-    // will use symbolicEqual from mathjs to compare expressions
-    // https://mathjs.org/docs/reference/functions/symbolicEqual.html
+    // will use parse and toString to extract expression trees and compare
+    // anything more complex than this will require a custom parser (and is probably not worth it)
+    // https://mathjs.org/docs/expressions/parsing.html
     if (this.answerContent.normAnswer) {
       for (let i =0; i < this.answerContent.normAnswer.length; i++) {
         for (let y = 0; y < otherAnswers.length; y++) {
           try {
-            if (symbolicEqual(this.answerContent.normAnswer[i].toString(), otherAnswers[y]) 
-              || this.answerContent.normAnswer[i].toString() === otherAnswers[y].toString()
-            ) {
+            const exp1 = parse(this.answerContent.normAnswer[i].toString()).toString();
+            const exp2 = parse(otherAnswers[y].toString()).toString();
+            if (exp1 === exp2)
               return true;
-            }
           } catch (e) {
             console.error(e);
           }
