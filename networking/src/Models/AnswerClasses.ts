@@ -10,16 +10,17 @@ export enum AnswerType {
 }
 
 export enum AnswerPrecision {
-  WHOLE = 'whole',
-  TENTH = 'tenth',
-  HUNDREDTH = 'hundredth',
-  THOUSANDTH = 'thousandth',
+  WHOLE = 'WHOLE',
+  TENTH = 'TENTH',
+  HUNDREDTH = 'HUNDREDTH',
+  THOUSANDTH = 'THOUSANDTH',
 }
 
 export interface ITeamAnswerContent {
   rawAnswer: string; 
-  normAnswer?: (string | number)[] | null;
+  normAnswer?: string[] | null;
   answerType?: AnswerType;
+  answerPrecision?: string;
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
   isSubmitted?: boolean;
@@ -30,8 +31,9 @@ export interface ITeamAnswerContent {
 
 export interface ICorrectAnswerContent {
   rawAnswer: string;
-  normAnswer?: (string | number)[];
+  normAnswer?: string[];
   answerType: AnswerType;
+  answerPrecision?: AnswerPrecision;
 }
 
 export interface IBaseAnswerConfig<T> {
@@ -102,17 +104,20 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
   if (!isNullOrUndefined(currentItem)) {
     switch (answerType) {
       case AnswerType.NUMBER:
+        console.log(currentItem);
         // if it's a number, check for percentages and convert to decimal
         const percentagesRegex = /(\d+(\.\d+)?)%/g;
         const extractPercents = currentItem.match(percentagesRegex);
         const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
         if (!isNullOrUndefined(percentages)){
-          normAnswers.push(percentages);
-          break;
+          normAnswers.push(percentages.toString());
         }
+        console.log(percentages);
         // then remove commas and spaces and push
         const noCommas = currentItem.replace(/,/g, '');
-        const normItem = Number(noCommas.trim());
+        console.log(noCommas);
+        console.log(noCommas.trim());
+        const normItem = noCommas.trim();
         if (!isNullOrUndefined(normItem)) {
           normAnswers.push(normItem);
         }
@@ -139,8 +144,8 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
   return normAnswers;
 };
 
-export class CorrectNumberAnswer extends BaseAnswer<number> {
-  constructor(config: IBaseAnswerConfig<number>) {
+export class CorrectNumberAnswer extends BaseAnswer<string> {
+  constructor(config: IBaseAnswerConfig<string>) {
     super(config); // Pass the config to the BaseAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
 
@@ -181,8 +186,8 @@ export class CorrectExpressionAnswer extends BaseAnswer<string> {
   }
 }
 
-export class NumberAnswer extends TeamAnswer<number> {
-  constructor(config: ITeamAnswerConfig<number>) {
+export class NumberAnswer extends TeamAnswer<string> {
+  constructor(config: ITeamAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
     
@@ -194,9 +199,28 @@ export class NumberAnswer extends TeamAnswer<number> {
     return this;
   }
 
-  isEqualTo(otherAnswers: number[]): Boolean {
-    if (this.answerContent.normAnswer && this.answerContent.normAnswer.some((answer) => otherAnswers.includes(answer as number))) {
-      return true;
+  isEqualTo(otherAnswers: string[]): Boolean {
+    const answerPrecisionDictionary = {
+      [AnswerPrecision.WHOLE]: 0,
+      [AnswerPrecision.TENTH]: 1,
+      [AnswerPrecision.HUNDREDTH]: 2,
+      [AnswerPrecision.THOUSANDTH]: 3
+    }
+    console.log(this.answerContent.normAnswer);
+    console.log(otherAnswers);
+    if (this.answerContent.normAnswer){
+      return this.answerContent.normAnswer.some((answer) => {
+        if (otherAnswers.includes(answer as string)){
+          if (this.answerContent && this.answerContent.answerPrecision)
+          {
+            const precisionEnum = AnswerPrecision[this.answerContent.answerPrecision as keyof typeof AnswerPrecision];
+            // this is going to round the number we found that matches to the precision that the teacher requested
+            const roundedNumberAsString = Number(answer).toFixed(answerPrecisionDictionary[precisionEnum]);
+            return answer.toString() === roundedNumberAsString;
+          }
+        }
+        return false;
+      }) 
     }
     return false;
   }

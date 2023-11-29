@@ -10,7 +10,6 @@ import {
   AnswerType,
   AnswerPrecision
 } from '@righton/networking';
-import ReactQuill from 'react-quill';
 import katex from 'katex';
 import './ReactQuill.css';
 import 'katex/dist/katex.min.css';
@@ -43,13 +42,9 @@ export default function OpenAnswerCard({
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const modules = {
-    toolbar: [['formula']],
-  };
-  const formats = ['formula'];
   const [isBadInput, setIsBadInput] = useState(false); 
   const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
-  const numericAnswerRegex = /^-?[0-9]+(\.[0-9]+)?%?$/;
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/;
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
       case AnswerType.STRING:
@@ -83,7 +78,7 @@ export default function OpenAnswerCard({
     let isBadInputDetected = false;
     if (answerSettings?.answerType === AnswerType.NUMBER) {
       isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
-      currentAnswer = currentAnswer.replace(/(?!-?[0-9]+(\.[0-9]+)?%?)./g, '');
+      currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
       setIsBadInput(isBadInputDetected);
     }
     const extractedAnswer: ITeamAnswerContent = {
@@ -107,6 +102,7 @@ export default function OpenAnswerCard({
       currentQuestionIndex,
       isShortAnswerEnabled,
       isSubmitted: true,
+      answerPrecision: answerSettings?.answerPrecision,
     } as ITeamAnswerContent;
     handleSubmitAnswer(packagedAnswer);
   };

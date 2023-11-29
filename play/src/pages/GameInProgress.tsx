@@ -204,9 +204,9 @@ export default function GameInProgress({
       }
       case (AnswerType.NUMBER):
       default: {
-        const answerConfig: ITeamAnswerConfig<number> = {
+        const answerConfig: ITeamAnswerConfig<string> = {
           ...answerConfigBase,
-          value: 0
+          value: ''
         }
         answer = new NumberAnswer(answerConfig);
         break;

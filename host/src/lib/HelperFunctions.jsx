@@ -259,15 +259,16 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
 };
 
 
-export const createCorrectAnswer = (correctAnswerValue, answerType) => {
+export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
   const answerConfigBase = {
     answerContent: {
       rawAnswer:  correctAnswerValue,
-      answerType,
+      answerType: answerSettings.answerType,
+      answerPrecision: answerSettings.answerPrecision
     },
   };
   let correctAnswer;
-  switch (answerType){
+  switch (answerSettings.answerType){
     case (AnswerType.NUMBER):
     default:
       correctAnswer = new NumberAnswer(answerConfigBase);
@@ -291,7 +292,7 @@ export const createCorrectAnswer = (correctAnswerValue, answerType) => {
  * @param {string} teamId 
  * @returns {IResponse[]}
  */
-export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
+export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
   // if the answer is empty, skip and return the previous answer
   // an empty answer could mean that a user was able to submit an answer of the wrong type
   if (newAnswer.answerContent.normAnswer.length === 0) {
@@ -300,7 +301,7 @@ export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, n
   // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
   if (prevShortAnswer.length === 0) { 
     const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
-    const correctAnswer = createCorrectAnswer(correctAnswerValue, newAnswer.answerContent.answerType);
+    const correctAnswer = createCorrectAnswer(correctAnswerValue, answerSettings);
     prevShortAnswer.push({
       rawAnswer: correctAnswer.answerContent.rawAnswer,
       normAnswer: correctAnswer.answerContent.normAnswer,
