@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, RefObject } from 'react';
+import React, { ChangeEvent, useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
@@ -42,9 +42,12 @@ export default function OpenAnswerCard({
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const katexBoxRef = useRef();
   const [isBadInput, setIsBadInput] = useState(false); 
+  const [katexAnswer, setKatexAnswer] = useState('');
+
   const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
-  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/;
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
       case AnswerType.STRING:
@@ -66,11 +69,11 @@ export default function OpenAnswerCard({
           }
     }
   }
+
   const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
     answerContent?.rawAnswer ?? ''
   );
-  // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -106,6 +109,16 @@ export default function OpenAnswerCard({
     } as ITeamAnswerContent;
     handleSubmitAnswer(packagedAnswer);
   };
+
+   // useEffect to handle KaTeX rendering
+   // need this in a useEffect because the katex render conflicts with react state updates (always one step behind)
+   useEffect(() => {
+    if (answerSettings?.answerType === AnswerType.EXPRESSION && katexBoxRef.current) {
+      katex.render(editorContents, katexBoxRef.current, {
+        throwOnError: false
+      });
+    }
+  }, [editorContents, answerSettings?.answerType]);
 
   return (
     <BodyCardStyled elevation={10}>
@@ -165,6 +178,11 @@ export default function OpenAnswerCard({
                   {t('gameinprogress.chooseanswer.openanswercardnumberwarning')}
               </Typography>
             : null
+          }
+          { answerSettings?.answerType === AnswerType.EXPRESSION && 
+            <Box
+              ref={katexBoxRef}
+            />
           }
           <ButtonSubmitAnswer
             isSelected={
