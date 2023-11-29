@@ -180,7 +180,7 @@ export default function GameInProgress({
       teamMemberAnswersId: teamMemberId,
       text: '',
       answerContent: packagedAnswer,
-      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !isShortAnswerEnabled,
+      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER,
       confidenceLevel: ConfidenceLevel.NOT_RATED
     };
     let answer;

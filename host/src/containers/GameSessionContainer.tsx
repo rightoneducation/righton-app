@@ -337,7 +337,7 @@ const GameSessionContainer = () => {
     ){
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({
         ...answer,
-        isSelectedMistake: selectedMistakes.includes(answer.value),
+        isSelectedMistake: selectedMistakes.includes(answer.rawAnswer),
         })
       );
       await apiClient

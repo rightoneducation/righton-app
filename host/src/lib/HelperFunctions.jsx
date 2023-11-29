@@ -215,17 +215,19 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
   if (shortAnswerResponses && shortAnswerResponses.length > 0) {
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
+    console.log(answers);
     const choices = shortAnswerResponses.reduce((acc, answer) => {
       if (answer.isSelectedMistake || answer.isCorrect) {
         acc.push(answer);
       }
       return acc; 
     }, []);
+    console.log(choices);
     const correctChoiceIndex = choices.findIndex(choice => choice.isCorrect);
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
       for (let i = 0; i < choices.length; i++){ 
-        if (answer.answerContent.rawAnswer === choices[i].value) {
+        if (answer.answerContent.rawAnswer === choices[i].rawAnswer) {
           answersArray[i].count += 1;
           answersArray[i].teams.push({name: team.name});
           break;
@@ -390,7 +392,7 @@ export const buildVictoryDataObjectShortAnswerPhaseTwo = (
       ...Object.keys(answers.answersArray).map((key, index) => ({
         answerCount: answers.answersArray[index].count,
         answerChoice: String.fromCharCode(65 + index),
-        answerText: shortAnswerResponses[index].value,
+        answerText: shortAnswerResponses[index].rawAnswer.toString(),
         answerTeams: shortAnswerResponses[index].teams,
         answerCorrect: shortAnswerResponses[index].isCorrect
       })).reverse(),

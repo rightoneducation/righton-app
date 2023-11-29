@@ -55,6 +55,7 @@ export default function DiscussAnswer({
     currentQuestion,
     currentState
   );
+  console.log(correctAnswer);
   const isPlayerCorrect = isShortAnswerEnabled
     ? ModelHelper.isShortAnswerResponseCorrect(
         currentQuestion.responses ?? [],
