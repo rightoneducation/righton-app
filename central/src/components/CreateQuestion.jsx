@@ -17,7 +17,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
   const [answerType, setAnswerType] = useState('number');
-  const [answerPrecision, setAnswerPrecision] = useState('ones');
+  const [answerPrecision, setAnswerPrecision] = useState('WHOLE');
 
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {

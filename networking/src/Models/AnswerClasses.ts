@@ -104,7 +104,6 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
   if (!isNullOrUndefined(currentItem)) {
     switch (answerType) {
       case AnswerType.NUMBER:
-        console.log(currentItem);
         // if it's a number, check for percentages and convert to decimal
         const percentagesRegex = /(\d+(\.\d+)?)%/g;
         const extractPercents = currentItem.match(percentagesRegex);
@@ -112,11 +111,8 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
         if (!isNullOrUndefined(percentages)){
           normAnswers.push(percentages.toString());
         }
-        console.log(percentages);
         // then remove commas and spaces and push
         const noCommas = currentItem.replace(/,/g, '');
-        console.log(noCommas);
-        console.log(noCommas.trim());
         const normItem = noCommas.trim();
         if (!isNullOrUndefined(normItem)) {
           normAnswers.push(normItem);
@@ -206,8 +202,6 @@ export class NumberAnswer extends TeamAnswer<string> {
       [AnswerPrecision.HUNDREDTH]: 2,
       [AnswerPrecision.THOUSANDTH]: 3
     }
-    console.log(this.answerContent.normAnswer);
-    console.log(otherAnswers);
     if (this.answerContent.normAnswer){
       return this.answerContent.normAnswer.some((answer) => {
         if (otherAnswers.includes(answer as string)){

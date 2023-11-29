@@ -86,25 +86,25 @@ export default function QuestionFormAnswerDropdown({
                 <RadioGroup value={answerPrecision} row onChange={(event) => setAnswerPrecision(event.target.value)}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'ones'} 
+                    value={'WHOLE'} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Ones (0)'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'tenths'} 
+                    value={'TENTH'} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Tenths (0.1)'} 
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'hundredths'} 
+                    value={'HUNDREDTH'} 
                     control={<Radio className={classes.radioButton} />} 
                     label={'Hundredths (0.01)'}
                   />
                   <FormControlLabel 
                     className={classes.radioLabel} 
-                    value={'thousandths'}
+                    value={'THOUSANDTH'}
                     control={<Radio className={classes.radioButton} />} 
                     label={'Thousandths (0.001)'}
                   />
