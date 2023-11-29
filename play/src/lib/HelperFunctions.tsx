@@ -61,7 +61,6 @@ export const checkForSubmittedAnswerOnRejoin = (
   isShortAnswerEnabled: boolean,
 ): ITeamAnswerContent => {
   let returnedAnswer: ITeamAnswerContent = {
-    delta: '',
     rawAnswer: '',
     normAnswer: [],
     multiChoiceAnswerIndex: null,

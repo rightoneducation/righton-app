@@ -263,7 +263,6 @@ export const createCorrectAnswer = (correctAnswerValue, answerType) => {
   const answerConfigBase = {
     answerContent: {
       rawAnswer:  correctAnswerValue,
-      normAnswer: correctAnswerValue,
       answerType,
     },
   };
