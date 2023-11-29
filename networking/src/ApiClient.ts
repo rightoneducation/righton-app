@@ -967,7 +967,7 @@ class TeamAnswerParser {
             default: {
                 const answerConfig = {
                     ...answerConfigBase,
-                    value: ''
+                    value: 0
                 }
                 teamAnswer = new NumberAnswer(answerConfig);
                 break;
