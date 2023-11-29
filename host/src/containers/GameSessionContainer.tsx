@@ -16,7 +16,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { createCorrectAnswerObject, buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
+import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator

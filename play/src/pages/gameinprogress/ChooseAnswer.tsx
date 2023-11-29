@@ -120,7 +120,7 @@ export default function ChooseAnswer({
           isShortAnswerEnabled={isShortAnswerEnabled}
           answerContent={answerContent}
           answerSettings={answerSettings}
-          isSubmitted={ false}
+          isSubmitted={isSubmitted}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}

@@ -26,7 +26,7 @@ export default function FeaturedMistakes({
     const extractedMistakes = shortAnswerResponses.reduce((acc, shortAnswerResponse) => {
       if (!shortAnswerResponse.isCorrect){
         acc.push({
-          answer: shortAnswerResponse.value, 
+          answer: shortAnswerResponse.rawAnswer, 
           percent: Math.round((shortAnswerResponse.count/totalAnswers)*100), 
           isSelected: shortAnswerResponse.isSelectedMistake ?? false
         });
