@@ -5,14 +5,18 @@ import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
   ITeamAnswerContent,
+  IAnswerSettings,
   GameSessionState,
+  NumberAnswer,
+  StringAnswer,
+  ExpressionAnswer,
+  AnswerType
 } from '@righton/networking';
 import ReactQuill from 'react-quill';
 import katex from 'katex';
 import './ReactQuill.css';
 import 'katex/dist/katex.min.css';
-import { handleNormalizeAnswers } from '../../lib/HelperFunctions';
-import { StorageKeyAnswer } from '../../lib/PlayModels';
+import { StorageKeyAnswer} from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
@@ -21,6 +25,7 @@ window.katex = katex;
 
 interface OpenAnswerCardProps {
   answerContent: ITeamAnswerContent;
+  answerSettings: IAnswerSettings | null;
   isSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
@@ -29,6 +34,7 @@ interface OpenAnswerCardProps {
 
 export default function OpenAnswerCard({
   answerContent,
+  answerSettings,
   isSubmitted,
   currentState,
   currentQuestionIndex,
@@ -40,6 +46,7 @@ export default function OpenAnswerCard({
     toolbar: [['formula']],
   };
   const formats = ['formula'];
+  const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
   // these two functions isolate the quill data structure (delta) from the rest of the app
   // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
   const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
@@ -71,14 +78,12 @@ export default function OpenAnswerCard({
     setEditorContents(currentAnswer);
   };
 
-  const handleNormalizeAnswerOnSubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    const normalizedAnswers = handleNormalizeAnswers(currentContents);
+  const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const packagedAnswer: ITeamAnswerContent = {
       delta: currentContents,
-      rawAnswer: normalizedAnswers.rawAnswer,
-      normAnswer: normalizedAnswers.normalizedAnswer,
       currentState,
       currentQuestionIndex,
+      isSubmitted: true,
     } as ITeamAnswerContent;
     handleSubmitAnswer(packagedAnswer);
   };
@@ -130,7 +135,7 @@ export default function OpenAnswerCard({
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>
-              handleNormalizeAnswerOnSubmit(editorContents)
+              handlePresubmit(editorContents)
             }
           />
         </Box>
