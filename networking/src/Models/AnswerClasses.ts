@@ -18,7 +18,7 @@ export enum AnswerPrecision {
 
 export interface ITeamAnswerContent {
   rawAnswer: string; 
-  normAnswer?: string[] | null;
+  normAnswer?: (string | number)[] | null;
   answerType?: AnswerType;
   answerPrecision?: string;
   percent?: number;
@@ -31,7 +31,7 @@ export interface ITeamAnswerContent {
 
 export interface ICorrectAnswerContent {
   rawAnswer: string;
-  normAnswer?: string[];
+  normAnswer?: (string | number)[];
   answerType: AnswerType;
   answerPrecision?: AnswerPrecision;
 }
@@ -109,7 +109,7 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
         const extractPercents = currentItem.match(percentagesRegex);
         const percentages = extractPercents ? parseFloat(extractPercents[0]) / 100 : null
         if (!isNullOrUndefined(percentages)){
-          normAnswers.push(percentages.toString());
+          normAnswers.push(percentages);
         }
         // then remove commas and spaces and push
         const noCommas = currentItem.replace(/,/g, '');
@@ -140,8 +140,8 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
   return normAnswers;
 };
 
-export class CorrectNumberAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
+export class CorrectNumberAnswer extends BaseAnswer<number> {
+  constructor(config: IBaseAnswerConfig<number>) {
     super(config); // Pass the config to the BaseAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
 
@@ -182,8 +182,8 @@ export class CorrectExpressionAnswer extends BaseAnswer<string> {
   }
 }
 
-export class NumberAnswer extends TeamAnswer<string> {
-  constructor(config: ITeamAnswerConfig<string>) {
+export class NumberAnswer extends TeamAnswer<number> {
+  constructor(config: ITeamAnswerConfig<number>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
     
@@ -195,7 +195,7 @@ export class NumberAnswer extends TeamAnswer<string> {
     return this;
   }
 
-  isEqualTo(otherAnswers: string[]): Boolean {
+  isEqualTo(otherAnswers: number[]): Boolean {
     const answerPrecisionDictionary = {
       [AnswerPrecision.WHOLE]: 0,
       [AnswerPrecision.TENTH]: 1,
@@ -204,13 +204,18 @@ export class NumberAnswer extends TeamAnswer<string> {
     }
     if (this.answerContent.normAnswer){
       return this.answerContent.normAnswer.some((answer) => {
-        if (otherAnswers.includes(answer as string)){
+        if (otherAnswers.includes(answer as number)){
           if (this.answerContent && this.answerContent.answerPrecision)
           {
+            // we clean up the raw answer again to remove commas and the percent sign
+            // we need to use the raw answer because the norm answer could be changed if there is a percentage present
+            // so it's not a reliable way to check decimal places
+            const normRawAnswer = this.answerContent.rawAnswer.replace(/[,%]/g, '').trim();
             const precisionEnum = AnswerPrecision[this.answerContent.answerPrecision as keyof typeof AnswerPrecision];
+
             // this is going to round the number we found that matches to the precision that the teacher requested
-            const roundedNumberAsString = Number(answer).toFixed(answerPrecisionDictionary[precisionEnum]);
-            return answer.toString() === roundedNumberAsString;
+            const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[precisionEnum]);
+            return normRawAnswer === roundedNumberAsString;
           }
         }
         return false;
