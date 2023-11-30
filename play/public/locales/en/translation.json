@@ -85,7 +85,7 @@
       "questioncard": "Question",
       "answercard": "Choose the correct answer",
       "openanswercard": "Enter your answer",
-      "openanswercarddescription": "Your teacher is expecting a",
+      "openanswercarddescription": "Your teacher is expecting a ",
       "openanswercardnumberanswer1": "numeric answer as a whole number.",
       "openanswercardnumberanswer2": "numeric answer to one decimal place.",
       "openanswercardnumberanswer3": "numeric answer to two decimal places.",
@@ -93,6 +93,7 @@
       "openanswercardwordanswer": "short word answer.",
       "openanswercardexpressionanswer": "math expression.",
       "openanswercardplaceholder": "Enter your answer here...",
+      "openanswercardkatexpreview": "Expression preview:",
       "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9 "
     },
     "discussanswer": {
