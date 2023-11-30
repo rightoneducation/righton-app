@@ -16,6 +16,7 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
+  isShortAnswerEnabled: boolean;
   selectedAnswer?: number | null;
   answers?: IChoice[] | undefined;
   currentState: GameSessionState;
@@ -26,6 +27,7 @@ interface ButtonSubmitAnswerProps {
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  isShortAnswerEnabled,
   selectedAnswer,
   answers,
   currentState,
@@ -48,13 +50,9 @@ export default function ButtonSubmitAnswer({
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
         const answer = {
           rawAnswer: answerText ?? '',
-          normAnswer: 
-            {
-              [AnswerType.NUMBER]: [],
-              [AnswerType.STRING]: [],
-              [AnswerType.EXPRESSION]: [],
-            } as INormAnswer,
+          normAnswer: [],
           multiChoiceAnswerIndex: selectedAnswer,
+          isShortAnswerEnabled,
           isSubmitted: true,
           currentState,
           currentQuestionIndex,

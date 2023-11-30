@@ -9,6 +9,10 @@ import {
   GameSessionState,
   IGameSession,
   isNullOrUndefined,
+  NumberAnswer,
+  StringAnswer,
+  ExpressionAnswer,
+  AnswerType
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
@@ -114,7 +118,7 @@ const GameSessionContainer = () => {
                     && answer.isChosen) 
                   ) {
                     setShortAnswerResponses((prev) => {
-                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
+                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
                    });
                   }
                 });
@@ -184,6 +188,7 @@ const GameSessionContainer = () => {
         // we have to get the gameSession as we're still in the useEffect closure and the gameSession is stale
         apiClient.getGameSession(gameSessionId).then((gameSession) => {
           let choices = getQuestionChoices(gameSession.questions, gameSession.currentQuestionIndex);
+
           // similarly all state values here are stale so we are going to use functional setting to ensure we're grabbing the most recent state
           setTeamsArray((prevState) => {
             const { teamName, teamId } = getTeamInfoFromAnswerId(prevState, teamAnswerResponse.teamMemberAnswersId);
@@ -201,7 +206,7 @@ const GameSessionContainer = () => {
               // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
-                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, teamAnswerResponse, teamName, teamId);
+                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
                 apiClient
                   .updateQuestion({
                     gameSessionId: gameSession.id, 
@@ -231,10 +236,11 @@ const GameSessionContainer = () => {
               team.teamMembers.forEach((teamMember) => {
                 if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                   teamMember.answers.forEach((answer) => {
-                    if (answer.id === teamAnswerResponse.id)
+                    if (answer.id === teamAnswerResponse.id){
                       answer.confidenceLevel =
                         teamAnswerResponse.confidenceLevel;
                       teamName = team.name;
+                    }
                   });
                 }
               });
@@ -245,7 +251,7 @@ const GameSessionContainer = () => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
           newShortAnswers.forEach((answer) => {
             answer.teams.forEach((answerTeam) => {
-              if (answerTeam.team === teamName) {
+              if (answerTeam.name === teamName) {
                 answerTeam.confidence = teamAnswerResponse.confidenceLevel;   
               }
             })
@@ -332,7 +338,7 @@ const GameSessionContainer = () => {
     ){
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({
         ...answer,
-        isSelectedMistake: selectedMistakes.includes(answer.value),
+        isSelectedMistake: selectedMistakes.includes(answer.rawAnswer),
         })
       );
       await apiClient

@@ -1,4 +1,4 @@
-import React, { useState, RefObject } from 'react';
+import React, { ChangeEvent, useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
@@ -7,19 +7,16 @@ import {
   ITeamAnswerContent,
   IAnswerSettings,
   GameSessionState,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
-  AnswerType
+  AnswerType,
+  AnswerPrecision
 } from '@righton/networking';
-import ReactQuill from 'react-quill';
 import katex from 'katex';
-import './ReactQuill.css';
 import 'katex/dist/katex.min.css';
 import { StorageKeyAnswer} from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
+import ShortAnswerTextFieldStyled from '../../lib/styledcomponents/ShortAnswerTextFieldStyled';
 
 window.katex = katex;
 
@@ -27,6 +24,7 @@ interface OpenAnswerCardProps {
   answerContent: ITeamAnswerContent;
   answerSettings: IAnswerSettings | null;
   isSubmitted: boolean;
+  isShortAnswerEnabled: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;
   handleSubmitAnswer: (result: ITeamAnswerContent) => void;
@@ -36,39 +34,60 @@ export default function OpenAnswerCard({
   answerContent,
   answerSettings,
   isSubmitted,
+  isShortAnswerEnabled,
   currentState,
   currentQuestionIndex,
   handleSubmitAnswer,
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const modules = {
-    toolbar: [['formula']],
-  };
-  const formats = ['formula'];
+  const katexBoxRef = useRef();
+  const [isBadInput, setIsBadInput] = useState(false); 
+  const [katexAnswer, setKatexAnswer] = useState('');
+
   const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
-  // these two functions isolate the quill data structure (delta) from the rest of the app
-  // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
-  const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
-    return inputAnswer.delta ?? [];
-  };
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
+  const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
+    switch (inputAnswerSettings?.answerType) {
+      case AnswerType.STRING:
+        return t('gameinprogress.chooseanswer.openanswercardwordanswer');
+      case AnswerType.EXPRESSION:
+        return t('gameinprogress.chooseanswer.openanswercardexpressionanswer');
+      case AnswerType.NUMBER:
+        default: 
+          switch(inputAnswerSettings?.answerPrecision){
+            case (AnswerPrecision.THOUSANDTH):
+              return t('gameinprogress.chooseanswer.openanswercardnumberanswer4');
+            case (AnswerPrecision.HUNDREDTH):
+              return t('gameinprogress.chooseanswer.openanswercardnumberanswer3');
+            case (AnswerPrecision.TENTH):
+              return t('gameinprogress.chooseanswer.openanswercardnumberanswer2');
+            case (AnswerPrecision.WHOLE):
+              default:
+                return t('gameinprogress.chooseanswer.openanswercardnumberanswer1');
+          }
+    }
+  }
 
+  const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
-    insertQuillDelta(answerContent)
+    answerContent?.rawAnswer ?? ''
   );
-
-  // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (
-    content: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    delta: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    source: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    editor: any // eslint-disable-line @typescript-eslint/no-explicit-any
+    event: ChangeEvent<HTMLInputElement>
   ) => {
-    const currentAnswer = editor.getContents();
+    let currentAnswer = event.target.value;
+    let isBadInputDetected = false;
+    if (answerSettings?.answerType === AnswerType.NUMBER) {
+      isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
+      currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
+      setIsBadInput(isBadInputDetected);
+    }
     const extractedAnswer: ITeamAnswerContent = {
-      delta: currentAnswer,
+      rawAnswer: currentAnswer,
       currentState,
       currentQuestionIndex,
+      isShortAnswerEnabled,
       isSubmitted: answerContent.isSubmitted,
     };
     window.localStorage.setItem(
@@ -77,16 +96,29 @@ export default function OpenAnswerCard({
     );
     setEditorContents(currentAnswer);
   };
-
+  
   const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const packagedAnswer: ITeamAnswerContent = {
-      delta: currentContents,
+      rawAnswer: currentContents,
       currentState,
       currentQuestionIndex,
+      isShortAnswerEnabled,
       isSubmitted: true,
+      answerPrecision: answerSettings?.answerPrecision,
     } as ITeamAnswerContent;
     handleSubmitAnswer(packagedAnswer);
   };
+
+   // useEffect to handle KaTeX rendering
+   // need this in a useEffect because the katex render conflicts with react state updates (always one step behind)
+   useEffect(() => {
+    if (answerSettings?.answerType === AnswerType.EXPRESSION && katexBoxRef.current) {
+      katex.render(editorContents, katexBoxRef.current, {
+        throwOnError: false,
+        trust: false
+      });
+    }
+  }, [editorContents, answerSettings?.answerType]);
 
   return (
     <BodyCardStyled elevation={10}>
@@ -97,6 +129,24 @@ export default function OpenAnswerCard({
         >
           {t('gameinprogress.chooseanswer.openanswercard')}
         </Typography>
+        <Box display="inline" style={{ width: '100%' }}>
+        <Typography
+          variant="body1"
+          display="inline"
+          sx={{ width: '100%', textAlign: 'left' }}
+        >
+          {t('gameinprogress.chooseanswer.openanswercarddescription')}
+         
+        </Typography>
+   
+        <Typography
+            variant="body1"
+            display="inline"
+            sx={{ width: '100%', textAlign: 'left', fontWeight: 700 }}
+          >
+            {answerText}
+          </Typography>
+          </Box>
         <Box
           style={{
             display: 'flex',
@@ -107,31 +157,63 @@ export default function OpenAnswerCard({
             gap: '20px',
           }}
         >
-          <ReactQuill
+          <ShortAnswerTextFieldStyled
             className="swiper-no-swiping"
-            theme="snow"
-            readOnly={isSubmitted}
-            value={editorContents}
+            data-testid="gameCode-inputtextfield"
+            fullWidth
+            variant="filled"
+            autoComplete="off"
+            multiline
+            minRows={2}
+            maxRows={2}
+            placeholder={t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
-            placeholder={
-              t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''
-            }
-            modules={modules}
-            formats={formats}
-            bounds={`[data-text-editor="name"]`}
-            style={{
-              width: '100%',
-              backgroundColor: !isSubmitted
-                ? ''
-                : `${theme.palette.primary.lightGrey}`,
-              borderRadius: '4px',
+            value={editorContents}
+            InputProps={{
+              disableUnderline: true,
+              style: {
+                paddingTop: '9px',
+              },
             }}
           />
+          { isBadInput
+            ? <Typography
+                variant="body1"
+                sx={{ width: '100%', textAlign: 'center' }}
+              >
+                  {t('gameinprogress.chooseanswer.openanswercardnumberwarning')}
+              </Typography>
+            : null
+          }
+          { answerSettings?.answerType === AnswerType.EXPRESSION &&
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 16
+              }}
+            >
+              <Typography
+              variant="body1"
+              sx={{ width: '100%', textAlign: 'left' }}
+              >
+                {t('gameinprogress.chooseanswer.openanswercardkatexpreview')}
+              </Typography>
+              <Box
+                style={{minHeight: '24px'}}
+                ref={katexBoxRef}
+              />
+            </Box>
+          }
           <ButtonSubmitAnswer
             isSelected={
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
             isSubmitted={isSubmitted}
+            isShortAnswerEnabled={isShortAnswerEnabled}
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}
             handleSubmitAnswer={() =>

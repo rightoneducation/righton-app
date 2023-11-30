@@ -1,5 +1,5 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
-import { ITeamAnswerContent } from "./TeamAnswerClass";
+import { ITeamAnswerContent } from "./AnswerClasses";
 
 export interface ITeamAnswer {
     id: string,

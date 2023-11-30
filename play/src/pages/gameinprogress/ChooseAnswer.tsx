@@ -117,9 +117,10 @@ export default function ChooseAnswer({
       {isShortAnswerEnabled &&
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
         <OpenAnswerCard
+          isShortAnswerEnabled={isShortAnswerEnabled}
           answerContent={answerContent}
           answerSettings={answerSettings}
-          isSubmitted={ false}
+          isSubmitted={isSubmitted}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
@@ -128,6 +129,7 @@ export default function ChooseAnswer({
         <AnswerCard
           answers={answerChoices}
           isSubmitted={answerContent.isSubmitted ?? false}
+          isShortAnswerEnabled={isShortAnswerEnabled}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}

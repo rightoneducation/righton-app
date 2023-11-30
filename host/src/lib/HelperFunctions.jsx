@@ -2,9 +2,11 @@ import {
   isNullOrUndefined,
   GameSessionState,
   ConfidenceLevel,
-  AnswerType,
+  NumberAnswer,
+  StringAnswer,
+  ExpressionAnswer,
+  AnswerType
 } from '@righton/networking';
-import { parse, symbolicEqual } from 'mathjs';
 
 /*
  * counts all answers for current question using isChosen, for use in footer progress bar
@@ -223,7 +225,7 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
       for (let i = 0; i < choices.length; i++){ 
-        if (answer.answerContent.rawAnswer === choices[i].value) {
+        if (answer.answerContent.rawAnswer === choices[i].rawAnswer) {
           answersArray[i].count += 1;
           answersArray[i].teams.push({name: team.name});
           break;
@@ -256,82 +258,30 @@ export const getTeamInfoFromAnswerId = (teamsArray, teamMemberAnswersId) => {
   return {teamName, teamId};
 };
 
-/**
- * We currently do not have the teacher select the type of answer for a correct answer. 
- * Therefore, this function determines the type of answer for the correct answer so it can be used in type-based comparisons
- * later on in the game.
- * @param {any} answer 
- * @returns {AnswerType}
- */
-export const determineAnswerType = (answer) => {
-  // check if answer is numeric
-  if (
-    (typeof(answer) === 'number' || 
-    typeof(answer) === "string") && 
-    answer.trim() !== ''
-    && !isNaN(answer)
-  ) 
-    return AnswerType.NUMBER; 
-  // check if answer is an expression
-  try {
-    // if the answer contains mathematical operators and mathjs can parse the answer, it's an expression
-    const expRegex = /[+\-*/^().]/;
-    if (expRegex.test(answer) && parse(answer))
-      return AnswerType.EXPRESSION;
-    return AnswerType.STRING;
-  } catch {
-    // if the parse fails, the answer is a string
-    return AnswerType.STRING;
-  }
-};
-/**
- * this function is called to check symbolic equality between two expressions
- * @param {any} normAnswer - the array of mathematical expressions that comprise the answer that has been submitted by the student 
- * @param {any} prevAnswer - the array of mathematical expressions that are contained in the previous answer
- * @returns {boolean} - true/false if there is a match
- */
-export const checkExpressionEquality = (normAnswer,  prevAnswer) => {
-  let isSymbolicallyEqual = false;
-  for (let normItem of normAnswer) {
-    for (let prevItem of prevAnswer) {
-      try {
-        if (symbolicEqual(normItem, prevItem) || normItem.toString() === prevItem.toString()) {
-          isSymbolicallyEqual = true;
-          break; // Break out of the inner loop
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    if (isSymbolicallyEqual) {
-      break; // Break out of the outer loop if a match has been found
-    }
-  }
-  return isSymbolicallyEqual;
-}
 
-/**
- * this function takes a received normalized answer and loops through all normalized answers in the immediate previous answer to check for equality
- * for more info see: https://github.com/rightoneducation/righton-app/wiki/Short-Answer-Response-%E2%80%90-Equality-Checks
- * @param {string} rawAnswer
- * @param {any} normValue
- * @param {AnswerType} normType
- * @param {IResponse[]} prevAnswer
- * @returns {boolean}
- */
-export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAnswer,  prevAnswer, correctAnswerRegex) => {
-  // convert to set to optimize the equality check between two arrays
-  // this prevents having to use two nested for/foreach loops etc
-  const prevAnswerSet = new Set(prevAnswer);
-  // expression equality requires a bit more work, as we have to use mathjs to check for symbolic equality
-  if (Number(normAnswerType) === AnswerType.EXPRESSION) {
-    return checkExpressionEquality(normAnswer, prevAnswerSet);
+export const createCorrectAnswer = (correctAnswerValue, answerSettings) => {
+  const answerConfigBase = {
+    answerContent: {
+      rawAnswer:  correctAnswerValue,
+      answerType: answerSettings.answerType,
+      answerPrecision: answerSettings.answerPrecision
+    },
+  };
+  let correctAnswer;
+  switch (answerSettings.answerType){
+    case (AnswerType.NUMBER):
+    default:
+      correctAnswer = new NumberAnswer(answerConfigBase);
+      break;
+    case(AnswerType.STRING):
+      correctAnswer = new StringAnswer(answerConfigBase);
+      break;
+    case(AnswerType.EXPRESSION):
+      correctAnswer = new ExpressionAnswer(answerConfigBase);
+      break;
   }
-  return ( normAnswer.some(item => prevAnswerSet.has(item)) 
-    || (Number(normAnswerType) === AnswerType.STRING && correctAnswerRegex.test(normAnswer))
-    || (rawAnswer === prevAnswer.value) 
-  );
-}
+  return correctAnswer;
+};
 
 /**
  * This function creates the short answer responses object that will be stored in the question object, via equality checks
@@ -342,49 +292,38 @@ export const checkEqualityWithOtherAnswers = (rawAnswer, normAnswerType, normAns
  * @param {string} teamId 
  * @returns {IResponse[]}
  */
-export const buildShortAnswerResponses = (prevShortAnswer, choices, newAnswer, newAnswerTeamName, teamId) => {
-  let correctAnswer = choices.find(choice => choice.isAnswer).text;
-  const correctAnswerRegEx = new RegExp(`\\b${correctAnswer.toLowerCase()}\\b`, 'g');
-  if (prevShortAnswer.length === 0) {
-    const correctAnswerType = determineAnswerType(correctAnswer);
-    if (correctAnswerType === AnswerType.NUMBER) {
-      correctAnswer = Number(correctAnswer);
-    } else {
-      correctAnswer = correctAnswer.toLowerCase();
-    }
-   
+export const buildShortAnswerResponses = (prevShortAnswer, choices, answerSettings, newAnswer, newAnswerTeamName, teamId) => {
+  // if the answer is empty, skip and return the previous answer
+  // an empty answer could mean that a user was able to submit an answer of the wrong type
+  if (newAnswer.answerContent.normAnswer.length === 0) {
+    return prevShortAnswer;
+  }
+  // if this is the first answer received, add the correct answer object to prevShortAnswer for comparisons
+  if (prevShortAnswer.length === 0) { 
+    const correctAnswerValue = choices.find(choice => choice.isAnswer).text;
+    const correctAnswer = createCorrectAnswer(correctAnswerValue, answerSettings);
     prevShortAnswer.push({
-      value: correctAnswer,
+      rawAnswer: correctAnswer.answerContent.rawAnswer,
+      normAnswer: correctAnswer.answerContent.normAnswer,
       isCorrect: true,
       isSelectedMistake: false,
-      normAnswer: {
-        [correctAnswerType]: [correctAnswer]
-      },
       count: 0,
       teams: [],
     });
   }
-  const rawAnswer = newAnswer.answerContent.rawAnswer;
-  let isExistingAnswer = false;
-
-  // for each answer type in the newly submitted answer
-  Object.entries(newAnswer.answerContent.normAnswer).forEach(([key, value])=>{
-      // for each answer in the previous short answer array 
-      prevShortAnswer.forEach((prevAnswer) => {
-        // check equality based on the type of answer
-        if (isExistingAnswer === false 
-          && prevAnswer.normAnswer[key] 
-          && checkEqualityWithOtherAnswers(rawAnswer, key, value, prevAnswer.normAnswer[key], correctAnswerRegEx)) {
-          isExistingAnswer = true;
-          prevAnswer.count += 1;
-          prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
-        }
-    });
+  let isExistingAnswer = false;  
+  // check the new answer against the previously submitted answers and the correct answer
+  prevShortAnswer.forEach((prevAnswer) => {
+    if(newAnswer.isEqualTo(prevAnswer.normAnswer)){
+      isExistingAnswer = true;
+      prevAnswer.count += 1;
+      prevAnswer.teams.push({name: newAnswerTeamName, id: teamId, confidence: newAnswer.confidenceLevel});
+    }
   });
-
+  // if there was no match above, add the new answer to the array of previous answers
   if (!isExistingAnswer){
     prevShortAnswer.push({
-      value: rawAnswer,
+      rawAnswer: newAnswer.answerContent.rawAnswer,
       normAnswer: newAnswer.answerContent.normAnswer,
       isCorrect: false,
       isSelectedMistake: false,
@@ -433,7 +372,7 @@ export const buildVictoryDataObjectShortAnswer = (
       .map((answer, index) => ({ 
         answerChoice: String.fromCharCode(65 + index),
         answerCount: answer.count,
-        answerText: answer.value.toString(),
+        answerText: answer.rawAnswer.toString(),
         answerTeams: answer.teams,
         answerCorrect: answer.isCorrect
     }))
@@ -451,7 +390,7 @@ export const buildVictoryDataObjectShortAnswerPhaseTwo = (
       ...Object.keys(answers.answersArray).map((key, index) => ({
         answerCount: answers.answersArray[index].count,
         answerChoice: String.fromCharCode(65 + index),
-        answerText: shortAnswerResponses[index].value,
+        answerText: shortAnswerResponses[index].rawAnswer.toString(),
         answerTeams: shortAnswerResponses[index].teams,
         answerCorrect: shortAnswerResponses[index].isCorrect
       })).reverse(),
