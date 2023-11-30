@@ -17,6 +17,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 interface AnswerCardProps {
   answers: IChoice[] | undefined;
   isSubmitted: boolean;
+  isShortAnswerEnabled: boolean;
   handleSubmitAnswer: (answerText: ITeamAnswerContent) => void;
   currentState: GameSessionState;
   currentQuestionIndex: number;
@@ -27,6 +28,7 @@ interface AnswerCardProps {
 export default function AnswerCard({
   answers,
   isSubmitted,
+  isShortAnswerEnabled,
   handleSubmitAnswer,
   currentState,
   currentQuestionIndex,
@@ -102,6 +104,7 @@ export default function AnswerCard({
         </Stack>
         <ButtonSubmitAnswer
           isSubmitted={isSubmitted}
+          isShortAnswerEnabled={isShortAnswerEnabled}
           selectedAnswer={selectedAnswer}
           answers={answers}
           currentState={currentState}

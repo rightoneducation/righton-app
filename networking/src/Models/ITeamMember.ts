@@ -1,4 +1,4 @@
-import { NumberAnswer, StringAnswer, ExpressionAnswer } from "./TeamAnswerClass"
+import { NumberAnswer, StringAnswer, ExpressionAnswer } from "./AnswerClasses"
 
 export interface ITeamMember {
     id: string

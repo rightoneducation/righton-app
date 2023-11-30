@@ -1,4 +1,4 @@
-import { AnswerType } from "./TeamAnswerClass";
+import { AnswerType } from "./AnswerClasses";
 
 export interface IExtractedAnswer {
   value: string;

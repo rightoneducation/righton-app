@@ -5,7 +5,6 @@ import {
   ApiClient,
   GameSessionState,
   ITeam,
-  ITeamAnswer,
   IQuestion,
   ModelHelper,
   ConfidenceLevel,
@@ -16,7 +15,7 @@ import {
   StringAnswer,
   ExpressionAnswer,
   AnswerType,
-  IBaseAnswerConfig
+  ITeamAnswerConfig
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -138,7 +137,8 @@ export default function GameInProgress({
       localModel,
       hasRejoined,
       currentState,
-      currentQuestionIndex ?? 0
+      currentQuestionIndex ?? 0,
+      isShortAnswerEnabled
     );
     return rejoinSubmittedAnswer;
   });
@@ -172,59 +172,53 @@ export default function GameInProgress({
     return rejoinSelectedConfidence;
   });
 
-  // contents is the quill pad contents and rece
+  // contents is the quill pad contents
   const handleSubmitAnswer = async (packagedAnswer: ITeamAnswerContent) => {
     const answerConfigBase = {
       questionId: currentQuestion.id,
-      isChosen: false,
+      isChosen: currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && !isShortAnswerEnabled,
       teamMemberAnswersId: teamMemberId,
       text: '',
       answerContent: packagedAnswer,
-      isTrickAnswer: false,
+      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !isShortAnswerEnabled,
       confidenceLevel: ConfidenceLevel.NOT_RATED
     };
-    let rawAnswer;
-    let normAnswer;
+    let answer;
     const currentQuestionType = currentQuestion.answerSettings?.answerType;
     switch (currentQuestionType) {
       case (AnswerType.STRING): {
-        const answerConfig: IBaseAnswerConfig<string> = {
+        const answerConfig: ITeamAnswerConfig<string> = {
           ...answerConfigBase,
           value: ''
         }
-        rawAnswer = new StringAnswer(answerConfig);
-        normAnswer = rawAnswer.normalize();
+        answer = new StringAnswer(answerConfig);
         break;
       }
       case (AnswerType.EXPRESSION): {
-        const answerConfig: IBaseAnswerConfig<string> = {
+        const answerConfig: ITeamAnswerConfig<string> = {
           ...answerConfigBase,
           value: ''
         }
-        rawAnswer = new ExpressionAnswer(answerConfig);
-        normAnswer = rawAnswer.normalize();
+        answer = new ExpressionAnswer(answerConfig);
         break;
       }
       case (AnswerType.NUMBER):
       default: {
-        const answerConfig: IBaseAnswerConfig<number> = {
+        const answerConfig: ITeamAnswerConfig<string> = {
           ...answerConfigBase,
-          value: 0
+          value: ''
         }
-        rawAnswer = new NumberAnswer(answerConfig);
-        normAnswer = rawAnswer.normalize();
+        answer = new NumberAnswer(answerConfig);
         break;
       }
     }
-
     try {
-      const response = await apiClient.addTeamAnswer(normAnswer);
-      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(normAnswer.answerContent));
+      const response = await apiClient.addTeamAnswer(answer);
+      window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answerContent));
       setTeamAnswerId(response.id);
-      setAnswerContent(normAnswer?.answerContent as ITeamAnswerContent);
+      setAnswerContent(answer?.answerContent as ITeamAnswerContent);
       setDisplaySubmitted(true);
     } catch (e) {
-      console.log(e)
       setIsAnswerError(true);
     }
   };
