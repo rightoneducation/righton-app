@@ -39,7 +39,6 @@ export default function GameInProgressContentSwitch ({
     handleOnSelectMistake,
   }) {
   const classes = useStyles();
-  console.log(data);
   const gameplayComponents = [
     <>
       {graphClickInfo.graph === null ? (
