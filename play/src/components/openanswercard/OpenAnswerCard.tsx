@@ -1,4 +1,4 @@
-import React, { useState, RefObject } from 'react';
+import React, { ChangeEvent, useState, RefObject } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
@@ -7,12 +7,9 @@ import {
   ITeamAnswerContent,
   IAnswerSettings,
   GameSessionState,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
-  AnswerType
+  AnswerType,
+  AnswerPrecision
 } from '@righton/networking';
-import ReactQuill from 'react-quill';
 import katex from 'katex';
 import './ReactQuill.css';
 import 'katex/dist/katex.min.css';
@@ -20,6 +17,7 @@ import { StorageKeyAnswer} from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
 import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
 import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
+import ShortAnswerTextFieldStyled from '../../lib/styledcomponents/ShortAnswerTextFieldStyled';
 
 window.katex = katex;
 
@@ -44,31 +42,47 @@ export default function OpenAnswerCard({
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const modules = {
-    toolbar: [['formula']],
-  };
-  const formats = ['formula'];
+  const [isBadInput, setIsBadInput] = useState(false); 
   const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
-  // these two functions isolate the quill data structure (delta) from the rest of the app
-  // this allows for the use of a different editor in the future by just adjusting the parsing in these functions
-  const insertQuillDelta = (inputAnswer: ITeamAnswerContent) => {
-    return inputAnswer.delta ?? [];
-  };
-
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/;
+  const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
+    switch (inputAnswerSettings?.answerType) {
+      case AnswerType.STRING:
+        return t('gameinprogress.chooseanswer.openanswercardwordanswer');
+      case AnswerType.EXPRESSION:
+        return t('gameinprogress.chooseanswer.openanswercardexpressionanswer');
+      case AnswerType.NUMBER:
+        default: 
+          switch(inputAnswerSettings?.answerPrecision){
+            case (AnswerPrecision.THOUSANDTH):
+              return t('gameinprogress.chooseanswer.openanswercardnumberanswer4');
+            case (AnswerPrecision.HUNDREDTH):
+              return t('gameinprogress.chooseanswer.openanswercardnumberanswer3');
+            case (AnswerPrecision.TENTH):
+              return t('gameinprogress.chooseanswer.openanswercardnumberanswer2');
+            case (AnswerPrecision.WHOLE):
+              default:
+                return t('gameinprogress.chooseanswer.openanswercardnumberanswer1');
+          }
+    }
+  }
+  const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
-    insertQuillDelta(answerContent)
+    answerContent?.rawAnswer ?? ''
   );
-
   // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (
-    content: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    delta: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    source: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    editor: any // eslint-disable-line @typescript-eslint/no-explicit-any
+    event: ChangeEvent<HTMLInputElement>
   ) => {
-    const currentAnswer = editor.getContents();
+    let currentAnswer = event.target.value;
+    let isBadInputDetected = false;
+    if (answerSettings?.answerType === AnswerType.NUMBER) {
+      isBadInputDetected = !numericAnswerRegex.test(currentAnswer);
+      currentAnswer = currentAnswer.replace(/[^0-9.%-]/g, '');
+      setIsBadInput(isBadInputDetected);
+    }
     const extractedAnswer: ITeamAnswerContent = {
-      delta: currentAnswer,
+      rawAnswer: currentAnswer,
       currentState,
       currentQuestionIndex,
       isShortAnswerEnabled,
@@ -80,13 +94,15 @@ export default function OpenAnswerCard({
     );
     setEditorContents(currentAnswer);
   };
-
+  
   const handlePresubmit = (currentContents: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const packagedAnswer: ITeamAnswerContent = {
-      delta: currentContents,
+      rawAnswer: currentContents,
       currentState,
       currentQuestionIndex,
+      isShortAnswerEnabled,
       isSubmitted: true,
+      answerPrecision: answerSettings?.answerPrecision,
     } as ITeamAnswerContent;
     handleSubmitAnswer(packagedAnswer);
   };
@@ -100,6 +116,18 @@ export default function OpenAnswerCard({
         >
           {t('gameinprogress.chooseanswer.openanswercard')}
         </Typography>
+        <Typography
+          variant="body1"
+          sx={{ width: '100%', textAlign: 'center' }}
+        >
+          {t('gameinprogress.chooseanswer.openanswercarddescription')}
+          <Typography
+          variant="body1"
+          sx={{ width: '100%', textAlign: 'center', fontWeight: 700 }}
+        >
+          {answerText}
+        </Typography>
+        </Typography>
         <Box
           style={{
             display: 'flex',
@@ -110,26 +138,34 @@ export default function OpenAnswerCard({
             gap: '20px',
           }}
         >
-          <ReactQuill
+          <ShortAnswerTextFieldStyled
             className="swiper-no-swiping"
-            theme="snow"
-            readOnly={isSubmitted}
-            value={editorContents}
+            data-testid="gameCode-inputtextfield"
+            fullWidth
+            variant="filled"
+            autoComplete="off"
+            multiline
+            minRows={2}
+            maxRows={2}
+            placeholder={t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
-            placeholder={
-              t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''
-            }
-            modules={modules}
-            formats={formats}
-            bounds={`[data-text-editor="name"]`}
-            style={{
-              width: '100%',
-              backgroundColor: !isSubmitted
-                ? ''
-                : `${theme.palette.primary.lightGrey}`,
-              borderRadius: '4px',
+            value={editorContents}
+            InputProps={{
+              disableUnderline: true,
+              style: {
+                paddingTop: '9px',
+              },
             }}
           />
+          { isBadInput
+            ? <Typography
+                variant="body1"
+                sx={{ width: '100%', textAlign: 'center' }}
+              >
+                  {t('gameinprogress.chooseanswer.openanswercardnumberwarning')}
+              </Typography>
+            : null
+          }
           <ButtonSubmitAnswer
             isSelected={
               !isNullOrUndefined(editorContents) && editorContents !== ''

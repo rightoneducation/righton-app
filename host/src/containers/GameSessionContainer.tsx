@@ -206,7 +206,7 @@ const GameSessionContainer = () => {
               // we are nesting the short answer response in here because we need to use the teamName and teamId to build the shortAnswerResponses object
               // if we did this outside of the setTeamsArray function we would be using stale state values
               setShortAnswerResponses((prevShortAnswerState) => {
-                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, teamAnswerResponse, teamName, teamId);
+                const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
                 apiClient
                   .updateQuestion({
                     gameSessionId: gameSession.id, 
