@@ -16,7 +16,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { createCorrectAnswerObject, buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
+import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -118,7 +118,7 @@ const GameSessionContainer = () => {
                     && answer.isChosen) 
                   ) {
                     setShortAnswerResponses((prev) => {
-                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), answer, team.name)
+                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
                    });
                   }
                 });
@@ -236,10 +236,11 @@ const GameSessionContainer = () => {
               team.teamMembers.forEach((teamMember) => {
                 if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                   teamMember.answers.forEach((answer) => {
-                    if (answer.id === teamAnswerResponse.id)
+                    if (answer.id === teamAnswerResponse.id){
                       answer.confidenceLevel =
                         teamAnswerResponse.confidenceLevel;
                       teamName = team.name;
+                    }
                   });
                 }
               });
@@ -250,7 +251,7 @@ const GameSessionContainer = () => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
           newShortAnswers.forEach((answer) => {
             answer.teams.forEach((answerTeam) => {
-              if (answerTeam.team === teamName) {
+              if (answerTeam.name === teamName) {
                 answerTeam.confidence = teamAnswerResponse.confidenceLevel;   
               }
             })
@@ -337,7 +338,7 @@ const GameSessionContainer = () => {
     ){
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({
         ...answer,
-        isSelectedMistake: selectedMistakes.includes(answer.value),
+        isSelectedMistake: selectedMistakes.includes(answer.rawAnswer),
         })
       );
       await apiClient

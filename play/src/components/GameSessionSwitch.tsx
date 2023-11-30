@@ -60,7 +60,7 @@ export default function GameSessionSwitch({
             if (shouldAddResponse) {
               acc.push({
                 id: uuidv4(),
-                text: response.value,
+                text: response.rawAnswer,
                 isAnswer: response.isCorrect,
               } as IChoice);
             }
