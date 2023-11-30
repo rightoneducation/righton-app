@@ -215,14 +215,12 @@ export const getShortAnswersPhaseTwo = (shortAnswerResponses, teamsArray, curren
   if (shortAnswerResponses && shortAnswerResponses.length > 0) {
     let currentQuestionId = questions[currentQuestionIndex].id;
     const answers = extractAnswers(teamsArray, currentState, currentQuestionId);
-    console.log(answers);
     const choices = shortAnswerResponses.reduce((acc, answer) => {
       if (answer.isSelectedMistake || answer.isCorrect) {
         acc.push(answer);
       }
       return acc; 
     }, []);
-    console.log(choices);
     const correctChoiceIndex = choices.findIndex(choice => choice.isCorrect);
     let answersArray = Array.from({length: choices.length ?? 0}, (item, index) => ({ count: 0, teams: [], isCorrect: index === correctChoiceIndex ? true : false }));
     answers.forEach(({team, answer}) => {
