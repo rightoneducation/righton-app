@@ -180,7 +180,7 @@ export default function GameInProgress({
       teamMemberAnswersId: teamMemberId,
       text: '',
       answerContent: packagedAnswer,
-      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER && !isShortAnswerEnabled,
+      isTrickAnswer: currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER,
       confidenceLevel: ConfidenceLevel.NOT_RATED
     };
     let answer;
@@ -204,9 +204,9 @@ export default function GameInProgress({
       }
       case (AnswerType.NUMBER):
       default: {
-        const answerConfig: ITeamAnswerConfig<string> = {
+        const answerConfig: ITeamAnswerConfig<number> = {
           ...answerConfigBase,
-          value: ''
+          value: 0
         }
         answer = new NumberAnswer(answerConfig);
         break;
