@@ -7,7 +7,8 @@ import {
   GameSessionState,
   ITeamAnswerContent,
   IChoice,
-  IResponse
+  IResponse,
+  IAnswerSettings
 } from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -24,6 +25,7 @@ interface ChooseAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
+  answerSettings: IAnswerSettings | null;
   answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
@@ -45,6 +47,7 @@ export default function ChooseAnswer({
   isSmallDevice,
   questionText,
   questionUrl,
+  answerSettings,
   answerChoices,
   isSubmitted,
   displaySubmitted,
@@ -115,7 +118,8 @@ export default function ChooseAnswer({
       currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
         <OpenAnswerCard
           answerContent={answerContent}
-          isSubmitted={answerContent.isSubmitted ?? false}
+          answerSettings={answerSettings}
+          isSubmitted={ false}
           currentState={currentState}
           currentQuestionIndex={currentQuestionIndex}
           handleSubmitAnswer={handleSubmitAnswer}
