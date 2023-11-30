@@ -26,7 +26,9 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -53,6 +55,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -96,7 +99,9 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -140,7 +145,9 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -167,6 +174,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -210,7 +218,9 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -254,7 +264,9 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -281,6 +293,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -324,7 +337,9 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -358,7 +373,9 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     id
     text
     choices
+    answerSettings
     responses
+    hints
     imageUrl
     instructions
     standard
@@ -385,7 +402,9 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     id
     text
     choices
+    answerSettings
     responses
+    hints
     imageUrl
     instructions
     standard
@@ -412,7 +431,9 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     id
     text
     choices
+    answerSettings
     responses
+    hints
     imageUrl
     instructions
     standard
@@ -442,7 +463,9 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -469,6 +492,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -512,7 +536,9 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -539,6 +565,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -582,7 +609,9 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -609,6 +638,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -657,6 +687,7 @@ export const createTeamMember = /* GraphQL */ `mutation CreateTeamMember(
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -692,6 +723,7 @@ export const updateTeamMember = /* GraphQL */ `mutation UpdateTeamMember(
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -727,6 +759,7 @@ export const deleteTeamMember = /* GraphQL */ `mutation DeleteTeamMember(
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -758,6 +791,7 @@ export const createTeamAnswer = /* GraphQL */ `mutation CreateTeamAnswer(
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -780,6 +814,7 @@ export const updateTeamAnswer = /* GraphQL */ `mutation UpdateTeamAnswer(
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -802,6 +837,7 @@ export const deleteTeamAnswer = /* GraphQL */ `mutation DeleteTeamAnswer(
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId

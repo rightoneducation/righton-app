@@ -23,7 +23,9 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -50,6 +52,7 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -93,7 +96,9 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -132,6 +137,7 @@ export const onTeamMemberUpdateByTeamId = /* GraphQL */ `subscription OnTeamMemb
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -159,7 +165,9 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -186,6 +194,7 @@ export const onTeamCreateByGameSessionId = /* GraphQL */ `subscription OnTeamCre
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -226,7 +235,9 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -253,6 +264,7 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -302,7 +314,9 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -329,6 +343,7 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -372,7 +387,9 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -415,7 +432,9 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -442,6 +461,7 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -485,7 +505,9 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -528,7 +550,9 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
           id
           text
           choices
+          answerSettings
           responses
+          hints
           imageUrl
           instructions
           standard
@@ -555,6 +579,7 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
                 awsAnswerContent
                 isTrickAnswer
                 confidenceLevel
+                awsHint
                 createdAt
                 updatedAt
                 teamMemberAnswersId
@@ -598,7 +623,9 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
         id
         text
         choices
+        answerSettings
         responses
+        hints
         imageUrl
         instructions
         standard
@@ -632,7 +659,9 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -659,6 +688,7 @@ export const onCreateTeam = /* GraphQL */ `subscription OnCreateTeam($filter: Mo
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -699,7 +729,9 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -726,6 +758,7 @@ export const onUpdateTeam = /* GraphQL */ `subscription OnUpdateTeam($filter: Mo
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -766,7 +799,9 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
       id
       text
       choices
+      answerSettings
       responses
+      hints
       imageUrl
       instructions
       standard
@@ -793,6 +828,7 @@ export const onDeleteTeam = /* GraphQL */ `subscription OnDeleteTeam($filter: Mo
             awsAnswerContent
             isTrickAnswer
             confidenceLevel
+            awsHint
             createdAt
             updatedAt
             teamMemberAnswersId
@@ -840,6 +876,7 @@ export const onCreateTeamMember = /* GraphQL */ `subscription OnCreateTeamMember
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -874,6 +911,7 @@ export const onUpdateTeamMember = /* GraphQL */ `subscription OnUpdateTeamMember
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -908,6 +946,7 @@ export const onDeleteTeamMember = /* GraphQL */ `subscription OnDeleteTeamMember
         awsAnswerContent
         isTrickAnswer
         confidenceLevel
+        awsHint
         createdAt
         updatedAt
         teamMemberAnswersId
@@ -938,6 +977,7 @@ export const onCreateTeamAnswer = /* GraphQL */ `subscription OnCreateTeamAnswer
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -959,6 +999,7 @@ export const onUpdateTeamAnswer = /* GraphQL */ `subscription OnUpdateTeamAnswer
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId
@@ -980,6 +1021,7 @@ export const onDeleteTeamAnswer = /* GraphQL */ `subscription OnDeleteTeamAnswer
     awsAnswerContent
     isTrickAnswer
     confidenceLevel
+    awsHint
     createdAt
     updatedAt
     teamMemberAnswersId

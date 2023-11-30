@@ -5,6 +5,7 @@ export interface IQuestion {
     id: number
     text: string
     choices?: Array<IChoice> | null
+    answerSettings?: IAnswerSettings | null
     responses?: Array<IResponse> | null
     imageUrl?: string | null
     instructions?: Array<string> | null
@@ -24,6 +25,11 @@ export interface IChoice {
     text: string
     reason?: string
     isAnswer: boolean
+}
+
+export interface IAnswerSettings {
+    answerType: string
+    answerPrecision: string
 }
 
 export interface IResponse {
