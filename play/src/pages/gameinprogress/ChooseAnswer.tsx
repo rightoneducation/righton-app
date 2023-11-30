@@ -2,12 +2,20 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Typography, Grid, Fade, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ConfidenceLevel, GameSessionState } from '@righton/networking';
+import {
+  ConfidenceLevel,
+  GameSessionState,
+  ITeamAnswerContent,
+  IChoice,
+  IResponse,
+  IAnswerSettings
+} from '@righton/networking';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BodyContentAreaDoubleColumnStyled } from '../../lib/styledcomponents/layout/BodyContentAreasStyled';
 import QuestionCard from '../../components/QuestionCard';
 import AnswerCard from '../../components/AnswerCard';
+import OpenAnswerCard from '../../components/openanswercard/OpenAnswerCard';
 import ConfidenceMeterCard from '../../components/ConfidenceMeterCard';
 import ScrollBoxStyled from '../../lib/styledcomponents/layout/ScrollBoxStyled';
 import 'swiper/css';
@@ -17,12 +25,12 @@ interface ChooseAnswerProps {
   isSmallDevice: boolean;
   questionText: string[];
   questionUrl: string;
-  answerChoices: { text: string; isCorrectAnswer: boolean }[] | undefined;
+  answerSettings: IAnswerSettings | null;
+  answerChoices: IChoice[] | undefined;
   isSubmitted: boolean;
   displaySubmitted: boolean;
-  handleSubmitAnswer: (answerText: string) => void;
+  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
   currentState: GameSessionState;
-  selectedAnswer: number | null;
   handleSelectAnswer: (answer: number) => void;
   isConfidenceEnabled: boolean;
   selectedConfidenceOption: string;
@@ -30,18 +38,21 @@ interface ChooseAnswerProps {
   isConfidenceSelected: boolean;
   timeOfLastConfidenceSelect: number;
   setTimeOfLastConfidenceSelect: (time: number) => void;
+  isShortAnswerEnabled: boolean;
+  answerContent: ITeamAnswerContent;
+  currentQuestionIndex: number;
 }
 
 export default function ChooseAnswer({
   isSmallDevice,
   questionText,
   questionUrl,
+  answerSettings,
   answerChoices,
   isSubmitted,
   displaySubmitted,
   handleSubmitAnswer,
   currentState,
-  selectedAnswer,
   handleSelectAnswer,
   isConfidenceEnabled,
   selectedConfidenceOption,
@@ -49,42 +60,33 @@ export default function ChooseAnswer({
   isConfidenceSelected,
   timeOfLastConfidenceSelect,
   setTimeOfLastConfidenceSelect,
+  isShortAnswerEnabled,
+  answerContent,
+  currentQuestionIndex,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-
   const questionContents = (
-    <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: `${theme.sizing.smallPadding}px`,
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.chooseanswer.questioncolumn')}
-      </Typography>
-      <ScrollBoxStyled>
-        <QuestionCard questionText={questionText} imageUrl={questionUrl} />
-        {isSmallDevice ? (
-          <Typography
-            variant="body1"
-            sx={{
-              textAlign: 'center',
-              marginTop: `${theme.sizing.largePadding}px`,
-              opacity: 0.5,
-            }}
-          >
-            {t('gameinprogress.general.swipealert')}
-          </Typography>
-        ) : null}
-      </ScrollBoxStyled>
-    </>
+    <ScrollBoxStyled>
+      <QuestionCard questionText={questionText} imageUrl={questionUrl} />
+      {isSmallDevice ? (
+        <Typography
+          variant="body1"
+          sx={{
+            textAlign: 'center',
+            marginTop: `${theme.sizing.largePadding}px`,
+            opacity: 0.5,
+          }}
+        >
+          {t('gameinprogress.general.swipealert')}
+        </Typography>
+      ) : null}
+    </ScrollBoxStyled>
   );
 
   const onSubmitDisplay =
-    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER && isConfidenceEnabled ? (
+    currentState === GameSessionState.CHOOSE_CORRECT_ANSWER &&
+    isConfidenceEnabled ? (
       <Fade in={displaySubmitted} timeout={500}>
         <Box>
           <ConfidenceMeterCard
@@ -110,50 +112,53 @@ export default function ChooseAnswer({
         {t('gameinprogress.chooseanswer.answerthankyou1')}
       </Typography>
     );
-
   const answerContents = (
-    <>
-      <Typography
-        variant="h2"
-        sx={{
-          marginTop: '16px',
-          marginBottom: `${theme.sizing.smallPadding}px`,
-          textAlign: 'center',
-        }}
-      >
-        {t('gameinprogress.chooseanswer.answercolumn')}
-      </Typography>
-      <ScrollBoxStyled>
+    <ScrollBoxStyled>
+      {isShortAnswerEnabled &&
+      currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ? (
+        <OpenAnswerCard
+          isShortAnswerEnabled={isShortAnswerEnabled}
+          answerContent={answerContent}
+          answerSettings={answerSettings}
+          isSubmitted={isSubmitted}
+          currentState={currentState}
+          currentQuestionIndex={currentQuestionIndex}
+          handleSubmitAnswer={handleSubmitAnswer}
+        />
+      ) : (
         <AnswerCard
           answers={answerChoices}
-          isSubmitted={isSubmitted}
+          isSubmitted={answerContent.isSubmitted ?? false}
+          isShortAnswerEnabled={isShortAnswerEnabled}
           handleSubmitAnswer={handleSubmitAnswer}
           currentState={currentState}
-          selectedAnswer={selectedAnswer}
+          currentQuestionIndex={currentQuestionIndex}
+          selectedAnswer={answerContent.multiChoiceAnswerIndex ?? null}
           handleSelectAnswer={handleSelectAnswer}
         />
-        {displaySubmitted ? onSubmitDisplay : null}
-        {isSubmitted ? (
-          <Typography
-            sx={{
-              fontWeight: 700,
-              marginTop: `${theme.sizing.largePadding}px`,
-              marginX: `${theme.sizing.largePadding}px`,
-              fontSize: `${theme.typography.h4.fontSize}px`,
-              textAlign: 'center',
-            }}
-          >
-            {t('gameinprogress.chooseanswer.answerthankyou2')}
-          </Typography>
-        ) : null}
-      </ScrollBoxStyled>
-    </>
+      )}
+      {displaySubmitted ? onSubmitDisplay : null}
+      {isSubmitted ? (
+        <Typography
+          sx={{
+            fontWeight: 700,
+            marginTop: `${theme.sizing.largePadding}px`,
+            marginX: `${theme.sizing.largePadding}px`,
+            fontSize: `${theme.typography.h4.fontSize}px`,
+            textAlign: 'center',
+          }}
+        >
+          {t('gameinprogress.chooseanswer.answerthankyou2')}
+        </Typography>
+      ) : null}
+    </ScrollBoxStyled>
   );
 
   return (
     <BodyContentAreaDoubleColumnStyled
       container
       spacing={isSmallDevice ? 0 : 2}
+      style={{ paddingTop: '16px' }}
     >
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
         {isSmallDevice ? (

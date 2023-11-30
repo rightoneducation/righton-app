@@ -1,8 +1,11 @@
+import { ConfidenceLevel } from "../AWSMobileApi";
+
 export interface IQuestion {
     id: number
     text: string
     choices?: Array<IChoice> | null
-    responses?: Array<string> | null
+    answerSettings?: IAnswerSettings | null
+    responses?: Array<IResponse> | null
     imageUrl?: string | null
     instructions?: Array<string> | null
     standard?: string | null
@@ -17,7 +20,28 @@ export interface IQuestion {
 }
 
 export interface IChoice {
+    id?: string
     text: string
     reason?: string
     isAnswer: boolean
+}
+
+export interface IAnswerSettings {
+    answerType: string
+    answerPrecision: string
+}
+
+export interface IResponse {
+    rawAnswer: string
+    normAnswer: string[]
+    isCorrect: boolean
+    isSelectedMistake: boolean
+    count: number
+    teams: Array<IResponseTeam>
+}
+
+export interface IResponseTeam {
+    team: string
+    id: string
+    confidence: ConfidenceLevel
 }

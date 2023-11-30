@@ -2,6 +2,13 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
+  ITeamAnswerContent,
+  GameSessionState,
+  INormAnswer,
+  IChoice,
+  AnswerType
+} from '@righton/networking';
+import {
   GamePlayButtonStyled,
   GamePlayButtonStyledDisabled,
 } from '../lib/styledcomponents/GamePlayButtonStyled';
@@ -9,16 +16,22 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
-  selectedAnswer: number | null;
-  answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
-  handleSubmitAnswer: (answer: string) => void;
+  isShortAnswerEnabled: boolean;
+  selectedAnswer?: number | null;
+  answers?: IChoice[] | undefined;
+  currentState: GameSessionState;
+  currentQuestionIndex: number;
+  handleSubmitAnswer: (answer: ITeamAnswerContent) => void;
 }
 
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  isShortAnswerEnabled,
   selectedAnswer,
   answers,
+  currentState,
+  currentQuestionIndex,
   handleSubmitAnswer,
 }: ButtonSubmitAnswerProps) {
   const { t } = useTranslation();
@@ -27,17 +40,25 @@ export default function ButtonSubmitAnswer({
     : t('gameinprogress.button.submit');
   const buttonContents = (
     <Typography sx={{ textTransform: 'none' }} variant="button">
-      {' '}
-      {buttonText}{' '}
+      {buttonText}
     </Typography>
   );
-
   return isSelected && !isSubmitted ? (
     <GamePlayButtonStyled
       data-testid="answer-button-enabled"
       onClick={() => {
         const answerText = answers?.[selectedAnswer ?? 0]?.text;
-        handleSubmitAnswer(answerText ?? '');
+        const answer = {
+          rawAnswer: answerText ?? '',
+          normAnswer: [],
+          multiChoiceAnswerIndex: selectedAnswer,
+          isShortAnswerEnabled,
+          isSubmitted: true,
+          currentState,
+          currentQuestionIndex,
+        } as ITeamAnswerContent;
+
+        handleSubmitAnswer(answer);
       }}
     >
       {buttonContents}

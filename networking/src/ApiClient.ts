@@ -52,9 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
-import { IGameSession } from "./Models/IGameSession"
-import { ITeam } from "./Models/ITeam"
+import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -222,7 +220,7 @@ export class ApiClient implements IApiClient {
 
     subscribeCreateTeamAnswer(
         id: string,
-        callback: (result: ITeamAnswer) => void
+        callback: (result: NumberAnswer | StringAnswer | ExpressionAnswer ) => void
     ) {
         return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
             {
@@ -240,7 +238,7 @@ export class ApiClient implements IApiClient {
 
     subscribeUpdateTeamAnswer(
         id: string,
-        callback: (result: ITeamAnswer) => void
+        callback: (result: NumberAnswer | StringAnswer | ExpressionAnswer ) => void
     ) {
         return this.subscribeGraphQL<OnUpdateTeamAnswerSubscription>(
             {
@@ -328,24 +326,19 @@ export class ApiClient implements IApiClient {
     }
 
     async addTeamAnswer(
-        teamMemberId: string,
-        questionId: number,
-        text: string,
-        answerContents: string,
-        isChosen: boolean = false,
-        isTrickAnswer: boolean = false
+        inputAnswer: NumberAnswer | StringAnswer | ExpressionAnswer
     ): Promise<ITeamAnswer> {
-        const awsAnswerContents = JSON.stringify(answerContents)
         const input: CreateTeamAnswerInput = {
-            questionId,
-            isChosen,
-            isTrickAnswer,
-            text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
-            awsAnswerContents, 
-            teamMemberAnswersId: teamMemberId,
+            questionId: inputAnswer.questionId,
+            isChosen: inputAnswer.isChosen,
+            isTrickAnswer: inputAnswer.isTrickAnswer,
+            text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            awsAnswerContent: JSON.stringify(inputAnswer.answerContent), 
+            teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
+        
         const answer = await this.callGraphQL<CreateTeamAnswerMutation>(
             createTeamAnswer,
             variables
@@ -479,7 +472,7 @@ export class ApiClient implements IApiClient {
 
     private mapOnCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         return TeamAnswerParser.teamAnswerFromCreateTeamAnswerSubscription(
             subscription
         )
@@ -487,7 +480,7 @@ export class ApiClient implements IApiClient {
 
     private mapOnUpdateTeamAnswerSubscription(
         subscription: OnUpdateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         return TeamAnswerParser.teamAnswerFromUpdateTeamAnswerSubscription(
             subscription
         )
@@ -537,6 +530,7 @@ type AWSQuestion = {
     id: number
     text: string
     choices?: string | null
+    answerSettings?: string | null
     responses?: string | null
     imageUrl?: string | null
     instructions?: string | null
@@ -569,7 +563,7 @@ type AWSTeamAnswer = {
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
-    awsAnswerContents?: string | null
+    awsAnswerContent?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -634,7 +628,6 @@ export class GameSessionParser {
                 "GameSession has null field for the attributes that are not nullable"
             )
         }
-
         const gameSession: IGameSession = {
             id,
             gameId,
@@ -659,7 +652,6 @@ export class GameSessionParser {
         subscription: OnGameSessionUpdatedByIdSubscription
     ): IGameSession {
         const updateGameSession = subscription.onGameSessionUpdatedById
-        console.log(updateGameSession);
         if (isNullOrUndefined(updateGameSession)) {
             throw new Error("subscription.onUpdateGameSession can't be null.")
         }
@@ -705,6 +697,13 @@ export class GameSessionParser {
         return []
     }
 
+    private static parseAnswerType<t>(input: any | t): t {
+        if (typeof input === "string") {
+            return JSON.parse(input as string)
+        }
+        return input
+    }
+
     private static mapQuestions(
         awsQuestions: Array<AWSQuestion | null>
     ): Array<IQuestion> {
@@ -719,7 +718,12 @@ export class GameSessionParser {
                     choices: isNullOrUndefined(awsQuestion.choices)
                         ? []
                         : this.parseServerArray<IChoice>(awsQuestion.choices),
-                    responses: [],
+                    answerSettings: isNullOrUndefined(awsQuestion.answerSettings)
+                        ? null
+                        : this.parseAnswerType<IAnswerSettings>(awsQuestion.answerSettings),
+                    responses: isNullOrUndefined(awsQuestion.responses)
+                         ? []
+                         : this.parseServerArray<IResponse>(awsQuestion.responses),
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []
@@ -869,7 +873,7 @@ class TeamMemberParser {
 class TeamAnswerParser {
     static teamAnswerFromCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const createTeamAnswer = subscription.onCreateTeamAnswer
         if (isNullOrUndefined(createTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
@@ -879,7 +883,7 @@ class TeamAnswerParser {
 
     static teamAnswerFromUpdateTeamAnswerSubscription(
         subscription: OnUpdateTeamAnswerSubscription
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const updateTeamAnswer = subscription.onUpdateTeamAnswer
         if (isNullOrUndefined(updateTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
@@ -889,7 +893,7 @@ class TeamAnswerParser {
 
     static mapTeamAnswers(
         awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined
-    ): Array<ITeamAnswer> {
+    ): Array<NumberAnswer | StringAnswer | ExpressionAnswer> {
         if (isNullOrUndefined(awsTeamAnswers)) {
             return []
         }
@@ -901,45 +905,91 @@ class TeamAnswerParser {
             return this.teamAnswerFromAWSTeamAnswer(awsTeamAnswer)
         })
     }
-
+    static answerContentFromAWSAnswerContent(
+        awsAnswerContent: string
+    ): ITeamAnswerContent {
+        let parsedAnswerContent;
+        try {
+            parsedAnswerContent = JSON.parse(awsAnswerContent);
+            if (isNullOrUndefined(parsedAnswerContent) ||
+            isNullOrUndefined(parsedAnswerContent.isSubmitted)) {
+                throw new Error(
+                    "Team answer has null field for the attributes that are not nullable"
+                )
+            }
+        } catch (e) {
+            console.log(e)
+            throw new Error("Failed to parse answer content")
+        }
+        return parsedAnswerContent as ITeamAnswerContent;
+    }   
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
-    ): ITeamAnswer {
+    ): NumberAnswer | StringAnswer | ExpressionAnswer {
         const {
             id,
             questionId,
             isChosen,
             isTrickAnswer,
             text,
-            awsAnswerContents,
+            awsAnswerContent,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
             confidenceLevel
         } = awsTeamAnswer || {}
-
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(teamMemberAnswersId) ||
             isNullOrUndefined(questionId) ||
             isNullOrUndefined(text) ||
-            isNullOrUndefined(awsAnswerContents)) {
+            isNullOrUndefined(awsAnswerContent)) {
             throw new Error(
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-
-        const teamAnswer: ITeamAnswer = {
+        // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
+        const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
+        let teamAnswer;
+        const answerConfigBase = {
             id,
             questionId,
             isChosen,
             isTrickAnswer,
             text,
-            answerContents: awsAnswerContents,
+            answerContent,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
             confidenceLevel
+          };
+        switch (answerContent.answerType) {
+            case(AnswerType.NUMBER):
+            default: {
+                const answerConfig = {
+                    ...answerConfigBase,
+                    value: 0
+                }
+                teamAnswer = new NumberAnswer(answerConfig);
+                break;
+            }
+            case(AnswerType.STRING): {
+                const answerConfig = {
+                    ...answerConfigBase,
+                    value: ''
+                }
+                teamAnswer = new StringAnswer(answerConfig);
+                break;
+            }
+            case(AnswerType.EXPRESSION): {
+                const answerConfig = {
+                    ...answerConfigBase,
+                    value: ''
+                }
+                teamAnswer = new ExpressionAnswer(answerConfig);
+                break;
+            }
         }
+        
         return teamAnswer
     }
 }
