@@ -15,13 +15,24 @@ export default function QuestionFormAnswerDropdown({
   answerType,
   setAnswerType,
   answerPrecision,
-  setAnswerPrecision
+  setAnswerPrecision,
+  isAnswerTypeInvalid,
+  isAnswerDecimalInvalid
 }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-
-
-  // instructions can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
+  const getAnswerText = (answerType) => {
+    switch (answerType) {
+      case ('string'):
+        return 'Please ensure that your input is a valid string';
+      case ('number'):
+        return 'Please ensure that your input is a valid number. Allowable characters are: 0-9, -, .';
+      case ('expression'):
+        return 'Please ensure that your input is a valid expression';
+    }
+  }
+  const answerText = isAnswerTypeInvalid ? getAnswerText(answerType) : '';
+  // instructio s can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
   // TODO: clean up how we are handling instructions for more consistency
   const instructionsHandler = (instructions) => {
     if (!instructions)
@@ -32,7 +43,10 @@ export default function QuestionFormAnswerDropdown({
       return JSON.parse(instructions);
   }
   const instructionsArray = instructionsHandler(instructions);
-
+  const handleOnTypeChange = (event) => {
+    setAnswerType(event.target.value);
+    onChoiceTextChangeMaker(index, event.target.value)({ currentTarget: { value: choice.text } });
+  };
   return (
     <Grid item xs={12}>
       <Card className={choice.isAnswer ? classes.correctCard : classes.wrongCard}>
@@ -45,7 +59,7 @@ export default function QuestionFormAnswerDropdown({
                 style={{ width: 600, margin: 0, position: 'relative', left: 16 }}
                 id={`choice${index + 1}`}
                 value={choice.text}
-                onChange={onChoiceTextChangeMaker(index)}
+                onChange={onChoiceTextChangeMaker(index, answerType)}
                 label="Type Answer Here"
                 variant="outlined"
                 required
@@ -59,7 +73,7 @@ export default function QuestionFormAnswerDropdown({
             <>
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Answer Type: "}</Typography>
-                <RadioGroup value={answerType} row onChange={(event) => setAnswerType(event.target.value)}>
+                <RadioGroup value={answerType} row onChange={(event) =>{ handleOnTypeChange(event)}}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
                     value={'text'}
@@ -110,7 +124,16 @@ export default function QuestionFormAnswerDropdown({
                   />
                 </RadioGroup>
               </Box>
+             
               : null}
+              <Box>   
+                { isAnswerTypeInvalid &&
+                  <Typography style={{ fontStyle: 'italic' }}> {answerText} </Typography>
+                }
+                 { isAnswerDecimalInvalid &&
+                  <Typography style={{ fontStyle: 'italic' }}> Please ensure the answer has the correct number of decimal places. </Typography>
+                }
+              </Box>
             </>
           : null} 
         </Box>

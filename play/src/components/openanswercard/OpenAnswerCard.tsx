@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, RefObject } from 'react';
+import React, { ChangeEvent, useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
@@ -11,7 +11,6 @@ import {
   AnswerPrecision
 } from '@righton/networking';
 import katex from 'katex';
-import './ReactQuill.css';
 import 'katex/dist/katex.min.css';
 import { StorageKeyAnswer} from '../../lib/PlayModels';
 import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
@@ -42,9 +41,12 @@ export default function OpenAnswerCard({
 }: OpenAnswerCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
+  const katexBoxRef = useRef();
   const [isBadInput, setIsBadInput] = useState(false); 
+  const [katexAnswer, setKatexAnswer] = useState('');
+
   const answerType = AnswerType[answerSettings?.answerType as keyof typeof AnswerType] ?? AnswerType.STRING;
-  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/;
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const getAnswerText = (inputAnswerSettings: IAnswerSettings | null) => {
     switch (inputAnswerSettings?.answerType) {
       case AnswerType.STRING:
@@ -66,11 +68,11 @@ export default function OpenAnswerCard({
           }
     }
   }
+
   const answerText = getAnswerText(answerSettings);
   const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
     answerContent?.rawAnswer ?? ''
   );
-  // ReactQuill onChange expects four parameters
   const handleEditorContentsChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -107,6 +109,17 @@ export default function OpenAnswerCard({
     handleSubmitAnswer(packagedAnswer);
   };
 
+   // useEffect to handle KaTeX rendering
+   // need this in a useEffect because the katex render conflicts with react state updates (always one step behind)
+   useEffect(() => {
+    if (answerSettings?.answerType === AnswerType.EXPRESSION && katexBoxRef.current) {
+      katex.render(editorContents, katexBoxRef.current, {
+        throwOnError: false,
+        trust: false
+      });
+    }
+  }, [editorContents, answerSettings?.answerType]);
+
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled spacing={2}>
@@ -116,18 +129,24 @@ export default function OpenAnswerCard({
         >
           {t('gameinprogress.chooseanswer.openanswercard')}
         </Typography>
+        <Box display="inline" style={{ width: '100%' }}>
         <Typography
           variant="body1"
-          sx={{ width: '100%', textAlign: 'center' }}
+          display="inline"
+          sx={{ width: '100%', textAlign: 'left' }}
         >
           {t('gameinprogress.chooseanswer.openanswercarddescription')}
-          <Typography
-          variant="body1"
-          sx={{ width: '100%', textAlign: 'center', fontWeight: 700 }}
-        >
-          {answerText}
+         
         </Typography>
-        </Typography>
+   
+        <Typography
+            variant="body1"
+            display="inline"
+            sx={{ width: '100%', textAlign: 'left', fontWeight: 700 }}
+          >
+            {answerText}
+          </Typography>
+          </Box>
         <Box
           style={{
             display: 'flex',
@@ -165,6 +184,29 @@ export default function OpenAnswerCard({
                   {t('gameinprogress.chooseanswer.openanswercardnumberwarning')}
               </Typography>
             : null
+          }
+          { answerSettings?.answerType === AnswerType.EXPRESSION &&
+            <Box
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 16
+              }}
+            >
+              <Typography
+              variant="body1"
+              sx={{ width: '100%', textAlign: 'left' }}
+              >
+                {t('gameinprogress.chooseanswer.openanswercardkatexpreview')}
+              </Typography>
+              <Box
+                style={{minHeight: '24px'}}
+                ref={katexBoxRef}
+              />
+            </Box>
           }
           <ButtonSubmitAnswer
             isSelected={
