@@ -85,7 +85,15 @@
       "questioncard": "Question",
       "answercard": "Choose the correct answer",
       "openanswercard": "Enter your answer",
-      "openanswercardplaceholder": "Enter your answer here..."
+      "openanswercarddescription": "Your teacher is expecting a",
+      "openanswercardnumberanswer1": "numeric answer as a whole number.",
+      "openanswercardnumberanswer2": "numeric as to one decimal place.",
+      "openanswercardnumberanswer3": "numeric as to two decimal places.",
+      "openanswercardnumberanswer4": "numeric as to three decimal places.",
+      "openanswercardwordanswer": "short word answer.",
+      "openanswercardexpressionanswer": "math expression.",
+      "openanswercardplaceholder": "Enter your answer here...",
+      "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9 "
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
