@@ -152,7 +152,10 @@ export default function GameInProgress({
     setTimeout(() => {
       if (graph === 'realtime')
         responsesRef.current.scrollIntoView({ behavior: 'smooth' });
-      else confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else if (graph=== 'confidence') 
+        confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else
+        hintCardRef.current.scrollIntoView({ behavior: 'smooth' });
     }, 0);
   };
 
