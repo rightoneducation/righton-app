@@ -327,7 +327,7 @@ export class ApiClient implements IApiClient {
 
     async addTeamAnswer(
         inputAnswer: NumberAnswer | StringAnswer | ExpressionAnswer
-    ): Promise<ITeamAnswer> {
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer > {
         const input: CreateTeamAnswerInput = {
             questionId: inputAnswer.questionId,
             isChosen: inputAnswer.isChosen,
@@ -349,12 +349,12 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as ITeamAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as NumberAnswer | StringAnswer | ExpressionAnswer
     }
 
     async updateTeamAnswerBase(
         input: UpdateTeamAnswerInput
-    ): Promise<ITeamAnswer> {
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
         const variables: UpdateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
             updateTeamAnswer,
@@ -366,13 +366,13 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as ITeamAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as NumberAnswer | StringAnswer | ExpressionAnswer
     }
     async updateTeamAnswerConfidence(
         teamAnswerId: string,
         isChosen: boolean | null = null,
         confidenceLevel?: ConfidenceLevel
-    ): Promise<ITeamAnswer> {
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
             isChosen,
@@ -384,7 +384,7 @@ export class ApiClient implements IApiClient {
         teamAnswerId: string,
         isChosen: boolean | null = null,
         hint: ITeamAnswerHint
-    ): Promise<ITeamAnswer> {
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
         const awsHint = JSON.stringify(hint)
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
@@ -582,6 +582,7 @@ type AWSTeamAnswer = {
     isTrickAnswer: boolean
     text?: string | null
     awsAnswerContent?: string | null
+    awsHint?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -941,6 +942,24 @@ class TeamAnswerParser {
         }
         return parsedAnswerContent as ITeamAnswerContent;
     }   
+    static hintFromAWSHint(
+        awsHint: string
+    ): ITeamAnswerHint {
+        let parsedHint;
+        try {
+            parsedHint = JSON.parse(awsHint);
+            if (isNullOrUndefined(awsHint) ||
+            isNullOrUndefined(parsedHint.isHintSubmitted)) {
+                throw new Error(
+                    "Hint has null field for the attributes that are not nullable"
+                )
+            }
+        } catch (e) {
+            console.log(e)
+            throw new Error("Failed to parse hint")
+        }
+        return parsedHint as ITeamAnswerHint;
+    }  
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): NumberAnswer | StringAnswer | ExpressionAnswer {
@@ -951,6 +970,7 @@ class TeamAnswerParser {
             isTrickAnswer,
             text,
             awsAnswerContent,
+            awsHint,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -967,6 +987,7 @@ class TeamAnswerParser {
         }
         // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
+        const hint = awsHint ? this.hintFromAWSHint(awsHint) : undefined;
         let teamAnswer;
         const answerConfigBase = {
             id,
@@ -975,6 +996,7 @@ class TeamAnswerParser {
             isTrickAnswer,
             text,
             answerContent,
+            hint,
             createdAt,
             updatedAt,
             teamMemberAnswersId,

@@ -7,7 +7,6 @@ import PlayerThinkingGraph from './PlayerThinkingGraph';
 export default function PlayerThinking({
   hints,
   gptHints,
-  gptModel,
   numPlayers,
   totalAnswers,
   questionChoices,
@@ -15,33 +14,18 @@ export default function PlayerThinking({
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
-  handleProcessHintsClick,
-  handleModelChange
+  handleProcessHintsClick
 }) {
   const classes = useStyles();
-  const handleChange = (event) => {
-  };
   return (
     <Box className={classes.centerContent}>
       <Box style={{display: 'flex', aligntItems: 'center', justifyContent: 'space-between', width: '100%'}}>
         <Typography className={classes.titleStyle}>
           Player Thinking
         </Typography>
-        <RadioGroup
-          aria-labelledby="demo-controlled-radio-buttons-group"
-          name="controlled-radio-buttons-group"
-          value={gptModel}
-          row
-          onChange={() => handleModelChange()}
-        >
-          <FormControlLabel value="gpt-3.5-turbo" control={<Radio
-           color="default"
-          />} label="GPT-3.5" />
-          <FormControlLabel value="gpt-4" control={<Radio color="default" />} label="GPT-4" />
-        </RadioGroup>
       </Box>
       <Typography className={classes.infoText}>
-        Players are asked how sure they are of their answer for this question.
+        Players have optionally submitted hints to help other players.
       </Typography>
       { !isNullOrUndefined(gptHints)? 
         <>
@@ -85,9 +69,6 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     width: '100%',
     maxWidth: '500px',
-    borderRadius: 34,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 34,
     boxSizing: 'border-box',
     gap: 16
   },

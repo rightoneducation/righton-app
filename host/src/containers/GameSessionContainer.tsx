@@ -268,6 +268,7 @@ const GameSessionContainer = () => {
           });
           return newState;
         });
+        console.log(teamAnswerResponse);
         if (!isNullOrUndefined(teamAnswerResponse.hint)) {
           setHints((prevHints) => {
               const newHints = buildHints(prevHints.prevSubmittedHints, teamAnswerResponse.hint) 

@@ -217,7 +217,7 @@ export default function GameInProgress({
     try {
       const response = await apiClient.addTeamAnswer(answer);
       window.localStorage.setItem(StorageKeyAnswer, JSON.stringify(answer.answerContent));
-      setTeamAnswerId(response.id);
+      setTeamAnswerId(response.id ?? '');
       setAnswerContent(answer?.answerContent as ITeamAnswerContent);
       setDisplaySubmitted(true);
     } catch (e) {
