@@ -32,6 +32,7 @@ import FooterStackContainerStyled from '../lib/styledcomponents/layout/FooterSta
 import {
   checkForSubmittedAnswerOnRejoin,
   checkForSelectedConfidenceOnRejoin,
+  checkForSubmittedHintOnRejoin
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
 import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
@@ -76,7 +77,15 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
-  const [answerHint, setAnswerHint] = useState<ITeamAnswerHint | null>(null);
+  const [answerHint, setAnswerHint] = useState<ITeamAnswerHint>(() => {
+    const rejoinSubmittedHint = checkForSubmittedHintOnRejoin(
+      localModel,
+      hasRejoined,
+      currentState,
+      currentQuestionIndex ?? 0
+    ); 
+    return rejoinSubmittedHint;
+  });
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
