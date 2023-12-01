@@ -81,9 +81,40 @@ interface SubscriptionValue<T> {
 
 export class ApiClient implements IApiClient {
     private endpoint: string
+    private hintEndpoint: string
 
     constructor(env: Environment) {
         this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
+        this.hintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`
+    }
+
+    async groupHints(
+        hints: string[]
+    ):Promise<string> {
+        try { 
+        const attempt = fetch(this.hintEndpoint, {
+            method: HTTPMethod.Post,
+            headers: {
+                "content-type": "application/json",
+                connection: "close",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({
+                hints: hints
+            }),
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(response.statusText)
+            }
+            return response.json()
+        })
+        
+        return attempt;
+        } catch (e) {
+            console.log(e)
+        }
+    return "";
     }
 
     createGameSession(
