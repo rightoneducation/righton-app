@@ -464,6 +464,15 @@ const GameSessionContainer = () => {
         setIsLoadModalOpen(true);
       });
   };
+  const [gptHints, setGptHints] = React.useState(null);
+  const handleProcessHintsClick = async (hints) => {
+    apiClient.groupHints(hints.prevSubmittedHints).then((response) => {
+      const parsedHints = JSON.parse(response.gptHints);
+      setGptHints(parsedHints);
+    });
+
+  };
+
   if (!gameSession) {
     return null;
   }
@@ -506,6 +515,8 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hintRef={hintRef}
           hints={hints}
+          gptHints={gptHints}
+          handleProcessHintsClick={handleProcessHintsClick}
         />
       );
     }
@@ -539,6 +550,8 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hintRef={hintRef}
           hints={hints}
+          gptHints={gptHints}
+          handleProcessHintsClick={handleProcessHintsClick}
         />
       );
 
