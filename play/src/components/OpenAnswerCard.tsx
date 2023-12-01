@@ -12,11 +12,11 @@ import {
 } from '@righton/networking';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import { StorageKeyAnswer} from '../../lib/PlayModels';
-import BodyCardStyled from '../../lib/styledcomponents/BodyCardStyled';
-import BodyCardContainerStyled from '../../lib/styledcomponents/BodyCardContainerStyled';
-import ButtonSubmitAnswer from '../ButtonSubmitAnswer';
-import ShortAnswerTextFieldStyled from '../../lib/styledcomponents/ShortAnswerTextFieldStyled';
+import { StorageKeyAnswer} from '../lib/PlayModels';
+import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
+import ButtonSubmitAnswer from './ButtonSubmitAnswer';
+import ShortAnswerTextFieldStyled from '../lib/styledcomponents/ShortAnswerTextFieldStyled';
 
 window.katex = katex;
 

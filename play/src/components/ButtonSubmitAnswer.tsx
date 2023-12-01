@@ -16,6 +16,7 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
+  isHint: boolean;
   isShortAnswerEnabled: boolean;
   selectedAnswer?: number | null;
   answers?: IChoice[] | undefined;
@@ -27,6 +28,7 @@ interface ButtonSubmitAnswerProps {
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  isHint,
   isShortAnswerEnabled,
   selectedAnswer,
   answers,
