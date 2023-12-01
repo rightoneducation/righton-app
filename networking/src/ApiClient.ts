@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -352,16 +352,9 @@ export class ApiClient implements IApiClient {
         return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as ITeamAnswer
     }
 
-    async updateTeamAnswer(
-        teamAnswerId: string,
-        isChosen: boolean | null = null,
-        confidenceLevel: ConfidenceLevel
+    async updateTeamAnswerBase(
+        input: UpdateTeamAnswerInput
     ): Promise<ITeamAnswer> {
-        const input: UpdateTeamAnswerInput = {
-            id: teamAnswerId,
-            isChosen,
-            confidenceLevel
-        }
         const variables: UpdateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
             updateTeamAnswer,
@@ -374,6 +367,31 @@ export class ApiClient implements IApiClient {
             throw new Error(`Failed to update team answer`)
         }
         return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as ITeamAnswer
+    }
+    async updateTeamAnswerConfidence(
+        teamAnswerId: string,
+        isChosen: boolean | null = null,
+        confidenceLevel?: ConfidenceLevel
+    ): Promise<ITeamAnswer> {
+        const input: UpdateTeamAnswerInput = {
+            id: teamAnswerId,
+            isChosen,
+            confidenceLevel
+        }
+       return this.updateTeamAnswerBase(input);
+    }
+    async updateTeamAnswerHint(
+        teamAnswerId: string,
+        isChosen: boolean | null = null,
+        hint: ITeamAnswerHint
+    ): Promise<ITeamAnswer> {
+        const awsHint = JSON.stringify(hint)
+        const input: UpdateTeamAnswerInput = {
+            id: teamAnswerId,
+            isChosen,
+            awsHint
+        }
+        return this.updateTeamAnswerBase(input);
     }
 
     async updateTeam(

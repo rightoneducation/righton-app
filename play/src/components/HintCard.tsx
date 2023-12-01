@@ -15,7 +15,7 @@ import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerSt
 import ButtonSubmitAnswer from './ButtonSubmitAnswer';
 
 interface HintProps {
-  answerHint: ITeamAnswerHint;
+  answerHintText: string;
   isHintSubmitted: boolean;
   currentState: GameSessionState;
   currentQuestionIndex: number;

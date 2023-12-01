@@ -194,3 +194,10 @@ export const StorageKey = 'rightOn';
  * kept separate from StorageKey so that timer and answer updates don't conflict
  */
 export const StorageKeyAnswer = 'rightOnAnswer';
+
+/**
+ * string for storage of hint data in users local storage
+ * kept separate from StorageKeyAnswer as hint is on ITeamAnswer not ITeamAnswerContent
+ */
+
+export const StorageKeyHint = 'rightOnHint';

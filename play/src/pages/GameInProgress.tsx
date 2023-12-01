@@ -15,7 +15,8 @@ import {
   StringAnswer,
   ExpressionAnswer,
   AnswerType,
-  ITeamAnswerConfig
+  ITeamAnswerConfig,
+  ITeamAnswerHint
 } from '@righton/networking';
 import HeaderContent from '../components/HeaderContent';
 import FooterContent from '../components/FooterContent';
@@ -33,7 +34,7 @@ import {
   checkForSelectedConfidenceOnRejoin,
 } from '../lib/HelperFunctions';
 import ErrorModal from '../components/ErrorModal';
-import { ErrorType, LocalModel, StorageKeyAnswer } from '../lib/PlayModels';
+import { ErrorType, LocalModel, StorageKeyAnswer, StorageKeyHint } from '../lib/PlayModels';
 
 interface GameInProgressProps {
   apiClient: ApiClient;
@@ -75,6 +76,7 @@ export default function GameInProgress({
   const theme = useTheme();
   const [isAnswerError, setIsAnswerError] = useState(false);
   const [isConfidenceError, setIsConfidenceError] = useState(false);
+  const [answerHint, setAnswerHint] = useState<ITeamAnswerHint | null>(null);
   const isSmallDevice = useMediaQuery(theme.breakpoints.down('sm'));
   const currentTeam = teams?.find((team) => team.id === teamId);
   const currentQuestion = questions[currentQuestionIndex ?? 0];
@@ -223,6 +225,16 @@ export default function GameInProgress({
     }
   };
 
+  const handleSubmitHint = async (normalizedHint: ITeamAnswerHint) => {
+    try{
+      await apiClient.updateTeamAnswerHint(teamAnswerId, true, normalizedHint);
+      window.localStorage.setItem(StorageKeyHint, JSON.stringify(normalizedHint));
+      setAnswerHint(normalizedHint);
+    } catch (e) {
+      setIsAnswerError(true);
+    }
+  };
+
   const handleRetry = () => {
     if (isAnswerError) {
       setIsAnswerError(false);
@@ -262,7 +274,7 @@ export default function GameInProgress({
       // that the loading message can display while we wait for apiClient. Then
       // after await, set isSelected to true again
       setSelectConfidence((prev) => ({ ...prev, isSelected: false }));
-      await apiClient.updateTeamAnswer(teamAnswerId, true, confidence);
+      await apiClient.updateTeamAnswerConfidence(teamAnswerId, true, confidence);
       setSelectConfidence((prev) => ({
         ...prev,
         selectedConfidenceOption: confidence,
@@ -329,6 +341,10 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             answerContent={answerContent}
             currentQuestionIndex={currentQuestionIndex ?? 0}
+            answerHint={answerHint ?? null}
+            isHintEnabled={currentQuestion.isHintEnabled}
+            handleSubmitHint={handleSubmitHint}
+            isHintSubmitted={answerHint?.isHintSubmitted ?? false}
           />
         ) : (
           <DiscussAnswer
