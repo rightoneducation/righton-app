@@ -40,7 +40,7 @@ export default function GameInProgressContentSwitch ({
     handleOnSelectMistake,
     hintCardRef,
     isHintEnabled,
-    HandleHintChange,
+    handleHintChange,
   }) {
   const classes = useStyles();
   const gameplayComponents = [

@@ -44,7 +44,7 @@ const GameSessionContainer = () => {
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
-  const [isHintEnabled, setIsHintEnabled] = useState(false);
+  const [isHintEnabled, setIsHintEnabled] = useState(true);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
