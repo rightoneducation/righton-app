@@ -58,7 +58,7 @@ export default function PlayerThinking({
         >
           Process Hints
         </Button>
-        { hints.length <= 2 &&
+        { hints.length < 2 &&
           <Typography className={classes.subText}>
             At least 2 players must submit a hint to process them
           </Typography>

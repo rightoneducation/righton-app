@@ -473,7 +473,7 @@ const GameSessionContainer = () => {
           });
         }
       });
-    } catch (err) {
+    } catch {
       setHintsError(true);
     }
   };
