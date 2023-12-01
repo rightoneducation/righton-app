@@ -44,7 +44,7 @@ export default function GameInProgressContentSwitch ({
   }) {
   const classes = useStyles();
   const gameplayComponents = [
-    <>
+    <Box className={classes.configContainer}>
       {graphClickInfo.graph === null ? (
         <>
           <div id="questioncard-scrollbox" ref={questionCardRef}>
@@ -89,6 +89,37 @@ export default function GameInProgressContentSwitch ({
                 shortAnswerResponses={shortAnswerResponses} 
                 totalAnswers={totalAnswers}
                 handleOnSelectMistake={handleOnSelectMistake}
+                handleProcessAnswersClick={handleProcessAnswersClick}
+                handleModelChange={handleModelChange}
+                numPlayers={numPlayers}
+                gptAnswers={gptAnswers}
+                gptModel={gptModel}
+              />
+            </div>
+          ) : null}
+          {isHintEnabled &&
+           (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
+            currentState === GameSessionState.PHASE_2_DISCUSS) ? (
+            <div
+              id="hint-scrollbox"
+              ref={hintRef}
+              className={classes.contentContainer}
+            >
+              <PlayerThinking
+                hints={hints}
+                gptHints={gptHints}
+                gptModel={gptModel}
+                questions={questions}
+                questionChoices={questionChoices}
+                currentQuestionIndex={currentQuestionIndex}
+                answers={answers}
+                totalAnswers={totalAnswers}
+                numPlayers={numPlayers}
+                statePosition={statePosition}
+                graphClickInfo={graphClickInfo}
+                handleGraphClick={handleGraphClick}
+                handleProcessHintsClick={handleProcessHintsClick}
+                handleModelChange={handleModelChange}
               />
             </div>
           ) : null}
@@ -109,47 +140,10 @@ export default function GameInProgressContentSwitch ({
           </div>
         </>
       ) : (
-        <div className={classes.contentContainer}>
-          {graphClickInfo.graph === 'realtime' ? (
-            <div id="responses-scrollbox" ref={responsesRef}>
-              <Responses
-                data={data}
-                numPlayers={numPlayers}
-                totalAnswers={totalAnswers}
-                questionChoices={questionChoices}
-                statePosition={statePosition}
-                graphClickInfo={graphClickInfo}
-                handleGraphClick={handleGraphClick}
-                isShortAnswerEnabled={isShortAnswerEnabled}
-              />
-              <SelectedAnswer
-                data={data}
-                graphClickInfo={graphClickInfo}
-                correctChoiceIndex={correctChoiceIndex}
-                numPlayers={numPlayers}
-                statePosition={statePosition}
-                isShortAnswerEnabled={isShortAnswerEnabled}
-              />
-            </div>
-          ) : (
-            <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
-              <ConfidenceResponseCard
-                confidenceData={confidenceData}
-                orderedAnswers={answers}
-                graphClickInfo={graphClickInfo}
-                handleGraphClick={handleGraphClick}
-              />
-              <ConfidenceResponseDropdown
-                graphClickInfo={graphClickInfo}
-                selectedConfidenceData={
-                  confidenceData[graphClickInfo.selectedIndex]
-                }
-              />
-            </div>
-          )}
-        </div>
-      )}
-    </>,
+        graphClickRenderSwitch(graphClickInfo)
+      )
+    };
+    </Box>,
   ];
 
   const questionCofigurationComponents = [
