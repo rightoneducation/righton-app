@@ -7,6 +7,7 @@ import {
   GameSessionState,
   ITeamAnswerContent,
   IChoice,
+  ITeam,
   ITeamAnswerHint,
   IAnswerSettings
 } from '@righton/networking';
@@ -46,6 +47,7 @@ interface ChooseAnswerProps {
   isHintEnabled: boolean;
   handleSubmitHint: (result: ITeamAnswerHint) => void;
   isHintSubmitted: boolean;
+  currentTeam: ITeam | null;
 }
 
 export default function ChooseAnswer({
@@ -72,6 +74,7 @@ export default function ChooseAnswer({
   isHintEnabled,
   handleSubmitHint,
   isHintSubmitted,
+  currentTeam,
 }: ChooseAnswerProps) {
   const theme = useTheme();
   const { t } = useTranslation();
