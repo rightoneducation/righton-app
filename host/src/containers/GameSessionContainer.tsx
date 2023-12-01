@@ -35,6 +35,7 @@ const GameSessionContainer = () => {
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   const [hints, setHints] = useState([]);
   const [gptHints, setGptHints] = React.useState(null);
+  const [hintsError, setHintsError] = React.useState(false);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -456,10 +457,25 @@ const GameSessionContainer = () => {
       });
   };
   const handleProcessHintsClick = async (hints) => {
-    apiClient.groupHints(hints).then((response) => {
-      const parsedHints = JSON.parse(response.gptHints);
-      setGptHints(parsedHints);
-    });
+    try {
+      apiClient.groupHints(hints).then((response) => {
+        const parsedHints = JSON.parse(response.gptHints);
+        setGptHints(parsedHints);
+        if (parsedHints){
+          apiClient.getGameSession(gameSessionId).then((gameSession) => {
+            apiClient
+              .updateQuestion({
+                gameSessionId: gameSession.id, 
+                id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                hints: JSON.stringify(parsedHints),
+            });
+          });
+        }
+      });
+    } catch (err) {
+      setHintsError(true);
+    }
   };
 
   if (!gameSession) {
@@ -506,6 +522,7 @@ const GameSessionContainer = () => {
           hints={hints}
           gptHints={gptHints}
           handleProcessHintsClick={handleProcessHintsClick}
+          hintsError={hintsError}
         />
       );
     }

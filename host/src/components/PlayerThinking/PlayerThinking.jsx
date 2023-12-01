@@ -14,7 +14,8 @@ export default function PlayerThinking({
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
-  handleProcessHintsClick
+  handleProcessHintsClick,
+  hintsError
 }) {
   const classes = useStyles();
   return (
@@ -60,6 +61,11 @@ export default function PlayerThinking({
         { hints.length <= 2 &&
           <Typography className={classes.subText}>
             At least 2 players must submit a hint to process them
+          </Typography>
+        } 
+        { hintsError &&
+          <Typography className={classes.subText}>
+            There was an error processing the hints. Please try again.
           </Typography>
         } 
        </Box>
