@@ -9,6 +9,7 @@ import SelectedAnswer from "./Responses/SelectedAnswer";
 import EnableConfidenceCard from "./EnableConfidenceCard";
 import ConfidenceResponseDropdown from "./ConfidenceResponses/ConfidenceResponseDropdown";
 import EnableShortAnswerCard from "./EnableShortAnswerCard";
+import EnableHintCard from "./EnableHintCard";
 import FeaturedMistakes from "./FeaturedMistakes";
 
 export default function GameInProgressContentSwitch ({ 
@@ -37,6 +38,9 @@ export default function GameInProgressContentSwitch ({
     handleShortAnswerChange,
     shortAnswerResponses,
     handleOnSelectMistake,
+    hintCardRef,
+    isHintEnabled,
+    HandleHintChange,
   }) {
   const classes = useStyles();
   const gameplayComponents = [
@@ -167,6 +171,13 @@ export default function GameInProgressContentSwitch ({
         <EnableConfidenceCard 
           isConfidenceEnabled={isConfidenceEnabled} 
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
+        />
+      </div>
+      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
+      <div id="hintcard-scrollbox" ref={hintCardRef} style={{width:'100%'}}>
+        <EnableHintCard
+          isHintEnabled={isHintEnabled} 
+          handleHintChange={handleHintChange}
         />
       </div>
       <div

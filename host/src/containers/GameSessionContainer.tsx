@@ -25,8 +25,7 @@ const GameSessionContainer = () => {
   const gameAnswersRef = React.useRef(null);
   const confidenceCardRef = React.useRef(null);
   const featuredMistakesRef = React.useRef(null);
-  const playerThinkingRef = React.useRef(null);
-  const popularMistakesRef = React.useRef(null);
+  const hintCardRef = React.useRef(null);
   const [gameSession, setGameSession] = useState<IGameSession | null>();
   const [teamsArray, setTeamsArray] = useState([{}]);
   // we're going to set this default condition to a query to the question object
@@ -45,11 +44,13 @@ const GameSessionContainer = () => {
   const [gameTimerZero, setGameTimerZero] = useState(false);
   const [isConfidenceEnabled, setIsConfidenceEnabled] = useState(false);
   const [isShortAnswerEnabled, setIsShortAnswerEnabled] = useState(false);
+  const [isHintEnabled, setIsHintEnabled] = useState(false);
   // module navigator dictionaries for different game states
   const questionConfigNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
     { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
+    { ref: hintCardRef, text: 'Surfacing Thinking Settings' },
   ];
   const gameplayNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -66,16 +67,28 @@ const GameSessionContainer = () => {
       return;
     }
     let newDictionary = [...gameplayNavDictionary];
-    if (isConfidenceEnabled)
-      newDictionary.splice(2, 0, {
+    let insertIndex = 2;
+    if (isConfidenceEnabled){
+      newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
       });
-    if (isShortAnswerEnabled)
-      newDictionary.splice(3, 0, {
+      insertIndex++;
+    }
+    if (isShortAnswerEnabled){
+      newDictionary.splice(insertIndex, 0, {
         ref: featuredMistakesRef,
         text: 'Featured Mistakes',
       });
+      insertIndex++;
+    }
+    if (isHintEnabled && (state === GameSessionState.CHOOSE_TRICKIEST_ANSWER || state === GameSessionState.PHASE_2_DISCUSS)){
+      newDictionary.splice(insertIndex, 0, {
+        ref: hintCardRef,
+        text: 'Player Thinking',
+      });
+      insertIndex++;
+    }
     setNavDictionary(newDictionary);
   };
 
@@ -318,6 +331,10 @@ const GameSessionContainer = () => {
     setIsShortAnswerEnabled(!isShortAnswerEnabled);
   };
 
+  const handleHintChange = (event) => {
+    setIsHintEnabled(!isHintEnabled);
+  };
+
   const handleOnSelectMistake = (value, isTop3) => {
     setSelectedMistakes((prev) => {
       if (prev.includes(value)) {
@@ -464,6 +481,9 @@ const GameSessionContainer = () => {
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
           handleOnSelectMistake={handleOnSelectMistake}
+          hintCardRef={hintCardRef}
+          isHintEnabled={isHintEnabled}
+          handleHintChange={handleHintChange}
         />
       );
     }
@@ -493,6 +513,9 @@ const GameSessionContainer = () => {
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
           handleOnSelectMistake={handleOnSelectMistake}
+          hintCardRef={hintCardRef}
+          isHintEnabled={isHintEnabled}
+          handleHintChange={handleHintChange}
         />
       );
 

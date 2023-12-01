@@ -47,7 +47,10 @@ export default function GameInProgress({
   confidenceCardRef,
   featuredMistakesRef,
   shortAnswerResponses,
-  handleOnSelectMistake
+  handleOnSelectMistake,
+  hintCardRef,
+  isHintEnabled,
+  handleHintChange
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -273,6 +276,9 @@ export default function GameInProgress({
             handleShortAnswerChange={handleShortAnswerChange}
             shortAnswerResponses={shortAnswerResponses}
             handleOnSelectMistake={handleOnSelectMistake}
+            hintCardRef={hintCardRef}
+            isHintEnabled={isHintEnabled}
+            handleHintChange={handleHintChange}
           />
         </div>
         <GameModal
