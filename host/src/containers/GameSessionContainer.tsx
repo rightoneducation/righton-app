@@ -33,6 +33,8 @@ const GameSessionContainer = () => {
   // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
   // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
+  const [hints, setHints] = useState({prevSubmittedHints: [], finalArray: []});
+  const [gptHints, setGptHints] = React.useState(null);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -109,6 +111,12 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
+        setIsHintEnabled(
+          response.questions[response.currentQuestionIndex].isHintEnabled,
+        );
+        if (!isNullOrUndefined(response.questions[response.currentQuestionIndex].hints)) {
+          setHints(response.questions[response.currentQuestionIndex].hints);
+        };
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.currentState,
@@ -260,6 +268,22 @@ const GameSessionContainer = () => {
           });
           return newState;
         });
+        if (!isNullOrUndefined(teamAnswerResponse.hint)) {
+          setHints((prevHints) => {
+              const newHints = buildHints(prevHints.prevSubmittedHints, teamAnswerResponse.hint) 
+              apiClient.getGameSession(gameSessionId).then((gameSession) => {
+                apiClient
+                  .updateQuestion({
+                    gameSessionId: gameSession.id, 
+                    id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                    order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                    hints: JSON.stringify(newHints),
+                });
+              });
+              return newHints;
+            }
+          );
+        }
         setShortAnswerResponses((existingAnswers) => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
           newShortAnswers.forEach((answer) => {
@@ -443,6 +467,13 @@ const GameSessionContainer = () => {
         setIsLoadModalOpen(true);
       });
   };
+  const handleProcessHintsClick = async (hints) => {
+    apiClient.groupHints(hints.prevSubmittedHints).then((response) => {
+      const parsedHints = JSON.parse(response.gptHints);
+      setGptHints(parsedHints);
+    });
+  };
+
   if (!gameSession) {
     return null;
   }
@@ -484,6 +515,9 @@ const GameSessionContainer = () => {
           hintCardRef={hintCardRef}
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
+          hints={hints}
+          gptHints={gptHints}
+          handleProcessHintsClick={handleProcessHintsClick}
         />
       );
     }
@@ -516,6 +550,9 @@ const GameSessionContainer = () => {
           hintCardRef={hintCardRef}
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
+          hints={hints}
+          gptHints={gptHints}
+          handleProcessHintsClick={handleProcessHintsClick}
         />
       );
 
