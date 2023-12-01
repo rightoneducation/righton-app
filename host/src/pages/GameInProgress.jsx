@@ -185,12 +185,12 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
     if (
       nextState === GameSessionState.PHASE_1_DISCUSS ||
       nextState === GameSessionState.PHASE_2_DISCUSS

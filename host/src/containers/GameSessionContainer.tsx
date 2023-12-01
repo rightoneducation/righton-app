@@ -53,7 +53,7 @@ const GameSessionContainer = () => {
     { ref: questionCardRef, text: 'Question Card' },
     { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
-    { ref: hintCardRef, text: 'Surfacing Thinking Settings' },
+    { ref: hintCardRef, text: 'Player Thinking Settings' },
   ];
   const gameplayNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -64,24 +64,17 @@ const GameSessionContainer = () => {
     questionConfigNavDictionary,
   );
   // assembles fields for module navigator in footer
-  const assembleNavDictionary = (isConfidenceEnabled, state) => {
+  const assembleNavDictionary = (isConfidenceEnabled, isHintEnabled, state) => {
     if (state === GameSessionState.TEAMS_JOINING) {
       setNavDictionary(questionConfigNavDictionary);
       return;
     }
     let newDictionary = [...gameplayNavDictionary];
     let insertIndex = 2;
-    if (isConfidenceEnabled){
+    if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)){
       newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
-      });
-      insertIndex++;
-    }
-    if (isShortAnswerEnabled){
-      newDictionary.splice(insertIndex, 0, {
-        ref: featuredMistakesRef,
-        text: 'Featured Mistakes',
       });
       insertIndex++;
     }
@@ -89,6 +82,13 @@ const GameSessionContainer = () => {
       newDictionary.splice(insertIndex, 0, {
         ref: hintCardRef,
         text: 'Player Thinking',
+      });
+      insertIndex++;
+    }
+    if (isShortAnswerEnabled){
+      newDictionary.splice(insertIndex, 0, {
+        ref: featuredMistakesRef,
+        text: 'Featured Mistakes',
       });
       insertIndex++;
     }
@@ -120,6 +120,7 @@ const GameSessionContainer = () => {
         };
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          response.questions[response.currentQuestionIndex].isHintEnabled,
           response.currentState,
         );
       }
@@ -572,6 +573,7 @@ const GameSessionContainer = () => {
           showFooterButtonOnly={true}
           setIsConfidenceEnabled={setIsConfidenceEnabled}
           assembleNavDictionary={assembleNavDictionary}
+          isHintEnabled={isHintEnabled}
         />
       );
 
