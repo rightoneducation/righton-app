@@ -52,10 +52,16 @@ export default function PlayerThinking({
         </Typography>
           <Button
           className={classes.button}
+          disabled={hints.length < 2}
           onClick={() => handleProcessHintsClick(hints)}
         >
           Process Hints
         </Button>
+        { hints.length <= 2 &&
+          <Typography className={classes.subText}>
+            At least 2 players must submit a hint to process them
+          </Typography>
+        } 
        </Box>
       }
     </Box>
@@ -111,5 +117,14 @@ const useStyles = makeStyles({
     fontWeight: '700',
     lineHeight: '30px',
     textTransform: 'none',
+    '&:disabled': {
+      background: `#909090`,
+      color: '#FFF',
+      boxShadow: 'none',
+      border: '4px solid #909090',
+      '&:hover': {
+        background: `#909090`,
+      },
+    }
   },
 });
