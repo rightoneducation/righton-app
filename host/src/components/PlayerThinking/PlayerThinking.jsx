@@ -48,7 +48,7 @@ export default function PlayerThinking({
       : 
       <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16}}>
         <Typography className={classes.infoText}>
-        {hints.prevSubmittedHints.length} / {numPlayers} players have submitted a hint
+        {hints.length} / {numPlayers} players have submitted a hint
         </Typography>
           <Button
           className={classes.button}

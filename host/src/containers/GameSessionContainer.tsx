@@ -33,7 +33,7 @@ const GameSessionContainer = () => {
   // we aren't going to subscribe to question objects on either app to prevent a bunch of updates
   // or maybe we just build shortanswerresponses based on reload logic like how we do it in create answer subscription
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
-  const [hints, setHints] = useState({prevSubmittedHints: [], finalArray: []});
+  const [hints, setHints] = useState([]);
   const [gptHints, setGptHints] = React.useState(null);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -270,20 +270,7 @@ const GameSessionContainer = () => {
         });
         console.log(teamAnswerResponse);
         if (!isNullOrUndefined(teamAnswerResponse.hint)) {
-          setHints((prevHints) => {
-              const newHints = buildHints(prevHints.prevSubmittedHints, teamAnswerResponse.hint) 
-              apiClient.getGameSession(gameSessionId).then((gameSession) => {
-                apiClient
-                  .updateQuestion({
-                    gameSessionId: gameSession.id, 
-                    id: gameSession.questions[gameSession.currentQuestionIndex].id,
-                    order: gameSession.questions[gameSession.currentQuestionIndex].order,
-                    hints: JSON.stringify(newHints),
-                });
-              });
-              return newHints;
-            }
-          );
+          setHints((prevHints) => {return [...prevHints, teamAnswerResponse.hint]});
         }
         setShortAnswerResponses((existingAnswers) => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
@@ -469,7 +456,7 @@ const GameSessionContainer = () => {
       });
   };
   const handleProcessHintsClick = async (hints) => {
-    apiClient.groupHints(hints.prevSubmittedHints).then((response) => {
+    apiClient.groupHints(hints).then((response) => {
       const parsedHints = JSON.parse(response.gptHints);
       setGptHints(parsedHints);
     });
