@@ -65,7 +65,7 @@ export default function HintCard({
           variant="subtitle1"
           sx={{ width: '100%', textAlign: 'left' }}
         >
-          {t('gameinprogress.chooseanswer.hintcard')}
+          {t('gameinprogress.chooseanswer.hintcardtitle')}
         </Typography>
         <Box
           style={{
@@ -95,7 +95,7 @@ export default function HintCard({
             multiline
             minRows={2}
             maxRows={2}
-            placeholder={t('gameinprogress.chooseanswer.hinttext') ?? ''}
+            placeholder={t('gameinprogress.chooseanswer.hintcardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
             value={editorContents}
             InputProps={{

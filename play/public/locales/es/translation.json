@@ -85,16 +85,10 @@
       "questioncard": "Pregunta",
       "answercard": "Elige la respuesta correcta",
       "openanswercard": "Introduce tu respuesta",
-      "openanswercarddescription": "Tu profesor esta esperando un ",
-      "openanswercardnumberanswer1": "respuesta numérica como un número entero.",
-      "openanswercardnumberanswer2": "respuesta numérica con un decimal.",
-      "openanswercardnumberanswer3": "numeric answer to two decimal places.",
-      "openanswercardnumberanswer4": "respuesta numérica con dos decimales.",
-      "openanswercardwordanswer": "respuesta de palabra corta.",
-      "openanswercardexpressionanswer": "expresión matemática.",
       "openanswercardplaceholder": "Ingresa tu respuesta aquí...",
-      "openanswercardkatexpreview": "Vista previa de expresión:",
-      "openanswercardnumberwarning": "Sólo se permiten las siguientes entradas: . -% 0-9"
+      "hintcardtitle": "Dar una pista (opcional)",
+      "hintcarddescription": "¿Podrías darle una pista a alguien que haya cometido este error?",
+      "hintcardplaceholder": "Introduce tu explicación..."
     },
     "discussanswer": {
       "questionanswercolumn": "Pregunta y Respuesta Correcta",
@@ -110,6 +104,7 @@
     },
     "button": {
       "submit": "Enviar Respuesta",
+      "submitHint": "Enviar Explicación",
       "submitted": "Enviada"
     }
   },
