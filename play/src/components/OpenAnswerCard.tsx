@@ -213,6 +213,7 @@ export default function OpenAnswerCard({
               !isNullOrUndefined(editorContents) && editorContents !== ''
             }
             isSubmitted={isSubmitted}
+            isHint={false}
             isShortAnswerEnabled={isShortAnswerEnabled}
             currentState={currentState}
             currentQuestionIndex={currentQuestionIndex}

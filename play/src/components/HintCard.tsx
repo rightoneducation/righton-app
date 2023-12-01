@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, {  ChangeEvent, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import {
   isNullOrUndefined,
-  ITeamAnswerContent,
   ITeam,
   ITeamAnswerHint,
   GameSessionState,
@@ -25,7 +24,7 @@ interface HintProps {
 }
 
 export default function HintCard({
-  answerHint,
+  answerHintText,
   isHintSubmitted,
   currentState,
   currentQuestionIndex,
@@ -35,43 +34,24 @@ export default function HintCard({
   const theme = useTheme();
   const { t } = useTranslation();
  
-  const [editorContents, setEditorContents] = useState<any>(() => // eslint-disable-line @typescript-eslint/no-explicit-any
-    answerHint
+  const [editorContents, setEditorContents] = useState<string>(() => 
+    answerHintText ?? ''
   );
-  const [editorObject, setEditorObject] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
-  // ReactQuill onChange expects four parameters
+  
   const handleEditorContentsChange = (
-    content: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    delta: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    source: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    editor: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  ) => {
-    const currentAnswer = editor.getContents();
-    const extractedAnswer: ITeamAnswerHint = {
-      delta: editor.getContents(),
-      rawHint: editor.getText(),
-      teamName: currentTeam?.name ?? '',
-      isHintSubmitted: false
-    };
+    event: ChangeEvent<HTMLInputElement>
+  ) => {    
+    const currentHint = event.target.value;
     window.localStorage.setItem(
       StorageKeyHint,
-      JSON.stringify(extractedAnswer)
+      JSON.stringify(currentHint)
     );
-    setEditorObject(editor);
-    setEditorContents(currentAnswer);
+    setEditorContents(currentHint);
   };
 
   const handleNormalizeAnswerOnSubmit = () => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    const hintArray = editorObject.getText().replace(/(\r\n|\n|\r|" ")/gm, '').split(" ").filter((word: string) => word !== "");
-    const normHint = removeStopwords(hintArray);
-
     const packagedAnswer: ITeamAnswerHint = {
-      delta: editorObject.getContents(),
-      rawHint: editorObject.getText()
-        .toLowerCase()
-        .replace(/(\r\n|\n|\r|" ")/gm, '')
-        .trim(),
-      normHint,
+      rawHint: editorContents,
       teamName: currentTeam?.name ?? '',
       isHintSubmitted: true
     } as ITeamAnswerHint;

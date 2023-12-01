@@ -16,6 +16,12 @@ export enum AnswerPrecision {
   THOUSANDTH = 'THOUSANDTH',
 }
 
+export interface ITeamAnswerHint {
+  rawHint: string;
+  teamName: string;
+  isHintSubmitted: boolean;
+}
+
 export interface ITeamAnswerContent {
   rawAnswer: string; 
   normAnswer?: (string | number)[] | null;
@@ -51,6 +57,7 @@ export interface ITeamAnswerConfig<T> {
   answerContent: ITeamAnswerContent;
   isTrickAnswer: boolean;
   confidenceLevel: ConfidenceLevel;
+  hint?: ITeamAnswerHint;
   createdAt?: string;
   updatedAt?: string;
   value: T;
@@ -77,6 +84,7 @@ abstract class TeamAnswer<T> extends BaseAnswer<T> {
   text: string;
   answerContent: ITeamAnswerContent;
   confidenceLevel: ConfidenceLevel;
+  hint?: ITeamAnswerHint;
   createdAt?: string;
   updatedAt?: string;
   value: T;
@@ -91,6 +99,7 @@ abstract class TeamAnswer<T> extends BaseAnswer<T> {
       this.answerContent = config.answerContent,
       this.isTrickAnswer = config.isTrickAnswer,
       this.confidenceLevel = config.confidenceLevel,
+      this.hint = config.hint,
       this.createdAt = config.createdAt,
       this.updatedAt = config.updatedAt,
       this.value = config.value
