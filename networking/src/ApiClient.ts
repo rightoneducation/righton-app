@@ -89,7 +89,9 @@ export class ApiClient implements IApiClient {
     }
 
     async groupHints(
-        hints: string[]
+        hints: string[],
+        questionText: string,
+        correctAnswer: string
     ):Promise<string> {
         try { 
         const attempt = fetch(this.hintEndpoint, {
@@ -100,7 +102,9 @@ export class ApiClient implements IApiClient {
                 "Access-Control-Allow-Origin": "*",
             },
             body: JSON.stringify({
-                hints: hints
+                hints: hints,
+                questionText: questionText,
+                correctAnswer: correctAnswer
             }),
         })
         .then((response) => {

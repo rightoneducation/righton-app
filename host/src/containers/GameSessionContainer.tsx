@@ -455,11 +455,13 @@ const GameSessionContainer = () => {
   };
   const handleProcessHintsClick = async (hints) => {
     try {
-      const questionChoices = getQuestionChoices(gameSession?.questions, gameSession?.currentQuestionIndex);
+      const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
+      const questionText =  currentQuestion.text;
       const correctChoiceIndex =
-        questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-      const correctAnswer = questionChoices[correctChoiceIndex].text;
-      apiClient.groupHints(hints).then((response) => {
+        currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
+      const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
+      
+      apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
         const parsedHints = JSON.parse(response.gptHints);
         setGptHints(parsedHints);
         if (parsedHints){
