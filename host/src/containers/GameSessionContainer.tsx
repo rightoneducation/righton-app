@@ -113,6 +113,7 @@ const GameSessionContainer = () => {
           response.questions[response.currentQuestionIndex].isHintEnabled,
         );
         setGptHints(response.questions[response.currentQuestionIndex].hints);
+        setHintsError(false);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.questions[response.currentQuestionIndex].isHintEnabled,
@@ -156,6 +157,7 @@ const GameSessionContainer = () => {
         if (gameSession && gameSession.currentState !== response.currentState) {
           checkGameTimer(response);
         }
+        setHintsError(false);
         setGameSession({ ...gameSession, ...response });
         setIsConfidenceEnabled(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
@@ -453,6 +455,10 @@ const GameSessionContainer = () => {
   };
   const handleProcessHintsClick = async (hints) => {
     try {
+      const questionChoices = getQuestionChoices(gameSession?.questions, gameSession?.currentQuestionIndex);
+      const correctChoiceIndex =
+        questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+      const correctAnswer = questionChoices[correctChoiceIndex].text;
       apiClient.groupHints(hints).then((response) => {
         const parsedHints = JSON.parse(response.gptHints);
         setGptHints(parsedHints);
@@ -553,6 +559,7 @@ const GameSessionContainer = () => {
           hints={hints}
           gptHints={gptHints}
           handleProcessHintsClick={handleProcessHintsClick}
+          hintsError={hintsError}
         />
       );
 
