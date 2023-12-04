@@ -8,11 +8,8 @@ import {
   Environment,
   GameSessionState,
   IGameSession,
+  IHints,
   isNullOrUndefined,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
-  AnswerType
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
@@ -115,9 +112,7 @@ const GameSessionContainer = () => {
         setIsHintEnabled(
           response.questions[response.currentQuestionIndex].isHintEnabled,
         );
-        if (!isNullOrUndefined(response.questions[response.currentQuestionIndex].hints)) {
-          setHints(response.questions[response.currentQuestionIndex].hints);
-        };
+        setGptHints(response.questions[response.currentQuestionIndex].hints);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
           response.questions[response.currentQuestionIndex].isHintEnabled,
@@ -270,7 +265,6 @@ const GameSessionContainer = () => {
           });
           return newState;
         });
-        console.log(teamAnswerResponse);
         if (!isNullOrUndefined(teamAnswerResponse.hint)) {
           setHints((prevHints) => {return [...prevHints, teamAnswerResponse.hint]});
         }
@@ -469,7 +463,7 @@ const GameSessionContainer = () => {
                 gameSessionId: gameSession.id, 
                 id: gameSession.questions[gameSession.currentQuestionIndex].id,
                 order: gameSession.questions[gameSession.currentQuestionIndex].order,
-                hints: JSON.stringify(parsedHints),
+                hints: JSON.stringify(parsedHints as IHints[]),
             });
           });
         }
