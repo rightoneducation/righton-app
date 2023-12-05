@@ -524,7 +524,6 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hints={hints}
           gptHints={gptHints}
-          handleProcessHintsClick={handleProcessHintsClick}
           hintsError={hintsError}
         />
       );
@@ -560,7 +559,6 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hints={hints}
           gptHints={gptHints}
-          handleProcessHintsClick={handleProcessHintsClick}
           hintsError={hintsError}
         />
       );

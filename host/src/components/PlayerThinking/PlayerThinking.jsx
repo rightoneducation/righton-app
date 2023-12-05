@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { Box, Typography, Button, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { isNullOrUndefined } from '@righton/networking';
+import { GameSessionState, isNullOrUndefined } from '@righton/networking';
+import LinearProgressBar from '../LinearProgressBar';
 import PlayerThinkingGraph from './PlayerThinkingGraph';
 
 export default function PlayerThinking({
@@ -14,8 +15,8 @@ export default function PlayerThinking({
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
-  handleProcessHintsClick,
-  hintsError
+  hintsError,
+  currentState
 }) {
   const classes = useStyles();
   return (
@@ -49,20 +50,17 @@ export default function PlayerThinking({
       : 
       <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16}}>
         <Typography className={classes.infoText}>
-        {hints.length} / {numPlayers} players have submitted a hint
+        Players that have submitted a hint:
         </Typography>
-          <Button
-          className={classes.button}
-          disabled={hints.length < 2}
-          onClick={() => handleProcessHintsClick(hints)}
-        >
-          Process Hints
-        </Button>
-        { hints.length < 2 &&
+        <LinearProgressBar
+          inputNum={hints.length}
+          totalNum={numPlayers}
+        />
+        { currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
           <Typography className={classes.subText}>
-            At least 2 players must submit a hint to process them
+            Hints will be displayed in the next phase
           </Typography>
-        } 
+        }
         { hintsError &&
           <Typography className={classes.subText}>
             There was an error processing the hints. Please try again.
@@ -97,7 +95,7 @@ const useStyles = makeStyles({
   infoText: {
     color: '#FFF',
     alignSelf: 'stretch',
-    textAlign: 'center',
+    textAlign: 'left',
     fontFamily: 'Poppins',
     fontSize: '14px',
     fontStyle: 'normal',

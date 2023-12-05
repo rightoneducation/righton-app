@@ -53,7 +53,6 @@ export default function GameInProgress({
   handleHintChange,
   hints,
   gptHints,
-  handleProcessHintsClick,
   hintsError,
 }) {
   const classes = useStyles();
@@ -287,7 +286,6 @@ export default function GameInProgress({
             handleHintChange={handleHintChange}
             hints={hints}
             gptHints={gptHints}
-            handleProcessHintsClick={handleProcessHintsClick}
             hintsError={hintsError}
           />
         </div>
