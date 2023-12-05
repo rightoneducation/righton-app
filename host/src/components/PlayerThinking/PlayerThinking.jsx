@@ -47,7 +47,7 @@ export default function PlayerThinking({
       </>
     ) : (
         <>
-          {!isNullOrUndefined(gptHints) && !isHintLoading ? (
+          {!isNullOrUndefined(gptHints) && !isHintLoading && !hintsError ? (
             <>      
               <PlayerThinkingGraph
                   data={gptHints}
@@ -79,7 +79,6 @@ export default function PlayerThinking({
                     <>
                       <Button
                         className={classes.button}
-                        disabled={hints.length < 2}
                         onClick={() => handleProcessHints(hints)}
                       >
                         Retry
