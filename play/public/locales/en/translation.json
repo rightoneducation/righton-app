@@ -94,7 +94,10 @@
       "openanswercardexpressionanswer": "math expression.",
       "openanswercardplaceholder": "Enter your answer here...",
       "openanswercardkatexpreview": "Expression preview:",
-      "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9 "
+      "openanswercardnumberwarning": "Only the following inputs are allowed: . - % 0-9 ",
+      "hintcardtitle": "Give a hint (optional)",
+      "hintcarddescription": "Could you give a hint to someone who has made this mistake?",
+      "hintcardplaceholder": "Enter your explanation..."
     },
     "discussanswer": {
       "questionanswercolumn": "Question and Correct Answer",
@@ -110,6 +113,7 @@
     },
     "button": {
       "submit": "Submit Answer",
+      "hint": "Submit Hint",
       "submitted": "Submitted"
     }
   },

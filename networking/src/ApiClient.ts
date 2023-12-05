@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -81,9 +81,44 @@ interface SubscriptionValue<T> {
 
 export class ApiClient implements IApiClient {
     private endpoint: string
+    private hintEndpoint: string
 
     constructor(env: Environment) {
         this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
+        this.hintEndpoint = `https://yh5ionr9rg.execute-api.us-east-1.amazonaws.com/groupHints/groupHints`
+    }
+
+    async groupHints(
+        hints: string[],
+        questionText: string,
+        correctAnswer: string
+    ):Promise<string> {
+        try { 
+        const attempt = fetch(this.hintEndpoint, {
+            method: HTTPMethod.Post,
+            headers: {
+                "content-type": "application/json",
+                connection: "close",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({
+                hints: hints,
+                questionText: questionText,
+                correctAnswer: correctAnswer
+            }),
+        })
+        .then((response) => {
+            if (!response.ok) {
+               console.error(response.statusText)
+            }
+            return response.json()
+        })
+        
+        return attempt;
+        } catch (e) {
+            console.log(e)
+        }
+    return "";
     }
 
     createGameSession(
@@ -327,7 +362,7 @@ export class ApiClient implements IApiClient {
 
     async addTeamAnswer(
         inputAnswer: NumberAnswer | StringAnswer | ExpressionAnswer
-    ): Promise<ITeamAnswer> {
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer > {
         const input: CreateTeamAnswerInput = {
             questionId: inputAnswer.questionId,
             isChosen: inputAnswer.isChosen,
@@ -349,19 +384,12 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as ITeamAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as NumberAnswer | StringAnswer | ExpressionAnswer
     }
 
-    async updateTeamAnswer(
-        teamAnswerId: string,
-        isChosen: boolean | null = null,
-        confidenceLevel: ConfidenceLevel
-    ): Promise<ITeamAnswer> {
-        const input: UpdateTeamAnswerInput = {
-            id: teamAnswerId,
-            isChosen,
-            confidenceLevel
-        }
+    async updateTeamAnswerBase(
+        input: UpdateTeamAnswerInput
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
         const variables: UpdateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
             updateTeamAnswer,
@@ -373,7 +401,32 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as ITeamAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as NumberAnswer | StringAnswer | ExpressionAnswer
+    }
+    async updateTeamAnswerConfidence(
+        teamAnswerId: string,
+        isChosen: boolean | null = null,
+        confidenceLevel?: ConfidenceLevel
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
+        const input: UpdateTeamAnswerInput = {
+            id: teamAnswerId,
+            isChosen,
+            confidenceLevel
+        }
+       return this.updateTeamAnswerBase(input);
+    }
+    async updateTeamAnswerHint(
+        teamAnswerId: string,
+        isChosen: boolean | null = null,
+        hint: ITeamAnswerHint
+    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
+        const awsHint = JSON.stringify(hint)
+        const input: UpdateTeamAnswerInput = {
+            id: teamAnswerId,
+            isChosen,
+            awsHint
+        }
+        return this.updateTeamAnswerBase(input);
     }
 
     async updateTeam(
@@ -532,6 +585,7 @@ type AWSQuestion = {
     choices?: string | null
     answerSettings?: string | null
     responses?: string | null
+    hints?: string | null
     imageUrl?: string | null
     instructions?: string | null
     standard?: string | null
@@ -564,6 +618,7 @@ type AWSTeamAnswer = {
     isTrickAnswer: boolean
     text?: string | null
     awsAnswerContent?: string | null
+    awsHint?: string | null
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null
@@ -724,6 +779,9 @@ export class GameSessionParser {
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),
+                    hints: isNullOrUndefined(awsQuestion.hints)
+                        ? []
+                        : this.parseServerArray<IHints>(awsQuestion.hints),
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []
@@ -923,6 +981,24 @@ class TeamAnswerParser {
         }
         return parsedAnswerContent as ITeamAnswerContent;
     }   
+    static hintFromAWSHint(
+        awsHint: string
+    ): ITeamAnswerHint {
+        let parsedHint;
+        try {
+            parsedHint = JSON.parse(awsHint);
+            if (isNullOrUndefined(awsHint) ||
+            isNullOrUndefined(parsedHint.isHintSubmitted)) {
+                throw new Error(
+                    "Hint has null field for the attributes that are not nullable"
+                )
+            }
+        } catch (e) {
+            console.log(e)
+            throw new Error("Failed to parse hint")
+        }
+        return parsedHint as ITeamAnswerHint;
+    }  
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
     ): NumberAnswer | StringAnswer | ExpressionAnswer {
@@ -933,6 +1009,7 @@ class TeamAnswerParser {
             isTrickAnswer,
             text,
             awsAnswerContent,
+            awsHint,
             createdAt,
             updatedAt,
             teamMemberAnswersId,
@@ -949,6 +1026,7 @@ class TeamAnswerParser {
         }
         // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
+        const hint = awsHint ? this.hintFromAWSHint(awsHint) : undefined;
         let teamAnswer;
         const answerConfigBase = {
             id,
@@ -957,6 +1035,7 @@ class TeamAnswerParser {
             isTrickAnswer,
             text,
             answerContent,
+            hint,
             createdAt,
             updatedAt,
             teamMemberAnswersId,

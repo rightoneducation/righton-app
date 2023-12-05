@@ -16,6 +16,7 @@ import {
 interface ButtonSubmitAnswerProps {
   isSelected: boolean;
   isSubmitted: boolean;
+  isHint: boolean;
   isShortAnswerEnabled: boolean;
   selectedAnswer?: number | null;
   answers?: IChoice[] | undefined;
@@ -27,6 +28,7 @@ interface ButtonSubmitAnswerProps {
 export default function ButtonSubmitAnswer({
   isSelected,
   isSubmitted,
+  isHint,
   isShortAnswerEnabled,
   selectedAnswer,
   answers,
@@ -38,9 +40,12 @@ export default function ButtonSubmitAnswer({
   const buttonText = isSubmitted
     ? t('gameinprogress.button.submitted')
     : t('gameinprogress.button.submit');
+  const hintButtonText = isSubmitted
+    ? t('gameinprogress.button.submitted')
+    : t('gameinprogress.button.hint');
   const buttonContents = (
     <Typography sx={{ textTransform: 'none' }} variant="button">
-      {buttonText}
+      {isHint ? hintButtonText : buttonText}
     </Typography>
   );
   return isSelected && !isSubmitted ? (

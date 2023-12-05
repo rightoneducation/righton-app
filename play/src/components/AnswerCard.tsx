@@ -105,6 +105,7 @@ export default function AnswerCard({
         <ButtonSubmitAnswer
           isSubmitted={isSubmitted}
           isShortAnswerEnabled={isShortAnswerEnabled}
+          isHint={false}
           selectedAnswer={selectedAnswer}
           answers={answers}
           currentState={currentState}
