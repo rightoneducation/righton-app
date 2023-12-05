@@ -109,7 +109,7 @@ export class ApiClient implements IApiClient {
         })
         .then((response) => {
             if (!response.ok) {
-                throw new Error(response.statusText)
+               console.error(response.statusText)
             }
             return response.json()
         })

@@ -460,9 +460,9 @@ const GameSessionContainer = () => {
       const correctChoiceIndex =
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
-      
+
       apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
-        const parsedHints = JSON.parse(response.gptHints);
+        const parsedHints = JSON.parse(response.gptHints.content);  
         setGptHints(parsedHints);
         if (parsedHints){
           apiClient.getGameSession(gameSessionId).then((gameSession) => {
@@ -482,7 +482,7 @@ const GameSessionContainer = () => {
   };
 
   if (!gameSession) {
-    return null;
+    return null;        
   }
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
