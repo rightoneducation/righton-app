@@ -53,7 +53,9 @@ export default function GameInProgress({
   handleHintChange,
   hints,
   gptHints,
-  handleProcessHintsClick
+  hintsError,
+  isHintLoading,
+  handleProcessHints
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -73,7 +75,6 @@ export default function GameInProgress({
   const correctChoiceIndex =
     questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
   const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
   const answers = useMemo(
     () =>
@@ -151,7 +152,10 @@ export default function GameInProgress({
     setTimeout(() => {
       if (graph === 'realtime')
         responsesRef.current.scrollIntoView({ behavior: 'smooth' });
-      else confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else if (graph=== 'confidence') 
+        confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else
+        hintCardRef.current.scrollIntoView({ behavior: 'smooth' });
     }, 0);
   };
 
@@ -181,12 +185,12 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
     if (
       nextState === GameSessionState.PHASE_1_DISCUSS ||
       nextState === GameSessionState.PHASE_2_DISCUSS
@@ -284,7 +288,9 @@ export default function GameInProgress({
             handleHintChange={handleHintChange}
             hints={hints}
             gptHints={gptHints}
-            handleProcessHintsClick={handleProcessHintsClick}
+            hintsError={hintsError}
+            isHintLoading={isHintLoading}
+            handleProcessHints={handleProcessHints}
           />
         </div>
         <GameModal

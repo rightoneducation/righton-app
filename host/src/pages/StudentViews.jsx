@@ -20,6 +20,7 @@ export default function StudentViews({
   showFooterButtonOnly,
   setIsConfidenceEnabled,
   assembleNavDictionary,
+  isHintEnabled
 }) {
   let statePosition;
   let isLastQuestion =
@@ -81,7 +82,7 @@ export default function StudentViews({
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
       setIsConfidenceEnabled(false);
-      assembleNavDictionary(false, GameSessionState.TEAMS_JOINING);
+      assembleNavDictionary(false, isHintEnabled, GameSessionState.TEAMS_JOINING);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),
         currentQuestionIndex: currentQuestionIndex + 1,
@@ -89,7 +90,7 @@ export default function StudentViews({
       return;
     }
     if (currentState === GameSessionState.PHASE_1_RESULTS)
-      assembleNavDictionary(false, currentState);
+      assembleNavDictionary(false, isHintEnabled, currentState);
     handleUpdateGameSession({ currentState: nextStateFunc(currentState) });
   };
 

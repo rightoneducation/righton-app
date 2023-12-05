@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -89,7 +89,9 @@ export class ApiClient implements IApiClient {
     }
 
     async groupHints(
-        hints: string[]
+        hints: string[],
+        questionText: string,
+        correctAnswer: string
     ):Promise<string> {
         try { 
         const attempt = fetch(this.hintEndpoint, {
@@ -100,12 +102,14 @@ export class ApiClient implements IApiClient {
                 "Access-Control-Allow-Origin": "*",
             },
             body: JSON.stringify({
-                hints: hints
+                hints: hints,
+                questionText: questionText,
+                correctAnswer: correctAnswer
             }),
         })
         .then((response) => {
             if (!response.ok) {
-                throw new Error(response.statusText)
+               console.error(response.statusText)
             }
             return response.json()
         })
@@ -581,6 +585,7 @@ type AWSQuestion = {
     choices?: string | null
     answerSettings?: string | null
     responses?: string | null
+    hints?: string | null
     imageUrl?: string | null
     instructions?: string | null
     standard?: string | null
@@ -774,6 +779,9 @@ export class GameSessionParser {
                     responses: isNullOrUndefined(awsQuestion.responses)
                          ? []
                          : this.parseServerArray<IResponse>(awsQuestion.responses),
+                    hints: isNullOrUndefined(awsQuestion.hints)
+                        ? []
+                        : this.parseServerArray<IHints>(awsQuestion.hints),
                     imageUrl: awsQuestion.imageUrl,
                     instructions: isNullOrUndefined(awsQuestion.instructions)
                         ? []

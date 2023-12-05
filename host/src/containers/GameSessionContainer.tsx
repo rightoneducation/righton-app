@@ -8,11 +8,8 @@ import {
   Environment,
   GameSessionState,
   IGameSession,
+  IHints,
   isNullOrUndefined,
-  NumberAnswer,
-  StringAnswer,
-  ExpressionAnswer,
-  AnswerType
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
@@ -35,6 +32,8 @@ const GameSessionContainer = () => {
   const [shortAnswerResponses, setShortAnswerResponses] = useState([]);
   const [hints, setHints] = useState([]);
   const [gptHints, setGptHints] = React.useState(null);
+  const [hintsError, setHintsError] = React.useState(false);
+  const [isHintLoading, setisHintLoading] = React.useState(false);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -52,7 +51,7 @@ const GameSessionContainer = () => {
     { ref: questionCardRef, text: 'Question Card' },
     { ref: responsesRef, text: 'Responses Settings' },
     { ref: confidenceCardRef, text: 'Confidence Settings' },
-    { ref: hintCardRef, text: 'Surfacing Thinking Settings' },
+    { ref: hintCardRef, text: 'Player Thinking Settings' },
   ];
   const gameplayNavDictionary = [
     { ref: questionCardRef, text: 'Question Card' },
@@ -63,24 +62,17 @@ const GameSessionContainer = () => {
     questionConfigNavDictionary,
   );
   // assembles fields for module navigator in footer
-  const assembleNavDictionary = (isConfidenceEnabled, state) => {
+  const assembleNavDictionary = (isConfidenceEnabled, isHintEnabled, state) => {
     if (state === GameSessionState.TEAMS_JOINING) {
       setNavDictionary(questionConfigNavDictionary);
       return;
     }
     let newDictionary = [...gameplayNavDictionary];
     let insertIndex = 2;
-    if (isConfidenceEnabled){
+    if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)){
       newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
-      });
-      insertIndex++;
-    }
-    if (isShortAnswerEnabled){
-      newDictionary.splice(insertIndex, 0, {
-        ref: featuredMistakesRef,
-        text: 'Featured Mistakes',
       });
       insertIndex++;
     }
@@ -88,6 +80,13 @@ const GameSessionContainer = () => {
       newDictionary.splice(insertIndex, 0, {
         ref: hintCardRef,
         text: 'Player Thinking',
+      });
+      insertIndex++;
+    }
+    if (isShortAnswerEnabled){
+      newDictionary.splice(insertIndex, 0, {
+        ref: featuredMistakesRef,
+        text: 'Featured Mistakes',
       });
       insertIndex++;
     }
@@ -114,11 +113,11 @@ const GameSessionContainer = () => {
         setIsHintEnabled(
           response.questions[response.currentQuestionIndex].isHintEnabled,
         );
-        if (!isNullOrUndefined(response.questions[response.currentQuestionIndex].hints)) {
-          setHints(response.questions[response.currentQuestionIndex].hints);
-        };
+        setGptHints(response.questions[response.currentQuestionIndex].hints);
+        setHintsError(false);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          response.questions[response.currentQuestionIndex].isHintEnabled,
           response.currentState,
         );
       }
@@ -150,7 +149,6 @@ const GameSessionContainer = () => {
         })
         .catch((reason) => console.log(reason));
     });
-
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(
       gameSessionId,
@@ -159,6 +157,7 @@ const GameSessionContainer = () => {
         if (gameSession && gameSession.currentState !== response.currentState) {
           checkGameTimer(response);
         }
+        setHintsError(false);
         setGameSession({ ...gameSession, ...response });
         setIsConfidenceEnabled(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
@@ -268,7 +267,6 @@ const GameSessionContainer = () => {
           });
           return newState;
         });
-        console.log(teamAnswerResponse);
         if (!isNullOrUndefined(teamAnswerResponse.hint)) {
           setHints((prevHints) => {return [...prevHints, teamAnswerResponse.hint]});
         }
@@ -379,6 +377,17 @@ const GameSessionContainer = () => {
         });
     }
     
+    // if game is moving to PHASE_2_DISCUSS, hints are enabled, there are hints to process that have yet to be processed
+    if (
+      gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER 
+      && isHintEnabled 
+      && gptHints === null 
+      && hints.length > 0
+    ) {
+      setisHintLoading(true);
+      handleProcessHints(hints);
+    }
+
     const response = await apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
     if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       setHeaderGameCurrentTime(response.phaseOneTime);
@@ -455,15 +464,44 @@ const GameSessionContainer = () => {
         setIsLoadModalOpen(true);
       });
   };
-  const handleProcessHintsClick = async (hints) => {
-    apiClient.groupHints(hints).then((response) => {
-      const parsedHints = JSON.parse(response.gptHints);
-      setGptHints(parsedHints);
-    });
+  const handleProcessHints = async (hints) => {
+    setHintsError(false);
+    try {
+      const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
+      const questionText =  currentQuestion.text;
+      const correctChoiceIndex =
+        currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
+      const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
+
+      apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
+        const parsedHints = JSON.parse(response.gptHints.content);  
+        setGptHints(parsedHints);
+        setisHintLoading(false);
+        if (parsedHints){
+          setHints(null);
+          apiClient.getGameSession(gameSessionId).then((gameSession) => {
+            apiClient
+              .updateQuestion({
+                gameSessionId: gameSession.id, 
+                id: gameSession.questions[gameSession.currentQuestionIndex].id,
+                order: gameSession.questions[gameSession.currentQuestionIndex].order,
+                hints: JSON.stringify(parsedHints as IHints[]),
+            });
+          });
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        setHintsError(true);
+      })
+      ;
+    } catch {
+      setHintsError(true);
+    }
   };
 
   if (!gameSession) {
-    return null;
+    return null;        
   }
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:
@@ -505,7 +543,9 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hints={hints}
           gptHints={gptHints}
-          handleProcessHintsClick={handleProcessHintsClick}
+          hintsError={hintsError}
+          isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
     }
@@ -540,7 +580,9 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hints={hints}
           gptHints={gptHints}
-          handleProcessHintsClick={handleProcessHintsClick}
+          hintsError={hintsError}
+          isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
 
@@ -555,6 +597,7 @@ const GameSessionContainer = () => {
           showFooterButtonOnly={true}
           setIsConfidenceEnabled={setIsConfidenceEnabled}
           assembleNavDictionary={assembleNavDictionary}
+          isHintEnabled={isHintEnabled}
         />
       );
 

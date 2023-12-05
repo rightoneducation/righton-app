@@ -14,6 +14,7 @@ import {
   LocalModel,
   StorageKey,
   StorageKeyAnswer,
+  StorageKeyHint,
   ErrorType,
 } from '../lib/PlayModels';
 
@@ -108,7 +109,10 @@ export function LocalModelLoader(): LocalModel {
   const localModelAnswer = JSON.parse(
     window.localStorage.getItem(StorageKeyAnswer) ?? '{}'
   );
-  const localModel = { ...localModelBase, answer: localModelAnswer };
+  const localModelHint = JSON.parse(
+    window.localStorage.getItem(StorageKeyHint) ?? '{}'
+  );
+  const localModel = { ...localModelBase, answer: localModelAnswer, hint: localModelHint };
   if (localModel && !localModel.hasRejoined) {
     const updatedModelForNextReload = { ...localModel, hasRejoined: true };
     window.localStorage.setItem(
