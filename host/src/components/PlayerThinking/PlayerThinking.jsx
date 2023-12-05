@@ -21,6 +21,7 @@ export default function PlayerThinking({
   handleProcessHints
 }) {
   const classes = useStyles();
+  const isHintEmpty = isNullOrUndefined(gptHints) || gptHints?.length === 0;
   return (
     <Box className={classes.centerContent}>
       <Box style={{display: 'flex', aligntItems: 'center', justifyContent: 'space-between', width: '100%'}}>
@@ -38,7 +39,7 @@ export default function PlayerThinking({
             Players that have submitted a hint:
         </Typography>
         <LinearProgressBar
-            inputNum={hints.length}
+            inputNum={hints ? hints.length : 0}
             totalNum={numPlayers}
         />
         <Typography className={classes.subText}>
@@ -47,7 +48,7 @@ export default function PlayerThinking({
       </>
     ) : (
         <>
-          {!isNullOrUndefined(gptHints) && !isHintLoading && !hintsError ? (
+          {!isHintEmpty && !isHintLoading && !hintsError ? (
             <>      
               <PlayerThinkingGraph
                   data={gptHints}
@@ -67,6 +68,13 @@ export default function PlayerThinking({
             </>
           ) : (
               <>
+                {(isHintEmpty && !isHintLoading && !hintsError) && (
+                  <>
+                    <Typography className={classes.subText}>
+                       No players submitted hints.
+                    </Typography>
+                    </>
+                )}
                 {(isHintLoading && !hintsError) && (
                   <>
                     <CircularProgress style={{color:'#159EFA'}}/>
