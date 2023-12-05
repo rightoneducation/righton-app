@@ -21,7 +21,6 @@ export default function PlayerThinking({
   handleProcessHints
 }) {
   const classes = useStyles();
-  hintsError = true;
   return (
     <Box className={classes.centerContent}>
       <Box style={{display: 'flex', aligntItems: 'center', justifyContent: 'space-between', width: '100%'}}>
