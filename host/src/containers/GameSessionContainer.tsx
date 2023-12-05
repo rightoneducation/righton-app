@@ -13,7 +13,7 @@ import {
 } from '@righton/networking';
 import GameInProgress from '../pages/GameInProgress';
 import Ranking from '../pages/Ranking';
-import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId } from '../lib/HelperFunctions';
+import { buildShortAnswerResponses, getQuestionChoices, getTeamInfoFromAnswerId, rebuildHints } from '../lib/HelperFunctions';
 
 const GameSessionContainer = () => {
   // refs for scrolling of components via module navigator
@@ -113,7 +113,15 @@ const GameSessionContainer = () => {
         setIsHintEnabled(
           response.questions[response.currentQuestionIndex].isHintEnabled,
         );
-        setGptHints(response.questions[response.currentQuestionIndex].hints);
+       
+        // if the teacher refreshes the page, we need to repopulate the hints/GPT hints depending on the state
+        if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
+            setHints(rebuildHints(response));
+        }
+        if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
+          setGptHints(response.questions[response.currentQuestionIndex].hints);
+        }
+
         setHintsError(false);
         assembleNavDictionary(
           response.questions[response.currentQuestionIndex].isConfidenceEnabled,
@@ -268,7 +276,9 @@ const GameSessionContainer = () => {
           return newState;
         });
         if (!isNullOrUndefined(teamAnswerResponse.hint)) {
-          setHints((prevHints) => {return [...prevHints, teamAnswerResponse.hint]});
+          setHints((prevHints) => {
+            return [...(prevHints || []), teamAnswerResponse.hint];
+        });
         }
         setShortAnswerResponses((existingAnswers) => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
@@ -381,13 +391,18 @@ const GameSessionContainer = () => {
     if (
       gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER 
       && isHintEnabled 
-      && gptHints === null 
-      && hints.length > 0
     ) {
       setisHintLoading(true);
       handleProcessHints(hints);
     }
 
+    // reset hints and gptHints to null after discussion. They have already been saved under the question object.
+    if (gameSession.currentState === GameSessionState.PHASE_2_DISCUSS
+      && isHintEnabled){
+      setGptHints([]);
+      setHints([]);
+    }
+    
     const response = await apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
     if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       setHeaderGameCurrentTime(response.phaseOneTime);
@@ -478,7 +493,7 @@ const GameSessionContainer = () => {
         setGptHints(parsedHints);
         setisHintLoading(false);
         if (parsedHints){
-          setHints(null);
+          setHints([]);
           apiClient.getGameSession(gameSessionId).then((gameSession) => {
             apiClient
               .updateQuestion({

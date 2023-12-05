@@ -398,3 +398,26 @@ export const buildVictoryDataObjectShortAnswerPhaseTwo = (
   }
   return [];
 }
+
+/**
+ * rebuilds the hints array from each of the team answers. This is only done if a teacher refreshes the page 
+ * before they have a chance to move to the next phase of the game where we process them through GPT
+ * @param {*} gameSession 
+ * @returns array of hints 
+ */
+export const rebuildHints = (gameSession) => {
+  const currentQuestionId = gameSession.questions[gameSession.currentQuestionIndex].id;
+  let hints = [];
+  gameSession.teams.forEach(team => {
+    team.teamMembers && team.teamMembers.forEach(teamMember => {
+      teamMember.answers && teamMember.answers.forEach(answer => {
+        if (answer.questionId === currentQuestionId) {
+          if (answer.hint) {
+              hints.push(answer.hint);
+          }
+        }
+      });
+    });
+  });
+  return hints;
+}
