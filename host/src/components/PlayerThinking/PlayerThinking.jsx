@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { Box, Typography, Button, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { Box, CircularProgress, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { isNullOrUndefined } from '@righton/networking';
+import { GameSessionState, isNullOrUndefined } from '@righton/networking';
+import LinearProgressBar from '../LinearProgressBar';
 import PlayerThinkingGraph from './PlayerThinkingGraph';
 
 export default function PlayerThinking({
@@ -14,8 +15,10 @@ export default function PlayerThinking({
   graphClickInfo,
   isShortAnswerEnabled,
   handleGraphClick,
-  handleProcessHintsClick,
-  hintsError
+  hintsError,
+  currentState,
+  isHintLoading,
+  handleProcessHints
 }) {
   const classes = useStyles();
   return (
@@ -28,48 +31,69 @@ export default function PlayerThinking({
       <Typography className={classes.infoText}>
         Players have optionally submitted hints to help other players.
       </Typography>
-      { !isNullOrUndefined(gptHints)? 
-        <>
-          <PlayerThinkingGraph
-            data={gptHints}
-            numPlayers={numPlayers}
-            totalAnswers={totalAnswers}
-            questionChoices={questionChoices}
-            statePosition={statePosition}
-            graphClickInfo={graphClickInfo}
-            isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
-            handleGraphClick={handleGraphClick}
-          />
-          {graphClickInfo.graph === null ? (
-            <Typography className={classes.subText}>
-              Tap on a response to see more details.
-            </Typography>
-          ) : null}
-        </>
-      : 
-      <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16}}>
+      <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16 }}>
+    { currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+      <>
         <Typography className={classes.infoText}>
-        {hints.length} / {numPlayers} players have submitted a hint
+            Players that have submitted a hint:
         </Typography>
-          <Button
-          className={classes.button}
-          disabled={hints.length < 2}
-          onClick={() => handleProcessHintsClick(hints)}
-        >
-          Process Hints
-        </Button>
-        { hints.length < 2 &&
-          <Typography className={classes.subText}>
-            At least 2 players must submit a hint to process them
-          </Typography>
-        } 
-        { hintsError &&
-          <Typography className={classes.subText}>
-            There was an error processing the hints. Please try again.
-          </Typography>
-        } 
-       </Box>
-      }
+        <LinearProgressBar
+            inputNum={hints.length}
+            totalNum={numPlayers}
+        />
+        <Typography className={classes.subText}>
+            Hints will be displayed in the next phase
+        </Typography>
+      </>
+    ) : (
+        <>
+          {!isNullOrUndefined(gptHints) && !isHintLoading && !hintsError ? (
+            <>      
+              <PlayerThinkingGraph
+                  data={gptHints}
+                  numPlayers={numPlayers}
+                  totalAnswers={totalAnswers}
+                  questionChoices={questionChoices}
+                  statePosition={statePosition}
+                  graphClickInfo={graphClickInfo}
+                  isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
+                  handleGraphClick={handleGraphClick}
+              />
+              {graphClickInfo.graph === null && (
+                  <Typography className={classes.subText}>
+                      Tap on a response to see more details.
+                  </Typography>
+              )}
+            </>
+          ) : (
+              <>
+                {(isHintLoading && !hintsError) && (
+                  <>
+                    <CircularProgress style={{color:'#159EFA'}}/>
+                    <Typography className={classes.subText}>
+                       The hints are loading ...
+                    </Typography>
+                    </>
+                )}
+                {hintsError && (
+                    <>
+                      <Button
+                        className={classes.button}
+                        onClick={() => handleProcessHints(hints)}
+                      >
+                        Retry
+                      </Button>
+                      <Typography className={classes.subText}>
+                          There was an error processing the hints. Please try again.
+                      </Typography>
+                    </>
+                )}
+              </>
+            )}
+        </>
+    )}
+</Box>
+
     </Box>
   );
 }
@@ -97,7 +121,7 @@ const useStyles = makeStyles({
   infoText: {
     color: '#FFF',
     alignSelf: 'stretch',
-    textAlign: 'center',
+    textAlign: 'left',
     fontFamily: 'Poppins',
     fontSize: '14px',
     fontStyle: 'normal',

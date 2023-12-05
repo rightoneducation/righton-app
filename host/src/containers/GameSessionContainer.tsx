@@ -33,6 +33,7 @@ const GameSessionContainer = () => {
   const [hints, setHints] = useState([]);
   const [gptHints, setGptHints] = React.useState(null);
   const [hintsError, setHintsError] = React.useState(false);
+  const [isHintLoading, setisHintLoading] = React.useState(false);
   const [selectedMistakes, setSelectedMistakes] = useState([]);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
@@ -148,7 +149,6 @@ const GameSessionContainer = () => {
         })
         .catch((reason) => console.log(reason));
     });
-
     let gameSessionSubscription: any | null = null;
     gameSessionSubscription = apiClient.subscribeUpdateGameSession(
       gameSessionId,
@@ -377,6 +377,17 @@ const GameSessionContainer = () => {
         });
     }
     
+    // if game is moving to PHASE_2_DISCUSS, hints are enabled, there are hints to process that have yet to be processed
+    if (
+      gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER 
+      && isHintEnabled 
+      && gptHints === null 
+      && hints.length > 0
+    ) {
+      setisHintLoading(true);
+      handleProcessHints(hints);
+    }
+
     const response = await apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
     if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       setHeaderGameCurrentTime(response.phaseOneTime);
@@ -453,7 +464,8 @@ const GameSessionContainer = () => {
         setIsLoadModalOpen(true);
       });
   };
-  const handleProcessHintsClick = async (hints) => {
+  const handleProcessHints = async (hints) => {
+    setHintsError(false);
     try {
       const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
       const questionText =  currentQuestion.text;
@@ -464,7 +476,9 @@ const GameSessionContainer = () => {
       apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
         const parsedHints = JSON.parse(response.gptHints.content);  
         setGptHints(parsedHints);
+        setisHintLoading(false);
         if (parsedHints){
+          setHints(null);
           apiClient.getGameSession(gameSessionId).then((gameSession) => {
             apiClient
               .updateQuestion({
@@ -475,7 +489,12 @@ const GameSessionContainer = () => {
             });
           });
         }
-      });
+      })
+      .catch(e => {
+        console.log(e);
+        setHintsError(true);
+      })
+      ;
     } catch {
       setHintsError(true);
     }
@@ -524,8 +543,9 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hints={hints}
           gptHints={gptHints}
-          handleProcessHintsClick={handleProcessHintsClick}
           hintsError={hintsError}
+          isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
     }
@@ -560,8 +580,9 @@ const GameSessionContainer = () => {
           handleHintChange={handleHintChange}
           hints={hints}
           gptHints={gptHints}
-          handleProcessHintsClick={handleProcessHintsClick}
           hintsError={hintsError}
+          isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
 
