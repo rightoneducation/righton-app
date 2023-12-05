@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Box, CircularProgress, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { GameSessionState, isNullOrUndefined } from '@righton/networking';
 import LinearProgressBar from '../LinearProgressBar';
@@ -17,9 +17,11 @@ export default function PlayerThinking({
   handleGraphClick,
   hintsError,
   currentState,
-  isHintLoading
+  isHintLoading,
+  handleProcessHints
 }) {
   const classes = useStyles();
+  hintsError = true;
   return (
     <Box className={classes.centerContent}>
       <Box style={{display: 'flex', aligntItems: 'center', justifyContent: 'space-between', width: '100%'}}>
@@ -66,7 +68,7 @@ export default function PlayerThinking({
             </>
           ) : (
               <>
-                {isHintLoading && (
+                {(isHintLoading && !hintsError) && (
                   <>
                     <CircularProgress style={{color:'#159EFA'}}/>
                     <Typography className={classes.subText}>
@@ -75,9 +77,18 @@ export default function PlayerThinking({
                     </>
                 )}
                 {hintsError && (
-                    <Typography className={classes.subText}>
-                        There was an error processing the hints. Please try again.
-                    </Typography>
+                    <>
+                      <Button
+                        className={classes.button}
+                        disabled={hints.length < 2}
+                        onClick={() => handleProcessHints(hints)}
+                      >
+                        Retry
+                      </Button>
+                      <Typography className={classes.subText}>
+                          There was an error processing the hints. Please try again.
+                      </Typography>
+                    </>
                 )}
               </>
             )}

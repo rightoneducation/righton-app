@@ -465,6 +465,7 @@ const GameSessionContainer = () => {
       });
   };
   const handleProcessHints = async (hints) => {
+    setHintsError(false);
     try {
       const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
       const questionText =  currentQuestion.text;
@@ -488,7 +489,12 @@ const GameSessionContainer = () => {
             });
           });
         }
-      });
+      })
+      .catch(e => {
+        console.log(e);
+        setHintsError(true);
+      })
+      ;
     } catch {
       setHintsError(true);
     }
@@ -539,6 +545,7 @@ const GameSessionContainer = () => {
           gptHints={gptHints}
           hintsError={hintsError}
           isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
     }
@@ -575,6 +582,7 @@ const GameSessionContainer = () => {
           gptHints={gptHints}
           hintsError={hintsError}
           isHintLoading={isHintLoading}
+          handleProcessHints={handleProcessHints}
         />
       );
 
