@@ -4,6 +4,7 @@ import {
   StringAnswer,
   ExpressionAnswer,
   ITeam,
+  ITeamAnswerHint,
   GameSessionState,
   isNullOrUndefined,
   ConfidenceLevel,
@@ -83,6 +84,39 @@ export const checkForSubmittedAnswerOnRejoin = (
     }
   }
   return returnedAnswer as ITeamAnswerContent;
+};
+
+/**
+ * on rejoining game, this checks if the player has already submitted a hint
+ * @param localModel - the localModel retrieved from local storage
+ * @param hasRejoined - if a player is rejoining
+ * @param currentState - the current state of the game session
+ * @param currentQuestionIndex - the current question index of the game session
+ * @returns - the hint that the player was working on, null if they haven't submitted a hint 
+ */
+export const checkForSubmittedHintOnRejoin = (
+  localModel: LocalModel,
+  hasRejoined: boolean,
+  currentState: GameSessionState,
+  currentQuestionIndex: number
+): ITeamAnswerHint => {
+  let returnedHint: ITeamAnswerHint = {
+    rawHint: '',
+    teamName: '',
+    isHintSubmitted: false,
+  };
+  if (hasRejoined) {
+    if (
+      localModel.answer !== null &&
+      localModel.hint!== null &&
+      localModel.answer.currentState === currentState &&
+      localModel.answer.currentQuestionIndex === currentQuestionIndex
+    ) {
+      // set hint to localModel.hint
+      returnedHint = localModel.hint;
+    }
+  }
+  return returnedHint as ITeamAnswerHint;
 };
 
 /**

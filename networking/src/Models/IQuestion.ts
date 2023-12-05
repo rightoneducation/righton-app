@@ -6,6 +6,7 @@ export interface IQuestion {
     choices?: Array<IChoice> | null
     answerSettings?: IAnswerSettings | null
     responses?: Array<IResponse> | null
+    hints?: IHints[] | null
     imageUrl?: string | null
     instructions?: Array<string> | null
     standard?: string | null
@@ -44,4 +45,10 @@ export interface IResponseTeam {
     team: string
     id: string
     confidence: ConfidenceLevel
+}
+
+export interface IHints {
+    themeText: string;
+    teams: string[];
+    teamCount: number;
 }
