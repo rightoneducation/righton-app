@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { GameSessionState, isNullOrUndefined } from '@righton/networking';
 import LinearProgressBar from '../LinearProgressBar';
@@ -16,7 +16,8 @@ export default function PlayerThinking({
   isShortAnswerEnabled,
   handleGraphClick,
   hintsError,
-  currentState
+  currentState,
+  isHintLoading
 }) {
   const classes = useStyles();
   return (
@@ -29,45 +30,61 @@ export default function PlayerThinking({
       <Typography className={classes.infoText}>
         Players have optionally submitted hints to help other players.
       </Typography>
-      { !isNullOrUndefined(gptHints)? 
-        <>
-          <PlayerThinkingGraph
-            data={gptHints}
-            numPlayers={numPlayers}
-            totalAnswers={totalAnswers}
-            questionChoices={questionChoices}
-            statePosition={statePosition}
-            graphClickInfo={graphClickInfo}
-            isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
-            handleGraphClick={handleGraphClick}
-          />
-          {graphClickInfo.graph === null ? (
-            <Typography className={classes.subText}>
-              Tap on a response to see more details.
-            </Typography>
-          ) : null}
-        </>
-      : 
-      <Box style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16}}>
+      <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16 }}>
+    { currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ? (
+      <>
         <Typography className={classes.infoText}>
-        Players that have submitted a hint:
+            Players that have submitted a hint:
         </Typography>
         <LinearProgressBar
-          inputNum={hints.length}
-          totalNum={numPlayers}
+            inputNum={hints.length}
+            totalNum={numPlayers}
         />
-        { currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER &&
-          <Typography className={classes.subText}>
+        <Typography className={classes.subText}>
             Hints will be displayed in the next phase
-          </Typography>
-        }
-        { hintsError &&
-          <Typography className={classes.subText}>
-            There was an error processing the hints. Please try again.
-          </Typography>
-        } 
-       </Box>
-      }
+        </Typography>
+      </>
+    ) : (
+        <>
+          {!isNullOrUndefined(gptHints) && !isHintLoading ? (
+            <>      
+              <PlayerThinkingGraph
+                  data={gptHints}
+                  numPlayers={numPlayers}
+                  totalAnswers={totalAnswers}
+                  questionChoices={questionChoices}
+                  statePosition={statePosition}
+                  graphClickInfo={graphClickInfo}
+                  isShortAnswerEnabled={isShortAnswerEnabled && statePosition < 6}
+                  handleGraphClick={handleGraphClick}
+              />
+              {graphClickInfo.graph === null && (
+                  <Typography className={classes.subText}>
+                      Tap on a response to see more details.
+                  </Typography>
+              )}
+            </>
+          ) : (
+              <>
+                {isHintLoading && (
+                  <>
+                    <CircularProgress style={{color:'#159EFA'}}/>
+                    <Typography className={classes.subText}>
+                       The hints are loading ...
+                    </Typography>
+                    </>
+                )}
+                {hintsError && (
+                    <Typography className={classes.subText}>
+                        There was an error processing the hints. Please try again.
+                    </Typography>
+                )}
+              </>
+            )}
+        </>
+    )}
+</Box>
+
     </Box>
   );
 }

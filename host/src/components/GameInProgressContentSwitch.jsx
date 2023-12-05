@@ -45,7 +45,8 @@ export default function GameInProgressContentSwitch ({
     handleHintChange,
     hints,
     gptHints,
-    hintsError
+    hintsError,
+    isHintLoading
   }) {
   const classes = useStyles();
   const graphClickRenderSwitch = (graphClickInfo) => {
@@ -119,6 +120,7 @@ export default function GameInProgressContentSwitch ({
               handleGraphClick={handleGraphClick}
               hintsError={hintsError}
               currentState={currentState}
+              isHintLoading={isHintLoading}
             />
             <PlayerThinkingSelectedAnswer
               gptHints={gptHints}
@@ -201,6 +203,7 @@ export default function GameInProgressContentSwitch ({
                 handleGraphClick={handleGraphClick}
                 hintsError={hintsError}
                 currentState={currentState}
+                isHintLoading={isHintLoading}
               />
             </div>
           ) : null}
