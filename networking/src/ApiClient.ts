@@ -111,6 +111,7 @@ export class ApiClient implements IApiClient {
         phaseTwoTime: number,
         imageUrl: string
     ): Promise<IGameTemplate | null> {
+        console.log("here");
         const input: CreateGameTemplateInput = {
            id,
            title,
@@ -137,7 +138,7 @@ export class ApiClient implements IApiClient {
             throw new Error(`Failed to create game template.`)
         }
         console.log(gameTemplate);
-        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate;
+        return null; //GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate;
     } 
 
     async listGameTemplates(nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
@@ -147,9 +148,9 @@ export class ApiClient implements IApiClient {
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
-        // const parsedNextToken = result.data.listGameTemplates.nextToken;
+        const parsedNextToken = result.data.listGameTemplates.nextToken;
         console.log(parsedGameTemplates);
-        return null; //{ gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
+        return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
   
     async createQuestionTemplate(

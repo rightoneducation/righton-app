@@ -42,6 +42,19 @@ export const onGameSessionUpdatedById = /* GraphQL */ `subscription OnGameSessio
             id
             isFacilitator
             answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                awsAnswerContents
+                isTrickAnswer
+                confidenceLevel
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+                __typename
+              }
               nextToken
               __typename
             }
@@ -272,6 +285,534 @@ export const onTeamDeleteByGameSessionId = /* GraphQL */ `subscription OnTeamDel
   APITypes.OnTeamDeleteByGameSessionIdSubscriptionVariables,
   APITypes.OnTeamDeleteByGameSessionIdSubscription
 >;
+export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemplate(
+  $filter: ModelSubscriptionGameTemplateFilterInput
+) {
+  onCreateGameTemplate(filter: $filter) {
+    id
+    title
+    owner
+    version
+    description
+    domain
+    cluster
+    grade
+    standard
+    phaseOneTime
+    phaseTwoTime
+    imageUrl
+    questionTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          domain
+          cluster
+          grade
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateGameTemplateSubscriptionVariables,
+  APITypes.OnCreateGameTemplateSubscription
+>;
+export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemplate(
+  $filter: ModelSubscriptionGameTemplateFilterInput
+) {
+  onUpdateGameTemplate(filter: $filter) {
+    id
+    title
+    owner
+    version
+    description
+    domain
+    cluster
+    grade
+    standard
+    phaseOneTime
+    phaseTwoTime
+    imageUrl
+    questionTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          domain
+          cluster
+          grade
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateGameTemplateSubscriptionVariables,
+  APITypes.OnUpdateGameTemplateSubscription
+>;
+export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemplate(
+  $filter: ModelSubscriptionGameTemplateFilterInput
+) {
+  onDeleteGameTemplate(filter: $filter) {
+    id
+    title
+    owner
+    version
+    description
+    domain
+    cluster
+    grade
+    standard
+    phaseOneTime
+    phaseTwoTime
+    imageUrl
+    questionTemplates {
+      items {
+        id
+        gameTemplateID
+        questionTemplateID
+        gameTemplate {
+          id
+          title
+          owner
+          version
+          description
+          domain
+          cluster
+          grade
+          standard
+          phaseOneTime
+          phaseTwoTime
+          imageUrl
+          questionTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        questionTemplate {
+          id
+          title
+          owner
+          version
+          choices
+          instructions
+          domain
+          cluster
+          grade
+          standard
+          imageUrl
+          gameTemplates {
+            items {
+              id
+              gameTemplateID
+              questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteGameTemplateSubscriptionVariables,
+  APITypes.OnDeleteGameTemplateSubscription
+>;
 export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQuestionTemplate(
   $filter: ModelSubscriptionQuestionTemplateFilterInput
 ) {
@@ -310,6 +851,47 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
               id
               gameTemplateID
               questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               createdAt
               updatedAt
               __typename
@@ -338,6 +920,47 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
               id
               gameTemplateID
               questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               createdAt
               updatedAt
               __typename
@@ -403,6 +1026,47 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
               id
               gameTemplateID
               questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               createdAt
               updatedAt
               __typename
@@ -431,6 +1095,47 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
               id
               gameTemplateID
               questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               createdAt
               updatedAt
               __typename
@@ -496,6 +1201,47 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
               id
               gameTemplateID
               questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               createdAt
               updatedAt
               __typename
@@ -524,6 +1270,47 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
               id
               gameTemplateID
               questionTemplateID
+              gameTemplate {
+                id
+                title
+                owner
+                version
+                description
+                domain
+                cluster
+                grade
+                standard
+                phaseOneTime
+                phaseTwoTime
+                imageUrl
+                questionTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
+              questionTemplate {
+                id
+                title
+                owner
+                version
+                choices
+                instructions
+                domain
+                cluster
+                grade
+                standard
+                imageUrl
+                gameTemplates {
+                  nextToken
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               createdAt
               updatedAt
               __typename
@@ -587,6 +1374,19 @@ export const onCreateGameSession = /* GraphQL */ `subscription OnCreateGameSessi
             id
             isFacilitator
             answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                awsAnswerContents
+                isTrickAnswer
+                confidenceLevel
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+                __typename
+              }
               nextToken
               __typename
             }
@@ -687,6 +1487,19 @@ export const onUpdateGameSession = /* GraphQL */ `subscription OnUpdateGameSessi
             id
             isFacilitator
             answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                awsAnswerContents
+                isTrickAnswer
+                confidenceLevel
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+                __typename
+              }
               nextToken
               __typename
             }
@@ -787,6 +1600,19 @@ export const onDeleteGameSession = /* GraphQL */ `subscription OnDeleteGameSessi
             id
             isFacilitator
             answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                awsAnswerContents
+                isTrickAnswer
+                confidenceLevel
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1256,6 +2082,47 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             phaseTwoTime
             imageUrl
             questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1276,6 +2143,47 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             standard
             imageUrl
             gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1325,6 +2233,47 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             phaseTwoTime
             imageUrl
             questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1345,6 +2294,47 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             standard
             imageUrl
             gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1411,6 +2401,47 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             phaseTwoTime
             imageUrl
             questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1431,6 +2462,47 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             standard
             imageUrl
             gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1480,6 +2552,47 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             phaseTwoTime
             imageUrl
             questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1500,6 +2613,47 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             standard
             imageUrl
             gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1566,6 +2720,47 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             phaseTwoTime
             imageUrl
             questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1586,6 +2781,47 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             standard
             imageUrl
             gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1635,6 +2871,47 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             phaseTwoTime
             imageUrl
             questionTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }
@@ -1655,6 +2932,47 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             standard
             imageUrl
             gameTemplates {
+              items {
+                id
+                gameTemplateID
+                questionTemplateID
+                gameTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  description
+                  domain
+                  cluster
+                  grade
+                  standard
+                  phaseOneTime
+                  phaseTwoTime
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                questionTemplate {
+                  id
+                  title
+                  owner
+                  version
+                  choices
+                  instructions
+                  domain
+                  cluster
+                  grade
+                  standard
+                  imageUrl
+                  createdAt
+                  updatedAt
+                  __typename
+                }
+                createdAt
+                updatedAt
+                __typename
+              }
               nextToken
               __typename
             }

@@ -3,6 +3,7 @@
 export * from './IAWSGameSession'
 export * from './IGameSession'
 export * from './IGameTemplate'
+export * from './IModelGameQuestionConnection'
 export * from './IQuestion'
 export * from './IQuestionTemplate'
 export * from './ITeam'

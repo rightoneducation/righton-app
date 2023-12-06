@@ -8,13 +8,12 @@ projects:
       # https://github.com/aws-amplify/amplify-codegen/issues/734#issuecomment-1772945645
       - src/AWSMobileApi.ts
       - src/graphql/index.ts
-      - src/graphql/customqueries/index.ts
     extensions:
       amplify:
         codeGenTarget: typescript
         generatedFileName: src/AWSMobileApi.ts
         docsFilePath: src/graphql
-        maxDepth: 6
+        maxDepth: 8
 extensions:
   amplify:
     version: 3
