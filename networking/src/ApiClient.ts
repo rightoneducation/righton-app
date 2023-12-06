@@ -141,15 +141,14 @@ export class ApiClient implements IApiClient {
         return null; //GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate;
     } 
 
-    async listGameTemplates(nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+    async listGameTemplates(limit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
         let result = (await API.graphql(
-            graphqlOperation(listGameTemplates, {limit: 5, nextToken })
+            graphqlOperation(listGameTemplates, {limit, nextToken })
         )) as { data: any }
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
         const parsedNextToken = result.data.listGameTemplates.nextToken;
-        console.log(parsedGameTemplates);
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
   

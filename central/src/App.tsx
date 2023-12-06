@@ -9,7 +9,12 @@ import {
   ThemeProvider,
 } from '@material-ui/core/styles';
 import { Auth } from 'aws-amplify';
-
+import { 
+  ApiClient,
+  Environment,
+  listGameTemplates,
+  IGameTemplate
+ } from '@righton/networking';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from './lib/games';
 import { updateQuestion, cloneQuestion } from './lib/questions';
 import { SORT_TYPES } from './lib/sorting';
@@ -18,6 +23,7 @@ import { Game, Questions } from './API';
 import AlertBar from './components/AlertBar';
 import Nav from './components/Nav';
 import Games from './components/Games';
+import GamesFooter from './components/GamesFooter';
 import SignUp from './components/auth/SignUp';
 import LogIn from './components/auth/LogIn';
 import Confirmation from './components/auth/Confirmation';
@@ -42,7 +48,7 @@ const theme = createTheme({
   },
 });
 
-const filterGame = (game: Game | null, search: string) => {
+const filterGame = (game: IGameTemplate | null, search: string) => {
   if (!game || !game?.title) {
     return false;
   }
@@ -50,24 +56,25 @@ const filterGame = (game: Game | null, search: string) => {
     return true;
   }
   else {
-    if (game?.questions) {
-      for (let i = 0; i < game.questions.length; i++) {
-        let questionText = game.questions[i]?.text;
-        if (questionText !== undefined && questionText.toLowerCase().indexOf(search) > -1) {
-          return true;
-        }
-      }
-    }
+    // if (game?.questions) {
+    //   for (let i = 0; i < game.questions.length; i++) {
+    //     let questionText = game.questions[i]?.text;
+    //     if (questionText !== undefined && questionText.toLowerCase().indexOf(search) > -1) {
+    //       return true;
+    //     }
+    //   }
+    // }
     return false;
   }
 };
 
 function App() {
+  const apiClient = new ApiClient(Environment.Staging);
   const [startup, setStartup] = useState(true);
   const [loading, setLoading] = useState(false);
   const [sortType, setSortType] = useState(SORT_TYPES.UPDATED);
   const [searchInput, setSearchInput] = useState('');
-  const [games, setGames] = useState<(Game | null)[]>([]);
+  const [games, setGames] = useState<(IGameTemplate[] | null)>([]);
   const [alert, setAlert] = useState<Alert | null>(null);
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
@@ -75,10 +82,38 @@ function App() {
   const [isUserAuth, setIsUserAuth] = useState(false);
   const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
   const [showModalGetApp, setShowModalGetApp] = useState(false);
+  const [listGameTemplatePrevTokens, setListGameTemplatePrevTokens] = useState<(string | null)[]>([null]);
+  const [listGameTemplatePrevTokenIndex, setListGameTemplatePrevTokenIndex] = useState<number>(0);
+  const [listGameTemplateNextToken, setListGameTemplateNextToken] = useState<string | null>(null);
+  const queryLimit = 12; // number of games retreiived on main page
 
   const getSortedGames = async () => {
-    const games = sortGames(await fetchGames(), sortType);
-    setGames(games);
+    const games = await apiClient.listGameTemplates(queryLimit, listGameTemplateNextToken);
+    if (games?.gameTemplates){
+      setGames(games?.gameTemplates ?? null);
+      setListGameTemplateNextToken(games?.nextToken ?? null);
+    }
+  }
+
+  const handleNextPage = async () => {
+    const games = await apiClient.listGameTemplates( queryLimit, listGameTemplateNextToken);
+    if (games?.gameTemplates){
+      setGames(games?.gameTemplates ?? null);
+      setListGameTemplatePrevTokens((prev) => [...prev, listGameTemplateNextToken]);
+      setListGameTemplateNextToken(games?.nextToken ?? null);
+    }
+  
+  }
+
+  const handlePrevPage = async () => {
+    const prevToken = listGameTemplatePrevTokens[listGameTemplatePrevTokens.length - 2];
+    const nextToken = listGameTemplatePrevTokens[listGameTemplatePrevTokens.length - 1];
+    const games = await apiClient.listGameTemplates(queryLimit, prevToken);
+    if (games?.gameTemplates){
+      setGames(games?.gameTemplates ?? null);
+      setListGameTemplatePrevTokens((prev) => prev.slice(0, -1));
+      setListGameTemplateNextToken(nextToken);
+    }
   }
 
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
@@ -87,7 +122,7 @@ function App() {
     const game = await createGame(newGame, questionIDSet);
     if (game) {
       const games = sortGames(await fetchGames(), sortType);
-      setGames(games);
+      // setGames(games);
     }
     setLoading(false);
     setAlert({ message: 'Game created.', type: 'success' });
@@ -129,7 +164,7 @@ function App() {
     const result = await deleteGames(id);
     if (result) {
       const games = sortGames(await fetchGames(), sortType);
-      setGames(games);
+      // setGames(games);
     }
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
@@ -198,7 +233,7 @@ function App() {
 
   if (startup) return null;
 
-  const filteredGames = games.filter((game: Game | null) => filterGame(game, searchInput.toLowerCase())) as Game[];
+  const filteredGames = games?.filter((game: IGameTemplate | null) => filterGame(game, searchInput.toLowerCase())) as IGameTemplate[];
 
   const alertContext = {
     alert,
@@ -229,6 +264,7 @@ function App() {
               <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
               <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
               <Games loading={loading} games={filteredGames} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile}/>
+              <GamesFooter listGameTemplateNextToken={listGameTemplateNextToken} listGameTemplatePrevTokens={listGameTemplatePrevTokens} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}></GamesFooter>
               <AlertBar />
             </Route>
           </Switch>
