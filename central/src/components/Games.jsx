@@ -11,7 +11,7 @@ import { getGameById } from '../lib/games';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, games, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile }) {
+export default function Games({ loading, games, questions, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -29,6 +29,7 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
               <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
+
               <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
             </Grid>
           </Grid>
@@ -61,7 +62,7 @@ export default function Games({ loading, games, saveGame, updateQuestion, delete
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} />;
+              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
             }
           )
         } />

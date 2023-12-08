@@ -48,7 +48,7 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion }) {
+export default function GameMaker({ loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -315,8 +315,8 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
 
                 <Grid container item xs={12} className={classes.questionAddition}>
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/addquestion`)}>
-                      Add Question
+                    <Button variant='contained' disableElevation className={classes.blueButton} onClick={() => handleQuestionBankClick(gameDetails)}>
+                      Question Bank
                     </Button>
                   </Grid>
 
@@ -362,6 +362,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
               question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]}
               updateQuestion={updateQuestion}
               cloneQuestion={cloneQuestion}
+              addQToGT={addQToGT}
               gameId={gameId}
               gameQuestion={handleGameQuestion} />;
           }} />

@@ -88,7 +88,7 @@ export default function GameDashboard({ loading, games, deleteGame, cloneGame, g
       return games
         .map((game, index) => {
           const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
-          const questionCount = game?.questions?.length || 0;
+          const questionCount = game?.questionTemplates?.length || 0;
 
           return (
             <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4}>

@@ -7,7 +7,7 @@ import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
 
-export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
+export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion, addQToGT }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -25,7 +25,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
       return copyOfOriginal
     }
     return {
-      text: '',
+      title: '',
       imageUrl: '',
       choices: [{ text: '', reason: '', isAnswer: true }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }, { text: '', reason: '', isAnswer: false }],
       grade: null,
@@ -94,9 +94,30 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   // Handles grade, domain, cluster, or standard change/update
   const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
 
+  const handleAddQTToGT = async (question) => {
+    console.log(addQToGT("a", "b"));
+    // const questionToSend = { ...question }
+    // questionToSend.choices = JSON.stringify(questionToSend.choices)
+    // questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
+    // questionToSend.owner = "Owner's Name";
+    // questionToSend.version = 0;
+
+    // let newQuestion;
+    // if (questionToSend.id) {
+    //   newQuestion = await updateQuestion(questionToSend);
+    //   // we'll need to update this one as well
+    // } else {
+    //   newQuestion = await addQToGT(questionToSend);
+    //   // this is where we send to dynamoDB instead of RDS
+    //   delete newQuestion.updatedAt;
+    //   delete newQuestion.createdAt;
+    //   gameQuestion(newQuestion);
+    // }
+  }
+
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
   const handleSaveQuestion = async (question) => {
-    if (isNullOrEmpty(question.text)) {
+    if (isNullOrEmpty(question.title)) {
       window.alert("Please enter a question");
       return;
     }
@@ -129,12 +150,16 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
+    questionToSend.owner = "Owner's Name";
+    questionToSend.version = 0;
 
     let newQuestion;
     if (questionToSend.id) {
       newQuestion = await updateQuestion(questionToSend);
+      // we'll need to update this one as well
     } else {
       newQuestion = await cloneQuestion(questionToSend);
+      // this is where we send to dynamoDB instead of RDS
       delete newQuestion.updatedAt;
       delete newQuestion.createdAt;
       gameQuestion(newQuestion);
@@ -160,7 +185,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
           </Grid>
 
           <Grid item container xs={8}>
-            <TextField className={classes.input} id="question-text" value={question.text} onChange={onChangeMaker('text')} label="Question Text" variant="outlined" fullWidth multiline rows={10} required />
+            <TextField className={classes.input} id="question-text" value={question.title} onChange={onChangeMaker('title')} label="Question Text" variant="outlined" fullWidth multiline rows={10} required />
 
             <TextField id="image-url" onChange={onChangeMaker('imageUrl')} fullWidth value={question.imageUrl} label="URL for Photo" variant="outlined" />
           </Grid>
@@ -280,8 +305,9 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
             </div>
           </Grid>
 
-          <Grid style={{ marginTop: 50 }} item container xs={8} sm={12} justifyContent='center'>
-            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Game</Button>
+          <Grid style={{ marginTop: 50, gap: 16 }} item container xs={8} sm={12} justifyContent='center'>
+          <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Question Bank</Button>
+            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleAddQTToGT(question)}>Add to Game</Button>
           </Grid>
 
         </Grid>

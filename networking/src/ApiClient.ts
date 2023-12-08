@@ -152,33 +152,8 @@ export class ApiClient implements IApiClient {
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
   
-    async createQuestionTemplate(
-        id: string,
-        title: string,
-        owner: string,
-        version: number,
-        choices: string,
-        instructions: string,
-        domain: string,
-        cluster: string,
-        grade: string,
-        standard: string,
-        imageUrl: string,
-    ): Promise<IQuestionTemplate | null> {
-        const input: CreateQuestionTemplateInput = {
-           id,
-           title,
-           owner,
-           version,
-           choices,
-           instructions,
-           domain,
-           cluster,
-           grade,
-           standard,
-           imageUrl
-        }
-        const variables: CreateQuestionTemplateMutationVariables = { input }
+    async createQuestionTemplate(inputParams: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> {
+        const variables: CreateQuestionTemplateMutationVariables = {input: inputParams}
         const questionTemplate = await this.callGraphQL<CreateQuestionTemplateMutation>(
             createQuestionTemplate,
             variables
@@ -189,12 +164,13 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create question template.`)
         }
-        return null; //QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
+        console.log(questionTemplate);
+        return null; // QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
     }
 
-    async listQuestionTemplates(nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+    async listQuestionTemplates(limit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
         let result = (await API.graphql(
-            graphqlOperation(listQuestionTemplates, {limit: 5, nextToken })
+            graphqlOperation(listQuestionTemplates, {limit: limit, nextToken })
         )) as { data: any }
         const parsedQuestionTemplates = result.data.listQuestionTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
             return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate) as IQuestionTemplate
@@ -689,7 +665,7 @@ type AWSQuestionTemplate = {
     grade?: string | null | undefined,
     standard?: string | null | undefined,
     imageUrl?: string | null | undefined,
-    gameTemplates?: IGameTemplate[] | null | undefined,
+    gameTemplates?:  IModelGameQuestionConnection | null,
     createdAt?: string | null | undefined,
     updatedAt?: string | null
 }
@@ -780,7 +756,14 @@ class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
         awsGameTemplate: AWSGameTemplate
     ): IGameTemplate {
-        let questionTemplates: IQuestionTemplate[] = awsGameTemplate.questionTemplates?.items?.filter((questionTemplate: AWSQuestionTemplate | null) => !isNullOrUndefined(questionTemplate)) || [];
+       let questionTemplates: IQuestionTemplate[] = [];
+        if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
+            questionTemplates = awsGameTemplate.questionTemplates.items.map((item: any) => {
+                const { questionTemplate } = item;
+                const { gameTemplates, questionTemplates, ...rest } = questionTemplate;
+                return rest as IQuestionTemplate;
+            });
+        }
 
         const {
             id,
@@ -843,6 +826,16 @@ class QuestionTemplateParser {
     static questionTemplateFromAWSQuestionTemplate(
         awsQuestionTemplate: AWSQuestionTemplate
     ): IQuestionTemplate {
+        let gameTemplates: IGameTemplate[] = [];
+        if (!isNullOrUndefined(awsQuestionTemplate) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
+            gameTemplates = awsQuestionTemplate.gameTemplates.items.map((item: any) => {
+                const { gameTemplate } = item;
+                const { gameTemplates, questionTemplates, ...rest } = gameTemplate;
+                return rest as IGameTemplate;
+            });
+        } 
+
+
         const {
             id,
             title,
@@ -855,11 +848,9 @@ class QuestionTemplateParser {
             grade,
             standard,
             imageUrl,
-            gameTemplates,
             createdAt,
             updatedAt
         } = awsQuestionTemplate || {}
-
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
