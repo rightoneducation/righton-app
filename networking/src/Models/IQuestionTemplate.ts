@@ -7,10 +7,10 @@ export interface IQuestionTemplate {
   version?: number | null,
   choices?: string | null,
   instructions?: string | null,
-  domain?: string | null | undefined,
-  cluster?: string | null | undefined,
-  grade?: string | null | undefined,
-  standard?: string | null | undefined,
+  domain: string;
+  cluster: string;
+  grade: string;
+  standard: string;
   imageUrl?: string | null | undefined,
   gameTemplates?: IGameTemplate[] | null,
   createdAt?: string | null | undefined,

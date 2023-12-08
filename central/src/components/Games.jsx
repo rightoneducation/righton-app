@@ -62,7 +62,7 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
+              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
             }
           )
         } />

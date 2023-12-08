@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import AddQuestionForm from './AddQuestionSidebar';
+import QuestionDashboard from './QuestionDashboard';
 import QuestionForm from './CreateQuestion';
 import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
@@ -48,7 +48,7 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick }) {
+export default function GameMaker({ loading, questions, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -82,7 +82,6 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
       return gameDetails.phaseTwoTime;
     }
   });
-  const [questions, setQuestions] = useState([...gameDetails.questions]);
 
   // Handles changing and storing of new values for both Phase Timers
   const handlePhaseOne = (event) => {
@@ -350,7 +349,7 @@ export default function GameMaker({ loading, game, newSave, editSave, gameId, cl
         <Route path="/gamemaker/:gameId/addquestion" render=
           {({ match }) => {
             const { gameId } = match.params
-            return <AddQuestionForm loading={loading} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId} />
+            return <QuestionDashboard loading={loading} questions={questions} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId} />
           }} />
 
         <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
