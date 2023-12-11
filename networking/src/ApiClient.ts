@@ -169,6 +169,7 @@ export class ApiClient implements IApiClient {
     }
 
     async listQuestionTemplates(limit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
+        try{
         let result = (await API.graphql(
             graphqlOperation(listQuestionTemplates, {limit: limit, nextToken })
         )) as { data: any }
@@ -178,6 +179,10 @@ export class ApiClient implements IApiClient {
         const parsedNextToken = result.data.listQuestionTemplates.nextToken;
         
         return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
     }
 
     async createGameQuestions(
@@ -660,6 +665,7 @@ type AWSQuestionTemplate = {
     version?: number | null,
     choices?: string | null,
     instructions?: string | null,
+    answerSettings?: string | null,
     domain?: string | null | undefined,
     cluster?: string | null | undefined,
     grade?: string | null | undefined,
@@ -843,6 +849,7 @@ class QuestionTemplateParser {
             version,
             choices,
             instructions,
+            answerSettings,
             domain,
             cluster,
             grade,
@@ -851,16 +858,15 @@ class QuestionTemplateParser {
             createdAt,
             updatedAt
         } = awsQuestionTemplate || {}
+        console.log(awsQuestionTemplate);
+        console.log(gameTemplates);
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
             isNullOrUndefined(choices) ||
             isNullOrUndefined(instructions) ||
-            isNullOrUndefined(domain) ||
-            isNullOrUndefined(cluster) ||
-            isNullOrUndefined(grade) ||
-            isNullOrUndefined(standard) ||
+            isNullOrUndefined(answerSettings) ||
             isNullOrUndefined(imageUrl) ||
             isNullOrUndefined(createdAt) ||
             isNullOrUndefined(updatedAt)) {
@@ -876,10 +882,11 @@ class QuestionTemplateParser {
             version,
             choices,
             instructions,
-            domain,
-            cluster,
-            grade,
-            standard,
+            answerSettings,
+            domain: domain ?? null,
+            cluster: cluster ?? null,
+            grade: grade ?? null,
+            standard: standard ?? null,
             imageUrl,
             gameTemplates,
             createdAt,

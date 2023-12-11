@@ -76,6 +76,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -107,6 +108,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -145,6 +147,7 @@ export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -253,6 +256,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -284,6 +288,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -322,6 +327,7 @@ export const updateGameTemplate = /* GraphQL */ `mutation UpdateGameTemplate(
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -430,6 +436,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -461,6 +468,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -499,6 +507,7 @@ export const deleteGameTemplate = /* GraphQL */ `mutation DeleteGameTemplate(
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -550,6 +559,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -606,6 +616,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -637,6 +648,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -675,6 +687,7 @@ export const createQuestionTemplate = /* GraphQL */ `mutation CreateQuestionTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -726,6 +739,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -782,6 +796,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -813,6 +828,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -851,6 +867,7 @@ export const updateQuestionTemplate = /* GraphQL */ `mutation UpdateQuestionTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -902,6 +919,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -958,6 +976,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -989,6 +1008,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -1027,6 +1047,7 @@ export const deleteQuestionTemplate = /* GraphQL */ `mutation DeleteQuestionTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -1939,6 +1960,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1966,6 +1988,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2000,6 +2023,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2038,6 +2062,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -2090,6 +2115,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2117,6 +2143,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2151,6 +2178,7 @@ export const createGameQuestions = /* GraphQL */ `mutation CreateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2259,6 +2287,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2286,6 +2315,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2320,6 +2350,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2358,6 +2389,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -2410,6 +2442,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2437,6 +2470,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2471,6 +2505,7 @@ export const updateGameQuestions = /* GraphQL */ `mutation UpdateGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2579,6 +2614,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2606,6 +2642,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2640,6 +2677,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2678,6 +2716,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -2730,6 +2769,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2757,6 +2797,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2791,6 +2832,7 @@ export const deleteGameQuestions = /* GraphQL */ `mutation DeleteGameQuestions(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade

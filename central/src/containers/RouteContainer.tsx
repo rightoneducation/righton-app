@@ -64,12 +64,18 @@ export const RouteContainer = ({
   }
 
   const getQuestions = async () => {
+    try {
     const questions = await apiClient.listQuestionTemplates(queryLimit, listQuestionTemplateNextToken);
+    console.log(questions);
     if (questions?.questionTemplates){
       setQuestions(questions?.questionTemplates ?? null);
       setListQuestionTemplateNextToken(questions?.nextToken ?? null);
       console.log(questions);
+      return questions;
     }
+  } catch (e) {
+    console.log(e);
+  }
   }
 
   const handleNextPage = async () => {
@@ -94,9 +100,9 @@ export const RouteContainer = ({
     }
   }
 
+  //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
     try{
-      console.log(questionInput);
     const question = await apiClient.createQuestionTemplate(questionInput);
     console.log(question);
     } catch (e) {

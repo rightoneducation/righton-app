@@ -73,6 +73,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -104,6 +105,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -142,6 +144,7 @@ export const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -248,6 +251,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -275,6 +279,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -309,6 +314,7 @@ export const listGameTemplates = /* GraphQL */ `query ListGameTemplates(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -356,6 +362,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -412,6 +419,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -443,6 +451,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -481,6 +490,7 @@ export const getQuestionTemplate = /* GraphQL */ `query GetQuestionTemplate($id:
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -534,6 +544,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -586,6 +597,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -613,6 +625,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -647,6 +660,7 @@ export const listQuestionTemplates = /* GraphQL */ `query ListQuestionTemplates(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1301,6 +1315,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1328,6 +1343,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -1362,6 +1378,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1400,6 +1417,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -1452,6 +1470,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1479,6 +1498,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -1513,6 +1533,7 @@ export const getGameQuestions = /* GraphQL */ `query GetGameQuestions($id: ID!) 
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1617,6 +1638,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               version
               choices
               instructions
+              answerSettings
               domain
               cluster
               grade
@@ -1656,6 +1678,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
         version
         choices
         instructions
+        answerSettings
         domain
         cluster
         grade
@@ -1702,6 +1725,7 @@ export const listGameQuestions = /* GraphQL */ `query ListGameQuestions(
               version
               choices
               instructions
+              answerSettings
               domain
               cluster
               grade
@@ -1822,6 +1846,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -1849,6 +1874,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -1883,6 +1909,7 @@ export const gameTemplatesByOwner = /* GraphQL */ `query GameTemplatesByOwner(
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade

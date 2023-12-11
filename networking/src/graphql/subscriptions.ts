@@ -352,6 +352,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -383,6 +384,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -421,6 +423,7 @@ export const onCreateGameTemplate = /* GraphQL */ `subscription OnCreateGameTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -528,6 +531,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -559,6 +563,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -597,6 +602,7 @@ export const onUpdateGameTemplate = /* GraphQL */ `subscription OnUpdateGameTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -704,6 +710,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -735,6 +742,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -773,6 +781,7 @@ export const onDeleteGameTemplate = /* GraphQL */ `subscription OnDeleteGameTemp
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -823,6 +832,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -879,6 +889,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -910,6 +921,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -948,6 +960,7 @@ export const onCreateQuestionTemplate = /* GraphQL */ `subscription OnCreateQues
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -998,6 +1011,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -1054,6 +1068,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -1085,6 +1100,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -1123,6 +1139,7 @@ export const onUpdateQuestionTemplate = /* GraphQL */ `subscription OnUpdateQues
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -1173,6 +1190,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
     version
     choices
     instructions
+    answerSettings
     domain
     cluster
     grade
@@ -1229,6 +1247,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -1260,6 +1279,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
           version
           choices
           instructions
+          answerSettings
           domain
           cluster
           grade
@@ -1298,6 +1318,7 @@ export const onDeleteQuestionTemplate = /* GraphQL */ `subscription OnDeleteQues
                 version
                 choices
                 instructions
+                answerSettings
                 domain
                 cluster
                 grade
@@ -2110,6 +2131,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2137,6 +2159,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2171,6 +2194,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2209,6 +2233,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -2261,6 +2286,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2288,6 +2314,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2322,6 +2349,7 @@ export const onCreateGameQuestions = /* GraphQL */ `subscription OnCreateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2429,6 +2457,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2456,6 +2485,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2490,6 +2520,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2528,6 +2559,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -2580,6 +2612,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2607,6 +2640,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2641,6 +2675,7 @@ export const onUpdateGameQuestions = /* GraphQL */ `subscription OnUpdateGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2748,6 +2783,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2775,6 +2811,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2809,6 +2846,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2847,6 +2885,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
       version
       choices
       instructions
+      answerSettings
       domain
       cluster
       grade
@@ -2899,6 +2938,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade
@@ -2926,6 +2966,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
             version
             choices
             instructions
+            answerSettings
             domain
             cluster
             grade
@@ -2960,6 +3001,7 @@ export const onDeleteGameQuestions = /* GraphQL */ `subscription OnDeleteGameQue
                   version
                   choices
                   instructions
+                  answerSettings
                   domain
                   cluster
                   grade

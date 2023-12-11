@@ -12,10 +12,10 @@ type QuestionCardProps = {
   version?: number | null;
   choices?: string | null;
   instructions?: string | null;
-  domain: string;
-  cluster: string;
-  grade: string;
-  standard: string;
+  domain: string | null;
+  cluster: string | null;
+  grade: string | null;
+  standard: string | null;
   imageUrl?: string | null;
   gameTemplates?: IGameTemplate[] | null;
   createdAt?: string | null;
@@ -41,14 +41,14 @@ export default function QuestionCard({
   const classes = useStyles();
   const gameCount = gameTemplates ? gameTemplates.length : 0;
 return (
-  <Card >
+  <Card className={classes.game}>
     <CardContent>
       <Grid container>
         <Grid container item xs={8} md={9} >
           <div className={classes.cardText}>
             <Grid container>
               <Grid item xs={5}> 
-                <CCSS grade={grade} domain={domain} cluster={cluster} standard={standard} />
+                <CCSS grade={grade ?? ''} domain={domain ?? ''} cluster={cluster ?? ''} standard={standard ?? ''} />
               </Grid>
               <Grid item md={7}>
                 <Typography className={classes.question}>
@@ -83,7 +83,6 @@ const useStyles = makeStyles(theme => ({
       width: '100%',
       borderRadius: '10px',
       marginBottom: theme.spacing(2),
-      marginRight: '5px',
       '&:hover': {
         backgroundColor: 'rgba(0, 0, 0, 0.03)',
         boxShadow: '1px 4px 12px grey',
@@ -91,6 +90,9 @@ const useStyles = makeStyles(theme => ({
       },
       height: '152px',
       boxShadow: '1px 4px 8px lightgrey',
+      display: 'inline-block',
+      marginRight: theme.spacing(2),
+      verticalAlign: 'top',
     },
     cardText: {
       display: 'flex',
