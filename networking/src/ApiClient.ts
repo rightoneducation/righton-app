@@ -716,7 +716,7 @@ type AWSTeam = {
 }
 
 type AWSQuestion = {
-    id: number
+    id: string
     text: string
     choices?: string | null
     responses?: string | null

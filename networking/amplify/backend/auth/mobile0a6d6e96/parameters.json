@@ -3,14 +3,16 @@
   "resourceName": "mobile0a6d6e96",
   "serviceType": "imported",
   "region": "us-east-1",
-  "requiredAttributes": [],
+  "requiredAttributes": [
+    "email"
+  ],
   "passwordPolicyMinLength": 8,
   "passwordPolicyCharacters": [
-    "Requires Lowercase",
-    "Requires Uppercase",
-    "Requires Numbers",
-    "Requires Symbols"
+    "Requires Numbers"
   ],
   "mfaConfiguration": "OFF",
+  "autoVerifiedAttributes": [
+    "email"
+  ],
   "mfaTypes": []
 }

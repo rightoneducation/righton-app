@@ -78,7 +78,7 @@ export type Team = {
 
 export type Question = {
   __typename: "Question",
-  id: number,
+  id: string,
   text: string,
   choices?: string | null,
   responses?: string | null,
@@ -421,7 +421,7 @@ export type DeleteGameSessionInput = {
 };
 
 export type CreateQuestionInput = {
-  id?: number | null,
+  id?: string | null,
   text: string,
   choices?: string | null,
   responses?: string | null,
@@ -459,7 +459,7 @@ export type ModelQuestionConditionInput = {
 };
 
 export type UpdateQuestionInput = {
-  id: number,
+  id: string,
   text?: string | null,
   choices?: string | null,
   responses?: string | null,
@@ -478,7 +478,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id: number,
+  id: string,
   order: number,
   gameSessionId: string,
 };
@@ -726,7 +726,7 @@ export type ModelQuestionPrimaryCompositeKeyInput = {
 };
 
 export type ModelQuestionFilterInput = {
-  id?: ModelIntInput | null,
+  id?: ModelIDInput | null,
   text?: ModelStringInput | null,
   choices?: ModelStringInput | null,
   responses?: ModelStringInput | null,
@@ -970,7 +970,7 @@ export type CreateGameSessionFromTemplateMutation = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -1040,7 +1040,7 @@ export type CreateGameSessionFromTemplateMutation = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -2159,7 +2159,7 @@ export type CreateGameSessionMutation = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -2229,7 +2229,7 @@ export type CreateGameSessionMutation = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -2274,7 +2274,7 @@ export type UpdateGameSessionMutation = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -2344,7 +2344,7 @@ export type UpdateGameSessionMutation = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -2389,7 +2389,7 @@ export type DeleteGameSessionMutation = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -2459,7 +2459,7 @@ export type DeleteGameSessionMutation = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -2491,7 +2491,7 @@ export type CreateQuestionMutationVariables = {
 export type CreateQuestionMutation = {
   createQuestion?:  {
     __typename: "Question",
-    id: number,
+    id: string,
     text: string,
     choices?: string | null,
     responses?: string | null,
@@ -2518,7 +2518,7 @@ export type UpdateQuestionMutationVariables = {
 export type UpdateQuestionMutation = {
   updateQuestion?:  {
     __typename: "Question",
-    id: number,
+    id: string,
     text: string,
     choices?: string | null,
     responses?: string | null,
@@ -2545,7 +2545,7 @@ export type DeleteQuestionMutationVariables = {
 export type DeleteQuestionMutation = {
   deleteQuestion?:  {
     __typename: "Question",
-    id: number,
+    id: string,
     text: string,
     choices?: string | null,
     responses?: string | null,
@@ -2576,7 +2576,7 @@ export type CreateTeamMutation = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -2646,7 +2646,7 @@ export type UpdateTeamMutation = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -2716,7 +2716,7 @@ export type DeleteTeamMutation = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -4629,7 +4629,7 @@ export type GetGameSessionQuery = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -4699,7 +4699,7 @@ export type GetGameSessionQuery = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -4747,7 +4747,7 @@ export type ListGameSessionsQuery = {
           name: string,
           question?:  {
             __typename: "Question",
-            id: number,
+            id: string,
             text: string,
             choices?: string | null,
             responses?: string | null,
@@ -4817,7 +4817,7 @@ export type ListGameSessionsQuery = {
         __typename: "ModelQuestionConnection",
         items:  Array< {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -4844,7 +4844,7 @@ export type ListGameSessionsQuery = {
 };
 
 export type GetQuestionQueryVariables = {
-  id: number,
+  id: string,
   order: number,
   gameSessionId: string,
 };
@@ -4852,7 +4852,7 @@ export type GetQuestionQueryVariables = {
 export type GetQuestionQuery = {
   getQuestion?:  {
     __typename: "Question",
-    id: number,
+    id: string,
     text: string,
     choices?: string | null,
     responses?: string | null,
@@ -4872,7 +4872,7 @@ export type GetQuestionQuery = {
 };
 
 export type ListQuestionsQueryVariables = {
-  id?: number | null,
+  id?: string | null,
   orderGameSessionId?: ModelQuestionPrimaryCompositeKeyConditionInput | null,
   filter?: ModelQuestionFilterInput | null,
   limit?: number | null,
@@ -4885,7 +4885,7 @@ export type ListQuestionsQuery = {
     __typename: "ModelQuestionConnection",
     items:  Array< {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -4917,7 +4917,7 @@ export type GetTeamQuery = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -4990,7 +4990,7 @@ export type ListTeamsQuery = {
       name: string,
       question?:  {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -5885,7 +5885,7 @@ export type GameSessionByStateQuery = {
           name: string,
           question?:  {
             __typename: "Question",
-            id: number,
+            id: string,
             text: string,
             choices?: string | null,
             responses?: string | null,
@@ -5955,7 +5955,7 @@ export type GameSessionByStateQuery = {
         __typename: "ModelQuestionConnection",
         items:  Array< {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -6007,7 +6007,7 @@ export type GameSessionByCodeQuery = {
           name: string,
           question?:  {
             __typename: "Question",
-            id: number,
+            id: string,
             text: string,
             choices?: string | null,
             responses?: string | null,
@@ -6077,7 +6077,7 @@ export type GameSessionByCodeQuery = {
         __typename: "ModelQuestionConnection",
         items:  Array< {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -6123,7 +6123,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -6193,7 +6193,7 @@ export type OnGameSessionUpdatedByIdSubscription = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -6261,7 +6261,7 @@ export type OnTeamCreateByGameSessionIdSubscription = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -6330,7 +6330,7 @@ export type OnTeamDeleteByGameSessionIdSubscription = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -7476,7 +7476,7 @@ export type OnCreateGameSessionSubscription = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -7546,7 +7546,7 @@ export type OnCreateGameSessionSubscription = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -7590,7 +7590,7 @@ export type OnUpdateGameSessionSubscription = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -7660,7 +7660,7 @@ export type OnUpdateGameSessionSubscription = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -7704,7 +7704,7 @@ export type OnDeleteGameSessionSubscription = {
         name: string,
         question?:  {
           __typename: "Question",
-          id: number,
+          id: string,
           text: string,
           choices?: string | null,
           responses?: string | null,
@@ -7774,7 +7774,7 @@ export type OnDeleteGameSessionSubscription = {
       __typename: "ModelQuestionConnection",
       items:  Array< {
         __typename: "Question",
-        id: number,
+        id: string,
         text: string,
         choices?: string | null,
         responses?: string | null,
@@ -7809,7 +7809,7 @@ export type OnCreateTeamSubscription = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -7878,7 +7878,7 @@ export type OnUpdateTeamSubscription = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,
@@ -7947,7 +7947,7 @@ export type OnDeleteTeamSubscription = {
     name: string,
     question?:  {
       __typename: "Question",
-      id: number,
+      id: string,
       text: string,
       choices?: string | null,
       responses?: string | null,

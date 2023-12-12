@@ -934,7 +934,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
   APITypes.ListGameSessionsQueryVariables,
   APITypes.ListGameSessionsQuery
 >;
-export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: Int!, $gameSessionId: ID!) {
+export const getQuestion = /* GraphQL */ `query GetQuestion($id: ID!, $order: Int!, $gameSessionId: ID!) {
   getQuestion(id: $id, order: $order, gameSessionId: $gameSessionId) {
     id
     text
@@ -960,7 +960,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
   APITypes.GetQuestionQuery
 >;
 export const listQuestions = /* GraphQL */ `query ListQuestions(
-  $id: Int
+  $id: ID
   $orderGameSessionId: ModelQuestionPrimaryCompositeKeyConditionInput
   $filter: ModelQuestionFilterInput
   $limit: Int

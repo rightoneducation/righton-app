@@ -1,5 +1,5 @@
 export interface IQuestion {
-    id: number
+    id: string
     text: string
     choices?: Array<IChoice> | null
     responses?: Array<string> | null

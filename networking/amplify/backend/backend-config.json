@@ -25,7 +25,7 @@
   },
   "auth": {
     "mobile0a6d6e96": {
-      "customAuth": true,
+      "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "Cognito",
@@ -80,6 +80,22 @@
         {
           "category": "auth",
           "resourceName": "mobile0a6d6e96"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGame"
+        }
+      ]
+    },
+    "AMPLIFY_function_createGame_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createGame"
         }
       ]
     }
