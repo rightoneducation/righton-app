@@ -8,6 +8,117 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameSessionFromTemplate($input: CreateGameSessionInput!) {
+  createGameSessionFromTemplate(input: $input) {
+    id
+    gameId
+    startTime
+    phaseOneTime
+    phaseTwoTime
+    teams {
+      items {
+        id
+        name
+        question {
+          id
+          text
+          choices
+          responses
+          imageUrl
+          instructions
+          standard
+          cluster
+          domain
+          grade
+          order
+          isConfidenceEnabled
+          isShortAnswerEnabled
+          isHintEnabled
+          gameSessionId
+          __typename
+        }
+        teamMembers {
+          items {
+            id
+            isFacilitator
+            answers {
+              items {
+                id
+                questionId
+                isChosen
+                text
+                awsAnswerContents
+                isTrickAnswer
+                confidenceLevel
+                createdAt
+                updatedAt
+                teamMemberAnswersId
+                __typename
+              }
+              nextToken
+              __typename
+            }
+            deviceId
+            createdAt
+            updatedAt
+            teamTeamMembersId
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        score
+        selectedAvatarIndex
+        createdAt
+        updatedAt
+        gameSessionTeamsId
+        teamQuestionId
+        teamQuestionOrder
+        teamQuestionGameSessionId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    currentQuestionIndex
+    currentState
+    gameCode
+    isAdvancedMode
+    imageUrl
+    description
+    title
+    currentTimer
+    questions {
+      items {
+        id
+        text
+        choices
+        responses
+        imageUrl
+        instructions
+        standard
+        cluster
+        domain
+        grade
+        order
+        isConfidenceEnabled
+        isShortAnswerEnabled
+        isHintEnabled
+        gameSessionId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateGameSessionFromTemplateMutationVariables,
+  APITypes.CreateGameSessionFromTemplateMutation
+>;
 export const createGameTemplate = /* GraphQL */ `mutation CreateGameTemplate(
   $input: CreateGameTemplateInput!
   $condition: ModelGameTemplateConditionInput

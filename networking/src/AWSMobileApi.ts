@@ -2,6 +2,140 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
+export type CreateGameSessionInput = {
+  gameTemplateId: string,
+};
+
+export type GameSession = {
+  __typename: "GameSession",
+  id: string,
+  gameId: number,
+  startTime?: string | null,
+  phaseOneTime: number,
+  phaseTwoTime: number,
+  teams?: ModelTeamConnection | null,
+  currentQuestionIndex?: number | null,
+  currentState: GameSessionState,
+  gameCode: number,
+  isAdvancedMode: boolean,
+  imageUrl?: string | null,
+  description?: string | null,
+  title?: string | null,
+  currentTimer?: number | null,
+  questions?: ModelQuestionConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelTeamConnection = {
+  __typename: "ModelTeamConnection",
+  items:  Array<Team | null >,
+  nextToken?: string | null,
+};
+
+export type Team = {
+  __typename: "Team",
+  id: string,
+  name: string,
+  question?: Question | null,
+  teamMembers?: ModelTeamMemberConnection | null,
+  score: number,
+  selectedAvatarIndex: number,
+  createdAt: string,
+  updatedAt: string,
+  gameSessionTeamsId?: string | null,
+  teamQuestionId?: string | null,
+  teamQuestionOrder?: number | null,
+  teamQuestionGameSessionId?: string | null,
+};
+
+export type Question = {
+  __typename: "Question",
+  id: number,
+  text: string,
+  choices?: string | null,
+  responses?: string | null,
+  imageUrl?: string | null,
+  instructions?: string | null,
+  standard?: string | null,
+  cluster?: string | null,
+  domain?: string | null,
+  grade?: string | null,
+  order: number,
+  isConfidenceEnabled: boolean,
+  isShortAnswerEnabled: boolean,
+  isHintEnabled: boolean,
+  gameSessionId: string,
+};
+
+export type ModelTeamMemberConnection = {
+  __typename: "ModelTeamMemberConnection",
+  items:  Array<TeamMember | null >,
+  nextToken?: string | null,
+};
+
+export type TeamMember = {
+  __typename: "TeamMember",
+  id: string,
+  isFacilitator?: boolean | null,
+  answers?: ModelTeamAnswerConnection | null,
+  deviceId: string,
+  createdAt: string,
+  updatedAt: string,
+  teamTeamMembersId?: string | null,
+};
+
+export type ModelTeamAnswerConnection = {
+  __typename: "ModelTeamAnswerConnection",
+  items:  Array<TeamAnswer | null >,
+  nextToken?: string | null,
+};
+
+export type TeamAnswer = {
+  __typename: "TeamAnswer",
+  id: string,
+  questionId: number,
+  isChosen: boolean,
+  text: string,
+  awsAnswerContents: string,
+  isTrickAnswer: boolean,
+  confidenceLevel: ConfidenceLevel,
+  createdAt: string,
+  updatedAt: string,
+  teamMemberAnswersId?: string | null,
+};
+
+export enum ConfidenceLevel {
+  NOT_RATED = "NOT_RATED",
+  NOT_AT_ALL = "NOT_AT_ALL",
+  KINDA = "KINDA",
+  QUITE = "QUITE",
+  VERY = "VERY",
+  TOTALLY = "TOTALLY",
+}
+
+
+export enum GameSessionState {
+  NOT_STARTED = "NOT_STARTED",
+  TEAMS_JOINING = "TEAMS_JOINING",
+  CHOOSE_CORRECT_ANSWER = "CHOOSE_CORRECT_ANSWER",
+  PHASE_1_DISCUSS = "PHASE_1_DISCUSS",
+  PHASE_1_RESULTS = "PHASE_1_RESULTS",
+  PHASE_2_START = "PHASE_2_START",
+  CHOOSE_TRICKIEST_ANSWER = "CHOOSE_TRICKIEST_ANSWER",
+  PHASE_2_DISCUSS = "PHASE_2_DISCUSS",
+  PHASE_2_RESULTS = "PHASE_2_RESULTS",
+  FINAL_RESULTS = "FINAL_RESULTS",
+  FINISHED = "FINISHED",
+}
+
+
+export type ModelQuestionConnection = {
+  __typename: "ModelQuestionConnection",
+  items:  Array<Question | null >,
+  nextToken?: string | null,
+};
+
 export type CreateGameTemplateInput = {
   id?: string | null,
   title: string,
@@ -223,37 +357,6 @@ export type DeleteQuestionTemplateInput = {
   id: string,
 };
 
-export type CreateGameSessionInput = {
-  id?: string | null,
-  gameId: number,
-  startTime?: string | null,
-  phaseOneTime: number,
-  phaseTwoTime: number,
-  currentQuestionIndex?: number | null,
-  currentState: GameSessionState,
-  gameCode: number,
-  isAdvancedMode: boolean,
-  imageUrl?: string | null,
-  description?: string | null,
-  title?: string | null,
-  currentTimer?: number | null,
-};
-
-export enum GameSessionState {
-  NOT_STARTED = "NOT_STARTED",
-  TEAMS_JOINING = "TEAMS_JOINING",
-  CHOOSE_CORRECT_ANSWER = "CHOOSE_CORRECT_ANSWER",
-  PHASE_1_DISCUSS = "PHASE_1_DISCUSS",
-  PHASE_1_RESULTS = "PHASE_1_RESULTS",
-  PHASE_2_START = "PHASE_2_START",
-  CHOOSE_TRICKIEST_ANSWER = "CHOOSE_TRICKIEST_ANSWER",
-  PHASE_2_DISCUSS = "PHASE_2_DISCUSS",
-  PHASE_2_RESULTS = "PHASE_2_RESULTS",
-  FINAL_RESULTS = "FINAL_RESULTS",
-  FINISHED = "FINISHED",
-}
-
-
 export type ModelGameSessionConditionInput = {
   gameId?: ModelIntInput | null,
   startTime?: ModelStringInput | null,
@@ -282,121 +385,6 @@ export type ModelBooleanInput = {
   eq?: boolean | null,
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
-};
-
-export type GameSession = {
-  __typename: "GameSession",
-  id: string,
-  gameId: number,
-  startTime?: string | null,
-  phaseOneTime: number,
-  phaseTwoTime: number,
-  teams?: ModelTeamConnection | null,
-  currentQuestionIndex?: number | null,
-  currentState: GameSessionState,
-  gameCode: number,
-  isAdvancedMode: boolean,
-  imageUrl?: string | null,
-  description?: string | null,
-  title?: string | null,
-  currentTimer?: number | null,
-  questions?: ModelQuestionConnection | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type ModelTeamConnection = {
-  __typename: "ModelTeamConnection",
-  items:  Array<Team | null >,
-  nextToken?: string | null,
-};
-
-export type Team = {
-  __typename: "Team",
-  id: string,
-  name: string,
-  question?: Question | null,
-  teamMembers?: ModelTeamMemberConnection | null,
-  score: number,
-  selectedAvatarIndex: number,
-  createdAt: string,
-  updatedAt: string,
-  gameSessionTeamsId?: string | null,
-  teamQuestionId?: string | null,
-  teamQuestionOrder?: number | null,
-  teamQuestionGameSessionId?: string | null,
-};
-
-export type Question = {
-  __typename: "Question",
-  id: number,
-  text: string,
-  choices?: string | null,
-  responses?: string | null,
-  imageUrl?: string | null,
-  instructions?: string | null,
-  standard?: string | null,
-  cluster?: string | null,
-  domain?: string | null,
-  grade?: string | null,
-  order: number,
-  isConfidenceEnabled: boolean,
-  isShortAnswerEnabled: boolean,
-  isHintEnabled: boolean,
-  gameSessionId: string,
-};
-
-export type ModelTeamMemberConnection = {
-  __typename: "ModelTeamMemberConnection",
-  items:  Array<TeamMember | null >,
-  nextToken?: string | null,
-};
-
-export type TeamMember = {
-  __typename: "TeamMember",
-  id: string,
-  isFacilitator?: boolean | null,
-  answers?: ModelTeamAnswerConnection | null,
-  deviceId: string,
-  createdAt: string,
-  updatedAt: string,
-  teamTeamMembersId?: string | null,
-};
-
-export type ModelTeamAnswerConnection = {
-  __typename: "ModelTeamAnswerConnection",
-  items:  Array<TeamAnswer | null >,
-  nextToken?: string | null,
-};
-
-export type TeamAnswer = {
-  __typename: "TeamAnswer",
-  id: string,
-  questionId: number,
-  isChosen: boolean,
-  text: string,
-  awsAnswerContents: string,
-  isTrickAnswer: boolean,
-  confidenceLevel: ConfidenceLevel,
-  createdAt: string,
-  updatedAt: string,
-  teamMemberAnswersId?: string | null,
-};
-
-export enum ConfidenceLevel {
-  NOT_RATED = "NOT_RATED",
-  NOT_AT_ALL = "NOT_AT_ALL",
-  KINDA = "KINDA",
-  QUITE = "QUITE",
-  VERY = "VERY",
-  TOTALLY = "TOTALLY",
-}
-
-
-export type ModelQuestionConnection = {
-  __typename: "ModelQuestionConnection",
-  items:  Array<Question | null >,
-  nextToken?: string | null,
 };
 
 export type UpdateGameSessionInput = {
@@ -943,6 +931,118 @@ export type ModelSubscriptionGameQuestionsFilterInput = {
   questionTemplateID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionGameQuestionsFilterInput | null > | null,
   or?: Array< ModelSubscriptionGameQuestionsFilterInput | null > | null,
+};
+
+export type CreateGameSessionFromTemplateMutationVariables = {
+  input: CreateGameSessionInput,
+};
+
+export type CreateGameSessionFromTemplateMutation = {
+  createGameSessionFromTemplate?:  {
+    __typename: "GameSession",
+    id: string,
+    gameId: number,
+    startTime?: string | null,
+    phaseOneTime: number,
+    phaseTwoTime: number,
+    teams?:  {
+      __typename: "ModelTeamConnection",
+      items:  Array< {
+        __typename: "Team",
+        id: string,
+        name: string,
+        question?:  {
+          __typename: "Question",
+          id: number,
+          text: string,
+          choices?: string | null,
+          responses?: string | null,
+          imageUrl?: string | null,
+          instructions?: string | null,
+          standard?: string | null,
+          cluster?: string | null,
+          domain?: string | null,
+          grade?: string | null,
+          order: number,
+          isConfidenceEnabled: boolean,
+          isShortAnswerEnabled: boolean,
+          isHintEnabled: boolean,
+          gameSessionId: string,
+        } | null,
+        teamMembers?:  {
+          __typename: "ModelTeamMemberConnection",
+          items:  Array< {
+            __typename: "TeamMember",
+            id: string,
+            isFacilitator?: boolean | null,
+            answers?:  {
+              __typename: "ModelTeamAnswerConnection",
+              items:  Array< {
+                __typename: "TeamAnswer",
+                id: string,
+                questionId: number,
+                isChosen: boolean,
+                text: string,
+                awsAnswerContents: string,
+                isTrickAnswer: boolean,
+                confidenceLevel: ConfidenceLevel,
+                createdAt: string,
+                updatedAt: string,
+                teamMemberAnswersId?: string | null,
+              } | null >,
+              nextToken?: string | null,
+            } | null,
+            deviceId: string,
+            createdAt: string,
+            updatedAt: string,
+            teamTeamMembersId?: string | null,
+          } | null >,
+          nextToken?: string | null,
+        } | null,
+        score: number,
+        selectedAvatarIndex: number,
+        createdAt: string,
+        updatedAt: string,
+        gameSessionTeamsId?: string | null,
+        teamQuestionId?: string | null,
+        teamQuestionOrder?: number | null,
+        teamQuestionGameSessionId?: string | null,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    currentQuestionIndex?: number | null,
+    currentState: GameSessionState,
+    gameCode: number,
+    isAdvancedMode: boolean,
+    imageUrl?: string | null,
+    description?: string | null,
+    title?: string | null,
+    currentTimer?: number | null,
+    questions?:  {
+      __typename: "ModelQuestionConnection",
+      items:  Array< {
+        __typename: "Question",
+        id: number,
+        text: string,
+        choices?: string | null,
+        responses?: string | null,
+        imageUrl?: string | null,
+        instructions?: string | null,
+        standard?: string | null,
+        cluster?: string | null,
+        domain?: string | null,
+        grade?: string | null,
+        order: number,
+        isConfidenceEnabled: boolean,
+        isShortAnswerEnabled: boolean,
+        isHintEnabled: boolean,
+        gameSessionId: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateGameTemplateMutationVariables = {

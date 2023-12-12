@@ -4,6 +4,14 @@ input AMPLIFY {
   globalAuthRule: AuthRule = { allow: public }
 } # FOR TESTING ONLY!
 
+type Mutation {
+  createGameSessionFromTemplate(input: CreateGameSessionInput!): GameSession
+}
+
+input CreateGameSessionInput {
+  gameTemplateId: String!
+}
+
 type GameTemplate @model{
   id: String!
   title: String!
