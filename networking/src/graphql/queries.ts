@@ -718,6 +718,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -788,6 +789,7 @@ export const getGameSession = /* GraphQL */ `query GetGameSession($id: ID!) {
         responses
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -834,6 +836,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
             responses
             imageUrl
             instructions
+            answerSettings
             standard
             cluster
             domain
@@ -904,6 +907,7 @@ export const listGameSessions = /* GraphQL */ `query ListGameSessions(
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -938,6 +942,7 @@ export const getQuestion = /* GraphQL */ `query GetQuestion($id: Int!, $order: I
     responses
     imageUrl
     instructions
+    answerSettings
     standard
     cluster
     domain
@@ -977,6 +982,7 @@ export const listQuestions = /* GraphQL */ `query ListQuestions(
       responses
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
@@ -1007,6 +1013,7 @@ export const getTeam = /* GraphQL */ `query GetTeam($id: ID!) {
       responses
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
@@ -1076,6 +1083,7 @@ export const listTeams = /* GraphQL */ `query ListTeams(
         responses
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -1980,6 +1988,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
             responses
             imageUrl
             instructions
+            answerSettings
             standard
             cluster
             domain
@@ -2050,6 +2059,7 @@ export const gameSessionByState = /* GraphQL */ `query GameSessionByState(
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -2107,6 +2117,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
             responses
             imageUrl
             instructions
+            answerSettings
             standard
             cluster
             domain
@@ -2177,6 +2188,7 @@ export const gameSessionByCode = /* GraphQL */ `query GameSessionByCode(
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain

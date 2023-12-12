@@ -9,7 +9,19 @@ type Mutation {
 }
 
 input CreateGameSessionInput {
-  gameTemplateId: String!
+  id: ID!
+  gameId: Int
+  title: String
+  description: String
+  startTime: AWSDateTime
+  phaseOneTime: Int
+  phaseTwoTime: Int
+  currentQuestionIndex: Int
+  currentState: GameSessionState
+  currentTimer: Int
+  gameCode: Int
+  isAdvancedMode: Boolean!
+  imageUrl: String
 }
 
 type GameTemplate @model{
@@ -99,12 +111,13 @@ enum GameSessionState {
 }
 
 type Question @model(subscriptions: null, timestamps: null) {
-  id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
+  id: ID! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
   responses: AWSJSON
   imageUrl: String
   instructions: AWSJSON
+  answerSettings: AWSJSON
   standard: String
   cluster: String
   domain: String

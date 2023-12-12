@@ -26,6 +26,7 @@ export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameS
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -96,6 +97,7 @@ export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameS
         responses
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -1220,6 +1222,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -1290,6 +1293,7 @@ export const createGameSession = /* GraphQL */ `mutation CreateGameSession(
         responses
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -1334,6 +1338,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -1404,6 +1409,7 @@ export const updateGameSession = /* GraphQL */ `mutation UpdateGameSession(
         responses
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -1448,6 +1454,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
           responses
           imageUrl
           instructions
+          answerSettings
           standard
           cluster
           domain
@@ -1518,6 +1525,7 @@ export const deleteGameSession = /* GraphQL */ `mutation DeleteGameSession(
         responses
         imageUrl
         instructions
+        answerSettings
         standard
         cluster
         domain
@@ -1552,6 +1560,7 @@ export const createQuestion = /* GraphQL */ `mutation CreateQuestion(
     responses
     imageUrl
     instructions
+    answerSettings
     standard
     cluster
     domain
@@ -1579,6 +1588,7 @@ export const updateQuestion = /* GraphQL */ `mutation UpdateQuestion(
     responses
     imageUrl
     instructions
+    answerSettings
     standard
     cluster
     domain
@@ -1606,6 +1616,7 @@ export const deleteQuestion = /* GraphQL */ `mutation DeleteQuestion(
     responses
     imageUrl
     instructions
+    answerSettings
     standard
     cluster
     domain
@@ -1636,6 +1647,7 @@ export const createTeam = /* GraphQL */ `mutation CreateTeam(
       responses
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
@@ -1706,6 +1718,7 @@ export const updateTeam = /* GraphQL */ `mutation UpdateTeam(
       responses
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
@@ -1776,6 +1789,7 @@ export const deleteTeam = /* GraphQL */ `mutation DeleteTeam(
       responses
       imageUrl
       instructions
+      answerSettings
       standard
       cluster
       domain
