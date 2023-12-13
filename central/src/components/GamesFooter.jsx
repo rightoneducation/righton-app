@@ -6,7 +6,7 @@ export default function GamesFooter({
   listGameTemplatePrevTokens,
   listGameTemplateNextToken,
   handlePrevPage,
-  handleNextPage,
+  handleNextPage
 }) {
   const classes = useStyles();
   return (

@@ -7,7 +7,7 @@ import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import GameMaker from './GameMaker';
-import { getGameById } from '../lib/games';
+import { getGameById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
@@ -18,6 +18,7 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
   const handleSortChange = (value) => {
     setSortType(value);
   };
+  console.log('match', match);
   const [sortByCheck, setSortByCheck] = React.useState(false);
   return (
     <Grid container className={classes.root} spacing={4}>
@@ -75,6 +76,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     marginTop: 0,
+    height: '100vh',
     width: 'calc(100% + 16px) !important',
   },
   sidebar: {

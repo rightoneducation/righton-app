@@ -116,7 +116,6 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
-
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId/question/:questionIndex');
@@ -176,12 +175,11 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
     setAnchorEl(null);
     setActiveIndex(null);
   };
-
   const addQuestion = () => history.push(`/gamemaker/${game.id}/createquestion/${questions.length + 1}`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
-  const questions = game?.questions || [];
-  const questionCount = game?.questions?.length || 0;
+  const questions = game?.questionTemplates || [];
+  const questionCount = game?.questionTemplates?.length || 0;
 
   const LAUNCH_GAME_URL = `http://test-host.rightoneducation.com/new/${game.id}`;
 

@@ -2,7 +2,7 @@ import { ConfidenceLevel } from "../AWSMobileApi";
 
 export interface ITeamAnswer {
     id: string,
-    questionId: number
+    questionId: string
     isChosen: boolean
     text: string
     answerContents: string

@@ -103,10 +103,10 @@ export class ApiClient implements IApiClient {
         owner: string,
         version: number,
         description: string,
-        domain: string,
-        cluster: string,
-        grade: string,
-        standard: string,
+        domain: string | null,
+        cluster: string | null,
+        grade: string | null,
+        standard: string | null,
         phaseOneTime: number,
         phaseTwoTime: number,
         imageUrl: string
@@ -130,7 +130,7 @@ export class ApiClient implements IApiClient {
         const gameTemplate = await this.callGraphQL<CreateGameTemplateMutation>(
             createGameTemplate,
             variables
-        )
+        ) 
         if (
             isNullOrUndefined(gameTemplate.data) ||
             isNullOrUndefined(gameTemplate.data.createGameTemplate)
@@ -142,9 +142,11 @@ export class ApiClient implements IApiClient {
     } 
 
     async listGameTemplates(limit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
+        console.log("sup");
         let result = (await API.graphql(
             graphqlOperation(listGameTemplates, {limit, nextToken })
         )) as { data: any }
+        console.log(result);
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
@@ -475,7 +477,7 @@ export class ApiClient implements IApiClient {
 
     async addTeamAnswer(
         teamMemberId: string,
-        questionId: number,
+        questionId: string,
         text: string,
         answerContents: string,
         isChosen: boolean = false,
@@ -747,7 +749,7 @@ type AWSTeamMember = {
 
 type AWSTeamAnswer = {
     id: string
-    questionId?: number | null
+    questionId?: string | null
     isChosen: boolean
     isTrickAnswer: boolean
     text?: string | null
@@ -793,10 +795,6 @@ class GameTemplateParser {
             isNullOrUndefined(owner) ||
             isNullOrUndefined(version) ||
             isNullOrUndefined(description) ||
-            isNullOrUndefined(domain) ||
-            isNullOrUndefined(cluster) ||
-            isNullOrUndefined(grade) ||
-            isNullOrUndefined(standard) ||
             isNullOrUndefined(phaseOneTime) ||
             isNullOrUndefined(phaseTwoTime) ||
             isNullOrUndefined(imageUrl) ||

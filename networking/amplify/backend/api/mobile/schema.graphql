@@ -5,27 +5,15 @@ input AMPLIFY {
 } # FOR TESTING ONLY!
 
 type Mutation {
-  createGameSessionFromTemplate(input: CreateGameSessionInput!): GameSession
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): GameSession @function(name: "createGame-${env}")
 }
 
-input CreateGameSessionInput {
-  id: ID!
-  gameId: Int
-  title: String
-  description: String
-  startTime: AWSDateTime
-  phaseOneTime: Int
-  phaseTwoTime: Int
-  currentQuestionIndex: Int
-  currentState: GameSessionState
-  currentTimer: Int
-  gameCode: Int
-  isAdvancedMode: Boolean!
-  imageUrl: String
+input CreateGameSessionFromTemplateInput {
+  gameTemplateId: ID!
 }
 
 type GameTemplate @model{
-  id: String!
+  id: ID!
   title: String!
   owner: String! @index(
       name: "gameTemplatesByOwner"
@@ -79,7 +67,7 @@ input QuestionTemplateInput {
 
 type GameSession @model {
   id: ID!
-  gameId: Int!
+  gameId: ID!
   startTime: AWSDateTime
   phaseOneTime: Int!
   phaseTwoTime: Int!
@@ -156,7 +144,7 @@ enum ConfidenceLevel {
 
 type TeamAnswer @model {
   id: ID!
-  questionId: Int!
+  questionId: ID!
   isChosen: Boolean!
   text: String!
   awsAnswerContents: AWSJSON!

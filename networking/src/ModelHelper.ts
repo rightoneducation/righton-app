@@ -7,7 +7,7 @@ import { GameSessionState } from './AWSMobileApi'
 export abstract class ModelHelper {
     private static correctAnswerScore = 10
 
-    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: number): Array<ITeamAnswer | null> | null {
+    static getBasicTeamMemberAnswersToQuestionId(team: ITeam, questionId: string): Array<ITeamAnswer | null> | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length == 0) {
             console.error("Team members is null")
@@ -57,7 +57,7 @@ export abstract class ModelHelper {
         }
         return null;
     }
-    static getSelectedTrickAnswer(team: ITeam, questionId: number): ITeamAnswer | null {
+    static getSelectedTrickAnswer(team: ITeam, questionId: string): ITeamAnswer | null {
         if (isNullOrUndefined(team.teamMembers) ||
             team.teamMembers.length !== 1) {
             throw new Error("Given team has no members or more than one members")
@@ -76,7 +76,7 @@ export abstract class ModelHelper {
         return trickAnswer ?? null
     }
 
-    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, answerText: string, questionId: number): number {
+    static calculateBasicModeWrongAnswerScore(gameSession: IGameSession, answerText: string, questionId: string): number {
         if (isNullOrUndefined(gameSession.teams)) {
             throw new Error("'teams' can't be null")
         }

@@ -9,7 +9,7 @@ import {
   ApiClient,
   IGameTemplate,
   IQuestionTemplate,
-  CreateQuestionTemplateInput,
+  CreateQuestionTemplateInput
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
@@ -56,10 +56,14 @@ export const RouteContainer = ({
   const queryLimit = 12; // number of games retreiived on main page
 
   const getSortedGames = async () => {
-    const games = await apiClient.listGameTemplates(queryLimit, listGameTemplateNextToken);
-    if (games?.gameTemplates){
-      setGames(games?.gameTemplates ?? null);
-      setListGameTemplateNextToken(games?.nextToken ?? null);
+    try { 
+      const games = await apiClient.listGameTemplates(queryLimit, listGameTemplateNextToken);
+      if (games?.gameTemplates){
+        setGames(games?.gameTemplates ?? null);
+        setListGameTemplateNextToken(games?.nextToken ?? null);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -99,7 +103,7 @@ export const RouteContainer = ({
       setListGameTemplateNextToken(nextToken);
     }
   }
-
+  
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
     try{

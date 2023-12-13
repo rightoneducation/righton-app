@@ -8,7 +8,9 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
-export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameSessionFromTemplate($input: CreateGameSessionInput!) {
+export const createGameSessionFromTemplate = /* GraphQL */ `mutation CreateGameSessionFromTemplate(
+  $input: CreateGameSessionFromTemplateInput!
+) {
   createGameSessionFromTemplate(input: $input) {
     id
     gameId
