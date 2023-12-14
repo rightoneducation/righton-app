@@ -40,7 +40,7 @@ type AWSTeam = {
 }
 
 type AWSQuestion = {
-  id: number
+  id: string
   text: string
   choices?: string | null
   imageUrl?: string | null
@@ -70,7 +70,7 @@ type AWSTeamMember = {
 
 type AWSTeamAnswer = {
   id: string
-  questionId?: number | null
+  questionId?: string | null
   isChosen: boolean
   isTrickAnswer: boolean
   text?: string | null

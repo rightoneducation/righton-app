@@ -16,7 +16,7 @@ interface CardResultsProps {
   answers: { text: string; isCorrectAnswer: boolean }[] | undefined;
   selectedAnswer: ITeamAnswer | null;
   currentState: GameSessionState;
-  currentQuestionId: number;
+  currentQuestionId: string;
   gameSession: IGameSession;
 }
 

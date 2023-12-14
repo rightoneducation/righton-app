@@ -24,11 +24,8 @@ const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 const API_KEY = process.env.API_MOBILE_GRAPHQLAPIKEYOUTPUT;
 
-
-
 const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   let questionTemplates = [];
-
   try {
       if (awsGameTemplate && awsGameTemplate.data && awsGameTemplate.data.getGameTemplate) {
           const { getGameTemplate } = awsGameTemplate.data;
@@ -46,7 +43,7 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
   const { owner, version, domain, grade, cluster, standard, __typename, createdAt, updatedAt, ...trimmedGameTemplate } = awsGameTemplate.data.getGameTemplate;
   const gameTemplate = {
       ...trimmedGameTemplate, 
-      currentQuestionIndex: 0,
+      currentQuestionIndex: null,
       currentTimer: 0,
       currentState: 'TEAMS_JOINING',
       isAdvancedMode: false,
@@ -60,7 +57,7 @@ const gameTemplateFromAWSGameTemplate = (awsGameTemplate) => {
  
 
 async function createAndSignRequest(query, variables) {
-  const endpoint = new URL(GRAPHQL_ENDPOINT);
+  const endpoint = new URL(GRAPHQL_ENDPOINT ?? '');
   const signer = new SignatureV4({
     credentials: defaultProvider(),
     region: AWS_REGION,
@@ -72,14 +69,14 @@ async function createAndSignRequest(query, variables) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
+      'x-api-key': API_KEY ?? '',
       host: endpoint.host,
     },
     hostname: endpoint.host,
     body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
-
+  console.log(requestToBeSigned);
   return new Request(endpoint, await signer.sign(requestToBeSigned));
 }
 /**
@@ -87,6 +84,7 @@ async function createAndSignRequest(query, variables) {
  */
 
  export const handler = async (event) => {
+  console.log("Received event:", JSON.stringify(event, null, 2));
   const getGameTemplate = /* GraphQL */ `query GetGameTemplate($id: ID!) {
     getGameTemplate(id: $id) {
       id
@@ -187,8 +185,8 @@ async function createAndSignRequest(query, variables) {
   let responseBody ={};
   try {
     // getGameTemplate
-    const gameTemplateId = event.arguments.id;
-    const gameTemplateRequest = await createAndSignRequest(getGameTemplate, { gameTemplateId });
+    const gameTemplateId = event.arguments.input.gameTemplateId;
+    const gameTemplateRequest = await createAndSignRequest(getGameTemplate, { id: gameTemplateId });
     const gameTemplateResponse = await fetch(gameTemplateRequest);
     const gameTemplateParsed = gameTemplateFromAWSGameTemplate(await gameTemplateResponse.json());
     const { questionTemplates: questions, ...game } = gameTemplateParsed;
@@ -196,7 +194,8 @@ async function createAndSignRequest(query, variables) {
     // createGameSession
     const gameSessionRequest = await createAndSignRequest(createGameSession, {input: { id: uuidv4(), ...game }});
     const gameSessionResponse = await fetch(gameSessionRequest);
-    const gameSessionParsed = await gameSessionResponse.json();
+    const gameSessionJson = await gameSessionResponse.json(); 
+    const gameSessionParsed = gameSessionJson.data.createGameSession; 
 
     // createQuestions
     const promises = questions.map(async (question) => {
@@ -206,7 +205,7 @@ async function createAndSignRequest(query, variables) {
           ...trimmedQuestion,
           id: uuidv4(),
           text: '',
-          gameSessionId: gameSessionParsed.data.createGameSession.id,
+          gameSessionId: gameSessionParsed.id,
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,
           isHintEnabled: true,
@@ -215,13 +214,20 @@ async function createAndSignRequest(query, variables) {
         }
       });
       const questionResponse = await fetch(questionRequest);
-      const questionParsed = await questionResponse.json();
+      const questionJson = await questionResponse.json();
+      const questionParsed = questionJson.data.createQuestion;
       return questionParsed;
     });
     const questionsParsed = await Promise.all(promises);
-    responseBody = {gameTemplateParsed, gameSessionParsed, questionsParsed};
-
+    responseBody = gameSessionParsed.id;
   } catch (error) {
+    console.error("Error occurred:", error);
+    // Log detailed error information
+    if (error instanceof SyntaxError) {
+      console.error("Error parsing JSON:", error.message);
+    } else {
+      console.error("General error:", error.message);
+    }
     statusCode = 500;
     responseBody = {
       errors: [
@@ -231,8 +237,5 @@ async function createAndSignRequest(query, variables) {
       ]
     };
   }
-  return {
-    statusCode,
-    body: JSON.stringify({...responseBody})
-  };
+  return responseBody;
 };

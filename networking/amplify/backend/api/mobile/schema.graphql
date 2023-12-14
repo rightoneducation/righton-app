@@ -5,7 +5,7 @@ input AMPLIFY {
 } # FOR TESTING ONLY!
 
 type Mutation {
-  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): GameSession @function(name: "createGame-${env}")
+  createGameSessionFromTemplate(input: CreateGameSessionFromTemplateInput!): String @function(name: "createGame-${env}")
 }
 
 input CreateGameSessionFromTemplateInput {

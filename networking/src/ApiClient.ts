@@ -43,6 +43,7 @@ import {
 import {
     listGameTemplates,
     listQuestionTemplates,
+    createGameSessionFromTemplate,
     gameSessionByCode,
     getGameSession,
     getTeam,
@@ -235,6 +236,36 @@ export class ApiClient implements IApiClient {
     constructor(env: Environment) {
         this.endpoint = `https://1y2kkd6x3e.execute-api.us-east-1.amazonaws.com/${env}/createGameSession`
     }
+
+
+    async createGameSessionFromTemplate(id: string): Promise<string | null> {
+        try {
+            console.log('sup');
+            const response = await API.graphql(
+                graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
+            ) as { data: { createGameSessionFromTemplate: string } };
+            const result = response.data.createGameSessionFromTemplate;
+            console.log(result);
+            return result;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
+    // async createGameSessionFromTemplate(id: string): Promise< IGameSession | null> {
+    //     try{
+    //         console.log('sup');
+    //     let result = (await API.graphql(
+    //         graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
+    //     )) as any
+    //     console.log(result);
+    //     return null; //  GameSessionParser.gameSessionFromAWSGameSession(result)
+   
+    //     } catch (e) {
+    //         console.log(e);
+    //         return null;
+    //     }
+    // }
 
     createGameSession(
         gameId: number,
