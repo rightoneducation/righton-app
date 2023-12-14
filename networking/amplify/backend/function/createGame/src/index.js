@@ -204,7 +204,7 @@ async function createAndSignRequest(query, variables) {
         input: {    
           ...trimmedQuestion,
           id: uuidv4(),
-          text: '',
+          text: title,
           gameSessionId: gameSessionParsed.id,
           isConfidenceEnabled: false,
           isShortAnswerEnabled: false,

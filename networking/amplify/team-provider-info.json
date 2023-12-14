@@ -68,7 +68,7 @@
       "function": {
         "createGame": {
           "deploymentBucketName": "amplify-mobile-testbase-183434-deployment",
-          "s3Key": "amplify-builds/createGame-7039377a487276634e63-build.zip"
+          "s3Key": "amplify-builds/createGame-5576666b6e465138666e-build.zip"
         },
         "mobile": {}
       },

@@ -234,7 +234,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
           )}
             {questions.map((question, index) => {
               if (question === null) return null;
-              const { text, imageUrl } = question;
+              const { title, imageUrl } = question;
               return (
                 <Grid key={index} item xs={12} md={6} >
                   <Card className={classes.question} onClick={() => history.push(`/games/${game.id}/questions/${index}`)}>
@@ -246,7 +246,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                         </Typography>
 
                         <Typography className={classes.questionText}>
-                          {text}
+                          {title}
                         </Typography>
                     </Grid>
 
