@@ -87,7 +87,7 @@ export default function ConfidenceMeterCard({
       </Typography>
     </Box>
   );
-  console.log(isSmallDevice)
+
   const responseOption = (option: IConfidenceOption) => {
     return (
       <Box
