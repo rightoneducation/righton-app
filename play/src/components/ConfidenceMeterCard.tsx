@@ -87,11 +87,11 @@ export default function ConfidenceMeterCard({
       </Typography>
     </Box>
   );
-
+  console.log(isSmallDevice)
   const responseOption = (option: IConfidenceOption) => {
     return (
       <Box
-        maxWidth={`${theme.sizing.extraLargePadding}px`}
+        maxWidth={isSmallDevice ? `${theme.sizing.largePadding}px` : `${theme.sizing.extraLargePadding}px`}
         sx={{
           textAlign: 'center',
           alignItems: 'center',
