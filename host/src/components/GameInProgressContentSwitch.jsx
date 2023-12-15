@@ -14,49 +14,47 @@ import FeaturedMistakes from "./FeaturedMistakes";
 import PlayerThinking from "./PlayerThinking/PlayerThinking";
 import PlayerThinkingSelectedAnswer from './PlayerThinking/PlayerThinkingSelectedAnswer';
 
-export default function GameInProgressContentSwitch ({ 
-    questions, 
-    questionChoices,
-    data,
-    graphClickInfo,
-    responsesRef,
-    handleGraphClick,
-    currentQuestionIndex, 
-    answers, 
-    totalAnswers, 
-    numPlayers, 
-    statePosition, 
-    questionCardRef, 
-    gameAnswersRef,
-    confidenceCardRef,
-    featuredMistakesRef,
-    correctChoiceIndex,
-    currentState,
-    isConfidenceEnabled,
-    handleConfidenceSwitchChange,
-    teamsArray,
-    confidenceData,
-    isShortAnswerEnabled,
-    handleShortAnswerChange,
-    shortAnswerResponses,
-    handleOnSelectMistake,
-    hintCardRef,
-    isHintEnabled,
-    handleHintChange,
-    hints,
-    gptHints,
-    hintsError,
-    isHintLoading,
-    handleProcessHints
-  }) {
+export default function GameInProgressContentSwitch({
+  questions,
+  questionChoices,
+  data,
+  graphClickInfo,
+  responsesRef,
+  handleGraphClick,
+  currentQuestionIndex,
+  answers,
+  totalAnswers,
+  numPlayers,
+  statePosition,
+  questionCardRef,
+  gameAnswersRef,
+  confidenceCardRef,
+  featuredMistakesRef,
+  correctChoiceIndex,
+  currentState,
+  isConfidenceEnabled,
+  handleConfidenceSwitchChange,
+  teamsArray,
+  confidenceData,
+  isShortAnswerEnabled,
+  handleShortAnswerChange,
+  shortAnswerResponses,
+  handleOnSelectMistake,
+  hintCardRef,
+  isHintEnabled,
+  handleHintChange,
+  hints,
+  gptHints,
+  hintsError,
+  isHintLoading,
+  handleProcessHints
+}) {
   const classes = useStyles();
   const graphClickRenderSwitch = (graphClickInfo) => {
-    switch (graphClickInfo.graph){
+    switch (graphClickInfo.graph) {
       case ('realtime'):
         return (
-          <div 
-            id="responses-scrollbox" 
-            ref={responsesRef}     
+          <div
             className={classes.contentContainer}
           >
             <Responses
@@ -69,20 +67,24 @@ export default function GameInProgressContentSwitch ({
               handleGraphClick={handleGraphClick}
               isShortAnswerEnabled={isShortAnswerEnabled}
             />
-            <SelectedAnswer
-              data={data}
-              graphClickInfo={graphClickInfo}
-              correctChoiceIndex={correctChoiceIndex}
-              numPlayers={numPlayers}
-              statePosition={statePosition}
-              isShortAnswerEnabled={isShortAnswerEnabled}
-            />
+            <div id="responses-scrollbox"
+              ref={responsesRef}>
+              <SelectedAnswer
+                data={data}
+                graphClickInfo={graphClickInfo}
+                correctChoiceIndex={correctChoiceIndex}
+                numPlayers={numPlayers}
+                statePosition={statePosition}
+                isShortAnswerEnabled={isShortAnswerEnabled}
+                ref={responsesRef}
+              />
+            </div>
           </div>
         );
       case ('confidence'):
         return (
-          <div 
-            id="confidencecard-scrollbox" 
+          <div
+            id="confidencecard-scrollbox"
             ref={confidenceCardRef}
             className={classes.contentContainer}
           >
@@ -102,8 +104,8 @@ export default function GameInProgressContentSwitch ({
         );
       case ('hint'):
         return (
-          <div 
-            id="hint-scrollbox" 
+          <div
+            id="hint-scrollbox"
             ref={hintCardRef}
             className={classes.contentContainer}
           >
@@ -160,8 +162,8 @@ export default function GameInProgressContentSwitch ({
             />
           </div>
           {isConfidenceEnabled &&
-          (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-            currentState === GameSessionState.PHASE_1_DISCUSS) ? (
+            (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+              currentState === GameSessionState.PHASE_1_DISCUSS) ? (
             <div id="confidencecard-scrollbox" ref={confidenceCardRef}>
               <ConfidenceResponseCard
                 confidenceData={confidenceData}
@@ -171,12 +173,12 @@ export default function GameInProgressContentSwitch ({
               />
             </div>
           ) : null}
-          {isShortAnswerEnabled && 
-          (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
-            currentState === GameSessionState.PHASE_1_DISCUSS) ? (
+          {isShortAnswerEnabled &&
+            (currentState === GameSessionState.CHOOSE_CORRECT_ANSWER ||
+              currentState === GameSessionState.PHASE_1_DISCUSS) ? (
             <div id="featuredmistakes-scrollbox" ref={featuredMistakesRef}>
-              <FeaturedMistakes 
-                shortAnswerResponses={shortAnswerResponses} 
+              <FeaturedMistakes
+                shortAnswerResponses={shortAnswerResponses}
                 totalAnswers={totalAnswers}
                 handleOnSelectMistake={handleOnSelectMistake}
                 numPlayers={numPlayers}
@@ -184,8 +186,8 @@ export default function GameInProgressContentSwitch ({
             </div>
           ) : null}
           {isHintEnabled &&
-           (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
-            currentState === GameSessionState.PHASE_2_DISCUSS) ? (
+            (currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER ||
+              currentState === GameSessionState.PHASE_2_DISCUSS) ? (
             <div
               id="hint-scrollbox"
               ref={hintCardRef}
@@ -229,7 +231,7 @@ export default function GameInProgressContentSwitch ({
       ) : (
         graphClickRenderSwitch(graphClickInfo)
       )
-    };
+      };
     </Box>,
   ];
 
@@ -241,23 +243,23 @@ export default function GameInProgressContentSwitch ({
           image={questions[currentQuestionIndex].imageUrl}
         />
       </div>
-      <div id="responses-scrollbox" ref={responsesRef} style={{width:'100%'}}>
-        <EnableShortAnswerCard 
-          isShortAnswerEnabled={isShortAnswerEnabled} 
+      <div id="responses-scrollbox" ref={responsesRef} style={{ width: '100%' }}>
+        <EnableShortAnswerCard
+          isShortAnswerEnabled={isShortAnswerEnabled}
           handleShortAnswerChange={handleShortAnswerChange}
         />
       </div>
-      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
-      <div id="confidencecard-scrollbox" ref={confidenceCardRef} style={{width:'100%'}}>
-        <EnableConfidenceCard 
-          isConfidenceEnabled={isConfidenceEnabled} 
+      <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)' }}> </div>
+      <div id="confidencecard-scrollbox" ref={confidenceCardRef} style={{ width: '100%' }}>
+        <EnableConfidenceCard
+          isConfidenceEnabled={isConfidenceEnabled}
           handleConfidenceSwitchChange={handleConfidenceSwitchChange}
         />
       </div>
-      <div style={{width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)'}}> </div>
-      <div id="hintcard-scrollbox" ref={hintCardRef} style={{width:'100%'}}>
+      <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)' }}> </div>
+      <div id="hintcard-scrollbox" ref={hintCardRef} style={{ width: '100%' }}>
         <EnableHintCard
-          isHintEnabled={isHintEnabled} 
+          isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
         />
       </div>
