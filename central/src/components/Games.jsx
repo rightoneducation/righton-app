@@ -6,6 +6,7 @@ import GameLaunch from './GameLaunch';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
+import QuestionDashboard from './QuestionDashboard';
 import GameMaker from './GameMaker';
 import { getGameById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
@@ -18,21 +19,24 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
   const handleSortChange = (value) => {
     setSortType(value);
   };
-  console.log('match', match);
   const [sortByCheck, setSortByCheck] = React.useState(false);
   return (
     <Grid container className={classes.root} spacing={4}>
       <Switch>
-        <Route path="/" exact>
+        <Route path="/">
           <Grid item xs={12} className={classes.sidebar}>
             <Box className={classes.actions}>
               <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
               <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
-
-              <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
-            </Grid>
+              <Route exact path="/questions" render= { () => 
+                <QuestionDashboard loading={loading} questions={questions}  />   
+              }/>
+              <Route exact path="/" render= { () => 
+                <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
+              }/>
+              </Grid>
           </Grid>
         </Route>
         {match && getGameById(games, match.params.gameId) && (

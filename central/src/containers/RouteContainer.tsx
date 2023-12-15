@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   Route,
   Switch,
-  useHistory
+  useHistory,
+  useLocation
 } from "react-router-dom";
 import { Auth } from 'aws-amplify';
 import { 
@@ -48,67 +49,82 @@ export const RouteContainer = ({
   const [isUserAuth, setIsUserAuth] = useState(false);
   const [modalOpen, setModalOpen] = useState(checkUserPlayed()); 
   const [showModalGetApp, setShowModalGetApp] = useState(false);
-  const [listGameTemplatePrevTokens, setListGameTemplatePrevTokens] = useState<(string | null)[]>([null]);
-  const [listGameTemplatePrevTokenIndex, setListGameTemplatePrevTokenIndex] = useState<number>(0);
-  const [listGameTemplateNextToken, setListGameTemplateNextToken] = useState<string | null>(null);
-  const [listQuestionTemplateNextToken, setListQuestionTemplateNextToken] = useState<string | null>(null);
+  const [prevTokens, setPrevTokens] = useState<(string | null)[]>([null]);
+  const [nextToken, setNextToken] = useState<string | null>(null);
+  const location = useLocation();
   const history = useHistory();
-  const queryLimit = 12; // number of games retreiived on main page
+  const queryLimit = 8; // number of games retreiived on main page
 
-  const getSortedGames = async () => {
+  const getSortedGames = async (nextToken: string | null) => {
     try { 
-      const games = await apiClient.listGameTemplates(queryLimit, listGameTemplateNextToken);
+      const games = await apiClient.listGameTemplates(queryLimit, nextToken);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates ?? null);
-        setListGameTemplateNextToken(games?.nextToken ?? null);
+        setNextToken(games?.nextToken ?? null);
       }
     } catch (e) {
       console.log(e);
     }
   }
 
-  const getQuestions = async () => {
+  const getQuestions = async (nextToken: string | null) => {
     try {
-    const questions = await apiClient.listQuestionTemplates(queryLimit, listQuestionTemplateNextToken);
-    console.log(questions);
-    if (questions?.questionTemplates){
-      setQuestions(questions?.questionTemplates ?? null);
-      setListQuestionTemplateNextToken(questions?.nextToken ?? null);
-      console.log(questions);
-      return questions;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-  }
-
-  const handleNextPage = async () => {
-    const games = await apiClient.listGameTemplates( queryLimit, listGameTemplateNextToken);
-    console.log(games);
-    if (games?.gameTemplates){
-      setGames(games?.gameTemplates ?? null);
-      setListGameTemplatePrevTokens((prev) => [...prev, listGameTemplateNextToken]);
-      setListGameTemplateNextToken(games?.nextToken ?? null);
+      const questions = await apiClient.listQuestionTemplates(queryLimit, nextToken);
+      if (questions?.questionTemplates){
+        setQuestions(questions?.questionTemplates ?? null);
+        setNextToken(questions?.nextToken ?? null);
+        return questions;
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  const handlePrevPage = async () => {
-    const prevToken = listGameTemplatePrevTokens[listGameTemplatePrevTokens.length - 2];
-    const nextToken = listGameTemplatePrevTokens[listGameTemplatePrevTokens.length - 1];
-    const games = await apiClient.listGameTemplates(queryLimit, prevToken);
-    console.log(games);
-    if (games?.gameTemplates){
-      setGames(games?.gameTemplates ?? null);
-      setListGameTemplatePrevTokens((prev) => prev.slice(0, -1));
-      setListGameTemplateNextToken(nextToken);
+  const handleNextPage = async (nextToken: string | null) => {
+    if (location.pathname === '/'){
+      const games = await apiClient.listGameTemplates( queryLimit, nextToken);
+      if (games?.gameTemplates){
+        setGames(games?.gameTemplates ?? null);
+        nextToken = games?.nextToken ?? null;
+        //console.log(nextToken);
+      }
+  
+    } else {
+      const questions = await apiClient.listQuestionTemplates( queryLimit, nextToken);
+      if (questions?.questionTemplates){
+        setQuestions(questions?.questionTemplates ?? null);
+        nextToken = questions?.nextToken ?? null;
+        //console.log(nextToken);
+      }
     }
+    setPrevTokens((prev) => [...prev, nextToken]);
+    setNextToken(nextToken);
+  }
+
+  const handlePrevPage = async (prevTokens: (string | null)[]) => {
+    const prevToken = prevTokens[prevTokens.length - 2];
+    const nextToken = prevTokens[prevTokens.length-1];
+    if (location.pathname === '/'){
+      const games = await apiClient.listGameTemplates(queryLimit, prevToken);
+      if (games?.gameTemplates){
+        setGames(games?.gameTemplates ?? null);
+      }
+    } else {
+      const questions = await apiClient.listQuestionTemplates( queryLimit, nextToken);
+      if (questions?.questionTemplates){
+        setQuestions(questions?.questionTemplates ?? null);
+
+      }
+    }
+    setPrevTokens((prev) => prev.slice(0, -1));
+    setNextToken(nextToken);
+
   }
   
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
     try{
     const question = await apiClient.createQuestionTemplate(questionInput);
-    console.log(question);
     } catch (e) {
       console.log(e);
     }
@@ -117,7 +133,6 @@ export const RouteContainer = ({
   const addQToGT = async (gameId: string, questionId: string) => {
     try{
       const game = await apiClient.createGameQuestions(uuidv4(), '5561', 'f98648a9-84e4-48b0-8ffa-5e5dfcb8a752');
-      console.log(game);
     }
     catch (e) {
       console.log(e);
@@ -153,13 +168,13 @@ export const RouteContainer = ({
     }
     const result = await updateGame(updatedGame);
     if (result) {
-      getSortedGames();
+      getSortedGames(nextToken);
     }
     setAlert({ message: 'Game saved.', type: 'success' });
   }
 
   const handleQuestionBankClick = (gameDetails: any) => {
-    getQuestions();
+    getQuestions(null);
     history.push(`/gamemaker/${gameDetails.id}/addquestion`)
   }
 
@@ -167,7 +182,7 @@ export const RouteContainer = ({
   const handleCloneGame = async (game) => {
     const result = await cloneGame(game);
     if (result) {
-      getSortedGames();
+      getSortedGames(nextToken);
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
     return result
@@ -185,7 +200,7 @@ export const RouteContainer = ({
   const handleDeleteQuestion = async (id: number, game: Game) => {
     const result = await deleteQuestions(id)
     if (result) {
-      getSortedGames()
+      getSortedGames(nextToken)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
@@ -209,7 +224,7 @@ export const RouteContainer = ({
 
   const getGames = async () => {
     setLoading(true);
-    await getSortedGames();
+    await getSortedGames(nextToken);
     setLoading(false);
   };
 
@@ -263,6 +278,25 @@ export const RouteContainer = ({
     setStartup(false);
   }, [sortType]);
 
+
+  // useEffect(() => {
+  //   // get either a list of games or questions when the route changes
+  //   const fetchData = async () => {
+  //     setNextToken(null);
+  //     setPrevTokens([null]);
+  //     setLoading(true);
+  //     if (location.pathname === '/questions'){
+  //       await getSortedGames(null);
+  //     } else {
+  //       await getQuestions(null);
+  //     }
+  //     setLoading(false);
+  //   };
+
+  //   if (location.pathname === '/questions' || location.pathname === '/') 
+  //     fetchData();
+  // }, [location]);
+
   if (startup) return null;
 
   const filteredGames = games?.filter((game: IGameTemplate | null) => filterGame(game, searchInput.toLowerCase())) as IGameTemplate[];
@@ -272,29 +306,28 @@ export const RouteContainer = ({
     setAlert,
   };
 
-
   return (
     <Switch>
     <Route path="/login">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <LogIn handleUserAuth={handleUserAuth} />
     </Route>
 
     <Route path="/signup">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <SignUp />
     </Route>
 
     <Route path="/confirmation">
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <Confirmation />
     </Route>
 
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen}/>
+      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
       <Games loading={loading} games={filteredGames} questions={questions} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />
-      <GamesFooter listGameTemplateNextToken={listGameTemplateNextToken} listGameTemplatePrevTokens={listGameTemplatePrevTokens} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}></GamesFooter>
+      <GamesFooter nextToken={nextToken} prevTokens={prevTokens} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage}></GamesFooter>
       <AlertBar />
     </Route>
   </Switch>

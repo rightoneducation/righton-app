@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import exploreIcon from '../images/ExploreIcon.svg';
+import questionBankIcon from '../images/QuestionBankIcon.svg';
 import betaLogo from '../images/BetaLogo.svg';
 import quizMakerIcon from '../images/GameMakerIcon.svg';
 import helpIcon from '../images/HelpIcon.svg';
@@ -25,12 +26,21 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
           </NavLink>
           <Grid className={classes.container}> 
           {(isResolutionMobile && !match) || !isResolutionMobile ?
-            <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
-              <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
-              <Typography className={classes.title} variant="h6">
-                Explore
-              </Typography>
-            </NavLink> : null }
+            <>
+              <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/'}>
+                <img src={exploreIcon} alt="Explore Icon" className={classes.icon} />
+                <Typography className={classes.title} variant="h6">
+                  Games
+                </Typography>
+              </NavLink>
+              <NavLink exact className={classes.link} activeClassName={classes.active} id='Explore' to={'/questions'}>
+                <img src={questionBankIcon} alt="Explore Icon" className={classes.icon} />
+                <Typography className={classes.title} variant="h6">
+                  Questions
+                </Typography>
+              </NavLink>
+            </>
+            : null }
             {(isUserAuth && isResolutionMobile && match) || (isUserAuth && !isResolutionMobile) ? 
             <NavLink className={classes.link} activeClassName={classes.active} id='GameMaker' to={'/gamemaker/0'}>
               <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
