@@ -12,7 +12,7 @@ import { getGameById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, games, questions, saveGame, updateQuestion, deleteQuestion, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
+export default function Games({ loading, games, questions, saveGame, updateQuestion, deleteQuestion, handleScrollDown, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -23,22 +23,6 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
   return (
     <Grid container className={classes.root} spacing={4}>
       <Switch>
-        <Route path="/">
-          <Grid item xs={12} className={classes.sidebar}>
-            <Box className={classes.actions}>
-              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
-              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
-            </Box>
-            <Grid container onClick={() => setSortByCheck(false)}>
-              <Route exact path="/questions" render= { () => 
-                <QuestionDashboard loading={loading} questions={questions}  />   
-              }/>
-              <Route exact path="/" render= { () => 
-                <GameDashboard loading={loading} games={games} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
-              }/>
-              </Grid>
-          </Grid>
-        </Route>
         {match && getGameById(games, match.params.gameId) && (
           <Grid item xs={12} className={classes.content}>
             <Switch>
@@ -71,6 +55,22 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
             }
           )
         } />
+          <Route path="/">
+          <Grid item xs={12} className={classes.sidebar}>
+            <Box className={classes.actions}>
+              <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
+              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
+            </Box>
+            <Grid container onClick={() => setSortByCheck(false)}>
+              <Route exact path="/questions" render= { () => 
+                <QuestionDashboard loading={loading} questions={questions}  />   
+              }/>
+              <Route exact path="/" render= { () => 
+                <GameDashboard id="GamesDashboard" loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
+              }/>
+              </Grid>
+          </Grid>
+        </Route>
       </Switch>
     </Grid>
   );
@@ -80,8 +80,9 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     marginTop: 0,
-    height: '100vh',
+    height: '100%',
     width: 'calc(100% + 16px) !important',
+    zIndex: 0,
   },
   sidebar: {
     padding: `0px 0px ${theme.spacing(4)}px ${theme.spacing(4)}px !important`,
@@ -96,11 +97,15 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     paddingTop: '10px',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0px 0px  !important`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 10px 0px  !important`,
     marginBottom: '16px',
     display: 'flex',
     justifyContent: 'space-between',
     gap: 10,
     height: '40px',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: 'white',
+    zIndex: -1,
   },
 }));

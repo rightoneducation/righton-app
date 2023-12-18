@@ -143,13 +143,9 @@ export class ApiClient implements IApiClient {
     } 
 
     async listGameTemplates(limit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
-        console.log(nextToken);
-        console.log(limit);
-        // const nextTokenString = 'eyJ2ZXJzaW9uIjozLCJ0b2tlbiI6IkFnVjRYV0Q5bk16dnp2dmd2SWZ3NHVtVDNqdTJxRTVNRnZxRW0zWnh0NDl0SENzQWV3QUNBQWRCY0hCVGVXNWpBQkZGYm1OeWVYQjBhVzl1UTI5dWRHVjRkQUFWWVhkekxXTnllWEIwYnkxd2RXSnNhV010YTJWNUFFUkJNMDFOTlZCVVpIRmFjV2RSTVd0cFRUWlJkbVJCYWtwU1YyOHhaRXBvYTBzNFlsQjBhblZGUms4MVJtRjZibmhOVFVVME5rUlJRM2d3U0VWa2VVNU9Wa0U5UFFBQkFBZGhkM010YTIxekFFdGhjbTQ2WVhkek9tdHRjenAxY3kxbFlYTjBMVEU2TVRrMk56Y3pNVEV6TWpRNU9tdGxlUzgzTm1Wak56TXpaUzA0TmpFMkxUUTJPV1F0WVRkaU5pMWhZMlEyTURCa1lUa3pOV1lBdUFFQ0FRQjRpU01oYUI3L1JFaGFXKzJNcFk1ZGRlTHJRUXhpUEZXeGdETGxlaXo5V0hnQktEQlN5b05wMWlydWZQdEJLUlNsa3dBQUFINHdmQVlKS29aSWh2Y05BUWNHb0c4d2JRSUJBREJvQmdrcWhraUc5dzBCQndFd0hnWUpZSVpJQVdVREJBRXVNQkVFREpwOE5uTnJxY1lqS0liV3hBSUJFSUE3WkpRUkZ0cW9uTjNLWUcyVi8yUnFwdjkvTEo0MUZGZGN5S1RjelAzUXpsRENzamFWNW9mdlgrYUNMUHNFUDVnR09Tak5BM09XTlgvM0pUMENBQUFRQUUwQ3NoNUFhWSsxd01VV3FGTHZHbWVBUS9wc2FpOG1YK2xEZWtZTUNxSlZVWFVFWExiWVBwdVpZQ1c0MW56TEh2Ly8vLzhBQUFBQkFBQUFBQUFBQUFBQUFBQUJBQUFCdm5Yd1VlTlNSQU92ekdSUFVOSzh1T3FVSUMrMnJNekhEdVlvcHZld3MvQnphY2taZGJBYWJEbkF5WTk1QVdidkVpbTFsdGVOSUxLZ2VCazB1RzNaV2k3Lzk4UWN5azlyWGkzQzcxK29zVHVNbUFubHM4M0xTSDNqbGxwRlhMemxhMnJZRmFFTEd4dTVtVGMzV2g5OVpGNC8xaVJiMWRpVm1BUktzOC9BcndLVmE5K3dldElVSjhkMHJpUTdSQWxWZldvYml1dk1xZWQ1RDdpZFluOWgyUFREK3BLbVBybjdMZEl5RGh2QUh5UjczdWp6d251c0RtUGNyV3NIMkZOQXZmUHBLQ2dSZURkcG9iQ1gzcWpFZVhxdlhZV2EveGFpNnM1QVBLdXQrK2l2MHpqcmJ4V2l5VG5NTVRpQk5DYjF5OERaSld0NktlQ3Q4TDE2NlYvWFN1TGxRYUxLcCtTUm9PTWFnYklHcURDOUJPR0lxWXhnY2JRSWJldVRUeWw1RVBONXB4aFhZQ1NpWTFKK3hCYnhnMzFaVHFRTkdMbUgxaFNDMjFzODVQS2JsNXQ0NnBuYTZYQkZMMnNXcnJXZEtDdmRpOXZTdEFUZk9lZWhvd29BdytkU1ZBZjVNL0JwMGtLb1BFbk9LMGNMT1E4NDRHb29OWGFGUXlicCtPYkZ0OU9IYmgzSkx3U1ZtVnd1TEx4RDJmakNMMUJPT055WFQ3T3V0MXJXZjY4a0c4aUhhTHREQndtZDd1WERmYXhrTG8rNGdJSFFJZnlYQVZaYzkxSmpYR09Qcm5SUjFyTGxUNjB4MDFtQmxRQm5NR1VDTVFDZ09WY3V6RTNlckF0REV4c2lpbkZ0SzZPVVNFMmplK290d1VwZXhmSFVSNGd2UWRQMzlsZFN4Tk5iWUsxdHlUb0NNRk9ZQUlNSzFnU0hCcnBQVFlNTm01NDJ6cXAxUWtpK3BmUURvNnQ0anppUDVYd0FUbTJLZjRoVC8yb2FLTWVyNmc9PSJ9';
         let result = (await API.graphql(
-            graphqlOperation(listGameTemplates, {limit: 25, nextToken})
+            graphqlOperation(listGameTemplates, {limit, nextToken})
         )) as { data: any }
-        console.log(result);
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
@@ -182,8 +178,7 @@ export class ApiClient implements IApiClient {
             return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate) as IQuestionTemplate
         });
         const parsedNextToken = result.data.listQuestionTemplates.nextToken;
-        console.log(parsedQuestionTemplates);
-        console.log(parsedNextToken);
+        console.log(result);
         return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
         } catch (e) {
             console.log(e);
@@ -890,8 +885,6 @@ class QuestionTemplateParser {
             createdAt,
             updatedAt
         } = awsQuestionTemplate || {}
-        console.log(awsQuestionTemplate);
-        console.log(gameTemplates);
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||

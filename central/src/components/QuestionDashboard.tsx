@@ -15,8 +15,6 @@ export default function QuestionDashboard({
   loading
 }: QuestionDashboardProps) {
   const classes = useStyles();
-  console.log("sup");
-  console.log(questions);
   return (
      loading ?   
       <>
