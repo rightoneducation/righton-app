@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+# RightOn! - Host App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[Host](https://host.rightoneducation.com) is the teacher facing RightOn! app built with ReactJS and Typescript. It makes use of [mui v5](https://mui.com/material-ui/migration/migration-v4/) for styling, [react-i18next](https://react.i18next.com/) for internationalization, [Storybook](https://storybook.js.org/) for UI development and [jest](https://jestjs.io/docs/getting-started) for testing.
 
-## Available Scripts
+### Installation Instructions:
 
-In the project directory, you can run:
+<strong> install packages per package.json: </strong>
 
-### `npm start`
+1. cd host_v2
+2. yarn install
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<strong> link networking for models, helper functions etc: </strong>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+3. change directory to networking
+4. yarn install
+5. yarn run build
+6. yarn link
+7. change directory back to host_v2
+8. yarn link '@righton/networking'
+9. yarn start
 
-### `npm test`
+### Scripts:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 'yarn start' - runs react-scripts app
+2. 'yarn storybook' - starts up preview of storybooks
+3. 'yarn chromatic' - builds storybook to chromatic for coordination
+4. 'yarn lint' - ESLints everything in /host_v2
+5. 'yarn format' - applies prettier formatting to everything in /play
+6. 'yarn test' - runs tests via jest for \*.test.tsx in the /tests folder
 
-### `npm run build`
+### Styling:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+@mui v5 is used for most components, with styled-components as the underlying styling engine (instead of @emotion). We have migrated from the deprecated `makeStyles` per https://mui.com/material-ui/migration/migration-v4/. Overrides are provided through styled(). Passing props to styles is achieved either through `styled()` or `sx`. https://mui.com/system/styled/#api describes the passing of props in both cases. For more complicated dynamic updates, `styled()` components are broken out (see `AnswerSelector.tsx` for an example) while simpler dynamic updates are done through `sx` (see `AnswerCard.tsx` for an example)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Linting/Formatting:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ESLint and prettier are used to create a consistent codebase. We are extending airbnb for the linting rules and apply mostly default prettier rules.
+There are some exceptions though:
 
-### `npm run eject`
+<strong> .eslintrc.json: </strong>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1.  "react/jsx-props-no-spreading": ["off"],  
+    We spread props to the components to minimize the need to pass the entire game session object to each component.
+2.  "react/require-default-props": ["off"],  
+    Currently set to off, may be enabled when game session nulls are resolved.
+3.  "no-console": [1, { "allow": ["debug"] }] // allowing use of console.debug  
+    Console.debug enabled for testing
+4.  "import/core-modules": ["@righton/networking"]  
+     Issue: symlink is getting flagged as "should be listed in project's dependencies". I think this fits under the definition of "core-modules"
+    (particularly because we will only use symlinks in development):
+    "An array of additional modules to consider as "core" modules--modules that should be considered resolved
+    but have no path on the filesystem: https://github.com/import-js/eslint-plugin-import#importcore-modules
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<strong> .prettierrc: </strong>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1.  "singleQuote": true  
+    I just think single quotes are nicer :sunglasses:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Theming:
 
-## Learn More
+lib/Theme.tsx has been added to centralize colors, fonts and breakpoints. This is deployed through the app via `<ThemeProvider>` in `App.tsx` and `import { styled, useTheme } from '@mui/material/styles';`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Internationalization:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Dictionaries are stored in `public/locales/{lang}/translations.json` and configured via `src/i18n.tsx` and deployed via `import './i18n';` in `index.tsx` and `import { useTranslation } from 'react-i18next';`
+
+We autodetect based on language settings in the browser and fall back to `EN` as a default.
