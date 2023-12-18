@@ -56,17 +56,17 @@ export default function Games({ loading, nextToken,  games, questions, saveGame,
           )
         } />
           <Route path="/">
-          <Grid item xs={12} className={classes.sidebar}>
+          <Grid item xs={12} className={classes.contentGrid}>
             <Box className={classes.actions}>
               <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />
-              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} />
+              <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} style={{zIndex: 5}}/>
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
                 <QuestionDashboard loading={loading} questions={questions}  />   
               }/>
               <Route exact path="/" render= { () => 
-                <GameDashboard id="GameDashboard" style={{height: '100%', overlflowY: 'scroll'}} nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
+                <GameDashboard id="GameDashboard" style={{height: '100%', overlflowY: 'scroll'}} nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />
               }/>
               </Grid>
           </Grid>
@@ -80,11 +80,10 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     marginTop: 0,
-    height: '100%',
     width: 'calc(100% + 16px) !important',
-    zIndex: 0,
+    zIndex: -2,
   },
-  sidebar: {
+  contentGrid: {
     padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
     overflowY: 'hidden',
@@ -105,6 +104,6 @@ const useStyles = makeStyles(theme => ({
     position: 'sticky',
     top: 0,
     backgroundColor: 'white',
-    zIndex: -1,
+    zIndex:3
   },
 }));

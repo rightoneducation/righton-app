@@ -1,30 +1,37 @@
 import React from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import {
+  Grid, 
+  Button, 
+  Card, 
+  CardContent, 
+  Typography, 
+  Menu, 
+  MenuItem
+} from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
-export default function GameDashboard({ 
+export default function GameCard({ 
   game,
   index,
   handleClick,
-  onClickGame,
   handleClose,
   cloneHandler,
   deleteHandler,
   addquestion,
   match,
   isUserAuth,
+  onClick,
+  anchorEl,
+  activeIndex
  }) {
   const classes = useStyles();
   const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
   const questionCount = game?.questionTemplates?.length || 0;
     return (
-      <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(game.id, gameId)}>
+      <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={onClick}>
         <CardContent>
           <Grid container>
             <Grid container item xs={8} md={9} >
@@ -46,12 +53,6 @@ export default function GameDashboard({
                   {description}
                 </Typography>
               </div>
-              {/* Post MVP Feature - Author of Games
-              <Grid item xs={12}>
-                <Typography color="textSecondary" gutterBottom>
-                  By: RightOn! Education
-                </Typography>
-              </Grid> */}
             </Grid>
 
             <Grid container className={classes.imageButton} item xs={4} md={3}>
@@ -99,7 +100,7 @@ const useStyles = makeStyles(theme => ({
     },
     height: '152px',
     boxShadow: '1px 4px 8px lightgrey',
-    zIndex: -2
+    zIndex: 2
   },
   gameGrid: {
     display: 'inline-block',
@@ -154,7 +155,6 @@ const useStyles = makeStyles(theme => ({
     objectFit: 'cover',
     borderWidth: '0',
     borderRadius: '15px',
-    // marginRight: theme.spacing(2),
   },
   imageContainer: {
     display: 'flex',

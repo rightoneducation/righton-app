@@ -6,7 +6,7 @@ import LoadingIndicator from './LoadingIndicator';
 import GameCard from './GameCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGame, gameId, onClickGame, isUserAuth }) {
+export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGame, gameId, isUserAuth }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -83,7 +83,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
           loader={<h4>Loading...</h4>}
           height={`calc(100vh - 140px)`}
           scrollableTarget="GameDashboard"
-          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll'}}
+          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
         > 
           {games.map((game, index) => 
             <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4} style={{width: '100%'}}>
@@ -92,13 +92,15 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
                 game={game}
                 index={index}
                 handleClick={handleClick}
-                onClickGame={onClickGame}
                 handleClose={handleClose}
                 cloneHandler={cloneHandler}
                 deleteHandler={deleteHandler}
                 addquestion={addquestion}
                 match={match}
                 isUserAuth={isUserAuth}
+                anchorEl={anchorEl}
+                activeIndex={activeIndex}
+                onClick={() => history.push(`/games/${game.id}`)}
               />
             </Grid>
           )}

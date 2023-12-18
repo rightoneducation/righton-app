@@ -22,7 +22,6 @@ import { v4 as uuidv4 } from 'uuid';
 import AlertBar from '../components/AlertBar';
 import Nav from '../components/Nav';
 import Games from '../components/Games';
-import GamesFooter from '../components/GamesFooter';
 import SignUp from '../components/auth/SignUp';
 import LogIn from '../components/auth/LogIn';
 import Confirmation from '../components/auth/Confirmation';
