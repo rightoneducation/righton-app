@@ -45,7 +45,7 @@ export default function QuestionDashboard({
         </div>
               </>
   :
-    <Grid container item xs={12} md={6} lg={4} className={classes.container}>
+    <Grid container item xs={12} md={6} lg={4} className={classes.container} >
     {
       questions.map((question) => {
         return <QuestionCard  {...question} />

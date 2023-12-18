@@ -23,8 +23,6 @@ export default function GameDashboard({
   const classes = useStyles();
   const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
   const questionCount = game?.questionTemplates?.length || 0;
-  console.log('sup');
-  console.log(game);
     return (
       <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={() => onClickGame(game.id, gameId)}>
         <CardContent>

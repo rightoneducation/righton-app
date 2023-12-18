@@ -12,7 +12,7 @@ import { getGameById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, games, questions, saveGame, updateQuestion, deleteQuestion, handleScrollDown, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
+export default function Games({ loading, nextToken,  games, questions, saveGame, updateQuestion, deleteQuestion, handleScrollDown, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -66,7 +66,7 @@ export default function Games({ loading, games, questions, saveGame, updateQuest
                 <QuestionDashboard loading={loading} questions={questions}  />   
               }/>
               <Route exact path="/" render= { () => 
-                <GameDashboard id="GamesDashboard" loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
+                <GameDashboard id="GameDashboard" style={{height: '100%', overlflowY: 'scroll'}} nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} onClickGame={(id) => history.push(`/games/${id}`)} isUserAuth={isUserAuth} />
               }/>
               </Grid>
           </Grid>
@@ -85,10 +85,9 @@ const useStyles = makeStyles(theme => ({
     zIndex: 0,
   },
   sidebar: {
-    padding: `0px 0px ${theme.spacing(4)}px ${theme.spacing(4)}px !important`,
+    padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
-    height: 'calc(100vh - 87px)',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
     overflowX: 'hidden',
   },
   content: {

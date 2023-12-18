@@ -6,14 +6,13 @@ import LoadingIndicator from './LoadingIndicator';
 import GameCard from './GameCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function GameDashboard({ loading, games, handleScrollDown, deleteGame, cloneGame, gameId, onClickGame, isUserAuth }) {
+export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGame, gameId, onClickGame, isUserAuth }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
   const addquestion = useRouteMatch('/gamemaker/:gameId/addquestion');
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  console.log(games);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setActiveIndex(event.currentTarget.dataset.gameIndex);
@@ -78,12 +77,13 @@ export default function GameDashboard({ loading, games, handleScrollDown, delete
 
     if (games.length >= 1) {
       return <InfiniteScroll
-        dataLength={games.length}
-        next={handleScrollDown}
-        hasMore={true}
-        loader={<h4>Loading...</h4>}
-        scrollableTarget="GameDashboard"
-        style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap'}}
+          dataLength={games.length}
+          next={() => handleScrollDown(nextToken)}
+          hasMore={nextToken !== null}
+          loader={<h4>Loading...</h4>}
+          height={`calc(100vh - 140px)`}
+          scrollableTarget="GameDashboard"
+          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll'}}
         > 
           {games.map((game, index) => 
             <Grid key={index} container item xs={12} md={addquestion ? 12 : 6} lg={addquestion ? 12 : 4} style={{width: '100%'}}>
@@ -113,20 +113,11 @@ export default function GameDashboard({ loading, games, handleScrollDown, delete
   }
 
   return (
-    <Box className={classes.root}>
-      {renderGames(loading)}
-    </Box>
+      renderGames(loading)
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    marginTop: 0,
-    height: '100%',
-    display: 'flex', 
-    justifyContent: 'flex-start',
-  },
   loadingContainer: {
     margin: 'auto',
     width: '60%',

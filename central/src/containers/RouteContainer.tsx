@@ -41,7 +41,7 @@ export const RouteContainer = ({
   const [loading, setLoading] = useState(false);
   const [sortType, setSortType] = useState(SORT_TYPES.UPDATED);
   const [searchInput, setSearchInput] = useState('');
-  const [games, setGames] = useState<(IGameTemplate[] | null)>([]);
+  const [games, setGames] = useState<(IGameTemplate[])>([]);
   const [questions, setQuestions] = useState<(IQuestionTemplate[] | null)>([]);
   const [isAuthenticated, setLoggedIn] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
@@ -85,11 +85,12 @@ export const RouteContainer = ({
     let currentToken = nextToken;
     if (location.pathname === '/'){
       const games = await apiClient.listGameTemplates( queryLimit, nextToken);
-      console.log(games);
       if (games?.gameTemplates){
-        setGames(games?.gameTemplates ?? null);
+        setGames((prev) => [
+          ...(prev ?? []),
+          ...(games?.gameTemplates ?? [])
+        ]);
         nextToken = games?.nextToken ?? null;
-        //console.log(nextToken);
       }
   
     } else {
@@ -103,31 +104,7 @@ export const RouteContainer = ({
     if (nextToken) {
       setPrevTokens((prev) => [...prev, currentToken]);
     }  
-    console.log(prevTokens.length);
-    console.log(prevTokens);
     setNextToken((prev) => nextToken);
-  }
-
-  const handlePrevPage = async (prevTokens: (string | null)[]) => {
-    const prevToken = prevTokens[prevTokens.length - 2];
-    const nextToken = prevTokens[prevTokens.length - 1];
-    if (location.pathname === '/'){
-      const games = await apiClient.listGameTemplates(queryLimit, prevToken);
-      if (games?.gameTemplates){
-        setGames(games?.gameTemplates ?? null);
-      }
-    } else {
-      const questions = await apiClient.listQuestionTemplates( queryLimit, nextToken);
-      if (questions?.questionTemplates){
-        setQuestions(questions?.questionTemplates ?? null);
-
-      }
-    }
-    setPrevTokens((prev) => prev.slice(0, -1));
-    console.log(prevTokens.length);
-    console.log(prevTokens);
-    setNextToken((prev) => nextToken);
-
   }
   
   //   const cloneQuestion = async (questionInput: CreateQuestionTemplateInput) => {
@@ -335,7 +312,7 @@ export const RouteContainer = ({
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <Games loading={loading} games={filteredGames} questions={questions} handleScrollDown={handleScrollDown} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />
+      <Games loading={loading} nextToken={nextToken} games={filteredGames} questions={questions} handleScrollDown={handleScrollDown} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />
       <AlertBar />
     </Route>
   </Switch>
