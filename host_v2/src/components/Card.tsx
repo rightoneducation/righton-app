@@ -5,10 +5,13 @@ import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
-interface CardProps {} // eslint-disable-line
+interface CardProps {
+  bottomText?: string;
+} 
 
-export default function Card({}: CardProps) {
-  // eslint-disable-line
+export default function Card({ 
+  bottomText
+}: CardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
   return (
@@ -23,6 +26,9 @@ export default function Card({}: CardProps) {
           </Typography>
           <Typography variant="h4" sx={{ width: '100%', textAlign: 'left' }}>
             {t('gamesession.card.body')}
+          </Typography>
+          <Typography variant="h4" sx={{ width: '100%', textAlign: 'left' }}>
+            {bottomText} 
           </Typography>
         </Box>
       </BodyCardContainerStyled>
