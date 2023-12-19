@@ -81,7 +81,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
           next={() => handleScrollDown(nextToken)}
           hasMore={nextToken !== null}
           loader={<h4>Loading...</h4>}
-          height={`calc(100vh - 140px)`}
+          height={`calc(100vh - 156px)`}
           scrollableTarget="GameDashboard"
           style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
         > 

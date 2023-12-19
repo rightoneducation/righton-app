@@ -19,7 +19,7 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.bar} position="sticky">
+      <AppBar className={classes.bar}>
         <Toolbar>
           <NavLink exact className={classes.logoContainer} activeClassName={classes.active} id='Logo' to={'/'}>
               <img src={betaLogo} alt="Logo" className={classes.logo} />
@@ -70,9 +70,10 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
     flexGrow: 1,
-    zIndex: 2
+    zIndex: 2,
   },
   bar: {
+    position: 'sticky',
     background: 'linear-gradient(right,#0F78BD,#043373)',
     paddingTop: '10px',
   },

@@ -66,7 +66,7 @@ export default function Games({ loading, nextToken,  games, questions, saveGame,
                 <QuestionDashboard loading={loading} questions={questions}  />   
               }/>
               <Route exact path="/" render= { () => 
-                <GameDashboard id="GameDashboard" style={{height: '100%', overlflowY: 'scroll'}} nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />
+                <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />
               }/>
               </Grid>
           </Grid>
@@ -82,15 +82,17 @@ const useStyles = makeStyles(theme => ({
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
     zIndex: -2,
+    overflowY: 'hidden',
+    height: '100%',
   },
   contentGrid: {
     padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
     overflowY: 'hidden',
     overflowX: 'hidden',
+    height: '100%'
   },
   content: {
-    minHeight: 'calc(100vh - 87px)',
     backgroundColor: '#F2F2F2',
   },
   actions: {
