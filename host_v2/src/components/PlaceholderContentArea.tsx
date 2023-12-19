@@ -1,34 +1,22 @@
 import React from 'react';
-import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { BodyContentAreaDoubleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
-import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
-import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
-import Card from '../components/Card';
+import Card from './Card';
 
-interface PlaceholderContentAreaProps {
-}
+interface PlaceholderContentAreaProps {} // eslint-disable-line
 
-export default function PlaceholderContentArea({
-}: PlaceholderContentAreaProps) {
-  const theme = useTheme();
-  const { t } = useTranslation();
+export default function PlaceholderContentArea({}: PlaceholderContentAreaProps) {
+  // eslint-disable-line
   return (
-  <BodyContentAreaDoubleColumnStyled
-    container
-    style={{ paddingTop: '16px' }}
-  >
-    <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-      <Card />
-      <Card />
-    </Grid>
-    <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-      <Card />
-      <Card />
-    </Grid>
-  </BodyContentAreaDoubleColumnStyled>
-
+    <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
+      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+        <Card />
+        <Card />
+      </Grid>
+      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+        <Card />
+        <Card />
+      </Grid>
+    </BodyContentAreaDoubleColumnStyled>
   );
 }
-

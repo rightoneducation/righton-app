@@ -24,8 +24,8 @@ const router = createBrowserRouter(
         element={<GameSessionContainer apiClient={apiClient} />}
       />
       <Route element={<RedirectToPlayIfMissing />} />
-    </>
-  )
+    </>,
+  ),
 );
 
 function App() {
