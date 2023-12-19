@@ -14,22 +14,20 @@ interface GameInProgressContainerProps {
   apiClient: ApiClient;
 }
 
-export default function GameSessionContainer(
-  { apiClient } : GameInProgressContainerProps
-) {
-  console.log(apiClient);
+export default function GameSessionContainer({
+  apiClient,
+}: GameInProgressContainerProps) {
+  console.log(apiClient); // eslint-disable-line
   const { t } = useTranslation();
   return (
     <StackContainerStyled
       direction="column"
       alignItems="center"
       justifyContent="space-between"
-    > 
+    >
       <HeaderBackgroundStyled />
       <HeaderStackContainerStyled>
-        <Typography variant="h1">
-        {t('gamesession.placeholder')}
-        </Typography>
+        <Typography variant="h1">{t('gamesession.placeholder')}</Typography>
       </HeaderStackContainerStyled>
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
@@ -39,4 +37,3 @@ export default function GameSessionContainer(
     </StackContainerStyled>
   );
 }
-

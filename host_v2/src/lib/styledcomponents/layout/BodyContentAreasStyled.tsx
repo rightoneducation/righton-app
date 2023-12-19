@@ -18,7 +18,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
 
 // content area of body that floats above background layers above - Single Column Page
 export const BodyContentAreaSingleColumnStyled = styled(
-  BodyContentAreaDoubleColumnStyled
+  BodyContentAreaDoubleColumnStyled,
 )(({ theme }) => ({
   justifyContent: 'center',
   maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
@@ -28,14 +28,14 @@ export const BodyContentAreaSingleColumnStyled = styled(
 
 // content area of body that floats above background layers above - Phase Results Page
 export const BodyContentAreaPhaseResultsStyled = styled(
-  BodyContentAreaSingleColumnStyled
+  BodyContentAreaSingleColumnStyled,
 )({
   position: 'fixed',
 });
 
 // content area of body that floats above background layers above - Phase Results Page
 export const BodyContentAreaLeaderboardStyled = styled(
-  BodyContentAreaDoubleColumnStyled
+  BodyContentAreaDoubleColumnStyled,
 )(({ theme }) => ({
   position: 'absolute',
   top: 0,
