@@ -23,6 +23,7 @@
     "react-i18next": "^13.5.0",
     "react-router-dom": "^6.21.0",
     "react-scripts": "5.0.1",
+    "storybook": "^7.6.5",
     "styled-components": "^6.1.1",
     "typescript": "^4.9.5",
     "uuid": "^9.0.1",
@@ -34,7 +35,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "chromatic": "chromatic --project-token 99c8d45b7b98"
   },
   "browserslist": {
     "production": [
@@ -49,6 +53,16 @@
     ]
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.6.5",
+    "@storybook/addon-interactions": "^7.6.5",
+    "@storybook/addon-links": "^7.6.5",
+    "@storybook/addon-onboarding": "^1.0.10",
+    "@storybook/blocks": "^7.6.5",
+    "@storybook/preset-create-react-app": "^7.6.5",
+    "@storybook/react": "^7.6.5",
+    "@storybook/react-webpack5": "^7.6.5",
+    "@storybook/test": "^7.6.5",
+    "chromatic": "^10.1.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -60,7 +74,10 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "prettier": "^3.1.1"
+    "eslint-plugin-storybook": "^0.6.15",
+    "prettier": "^3.1.1",
+    "prop-types": "^15.8.1",
+    "webpack": "^5.89.0"
   },
   "resolutions": {
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
@@ -82,7 +99,8 @@
       "airbnb-typescript",
       "prettier",
       "plugin:@typescript-eslint/recommended",
-      "plugin:import/typescript"
+      "plugin:import/typescript",
+      "plugin:storybook/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
