@@ -69,21 +69,21 @@ const GameSessionContainer = () => {
     }
     let newDictionary = [...gameplayNavDictionary];
     let insertIndex = 2;
-    if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)){
+    if (isConfidenceEnabled && (state === GameSessionState.CHOOSE_CORRECT_ANSWER || state === GameSessionState.PHASE_1_DISCUSS)) {
       newDictionary.splice(insertIndex, 0, {
         ref: confidenceCardRef,
         text: 'Player Confidence',
       });
       insertIndex++;
     }
-    if (isHintEnabled && (state === GameSessionState.CHOOSE_TRICKIEST_ANSWER || state === GameSessionState.PHASE_2_DISCUSS)){
+    if (isHintEnabled && (state === GameSessionState.CHOOSE_TRICKIEST_ANSWER || state === GameSessionState.PHASE_2_DISCUSS)) {
       newDictionary.splice(insertIndex, 0, {
         ref: hintCardRef,
         text: 'Player Thinking',
       });
       insertIndex++;
     }
-    if (isShortAnswerEnabled){
+    if (isShortAnswerEnabled) {
       newDictionary.splice(insertIndex, 0, {
         ref: featuredMistakesRef,
         text: 'Featured Mistakes',
@@ -107,16 +107,18 @@ const GameSessionContainer = () => {
         !isNullOrUndefined(response.questions[response.currentQuestionIndex])
       ) {
         setIsConfidenceEnabled(
-          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          //response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          response.questions[0].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
         setIsHintEnabled(
-          response.questions[response.currentQuestionIndex].isHintEnabled,
+          //response.questions[response.currentQuestionIndex].isHintEnabled,
+          response.questions[0].isHintEnabled,
         );
-       
+
         // if the teacher refreshes the page, we need to repopulate the hints/GPT hints depending on the state
         if (gameSession?.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER) {
-            setHints(rebuildHints(response));
+          setHints(rebuildHints(response));
         }
         if (gameSession?.currentState === GameSessionState.PHASE_2_DISCUSS) {
           setGptHints(response.questions[response.currentQuestionIndex].hints);
@@ -124,8 +126,8 @@ const GameSessionContainer = () => {
 
         setHintsError(false);
         assembleNavDictionary(
-          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
-          response.questions[response.currentQuestionIndex].isHintEnabled,
+          response.questions[0].isConfidenceEnabled,
+          response.questions[0].isHintEnabled,
           response.currentState,
         );
       }
@@ -141,13 +143,13 @@ const GameSessionContainer = () => {
             responses.forEach((team) => {
               team.teamMembers && team.teamMembers.forEach((teamMember) => {
                 teamMember.answers && teamMember.answers.forEach((answer) => {
-                  if (answer.questionId === response.questions[response.currentQuestionIndex].id 
-                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS) 
-                    && answer.isChosen) 
+                  if (answer.questionId === response.questions[response.currentQuestionIndex].id
+                    && ((response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER || response.currentState === GameSessionState.PHASE_1_DISCUSS)
+                      && answer.isChosen)
                   ) {
                     setShortAnswerResponses((prev) => {
-                     return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
-                   });
+                      return buildShortAnswerResponses(prev, getQuestionChoices(response.questions, response.currentQuestionIndex), response.questions[response.currentQuestionIndex].answerSettings, answer, team.name)
+                    });
                   }
                 });
               });
@@ -168,7 +170,8 @@ const GameSessionContainer = () => {
         setHintsError(false);
         setGameSession({ ...gameSession, ...response });
         setIsConfidenceEnabled(
-          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          //response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          response.questions[0].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
@@ -207,7 +210,7 @@ const GameSessionContainer = () => {
         }
       },
     );
-      
+
     // set up subscription for teams answering
     let createTeamAnswerSubscription: any | null = null;
     createTeamAnswerSubscription = apiClient.subscribeCreateTeamAnswer(
@@ -237,17 +240,17 @@ const GameSessionContainer = () => {
                 const newShortAnswerState = buildShortAnswerResponses(prevShortAnswerState, choices, gameSession.questions[gameSession.currentQuestionIndex].answerSettings, teamAnswerResponse, teamName, teamId);
                 apiClient
                   .updateQuestion({
-                    gameSessionId: gameSession.id, 
+                    gameSessionId: gameSession.id,
                     id: gameSession.questions[gameSession.currentQuestionIndex].id,
                     order: gameSession.questions[gameSession.currentQuestionIndex].order,
                     responses: JSON.stringify(newShortAnswerState),
-                });
+                  });
                 return newShortAnswerState;
               });
             }
             return newState;
           });
-       });
+        });
       },
     );
 
@@ -264,7 +267,7 @@ const GameSessionContainer = () => {
               team.teamMembers.forEach((teamMember) => {
                 if (teamMember.id === teamAnswerResponse.teamMemberAnswersId) {
                   teamMember.answers.forEach((answer) => {
-                    if (answer.id === teamAnswerResponse.id){
+                    if (answer.id === teamAnswerResponse.id) {
                       answer.confidenceLevel =
                         teamAnswerResponse.confidenceLevel;
                       teamName = team.name;
@@ -278,14 +281,14 @@ const GameSessionContainer = () => {
         if (!isNullOrUndefined(teamAnswerResponse.hint)) {
           setHints((prevHints) => {
             return [...(prevHints || []), teamAnswerResponse.hint];
-        });
+          });
         }
         setShortAnswerResponses((existingAnswers) => {
           let newShortAnswers = JSON.parse(JSON.stringify(existingAnswers));
           newShortAnswers.forEach((answer) => {
             answer.teams.forEach((answerTeam) => {
               if (answerTeam.name === teamName) {
-                answerTeam.confidence = teamAnswerResponse.confidenceLevel;   
+                answerTeam.confidence = teamAnswerResponse.confidenceLevel;
               }
             })
           });
@@ -369,28 +372,28 @@ const GameSessionContainer = () => {
   const handleUpdateGameSession = async (newUpdates: Partial<IGameSession>) => {
     // this will update the response object with confidence and selected mistakes values
     if (
-      (isShortAnswerEnabled 
-      || isConfidenceEnabled) 
+      (isShortAnswerEnabled
+        || isConfidenceEnabled)
       && gameSession.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER
-    ){
+    ) {
       const finalResultsContainer = shortAnswerResponses.map((answer) => ({
         ...answer,
         isSelectedMistake: selectedMistakes.includes(answer.rawAnswer),
-        })
+      })
       );
       await apiClient
         .updateQuestion({
-          gameSessionId, 
+          gameSessionId,
           id: gameSession.questions[gameSession.currentQuestionIndex].id,
           order: gameSession.questions[gameSession.currentQuestionIndex].order,
           responses: JSON.stringify(finalResultsContainer),
         });
     }
-    
+
     // if game is moving to PHASE_2_DISCUSS, hints are enabled, there are hints to process that have yet to be processed
     if (
-      gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER 
-      && isHintEnabled 
+      gameSession.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
+      && isHintEnabled
     ) {
       setisHintLoading(true);
       handleProcessHints(hints);
@@ -398,18 +401,18 @@ const GameSessionContainer = () => {
 
     // reset hints and gptHints to null after discussion. They have already been saved under the question object.
     if (gameSession.currentState === GameSessionState.PHASE_2_DISCUSS
-      && isHintEnabled){
+      && isHintEnabled) {
       setGptHints([]);
       setHints([]);
     }
-    
+
     const response = await apiClient.updateGameSession({ id: gameSessionId, ...newUpdates })
     if (response.currentState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
       setHeaderGameCurrentTime(response.phaseOneTime);
     } else if (
       response.currentState === GameSessionState.CHOOSE_TRICKIEST_ANSWER
     )
-    setHeaderGameCurrentTime(response.phaseTwoTime);
+      setHeaderGameCurrentTime(response.phaseTwoTime);
     setGameSession(response);
     checkGameTimer(response);
   };
@@ -439,9 +442,9 @@ const GameSessionContainer = () => {
     const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
     const questionId = currentQuestion.id;
     const order = currentQuestion.order;
-    
 
-    if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
+
+    if (gameSession.currentState !== GameSessionState.TEAMS_JOINING)
       return;
     apiClient
       .updateQuestion({
@@ -483,40 +486,40 @@ const GameSessionContainer = () => {
     setHintsError(false);
     try {
       const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex];
-      const questionText =  currentQuestion.text;
+      const questionText = currentQuestion.text;
       const correctChoiceIndex =
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
 
       apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
-        const parsedHints = JSON.parse(response.gptHints.content);  
+        const parsedHints = JSON.parse(response.gptHints.content);
         setGptHints(parsedHints);
         setisHintLoading(false);
-        if (parsedHints){
+        if (parsedHints) {
           setHints([]);
           apiClient.getGameSession(gameSessionId).then((gameSession) => {
             apiClient
               .updateQuestion({
-                gameSessionId: gameSession.id, 
+                gameSessionId: gameSession.id,
                 id: gameSession.questions[gameSession.currentQuestionIndex].id,
                 order: gameSession.questions[gameSession.currentQuestionIndex].order,
                 hints: JSON.stringify(parsedHints as IHints[]),
-            });
+              });
           });
         }
       })
-      .catch(e => {
-        console.log(e);
-        setHintsError(true);
-      })
-      ;
+        .catch(e => {
+          console.log(e);
+          setHintsError(true);
+        })
+        ;
     } catch {
       setHintsError(true);
     }
   };
 
   if (!gameSession) {
-    return null;        
+    return null;
   }
   switch (gameSession.currentState) {
     case GameSessionState.NOT_STARTED:

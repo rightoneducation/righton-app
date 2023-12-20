@@ -66,7 +66,7 @@ export default function StudentViews({
   // determines next state for use by footer
   const nextStateFunc = (currentState) => {
     if (currentState === GameSessionState.PHASE_2_RESULTS && !isLastQuestion) {
-      return GameSessionState.TEAMS_JOINING;
+      return GameSessionState.CHOOSE_CORRECT_ANSWER;
     } else {
       let currentIndex = Object.keys(GameSessionState).indexOf(currentState);
       return GameSessionState[Object.keys(GameSessionState)[currentIndex + 1]];
@@ -81,7 +81,7 @@ export default function StudentViews({
   const handleFooterOnClick = () => {
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
-      setIsConfidenceEnabled(false);
+      //setIsConfidenceEnabled(false);
       assembleNavDictionary(false, isHintEnabled, GameSessionState.TEAMS_JOINING);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),
