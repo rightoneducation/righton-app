@@ -112,7 +112,6 @@ export class ApiClient implements IApiClient {
         phaseTwoTime: number,
         imageUrl: string
     ): Promise<IGameTemplate | null> {
-        console.log("here");
         const input: CreateGameTemplateInput = {
            id,
            title,
@@ -138,8 +137,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create game template.`)
         }
-        console.log(gameTemplate);
-        return null; //GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate) as IGameTemplate;
+        return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate.data.createGameTemplate as AWSGameTemplate)
     } 
 
     async listGameTemplates(limit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> {
@@ -147,7 +145,7 @@ export class ApiClient implements IApiClient {
             graphqlOperation(listGameTemplates, {limit, nextToken})
         )) as { data: any }
         const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
-            return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
+            return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
         });
         const parsedNextToken = result.data.listGameTemplates.nextToken;
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
@@ -165,8 +163,7 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create question template.`)
         }
-        console.log(questionTemplate);
-        return null; // QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate) as IQuestionTemplate
+        return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate.data.createQuestionTemplate as AWSQuestionTemplate)
     }
 
     async listQuestionTemplates(limit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> {
@@ -175,7 +172,7 @@ export class ApiClient implements IApiClient {
             graphqlOperation(listQuestionTemplates, {limit: limit, nextToken })
         )) as { data: any }
         const parsedQuestionTemplates = result.data.listQuestionTemplates.items.map((questionTemplate: AWSQuestionTemplate) => {
-            return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate) as IQuestionTemplate
+            return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
         });
         const parsedNextToken = result.data.listQuestionTemplates.nextToken;
         console.log(result);
@@ -793,13 +790,20 @@ class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
         awsGameTemplate: AWSGameTemplate
     ): IGameTemplate {
+        // parse the IQuestionTemplate[] from IModelGameQuestionConnection
        let questionTemplates: IQuestionTemplate[] = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
-            questionTemplates = awsGameTemplate.questionTemplates.items.map((item: any) => {
-                const { questionTemplate } = item;
-                const { gameTemplates, questionTemplates, ...rest } = questionTemplate;
-                return rest as IQuestionTemplate;
-            });
+            for (const item of awsGameTemplate.questionTemplates.items) {
+
+                if (item && item.questionTemplate) {
+                    const { gameTemplates, ...rest } = item.questionTemplate;
+        
+                    // Only add to questionTemplates if 'rest' is not empty
+                    if (Object.keys(rest).length > 0) {
+                        questionTemplates.push(rest as IQuestionTemplate);
+                    }
+                }
+            }
         }
 
         const {
@@ -867,7 +871,6 @@ class QuestionTemplateParser {
                 return rest as IGameTemplate;
             });
         } 
-
 
         const {
             id,
