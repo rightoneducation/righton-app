@@ -7,7 +7,7 @@ export type AWSModelGameQuestionConnection = {
   nextToken: string | null;
 }
 
-type AWSGameQuestions = {
+export type AWSGameQuestions = {
 id: string,
 questionTemplateID: string,
 gameTemplateID: string,
