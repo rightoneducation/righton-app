@@ -19,7 +19,6 @@ import {
     CreateTeamMemberMutationVariables,
     CreateTeamMutation,
     CreateTeamMutationVariables,
-    GameSessionState,
     OnCreateTeamAnswerSubscription,
     OnUpdateTeamAnswerSubscription,
     OnCreateTeamSubscription,
@@ -68,7 +67,7 @@ import {
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
 import { IGameTemplate, IQuestionTemplate, IChoice, IQuestion, ITeamAnswer, ITeamMember } from "./Models"
-import { IModelGameQuestionConnection } from "./Models/IModelGameQuestionConnection"
+import { AWSGameSession, AWSGameTemplate, AWSQuestion, AWSQuestionTemplate, AWSTeam, AWSTeamAnswer, AWSTeamMember } from "./Models/AWS"
 import { IGameSession } from "./Models/IGameSession"
 import { ITeam } from "./Models/ITeam"
 
@@ -76,6 +75,7 @@ Amplify.configure(awsconfig)
 
 export enum Environment {
     Staging = "staging",
+    Developing = "developing",
     Testing = "testing"
 }
 
@@ -668,123 +668,6 @@ export class ApiClient implements IApiClient {
     }
 }
 
-type AWSGameTemplate = {
-    id: string,
-    title: string,
-    owner: string,
-    version: number,
-    description: string,
-    domain?: string | null | undefined,
-    cluster?: string | null | undefined,
-    grade?: string | null | undefined,
-    standard?: string | null | undefined,
-    phaseOneTime?: number | null | undefined,
-    phaseTwoTime?: number | null | undefined,
-    imageUrl?: string | null | undefined,
-    questionTemplates?: IModelGameQuestionConnection | null,
-    createdAt?: string | null | undefined,
-    updatedAt?: string | null
-}
-
-type AWSQuestionTemplate = {
-    id: string,
-    title?: string | null,
-    owner?: string | null,
-    version?: number | null,
-    choices?: string | null,
-    instructions?: string | null,
-    answerSettings?: string | null,
-    domain?: string | null | undefined,
-    cluster?: string | null | undefined,
-    grade?: string | null | undefined,
-    standard?: string | null | undefined,
-    imageUrl?: string | null | undefined,
-    gameTemplates?:  IModelGameQuestionConnection | null,
-    createdAt?: string | null | undefined,
-    updatedAt?: string | null
-}
-
-type AWSGameSession = {
-    id: string
-    gameId: number
-    startTime?: string | null
-    phaseOneTime: number
-    phaseTwoTime: number
-    teams?: {
-        items: Array<AWSTeam | null>
-    } | null
-    currentQuestionIndex?: number | null
-    currentState: GameSessionState
-    gameCode: number
-    isAdvancedMode: boolean
-    imageUrl?: string | null
-    description?: string | null
-    title?: string | null
-    currentTimer?: number | null
-    questions?: {
-        items: Array<AWSQuestion | null>
-    } | null
-    createdAt: string
-    updatedAt: string
-}
-
-type AWSTeam = {
-    id: string
-    name: string
-    teamMembers?: {
-        items: Array<AWSTeamMember | null>
-    } | null
-    score: number
-    selectedAvatarIndex: number
-    createdAt: string
-    updatedAt?: string
-    gameSessionTeamsId?: string | null
-    teamQuestionId?: string | null
-    teamQuestionGameSessionId?: string | null
-}
-
-type AWSQuestion = {
-    id: string
-    text: string
-    choices?: string | null
-    responses?: string | null
-    imageUrl?: string | null
-    instructions?: string | null
-    standard?: string | null
-    cluster?: string | null
-    domain?: string | null
-    grade?: string | null
-    gameSessionId: string
-    order: number
-    isConfidenceEnabled: boolean
-    isShortAnswerEnabled: boolean
-    isHintEnabled: boolean
-}
-
-type AWSTeamMember = {
-    id: string
-    isFacilitator?: boolean | null
-    answers?: {
-        items: Array<ITeamAnswer> | null
-    } | null
-    deviceId?: string | null
-    createdAt?: string | null
-    updatedAt?: string | null
-    teamTeamMembersId?: string | null
-}
-
-type AWSTeamAnswer = {
-    id: string
-    questionId?: string | null
-    isChosen: boolean
-    isTrickAnswer: boolean
-    text?: string | null
-    awsAnswerContents?: string | null
-    createdAt?: string
-    updatedAt?: string
-    teamMemberAnswersId?: string | null
-    confidenceLevel: ConfidenceLevel
-}
 // ~~~~~~~~~GAMETEMPLATE~~~~~~~~~~~~~~
 class GameTemplateParser {
     static gameTemplateFromAWSGameTemplate(
