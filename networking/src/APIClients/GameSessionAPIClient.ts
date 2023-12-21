@@ -17,7 +17,7 @@ import {
 import { isNullOrUndefined } from "../IApiClient";
 import { IGameSessionAPIClient } from "./interfaces/IGameSessionAPIClient";
 
-export default class GameSessionAPIClient
+export class GameSessionAPIClient
   extends BaseAPIClient
   implements IGameSessionAPIClient
 {

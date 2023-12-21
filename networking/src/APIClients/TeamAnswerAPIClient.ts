@@ -21,7 +21,7 @@ import {
 import { BaseAPIClient } from "./BaseAPIClient";
 import { ITeamAnswerAPIClient } from "./interfaces/ITeamAnswerAPIClient";
 
-export default class TeamAnswerAPIClient
+export class TeamAnswerAPIClient
   extends BaseAPIClient
   implements ITeamAnswerAPIClient
 {

@@ -14,6 +14,8 @@ import {
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
+import { getSortedGameTemplates } from '../lib/API/gametemplates';
+import { getSortedQuestionTemplates } from '../lib/API/questiontemplates';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from '../lib/games';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
 import { SORT_TYPES } from '../lib/sorting';
@@ -54,12 +56,11 @@ export const RouteContainer = ({
   const history = useHistory();
   const queryLimit = 12; // number of games retreiived on main page
 
-  const getSortedGames = async (nextToken: string | null) => {
+  const getGameTemplates = async (nextToken: string | null) => {
     try { 
-      const games = await apiClient.listGameTemplates(queryLimit, nextToken);
-      console.log(games);
+      const games = await getSortedGameTemplates(queryLimit, nextToken);
       if (games?.gameTemplates){
-        setGames(games?.gameTemplates ?? null);
+        setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
       }
     } catch (e) {
@@ -67,9 +68,9 @@ export const RouteContainer = ({
     }
   }
 
-  const getQuestions = async (nextToken: string | null) => {
+  const getQuestionTemplates = async (nextToken: string | null) => {
     try {
-      const questions = await apiClient.listQuestionTemplates(queryLimit, nextToken);
+      const questions = await getSortedQuestionTemplates(queryLimit, nextToken);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
         setNextToken(questions?.nextToken ?? null);
@@ -83,7 +84,7 @@ export const RouteContainer = ({
   const handleScrollDown = async (nextToken: string | null) => {
     let currentToken = nextToken;
     if (location.pathname === '/'){
-      const games = await apiClient.listGameTemplates( queryLimit, nextToken);
+      const games = await getSortedGameTemplates(queryLimit, nextToken);
       if (games?.gameTemplates){
         setGames((prev) => [
           ...(prev ?? []),
@@ -93,7 +94,7 @@ export const RouteContainer = ({
       }
   
     } else {
-      const questions = await apiClient.listQuestionTemplates( queryLimit, nextToken);
+      const questions = await getSortedQuestionTemplates( queryLimit, nextToken);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
         nextToken = questions?.nextToken ?? null;
@@ -153,13 +154,13 @@ export const RouteContainer = ({
     }
     const result = await updateGame(updatedGame);
     if (result) {
-      getSortedGames(nextToken);
+      getGameTemplates(nextToken);
     }
     setAlert({ message: 'Game saved.', type: 'success' });
   }
 
   const handleQuestionBankClick = (gameDetails: any) => {
-    getQuestions(null);
+    getQuestionTemplates(null);
     history.push(`/gamemaker/${gameDetails.id}/addquestion`)
   }
 
@@ -167,7 +168,7 @@ export const RouteContainer = ({
   const handleCloneGame = async (game) => {
     const result = await cloneGame(game);
     if (result) {
-      getSortedGames(nextToken);
+      getGameTemplates(nextToken);
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
     return result
@@ -185,7 +186,7 @@ export const RouteContainer = ({
   const handleDeleteQuestion = async (id: number, game: Game) => {
     const result = await deleteQuestions(id)
     if (result) {
-      getSortedGames(nextToken)
+      getGameTemplates(nextToken)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
@@ -209,7 +210,7 @@ export const RouteContainer = ({
 
   const getGames = async () => {
     setLoading(true);
-    await getSortedGames(nextToken);
+    await getGameTemplates(nextToken);
     setLoading(false);
   };
 
@@ -271,9 +272,9 @@ export const RouteContainer = ({
       setPrevTokens([null]);
       setLoading(true);
       if (location.pathname === '/questions'){
-        await getQuestions(null);
+        await getQuestionTemplates(null);
       } else {
-        await getSortedGames(null);
+        await getGameTemplates(null);
       }
       setLoading(false);
     };

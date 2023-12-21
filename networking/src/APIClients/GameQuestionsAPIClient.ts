@@ -2,25 +2,31 @@ import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
 import { IGameQuestionsAPIClient } from "./interfaces";
 import { IGameQuestions, AWSGameQuestions } from "../Models";
-import { createGameQuestions, listGameTemplates } from "../graphql";
-import { CreateGameQuestionsInput, CreateGameQuestionsMutation, CreateGameQuestionsMutationVariables } from "../AWSMobileApi";
+import { 
+    createGameQuestions, 
+    listGameQuestions,
+    getGameQuestions,
+    deleteGameQuestions,
+ } from "../graphql";
+import { 
+    CreateGameQuestionsInput, 
+    CreateGameQuestionsMutation, 
+    CreateGameQuestionsMutationVariables,
+    GetGameQuestionsQuery,
+    GetGameQuestionsQueryVariables,
+    DeleteGameQuestionsMutation,
+    DeleteGameQuestionsMutationVariables,
+} from "../AWSMobileApi";
 import { isNullOrUndefined } from "../IApiClient";
 
-export default class GameQuestionsAPIClient
+export class GameQuestionsAPIClient
   extends BaseAPIClient
   implements IGameQuestionsAPIClient
 {
   async createGameQuestions(
-    id: string,
-    gameTemplateID: string,
-    questionTemplateID: string,
+    createGameQuestionsInput: CreateGameQuestionsInput
 ): Promise<IGameQuestions | null> {
-    const input: CreateGameQuestionsInput = {
-       id,
-       gameTemplateID,
-       questionTemplateID,
-    }
-    const variables: CreateGameQuestionsMutationVariables = { input }
+    const variables: CreateGameQuestionsMutationVariables = { input: createGameQuestionsInput }
     const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
         createGameQuestions,
         variables
@@ -29,19 +35,49 @@ export default class GameQuestionsAPIClient
         isNullOrUndefined(gameQuestions?.data) ||
         isNullOrUndefined(gameQuestions?.data.createGameQuestions)
     ) {
-        throw new Error(`Failed to create game template.`)
+        throw new Error(`Failed to create gameQuestions.`)
     }
-    return gameQuestions as IGameQuestions;
+    return gameQuestions.data.createGameQuestions as IGameQuestions;
+}
+
+async getGameQuestions(id: string): Promise<IGameQuestions | null> {
+    const variables: GetGameQuestionsQueryVariables = { id }
+    const result = await this.callGraphQL<GetGameQuestionsQuery>(
+      getGameQuestions,
+      { variables }
+    )
+    if (
+        isNullOrUndefined(result.data) ||
+        isNullOrUndefined(result.data.getGameQuestions)
+    ) {
+        throw new Error(`Failed to create gameQuestions.`)
+    }
+    return result.data.getGameQuestions as IGameQuestions;
+}
+
+async deleteGameQuestions(id: string): Promise<IGameQuestions | null> {
+    const variables: DeleteGameQuestionsMutationVariables = { input: { id } }
+    const gameQuestions = await this.callGraphQL<DeleteGameQuestionsMutation>(
+        deleteGameQuestions,
+        variables
+    );
+    if (
+        isNullOrUndefined(gameQuestions?.data) ||
+        isNullOrUndefined(gameQuestions?.data.deleteGameQuestions)
+    ) {
+        throw new Error(`Failed to create gameQuestions.`)
+    }
+    return gameQuestions.data.deleteGameQuestions as IGameQuestions;
 }
 
 async listGameQuestions(limit: number, nextToken: string | null): Promise<{ gameQuestions: IGameQuestions[], nextToken: string } | null> {
     let result = (await API.graphql(
-        graphqlOperation(listGameTemplates, {limit, nextToken })
+        graphqlOperation(listGameQuestions, {limit, nextToken })
     )) as { data: any }
-    const parsedGameQuestions = result.data.listGameTemplates.items.map((gameTemplate: AWSGameQuestions) => {
-        return gameTemplate as IGameQuestions;
+    const parsedGameQuestions = result.data.listGameQuestions.items.map((gameQuestions: AWSGameQuestions) => {
+        return gameQuestions as IGameQuestions;
     });
-    const parsedNextToken = result.data.listGameTemplates.nextToken;
+    const parsedNextToken = result.data.listGameQuestions.nextToken;
     
     return { gameQuestions: parsedGameQuestions, nextToken: parsedNextToken };
 }

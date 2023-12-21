@@ -1,23 +1,25 @@
 import { IGameTemplate } from "../../Models";
+import { CreateGameTemplateInput, UpdateGameTemplateInput } from "../../AWSMobileApi";
 
 export interface IGameTemplateAPIClient {
   createGameTemplate(
-    id: string,
-    title: string,
-    owner: string,
-    version: number,
-    description: string,
-    domain: string | null,
-    cluster: string | null,
-    grade: string | null,
-    standard: string | null,
-    phaseOneTime: number,
-    phaseTwoTime: number,
-    imageUrl: string
+    createGameTemplateInput: CreateGameTemplateInput
+  ): Promise<IGameTemplate | null>;
+
+  getGameTemplate(
+    id: string
+  ): Promise<IGameTemplate | null>;
+
+  updateGameTemplate(
+    updateGameTemplateInput: UpdateGameTemplateInput
+  ): Promise<IGameTemplate | null>;
+
+  deleteGameTemplate(
+    id: string
   ): Promise<IGameTemplate | null>;
 
   listGameTemplates(
     limit: number,
-    nextToken: string
+    nextToken: string | null
   ): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null>;
 }

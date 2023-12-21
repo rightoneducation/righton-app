@@ -21,7 +21,7 @@ import {
 import { isNullOrUndefined } from "../IApiClient";
 import { ITeamAPIClient } from "./interfaces/ITeamAPIClient";
 
-export default class TeamAPIClient
+export class TeamAPIClient
   extends BaseAPIClient
   implements ITeamAPIClient
 {
