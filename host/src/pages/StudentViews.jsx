@@ -82,7 +82,7 @@ export default function StudentViews({
     if (!isLastQuestion && currentState === GameSessionState.PHASE_2_RESULTS) {
       // if they are on the last page a\nd need to advance to the next question
       //setIsConfidenceEnabled(false);
-      assembleNavDictionary(false, isHintEnabled, GameSessionState.TEAMS_JOINING);
+      assembleNavDictionary(false, isHintEnabled, GameSessionState.CHOOSE_CORRECT_ANSWER);
       handleUpdateGameSession({
         currentState: nextStateFunc(currentState),
         currentQuestionIndex: currentQuestionIndex + 1,

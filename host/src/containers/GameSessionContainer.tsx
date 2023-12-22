@@ -107,13 +107,11 @@ const GameSessionContainer = () => {
         !isNullOrUndefined(response.questions[response.currentQuestionIndex])
       ) {
         setIsConfidenceEnabled(
-          //response.questions[response.currentQuestionIndex].isConfidenceEnabled,
-          response.questions[0].isConfidenceEnabled,
+          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
         setIsHintEnabled(
-          //response.questions[response.currentQuestionIndex].isHintEnabled,
-          response.questions[0].isHintEnabled,
+          response.questions[response.currentQuestionIndex].isHintEnabled,
         );
 
         // if the teacher refreshes the page, we need to repopulate the hints/GPT hints depending on the state
@@ -126,8 +124,8 @@ const GameSessionContainer = () => {
 
         setHintsError(false);
         assembleNavDictionary(
-          response.questions[0].isConfidenceEnabled,
-          response.questions[0].isHintEnabled,
+          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
+          response.questions[response.currentQuestionIndex].isHintEnabled,
           response.currentState,
         );
       }
@@ -170,8 +168,7 @@ const GameSessionContainer = () => {
         setHintsError(false);
         setGameSession({ ...gameSession, ...response });
         setIsConfidenceEnabled(
-          //response.questions[response.currentQuestionIndex].isConfidenceEnabled,
-          response.questions[0].isConfidenceEnabled,
+          response.questions[response.currentQuestionIndex].isConfidenceEnabled,
         );
         setIsShortAnswerEnabled(response.questions[response.currentQuestionIndex].isShortAnswerEnabled);
         setShortAnswerResponses(response.questions[response.currentQuestionIndex].responses);
@@ -442,45 +439,47 @@ const GameSessionContainer = () => {
     const currentQuestion = gameSession.questions[gameSession.currentQuestionIndex];
     const questionId = currentQuestion.id;
     const order = currentQuestion.order;
+    
 
-
-    if (gameSession.currentState !== GameSessionState.TEAMS_JOINING)
+    if (gameSession.currentState !== GameSessionState.TEAMS_JOINING) 
       return;
-    apiClient
-      .updateQuestion({
+    const questionConfigRequests = gameSession.questions.map((question) => {  
+      return apiClient.updateQuestion({
         gameSessionId: gameSessionId,
-        id: questionId,
-        order: order,
+        id: question.id,
+        order: question.order,
         isConfidenceEnabled: isConfidenceEnabled,
-        isShortAnswerEnabled: isShortAnswerEnabled
-      })
-      .then((response) => {
-        let newUpdates = {
-          currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
-        };
-        apiClient
-          .updateGameSession({ id: gameSessionId, ...newUpdates })
-          .then((response) => {
-            localStorage.setItem(
-              'currentGameTimeStore',
-              gameSession.phaseOneTime,
-            );
-            setHeaderGameCurrentTime(gameSession.phaseOneTime);
-            checkGameTimer(response);
-            setGameSession(response);
-            const teamDataRequests = response.teams.map((team) => {
-              return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
-            });
-
-            Promise.all(teamDataRequests)
-              .then((responses) => {
-                setTeamsArray(responses);
-              })
-              .catch((reason) => console.log(reason));
-          });
-        setIsTimerActive(true);
-        setIsLoadModalOpen(true);
+        isShortAnswerEnabled: isShortAnswerEnabled,
+        isHintEnabled: isHintEnabled,
       });
+    });
+    Promise.all(questionConfigRequests).then((response) => {
+      let newUpdates = {
+        currentState: GameSessionState.CHOOSE_CORRECT_ANSWER,
+      };
+      apiClient
+        .updateGameSession({ id: gameSessionId, ...newUpdates })
+        .then((response) => {
+          localStorage.setItem(
+            'currentGameTimeStore',
+            gameSession.phaseOneTime,
+          );
+          setHeaderGameCurrentTime(gameSession.phaseOneTime);
+          checkGameTimer(response);
+          setGameSession(response);
+          const teamDataRequests = response.teams.map((team) => {
+            return apiClient.getTeam(team.id); // got to call the get the teams from the API so we can see the answers
+          });
+
+          Promise.all(teamDataRequests)
+            .then((responses) => {
+              setTeamsArray(responses);
+            })
+            .catch((reason) => console.log(reason));
+        });
+      setIsTimerActive(true);
+      setIsLoadModalOpen(true);
+    });
   };
   const handleProcessHints = async (hints) => {
     setHintsError(false);
