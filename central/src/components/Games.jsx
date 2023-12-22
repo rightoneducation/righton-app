@@ -7,12 +7,13 @@ import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
 import QuestionDetails from './QuestionDetail';
 import QuestionDashboard from './QuestionDashboard';
+import QuestionMaker from './QuestionMaker';
 import GameMaker from './GameMaker';
 import { getGameById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, nextToken,  games, questions, editGameTemplate, updateQuestion, deleteQuestion, handleScrollDown, createNewGameTemplate, deleteGame, cloneGameTemplate, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
+export default function Games({ loading, nextToken,  games, questions, editGameTemplate, updateQuestion, deleteQuestion, handleScrollDown, createNewGameTemplate, deleteGame, cloneGameTemplate, handleCreateQuestionTemplate, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -55,7 +56,16 @@ export default function Games({ loading, nextToken,  games, questions, editGameT
             }
           )
         } />
-          <Route path="/">
+        <Route path='/createquestion/:questionId' render={
+          isUserAuth && (
+            ({match}) => {
+              const { questionId } = match.params;
+              const newQuestion = Number(questionId) === 0;
+              return <QuestionMaker handleCreateQuestionTemplate={handleCreateQuestionTemplate}/>
+            } 
+          )
+        }/>
+        <Route path="/">
           <Grid item xs={12} className={classes.contentGrid}>
             <Box className={classes.actions}>
               <SearchBar setSearchInput={setSearchInput} searchInput={searchInput} isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} isResolutionMobile={isResolutionMobile} />

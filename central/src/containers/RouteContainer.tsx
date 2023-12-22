@@ -21,6 +21,12 @@ import {
   deleteGameTemplate, 
   listGameTemplates
 } from '../lib/API/gametemplates';
+import { 
+  createQuestionTemplate, 
+  getQuestionTemplate, 
+  updateQuestionTemplate,
+  deleteQuestionTemplate
+} from '../lib/API/questiontemplates';
 import { getSortedQuestionTemplates } from '../lib/API/questiontemplates';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from '../lib/games';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
@@ -215,6 +221,18 @@ export const RouteContainer = ({
     setIsUserAuth(isAuth);
   }
 
+  const handleCreateQuestionTemplate = async ( question: IQuestionTemplate) => {
+    try {
+      const result = await createQuestionTemplate(question);
+      if (result) {
+        getQuestionTemplates(nextToken);
+      }
+      setAlert({ message: 'Question created.', type: 'success' });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const persistUserAuth = (async () => {
     let user = null;
     try {
@@ -354,7 +372,8 @@ export const RouteContainer = ({
         searchInput={searchInput} 
         isResolutionMobile={isResolutionMobile} 
         addQToGT={addQToGT} 
-        handleQuestionBankClick={handleQuestionBankClick} 
+        handleQuestionBankClick={handleQuestionBankClick}
+        handleCreateQuestionTemplate={handleCreateQuestionTemplate}
       />
       <AlertBar />
     </Route>

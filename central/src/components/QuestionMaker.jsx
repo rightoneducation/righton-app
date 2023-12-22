@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
-import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
+import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
 
-export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion, addQToGT }) {
+export default function QuestionMaker({ updateQuestion, question: initialState, gameId, gameQuestion, handleCreateQuestionTemplate }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -16,6 +16,11 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const history = useHistory();
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
+  const [answerType, setAnswerType] = useState('number');
+  const [answerPrecision, setAnswerPrecision] = useState('WHOLE');
+  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
+  const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
+  const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
 
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
@@ -35,6 +40,17 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
   });
 
+  const decimalValidator = (inputValue) => {
+    const answerPrecisionDictionary = {
+      ['WHOLE']: 0,
+      ['TENTH']: 1,
+      ['HUNDREDTH']: 2,
+      ['THOUSANDTH']: 3
+    }
+    const precisionValue = answerPrecisionDictionary[answerPrecision];
+    const roundedNumberAsString = Number(inputValue).toFixed(precisionValue);
+    return inputValue.toString() === roundedNumberAsString;
+  }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (gameId != null) {
@@ -58,11 +74,18 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
+  const onChoiceTextChangeMaker = (choiceIndex, answerType) => ({ currentTarget }) => {
+    if (choiceIndex === 0 && answerType === 'number') {
+      setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
+      currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
+      setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
+    } else {
+      setIsAnswerDecimalInvalid(false);
+    }
     const newChoices = [...question.choices];
     newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
-  }, [question, setQuestion]);
+  };
 
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
@@ -94,29 +117,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   // Handles grade, domain, cluster, or standard change/update
   const onSelectMaker = useCallback((field) => ({ target }) => { setQuestion({ ...question, [field]: target.value }); }, [question, setQuestion]);
 
-  const handleAddQTToGT = async (question) => {
-    console.log(addQToGT("a", "b"));
-    // const questionToSend = { ...question }
-    // questionToSend.choices = JSON.stringify(questionToSend.choices)
-    // questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
-    // questionToSend.owner = "Owner's Name";
-    // questionToSend.version = 0;
-
-    // let newQuestion;
-    // if (questionToSend.id) {
-    //   newQuestion = await updateQuestion(questionToSend);
-    //   // we'll need to update this one as well
-    // } else {
-    //   newQuestion = await addQToGT(questionToSend);
-    //   // this is where we send to dynamoDB instead of RDS
-    //   delete newQuestion.updatedAt;
-    //   delete newQuestion.createdAt;
-    //   gameQuestion(newQuestion);
-    // }
-  }
-
   // Handles saving a new or updated question. If certain required fields are not met it throws an error popup
-  const handleSaveQuestion = async (question) => {
+  const handleSaveQuestionTemplate = async (question) => {
     if (isNullOrEmpty(question.title)) {
       window.alert("Please enter a question");
       return;
@@ -150,16 +152,15 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
-    questionToSend.owner = "Owner's Name";
+    questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
+    questionToSend.owner = "Owners Name";
     questionToSend.version = 0;
 
     let newQuestion;
     if (questionToSend.id) {
       newQuestion = await updateQuestion(questionToSend);
-      // we'll need to update this one as well
     } else {
-      newQuestion = await cloneQuestion(questionToSend);
-      // this is where we send to dynamoDB instead of RDS
+      newQuestion = await handleCreateQuestionTemplate(questionToSend);
       delete newQuestion.updatedAt;
       delete newQuestion.createdAt;
       gameQuestion(newQuestion);
@@ -200,7 +201,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
           <Grid item container xs={9} sm={12}>
             {question.choices.sort((a, b) => Number(b.isAnswer) - Number(a.isAnswer)).map((choice, index) => (
-              <QuestionFormAnswerDropdown
+              <QuestionMakerAnswerDropdown
                 key={`choice${index}`}
                 index={index}
                 choice={choice}
@@ -210,6 +211,12 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
                 handleRemoveInstruction={handleRemoveInstruction}
                 addInstruction={addInstruction}
                 instructions={question?.instructions}
+                answerType={answerType}
+                setAnswerType={setAnswerType}
+                answerPrecision={answerPrecision}
+                setAnswerPrecision={setAnswerPrecision}
+                isAnswerTypeInvalid={isAnswerTypeInvalid}
+                isAnswerDecimalInvalid={isAnswerDecimalInvalid}
               />
             ))}
           </Grid>
@@ -305,9 +312,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
             </div>
           </Grid>
 
-          <Grid style={{ marginTop: 50, gap: 16 }} item container xs={8} sm={12} justifyContent='center'>
-          <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestion(question)}>Add to Question Bank</Button>
-            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleAddQTToGT(question)}>Add to Game</Button>
+          <Grid style={{ marginTop: 50 }} item container xs={8} sm={12} justifyContent='center'>
+            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Question Bank</Button>
           </Grid>
 
         </Grid>

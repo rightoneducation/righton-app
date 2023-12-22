@@ -5,7 +5,7 @@ import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Car
 import { Cancel } from '@material-ui/icons';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
 import QuestionDashboard from './QuestionDashboard';
-import QuestionForm from './CreateQuestion';
+import QuestionForm from './QuestionMaker';
 import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
 import { getGameById } from '../lib/games';
@@ -354,7 +354,7 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
             return <QuestionDashboard loading={loading} questions={questions} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId} />
           }} />
 
-        <Route path="/gamemaker/:gameId/createquestion/:createQuestionIndex" render=
+        <Route path="/createquestion" render=
           {({ match }) => {
             const { gameId, createQuestionIndex } = match.params
             const gameNumber = Number(gameId) === 0;

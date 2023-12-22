@@ -14,7 +14,6 @@ export class QuestionTemplateParser {
               return rest as IGameTemplate;
           });
       } 
-
       const {
           id,
           title,
@@ -34,13 +33,7 @@ export class QuestionTemplateParser {
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
           isNullOrUndefined(owner) ||
-          isNullOrUndefined(version) ||
-          isNullOrUndefined(choices) ||
-          isNullOrUndefined(instructions) ||
-          isNullOrUndefined(answerSettings) ||
-          isNullOrUndefined(imageUrl) ||
-          isNullOrUndefined(createdAt) ||
-          isNullOrUndefined(updatedAt)) {
+          isNullOrUndefined(version)) {
           throw new Error(
               "Question Template has null field for the attributes that are not nullable"
           )
