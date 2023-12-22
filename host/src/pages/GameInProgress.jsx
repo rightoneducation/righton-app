@@ -10,8 +10,13 @@ import GameInProgressContentSwitch from '../components/GameInProgressContentSwit
 import {
   getTotalAnswers,
   getQuestionChoices,
-  getAnswersByQuestion,
-  getTeamByQuestion,
+  getShortAnswers,
+  getShortAnswersPhaseTwo,
+  getMultiChoiceAnswers,
+  getNoResponseTeams,
+  buildVictoryDataObject,
+  buildVictoryDataObjectShortAnswer,
+  buildVictoryDataObjectShortAnswerPhaseTwo
 } from '../lib/HelperFunctions';
 
 export default function GameInProgress({
@@ -31,6 +36,8 @@ export default function GameInProgress({
   showFooterButtonOnly,
   isConfidenceEnabled,
   handleConfidenceSwitchChange,
+  isShortAnswerEnabled,
+  handleShortAnswerChange,
   handleBeginQuestion,
   navDictionary,
   assembleNavDictionary,
@@ -38,6 +45,17 @@ export default function GameInProgress({
   responsesRef,
   gameAnswersRef,
   confidenceCardRef,
+  featuredMistakesRef,
+  shortAnswerResponses,
+  handleOnSelectMistake,
+  hintCardRef,
+  isHintEnabled,
+  handleHintChange,
+  hints,
+  gptHints,
+  hintsError,
+  isHintLoading,
+  handleProcessHints
 }) {
   const classes = useStyles();
   const footerButtonTextDictionary = {
@@ -54,54 +72,75 @@ export default function GameInProgress({
   };
   const numPlayers = teams ? teams.length : 0;
   const questionChoices = getQuestionChoices(questions, currentQuestionIndex);
+  const correctChoiceIndex =
+    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
+  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
   // using useMemo due to the nested maps in the getAnswerByQuestion and the fact that this component rerenders every second from the timer
-  const answersByQuestion = useMemo(
+  const answers = useMemo(
     () =>
-      getAnswersByQuestion(
-        questionChoices,
-        teamsArray,
-        currentQuestionIndex,
-        questions,
-        currentState,
+    (isShortAnswerEnabled
+      ? ( statePosition < 6 
+          ? getShortAnswers(
+              shortAnswerResponses
+            )
+          : getShortAnswersPhaseTwo(
+              shortAnswerResponses,
+              teamsArray, 
+              currentState, 
+              questions,
+              currentQuestionIndex
+            )
+        ) 
+      : getMultiChoiceAnswers(
+          questionChoices,
+          teamsArray,
+          currentQuestionIndex,
+          questions,
+          currentState,
+          correctChoiceIndex,
+        )
       ),
     [
+      shortAnswerResponses,
       questionChoices,
       teamsArray,
       currentQuestionIndex,
       questions,
       currentState,
+      correctChoiceIndex
     ],
   );
-  const correctChoiceIndex =
-    questionChoices.findIndex(({ isAnswer }) => isAnswer) + 1;
-  const totalAnswers = getTotalAnswers(answersByQuestion.answersArray);
-  const statePosition = Object.keys(GameSessionState).indexOf(currentState);
-  const teamsPickedChoices = getTeamByQuestion(
-    teamsArray,
-    currentQuestionIndex,
-    questionChoices,
-    questions,
-    currentState,
-  );
+  const totalAnswers = getTotalAnswers(answers.answersArray);
+  const noResponseTeams = getNoResponseTeams(teams, answers.answersArray);
   const noResponseLabel = '–';
+  const noResponseObject = {
+    answerChoice: noResponseLabel,
+    answerCount: numPlayers - totalAnswers,
+    answerText: 'No response',
+    answerCorrect: false,
+    answerTeams: noResponseTeams,
+  };
   // data object used in Victory graph for real-time responses
-  const data = [
-    {
-      answerChoice: noResponseLabel,
-      answerCount: numPlayers - totalAnswers,
-      answerText: 'No response',
-    },
-    ...Object.keys(answersByQuestion.answersArray).map((key, index) => ({
-      answerCount: answersByQuestion.answersArray[index],
-      answerChoice: String.fromCharCode(65 + index),
-      // TODO: set this so that it reflects incoming student answers rather than just given answers (for open-eneded questions)
-      answerText: questionChoices[index].text,
-    })),
-  ].reverse();
-
+  const data = (isShortAnswerEnabled )
+    ? ( statePosition < 6 
+      ? buildVictoryDataObjectShortAnswer(
+          shortAnswerResponses, 
+          noResponseObject
+        ) 
+        : 
+        buildVictoryDataObjectShortAnswerPhaseTwo(
+          shortAnswerResponses,
+          answers, 
+          noResponseObject
+        )
+      )
+    : buildVictoryDataObject(
+        answers, 
+        questionChoices,
+        noResponseObject
+      );
   // data object used in Victory graph for confidence responses
-  const confidenceData = answersByQuestion.confidenceArray;
-
+  const confidenceData = answers.confidenceArray;
   // handles if a graph is clicked, noting which graph and which bar on that graph
   const [graphClickInfo, setGraphClickInfo] = useState({
     graph: null,
@@ -113,7 +152,10 @@ export default function GameInProgress({
     setTimeout(() => {
       if (graph === 'realtime')
         responsesRef.current.scrollIntoView({ behavior: 'smooth' });
-      else confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else if (graph=== 'confidence') 
+        confidenceCardRef.current.scrollIntoView({ behavior: 'smooth' });
+      else
+        hintCardRef.current.scrollIntoView({ behavior: 'smooth' });
     }, 0);
   };
 
@@ -143,12 +185,12 @@ export default function GameInProgress({
   const handleFooterOnClick = (numPlayers, totalAnswers) => {
     let nextState = nextStateFunc(currentState);
     if (nextState === GameSessionState.CHOOSE_CORRECT_ANSWER) {
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
       handleBeginQuestion();
       return;
     }
     if (nextState === GameSessionState.TEAMS_JOINING)
-      assembleNavDictionary(isConfidenceEnabled, nextState);
+      assembleNavDictionary(isConfidenceEnabled, isHintEnabled, nextState);
     if (
       nextState === GameSessionState.PHASE_1_DISCUSS ||
       nextState === GameSessionState.PHASE_2_DISCUSS
@@ -219,17 +261,17 @@ export default function GameInProgress({
             questions={questions}
             questionChoices={questionChoices}
             currentQuestionIndex={currentQuestionIndex}
-            answersByQuestion={answersByQuestion.answersArray}
+            answers={answers.answersArray}
             totalAnswers={totalAnswers}
             numPlayers={numPlayers}
             statePosition={statePosition}
-            teamsPickedChoices={teamsPickedChoices}
             data={data}
             confidenceData={confidenceData}
             questionCardRef={questionCardRef}
             responsesRef={responsesRef}
             gameAnswersRef={gameAnswersRef}
             confidenceCardRef={confidenceCardRef}
+            featuredMistakesRef={featuredMistakesRef}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}
             correctChoiceIndex={correctChoiceIndex}
@@ -237,6 +279,18 @@ export default function GameInProgress({
             isConfidenceEnabled={isConfidenceEnabled}
             handleConfidenceSwitchChange={handleConfidenceSwitchChange}
             teamsArray={teamsArray}
+            isShortAnswerEnabled={isShortAnswerEnabled}
+            handleShortAnswerChange={handleShortAnswerChange}
+            shortAnswerResponses={shortAnswerResponses}
+            handleOnSelectMistake={handleOnSelectMistake}
+            hintCardRef={hintCardRef}
+            isHintEnabled={isHintEnabled}
+            handleHintChange={handleHintChange}
+            hints={hints}
+            gptHints={gptHints}
+            hintsError={hintsError}
+            isHintLoading={isHintLoading}
+            handleProcessHints={handleProcessHints}
           />
         </div>
         <GameModal

@@ -93,7 +93,9 @@ type Question @model(subscriptions: null, timestamps: null) {
   id: Int! @primaryKey(sortKeyFields: ["order", "gameSessionId"])
   text: String!
   choices: AWSJSON
+  answerSettings: AWSJSON
   responses: AWSJSON
+  hints: AWSJSON
   imageUrl: String
   instructions: AWSJSON
   standard: String
@@ -137,9 +139,10 @@ type TeamAnswer @model {
   questionId: Int!
   isChosen: Boolean!
   text: String!
-  awsAnswerContents: AWSJSON!
+  awsAnswerContent: AWSJSON!
   isTrickAnswer: Boolean!
   confidenceLevel: ConfidenceLevel! @default(value: "NOT_RATED")
+  awsHint: AWSJSON
 }
 
 type Subscription {
