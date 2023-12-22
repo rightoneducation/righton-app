@@ -6,7 +6,7 @@ import LoadingIndicator from './LoadingIndicator';
 import GameCard from './GameCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGame, gameId, isUserAuth }) {
+export default function GameDashboard({ loading, nextToken, games, handleScrollDown, deleteGame, cloneGameTemplate, gameId, isUserAuth }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameIndex');
@@ -23,19 +23,7 @@ export default function GameDashboard({ loading, nextToken, games, handleScrollD
     setActiveIndex(null);
   };
   const cloneHandler = (game) => () => {
-    const newGame = {
-      cluster: game.cluster,
-      description: game.description,
-      domain: game.domain,
-      grade: game.grade,
-      questions: game.questions,
-      standard: game.standard,
-      title: `Clone of ${game.title}`,
-      imageUrl: game.imageUrl,
-    };
-    cloneGame(newGame).then((index) => {
-      if (index > -1) history.push(`/games/${index + 1}`);
-    });
+    cloneGameTemplate(game);
     handleClose();
   };
   const deleteHandler = (id) => () => {

@@ -14,7 +14,13 @@ import {
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
-import { getSortedGameTemplates } from '../lib/API/gametemplates';
+import { 
+  createGameTemplate, 
+  getGameTemplate, 
+  updateGameTemplate,
+  deleteGameTemplate, 
+  listGameTemplates
+} from '../lib/API/gametemplates';
 import { getSortedQuestionTemplates } from '../lib/API/questiontemplates';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from '../lib/games';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
@@ -56,9 +62,9 @@ export const RouteContainer = ({
   const history = useHistory();
   const queryLimit = 12; // number of games retreiived on main page
 
-  const getGameTemplates = async (nextToken: string | null) => {
+  const getAllGameTemplates = async (nextToken: string | null) => {
     try { 
-      const games = await getSortedGameTemplates(queryLimit, nextToken);
+      const games = await listGameTemplates(queryLimit, nextToken);
       if (games?.gameTemplates){
         setGames(games?.gameTemplates);
         setNextToken(games?.nextToken ?? null);
@@ -84,7 +90,7 @@ export const RouteContainer = ({
   const handleScrollDown = async (nextToken: string | null) => {
     let currentToken = nextToken;
     if (location.pathname === '/'){
-      const games = await getSortedGameTemplates(queryLimit, nextToken);
+      const games = await listGameTemplates(queryLimit, nextToken);
       if (games?.gameTemplates){
         setGames((prev) => [
           ...(prev ?? []),
@@ -126,38 +132,50 @@ export const RouteContainer = ({
   }
 
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const saveNewGame = async (newGame: { title: string, description?: string, phaseOneTime?: string, phaseTwoTime?: string, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
+  const createNewGameTemplate = async (newGame: { owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
     setLoading(true);
-    const game = await createGame(newGame, questionIDSet);
-    if (game) {
-      const games = sortGames(await fetchGames(), sortType);
-      // setGames(games);
+    try{
+      console.log(newGame);
+    const game = await createGameTemplate(newGame);
+      if (game) {
+        // ~~~~ add questions to game ~~~~~~ using , questionIDSet
+
+        const games = await getAllGameTemplates(nextToken);
+      } else {
+        throw new Error ('Game was unable to be created');
+      }
+      setLoading(false);
+      setAlert({ message: 'Game created.', type: 'success' });
+    } catch (e) {
+      console.log(e);
     }
-    setLoading(false);
-    setAlert({ message: 'Game created.', type: 'success' });
+
   }
 
-  // Update saveGame let statement to include other attributes of game that have now been created and possibly add the createGameQuestion here (if functionaloity is not in updateGame) with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const saveGame = async (game: Game, questions: Questions) => {
-    let updatedGame = {
-      id: game.id,
-      title: game.title,
-      description: game.description,
-      phaseOneTime: game.phaseOneTime,
-      phaseTwoTime: game.phaseTwoTime,
-      imageUrl: game.imageUrl,
-      grade: game.grade,
-      domain: game.domain,
-      cluster: game.cluster,
-      standard: game.standard,
-      questions: questions,
+
+    // update existing game template with changes from game maker
+    const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[] }, questionIDSet: number[]) => {
+      setLoading(true);
+      try{
+        console.log(newGame);
+      const {questionTemplates, ...rest} = newGame;
+      const gameTemplateUpdate = rest; 
+      const questionTemplatesUpdate = questionTemplates;
+      const game = await updateGameTemplate(gameTemplateUpdate);
+        if (game) {
+          // ~~~~ add questions to game ~~~~~~ using , questionIDSet
+  
+          const games = await getAllGameTemplates(nextToken);
+        } else {
+          throw new Error ('Game was unable to be created');
+        }
+        setLoading(false);
+        setAlert({ message: 'Game updated.', type: 'success' });
+      } catch (e) {
+        console.log(e);
+      }
+  
     }
-    const result = await updateGame(updatedGame);
-    if (result) {
-      getGameTemplates(nextToken);
-    }
-    setAlert({ message: 'Game saved.', type: 'success' });
-  }
 
   const handleQuestionBankClick = (gameDetails: any) => {
     getQuestionTemplates(null);
@@ -165,20 +183,22 @@ export const RouteContainer = ({
   }
 
   // @ts-ignore
-  const handleCloneGame = async (game) => {
-    const result = await cloneGame(game);
+  const cloneGameTemplate = async (game) => {
+    const {questionTemplates, ...rest} = game;
+    const questionTemplatesUpdate = questionTemplates;
+    const newGameTemplate = { ...rest, id: uuidv4(), title: `Clone of ${game.title}`};
+    const result = await createGameTemplate(newGameTemplate);
     if (result) {
-      getGameTemplates(nextToken);
+      getAllGameTemplates(nextToken);
       setAlert({ message: 'Game cloned.', type: 'success' });
     }
     return result
   }
 
-  const handleDeleteGame = async (id: number) => {
-    const result = await deleteGames(id);
+  const handleDeleteGameTemplate = async (id: string) => {
+    const result = await deleteGameTemplate(id);
     if (result) {
-      const games = sortGames(await fetchGames(), sortType);
-      // setGames(games);
+      const games = await getAllGameTemplates(nextToken);
     }
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
@@ -186,7 +206,7 @@ export const RouteContainer = ({
   const handleDeleteQuestion = async (id: number, game: Game) => {
     const result = await deleteQuestions(id)
     if (result) {
-      getGameTemplates(nextToken)
+      getAllGameTemplates(nextToken)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
   }
@@ -210,7 +230,7 @@ export const RouteContainer = ({
 
   const getGames = async () => {
     setLoading(true);
-    await getGameTemplates(nextToken);
+    await getAllGameTemplates(nextToken);
     setLoading(false);
   };
 
@@ -274,7 +294,7 @@ export const RouteContainer = ({
       if (location.pathname === '/questions'){
         await getQuestionTemplates(null);
       } else {
-        await getGameTemplates(null);
+        await getAllGameTemplates(null);
       }
       setLoading(false);
     };
@@ -312,7 +332,30 @@ export const RouteContainer = ({
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
       <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <Games loading={loading} nextToken={nextToken} games={filteredGames} questions={questions} handleScrollDown={handleScrollDown} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />
+      <Games 
+        loading={loading} 
+        nextToken={nextToken} 
+        games={filteredGames} 
+        questions={questions} 
+        handleScrollDown={handleScrollDown} 
+        createNewGameTemplate={createNewGameTemplate} 
+        editGameTemplate={editGameTemplate} 
+        updateQuestion={updateQuestion} 
+        deleteQuestion={handleDeleteQuestion} 
+        deleteGame={handleDeleteGameTemplate} 
+        cloneGameTemplate={cloneGameTemplate} 
+        sortType={sortType} 
+        setSortType={setSortType} 
+        cloneQuestion={cloneQuestion} 
+        isUserAuth={isUserAuth}  
+        isSearchClick={isSearchClick} 
+        handleSearchClick={handleSearchClick} 
+        setSearchInput={setSearchInput} 
+        searchInput={searchInput} 
+        isResolutionMobile={isResolutionMobile} 
+        addQToGT={addQToGT} 
+        handleQuestionBankClick={handleQuestionBankClick} 
+      />
       <AlertBar />
     </Route>
   </Switch>

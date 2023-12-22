@@ -12,7 +12,7 @@ import { getGameById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, nextToken,  games, questions, saveGame, updateQuestion, deleteQuestion, handleScrollDown, saveNewGame, deleteGame, cloneGame, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
+export default function Games({ loading, nextToken,  games, questions, editGameTemplate, updateQuestion, deleteQuestion, handleScrollDown, createNewGameTemplate, deleteGame, cloneGameTemplate, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -39,7 +39,7 @@ export default function Games({ loading, nextToken,  games, questions, saveGame,
                   const { gameId } = match.params;
                   const game = getGameById(games, gameId);
                   handleSearchClick(false);
-                  return <GameLaunch loading={loading} saveGame={saveGame} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />;
+                  return <GameLaunch loading={loading} saveGame={editGameTemplate} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />;
                 }
               } />
             </Switch>
@@ -51,7 +51,7 @@ export default function Games({ loading, nextToken,  games, questions, saveGame,
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} newSave={saveNewGame} editSave={saveGame} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
+              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
             }
           )
         } />
@@ -63,10 +63,10 @@ export default function Games({ loading, nextToken,  games, questions, saveGame,
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
-                <QuestionDashboard loading={loading} questions={questions}  />   
+                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} />   
               }/>
               <Route exact path="/" render= { () => 
-                <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={saveGame} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />
+                <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />
               }/>
               </Grid>
           </Grid>

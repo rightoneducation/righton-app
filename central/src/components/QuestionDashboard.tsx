@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import LoadingIndicator from './LoadingIndicator';
@@ -8,13 +9,42 @@ import QuestionCard from './QuestionCard';
 type QuestionDashboardProps = {
   questions: IQuestionTemplate[];
   loading: boolean;
+  isUserAuth: boolean;
+  cloneQuestionTemplate: (question: IQuestionTemplate) => void;
+  deleteQuestionTemplate: (id: string) => void;
 };
 
 export default function QuestionDashboard({
   questions,
-  loading
+  loading,
+  isUserAuth,
+  cloneQuestionTemplate,
+  deleteQuestionTemplate,
 }: QuestionDashboardProps) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const match = useRouteMatch('/questions/:questionIndex');
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+    setActiveIndex(Number(event.currentTarget.dataset.questionIndex));
+    event.stopPropagation();
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setActiveIndex(null);
+  };
+  const cloneHandler = (question: IQuestionTemplate) => () => {
+    cloneQuestionTemplate(question);
+    handleClose();
+  };
+  const deleteHandler = (id: string) => () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+    if (confirmDelete) {
+      deleteQuestionTemplate(id);
+    }
+    handleClose();
+  };
   return (
      loading ?   
       <>
@@ -47,8 +77,8 @@ export default function QuestionDashboard({
   :
     <Grid container item xs={12} md={6} lg={4} className={classes.container} >
     {
-      questions.map((question) => {
-        return <QuestionCard  {...question} />
+      questions.map((question, index) => {
+        return <QuestionCard  question={question} anchorEl={anchorEl} isUserAuth={isUserAuth} match={match} index={index} activeIndex={activeIndex} handleClick={handleClick} cloneHandler={cloneHandler} deleteHandler={deleteHandler} handleClose={handleClose}/>
       })
     }
     </Grid>

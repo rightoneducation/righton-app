@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid, 
@@ -30,6 +31,7 @@ export default function GameCard({
   const classes = useStyles();
   const { id, title, description, cluster, domain, grade, standard, imageUrl } = game;
   const questionCount = game?.questionTemplates?.length || 0;
+  const history = useHistory();
     return (
       <Card className={classnames(classes.game, !match && classes.gameGrid, match && Number(match.params.gameIndex) === index + 1 && classes.gameSelected)} key={id} onClick={onClick}>
         <CardContent>

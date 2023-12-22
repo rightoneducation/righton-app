@@ -48,7 +48,7 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, questions, game, newSave, editSave, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick }) {
+export default function GameMaker({ loading, questions, game, createNewGameTemplate, editGameTemplate, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -134,13 +134,15 @@ export default function GameMaker({ loading, questions, game, newSave, editSave,
         delete question.updatedAt;
         delete question.createdAt;
       })
-      editSave(gameDetails, questions);
+      editGameTemplate(gameDetails, questions);
     }
     else {
       let questionIDs = questions.map(question => (question.id))
       delete gameDetails.questions;
       delete gameDetails.id;
-      newSave(gameDetails, questionIDs);
+      gameDetails.owner = 'Owners Name';
+      gameDetails.version = 0;
+      createNewGameTemplate(gameDetails, questionIDs);
 
     }
     event.preventDefault();

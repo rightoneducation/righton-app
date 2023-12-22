@@ -50,7 +50,7 @@ export const deleteGameTemplate = async (id: string): Promise<IGameTemplate | nu
   return null;
 };
 
-export const getSortedGameTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
+export const listGameTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ gameTemplates: IGameTemplate[], nextToken: string } | null> => {
   try {
     const games = await gameTemplateAPIClient.listGameTemplates(queryLimit, nextToken);
     return games;
