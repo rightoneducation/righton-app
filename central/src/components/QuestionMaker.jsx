@@ -149,23 +149,29 @@ export default function QuestionMaker({ updateQuestion, question: initialState, 
       window.alert("Please enter a cluster to save the game");
       return;
     }
+    try{
     const questionToSend = { ...question }
     questionToSend.choices = JSON.stringify(questionToSend.choices)
     questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
     questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
     questionToSend.owner = "Owners Name";
     questionToSend.version = 0;
-
+    console.log(questionToSend);
     let newQuestion;
     if (questionToSend.id) {
       newQuestion = await updateQuestion(questionToSend);
     } else {
+      console.log('here');
       newQuestion = await handleCreateQuestionTemplate(questionToSend);
+      console.log(newQuestion);
       delete newQuestion.updatedAt;
       delete newQuestion.createdAt;
-      gameQuestion(newQuestion);
     }
-    history.push(`/gamemaker/${gameId}`);
+    history.push(`/questions/${newQuestion.id}`);
+    } catch (e) {
+      console.log(e);
+    }
+    history.push('/questions');
   }
 
 

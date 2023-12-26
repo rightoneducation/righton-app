@@ -21,5 +21,5 @@ export interface IQuestionTemplateAPIClient {
   listQuestionTemplates(
     limit: number,
     nextToken: string | null,
-  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null>;
+  ): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null>;
 }

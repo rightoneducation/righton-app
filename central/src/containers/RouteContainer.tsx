@@ -82,6 +82,7 @@ export const RouteContainer = ({
 
   const getQuestionTemplates = async (nextToken: string | null) => {
     try {
+      console.log(nextToken);
       const questions = await getSortedQuestionTemplates(queryLimit, nextToken);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
@@ -225,12 +226,14 @@ export const RouteContainer = ({
     try {
       const result = await createQuestionTemplate(question);
       if (result) {
-        getQuestionTemplates(nextToken);
+        getQuestionTemplates(null);
       }
       setAlert({ message: 'Question created.', type: 'success' });
+      return result;
     } catch (e) {
       console.log(e);
     }
+    return null;
   }
 
   const persistUserAuth = (async () => {
@@ -304,6 +307,7 @@ export const RouteContainer = ({
 
 
   useEffect(() => {
+    console.log('here');
     // get either a list of games or questions when the route changes
     const fetchData = async () => {
       setNextToken(null);
