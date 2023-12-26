@@ -7,19 +7,23 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface AnswerCardProps {
   isCorrectAnswer: boolean,
+  answerIndex: number,
+  answerContent: string,
   instructions: string[],
   answerReason: string
 }
 
 
-
 export default function AnswerCard({
   isCorrectAnswer,
+  answerIndex,
+  answerContent,
   instructions,
   answerReason
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
+  const letterCode = 'A'.charCodeAt(0) + answerIndex;
 
   const correctAnswerInstruction = (index: number) => {
     return (
@@ -60,8 +64,8 @@ export default function AnswerCard({
               marginRight: `${theme.sizing.extraSmallPadding}px`,
               fontWeight: `${theme.typography.h5.fontWeight}`,
               opacity: 0.5
-            }}>A</Typography>
-            <Typography>answer choice</Typography>
+            }}>{String.fromCharCode(letterCode)}</Typography>
+            <Typography>{answerContent}</Typography>
           </Box>
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
             {isCorrectAnswer ? instructions.map(instruction => correctAnswerInstruction(instructions.indexOf(instruction))) : answerReason}

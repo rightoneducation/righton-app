@@ -13,6 +13,8 @@ const sampleText = "A pair of shoes were 10% off last week. This week, theres an
 // Answer card
 const instructions = ['step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ', 'step 2', 'step 3', 'step 4'];
 const answerReason = 'reasoning'
+const answerContent = "answer"
+const answerIndex = 0
 // TODO: delete later <--------
 
 export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps) {
@@ -24,7 +26,7 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
         <Card />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <AnswerCard isCorrectAnswer instructions={instructions} answerReason={answerReason} />
+        <AnswerCard isCorrectAnswer answerIndex={answerIndex} answerContent={answerContent} instructions={instructions} answerReason={answerReason} />
         <Card />
       </Grid>
     </BodyContentAreaDoubleColumnStyled>
