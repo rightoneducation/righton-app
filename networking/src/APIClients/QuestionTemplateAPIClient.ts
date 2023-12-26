@@ -99,7 +99,6 @@ export class QuestionTemplateAPIClient
         return QuestionTemplateParser.questionTemplateFromAWSQuestionTemplate(questionTemplate)
     });
     const parsedNextToken = result.data.listQuestionTemplates.nextToken;
-    console.log(result);
     return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
     } catch (e) {
         console.log(e);

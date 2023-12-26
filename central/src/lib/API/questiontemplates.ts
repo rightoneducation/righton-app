@@ -49,7 +49,7 @@ export const deleteQuestionTemplate = async (id: string): Promise<IQuestionTempl
   return null;
 };
 
-export const getSortedQuestionTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> => {
+export const listQuestionTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string | null } | null> => {
   try {
     const games = await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken);
     return games;

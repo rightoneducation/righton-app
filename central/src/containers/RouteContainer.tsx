@@ -25,9 +25,9 @@ import {
   createQuestionTemplate, 
   getQuestionTemplate, 
   updateQuestionTemplate,
-  deleteQuestionTemplate
+  deleteQuestionTemplate,
+  listQuestionTemplates
 } from '../lib/API/questiontemplates';
-import { getSortedQuestionTemplates } from '../lib/API/questiontemplates';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from '../lib/games';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
 import { SORT_TYPES } from '../lib/sorting';
@@ -82,8 +82,7 @@ export const RouteContainer = ({
 
   const getQuestionTemplates = async (nextToken: string | null) => {
     try {
-      console.log(nextToken);
-      const questions = await getSortedQuestionTemplates(queryLimit, nextToken);
+      const questions = await listQuestionTemplates(queryLimit, nextToken);
       if (questions?.questionTemplates){
         setQuestions(questions?.questionTemplates ?? null);
         setNextToken(questions?.nextToken ?? null);
@@ -107,11 +106,13 @@ export const RouteContainer = ({
       }
   
     } else {
-      const questions = await getSortedQuestionTemplates( queryLimit, nextToken);
+      const questions = await listQuestionTemplates(queryLimit, nextToken);
       if (questions?.questionTemplates){
-        setQuestions(questions?.questionTemplates ?? null);
+        setQuestions((prev) => [
+          ...(prev ?? []),
+          ...(questions.questionTemplates ?? [])
+        ]);
         nextToken = questions?.nextToken ?? null;
-        //console.log(nextToken);
       }
     }
     if (nextToken) {
@@ -142,7 +143,6 @@ export const RouteContainer = ({
   const createNewGameTemplate = async (newGame: { owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
     setLoading(true);
     try{
-      console.log(newGame);
     const game = await createGameTemplate(newGame);
       if (game) {
         // ~~~~ add questions to game ~~~~~~ using , questionIDSet
@@ -301,13 +301,15 @@ export const RouteContainer = ({
 
   useEffect(() => {
     persistUserAuth();
-    getGames();
+    if (location.pathname === '/questions'){
+      getQuestionTemplates(null);
+    } else {
+      getAllGameTemplates(null);
+    }
     setStartup(false);
   }, [sortType]);
 
-
   useEffect(() => {
-    console.log('here');
     // get either a list of games or questions when the route changes
     const fetchData = async () => {
       setNextToken(null);

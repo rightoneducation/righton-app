@@ -73,7 +73,7 @@ export default function Games({ loading, nextToken,  games, questions, editGameT
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
-                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} />   
+                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken}/>   
               }/>
               <Route exact path="/" render= { () => 
                 <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />

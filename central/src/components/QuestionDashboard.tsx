@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from './LoadingIndicator';
 import { IQuestionTemplate } from '@righton/networking';
 import QuestionCard from './QuestionCard';
@@ -12,6 +13,8 @@ type QuestionDashboardProps = {
   isUserAuth: boolean;
   cloneQuestionTemplate: (question: IQuestionTemplate) => void;
   deleteQuestionTemplate: (id: string) => void;
+  nextToken: string | null; 
+  handleScrollDown: (nextToken: string | null) => void;
 };
 
 export default function QuestionDashboard({
@@ -20,6 +23,8 @@ export default function QuestionDashboard({
   isUserAuth,
   cloneQuestionTemplate,
   deleteQuestionTemplate,
+  nextToken,
+  handleScrollDown,
 }: QuestionDashboardProps) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,14 +44,13 @@ export default function QuestionDashboard({
     handleClose();
   };
   const deleteHandler = (id: string) => () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this questions?');
     if (confirmDelete) {
       deleteQuestionTemplate(id);
     }
     handleClose();
   };
-  return (
-     loading ?   
+    if (loading) return ( 
       <>
         <div className={classes.loadingContainer}>
           <div>
@@ -73,17 +77,46 @@ export default function QuestionDashboard({
             </Typography>
           </div>
         </div>
-              </>
-  :
-    <Grid container item xs={12} md={6} lg={4} className={classes.container} >
-    {
-      questions.map((question, index) => {
-        return <QuestionCard  question={question} anchorEl={anchorEl} isUserAuth={isUserAuth} match={match} index={index} activeIndex={activeIndex} handleClick={handleClick} cloneHandler={cloneHandler} deleteHandler={deleteHandler} handleClose={handleClose}/>
-      })
-    }
-    </Grid>
+      </>
+    );
+
+  if (questions.length >= 1) {
+    return (
+        <InfiniteScroll
+          dataLength={questions.length}
+          next={() => handleScrollDown(nextToken)}
+          hasMore={nextToken !== null}
+          loader={<h4>Loading...</h4>}
+          height={`calc(100vh - 156px)`}
+          scrollableTarget="questionsDashboard"
+          style={{display: 'flex', justifyContent: 'flex-start', width: '100%', flexWrap: 'wrap', overflowY: 'scroll', zIndex: -2}}
+        > 
+          {questions.map((question, index) => 
+            <Grid key={index} container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4} style={{width: '100%'}}>
+            <QuestionCard  
+              question={question}
+              anchorEl={anchorEl}
+              isUserAuth={isUserAuth}
+              match={match}
+              index={index}
+              activeIndex={activeIndex}
+              handleClick={handleClick}
+              cloneHandler={cloneHandler}
+              deleteHandler={deleteHandler}
+              handleClose={handleClose}
+            />
+            </Grid>
+          )}
+      </InfiniteScroll>
+    );
+  };
+  return (
+    <Typography gutterBottom>
+      No results found.
+    </Typography>
   );
-}
+};
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
