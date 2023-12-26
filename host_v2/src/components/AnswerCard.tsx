@@ -11,6 +11,8 @@ interface AnswerCardProps {
   answerReason: string
 }
 
+
+
 export default function AnswerCard({
   isCorrectAnswer,
   instructions,
@@ -18,11 +20,35 @@ export default function AnswerCard({
 }: AnswerCardProps) {
   const theme = useTheme(); // eslint-disable-line
   const { t } = useTranslation();
+
+  const correctAnswerInstruction = (index: number) => {
+    return (
+      <Box sx={{ // TODO: maybe make this a standardized style component in host_v2>src>lib>styledcomponents
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: `${theme.sizing.extraSmallPadding}px`
+      }}>
+        <Typography sx={{
+          marginLeft: `${theme.sizing.smallPadding}px`,
+          fontSize: `${theme.typography.h3.fontSize}px`,
+          fontWeight: `${theme.typography.h3.fontWeight}`,
+          color: `${theme.palette.primary.darkPurple}`
+        }}>
+          {index + 1}
+        </Typography>
+        <Typography sx={{
+          marginLeft: `${theme.sizing.extraSmallPadding}px`
+        }}>
+          {instructions[index]}
+        </Typography>
+      </Box >);
+  }
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
         <Box sx={{ width: '100%' }}>
-          <Box sx={{
+          <Box sx={{ // TODO: maybe make this a standardized style component in host_v2>src>lib>styledcomponents
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'flex-start',
@@ -30,10 +56,16 @@ export default function AnswerCard({
             padding: `${theme.sizing.smallPadding}px`,
             backgroundColor: isCorrectAnswer ? theme.palette.primary.correctColor : theme.palette.primary.lightGrey
           }}>
-            <Typography variant="h5" sx={{ marginRight: `${theme.sizing.extraSmallPadding}px` }}>nknknkn</Typography>
-            <Typography>nknknkn</Typography>
+            <Typography sx={{
+              marginRight: `${theme.sizing.extraSmallPadding}px`,
+              fontWeight: `${theme.typography.h5.fontWeight}`,
+              opacity: 0.5
+            }}>A</Typography>
+            <Typography>answer choice</Typography>
           </Box>
-
+          <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
+            {isCorrectAnswer ? instructions.map(instruction => correctAnswerInstruction(instructions.indexOf(instruction))) : answerReason}
+          </BodyCardContainerStyled>
         </Box>
       </BodyCardContainerStyled>
     </BodyCardStyled>
