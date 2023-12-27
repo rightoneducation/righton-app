@@ -78,7 +78,7 @@ return (
                   onClose={handleClose}
                   onClick={(event) => { if (!match) event.stopPropagation(); }}
                 >
-                  <MenuItem onClick={(event) => { history.push(`/gamemaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                  <MenuItem onClick={(event) => { history.push(`/questionmaker/${question.id}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                   <MenuItem onClick={cloneHandler(question)}>Clone</MenuItem>
                   <MenuItem onClick={deleteHandler(question.id)}>Delete</MenuItem>
                 </Menu>             

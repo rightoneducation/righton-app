@@ -7,7 +7,7 @@ import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
 
-export default function QuestionMaker({ updateQuestion, question: initialState, gameId, gameQuestion, handleCreateQuestionTemplate }) {
+export default function QuestionMaker({ updateQuestion, question: initialState, gameId, gameQuestion, handleCreateQuestionTemplate, handleUpdateQuestionTemplate }) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -150,24 +150,21 @@ export default function QuestionMaker({ updateQuestion, question: initialState, 
       return;
     }
     try{
-    const questionToSend = { ...question }
-    questionToSend.choices = JSON.stringify(questionToSend.choices)
-    questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
-    questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
-    questionToSend.owner = "Owners Name";
-    questionToSend.version = 0;
-    console.log(questionToSend);
-    let newQuestion;
-    if (questionToSend.id) {
-      newQuestion = await updateQuestion(questionToSend);
-    } else {
-      console.log('here');
-      newQuestion = await handleCreateQuestionTemplate(questionToSend);
-      console.log(newQuestion);
-      delete newQuestion.updatedAt;
-      delete newQuestion.createdAt;
-    }
-    history.push(`/questions/${newQuestion.id}`);
+      const questionToSend = { ...question }
+      questionToSend.choices = JSON.stringify(questionToSend.choices)
+      questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
+      questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
+      questionToSend.owner = "Owners Name";
+      questionToSend.version = 0;
+      let newQuestion;
+      if (questionToSend.id) {
+        newQuestion = await handleUpdateQuestionTemplate(questionToSend);
+      } else {
+        newQuestion = await handleCreateQuestionTemplate(questionToSend);
+        delete newQuestion.updatedAt;
+        delete newQuestion.createdAt;
+      }
+      history.push(`/questions/${newQuestion.id}`);
     } catch (e) {
       console.log(e);
     }

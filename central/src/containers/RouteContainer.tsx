@@ -10,7 +10,8 @@ import {
   ApiClient,
   IGameTemplate,
   IQuestionTemplate,
-  CreateQuestionTemplateInput
+  CreateQuestionTemplateInput,
+  getQuestion
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
@@ -210,16 +211,13 @@ export const RouteContainer = ({
     setAlert({ message: 'Game deleted.', type: 'success' });
   }
 
-  const handleDeleteQuestion = async (id: number, game: Game) => {
-    const result = await deleteQuestions(id)
+  const handleDeleteQuestionTemplate = async (id: string, game: Game) => {
+    const result = await deleteQuestionTemplate(id);
+    console.log(result);
     if (result) {
-      getAllGameTemplates(nextToken)
+      getQuestionTemplates(nextToken)
     }
     setAlert({ message: 'Question deleted.', type: 'success' });
-  }
-
-  const handleUserAuth = (isAuth: boolean) => {
-    setIsUserAuth(isAuth);
   }
 
   const handleCreateQuestionTemplate = async ( question: IQuestionTemplate) => {
@@ -234,6 +232,44 @@ export const RouteContainer = ({
       console.log(e);
     }
     return null;
+  }
+
+  // update existing question template from question template bank
+  const handleUpdateQuestionTemplate = async (newQuestion : IQuestionTemplate) => {
+    setLoading(true);
+    try{
+      const {gameTemplates, ...rest} = newQuestion;
+      const questionTemplateUpdate = rest; 
+      const gameTemplatesUpdate = gameTemplates;
+      const question = await updateQuestionTemplate(questionTemplateUpdate);
+        if (question) {
+          // ~~~~ add questions to game ~~~~~~ using , questionIDSet
+  
+          const question = await getQuestionTemplates(nextToken);
+        } else {
+          throw new Error ('Question was unable to be update');
+        }
+        setLoading(false);
+        setAlert({ message: 'Question updated.', type: 'success' });
+      } catch (e) {
+        console.log(e);
+      }
+  }
+
+  const handleCloneQuestionTemplate = async (question : IQuestionTemplate) => {
+    const {gameTemplates, ...rest} = question;
+    const gameTemplatesUpdate = gameTemplates;
+    const newQuestionTemplate = { ...rest, id: uuidv4(), title: `Clone of ${question.title}`};
+    const result = await createQuestionTemplate(newQuestionTemplate);
+    if (result) {
+      getAllGameTemplates(nextToken);
+      setAlert({ message: 'Question cloned.', type: 'success' });
+    }
+    return result
+  }
+
+  const handleUserAuth = (isAuth: boolean) => {
+    setIsUserAuth(isAuth);
   }
 
   const persistUserAuth = (async () => {
@@ -365,7 +401,7 @@ export const RouteContainer = ({
         createNewGameTemplate={createNewGameTemplate} 
         editGameTemplate={editGameTemplate} 
         updateQuestion={updateQuestion} 
-        deleteQuestion={handleDeleteQuestion} 
+        handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
         deleteGame={handleDeleteGameTemplate} 
         cloneGameTemplate={cloneGameTemplate} 
         sortType={sortType} 
@@ -380,6 +416,8 @@ export const RouteContainer = ({
         addQToGT={addQToGT} 
         handleQuestionBankClick={handleQuestionBankClick}
         handleCreateQuestionTemplate={handleCreateQuestionTemplate}
+        handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
+        handleCloneQuestionTemplate={handleCloneQuestionTemplate}
       />
       <AlertBar />
     </Route>

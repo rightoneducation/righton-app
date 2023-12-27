@@ -322,7 +322,7 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
                   </Grid>
 
                   <Grid container item xs={6} justifyContent='center'>
-                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/createquestion/0`)}>
+                    <Button variant='contained' disableElevation className={classes.greenButton} onClick={() => history.push(`/gamemaker/${gameDetails.id}/questionmaker/0`)}>
                       Create Question
                     </Button>
                   </Grid>

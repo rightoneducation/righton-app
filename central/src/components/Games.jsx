@@ -9,11 +9,37 @@ import QuestionDetails from './QuestionDetail';
 import QuestionDashboard from './QuestionDashboard';
 import QuestionMaker from './QuestionMaker';
 import GameMaker from './GameMaker';
-import { getGameById } from '../lib/HelperFunctions';
+import { getGameById, getQuestionTemplateById } from '../lib/HelperFunctions';
 import SearchBar from './SearchBar.jsx';
 
 
-export default function Games({ loading, nextToken,  games, questions, editGameTemplate, updateQuestion, deleteQuestion, handleScrollDown, createNewGameTemplate, deleteGame, cloneGameTemplate, handleCreateQuestionTemplate, sortType, setSortType, cloneQuestion, isUserAuth, setSearchInput, searchInput, isSearchClick, handleSearchClick, isResolutionMobile, addQToGT, handleQuestionBankClick }) {
+export default function Games({ 
+  loading,
+  nextToken,  
+  games, 
+  questions, 
+  editGameTemplate, 
+  updateQuestion, 
+  handleDeleteQuestionTemplate, 
+  handleScrollDown, 
+  createNewGameTemplate, 
+  deleteGame, 
+  cloneGameTemplate, 
+  handleCreateQuestionTemplate, 
+  handleUpdateQuestionTemplate, 
+  handleCloneQuestionTemplate,
+  sortType, 
+  setSortType, 
+  cloneQuestion, 
+  isUserAuth, 
+  setSearchInput, 
+  searchInput, 
+  isSearchClick, 
+  handleSearchClick, 
+  isResolutionMobile, 
+  addQToGT, 
+  handleQuestionBankClick 
+}) {
   const classes = useStyles();
   const history = useHistory();
   const match = useRouteMatch('/games/:gameId');
@@ -56,12 +82,15 @@ export default function Games({ loading, nextToken,  games, questions, editGameT
             }
           )
         } />
-        <Route path='/createquestion/:questionId' render={
+        <Route path='/questionmaker/:questionId' render={
           isUserAuth && (
             ({match}) => {
               const { questionId } = match.params;
-              const newQuestion = Number(questionId) === 0;
-              return <QuestionMaker handleCreateQuestionTemplate={handleCreateQuestionTemplate}/>
+              console.log(questionId);
+              const question = getQuestionTemplateById(questions, questionId);
+              console.log(question);
+              handleSearchClick(false);
+              return <QuestionMaker question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
           )
         }/>
@@ -73,12 +102,12 @@ export default function Games({ loading, nextToken,  games, questions, editGameT
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
               <Route exact path="/questions" render= { () => 
-                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken}/>   
+                <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
               }/>
               <Route exact path="/" render= { () => 
                 <GameDashboard id="GameDashboard" nextToken={nextToken} loading={loading} games={games} handleScrollDown={handleScrollDown} saveGame={editGameTemplate} deleteGame={deleteGame} cloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />
               }/>
-              </Grid>
+            </Grid>
           </Grid>
         </Route>
       </Switch>

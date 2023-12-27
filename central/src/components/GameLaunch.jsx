@@ -175,7 +175,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
     setAnchorEl(null);
     setActiveIndex(null);
   };
-  const addQuestion = () => history.push(`/gamemaker/${game.id}/createquestion/${questions.length + 1}`);
+  const addQuestion = () => history.push(`/gamemaker/${game.id}/questionmaker/${questions.length + 1}`);
 
   if (loading) return <Skeleton variant="rect" height={500} />;
   const questions = game?.questionTemplates || [];
@@ -270,7 +270,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
                             onClose={handleClose}
                             onClick={(event) => { if (!match) event.stopPropagation(); }}
                           >
-                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/createquestion/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
+                            <MenuItem onClick={(event) => { history.push(`/gamemaker/${gameId}/questionmaker/${index + 1}`); event.stopPropagation(); handleClose(); }}>Edit</MenuItem>
                             <MenuItem onClick={() => { deleteQuestion(question.id, game).then(() => history.push(`/games/${game.id}`)); setAnchorEl(null); setActiveIndex(null); }}>Delete</MenuItem>
                           </Menu>
                         </Grid>

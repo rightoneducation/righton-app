@@ -11,8 +11,8 @@ type QuestionDashboardProps = {
   questions: IQuestionTemplate[];
   loading: boolean;
   isUserAuth: boolean;
-  cloneQuestionTemplate: (question: IQuestionTemplate) => void;
-  deleteQuestionTemplate: (id: string) => void;
+  handleDeleteQuestionTemplate: (id: string) => void;
+  handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
   nextToken: string | null; 
   handleScrollDown: (nextToken: string | null) => void;
 };
@@ -21,8 +21,8 @@ export default function QuestionDashboard({
   questions,
   loading,
   isUserAuth,
-  cloneQuestionTemplate,
-  deleteQuestionTemplate,
+  handleCloneQuestionTemplate,
+  handleDeleteQuestionTemplate,
   nextToken,
   handleScrollDown,
 }: QuestionDashboardProps) {
@@ -40,13 +40,13 @@ export default function QuestionDashboard({
     setActiveIndex(null);
   };
   const cloneHandler = (question: IQuestionTemplate) => () => {
-    cloneQuestionTemplate(question);
+    handleCloneQuestionTemplate(question);
     handleClose();
   };
   const deleteHandler = (id: string) => () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this questions?');
     if (confirmDelete) {
-      deleteQuestionTemplate(id);
+      handleDeleteQuestionTemplate(id);
     }
     handleClose();
   };

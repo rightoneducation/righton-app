@@ -49,7 +49,7 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
                 Game Maker
               </Typography> 
             </NavLink>
-               <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/createquestion/0'}>
+               <NavLink className={classes.link} activeClassName={classes.active} id='QuestionMaker' to={'/questionmaker/0'}>
                <img src={quizMakerIcon} alt="Quiz Maker Icon" className={classes.icon} />
                 <Typography className={classes.title} variant="h6" >
                  Question Maker
