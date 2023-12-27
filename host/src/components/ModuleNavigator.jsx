@@ -8,12 +8,15 @@ export default function ModuleNavigator({
   graphClickInfo,
   setGraphClickInfo,
   navDictionary,
+  statePosition
 }) {
   const classes = useStyles();
+  const modifiedNavDictionary =
+    statePosition === 1 ? navDictionary.slice(1) : navDictionary;
   const [selectedNavValue, setSelectedNavValue] = useState(0);
   const handleSelectedNavChange = (event) => {
     setTimeout(() => {
-      navDictionary[event.target.value].ref.current.scrollIntoView({
+      modifiedNavDictionary[event.target.value].ref.current.scrollIntoView({
         behavior: 'smooth',
       });
     }, 0);
@@ -21,18 +24,17 @@ export default function ModuleNavigator({
   };
   const handleNavUpClick = () => {
     const newValue = selectedNavValue > 0 ? selectedNavValue - 1 : 0;
-    navDictionary[newValue].ref.current.scrollIntoView({ behavior: 'smooth' });
+    modifiedNavDictionary[newValue].ref.current.scrollIntoView({ behavior: 'smooth' });
     setSelectedNavValue(newValue);
   };
   const handleNavDownClick = () => {
     const newValue =
-      selectedNavValue < navDictionary.length - 1
+      selectedNavValue < modifiedNavDictionary.length - 1
         ? selectedNavValue + 1
-        : navDictionary.length - 1;
-    navDictionary[newValue].ref.current.scrollIntoView({ behavior: 'smooth' });
+        : modifiedNavDictionary.length - 1;
+        modifiedNavDictionary[newValue].ref.current.scrollIntoView({ behavior: 'smooth' });
     setSelectedNavValue(newValue);
   };
-
   return (
     <div className={classes.container}>
       {graphClickInfo && graphClickInfo.graph === null ? (
@@ -58,12 +60,12 @@ export default function ModuleNavigator({
             renderValue={(value) => {
               return (
                 <span className={classes.selectedItem}>
-                  {navDictionary[selectedNavValue].text}
+                  {modifiedNavDictionary[selectedNavValue].text}
                 </span>
               );
             }}
           >
-            {navDictionary.map((item, index) => {
+            {modifiedNavDictionary.map((item, index) => {
               return (
                 <MenuItem value={index} className={classes.menuItem}>
                   {item.text}
