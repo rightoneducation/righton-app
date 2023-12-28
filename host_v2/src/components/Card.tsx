@@ -7,9 +7,9 @@ import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
 
 interface CardProps {
   bottomText?: string;
-} 
+}
 
-export default function Card({ 
+export default function Card({
   bottomText
 }: CardProps) {
   const theme = useTheme(); // eslint-disable-line
@@ -28,7 +28,7 @@ export default function Card({
             {t('gamesession.card.body')}
           </Typography>
           <Typography variant="h4" sx={{ width: '100%', textAlign: 'left' }}>
-            {bottomText} 
+            {bottomText}
           </Typography>
         </Box>
       </BodyCardContainerStyled>
