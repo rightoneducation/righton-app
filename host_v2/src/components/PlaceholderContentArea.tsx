@@ -3,9 +3,9 @@ import { Grid } from '@mui/material';
 import { BodyContentAreaDoubleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
 
-interface PlaceholderContentAreaProps {} // eslint-disable-line
+interface PlaceholderContentAreaProps { } // eslint-disable-line
 
-export default function PlaceholderContentArea({}: PlaceholderContentAreaProps) {
+export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps) {
   // eslint-disable-line
   return (
     <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
