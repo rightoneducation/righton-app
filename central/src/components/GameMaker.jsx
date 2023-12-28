@@ -22,7 +22,7 @@ const newGame = {
   phaseOneTime: 180,
   phaseTwoTime: 180,
   imageUrl: '',
-  questions: [],
+  questionTemplates: [],
 }
 
 // Preset times
@@ -49,21 +49,13 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, questions, game, createNewGameTemplate, editGameTemplate, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick, handleDeleteGameQuestion }) {
+export default function GameMaker({ loading, questions, game, createNewGameTemplate, editGameTemplate, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick, handleDeleteGameQuestion, selectedQuestions, setSelectedQuestions, saveGameTemplate }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
   }, []);
-
   const classes = useStyles();
   const history = useHistory();
-  const [disabled, setDisabled] = useState(true);
-  // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
-  const [localQuestionTemplates, setLocalQuestionTemplates] = useState(questions);
-  // questionTemplatesToAdd is an array of questionTemplate ids
-  const [questionTemplatesToAdd, setQuestionTemplatesToAdd] = useState([]);
-  // questionTemplatesToDelete is an array of gameQuestion ids (so that we don't have to map through anything)
-  const [questionTemplatesToDelete, setQuestionTemplatesToDelete] = useState([]);
   const [gameDetails, setGameDetails] = useState(() => {
     if (game) {
       return { ...game };
@@ -72,6 +64,14 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
       return newGame;
     }
   });
+
+  const selectedQuestionTemplates = selectedQuestions.map(question => {
+    return {questionTemplate: question, gameQuestionId: null }
+  });
+
+  // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
+  const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates, ...selectedQuestionTemplates]);
+
   const [phaseOne, setPhaseOne] = useState(() => {
     if (gameDetails.phaseOneTime === null) {
       return 180;
@@ -105,23 +105,15 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
   }
 
   const handleDelete = (index) => {
-    const newQuestions = [...questions];
+    const newQuestions = [...localQuestionTemplates];
     newQuestions.splice(index, 1);
     setLocalQuestionTemplates(newQuestions);
-    setQuestionTemplatesToDelete((prev) => [...prev, questions[index].id]);
   }
 
   const handleAdd = (questionTemplate) => {
     setLocalQuestionTemplates((prev) => [...prev, questionTemplate]);
     setQuestionTemplatesToAdd((prev) => [...prev, questionTemplate.id]);
   }
-
-  // // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
-  // const handleDeleteGameQuestion = (index) => {
-  //   const newQuestions = [...questions];
-  //   newQuestions.splice(index, 1);
-  //   setQuestions(newQuestions);
-  // }
 
   // Handles any new questions added to the game, either through Add Question or Create Question
   const handleGameQuestion = (newQuestion) => {
@@ -147,22 +139,24 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
 
   // Save New or Existing Game (preliminary submit)
   const handleSubmit = (event) => {
-    if (gameDetails.id !== 0) {
-      questions && questions.map(question => {
-        delete question.updatedAt;
-        delete question.createdAt;
-      })
-      editGameTemplate(gameDetails, questions);
-    }
-    else {
-      let questionIDs = questions.map(question => (question.id))
-      delete gameDetails.questions;
-      delete gameDetails.id;
-      gameDetails.owner = 'Owners Name';
-      gameDetails.version = 0;
-      createNewGameTemplate(gameDetails, questionIDs);
+    gameDetails.questionTemplates = localQuestionTemplates;
+    saveGameTemplate(game, gameDetails);
+    // if (gameDetails.id !== 0) {
+    //   questions && questions.map(question => {
+    //     delete question.updatedAt;
+    //     delete question.createdAt;
+    //   })
+    //   editGameTemplate(gameDetails, questions);
+    // }
+    // else {
+    //   let questionIDs = questions.map(question => (question.id))
+    //   delete gameDetails.questions;
+    //   delete gameDetails.id;
+    //   gameDetails.owner = 'Owners Name';
+    //   gameDetails.version = 0;
+    //   createNewGameTemplate(gameDetails, questionIDs);
 
-    }
+    // }
     event.preventDefault();
     history.push('/');
   };
@@ -171,7 +165,6 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
     let newString = value.replace(/\'/g, '\u2019');
     return newString;
   }
-
   let content = (
     <div>
       <form onSubmit={handleSubmit}>
@@ -289,7 +282,7 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
 
               <Grid container item xs={12} className={classes.questionHolder}>
                 {
-                !isNullOrUndefined(questions) 
+                !isNullOrUndefined(localQuestionTemplates) 
                   ? 
                   localQuestionTemplates.map((questionData, index) => {
                     const question = questionData.questionTemplate;
@@ -357,9 +350,12 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
 
             {questions.length > 0 ? <GameCCSS questions={questions} handleCCSS={handleCCSS} currentGameGrade={gameDetails.grade} /> : <Grid container item xs={12}></Grid>}
 
-            <Grid container item xs={12} justifyContent='center'>
-              <Button variant='contained' type='submit' disabled={disabled} disableElevation className={classes.greenButton}>
+            <Grid container item xs={12} style={{display: 'flex', justifyContent: 'center', gap: 16}}>
+              <Button variant='contained' type='submit' disableElevation className={classes.blueButton}>
                 Save Game
+              </Button>
+              <Button variant='contained' disableElevation className={classes.greenButton} onClick={()=> { setSelectedQuestions([]); setLocalQuestionTemplates([]); history.push('/')}}>
+                Cancel
               </Button>
             </Grid>
           </Grid>
@@ -373,20 +369,6 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
   return (
     <div>
       <Switch>
-        <Route path="/gamemaker/:gameId/addquestion" render=
-          {({ match }) => {
-            const { gameId } = match.params;
-            console.log("here!");
-            return <QuestionDashboard 
-              loading={loading} 
-              questions={questions} 
-              games={games} 
-              cloneQuestion={cloneQuestion} 
-              submit={handleGameQuestion} 
-              gameId={gameId} 
-            />
-          }} />
-
         <Route path="/createquestion" render=
           {({ match }) => {
             const { gameId, createQuestionIndex } = match.params
@@ -400,7 +382,6 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
               gameId={gameId}
               gameQuestion={handleGameQuestion} />;
           }} />
-
         <Route path="/gamemaker/:gameId">
           {content}
         </Route>

@@ -16,6 +16,7 @@ type QuestionDashboardProps = {
   handleCloneQuestionTemplate: (question: IQuestionTemplate) => void;
   nextToken: string | null; 
   handleScrollDown: (nextToken: string | null) => void;
+  handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
 };
 
 export default function QuestionDashboard({
@@ -27,8 +28,8 @@ export default function QuestionDashboard({
   handleDeleteQuestionTemplate,
   nextToken,
   handleScrollDown,
+  handleQuestionSelected
 }: QuestionDashboardProps) {
-  console.log("or here?");
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -53,6 +54,7 @@ export default function QuestionDashboard({
     }
     handleClose();
   };
+
     if (loading) return ( 
       <>
         <div className={classes.loadingContainer}>
@@ -97,6 +99,7 @@ export default function QuestionDashboard({
           {questions.map((question, index) => 
             <Grid key={index} container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4} style={{width: '100%'}}>
               <QuestionCard  
+                gameId={gameId}
                 question={question}
                 anchorEl={anchorEl}
                 isUserAuth={isUserAuth}
@@ -107,14 +110,10 @@ export default function QuestionDashboard({
                 cloneHandler={cloneHandler}
                 deleteHandler={deleteHandler}
                 handleClose={handleClose}
+                handleQuestionSelected={handleQuestionSelected}
               />
             </Grid>
           )}
-      {!isNullOrUndefined(gameId) ?
-        <div>SUP</div>
-        :
-        null
-      }
       </InfiniteScroll>
    
     );
@@ -128,13 +127,6 @@ export default function QuestionDashboard({
 
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-   display: 'flex',
-   flexDirection: 'column',
-   alignItems: 'center',
-   width: '100%',
-   height: '100vh'
-  },
   loadingContainer: {
     margin: 'auto',
     width: '60%',

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Card, CardContent, Grid, Typography, Button, Menu, MenuItem } from '@material-ui/core';
+import { Card, CardContent, Grid, Typography, Button, Menu, MenuItem, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { IQuestionTemplate, IGameTemplate } from '@righton/networking';
 import RightOnPlaceHolder from '../images/RightOnPlaceholder.svg';
@@ -8,6 +8,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CCSS from './CCSS';
 
 type QuestionCardProps = {
+  gameId: string | null;
   question: IQuestionTemplate;
   anchorEl: any;
   isUserAuth: boolean;
@@ -18,9 +19,11 @@ type QuestionCardProps = {
   cloneHandler: (question: IQuestionTemplate) => () => void;
   deleteHandler: (id: string) => () => void;
   handleClose: () => void;
+  handleQuestionSelected: (question: IQuestionTemplate, isSelected: boolean) => void;
 };
 
 export default function QuestionCard({
+  gameId,
   question,
   anchorEl,
   isUserAuth,
@@ -30,11 +33,13 @@ export default function QuestionCard({
   handleClick,
   cloneHandler,
   deleteHandler,
-  handleClose
+  handleClose,
+  handleQuestionSelected
 } : QuestionCardProps) {
   const classes = useStyles();
   const gameCount = question.gameTemplates ? question.gameTemplates.length : 0;
   const history = useHistory();
+  const [isSelected, setIsSelected] = useState(false);
 return (
   <Card className={classes.game}>
     <CardContent>
@@ -54,9 +59,6 @@ return (
             <Typography className={classes.title} >
               {question.title}
             </Typography>
-            <Typography className={classes.textSecondary} color="textSecondary" >
-              {question.instructions}
-            </Typography>
           </div>
         </Grid>
         <Grid container item xs={4} md={3}>
@@ -65,6 +67,15 @@ return (
               {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" className={classes.image} />}
             </div>
           </Grid>
+          {
+            gameId &&
+            <Grid item xs={2}>
+              <Checkbox value="isSelected" onChange={() => {
+                handleQuestionSelected(question, !isSelected);
+                setIsSelected(!isSelected);
+              }}/>
+            </Grid>
+          }
           { isUserAuth && 
               <Grid item xs={2} className={classes.show}>
                 <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.moreButton} data-question-index={index}>

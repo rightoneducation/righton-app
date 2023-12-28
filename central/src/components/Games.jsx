@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, Button } from '@material-ui/core';
 import GameLaunch from './GameLaunch';
 import GameDashboard from './GameDashboard';
 import SortByDropdown from './SortByDropdown';
@@ -39,7 +39,8 @@ export default function Games({
   isResolutionMobile, 
   addQToGT, 
   handleQuestionBankClick,
-  handleDeleteGameQuestion
+  handleDeleteGameQuestion,
+  saveGameTemplate
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -48,6 +49,15 @@ export default function Games({
     setSortType(value);
   };
   const [sortByCheck, setSortByCheck] = React.useState(false);
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const handleQuestionSelected = (question, isSelected) => {
+    if (isSelected) {
+      if (!selectedQuestions.some(existingQuestion => existingQuestion.id === question.id)) 
+        setSelectedQuestions([...selectedQuestions, question]);
+    } else {
+      setSelectedQuestions(selectedQuestions.filter((existingQuestion) => existingQuestion.id !== question.id));
+    }
+  }
   return (
     <Grid container className={classes.root} spacing={4}>
       <Switch>
@@ -73,13 +83,14 @@ export default function Games({
             </Switch>
           </Grid>
         )}
-        <Route path='/gamemaker/:gameId' render={
+        <Route exact path='/gamemaker/:gameId' render={
           isUserAuth && (
             ({ match }) => {
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} handleDeleteGameQuestion={handleDeleteGameQuestion} />;
+              console.log(questions)
+              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} handleDeleteGameQuestion={handleDeleteGameQuestion} selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions} saveGameTemplate={saveGameTemplate} />;
             }
           )
         } />
@@ -87,9 +98,7 @@ export default function Games({
           isUserAuth && (
             ({match}) => {
               const { questionId } = match.params;
-              console.log(questionId);
               const question = getQuestionTemplateById(questions, questionId);
-              console.log(question);
               handleSearchClick(false);
               return <QuestionMaker question={question} handleCreateQuestionTemplate={handleCreateQuestionTemplate} handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}/>
             } 
@@ -102,6 +111,29 @@ export default function Games({
               <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} style={{zIndex: 5}}/>
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
+              <Route exact path="/gamemaker/:gameId/addquestion" render=
+                {({ match }) => {
+                  const { gameId } = match.params;
+                  return (
+                    <>
+                      <QuestionDashboard 
+                        loading={loading} 
+                        questions={questions} 
+                        games={games} 
+                        cloneQuestion={cloneQuestion} 
+                        gameId={gameId} 
+                        handleScrollDown={handleScrollDown}
+                        handleQuestionSelected={handleQuestionSelected}
+                      />
+                      <Box className={classes.addQuestionFooter}>
+                        <Button variant='contained' disableElevation className={classes.blueButton} onClick={(event) => history.push(`/gamemaker/${gameId}`)}>
+                          Add to Game
+                        </Button>
+                      </Box>
+                    </>
+                  );
+                }} 
+              />
               <Route exact path="/questions" render= { () => 
                 <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
               }/>
@@ -121,8 +153,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
     zIndex: -2,
-    overflowY: 'auto',
-    height: '100%'
+    overflowY: 'auto'
   },
   contentGrid: {
     padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
@@ -148,5 +179,24 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     backgroundColor: 'white',
     zIndex:3
+  },
+  addQuestionFooter: {
+    width: '100%',
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    background: '#FFF',
+    zIndex: 4
+  },
+  blueButton: {
+    background: 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%);',
+    borderRadius: '50px',
+    textTransform: 'none',
+    fontSize: '17px',
+    fontWeight: 500,
+    color: 'white',
   },
 }));

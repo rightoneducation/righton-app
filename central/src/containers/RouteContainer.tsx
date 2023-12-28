@@ -12,7 +12,8 @@ import {
   IGameTemplate,
   IQuestionTemplate,
   CreateQuestionTemplateInput,
-  getQuestion
+  getQuestion,
+  isNullOrUndefined
  } from '@righton/networking';
 import {Alert} from '../context/AlertContext';
 import { Game, Questions } from '../API';
@@ -30,6 +31,10 @@ import {
   deleteQuestionTemplate,
   listQuestionTemplates
 } from '../lib/API/questiontemplates';
+import {
+  createGameQuestions,
+  deleteGameQuestions
+} from '../lib/API/gamequestions';
 import { fetchGames, sortGames, createGame, updateGame, cloneGame, deleteGames, deleteQuestions } from '../lib/games';
 import { updateQuestion, cloneQuestion } from '../lib/questions';
 import { SORT_TYPES } from '../lib/sorting';
@@ -142,25 +147,49 @@ export const RouteContainer = ({
   }
 
   // Update newGame parameter to include other aspects (or like saveGame below have it equal a Game object if that is possible) and possibly add the createGameQuestio here with array of questions or question ids as params (whatever createQuestion returns to Game Maker)
-  const createNewGameTemplate = async (newGame: { owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string }, questionIDSet: number[]) => {
-    setLoading(true);
+  const createNewGameTemplate = async (newGame: IGameTemplate) => {
     try{
     const game = await createGameTemplate(newGame);
-      if (game) {
-        // ~~~~ add questions to game ~~~~~~ using , questionIDSet
-
-        const games = await getAllGameTemplates(nextToken);
-      } else {
+      if (!game) {
         throw new Error ('Game was unable to be created');
       }
-      setLoading(false);
-      setAlert({ message: 'Game created.', type: 'success' });
+      return game;
     } catch (e) {
       console.log(e);
     }
-
   }
 
+
+  const saveGameTemplate = async (existingGame: IGameTemplate, updatedGame: IGameTemplate) => {
+    // first create the game template
+    setLoading(true);
+    if (updatedGame.id === '0')
+    {
+      const backendGame = await createNewGameTemplate(updatedGame);
+    }
+    else {
+      // updateGameTemplate
+    }
+    if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
+      const newGameQuestionRequests = updatedGame.questionTemplates.map((question) => {
+        if (question.gameQuestionId === null)
+        handleCreateGameQuestion(updatedGame.id, question.questionTemplate.id);
+      });
+      const newGameQuestions = await Promise.all(newGameQuestionRequests);
+      // find question templates that were deleted (if gameQuestionId is present in existing but not in updated)
+      const questionTemplatesToDelete = existingGame.questionTemplates.filter((existingQuestion) => {
+        return updatedGame.questionTemplates && !updatedGame.questionTemplates.some(updatedQuestion => 
+            updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
+      });
+      console.log(questionTemplatesToDelete);
+      const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
+        handleDeleteGameQuestion(question.gameQuestionId);
+      });
+      const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
+    }
+    setLoading(false);
+    setAlert({ message: 'Save Completed.', type: 'success' });
+  };
 
     // update existing game template with changes from game maker
     const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[] }, questionIDSet: number[]) => {
@@ -269,12 +298,13 @@ export const RouteContainer = ({
     return result
   }
 
+  const handleCreateGameQuestion = async (gameId: string, questionId: string) => {
+    const result = await createGameQuestions({gameTemplateID: gameId, questionTemplateID: questionId});
+    return result;
+  };
+
   const handleDeleteGameQuestion = async (id: string) => {
-    // const result = await deleteQuestionTemplate(id);
-    // if (result) {
-    //   getQuestionTemplates(nextToken)
-    // }
-    // setAlert({ message: 'Question deleted.', type: 'success' });
+    const result = await deleteGameQuestions(id);
   }
 
   const handleUserAuth = (isAuth: boolean) => {
@@ -429,6 +459,7 @@ export const RouteContainer = ({
           handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
           handleCloneQuestionTemplate={handleCloneQuestionTemplate}
           handleDeleteGameQuestion={handleDeleteGameQuestion}
+          saveGameTemplate={saveGameTemplate}
         />
       </Box>
       <AlertBar />
