@@ -12,7 +12,7 @@ const sampleUrl = "https://images.unsplash.com/photo-1609188944094-394637c26769?
 const sampleText = "A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?";
 // Answer card
 const instructions = ['step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ', 'step 2', 'step 3', 'step 4'];
-const answerReason = 'reasoning'
+const answerReason = "reasoning"
 const answerContent = "answer"
 const answerIndex = 0
 // TODO: delete later <--------

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Typography, Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
@@ -22,7 +22,7 @@ export default function QuestionCard({
         variant="subtitle1"
         sx={{ width: '100%', textAlign: 'left' }}
       >
-        Question
+        {t('gamesession.questionCard.title')}
       </Typography>
       <img
         style={{

@@ -4,6 +4,7 @@ import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import BodyCardContainerStyled from '../lib/styledcomponents/BodyCardContainerStyled';
 import BodyCardStyled from '../lib/styledcomponents/BodyCardStyled';
+import AnswerOptionStyled from '../lib/styledcomponents/AnswerOptionStyled';
 
 interface AnswerCardProps {
   isCorrectAnswer: boolean,
@@ -12,7 +13,6 @@ interface AnswerCardProps {
   instructions: string[],
   answerReason: string
 }
-
 
 export default function AnswerCard({
   isCorrectAnswer,
@@ -27,7 +27,7 @@ export default function AnswerCard({
 
   const correctAnswerInstruction = (index: number) => {
     return (
-      <Box sx={{ // TODO: maybe make this a standardized style component in host_v2>src>lib>styledcomponents
+      <Box sx={{
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -48,27 +48,40 @@ export default function AnswerCard({
         </Typography>
       </Box >);
   }
+
+  const incorrectAnswerReasoning = () => {
+    return (
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: `${theme.sizing.extraSmallPadding}px`
+      }}>
+        <Typography sx={{
+          marginLeft: `${theme.sizing.extraSmallPadding}px`
+        }}>
+          {answerReason}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <BodyCardStyled elevation={10}>
       <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
         <Box sx={{ width: '100%' }}>
-          <Box sx={{ // TODO: maybe make this a standardized style component in host_v2>src>lib>styledcomponents
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            borderRadius: '22px', // TODO: change this later to theme reference value
-            padding: `${theme.sizing.smallPadding}px`,
-            backgroundColor: isCorrectAnswer ? theme.palette.primary.correctColor : theme.palette.primary.lightGrey
-          }}>
+          <AnswerOptionStyled sx={{ backgroundColor: isCorrectAnswer ? theme.palette.primary.correctColor : theme.palette.primary.lightGrey }}>
             <Typography sx={{
               marginRight: `${theme.sizing.extraSmallPadding}px`,
               fontWeight: `${theme.typography.h5.fontWeight}`,
               opacity: 0.5
             }}>{String.fromCharCode(letterCode)}</Typography>
             <Typography>{answerContent}</Typography>
-          </Box>
+          </AnswerOptionStyled>
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
-            {isCorrectAnswer ? instructions.map(instruction => correctAnswerInstruction(instructions.indexOf(instruction))) : answerReason}
+            {isCorrectAnswer ? instructions.map(instruction =>
+              correctAnswerInstruction(instructions.indexOf(instruction))) :
+              incorrectAnswerReasoning()}
           </BodyCardContainerStyled>
         </Box>
       </BodyCardContainerStyled>
