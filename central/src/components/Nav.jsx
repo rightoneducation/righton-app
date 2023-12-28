@@ -78,7 +78,6 @@ export default function PrimarySearchAppBar({ isResolutionMobile, isUserAuth, ha
 
 const useStyles = (isResolutionMobile) => makeStyles(theme => ({  
   grow: {
-    flexGrow: 1,
     zIndex: 2,
   },
   bar: {

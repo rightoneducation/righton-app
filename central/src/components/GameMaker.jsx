@@ -9,6 +9,7 @@ import QuestionForm from './QuestionMaker';
 import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
 import { getGameById } from '../lib/games';
+import { isNullOrUndefined } from '@righton/networking';
 
 
 // New "empty" game
@@ -48,7 +49,7 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, questions, game, createNewGameTemplate, editGameTemplate, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick }) {
+export default function GameMaker({ loading, questions, game, createNewGameTemplate, editGameTemplate, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick, handleDeleteGameQuestion }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -57,7 +58,12 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
   const classes = useStyles();
   const history = useHistory();
   const [disabled, setDisabled] = useState(true);
-
+  // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
+  const [localQuestionTemplates, setLocalQuestionTemplates] = useState(questions);
+  // questionTemplatesToAdd is an array of questionTemplate ids
+  const [questionTemplatesToAdd, setQuestionTemplatesToAdd] = useState([]);
+  // questionTemplatesToDelete is an array of gameQuestion ids (so that we don't have to map through anything)
+  const [questionTemplatesToDelete, setQuestionTemplatesToDelete] = useState([]);
   const [gameDetails, setGameDetails] = useState(() => {
     if (game) {
       return { ...game };
@@ -98,12 +104,24 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
     setGameDetails({ ...gameDetails, grade: grade, domain: domain, cluster: cluster, standard: standard });
   }
 
-  // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
   const handleDelete = (index) => {
     const newQuestions = [...questions];
     newQuestions.splice(index, 1);
-    setQuestions(newQuestions);
+    setLocalQuestionTemplates(newQuestions);
+    setQuestionTemplatesToDelete((prev) => [...prev, questions[index].id]);
   }
+
+  const handleAdd = (questionTemplate) => {
+    setLocalQuestionTemplates((prev) => [...prev, questionTemplate]);
+    setQuestionTemplatesToAdd((prev) => [...prev, questionTemplate.id]);
+  }
+
+  // // Handles deletion of Question in the Question set of a Game (does not remove it on the backend, just removes it from the copy of the array of Questions that will then be saved as new connections to the Game in the handleSubmit function)
+  // const handleDeleteGameQuestion = (index) => {
+  //   const newQuestions = [...questions];
+  //   newQuestions.splice(index, 1);
+  //   setQuestions(newQuestions);
+  // }
 
   // Handles any new questions added to the game, either through Add Question or Create Question
   const handleGameQuestion = (newQuestion) => {
@@ -270,49 +288,56 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
               </Grid>
 
               <Grid container item xs={12} className={classes.questionHolder}>
-                {questions.map((question, index) => {
-                  return (
-                    <Grid key={index} container item xs={12}>
-                      <Card className={classes.question}>
-                        <CardContent>
-                          <Grid container item>
-                            <Grid container item xs={10}>
-                              <Grid item xs={12}>
-                                <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                {
+                !isNullOrUndefined(questions) 
+                  ? 
+                  localQuestionTemplates.map((questionData, index) => {
+                    const question = questionData.questionTemplate;
+                    return (
+                      <Grid key={index} container item xs={12}>
+                        <Card className={classes.question}>
+                          <CardContent>
+                            <Grid container item>
+                              <Grid container item xs={10}>
+                                <Grid item xs={12}>
+                                  <CCSS grade={question.grade} domain={question.domain} cluster={question.cluster} standard={question.standard} />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                  <Typography className={classes.title}>
+                                    Question {index + 1}
+                                  </Typography>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                  <Typography color="textSecondary" gutterBottom>
+                                    {question.text}
+                                  </Typography>
+                                </Grid>
                               </Grid>
 
-                              <Grid item xs={12}>
-                                <Typography className={classes.title}>
-                                  Question {index + 1}
-                                </Typography>
-                              </Grid>
+                              <Grid container item xs={2}>
+                                <Grid container item xs={10} justifyContent='center'>
+                                  {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'} />}
+                                </Grid>
 
-                              <Grid item xs={12}>
-                                <Typography color="textSecondary" gutterBottom>
-                                  {question.text}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-
-                            <Grid container item xs={2}>
-                              <Grid container item xs={10} justifyContent='center'>
-                                {question.imageUrl ? <img className={classes.image} src={question.imageUrl} alt="" /> : <img src={RightOnPlaceHolder} alt="Placeholder" height={'128px'} />}
-                              </Grid>
-
-                              <Grid container direction='column' item xs={2}>
-                                <Grid container item xs={2}>
-                                  <IconButton size='small' onClick={() => handleDelete(index)}>
-                                    <Cancel />
-                                  </IconButton>
+                                <Grid container direction='column' item xs={2}>
+                                  <Grid container item xs={2}>
+                                    <IconButton size='small' onClick={() => handleDelete(index)}>
+                                      <Cancel />
+                                    </IconButton>
+                                  </Grid>
                                 </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  );
-                })}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    );
+                  })
+                : 
+                null
+                }
 
                 <Grid container item xs={12} className={classes.questionAddition}>
                   <Grid container item xs={6} justifyContent='center'>
@@ -350,8 +375,16 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
       <Switch>
         <Route path="/gamemaker/:gameId/addquestion" render=
           {({ match }) => {
-            const { gameId } = match.params
-            return <QuestionDashboard loading={loading} questions={questions} games={games} cloneQuestion={cloneQuestion} submit={handleGameQuestion} gameId={gameId} />
+            const { gameId } = match.params;
+            console.log("here!");
+            return <QuestionDashboard 
+              loading={loading} 
+              questions={questions} 
+              games={games} 
+              cloneQuestion={cloneQuestion} 
+              submit={handleGameQuestion} 
+              gameId={gameId} 
+            />
           }} />
 
         <Route path="/createquestion" render=

@@ -669,16 +669,15 @@ class GameTemplateParser {
         awsGameTemplate: AWSGameTemplate
     ): IGameTemplate {
         // parse the IQuestionTemplate[] from IModelGameQuestionConnection
-       let questionTemplates: IQuestionTemplate[] = [];
+        let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
-
+  
                 if (item && item.questionTemplate) {
                     const { gameTemplates, ...rest } = item.questionTemplate;
-        
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
-                        questionTemplates.push(rest as IQuestionTemplate);
+                        questionTemplates.push({questionTemplate: rest as IQuestionTemplate, gameQuestionId: item.id as string});
                     }
                 }
             }
@@ -741,13 +740,17 @@ class QuestionTemplateParser {
     static questionTemplateFromAWSQuestionTemplate(
         awsQuestionTemplate: AWSQuestionTemplate
     ): IQuestionTemplate {
-        let gameTemplates: IGameTemplate[] = [];
+        let gameTemplates: Array<{ gameTemplate: IGameTemplate, gameQuestionId: string }> | null = [];
         if (!isNullOrUndefined(awsQuestionTemplate) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
-            gameTemplates = awsQuestionTemplate.gameTemplates.items.map((item: any) => {
-                const { gameTemplate } = item;
-                const { gameTemplates, questionTemplates, ...rest } = gameTemplate;
-                return rest as IGameTemplate;
-            });
+            for (const item of awsQuestionTemplate.gameTemplates.items) {
+              if (item && item.gameTemplate) {
+                  const { questionTemplates, ...rest } = item.gameTemplate;
+                  // Only add to questionTemplates if 'rest' is not empty
+                  if (Object.keys(rest).length > 0) {
+                      gameTemplates.push({gameTemplate: rest as IGameTemplate, gameQuestionId: item.id as string});
+                  }
+              }
+          }
         } 
 
         const {

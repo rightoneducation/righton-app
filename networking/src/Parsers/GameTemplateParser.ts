@@ -7,16 +7,15 @@ export class GameTemplateParser {
       awsGameTemplate: AWSGameTemplate
   ): IGameTemplate {
       // parse the IQuestionTemplate[] from IModelGameQuestionConnection
-     let questionTemplates: IQuestionTemplate[] = [];
+     let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
       if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
           for (const item of awsGameTemplate.questionTemplates.items) {
 
               if (item && item.questionTemplate) {
                   const { gameTemplates, ...rest } = item.questionTemplate;
-      
                   // Only add to questionTemplates if 'rest' is not empty
                   if (Object.keys(rest).length > 0) {
-                      questionTemplates.push(rest as IQuestionTemplate);
+                      questionTemplates.push({questionTemplate: rest as IQuestionTemplate, gameQuestionId: item.id as string});
                   }
               }
           }

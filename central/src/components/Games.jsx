@@ -38,7 +38,8 @@ export default function Games({
   handleSearchClick, 
   isResolutionMobile, 
   addQToGT, 
-  handleQuestionBankClick 
+  handleQuestionBankClick,
+  handleDeleteGameQuestion
 }) {
   const classes = useStyles();
   const history = useHistory();
@@ -66,7 +67,7 @@ export default function Games({
                   const { gameId } = match.params;
                   const game = getGameById(games, gameId);
                   handleSearchClick(false);
-                  return <GameLaunch loading={loading} saveGame={editGameTemplate} deleteQuestion={deleteQuestion} game={game} gameId={gameId} deleteGame={deleteGame} cloneGame={cloneGame} isUserAuth={isUserAuth} />;
+                  return <GameLaunch loading={loading} saveGame={editGameTemplate} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} game={game} gameId={gameId} deleteGame={deleteGame} handleCloneGameTemplate={cloneGameTemplate} isUserAuth={isUserAuth} />;
                 }
               } />
             </Switch>
@@ -78,7 +79,7 @@ export default function Games({
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />;
+              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} handleDeleteGameQuestion={handleDeleteGameQuestion} />;
             }
           )
         } />
@@ -117,22 +118,23 @@ export default function Games({
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
     marginTop: 0,
     width: 'calc(100% + 16px) !important',
     zIndex: -2,
-    overflowY: 'hidden',
-    height: '100%',
+    overflowY: 'auto',
+    height: '100%'
   },
   contentGrid: {
     padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
     borderRight: '1px #0000003b solid',
     overflowY: 'hidden',
     overflowX: 'hidden',
-    height: '100%'
   },
   content: {
     backgroundColor: '#F2F2F2',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
   },
   actions: {
     paddingTop: '10px',

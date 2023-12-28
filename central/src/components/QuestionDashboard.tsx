@@ -4,10 +4,11 @@ import { makeStyles, Box, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingIndicator from './LoadingIndicator';
-import { IQuestionTemplate } from '@righton/networking';
+import { IQuestionTemplate, isNullOrUndefined } from '@righton/networking';
 import QuestionCard from './QuestionCard';
 
 type QuestionDashboardProps = {
+  gameId: string | null;
   questions: IQuestionTemplate[];
   loading: boolean;
   isUserAuth: boolean;
@@ -18,6 +19,7 @@ type QuestionDashboardProps = {
 };
 
 export default function QuestionDashboard({
+  gameId,
   questions,
   loading,
   isUserAuth,
@@ -26,6 +28,7 @@ export default function QuestionDashboard({
   nextToken,
   handleScrollDown,
 }: QuestionDashboardProps) {
+  console.log("or here?");
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -93,21 +96,27 @@ export default function QuestionDashboard({
         > 
           {questions.map((question, index) => 
             <Grid key={index} container item xs={12} md={match ? 12 : 6} lg={match ? 12 : 4} style={{width: '100%'}}>
-            <QuestionCard  
-              question={question}
-              anchorEl={anchorEl}
-              isUserAuth={isUserAuth}
-              match={match}
-              index={index}
-              activeIndex={activeIndex}
-              handleClick={handleClick}
-              cloneHandler={cloneHandler}
-              deleteHandler={deleteHandler}
-              handleClose={handleClose}
-            />
+              <QuestionCard  
+                question={question}
+                anchorEl={anchorEl}
+                isUserAuth={isUserAuth}
+                match={match}
+                index={index}
+                activeIndex={activeIndex}
+                handleClick={handleClick}
+                cloneHandler={cloneHandler}
+                deleteHandler={deleteHandler}
+                handleClose={handleClose}
+              />
             </Grid>
           )}
+      {!isNullOrUndefined(gameId) ?
+        <div>SUP</div>
+        :
+        null
+      }
       </InfiniteScroll>
+   
     );
   };
   return (

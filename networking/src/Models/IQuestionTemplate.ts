@@ -13,7 +13,7 @@ export interface IQuestionTemplate {
   grade: string | null;
   standard: string | null;
   imageUrl?: string | null | undefined,
-  gameTemplates?: IGameTemplate[] | null,
+  gameTemplates?: { gameTemplate: IGameTemplate, gameQuestionId: string }[] | null,
   createdAt?: string | null | undefined,
   updatedAt?: string | null
 }

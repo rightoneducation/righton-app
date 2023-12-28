@@ -6,6 +6,7 @@ import {
   useLocation
 } from "react-router-dom";
 import { Auth } from 'aws-amplify';
+import { Box } from '@material-ui/core';
 import { 
   ApiClient,
   IGameTemplate,
@@ -268,6 +269,14 @@ export const RouteContainer = ({
     return result
   }
 
+  const handleDeleteGameQuestion = async (id: string) => {
+    // const result = await deleteQuestionTemplate(id);
+    // if (result) {
+    //   getQuestionTemplates(nextToken)
+    // }
+    // setAlert({ message: 'Question deleted.', type: 'success' });
+  }
+
   const handleUserAuth = (isAuth: boolean) => {
     setIsUserAuth(isAuth);
   }
@@ -391,34 +400,37 @@ export const RouteContainer = ({
 
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <Games 
-        loading={loading} 
-        nextToken={nextToken} 
-        games={filteredGames} 
-        questions={questions} 
-        handleScrollDown={handleScrollDown} 
-        createNewGameTemplate={createNewGameTemplate} 
-        editGameTemplate={editGameTemplate} 
-        updateQuestion={updateQuestion} 
-        handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
-        deleteGame={handleDeleteGameTemplate} 
-        cloneGameTemplate={cloneGameTemplate} 
-        sortType={sortType} 
-        setSortType={setSortType} 
-        cloneQuestion={cloneQuestion} 
-        isUserAuth={isUserAuth}  
-        isSearchClick={isSearchClick} 
-        handleSearchClick={handleSearchClick} 
-        setSearchInput={setSearchInput} 
-        searchInput={searchInput} 
-        isResolutionMobile={isResolutionMobile} 
-        addQToGT={addQToGT} 
-        handleQuestionBankClick={handleQuestionBankClick}
-        handleCreateQuestionTemplate={handleCreateQuestionTemplate}
-        handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
-        handleCloneQuestionTemplate={handleCloneQuestionTemplate}
-      />
+      <Box sx={{ height: '100vh' }}>
+        <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
+        <Games 
+          loading={loading} 
+          nextToken={nextToken} 
+          games={filteredGames} 
+          questions={questions} 
+          handleScrollDown={handleScrollDown} 
+          createNewGameTemplate={createNewGameTemplate} 
+          editGameTemplate={editGameTemplate} 
+          updateQuestion={updateQuestion} 
+          handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} 
+          deleteGame={handleDeleteGameTemplate} 
+          cloneGameTemplate={cloneGameTemplate} 
+          sortType={sortType} 
+          setSortType={setSortType} 
+          cloneQuestion={cloneQuestion} 
+          isUserAuth={isUserAuth}  
+          isSearchClick={isSearchClick} 
+          handleSearchClick={handleSearchClick} 
+          setSearchInput={setSearchInput} 
+          searchInput={searchInput} 
+          isResolutionMobile={isResolutionMobile} 
+          addQToGT={addQToGT} 
+          handleQuestionBankClick={handleQuestionBankClick}
+          handleCreateQuestionTemplate={handleCreateQuestionTemplate}
+          handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
+          handleCloneQuestionTemplate={handleCloneQuestionTemplate}
+          handleDeleteGameQuestion={handleDeleteGameQuestion}
+        />
+      </Box>
       <AlertBar />
     </Route>
   </Switch>

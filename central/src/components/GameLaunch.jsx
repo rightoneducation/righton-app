@@ -11,8 +11,10 @@ import CCSS from './CCSS';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: `${theme.spacing(2)}px`,
     display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    padding: `${theme.spacing(2)}px`,
   },
   actions: {
     display: 'flex',
@@ -111,7 +113,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame, cloneGame, isUserAuth }) {
+function GameForm({ loading, game, gameId, saveGame, deleteQuestion, handleDeleteGameTemplate, handleCloneGameTemplate, isUserAuth }) {
   useEffect(() => {
     document.title = 'RightOn! | Game launcher';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -154,13 +156,13 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
       title: `Clone of ${game.title}`,
       imageUrl: game.imageUrl,
     };
-    const gameClone = cloneGame(newGame)
+    const gameClone = handleCloneGameTemplate(newGame)
     history.push(`/`)
   };
   const deleteHandler = (id) => () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this game?');
     if (confirmDelete) {
-      deleteGame(id);
+      handleDeleteGameTemplate(id);
     }
     history.push(`/`)
   };
@@ -184,7 +186,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
   const LAUNCH_GAME_URL = `http://localhost:3001/new/${game.id}`;
 
   return (
-    <>
+    <Box className={classes.root}>
       <Box className={classes.actions}>
         <Button type="button" onClick={() => history.push(`/`)}>
           <ArrowBack className={classes.back} />Back to Explore Page
@@ -232,7 +234,8 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
               No questions yet. <Link onClick={addQuestion} component="button" variant="h5" className={classes.addLink}>Add a question.</Link>
             </Typography>
           )}
-            {questions.map((question, index) => {
+            {questions.map((questionData, index) => {
+              const question = questionData.questionTemplate;
               if (question === null) return null;
               const { title, imageUrl } = question;
               return (
@@ -282,7 +285,7 @@ function GameForm({ loading, game, gameId, saveGame, deleteQuestion, deleteGame,
             })}
         </Grid>
       </Grid>
-    </>
+    </Box>
   );
 }
 

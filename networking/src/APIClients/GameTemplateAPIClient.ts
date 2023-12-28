@@ -99,6 +99,7 @@ export class GameTemplateAPIClient
         graphqlOperation(listGameTemplates, {limit, nextToken})
     )) as { data: any }
     const parsedGameTemplates = result.data.listGameTemplates.items.map((gameTemplate: AWSGameTemplate) => {
+      console.log(gameTemplate);
         return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate)
     });
     const parsedNextToken = result.data.listGameTemplates.nextToken;
