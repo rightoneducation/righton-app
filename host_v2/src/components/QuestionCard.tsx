@@ -24,16 +24,17 @@ export default function QuestionCard({
       >
         {t('gamesession.questionCard.title')}
       </Typography>
-      <img
-        style={{
-          width: '75%',
-          height: 'auto',
-          paddingTop: `${theme.sizing.smallPadding}px`,
-          paddingBottom: `${theme.sizing.smallPadding}px`,
-        }}
-        src={imageUrl}
-        alt="Question"
-      />
+      {imageUrl === undefined ? null :
+        <img
+          style={{
+            width: '75%',
+            height: 'auto',
+            paddingTop: `${theme.sizing.smallPadding}px`,
+            paddingBottom: `${theme.sizing.smallPadding}px`,
+          }}
+          src={imageUrl}
+          alt="Question"
+        />}
       <Typography variant="body1"> {questionText} </Typography>
     </BodyCardContainerStyled>
   </BodyCardStyled>
