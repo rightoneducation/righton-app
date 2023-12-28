@@ -22,7 +22,7 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
   return (
     <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <QuestionCard questionText={sampleText} imageUrl={undefined} />
+        <QuestionCard questionText={sampleText} imageUrl={sampleUrl} />
         <Card />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
