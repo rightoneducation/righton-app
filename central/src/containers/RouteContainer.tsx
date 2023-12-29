@@ -160,7 +160,6 @@ export const RouteContainer = ({
   }
 
   const saveGameTemplate = async (existingGame: IGameTemplate, updatedGame: IGameTemplate) => {
-    console.log(existingGame, updatedGame);
     // first create the game template
     setLoading(true);
     if (updatedGame.id === '0')
@@ -168,11 +167,19 @@ export const RouteContainer = ({
       const backendGame = await createNewGameTemplate(updatedGame);
     }
     else {
+      // update all fields except for the questionTemplates
       const {questionTemplates, ...rest} = updatedGame;
       const gameTemplateUpdate = rest; 
       const backendGame = await updateGameTemplate(gameTemplateUpdate);
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
+      const newQuestionTemplates = updatedGame.questionTemplates.map((updatedQuestion) => {
+        if (updatedQuestion.gameQuestionId === null)  {
+          handleCreateQuestionTemplate(updatedQuestion.questionTemplate);
+        }
+      });
+      const newQuestions = await Promise.all(newQuestionTemplates);
+      
       const newGameQuestionRequests = updatedGame.questionTemplates.map((question) => {
         if (question.gameQuestionId === null){ 
           handleCreateGameQuestion(updatedGame.id, question.questionTemplate.id);
@@ -184,12 +191,12 @@ export const RouteContainer = ({
         return updatedGame.questionTemplates && !updatedGame.questionTemplates.some(updatedQuestion => 
             updatedQuestion.gameQuestionId === existingQuestion.gameQuestionId);
       });
-      console.log(questionTemplatesToDelete);
       const newDeletedGameQuestionTemplates = questionTemplatesToDelete.map((question) => {
         handleDeleteGameQuestion(question.gameQuestionId);
       });
       const deletedGameQuestionTemplates = await Promise.all(newDeletedGameQuestionTemplates);
     }
+    const games = await getAllGameTemplates(null);
     setLoading(false);
     setAlert({ message: 'Save Completed.', type: 'success' });
   };
@@ -258,7 +265,7 @@ export const RouteContainer = ({
       if (result) {
         getQuestionTemplates(null);
       }
-      setAlert({ message: 'Question created.', type: 'success' });
+      console.log(result);
       return result;
     } catch (e) {
       console.log(e);
@@ -274,9 +281,7 @@ export const RouteContainer = ({
       const questionTemplateUpdate = rest; 
       const gameTemplatesUpdate = gameTemplates;
       const question = await updateQuestionTemplate(questionTemplateUpdate);
-        if (question) {
-          // ~~~~ add questions to game ~~~~~~ using , questionIDSet
-  
+        if (question) {  
           const question = await getQuestionTemplates(nextToken);
         } else {
           throw new Error ('Question was unable to be update');

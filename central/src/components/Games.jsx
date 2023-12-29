@@ -54,6 +54,7 @@ export default function Games({
     if (isSelected) {
       if (!selectedQuestions.some(existingQuestion => existingQuestion.id === question.id)) 
         setSelectedQuestions([...selectedQuestions, question]);
+      console.log([...selectedQuestions, question]);
     } else {
       setSelectedQuestions(selectedQuestions.filter((existingQuestion) => existingQuestion.id !== question.id));
     }
@@ -89,7 +90,34 @@ export default function Games({
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} handleDeleteGameQuestion={handleDeleteGameQuestion} selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions} saveGameTemplate={saveGameTemplate} isUserAuth={isUserAuth}/>;
+              return <GameMaker 
+                loading={loading} 
+                questions={questions} 
+                game={newGame ? null : getGameById(games, gameId)} 
+                createNewGameTemplate={createNewGameTemplate} 
+                editGameTemplate={editGameTemplate} 
+                gameId={gameId} 
+                games={games} 
+                cloneQuestion={cloneQuestion} 
+                updateQuestion={updateQuestion} 
+                addQToGT={addQToGT} 
+                handleQuestionBankClick={handleQuestionBankClick} 
+                handleDeleteGameQuestion={handleDeleteGameQuestion} 
+                selectedQuestions={selectedQuestions} 
+                setSelectedQuestions={setSelectedQuestions} 
+                saveGameTemplate={saveGameTemplate}
+                isUserAuth={isUserAuth}
+                setSearchInput={setSearchInput}
+                searchInput={searchInput}
+                isSearchClick={isSearchClick}
+                handleSearchClick={handleSearchClick}
+                isResolutionMobile={isResolutionMobile} 
+                handleSortChange={handleSortChange} 
+                sortByCheck={sortByCheck}
+                setSortByCheck={setSortByCheck}
+                handleScrollDown={handleScrollDown}
+                handleQuestionSelected={handleQuestionSelected} 
+              />;
             }
           )
         } />
@@ -110,29 +138,6 @@ export default function Games({
               <SortByDropdown handleSortChange={handleSortChange} sortByCheck={sortByCheck} setSortByCheck={setSortByCheck} isResolutionMobile={isResolutionMobile} style={{zIndex: 5}}/>
             </Box>
             <Grid container onClick={() => setSortByCheck(false)}>
-              <Route exact path="/gamemaker/:gameId/addquestion" render=
-                {({ match }) => {
-                  const { gameId } = match.params;
-                  return (
-                    <>
-                      <QuestionDashboard 
-                        loading={loading} 
-                        questions={questions} 
-                        games={games} 
-                        cloneQuestion={cloneQuestion} 
-                        gameId={gameId} 
-                        handleScrollDown={handleScrollDown}
-                        handleQuestionSelected={handleQuestionSelected}
-                      />
-                      <Box className={classes.addQuestionFooter}>
-                        <Button variant='contained' disableElevation className={classes.blueButton} onClick={(event) => history.push(`/gamemaker/${gameId}`)}>
-                          Add to Game
-                        </Button>
-                      </Box>
-                    </>
-                  );
-                }} 
-              />
               <Route exact path="/questions" render= { () => 
                 <QuestionDashboard loading={loading} questions={questions} isUserAuth={isUserAuth} handleScrollDown={handleScrollDown} nextToken={nextToken} handleDeleteQuestionTemplate={handleDeleteQuestionTemplate} handleCloneQuestionTemplate={handleCloneQuestionTemplate}/>   
               }/>

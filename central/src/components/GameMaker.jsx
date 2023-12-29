@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
+import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent, Box } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
 import { isNullOrUndefined } from '@righton/networking';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
@@ -9,6 +9,9 @@ import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
 import QuestionMaker from './QuestionMaker';
 import { getQuestionTemplateById } from '../lib/HelperFunctions';
+import SearchBar from './SearchBar.jsx';
+import SortByDropdown from './SortByDropdown';
+import QuestionDashboard from './QuestionDashboard';
 
 // New "empty" game
 const newGame = {
@@ -48,15 +51,29 @@ const times = [
 ]
 
 export default function GameMaker({ 
+  loading,
   questions, 
-  game, 
+  game,
+  games, 
   handleQuestionBankClick, 
   selectedQuestions, 
   setSelectedQuestions, 
   saveGameTemplate, 
   isUserAuth,
   handleCreateQuestionTemplate,
-  handleUpdateQuestionTemplate
+  handleUpdateQuestionTemplate,
+  setSearchInput,
+  searchInput, 
+  isSearchClick, 
+  handleSearchClick, 
+  isResolutionMobile, 
+  handleSortChange, 
+  sortByCheck, 
+  setSortByCheck, 
+  cloneQuestion,
+  gameId,
+  handleScrollDown,
+  handleQuestionSelected
 }) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
@@ -76,11 +93,10 @@ export default function GameMaker({
   const selectedQuestionTemplates = selectedQuestions.map(question => {
     return {questionTemplate: question, gameQuestionId: null }
   });
-
+  console.log([...gameDetails.questionTemplates, ...selectedQuestionTemplates]);
   // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
-  const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates, ...selectedQuestionTemplates]);
-  console.log(gameDetails);
-  console.log(localQuestionTemplates);
+  const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates]);
+
   const [phaseOne, setPhaseOne] = useState(() => {
     if (gameDetails.phaseOneTime === null) {
       return 180;
@@ -150,6 +166,7 @@ export default function GameMaker({
   const handleSubmit = (event) => {
     gameDetails.questionTemplates = localQuestionTemplates;
     saveGameTemplate(game, gameDetails);
+    setLocalQuestionTemplates([]);
     event.preventDefault();
     history.push('/');
   };
@@ -297,7 +314,7 @@ export default function GameMaker({
 
                                 <Grid item xs={12}>
                                   <Typography color="textSecondary" gutterBottom>
-                                    {question.text}
+                                    {question.title}
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -358,9 +375,7 @@ export default function GameMaker({
       </form>
     </div>
   );
-
   return (
-    <div>
       <Switch>
         <Route exact path='/gamemaker/:gameId/questionmaker/:questionId' render={
           isUserAuth && (
@@ -379,15 +394,94 @@ export default function GameMaker({
             }
           )
         } />
+        <Route exact path="/gamemaker/:gameId/addquestion" render=
+          {({ match }) => {
+            const { gameId } = match.params;
+            return (
+              <>
+                <Grid item xs={12} className={classes.contentGrid}>
+                  <Box className={classes.actions}>
+                    <SearchBar 
+                      setSearchInput={setSearchInput} 
+                      searchInput={searchInput} 
+                      isSearchClick={isSearchClick} 
+                      handleSearchClick={handleSearchClick} 
+                      isResolutionMobile={isResolutionMobile} 
+                    />
+                    <SortByDropdown 
+                      handleSortChange={handleSortChange} 
+                      sortByCheck={sortByCheck} 
+                      setSortByCheck={setSortByCheck} 
+                      isResolutionMobile={isResolutionMobile} 
+                      style={{zIndex: 5}}
+                    />
+                  </Box>
+                  <Grid container onClick={() => setSortByCheck(false)}>
+                    <QuestionDashboard 
+                      loading={loading} 
+                      questions={questions} 
+                      games={games} 
+                      cloneQuestion={cloneQuestion} 
+                      gameId={gameId} 
+                      handleScrollDown={handleScrollDown}
+                      handleQuestionSelected={handleQuestionSelected}
+                    />
+                  </Grid>
+                </Grid>
+                <Box className={classes.addQuestionFooter}>
+                  <Button 
+                    variant='contained' 
+                    disableElevation 
+                    className={classes.blueButton} 
+                    onClick={(event) => {
+                    setLocalQuestionTemplates([...localQuestionTemplates, ...selectedQuestionTemplates]);
+                    history.push(`/gamemaker/${gameId}`)
+                  }}>
+                    Add to Game
+                  </Button>
+                </Box>
+              </>
+            );
+          }} 
+        />
         <Route path="/gamemaker/:gameId">
           {content}
         </Route>
       </Switch>
-    </div>
   );
 }
 
 const useStyles = makeStyles(theme => ({
+  contentGrid: {
+    padding: `0px 0px 0px ${theme.spacing(4)}px !important`,
+    borderRight: '1px #0000003b solid',
+    overflowY: 'hidden',
+    overflowX: 'hidden',
+  },
+  actions: {
+    paddingTop: '10px',
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 10px 0px  !important`,
+    marginBottom: '16px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 10,
+    height: '40px',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: 'white',
+    zIndex:3
+  },
+  addQuestionFooter: {
+    width: '100%',
+    height: '50px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    background: '#FFF',
+    zIndex: 4
+  },
   page: {
     marginTop: '1%',
     paddingBottom: '10px',

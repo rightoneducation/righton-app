@@ -120,7 +120,7 @@ export default function QuestionDashboard({
   };
   return (
     <Typography gutterBottom>
-      No results found.
+      Loading...
     </Typography>
   );
 };

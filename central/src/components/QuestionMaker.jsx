@@ -160,7 +160,6 @@ export default function QuestionMaker({
     }
     try{
       const questionToSend = { ...question };
-      questionToSend.id = uuidv4();
       questionToSend.choices = JSON.stringify(questionToSend.choices)
       questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
       questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
@@ -168,6 +167,7 @@ export default function QuestionMaker({
       questionToSend.version = 0;
       let newQuestion;
       if (gameId){
+        questionToSend.id = uuidv4();
         setLocalQuestionTemplates([...localQuestionTemplates, {questionTemplate: questionToSend, gameQuestionId: null}]);
         history.push(`/gamemaker/${gameId}`);
         return;
@@ -175,6 +175,7 @@ export default function QuestionMaker({
       if (questionToSend.id) {
         newQuestion = await handleUpdateQuestionTemplate(questionToSend);
       } else {
+        questionToSend.id = uuidv4();
         newQuestion = await handleCreateQuestionTemplate(questionToSend);
         delete newQuestion.updatedAt;
         delete newQuestion.createdAt;
