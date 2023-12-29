@@ -8,7 +8,6 @@ const useStyles = makeStyles(() => ({
   div: {
     top: 0,
     padding: '16px',
-    height: '175px',
     boxSizing: 'border-box',
     width: '100%',
     maxWidth: '700px',
@@ -71,8 +70,12 @@ export default function HeaderGame({
 }) {
   const classes = useStyles();
 
+  const divStyle = {
+    height: statePosition === 1 ? 'auto' : '175px'
+  };
+  
   return (
-    <div className={classes.div}>
+    <div style={divStyle} className={classes.div}>
       {statePosition !== 1 && ( 
         <Pagination
           totalQuestions={totalQuestions}
