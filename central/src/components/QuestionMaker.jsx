@@ -2,12 +2,22 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Divider, Button, Select, MenuItem, Grid } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionMakerAnswerDropdown from './QuestionMakerAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
 
-export default function QuestionMaker({ updateQuestion, question: initialState, gameId, gameQuestion, handleCreateQuestionTemplate, handleUpdateQuestionTemplate }) {
+export default function QuestionMaker({ 
+  updateQuestion, 
+  question: initialState, 
+  gameId, 
+  gameQuestion, 
+  handleCreateQuestionTemplate, 
+  handleUpdateQuestionTemplate,
+  localQuestionTemplates,
+  setLocalQuestionTemplates 
+}) {
   useEffect(() => {
     document.title = 'RightOn! | Question editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -21,7 +31,6 @@ export default function QuestionMaker({ updateQuestion, question: initialState, 
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
   const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
-
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
       const copyOfOriginal = { ...originalQuestion }
@@ -150,13 +159,19 @@ export default function QuestionMaker({ updateQuestion, question: initialState, 
       return;
     }
     try{
-      const questionToSend = { ...question }
+      const questionToSend = { ...question };
+      questionToSend.id = uuidv4();
       questionToSend.choices = JSON.stringify(questionToSend.choices)
       questionToSend.instructions = JSON.stringify(questionToSend.instructions.filter(step => step !== ""));
       questionToSend.answerSettings = JSON.stringify({ answerType, answerPrecision });
       questionToSend.owner = "Owners Name";
       questionToSend.version = 0;
       let newQuestion;
+      if (gameId){
+        setLocalQuestionTemplates([...localQuestionTemplates, {questionTemplate: questionToSend, gameQuestionId: null}]);
+        history.push(`/gamemaker/${gameId}`);
+        return;
+      }
       if (questionToSend.id) {
         newQuestion = await handleUpdateQuestionTemplate(questionToSend);
       } else {
@@ -170,7 +185,6 @@ export default function QuestionMaker({ updateQuestion, question: initialState, 
     }
     history.push('/questions');
   }
-
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -316,8 +330,13 @@ export default function QuestionMaker({ updateQuestion, question: initialState, 
           </Grid>
 
           <Grid style={{ marginTop: 50 }} item container xs={8} sm={12} justifyContent='center'>
-            <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Question Bank</Button>
-          </Grid>
+            { !gameId 
+              ?
+                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Question Bank</Button>
+              :
+                <Button className={classes.addGameButton} variant="contained" color="primary" onClick={() => handleSaveQuestionTemplate(question)}>Add to Game</Button>
+            }
+            </Grid>
 
         </Grid>
 

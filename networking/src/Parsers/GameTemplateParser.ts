@@ -10,7 +10,7 @@ export class GameTemplateParser {
      let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
       if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
           for (const item of awsGameTemplate.questionTemplates.items) {
-
+         
               if (item && item.questionTemplate) {
                   const { gameTemplates, ...rest } = item.questionTemplate;
                   // Only add to questionTemplates if 'rest' is not empty

@@ -159,8 +159,8 @@ export const RouteContainer = ({
     }
   }
 
-
   const saveGameTemplate = async (existingGame: IGameTemplate, updatedGame: IGameTemplate) => {
+    console.log(existingGame, updatedGame);
     // first create the game template
     setLoading(true);
     if (updatedGame.id === '0')
@@ -168,12 +168,15 @@ export const RouteContainer = ({
       const backendGame = await createNewGameTemplate(updatedGame);
     }
     else {
-      // updateGameTemplate
+      const {questionTemplates, ...rest} = updatedGame;
+      const gameTemplateUpdate = rest; 
+      const backendGame = await updateGameTemplate(gameTemplateUpdate);
     }
     if (!isNullOrUndefined(updatedGame.questionTemplates) && !isNullOrUndefined(existingGame.questionTemplates)) {
       const newGameQuestionRequests = updatedGame.questionTemplates.map((question) => {
-        if (question.gameQuestionId === null)
-        handleCreateGameQuestion(updatedGame.id, question.questionTemplate.id);
+        if (question.gameQuestionId === null){ 
+          handleCreateGameQuestion(updatedGame.id, question.questionTemplate.id);
+        }
       });
       const newGameQuestions = await Promise.all(newGameQuestionRequests);
       // find question templates that were deleted (if gameQuestionId is present in existing but not in updated)
@@ -212,7 +215,6 @@ export const RouteContainer = ({
       } catch (e) {
         console.log(e);
       }
-  
     }
 
   const handleQuestionBankClick = (gameDetails: any) => {

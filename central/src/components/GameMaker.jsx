@@ -3,14 +3,12 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Divider, Grid, MenuItem, TextField, Typography, Card, CardContent } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
+import { isNullOrUndefined } from '@righton/networking';
 import RightOnPlaceHolder from './../images/RightOnPlaceholder.svg';
-import QuestionDashboard from './QuestionDashboard';
-import QuestionForm from './QuestionMaker';
 import CCSS from './CCSS';
 import GameCCSS from './GameMakerCCSS';
-import { getGameById } from '../lib/games';
-import { isNullOrUndefined } from '@righton/networking';
-
+import QuestionMaker from './QuestionMaker';
+import { getQuestionTemplateById } from '../lib/HelperFunctions';
 
 // New "empty" game
 const newGame = {
@@ -49,7 +47,17 @@ const times = [
   },
 ]
 
-export default function GameMaker({ loading, questions, game, createNewGameTemplate, editGameTemplate, gameId, cloneQuestion, games, updateQuestion, addQToGT, handleQuestionBankClick, handleDeleteGameQuestion, selectedQuestions, setSelectedQuestions, saveGameTemplate }) {
+export default function GameMaker({ 
+  questions, 
+  game, 
+  handleQuestionBankClick, 
+  selectedQuestions, 
+  setSelectedQuestions, 
+  saveGameTemplate, 
+  isUserAuth,
+  handleCreateQuestionTemplate,
+  handleUpdateQuestionTemplate
+}) {
   useEffect(() => {
     document.title = 'RightOn! | Game editor';
     return () => { document.title = 'RightOn! | Game management'; }
@@ -71,7 +79,8 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
 
   // these two state variables will be updated by the user on this screen, and then sent to the API when they click "Save Game"
   const [localQuestionTemplates, setLocalQuestionTemplates] = useState([...gameDetails.questionTemplates, ...selectedQuestionTemplates]);
-
+  console.log(gameDetails);
+  console.log(localQuestionTemplates);
   const [phaseOne, setPhaseOne] = useState(() => {
     if (gameDetails.phaseOneTime === null) {
       return 180;
@@ -141,22 +150,6 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
   const handleSubmit = (event) => {
     gameDetails.questionTemplates = localQuestionTemplates;
     saveGameTemplate(game, gameDetails);
-    // if (gameDetails.id !== 0) {
-    //   questions && questions.map(question => {
-    //     delete question.updatedAt;
-    //     delete question.createdAt;
-    //   })
-    //   editGameTemplate(gameDetails, questions);
-    // }
-    // else {
-    //   let questionIDs = questions.map(question => (question.id))
-    //   delete gameDetails.questions;
-    //   delete gameDetails.id;
-    //   gameDetails.owner = 'Owners Name';
-    //   gameDetails.version = 0;
-    //   createNewGameTemplate(gameDetails, questionIDs);
-
-    // }
     event.preventDefault();
     history.push('/');
   };
@@ -369,19 +362,23 @@ export default function GameMaker({ loading, questions, game, createNewGameTempl
   return (
     <div>
       <Switch>
-        <Route path="/createquestion" render=
-          {({ match }) => {
-            const { gameId, createQuestionIndex } = match.params
-            const gameNumber = Number(gameId) === 0;
-            return <QuestionForm
-              onChange={setDisabled(isButtonDisabled())}
-              question={gameNumber ? null : getGameById(games, gameId)?.questions[Number(createQuestionIndex) - 1]}
-              updateQuestion={updateQuestion}
-              cloneQuestion={cloneQuestion}
-              addQToGT={addQToGT}
-              gameId={gameId}
-              gameQuestion={handleGameQuestion} />;
-          }} />
+        <Route exact path='/gamemaker/:gameId/questionmaker/:questionId' render={
+          isUserAuth && (
+            ({match}) => {
+              console.log('sup');
+              const { questionId, gameId } = match.params;
+              const question = getQuestionTemplateById(questions, questionId);
+              return <QuestionMaker 
+                question={question} 
+                gameId={gameId} 
+                handleCreateQuestionTemplate={handleCreateQuestionTemplate} 
+                handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}
+                localQuestionTemplates={localQuestionTemplates}
+                setLocalQuestionTemplates={setLocalQuestionTemplates}
+              />
+            }
+          )
+        } />
         <Route path="/gamemaker/:gameId">
           {content}
         </Route>

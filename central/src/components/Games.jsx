@@ -83,14 +83,13 @@ export default function Games({
             </Switch>
           </Grid>
         )}
-        <Route exact path='/gamemaker/:gameId' render={
+        <Route path='/gamemaker/:gameId' render={
           isUserAuth && (
             ({ match }) => {
               const { gameId } = match.params;
               const newGame = Number(gameId) === 0;
               handleSearchClick(false);
-              console.log(questions)
-              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} handleDeleteGameQuestion={handleDeleteGameQuestion} selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions} saveGameTemplate={saveGameTemplate} />;
+              return <GameMaker loading={loading} questions={questions} game={newGame ? null : getGameById(games, gameId)} createNewGameTemplate={createNewGameTemplate} editGameTemplate={editGameTemplate} gameId={gameId} games={games} cloneQuestion={cloneQuestion} updateQuestion={updateQuestion} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} handleDeleteGameQuestion={handleDeleteGameQuestion} selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions} saveGameTemplate={saveGameTemplate} isUserAuth={isUserAuth}/>;
             }
           )
         } />
