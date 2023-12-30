@@ -237,15 +237,9 @@ export default function GameInProgressContentSwitch({
 
   const questionCofigurationComponents = [
     <Box className={classes.configContainer}>
-      <div id="questioncard-scrollbox" ref={questionCardRef}>
-        <QuestionCard
-          question={questions[currentQuestionIndex].text}
-          image={questions[currentQuestionIndex].imageUrl}
-        />
-      </div>
-      <div id="responses-scrollbox" ref={responsesRef} style={{ width: '100%' }}>
-        <EnableShortAnswerCard
-          isShortAnswerEnabled={isShortAnswerEnabled}
+      <div id="responses-scrollbox" ref={responsesRef} style={{width:'100%'}}>
+        <EnableShortAnswerCard 
+          isShortAnswerEnabled={isShortAnswerEnabled} 
           handleShortAnswerChange={handleShortAnswerChange}
         />
       </div>

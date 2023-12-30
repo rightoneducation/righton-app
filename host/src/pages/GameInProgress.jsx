@@ -314,6 +314,7 @@ export default function GameInProgress({
           setGraphClickInfo={setGraphClickInfo}
           showFooterButtonOnly={showFooterButtonOnly}
           navDictionary={navDictionary}
+          statePosition={statePosition}
         />
       </div>
     </div>
