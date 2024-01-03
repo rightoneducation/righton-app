@@ -1,6 +1,19 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
+export const BodyContentAreaTripleColumnStyled = styled(Grid)({
+  position: 'absolute',
+  top: '0',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  maxWidth: '1236px',
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  zIndex: 2,
+});
+
 /* lower-level container for background content in body. floats above body boxes
 (body stack container -> body box upper, body box lower, body content area) */
 export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
@@ -8,7 +21,7 @@ export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
   top: '0',
   display: 'flex',
   justifyContent: 'flex-start',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   maxWidth: '824px',
   width: '100%',
   height: '100%',
