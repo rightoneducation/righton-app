@@ -54,26 +54,32 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
   // TODO: 
   //      -add edge of next slide to the right
   //      -resolve new keyword issue, preventing addition of bullets, pagination
-  //      -enable scroll 
+  //      -enable scroll
   const mediumScreen =
     <BodyContentAreaDoubleColumnStyled>
       <Swiper slidesPerView={2}>
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
-            <Card />
-            <Card />
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
-            <Card />
-            <Card />
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
-            <Card />
-            <Card />
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
       </Swiper>
@@ -82,27 +88,30 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
   // TODO: 
   //      -add edge of next slide to the right
   //      -resolve new keyword issue, preventing addition of bullets, pagination
-  //      -enable scroll 
   const smallScreen = <BodyContentAreaSingleColumnStyled>
-    <Swiper>
-      <SwiperSlide>
-        <ScrollBoxStyled>
-          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-            <Card />
-            <Card />
-          </Grid>
-        </ScrollBoxStyled>
-      </SwiperSlide>
+    <Swiper spaceBetween={10}>
       <SwiperSlide>
         <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-          <Card />
-          <Card />
+          <ScrollBoxStyled>
+            <Card />
+            <Card />
+          </ScrollBoxStyled>
         </Grid>
       </SwiperSlide>
       <SwiperSlide>
         <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-          <Card />
-          <Card />
+          <ScrollBoxStyled>
+            <Card />
+            <Card />
+          </ScrollBoxStyled>
+        </Grid>
+      </SwiperSlide>
+      <SwiperSlide>
+        <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+          <ScrollBoxStyled>
+            <Card />
+            <Card />
+          </ScrollBoxStyled>
         </Grid>
       </SwiperSlide></Swiper>
   </BodyContentAreaSingleColumnStyled>
