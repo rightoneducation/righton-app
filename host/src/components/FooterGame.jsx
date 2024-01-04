@@ -16,6 +16,7 @@ export default function FooterGame({
   setGraphClickInfo,
   showFooterButtonOnly,
   navDictionary,
+  statePosition
 }) {
   const classes = useStyles();
   return (
@@ -48,6 +49,7 @@ export default function FooterGame({
               graphClickInfo={graphClickInfo}
               setGraphClickInfo={setGraphClickInfo}
               navDictionary={navDictionary}
+              statePosition={statePosition}
             />
           </>
         )}

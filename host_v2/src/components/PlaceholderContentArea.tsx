@@ -17,6 +17,7 @@ const answerContent = "answer"
 const answerIndex = 0
 // TODO: delete later <--------
 
+
 export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps) {
   // eslint-disable-line
   return (
