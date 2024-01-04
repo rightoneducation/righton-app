@@ -10,6 +10,7 @@ import {
   BodyContentAreaSingleColumnStyled
 } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
+import HostDefaultCardStyled from '../lib/styledcomponents/HostDefaultCardStyled';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
@@ -34,9 +35,9 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
   const isLargeScreen = mediaQueryLarge.matches;
 
   // TODO: 
-  //      -enable scroll 
+  //      -update scroll behavior if necessary (after getting feedback from design)
   const largeScreen =
-    <BodyContentAreaTripleColumnStyled container style={{ paddingTop: '16px' }}>
+    <BodyContentAreaTripleColumnStyled container>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <Card />
         <Card />
@@ -46,18 +47,19 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
         <Card />
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-        <Card />
-        <Card />
+        <ScrollBoxStyled>
+          <Card />
+          <Card />
+        </ScrollBoxStyled>
       </Grid>
     </BodyContentAreaTripleColumnStyled>
 
   // TODO: 
-  //      -add edge of next slide to the right
   //      -resolve new keyword issue, preventing addition of bullets, pagination
-  //      -enable scroll
+  //      -update scroll behavior if necessary (after getting feedback from design)
   const mediumScreen =
     <BodyContentAreaDoubleColumnStyled>
-      <Swiper slidesPerView={2}>
+      <Swiper slidesPerView={2.1}>
         <SwiperSlide>
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
@@ -86,10 +88,9 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
     </BodyContentAreaDoubleColumnStyled>
 
   // TODO: 
-  //      -add edge of next slide to the right
   //      -resolve new keyword issue, preventing addition of bullets, pagination
   const smallScreen = <BodyContentAreaSingleColumnStyled>
-    <Swiper spaceBetween={10}>
+    <Swiper slidesPerView={1.1}>
       <SwiperSlide>
         <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
           <ScrollBoxStyled>

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
-export const BodyContentAreaTripleColumnStyled = styled(Grid)({
+export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
@@ -11,8 +11,11 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)({
   width: '100%',
   height: '100%',
   overflow: 'hidden',
+  paddingTop: `${theme.sizing.smallPadding}px`,
+  paddingLeft: `${theme.sizing.mediumPadding}px`,
+  paddingRight: `${theme.sizing.mediumPadding}px`,
   zIndex: 2,
-});
+}));
 
 /* lower-level container for background content in body. floats above body boxes
 (body stack container -> body box upper, body box lower, body content area) */
