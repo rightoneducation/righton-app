@@ -91,7 +91,7 @@ export default function ConfidenceMeterCard({
   const responseOption = (option: IConfidenceOption) => {
     return (
       <Box
-        maxWidth={`${theme.sizing.extraLargePadding}px`}
+        maxWidth={isSmallDevice ? `${theme.sizing.largePadding}px` : `${theme.sizing.extraLargePadding}px`}
         sx={{
           textAlign: 'center',
           alignItems: 'center',
@@ -111,7 +111,14 @@ export default function ConfidenceMeterCard({
               }}
             />
           }
-          label={option.text}
+          label={<Typography
+            style={{
+              fontSize: isSmallDevice ?
+                `${theme.typography.h4.fontSize}` :
+                `${theme.typography.h5.fontSize}`
+            }}>
+            {option.text}
+          </Typography>}
           labelPlacement="bottom"
           sx={{ marginX: '0' }}
         />
@@ -153,7 +160,7 @@ export default function ConfidenceMeterCard({
   };
 
   const responseOptions = (
-    <FormControl>
+    <FormControl fullWidth>
       <RadioGroup
         row
         aria-labelledby="demo-controlled-radio-buttons-group"
@@ -162,7 +169,7 @@ export default function ConfidenceMeterCard({
         onChange={handleRadioChange}
         sx={{
           textAlign: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           marginY: `${theme.sizing.mediumPadding}px`,
         }}
       >
@@ -175,6 +182,8 @@ export default function ConfidenceMeterCard({
     <BodyCardStyled
       sx={{
         marginTop: `${theme.sizing.smallPadding}px`,
+        paddingLeft: `${theme.sizing.extraSmallPadding}px`,
+        paddingRight: `${theme.sizing.extraSmallPadding}px`
       }}
     >
       {confidenceHeader}

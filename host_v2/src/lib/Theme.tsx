@@ -3,6 +3,7 @@ import { createTheme } from '@mui/material/styles';
 // design tokens - colors: (comments = example usage)
 const mainColor = '#FFFFFF'; // main  (ex white)
 const accentColor = '#312759'; // accent (ex purple)
+const darkBlueCardColor = '#08458F'; // card color for default host cards with student data
 const backgroundGradient =
   'linear-gradient(196deg, rgb(49,109,176) 0%, rgb(11,33,90) 73%)'; // upper header background1
 //   background: linear-gradient(196deg, #0D68B1 0%, #02215F 73.62%);
@@ -95,6 +96,7 @@ declare module '@mui/material/styles' {
   interface PaletteColor {
     accent: string;
     backgroundGradient: string;
+    darkBlueCardColor: string;
     radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
@@ -114,6 +116,7 @@ declare module '@mui/material/styles' {
   interface SimplePaletteColorOptions {
     accent?: string;
     backgroundGradient?: string;
+    darkBlueCardColor?: string;
     radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
@@ -154,6 +157,7 @@ export default createTheme({
     primary: {
       main: mainColor,
       accent: accentColor,
+      darkBlueCardColor,
       backgroundGradient,
       radialGradient,
       highlightGradient,
