@@ -4,16 +4,16 @@ import { ConfidenceLevel, GameSessionState } from '../AWSMobileApi';
 import { isNullOrUndefined } from '../IApiClient';
 
 export enum AnswerType {
-  NUMBER = 'number',
-  STRING = 'string',
-  EXPRESSION = 'expression'
+  NUMBER = 0,
+  STRING = 1,
+  EXPRESSION = 2
 }
 
 export enum AnswerPrecision {
-  WHOLE = 'WHOLE',
-  TENTH = 'TENTH',
-  HUNDREDTH = 'HUNDREDTH',
-  THOUSANDTH = 'THOUSANDTH',
+  WHOLE = 0,
+  TENTH = 1,
+  HUNDREDTH = 2,
+  THOUSANDTH = 3,
 }
 
 export interface ITeamAnswerHint {

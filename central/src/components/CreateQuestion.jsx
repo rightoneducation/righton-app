@@ -6,6 +6,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
+import { AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
   useEffect(() => {
@@ -16,8 +17,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const history = useHistory();
   const location = useLocation();
   const originalQuestion = location.state || initialState || null;
-  const [answerType, setAnswerType] = useState('number');
-  const [answerPrecision, setAnswerPrecision] = useState('WHOLE');
+  const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
+  const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
   const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
   const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
   const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
@@ -41,14 +42,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   });
 
   const decimalValidator = (inputValue) => {
-    const answerPrecisionDictionary = {
-      ['WHOLE']: 0,
-      ['TENTH']: 1,
-      ['HUNDREDTH']: 2,
-      ['THOUSANDTH']: 3
-    }
-    const precisionValue = answerPrecisionDictionary[answerPrecision];
-    const roundedNumberAsString = Number(inputValue).toFixed(precisionValue);
+    const roundedNumberAsString = Number(inputValue).toFixed(answerPrecision);
+    console.log(roundedNumberAsString);
     return inputValue.toString() === roundedNumberAsString;
   }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
@@ -86,7 +81,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
   };
-
+  console.log(answerPrecision);
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];
