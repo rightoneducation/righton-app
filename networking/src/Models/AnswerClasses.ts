@@ -75,7 +75,7 @@ abstract class BaseAnswer<T> {
   }
 }
 
-abstract class TeamAnswer<T> extends BaseAnswer<T> {
+export abstract class TeamAnswer<T> extends BaseAnswer<T> {
   id?: string;
   questionId: number;
   teamMemberAnswersId: string;

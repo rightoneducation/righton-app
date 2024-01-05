@@ -47,7 +47,7 @@ export default function GameInProgress({
   confidenceCardRef,
   featuredMistakesRef,
   shortAnswerResponses,
-  handleOnSelectMistake,
+  onSelectMistake,
   hintCardRef,
   isHintEnabled,
   handleHintChange,
@@ -282,7 +282,7 @@ export default function GameInProgress({
             isShortAnswerEnabled={isShortAnswerEnabled}
             handleShortAnswerChange={handleShortAnswerChange}
             shortAnswerResponses={shortAnswerResponses}
-            handleOnSelectMistake={handleOnSelectMistake}
+            onSelectMistake={onSelectMistake}
             hintCardRef={hintCardRef}
             isHintEnabled={isHintEnabled}
             handleHintChange={handleHintChange}

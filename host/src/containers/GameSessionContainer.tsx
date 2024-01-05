@@ -355,10 +355,10 @@ const GameSessionContainer = () => {
     setIsHintEnabled(!isHintEnabled);
   };
 
-  const handleOnSelectMistake = (value, isTop3) => {
+  const onSelectMistake = (value, isBasedOnPopularity) => {
     setSelectedMistakes((prev) => {
       if (prev.includes(value)) {
-        if (isTop3 === false)
+        if (isBasedOnPopularity === false)
           return prev.filter(mistake => mistake !== value);
         return prev;
       } else {
@@ -554,7 +554,7 @@ const GameSessionContainer = () => {
           featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
-          handleOnSelectMistake={handleOnSelectMistake}
+          onSelectMistake={onSelectMistake}
           hintCardRef={hintCardRef}
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}
@@ -591,7 +591,7 @@ const GameSessionContainer = () => {
           featuredMistakesRef={featuredMistakesRef}
           assembleNavDictionary={assembleNavDictionary}
           shortAnswerResponses={shortAnswerResponses}
-          handleOnSelectMistake={handleOnSelectMistake}
+          onSelectMistake={onSelectMistake}
           hintCardRef={hintCardRef}
           isHintEnabled={isHintEnabled}
           handleHintChange={handleHintChange}

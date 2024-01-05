@@ -70,7 +70,7 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   // When a wrong answer is changed/update this function handles that change
   const onChoiceTextChangeMaker = (choiceIndex, answerType) => ({ currentTarget }) => {
-    if (choiceIndex === 0 && answerType === 'number') {
+    if (choiceIndex === 0 && answerType === AnswerType.NUMBER) {
       setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
       currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
       setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
