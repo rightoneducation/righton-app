@@ -12,14 +12,19 @@ interface AnswerOption {
   content: string;
 }
 
-interface PlaceholderContentAreaProps { questionText: string, questionImageUrl: string, answerOptions: AnswerOption[] } // eslint-disable-line
+interface QuestionData {
+  text: string;
+  imageUrl: string | undefined;
+}
 
-export default function PlaceholderContentArea({ questionText, questionImageUrl, answerOptions }: PlaceholderContentAreaProps) {
+interface PlaceholderContentAreaProps { questionData: QuestionData, answerOptions: AnswerOption[] } // eslint-disable-line
+
+export default function PlaceholderContentArea({ questionData, answerOptions }: PlaceholderContentAreaProps) {
   // eslint-disable-line
   return (
     <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <QuestionCard questionText={questionText} imageUrl={questionImageUrl} />
+        <QuestionCard questionText={questionData.text} imageUrl={questionData.imageUrl} />
         <Card />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
