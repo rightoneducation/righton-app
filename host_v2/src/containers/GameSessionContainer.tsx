@@ -33,6 +33,7 @@ export default function GameSessionContainer({
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
         <PlaceholderContentArea />
+        
       </BodyStackContainerStyled>
     </StackContainerStyled>
   );
