@@ -34,17 +34,19 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
   const mediaQueryLarge = window.matchMedia(`(min-width: ${theme.breakpoints.values.lg}px)`);
   const isLargeScreen = mediaQueryLarge.matches;
 
-  // TODO: 
-  //      -update scroll behavior if necessary (after getting feedback from design)
   const largeScreen =
     <BodyContentAreaTripleColumnStyled container>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-        <Card />
-        <Card />
+        <ScrollBoxStyled>
+          <Card />
+          <Card />
+        </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
-        <Card />
-        <Card />
+        <ScrollBoxStyled>
+          <Card />
+          <Card />
+        </ScrollBoxStyled>
       </Grid>
       <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
         <ScrollBoxStyled>
@@ -56,7 +58,6 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
 
   // TODO: 
   //      -resolve new keyword issue, preventing addition of bullets, pagination
-  //      -update scroll behavior if necessary (after getting feedback from design)
   const mediumScreen =
     <BodyContentAreaDoubleColumnStyled>
       <Swiper slidesPerView={2.1}>
