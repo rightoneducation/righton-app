@@ -10,8 +10,8 @@ interface AnswerCardProps {
   isCorrectAnswer: boolean,
   answerIndex: number,
   answerContent: string,
-  instructions: string[],
-  answerReason: string
+  instructions: string[] | null,
+  answerReason: string | null
 }
 
 export default function AnswerCard({
@@ -44,7 +44,7 @@ export default function AnswerCard({
         <Typography sx={{
           marginLeft: `${theme.sizing.extraSmallPadding}px`
         }}>
-          {instructions[index]}
+          {instructions !== null ? instructions[index] : null}
         </Typography>
       </Box >);
   }
@@ -79,7 +79,7 @@ export default function AnswerCard({
             <Typography>{answerContent}</Typography>
           </AnswerOptionStyled>
           <BodyCardContainerStyled sx={{ alignItems: 'flex-start' }}>
-            {isCorrectAnswer ? instructions.map(instruction =>
+            {isCorrectAnswer && instructions !== null ? instructions.map(instruction =>
               correctAnswerInstruction(instructions.indexOf(instruction))) :
               incorrectAnswerReasoning()}
           </BodyCardContainerStyled>

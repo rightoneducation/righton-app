@@ -5,29 +5,32 @@ import Card from './Card';
 import QuestionCard from './QuestionCard';
 import AnswerCard from './AnswerCard';
 
-interface PlaceholderContentAreaProps { } // eslint-disable-line
-// TODO: delete later <--------
-// Question card
-const sampleUrl = "https://images.unsplash.com/photo-1609188944094-394637c26769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80";
-const sampleText = "A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?";
-// Answer card
-const instructions = ['step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ', 'step 2', 'step 3', 'step 4'];
-const answerReason = "reasoning"
-const answerContent = "answer"
-const answerIndex = 0
-// TODO: delete later <--------
+// may have to reformat/restructure this later but here is a sample answer object
+interface AnswerOption {
+  instructions: string[] | null;
+  reason: string | null;
+  content: string;
+  index: number;
+}
 
+interface PlaceholderContentAreaProps { questionText: string, questionImageUrl: string, answerOptions: AnswerOption[] } // eslint-disable-line
 
-export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps) {
+export default function PlaceholderContentArea({ questionText, questionImageUrl, answerOptions }: PlaceholderContentAreaProps) {
   // eslint-disable-line
   return (
     <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <QuestionCard questionText={sampleText} imageUrl={sampleUrl} />
+        <QuestionCard questionText={questionText} imageUrl={questionImageUrl} />
         <Card />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <AnswerCard isCorrectAnswer answerIndex={answerIndex} answerContent={answerContent} instructions={instructions} answerReason={answerReason} />
+        {answerOptions.map((option, index) =>
+          <AnswerCard
+            isCorrectAnswer={option.reason === null}
+            answerIndex={index}
+            answerContent={option.content}
+            instructions={option.instructions}
+            answerReason={option.reason} />)}
         <Card />
       </Grid>
     </BodyContentAreaDoubleColumnStyled>
