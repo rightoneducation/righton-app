@@ -9,6 +9,7 @@ import BodyStackContainerStyled from '../lib/styledcomponents/layout/BodyStackCo
 import BodyBoxUpperStyled from '../lib/styledcomponents/layout/BodyBoxUpperStyled';
 import BodyBoxLowerStyled from '../lib/styledcomponents/layout/BodyBoxLowerStyled';
 import PlaceholderContentArea from '../components/PlaceholderContentArea';
+import QuestionIndicator from '../components/QuestionIndicator';
 
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
@@ -19,6 +20,9 @@ export default function GameSessionContainer({
 }: GameInProgressContainerProps) {
   console.log(apiClient); // eslint-disable-line
   const { t } = useTranslation();
+  const totalQuestions = 5;
+  const currentQuestionIndex = 3;
+  const statePosition = 3;
   return (
     <StackContainerStyled
       direction="column"
@@ -26,9 +30,7 @@ export default function GameSessionContainer({
       justifyContent="space-between"
     >
       <HeaderBackgroundStyled />
-      <HeaderStackContainerStyled>
-        <Typography variant="h1">{t('gamesession.placeholder')}</Typography>
-      </HeaderStackContainerStyled>
+      <QuestionIndicator totalQuestions={totalQuestions} currentQuestionIndex={currentQuestionIndex} statePosition={statePosition}/>
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />

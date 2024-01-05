@@ -15,6 +15,8 @@ const radialGradient =
 const highlightGradient = 'linear-gradient(90deg, #159EFA 0%, #19BCFB 100%)'; // button and score indicator
 const altHighlightGradient =
   'linear-gradient(190deg, #7BDD61 0%, #22B851 100%)'; // new points score indicator
+const questionGradient =
+  'linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)'; //  current question indicator
 const primaryTextColor = '#FFFFFF'; // main text (headers, titles)
 const secondaryTextColor = '#384466'; // secondary text (question text, answer text)
 const darkestTextColor = '#000000'; // darkest color for text(ex black)
@@ -27,6 +29,7 @@ const extraDarkGreyColor = '#909090'; // disabled button
 const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answer
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
+const baseQuestionColor = 'rgba(255,255,255,0.2)'; //
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
@@ -38,6 +41,13 @@ const radialTimerArray = [
   `${countdownColor}, 0.9)`,
   `${countdownColor}, 1)`,
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
+
+//  borders
+const borderWidth = 1;
+const solidWhite = `${borderWidth}px solid rgba(255, 255, 255, 1)`;
+const transparent = `${borderWidth}px solid rgba(255, 255, 255, 0)`;
+const semiTransparent = `${borderWidth}px solid rgba(255, 255, 255, 0.2)`;
+
 
 // design tokens - breakpoints:
 const xs = 400;
@@ -51,6 +61,7 @@ const fullHeaderHeight = 228;
 const headerHeight = 150;
 const footerHeight = 60;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
+const extraExtraSmallPadding = 4; //  used on question indicators
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
@@ -61,11 +72,18 @@ const extraExtraLargePadding = 64; // spacing between buttons and bottom of scre
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
   interface Theme {
+    borders: {
+      borderWidth: number;
+      solidWhite: string;
+      transparent: string;
+      semiTransparent: string;
+    };
     sizing: {
       fullHeaderHeight: number;
       headerHeight: number;
       footerHeight: number;
       pregameMinColumnWidth: number;
+      extraExtraSmallPadding: number;
       extraSmallPadding: number;
       smallPadding: number;
       mediumPadding: number;
@@ -76,11 +94,18 @@ declare module '@mui/material/styles' {
   }
 
   interface ThemeOptions {
+    borders?: {
+      borderWidth?: number;
+      solidWhite?: string;
+      transparent?: string;
+      semiTransparent?: string;
+    };
     sizing?: {
       fullHeaderHeight?: number;
       headerHeight?: number;
       footerHeight?: number;
       pregameMinColumnWidth?: number;
+      extraExtraSmallPadding?: number;
       extraSmallPadding?: number;
       smallPadding?: number;
       mediumPadding?: number;
@@ -97,6 +122,7 @@ declare module '@mui/material/styles' {
     radialGradient: string;
     highlightGradient: string;
     altHighlightGradient: string;
+    questionGradient: string;
     red: string;
     green: string;
     darkPurple: string;
@@ -117,6 +143,7 @@ declare module '@mui/material/styles' {
     radialGradient?: string;
     highlightGradient?: string;
     altHighlightGradient?: string;
+    questionGradient?: string;
     red?: string;
     green?: string;
     darkPurple?: string;
@@ -127,6 +154,7 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
+    baseQuestionColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -136,11 +164,18 @@ export default createTheme({
   breakpoints: {
     values: { xs, sm, md, lg, xl },
   },
+  borders: {
+    borderWidth,
+    solidWhite,
+    transparent,
+    semiTransparent,
+  },
   sizing: {
     fullHeaderHeight,
     headerHeight,
     footerHeight,
     pregameMinColumnWidth,
+    extraExtraSmallPadding,
     extraSmallPadding,
     smallPadding,
     mediumPadding,
@@ -157,6 +192,7 @@ export default createTheme({
       radialGradient,
       highlightGradient,
       altHighlightGradient,
+      questionGradient,
       red: redColor,
       green: greenColor,
       darkPurple: darkPurpleColor,
@@ -166,6 +202,7 @@ export default createTheme({
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
+      baseQuestionColor,
       countdownColor,
       radialTimerArray,
     },
