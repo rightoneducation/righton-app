@@ -18,7 +18,6 @@ interface AnswerOption {
   instructions: string[] | null;
   reason: string | null;
   content: string;
-  index: number;
 }
 
 export default function GameSessionContainer({
@@ -33,15 +32,13 @@ export default function GameSessionContainer({
   const sampleAnswerOptionOne: AnswerOption = {
     instructions: ['step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ', 'step 2', 'step 3', 'step 4'],
     reason: null,
-    content: "an answer choice",
-    index: 0
+    content: "an answer choice"
   }
 
   const sampleAnswerOptionTwo: AnswerOption = {
     instructions: null,
     reason: "reasoning",
-    content: "another answer choice",
-    index: 1
+    content: "another answer choice"
   }
 
   const { t } = useTranslation();

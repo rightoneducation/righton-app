@@ -10,7 +10,6 @@ interface AnswerOption {
   instructions: string[] | null;
   reason: string | null;
   content: string;
-  index: number;
 }
 
 interface PlaceholderContentAreaProps { questionText: string, questionImageUrl: string, answerOptions: AnswerOption[] } // eslint-disable-line
