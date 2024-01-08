@@ -10,51 +10,40 @@ import {
 let questionTemplateAPIClient: IQuestionTemplateAPIClient = new QuestionTemplateAPIClient(Environment.Testing);
 export const createQuestionTemplate = async (createQuestionTemplateInput: CreateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.createQuestionTemplate(createQuestionTemplateInput);
-    return question;
+    return questionTemplateAPIClient.createQuestionTemplate(createQuestionTemplateInput);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error creating questionTemplate: ${e}`);
   }
-  return null;
 }
 
 export const getQuestionTemplate = async (id: string): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.getQuestionTemplate(id);
-    return question;
-
+    return await questionTemplateAPIClient.getQuestionTemplate(id);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error getting questionTemplate: ${e}`);
   }
-  return null;
 }
 
 export const updateQuestionTemplate = async (updateQuestionTemplateInput: UpdateQuestionTemplateInput): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
-    return question;
+    return questionTemplateAPIClient.updateQuestionTemplate(updateQuestionTemplateInput);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error updating questionTemplate: ${e}`);
   }
-  return null;
 };
 
 export const deleteQuestionTemplate = async (id: string): Promise<IQuestionTemplate | null> => {
   try {
-    const question = await questionTemplateAPIClient.deleteQuestionTemplate(id);
-    return question;
+    return await questionTemplateAPIClient.deleteQuestionTemplate(id);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error deleting questionTemplate: ${e}`);
   }
-  return null;
 };
 
 export const getSortedQuestionTemplates = async (queryLimit: number, nextToken: string | null): Promise<{ questionTemplates: IQuestionTemplate[], nextToken: string } | null> => {
   try {
-    const games = await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken);
-    return games;
+    return await questionTemplateAPIClient.listQuestionTemplates(queryLimit, nextToken);
   } catch (e) {
-    console.log(e);
+    throw new Error (`Error listing questionTemplate: ${e}`);
   }
-  return null;
 };

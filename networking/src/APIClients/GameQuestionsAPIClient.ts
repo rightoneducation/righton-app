@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from "aws-amplify";
 import { BaseAPIClient } from "./BaseAPIClient";
-import { IGameQuestionsAPIClient } from "./interfaces";
+import { IGameQuestionAPIClient } from "./interfaces";
 import { IGameQuestions, AWSGameQuestions } from "../Models";
 import { 
     createGameQuestions, 
@@ -21,7 +21,7 @@ import { isNullOrUndefined } from "../IApiClient";
 
 export class GameQuestionsAPIClient
   extends BaseAPIClient
-  implements IGameQuestionsAPIClient
+  implements IGameQuestionAPIClient
 {
   async createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput
@@ -55,7 +55,7 @@ async getGameQuestions(id: string): Promise<IGameQuestions | null> {
     return result.data.getGameQuestions as IGameQuestions;
 }
 
-async deleteGameQuestions(id: string): Promise<IGameQuestions | null> {
+async deleteGameQuestion(id: string): Promise<IGameQuestions | null> {
     const variables: DeleteGameQuestionsMutationVariables = { input: { id } }
     const gameQuestions = await this.callGraphQL<DeleteGameQuestionsMutation>(
         deleteGameQuestions,

@@ -7,8 +7,8 @@ export type AWSTeamAnswer = {
   isTrickAnswer: boolean
   text?: string | null
   awsAnswerContents?: string | null
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
   teamMemberAnswersId?: string | null
   confidenceLevel: ConfidenceLevel
 }

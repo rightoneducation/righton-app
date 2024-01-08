@@ -3,7 +3,6 @@ import { AWSGameTemplate } from "./AWSGameTemplate";
 
 export type AWSModelGameQuestionConnection = {
   items: Array<AWSGameQuestions>;
-  __typename: string;
   nextToken: string | null;
 }
 
@@ -15,5 +14,4 @@ questionTemplate?: AWSQuestionTemplate | null | undefined,
 gameTemplate?: AWSGameTemplate | null | undefined,
 createdAt: string,
 updatedAt: string,
-__typename: string
 };

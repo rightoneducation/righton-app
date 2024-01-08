@@ -9,7 +9,7 @@ export type AWSTeam = {
   score: number
   selectedAvatarIndex: number
   createdAt: string
-  updatedAt?: string
+  updatedAt: string
   gameSessionTeamsId?: string | null
   teamQuestionId?: string | null
   teamQuestionGameSessionId?: string | null

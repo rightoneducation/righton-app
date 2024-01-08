@@ -1,7 +1,7 @@
 import { IGameQuestions } from "../../Models";
 import { CreateGameQuestionsInput } from "../../AWSMobileApi";
 
-export interface IGameQuestionsAPIClient {
+export interface IGameQuestionAPIClient {
   createGameQuestions(
     createGameQuestionsInput: CreateGameQuestionsInput
   ): Promise<IGameQuestions | null>;
@@ -10,7 +10,7 @@ export interface IGameQuestionsAPIClient {
     id: string
   ): Promise<IGameQuestions | null>;
 
-  deleteGameQuestions(
+  deleteGameQuestion(
     id: string
   ): Promise<IGameQuestions | null>;
 
