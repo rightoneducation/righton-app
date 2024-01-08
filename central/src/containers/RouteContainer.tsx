@@ -310,8 +310,35 @@ export const RouteContainer = ({
 
     <Route>
       <OnboardingModal modalOpen={modalOpen} showModalGetApp={showModalGetApp} handleModalClose={handleModalClose} />
-      <Nav isResolutionMobile={isResolutionMobile} isUserAuth={isUserAuth} handleModalOpen={handleModalOpen} />
-      <Games loading={loading} nextToken={nextToken} games={filteredGames} questions={questions} handleScrollDown={handleScrollDown} saveNewGame={saveNewGame} saveGame={saveGame} updateQuestion={updateQuestion} deleteQuestion={handleDeleteQuestion} deleteGame={handleDeleteGame} cloneGame={handleCloneGame} sortType={sortType} setSortType={setSortType} cloneQuestion={cloneQuestion} isUserAuth={isUserAuth}  isSearchClick={isSearchClick} handleSearchClick={handleSearchClick} setSearchInput={setSearchInput} searchInput={searchInput} isResolutionMobile={isResolutionMobile} addQToGT={addQToGT} handleQuestionBankClick={handleQuestionBankClick} />
+      <Nav 
+        isResolutionMobile={isResolutionMobile} 
+        isUserAuth={isUserAuth} 
+        handleModalOpen={handleModalOpen} 
+      />
+      <Games 
+        loading={loading} 
+        nextToken={nextToken} 
+        games={filteredGames} 
+        questions={questions} 
+        handleScrollDown={handleScrollDown} 
+        saveNewGame={saveNewGame} 
+        saveGame={saveGame} 
+        updateQuestion={updateQuestion} 
+        deleteQuestion={handleDeleteQuestion}
+        deleteGame={handleDeleteGame}
+        cloneGame={handleCloneGame}
+        sortType={sortType}
+        setSortType={setSortType}
+        cloneQuestion={cloneQuestion}
+        isUserAuth={isUserAuth} 
+        isSearchClick={isSearchClick}
+        handleSearchClick={handleSearchClick}
+        setSearchInput={setSearchInput}
+        searchInput={searchInput}
+        isResolutionMobile={isResolutionMobile}
+        addQToGT={addQToGT}
+        handleQuestionBankClick={handleQuestionBankClick}
+      />
       <AlertBar />
     </Route>
   </Switch>
