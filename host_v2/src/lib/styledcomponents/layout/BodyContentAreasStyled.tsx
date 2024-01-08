@@ -37,9 +37,7 @@ export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled,
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`
 }));
 
 // content area of body that floats above background layers above - Phase Results Page
