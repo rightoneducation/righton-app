@@ -43,7 +43,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   const decimalValidator = (inputValue) => {
     const roundedNumberAsString = Number(inputValue).toFixed(answerPrecision);
-    console.log(roundedNumberAsString);
     return inputValue.toString() === roundedNumberAsString;
   }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
@@ -69,8 +68,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const onChangeMaker = useCallback((field) => ({ currentTarget }) => { setQuestion({ ...question, [field]: handleStringInput(currentTarget.value) }); }, [question, setQuestion]);
 
   // When a wrong answer is changed/update this function handles that change
-  const onChoiceTextChangeMaker = (choiceIndex, answerType) => ({ currentTarget }) => {
-    if (choiceIndex === 0 && answerType === AnswerType.NUMBER) {
+  const onChoiceTextChangeMaker = (choice, choiceIndex, answerType) => ({ currentTarget }) => {
+    if (choice.isAnswer === true && answerType === AnswerType.NUMBER) {
       setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
       currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
       setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
@@ -81,7 +80,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
   };
-  console.log(answerPrecision);
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];

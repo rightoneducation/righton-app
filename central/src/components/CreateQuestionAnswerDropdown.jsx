@@ -32,7 +32,6 @@ export default function QuestionFormAnswerDropdown({
         return 'Please ensure that your input is a valid expression';
     }
   }
-  console.log(answerPrecision);
   const answerText = isAnswerTypeInvalid ? getAnswerText(answerType) : '';
   // instructio s can be either null (when empty game is first started), [''] (when an empty instruction is passed back to this component), or an object (when a already created game is being editted)
   // TODO: clean up how we are handling instructions for more consistency
@@ -46,8 +45,8 @@ export default function QuestionFormAnswerDropdown({
   }
   const instructionsArray = instructionsHandler(instructions);
   const handleOnTypeChange = (event) => {
-    setAnswerType(event.target.value);
-    onChoiceTextChangeMaker(index, event.target.value)({ currentTarget: { value: choice.text } });
+    setAnswerType(event);
+    onChoiceTextChangeMaker(choice, index, event)({ currentTarget: { value: choice.text } });
   };
   return (
     <Grid item xs={12}>
@@ -55,13 +54,13 @@ export default function QuestionFormAnswerDropdown({
         <Box className={classes.correctCardBox}>
           <CardContent style={{ display: 'flex', justifyContent: 'space-between', padding: 0 }}>
             <Box style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 16 }}>
-              <Typography className={classes.answer}>{index === 0 ? 'Correct Answer:' : `Wrong Answer ${index}:`}</Typography>
+              <Typography className={classes.answer}>{choice.isAnswer === true ? 'Correct Answer:' : `Wrong Answer ${index}:`}</Typography>
               <TextField
                 size="small"
                 style={{ width: 600, margin: 0, position: 'relative', left: 16 }}
                 id={`choice${index + 1}`}
                 value={choice.text}
-                onChange={onChoiceTextChangeMaker(index, answerType)}
+                onChange={onChoiceTextChangeMaker(choice, index, answerType)}
                 label="Type Answer Here"
                 variant="outlined"
                 required
@@ -71,7 +70,7 @@ export default function QuestionFormAnswerDropdown({
               <ExpandMore fontSize='large' />
             </IconButton>
           </CardContent>
-          { index === 0 ? 
+          { choice.isAnswer === true ? 
             <>
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Answer Type: "}</Typography>
@@ -99,7 +98,7 @@ export default function QuestionFormAnswerDropdown({
               {answerType === AnswerType.NUMBER ?
               <Box className={classes.answerTypeBox}> 
                 <Typography className={classes.answerType}>{"Decimal Places: "}</Typography>
-                <RadioGroup value={answerPrecision} row onChange={(event) => {console.log(event.target.value); setAnswerPrecision(Number(event.target.value))}}>
+                <RadioGroup value={answerPrecision} row onChange={(event) => {setAnswerPrecision(Number(event.target.value))}}>
                   <FormControlLabel 
                     className={classes.radioLabel} 
                     value={AnswerPrecision.WHOLE} 
