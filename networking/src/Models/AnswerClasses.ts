@@ -22,87 +22,50 @@ export interface ITeamAnswerHint {
   isHintSubmitted: boolean;
 }
 
-export interface ITeamAnswerContent {
+export interface IAnswerContent {
   rawAnswer: string; 
   normAnswer?: (string | number)[] | null;
-  answerType?: AnswerType;
+  answerType: AnswerType;
   answerPrecision?: string;
   percent?: number;
   multiChoiceAnswerIndex?: number | null;
   isSubmitted?: boolean;
-  isShortAnswerEnabled: boolean;
-  currentState: GameSessionState | null;
-  currentQuestionIndex: number | null;
+  isShortAnswerEnabled?: boolean;
+  currentState?: GameSessionState | null;
+  currentQuestionIndex?: number | null;
 }
 
-export interface ICorrectAnswerContent {
-  rawAnswer: string;
-  normAnswer?: (string | number)[];
-  answerType: AnswerType;
-  answerPrecision?: AnswerPrecision;
+export interface ITeamAnswerAttributes {
+  questionId?: number;
+  isChosen?: boolean;
+  teamMemberAnswersId?: string;
+  text?: string;
+  answerContent?: IAnswerContent;
+  isTrickAnswer?: boolean;
+  confidenceLevel?: ConfidenceLevel;
+  hint?: ITeamAnswerHint;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IBaseAnswerConfig<T> {
   id?: string;
-  answerContent: ITeamAnswerContent | ICorrectAnswerContent;
-  value: T;
-}
-
-export interface ITeamAnswerConfig<T> {
-  id?: string;
-  questionId: number;
-  isChosen: boolean;
-  teamMemberAnswersId: string;
-  text: string;
-  answerContent: ITeamAnswerContent;
-  isTrickAnswer: boolean;
-  confidenceLevel: ConfidenceLevel;
-  hint?: ITeamAnswerHint;
-  createdAt?: string;
-  updatedAt?: string;
+  answerContent: IAnswerContent;
+  teamAnswerAttributes?: ITeamAnswerAttributes;
   value: T;
 }
 
 abstract class BaseAnswer<T> {
   id?: string;
-  answerContent: ITeamAnswerContent | ICorrectAnswerContent;
+  answerContent: IAnswerContent;
+  teamAnswerAttributes?: ITeamAnswerAttributes;
   value: T;
   constructor(config: IBaseAnswerConfig<T>) 
   {
     this.id = config.id,
     this.answerContent = config.answerContent,
+    this.teamAnswerAttributes = config.teamAnswerAttributes,
     this.value = config.value
-  }
-}
-
-export abstract class TeamAnswerClass<T> extends BaseAnswer<T> {
-  id?: string;
-  questionId: number;
-  teamMemberAnswersId: string;
-  isChosen: boolean;
-  isTrickAnswer: boolean;
-  text: string;
-  answerContent: ITeamAnswerContent;
-  confidenceLevel: ConfidenceLevel;
-  hint?: ITeamAnswerHint;
-  createdAt?: string;
-  updatedAt?: string;
-  value: T;
-  constructor(config: ITeamAnswerConfig<T>) 
-    {
-      super(config);
-      this.id = config.id,
-      this.questionId = config.questionId,
-      this.teamMemberAnswersId = config.teamMemberAnswersId,
-      this.isChosen = config.isChosen,
-      this.text = config.text,
-      this.answerContent = config.answerContent,
-      this.isTrickAnswer = config.isTrickAnswer,
-      this.confidenceLevel = config.confidenceLevel,
-      this.hint = config.hint,
-      this.createdAt = config.createdAt,
-      this.updatedAt = config.updatedAt,
-      this.value = config.value
   }
 
   abstract isEqualTo(otherAnswers: T[]): Boolean;
@@ -149,50 +112,8 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
   return normAnswers;
 };
 
-export class CorrectNumberAnswer extends BaseAnswer<number> {
+export class NumberAnswer extends BaseAnswer<number> {
   constructor(config: IBaseAnswerConfig<number>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.NUMBER
-    };
-    return this;
-  }
-}
-
-export class CorrectStringAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.STRING
-    };
-    return this;
-  }
-}
-
-export class CorrectExpressionAnswer extends BaseAnswer<string> {
-  constructor(config: IBaseAnswerConfig<string>) {
-    super(config); // Pass the config to the BaseAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);
-
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.EXPRESSION
-    };
-    return this;
-  }
-}
-
-export class NumberAnswer extends TeamAnswerClass<number> {
-  constructor(config: ITeamAnswerConfig<number>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
     
@@ -234,8 +155,8 @@ export class NumberAnswer extends TeamAnswerClass<number> {
   }
 }
 
-export class StringAnswer extends TeamAnswerClass<string> {
-  constructor(config: ITeamAnswerConfig<string>) {
+export class StringAnswer extends BaseAnswer<string> {
+  constructor(config: IBaseAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
 
@@ -256,8 +177,8 @@ export class StringAnswer extends TeamAnswerClass<string> {
   }
 }
 
-export class ExpressionAnswer extends TeamAnswerClass<string> {
-  constructor(config: ITeamAnswerConfig<string>) {
+export class ExpressionAnswer extends BaseAnswer<string> {
+  constructor(config: IBaseAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
     const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);
 
