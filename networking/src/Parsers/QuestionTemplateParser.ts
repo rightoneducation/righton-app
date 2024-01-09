@@ -13,7 +13,9 @@ export class QuestionTemplateParser {
                 const { questionTemplates, ...rest } = item.gameTemplate;
                 // Only add to questionTemplates if 'rest' is not empty
                 if (Object.keys(rest).length > 0) {
-                    gameTemplates.push({gameTemplate: rest as IGameTemplate, gameQuestionId: item.id as string});
+                    const createdAt = new Date(rest.createdAt)
+                    const updatedAt = new Date(rest.updatedAt)
+                    gameTemplates.push({gameTemplate: {...rest, createdAt, updatedAt} as IGameTemplate, gameQuestionId: item.id as string});
                 }
             }
         }
@@ -31,9 +33,11 @@ export class QuestionTemplateParser {
           grade,
           standard,
           imageUrl,
-          createdAt,
-          updatedAt
       } = awsQuestionTemplate || {}
+
+      const createdAt = new Date(awsQuestionTemplate.createdAt)
+      const updatedAt = new Date(awsQuestionTemplate.updatedAt)
+
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
           isNullOrUndefined(owner) ||

@@ -4,7 +4,6 @@ import { IGameTemplate } from "./IGameTemplate"
 
 export type IModelGameQuestionConnection = {
   items: Array<IGameQuestions>;
-  __typename: string;
   nextToken: string | null;
 };
 
@@ -14,7 +13,6 @@ export type IGameQuestions = {
   gameTemplateID: string,
   questionTemplate?: IQuestionTemplate | null | undefined,
   gameTemplate?: IGameTemplate | null | undefined,
-  createdAt: string,
-  updatedAt: string,
-  __typename: string
+  createdAt: Date,
+  updatedAt: Date,
 };

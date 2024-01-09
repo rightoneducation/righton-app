@@ -189,20 +189,18 @@ export class ApiClient implements IApiClient {
            questionTemplateID,
         }
         const variables: CreateGameQuestionsMutationVariables = { input }
-        console.log(variables);
+
         try {
             const gameQuestions = await this.callGraphQL<CreateGameQuestionsMutation>(
                 createGameQuestions,
                 variables
             )
-            console.log('sup');
             if (
                 isNullOrUndefined(gameQuestions.data) ||
                 isNullOrUndefined(gameQuestions.data.createGameQuestions)
             ) {
                 throw new Error(`Failed to create game template.`)
             }
-            console.log(gameQuestions);
         } catch (e) {
             console.log(e);
         } 
@@ -217,7 +215,6 @@ export class ApiClient implements IApiClient {
             return GameTemplateParser.gameTemplateFromAWSGameTemplate(gameTemplate) as IGameTemplate
         });
         const parsedNextToken = result.data.listGameTemplates.nextToken;
-        
         return { gameTemplates: parsedGameTemplates, nextToken: parsedNextToken };
     }
 
@@ -234,27 +231,12 @@ export class ApiClient implements IApiClient {
                 graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
             ) as { data: { createGameSessionFromTemplate: string } };
             const result = response.data.createGameSessionFromTemplate;
-            console.log(result);
             return result;
         } catch (e) {
             console.error(e);
             return null;
         }
     }
-    // async createGameSessionFromTemplate(id: string): Promise< IGameSession | null> {
-    //     try{
-    //         console.log('sup');
-    //     let result = (await API.graphql(
-    //         graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
-    //     )) as any
-    //     console.log(result);
-    //     return null; //  GameSessionParser.gameSessionFromAWSGameSession(result)
-   
-    //     } catch (e) {
-    //         console.log(e);
-    //         return null;
-    //     }
-    // }
 
     createGameSession(
         gameId: number,
