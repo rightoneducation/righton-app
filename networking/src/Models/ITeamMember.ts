@@ -1,9 +1,9 @@
-import { TeamAnswerClass } from "./AnswerClasses"
+import { BaseAnswer } from "./AnswerClasses"
 
 export interface ITeamMember {
     id: string
     isFacilitator?: boolean | null
-    answers?: Array<TeamAnswerClass<any> | null> | null
+    answers?: Array<BaseAnswer<any> | null> | null
     deviceId?: string | null
     createdAt?: string | null
     updatedAt?: string | null

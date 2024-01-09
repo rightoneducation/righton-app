@@ -55,7 +55,7 @@ export interface IBaseAnswerConfig<T> {
   value: T;
 }
 
-abstract class BaseAnswer<T> {
+export abstract class BaseAnswer<T> {
   id?: string;
   answerContent: IAnswerContent;
   teamAnswerAttributes?: ITeamAnswerAttributes;
@@ -153,6 +153,16 @@ export class NumberAnswer extends BaseAnswer<number> {
     }
     return false;
   }
+
+  static isAnswerTypeValid(input: string): Boolean {
+    const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; // matches any number, with or without a decimal, with or without a percent sign
+    return numericAnswerRegex.test(input);
+  }
+
+  static isAnswerPrecisionValid(input: string, precision: AnswerPrecision): Boolean {
+    const roundedNumberAsString = Number(input).toFixed(precision);
+    return input.toString() === roundedNumberAsString;
+  }
 }
 
 export class StringAnswer extends BaseAnswer<string> {
@@ -174,6 +184,12 @@ export class StringAnswer extends BaseAnswer<string> {
       return true;
     }
     return false;
+  }
+
+  // checks if string value is actually a number
+  static isAnswerTypeValid(input: string): Boolean {
+    const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; // matches any number, with or without a decimal, with or without a percent sign
+    return !numericAnswerRegex.test(input);
   }
 }
 
@@ -206,5 +222,15 @@ export class ExpressionAnswer extends BaseAnswer<string> {
       }
     }
    return false;
+  }
+
+   // checks if expression can be parsed via mathjs
+   static isAnswerTypeValid(input: string): Boolean {
+    try {
+      parse(input);
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

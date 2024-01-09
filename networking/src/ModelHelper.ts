@@ -23,8 +23,8 @@ export abstract class ModelHelper {
 
         return teamMember.answers.filter((answer) => {
             return !isNullOrUndefined(answer) &&
-                !isNullOrUndefined(answer.questionId) &&
-                answer.questionId === questionId
+                !isNullOrUndefined(answer.teamAnswerAttributes?.questionId) &&
+                answer.teamAnswerAttributes?.questionId === questionId
         })
     }
 
@@ -46,8 +46,8 @@ export abstract class ModelHelper {
         const findSelectedAnswer = (answers: (NumberAnswer | StringAnswer | ExpressionAnswer | null)[]) => {
             const selectedAnswer = answers.find((teamAnswer: NumberAnswer | StringAnswer | ExpressionAnswer | null) => 
                 currentState === GameSessionState.PHASE_1_RESULTS || currentState === GameSessionState.PHASE_1_DISCUSS
-                    ? teamAnswer?.isChosen === true
-                    : teamAnswer?.isTrickAnswer === true
+                    ? teamAnswer?.teamAnswerAttributes?.isChosen === true
+                    : teamAnswer?.teamAnswerAttributes?.isTrickAnswer === true
             );
             return isNullOrUndefined(selectedAnswer) ? null : selectedAnswer;
         };
@@ -69,8 +69,8 @@ export abstract class ModelHelper {
                 return false
             }
 
-            return answer.questionId === questionId &&
-                answer.isTrickAnswer
+            return answer.teamAnswerAttributes?.questionId === questionId &&
+                answer.teamAnswerAttributes?.isTrickAnswer
         })
 
         return trickAnswer ?? null
@@ -98,10 +98,10 @@ export abstract class ModelHelper {
 
             const answersToQuestion = teamMember.answers.find((answer) => {
                 return !isNullOrUndefined(answer) &&
-                    !isNullOrUndefined(answer!.questionId) &&
-                    answer.questionId === questionId &&
-                    !answer.isTrickAnswer &&
-                    answer!.text === answerText
+                    !isNullOrUndefined(answer!.teamAnswerAttributes?.questionId) &&
+                    answer.teamAnswerAttributes?.questionId === questionId &&
+                    !answer.teamAnswerAttributes?.isTrickAnswer &&
+                    answer!.teamAnswerAttributes?.text === answerText
             })
 
             return previousVal + (isNullOrUndefined(answersToQuestion) ? 0 : 1)
@@ -130,12 +130,12 @@ export abstract class ModelHelper {
 
         const correctAnswer = this.getCorrectAnswer(question)
         const currentQuestion = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0]
-        let submittedTrickAnswer = answers.find(answer => answer?.isTrickAnswer && answer.questionId === currentQuestion.id)
+        let submittedTrickAnswer = answers.find(answer => answer?.teamAnswerAttributes?.isTrickAnswer && answer.teamAnswerAttributes.questionId === currentQuestion.id)
 
         if (submittedTrickAnswer){
-          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.text ?? '', currentQuestion.id)
+          return ModelHelper.calculateBasicModeWrongAnswerScore(gameSession, submittedTrickAnswer.teamAnswerAttributes?.text ?? '', currentQuestion.id)
         } else {
-            if (!isShortAnswerEnabled && answers.find(answer => answer?.isChosen && answer?.text === correctAnswer?.text && answer.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
+            if (!isShortAnswerEnabled && answers.find(answer => answer?.teamAnswerAttributes?.isChosen && answer?.teamAnswerAttributes?.text === correctAnswer?.text && answer.teamAnswerAttributes?.questionId === currentQuestion.id && gameSession?.currentState === GameSessionState.PHASE_1_RESULTS)){
                 return this.correctAnswerScore
             } else {
                 const teamResponses = gameSession?.questions[gameSession?.currentQuestionIndex ?? 0].responses

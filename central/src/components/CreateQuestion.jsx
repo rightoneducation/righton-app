@@ -6,7 +6,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import Placeholder from '../images/RightOnPlaceholder.svg';
 import QuestionFormAnswerDropdown from './CreateQuestionAnswerDropdown';
 import QuestionHelper from './QuestionHelper';
-import { AnswerType, AnswerPrecision } from '@righton/networking';
+import { NumberAnswer, StringAnswer, ExpressionAnswer, AnswerType, AnswerPrecision } from '@righton/networking';
 
 export default function QuestionForm({ updateQuestion, question: initialState, gameId, gameQuestion, cloneQuestion }) {
   useEffect(() => {
@@ -19,9 +19,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
   const originalQuestion = location.state || initialState || null;
   const [answerType, setAnswerType] = useState(AnswerType.NUMBER);
   const [answerPrecision, setAnswerPrecision] = useState(AnswerPrecision.WHOLE);
-  const numericAnswerRegex = /^-?[0-9]*(\.[0-9]*)?%?$/; 
-  const [isAnswerTypeInvalid, setIsAnswerTypeInvalid] = useState(false);
-  const [isAnswerDecimalInvalid, setIsAnswerDecimalInvalid] = useState(false);
+  const [isAnswerTypeValid, setIsAnswerTypeValid] = useState(false);
+  const [isAnswerPrecisionValid, setIsAnswerPrecisionValid] = useState(false);
 
   const [question, setQuestion] = useState(() => {
     if (originalQuestion) {
@@ -41,10 +40,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
     }
   });
 
-  const decimalValidator = (inputValue) => {
-    const roundedNumberAsString = Number(inputValue).toFixed(answerPrecision);
-    return inputValue.toString() === roundedNumberAsString;
-  }
   // Handles which Url to redirect to when clicking the Back to Game Maker button
   const handleBack = useCallback(() => {
     if (gameId != null) {
@@ -69,17 +64,30 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
 
   // When a wrong answer is changed/update this function handles that change
   const onChoiceTextChangeMaker = (choice, choiceIndex, answerType) => ({ currentTarget }) => {
-    if (choice.isAnswer === true && answerType === AnswerType.NUMBER) {
-      setIsAnswerTypeInvalid(!numericAnswerRegex.test(currentTarget.value));
-      currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
-      setIsAnswerDecimalInvalid(!decimalValidator(currentTarget.value));
-    } else {
-      setIsAnswerDecimalInvalid(false);
+    if (choice.isAnswer === true){
+      switch(answerType){
+        case AnswerType.STRING:
+        default:
+          setIsAnswerTypeValid(StringAnswer.isAnswerTypeValid(currentTarget.value));
+          setIsAnswerPrecisionValid(true);
+          console.log(StringAnswer.isAnswerTypeValid(currentTarget.value));
+          break;
+        case AnswerType.NUMBER:
+          setIsAnswerTypeValid(NumberAnswer.isAnswerTypeValid(currentTarget.value));
+          currentTarget.value = currentTarget.value.replace(/[^0-9.%-]/g, '');
+          setIsAnswerPrecisionValid((prev) => NumberAnswer.isAnswerPrecisionValid(currentTarget.value, answerPrecision));
+          break;
+        case AnswerType.EXPRESSION:
+          setIsAnswerTypeValid(ExpressionAnswer.isAnswerTypeValid(currentTarget.value));
+          setIsAnswerPrecisionValid(true);
+          break;
+      }
     }
     const newChoices = [...question.choices];
     newChoices[choiceIndex].text = handleStringInput(currentTarget.value);
     setQuestion({ ...question, choices: newChoices });
   };
+
   // When the wrong answer reasoning is changed/update this function handles that change
   const onChoiceReasonChangeMaker = useCallback((choiceIndex) => ({ currentTarget }) => {
     const newChoices = [...question.choices];
@@ -206,8 +214,8 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
                 setAnswerType={setAnswerType}
                 answerPrecision={answerPrecision}
                 setAnswerPrecision={setAnswerPrecision}
-                isAnswerTypeInvalid={isAnswerTypeInvalid}
-                isAnswerDecimalInvalid={isAnswerDecimalInvalid}
+                isAnswerTypeValid={isAnswerTypeValid}
+                isAnswerPrecisionValid={isAnswerPrecisionValid}
               />
             ))}
           </Grid>

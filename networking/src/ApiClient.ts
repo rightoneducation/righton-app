@@ -52,7 +52,7 @@ import {
     updateQuestion
 } from "./graphql/mutations"
 import { IApiClient, isNullOrUndefined } from "./IApiClient"
-import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, ITeamAnswerContent, NumberAnswer, AnswerType, StringAnswer, ExpressionAnswer } from "./Models"
+import { IChoice, IResponse, IQuestion, IHints, IAnswerSettings, ITeamAnswer, ITeamAnswerHint, ITeamMember, IGameSession, ITeam, IAnswerContent, BaseAnswer, AnswerType, NumberAnswer, StringAnswer, ExpressionAnswer } from "./Models"
 
 Amplify.configure(awsconfig)
 
@@ -255,7 +255,7 @@ export class ApiClient implements IApiClient {
 
     subscribeCreateTeamAnswer(
         id: string,
-        callback: (result: NumberAnswer | StringAnswer | ExpressionAnswer ) => void
+        callback: (result: BaseAnswer<any> ) => void
     ) {
         return this.subscribeGraphQL<OnCreateTeamAnswerSubscription>(
             {
@@ -273,7 +273,7 @@ export class ApiClient implements IApiClient {
 
     subscribeUpdateTeamAnswer(
         id: string,
-        callback: (result: NumberAnswer | StringAnswer | ExpressionAnswer ) => void
+        callback: (result: BaseAnswer<any> ) => void
     ) {
         return this.subscribeGraphQL<OnUpdateTeamAnswerSubscription>(
             {
@@ -361,15 +361,23 @@ export class ApiClient implements IApiClient {
     }
 
     async addTeamAnswer(
-        inputAnswer: NumberAnswer | StringAnswer | ExpressionAnswer
-    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer > {
+        inputAnswer: BaseAnswer<any>
+    ): Promise<BaseAnswer<any>> {
+        if (isNullOrUndefined(inputAnswer.teamAnswerAttributes) ||
+            isNullOrUndefined(inputAnswer.teamAnswerAttributes.questionId) ||
+            isNullOrUndefined(inputAnswer.teamAnswerAttributes.isChosen) ||
+            isNullOrUndefined(inputAnswer.teamAnswerAttributes.isTrickAnswer) ||
+            isNullOrUndefined(inputAnswer.teamAnswerAttributes.text) 
+        ) {
+            throw new Error(`Missing required answer attributes`);
+        }
         const input: CreateTeamAnswerInput = {
-            questionId: inputAnswer.questionId,
-            isChosen: inputAnswer.isChosen,
-            isTrickAnswer: inputAnswer.isTrickAnswer,
-            text: inputAnswer.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
+            questionId: inputAnswer.teamAnswerAttributes.questionId,
+            isChosen: inputAnswer.teamAnswerAttributes.isChosen,
+            isTrickAnswer: inputAnswer.teamAnswerAttributes.isTrickAnswer,
+            text: inputAnswer.teamAnswerAttributes.text, // leaving this in to prevent breaking current build, will be removed when answerContents is finalized
             awsAnswerContent: JSON.stringify(inputAnswer.answerContent), 
-            teamMemberAnswersId: inputAnswer.teamMemberAnswersId,
+            teamMemberAnswersId: inputAnswer.teamAnswerAttributes.teamMemberAnswersId,
             confidenceLevel: ConfidenceLevel.NOT_RATED
         }
         const variables: CreateTeamAnswerMutationVariables = { input }
@@ -384,12 +392,12 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to create team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as NumberAnswer | StringAnswer | ExpressionAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.createTeamAnswer) as BaseAnswer<any>
     }
 
     async updateTeamAnswerBase(
         input: UpdateTeamAnswerInput
-    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
+    ): Promise<BaseAnswer<any>> {
         const variables: UpdateTeamAnswerMutationVariables = { input }
         const answer = await this.callGraphQL<UpdateTeamAnswerMutation>(
             updateTeamAnswer,
@@ -401,13 +409,13 @@ export class ApiClient implements IApiClient {
         ) {
             throw new Error(`Failed to update team answer`)
         }
-        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as NumberAnswer | StringAnswer | ExpressionAnswer
+        return TeamAnswerParser.teamAnswerFromAWSTeamAnswer(answer.data.updateTeamAnswer) as BaseAnswer<any>
     }
     async updateTeamAnswerConfidence(
         teamAnswerId: string,
         isChosen: boolean | null = null,
         confidenceLevel?: ConfidenceLevel
-    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
+    ): Promise<BaseAnswer<any>> {
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
             isChosen,
@@ -419,7 +427,7 @@ export class ApiClient implements IApiClient {
         teamAnswerId: string,
         isChosen: boolean | null = null,
         hint: ITeamAnswerHint
-    ): Promise<NumberAnswer | StringAnswer | ExpressionAnswer> {
+    ): Promise<BaseAnswer<any>> {
         const awsHint = JSON.stringify(hint)
         const input: UpdateTeamAnswerInput = {
             id: teamAnswerId,
@@ -525,7 +533,7 @@ export class ApiClient implements IApiClient {
 
     private mapOnCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
-    ): NumberAnswer | StringAnswer | ExpressionAnswer {
+    ): BaseAnswer<any> {
         return TeamAnswerParser.teamAnswerFromCreateTeamAnswerSubscription(
             subscription
         )
@@ -533,7 +541,7 @@ export class ApiClient implements IApiClient {
 
     private mapOnUpdateTeamAnswerSubscription(
         subscription: OnUpdateTeamAnswerSubscription
-    ): NumberAnswer | StringAnswer | ExpressionAnswer {
+    ): BaseAnswer<any> {
         return TeamAnswerParser.teamAnswerFromUpdateTeamAnswerSubscription(
             subscription
         )
@@ -931,7 +939,7 @@ class TeamMemberParser {
 class TeamAnswerParser {
     static teamAnswerFromCreateTeamAnswerSubscription(
         subscription: OnCreateTeamAnswerSubscription
-    ): NumberAnswer | StringAnswer | ExpressionAnswer {
+    ): BaseAnswer<any> {
         const createTeamAnswer = subscription.onCreateTeamAnswer
         if (isNullOrUndefined(createTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
@@ -941,7 +949,7 @@ class TeamAnswerParser {
 
     static teamAnswerFromUpdateTeamAnswerSubscription(
         subscription: OnUpdateTeamAnswerSubscription
-    ): NumberAnswer | StringAnswer | ExpressionAnswer {
+    ): BaseAnswer<any> {
         const updateTeamAnswer = subscription.onUpdateTeamAnswer
         if (isNullOrUndefined(updateTeamAnswer)) {
             throw new Error("subscription.onCreateTeamAnswer can't be null.")
@@ -951,7 +959,7 @@ class TeamAnswerParser {
 
     static mapTeamAnswers(
         awsTeamAnswers: Array<AWSTeamAnswer | null> | null | undefined
-    ): Array<NumberAnswer | StringAnswer | ExpressionAnswer> {
+    ): Array<BaseAnswer<any>> {
         if (isNullOrUndefined(awsTeamAnswers)) {
             return []
         }
@@ -965,7 +973,7 @@ class TeamAnswerParser {
     }
     static answerContentFromAWSAnswerContent(
         awsAnswerContent: string
-    ): ITeamAnswerContent {
+    ): IAnswerContent {
         let parsedAnswerContent;
         try {
             parsedAnswerContent = JSON.parse(awsAnswerContent);
@@ -979,7 +987,7 @@ class TeamAnswerParser {
             console.log(e)
             throw new Error("Failed to parse answer content")
         }
-        return parsedAnswerContent as ITeamAnswerContent;
+        return parsedAnswerContent as IAnswerContent;
     }   
     static hintFromAWSHint(
         awsHint: string
@@ -1001,7 +1009,7 @@ class TeamAnswerParser {
     }  
     static teamAnswerFromAWSTeamAnswer(
         awsTeamAnswer: AWSTeamAnswer
-    ): NumberAnswer | StringAnswer | ExpressionAnswer {
+    ): BaseAnswer<any> {
         const {
             id,
             questionId,
@@ -1024,7 +1032,7 @@ class TeamAnswerParser {
                 "Team answer has null field for the attributes that are not nullable"
             )
         }
-        // aws answer content is a stringified json object, parse it below into an ITeamAnswerContent object
+        // aws answer content is a stringified json object, parse it below into an IAnswerContent object
         const answerContent = this.answerContentFromAWSAnswerContent(awsAnswerContent);
         const hint = awsHint ? this.hintFromAWSHint(awsHint) : undefined;
         let teamAnswer;
