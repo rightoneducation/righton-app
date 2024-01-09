@@ -30,8 +30,6 @@ type GameTemplate @model{
   phaseTwoTime: Int!
   imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
 }
 
 input GameTemplateInput {
@@ -55,8 +53,6 @@ type QuestionTemplate @model {
   standard: String
   imageUrl: String
   gameTemplates: [GameTemplate] @manyToMany(relationName: "GameQuestions")
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
 }
 
 input QuestionTemplateInput {
