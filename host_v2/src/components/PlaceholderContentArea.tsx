@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Grid } from '@mui/material';
-import { BodyContentAreaDoubleColumnStyled } from '../lib/styledcomponents/layout/BodyContentAreasStyled';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from "swiper/modules";
+import {
+  BodyContentAreaDoubleColumnStyled,
+  BodyContentAreaTripleColumnStyled,
+  BodyContentAreaSingleColumnStyled
+} from '../lib/styledcomponents/layout/BodyContentAreasStyled';
 import Card from './Card';
-import QuestionCard from './QuestionCard';
-import AnswerCard from './AnswerCard';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
+import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
+
 
 // may have to reformat/restructure this later but here is a sample answer object
 interface AnswerOption {
@@ -21,22 +32,140 @@ interface PlaceholderContentAreaProps { questionData: QuestionData, answerOption
 
 export default function PlaceholderContentArea({ questionData, answerOptions }: PlaceholderContentAreaProps) {
   // eslint-disable-line
-  return (
-    <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <QuestionCard questionText={questionData.text} imageUrl={questionData.imageUrl} />
-        <Card />
+
+  const theme = useTheme();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
+  const largeScreen =
+    <BodyContentAreaTripleColumnStyled container>
+      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+        <ScrollBoxStyled>
+          <Card />
+          <Card />
+        </ScrollBoxStyled>
       </Grid>
-      <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        {answerOptions.map((option, index) =>
-          <AnswerCard
-            isCorrectAnswer={option.reason === null}
-            answerIndex={index}
-            answerContent={option.content}
-            instructions={option.instructions}
-            answerReason={option.reason} />)}
-        <Card />
+      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+        <ScrollBoxStyled>
+          <Card />
+          <Card />
+        </ScrollBoxStyled>
       </Grid>
+      <Grid item xs={12} sm={4} sx={{ width: '100%', height: '100%' }}>
+        <ScrollBoxStyled>
+          <Card />
+          <Card />
+        </ScrollBoxStyled>
+      </Grid>
+    </BodyContentAreaTripleColumnStyled>
+
+  const mediumScreen =
+    <BodyContentAreaDoubleColumnStyled>
+      <Swiper
+        modules={[Pagination]}
+        pagination={{
+          el: '.swiper-pagination-container',
+          bulletClass: 'swiper-pagination-bullet',
+          bulletActiveClass: 'swiper-pagination-bullet-active',
+          clickable: true,
+          renderBullet(index: number, className: string) {
+            return `<span class="${className}" style="width:20px; height:6px; border-radius:0"></span>`;
+          },
+        }}
+        slidesPerView={2.1}
+      >
+        <SwiperSlide >
+          <Grid item xs={12} sm={6} direction="column">
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
+          </Grid>
+        </SwiperSlide>
+        <SwiperSlide >
+          <Grid item xs={12} sm={6} direction="column">
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
+          </Grid>
+        </SwiperSlide>
+        <SwiperSlide >
+          <Grid item xs={12} sm={6} direction="column">
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
+          </Grid>
+        </SwiperSlide>
+      </Swiper>
     </BodyContentAreaDoubleColumnStyled>
+
+  const smallScreen =
+    <BodyContentAreaSingleColumnStyled>
+      <Swiper
+        modules={[Pagination]}
+        pagination={{
+          el: '.swiper-pagination-container',
+          bulletClass: 'swiper-pagination-bullet',
+          bulletActiveClass: 'swiper-pagination-bullet-active',
+          clickable: true,
+          renderBullet(index: number, className: string) {
+            return `<span class="${className}" style="width:20px; height:6px; border-radius:0;"></span>`;
+          },
+        }}
+        slidesPerView={1.1}
+      >
+        <SwiperSlide>
+          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
+          </Grid>
+        </SwiperSlide>
+        <SwiperSlide>
+          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
+          </Grid>
+        </SwiperSlide>
+        <SwiperSlide>
+          <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+            <ScrollBoxStyled>
+              <Card />
+              <Card />
+            </ScrollBoxStyled>
+          </Grid>
+        </SwiperSlide>
+      </Swiper>
+    </BodyContentAreaSingleColumnStyled>
+
+  if (isLargeScreen) {
+    return (
+      largeScreen
+    );
+  } if (isMediumScreen) {
+    return (
+      <>
+        {mediumScreen}
+        <PaginationContainerStyled
+          className="swiper-pagination-container"
+          style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+        />
+      </>
+    );
+  }
+  return (
+    <>
+      {smallScreen}
+      <PaginationContainerStyled
+        className="swiper-pagination-container"
+        style={{ paddingTop: `${theme.sizing.largePadding}px`, zIndex: 2 }}
+      />
+    </>
   );
+
 }

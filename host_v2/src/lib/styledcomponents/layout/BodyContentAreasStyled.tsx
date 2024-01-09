@@ -1,29 +1,43 @@
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
-/* lower-level container for background content in body. floats above body boxes
-(body stack container -> body box upper, body box lower, body content area) */
-export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
+export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
   justifyContent: 'flex-start',
-  alignItems: 'center',
-  maxWidth: '824px',
+  alignItems: 'flex-start',
+  maxWidth: '1236px',
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  paddingTop: `${theme.sizing.smallPadding}px`,
+  paddingLeft: `${theme.sizing.mediumPadding}px`,
+  paddingRight: `${theme.sizing.mediumPadding}px`,
+  zIndex: 2,
+}));
+
+/* lower-level container for background content in body. floats above body boxes
+(body stack container -> body box upper, body box lower, body content area) */
+export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
+  position: 'absolute',
+  top: '0',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  maxWidth: `${theme.breakpoints.values.lg})px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
-});
+}));
 
 // content area of body that floats above background layers above - Single Column Page
 export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled,
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`,
-  paddingLeft: `${theme.sizing.mediumPadding}px`,
-  paddingRight: `${theme.sizing.mediumPadding}px`,
+  maxWidth: `${theme.breakpoints.values.md})px`,
 }));
 
 // content area of body that floats above background layers above - Phase Results Page
