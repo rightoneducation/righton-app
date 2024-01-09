@@ -15,23 +15,26 @@ import { ConfidenceLevel } from '@righton/networking';
 import Legend from './ConfidenceResponseLegend';
 import CustomBar from './CustomBar';
 
-// TODO: maybe move styled components to bottom?
 const LabelStyled = styled(Typography)(({ theme }) => ({
-  color: `${theme.palette.playerFeedbackLabelColor}`,
+  color: `${theme.palette.primary.playerFeedbackLabelColor}`,
   fontSize: `${theme.typography.caption.fontSize}`,
   flexDirection: 'column',
   alignItems: 'center',
-  alignSelf: 'stretch',
-  opacity: 0.4
+  alignSelf: 'stretch'
 }));
 
-const ContainerStyled = styled(Box)(({ theme }) => ({
+const ContainerStyled = styled(Box)({
   display: 'flex',
-  padding: `calc(${theme.extraSmallPadding})/2`,
+  padding: `4px`,
   flexDirection: 'column',
   alignItems: 'center',
   alignSelf: 'stretch',
-}));
+});
+
+const CenteredContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center'
+});
 
 
 interface GraphProps {
@@ -56,12 +59,12 @@ export default function ConfidenceResponsesGraph({
   const customThemeGraph = {
     axis: {
       style: {
-        axis: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: 2 },
+        axis: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: `${theme.sizing.barStrokeWidth}` },
         grid: { stroke: 'transparent' },
         tickLabels: {
           padding: 10,
-          fill: `${theme.palette.primary.graphAccentColor}`,
-          fontSize: 18,
+          fill: `${theme.palette.primary.playerFeedbackLabelColor}`,
+          fontSize: `${theme.typography.body2.fontSize}`,
         },
       },
     },
@@ -70,14 +73,14 @@ export default function ConfidenceResponsesGraph({
       style: {
         data: {
           stroke: `${theme.palette.primary.main}`,
-          strokeWidth: 2,
+          strokeWidth: `${theme.sizing.barStrokeWidth}`,
         },
       },
     },
     bar: {
       style: {
         data: {
-          fill: `${theme.palette.primary.graphAccentColor}`,  // Adjust the fill color as needed
+          fill: `${theme.palette.primary.graphAccentColor}`,
         },
       },
       barWidth: 55,
@@ -106,6 +109,34 @@ export default function ConfidenceResponsesGraph({
   const correctResponders: any = [];
   const incorrectResponders: any = [];
 
+  /**
+   * @param name must be either 'correct' or 'incorrect'
+   * @returns VictoryBar component for approproate data based on name arg
+   */
+  function customBar(name: string): any {
+    return (
+      <VictoryBar
+        name={name}
+        data={name === 'incorrect' ? incorrectResponders : correctResponders}
+        cornerRadius={({ index }) =>
+          (index !== undefined && correctResponders[index].y === 0) ||
+            name === 'correct' ? 5 : 0
+        }
+        labels={({ index }) =>
+          correctResponders[index].y + incorrectResponders[index].y
+        }
+        dataComponent={
+          <CustomBar
+            // smallPadding={smallPadding}
+            selectedWidth={barThickness + smallPadding}
+            selectedHeight={200}
+            graphClickInfo={graphClickInfo}
+            handleGraphClick={handleGraphClick}
+          />
+        }
+      />);
+  }
+
   const ConfidenceLevelDictionary: { [key: number]: string } = {
     0: 'Not\nRated',
     1: 'Not At\nAll',
@@ -127,93 +158,35 @@ export default function ConfidenceResponsesGraph({
 
   return (
     <ContainerStyled>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: '-5%',
-          marginTop: '5%',
-        }}
-      >
-        <LabelStyled>
-          Number of players
-        </LabelStyled>
-      </div>
+      <CenteredContainer>
+        <LabelStyled>{t('gamesession.confidenceCard.graph.title')}</LabelStyled>
+      </CenteredContainer>
       <div ref={graphRef}>
         <VictoryChart
           theme={customThemeGraph}
           height={200}
           containerComponent={
-            <VictoryContainer
-              style={{
-                touchAction: "auto"
-              }}
-            />
-          }
-        >
+            <VictoryContainer style={{ touchAction: "auto" }} />
+          }>
           <VictoryStack
             standalone={false}
             labelComponent={
               <VictoryLabel
                 style={{
                   fill: `${theme.palette.primary.main}`,
-                  fontSize: 18,
-                }}
-              />
-            }
-          >
-            <VictoryBar
-              name="incorrect"
-              data={incorrectResponders}
-              cornerRadius={({ index }) =>
-                index !== undefined && correctResponders[index].y === 0 ? 5 : 0
-              }
-              labels={({ index }) =>
-                correctResponders[index].y + incorrectResponders[index].y
-              }
-              dataComponent={
-                <CustomBar
-                  // smallPadding={smallPadding}
-                  selectedWidth={barThickness + smallPadding}
-                  selectedHeight={200}
-                  graphClickInfo={graphClickInfo}
-                  handleGraphClick={handleGraphClick}
-                />
-              }
-            />
-            <VictoryBar
-              name="correct"
-              data={correctResponders}
-              cornerRadius={5}
-              labels={({ index }) =>
-                correctResponders[index].y + incorrectResponders[index].y
-              }
-              dataComponent={
-                <CustomBar
-                  // smallPadding={smallPadding}
-                  selectedWidth={barThickness + smallPadding}
-                  selectedHeight={200}
-                  graphClickInfo={graphClickInfo}
-                  handleGraphClick={handleGraphClick}
-                />
-              }
-            />
+                  fontSize: `${theme.typography.body2.fontSize}`,
+                }} />}>
+            {customBar('incorrect')}
+            {customBar('correct')}
             <VictoryAxis
               tickValues={correctResponders.map((datum: any) => datum.x)}
             />
           </VictoryStack>
         </VictoryChart>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <LabelStyled>
-          Confidence
-        </LabelStyled>
-      </div>
+      <CenteredContainer>
+        <LabelStyled>{t('gamesession.confidenceCard.title')}</LabelStyled>
+      </CenteredContainer>
       <Legend />
     </ContainerStyled>
   );
