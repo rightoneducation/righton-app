@@ -36,7 +36,6 @@ const CenteredContainer = styled(Box)({
   justifyContent: 'center'
 });
 
-
 interface GraphProps {
   // TODO: change these to their correct types (and make them non-optional)
   confidenceData?: any;
@@ -54,8 +53,6 @@ export default function ConfidenceResponsesGraph({
 
   const correctColor = `${theme.palette.primary.main}`;
   const incorrectColor = 'transparent';
-  const barThickness = 55;
-  const smallPadding = 12;
   const customThemeGraph = {
     axis: {
       style: {
@@ -83,7 +80,7 @@ export default function ConfidenceResponsesGraph({
           fill: `${theme.palette.primary.graphAccentColor}`,
         },
       },
-      barWidth: 55,
+      barWidth: `${theme.sizing.confidenceBarThickness}`,
     },
   };
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
@@ -127,8 +124,7 @@ export default function ConfidenceResponsesGraph({
         }
         dataComponent={
           <CustomBar
-            // smallPadding={smallPadding}
-            selectedWidth={barThickness + smallPadding}
+            selectedWidth={theme.sizing.confidenceBarThickness}
             selectedHeight={200}
             graphClickInfo={graphClickInfo}
             handleGraphClick={handleGraphClick}

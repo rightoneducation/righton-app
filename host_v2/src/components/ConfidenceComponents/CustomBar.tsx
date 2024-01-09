@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bar } from 'victory';
-// import { makeStyles } from '@mui/styles';
+import { Box } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
 
 interface BarProps {
   // TODO: change these to their correct types (and make them non-optional)
@@ -11,7 +12,6 @@ interface BarProps {
   graphClickInfo?: any;
   handleGraphClick: any;
 }
-
 
 export default function CustomBar(props: BarProps) {
   const {
@@ -24,6 +24,9 @@ export default function CustomBar(props: BarProps) {
   } = props;
   const offset = selectedWidth / 2;
   const graphTitleOffset = 28;
+
+  const theme = useTheme(); // eslint-disable-line
+
   // const classes = useStyles();
   return (
     <g style={{ pointerEvents: 'visible' }}>
@@ -36,9 +39,8 @@ export default function CustomBar(props: BarProps) {
         height={selectedHeight - graphTitleOffset}
         fill={
           graphClickInfo.selectedIndex != null &&
-            graphClickInfo.selectedIndex === index &&
-            graphClickInfo.graph === 'confidence'
-            ? 'rgba(255, 255, 255, 0.2)'
+            graphClickInfo.selectedIndex === index
+            ? `${theme.palette.primary.graphAccentColor}`
             : 'transparent'
         }
         stroke="transparent"

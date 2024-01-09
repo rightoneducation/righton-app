@@ -61,6 +61,7 @@ const largePadding = 32; // text spacing on answer selector, top margin on title
 const extraLargePadding = 48; // spacing between card and edge of screen
 const extraExtraLargePadding = 64; // spacing between buttons and bottom of screen
 const barStrokeWidth = 2; // stroke width of the bar outlines on host graph cards
+const confidenceBarThickness = 55; // thickness of each bar component in confidence bar graph
 
 // adds mainGradient field to the palette theme
 declare module '@mui/material/styles' {
@@ -78,6 +79,7 @@ declare module '@mui/material/styles' {
       extraLargePadding: number;
       extraExtraLargePadding: number;
       barStrokeWidth: number;
+      confidenceBarThickness: number;
     };
   }
 
@@ -95,6 +97,7 @@ declare module '@mui/material/styles' {
       extraLargePadding?: number;
       extraExtraLargePadding?: number;
       barStrokeWidth?: number;
+      confidenceBarThickness?: number;
     };
   }
 
@@ -160,7 +163,8 @@ export default createTheme({
     largePadding,
     extraLargePadding,
     extraExtraLargePadding,
-    barStrokeWidth
+    barStrokeWidth,
+    confidenceBarThickness
   },
   palette: {
     primary: {
