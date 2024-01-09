@@ -48,7 +48,6 @@ export class GameTemplateParser {
           isNullOrUndefined(description) ||
           isNullOrUndefined(phaseOneTime) ||
           isNullOrUndefined(phaseTwoTime) ||
-          isNullOrUndefined(imageUrl) ||
           isNullOrUndefined(createdAt) ||
           isNullOrUndefined(updatedAt)) {
           throw new Error(

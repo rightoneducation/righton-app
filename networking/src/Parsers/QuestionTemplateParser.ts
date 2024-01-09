@@ -41,7 +41,13 @@ export class QuestionTemplateParser {
       if (isNullOrUndefined(id) ||
           isNullOrUndefined(title) ||
           isNullOrUndefined(owner) ||
-          isNullOrUndefined(version)) {
+          isNullOrUndefined(version) ||
+          isNullOrUndefined(domain) ||
+          isNullOrUndefined(cluster) ||
+          isNullOrUndefined(grade) ||
+          isNullOrUndefined(standard) ||
+          isNullOrUndefined(createdAt) ||
+          isNullOrUndefined(updatedAt)) {
           throw new Error(
               "Question Template has null field for the attributes that are not nullable"
           )
