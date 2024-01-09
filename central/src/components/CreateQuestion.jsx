@@ -70,7 +70,6 @@ export default function QuestionForm({ updateQuestion, question: initialState, g
         default:
           setIsAnswerTypeValid(StringAnswer.isAnswerTypeValid(currentTarget.value));
           setIsAnswerPrecisionValid(true);
-          console.log(StringAnswer.isAnswerTypeValid(currentTarget.value));
           break;
         case AnswerType.NUMBER:
           setIsAnswerTypeValid(NumberAnswer.isAnswerTypeValid(currentTarget.value));
