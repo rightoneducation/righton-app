@@ -9,6 +9,8 @@ export enum AnswerType {
   EXPRESSION = 2
 }
 
+export type NormAnswerType = string | number;
+
 export enum AnswerPrecision {
   WHOLE = 0,
   TENTH = 1,
@@ -24,7 +26,7 @@ export interface ITeamAnswerHint {
 
 export interface IAnswerContent {
   rawAnswer: string; 
-  normAnswer?: (string | number)[] | null;
+  normAnswer?: (NormAnswerType)[] | null;
   answerType: AnswerType;
   answerPrecision?: string;
   percent?: number;
