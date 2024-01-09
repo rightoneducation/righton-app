@@ -40,10 +40,10 @@ const radialTimerArray = [
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
 
 // design tokens - breakpoints:
-const xs = 400;
-const sm = 700;
-const md = 900;
-const lg = 1200;
+const xs = 0;
+const sm = 400;
+const md = 700;
+const lg = 1024;
 const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)

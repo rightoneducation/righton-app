@@ -19,25 +19,25 @@ export const BodyContentAreaTripleColumnStyled = styled(Grid)(({ theme }) => ({
 
 /* lower-level container for background content in body. floats above body boxes
 (body stack container -> body box upper, body box lower, body content area) */
-export const BodyContentAreaDoubleColumnStyled = styled(Grid)({
+export const BodyContentAreaDoubleColumnStyled = styled(Grid)(({ theme }) => ({
   position: 'absolute',
   top: '0',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  maxWidth: '824px',
+  maxWidth: `${theme.breakpoints.values.lg})px`,
   width: '100%',
   height: '100%',
   overflow: 'hidden',
   zIndex: 2,
-});
+}));
 
 // content area of body that floats above background layers above - Single Column Page
 export const BodyContentAreaSingleColumnStyled = styled(
   BodyContentAreaDoubleColumnStyled,
 )(({ theme }) => ({
   justifyContent: 'center',
-  maxWidth: `calc(400px + ${theme.sizing.mediumPadding * 2}px)`
+  maxWidth: `${theme.breakpoints.values.md})px`,
 }));
 
 // content area of body that floats above background layers above - Phase Results Page

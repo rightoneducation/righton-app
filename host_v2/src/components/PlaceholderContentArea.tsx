@@ -22,7 +22,7 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
   // eslint-disable-line
 
   const theme = useTheme();
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
   const largeScreen =
@@ -62,7 +62,7 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
         }}
         slidesPerView={2.1}
       >
-        <SwiperSlide>
+        <SwiperSlide >
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
               <Card />
@@ -70,7 +70,7 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
-        <SwiperSlide>
+        <SwiperSlide >
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
               <Card />
@@ -78,7 +78,7 @@ export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps)
             </ScrollBoxStyled>
           </Grid>
         </SwiperSlide>
-        <SwiperSlide>
+        <SwiperSlide >
           <Grid item xs={12} sm={6} direction="column">
             <ScrollBoxStyled>
               <Card />
