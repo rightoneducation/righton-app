@@ -16,55 +16,83 @@ export enum AnswerPrecision {
   THOUSANDTH = 3,
 }
 
+// interface for answer prior to submission by player
+// this is stored in local storage on the player's device
+export interface IPreSubmitAnswer {
+  rawAnswer: string,
+  answerType: AnswerType;
+  answerPrecision: AnswerPrecision,
+  currentState: GameSessionState,
+  currentQuestionIndex: number,
+  isShortAnswerEnabled: boolean,
+  isSubmitted: boolean,
+}
+
+// attributes that are specific to player-submitted hints
 export interface ITeamAnswerHint {
   rawHint: string;
   teamName: string;
   isHintSubmitted: boolean;
 }
 
-export interface IAnswerContent {
-  rawAnswer: string; 
-  normAnswer?: (string | number)[] | null;
-  answerType: AnswerType;
-  answerPrecision?: string;
+// attributes that are specific to a numeric answer
+export interface INumericAnswerAttributes {
+  answerPrecision: AnswerPrecision;
+}
+
+// attributes that are specific to a multiple choice answer
+export interface IMultiChoiceAnswerAttributes {
+  multiChoiceAnswerIndex: number;
+}
+
+// attrivutes that are required during the gameplay phase 
+// in contrast to when a teacher is creating the queation
+export interface IGamePlayAttributes {
+  questionId?: number;
+  isChosen?: boolean;
+  teamMemberAnswersId?: string;
+  text?: string;
+  isTrickAnswer?: boolean;
+  confidenceLevel?: ConfidenceLevel;
+  hint?: ITeamAnswerHint;
   percent?: number;
-  multiChoiceAnswerIndex?: number | null;
   isSubmitted?: boolean;
   isShortAnswerEnabled?: boolean;
   currentState?: GameSessionState | null;
   currentQuestionIndex?: number | null;
 }
 
-export interface ITeamAnswerAttributes {
-  questionId?: number;
-  isChosen?: boolean;
-  teamMemberAnswersId?: string;
-  text?: string;
-  answerContent?: IAnswerContent;
-  isTrickAnswer?: boolean;
-  confidenceLevel?: ConfidenceLevel;
-  hint?: ITeamAnswerHint;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export interface IBaseAnswerConfig<T> {
   id?: string;
-  answerContent: IAnswerContent;
-  teamAnswerAttributes?: ITeamAnswerAttributes;
+  rawAnswer: string;
+  normAnswer?: (string | number)[] | null;
+  answerType: AnswerType;
+  numericAnswerAttributes?: INumericAnswerAttributes;
+  multiChoiceAnswerAttributes?: IMultiChoiceAnswerAttributes;
+  gamePlayAttributes?: IGamePlayAttributes;
+  createdAt?: string;
+  updatedAt?: string;
   value: T;
 }
 
 export abstract class BaseAnswer<T> {
   id?: string;
-  answerContent: IAnswerContent;
-  teamAnswerAttributes?: ITeamAnswerAttributes;
+  rawAnswer: string;
+  normAnswer?: (string | number)[] | null;
+  answerType: AnswerType;
+  numericAnswerAttributes?: INumericAnswerAttributes;
+  multiChoiceAnswerAttributes?: IMultiChoiceAnswerAttributes;
+  gamePlayAttributes?: IGamePlayAttributes;
   value: T;
   constructor(config: IBaseAnswerConfig<T>) 
   {
     this.id = config.id,
-    this.answerContent = config.answerContent,
-    this.teamAnswerAttributes = config.teamAnswerAttributes,
+    this.rawAnswer = config.rawAnswer,
+    this.normAnswer = config.normAnswer,
+    this.answerType = config.answerType,
+    this.numericAnswerAttributes = config.numericAnswerAttributes,
+    this.multiChoiceAnswerAttributes = config.multiChoiceAnswerAttributes,
+    this.gamePlayAttributes = config.gamePlayAttributes,
     this.value = config.value
   }
 
@@ -115,13 +143,10 @@ function normalizeAnswers(currentItem: string, answerType: AnswerType) {
 export class NumberAnswer extends BaseAnswer<number> {
   constructor(config: IBaseAnswerConfig<number>) {
     super(config); // Pass the config to the TeamAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.NUMBER);
+    const normalizedAnswers = normalizeAnswers(this.rawAnswer, AnswerType.NUMBER);
     
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.NUMBER
-    };
+    this.normAnswer = normalizedAnswers;
+    this.answerType = AnswerType.NUMBER;
     return this;
   }
 
@@ -132,16 +157,16 @@ export class NumberAnswer extends BaseAnswer<number> {
       [AnswerPrecision.HUNDREDTH]: 2,
       [AnswerPrecision.THOUSANDTH]: 3
     }
-    if (this.answerContent.normAnswer){
-      return this.answerContent.normAnswer.some((answer) => {
+    if (this.normAnswer){
+      return this.normAnswer.some((answer) => {
         if (otherAnswers.includes(answer as number)){
-          if (this.answerContent && this.answerContent.answerPrecision)
+          if (this.numericAnswerAttributes && this.numericAnswerAttributes.answerPrecision)
           {
             // we clean up the raw answer again to remove commas and the percent sign
             // we need to use the raw answer because the norm answer could be changed if there is a percentage present
             // so it's not a reliable way to check decimal places
-            const normRawAnswer = this.answerContent.rawAnswer.replace(/[,%]/g, '').trim();
-            const precisionEnum = AnswerPrecision[this.answerContent.answerPrecision as keyof typeof AnswerPrecision];
+            const normRawAnswer = this.rawAnswer.replace(/[,%]/g, '').trim();
+            const precisionEnum = this.numericAnswerAttributes.answerPrecision as AnswerPrecision;
 
             // this is going to round the number we found that matches to the precision that the teacher requested
             const roundedNumberAsString = Number(normRawAnswer).toFixed(answerPrecisionDictionary[precisionEnum]);
@@ -168,19 +193,16 @@ export class NumberAnswer extends BaseAnswer<number> {
 export class StringAnswer extends BaseAnswer<string> {
   constructor(config: IBaseAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.STRING);
+    const normalizedAnswers = normalizeAnswers(this.rawAnswer, AnswerType.STRING);
 
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.STRING
-    };
+    this.normAnswer = normalizedAnswers;
+    this.answerType = AnswerType.STRING;
     return this;
   }
 
   isEqualTo(otherAnswers: string[]): Boolean {
     const otherAnswersSet = new Set(otherAnswers);
-    if (this.answerContent.normAnswer && this.answerContent.normAnswer.some((answer) => otherAnswersSet.has(answer as string))) {
+    if (this.normAnswer && this.normAnswer.some((answer) => otherAnswersSet.has(answer as string))) {
       return true;
     }
     return false;
@@ -196,22 +218,19 @@ export class StringAnswer extends BaseAnswer<string> {
 export class ExpressionAnswer extends BaseAnswer<string> {
   constructor(config: IBaseAnswerConfig<string>) {
     super(config); // Pass the config to the TeamAnswer constructor
-    const normalizedAnswers = normalizeAnswers(this.answerContent.rawAnswer, AnswerType.EXPRESSION);
+    const normalizedAnswers = normalizeAnswers(this.rawAnswer, AnswerType.EXPRESSION);
 
-    this.answerContent = {
-      ...this.answerContent,
-      normAnswer: normalizedAnswers,
-      answerType: AnswerType.EXPRESSION
-    };
+    this.normAnswer = normalizedAnswers;
+    this.answerType = AnswerType.EXPRESSION;
     return this;
   }
 
   isEqualTo(otherAnswers: string[]): Boolean {
-    if (this.answerContent.normAnswer) {
-      for (let i =0; i < this.answerContent.normAnswer.length; i++) {
+    if (this.normAnswer) {
+      for (let i =0; i < this.normAnswer.length; i++) {
         for (let y = 0; y < otherAnswers.length; y++) {
           try {
-            const exp1 = parse(this.answerContent.normAnswer[i].toString()).toString();
+            const exp1 = parse(this.normAnswer[i].toString()).toString();
             const exp2 = parse(otherAnswers[y].toString()).toString();
             if (exp1 === exp2)
               return true;
