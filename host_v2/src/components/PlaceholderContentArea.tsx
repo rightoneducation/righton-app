@@ -16,9 +16,21 @@ import ScrollBoxStyled from '../lib/styledcomponents/layout/ScrollBoxStyled';
 import PaginationContainerStyled from '../lib/styledcomponents/PaginationContainerStyled';
 
 
-interface PlaceholderContentAreaProps { } // eslint-disable-line
+// may have to reformat/restructure this later but here is a sample answer object
+interface AnswerOption {
+  instructions: string[] | null;
+  reason: string | null;
+  content: string;
+}
 
-export default function PlaceholderContentArea({ }: PlaceholderContentAreaProps) {
+interface QuestionData {
+  text: string;
+  imageUrl: string | undefined;
+}
+
+interface PlaceholderContentAreaProps { questionData: QuestionData, answerOptions: AnswerOption[] } // eslint-disable-line
+
+export default function PlaceholderContentArea({ questionData, answerOptions }: PlaceholderContentAreaProps) {
   // eslint-disable-line
 
   const theme = useTheme();

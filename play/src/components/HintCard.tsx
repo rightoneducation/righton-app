@@ -95,6 +95,7 @@ export default function HintCard({
             multiline
             minRows={2}
             maxRows={2}
+            disabled={isHintSubmitted}
             placeholder={t('gameinprogress.chooseanswer.hintcardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
             value={editorContents}

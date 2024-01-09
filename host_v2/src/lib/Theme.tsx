@@ -51,6 +51,7 @@ const fullHeaderHeight = 228;
 const headerHeight = 150;
 const footerHeight = 60;
 const pregameMinColumnWidth = 248; // used on enter game code screen and righton logo
+const answerOptionBorderRadius = 22; // border radius of options on answer cards
 const extraSmallPadding = 8; // small icons, text positioning
 const smallPadding = 16; // upper and lower margins on text, spacing of content in cards
 const mediumPadding = 24; // timer margin
@@ -66,6 +67,7 @@ declare module '@mui/material/styles' {
       headerHeight: number;
       footerHeight: number;
       pregameMinColumnWidth: number;
+      answerOptionBorderRadius: number;
       extraSmallPadding: number;
       smallPadding: number;
       mediumPadding: number;
@@ -81,6 +83,7 @@ declare module '@mui/material/styles' {
       headerHeight?: number;
       footerHeight?: number;
       pregameMinColumnWidth?: number;
+      answerOptionBorderRadius?: number;
       extraSmallPadding?: number;
       smallPadding?: number;
       mediumPadding?: number;
@@ -141,12 +144,14 @@ export default createTheme({
     headerHeight,
     footerHeight,
     pregameMinColumnWidth,
+    answerOptionBorderRadius,
     extraSmallPadding,
     smallPadding,
     mediumPadding,
     largePadding,
     extraLargePadding,
     extraExtraLargePadding,
+
   },
   palette: {
     primary: {

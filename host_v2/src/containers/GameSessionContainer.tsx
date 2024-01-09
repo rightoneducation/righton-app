@@ -13,11 +13,40 @@ import PlaceholderContentArea from '../components/PlaceholderContentArea';
 interface GameInProgressContainerProps {
   apiClient: ApiClient;
 }
+// may have to reformat/restructure this later but here is a sample answer object
+interface AnswerOption {
+  instructions: string[] | null;
+  reason: string | null;
+  content: string;
+}
+
+interface QuestionData {
+  text: string;
+  imageUrl: string | undefined;
+}
 
 export default function GameSessionContainer({
   apiClient,
 }: GameInProgressContainerProps) {
   console.log(apiClient); // eslint-disable-line
+  // TODO: delete hard coded values later
+  const sampleQuestion: QuestionData = {
+    text: "A pair of shoes were 10% off last week. This week, theres an additional sale, and you can get an extra 40% off the already discounted price from last week. What is the total percentage discount that youd get if you buy the shoes this week?",
+    imageUrl: "https://images.unsplash.com/photo-1609188944094-394637c26769?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+  }
+
+  const sampleAnswerOptionOne: AnswerOption = {
+    instructions: ['step 1 step 1 step 1 step 1 step 1 step 1  step 1 step 1 step 1 step 1 step 1 step 1 ', 'step 2', 'step 3', 'step 4'],
+    reason: null,
+    content: "an answer choice"
+  }
+
+  const sampleAnswerOptionTwo: AnswerOption = {
+    instructions: null,
+    reason: "reasoning",
+    content: "another answer choice"
+  }
+
   const { t } = useTranslation();
   return (
     <StackContainerStyled
@@ -32,8 +61,7 @@ export default function GameSessionContainer({
       <BodyStackContainerStyled>
         <BodyBoxUpperStyled />
         <BodyBoxLowerStyled />
-        <PlaceholderContentArea />
-        
+        <PlaceholderContentArea questionData={sampleQuestion} answerOptions={[sampleAnswerOptionOne, sampleAnswerOptionTwo]} />
       </BodyStackContainerStyled>
     </StackContainerStyled>
   );
