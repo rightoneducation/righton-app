@@ -169,6 +169,7 @@ export default function OpenAnswerCard({
             placeholder={t('gameinprogress.chooseanswer.openanswercardplaceholder') ?? ''}
             onChange={handleEditorContentsChange}
             value={editorContents}
+            disabled={isSubmitted}
             InputProps={{
               disableUnderline: true,
               style: {
