@@ -26,7 +26,7 @@ type GameTemplate @model{
   cluster: String
   grade: String
   standard: String
-  phaseOneTime: Int
+  phaseOneTime: Int!
   phaseTwoTime: Int!
   imageUrl: String
   questionTemplates: [QuestionTemplate] @manyToMany(relationName: "GameQuestions")
