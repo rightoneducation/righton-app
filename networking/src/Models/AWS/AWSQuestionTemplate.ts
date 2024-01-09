@@ -14,6 +14,6 @@ export type AWSQuestionTemplate = {
     standard?: string | null | undefined,
     imageUrl?: string | null | undefined,
     gameTemplates?:  AWSModelGameQuestionConnection | null,
-    createdAt?: string | null | undefined,
-    updatedAt?: string | null
+    createdAt: string,
+    updatedAt: string
 }

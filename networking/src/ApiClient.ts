@@ -230,7 +230,6 @@ export class ApiClient implements IApiClient {
 
     async createGameSessionFromTemplate(id: string): Promise<string | null> {
         try {
-            console.log('sup');
             const response = await API.graphql(
                 graphqlOperation(createGameSessionFromTemplate, { input: { gameTemplateId: id } })
             ) as { data: { createGameSessionFromTemplate: string } };
@@ -677,7 +676,9 @@ class GameTemplateParser {
                     const { gameTemplates, ...rest } = item.questionTemplate;
                     // Only add to questionTemplates if 'rest' is not empty
                     if (Object.keys(rest).length > 0) {
-                        questionTemplates.push({questionTemplate: rest as IQuestionTemplate, gameQuestionId: item.id as string});
+                        const createdAt = new Date(rest.createdAt)
+                        const updatedAt = new Date(rest.updatedAt)
+                        questionTemplates.push({questionTemplate: {...rest, createdAt, updatedAt} as IQuestionTemplate, gameQuestionId: item.id as string});
                     }
                 }
             }
@@ -696,9 +697,10 @@ class GameTemplateParser {
             phaseOneTime,
             phaseTwoTime,
             imageUrl,
-            createdAt,
-            updatedAt
         } = awsGameTemplate || {}
+
+        const createdAt = new Date(awsGameTemplate.createdAt)
+        const updatedAt = new Date(awsGameTemplate.updatedAt)
 
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
@@ -747,7 +749,9 @@ class QuestionTemplateParser {
                   const { questionTemplates, ...rest } = item.gameTemplate;
                   // Only add to questionTemplates if 'rest' is not empty
                   if (Object.keys(rest).length > 0) {
-                      gameTemplates.push({gameTemplate: rest as IGameTemplate, gameQuestionId: item.id as string});
+                    const createdAt = new Date(rest.createdAt)
+                    const updatedAt = new Date(rest.updatedAt)
+                    gameTemplates.push({gameTemplate: {...rest, createdAt, updatedAt} as IGameTemplate, gameQuestionId: item.id as string});
                   }
               }
           }
@@ -766,9 +770,11 @@ class QuestionTemplateParser {
             grade,
             standard,
             imageUrl,
-            createdAt,
-            updatedAt
         } = awsQuestionTemplate || {}
+
+        const createdAt = new Date(awsQuestionTemplate.createdAt)
+        const updatedAt = new Date(awsQuestionTemplate.updatedAt)
+
         if (isNullOrUndefined(id) ||
             isNullOrUndefined(title) ||
             isNullOrUndefined(owner) ||
