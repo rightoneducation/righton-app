@@ -7,6 +7,13 @@
     "questionCard": {
       "title": "Pregunta"
     },
+    "confidenceCard": {
+      "title": "Confianza",
+      "description": "Se pregunta a los jugadores qué tan seguros están de su respuesta a esta pregunta.",
+      "graph": {
+        "title": "Cantidad de jugadores"
+      }
+    },
     "placeholder": "Este es un texto de marcador de posición."
   }
 }

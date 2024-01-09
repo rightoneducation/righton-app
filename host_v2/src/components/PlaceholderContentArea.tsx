@@ -4,6 +4,7 @@ import { BodyContentAreaDoubleColumnStyled } from '../lib/styledcomponents/layou
 import Card from './Card';
 import QuestionCard from './QuestionCard';
 import AnswerCard from './AnswerCard';
+import ConfidenceCard from './ConfidenceCard';
 
 // may have to reformat/restructure this later but here is a sample answer object
 interface AnswerOption {
@@ -24,10 +25,10 @@ export default function PlaceholderContentArea({ questionData, answerOptions }: 
   return (
     <BodyContentAreaDoubleColumnStyled container style={{ paddingTop: '16px' }}>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
-        <QuestionCard questionText={questionData.text} imageUrl={questionData.imageUrl} />
-        <Card />
+        <ConfidenceCard />
       </Grid>
       <Grid item xs={12} sm={6} sx={{ width: '100%', height: '100%' }}>
+        <QuestionCard questionText={questionData.text} imageUrl={questionData.imageUrl} />
         {answerOptions.map((option, index) =>
           <AnswerCard
             isCorrectAnswer={option.reason === null}
