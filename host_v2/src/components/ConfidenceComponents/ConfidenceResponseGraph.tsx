@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography } from '@mui/material';
-// import { makeStyles } from '@mui/material/styles';
+import { Typography, Box } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
 import {
   VictoryChart,
   VictoryContainer,
@@ -9,10 +10,29 @@ import {
   VictoryLabel,
   VictoryAxis,
 } from 'victory';
-// import { debounce } from 'lodash';
+import { debounce } from 'lodash';
 import { ConfidenceLevel } from '@righton/networking';
 import Legend from './ConfidenceResponseLegend';
 import CustomBar from './CustomBar';
+
+// TODO: maybe move styled components to bottom?
+const LabelStyled = styled(Typography)(({ theme }) => ({
+  color: `${theme.palette.playerFeedbackLabelColor}`,
+  fontSize: `${theme.typography.caption.fontSize}`,
+  flexDirection: 'column',
+  alignItems: 'center',
+  alignSelf: 'stretch',
+  opacity: 0.4
+}));
+
+const ContainerStyled = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  padding: `calc(${theme.extraSmallPadding})/2`,
+  flexDirection: 'column',
+  alignItems: 'center',
+  alignSelf: 'stretch',
+}));
+
 
 interface GraphProps {
   // TODO: change these to their correct types (and make them non-optional)
@@ -26,19 +46,21 @@ export default function ConfidenceResponsesGraph({
   graphClickInfo,
   handleGraphClick,
 }: GraphProps) {
-  // const classes = useStyles();
-  const correctColor = '#FFF';
+  const theme = useTheme(); // eslint-disable-line
+  const { t } = useTranslation();
+
+  const correctColor = `${theme.palette.primary.main}`;
   const incorrectColor = 'transparent';
   const barThickness = 55;
   const smallPadding = 12;
   const customThemeGraph = {
     axis: {
       style: {
-        axis: { stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 2 },
+        axis: { stroke: `${theme.palette.primary.graphAccentColor}`, strokeWidth: 2 },
         grid: { stroke: 'transparent' },
         tickLabels: {
           padding: 10,
-          fill: 'rgba(255, 255, 255, 0.5)',
+          fill: `${theme.palette.primary.graphAccentColor}`,
           fontSize: 18,
         },
       },
@@ -47,7 +69,7 @@ export default function ConfidenceResponsesGraph({
       colorScale: [incorrectColor, correctColor],
       style: {
         data: {
-          stroke: '#FFF',
+          stroke: `${theme.palette.primary.main}`,
           strokeWidth: 2,
         },
       },
@@ -55,7 +77,7 @@ export default function ConfidenceResponsesGraph({
     bar: {
       style: {
         data: {
-          fill: 'blue',  // Adjust the fill color as needed
+          fill: `${theme.palette.primary.graphAccentColor}`,  // Adjust the fill color as needed
         },
       },
       barWidth: 55,
@@ -64,27 +86,26 @@ export default function ConfidenceResponsesGraph({
   const [boundingRect, setBoundingRect] = useState({ width: 0, height: 0 });
   const graphRef = useRef<HTMLDivElement>(null);
   // this is req'd to handle the resizing of the graph container so that Victory can render the svgs
-  // TODO: implement this later, add lodash to dependencies
-  // useEffect(() => {
-  //   const node = graphRef.current;
-  //   if (node) {
-  //     const updateRect = debounce(() => {
-  //       setBoundingRect(node.getBoundingClientRect());
-  //     });
-  //     updateRect();
-  //     window.addEventListener('resize', updateRect);
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    const node = graphRef.current;
+    if (node) {
+      const updateRect = debounce(() => {
+        setBoundingRect(node.getBoundingClientRect());
+      });
+      updateRect();
+      window.addEventListener('resize', updateRect);
 
-  //     return () => {
-  //       updateRect.cancel();
-  //       window.removeEventListener('resize', updateRect);
-  //     };
-  //   }
-  // }, []);
+      return () => {
+        updateRect.cancel();
+        window.removeEventListener('resize', updateRect);
+      };
+    }
+  }, []);
   // parse the confidenceData to be used by Victory
   const correctResponders: any = [];
   const incorrectResponders: any = [];
 
-  // TODO: integrate this into ConfidenceLevel enum to prevent use of dictionaries here and in confidenceresponsedropdown
   const ConfidenceLevelDictionary: { [key: number]: string } = {
     0: 'Not\nRated',
     1: 'Not At\nAll',
@@ -105,8 +126,7 @@ export default function ConfidenceResponsesGraph({
   });
 
   return (
-    <div>
-      {/* className={classes.container}> */}
+    <ContainerStyled>
       <div
         style={{
           display: 'flex',
@@ -115,16 +135,9 @@ export default function ConfidenceResponsesGraph({
           marginTop: '5%',
         }}
       >
-        <Typography
-          // className={classes.labels}
-          style={{
-            color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
-            opacity: 0.4,
-          }}
-        >
+        <LabelStyled>
           Number of players
-        </Typography>
+        </LabelStyled>
       </div>
       <div ref={graphRef}>
         <VictoryChart
@@ -142,9 +155,8 @@ export default function ConfidenceResponsesGraph({
             standalone={false}
             labelComponent={
               <VictoryLabel
-                // className={classes.labels}
                 style={{
-                  fill: '#FFF',
+                  fill: `${theme.palette.primary.main}`,
                   fontSize: 18,
                 }}
               />
@@ -153,10 +165,8 @@ export default function ConfidenceResponsesGraph({
             <VictoryBar
               name="incorrect"
               data={incorrectResponders}
-              // TODO: change this later based on index
               cornerRadius={({ index }) =>
-                // correctResponders[index].y === 0 ? 5 : 0
-                5
+                index !== undefined && correctResponders[index].y === 0 ? 5 : 0
               }
               labels={({ index }) =>
                 correctResponders[index].y + incorrectResponders[index].y
@@ -200,36 +210,11 @@ export default function ConfidenceResponsesGraph({
           justifyContent: 'center',
         }}
       >
-        <Typography
-          // className={classes.labels}
-          style={{
-            color: 'rgba(255, 255, 255, 1)',
-            fontSize: 12,
-            opacity: 0.4,
-          }}
-        >
+        <LabelStyled>
           Confidence
-        </Typography>
+        </LabelStyled>
       </div>
       <Legend />
-    </div>
+    </ContainerStyled>
   );
 }
-
-// const useStyles = makeStyles({
-//   container: {
-//     display: 'flex',
-//     padding: '5px 4px',
-//     flexDirection: 'column',
-//     alignItems: 'center',
-//     alignSelf: 'stretch',
-//   },
-//   labels: {
-//     color: 'rgba(255, 255, 255, 1)',
-//     fontFamily: 'Rubik',
-//     fontSize: 12,
-//     flexDirection: 'column',
-//     alignItems: 'center',
-//     alignSelf: 'stretch',
-//   },
-// });

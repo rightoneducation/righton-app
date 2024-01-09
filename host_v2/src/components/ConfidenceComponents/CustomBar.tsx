@@ -35,7 +35,7 @@ export default function CustomBar(props: BarProps) {
         width={selectedWidth}
         height={selectedHeight - graphTitleOffset}
         fill={
-          graphClickInfo.selectedIndex &&
+          graphClickInfo.selectedIndex != null &&
             graphClickInfo.selectedIndex === index &&
             graphClickInfo.graph === 'confidence'
             ? 'rgba(255, 255, 255, 0.2)'

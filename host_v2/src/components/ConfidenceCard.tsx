@@ -49,11 +49,12 @@ export default function ConfidenceCard({
   const samplePlayerOne: Player = { answer: '273', isCorrect: false, name: 'a a' }
   const samplePlayerTwo: Player = { answer: '273', isCorrect: false, name: 'b b' }
   const samplePlayerThree: Player = { answer: '714', isCorrect: true, name: 'c c' }
+  const samplePlayerFour: Player = { answer: '55', isCorrect: false, name: 'd d' }
   const sampleConfidenceData: ConfidenceOption[] = [{ confidence: 'NOT_RATED', correct: 0, incorrect: 0, players: [] },
   { confidence: 'NOT_AT_ALL', correct: 0, incorrect: 0, players: [] },
   { confidence: 'KINDA', correct: 0, incorrect: 2, players: [samplePlayerOne, samplePlayerTwo] },
   { confidence: 'QUITE', correct: 0, incorrect: 0, players: [] },
-  { confidence: 'VERY', correct: 1, incorrect: 0, players: [samplePlayerThree] },
+  { confidence: 'VERY', correct: 1, incorrect: 1, players: [samplePlayerThree, samplePlayerFour] },
   { confidence: 'TOTALLY', correct: 0, incorrect: 0, players: [] }]
 
   const [graphClickInfo, setGraphClickInfo] = useState({

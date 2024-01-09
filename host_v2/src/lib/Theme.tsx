@@ -28,6 +28,8 @@ const darkGreyColor = '#CFCFCF'; // disabled pagination bullet, unselected answe
 const lightGreyColor = '#F4F4F4'; // submitted answer
 const greenCorrectColor = '#EBFFDA'; // correct answer background
 const countdownColor = 'rgba(225, 65, 107'; // countdown timer color - appended with '0.x )' opacity when used in countdown
+const playerFeedbackLabelColor = 'rgba(255, 255, 255, 1)'; // color of text on confidence card, responses card, player thinking, etc.
+const graphAccentColor = 'rgba(255, 255, 255, 0.2'; // color of graph axis and bar outline on confidence card, responses card, etc.
 const radialTimerArray = [
   `${countdownColor}, 0.3)`,
   `${countdownColor}, 0.4)`,
@@ -40,10 +42,10 @@ const radialTimerArray = [
 ]; // radial timer color array - appended with '0.x )' opacity when used in countdown
 
 // design tokens - breakpoints:
-const xs = 400;
-const sm = 700;
-const md = 900;
-const lg = 1200;
+const xs = 0;
+const sm = 400;
+const md = 700;
+const lg = 1024;
 const xl = 1536;
 
 // design tokens - header, footer, padding sizes (coordinate this approach with U/X team): (comments = example usage)
@@ -109,6 +111,8 @@ declare module '@mui/material/styles' {
     darkGrey: string;
     lightGrey: string;
     correctColor: string;
+    playerFeedbackLabelColor: string;
+    graphAccentColor: string;
     countdownColor: string;
     radialTimerArray: string[];
   }
@@ -130,6 +134,8 @@ declare module '@mui/material/styles' {
     darkGrey?: string;
     lightGrey?: string;
     correctColor?: string;
+    playerFeedbackLabelColor?: string;
+    graphAccentColor?: string;
     countdownColor: string;
     radialTimerArray?: string[];
   }
@@ -171,6 +177,8 @@ export default createTheme({
       darkGrey: darkGreyColor,
       lightGrey: lightGreyColor,
       correctColor: greenCorrectColor,
+      playerFeedbackLabelColor,
+      graphAccentColor,
       countdownColor,
       radialTimerArray,
     },
