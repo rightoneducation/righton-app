@@ -104,11 +104,7 @@ export default function GameInProgressContentSwitch({
         );
       case ('hint'):
         return (
-          <div
-            id="hint-scrollbox"
-            ref={hintCardRef}
-            className={classes.contentContainer}
-          >
+          <div className={classes.contentContainer}>
             <PlayerThinking
               hints={hints}
               gptHints={gptHints}
@@ -126,11 +122,16 @@ export default function GameInProgressContentSwitch({
               isHintLoading={isHintLoading}
               handleProcessHints={handleProcessHints}
             />
-            <PlayerThinkingSelectedAnswer
-              gptHints={gptHints}
-              graphClickInfo={graphClickInfo}
-              numPlayers={numPlayers}
-            />
+            <div
+              id="hint-scrollbox"
+              ref={hintCardRef}
+            >
+              <PlayerThinkingSelectedAnswer
+                gptHints={gptHints}
+                graphClickInfo={graphClickInfo}
+                numPlayers={numPlayers}
+              />
+            </div>
           </div>
         );
     }

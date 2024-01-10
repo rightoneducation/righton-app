@@ -16,14 +16,6 @@ export default function PlayerThinkingSelectedAnswer(props) {
   return (
     <div>
       <div style={{ width: '100%' }}>
-        <Typography className={classes.titleText}>
-          Showing players who submitted this hint:
-        </Typography>
-        <div className={classes.rectStyle}>
-          <div className={classes.textContainer}>
-            {gptHints[graphClickInfo.selectedIndex].themeText}
-          </div>
-        </div>
         <PlayersSelectedAnswer
           gptHints={gptHints}
           graphClickInfo={graphClickInfo}

@@ -15,25 +15,15 @@ export default function PlayersSelectedAnswer(props) {
     <div>
       <div className={classes.textContainer}>
         <Typography className={classes.titleText}>
-          Players who submitted this hint:
+          {`Players who submitted hints that were categorized under "${gptHints[graphClickInfo.selectedIndex].themeText}":`}
         </Typography>
-        <div className={classes.numberContainer}>
-          <Typography className={classes.countText}>
-            {/* count from stateposition === 6 saved and displayed here for stateposition === 6 */}
-            {hintCount}
-          </Typography>
-          <Typography className={classes.percentageText}>
-            {/* percentage from  stateposition === 6saved and displayed here for stateposition === 6 */}
-            ({Math.round(percentage)}%)
-          </Typography>
-        </div>
       </div>
       {teamsWithSelectedAnswer.map((team, index) => (
         <div key={index} className={classes.rectStyle}>
-          <Typography className={classes.nameText} style={{fontWeight: 700}}>
+          <Typography className={classes.nameText} >
             {team.name}
           </Typography>
-          <Typography className={classes.nameText}>
+          <Typography className={classes.nameText} style={{color: 'rgba(255,255,255,0.6)'}}>
             {team.rawHint}
           </Typography>
         </div>
