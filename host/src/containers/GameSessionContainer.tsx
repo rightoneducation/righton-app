@@ -498,7 +498,7 @@ const GameSessionContainer = () => {
         const combinedHints = parsedHints.map(parsedHint => {
           const updatedTeams = parsedHint.teams.map(team => {
             if (hintsLookup.has(team)) {
-              return { team: team, rawHint: hintsLookup.get(team) };
+              return { name: team, rawHint: hintsLookup.get(team) };
             } else {
               return team;
             }

@@ -31,10 +31,10 @@ export default function PlayersSelectedAnswer(props) {
       {teamsWithSelectedAnswer.map((team, index) => (
         <div key={index} className={classes.rectStyle}>
           <Typography className={classes.nameText} style={{fontWeight: 700}}>
-            {team.team}
+            {team.name}
           </Typography>
           <Typography className={classes.nameText}>
-          {team.rawHint}
+            {team.rawHint}
           </Typography>
         </div>
       ))}
