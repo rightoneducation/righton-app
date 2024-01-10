@@ -13,7 +13,7 @@ export interface IGameTemplate {
   phaseOneTime: number,
   phaseTwoTime: number,
   imageUrl?: string | null,
-  questionTemplates?: { questionTemplate: IQuestionTemplate, gameQuestionId: string }[] | null,
+  questionTemplates: { questionTemplate: IQuestionTemplate, gameQuestionId: string }[] | [],
   createdAt: Date,
   updatedAt: Date
 }

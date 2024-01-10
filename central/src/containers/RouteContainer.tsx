@@ -137,7 +137,7 @@ export const RouteContainer = ({
     }
   }
 
-  const addQToGT = async (gameId: string, questionId: string) => {
+  const addQuestionTemplateToGameTemplate = async (gameId: string, questionId: string) => {
     try{
       const game = await apiClient.createGameQuestions(uuidv4(), '5561', 'f98648a9-84e4-48b0-8ffa-5e5dfcb8a752');
     }
@@ -205,7 +205,6 @@ export const RouteContainer = ({
     const editGameTemplate = async (newGame: { id: string, owner: string, version: number, title: string, description: string, phaseOneTime?: number, phaseTwoTime?: number, grade?: string, domain?: string, cluster?: string, standard?: string, questionTemplates?: IQuestionTemplate[] }, questionIDSet: number[]) => {
       setLoading(true);
       try{
-        console.log(newGame);
       const {questionTemplates, ...rest} = newGame;
       const gameTemplateUpdate = rest; 
       const questionTemplatesUpdate = questionTemplates;
@@ -252,7 +251,6 @@ export const RouteContainer = ({
 
   const handleDeleteQuestionTemplate = async (id: string, game: Game) => {
     const result = await deleteQuestionTemplate(id);
-    console.log(result);
     if (result) {
       getQuestionTemplates(nextToken)
     }
@@ -265,7 +263,6 @@ export const RouteContainer = ({
       if (result) {
         getQuestionTemplates(null);
       }
-      console.log(result);
       return result;
     } catch (e) {
       console.log(e);
@@ -369,14 +366,6 @@ export const RouteContainer = ({
       return true;
     }
     else {
-      // if (game?.questions) {
-      //   for (let i = 0; i < game.questions.length; i++) {
-      //     let questionText = game.questions[i]?.text;
-      //     if (questionText !== undefined && questionText.toLowerCase().indexOf(search) > -1) {
-      //       return true;
-      //     }
-      //   }
-      // }
       return false;
     }
   };
@@ -460,7 +449,7 @@ export const RouteContainer = ({
           setSearchInput={setSearchInput} 
           searchInput={searchInput} 
           isResolutionMobile={isResolutionMobile} 
-          addQToGT={addQToGT} 
+          addQuestionTemplateToGameTemplate={addQuestionTemplateToGameTemplate} 
           handleQuestionBankClick={handleQuestionBankClick}
           handleCreateQuestionTemplate={handleCreateQuestionTemplate}
           handleUpdateQuestionTemplate={handleUpdateQuestionTemplate}

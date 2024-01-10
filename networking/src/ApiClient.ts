@@ -172,7 +172,7 @@ export class ApiClient implements IApiClient {
         const parsedNextToken = result.data.listQuestionTemplates.nextToken;
         return { questionTemplates: parsedQuestionTemplates, nextToken: parsedNextToken };
         } catch (e) {
-            console.log(e);
+            console.error(e);
             return null;
         }
     }
@@ -650,7 +650,9 @@ class GameTemplateParser {
     ): IGameTemplate {
         // parse the IQuestionTemplate[] from IModelGameQuestionConnection
         let questionTemplates: Array<{ questionTemplate: IQuestionTemplate, gameQuestionId: string }> | null = [];
-        if (!isNullOrUndefined(awsGameTemplate) && !isNullOrUndefined(awsGameTemplate.questionTemplates) && !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
+        if (!isNullOrUndefined(awsGameTemplate) &&
+            !isNullOrUndefined(awsGameTemplate.questionTemplates) &&
+            !isNullOrUndefined(awsGameTemplate.questionTemplates.items)) {
             for (const item of awsGameTemplate.questionTemplates.items) {
   
                 if (item && item.questionTemplate) {
@@ -724,7 +726,9 @@ class QuestionTemplateParser {
         awsQuestionTemplate: AWSQuestionTemplate
     ): IQuestionTemplate {
         let gameTemplates: Array<{ gameTemplate: IGameTemplate, gameQuestionId: string }> | null = [];
-        if (!isNullOrUndefined(awsQuestionTemplate) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates) && !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
+        if (!isNullOrUndefined(awsQuestionTemplate) &&
+            !isNullOrUndefined(awsQuestionTemplate.gameTemplates) &&
+            !isNullOrUndefined(awsQuestionTemplate.gameTemplates.items)) {
             for (const item of awsQuestionTemplate.gameTemplates.items) {
               if (item && item.gameTemplate) {
                   const { questionTemplates, ...rest } = item.gameTemplate;
@@ -779,10 +783,10 @@ class QuestionTemplateParser {
             choices,
             instructions,
             answerSettings,
-            domain: domain ?? null,
-            cluster: cluster ?? null,
-            grade: grade ?? null,
-            standard: standard ?? null,
+            domain,
+            cluster,
+            grade,
+            standard,
             imageUrl,
             gameTemplates,
             createdAt,

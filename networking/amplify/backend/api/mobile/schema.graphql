@@ -44,9 +44,9 @@ type QuestionTemplate @model {
   title: String!
   owner: String!
   version: Int!
-  choices: AWSJSON
-  instructions: AWSJSON
-  answerSettings: AWSJSON
+  choices: AWSJSON @default(value: "[]")
+  instructions: AWSJSON @default(value: "[]")
+  answerSettings: AWSJSON @default(value: "{AnswerType.NUMBER, AnswerPrecision.WHOLE}")
   domain: String
   cluster: String
   grade: String

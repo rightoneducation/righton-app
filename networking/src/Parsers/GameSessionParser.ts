@@ -91,7 +91,6 @@ export class GameSessionParser {
       subscription: OnGameSessionUpdatedByIdSubscription
   ): IGameSession {
       const updateGameSession = subscription.onGameSessionUpdatedById
-      console.log(updateGameSession);
       if (isNullOrUndefined(updateGameSession)) {
           throw new Error("subscription.onUpdateGameSession can't be null.")
       }
