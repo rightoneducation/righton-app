@@ -49,6 +49,9 @@ export interface IResponseTeam {
 
 export interface IHints {
     themeText: string;
-    teams: string[];
+    teams: {
+        name: string;
+        rawHint: string;
+    }[];
     teamCount: number;
 }
