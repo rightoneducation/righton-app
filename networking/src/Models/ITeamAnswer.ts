@@ -1,11 +1,12 @@
 import { ConfidenceLevel } from "../AWSMobileApi";
+import { ITeamAnswerContent } from "./AnswerClasses";
 
 export interface ITeamAnswer {
     id: string,
     questionId: number
     isChosen: boolean
     text: string
-    answerContents: string
+    answerContent: ITeamAnswerContent
     createdAt?: string
     updatedAt?: string
     teamMemberAnswersId?: string | null

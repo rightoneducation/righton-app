@@ -5,7 +5,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { makeStyles } from '@material-ui/core';
 
 const CreateNewGameSession = () => {
-  const apiClient = new ApiClient(Environment.Testing);
+  const apiClient = new ApiClient(Environment.Developing);
   const classes = useStyles();
   let { gameId } = useParams<{ gameId: string }>();
 
