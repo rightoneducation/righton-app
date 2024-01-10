@@ -489,12 +489,29 @@ const GameSessionContainer = () => {
       const correctChoiceIndex =
         currentQuestion.choices.findIndex(({ isAnswer }) => isAnswer);
       const correctAnswer = currentQuestion.choices[correctChoiceIndex].text;
-
+      console.log('what up');
+      console.log(hints);
       apiClient.groupHints(hints, questionText, correctAnswer).then((response) => {
         const parsedHints = JSON.parse(response.gptHints.content);
-        setGptHints(parsedHints);
+        console.log(parsedHints);
+        // adds rawHint text to parsedHints received from GPT
+        // (we want to minimize the amount of data we send and receive to/from OpenAI
+        // so we do this ourselves instead of asking GPT to return data we already have)
+        const combinedHints = 
+          hints.forEach((hint) => {
+            parsedHints.forEach((parsedHint) => {
+              parsedHint.teams.forEach((team, index) => {
+                  if (hint.teamName === team)
+                  {
+                    parsedHint.teams[index] = {team: team, rawHint: hint.rawHint}
+                  }
+              });
+            });
+          });
+          console.log(combinedHints);
+        setGptHints(combinedHints);
         setisHintLoading(false);
-        if (parsedHints) {
+        if (combinedHints) {
           setHints([]);
           apiClient.getGameSession(gameSessionId).then((gameSession) => {
             apiClient
@@ -502,7 +519,7 @@ const GameSessionContainer = () => {
                 gameSessionId: gameSession.id,
                 id: gameSession.questions[gameSession.currentQuestionIndex].id,
                 order: gameSession.questions[gameSession.currentQuestionIndex].order,
-                hints: JSON.stringify(parsedHints as IHints[]),
+                hints: JSON.stringify(combinedHints as IHints[]),
               });
           });
         }

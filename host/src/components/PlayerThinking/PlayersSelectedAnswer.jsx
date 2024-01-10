@@ -11,7 +11,7 @@ export default function PlayersSelectedAnswer(props) {
   const hintCount = gptHints[graphClickInfo.selectedIndex].teamCount;
   const percentage = (hintCount / numPlayers) * 100;
   const teamsWithSelectedAnswer = gptHints[graphClickInfo.selectedIndex].teams.map((team) => team);
-
+  console.log(gptHints);
   return (
     <div>
       <div className={classes.textContainer}>
