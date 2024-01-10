@@ -11,7 +11,6 @@ export default function PlayersSelectedAnswer(props) {
   const hintCount = gptHints[graphClickInfo.selectedIndex].teamCount;
   const percentage = (hintCount / numPlayers) * 100;
   const teamsWithSelectedAnswer = gptHints[graphClickInfo.selectedIndex].teams.map((team) => team);
-  console.log(gptHints);
   return (
     <div>
       <div className={classes.textContainer}>
@@ -29,10 +28,13 @@ export default function PlayersSelectedAnswer(props) {
           </Typography>
         </div>
       </div>
-      {teamsWithSelectedAnswer.map((teamChoice, index) => (
+      {teamsWithSelectedAnswer.map((team, index) => (
         <div key={index} className={classes.rectStyle}>
+          <Typography className={classes.nameText} style={{fontWeight: 700}}>
+            {team.team}
+          </Typography>
           <Typography className={classes.nameText}>
-            {teamChoice}
+          {team.rawHint}
           </Typography>
         </div>
       ))}
@@ -114,7 +116,6 @@ const useStyles = makeStyles({
   },
   rectStyle: {
     width: '100%',
-    height: '40px',
     color: 'white',
     backgroundColor: '#063772',
     fontSize: '16px',
